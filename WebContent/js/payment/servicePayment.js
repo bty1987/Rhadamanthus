@@ -40,11 +40,15 @@ jQuery(function($) {
 			serviceMoneyDiv: com.focusPage("#serviceMoneyDiv", "#servicePayment"),
 			serviceMoney: com.focusPage("#serviceMoney", "#servicePayment"),
 
-			myModalLabel: com.focusPage("#myModalLabel", "#servicePayment")
+			myModalLabel: com.focusPage("#myModalLabel", "#servicePayment"),
+
+			orderId: com.focusPage("#orderId", "#servicePayment"),
+			collectMoney: com.focusPage("#collectMoney", "#servicePayment")
 		},
 
 		btns: {
 			collectBtn: com.focusPage("#collectBtn", "#servicePayment"),
+			createBtn: com.focusPage("#createBtn", "#servicePayment"),
 
 			checkvAdd: com.focusPage("#checkvAdd", "#servicePayment"),
 			couponAdd: com.focusPage("#couponAdd", "#servicePayment"),
@@ -52,7 +56,9 @@ jQuery(function($) {
 		},
 
 		modals: {
-			collectModal: com.focusPage("#collectModal", "#servicePayment")
+			collectModal: com.focusPage("#collectModal", "#servicePayment"),
+			createServicetModal: com.focusPage("#createServicetModal", "#servicePayment"),
+			serviceCollectQrcodeModal: com.focusPage("#serviceCollectQrcodeModal").prop("id", params['urlLoadParams'].paytype+"serviceCollectQrcodeModal")
 		},
 
 		cash: [],
@@ -100,6 +106,11 @@ jQuery(function($) {
 		com.closeTip();
 	});
 
+	servicePayment.modals.createServicetModal.on('hide.bs.modal', function () {
+		com.cleanItems(servicePayment.items);
+		com.closeTip();
+	});
+
 	servicePayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
 
 	com.focusPage("#collectModal :checkbox", "#servicePayment").on("change", function(){
@@ -126,6 +137,8 @@ jQuery(function($) {
 	servicePayment.items.advanceType.bindData([{"key":"1", "value":"合同"}], 'key', 'value');
 
 	servicePayment.btns.collectBtn.bindClick(collect);
+
+	servicePayment.btns.createBtn.bindClick(createService);
 
 	servicePayment.btns.createPaytran.unbind().click(function(){
 		paymentUtils.pushPos(servicePayment, servicePayment.payment.decoration.orderId);
@@ -162,6 +175,10 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+			var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
+			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
+			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
+
 			var $btnService = $('<a></a>').addClass('btn btn-minier btn-success').html("服务费");
             var $btnRefunds = $('<a></a>').addClass('btn btn-minier btn-warning').html("服务费退款");
 
@@ -181,6 +198,10 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty);
 
 			if(servicePayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
+
+			if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
+			if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+			if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
 
 			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
 			if (servicePayment.pageConfig.pageBtn.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
@@ -227,6 +248,55 @@ jQuery(function($) {
 				},null,true)
 			});
 
+			// pos推送
+			$btnPosPush.click(function() {
+				var bankVal = com.typeahead(servicePayment.htmlName+"paytranBankName");
+				var bankDiv = com.focusPage("#"+servicePayment.htmlName+"paytranBankName");
+
+				if (bankVal == "" || bankDiv.val() == "") {
+					com.showAlert(com.warning, "请使用匹配数据.");
+					return false;
+				}
+
+				var options = {
+					"paytran.orderId": v.decoration.orderId,
+					"paytran.pid": v.spid,
+					"paytran.type": constant.payment.receipt.PAYMENTTYPE_SERVICE_INT,
+					"paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+					"paytran.no": com.typeahead(bankDiv),
+					"paytran.sn": servicePayment.posValues[bankVal].value, // 收据类型中pos的value值
+					"paytran.money": v.serviceMoney,
+					"paytran.way": 0
+				};
+
+				com.post(api.payment.addPaytran, options, function(res) {
+					var sendOption = {
+						"paytran.ptid": res.paytran.ptid,
+						"paytran.way": 1
+					};
+
+					com.post(api.payment.posPay, sendOption, function(res) {
+						com.showAlert(com.info, "推送成功");
+					});
+				});
+			});
+
+			//二维码
+			$btnCode.click(function () {
+				com.focusPage("#"+servicePayment.type+"serviceCollectQrcodeModal").html("");
+				paymentUtils.initQrcode("collect", servicePayment.type+"serviceCollectQrcodeModal"); //收款码
+				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=4"+"&pid="+ v.spid, servicePayment.type+"serviceCollectQrcodeModal");
+			});
+
+			//微信推送
+			$btnCodePush.click(function () {
+				com.showConfirm("是否发送付款通知", function() {
+					com.post(api.payment.sendServicePayment, {"servicePayment.spid": v.spid}, function(res) {
+						com.showAlert(com.info, "发送成功");
+					});
+				});
+			});
+
 			return $liLine;
 		};
 
@@ -252,6 +322,10 @@ jQuery(function($) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "servicePaymentPostData"+servicePayment.type, extraParams, false, null, function(){
 
+		var $createa = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createService').css("margin", "0px 3px");
+		var $createi = $('<i></i>').addClass('icon-check bigger-110').appendTo($createa);
+		var $createspan = $('<span></span>').text('生成服务费').appendTo($createa);
+
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
 		var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
 		var $checkspan = $('<span></span>').text('全选').appendTo($checka);
@@ -266,6 +340,7 @@ jQuery(function($) {
 
 		var btnParams = [];
 
+		if(servicePayment.pageConfig.pageBtn.contains("createService")) btnParams.push($createa);
 		if(servicePayment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
 		if(servicePayment.pageConfig.pageBtn.contains("confirms")) btnParams.push($adda);
 		if(servicePayment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
@@ -273,6 +348,9 @@ jQuery(function($) {
 		return btnParams;
 
 	}, "resultList");
+
+	// 要在searcher后面
+	paymentUtils.pushPosBank(servicePayment.type == "create", servicePayment.bankUtil, com.focusPage("#condList", "#servicePaymentList"), servicePayment.htmlName);
 
 	function initCollect(payment){
 
@@ -338,6 +416,22 @@ jQuery(function($) {
 		servicePayment.modals.collectModal.modal("show");
 	}
 
+	//生成服务费
+	function createService () {
+		if (com.validate("createServicetModal", "#servicePayment")) return false;
+
+		var options = {
+			"servicePayment.decoration.orderId" : servicePayment.items.orderId.val(),
+			"servicePayment.referMoney" : servicePayment.items.collectMoney.val()
+		};
+
+		com.post(api.payment.makeServicePayment, options, function (res) {
+			com.showAlert(com.info, "创建成功");
+			searcher.doSearch();
+			servicePayment.modals.createServicetModal.modal("hide");
+		})
+	}
+
 	//收款
 	function collect(){
 
@@ -345,6 +439,7 @@ jQuery(function($) {
 
 		var url = "";
 		var realPayment = 0;
+		var realMoney = 0;
 		var referMoney = servicePayment.items.referMoney.val();
 		var comment =  servicePayment.items.comment.val();
 		var type;
@@ -375,6 +470,7 @@ jQuery(function($) {
 		var cash = paymentUtils.paramCash(servicePayment, "serviceReceipt", options);
 
 		realPayment = utils.accAdd(realPayment, parseFloat(cash));
+		realMoney = utils.accAdd(realMoney, parseFloat(cash));
 
 		var bank = paymentUtils.paramBank(servicePayment, servicePayment.payment.serviceReceipt, "serviceReceipt", options, type);
 
@@ -384,10 +480,12 @@ jQuery(function($) {
 		}
 
 		realPayment = utils.accAdd(realPayment, parseFloat(bank));
+		realMoney = utils.accAdd(realMoney, parseFloat(bank));
 
 		var checkv = paymentUtils.paramCheckv(servicePayment, "serviceReceipt", options);
 
 		realPayment = utils.accAdd(realPayment, parseFloat(checkv));
+		realMoney = utils.accAdd(realMoney, parseFloat(checkv));
 
 		var advance = paymentUtils.paramAdvance(servicePayment, servicePayment.payment.serviceReceipt, "serviceReceipt", options, "advance", type);
 
@@ -411,12 +509,18 @@ jQuery(function($) {
 			}
 		}
 
+		options["serviceReceipt.realMoney"] = realMoney;
 		com.post(url, options, function () {
 			searcher.doSearch();
 			servicePayment.modals.collectModal.modal("hide");
 		});
 
 	}
+
+	//生成服务费
+	com.focusPage('a[name="createService"]', '#pagenation').click(function(){
+		servicePayment.modals.createServicetModal.modal("show");
+	});
 
 	//全选
 	com.focusPage('a[name="checks"]', '#pagenation').click(function(){

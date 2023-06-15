@@ -407,7 +407,6 @@ $(function() {
             }
 
             var url, option = {
-                "quotationItem.no": quotationItem.items.no.val(),
                 "quotationItem.name": quotationItem.items.name.val(),
 
                 "quotationItem.version.no": quotationItem.items.version.val(),

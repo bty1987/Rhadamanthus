@@ -81,18 +81,22 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
+		if (filters == null) return;
 
-			for (Filter filter : filters) {
-				if ("customerName".equals(filter.getField())) {
-					query.add(query.getCriterion("customerName", filter));
-				} else if ("relationshipType".equals(filter.getField())) {
-					query.add(query.getCriterion("relationshipType", filter));
-				}else if("type".equals(filter.getField())){
-					query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
-				}
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+
+			if ("customerName".equals(field)) {
+				query.add(query.getCriterion("customerName", filter));
+			} else if ("relationshipType".equals(field)) {
+				query.add(query.getCriterion("relationshipType", filter));
+			} else if ("type".equals(field)) {
+				query.add(Restrictions.eq("type", Short.valueOf(data)));
+			} else if ("phone".equals(field)) {
+				query.add(Restrictions.like("phone", data));
 			}
 		}
 	}
-
 }

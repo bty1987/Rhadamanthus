@@ -35,6 +35,8 @@ public class NoticeVO implements Serializable {
 
 	private Short isPublic;
 
+	private Short exPublic;
+
 	private String contents;
 
 	private String depts;
@@ -121,6 +123,14 @@ public class NoticeVO implements Serializable {
 
 	public void setIsPublic(Short isPublic) {
 		this.isPublic = isPublic;
+	}
+
+	public Short getExPublic() {
+		return exPublic;
+	}
+
+	public void setExPublic(Short exPublic) {
+		this.exPublic = exPublic;
 	}
 
 	public String getContents() {

@@ -54,229 +54,229 @@ jQuery(function($) {
     com.datetime(construction.items.drawlineTime);
     com.datetime(construction.items.designTime);
 
-    construction.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
-    construction.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
-    construction.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
+    construction.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas, "key", "value");
+    construction.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
+    construction.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
-    var displayFunc = (function() {
+    var searcher = new Searcher();
 
-        var renderList = function(tableId, listData) {
+    searcher.base("constructionCondList", "constructionPagenation", "constructionResultList", api.construction.pageConstructionForBase);
 
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    searcher.condition(["construction-orderId", "construction-village-name", "construction-houseNumber-name", "construction-designer", "construction-schedule", "construction-projectStatusFlag"]);
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+    var lineprops = [{
+        field: "decoration",
+        name: "楼盘名",
+        prop: "decoration.house.village.name",
+        clazz: "grey"
+    }, {
+        field: "houseNumber",
+        name: "楼牌号",
+        prop: "decoration.house.houseNumber",
+        clazz: "grey"
+    }, {
+        field: "designer",
+        name: "设计师",
+        prop: "decoration.designer.userName",
+        clazz: "grey"
+    }, {
+        field: "supervisor",
+        name: "监理",
+        prop: "supervisor.userName",
+        clazz: "grey"
+    }, {
+        field: "orderTotalPrice",
+        name: "总价",
+        prop: "decoration.orderTotalPrice",
+        clazz: "blue"
+    }, {
+        field: "buildArea",
+        name: "面积",
+        prop: "decoration.house.buildArea",
+        clazz: "blue"
+    }, {
+        field: "projectStatus",
+        name: "进度",
+        prop: "decoration.projectStatus",
+        dataset: constant.decoration().decoration.projectStatus.keys,
+        clazz: "red"
+    }, {
+        field: "accessoryLimit",
+        name: "辅料额上限",
+        prop: "accessoryLimit",
+        clazz: "blue"
+    }, {
+        field: "salaryLimit",
+        name: "工费额上限",
+        prop: "salaryLimit",
+        clazz: "blue"
+    }, {
+        field: "accessoryTotal",
+        name: "辅料总额",
+        prop: "accessoryTotal",
+        clazz: "blue"
+    }, {
+        field: "salaryTotal",
+        name: "工费总额",
+        prop: "salaryTotal",
+        clazz: "blue"
+    }, {
+        field: "currentName",
+        name: "锁定人",
+        prop: "locker.currentName",
+        clazz: "grey"
+    }, {
+        field: "lockTime",
+        name: "锁定时间",
+        prop: "lockTime",
+        clazz: "green"
+    }, {
+        field: "accessory",
+        name: "辅料控制",
+        prop: "accessory",
+        dataset: constant.construction().construction.isAccessory.keys,
+        clazz: "red"
+    }, ];
 
-                    creatLine(v).appendTo($ul);
-                });
+    var linebtns = [{
+        name: "信息",
+        clazz: "btn-yellow",
+        handle: function(v) {
 
-                $ul.appendTo($tableWrap);
-            }
-        };
+            com.post(api.construction.queryConstructionInfoByOrderId, {
+                "constructionInfo.orderId": v.decoration.orderId
+            }, function(res) {
 
-        var creatLine = function(v) {
+                data = res.constructionInfo;
 
-            var that = this;
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                construction.items.orderId = v.decoration.orderId;
+                construction.items.ishovel.val(data.ishovel);
+                construction.items.iskey.val(data.iskey);
+                construction.items.isCeremony.val(data.isCeremony);
+                construction.items.timeLimit.val(data.timeLimit);
 
-            var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-success').html("查看");
-            var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-warning').html('增减项');
-            var $btnRe = $('<a></a>').addClass('btn btn-minier btn-inverse').html('返工');
-            var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-info').html('扣款');
-            var $btnAcs = $('<a></a>').addClass('btn btn-minier btn-purple').html('工程辅料');
-            var $btnOpen = $('<a></a>').addClass('btn btn-minier btn-danger').html('辅料开启');
-            var $btnLock = $('<a></a>').addClass('btn btn-minier btn-pink').html('辅料锁定');
-            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-yellow').html("更新");
+                if (data.finishTime != null) {
+                    construction.items.finishTime.val(data.finishTime.substr(0, 10));
+                }
+                if (data.keyTime != null) {
+                    construction.items.keyTime.val(data.keyTime.substr(0, 10));
+                }
+                if (data.drawlineTime != null) {
+                    construction.items.drawlineTime.val(data.drawlineTime.substr(0, 10));
+                }
+                if (data.designTime != null) {
+                    construction.items.designTime.val(data.designTime.substr(0, 10));
+                }
 
-            var propertyArr = [["楼盘名:", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"], ["设计师:", v.decoration.designer.userName, "grey"], ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey"], ["总价:", v.decoration.orderTotalPrice, "blue"], ["面积:", v.decoration.house.buildArea, "blue"], ["进度:", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"], ["辅料额上限:", v.accessoryLimit, "blue"], ["工费额上限:", v.salaryLimit, "blue"], ["辅料总额:", v.accessoryTotal, "blue"], ["工费总额:", v.salaryTotal, "blue"], ["锁定人:", v.locker ? v.locker.currentName : "", "grey"], ["锁定时间:", v.lockTime, "green"], ["辅料控制:", constant.construction().construction.isAccessory.keys[v.accessory], "red"], ];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
+                construction.items.comment.val(data.comment);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnAcs).append($btnUpdate).appendTo($h3);
+            construction.modals.constructionInfoModal.modal("show");
 
-            if (v.accessory == constant.construction().construction.ISACCESSORY_DISABLE_INT) {
-                $divBtnWrap.append($btnOpen);
-            } else if (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT) {
-                $divBtnWrap.append($btnLock);
-            }
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnView.click(function() {
-
-                viewSupervisionDetail(v.decoration.orderId);
-            });
-
-            $btnInfo.click(function() {
-
-                viewConstructionInfo(v.decoration.orderId);
-            });
-
-            $btnAddReduce.click(function() {
-
-                viewAddReduceIndex(v.decoration.orderId, v.decoration.type);
-            });
-
-            $btnRe.click(function() {
-
-                viewReworkIndex(v.decoration.orderId);
-            });
-
-            $btnAcs.click(function() {
-
-                viewAccessory(v.cid, v.decoration.orderId);
-            });
-
-            $btnMoney.click(function() {
-
-                viewDelGold(v.decoration.orderId);
-            });
-
-            $btnOpen.click(function() {
-
-                accessoryOpen(v.cid);
-            });
-
-            $btnLock.click(function() {
-
-                accessoryLock(v.cid);
-            });
-
-            $btnUpdate.click(function() {
-
-                construction.cid = v.cid;
-                construction.updateItems.accessoryLimit.val(v.accessoryLimit);
-                construction.updateItems.salaryLimit.val(v.salaryLimit);
-
-                construction.modals.updateConstructionModal.modal("show");
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
+            return false;
         }
-    })();
+    }, {
+        name: "查看",
+        clazz: "btn-success",
+        handle: function(v) {
 
-    var seacher = new Searcher();
+            params.construction.orderId = v.decoration.orderId;
 
-    seacher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule', 'construction-projectStatusFlag'], "constructionCondList", api.construction.pageConstructionForBase, function(list) {
+            com.popup4page("#stockRecordPopUp", "/views/construction/supervision4detail.html", "查看");
 
-        displayFunc.init('constructionResultList', list);
-    }, "constructionPagenation", "constructionPostData", null, false, null, null, "constructionResultList");
+            return false;
+        }
+    }, {
+        name: "增减项",
+        clazz: "btn-warning",
+        handle: function(v) {
 
-    function viewSupervisionDetail(orderId) {
+            params.quotation.orderId = v.decoration.orderId;
+            params.quotation.type = v.decoration.type;
 
-        params.construction.orderId = orderId;
+            params.historyPage = api.index.supervisionIndex.url;
 
-        com.popup4page("#stockRecordPopUp", "/views/construction/supervisionDetail.html", "查看");
-    }
+            com.switchPage(api.index.addReduceIndex.url);
 
-    function viewAddReduceIndex(orderId, type) {
+            return false;
+        }
+    }, {
+        name: "返工",
+        clazz: "btn-inverse",
+        handle: function(v) {
 
-        params.quotation.orderId = orderId;
-        params.quotation.type = type;
+            params.construction.orderId = v.decoration.orderId;
 
-        params.historyPage = api.index.supervisionIndex.url;
+            com.popup4page("#stockRecordPopUp", "/views/construction/supervision4rework.html", "返工");
 
-        com.switchPage(api.index.addReduceIndex.url);
-    }
+            return false;
+        }
+    }, {
+        name: "工程辅料",
+        clazz: "btn-purple",
+        handle: function(v) {
 
-    function viewReworkIndex(orderId) {
+            params.construction.orderId = v.decoration.orderId;
+            params.construction.cid = v.cid;
 
-        params.construction.orderId = orderId;
+            com.popup4page("#stockRecordPopUp", "/views/construction/accessory.html", "工程辅料")
 
-        com.popup4page("#stockRecordPopUp", "/views/construction/supervisionRework.html", "返工");
-    }
+            return false;
+        }
+    }, {
+        name: "更新",
+        clazz: "btn-yellow",
+        handle: function(v) {
 
-    function viewDelGold(orderId) {
+            construction.cid = v.cid;
+            construction.updateItems.accessoryLimit.val(v.accessoryLimit);
+            construction.updateItems.salaryLimit.val(v.salaryLimit);
 
-        params.decoration.orderId = orderId;
-        params.decoration.auditStatusType = "select";
+            construction.modals.updateConstructionModal.modal("show");
 
-        com.popup4page("#stockRecordPopUp", "/views/decoration/audit4record.html", "扣款")
-    }
+            return false;
+        }
+    }, {
+        name: "辅料开启",
+        clazz: "btn-danger",
+        handle: function(v) {
 
-    function viewConstructionInfo(orderId) {
+            com.post(api.construction.openAccessory, {
+                "construction.cid": v.cid
+            }, function(res) {
 
-        com.post(api.construction.queryConstructionInfoByOrderId, {
-            "constructionInfo.orderId": orderId
-        }, function(res) {
+                com.showAlert(com.info, "创建辅料单状态开启");
+                searcher.doSearch();
+            });
 
-            data = res.constructionInfo;
+            return false;
+        },
+        show: function(v) {
 
-            construction.items.orderId = orderId;
-            construction.items.ishovel.val(data.ishovel);
-            construction.items.iskey.val(data.iskey);
-            construction.items.isCeremony.val(data.isCeremony);
-            construction.items.timeLimit.val(data.timeLimit);
-            if (data.finishTime != null) {
-                construction.items.finishTime.val(data.finishTime.substr(0, 10));
-            }
-            if (data.keyTime != null) {
-                construction.items.keyTime.val(data.keyTime.substr(0, 10));
-            }
-            if (data.drawlineTime != null) {
-                construction.items.drawlineTime.val(data.drawlineTime.substr(0, 10));
-            }
-            if (data.designTime != null) {
-                construction.items.designTime.val(data.designTime.substr(0, 10));
-            }
-            construction.items.comment.val(data.comment);
-        });
+            return (v.accessory == constant.construction().construction.ISACCESSORY_DISABLE_INT);
+        }
+    }, {
+        name: "辅料锁定",
+        clazz: "btn-pink",
+        handle: function(v) {
 
-        construction.modals.constructionInfoModal.modal("show");
-    }
+            com.post(api.construction.lockAccessory, {
+                "construction.cid": v.cid
+            }, function(res) {
 
-    function viewAccessory(cid, orderId) {
+                com.showAlert(com.info, "创建辅料单状态锁定");
+                searcher.doSearch();
+            });
 
-        params.construction.orderId = orderId;
-        params.construction.cid = cid;
+            return false;
+        },
+        show: function(v) {
 
-        com.popup4page("#stockRecordPopUp", "/views/construction/constructionAccessory.html", "工程辅料")
-    }
+            return (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT);
+        }
+    }];
 
-    function accessoryOpen(cid) {
-
-        com.post(api.construction.openAccessory, {
-            "construction.cid": cid
-        }, function(res) {
-
-            com.showAlert(com.info, "创建辅料单状态开启");
-            seacher.doSearch();
-        });
-    }
-
-    function accessoryLock(cid) {
-
-        com.post(api.construction.lockAccessory, {
-            "construction.cid": cid
-        }, function(res) {
-
-            com.showAlert(com.info, "创建辅料单状态锁定");
-            seacher.doSearch();
-        });
-    }
+    searcher.line("decoration.orderId", lineprops, linebtns).render();
 
     function saveData() {
 
@@ -312,7 +312,7 @@ jQuery(function($) {
 
         com.post(api.construction.updateConstructionForAdvance, options, function(res) {
 
-            seacher.doSearch();
+            searcher.doSearch();
             com.showAlert(com.info, "操作成功");
 
             construction.modals.updateConstructionModal.modal("hide");

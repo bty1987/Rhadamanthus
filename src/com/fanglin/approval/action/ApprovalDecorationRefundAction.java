@@ -30,19 +30,23 @@ import com.fanglin.core.interceptor.FLException;
 public class ApprovalDecorationRefundAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1295407298987714951L;
-	
+
 	@Autowired
 	private ApprovalDecorationRefundService approvalDecorationRefundService;
-	
+
 	private ApprovalVO approval;
-	
+
 	private ApprovalDecorationRefundVO approvalDecorationRefund;
 
+	private String code;
+
+	private String forms;
+
 	@Action(value = "submitApprovalForDecorationRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String submitApprovalForDecorationRefund() throws FLException{
-		
-		approvalDecorationRefundService.submitApprovalForDecorationRefund(approval, approvalDecorationRefund, queryUserId(),queryCompany());
-		
+	public String submitApprovalForDecorationRefund() throws FLException {
+
+		approvalDecorationRefundService.submitApprovalForDecorationRefund(approval, approvalDecorationRefund, queryUserId(), queryCompany(), code, forms);
+
 		return SUCCESS;
 	}
 
@@ -58,9 +62,24 @@ public class ApprovalDecorationRefundAction extends BaseListAction {
 		return approvalDecorationRefund;
 	}
 
-	public void setApprovalDecorationRefund(
-			ApprovalDecorationRefundVO approvalDecorationRefund) {
+	public void setApprovalDecorationRefund(ApprovalDecorationRefundVO approvalDecorationRefund) {
 		this.approvalDecorationRefund = approvalDecorationRefund;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getForms() {
+		return forms;
+	}
+
+	public void setForms(String forms) {
+		this.forms = forms;
 	}
 
 }

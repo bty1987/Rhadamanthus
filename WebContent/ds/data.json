@@ -91,7 +91,7 @@
     {"key" : "C", "value" : "C"}
   ],
   "receiptTypeFund":[
-    {"key" : "0", "value" : "普通"},
+    {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "资金"}
   ],
   "costStatus": [
@@ -123,7 +123,7 @@
     {"key" : "1", "value" : "禁用"}
   ],
   "categoryType": [
-    {"key" : "0", "value" : "普通"},
+    {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "统计"}
   ],
   "visionType": [
@@ -238,10 +238,11 @@
   ],
   "signetType": [
     {"key" : "0", "value" : "合同"},
-    {"key" : "1", "value" : "款项"}
+    {"key" : "1", "value" : "款项"},
+    {"key" : "2", "value" : "人资"}
   ],
   "aoodsAtttype": [
-    {"key" : "0", "value" : "普通"},
+    {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "外辅"}
 ],
   "surveyTemplateStatus": [

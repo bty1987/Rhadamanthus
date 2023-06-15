@@ -19,6 +19,8 @@ public class SurveyTemplatePO implements Serializable {
 
 	private static final long serialVersionUID = -3744114086090973975L;
 
+	public static final short STATUS_ENABLE_INT = 0; // 启用
+
 	private long stid;
 
 	private String name;

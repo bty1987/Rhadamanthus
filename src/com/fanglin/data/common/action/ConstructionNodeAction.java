@@ -46,6 +46,14 @@ public class ConstructionNodeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryConstructionNodeByCnid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionNodeByCnid() throws FLException {
+
+		constructionNode = constructionNodeService.queryConstructionNodeByCnid(constructionNode);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryConstructionNodeByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionNodeByOrderId() throws FLException {
 

@@ -162,6 +162,11 @@
     $(".messageList").attr("href", api.index.messageIndex.url + "?timestamp=" + new Date().getTime());
     $(".messageList").data("level", 1);
 
+    if (utils.isMobile()) {
+        $("#faqInfo").parent().hide();
+        $("#versionInfo").parent().hide();
+    }
+
     params.userCompany = window.userCompany;
 
     com.post(api.personel.queryUserCompany, {
@@ -475,7 +480,7 @@
         var arr;
 
         $tree.slimscroll({
-            height: '88vh',
+            height: utils.isMobile() ? '100vh' : '88vh',
             size: '5px',
             opacity: 0.2,
             position: 'left',
@@ -625,7 +630,11 @@
                         var module = res.module
 
                         if (module) {
+
                             params.urlLoadParams = com.splitUrl(module.url);
+
+                            $("#menu-toggler").removeClass("display");
+                            $("#sidebar").removeClass("display");
 
                             if (params.urlLoadParams.open && params.urlLoadParams.open == "popup") {
 
@@ -645,7 +654,6 @@
                         } else {
                             com.showAlert(com.warning, "无操作权限")
                         }
-
                     });
                 }
             }

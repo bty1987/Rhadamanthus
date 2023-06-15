@@ -1,8 +1,10 @@
 package com.fanglin.payment.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,77 +13,80 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "salesreceipt", catalog = "payment")
-public class SalesReceiptPO  implements Serializable{
+public class SalesReceiptPO implements Serializable {
 
 	private static final long serialVersionUID = -1338386407765927692L;
-	
+
 	public static final String COLUMN_SRID_STR = "srId";
-	
+
 	public static final long COLUMN_COUPON_INT = 0;
-	
+
 	public static final long COLUMN_MONEY_INT = 0;
-	
+
 	public static final short COLUMN_ADVANCETYPE_INT = 0;
-	
+
 	public static final String COLUMN_COUPONINFO_STR = "";
-	
+
 	public static final short COLUMN_SALESRECEIPT_TYPE_INT = 0;
-	
+
 	public static final short COLUMN_SALESRECEIPT_REFUND_TYPE_INT = 1;
-	
+
 	private long srId;
-	
+
 	private short type;
-	
+
 	private UserPO collecter;
-	
+
 	private UserPO confirmer;
-	
+
 	private String collecterName;
-	
+
 	private String confirmerName;
-	
+
 	private Timestamp collectTime;
-	
+
 	private Timestamp confirmTime;
-	
-	private long cash;                
-	
-	private String cashInfo;           
-	
-	private long bank;                
-	
-	private String bankInfo;           
-	
-	private long checkv;              
-	
+
+	private long realMoney;
+
+	private long cash;
+
+	private String cashInfo;
+
+	private long bank;
+
+	private String bankInfo;
+
+	private long checkv;
+
 	private String checkvBank;
-	
-	private long installment;         
-	
-	private String installBank;        
-	
-	private long accounts;            
-	
-	private String accountsBank; 
-	
-	private long advance;             
-	
-	private short advanceType;         
-	
-	private long coupon;              
-	
-	private String couponInfo;         
-	
-	private String comment;                
-	
+
+	private long installment;
+
+	private String installBank;
+
+	private long accounts;
+
+	private String accountsBank;
+
+	private long advance;
+
+	private short advanceType;
+
+	private long coupon;
+
+	private String couponInfo;
+
+	private String comment;
+
 	public SalesReceiptPO() {
 		super();
-		
+
 		this.installBank = "";
 		this.accountsBank = "";
 	}
@@ -92,7 +97,7 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY) 
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "srid")
 	public long getSrId() {
 		return srId;
@@ -120,7 +125,7 @@ public class SalesReceiptPO  implements Serializable{
 	public void setCollecter(UserPO collecter) {
 		this.collecter = collecter;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cfuid", referencedColumnName = "uid")
 	public UserPO getConfirmer() {
@@ -130,7 +135,7 @@ public class SalesReceiptPO  implements Serializable{
 	public void setConfirmer(UserPO confirmer) {
 		this.confirmer = confirmer;
 	}
-	
+
 	@Column(name = "collecterName")
 	public String getCollecterName() {
 		return collecterName;
@@ -165,6 +170,15 @@ public class SalesReceiptPO  implements Serializable{
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
+	}
+
+	@Column(name = "realMoney")
+	public long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	@Column(name = "cash")
@@ -220,7 +234,7 @@ public class SalesReceiptPO  implements Serializable{
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-	
+
 	@Column(name = "installment")
 	public long getInstallment() {
 		return installment;
@@ -301,5 +315,5 @@ public class SalesReceiptPO  implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

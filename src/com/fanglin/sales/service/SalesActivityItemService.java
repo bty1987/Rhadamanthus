@@ -5,6 +5,7 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.sales.vo.SalesActivityItemVO;
 import com.fanglin.sales.vo.SalesActivityVO;
+import com.fanglin.sales.vo.SalesVO;
 
 public interface SalesActivityItemService {
 
@@ -23,10 +24,10 @@ public interface SalesActivityItemService {
 	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
 	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
-	
+
 	public void discountSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
 	public void sendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
 
-	public int affirmSalesActivityItem(List<SalesActivityItemVO> salesActivityItems) throws FLException;
+	public int affirmSalesActivityItem(SalesVO salesVO, List<SalesActivityItemVO> salesActivityItems) throws FLException;
 }

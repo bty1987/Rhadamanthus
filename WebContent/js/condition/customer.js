@@ -54,7 +54,6 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
-
     "service-orderId": {
         label: "装修单号",
         type: "text",
@@ -160,7 +159,7 @@ Condition.addupRule("customer", {
             postData: null,
             listPath: [{
                 "key": "0",
-                "value": "普通"
+                "value": "标准"
             }, {
                 "key": "1",
                 "value": "重大"
@@ -454,6 +453,40 @@ Condition.addupRule("customer", {
             name: "sendTime",
             op: "cn",
             validate: null
+        }
+    },
+    "survey-handleTime": {
+        label: "处理时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "handleTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "survey-finishTime": {
+        label: "完成时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "finishTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "survey-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.customer,
+            postData: {},
+            listPath: "surveyStatus",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "droup-orderId": {

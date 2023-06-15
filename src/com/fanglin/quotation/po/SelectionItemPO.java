@@ -83,6 +83,10 @@ public class SelectionItemPO implements Serializable {
 
 	private long suid;// 厂商id
 
+	private long qiid;
+
+	private long sgid;
+
 	private short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
 
 	private int initNum;// 工程量
@@ -216,6 +220,24 @@ public class SelectionItemPO implements Serializable {
 
 	public void setSuid(long suid) {
 		this.suid = suid;
+	}
+
+	@Column(name = "qiid")
+	public long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(long qiid) {
+		this.qiid = qiid;
+	}
+
+	@Column(name = "sgid")
+	public long getSgid() {
+		return sgid;
+	}
+
+	public void setSgid(long sgid) {
+		this.sgid = sgid;
 	}
 
 	@Column(name = "status")

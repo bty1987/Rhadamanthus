@@ -542,7 +542,7 @@ $(function() {
 
                     $btnPrint.click(function() {
 
-                        printPayment(v.orderId, v.sid, v, "fullPay");
+                        printPayment(v.orderId, v.sid, v, "fullPay", "sales");
 
                     });
 
@@ -728,11 +728,12 @@ $(function() {
 
             printSales = res.sales
         }, null, false);
-
-        printPayment(printSales.orderId, printSales.sid, printSales, "deposit");
+        
+        if(printSales.depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT) printPayment(printSales.orderId, printSales.sid, printSales, "deposit", "sales");
+        if(printSales.depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT) printPayment(printSales.orderId, printSales.sid, printSales, "deposit", "refund");
+        
 
         return false;
-
     });
 
     // 不退
@@ -1274,7 +1275,7 @@ $(function() {
             sales.btns.fullPaymentBtn.addClass('hide');
         }
 
-        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT) {
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT || depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT) {
             sales.btns.depositPrintBtn.removeClass('hide');
         }
 
@@ -1297,12 +1298,19 @@ $(function() {
         return val == "" || val < 0 ? 0 : val;
     }
 
-    function printPayment(orderId, sid, v, flag) {
+
+
+    function printPayment(orderId, sid, v, flag, type) {
 
         params.sales.sales = v;
         params.sales.flag = flag;
+        
+        if (type == "sales") {
+            com.popup("销售购货单: " + orderId, api.index.salesPrintIndex.url, null, null, true);
+        } else if (type == "refund"){
+            com.popup("销售退货单: " + orderId, api.index.salesRefundsPrintIndex.url, null, null, true);
+        }
 
-        com.popup("销售购货单: " + orderId, api.index.salesPrintIndex.url, null, null, true);
     }
 
     function brandBalance(bid) {

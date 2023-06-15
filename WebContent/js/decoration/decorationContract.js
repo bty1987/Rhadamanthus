@@ -250,18 +250,18 @@ jQuery(function($) {
         }
     }, {
         name: "已签",
-        clazz: "btn-danger",
+        clazz: "btn-success",
         handle: function(v) {
 
             signContract(v.dcid);
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == 0 && decorationContract.showtype != "design";
         }
     }, {
         name: "失效",
-        clazz: "btn-pink",
+        clazz: "btn-danger",
         handle: function(v) {
 
             expireContract(v.dcid);
@@ -271,6 +271,8 @@ jQuery(function($) {
             return v.status == 0;
         }
     }, {
+        type: "newline"
+    }, {
         name: "公司签",
         clazz: "btn-purple",
         handle: function(v) {
@@ -279,14 +281,36 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == 0 && decorationContract.showtype != "design";
         }
     }, {
         name: "客户签",
-        clazz: "btn-yellow",
+        clazz: "btn-purple",
         handle: function(v) {
 
             customerSign(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "二维签名",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "二维客签",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
         },
         show: function(v) {
 
@@ -307,7 +331,7 @@ jQuery(function($) {
         }
     }, {
         name: "客签通知",
-        clazz: "btn-warning",
+        clazz: "btn-success",
         handle: function(v) {
 
             sendNotice("是否发送签订通知", v.dcid, 2);
@@ -317,30 +341,8 @@ jQuery(function($) {
             return v.status == 0;
         }
     }, {
-        name: "二维签名",
-        clazz: "btn-inverse",
-        handle: function(v) {
-
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
-        },
-        show: function(v) {
-
-            return v.status == 0;
-        }
-    }, {
-        name: "二维客签",
-        clazz: "btn-danger",
-        handle: function(v) {
-
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
-        },
-        show: function(v) {
-
-            return v.status == 0;
-        }
-    }, {
         name: "查看通知",
-        clazz: "btn-pink",
+        clazz: "btn-yellow",
         handle: function(v) {
 
             showContract(v.dcid, 1);
@@ -351,7 +353,7 @@ jQuery(function($) {
         }
     }, {
         name: "下载通知",
-        clazz: "btn-purple",
+        clazz: "btn-yellow",
         handle: function(v) {
 
             sendNotice("是否发送下载通知", v.dcid, 4);
@@ -362,7 +364,7 @@ jQuery(function($) {
         }
     }, {
         name: "二维查看",
-        clazz: "btn-yellow",
+        clazz: "btn-info",
         handle: function(v) {
 
             showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");

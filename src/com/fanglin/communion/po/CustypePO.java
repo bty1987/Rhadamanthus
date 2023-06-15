@@ -31,6 +31,8 @@ public class CustypePO implements java.io.Serializable {
 
 	public static final String COLUMN_ATTTYPE_STR = "atttype";
 
+	public static final String COLUMN_PLATFORM_STR = "platform";
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
@@ -45,6 +47,10 @@ public class CustypePO implements java.io.Serializable {
 
 	public static final short ATTTYPE_SERVICE_INT = 4;
 
+	public static final short PLATFORM_POSPAY_INT = 0;
+
+	public static final short PLATFORM_WXPAY_INT = 1;
+
 	private long ctid;
 
 	private String name; // 名称
@@ -58,6 +64,8 @@ public class CustypePO implements java.io.Serializable {
 	private String wxapp; // wx小程序appid
 
 	private ReceiptTypePO receiptType;
+
+	private short platform;
 
 	private short atttype; // 业务类型: 0预付 , 1装修 , 2主材/占位 , 3销售 , 4服务
 
@@ -142,6 +150,15 @@ public class CustypePO implements java.io.Serializable {
 
 	public void setReceiptType(ReceiptTypePO receiptType) {
 		this.receiptType = receiptType;
+	}
+
+	@Column(name = "platform")
+	public short getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(short platform) {
+		this.platform = platform;
 	}
 
 	@Column(name = "atttype")

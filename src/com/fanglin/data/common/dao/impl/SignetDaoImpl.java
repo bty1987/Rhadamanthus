@@ -3,6 +3,7 @@ package com.fanglin.data.common.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -33,8 +34,17 @@ public class SignetDaoImpl extends DaoImpl<SignetPO> implements SignetDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SignetPO> querySignet(int company) {
-		return session().createCriteria(SignetPO.class).add(Restrictions.eq(SignetPO.COLUMN_COMPANY_STR, company)).add(Restrictions.ne("status", SignetPO.STATUS_CANCEL_INT)).list();
+	public List<SignetPO> querySignet(Short type, int company) {
+
+		Criteria query = session().createCriteria(SignetPO.class);
+
+		query.add(Restrictions.eq(SignetPO.COLUMN_COMPANY_STR, company));
+
+		if (type != null) {
+			query.add(Restrictions.eq("type", type));
+		}
+
+		return query.add(Restrictions.ne("status", SignetPO.STATUS_CANCEL_INT)).list();
 	}
 
 	@Override
@@ -48,19 +58,22 @@ public class SignetDaoImpl extends DaoImpl<SignetPO> implements SignetDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
+		if (filters == null) return;
 
-			for (Filter filter : filters) {
-				String data = filter.getData();
-				if ("name".equals(filter.getField())) {
-					query.add(query.getCriterion("name", filter));
-				} else if ("type".equals((filter.getField()))) {
-					query.add(query.getCriterion("type", Short.valueOf(data), filter.getOp()));
-				} else if ("status".equals((filter.getField()))) {
-					query.add(query.getCriterion("status", Short.valueOf(data), filter.getOp()));
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(query.getCriterion("name", filter));
+			} else if ("type".equals((field))) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
+			} else if ("status".equals((field))) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			}
 		}
 	}
 
-	}
 }

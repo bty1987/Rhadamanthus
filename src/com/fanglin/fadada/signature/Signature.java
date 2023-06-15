@@ -37,7 +37,6 @@ import com.fadada.sdk.client.authForfadada.model.BankInfoINO;
 import com.fadada.sdk.client.authForfadada.model.CompanyInfoINO;
 import com.fadada.sdk.client.authForfadada.model.LegalInfoINO;
 import com.fadada.sdk.client.request.ExtsignReq;
-import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.fadada.bean.Contract;
@@ -298,11 +297,11 @@ public class Signature {
 		return authBeforeSign.invokeAuthBeforeSign(transactionId, authType, contractId, customerId, RETURN_URL_STR, NOTIFY_URL_STR);
 	}
 
-	public static void register(CustomerPO customerPO) throws FLException {
+	public static String register(String no) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeregisterAccount(customerPO.getNo(), "1"); // 注册类型 , 1: 个人 , 2: 公司
+		String result = base.invokeregisterAccount(no, "1"); // 注册类型 , 1: 个人 , 2: 公司
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -315,10 +314,10 @@ public class Signature {
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
-		customerPO.setSignno(response.getString("data"));
+		return response.getString("data");
 	}
 
-	public static String authenticate(CustomerPO customerPO) throws FLException {
+	public static JSONObject authenticate(String signno, String name, String phone, String identity) throws FLException {
 
 		GetPersonVerifyUrl personverify = new GetPersonVerifyUrl(APPID, APPSECRET, VERSION, HOST);
 
@@ -329,12 +328,7 @@ public class Signature {
 		String result_type = "1"; // 认证跳转方式 , 1: 直接跳转 , 2: 确认后跳转
 		String cert_flag = "1"; // 自动申请证书 , 0: 不申请 , 1: 自动申请
 
-		String signno = customerPO.getSignno();
-		String customerPhone = customerPO.getPhone();
-		String customerName = customerPO.getName();
-		String customerIdent = customerPO.getIdentity();
-
-		String result = personverify.invokePersonVerifyUrl(signno, verifyed_way, page_modify, NOTIFY_URL_STR, RETURN_URL_STR, customerName, customer_ident_type, customerIdent, customerPhone, ident_front_path, result_type, cert_flag, null, null, null, null, null);
+		String result = personverify.invokePersonVerifyUrl(signno, verifyed_way, page_modify, NOTIFY_URL_STR, RETURN_URL_STR, name, customer_ident_type, identity, phone, ident_front_path, result_type, cert_flag, null, null, null, null, null);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -349,18 +343,14 @@ public class Signature {
 
 		JSONObject data = response.getJSONObject("data");
 
-		String authurl = decode(data.getString("url"));
-
-		customerPO.setToken(data.getString("transactionNo"));
-
-		return authurl;
+		return data;
 	}
 
-	public static void person(CustomerPO customerPO) throws FLException {
+	public static JSONObject person(String token) throws FLException {
 
 		FindCertInfo personCertInfo = new FindCertInfo(APPID, APPSECRET, VERSION, HOST);
 
-		String result = personCertInfo.invokeFindPersonCert(customerPO.getToken(), "1");
+		String result = personCertInfo.invokeFindPersonCert(token, "1");
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -381,23 +371,14 @@ public class Signature {
 			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("status")));
 		}
 
-		customerPO.setName(person.getString("personName"));
-		customerPO.setIdentity(person.getString("idCard"));
-		customerPO.setPhone(person.getString("mobile"));
-		customerPO.setAddress(person.getString("address"));
-
-		customerPO.setPhotoPath(person.getString("photoUuid"));
-		customerPO.setIdentityPathF(person.getString("headPhotoPath"));
-		customerPO.setIdentityPathB(person.getString("backgroundIdCardPath"));
-
-		customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
+		return data;
 	}
 
-	public static void certificate(CustomerPO customerPO) throws FLException {
+	public static void certificate(String no, String token) throws FLException {
 
 		ApplyCert applyCert = new ApplyCert(APPID, APPSECRET, VERSION, HOST);
 
-		String result = applyCert.invokeApplyCert(customerPO.getNo(), customerPO.getToken());
+		String result = applyCert.invokeApplyCert(no, token);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -693,7 +674,7 @@ public class Signature {
 		}
 	}
 
-	private static String decode(String bizContent) {
+	public static String decode(String bizContent) {
 		try {
 			bizContent = URLDecoder.decode(bizContent, "utf-8");
 			bizContent = new String(Base64.decodeBase64(bizContent.getBytes()));

@@ -20,6 +20,8 @@ public class CustypeVO implements java.io.Serializable {
 
 	private ReceiptTypeVO receiptType;
 
+	private Short platform;
+
 	private Short atttype;
 
 	private String dgrade;
@@ -93,6 +95,14 @@ public class CustypeVO implements java.io.Serializable {
 
 	public void setReceiptType(ReceiptTypeVO receiptType) {
 		this.receiptType = receiptType;
+	}
+
+	public Short getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(Short platform) {
+		this.platform = platform;
 	}
 
 	public Short getAtttype() {

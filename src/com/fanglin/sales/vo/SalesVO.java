@@ -13,94 +13,96 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class SalesVO implements Serializable {
 
 	private static final long serialVersionUID = 711873433253802459L;
-	
+
 	private Long sid;
-	
+
 	private String no;
-	
+
 	private String orderId;
-	
+
 	private UserBaseVO supplier;
-	
+
 	private HouseVO house;
-	
+
 	private CustomerVO customer;
-	
+
 	private String dompanys;
-	
+
 	private Integer pompany;
-	
+
 	private String grade;
-	
+
 	private UserBaseVO salesman;
-	
+
 	private DepartmentVO dept;
-	
+
 	private DepartmentVO region;
-	
+
 	private UserBaseVO guider;
-	
+
 	private DepartmentVO guideDept;
-	
+
 	private UserBaseVO instorer;
-	
+
 	private UserBaseVO finisher;
-	
+
 	private String category;
-	
+
 	private Long bid;
-	
+
 	private String brand;
-	
+
 	private String comment;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp balanceTime;
-	
+
 	private Timestamp fullpayTime;
-	
+
 	private Timestamp finishTime;
-	
+
+	private Timestamp affirmTime;
+
+	private Short isAffirm;
+
 	private Short status;
-	
+
 	private Long depositpay;
-	
+
 	private Short depositpayStatus;
-	
+
 	private Long fullpay;
-	
+
 	private Short fullpayStatus;
-	
+
 	private Short balanceStatus;
-	
+
 	private Long total;
-	
+
 	private Long amount;
-	
+
 	private Integer maling;
-	
+
 	private Integer venderMaling;
-	
+
 	private Integer coupon;
-	
+
 	private String couponInfo;
-	
+
 	private Short otherStatus;
-	
+
 	private Long activityId;
-	
+
 	private Short ctype;
-	
+
 	private Integer cvalue;
-	
+
 	public SalesVO() {
 		super();
 	}
-	
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman,
-			DepartmentVO dept, DepartmentVO region, UserBaseVO guider,
-			DepartmentVO guideDept, UserBaseVO instorer) {
+
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -111,10 +113,8 @@ public class SalesVO implements Serializable {
 		this.guideDept = guideDept;
 		this.instorer = instorer;
 	}
-	
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman,
-			DepartmentVO dept, DepartmentVO region, UserBaseVO guider,
-			DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher) {
+
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -127,7 +127,7 @@ public class SalesVO implements Serializable {
 		this.supplier = supplier;
 		this.finisher = finisher;
 	}
-	
+
 	public Long getSid() {
 		return sid;
 	}
@@ -247,7 +247,7 @@ public class SalesVO implements Serializable {
 	public void setInstorer(UserBaseVO instorer) {
 		this.instorer = instorer;
 	}
-	
+
 	public UserBaseVO getFinisher() {
 		return finisher;
 	}
@@ -287,8 +287,8 @@ public class SalesVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -297,7 +297,7 @@ public class SalesVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -306,7 +306,7 @@ public class SalesVO implements Serializable {
 		this.balanceTime = balanceTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFullpayTime() {
 		return fullpayTime;
 	}
@@ -314,14 +314,31 @@ public class SalesVO implements Serializable {
 	public void setFullpayTime(Timestamp fullpayTime) {
 		this.fullpayTime = fullpayTime;
 	}
-	
-	@JSON(format="yyyy-MM-dd")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	public Short getStatus() {
@@ -375,7 +392,7 @@ public class SalesVO implements Serializable {
 	public Long getTotal() {
 		return total;
 	}
-	
+
 	public void setTotal(Long total) {
 		this.total = total;
 	}

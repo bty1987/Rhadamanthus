@@ -4,7 +4,7 @@
         postData: {},
         postParam: {},
         userAdvanceItems: {},
-        companysel: {},
+        companysel: [],
         task: {},
         rolesel: {},
 
@@ -50,9 +50,14 @@
 
     }
 
-    com.post(api.system.queryCompany, {}, function(res) {
+    com.post(api.personel.queryUserCompanyForSelf, {}, function(res) {
 
-        user.companysel = res.companys;
+        $.each(res.userCompanys, function(i, v) {
+
+            user.companysel.push(v.company);
+        })
+
+        console.log(user.companysel)
 
     }, null, false);
 
@@ -158,6 +163,7 @@
                         user.user.uid = v.uid;
 
                         $("#companydiv").empty();
+
                         var companyname = [];
 
                         var options = {

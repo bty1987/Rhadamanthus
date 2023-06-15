@@ -18,4 +18,6 @@ public interface ExtensionDao extends Dao<ExtensionPO> {
 
 	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId, Short type);
 
+	public int deleteExtension(String orderId);
+
 }

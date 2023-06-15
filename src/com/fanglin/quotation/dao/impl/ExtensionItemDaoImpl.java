@@ -55,4 +55,12 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 		return 0;
 	}
 
+	@Override
+	public int deleteExtensionItem(String orderId) {
+		String sql = "delete from quotation.extensionItem where eid = (select eid from quotation.extension where orderId = :orderId)";
+		session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
+
+		return 0;
+	}
+
 }

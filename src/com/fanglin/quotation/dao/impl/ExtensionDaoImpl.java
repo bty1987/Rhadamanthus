@@ -59,6 +59,14 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 		return session().createCriteria(ExtensionPO.class).add(Restrictions.eq(ExtensionPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ExtensionPO.COLUMN_TYPE_STR, type)).list();
 	}
 
+	@Override
+	public int deleteExtension(String orderId) {
+		String sql = "delete from quotation.extension where orderId = :orderId";
+		session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
+
+		return 0;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

@@ -10,9 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name = "color", catalog = "inventory")
+@Table(name = "color", catalog = "data")
 public class ColorPO implements Serializable {
 
 	private static final long serialVersionUID = 7932119609397630378L;

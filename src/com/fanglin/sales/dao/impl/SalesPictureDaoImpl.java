@@ -1,7 +1,9 @@
 package com.fanglin.sales.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +26,18 @@ public class SalesPictureDaoImpl extends DaoImpl<SalesPicturePO> implements Sale
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SalesPicturePO> querysalesPictureBySiid(Long siid) {
+	public List<SalesPicturePO> querySalesPictureBySiid(Long siid) {
 		return session().createCriteria(SalesPicturePO.class).add(Restrictions.eq(SalesPicturePO.COLUMN_SIID_STR, siid)).list();
+	}
+
+	@Override
+	public int countSalesPicture(Long sid, short type) {
+
+		String sql = "SELECT count(*) from sales.salespicture sp where sp.sid = :sid and sp.type = :type";
+		Query query = session().createSQLQuery(sql).setLong("sid", sid).setShort("type", type);
+
+		return ((BigInteger) query.uniqueResult()).intValue();
+
 	}
 
 }

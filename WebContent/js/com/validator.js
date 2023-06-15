@@ -1,11 +1,11 @@
+var Validator = function() {
 
-var Validator = function(){
-    
     var _validator = {
         required: {
             type: "v_required",
             errorMsg: "内容不能为空",
-            func: function (obj) {
+            func: function(obj) {
+
                 if (obj.val() == null || obj.val() == undefined)
                     return true;
                 if (toString.apply(obj.val()) === '[object Array]')
@@ -16,7 +16,8 @@ var Validator = function(){
         typeahead: {
             type: "v_typeahead",
             errorMsg: "请使用匹配数据",
-            func: function (obj) {
+            func: function(obj) {
+
                 if (obj.attr('data-typeahead-key') == null || obj.attr('data-typeahead-key') == undefined)
                     return true;
                 if (toString.apply(obj.attr('data-typeahead-key')) === '[object Array]')
@@ -57,7 +58,7 @@ var Validator = function(){
         namecn: {
             type: "v_name_cn",
             regex: /^[\u4e00-\u9fa5]*$/,
-            errorMsg: "内容可以由汉字, 字母, 数字,基本标点符号,'-','>','<','_', '.', '@'组成."
+            errorMsg: "内容可以由汉字组成."
         },
         nameen: {
             type: "v_name_en",
@@ -105,14 +106,14 @@ var Validator = function(){
             errorMsg: "请输入正确的军官证号."
         }
     }
-    
+
     return {
-        init: function(){
-            
+        init: function() {
+
             var dtd = $.Deferred();
-            
+
             com.validator = _validator;
-            
+
             return dtd.promise();
         }
     }

@@ -69,6 +69,19 @@
     var imgpath = "";
 
     $("#signature").jSignature(arguments);
+    
+    var authentication = "eX3o2SZdrpVOV9HC4UYTRA==";
+    
+    var cid = getQueryString('cid');
+    var type = getQueryString('type');
+    
+    var apiurl = "../../signateCustomer.do";
+    var argkey = "customer.cid";
+    
+    if(type == "2"){
+        apiurl = "../../signateUser.do";
+        argkey = "user.uid";
+    }
 
     //印章按钮
     $("#uploadBtn").click(function () {
@@ -133,17 +146,20 @@
     };
 
     function uploadimg(base64) {
+    
+        var args = {
+            "imgbase": base64.replace("data:image/png;base64,", ""),
+            "authentication": authentication
+        }
+        
+        args[argkey] = cid;
 
         $.ajax({
             type: "POST",
             dataType: "json",
             // contentType: "application/json; charset=utf-8",
-            url: "../../signateCustomer.do",
-            data: {
-                "customer.cid": getQueryString('cid'),
-                "imgbase": base64.replace("data:image/png;base64,", ""),
-                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
-            },
+            url: apiurl,
+            data: args,
             cache: false,
             success: function (msg) {
                 if (msg.errorCode == 0) {
@@ -166,7 +182,7 @@
             type: "POST",
             contentType:false,
             processData:false,
-            url: "../../Demeter/uploadImg.do",
+            url: "../../uploadImg.do",
             data: form,
             cache: false,
             async: false,
@@ -185,17 +201,19 @@
     };
     
     function handleImg(){
+    
+        var args = {
+            "imgbase": "http://www.fanglinserver.com/" + imgpath,
+            "authentication": authentication
+        }
+        
+        args[argkey] = cid;
         
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "../../signateCustomer.do",
-            data: {
-                "customer.cid": getQueryString('cid'),
-                "customer.signPath": imgpath,
-                "imgbase": "http://www.fanglinserver.com/" + imgpath,
-                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
-            },
+            url: apiurl,
+            data: args,
             success: function(msg){
                 if(msg.errorCode == 0){
                     alert('上传成功');

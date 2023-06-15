@@ -11,6 +11,7 @@ package com.fanglin.communion.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,18 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
+import com.fanglin.communion.dao.CustomerRecordDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
+import com.fanglin.communion.po.CustomerRecordPO;
 import com.fanglin.communion.service.CustomerService;
 import com.fanglin.communion.vo.CustomerPhoneVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.fadada.signature.Signature;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -47,7 +52,13 @@ public class CustomerServiceImpl implements CustomerService {
 	private CustomerPhoneDao customerPhoneDao;
 
 	@Autowired
+	private CustomerRecordDao customerRecordDao;
+
+	@Autowired
 	private CountingService countingService;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void pageCustomer(Paging paging, List<Filter> filters, CustomerVO customerVO, Integer company) {
@@ -73,7 +84,9 @@ public class CustomerServiceImpl implements CustomerService {
 		for (CustomerPO customerPO : customerPOs) {
 			customerVO = new CustomerVO();
 
-			BeanUtil.copyProperties(customerPO, customerVO);
+			BeanUtil.copyProperties(customerPO, customerVO, "phone");
+
+			customerVO.setPhone(customerPO.getPhone() == null ? "" : customerPO.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
 
 			customerVOs.add(customerVO);
 		}
@@ -99,7 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
 			List<String> phones = new ArrayList<String>();
 
 			for (CustomerPhonePO customerphone : customerPhones) {
-				phones.add(customerphone.getPhone());
+				phones.add(customerphone.getPhone() == null ? "" : customerphone.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
 			}
 
 			customerVO.setPhone(StringUtils.join(phones, ","));
@@ -119,12 +132,42 @@ public class CustomerServiceImpl implements CustomerService {
 
 			CustomerVO customerVO = new CustomerVO();
 
-			BeanUtil.copyProperties(customerPO, customerVO);
+			BeanUtil.copyProperties(customerPO, customerVO, "phone");
 
 			customerVOs.add(customerVO);
 		}
 
 		return customerVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public CustomerVO queryCustomerForPhone(CustomerPhoneVO customerPhoneVO, String userId) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerPhoneVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		CustomerVO customerVO = new CustomerVO();
+
+		BeanUtil.copyProperties(customerPO, customerVO, "phone");
+
+		if (customerPhoneVO.getCpid() != null) {
+
+			CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
+
+			customerPhoneVO.setCpid(customerPhonePO.getCpid());
+			customerVO.setPhone(customerPhonePO == null ? "" : customerPhonePO.getPhone());
+		} else {
+			customerPhoneVO.setCpid(customerPO.getCid());
+			customerVO.setPhone(customerPO.getPhone());
+		}
+
+		customerRecordDao.save(new CustomerRecordPO(customerPO.getCid(), customerPhoneVO.getCpid(), CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
+
+		return customerVO;
 	}
 
 	@Override
@@ -142,7 +185,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 			CustomerPhoneVO customerPhoneVO = new CustomerPhoneVO();
 
-			BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
+			BeanUtil.copyProperties(customerPhonePO, customerPhoneVO, "phone");
+
+			customerPhoneVO.setPhone(customerPhonePO.getPhone() == null ? "" : customerPhonePO.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
 
 			customerPhoneVOs.add(customerPhoneVO);
 		}
@@ -318,14 +363,15 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		customerDao.update(customerPO);
-
+		customerPO.setType(customerVO.getType());
 		customerPO.setCompanyNo(customerVO.getCompanyNo());
 		customerPO.setCompanyName(customerVO.getCompanyName());
 		customerPO.setCompanyAddr(customerVO.getCompanyAddr());
 		customerPO.setCompanyPhone(customerVO.getCompanyPhone());
 		customerPO.setCompanyBank(customerVO.getCompanyBank());
 		customerPO.setCompanyBankno(customerVO.getCompanyBankno());
+
+		customerDao.update(customerPO);
 
 		return 0;
 	}
@@ -382,13 +428,9 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPhoneDao.clearCustomerPhoneForDefault(customerPhonePO.getCid());
 
 			customerPhonePO.setDefaults(customerPhoneVO.getDefaults());
+			customerPhoneDao.update(customerPhonePO);
 
-			customerDao.update(customerPhonePO);
-		}
-
-		if (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT) {
 			customerPO.setPhone(customerPhonePO.getPhone());
-
 			customerDao.update(customerPO);
 		}
 
@@ -412,8 +454,10 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 
 		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
-			Signature.register(customerPO);
+			customerPO.setSignno(Signature.register(customerPO.getNo()));
 		}
+
+		customerDao.update(customerPO);
 
 		return 0;
 	}
@@ -459,7 +503,12 @@ public class CustomerServiceImpl implements CustomerService {
 		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
 			redirect = customerPO.getAuthurl();
 		} else {
-			redirect = Signature.authenticate(customerPO);
+			JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), customerPO.getPhone(), customerPO.getIdentity());
+
+			redirect = Signature.decode(info.getString("url"));
+
+			customerPO.setToken(info.getString("transactionNo"));
+
 			customerDao.update(customerPO);
 		}
 
@@ -480,7 +529,20 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
-		Signature.person(customerPO);
+		JSONObject info = Signature.person(customerPO.getToken());
+
+		JSONObject person = info.getJSONObject("person");
+
+		customerPO.setName(person.getString("personName"));
+		customerPO.setIdentity(person.getString("idCard"));
+		customerPO.setPhone(person.getString("mobile"));
+		customerPO.setAddress(person.getString("address"));
+
+		customerPO.setPhotoPath(person.getString("photoUuid"));
+		customerPO.setIdentityPathF(person.getString("headPhotoPath"));
+		customerPO.setIdentityPathB(person.getString("backgroundIdCardPath"));
+
+		customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
 
 		customerDao.update(customerPO);
 

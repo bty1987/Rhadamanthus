@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundItemDao;
@@ -23,6 +24,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -85,6 +87,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	@Autowired
 	private SalesActivityService salesActivityService;
 
+	@Autowired
+	private ApprovalService approvalService;
+
 	// 获取销售退货审批向信息
 	@Override
 	public List<ApprovalSalesRefundItemVO> queryApprovalSalesRefundItem(ApprovalVO approvalVO) throws FLException {
@@ -124,7 +129,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	// 提交销售退货审批
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int submitApprovalForSalesRefund(ApprovalVO approvalVO, ApprovalSalesRefundVO approvalSalesRefundVO, List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs, String userId, int company) throws FLException {
+	public int submitApprovalForSalesRefund(ApprovalVO approvalVO, ApprovalSalesRefundVO approvalSalesRefundVO, List<ApprovalSalesRefundItemVO> approvalSalesRefundItemVOs, String userId, int company, String code, String forms) throws FLException {
 
 		long sid = approvalSalesRefundVO.getSid();
 
@@ -193,6 +198,14 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
 		}
 
+		if (code != null && !"".equals(code)) {
+			String piid = approvalService.initiateApproval(code, userId, null, null, null, JSONArray.parseArray(forms), company);
+
+			approvalPO.setPiid(piid);
+
+			approvalDao.update(approvalPO);
+		}
+
 		return 0;
 	}
 
@@ -243,7 +256,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		refundsPO.setType(approvalSalesRefundPO.getType());
 		refundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		refundsPO.setStatus(RefundsPO.STATUS_TYPE_REFUNDS_INT);
-		refundsPO.setComment(approvalPO.getContents());
+		refundsPO.setComment(approvalPO.getComment());
 
 		refundsDao.save(refundsPO);
 
@@ -263,7 +276,6 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			salesBalancePO.setPbalance(0);
 			salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
-			salesBalancePO.setComment(salesPO.getComment());
 
 			salesBalancePO.setSalesman(salesPO.getSalesman());
 			salesBalancePO.setDept(salesPO.getSalesman().getDept());

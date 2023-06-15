@@ -10,4 +10,8 @@ public interface PaymentService {
 
 	public void queryCusPayment(Paging paging, List<Filter> filters, PaymentVO paymentVO);
 
+	public Integer queryCusPaymentConfig(String orderId);
+
+	public String queryCusPaymentPlatform(String orderId);
+
 }

@@ -4,8 +4,8 @@ jQuery(function($) {
         saveBtn: null,
         cancelBtn: null,
         modal: null,
-        categoryItems:{},
-        type:{},
+        categoryItems: {},
+        type: {},
         editFlg: false,
         repeatFlg: false,
 
@@ -21,7 +21,8 @@ jQuery(function($) {
     category.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
     category.cancelBtn = com.focusPage("#cancelBtn");
 
-    category.modal = com.focusPage("#categoryModal").on('show.bs.modal',function(e){
+    category.modal = com.focusPage("#categoryModal").on('show.bs.modal', function(e) {
+
         com.clearValidator();
         com.clearValidator("#no", true);
     });
@@ -33,20 +34,23 @@ jQuery(function($) {
     category.categoryItems.kiname = com.focusPage("#kiname");
     category.categoryItems.type = com.focusPage("#type");
 
-    com.post(api.ds.data, {}, function(res){
+    com.post(api.ds.data, {}, function(res) {
+
         category.categoryItems.type.bindData(res.categoryType, "key", "value");
     });
 
     $.extend(com.validator, category.validator);
 
-    var displayFunc  = (function(){
+    var displayFunc = (function() {
 
-        var renderList = function(tableId,listData){
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -56,7 +60,7 @@ jQuery(function($) {
             }
         };
 
-        var creatLine = function(v){
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " " + v.name));
@@ -65,13 +69,10 @@ jQuery(function($) {
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
-            var propertyArr = [
-                ["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"],
-                ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"],
-                ["类型: ", v.type == 0 ? "普通" : "统计", "red"]
-            ];
+            var propertyArr = [["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"], ["类型: ", v.type == 0 ? "标准" : "统计", "red"]];
 
-            $.each(propertyArr, function (index,value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -82,7 +83,8 @@ jQuery(function($) {
 
             $liLine.append($h3).append($ulProperty);
 
-            $btnEdit.click(function(){
+            $btnEdit.click(function() {
+
                 editCategory(v);
             });
 
@@ -90,11 +92,13 @@ jQuery(function($) {
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -102,9 +106,10 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-category-name"], "condList", api.data.pageCategory, function(data){
+    searcher.init(["data-category-name"], "condList", api.data.pageCategory, function(data) {
+
         displayFunc.init('resultList', data);
-    }, "pagenation", "categoryPostData", null, false, null, function(){
+    }, "pagenation", "categoryPostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -113,7 +118,8 @@ jQuery(function($) {
         return [$adda];
     });
 
-    com.focusPage('a[name="add"]', '#pagenation').click(function(){
+    com.focusPage('a[name="add"]', '#pagenation').click(function() {
+
         editFlg = false;
 
         com.cleanItems(category.categoryItems);
@@ -123,7 +129,8 @@ jQuery(function($) {
         category.modal.modal("show");
     });
 
-    function editCategory(v){
+    function editCategory(v) {
+
         editFlg = true;
 
         category.categoryItems.cId.val(v.cid);
@@ -136,9 +143,9 @@ jQuery(function($) {
         category.modal.modal("show");
     }
 
-    function saveData(){
-        
-        if(com.validate("categoryModal") || category.repeatFlg){
+    function saveData() {
+
+        if (com.validate("categoryModal") || category.repeatFlg) {
             return false;
         }
 
@@ -151,14 +158,15 @@ jQuery(function($) {
             'category.type': category.categoryItems.type.val()
         };
 
-        if(editFlg){
+        if (editFlg) {
             url = api.data.updateCategory;
             options['category.cid'] = category.categoryItems.cId.val();
-        }else{
+        } else {
             url = api.data.addCategory;
         }
 
-        com.post(url, options, function(res){
+        com.post(url, options, function(res) {
+
             searcher.doSearch();
         });
 

@@ -74,6 +74,8 @@ public class QuotationItemPO implements Serializable {
 
 	private QuotationVersionPO quotationVersion;
 
+	private QuotationCtemPO quotationCtem;
+
 	private int addPrice; // 增补价
 
 	private int unitPrice; // 单价
@@ -195,6 +197,16 @@ public class QuotationItemPO implements Serializable {
 		this.quotationVersion = quotationVersion;
 	}
 
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "quotationCtemId", referencedColumnName = "qcid")
+	public QuotationCtemPO getQuotationCtem() {
+		return quotationCtem;
+	}
+
+	public void setQuotationCtem(QuotationCtemPO quotationCtem) {
+		this.quotationCtem = quotationCtem;
+	}
+
 	@Column(name = "addPrice")
 	public int getAddPrice() {
 		return addPrice;
@@ -260,7 +272,7 @@ public class QuotationItemPO implements Serializable {
 
 	public QuotationItemVO ptv(QuotationItemVO quotationItemVO) {
 
-		BeanUtil.copyProperties(this, quotationItemVO, Arrays.asList("version", "category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
+		BeanUtil.copyProperties(this, quotationItemVO, Arrays.asList("version", "category", "classification", "bigCategory", "smallCategory", "unit", "workType", "quotationCtem"));
 
 		if (quotationItemVO.getVersion() != null) BeanUtil.copyPropertie(getQuotationVersion(), quotationItemVO.getVersion());
 
@@ -275,6 +287,8 @@ public class QuotationItemPO implements Serializable {
 		if (quotationItemVO.getUnit() != null) BeanUtil.copyPropertie(getMeasurementUnit(), quotationItemVO.getUnit());
 
 		if (quotationItemVO.getWorkType() != null) BeanUtil.copyPropertie(getWorkType(), quotationItemVO.getWorkType());
+
+		if (quotationItemVO.getQuotationCtem() != null) BeanUtil.copyPropertie(getQuotationCtem(), quotationItemVO.getQuotationCtem());
 
 		return quotationItemVO;
 	}

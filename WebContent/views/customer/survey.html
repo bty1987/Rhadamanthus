@@ -1,11 +1,11 @@
 <div id="survey">
     <div class="row">
         <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div>
+            <div id="surveycondList" class="fl_search clearfix"></div>
             <!-- 查询条件-->
-            <div id="resultList" class="clearfix tab-pane active"></div>
+            <div id="surveyresultList" class="clearfix tab-pane active"></div>
             <!--查询结果-->
-            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+            <div id="surveypagenation" class="fl-page-wrap clearfix"></div>
             <!--分页-->
         </div>
     </div>
@@ -70,6 +70,8 @@
     
 </div>
 
+<div id="layerPopUp" class="portlet box page-content"></div>
+
 <script type="text/javascript">
-    $.loadScript(['js/customer/survey.js']);
+    $.loadScript(['js/utils/decorationPageUtils.js', 'js/utils/decorationUtils.js', 'js/customer/survey.js']);
 </script>

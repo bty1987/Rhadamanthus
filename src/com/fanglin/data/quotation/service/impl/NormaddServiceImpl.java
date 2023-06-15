@@ -18,63 +18,62 @@ import com.fanglin.data.quotation.vo.NormaddVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
-
 @Service("normaddService")
 @Transactional(readOnly = true)
-public class NormaddServiceImpl implements NormaddService{
-	
+public class NormaddServiceImpl implements NormaddService {
+
 	@Autowired
 	private NormaddDao normaddDao;
 
 	@Override
 	public void pageNormadd(Paging paging, List<Filter> filters, int company) {
-		
-		List<NormaddPO> normaddPOs = normaddDao.pageNormadd(paging, filters,company);
+
+		List<NormaddPO> normaddPOs = normaddDao.pageNormadd(paging, filters, company);
 		List<NormaddVO> normaddVOs = new ArrayList<NormaddVO>();
-		
+
 		NormaddVO normadd;
-		
+
 		for (NormaddPO normaddPO : normaddPOs) {
-			
+
 			normadd = new NormaddVO(new ConstructionNodeVO());
-			
+
 			BeanUtil.copyProperties(normaddPO, normadd, Arrays.asList("constructionNode"));
-			BeanUtil.copyProperties(normaddPO.getConstructionNode(), normadd.getConstructionNode());
-			
+			BeanUtil.copyProperties(normaddPO.getConstructionNode(), normadd.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
 			normaddVOs.add(normadd);
 		}
-		
+
 		paging.setData(normaddVOs);
-		
+
 	}
 
 	@Override
 	public List<NormaddVO> queryNormadd(NormaddVO normaddVO, int company) {
 
-		List<NormaddPO> normaddPOs = normaddDao.queryNormadd(normaddVO.getConstructionNode().getSort(),company);
+		List<NormaddPO> normaddPOs = normaddDao.queryNormadd(normaddVO.getConstructionNode().getSort(), company);
 		List<NormaddVO> normaddVOs = new ArrayList<NormaddVO>();
-		
+
 		NormaddVO normadd;
-		
+
 		for (NormaddPO normaddPO : normaddPOs) {
-			
+
 			normadd = new NormaddVO(new ConstructionNodeVO());
-			
+
 			BeanUtil.copyProperties(normaddPO, normadd, Arrays.asList("constructionNode"));
-			BeanUtil.copyProperties(normaddPO.getConstructionNode(), normadd.getConstructionNode());
-			
+			BeanUtil.copyProperties(normaddPO.getConstructionNode(), normadd.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
 			normaddVOs.add(normadd);
 		}
-		
+
 		return normaddVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addNormadd(NormaddVO normaddVO, int company) {
-		
+
 		NormaddPO normaddPO = new NormaddPO(new ConstructionNodePO());
-		
+
 		normaddPO.setName(normaddVO.getName());
 		normaddPO.setUnit(normaddVO.getUnit());
 		normaddPO.setPrice(normaddVO.getPrice());
@@ -89,16 +88,16 @@ public class NormaddServiceImpl implements NormaddService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateNormaddForStatus(NormaddVO normaddVO) {
-		
+
 		NormaddPO normaddPO = normaddDao.get(normaddVO.getNaid());
-		
-		if(normaddPO != null){
-			
+
+		if (normaddPO != null) {
+
 			normaddPO.setStatus(normaddVO.getStatus());
-			
+
 			normaddDao.update(normaddPO);
 		}
-		
+
 		return 0;
 	}
 
@@ -107,12 +106,12 @@ public class NormaddServiceImpl implements NormaddService{
 	public int deleteNormadd(NormaddVO normaddVO) {
 
 		NormaddPO normaddPO = normaddDao.get(normaddVO.getNaid());
-		
-		if(normaddPO != null){
-			
+
+		if (normaddPO != null) {
+
 			normaddDao.delete(normaddPO);
 		}
-		
+
 		return 0;
 	}
 

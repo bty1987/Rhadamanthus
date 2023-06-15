@@ -33,21 +33,25 @@ import com.fanglin.core.interceptor.FLException;
 public class ApprovalDecorationBelongAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6930218639120369013L;
-	
+
 	@Autowired
 	private ApprovalDecorationBelongService approvalDecorationBelongService;
-	
+
 	private ApprovalVO approval;
-	
+
 	private ApprovalDecorationBelongVO approvalDecorationBelong;
-	
+
 	private List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItems;
 
+	private String code;
+
+	private String forms;
+
 	@Action(value = "submitApprovalForDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String submitApprovalForDecorationBelong() throws FLException{
-		
-		approvalDecorationBelongService.submitApprovalForDecorationBelong(approval, approvalDecorationBelong, approvalDecorationBelongItems, queryUserId(),queryCompany());
-		
+	public String submitApprovalForDecorationBelong() throws FLException {
+
+		approvalDecorationBelongService.submitApprovalForDecorationBelong(approval, approvalDecorationBelong, approvalDecorationBelongItems, queryUserId(), queryCompany(), code, forms);
+
 		return SUCCESS;
 	}
 
@@ -63,8 +67,7 @@ public class ApprovalDecorationBelongAction extends BaseListAction {
 		return approvalDecorationBelong;
 	}
 
-	public void setApprovalDecorationBelong(
-			ApprovalDecorationBelongVO approvalDecorationBelong) {
+	public void setApprovalDecorationBelong(ApprovalDecorationBelongVO approvalDecorationBelong) {
 		this.approvalDecorationBelong = approvalDecorationBelong;
 	}
 
@@ -72,9 +75,24 @@ public class ApprovalDecorationBelongAction extends BaseListAction {
 		return approvalDecorationBelongItems;
 	}
 
-	public void setApprovalDecorationBelongItems(
-			List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItems) {
+	public void setApprovalDecorationBelongItems(List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItems) {
 		this.approvalDecorationBelongItems = approvalDecorationBelongItems;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getForms() {
+		return forms;
+	}
+
+	public void setForms(String forms) {
+		this.forms = forms;
 	}
 
 }

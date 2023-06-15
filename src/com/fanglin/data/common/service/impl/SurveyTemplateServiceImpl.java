@@ -53,9 +53,9 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 	}
 
 	@Override
-	public List<SurveyTemplateVO> querySurveyTemplate(SurveyTemplateVO surveyTemplateVO) {
+	public List<SurveyTemplateVO> querySurveyTemplate(SurveyTemplateVO surveyTemplateVO, int company) {
 
-		List<SurveyTemplatePO> surveyTemplatePOs = surveyTemplateDao.list();
+		List<SurveyTemplatePO> surveyTemplatePOs = surveyTemplateDao.querySurveyTemplate(company);
 		List<SurveyTemplateVO> surveyTemplateVOs = new ArrayList<SurveyTemplateVO>();
 
 		for (SurveyTemplatePO surveyTemplatePO : surveyTemplatePOs) {
@@ -155,6 +155,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		if (surveyTemplatePO == null) {
 			throw new FLException(130096, "调研模版不存在");
 		}
+
 		surveyTemplatePO.setName(surveyTemplateVO.getName());
 
 		surveyTemplateDao.update(surveyTemplatePO);
@@ -192,6 +193,22 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 				surveyTemplateOptionDao.save(optionPO);
 			}
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateSurveyTemplateForStatus(SurveyTemplateVO surveyTemplateVO) throws FLException {
+
+		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyTemplateVO.getStid());
+
+		if (surveyTemplatePO == null) {
+			throw new FLException(130096, "调研模版不存在");
+		}
+
+		surveyTemplatePO.setStatus(surveyTemplateVO.getStatus());
+
+		surveyTemplateDao.update(surveyTemplatePO);
+
 	}
 
 	@Override

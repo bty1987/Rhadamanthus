@@ -35,7 +35,7 @@ public class DepartmentPO implements Serializable {
 	public static final String COLUMN_PINYIN_STR = "pinyin";
 
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_ISDET_STR = "isdet"; //
 
 	public static final String COLUMN_COMPANY_STR = "company";
@@ -72,11 +72,15 @@ public class DepartmentPO implements Serializable {
 
 	private String kiname;
 
+	private int limit;
+
 	private UserPO manager;
 
 	private String comment;
 
 	private int company;
+
+	private String code;
 
 	public DepartmentPO() {
 		super();
@@ -208,6 +212,15 @@ public class DepartmentPO implements Serializable {
 		this.kiname = kiname;
 	}
 
+	@Column(name = "limits")
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "muid", referencedColumnName = "uid")
 	public UserPO getManager() {
@@ -234,6 +247,15 @@ public class DepartmentPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "code")
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

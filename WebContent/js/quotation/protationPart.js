@@ -5,6 +5,7 @@ var protationPart = (function() {
         protationId: null, // 预签ID
         versionId: null, // 预签版本
         basicParams: null,
+        presignProduce: null,
 
         modals: {},
         btns: {},
@@ -48,6 +49,13 @@ var protationPart = (function() {
 
                     com.focusPage('.icon-chevron-up').parents('[data-action="collapse"]').trigger('click');
                 }),
+                // 优惠价格修改
+                $preferPriceBlueButton: com.focusPage('#preferPriceBlueButton').click(function() {
+
+                    com.focusPage('#functionAreaPreferPrice').modal("show");
+
+                    com.focusPage('#preferPrices').val(quo.basicParams["protation.preferPrice"]);
+                }),
             };
             return that;
         },
@@ -70,10 +78,11 @@ var protationPart = (function() {
             };
 
             if (areatype == 0) {
-                extraParams["types[0]"] = 0;
+                extraParams["types[0]"] = constant.data().presignItem.TYPE_BASICS_INT;
             } else if (areatype == 2) {
-                extraParams["types[0]"] = 1;
-                extraParams["types[1]"] = 2;
+                extraParams["types[0]"] = constant.data().presignItem.TYPE_CUSTOM_INT;
+            } else if (areatype == 4) {
+                extraParams["types[0]"] = constant.data().presignItem.TYPE_ADDTION_INT;
             }
 
             var searcher = new Searcher();
@@ -104,7 +113,7 @@ var protationPart = (function() {
         },
         calculateQuoFees: function(func) {
 
-            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, total = 0, cost = 0, profit = 0;
+            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, total = 0, cost = 0, profit = 0, accm = 0, accd = 0;
 
             var $domains = com.focusPage('#functionAreaDetailList .widget-box');
 
@@ -124,6 +133,8 @@ var protationPart = (function() {
                 var _addm = parseFloat($this.attr('data-addm'));
                 var _subd = parseFloat($this.attr('data-subd'));
                 var _subm = parseFloat($this.attr('data-subm'));
+                var _accm = parseFloat($this.attr('data-accm'));
+                var _accd = parseFloat($this.attr('data-accd'));
 
                 cost = utils.changeThrDecimal(utils.accAdd(cost, _cost));
                 basic = utils.changeThrDecimal(utils.accAdd(basic, _basic));
@@ -133,15 +144,32 @@ var protationPart = (function() {
                 addm = utils.changeThrDecimal(utils.accAdd(addm, _addm));
                 subd = utils.changeThrDecimal(utils.accAdd(subd, _subd));
                 subm = utils.changeThrDecimal(utils.accAdd(subm, _subm));
+                accm = utils.changeThrDecimal(utils.accAdd(accm, _accm));
+                accd = utils.changeThrDecimal(utils.accAdd(accd, _accd));
 
-                var amount = utils.changeThrDecimal(utils.accAdd(_basic, utils.accAdd(_addd, utils.accSub(_addm, utils.accAdd(_subd, _subm)))));
+                var amount = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_basic, utils.accAdd(_addd, utils.accSub(_addm, utils.accAdd(_subd, _subm)))), utils.accAdd(_accm, _accd)));
 
                 total = utils.changeThrDecimal(utils.accAdd(total, amount));
 
             });
 
-            total = utils.accSub(utils.accSub(utils.accAdd(utils.accMul(utils.accSub(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.quoteArea"]), quo.basicParams["protation.costPrice"]), quo.basicParams["protation.quotePrice"]), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.managePrice"]);
-            total = utils.accAdd(total, utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(subd, subm)))));
+            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm)), quo.basicParams["protation.preferPrice"]), utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm))));
+
+            _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
+
+            if (utils.accMul(_discout, 10) < quo.presignProduce.discount) {
+
+                com.showAlert(com.info, "优惠金额不合理");
+
+                return false;
+            }
+
+            var _managePrice = utils.changeThrDecimal(utils.accMul(utils.accMul(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.manageRate"]), _discout));
+
+            total = utils.changeThrDecimal(utils.accSub(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), quo.basicParams["protation.preferPrice"]));
+            total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(subd, subm)))), utils.accAdd(accm, accd))));
+
+            _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
 
             quo.basicParams["protation.basicPrice"] = basic;
             quo.basicParams["protation.comdPrice"] = comd;
@@ -150,7 +178,11 @@ var protationPart = (function() {
             quo.basicParams["protation.addmPrice"] = addm;
             quo.basicParams["protation.subdPrice"] = subd;
             quo.basicParams["protation.submPrice"] = subm;
+            quo.basicParams["protation.accmPrice"] = accm;
+            quo.basicParams["protation.accdPrice"] = accd;
             quo.basicParams["protation.totalPrice"] = total;
+            quo.basicParams["protation.managePrice"] = _managePrice;
+            quo.basicParams["protation.discount"] = _discout;
 
             com.focusPage('#houstCost').text(cost);
 
@@ -161,21 +193,27 @@ var protationPart = (function() {
 
             quo.basicParams["protation.totalCost"] = cost;
 
+            com.focusPage('#preferPrice').text(quo.basicParams["protation.preferPrice"]);
             com.focusPage('#basicCost').text(quo.basicParams["protation.basicCost"]);
             com.focusPage('#materialCost').text(quo.basicParams["protation.mostCost"]);
             com.focusPage('#addCost').text(quo.basicParams["protation.addCost"]);
             com.focusPage('#totalCost').text(quo.basicParams["protation.totalCost"]);
+            com.focusPage('#discount').text(_discout);
+            com.focusPage('#managePrice').text(quo.basicParams["protation.managePrice"]);
+            com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
 
             profit = utils.changeThrDecimal(utils.accSub(1.0, utils.accDiv(cost, utils.accSub(total, quo.basicParams["protation.activityAmount"]))));
 
             com.focusPage('#profitRate').text(profit);
 
             com.focusPage('#sumquoSumMoney').text(total);
+
+            return true;
         },
 
         calculateDomainFees: function($domain, func) {
 
-            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, cost = 0, total = 0;
+            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, cost = 0, accm = 0, accd = 0, total = 0;
 
             var $arr = com.focusPage('.fl-quo-item.item', $domain);
 
@@ -207,6 +245,10 @@ var protationPart = (function() {
                     subd = utils.changeThrDecimal(utils.accAdd(subd, _total));
                 if (_type == constant.quotation().protationItem.TYPE_CUTMAIN_INT)
                     subm = utils.changeThrDecimal(utils.accAdd(subm, _total));
+                if (_type == constant.quotation().protationItem.TYPE_ACCMAIN_INT)
+                    accm = utils.changeThrDecimal(utils.accAdd(accm, _total));
+                if (_type == constant.quotation().protationItem.TYPE_ACCWORK_INT)
+                    accd = utils.changeThrDecimal(utils.accAdd(accd, _total));
 
             });
 
@@ -218,8 +260,10 @@ var protationPart = (function() {
             $domain.attr('data-addm', addm);
             $domain.attr('data-subd', subd);
             $domain.attr('data-subm', subm);
+            $domain.attr('data-accm', accm);
+            $domain.attr('data-accd', accd);
 
-            return utils.changeThrDecimal(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(subd, subm)))));
+            return utils.changeThrDecimal(utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(subd, subm)))), utils.accAdd(accm, accd)));
         },
         calculateNowQuoteItem: function(num, areaType, $nowLine) {
 
@@ -229,21 +273,28 @@ var protationPart = (function() {
             var price = parseFloat($nowLine.find('.unitprice .cell-wrap').text());// 单价
             var basicNum = parseFloat($nowLine.find('.unit .cell-wrap').text());
 
+            var _areaCale = $nowLine.attr('data-areaCale') == constant.data().presignItem.AREACALE_AREA_INT ? quo.basicParams["protation.quoteArea"] : 1;
+
             var _total = 0;
             var _cost = 0;
 
             if (type == constant.quotation().protationItem.TYPE_BASE_INT) {
-                _total = utils.changeThrDecimal(utils.accMul(price, utils.accSub(num, basicNum)));
+                _total = utils.changeThrDecimal(utils.accMul(utils.accMul(price, utils.accSub(num, basicNum)), _areaCale));
                 _cost = utils.changeThrDecimal(utils.accMul(cost, utils.accSub(num, basicNum)));
             }
 
             if (type == constant.quotation().protationItem.TYPE_ADDWORK_INT || type == constant.quotation().protationItem.TYPE_ADDMAIN_INT) { // 个性
-                _total = utils.changeThrDecimal(utils.accMul(price, num));
+                _total = utils.changeThrDecimal(utils.accMul(utils.accMul(price, num), _areaCale));
                 _cost = utils.changeThrDecimal(utils.accMul(cost, num));
             }
 
             if (type == constant.quotation().protationItem.TYPE_CUTWORK_INT || type == constant.quotation().protationItem.TYPE_CUTMAIN_INT) { // 增主材
-                _total = utils.changeThrDecimal(utils.accMul(price, num));
+                _total = utils.changeThrDecimal(utils.accMul(utils.accMul(price, num), _areaCale));
+                _cost = utils.changeThrDecimal(utils.accMul(cost, num));
+            }
+
+            if (type == constant.quotation().protationItem.TYPE_ACCWORK_INT || type == constant.quotation().protationItem.TYPE_ACCMAIN_INT) { // 赋能
+                _total = utils.changeThrDecimal(utils.accMul(utils.accMul(price, num), _areaCale));
                 _cost = utils.changeThrDecimal(utils.accMul(cost, num));
             }
 
@@ -253,8 +304,6 @@ var protationPart = (function() {
             $nowLine.attr('data-cost', _cost);
 
             var _fee = quo.calculateDomainFees(domain.nowEditDomain);
-
-            quo.calculateQuoFees();
 
             return _fee;
         },
@@ -348,19 +397,18 @@ var protationPart = (function() {
 
                 // 赋值给外部的公式显示
                 that.$nowLine.find('.cell.formula .cell-wrap').text(formula);
+
                 // 赋值给外部显示DIV 显示数量
-
                 that.$nowLine.find('.cell.num .cell-wrap').text(num);
-                // 获取下一个预签项的整体元素标签
 
+                // 获取下一个预签项的整体元素标签
                 $line = that.$nowLine.next('.fl-quo-item.item');
 
                 // 获取预签项的类型
                 var _type = that.$nowLine.find('.type').attr('data-type');
-                var _num = that.$nowLine.find('.num .cell-wrap').text();
                 var _basicNum = that.$nowLine.find('.unit .cell-wrap').text();
 
-                if (_type == constant.quotation().protationItem.TYPE_BASE_INT && _num < _basicNum) {
+                if (_type == constant.quotation().protationItem.TYPE_BASE_INT && num < _basicNum) {
                     com.showAlert(com.warning, "工程量不能小于基础数量");
                     return false;
                 }
@@ -372,14 +420,33 @@ var protationPart = (function() {
                     "protationItem.price": that.$nowLine.find('.unitprice .cell-wrap').text(), // 单价 ;
                     "protationItem.num": that.$nowLine.find('.num .cell-wrap').text(), // 数量;
                     "protationItem.type": that.$nowLine.find('.type').attr("data-type"), // 类型
+                    "protationItem.areaCale": that.$nowLine.attr("data-areaCale"), // 面积规则
+                    "protationItem.basicNum": that.$nowLine.attr("data-basicNum"), // 基础量
 
                     "protationItem.ppiid": that.$nowLine.attr("data-ppiid"),
                 };
 
                 that.$nowLine.find('input[name="deleteItems"]').val(that.$nowLine.find('input[name="deleteItems"]').val());
+
                 var _fee = quo.calculateNowQuoteItem(num, 1, that.$nowLine);
+
+                if (!quo.calculateQuoFees()) {
+
+                    that.$nowLine.find('.cell.formula .cell-wrap').text(oldFormula);
+                    that.$nowLine.find('.cell.num .cell-wrap').text(oldNum);
+
+                    quo.calculateNowQuoteItem(oldNum, 1, that.$nowLine);
+                    quo.calculateQuoFees();
+
+                    that.hideInputWrap();
+
+                    return false;
+                }
+
                 com.clearValidator();
+
                 var _params = $.extend({}, args, quo.basicParams);
+
                 com.post(api.quotation.updateProtationItem, _params, function(res) {
 
                     // 选中左上角预签中的功能区ID 将总价格显示
@@ -388,9 +455,12 @@ var protationPart = (function() {
                 }, function(res) {
 
                     com.showAlert(com.error, res.errorMsg);
+
                     that.$nowLine.find('.cell.formula .cell-wrap').text(oldFormula);
                     that.$nowLine.find('.cell.num .cell-wrap').text(oldNum);
+
                     quo.calculateNowQuoteItem(oldNum, 1, that.$nowLine);
+                    quo.calculateQuoFees();
                 }, false);
 
                 if ($line.length) {
@@ -443,6 +513,7 @@ var protationPart = (function() {
 
             var that = this;
 
+            var _total = $quote.find('.totalprice-discount .cell-wrap').text();
             var _pid = $quote.find('input[type="checkbox"]').val();
             var _params = {};
 
@@ -452,14 +523,29 @@ var protationPart = (function() {
             if (!_pid) {
                 $quote.remove();
             } else {
-                $quote.remove();
+
+                $quote.attr("data-total", 0);
+
                 var _fee = quo.calculateDomainFees(domain.nowEditDomain);
+
+                if (!quo.calculateQuoFees()) {
+
+                    $quote.attr("data-total", _total);
+
+                    quo.calculateDomainFees(domain.nowEditDomain);
+                    quo.calculateQuoFees();
+
+                    return false;
+                }
+
+                $quote.remove();
+
                 com.focusPage('[data-pfaid="' + domain.nowEditDomain.attr('data-pfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
-                // 调用 统计车运费管理费总价折扣价"
-                quo.calculateQuoFees();
+
                 _params = $.extend({
                     "protationItem.piid": _pid
                 }, quo.basicParams);
+
                 com.post(api.quotation.deleteProtationItem, _params, function(res) {
 
                 }, null, false);
@@ -552,15 +638,28 @@ var protationPart = (function() {
                 }
 
                 var type = parseInt($this.attr("data-type"));
+                var atttype = parseInt($this.attr("data-atttype"));
 
-                if (type == constant.quotation().protationItem.TYPE_BASE_INT && _areaType != 0)
-                    return true;
+                if (type == constant.data().presignItem.TYPE_BASICS_INT && _areaType == 0)
+                    type = constant.quotation().protationItem.TYPE_BASE_INT;
 
-                if ([constant.quotation().protationItem.TYPE_PROJECT_INT, constant.quotation().protationItem.TYPE_PRINCIPAL_INT].indexOf(type) != -1 && _areaType != 2)
-                    return true;
+                if (type == constant.data().presignItem.TYPE_OPTIONAL_INT && atttype == constant.data().presignItem.ATTTYPE_ENGINEERING_INT && _areaType == 1)
+                    type = constant.quotation().protationItem.TYPE_PROJECT_INT;
 
-                if ([constant.quotation().protationItem.TYPE_PROJECT_INT, constant.quotation().protationItem.TYPE_PRINCIPAL_INT].indexOf(type) != -1)
-                    type = type + 2;
+                if (type == constant.data().presignItem.TYPE_OPTIONAL_INT && _areaType == 1)
+                    type = constant.quotation().protationItem.TYPE_PRINCIPAL_INT;
+
+                if (type == constant.data().presignItem.TYPE_CUSTOM_INT && atttype == constant.data().presignItem.ATTTYPE_ENGINEERING_INT && _areaType == 2)
+                    type = constant.quotation().protationItem.TYPE_ADDWORK_INT;
+
+                if (type == constant.data().presignItem.TYPE_CUSTOM_INT && _areaType == 2)
+                    type = constant.quotation().protationItem.TYPE_ADDMAIN_INT;
+
+                if (type == constant.data().presignItem.TYPE_ADDTION_INT && atttype == constant.data().presignItem.ATTTYPE_ENGINEERING_INT && _areaType == 4)
+                    type = constant.quotation().protationItem.TYPE_ACCWORK_INT;
+
+                if (type == constant.data().presignItem.TYPE_ADDTION_INT && _areaType == 4)
+                    type = constant.quotation().protationItem.TYPE_ACCMAIN_INT;
 
                 var _quotval = {
                     "name": $this.attr('data-name'),
@@ -572,16 +671,44 @@ var protationPart = (function() {
                     "price": $this.attr('data-itemPrice'),
                     "cost": $this.attr('data-cost'),
                     "ppiid": $this.val(),
+                    "areaCale": $this.attr("data-areaCale"),
                 };
 
                 var $item = painter.createQuote(_index + i + 1, _quotval).appendTo(domain.nowEditDomain.find('.fl-quo-list.items'));
             });
             quote.quotesRecord = [];
         },
+
+        // 修改优惠价格保存按钮方法
+        saveFunctionAreaPreferPrice: function() {
+
+            com.focusPage('#saveFunctionAreaBtn').click(function() {
+
+                quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
+
+                var subd = quo.basicParams["protation.subdPrice"];
+                var subm = quo.basicParams["protation.submPrice"];
+
+                quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
+                quo.basicParams["protation.discount"] = utils.accMul(utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm)), com.focusPage('#preferPrices').val()), utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm)))), 10);
+
+                if (!quo.calculateQuoFees())
+                    return false;
+
+                com.post(api.quotation.updateProtationForAdvance, quo.basicParams, function(res) {
+
+                    com.focusPage('#functionAreaPreferPrice').modal("hide");
+                    com.showAlert(com.info, "操作成功");
+
+                });
+            });
+        },
+
         init: function() {
 
             this.clearQuoteSelected();
             this.calculationNum();
+            this.saveFunctionAreaPreferPrice();
         }
     };
 
@@ -593,11 +720,11 @@ var protationPart = (function() {
             var $domain, $dhead, $dname, $dtoolbar, $btns = {}, $dbody, $dbodyInner, $list, $input;
 
             var _btnSet = {
-                "$btnAdd": ["添加工程项", '<i class="bigger-125 icon-plus purple"></i>', dv.type == constant.quotation().protationItem.TYPE_BASE_INT || dv.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT],
+                "$btnAdd": ["添加工程项", '<i class="bigger-125 icon-plus purple"></i>', dv.type == 0 || dv.type == 2 || dv.type == 4],
                 "$btnFold": ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
             };
 
-            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, cost = 0, total = 0;
+            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, cost = 0, accm = 0, accd = 0, total = 0;
 
             $domain = $('<div></div>').addClass('widget-box transparent').attr({
                 "data-dlevel": dv.functionAreaOrder, // 排序
@@ -632,7 +759,7 @@ var protationPart = (function() {
                 "data-action": "collapse"
             });
 
-            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "数量"], ["name", "名称"], ["type", "类型"], ["unit", "起报价"], ["worktype", ""], ["price", "单价"], ["price", "折后价"], ["price", "总价"], ["btns", "功能"]];
+            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "数量"], ["name", "名称"], ["type", "类型"], ["unit", "基础量"], ["price", "单价"], ["price", "折后价"], ["price", "总价"], ["btns", "功能"]];
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list');
             var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
@@ -660,6 +787,8 @@ var protationPart = (function() {
 
                 $.each(_items, function(i, v) {
 
+                    var _areaCale = v.areaCale == constant.data().presignItem.AREACALE_AREA_INT ? quo.basicParams["protation.quoteArea"] : 1;
+
                     var $item = that.createQuote(i + 1, v).appendTo($list);
 
                     if (v.type == constant.quotation().protationItem.TYPE_BASE_INT) {
@@ -669,19 +798,23 @@ var protationPart = (function() {
                     }
 
                     if (v.type == constant.quotation().protationItem.TYPE_BASE_INT)
-                        basic = utils.changeThrDecimal(utils.accAdd(basic, utils.accMul(v.price, utils.accSub(v.num, v.basicNum))));
+                        basic = utils.changeThrDecimal(utils.accAdd(basic, utils.accMul(utils.accMul(v.price, utils.accSub(v.num, v.basicNum)), _areaCale)));
                     if (v.type == constant.quotation().protationItem.TYPE_PROJECT_INT)
-                        comd = utils.changeThrDecimal(utils.accAdd(comd, utils.accMul(v.price, v.num)));
+                        comd = utils.changeThrDecimal(utils.accAdd(comd, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
                     if (v.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT)
-                        comm = utils.changeThrDecimal(utils.accAdd(comm, utils.accMul(v.price, v.num)));
+                        comm = utils.changeThrDecimal(utils.accAdd(comm, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
                     if (v.type == constant.quotation().protationItem.TYPE_ADDWORK_INT)
-                        addd = utils.changeThrDecimal(utils.accAdd(addd, utils.accMul(v.price, v.num)));
+                        addd = utils.changeThrDecimal(utils.accAdd(addd, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
                     if (v.type == constant.quotation().protationItem.TYPE_ADDMAIN_INT)
-                        addm = utils.changeThrDecimal(utils.accAdd(addm, utils.accMul(v.price, v.num)));
+                        addm = utils.changeThrDecimal(utils.accAdd(addm, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
                     if (v.type == constant.quotation().protationItem.TYPE_CUTWORK_INT)
-                        subd = utils.changeThrDecimal(utils.accAdd(subd, utils.accMul(v.price, v.num)));
+                        subd = utils.changeThrDecimal(utils.accAdd(subd, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
                     if (v.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT)
-                        subm = utils.changeThrDecimal(utils.accAdd(subm, utils.accMul(v.price, v.num)));
+                        subm = utils.changeThrDecimal(utils.accAdd(subm, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
+                    if (v.type == constant.quotation().protationItem.TYPE_ACCMAIN_INT)
+                        accm = utils.changeThrDecimal(utils.accAdd(accm, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
+                    if (v.type == constant.quotation().protationItem.TYPE_ACCWORK_INT)
+                        accd = utils.changeThrDecimal(utils.accAdd(accd, utils.accMul(utils.accMul(v.price, v.num), _areaCale)));
                 });
             }
 
@@ -702,6 +835,8 @@ var protationPart = (function() {
             $domain.attr('data-addm', addm);
             $domain.attr('data-subd', subd);
             $domain.attr('data-subm', subm);
+            $domain.attr('data-accm', accm);
+            $domain.attr('data-accd', accd);
 
             return $domain;
         },
@@ -713,40 +848,32 @@ var protationPart = (function() {
             var _dcp = 0;
             var _num = qv.num;
             var _unitPrice = qv.price;
-            var _type = qv.type;
+            var _type = qv.type % 2;
             var _total = 0;
             var _cost = 0;
-
             var _typeName = "-";
+            var _areaCale = qv.areaCale == constant.data().presignItem.AREACALE_AREA_INT ? quo.basicParams["protation.quoteArea"] : 1;
+
+            if (_type == 1) {
+                _typeName = "工程";
+                _total = qv.type == constant.quotation().protationItem.TYPE_PROJECT_INT ? _total : utils.changeThrDecimal(utils.accMul(utils.accMul(_unitPrice, _num), _areaCale));
+            } else {
+                _typeName = "主材";
+                _total = qv.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT ? _total : utils.changeThrDecimal(utils.accMul(utils.accMul(_unitPrice, _num), _areaCale));
+            }
 
             if (qv.type == constant.quotation().protationItem.TYPE_BASE_INT) {
                 _typeName = "信息";
-                _total = utils.changeThrDecimal(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)));
-            }
-
-            if (_type == constant.quotation().protationItem.TYPE_PROJECT_INT || qv.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT) { // 基础工程
-                _typeName = "基础";
-            }
-
-            if (qv.type == constant.quotation().protationItem.TYPE_ADDWORK_INT || qv.type == constant.quotation().protationItem.TYPE_ADDMAIN_INT) { // 个性
-                _typeName = "个性";
-                _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
-            }
-
-            if (qv.type == constant.quotation().protationItem.TYPE_CUTWORK_INT || qv.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT) { // 增主材
-                _typeName = "减项";
-                _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
+                _total = utils.changeThrDecimal(utils.accMul(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)), _areaCale));
             }
 
             var _lineSet = [];
-
             _lineSet.push(["line", linenum, ["data-areaType", qv.areaType]]); // 编号
             _lineSet.push(["formula", qv.num ? qv.num : "0"]); // 公式
             _lineSet.push(["num", qv.num, ["data-subtype", qv.subtype]]); // 数量
             _lineSet.push(["name", qv.name, ["data-piid", qv.piid]]); // 预签名称
             _lineSet.push(["type", _typeName, ["data-type", qv.type]]);
-            _lineSet.push(["unit", qv.basicNum]); // 单位
-            _lineSet.push(["worktype", qv.workType]); // 工种
+            _lineSet.push(["unit", qv.basicNum]); // 基础量
             _lineSet.push(["price unitprice", _unitPrice, ["data-cost", qv.cost]]); // 单价
             _lineSet.push(["price discountprice", _unitPrice]);
             _lineSet.push(["price totalprice-discount", _total]);
@@ -802,6 +929,7 @@ var protationPart = (function() {
             $item.click(function() {// 编辑数量
 
                 quote.getNumCellFocus($item);
+
             });
 
             // 删除预签项
@@ -809,7 +937,7 @@ var protationPart = (function() {
 
                 e.stopPropagation();
 
-                if ([constant.quotation().protationItem.TYPE_BASE_INT, constant.quotation().protationItem.TYPE_ADDWORK_INT, constant.quotation().protationItem.TYPE_ADDMAIN_INT, constant.quotation().protationItem.TYPE_CUTWORK_INT, constant.quotation().protationItem.TYPE_CUTMAIN_INT].indexOf(qv.type) != -1)
+                if ([constant.quotation().protationItem.TYPE_BASE_INT, constant.quotation().protationItem.TYPE_ADDWORK_INT, constant.quotation().protationItem.TYPE_ADDMAIN_INT, constant.quotation().protationItem.TYPE_CUTWORK_INT, constant.quotation().protationItem.TYPE_CUTMAIN_INT, constant.quotation().protationItem.TYPE_ACCWORK_INT, constant.quotation().protationItem.TYPE_ACCMAIN_INT].indexOf(qv.type) != -1)
                     quote.deleteQuote($item);
 
                 if ([constant.quotation().protationItem.TYPE_PROJECT_INT, constant.quotation().protationItem.TYPE_PRINCIPAL_INT].indexOf(qv.type) != -1) {
@@ -832,8 +960,9 @@ var protationPart = (function() {
 
             $item.attr('data-total', _total);
             $item.attr('data-cost', _cost);
-
             $item.attr("data-ppiid", qv.ppiid);
+            $item.attr("data-areaCale", qv.areaCale);
+            $item.attr("data-basicNum", qv.basicNum);
 
             return $item;
         },
@@ -870,13 +999,15 @@ var protationPart = (function() {
                 "data-itemUnite": v.basicNum,
                 "data-des": v.common,
                 "data-type": v.type,
+                "data-atttype": v.atttype,
+                "data-areaCale": v.areaCale,
             }).val(v.piid);
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
             var propertyArr = [];
 
-            propertyArr.push(["类型: ", v.type, "red"]);
+            propertyArr.push(["类型: ", constant.data().presignItem.type.keys[v.type], "red"]);
             propertyArr.push(["单位: ", v.basicNum, "red"]);
             propertyArr.push(["单价: ", v.price, "blue"]);
             propertyArr.push(["说明: ", v.content, "grey"]);
@@ -927,6 +1058,9 @@ var protationPart = (function() {
                 "protation.pid": quo.protationId
             }, function(data) {
 
+                // 左上角显示预签产品名称
+                com.focusPage('#product').text(data.protation.product);
+
                 // 左上角显示预签名称
                 com.focusPage('#protationName').text(data.protation.name);
 
@@ -953,6 +1087,10 @@ var protationPart = (function() {
                     "protation.subdPrice": data.protation.subdPrice, // 减工额
                     "protation.submPrice": data.protation.submPrice, // 减主额
                     "protation.totalPrice": data.protation.totalPrice, // 总额
+                    "protation.accdPrice": data.protation.accmPrice, // 赋工额
+                    "protation.accmPrice": data.protation.accdPrice, // 赋主额
+                    "protation.discount": data.protation.discount, // 折扣
+                    "protation.manageRate": data.protation.manageRate, // 管理费比例
                 };
                 quo.protation = data.protation;
             }, null, false);
@@ -977,9 +1115,16 @@ var protationPart = (function() {
                 quo.basicParams["protation.activityAmount"] = res.decorationActivity.amount;
             }, null, false);
 
+            com.post(api.quotation.queryPresignProduceByPpid, {
+                "presignProduce.ppid": quo.protation.ppid
+            }, function(res) {
+
+                quo.presignProduce = res.presignProduce;
+            });
+
             var protationFunctionAreas = [{
                 "pfaid": 1,
-                "name": "基础",
+                "name": "功能区",
                 "functionAreaOrder": 1,
                 "functionAreaType": 0,
                 "type": 0,
@@ -988,7 +1133,7 @@ var protationPart = (function() {
                 "protationFunctionAreaItems": [],
             }, {
                 "pfaid": 2,
-                "name": "标配",
+                "name": "可选",
                 "functionAreaOrder": 2,
                 "functionAreaType": 0,
                 "type": 1,
@@ -1013,6 +1158,15 @@ var protationPart = (function() {
                 total: 0,
                 index: 4,
                 "protationFunctionAreaItems": [],
+            }, {
+                "pfaid": 5,
+                "name": "赋能",
+                "functionAreaOrder": 5,
+                "functionAreaType": 0,
+                "type": 4,
+                total: 0,
+                index: 5,
+                "protationFunctionAreaItems": [],
             }];
 
             com.post(api.quotation.queryProtationItemByPid, {
@@ -1022,11 +1176,12 @@ var protationPart = (function() {
                 $.each(res.protationItems, function(i, v) {
 
                     var type = (v.type + v.type % 2) / 2;
+
                     protationFunctionAreas[type].protationFunctionAreaItems.push(v);
                 });
             }, null, false);
 
-            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, total = 0, cost = 0, profit = 0;
+            var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, total = 0, cost = 0, profit = 0, accm = 0, accd = 0;
 
             $.each(protationFunctionAreas, function(i, v) {
 
@@ -1040,6 +1195,8 @@ var protationPart = (function() {
                 var _addm = parseFloat($domain.attr('data-addm'));
                 var _subd = parseFloat($domain.attr('data-subd'));
                 var _subm = parseFloat($domain.attr('data-subm'));
+                var _accm = parseFloat($domain.attr('data-accm'));
+                var _accd = parseFloat($domain.attr('data-accd'));
 
                 cost = utils.changeThrDecimal(utils.accAdd(cost, _cost));
                 basic = utils.changeThrDecimal(utils.accAdd(basic, _basic));
@@ -1049,8 +1206,10 @@ var protationPart = (function() {
                 addm = utils.changeThrDecimal(utils.accAdd(addm, _addm));
                 subd = utils.changeThrDecimal(utils.accAdd(subd, _subd));
                 subm = utils.changeThrDecimal(utils.accAdd(subm, _subm));
+                accm = utils.changeThrDecimal(utils.accAdd(accm, _accm));
+                accd = utils.changeThrDecimal(utils.accAdd(accd, _accd));
 
-                var amount = utils.changeThrDecimal(utils.accAdd(_basic, utils.accAdd(_addd, utils.accSub(_addm, utils.accAdd(_subd, _subm)))));
+                var amount = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_basic, utils.accAdd(_addd, utils.accSub(_addm, utils.accAdd(_subd, _subm)))), utils.accAdd(_accm, _accd)));
 
                 $dmoney = painter.createDomainMoney(amount, v).appendTo(com.focusPage('#functionAreaSumList'));
             });
@@ -1073,8 +1232,16 @@ var protationPart = (function() {
             quo.basicParams["protation.mostCost"] = mostCost;
             quo.basicParams["protation.houseCost"] = cost;
 
-            total = utils.accSub(utils.accSub(utils.accAdd(utils.accMul(utils.accSub(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.quoteArea"]), quo.basicParams["protation.costPrice"]), quo.basicParams["protation.quotePrice"]), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.managePrice"]);
-            total = utils.accAdd(total, utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(subd, subm)))));
+            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm)), quo.basicParams["protation.preferPrice"]), utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm))));
+
+            _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
+
+            var _managePrice = utils.changeThrDecimal(utils.accMul(utils.accMul(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.manageRate"]), _discout));
+
+            total = utils.changeThrDecimal(utils.accSub(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), quo.basicParams["protation.preferPrice"]));
+            total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(subd, subm)))), utils.accAdd(accm, accd))));
+
+            _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
 
             quo.basicParams["protation.basicPrice"] = basic;
             quo.basicParams["protation.comdPrice"] = comd;
@@ -1083,7 +1250,11 @@ var protationPart = (function() {
             quo.basicParams["protation.addmPrice"] = addm;
             quo.basicParams["protation.subdPrice"] = subd;
             quo.basicParams["protation.submPrice"] = subm;
+            quo.basicParams["protation.accmPrice"] = accm;
+            quo.basicParams["protation.accdPrice"] = accd;
             quo.basicParams["protation.totalPrice"] = total;
+            quo.basicParams["protation.managePrice"] = _managePrice;
+            quo.basicParams["protation.discount"] = _discout;
 
             cost = utils.accAdd(utils.accAdd(utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]), utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"])), utils.accAdd(quo.basicParams["protation.mostCost"], utils.accAdd(utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"]), cost)));
 
@@ -1093,7 +1264,10 @@ var protationPart = (function() {
             com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
             com.focusPage('#cacelArea').text(quo.basicParams["protation.cacelArea"]);
             com.focusPage('#preferPrice').text(quo.basicParams["protation.preferPrice"]);
+            com.focusPage('#discount').text(_discout);
             com.focusPage('#managePrice').text(quo.basicParams["protation.managePrice"]);
+            com.focusPage('#manageRate').text(quo.basicParams["protation.manageRate"]);
+            com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
 
             com.focusPage('#sumquoSumMoney').text(total);
 

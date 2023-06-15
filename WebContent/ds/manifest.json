@@ -28,7 +28,8 @@
         {"key":"3","value":"撤销"},
         {"key":"4","value":"拒绝"},
         {"key":"5","value":"退回"},
-        {"key":"6","value":"到货"}
+        {"key":"6","value":"到货"},
+        {"key":"7","value":"审核"}
     ],
     "purchaseStatus": [
         {"key":"0","value":"初始"},
@@ -90,6 +91,10 @@
         {"key": "0", "value": "车运费"},
         {"key": "1", "value": "搬运费"},
         {"key": "2", "value": "上楼费"}
+    ],
+    "accessoriesType": [
+        {"key": "0", "value": "普通"},
+        {"key": "1", "value": "售后"}
     ],
     "errorCode": 0,
     "errorMsg": null

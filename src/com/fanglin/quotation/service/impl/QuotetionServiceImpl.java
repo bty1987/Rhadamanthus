@@ -154,7 +154,10 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		quotetionFunctionAreaItemDao.save(trafficPrice);
 		quotetionFunctionAreaItemDao.save(managePrice);
-		quotetionFunctionAreaItemDao.save(taxPrice);
+
+		if (quotationVersionPO.getTaxDiscount() != QuotationVersionPO.TAX_NOTTAXDISCOUNT_INT) {
+			quotetionFunctionAreaItemDao.save(taxPrice);
+		}
 
 		return 0;
 	}

@@ -20,12 +20,18 @@ jQuery(function($) {
             type: com.focusPage("#type", "#createPresignItemModal"),
             onetype: com.focusPage("#onetype", "#createPresignItemModal"),
             content: com.focusPage("#content", "#createPresignItemModal"),
+            atttype: com.focusPage("#atttype", "#createPresignItemModal"),
+            areaCale: com.focusPage("input[name=areaCale]", "#createPresignItemModal"),
+            number: com.focusPage("#number", "#createPresignItemModal"),
+            area: com.focusPage("#area", "#createPresignItemModal"),
         },
 
         status: {},
         type: {},
+        areaCale: {},
+        atttype: {},
         onetype: {
-            0: "普通",
+            0: "标准",
             1: "标配"
         }
     };
@@ -34,8 +40,11 @@ jQuery(function($) {
 
         presignItem.status = res.presignItemStatus.split("key", "value");
         presignItem.type = res.presignItemType.split("key", "value");
+        presignItem.areaCale = res.presignItemAreaCale.split("key", "value");
+        presignItem.atttype = res.presignItemAtttype.split("key", "value");
 
         presignItem.items.type.bindData(res.presignItemType, "key", "value");
+        presignItem.items.atttype.bindData(res.presignItemAtttype, "key", "value");
     }, null, false);
 
     presignItem.modals.createPresignItemModal.on('hide.bs.modal', function() {
@@ -85,6 +94,12 @@ jQuery(function($) {
         prop: "price",
         clazz: "blue"
     }, {
+        fieId: "areaCale",
+        name: "面积规则",
+        prop: "areaCale",
+        clazz: "red",
+        dataset: presignItem.areaCale
+    }, {
         fieId: "basicNum",
         name: "基础量",
         prop: "basicNum",
@@ -101,6 +116,12 @@ jQuery(function($) {
         prop: "onetype",
         clazz: "red",
         dataset: presignItem.onetype
+    }, {
+        fieId: "atttype",
+        name: "业务类型",
+        prop: "atttype",
+        clazz: "red",
+        dataset: presignItem.atttype
     }, {
         fieId: "content",
         name: "说明",
@@ -122,6 +143,9 @@ jQuery(function($) {
             presignItem.items.type.val(v.type);
             presignItem.items.onetype.val(v.onetype);
             presignItem.items.content.val(v.content);
+            presignItem.items.atttype.val(v.atttype);
+            presignItem.items.number.prop("checked", v.areaCale == 0);
+            presignItem.items.area.prop("checked", v.areaCale == 1);
 
             presignItem.modals.createPresignItemModal.modal("show");
 
@@ -138,10 +162,6 @@ jQuery(function($) {
 
                 searcher.doSearch();
             });
-
-            return false;
-        },
-        show: function(v) {
 
             return false;
         }
@@ -170,6 +190,7 @@ jQuery(function($) {
 
         presignItem.piid = null;
         presignItem.modals.createPresignItemModal.modal("show");
+        presignItem.items.number.prop("checked", true);
     });
 
     function saveData() {
@@ -188,6 +209,8 @@ jQuery(function($) {
             "presignItem.type": presignItem.items.type.val(),
             "presignItem.onetype": presignItem.items.onetype.val(),
             "presignItem.content": presignItem.items.content.val(),
+            "presignItem.atttype": presignItem.items.atttype.val(),
+            "presignItem.areaCale": presignItem.items.areaCale.prop("checked") ? 0 : 1,
         };
 
         if (presignItem.piid) {

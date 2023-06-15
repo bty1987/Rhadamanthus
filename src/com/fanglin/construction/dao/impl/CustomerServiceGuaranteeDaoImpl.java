@@ -23,39 +23,46 @@ import com.fanglin.utils.Paging;
 
 @Repository("customerServiceGuaranteeDao")
 public class CustomerServiceGuaranteeDaoImpl extends DaoImpl<CustomerServiceGuaranteePO> implements CustomerServiceGuaranteeDao {
-	
-	public CustomerServiceGuaranteeDaoImpl(){
+
+	public CustomerServiceGuaranteeDaoImpl() {
 		super(CustomerServiceGuaranteePO.class);
 	}
 
 	@Override
-	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuarantee(Paging paging, List<Filter> filters){
-		
+	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuarantee(Paging paging, List<Filter> filters) {
+
 		PagingQuery<CustomerServiceGuaranteePO> query = pagingQuery(paging, CustomerServiceGuaranteePO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
 
 	@Override
-	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuaranteeByOrderId(Paging paging, List<Filter> filters, String orderId){
-		
+	public List<CustomerServiceGuaranteePO> pageCustomerServiceGuaranteeByOrderId(Paging paging, List<Filter> filters, String orderId) {
+
 		PagingQuery<CustomerServiceGuaranteePO> query = pagingQuery(paging, CustomerServiceGuaranteePO.class);
-		
+
 		query.add(query.getCriterion(CustomerServiceGuaranteePO.COLUMN_ORDERID_STR, orderId, "eq"));
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.add(query.getCriterion(field, data, op));
+		}
+
 	}
 
 }

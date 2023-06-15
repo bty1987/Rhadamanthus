@@ -259,7 +259,10 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationFunctionAreaItemDao.save(trafficPrice);
 		quotationFunctionAreaItemDao.save(managePrice);
-		quotationFunctionAreaItemDao.save(taxPrice);
+
+		if (quotationVersionPO.getTaxDiscount() != QuotationVersionPO.TAX_NOTTAXDISCOUNT_INT) {
+			quotationFunctionAreaItemDao.save(taxPrice);
+		}
 
 		return 0;
 	}
@@ -344,9 +347,13 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		if (quotationVO.getTaxDiscount() != null) {
+
 			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId(), QuotationFunctionAreaItemPO.TYPE_TAX_INT);
-			quotationFunctionAreaItemPO.setDiscount((quotationVO.getTaxDiscount()));
-			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+
+			if (quotationFunctionAreaItemPO != null) {
+				quotationFunctionAreaItemPO.setDiscount((quotationVO.getTaxDiscount()));
+				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+			}
 		}
 
 		quotationDao.update(quotationPO);
@@ -777,11 +784,6 @@ public class QuotationServiceImpl implements QuotationService {
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
-
-		quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
-		quotationVO.setNo(decorationPO.getVersion().getNo());
-
 	}
 
 	private void handleListQuotation(List<QuotationVO> quotationVOs, List<QuotationPO> quotationPOs, String orderId) {
@@ -790,17 +792,12 @@ public class QuotationServiceImpl implements QuotationService {
 			return;
 		}
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
 		QuotationVO quotationVO;
 
 		for (QuotationPO quotationPO : quotationPOs) {
 			quotationVO = new QuotationVO();
 
 			BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
-
-			quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
-			quotationVO.setNo(decorationPO.getVersion().getNo());
 
 			quotationVOs.add(quotationVO);
 		}

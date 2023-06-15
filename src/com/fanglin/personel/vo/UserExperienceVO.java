@@ -22,8 +22,6 @@ public class UserExperienceVO implements Serializable {
 
 	private Integer uid;
 
-	private UserBaseVO operator;
-
 	private String type;
 
 	private Timestamp createTime;
@@ -34,11 +32,6 @@ public class UserExperienceVO implements Serializable {
 
 	public UserExperienceVO() {
 		super();
-	}
-
-	public UserExperienceVO(UserBaseVO operator) {
-		super();
-		this.operator = operator;
 	}
 
 	public Long getUpid() {
@@ -91,11 +84,4 @@ public class UserExperienceVO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
-	public UserBaseVO getOperator() {
-		return operator;
-	}
-
-	public void setOperator(UserBaseVO operator) {
-		this.operator = operator;
-	}
 }

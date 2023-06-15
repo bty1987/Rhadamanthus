@@ -73,10 +73,10 @@ public class AddReduceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryAddReduceByDecorationPaymentId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceByDecorationPaymentId() throws FLException {
+	@Action(value = "queryAddReduceByDpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddReduceByDpid() throws FLException {
 
-		addReduce = addReduceService.queryAddReduceByDecorationPaymentId(addReduce);
+		addReduces = addReduceService.queryAddReduceByDpid(addReduce);
 
 		return SUCCESS;
 	}
@@ -108,7 +108,15 @@ public class AddReduceAction extends BaseListAction {
 	@Action(value = "submitAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitAddReduce() throws FLException {
 
-		addReduceService.submitAddReduce(addReduce, queryUserId());
+		addReduceService.submitAddReduce(addReduce, addReduces, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "cancelAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelAddReduce() throws FLException {
+
+		addReduceService.cancelAddReduce(addReduce);
 
 		return SUCCESS;
 	}

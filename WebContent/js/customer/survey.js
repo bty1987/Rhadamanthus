@@ -26,6 +26,8 @@ jQuery(function($) {
         checked: {}
     };
 
+    var pageConfig = drawNode.getConfig("customerService");
+
     survey.modals.surveyModal.on('hide.bs.modal', function(e) {
 
         com.cleanItems(survey.items);
@@ -42,9 +44,9 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageSurvey);
+    searcher.base("surveycondList", "surveypagenation", "surveyresultList", api.customer.pageSurvey);
 
-    searcher.condition(['customer-survey-orderId', 'customer-survey-createTime', 'customer-survey-sendTime']);
+    searcher.condition(['customer-survey-orderId', 'customer-survey-createTime', 'customer-survey-sendTime', 'customer-survey-handleTime', 'customer-survey-finishTime', 'customer-survey-status']);
 
     searcher.button([{
         id: "makeSurvey",
@@ -69,6 +71,16 @@ jQuery(function($) {
         prop: "creater.userName",
         clazz: "grey"
     }, {
+        field: "sender",
+        name: "推送人",
+        prop: "sender.userName",
+        clazz: "grey"
+    }, {
+        field: "finisher",
+        name: "完成人",
+        prop: "finisher.userName",
+        clazz: "grey"
+    }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
@@ -77,6 +89,16 @@ jQuery(function($) {
         fieId: "sendTime",
         name: "推送时间",
         prop: "sendTime",
+        clazz: "green"
+    }, {
+        fieId: "handleTime",
+        name: "处理时间",
+        prop: "handleTime",
+        clazz: "green"
+    }, {
+        fieId: "finishTime",
+        name: "完成时间",
+        prop: "finishTime",
         clazz: "green"
     }, {
         fieId: "status",
@@ -106,6 +128,46 @@ jQuery(function($) {
         show: function(v) {
 
             return v.status == constant.customer().survey.STATUS_INIT_INT;
+        }
+    }, {
+        name: "装修单",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            survey.sid = v.sid;
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": v.orderId
+            }, function(res) {
+
+                var decoration = res.decoration;
+
+                params.decoration.orderId = decoration.orderId;
+                params.decoration.orderType = decoration.type;
+                params.decoration.orderTypeness = decoration.typeness;
+                params.decoration.versionId = decoration.versionId;
+                params.decoration.notSalesmanRate = decoration.notSalesmanRate;
+
+                params.decoration.viewNode = Object.values(pageConfig.nodes);
+
+                params.quotation.orderId = v.orderId;
+
+                com.popup4page("#layerPopUp", api.index.decorationDetailIndex.url, "装修单详情: " + v.orderId);
+            });
+
+            return false;
+        }
+    }, {
+        name: "完成",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            finish(v.sid);
+            return false;
+        },
+        show: function(v) {
+
+            return v.status == constant.customer().survey.STATUS_HANDLE_INT;
         }
     }];
 
@@ -204,6 +266,23 @@ jQuery(function($) {
             };
 
             com.post(api.customer.sendSurvey, options, function() {
+
+                searcher.doSearch();
+            }, function() {
+
+                searcher.doSearch();
+            });
+        });
+    }
+    function finish(sid) {
+
+        com.showConfirm("调研信息是否确认完成", function() {
+
+            var options = {
+                "survey.sid": sid
+            };
+
+            com.post(api.customer.finishSurvey, options, function() {
 
                 searcher.doSearch();
             }, function() {

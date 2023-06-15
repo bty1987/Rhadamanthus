@@ -75,12 +75,6 @@ public class QuotationVO implements Serializable {
 
 	private String content;
 
-	private Integer notSalesmanRate;
-
-	private String no;
-
-	private Short type;
-
 	public QuotationVO() {
 		super();
 	}
@@ -303,30 +297,6 @@ public class QuotationVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public Integer getNotSalesmanRate() {
-		return notSalesmanRate;
-	}
-
-	public void setNotSalesmanRate(Integer notSalesmanRate) {
-		this.notSalesmanRate = notSalesmanRate;
-	}
-
-	public String getNo() {
-		return no;
-	}
-
-	public void setNo(String no) {
-		this.no = no;
-	}
-
-	public Short getType() {
-		return type;
-	}
-
-	public void setType(Short type) {
-		this.type = type;
 	}
 
 }

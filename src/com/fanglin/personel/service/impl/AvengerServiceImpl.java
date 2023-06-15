@@ -12,7 +12,6 @@
 package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.AvengerService;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.RoleVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("avengerService")
@@ -45,7 +43,7 @@ public class AvengerServiceImpl implements AvengerService {
 		List<UserVO> avengerVOs = new ArrayList<UserVO>();
 
 		for (UserPO avengerPO : avengerPOs) {
-			avengerVOs.add(convertBean(avengerPO));
+			avengerVOs.add(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()).ptv(avengerPO));
 		}
 
 		paging.setData(avengerVOs);
@@ -54,28 +52,15 @@ public class AvengerServiceImpl implements AvengerService {
 	@Override
 	public List<UserVO> queryAvengerByPinyin(String pinyin) throws FLException {
 
-		List<UserVO> userBaseVOs = new ArrayList<UserVO>();
+		List<UserVO> avengerVOs = new ArrayList<UserVO>();
 
-		List<UserPO> userPOs = avengerDao.queryAvengerByPinyin(pinyin);
+		List<UserPO> avengerPOs = avengerDao.queryAvengerByPinyin(pinyin);
 
-		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(convertBean(userPO));
+		for (UserPO avengerPO : avengerPOs) {
+			avengerVOs.add(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()).ptv(avengerPO));
 		}
 
-		return userBaseVOs;
-	}
-
-	private UserVO convertBean(UserPO userPO) throws FLException {
-
-		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
-
-		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-
-		BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
-
-		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		return userVO;
+		return avengerVOs;
 	}
 
 }

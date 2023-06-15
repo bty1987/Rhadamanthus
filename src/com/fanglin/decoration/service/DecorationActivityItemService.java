@@ -21,7 +21,7 @@ public interface DecorationActivityItemService {
 
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO);
 
-	public int addDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
+	public int addDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 
 	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 
@@ -41,5 +41,5 @@ public interface DecorationActivityItemService {
 
 	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
 
-	public int affirmDecorationActivityItem(List<DecorationActivityItemVO> decorationActivityItems) throws FLException;
+	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems) throws FLException;
 }

@@ -6,8 +6,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,7 +32,7 @@ public class ConstructionNodePO implements Serializable {
 	private int precheck;
 
 	private int postcheck;
-	
+
 	private int stacheck;
 
 	private int fincheck;
@@ -37,14 +40,32 @@ public class ConstructionNodePO implements Serializable {
 	private short status;
 
 	private String startalk;
-	
+
 	private String endtalk;
-	
+
+	private SurveyTemplatePO startSurvey;
+
+	private SurveyTemplatePO endSurvey;
+
 	private int timeLimit;
-	
+
 	private short sort;
 
+	private String kino;
+
+	private String kiname;
+
 	private int company;
+
+	public ConstructionNodePO() {
+		super();
+	}
+
+	public ConstructionNodePO(SurveyTemplatePO startSurvey, SurveyTemplatePO endSurvey) {
+		super();
+		this.startSurvey = startSurvey;
+		this.endSurvey = endSurvey;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -99,7 +120,7 @@ public class ConstructionNodePO implements Serializable {
 	public void setFincheck(int fincheck) {
 		this.fincheck = fincheck;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -108,7 +129,7 @@ public class ConstructionNodePO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "startalk")
 	public String getStartalk() {
 		return startalk;
@@ -127,6 +148,26 @@ public class ConstructionNodePO implements Serializable {
 		this.endtalk = endtalk;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sstid", referencedColumnName = "stid")
+	public SurveyTemplatePO getStartSurvey() {
+		return startSurvey;
+	}
+
+	public void setStartSurvey(SurveyTemplatePO startSurvey) {
+		this.startSurvey = startSurvey;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "estid", referencedColumnName = "stid")
+	public SurveyTemplatePO getEndSurvey() {
+		return endSurvey;
+	}
+
+	public void setEndSurvey(SurveyTemplatePO endSurvey) {
+		this.endSurvey = endSurvey;
+	}
+
 	@Column(name = "timeLimit")
 	public int getTimeLimit() {
 		return timeLimit;
@@ -143,6 +184,24 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setSort(short sort) {
 		this.sort = sort;
+	}
+
+	@Column(name = "kino")
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	@Column(name = "kiname")
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
 	}
 
 	@Column(name = "company")

@@ -11,7 +11,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.DecorationPaymentDao;
 import com.fanglin.customer.service.DecorationPaymentService;
 import com.fanglin.customer.vo.DecorationPaymentVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Paging;
 
 @Service("decorationPaymentOrderService")
@@ -21,10 +25,29 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
 
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
 	@Override
 	public void queryCusDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO) {
 
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPayment(paging, filters, decorationPaymentVO.getOrderId());
+		String orderId = decorationPaymentVO.getOrderId();
+		String platform = "";
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", decorationPO.getGrade()), decorationPO.getCompany());
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", decorationPO.getCompany());
+		}
+
+		if (systemConfigPO != null) platform = systemConfigPO.getValue();
+
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPayment(paging, filters, orderId);
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 
 		if (decorationPaymentPOs.size() != 0 && decorationPaymentPOs != null) {
@@ -34,12 +57,14 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				decorationPaymentVO = new DecorationPaymentVO();
 
 				decorationPaymentVO.setDpid(decorationPaymentPO.getDpid());
-				decorationPaymentVO.setOrderId(decorationPaymentVO.getOrderId());
+				decorationPaymentVO.setOrderId(orderId);
 				decorationPaymentVO.setReferMoney(decorationPaymentPO.getReferMoney());
 				decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());
 				decorationPaymentVO.setPaymentType(decorationPaymentPO.getPaymentType());
 				decorationPaymentVO.setOnetype(decorationPaymentPO.getOneType());
 				decorationPaymentVO.setSort(decorationPaymentPO.getSort());
+
+				decorationPaymentVO.setPlatform(platform);
 
 				if (decorationPaymentPO.getDecorationReceipt() != null) {
 					decorationPaymentVO.setCollectTime(decorationPaymentPO.getDecorationReceipt().getCollectTime());
@@ -72,7 +97,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 				decorationPaymentVOs.add(decorationPaymentVO);
 			}
-
 		}
 
 		return decorationPaymentVOs;

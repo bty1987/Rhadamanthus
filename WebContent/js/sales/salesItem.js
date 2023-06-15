@@ -41,7 +41,7 @@ $(function() {
         salesItem.sales = res.sales;
     }, null, false);
 
-    if ((salesItem.sales.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) || salesItem.dompany == "dompany" || salesItem.dompany == "pompany") {
+    if ((salesItem.sales.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) || salesItem.dompany == "pompany") {
         hideButtons([salesItem.btns.refundBtn, salesItem.btns.refundCancelBtn, salesItem.btns.refundCommitBtn, salesItem.btns.fullRefundBtn, salesItem.btns.reOrderBtn]);
     }
 
@@ -83,7 +83,7 @@ $(function() {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if (salesItem.dompany != "dompany" && salesItem.dompany != "pompany") {
+                if (salesItem.dompany != "pompany") {
                     if (salesItem.sales.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) {
                         $btnDiv.append($btnEdit).append($btnDelete);
                     }
@@ -544,9 +544,10 @@ $(function() {
         }, function(data) {
 
             $.exceler({
-                column: [['品牌系列', 'goods.category'], ['产品名称', 'goods.name'], ['产品编码', 'goods.no'], ['产品规格', 'format.info'], ['单价', 'price'], ['数量', 'num'], ['金额', 'total'], ["备注", 'comment']],
+                column: [['品牌', 'goods.category'], ['编码', 'goods.no'], ['产品', 'goods.name'], ['颜色', 'color.name'], ['规格', 'format.info'], ['单价', 'price'], ['数量', 'num'], ['金额', 'total'], ["备注", 'comment']],
                 list: data.salesItems
+
             });
         });
-    });
+    });   
 });

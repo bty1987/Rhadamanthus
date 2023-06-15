@@ -3,7 +3,7 @@ $.extend(api.index, {
         url: "/views/construction/supervision.html"
     },
     supervisionDetailIndex: {
-        url: "/views/construction/supervisionDetail.html"
+        url: "/views/construction/supervision4detail.html"
     },
     supervisionInDecreaseIndex: {
         url: "/views/construction/supervisionInDecrease.html"
@@ -23,10 +23,10 @@ $.extend(api.index, {
     },
 
     customerServiceIndex: {
-        url: "/views/construction/customerService.html"
+        url: "/views/construction/customer.html"
     },
     customerServiceDetailIndex: {
-        url: "/views/construction/customerServiceDetail.html"
+        url: "/views/construction/customer4detail.html"
     },
 
     inspectionIndex: {
@@ -36,45 +36,45 @@ $.extend(api.index, {
         url: "/views/construction/inspectionDeduction.html"
     },
     inspectionRecordIndex: {
-        url: "/views/construction/inspectionRecord.html"
+        url: "/views/construction/inspection4record.html"
     },
 
     acceptanceIndex: {
         url: "/views/construction/acceptance.html"
     },
     acceptanceDetailIndex: {
-        url: "/views/construction/acceptanceDetail.html"
+        url: "/views/construction/acceptance4detail.html"
     },
 
     customerServiceBackVisitIndex: {
-        url: "/views/construction/customerServiceBackVisit.html"
+        url: "/views/construction/customer4feedback.html"
     },
     customerServiceComplaintIndex: {
-        url: "/views/construction/customerServiceComplaint.html"
+        url: "/views/construction/customer4complaint.html"
     },
     customerServiceGuaranteeIndex: {
-        url: "/views/construction/customerServiceGuarantee.html"
+        url: "/views/construction/customer4guarantee.html"
     },
 
     supervisionReworkIndex: {
-        url: "/views/construction/supervisionRework.html"
+        url: "/views/construction/supervision4rework.html"
     },
     supervisionAddReduceIndex: {
         url: "/views/construction/supervisionAddReduce.html"
     },
     supervisionReworkDrawingIndex: {
-        url: "/views/construction/supervisionReworkDrawing.html"
+        url: "/views/construction/supervision4drawing.html"
     },
 
     workerAllocationIndex: {
-        url: "/views/construction/workerAllocation.html"
+        url: "/views/construction/allocation.html"
     },
     workerAllocationDetailIndex: {
-        url: "/views/construction/workerAllocationDetail.html"
+        url: "/views/construction/allocation4detail.html"
     },
 
     constructionAccessoryIndex: {
-        url: "/views/construction/constructionAccessory.html"
+        url: "/views/construction/accessory.html"
     },
 
 });
@@ -163,7 +163,7 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data-construction",
                 args: ["salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
-            },{
+            }, {
                 result: "paging-data-decoration-house",
                 args: ["buildArea"]
             }]
@@ -295,6 +295,9 @@ $.extend(api, {
         queryConstructerByCid: {
             url: "queryConstructerByCid.do"
         },
+        queryConstructerByCrid: {
+            url: "queryConstructerByCrid.do"
+        },
         addConstructer: {
             url: "addConstructer.do"
         },
@@ -306,6 +309,12 @@ $.extend(api, {
         },
         updateConstructerForRate: {
             url: "updateConstructerForRate.do"
+        },
+        rateConstructer: {
+            url: "rateConstructer.do"
+        },
+        sendConstructer: {
+            url: "sendConstructer.do"
         },
 
         pageDrawLineForPlan: {

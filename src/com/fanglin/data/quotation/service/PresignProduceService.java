@@ -14,6 +14,8 @@ public interface PresignProduceService {
 
 	public List<PresignProduceVO> queryPresignProduce(PresignProduceVO presignProduceVO, int company) throws FLException;
 
+	public PresignProduceVO queryPresignProduceByPpid(PresignProduceVO presignProduceVO);
+
 	public int addPresignProduce(PresignProduceVO presignProduceVO, int company) throws FLException;
 
 	public void updatePresignProduce(PresignProduceVO presignProduceVO, List<PresignItemVO> presignItems) throws FLException;

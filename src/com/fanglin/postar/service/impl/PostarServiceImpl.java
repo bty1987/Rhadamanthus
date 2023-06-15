@@ -1,6 +1,8 @@
 package com.fanglin.postar.service.impl;
 
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,26 +55,35 @@ public class PostarServiceImpl implements PostarService {
 		Wxpay wxpay = new Wxpay();
 
 		String threeOrderNo = args.getString("THREE_ORDER_NO");
-		String ptidStr = threeOrderNo.substring(8);
-		Long ptid = Long.valueOf(ptidStr.substring(0, Arith.sub(ptidStr.length(), 4)));
 
-		PaytranPO paytranPO = paytranDao.get(ptid);
+		String regex = ".*[a-zA-Z]+.*";
+		Matcher matcher = Pattern.compile(regex).matcher(threeOrderNo);
 
-		if (paytranPO.getStatus() != PaytranPO.STATUS_INIT_INT) {
-			throw new FLException(150047, "转换款支付不可操作");
+		if (!matcher.matches()) {
+
+			String ptidStr = threeOrderNo.substring(8);
+
+			Long ptid = Long.valueOf(ptidStr.substring(0, Arith.sub(ptidStr.length(), 4)));
+
+			PaytranPO paytranPO = paytranDao.get(ptid);
+
+			if (paytranPO.getStatus() != PaytranPO.STATUS_INIT_INT) {
+				throw new FLException(150047, "转换款支付不可操作");
+			}
+
+			paytranPO.setStatus(PaytranPO.STATUS_SUCCESS_INT);
+			paytranPO.setMsgId(args.getString("ORDER_NO"));
+
+			paytranDao.update(paytranPO);
+			paytranDao.flush();
+
+			wxpay.setPaymentptid(ptid);
+			wxpay.setPaymentMoney(Arith.mul(Long.parseLong(args.getString("TXAMT")), 10000));
+
+			if (paytranPO.getPid() == 0) return;
+
+			paytranService.makePayment(wxpay, "wechat");
 		}
 
-		paytranPO.setStatus(PaytranPO.STATUS_SUCCESS_INT);
-		paytranPO.setMsgId(args.getString("ORDER_NO"));
-
-		paytranDao.update(paytranPO);
-		paytranDao.flush();
-
-		wxpay.setPaymentptid(ptid);
-		wxpay.setPaymentMoney(Arith.mul(Long.parseLong(args.getString("NETR_AMT")), 10000));
-
-		if (paytranPO.getPid() == 0) return;
-
-		paytranService.makePayment(wxpay, "wechat");
 	}
 }

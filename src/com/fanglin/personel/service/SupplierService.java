@@ -24,7 +24,7 @@ public interface SupplierService {
 
 	public List<UserVO> querySupplierByPinyin(String pinyin, int company) throws FLException;
 
-	public void addSupplier(UserVO supplier, int company) throws FLException;
+	public void addSupplier(UserVO supplier, String userId, int company) throws FLException;
 
 	public void updateSupplier(UserVO supplier) throws FLException;
 

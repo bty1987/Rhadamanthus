@@ -7,6 +7,7 @@ jQuery(function($) {
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
             copyBtn: com.focusPage("#copyBtn"),
+            moveBtn: com.focusPage("#moveBtn"),
         },
 
         items: {
@@ -18,12 +19,15 @@ jQuery(function($) {
 
             signetImg: com.focusPage("#signetImg"),
 
+            company: com.focusPage("#company", "#moveSignetModal"),
+
             qrcode: null,
         },
 
         modals: {
             qrcodeModal: null,
-            copySignetModal: null
+            copySignetModal: null,
+            moveSignetModal: null,
         },
 
         status: {},
@@ -36,6 +40,15 @@ jQuery(function($) {
         signet.type = res.signetType.split("key", "value");
         signet.items.type.bindData(res.signetType, "key", "value");
     }, null, false);
+
+    com.post(api.system.queryCompany, {
+        "company.atttype": 1
+    }, function(res) {
+
+        console.log(res);
+
+        signet.items.company.bindData(res.companys, "cid", "name");
+    })
 
     signet.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{
         "id": "qrcode",
@@ -56,6 +69,7 @@ jQuery(function($) {
 
     signet.btns.saveBtn.click(saveData);
     signet.btns.copyBtn.click(copyData);
+    signet.btns.moveBtn.click(moveData);
 
     var searcher = new Searcher();
 
@@ -111,17 +125,23 @@ jQuery(function($) {
         clazz: "red"
     }, ];
 
-    var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
-    var $btnRegist = $('<a></a>').addClass(' btn btn-minier btn-success').html('注册');
-    var $btnAuth = $('<a></a>').addClass(' btn btn-minier btn-warning').html('认证');
-    var $btnConfirm = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('确认');
-    var $btnSign = $('<a></a>').addClass(' btn btn-minier btn-danger').html('签章');
-    var $btnAuto = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('自动授权');
-    var $btnAutoQ = $('<a></a>').addClass(' btn btn-minier btn-success').html('自动授权');
-    var $btnSignature = $('<a></a>').addClass(' btn btn-minier btn-info').html('印章');
-    var $btnCancel = $('<a></a>').addClass(' btn btn-minier btn-danger').html('作废');
-
     var linebtns = [{
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            signet.sid = v.sid;
+
+            com.popup4model('#layerAdd', '编辑', null, function() {
+
+                com.clearValidator();
+            }, function() {
+
+                editSignet(v);
+            });
+            return false;
+        }
+    }, {
         name: "更新",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -279,6 +299,23 @@ jQuery(function($) {
             return (v.status == 3);
         }
     }, {
+        name: "公司",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            signet.sid = v.sid;
+
+            com.popup4model('#moveSignet', '切换公司', null, function() {
+
+                com.clearValidator();
+            });
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status == 3);
+        }
+    }, {
         name: "作废",
         clazz: "btn-danger",
         handle: function(v) {
@@ -298,23 +335,7 @@ jQuery(function($) {
 
             return v.status != 5;
         }
-    }, {
-        name: "编辑",
-        clazz: "btn-yellow",
-        handle: function(v) {
-
-            signet.sid = v.sid;
-
-            com.popup4model('#layerAdd', '编辑', null, function() {
-
-                com.clearValidator();
-            }, function() {
-
-                editSignet(v);
-            });
-            return false;
-        }
-    }]
+    }, ]
 
     searcher.line("name", lineprops, linebtns).render();
 
@@ -371,6 +392,24 @@ jQuery(function($) {
             "signet.sid": signet.sid,
             "signet.no": com.focusPage("#no", "#copySignetModal").val(),
             "signet.name": com.focusPage("#name", "#copySignetModal").val(),
+        };
+
+        com.post(url, options, function(res) {
+
+            com.closePopup();
+            searcher.doSearch();
+        });
+    }
+
+    function moveData() {
+
+        if (com.validate('moveSignetModal'))
+            return false;
+
+        var url = api.data.moveSignet;
+        var options = {
+            "signet.sid": signet.sid,
+            "signet.company": signet.items.company.val(),
         };
 
         com.post(url, options, function(res) {

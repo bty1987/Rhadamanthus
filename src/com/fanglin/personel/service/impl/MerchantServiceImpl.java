@@ -12,7 +12,6 @@
 package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.MerchantService;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.RoleVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("merchantService")
@@ -45,7 +43,7 @@ public class MerchantServiceImpl implements MerchantService {
 		List<UserVO> merchantVOs = new ArrayList<UserVO>();
 
 		for (UserPO merchantPO : merchantPOs) {
-			merchantVOs.add(convertBean(merchantPO));
+			merchantVOs.add(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()).ptv(merchantPO));
 		}
 
 		paging.setData(merchantVOs);
@@ -54,28 +52,14 @@ public class MerchantServiceImpl implements MerchantService {
 	@Override
 	public List<UserVO> queryMerchantByPinyin(String pinyin) throws FLException {
 
-		List<UserVO> userBaseVOs = new ArrayList<UserVO>();
+		List<UserVO> merchantVOs = new ArrayList<UserVO>();
+		List<UserPO> merchantPOs = merchantDao.queryMerchantByPinyin(pinyin);
 
-		List<UserPO> userPOs = merchantDao.queryMerchantByPinyin(pinyin);
-
-		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(convertBean(userPO));
+		for (UserPO merchantPO : merchantPOs) {
+			merchantVOs.add(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()).ptv(merchantPO));
 		}
 
-		return userBaseVOs;
-	}
-
-	private UserVO convertBean(UserPO userPO) throws FLException {
-
-		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
-
-		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-
-		BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
-
-		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		return userVO;
+		return merchantVOs;
 	}
 
 }

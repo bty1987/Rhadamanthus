@@ -11,45 +11,47 @@ public class MaterialReceiptVO implements java.io.Serializable {
 	private static final long serialVersionUID = 5076868061753670487L;
 
 	private Long mrId;
-	
+
 	private UserBaseVO collecter;
-	
+
 	private Timestamp collectTime;
-	
-	private UserBaseVO confirmer; 
-	
+
+	private UserBaseVO confirmer;
+
 	private Timestamp confirmTime;
-	
+
+	private Long realMoney;
+
 	private Long cash;
-	
+
 	private String cashInfo;
-	
+
 	private Long bank;
-	
+
 	private String bankInfo;
-	
+
 	private Long checkv;
-	
+
 	private String checkvBank;
-	
+
 	private Long installment;
-	
+
 	private String installmentBank;
-	
+
 	private Long accounts;
-	
+
 	private String accountsBank;
-	
+
 	private Long advance;
-	
+
 	private Short advanceType;
-	
+
 	private Long coupon;
-	
+
 	private Short couponType;
-	
+
 	private String couponInfo;
-	
+
 	private String comment;
 
 	public MaterialReceiptVO() {
@@ -92,6 +94,14 @@ public class MaterialReceiptVO implements java.io.Serializable {
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
+	}
+
+	public Long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Long getCash() {
@@ -219,11 +229,11 @@ public class MaterialReceiptVO implements java.io.Serializable {
 	}
 
 	public String getComment() {
-		return comment ;
+		return comment;
 	}
 
-	public void setComment (String comment) {
-		this.comment  = comment ;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

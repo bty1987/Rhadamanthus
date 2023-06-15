@@ -17,12 +17,12 @@ public class SurveyTemplateDaoImpl extends DaoImpl<SurveyTemplatePO> implements 
 	public SurveyTemplateDaoImpl() {
 		super(SurveyTemplatePO.class);
 	}
-	
+
 	@Override
 	public List<SurveyTemplatePO> pageSurveyTemplate(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<SurveyTemplatePO> query = pagingQuery(paging, SurveyTemplatePO.class);
-		
+
 		query.add(Restrictions.eq("company", company));
 
 		queryFilterExecute(query, filters);
@@ -32,16 +32,28 @@ public class SurveyTemplateDaoImpl extends DaoImpl<SurveyTemplatePO> implements 
 		return query.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SurveyTemplatePO> querySurveyTemplate(int company) {
+		return session().createCriteria(SurveyTemplatePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SurveyTemplatePO.STATUS_ENABLE_INT)).list();
+	}
+
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
-//		if (filters != null) {
-//			for (Filter filter : filters) {
-//
-//				String field = filter.getField();
-//				String data = filter.getData();
-//				String op = filter.getOp();
-//			}
-//		}
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+
+			if ("name".equals(field)) {
+				query.add(query.getCriterion("name", filter));
+			} else if ("status".equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(data)));
+			}
+
+		}
 	}
 
 }

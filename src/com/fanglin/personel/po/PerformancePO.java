@@ -14,32 +14,56 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "performance", catalog = "communion")
-public class PerformancePO implements Serializable{
+public class PerformancePO implements Serializable {
 
 	private static final long serialVersionUID = -8979328875291176003L;
-	
-    private long pid;
-    
-    private UserPO user;
-    
-    private short type;
-    
-    private long value;
-    
-    private short level;
-    
-    private Timestamp startTime;
-    
-    private Timestamp endTime;
-    
-    private String work;
-    
-    private String content;
-    
-    public PerformancePO() {
+
+	public static final short TYPE_TASK_INT = 0; // 任务
+
+	public static final short TYPE_CODE_INT = 1; // 代码
+
+	public static final short TYPE_FILE_INT = 2; // 文档
+
+	public static final short TYPE_TEST_INT = 3; // 测试用例
+
+	public static final short TYPE_BUG_INT = 4; // bug
+
+	public static final short TYPE_DELAY_INT = 5; // 延期
+
+	public static final short TYPE_ERROR_INT = 6; // 失误
+
+	public static final short TYPE_ATTENDANCE_INT = 7; // 考勤
+
+	public static final short TYPE_OVERTIME_INT = 8; // 加班
+
+	public static final short LEVEL_LOW_INT = 0; // 低级
+
+	public static final short LEVEL_IN_INT = 1; // 中级
+
+	public static final short LEVEL_HIGH_INT = 2; // 高级
+
+	private long pid;
+
+	private UserPO user;
+
+	private short type;
+
+	private long value;
+
+	private short level;
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
+	private String work;
+
+	private String content;
+
+	public PerformancePO() {
 		super();
 	}
-    
+
 	public PerformancePO(UserPO user) {
 		super();
 		this.user = user;
@@ -47,7 +71,7 @@ public class PerformancePO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="pid")
+	@Column(name = "pid")
 	public long getPid() {
 		return pid;
 	}
@@ -66,8 +90,7 @@ public class PerformancePO implements Serializable{
 		this.user = user;
 	}
 
-
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -76,7 +99,7 @@ public class PerformancePO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="value")
+	@Column(name = "value")
 	public long getValue() {
 		return value;
 	}
@@ -85,7 +108,7 @@ public class PerformancePO implements Serializable{
 		this.value = value;
 	}
 
-	@Column(name="level")
+	@Column(name = "level")
 	public short getLevel() {
 		return level;
 	}
@@ -94,7 +117,7 @@ public class PerformancePO implements Serializable{
 		this.level = level;
 	}
 
-	@Column(name="startTime")
+	@Column(name = "startTime")
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -103,7 +126,7 @@ public class PerformancePO implements Serializable{
 		this.startTime = startTime;
 	}
 
-	@Column(name="endTime")
+	@Column(name = "endTime")
 	public Timestamp getEndTime() {
 		return endTime;
 	}
@@ -112,7 +135,7 @@ public class PerformancePO implements Serializable{
 		this.endTime = endTime;
 	}
 
-	@Column(name="work")
+	@Column(name = "work")
 	public String getWork() {
 		return work;
 	}
@@ -121,7 +144,7 @@ public class PerformancePO implements Serializable{
 		this.work = work;
 	}
 
-	@Column(name="content")
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}

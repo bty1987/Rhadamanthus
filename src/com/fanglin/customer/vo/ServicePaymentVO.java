@@ -9,6 +9,8 @@ public class ServicePaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 1826864912143630662L;
 
+	private Long spid;
+
 	private String orderId;
 
 	private Long advanceMoney;
@@ -20,6 +22,16 @@ public class ServicePaymentVO implements Serializable {
 	private Short status;
 
 	private Short type;
+
+	private String platform;
+
+	public Long getSpid() {
+		return spid;
+	}
+
+	public void setSpid(Long spid) {
+		this.spid = spid;
+	}
 
 	public String getOrderId() {
 		return orderId;
@@ -68,6 +80,14 @@ public class ServicePaymentVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 
 }

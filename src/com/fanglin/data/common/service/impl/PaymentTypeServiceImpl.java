@@ -26,9 +26,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 	@Override
 	public void pagePaymentType(Paging paging, List<Filter> filters, int company) {
 
-		filters.add(new Filter(PaymentTypePO.COLUMN_COMPANY_STR, String.valueOf(company), "eq"));
-
-		List<PaymentTypePO> paymentTypePOs = paymentTypeDao.pagePaymentType(paging, filters);
+		List<PaymentTypePO> paymentTypePOs = paymentTypeDao.pagePaymentType(paging, filters, company);
 		List<PaymentTypeVO> paymentTypeVOs = new ArrayList<PaymentTypeVO>();
 
 		for (PaymentTypePO paymentTypePO : paymentTypePOs) {
@@ -41,7 +39,6 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 		}
 
 		paging.setData(paymentTypeVOs);
-
 	}
 
 	@Override
@@ -49,10 +46,6 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 
 		List<PaymentTypePO> paymentTypePOs = paymentTypeDao.queryPaymentType(paymentType.getType(), paymentType.getPaytype(), paymentType.getBustype(), paymentType.getAtttype(), company);
 		List<PaymentTypeVO> paymentTypeVOs = new ArrayList<PaymentTypeVO>();
-
-		if (paymentTypePOs.size() == 0) {
-			paymentTypePOs = paymentTypeDao.queryPaymentType(paymentType.getType(), paymentType.getPaytype(), paymentType.getBustype(), paymentType.getAtttype(), 0);
-		}
 
 		for (PaymentTypePO paymentTypePO : paymentTypePOs) {
 
@@ -82,15 +75,31 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 	}
 
 	@Override
+	public PaymentTypeVO queryPaymentTypeByName(PaymentTypeVO paymentType, int company) throws FLException {
+
+		PaymentTypePO paymentTypePO = paymentTypeDao.queryPaymentTypeByName(paymentType.getName(), company);
+		PaymentTypeVO paymentTypeVO = new PaymentTypeVO();
+
+		if (paymentTypePO == null) {
+			throw new FLException(130091, "款项类型不存在");
+		}
+
+		BeanUtil.copyProperties(paymentTypePO, paymentTypeVO);
+
+		return paymentTypeVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addPaymentType(PaymentTypeVO paymentType, int company) throws FLException {
 
 		PaymentTypePO paymentTypePO = new PaymentTypePO();
+
 		BeanUtil.copyProperties(paymentType, paymentTypePO);
+
 		paymentTypePO.setCompany(company);
 
 		paymentTypeDao.save(paymentTypePO);
-
 	}
 
 	@Override
@@ -112,7 +121,6 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 		paymentTypePO.setBillType(paymentType.getBillType());
 
 		paymentTypeDao.update(paymentTypePO);
-
 	}
 
 	@Override
@@ -128,7 +136,6 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 		paymentTypePO.setStatus(paymentType.getStatus());
 
 		paymentTypeDao.update(paymentTypePO);
-
 	}
 
 }

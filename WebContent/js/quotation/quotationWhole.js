@@ -480,12 +480,12 @@ var QuotationDetail = (function(){
 
 					"quotationFunctionAreaItem.unitPrice" :  that.$nowLine.find('.unitprice .cell-wrap').text(),// 单价 ;
 					"quotationFunctionAreaItem.num" : that.$nowLine.find('.num .cell-wrap').text() ,// , 工程量 ;
-					"quotationFunctionAreaItem.type" : _type,// , 类型 , 自定义为1 , 普通报价项为0 ;
+					"quotationFunctionAreaItem.type" : _type,// , 类型 , 自定义为1 , 标准报价项为0 ;
 					"quotationFunctionAreaItem.quotationFunctionAreaId" : domain.nowEditDomain.attr('data-qfaId'),// 功能区Id ;
 				};
 
 				if(_type == 0){
-					args["quotationFunctionAreaItem.quotationItemId"] = that.$nowLine.find('input[name="deleteItems"]').attr('data-qiid');// , 报价项Id , 普通类型报价项需要传递 "data-qiid"
+					args["quotationFunctionAreaItem.quotationItemId"] = that.$nowLine.find('input[name="deleteItems"]').attr('data-qiid');// , 报价项Id , 标准类型报价项需要传递 "data-qiid"
 				}
 				if(_type == 1){
 					args["quotationFunctionAreaItem.content"] = that.$nowLine.prop('title');// , 报价项说明 , 自定义类型报价项需要传递 ;
@@ -637,7 +637,7 @@ var QuotationDetail = (function(){
 					"quotationFunctionAreaItem.content" : addRow.content,// , 报价项说明 , 自定义类型报价项需要传递 ;
 					"quotationFunctionAreaItem.unitPrice" :  addRow.unitPrice,// 单价 ;
 					"quotationFunctionAreaItem.num" : addRow.num ,// , 工程量 ;
-					"quotationFunctionAreaItem.type" : addRow.type,// , 类型 , 自定义为1 , 普通报价项为0 ;
+					"quotationFunctionAreaItem.type" : addRow.type,// , 类型 , 自定义为1 , 标准报价项为0 ;
 					"quotationFunctionAreaItem.quotationFunctionAreaId" : domain.nowEditDomain.attr('data-qfaId'),// 功能区Id ;
 				};
 
@@ -882,7 +882,7 @@ var QuotationDetail = (function(){
 				["line", linenum],
 				["num", qv.num],
 				["name", qv.itemName],
-				["type", qv.type== 0 ? "普通" : qv.type== 1 ? "自定义" : "-", ["data-type", qv.type]],
+				["type", qv.type== 0 ? "标准" : qv.type== 1 ? "自定义" : "-", ["data-type", qv.type]],
 				["unit", qv.measurementUnit],
 				["worktype", qv.workType],
 				["price unitprice", qv.unitPrice],

@@ -13,6 +13,7 @@ package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("approvalDecorationActivityService")
 @Transactional(readOnly = true)
@@ -151,12 +153,11 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			}
 
 			DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
-			BeanUtil.copyProperties(approvalDecorationActivityItemPO, decorationActivityItemPO);
+			BeanUtil.copyProperties(approvalDecorationActivityItemPO, decorationActivityItemPO, "receiver");
 
 			decorationActivityItemPO.setAid(approvalDecorationActivityPO.getActivityId());
 			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 			decorationActivityItemPO.setAsid(awardStockPO.getAsId());
-			decorationActivityItemPO.setReceiveUserName("");
 			decorationActivityItemPO.setIsPrefor(awardStockPO.getIsPrefor());
 			decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
@@ -167,6 +168,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
 				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			}
+
+			decorationActivityItemPO.setCuid(approvalPO.getSender().getUid());
+			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationActivityItemDao.save(decorationActivityItemPO);
 		}

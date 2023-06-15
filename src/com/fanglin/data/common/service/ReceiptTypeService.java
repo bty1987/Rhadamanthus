@@ -25,6 +25,8 @@ public interface ReceiptTypeService {
 
 	public List<ReceiptTypeVO> queryReceiptTypeByType(ReceiptTypeVO receiptTypeVO, int company);
 
+	public ReceiptTypeVO queryReceiptTypeByNo(ReceiptTypeVO receiptTypeVO, int company);
+
 	public int addReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException;
 
 	public int updateReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException;

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.service.OccessoriesItemService;
 import com.fanglin.inventory.service.OccessoriesService;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
 import com.fanglin.inventory.vo.OccessoriesVO;
@@ -26,12 +25,7 @@ public class OccessoriesAction extends BaseListAction {
 	@Autowired
 	private OccessoriesService occessoriesService;
 
-	@Autowired
-	private OccessoriesItemService occessoriesItemService;
-
 	private OccessoriesVO occessories;
-
-	private OccessoriesItemVO occessoriesItem;
 
 	private List<OccessoriesItemVO> occessoriesItems;
 
@@ -51,10 +45,10 @@ public class OccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryOccessoriesItemByAid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOccessoriesItemByAid() throws FLException {
+	@Action(value = "queryOccessoriesByOid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOccessoriesByOid() throws FLException {
 
-		occessoriesItems = occessoriesItemService.queryOccessoriesItemByAid(occessoriesItem);
+		occessories = occessoriesService.queryOccessoriesByOid(occessories);
 
 		return SUCCESS;
 	}
@@ -63,14 +57,6 @@ public class OccessoriesAction extends BaseListAction {
 	public String addOccessories() throws FLException {
 
 		occessoriesService.addOccessories(occessories, occessoriesItems, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "addOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addOccessoriesItem() throws FLException {
-
-		occessoriesItemService.addOccessoriesItem(occessories, occessoriesItem);
 
 		return SUCCESS;
 	}
@@ -94,7 +80,7 @@ public class OccessoriesAction extends BaseListAction {
 	@Action(value = "deliveOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deliveOccessories() throws FLException {
 
-		occessoriesService.deliveOccessories(occessories, occessoriesItems);
+		occessoriesService.deliveOccessories(occessories, occessoriesItems, queryUserId());
 
 		return SUCCESS;
 	}
@@ -102,7 +88,23 @@ public class OccessoriesAction extends BaseListAction {
 	@Action(value = "receiveOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String receiveOccessories() throws FLException {
 
-		occessoriesService.receiveOccessories(occessories, occessoriesItems);
+		occessoriesService.receiveOccessories(occessories, occessoriesItems, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "finishOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishOccessories() throws FLException {
+
+		occessoriesService.finishOccessories(occessories);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "rateOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rateOccessories() throws FLException {
+
+		occessoriesService.rateOccessories(occessories);
 
 		return SUCCESS;
 	}
@@ -115,36 +117,12 @@ public class OccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateOccessoriesItem() throws FLException {
-
-		occessoriesItemService.updateOccessoriesItem(occessoriesItem);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "deleteOccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteOccessoriesItem() throws FLException {
-
-		occessoriesItemService.deleteOccessoriesItem(occessoriesItem);
-
-		return SUCCESS;
-	}
-
 	public OccessoriesVO getOccessories() {
 		return occessories;
 	}
 
 	public void setOccessories(OccessoriesVO occessories) {
 		this.occessories = occessories;
-	}
-
-	public OccessoriesItemVO getOccessoriesItem() {
-		return occessoriesItem;
-	}
-
-	public void setOccessoriesItem(OccessoriesItemVO occessoriesItem) {
-		this.occessoriesItem = occessoriesItem;
 	}
 
 	public List<OccessoriesItemVO> getOccessoriesItems() {

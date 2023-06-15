@@ -27,7 +27,7 @@ jQuery(function($) {
     decorationActivityItem.activityItems.papersType = com.focusPage("#papersType");
     decorationActivityItem.activityItems.papersVal = com.focusPage("#papersVal");
     decorationActivityItem.activityItems.receiveTypess = com.focusPage("#receiveTypess");
-    decorationActivityItem.activityItems.comment = com.focusPage("#comment");
+    decorationActivityItem.activityItems.comment = com.focusPage("#comment", "#commentActivityModal");
 
     com.focusPage("#activity").on("change", function() {
 
@@ -524,7 +524,7 @@ jQuery(function($) {
             "decorationActivityItem.stateType": decorationActivityItem.activityItems.receiveType1.val(),
             "decorationActivityItem.asid": com.typeahead(decorationActivityItem.activityItems.itemObj),
             "decorationActivityItem.content": "",
-        }
+        };
 
         com.post(api.decoration.addDecorationActivityItem, options, function(res) {
 

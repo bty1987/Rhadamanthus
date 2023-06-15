@@ -50,6 +50,10 @@ public class NoticePO implements Serializable {
 
 	public static final short ISPUBLIC_DEPARTMENTOPEN_INT = 1; // 部门公开
 
+	public static final short EXPUBLIC_OPEN_INT = 0; // 过期公开
+
+	public static final short EXPUBLIC_HIDE_INT = 1; // 过期 隐藏
+
 	private long nid;
 
 	private UserPO creater;
@@ -67,6 +71,8 @@ public class NoticePO implements Serializable {
 	private String publishTime;
 
 	private short isPublic;
+
+	private short exPublic;
 
 	private String contents;
 
@@ -168,6 +174,15 @@ public class NoticePO implements Serializable {
 
 	public void setIsPublic(short isPublic) {
 		this.isPublic = isPublic;
+	}
+
+	@Column(name = "exPublic")
+	public short getExPublic() {
+		return exPublic;
+	}
+
+	public void setExPublic(short exPublic) {
+		this.exPublic = exPublic;
 	}
 
 	@Column(name = "contents")

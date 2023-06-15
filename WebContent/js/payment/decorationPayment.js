@@ -77,7 +77,8 @@ jQuery(function($) {
             approveModal: com.focusPage("#approveModal", "#decorationPayment"),
             collectModal: com.focusPage("#collectModal", "#decorationPayment"),
             addReduceModal: com.focusPage("#addReduceModal", "#decorationPayment"),
-            withholdModal: com.focusPage("#withholdModal", "#decorationPayment")
+            withholdModal: com.focusPage("#withholdModal", "#decorationPayment"),
+            codepayModal: com.focusPage("#decorationCodeQrcodeModal"),
         },
 
         cash: [],
@@ -132,6 +133,7 @@ jQuery(function($) {
     });
 
     decorationPayment.modals.approveModal.on('hide.bs.modal', function() {
+
         com.closeTip();
     });
 
@@ -247,8 +249,9 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
+            var $btnCodepay = $('<a></a>').addClass('btn btn-minier btn-inverse').html('POS扫码');
             var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
-            var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-yellow').html('增减明细');
+            var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-yellow hide').html('增减明细');
             var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
@@ -256,6 +259,7 @@ jQuery(function($) {
             var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
             var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
+            var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
 
             var propertyArr = paymentUtils.getPropertyArr(decorationPayment, v, v.decoration, decorationPayment.paymentStatusArray);
 
@@ -286,6 +290,8 @@ jQuery(function($) {
                 $divBtnWrap.append($btnDetail);
             if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
                 $divBtnWrap.append($btnPosPush);
+            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
+                $divBtnWrap.append($btnCodepay);
             if (decorationPayment.pageConfig.pageBtn.contains("collect"))
                 $divBtnWrap.append($btnCollect);
             if (v.paymentStatus != constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && decorationPayment.pageConfig.pageBtn.contains("print"))
@@ -302,6 +308,8 @@ jQuery(function($) {
                 $divBtnWrap.append($btnCodePush);
             if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("check"))
                 $divBtnWrap.append($btnCheck);
+            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_CONFIRM_INT && decorationPayment.pageConfig.pageBtn.contains("toKingdee"))
+                $divBtnWrap.append($btnKingdee);
 
             // 退款 增减项款 收款点击显示模态框
             $btnCollect.click(function() {
@@ -399,7 +407,8 @@ jQuery(function($) {
             // 二维码
             $btnCode.click(function() {
 
-                com.focusPage("#decorationCodeQrcodeModal").html("");
+                decorationPayment.modals.codepayModal.html("");
+
                 paymentUtils.initQrcode("decorationPayment", "decorationCodeQrcodeModal"); // 收款码
                 paymentUtils.showQRCode("decorationPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.decoration.orderId + "&paymentType=1" + "&pid=" + v.dpid, "decorationCodeQrcodeModal");
             });
@@ -420,8 +429,9 @@ jQuery(function($) {
 
             // pos推送
             $btnPosPush.click(function() {
-                var bankVal = com.typeahead(decorationPayment.htmlName+"paytranBankName");
-                var bankDiv = com.focusPage("#"+decorationPayment.htmlName+"paytranBankName");
+
+                var bankVal = com.typeahead(decorationPayment.htmlName + "paytranBankName");
+                var bankDiv = com.focusPage("#" + decorationPayment.htmlName + "paytranBankName");
 
                 if (bankVal == "" || bankDiv.val() == "") {
                     com.showAlert(com.warning, "请使用匹配数据.");
@@ -435,19 +445,51 @@ jQuery(function($) {
                     "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
                     "paytran.no": com.typeahead(bankDiv),
                     "paytran.sn": decorationPayment.posValues[bankVal].value, // 收据类型中pos的value值
-                    "paytran.money": v.referMoney
+                    "paytran.money": v.referMoney,
+                    "paytran.way": 0
                 };
 
                 com.post(api.payment.addPaytran, options, function(res) {
+
                     var sendOption = {
                         "paytran.ptid": res.paytran.ptid,
-                        "paytran.way": "wxpay"
+                        "paytran.way": 1
                     };
 
                     com.post(api.payment.posPay, sendOption, function(res) {
+
                         com.showAlert(com.info, "推送成功");
                     });
                 });
+            });
+
+            // pos扫码
+            $btnCodepay.click(function() {
+
+                var options = {
+                    "paytran.orderId": v.decoration.orderId,
+                    "paytran.pid": v.dpid,
+                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_DECORATION_INT,
+                    "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+                    "paytran.money": v.referMoney,
+                    "paytran.way": 3
+                };
+
+                com.post(api.payment.codepay, options, function(res) {
+
+                    var codeString = res.paytran.rstcode;
+
+                    decorationPayment.modals.codepayModal.html("");
+
+                    paymentUtils.initQrcode("decorationPayment", "decorationCodeQrcodeModal"); // 收款码
+                    paymentUtils.showQRCode("decorationPaymentqrcode", codeString, "decorationCodeQrcodeModal");
+                });
+            });
+
+            // 同步金蝶
+            $btnKingdee.click(function() {
+
+                kingdeeUtils.decorationPayment(v);
             });
 
             return $liLine;
@@ -478,6 +520,7 @@ jQuery(function($) {
     }
 
     searcher.init(decorationPayment.pageConfig.condArr, "condList", decorationPayment.pageConfig.apiPage, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "decorationPaymentPostData" + decorationPayment.type, extraParams, false, null, function() {
 
@@ -565,7 +608,9 @@ jQuery(function($) {
                         createAddReduceItem(v).appendTo($ul);
                     });
                 }
-            }, "pagenation", "", {"addReduce.arId": res.addReduce.arId}, true, "addReduceItems", null, 'aresultList');
+            }, "pagenation", "", {
+                "addReduce.arId": res.addReduce.arId
+            }, true, "addReduceItems", null, 'aresultList');
         });
 
         decorationPayment.modals.addReduceModal.modal("show");
@@ -849,7 +894,9 @@ jQuery(function($) {
                 list: res.paging.data
             }, function(v) {
 
-                v.collecter = v.collecter == null ? {"collecter": ""} : v.collecter;
+                v.collecter = v.collecter == null ? {
+                    "collecter": ""
+                } : v.collecter;
 
                 if (v.bank != null && v.bank != 0) {
                     v.bankInfo = paymentUtils.splitBankInfo('', v.bankInfo, decorationPayment.bankInfo, true);

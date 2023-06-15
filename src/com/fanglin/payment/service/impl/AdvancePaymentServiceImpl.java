@@ -193,6 +193,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		advanceReceiptPO.setCollecter(userPO);
 		advanceReceiptPO.setCollecterName(userPO.getUserName());
 		advanceReceiptPO.setConfirmerName("");
+		advanceReceiptPO.setRealMoney(0);
 
 		advanceReceiptDao.save(advanceReceiptPO);
 

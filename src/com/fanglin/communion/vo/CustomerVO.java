@@ -26,6 +26,8 @@ public class CustomerVO implements Serializable {
 
 	private String email;
 
+	private String career;
+
 	private String address;
 
 	private String relationshipType;
@@ -145,6 +147,14 @@ public class CustomerVO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getCareer() {
+		return career;
+	}
+
+	public void setCareer(String career) {
+		this.career = career;
 	}
 
 	public String getAddress() {

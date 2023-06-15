@@ -3,6 +3,8 @@ package com.fanglin.data.common.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fanglin.data.po.SurveyTemplatePO;
+
 public class SurveyTemplateVO implements Serializable {
 
 	private static final long serialVersionUID = -5695437132754725625L;
@@ -64,6 +66,17 @@ public class SurveyTemplateVO implements Serializable {
 
 	public void setItems(List<SurveyTemplateItemVO> items) {
 		this.items = items;
+	}
+
+	public SurveyTemplateVO setBaseInfo(SurveyTemplatePO surveyTemplatePO) {
+
+		if (surveyTemplatePO != null) {
+			setStid(surveyTemplatePO.getStid());
+			setName(surveyTemplatePO.getName());
+			setStatus(surveyTemplatePO.getStatus());
+		}
+
+		return this;
 	}
 
 }

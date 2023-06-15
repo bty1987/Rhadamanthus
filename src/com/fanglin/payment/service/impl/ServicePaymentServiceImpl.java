@@ -139,6 +139,56 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 	}
 
 	@Override
+	public ServicePaymentVO queryServicePaymentBySpid(ServicePaymentVO servicePaymentVO) {
+
+		ServicePaymentPO servicePaymentPO = servicePaymentDao.get(servicePaymentVO.getSpid());
+
+		ServicePaymentVO servicePayment = new ServicePaymentVO();
+
+		BeanUtil.copyProperties(servicePaymentPO, servicePayment, Arrays.asList("decoration", "creater", "collecter", "confirmer", "serviceReceipt"));
+
+		return servicePayment;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void makeServicePayment(ServicePaymentVO servicePayment, String cuid, int company) throws FLException {
+
+		DecorationHolonomyPO decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePayment.getDecoration().getOrderId());
+
+		if (decorationHolonomy == null) {
+			throw new FLException(260021, "半价信息不存在");
+		}
+
+		DecorationPO decoration = decorationHolonomy.getDecoration();
+
+		if (decoration == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		long servicePrice = decorationHolonomy.getServicePrice();
+		long currentServicePrice = Arith.add(servicePayment.getReferMoney(), decorationHolonomy.getServicePaidup());
+
+		if (currentServicePrice > servicePrice) {
+			throw new FLException(150025, "款项金额不正确");
+		}
+
+		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(decoration);
+
+		UserPO userPO = userDao.queryUserByUserId(cuid);
+		servicePaymentPO.setCreater(userPO);
+		servicePaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		servicePaymentPO.setType(ServicePaymentPO.COLUMN_STYPE_INT);
+		servicePaymentPO.setServiceMoney(servicePayment.getReferMoney());
+		servicePaymentPO.setCompany(company);
+
+		servicePaymentDao.save(servicePaymentPO);
+
+		servicePayment.setSpid(servicePaymentPO.getSpid());
+
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> ptids, String cuid, Integer company) throws FLException {
 		DecorationHolonomyPO decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
@@ -253,7 +303,13 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
-		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(decoration);
+		ServicePaymentPO servicePaymentPO = null;
+
+		if (servicePaymentVO.getSpid() != null) {
+			servicePaymentPO = servicePaymentDao.get(servicePaymentVO.getSpid());
+		} else {
+			servicePaymentPO = new ServicePaymentPO(decoration);
+		}
 
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration", "creater", "collecter", "confirmer", "serviceReceipt"));
 
@@ -286,7 +342,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 			paytranService.updatePaytran(ptids, servicePaymentPO.getServiceReceipt().getSrId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_SERVICE_INT);
 		}
 
-		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)));
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=4", servicePaymentPO.getDecoration().getOrderId(), serviceReceiptPO.getSrId()));
 
 		return 0;
 	}
@@ -333,7 +389,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		decorationHolonomy.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_INT);
 		decorationHolonomyDao.update(decorationHolonomy);
 
-		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款退款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)));
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款退款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=4", servicePaymentPO.getDecoration().getOrderId(), serviceReceiptPO.getSrId()));
 
 		return 0;
 	}
@@ -434,6 +490,22 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		serviceReceiptDao.update(serviceReceiptPO);
 	}
 
+	@Override
+	public void sendServicePayment(ServicePaymentVO servicePaymentVO) throws FLException {
+
+		System.out.println(servicePaymentVO.getSpid());
+		ServicePaymentPO servicePaymentPO = servicePaymentDao.get(servicePaymentVO.getSpid());
+
+		if (servicePaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		String orderId = servicePaymentPO.getDecoration().getOrderId();
+
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=4", orderId, servicePaymentPO.getSpid()));
+
+	}
+
 	@Transactional(rollbackFor = Exception.class)
 	private AdvanceReceiptPO addAdvanceReceipt(Long advanceMoney, String comment, String userId) {
 
@@ -467,7 +539,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		ServicePaymentPO servicePayment = servicePaymentDao.get(servicePaymentVO.getSpid());
 
 		ServiceReceiptPO serviceReceiptPO = new ServiceReceiptPO();
+
 		UserPO user = userDao.queryUserByUserId(userId);
+
 		serviceReceiptPO.setCollecter(user);
 		serviceReceiptPO.setCollecterName(user.getUserName());
 		serviceReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
@@ -508,6 +582,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		}
 
 		serviceReceiptPO.setType(servicePayment.getType());
+		serviceReceiptPO.setRealMoney(serviceReceiptVO.getRealMoney());
 
 		serviceReceiptDao.save(serviceReceiptPO);
 
@@ -523,9 +598,15 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		BeanUtil.copyProperties(servicePaymentPO, servicePaymentVO, Arrays.asList("creater", "collecter", "confirmer", "decoration", "serviceReceipt"));
 		servicePaymentVO.getCreater().setBaseInfo(servicePaymentPO.getCreater());
 		servicePaymentPO.getDecoration().ptvcascade(servicePaymentVO.getDecoration());
-		BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter", "confirmer"));
-		BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept", "duty"));
+
+		if (servicePaymentPO.getServiceReceipt() != null) {
+
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt(), servicePaymentVO.getServiceReceipt(), Arrays.asList("collecter", "confirmer"));
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getCollecter(), servicePaymentVO.getServiceReceipt().getCollecter(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(servicePaymentPO.getServiceReceipt().getConfirmer(), servicePaymentVO.getServiceReceipt().getConfirmer(), Arrays.asList("dept", "duty"));
+
+		}
+
 		return servicePaymentVO;
 	}
 

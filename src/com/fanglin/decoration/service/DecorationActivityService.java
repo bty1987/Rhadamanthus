@@ -23,7 +23,7 @@ public interface DecorationActivityService {
 
 	public DecorationActivityVO amountDecorationActivity(DecorationActivityVO decorationActivityVO, DecorationActivityItemVO decorationActivityItemVO) throws FLException;
 
-	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
+	public int addDecorationActivity(DecorationActivityVO decorationActivityVO, String userId) throws FLException;
 
 	public int deleteDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
 

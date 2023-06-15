@@ -10,11 +10,13 @@
 package com.fanglin.personel.vo;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.BeanUtil;
 
 public class UserVO implements Serializable {
 
@@ -69,6 +71,14 @@ public class UserVO implements Serializable {
 	private String companyNo;
 
 	private String companys;
+
+	private Short authStatus;
+
+	private String authUrl;
+
+	private String signNo;
+
+	private String token;
 
 	public UserVO() {
 		super();
@@ -299,6 +309,38 @@ public class UserVO implements Serializable {
 		return dutyName;
 	}
 
+	public Short getAuthStatus() {
+		return authStatus;
+	}
+
+	public void setAuthStatus(Short authStatus) {
+		this.authStatus = authStatus;
+	}
+
+	public String getAuthUrl() {
+		return authUrl;
+	}
+
+	public void setAuthUrl(String authUrl) {
+		this.authUrl = authUrl;
+	}
+
+	public String getSignNo() {
+		return signNo;
+	}
+
+	public void setSignNo(String signNo) {
+		this.signNo = signNo;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	public UserVO setBaseInfo(UserPO userPO) {
 
 		if (userPO == null) return this;
@@ -310,6 +352,17 @@ public class UserVO implements Serializable {
 		setUserPhoto(userPO.getUserPhoto());
 		setPhone(userPO.getPhone());
 		setDutyName(userPO.getDuty().getName());
+
+		return this;
+	}
+
+	public UserVO ptv(UserPO userPO) {
+
+		if (userPO == null) return this;
+
+		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+		BeanUtil.copyProperties(userPO.getDuty(), getDuty(), Arrays.asList("departmentType"));
+		BeanUtil.copyProperties(userPO.getDept(), getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
 		return this;
 	}

@@ -44,6 +44,22 @@ public class PaytranAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryPaytranByPtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPaytranByPtid() throws FLException {
+
+		paytran = paytranService.queryPaytranByPtid(paytran);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendPaytran() throws FLException {
+
+		paytranService.sendPaytran(paytran);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPaytran() throws FLException {
 
@@ -68,18 +84,26 @@ public class PaytranAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "sendPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendPaytran() throws FLException {
+	@Action(value = "deletePaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deletePaytran() throws FLException {
 
-		paytranService.sendPaytran(paytran);
+		paytranService.deletePaytran(paytran);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "posPay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String posPay() throws FLException {
+	@Action(value = "pospay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pospay() throws FLException {
 
-		paytranService.posPay(paytran, queryCompany());
+		paytranService.pospay(paytran, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "codepay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String codepay() throws FLException {
+
+		paytranService.codepay(paytran);
 
 		return SUCCESS;
 	}

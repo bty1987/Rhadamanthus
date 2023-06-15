@@ -13,6 +13,8 @@ package com.fanglin.payment.bean;
 
 public class Wxpay {
 
+	public static final String PAYTYPE_WXCHAT_MINIPROGRAM = "WE_MINIPG"; // 小程序支付
+
 	// args of system
 
 	private Long paymentptid; // 转换款id
@@ -54,6 +56,16 @@ public class Wxpay {
 	private String orderTime;
 
 	private String threeOrderNo;
+
+	private String unionId;
+
+	// args of swiftpass
+
+	private String mchNo;
+
+	private String url;
+
+	private String bizId;
 
 	public Wxpay() {
 		super();
@@ -193,6 +205,38 @@ public class Wxpay {
 
 	public void setThreeOrderNo(String threeOrderNo) {
 		this.threeOrderNo = threeOrderNo;
+	}
+
+	public String getUnionId() {
+		return unionId;
+	}
+
+	public void setUnionId(String unionId) {
+		this.unionId = unionId;
+	}
+
+	public String getMchNo() {
+		return mchNo;
+	}
+
+	public void setMchNo(String mchNo) {
+		this.mchNo = mchNo;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getBizId() {
+		return bizId;
+	}
+
+	public void setBizId(String bizId) {
+		this.bizId = bizId;
 	}
 
 }

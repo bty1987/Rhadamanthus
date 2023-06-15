@@ -39,7 +39,7 @@ public class SurveyTemplateAction extends BaseListAction {
 	@Action(value = "querySurveyTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySurveyTemplate() throws FLException {
 
-		surveyTemplates = surveyTemplateService.querySurveyTemplate(surveyTemplate);
+		surveyTemplates = surveyTemplateService.querySurveyTemplate(surveyTemplate, queryCompany());
 
 		return SUCCESS;
 	}
@@ -68,6 +68,14 @@ public class SurveyTemplateAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateSurveyTemplateForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSurveyTemplateForStatus() throws FLException {
+
+		surveyTemplateService.updateSurveyTemplateForStatus(surveyTemplate);
+
+		return "success";
+	}
+
 	@Action(value = "deleteSurveyTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSurveyTemplate() throws FLException {
 
@@ -91,4 +99,5 @@ public class SurveyTemplateAction extends BaseListAction {
 	public void setSurveyTemplates(List<SurveyTemplateVO> surveyTemplates) {
 		this.surveyTemplates = surveyTemplates;
 	}
+
 }

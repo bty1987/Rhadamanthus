@@ -46,6 +46,12 @@ public class AddReduceVO implements Serializable {
 
 	private Short manageDiscount;
 
+	private Long taxPrice;
+
+	private Integer taxRate;
+
+	private Short taxDiscount;
+
 	private Long undisPrice;
 
 	private Long disPrice;
@@ -65,6 +71,8 @@ public class AddReduceVO implements Serializable {
 	private Timestamp createTime;
 
 	private Timestamp confirmTime;
+
+	private Timestamp sendTime;
 
 	private Timestamp affirmTime;
 
@@ -172,6 +180,30 @@ public class AddReduceVO implements Serializable {
 		this.manageDiscount = manageDiscount;
 	}
 
+	public Long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(Long taxPrice) {
+		this.taxPrice = taxPrice;
+	}
+
+	public Integer getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Integer taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public Short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(Short taxDiscount) {
+		this.taxDiscount = taxDiscount;
+	}
+
 	public Long getUndisPrice() {
 		return undisPrice;
 	}
@@ -268,6 +300,15 @@ public class AddReduceVO implements Serializable {
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")

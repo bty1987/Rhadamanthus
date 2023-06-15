@@ -59,7 +59,7 @@ public class DecorationActivityAction extends BaseListAction {
 	@Action(value = "addDecorationActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationActivity() throws FLException {
 
-		decorationActivityService.addDecorationActivity(decorationActivity);
+		decorationActivityService.addDecorationActivity(decorationActivity, queryUserId());
 
 		return SUCCESS;
 	}
@@ -91,7 +91,7 @@ public class DecorationActivityAction extends BaseListAction {
 	@Action(value = "addDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationActivityItem() throws FLException {
 
-		decorationActivityItemService.addDecorationActivityItem(decorationActivityItem);
+		decorationActivityItemService.addDecorationActivityItem(decorationActivityItem, queryUserId());
 
 		return SUCCESS;
 	}

@@ -429,6 +429,10 @@ $(function() {
                 var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
                 var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(salesActivityItem.isAffirm[v.isAffirm]).appendTo(isAffirmLi);
 
+                var createTimeLi = $("<li></li>").appendTo(ul);
+                var createTimeState = $("<strong></strong>").text("创建时间:").appendTo(createTimeLi);
+                var createTimeSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.createTime).text(v.createTime).appendTo(createTimeLi);
+
                 var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetMain);
 
                 if (uiBtnMethod != null) {

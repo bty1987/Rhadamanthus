@@ -38,7 +38,10 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModule(List<Integer> rids, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("module.system", system)).list();
+
+		String sql = "select {rm.*} from communion.rolemodule rm, communion.module m where rm.rid in :rids and rm.mid = m.mid and m.system = :system group by rm.mid;";
+
+		return session().createSQLQuery(sql).addEntity("rm", RoleModulePO.class).setParameterList("rids", rids).setShort("system", system).list();
 	}
 
 	@Override
@@ -50,7 +53,10 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int level, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
+
+		String sql = "select {rm.*} from communion.rolemodule rm, communion.module m where rm.rid in :rids and rm.mid = m.mid and m.system = :system and m.level = :level group by rm.mid;";
+
+		return session().createSQLQuery(sql).addEntity("rm", RoleModulePO.class).setParameterList("rids", rids).setShort("system", system).setInteger("level", level).list();
 	}
 
 	@Override
@@ -62,7 +68,15 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModuleForLink(List<Integer> rids, short system) {
-		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("link", ModulePO.LINK_LINK_INT)).add(Restrictions.eq("module.system", system)).list();
+
+		String sql = "select {rm.*} from communion.rolemodule rm, communion.module m where rm.rid in :rids and rm.mid = m.mid and m.system = :system and m.link = :link group by rm.mid;";
+
+		return session().createSQLQuery(sql).addEntity("rm", RoleModulePO.class).setParameterList("rids", rids).setShort("system", system).setShort("link", ModulePO.LINK_LINK_INT).list();
+	}
+
+	@Override
+	public RoleModulePO queryRoleModule(List<Integer> rids, int mid) {
+		return (RoleModulePO) session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("module.mid", mid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

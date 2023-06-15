@@ -45,7 +45,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 			normriceItem = new NormriceItemVO(new ConstructionNodeVO());
 
 			BeanUtil.copyProperties(normriceItemPO, normriceItem, Arrays.asList("constructionNode"));
-			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItem.getConstructionNode(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItem.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 			normriceItemVOs.add(normriceItem);
 		}
@@ -83,7 +83,7 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 		normriceItemVO.setConstructionNode(new ConstructionNodeVO());
 
 		BeanUtil.copyProperties(normriceItemPO, normriceItemVO, Arrays.asList("constructionNode"));
-		BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode());
+		BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 		return 0;
 	}

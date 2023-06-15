@@ -32,7 +32,7 @@ public class ApprovalVO implements java.io.Serializable {
 
 	private String annotate;
 
-	private String processinstanceid;
+	private String piid;
 
 	public ApprovalVO() {
 		super();
@@ -134,12 +134,12 @@ public class ApprovalVO implements java.io.Serializable {
 		this.annotate = annotate;
 	}
 
-	public String getProcessinstanceid() {
-		return processinstanceid;
+	public String getPiid() {
+		return piid;
 	}
 
-	public void setProcessinstanceid(String processinstanceid) {
-		this.processinstanceid = processinstanceid;
+	public void setPiid(String piid) {
+		this.piid = piid;
 	}
 
 }

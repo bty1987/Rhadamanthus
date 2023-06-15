@@ -39,14 +39,14 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 
 	@Override
-	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Long suid, Integer company) {
+	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Integer suid, Integer company) {
 
 		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
 
 		queryFilterExcute(query, filters);
 
 		query.add(Restrictions.eq(SelectionItemPO.COLUMN_COMPANY_STR, company));
-		query.add(Restrictions.eq(SelectionItemPO.COLUMN_SUID_STR, suid));
+		query.add(Restrictions.eq("supplier.uid", suid));
 
 		query.desc("siid");
 
@@ -90,7 +90,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SelectionItemPD> querySelectionItemDBySid(long sid) {
-		return createCriteria(SelectionItemPD.class).add(Restrictions.eq(SelectionItemPD.COLUMN_SID_STR, sid)).list();
+		return createCriteria(SelectionItemPD.class).add(Restrictions.eq("selection.sid", sid)).list();
 	}
 
 	@Override

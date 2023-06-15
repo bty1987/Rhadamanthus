@@ -34,6 +34,8 @@ public class PaytranPO implements java.io.Serializable {
 
 	public static final String COLUMN_CUSERID_STR = "creater.userId";
 
+	public static final String COLUMN_SN_STR = "sn";
+
 	public static final short STATUS_INIT_INT = 0; // 初始
 
 	public static final short STATUS_SUCCESS_INT = 1; // 成功
@@ -58,9 +60,23 @@ public class PaytranPO implements java.io.Serializable {
 
 	public static final short TYPE_PAYTRAN_INT = 6; // 转换款
 
+	public static final short TYPE_PROXY_INT = 7; // 代付款
+
 	public static final short ATTTYPE_DECORATION_INT = 0; // 装修
 
 	public static final short ATTTYPE_MATERIAL_INT = 1; // 主材
+
+	public static final short WAY_ACQUIRE_SHORT = 0; // 刷卡
+
+	public static final short WAY_WXPAY_SHORT = 1; // 微信
+
+	public static final short WAY_ALIPAY_SHORT = 2; // 支付宝
+
+	public static final long CHECK_INVALIDTIME_LONG = 120000; // 失效时长2m
+
+	public static final short CODESTATUS_PAY_SHORT = 0;
+
+	public static final short CODESTATUS_UNPAYING_SHORT = 1;
 
 	private long ptid;
 
@@ -90,11 +106,15 @@ public class PaytranPO implements java.io.Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp pushTime;
+
 	private UserPO creater;
 
 	private String rstcode;
 
 	private String rstmsg;
+
+	private short way;
 
 	public PaytranPO() {
 		super();
@@ -105,7 +125,7 @@ public class PaytranPO implements java.io.Serializable {
 		this.creater = creater;
 	}
 
-	public PaytranPO(String orderId, long pid, short type, short atttype, String no, short status, long money) {
+	public PaytranPO(String orderId, long pid, short type, short atttype, String no, short status, long money, short way) {
 		super();
 		this.orderId = orderId;
 		this.pid = pid;
@@ -114,6 +134,7 @@ public class PaytranPO implements java.io.Serializable {
 		this.no = no;
 		this.status = status;
 		this.money = money;
+		this.way = way;
 	}
 
 	@Id
@@ -244,6 +265,15 @@ public class PaytranPO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "pushTime")
+	public Timestamp getPushTime() {
+		return pushTime;
+	}
+
+	public void setPushTime(Timestamp pushTime) {
+		this.pushTime = pushTime;
+	}
+
 	@ManyToOne
 	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -270,6 +300,15 @@ public class PaytranPO implements java.io.Serializable {
 
 	public void setRstmsg(String rstmsg) {
 		this.rstmsg = rstmsg;
+	}
+
+	@Column(name = "way")
+	public short getWay() {
+		return way;
+	}
+
+	public void setWay(short way) {
+		this.way = way;
 	}
 
 }

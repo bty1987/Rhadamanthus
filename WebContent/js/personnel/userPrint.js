@@ -5,6 +5,7 @@ $(function() {
     utils = parent.utils;
     params = parent.params;
     printer = parent.printer;
+    constant = parent.constant;
 
     var userInfo = {};
     var user = {};
@@ -53,6 +54,7 @@ $(function() {
     var table = createPreHeader().appendTo(trList);
 
     tabody.appendTo(table);
+
     createPreFooter();
 
     function createPreHeader() {
@@ -89,7 +91,6 @@ $(function() {
         var td15 = $('<td colspan="2" style="border: 1px solid;"></td>').text("现用名").appendTo(tr6);
         var td16 = $('<td style="border: 1px solid;"></td>').text(com.checkNull(userInfo.user.currentName, "无")).appendTo(tr6);
         var td17 = $('<td style="border: 1px solid;"></td>').text("民族").appendTo(tr6);
-
         var td18 = $('<td style="border: 1px solid;"></td>').text(com.checkNull(userInfo.nation, "无")).appendTo(tr6);
         var td19 = $('<td colspan="2" style="border: 1px solid;"></td>').text("最高学历").appendTo(tr6);
         var td20 = $('<td style="border: 1px solid;"></td>').text(com.checkNull(constant.personel().userInfo.education.datas[userInfo.education].value, "无")).appendTo(tr6);
@@ -104,7 +105,7 @@ $(function() {
 
         var tr8 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
         var td26 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text("政治面貌").appendTo(tr8);
-        var td27 = $('<td style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(constant.personel().political.datas[userInfo.political].value, "无")).appendTo(tr8);
+        var td27 = $('<td style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(constant.personel().userInfo.political.datas[userInfo.political].value, "无")).appendTo(tr8);
         var td28 = $('<td style="border: 1px solid;border-top:1px none;"></td>').text("年龄").appendTo(tr8);
         var td29 = $('<td style="border: 1px solid;border-top:1px none;"></td>').text(calaAge(getBirthday(userInfo.user.identity))).appendTo(tr8);
         var td30 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text("户籍所在地").appendTo(tr8);
@@ -136,10 +137,9 @@ $(function() {
 
         var tr12 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
         var td50 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text("户口类型").appendTo(tr12);
-        var td51 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(constant.personel().householdType.datas[userInfo.householdType].value)).appendTo(tr12);
+        var td51 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(constant.personel().userInfo.householdType.datas[userInfo.householdType].value)).appendTo(tr12);
         var td52 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text("应聘方式").appendTo(tr12);
-        var td53 = $('<td colspan="5" style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(stant.personel.employWay.datas[userInfo.employWay].value, "无")).appendTo(tr12);
-
+        var td53 = $('<td colspan="5" style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(constant.personel().userInfo.employWay.datas[userInfo.employWay].value, "无")).appendTo(tr12);
         return table;
     }
 

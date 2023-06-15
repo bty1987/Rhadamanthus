@@ -63,10 +63,12 @@ public class SurveyServiceImpl implements SurveyService {
 
 		for (SurveyPO surveyPO : surveyPOs) {
 
-			SurveyVO surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO());
+			SurveyVO surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO(), new UserVO(), new UserVO());
 
-			BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater"));
+			BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater", "sender", "finisher"));
 			BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(surveyPO.getSender(), surveyVO.getSender(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(surveyPO.getFinisher(), surveyVO.getFinisher(), Arrays.asList("dept", "role", "duty"));
 			surveyVOs.add(surveyVO);
 		}
 
@@ -81,10 +83,12 @@ public class SurveyServiceImpl implements SurveyService {
 
 		for (SurveyPO surveyPO : surveyPOs) {
 
-			surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO());
+			surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO(), new UserVO(), new UserVO());
 
 			BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater"));
 			BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(surveyPO.getSender(), surveyVO.getSender(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(surveyPO.getFinisher(), surveyVO.getFinisher(), Arrays.asList("dept", "role", "duty"));
 
 			surveyVOs.add(surveyVO);
 		}
@@ -97,10 +101,12 @@ public class SurveyServiceImpl implements SurveyService {
 
 		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
 
-		surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO());
+		surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO(), new UserVO(), new UserVO());
 
 		BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater"));
 		BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+		BeanUtil.copyProperties(surveyPO.getSender(), surveyVO.getSender(), Arrays.asList("dept", "role", "duty"));
+		BeanUtil.copyProperties(surveyPO.getFinisher(), surveyVO.getFinisher(), Arrays.asList("dept", "role", "duty"));
 
 		for (SurveyItemPO itemPO : surveyPO.getItems()) {
 
@@ -125,19 +131,33 @@ public class SurveyServiceImpl implements SurveyService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int sendSurvey(SurveyVO surveyVO) {
+	public int sendSurvey(SurveyVO surveyVO, String userId) throws FLException {
 
 		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
 
+		if (surveyPO == null) {
+			throw new FLException(330058, "调研不存在");
+		}
+
+		if (surveyPO.getStatus() != SurveyPO.STATUS_INIT_INT) {
+			throw new FLException(330059, "外销单状态不可操作");
+		}
+
+		UserPO sender = userdDao.queryUserByUserId(userId);
+
 		String orderId = surveyPO.getOrderId();
+
+		surveyPO.setStatus(SurveyPO.STATUS_SEND_INT);
+
+		surveyPO.setSender(sender);
 
 		surveyPO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
 
 		surveyDao.save(surveyPO);
 
-		System.out.println(String.format("pages/survery/survery?sid=%s", surveyPO.getSid()));
+		System.out.println(String.format("pages/customer/survery/survery?sid=%s", surveyPO.getSid()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s", orderId, surveyPO.getName()), String.format("pages/survey/survey?sid=%s", surveyPO.getSid()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s", orderId, surveyPO.getName()), String.format("pages/customer/survey/survey?sid=%s", surveyPO.getSid()));
 
 		return 0;
 	}
@@ -164,7 +184,7 @@ public class SurveyServiceImpl implements SurveyService {
 		surveyPO.setOrderId(surveyVO.getOrderId());
 		surveyPO.setStid(surveyTemplatePO.getStid());
 		surveyPO.setCompany(company);
-
+		surveyPO.setStatus(SurveyPO.STATUS_INIT_INT);
 		surveyDao.save(surveyPO);
 
 		List<SurveyTemplateItemPO> surveyTemplateItemPOs = surveyTemplatePO.getItems();
@@ -208,9 +228,17 @@ public class SurveyServiceImpl implements SurveyService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void handleSurvey(SurveyVO surveyVO) {
+	public void handleSurvey(SurveyVO surveyVO) throws FLException {
 
 		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
+
+		if (surveyPO == null) {
+			throw new FLException(330058, "调研不存在");
+		}
+
+		if (surveyPO.getStatus() != SurveyPO.STATUS_SEND_INT) {
+			throw new FLException(330059, "外销单状态不可操作");
+		}
 
 		BeanUtil.copyProperties(surveyVO, surveyPO, Arrays.asList("items"));
 
@@ -243,9 +271,32 @@ public class SurveyServiceImpl implements SurveyService {
 				surveyOptionDao.update(optionPO);
 			}
 		}
+		surveyPO.setHandleTime(DateUtil.getDateToTimestamp(new Date()));
 
 		surveyPO.setStatus(SurveyPO.STATUS_HANDLE_INT);
 
 		surveyDao.update(surveyPO);
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void finishSurvey(SurveyVO surveyVO, String userId) throws FLException {
+		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
+
+		if (surveyPO == null) {
+			throw new FLException(330058, "调研不存在");
+		}
+
+		if (surveyPO.getStatus() != SurveyPO.STATUS_HANDLE_INT) {
+			throw new FLException(330059, "外销单状态不可操作");
+		}
+		UserPO finisher = userdDao.queryUserByUserId(userId);
+
+		surveyPO.setStatus(SurveyPO.STATUS_FINISH_INT);
+		surveyPO.setFinisher(finisher);
+		surveyPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
+		surveyDao.update(surveyPO);
+	}
+
 }

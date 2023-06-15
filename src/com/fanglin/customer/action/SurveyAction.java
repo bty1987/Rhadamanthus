@@ -55,7 +55,7 @@ public class SurveyAction extends BaseListAction {
 	@Action(value = "sendSurvey", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSurvey() throws FLException {
 
-		surveyService.sendSurvey(survey);
+		surveyService.sendSurvey(survey, queryUserId());
 
 		return SUCCESS;
 	}
@@ -72,6 +72,14 @@ public class SurveyAction extends BaseListAction {
 	public String handleSurvey() throws FLException {
 
 		surveyService.handleSurvey(survey);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "finishSurvey", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishSurvey() throws FLException {
+
+		surveyService.finishSurvey(survey, queryUserId());
 
 		return SUCCESS;
 	}

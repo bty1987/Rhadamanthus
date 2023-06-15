@@ -32,7 +32,7 @@ import com.fanglin.utils.SystemConfig;
 public class RoleAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5295311320323779589L;
-	
+
 	@Autowired
 	private RoleService roleService;
 
@@ -41,87 +41,87 @@ public class RoleAction extends BaseListAction {
 	private List<RoleVO> roleList;
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageRole() throws FLException{
-		
-		roleService.pageRole(getPaging(), getFilters(),queryCompany());
-		
+	public String pageRole() throws FLException {
+
+		roleService.pageRole(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRole() throws FLException{
-		
+	public String queryRole() throws FLException {
+
 		roleList = roleService.querylRole(queryCompany());
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "queryRoleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRoleByRid(){
-		
+	public String queryRoleByRid() {
+
 		role = roleService.queryRoleByRid(role);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryRoleByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRoleByName() throws FLException{
-		
-		roleList = roleService.queryRoleByName(role,queryCompany());
-		
+	public String queryRoleByName() throws FLException {
+
+		roleList = roleService.queryRoleByName(role, queryCompany());
+
 		return SUCCESS;
 	}
 
 	@Action(value = "addRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addRole() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String addRole() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
-		roleService.addRole(role,queryCompany(),queryUserId());
-		
-	    return SUCCESS;
+
+		roleService.addRole(role, queryCompany(), queryUserId());
+
+		return SUCCESS;
 	}
 
 	@Action(value = "updateRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String editRole() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String editRole() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		roleService.updateRole(role);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteRoleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteRoleByRid() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		roleService.deleteRoleByRid(role, queryRoleId());
-		
+
 		return SUCCESS;
 	}
 
-	public RoleVO getRole(){
+	@Action(value = "deleteRoleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteRoleByRid() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		roleService.deleteRoleByRid(role, queryRoleId());
+
+		return SUCCESS;
+	}
+
+	public RoleVO getRole() {
 		return role;
 	}
 
-	public void setRole(RoleVO role){
+	public void setRole(RoleVO role) {
 		this.role = role;
 	}
 
-	public List<RoleVO> getRoleList(){
+	public List<RoleVO> getRoleList() {
 		return roleList;
 	}
 
-	public void setRoleList(List<RoleVO> roleList){
+	public void setRoleList(List<RoleVO> roleList) {
 		this.roleList = roleList;
 	}
-	
+
 }

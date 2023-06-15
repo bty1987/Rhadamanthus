@@ -13,7 +13,7 @@ public class ConstructionNodeVO implements Serializable {
 	private Integer precheck;
 
 	private Integer postcheck;
-	
+
 	private Integer stacheck;
 
 	private Integer fincheck;
@@ -23,14 +23,33 @@ public class ConstructionNodeVO implements Serializable {
 	private Short checkout;
 
 	private String startalk;
-	
+
 	private String endtalk;
-	
+
+	private SurveyTemplateVO startSurvey;
+
+	private SurveyTemplateVO endSurvey;
+
 	private Integer timeLimit;
-	
+
 	private Short sort;
 
+	private String kino;
+
+	private String kiname;
+
 	private Integer company;
+
+	public ConstructionNodeVO() {
+		super();
+
+	}
+
+	public ConstructionNodeVO(SurveyTemplateVO startSurvey, SurveyTemplateVO endSurvey) {
+		super();
+		this.startSurvey = startSurvey;
+		this.endSurvey = endSurvey;
+	}
 
 	public Long getCnid() {
 		return cnid;
@@ -63,7 +82,7 @@ public class ConstructionNodeVO implements Serializable {
 	public void setPostcheck(Integer postcheck) {
 		this.postcheck = postcheck;
 	}
-	
+
 	public Integer getStacheck() {
 		return stacheck;
 	}
@@ -112,6 +131,22 @@ public class ConstructionNodeVO implements Serializable {
 		this.endtalk = endtalk;
 	}
 
+	public SurveyTemplateVO getStartSurvey() {
+		return startSurvey;
+	}
+
+	public void setStartSurvey(SurveyTemplateVO startSurvey) {
+		this.startSurvey = startSurvey;
+	}
+
+	public SurveyTemplateVO getEndSurvey() {
+		return endSurvey;
+	}
+
+	public void setEndSurvey(SurveyTemplateVO endSurvey) {
+		this.endSurvey = endSurvey;
+	}
+
 	public Integer getTimeLimit() {
 		return timeLimit;
 	}
@@ -126,6 +161,22 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setSort(Short sort) {
 		this.sort = sort;
+	}
+
+	public String getKino() {
+		return kino;
+	}
+
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
 	}
 
 	public Integer getCompany() {

@@ -9,8 +9,10 @@ import com.fanglin.utils.Paging;
 
 public interface PaymentTypeDao extends Dao<PaymentTypePO> {
 
-	public List<PaymentTypePO> pagePaymentType(Paging paging, List<Filter> filters);
+	public List<PaymentTypePO> pagePaymentType(Paging paging, List<Filter> filters, int company);
 
 	public List<PaymentTypePO> queryPaymentType(Short type, Short paytype, Short bustype, Short atttype, int company);
+
+	public PaymentTypePO queryPaymentTypeByName(String name, int company);
 
 }

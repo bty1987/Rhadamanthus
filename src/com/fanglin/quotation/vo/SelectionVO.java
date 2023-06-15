@@ -44,14 +44,20 @@ public class SelectionVO implements Serializable {
 
 	private UserBaseVO creater;
 
+	private UserBaseVO splitter;
+
+	private UserBaseVO traner;
+
 	public SelectionVO() {
 		super();
 	}
 
-	public SelectionVO(DecorationVO decoration, UserBaseVO creater) {
+	public SelectionVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO splitter, UserBaseVO traner) {
 		super();
 		this.decoration = decoration;
 		this.creater = creater;
+		this.splitter = splitter;
+		this.traner = traner;
 	}
 
 	public Long getSid() {
@@ -182,5 +188,21 @@ public class SelectionVO implements Serializable {
 
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
+	}
+
+	public UserBaseVO getSplitter() {
+		return splitter;
+	}
+
+	public void setSplitter(UserBaseVO splitter) {
+		this.splitter = splitter;
+	}
+
+	public UserBaseVO getTraner() {
+		return traner;
+	}
+
+	public void setTraner(UserBaseVO traner) {
+		this.traner = traner;
 	}
 }

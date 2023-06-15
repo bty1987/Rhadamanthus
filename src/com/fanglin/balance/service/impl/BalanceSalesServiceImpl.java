@@ -13,11 +13,13 @@ import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceSalesBalanceDao;
 import com.fanglin.balance.dao.BalanceSalesDao;
 import com.fanglin.balance.po.BalancePO;
+import com.fanglin.balance.po.BalanceSalesBO;
 import com.fanglin.balance.po.BalanceSalesBalancePO;
 import com.fanglin.balance.po.BalanceSalesPO;
 import com.fanglin.balance.service.BalanceSalesService;
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.balance.vo.BalanceSalesVO;
+import com.fanglin.balance.vo.BalanceVO;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.BrandDao;
@@ -67,19 +69,48 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Override
 	public void pageBalanceSales(Paging paging, List<Filter> filters, int company) {
+
 		List<BalanceSalesPO> balanceSalesPOs = balanceSalesDao.pageBalanceSales(paging, filters, company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		BalanceSalesVO balanceSalesVO;
 
 		for (BalanceSalesPO balanceSalesPO : balanceSalesPOs) {
+
 			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO(), new UserBaseVO());
+
 			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
 			BeanUtil.copyProperties(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyProperties(balanceSalesPO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
 
 			balanceSalesVOs.add(balanceSalesVO);
+		}
+
+		paging.setData(balanceSalesVOs);
+	}
+
+	@Override
+	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, int company) {
+		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSalesForBalance(paging, filters, company);
+		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
+
+		BalanceSalesVO balanceSalesVO;
+
+		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
+
+			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
+
+			BeanUtil.copyPropertie(balanceSalesBO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyProperties(balanceSalesBO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+			BeanUtil.copyProperties(balanceSalesBO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBalance(), balanceSalesVO.getBalance(), Arrays.asList("belonger", "creater"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getBelonger(), balanceSalesVO.getBalance().getBelonger(), Arrays.asList("duty", "dept", "role"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getCreater(), balanceSalesVO.getBalance().getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			balanceSalesVOs.add(balanceSalesVO);
+
 		}
 
 		paging.setData(balanceSalesVOs);
@@ -146,6 +177,10 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 
+		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_INIT_INT) {
+			throw new FLException(350018, "结算销售不可操作");
+		}
+
 		for (BalanceSalesBalanceVO balanceSalesBalanceVO : balanceSalesBalance) {
 
 			SalesBalancePO salesBalancePO = salesBalanceDao.get(balanceSalesBalanceVO.getSalesBalance().getSbid());
@@ -178,7 +213,9 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 
 		for (BalanceSalesBalanceVO balanceSalesBalanceVO : balanceSalesBalance) {
+
 			BalanceSalesBalancePO balanceSalesBalancePO = balanceSalesBalanceDao.get(balanceSalesBalanceVO.getBsbid());
+
 			if (balanceSalesBalancePO == null) continue;
 
 			SalesBalancePO salesBalancePO = balanceSalesBalancePO.getSalesBalance();
@@ -202,13 +239,17 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateBalanceSales(BalanceSalesVO balanceSales) throws FLException {
+
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSales.getBsid());
+
 		if (balanceSalesPO == null) {
 			throw new FLException(350017, "结算销售不存在");
 		}
-		if (balanceSalesPO.getStatus() != 0) {
+
+		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_INIT_INT) {
 			throw new FLException(350018, "结算销售不可操作");
 		}
+
 		balanceSalesPO.setName(balanceSales.getName());
 
 		balanceSalesDao.update(balanceSalesPO);
@@ -254,8 +295,8 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		balancePO.setCreater(balanceSalesPO.getCreater());
 		balancePO.setCompany(balanceSalesPO.getCompany());
 		balancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		balancePO.setAmount(balanceSalesPO.getPayment());
-		balancePO.setSurplus(balanceSalesPO.getPayment());
+		balancePO.setAmount(balanceSalesVO.getPayment());
+		balancePO.setSurplus(balanceSalesVO.getPayment());
 
 		balanceDao.save(balancePO);
 
@@ -281,6 +322,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		}
 
 		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_UNLOCK_INT);
+		balanceSalesPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
 
 		return 0;
 	}
@@ -300,6 +342,31 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		}
 
 		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_INIT_INT);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteBalanceSales(BalanceSalesVO balanceSales) throws FLException {
+
+		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSales.getBsid());
+
+		Integer balanceSalesBalanceCount = balanceSalesBalanceDao.countBalanceSalesBalance(balanceSales.getBsid());
+
+		if (balanceSalesPO == null) {
+			throw new FLException(350017, "结算销售不存在");
+		}
+
+		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_INIT_INT) {
+			throw new FLException(350018, "结算销售不可操作");
+		}
+
+		if (balanceSalesBalanceCount > 0) {
+			throw new FLException(350021, "销售明细存在");
+		}
+
+		balanceSalesDao.delete(balanceSalesPO);
 
 		return 0;
 	}

@@ -1,81 +1,106 @@
 jQuery(function($) {
 
-	var decorationBusitype = {
+    var decorationBusitype = {
 
-		dbid: null,
+        dbid: null,
 
-		btns: {
-			addDecorationBusitypeBtn: com.focusPage("#addDecorationBusitypeBtn").on("click", saveData),
-		},
- 
-		modals: {
-				DecorationBusitypeModal: com.focusPage("#DecorationBusitypeModal"),
-		},
+        btns: {
+            addDecorationBusitypeBtn: com.focusPage("#addDecorationBusitypeBtn").on("click", saveData),
+        },
 
-		items: {
-			name : com.focusPage("#decorationBusitypeName"),
-		},
+        modals: {
+            DecorationBusitypeModal: com.focusPage("#DecorationBusitypeModal"),
+        },
 
-		status: ["启用", "禁用"],
-	};
+        items: {
+            name: com.focusPage("#decorationBusitypeName"),
+        },
 
-	var seacher = new Searcher();
+        status: ["启用", "禁用"],
+    };
 
-	seacher.base("condList", "pagenation", "resultList", api.data.pageDecorationBusitype);
+    var seacher = new Searcher();
 
-//	seacher.button([{id: "addDecorationBusitype", name: "添加", clazz: "btn-yellow", icon: "icon-plus"}]);
+    seacher.base("condList", "pagenation", "resultList", api.data.pageDecorationBusitype);
+    seacher.condition(["data-decoration-busitype-name", "data-decoration-busitype-status"]);
+    seacher.button([{
+        id: "addDecorationBusitype",
+        name: "添加",
+        clazz: "btn-yellow hide",
+        icon: "icon-plus"
+    }]);
 
-	seacher.history("decorationBusitypePostData");
+    seacher.history("decorationBusitypePostData");
 
-	var lineprops = [
-		{fieId: "status", name: "状态", prop: "status", clazz: "red", dataset: decorationBusitype.status},
-	];
+    var lineprops = [{
+        field: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: decorationBusitype.status
+    }, ];
 
-	var linebtus = [
-		{name: "编辑",clazz: "btn-yellow", handle: function(v){
-			decorationBusitype.editFlg = false;
-			decorationBusitype.dbid = v.dbid;
+    var linebtus = [{
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
 
-			decorationBusitype.items.name.val(v.name);
+            decorationBusitype.editFlg = false;
+            decorationBusitype.dbid = v.dbid;
 
-			decorationBusitype.modals.DecorationBusitypeModal.modal("show");
-			return false;
-		}},
-		{name: "状态", type: "switch", clazz: "status-lbl", handle: function(v, check){
-			com.post(api.data.updateDecorationBusitypeForStatus, {"decorationBusitype.dbid": v.dbid, "decorationBusitype.status": check ? 0 : 1});
-			seacher.doSearch();
-			return false;
-		}, init: function(v){
-			return !v.status;
-		}},
-	];
+            decorationBusitype.items.name.val(v.name);
 
-	seacher.line("name", lineprops, linebtus).render();
+            decorationBusitype.modals.DecorationBusitypeModal.modal("show");
+            return false;
+        }
+    }, {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
 
-	com.focusPage('#addDecorationBusitype' , '#pagenation').on("click",function(){
-		decorationBusitype.editFlg = true;
-		decorationBusitype.dbid = null;
+            com.post(api.data.updateDecorationBusitypeForStatus, {
+                "decorationBusitype.dbid": v.dbid,
+                "decorationBusitype.status": check ? 0 : 1
+            });
+            seacher.doSearch();
+            return false;
+        },
+        init: function(v) {
 
-		decorationBusitype.items.name.val(null);
-		decorationBusitype.modals.DecorationBusitypeModal.modal("show");
-	});
+            return !v.status;
+        }
+    }, ];
 
-	function saveData(){
+    seacher.line("name", lineprops, linebtus).render();
 
-		if(com.validate('DecorationBusitypeModal'))  return false;
+    com.focusPage('#addDecorationBusitype', '#pagenation').on("click", function() {
 
-		var url;
-		var options = {
-			"decorationBusitype.name": decorationBusitype.items.name.val(),
-		};
+        decorationBusitype.editFlg = true;
+        decorationBusitype.dbid = null;
 
-		decorationBusitype.editFlg ? url = api.data.addDecorationBusitype : url = api.data.updateDecorationBusitype, options["decorationBusitype.dbid"] = decorationBusitype.dbid;
-		
-		com.post(url, options, function(){
-			com.showAlert(com.info, "操作成功");
-			seacher.doSearch();
-		});
-		decorationBusitype.modals.DecorationBusitypeModal.modal("hide")
-	}
+        decorationBusitype.items.name.val(null);
+        decorationBusitype.modals.DecorationBusitypeModal.modal("show");
+    });
+
+    function saveData() {
+
+        if (com.validate('DecorationBusitypeModal'))
+            return false;
+
+        var url;
+        var options = {
+            "decorationBusitype.name": decorationBusitype.items.name.val(),
+        };
+
+        decorationBusitype.editFlg ? url = api.data.addDecorationBusitype : url = api.data.updateDecorationBusitype, options["decorationBusitype.dbid"] = decorationBusitype.dbid;
+
+        com.post(url, options, function() {
+
+            com.showAlert(com.info, "操作成功");
+            seacher.doSearch();
+        });
+        decorationBusitype.modals.DecorationBusitypeModal.modal("hide")
+    }
 
 });

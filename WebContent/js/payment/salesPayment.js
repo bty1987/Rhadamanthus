@@ -322,13 +322,14 @@ $(function () {
                     "paytran.atttype": constant.payment.paytran.ATTTYPE_MATERIAL_INT,
                     "paytran.no": com.typeahead(bankDiv),
                     "paytran.sn": salesPayment.posValues[bankVal].value, // 收据类型中pos的value值
-                    "paytran.money": v.referMoney
+                    "paytran.money": v.referMoney,
+                    "paytran.way": 0
                 };
 
                 com.post(api.payment.addPaytran, options, function(res) {
                     var sendOption = {
                         "paytran.ptid": res.paytran.ptid,
-                        "paytran.way": "wxpay"
+                        "paytran.way": 1
                     };
 
                     com.post(api.payment.posPay, sendOption, function(res) {
@@ -491,6 +492,7 @@ $(function () {
         };
 
         var realPayment = 0;
+        var realMoney = 0;
         var referPayment = salesPayment.items.referMoney.val();
         var type = 0;
 
@@ -523,6 +525,7 @@ $(function () {
         var cash = paymentUtils.paramCash(salesPayment, "salesReceipt", options);
 
         realPayment = utils.accAdd(realPayment, parseFloat(cash));
+        realMoney = utils.accAdd(realMoney, parseFloat(cash));
 
         var bank = paymentUtils.paramBank(salesPayment, salesPayment.payment.salesReceipt, "salesReceipt", options, type);
 
@@ -532,10 +535,12 @@ $(function () {
         }
 
         realPayment = utils.accAdd(realPayment, parseFloat(bank));
+        realMoney = utils.accAdd(realMoney, parseFloat(bank));
 
         var checkv = paymentUtils.paramCheckv(salesPayment, "salesReceipt", options);
 
         realPayment = utils.accAdd(realPayment, parseFloat(checkv));
+        realMoney = utils.accAdd(realMoney, parseFloat(checkv));
 
         var advance = paymentUtils.paramAdvance(salesPayment, salesPayment.payment.salesReceipt, "salesReceipt", options, "advance", type);
 
@@ -561,6 +566,7 @@ $(function () {
         }
 
         options["salesPayment.spid"] = payment.spid;
+        options["salesReceipt.realMoney"] = realMoney;
 
         com.post(url, options, function(res){
             searcher.doSearch();

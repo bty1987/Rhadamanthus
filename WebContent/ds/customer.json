@@ -27,7 +27,7 @@
   	{"key":"1","value":"投诉"}
   ],
   "complainLevel":[
-    {"key":"0","value":"普通"},
+    {"key":"0","value":"标准"},
     {"key":"1","value":"重大"},
     {"key":"2","value":"危机"}
   ],
@@ -83,8 +83,9 @@
   ],
   "surveyStatus": [
     {"key":"0","value":"初始"},
-    {"key":"1","value":"处理"},
-    {"key":"2","value":"完成"}
+    {"key":"1","value":"推送"},
+    {"key":"2","value":"处理"},
+    {"key":"3","value":"完成"}
   ],
   "surveyItemType": [
     {"key":"0","value":"文本"},
@@ -111,6 +112,10 @@
     {"key":"3","value":"工程"},
     {"key":"4","value":"款项"},
     {"key":"5","value":"其他"}
+  ],
+  "droupType": [
+    {"key":"1","value":"钉钉"},
+    {"key":"2","value":"微信"}
   ],
   "errorCode": 0,
   "errorMsg": ""

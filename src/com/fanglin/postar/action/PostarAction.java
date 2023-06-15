@@ -36,7 +36,13 @@ public class PostarAction extends BaseListAction {
 
 		JSONObject params = JSONObject.parseObject(getRequestPostData(request));
 
-		postarService.callbackPostar(params);
+		try {
+			postarService.callbackPostar(params);
+		} catch (FLException e) {
+			System.out.println(params);
+			System.out.println(e.getCode() + ":" + e.getMessage());
+			throw e;
+		}
 
 		return SUCCESS;
 	}

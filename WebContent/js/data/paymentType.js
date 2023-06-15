@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var paymentType = {
         modals: {
@@ -7,7 +7,7 @@ jQuery(function ($) {
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData)
         },
-        items:{
+        items: {
             name: com.focusPage("#name"),
             type: com.focusPage("#type"),
             paytype: com.focusPage("#paytype"),
@@ -40,10 +40,13 @@ jQuery(function ($) {
         codes_sales: {},
         status: {},
         ptid: null,
-        editFlg: true
+        editFlg: true,
+
+        pageType: params.urlLoadParams.type,
     };
 
-    paymentType.modals.paymentTypeModal.on('hide.bs.modal', function (e) {
+    paymentType.modals.paymentTypeModal.on('hide.bs.modal', function(e) {
+
         com.closeTip();
         com.clearValidator();
         com.cleanItems(paymentType.items);
@@ -51,7 +54,8 @@ jQuery(function ($) {
 
     paymentType.items.taxrate.bindData(paymentType.taxrate, "", "", true);
 
-    com.post(api.ds.data, {}, function (res) {
+    com.post(api.ds.data, {}, function(res) {
+
         paymentType.atttype_advance = res.atttype_advance;
         paymentType.atttype_decoration = res.atttype_decoration;
         paymentType.atttype_material = res.atttype_material;
@@ -59,34 +63,44 @@ jQuery(function ($) {
         paymentType.code_material = res.code_material;
         paymentType.code_sales = res.code_sales;
 
-        $.each(res.paymentType, function(i, v){
+        $.each(res.paymentType, function(i, v) {
+
             paymentType.types[v.key] = v.value;
         });
-        $.each(res.paytype, function(i, v){
+        $.each(res.paytype, function(i, v) {
+
             paymentType.paytypes[v.key] = v.value;
         });
-        $.each(res.bustype, function(i, v){
+        $.each(res.bustype, function(i, v) {
+
             paymentType.bustypes[v.key] = v.value;
         });
-        $.each(res.atttype_advance, function(i, v){
+        $.each(res.atttype_advance, function(i, v) {
+
             paymentType.atttypes_advance[v.key] = v.value;
         });
-        $.each(res.atttype_decoration, function(i, v){
+        $.each(res.atttype_decoration, function(i, v) {
+
             paymentType.atttypes_decoration[v.key] = v.value;
         });
-        $.each(res.atttype_material, function(i, v){
+        $.each(res.atttype_material, function(i, v) {
+
             paymentType.atttypes_material[v.key] = v.value;
         });
-        $.each(res.atttype_sales, function(i, v){
+        $.each(res.atttype_sales, function(i, v) {
+
             paymentType.atttypes_sales[v.key] = v.value;
         });
-        $.each(res.paymentTypeStatus, function(i, v){
+        $.each(res.paymentTypeStatus, function(i, v) {
+
             paymentType.status[v.key] = v.value;
         });
-        $.each(res.code_material, function(i, v){
+        $.each(res.code_material, function(i, v) {
+
             paymentType.codes_material[v.key] = v.value;
         });
-        $.each(res.code_sales, function(i, v){
+        $.each(res.code_sales, function(i, v) {
+
             paymentType.codes_sales[v.key] = v.value;
         });
 
@@ -96,10 +110,11 @@ jQuery(function ($) {
         paymentType.items.atttype.bindData(res.atttype_advance, "key", "value");
     });
 
-    paymentType.items.type.on("change", function(){
-        var typeVal =  paymentType.items.type.val();
+    paymentType.items.type.on("change", function() {
 
-        switch(typeVal) {
+        var typeVal = paymentType.items.type.val();
+
+        switch (typeVal) {
             case "0":
                 paymentType.items.atttype.bindData(paymentType.atttype_advance, "key", "value");
                 paymentType.items.code.bindData({}, "", "");
@@ -132,13 +147,30 @@ jQuery(function ($) {
 
     searcher.history("paymentTypePostData");
 
-    var lineprops = [
-        {fieId:"type",name: "类型", prop: "type", dataset: paymentType.types, clazz:"red"},
-        {fieId:"paytype",name: "付款类型", prop: "paytype", dataset: paymentType.paytypes,clazz:"red"},
-        {fieId:"bustype",name: "业务类型", prop: "bustype", dataset: paymentType.bustypes,clazz:"grey"},
-        {fieId:"atttype", name: "属性类型", prop: function(v){
+    var lineprops = [{
+        fieId: "type",
+        name: "类型",
+        prop: "type",
+        dataset: paymentType.types,
+        clazz: "red"
+    }, {
+        fieId: "paytype",
+        name: "付款类型",
+        prop: "paytype",
+        dataset: paymentType.paytypes,
+        clazz: "red"
+    }, {
+        fieId: "bustype",
+        name: "业务类型",
+        prop: "bustype",
+        dataset: paymentType.bustypes,
+        clazz: "grey"
+    }, {
+        fieId: "atttype",
+        name: "属性类型",
+        prop: function(v) {
 
-            switch(v.type) {
+            switch (v.type) {
                 case 0:
                     return paymentType.atttypes_advance[v.atttype];
                     break;
@@ -155,12 +187,24 @@ jQuery(function ($) {
                     return "";
                     break;
             }
-        }, clazz: "red"},
-        {fieId:"payScale",name: "付款比例", prop: "payScale", clazz:"blue"},
-        {fieId:"saleScale",name: "销售比例", prop: "saleScale", clazz:"blue"},
-        {fieId:"code", name: "索引", prop: function(v){
+        },
+        clazz: "red"
+    }, {
+        fieId: "payScale",
+        name: "付款比例",
+        prop: "payScale",
+        clazz: "blue"
+    }, {
+        fieId: "saleScale",
+        name: "销售比例",
+        prop: "saleScale",
+        clazz: "blue"
+    }, {
+        fieId: "code",
+        name: "索引",
+        prop: function(v) {
 
-            switch(v.type) {
+            switch (v.type) {
                 case 2:
                     return paymentType.codes_material[v.code];
                     break;
@@ -171,18 +215,49 @@ jQuery(function ($) {
                     return "";
                     break;
             }
-        }, clazz: "blue"},
-        {fieId:"taxrate", name: "税率", prop: "taxrate", clazz: "blue"},
-        {fieId:"kino", name: "金蝶编号", prop: "kino", clazz: "blue"},
-        {fieId:"kiname", name: "金蝶名称", prop: "kiname", clazz: "grey"},
-        {fieId:"kibalance", name: "费用项目编码", prop: "kibalance", clazz: "blue"},
-        {fieId:"billType", name: "单据名称", prop: "billType", clazz: "grey", show: function(v){
+        },
+        clazz: "blue"
+    }, {
+        fieId: "taxrate",
+        name: "税率",
+        prop: "taxrate",
+        clazz: "blue"
+    }, {
+        fieId: "kino",
+        name: "金蝶编号",
+        prop: "kino",
+        clazz: "blue"
+    }, {
+        fieId: "kiname",
+        name: "金蝶名称",
+        prop: "kiname",
+        clazz: "grey"
+    }, {
+        fieId: "kibalance",
+        name: "费用项目编码",
+        prop: "kibalance",
+        clazz: "blue"
+    }, {
+        fieId: "billType",
+        name: "单据名称",
+        prop: "billType",
+        clazz: "grey",
+        show: function(v) {
+
             return v.billType = com.checkNull(v.billType, "无");
-        }},
-        {fieId:"status", name: "状态", prop: "status", dataset: paymentType.status, clazz: "red"}
-    ];
-    var linebtns = [
-        {name: "更新", clazz: "btn-yellow", handle: function(v){
+        }
+    }, {
+        fieId: "status",
+        name: "状态",
+        prop: "status",
+        dataset: paymentType.status,
+        clazz: "red"
+    }];
+    var linebtns = [{
+        name: "更新",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
             paymentType.ptid = v.ptid;
             paymentType.items.payScale.val(v.payScale);
             paymentType.items.saleScale.val(v.saleScale);
@@ -196,34 +271,60 @@ jQuery(function ($) {
             paymentType.modals.paymentTypeModal.modal("show");
 
             return false;
-        }},{name: "状态", type: "switch", clazz: "status-lbl", handle: function(v, check){
-            com.post(api.data.updatePaymentTypeForStatus, {"paymentType.ptid": v.ptid, "paymentType.status": check ? 0 : 1}, function(res){
+        },
+        show: function(v) {
+
+            return paymentType.pageType == "common";
+        }
+    }, {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+
+            com.post(api.data.updatePaymentTypeForStatus, {
+                "paymentType.ptid": v.ptid,
+                "paymentType.status": check ? 0 : 1
+            }, function(res) {
+
                 searcher.doSearch();
                 return false;
             });
-        }, init: function(v){
+        },
+        init: function(v) {
+
             return !v.status;
-        }}
+        }
+    }
 
     ];
-
-    searcher.button([{id: "add", name: "添加", clazz: "btn-success", icon: "icon-plus bigger-110"}]);
+    if (paymentType.pageType == "common") {
+        searcher.button([{
+            id: "add",
+            name: "添加",
+            clazz: "btn-success",
+            icon: "icon-plus bigger-110"
+        }]);
+    }
 
     searcher.line("name", lineprops, linebtns).render();
 
-    com.focusPage("#add").click(function(){
+    com.focusPage("#add").click(function() {
+
         paymentType.editFlg = true;
         com.focusPage("#saveInfo").css("display", "block");
         paymentType.modals.paymentTypeModal.modal("show");
     });
 
     function saveData() {
-        if (com.validate('paymentTypeModal')) return false;
+
+        if (com.validate('paymentTypeModal'))
+            return false;
 
         var url;
         var options = {
-            "paymentType.payScale" : paymentType.items.payScale.val(),
-            "paymentType.saleScale" : paymentType.items.saleScale.val(),
+            "paymentType.payScale": paymentType.items.payScale.val(),
+            "paymentType.saleScale": paymentType.items.saleScale.val(),
             "paymentType.taxrate": paymentType.items.taxrate.val() == "" ? 0 : paymentType.items.taxrate.val(),
             "paymentType.kino": paymentType.items.kino.val(),
             "paymentType.kiname": paymentType.items.kiname.val(),
@@ -244,7 +345,8 @@ jQuery(function ($) {
             options["paymentType.ptid"] = paymentType.ptid;
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
+
             searcher.doSearch();
         });
 

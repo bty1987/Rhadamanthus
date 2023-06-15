@@ -24,6 +24,10 @@ public class ApprovalDecorationBelongItemPO implements java.io.Serializable {
 
 	private int buid;
 
+	private int bdid;
+
+	private int brid;
+
 	private int rate;
 
 	private short defaultFlag;
@@ -64,6 +68,24 @@ public class ApprovalDecorationBelongItemPO implements java.io.Serializable {
 
 	public void setBuid(int buid) {
 		this.buid = buid;
+	}
+
+	@Column(name = "bdid")
+	public int getBdid() {
+		return bdid;
+	}
+
+	public void setBdid(int bdid) {
+		this.bdid = bdid;
+	}
+
+	@Column(name = "brid")
+	public int getBrid() {
+		return brid;
+	}
+
+	public void setBrid(int brid) {
+		this.brid = brid;
 	}
 
 	@Column(name = "rate")

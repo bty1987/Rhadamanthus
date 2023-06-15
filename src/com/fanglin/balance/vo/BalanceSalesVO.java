@@ -19,6 +19,8 @@ public class BalanceSalesVO implements java.io.Serializable {
 
 	private BrandVO brand;
 
+	private BalanceVO balance;
+
 	private String grade;
 
 	private Long income;
@@ -41,11 +43,13 @@ public class BalanceSalesVO implements java.io.Serializable {
 
 	private UserBaseVO creater;
 
-	private Timestamp createTime;
-
 	private UserBaseVO balancer;
 
+	private Timestamp createTime;
+
 	private Timestamp balanceTime;
+
+	private Timestamp lockTime;
 
 	public BalanceSalesVO() {
 		super();
@@ -62,6 +66,14 @@ public class BalanceSalesVO implements java.io.Serializable {
 		this.brand = brand;
 		this.creater = creater;
 		this.balancer = balancer;
+	}
+
+	public BalanceSalesVO(BrandVO brand, BalanceVO balance, UserBaseVO creater, UserBaseVO balancer) {
+		super();
+		this.brand = brand;
+		this.creater = creater;
+		this.balancer = balancer;
+		this.balance = balance;
 	}
 
 	public Long getBsid() {
@@ -94,6 +106,14 @@ public class BalanceSalesVO implements java.io.Serializable {
 
 	public void setBrand(BrandVO brand) {
 		this.brand = brand;
+	}
+
+	public BalanceVO getBalance() {
+		return balance;
+	}
+
+	public void setBalance(BalanceVO balance) {
+		this.balance = balance;
 	}
 
 	public String getGrade() {
@@ -208,6 +228,15 @@ public class BalanceSalesVO implements java.io.Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Timestamp lockTime) {
+		this.lockTime = lockTime;
 	}
 
 }

@@ -143,8 +143,7 @@ jQuery(function($) {
         com.focusPage("#con-housetype", "#form").val(data.houseClass);
 
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
-        com.focusPage("#con-work-type", "#form").val(contractEdit.decorationType[data.type]);
-        com.focusPage("#con-work-model", "#form").val(contractEdit.decorationType[data.type]);
+        com.focusPage("#con-work-model", "#form").val(contractEdit.decorationType[data.typeness]);
 
         com.focusPage("#con-contract-total", "#form").val(utils.accAdd(parseFloat(data.orderTotalPrice), parseFloat(contractEdit.designPrice)));
         com.focusPage("#con-contract-stotal", "#form").val(data.orderTotalPrice);

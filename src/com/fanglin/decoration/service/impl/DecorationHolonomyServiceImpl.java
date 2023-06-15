@@ -160,7 +160,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		Long managePrice = decorationHolonomyVO.getManageDiscount() == 1 ? Arith.mul(quotationPO.getManagePrice(), Arith.div(decorationHolonomyVO.getDiscount(), 10000)) : quotationPO.getManagePrice();
 
 		// 工程基础额 与报价额相同
-		Long projectBase = Arith.add(projectPrice, quotationPO.getManagePrice());
+		Long projectBase = Arith.add(projectPrice, Arith.add(quotationPO.getManagePrice(), quotationPO.getTaxPrice()));
 
 		// 主材总额 = 工程总额 * 主材配比
 		Long materialPrice = Arith.mul(Arith.div(Arith.mul(projectBase, decorationHolonomyVO.getMaching()), 1000000), 1000000);
@@ -183,7 +183,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 
 		// 传给款项
 		// 生成装修款信息 , 通过款项比例对应的比例项信息生成装修款信息
-		decorationPaymentService.makeDecorationPayment(decorationPO, Arith.add(disprojectPrice, managePrice), quotationPO.getCostPrice(), decorationHolonomyVO.getPsId(), userId);
+		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), quotationPO.getCostPrice(), decorationHolonomyVO.getPsId(), userId);
 
 		decorationHolonomyVO.setProjectPrice(disprojectPrice);
 		decorationHolonomyVO.setManagePrice(managePrice);

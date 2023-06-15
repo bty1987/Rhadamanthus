@@ -180,7 +180,7 @@ public class AoodsServiceImpl implements AoodsService {
 
 		int cid = "".equals(aoodsVO.getBompany()) ? 0 : CompanyServiceImpl.decode(aoodsVO.getBompany());
 
-		if (aoodsDao.countAoods(aoodsPO.getGoods().getGid(), cid) > 0 && cid != aoodsPO.getBompany()) {
+		if (aoodsPO.getBompany() != cid && aoodsDao.countAoods(aoodsVO.getGoods().getGid(), cid) > 0) {
 			throw new FLException(130029, "辅材已存在");
 		}
 

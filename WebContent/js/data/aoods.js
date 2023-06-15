@@ -28,39 +28,47 @@ $(function() {
         },
 
         status: ["启用", "禁用"],
-        atttype: ["普通", "外辅"],
+        atttype: ["标准", "外辅"],
         pageType: params.urlLoadParams.type,
     };
 
     com.post(api.data.queryAccessoriesType, {}, function(res) {
+
         aoods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
         com.focusPage('select[name="editAccessoriesType"]').bindData(res.accessoriesTypes, 'atid', 'name', false);
     });
 
     com.post(api.system.queryCompany, {}, function(res) {
+
         aoods.items.bcompany.bindData(res.companys, 'cid', 'name', true);
         aoods.items.ccompany.bindData(res.companys, 'cid', 'name', true);
         com.focusPage('select[name="editBcompany"]').bindData(res.companys, 'cid', 'name', false);
     });
     com.post(api.ds.data, {}, function(res) {
+
         com.focusPage('select[name="editAtttype"]').bindData(res.aoodsAtttype, "key", "value", false);
         com.focusPage('select[name="atttype"]').bindData(res.aoodsAtttype, "key", "value", false);
     }, null, false);
 
     aoods.btns.submitBtn.click(function() {
+
         saveData();
     });
 
     aoods.btns.editBtn.click(function() {
+
         editAoods();
     });
 
     aoods.btns.copyBtn.click(function() {
+
         copyAoods();
     });
 
     com.initTypeahead("name", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
+
         $.each(list, function(index, val) {
+
             if (val.gid == k) {
                 aoods.gid = k;
             }
@@ -153,6 +161,7 @@ $(function() {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
+
             com.cleanItems(aoods.items);
             aoods.items.editBalance.val(v.balance);
             aoods.aid = v.aid;
@@ -166,6 +175,7 @@ $(function() {
         name: "成本",
         clazz: "btn-pink",
         handle: function(v) {
+
             params.data.aoods = v;
             com.popup4page("#optPopUp", "views/data/aoodsCost.html", "辅材成本");
         }
@@ -174,6 +184,7 @@ $(function() {
         type: "switch",
         clazz: "status-lbl",
         handle: function(v, check) {
+
             com.post(api.data.updateAoodsForStatus, {
                 "aoods.aid": v.aid,
                 "aoods.status": check ? 0 : 1
@@ -181,6 +192,7 @@ $(function() {
             return false;
         },
         init: function(v) {
+
             return !v.status;
         }
     }, ];
@@ -190,18 +202,22 @@ $(function() {
     searcher.render();
 
     com.focusPage('#add', '#pagenation').on("click", function() {
+
         com.cleanItems(aoods.items);
         com.popup4model("#addLayer", "添加");
     });
 
     com.focusPage('#copy', '#pagenation').on("click", function() {
+
         com.cleanItems(aoods.items);
         com.popup4model("#copyLayer", "复制");
     });
 
     function saveData() {
 
-        if (com.validate("formAoods", "right")) { return false; }
+        if (com.validate("formAoods", "right")) {
+            return false;
+        }
 
         var gid = aoods.gid;
         var atid = aoods.items.accessoriesType.val();
@@ -218,6 +234,7 @@ $(function() {
         };
 
         com.post(api.data.addAoods, options, function(res) {
+
             com.closePopup();
             searcher.doSearch();
         });
@@ -225,7 +242,9 @@ $(function() {
 
     function editAoods() {
 
-        if (com.validate("editAoods", "right")) { return false; }
+        if (com.validate("editAoods", "right")) {
+            return false;
+        }
         var atid = aoods.items.editAccessoriesType.val();
         var bcid = aoods.items.editBcompany.val();
         var atttype = aoods.items.editAtttype.val();
@@ -244,6 +263,7 @@ $(function() {
         };
 
         com.post(api.data.updateAoods, options, function(res) {
+
             com.closePopup();
             searcher.doSearch();
         });
@@ -255,15 +275,19 @@ $(function() {
             "aoods.aid": id,
             "aoods.status": status
         }, function() {
+
             searcher.doSearch();
         }, function() {
+
             failcallBack && failcallBack();
         });
     }
 
     function copyAoods() {
 
-        if (com.validate("copyAoods", "right")) { return false; }
+        if (com.validate("copyAoods", "right")) {
+            return false;
+        }
 
         var bcid = aoods.items.ccompany.val();
 
@@ -272,6 +296,7 @@ $(function() {
         };
 
         com.post(api.data.copyAoods, options, function(res) {
+
             com.closePopup();
             searcher.doSearch();
         });

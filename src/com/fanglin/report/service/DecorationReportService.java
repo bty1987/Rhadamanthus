@@ -13,8 +13,8 @@ public interface DecorationReportService {
 
 	public void queryDecoration7Achievement(Paging paging, List<Filter> list, int company) throws FLException;
 
-	public void updataDecoration7Construction() throws Exception;
+	public void updateDecoration7Construction() throws Exception;
 
-	public void updataDecoration7Achievement(DecorationAchievementVO decorationAchievement, int company) throws Exception;
+	public void updateDecoration7Achievement(DecorationAchievementVO decorationAchievement, int company) throws Exception;
 
 }

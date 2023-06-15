@@ -39,13 +39,15 @@ public class PaytranVO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp pushTime;
+
 	private UserVO creater;
 
 	private String rstcode;
 
 	private String rstmsg;
 
-	private String way;
+	private Short way;
 
 	public PaytranVO() {
 		super();
@@ -174,6 +176,15 @@ public class PaytranVO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getPushTime() {
+		return pushTime;
+	}
+
+	public void setPushTime(Timestamp pushTime) {
+		this.pushTime = pushTime;
+	}
+
 	public UserVO getCreater() {
 		return creater;
 	}
@@ -198,11 +209,11 @@ public class PaytranVO implements Serializable {
 		this.rstmsg = rstmsg;
 	}
 
-	public String getWay() {
+	public Short getWay() {
 		return way;
 	}
 
-	public void setWay(String way) {
+	public void setWay(Short way) {
 		this.way = way;
 	}
 

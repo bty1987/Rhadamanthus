@@ -47,6 +47,14 @@ public class PresignProduceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryPresignProduceByPpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPresignProduceByPpid() {
+
+		presignProduce = presignProduceService.queryPresignProduceByPpid(presignProduce);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addPresignProduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPresignProduce() throws FLException {
 

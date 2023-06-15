@@ -3,10 +3,12 @@ package com.fanglin.balance.dao.impl;
 import java.util.List;
 
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.balance.dao.BalanceSalesDao;
+import com.fanglin.balance.po.BalanceSalesBO;
 import com.fanglin.balance.po.BalanceSalesPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
@@ -28,7 +30,23 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 
 		queryFilterExcute(query, filters);
 
-		query.asc("bsid");
+		query.desc("bsid");
+
+		return query.list();
+	}
+
+	@Override
+	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, int company) {
+
+		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
+
+		query.add(Restrictions.eq("company", company));
+
+		query.add(Restrictions.ne("balance.bid", Long.valueOf(0)));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("bsid");
 
 		return query.list();
 	}
@@ -36,33 +54,44 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<BalanceSalesPO> queryBalanceSales(String name, int company) {
-		return session().createCriteria(BalanceSalesPO.class).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).add(Restrictions.eq("status", BalanceSalesPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).setMaxResults(10).list();
+		return session().createCriteria(BalanceSalesPO.class).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).add(Restrictions.eq("status", BalanceSalesPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("bsid")).setMaxResults(10).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				if ("name".equals(field)) {
-					query.add(Restrictions.ilike("name", data, MatchMode.ANYWHERE));
-				} else if ("status".equals(field)) {
-					query.add(Restrictions.eq("status", Short.valueOf(data)));
-				} else if ("grade".equals(field)) {
-					query.add(query.getCriterion("grade", data, op));
-				} else if ("createTimeDateRange".equals(field)) {
-					query.timeranges("createTime", "createTime", data);
-				} else if ("createrId".equals(field)) {
-					query.alias("creater", "creater");
-					query.add(query.getCriterion("creater.userId", data, op));
-				} else if ("brandId".equals(field)) {
-					query.alias("brand", "brand");
-					query.add(query.getCriterion("brand.bid", Long.valueOf(data), op));
-				}
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(Restrictions.ilike("name", data, MatchMode.ANYWHERE));
+			} else if ("status".equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(data)));
+			} else if ("grade".equals(field)) {
+				query.add(query.getCriterion("grade", data, op));
+			} else if ("createTimeDateRange".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("createrId".equals(field)) {
+				query.alias("creater", "creater");
+				query.add(query.getCriterion("creater.userId", data, op));
+			} else if ("brandId".equals(field)) {
+				query.alias("brand", "brand");
+				query.add(query.getCriterion("brand.bid", Long.valueOf(data), op));
+			} else if ("balanceNo".equals(field)) {
+				query.alias("balance", "balance");
+				query.add(query.getCriterion("balance.no", String.valueOf(data), op));
+			} else if ("balanceType".equals(field)) {
+				query.alias("balance", "balance");
+				query.add(query.getCriterion("balance.type", Short.valueOf(data), op));
+			} else if ("balanceStatus".equals(field)) {
+				query.alias("balance", "balance");
+				query.add(query.getCriterion("balance.status", Short.valueOf(data), op));
+			} else if ("lockTimeDateRange".equals(field)) {
+				query.timeranges("lockTime", "lockTime", data);
 			}
 		}
 	}

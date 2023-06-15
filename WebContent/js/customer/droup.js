@@ -17,6 +17,7 @@ jQuery(function ($) {
             itemlist: com.focusPage("#itemlist", "#droupModal"),
             orderId: com.focusPage("#orderId", "#bindModal"),
             name: com.focusPage("#name", "#bindModal"),
+            type: com.focusPage("#type", "#bindModal"),
             user: com.focusPage("#user", "#addModal"),
             enter: com.focusPage("#enter"),
             path: com.focusPage("#path"),
@@ -54,7 +55,7 @@ jQuery(function ($) {
         "user.status": 0
     }, "autoFillKeyValue", "key", "value", null);
 
-
+    droup.items.type.bindData(constant.customer().droup.dType.datas, "key", "value");
     function line(v) {
 
         if(v.contype == constant.customer().droup.TYPE_CUSTOMER_INT){
@@ -70,8 +71,10 @@ jQuery(function ($) {
         }else if (v.contype == constant.customer().droup.TYPE_OTHER_INT){
             var sevenDiv = $('<div class="itemdiv dialogdiv rests"></div>');
         }
-        var eightDiv = $('<div class="user"></div>').appendTo(sevenDiv);
+        var nameDiv = $('<div></div>').appendTo(sevenDiv);
+        var Name = $('<h5 align="left" style="margin-left: 50px"></h5>').html(v.name).appendTo(nameDiv);
 
+        var eightDiv = $('<div class="user"></div>').appendTo(sevenDiv);
         var img = $('<img src="assets/altogether/images/avatar2.png"/>').appendTo(eightDiv);
         com.showImg(img, v.creater.userPhoto, 50, 50, '');
         var nineDiv = $('<div class="body" style="border: 2px solid #fee188"></div>').appendTo(sevenDiv);
@@ -105,7 +108,6 @@ jQuery(function ($) {
             if (or == 0){
                 com.showImg(photo, v.path, 250, 150, '', null, 0);
             }else if(or == -1){
-                console.log(1);
                 com.showImg(photo, v.path, 0, 0, '250x150', null, 1);
             }
             var eighteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
@@ -275,7 +277,7 @@ jQuery(function ($) {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageDroup);
 
-    searcher.condition(['customer-droup-orderId', 'customer-v-name', 'customer-droup-status', 'customer-droup-updateTime', 'customer-droup-handleTime', 'customer-droup-isHandle']);
+    searcher.condition(['customer-droup-orderId', 'customer-v-name', 'customer-droup-status', 'customer-droup-updateTime', 'customer-droup-handleTime', 'customer-droup-isHandle', 'customer-droup-type']);
 
     searcher.button([{
         id: "bindDroup",
@@ -329,6 +331,12 @@ jQuery(function ($) {
         name: "处理时间",
         prop: "handleTime",
         clazz: "green"
+    }, {
+        fieId: "type",
+        name: "类型",
+        prop: "type",
+        clazz: "red",
+        dataset: constant.customer().droup.dType.keys
     }, {
         fieId: "status",
         name: "状态",
@@ -398,6 +406,7 @@ jQuery(function ($) {
         var options = {
             "droup.decoration.orderId": orderId,
             "droup.name": droup.items.name.val(),
+            "droup.type": droup.items.type.val(),
         };
         com.post(url, options, function (res) {
 

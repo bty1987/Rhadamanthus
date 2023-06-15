@@ -40,6 +40,8 @@ public class ConversationPO implements Serializable {
 
 	private String orderId;
 
+	private String name;
+
 	private short type;
 
 	private short atttype;
@@ -89,6 +91,15 @@ public class ConversationPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = "type")

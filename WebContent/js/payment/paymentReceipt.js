@@ -35,12 +35,12 @@ jQuery(function($) {
     params = parent.params;
 
     var queryPaymentByPaymentId = api.payment.queryPaymentByPaymentId;
-    var queryDecorationByCustomerId = api.decoration.queryDecorationByCustomerId;
+    var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
 
     var orderInfo = null;
     var commonInfo = {};
-    var orderIds = "";
-    var addrs = "";
+    var orderId = params.payment.orderId;
+    var addr = "";
     var arid = "";
 
     com.post(queryPaymentByPaymentId, {"payment.pid": params.payment.pid}, function(res) {
@@ -106,15 +106,15 @@ jQuery(function($) {
 
         var _items = [];
 
-        com.post(queryDecorationByCustomerId, {"decoration.customer.no": res.payment.customer.no}, function(data) {
+        com.post(queryDecorationForCommonByOrderId, {"decoration.orderId": orderId}, function(data) {
 
-            createReceiptTable(commonInfo, receipt.receipts, data.decorations, getPaymentType(payment.paymentType));
+            createReceiptTable(commonInfo, receipt.receipts, data.decoration, getPaymentType(payment.paymentType));
 
             printer.name = "payment";
             printer.args = {
                 "title": receipt.organizationName,
-                "orderId": orderIds,
-                "orderAddr": addrs,
+                "orderId": orderId,
+                "orderAddr": addr,
                 "collectTime": commonInfo["collectTime"],
                 "collecter": commonInfo["collectUserName"],
                 "referMoney": commonInfo["total"],
@@ -133,7 +133,7 @@ jQuery(function($) {
     paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
     paymentUtils.showContractBtn(arid, 0, printer.args, commonInfo.customerName, receipt);
 
-    function createReceiptTable(commonInfo, paymentInfo, orderInfo, currentPaymentType) {
+    function createReceiptTable(commonInfo, paymentInfo, decoration, currentPaymentType) {
 
         var num = paymentInfo.length;
         var bankRowspan = 1;
@@ -167,23 +167,10 @@ jQuery(function($) {
             var customerReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('客 户 名: ' + commonInfo["customerName"]).appendTo(presonReceiptTr);
             var timeReceiptTd = $('<td colspan="3"></td>').text('收款日期: ' + commonInfo["collectTime"]).appendTo(presonReceiptTr);
 
-            for ( var k = 0; k < orderInfo.length; k++) {
-                var $order = orderInfo[k];
-
-                var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-                var noReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('装修单号: ' + $order.orderId).appendTo(orderReceiptTr);
-                var addr = $order.house.village.cityProper.city.name + ' ' + $order.house.village.cityProper.name + ' ' + $order.house.village.name + ' ' + $order.house.houseNumber;
-                var timeReceiptTd = $('<td colspan="3" style="width: 33%"></td>').text('楼盘: ' + addr).appendTo(orderReceiptTr);
-                var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-
-                orderIds = orderIds + $order.orderId;
-                addrs = addrs + addr;
-
-                if (k != orderInfo.length - 1) {
-                    orderIds = orderIds + "/";
-                    addrs = addrs + "/";
-                }
-            }
+            var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
+            var noReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('装修单号: ' + decoration.orderId).appendTo(orderReceiptTr);
+            addr = decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + ' ' + decoration.house.houseNumber;
+            var timeReceiptTd = $('<td colspan="3" style="width: 33%"></td>').text('楼盘: ' + addr).appendTo(orderReceiptTr);
 
             var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             var typeReceiptTd = $('<td style="width: 25%; text-align: center;" ></td>').html('<strong>收款类型</strong>').appendTo(receReceiptTr);

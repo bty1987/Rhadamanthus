@@ -87,13 +87,18 @@ $(function() {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $contentWrap = $('<div style="float: left;"></div>').css("text-align", "center").css("width", "75px").css("margin-right", "10px");
+            var $drawingUrl = $('<div style="float: left;"></div>').css("text-align", "center").css("width", "75px").css("height", "75px").css("margin-right", "10px");
             var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
+            var img = $('<img/>').appendTo($drawingUrl);
             $imgDiv.qrcode({
                 render: "canvas",
                 width: 75,
                 height: 75,
                 text: "" + v.sid
             });
+
+            v.path != null ? com.showImg(img, v.path, 75, 75, v.goods.name, null, null) : null;
+
             $('<span></span>').css("font-size", "1px").html(v.goods.name).appendTo($contentWrap);
 
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
@@ -148,7 +153,7 @@ $(function() {
 
             $divBtnWrap.appendTo($h3);
 
-            $liLine.append($contentWrap).append($h3).append($ulProperty);
+            $liLine.append($contentWrap).append($drawingUrl).append($h3).append($ulProperty);
 
             !v.status && $statusSwitch.prop("checked", true);
 
@@ -463,7 +468,23 @@ $(function() {
             });
         }).appendTo(toolsDiv);
 
+        var soodsUrl = $("<a></a>").attr("href", "#").on("click", function() {
+
+            var option = {
+                "soods.sid": params.sid,
+                "soods.path": value.drawingUrl
+            };
+
+            com.post(api.data.updateSoods, option, function(e) {
+
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功");
+            });
+
+        }).appendTo(toolsDiv);
+
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+        $("<i></i>").addClass("icon-plus green").appendTo(soodsUrl);
     }
 
     com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls;*.xlsx", {

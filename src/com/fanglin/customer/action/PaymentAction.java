@@ -15,12 +15,14 @@ import com.fanglin.customer.service.AdvanceService;
 import com.fanglin.customer.service.DecorationPaymentService;
 import com.fanglin.customer.service.MaterialPaymentService;
 import com.fanglin.customer.service.PaymentService;
+import com.fanglin.customer.service.ProxyPaymentService;
 import com.fanglin.customer.service.SalesPaymentService;
 import com.fanglin.customer.service.ServicePaymentService;
 import com.fanglin.customer.vo.AdvanceVO;
 import com.fanglin.customer.vo.DecorationPaymentVO;
 import com.fanglin.customer.vo.MaterialPaymentVO;
 import com.fanglin.customer.vo.PaymentVO;
+import com.fanglin.customer.vo.ProxyPaymentVO;
 import com.fanglin.customer.vo.SalesPaymentVO;
 import com.fanglin.customer.vo.ServicePaymentVO;
 
@@ -32,22 +34,25 @@ public class PaymentAction extends BaseListAction {
 	private static final long serialVersionUID = -5147550362380249742L;
 
 	@Autowired
+	private AdvanceService advanceService;
+
+	@Autowired
+	private PaymentService paymentService;
+
+	@Autowired
 	private MaterialPaymentService materialPaymentService;
 
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
 
 	@Autowired
-	private ServicePaymentService servicePaymentOrderService;
+	private ServicePaymentService servicePaymentService;
 
 	@Autowired
 	private SalesPaymentService salesPaymentService;
 
 	@Autowired
-	private AdvanceService advanceService;
-
-	@Autowired
-	private PaymentService paymentService;
+	private ProxyPaymentService proxyPaymentService;
 
 	private List<DecorationPaymentVO> decorationPayments;
 
@@ -63,11 +68,17 @@ public class PaymentAction extends BaseListAction {
 
 	private SalesPaymentVO salesPayment;
 
+	private ProxyPaymentVO proxyPayment;
+
 	private String unionId;
 
 	private String orderId;
 
 	private Long realMoney;
+
+	private Integer config;
+
+	private String platform;
 
 	@Action(value = "queryCusAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusAdvance() throws FLException {
@@ -120,7 +131,15 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusServicePayment() {
 
-		servicePaymentOrderService.queryCusServicePayment(getPaging(), getFilters(), servicePayment);
+		servicePaymentService.queryCusServicePayment(getPaging(), getFilters(), servicePayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCusProxyPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCusProxyPayment() throws FLException {
+
+		proxyPayment = proxyPaymentService.queryCusProxyPayment(proxyPayment);
 
 		return SUCCESS;
 	}
@@ -136,7 +155,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "countCusServicePaymentForAmount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String countCusServicePaymentForAmount() {
 
-		realMoney = servicePaymentOrderService.amountCusServicePayment(servicePayment);
+		realMoney = servicePaymentService.amountCusServicePayment(servicePayment);
 
 		return SUCCESS;
 	}
@@ -145,6 +164,22 @@ public class PaymentAction extends BaseListAction {
 	public String countCusSalesPaymentForAmount() {
 
 		realMoney = salesPaymentService.amountCusSalesPayment(salesPayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCusPaymentConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCusPaymentConfig() {
+
+		config = paymentService.queryCusPaymentConfig(orderId);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCusPaymentPlatform", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCusPaymentPlatform() {
+
+		platform = paymentService.queryCusPaymentPlatform(orderId);
 
 		return SUCCESS;
 	}
@@ -227,6 +262,30 @@ public class PaymentAction extends BaseListAction {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public Integer getConfig() {
+		return config;
+	}
+
+	public void setConfig(Integer config) {
+		this.config = config;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	public ProxyPaymentVO getProxyPayment() {
+		return proxyPayment;
+	}
+
+	public void setProxyPayment(ProxyPaymentVO proxyPayment) {
+		this.proxyPayment = proxyPayment;
 	}
 
 }

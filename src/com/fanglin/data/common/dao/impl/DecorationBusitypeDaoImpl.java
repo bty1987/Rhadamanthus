@@ -29,7 +29,7 @@ public class DecorationBusitypeDaoImpl extends DaoImpl<DecorationBusitypePO> imp
 		query.add(Restrictions.eq("company", company));
 
 		query.asc("dbid");
-		
+
 		return query.list();
 	}
 
@@ -41,15 +41,19 @@ public class DecorationBusitypeDaoImpl extends DaoImpl<DecorationBusitypePO> imp
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if ("name".equals(filter.getField())) {
-					query.add(Restrictions.ilike("name", filter.getData(), MatchMode.ANYWHERE));
-				} else if ("status".equals(filter.getField())) {
-					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
-				}
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(Restrictions.ilike("name", data, MatchMode.ANYWHERE));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			}
 		}
 	}
-
 }

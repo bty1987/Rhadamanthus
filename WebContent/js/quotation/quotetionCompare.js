@@ -1,4 +1,5 @@
 var QuotetionDetail = (function() {
+
     var quo = {
         LbasicParams: null,
         RbasicParams: null,
@@ -6,6 +7,7 @@ var QuotetionDetail = (function() {
     };
     var painter = {
         createAlldomain: function(Ltype, vl, lqid, ldiscount, Rtype, vr, rqid, rdiscount) {
+
             var that = this;
             var result = {};
             var $alldiv = $('<div></div>').addClass('col-md-12').css("background-color", "#e7e7e7").css("padding", "0px");
@@ -70,6 +72,7 @@ var QuotetionDetail = (function() {
                 if (LFunctionAreaItems.length) {
                     _itemsL = LFunctionAreaItems;
                     _itemsL = _itemsL.sort(function(a, b) {
+
                         if (a.index == null || b.index == null) {
                             return b.index - a.index;
                         } else {
@@ -125,6 +128,7 @@ var QuotetionDetail = (function() {
                 if (RFunctionAreaItems.length) {
                     _itemsR = RFunctionAreaItems;
                     _itemsR = _itemsR.sort(function(a, b) {
+
                         if (a.index == null || b.index == null) {
                             return b.index - a.index;
                         } else {
@@ -142,6 +146,7 @@ var QuotetionDetail = (function() {
                     if (vr != null) {
                         if (_itemsR.length > 0) {
                             $.each(_itemsL, function(i, v) {
+
                                 if (Ltype == 0) {
                                     var Lname = v.name;
                                 } else {
@@ -150,6 +155,7 @@ var QuotetionDetail = (function() {
                                 v.areaType = $domain.attr('data-areaType');
                                 if (i < _itemsR.length) {
                                     $.each(_itemsR, function(j, val) {
+
                                         if (Rtype == 0) {
                                             var Rname = val.name;
                                         } else {
@@ -219,6 +225,7 @@ var QuotetionDetail = (function() {
                             // 如果右侧功能区的报价项个数比左侧功能区报价项个数多
                             if (_itemsR.length > _itemsL.length) {
                                 $.each(_itemsR, function(i, v) {
+
                                     if (i > _itemsL.length - 1) {
                                         v.areaType = $domainR.attr('data-areaType');
                                         var $item = that.createAllQuote(null, null, null, null, null, Rtype, i + 1, v, rqid, rdiscount);
@@ -243,6 +250,7 @@ var QuotetionDetail = (function() {
                         // 左侧不为空右侧功能区中报价项为空时
                         else {
                             $.each(_itemsL, function(i, v) {
+
                                 v.areaType = $domain.attr('data-areaType');
                                 var $item = that.createAllQuote(Ltype, i + 1, v, lqid, ldiscount, null, null, null, null, null);
                                 $itemll = $item.$iteml;
@@ -263,6 +271,7 @@ var QuotetionDetail = (function() {
                         }
                     } else if (vr == null) {
                         $.each(_itemsL, function(i, v) {
+
                             v.areaType = $domain.attr('data-areaType');
                             var $item = that.createAllQuote(Ltype, i + 1, v, lqid, ldiscount, null, null, null, null, null);
 
@@ -285,6 +294,7 @@ var QuotetionDetail = (function() {
                     if (vr != null) {
                         if (_itemsR.length > 0) {
                             $.each(_itemsR, function(i, v) {
+
                                 v.areaType = $domainR.attr('data-areaType');
                                 var $item = that.createAllQuote(null, null, null, null, null, Rtype, i + 1, v, rqid, rdiscount);
                                 $itemll = $item.$iteml;
@@ -333,6 +343,7 @@ var QuotetionDetail = (function() {
             } else if (vl == null && vr != null) {
                 if (_itemsR.length) {
                     $.each(_itemsR, function(i, v) {
+
                         v.areaType = $domainR.attr('data-areaType');
                         var $item = that.createAllQuote(null, null, null, null, null, Rtype, i + 1, v, rqid, rdiscount);
                         $itemrr = $item.$itemr;
@@ -359,6 +370,7 @@ var QuotetionDetail = (function() {
             return result
         },
         createAllQuote: function(Ltype, llinenum, lqv, lqid, ldiscount, Rtype, rlinenum, rqv, rqid, rdiscount) {
+
             com.focusPage('#quo-Item').html("");
             var $item = {};
             var $iteml = $('<li></li>').addClass('fl-quo-item');
@@ -381,13 +393,14 @@ var QuotetionDetail = (function() {
                 var _lineSet = [["line", llinenum, ["data-areaType", lqv.areaType]],// 编号
                 ["num", lqv.num, ["data-subtype", lqv.subtype]],// 数量
                 ["name", Ltype == 0 ? lqv.name : lqv.itemName, ["data-qfaId", Ltype == 0 ? lqv.qfaid : lqv.quotationFunctionAreaId]],// 报价名称
-                ["price unitprice", lqv.type == 3 ? _dcp : lqv.unitPrice],// 类型 , 0: 普通报价项 , 1: 自定义报价项 , 2: 车运费 , 3: 管理费 , 4: 不计入总额
+                ["price unitprice", lqv.type == 3 ? _dcp : lqv.unitPrice],// 类型 , 0: 标准报价项 , 1: 自定义报价项 , 2: 车运费 , 3: 管理费 , 4: 不计入总额
                 ["price discountprice", lqv.areaType == 3 ? 0 : _dcp, ["data-discount", lqv.discount]],// 折扣后的价格 将折扣存入
                 ["price totalprice-discount", lqv.areaType == 3 ? 0 : lqv.type < 2 ? utils.changeThrDecimal(utils.accMul(lqv.num, _dcp)) : _dcp],// 根据类型计算(数量*折扣)
                 ];
 
                 var $btnCell, $btnCellWrap, $btnset;
                 $.each(_lineSet, function(i, v) {
+
                     var $cell = $('<div></div>').addClass('cell ' + v[0]);
                     var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
                     if (v[2]) {
@@ -395,7 +408,7 @@ var QuotetionDetail = (function() {
                     }
                     $cell.append($cellWrap).appendTo($iteml);
                 });
-                // 报价类型为普通跟自定义
+                // 报价类型为标准跟自定义
                 if (lqv.type == 2 || lqv.type == 3) {
                     if (lqv.type == 2) { // 车运费
                         $iteml.attr('id', 'conveyanceCost' + lqid);
@@ -439,13 +452,14 @@ var QuotetionDetail = (function() {
                 var _lineSet = [["line", rlinenum, ["data-areaType", rqv.areaType]],// 编号
                 ["num", rqv.num, ["data-subtype", rqv.subtype]],// 数量
                 ["name", Rtype == 0 ? rqv.name : rqv.itemName, ["data-qfaId", Rtype == 0 ? rqv.qfaid : rqv.quotationFunctionAreaId]],// 报价名称
-                ["price unitprice", rqv.type == 3 ? _dcp : rqv.unitPrice],// 类型 , 0: 普通报价项 , 1: 自定义报价项 , 2: 车运费 , 3: 管理费 , 4: 不计入总额
+                ["price unitprice", rqv.type == 3 ? _dcp : rqv.unitPrice],// 类型 , 0: 标准报价项 , 1: 自定义报价项 , 2: 车运费 , 3: 管理费 , 4: 不计入总额
                 ["price discountprice", rqv.areaType == 3 ? 0 : _dcp, ["data-discount", rqv.discount]],// 折扣后的价格 将折扣存入
                 ["price totalprice-discount", rqv.areaType == 3 ? 0 : rqv.type < 2 ? utils.changeThrDecimal(utils.accMul(rqv.num, _dcp)) : _dcp],// 根据类型计算(数量*折扣)
                 ];
 
                 var $btnCell, $btnCellWrap, $btnset;
                 $.each(_lineSet, function(i, v) {
+
                     var $cell = $('<div></div>').addClass('cell ' + v[0]);
                     var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
                     if (v[2]) {
@@ -453,7 +467,7 @@ var QuotetionDetail = (function() {
                     }
                     $cell.append($cellWrap).appendTo($itemr);
                 });
-                // 报价类型为普通跟自定义
+                // 报价类型为标准跟自定义
                 if (rqv.type == 2 || rqv.type == 3) {
                     if (rqv.type == 2) { // 车运费
                         $itemr.attr('id', 'conveyanceCost' + rqid);
@@ -493,6 +507,7 @@ var QuotetionDetail = (function() {
 
         },
         allPaint: function(Ltype, Lqid, LbasicParams, Rtype, Rqid, RbasicParams, AllDetailId) {
+
             var leftAreas, rightAreas;
             leftAreas = LbasicParams.FunctionAreas;
             rightAreas = RbasicParams.FunctionAreas;
@@ -509,6 +524,7 @@ var QuotetionDetail = (function() {
 
             if (leftAreas.length) {
                 $.each(leftAreas, function(i, vl) {
+
                     if (Ltype == 0) {
                         var Lname = vl.name
                     } else if (Ltype == 1) {
@@ -517,6 +533,7 @@ var QuotetionDetail = (function() {
                     if (Lname != "生成项目") {
                         if (rightAreas.length > 1) {
                             $.each(rightAreas, function(j, vr) {
+
                                 if (Rtype == 0) {
                                     var Rname = vr.name
                                 } else if (Rtype == 1) {
@@ -608,6 +625,7 @@ var QuotetionDetail = (function() {
                 // 右侧功能区比左侧功能区多的情况下
                 if (leftAreas.length < rightAreas.length) {
                     $.each(rightAreas, function(j, vr) {
+
                         if (Rtype == 0) {
                             var Rname = vr.name
                         } else {
@@ -638,6 +656,7 @@ var QuotetionDetail = (function() {
                 }
                 // 画生成项目功能区
                 $.each(leftAreas, function(i, vl) {
+
                     if (Ltype == 0) {
                         var Lname = vl.name;
                     } else {
@@ -645,6 +664,7 @@ var QuotetionDetail = (function() {
                     }
                     if (Lname == "生成项目") {
                         $.each(rightAreas, function(j, vr) {
+
                             if (Rtype == 0) {
                                 var Rname = vr.name;
                             } else {
@@ -717,6 +737,7 @@ var QuotetionDetail = (function() {
         },
 
         allquery: function(qid, type) {
+
             var resultParams = {
                 FunctionAreas: null,
                 basicParams: null
@@ -725,6 +746,7 @@ var QuotetionDetail = (function() {
                 com.post(api.quotation.queryQuotetionByNo, {
                     "quotetion.no": qid
                 }, function(data) {
+
                     resultParams.basicParams = {
                         "quotetion.qid": data.quotetion.qid,// 报价Id
                         "quotetion.discount": data.quotetion.discount,// 报价折扣
@@ -739,6 +761,7 @@ var QuotetionDetail = (function() {
                     com.post(api.quotation.queryQuotetionFunctionAreaByQid, {
                         "quotetion.qid": data.quotetion.qid
                     }, function(data) {
+
                         resultParams.FunctionAreas = data.quotetionFunctionAreas;
                     }, null, false);
                 }, null, false);
@@ -746,6 +769,7 @@ var QuotetionDetail = (function() {
                 com.post(api.quotation.queryQuotationById, {
                     "quotation.qid": qid
                 }, function(data) {
+
                     resultParams.basicParams = {
                         "quotetion.qid": data.quotation.qid,// 报价Id
                         "quotetion.discount": data.quotation.discount,// 报价折扣
@@ -761,6 +785,7 @@ var QuotetionDetail = (function() {
                 com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {
                     "quotation.qid": qid
                 }, function(data) {
+
                     resultParams.FunctionAreas = data.quotationFunctionAreas;
                 }, null, false);
             }
@@ -770,6 +795,7 @@ var QuotetionDetail = (function() {
 
     return {
         init: function() {
+
             com.focusPage("#ALLDetailList").html("");
             var lType = params.quotation.leftType;
             var rType = params.quotation.rightType;
@@ -788,7 +814,9 @@ var QuotetionDetail = (function() {
 $(function() {
 
     com.focusPage("#compareBackBtn").on('click', function() {
+
         com.showConfirm("是否确定返回上一页", function() {
+
             com.switchPage(params.quotation.historyQuotation);
         });
     });

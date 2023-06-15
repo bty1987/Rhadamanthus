@@ -48,9 +48,9 @@ $(function() {
 
     constructionNodes.constructionNode.bindData(constant.data().construction.node.datas, "key", "value", false);
 
-    constructionNodes.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
-    constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
-    constructionNodes.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
+    constructionNodes.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas, "key", "value");
+    constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
+    constructionNodes.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
 
     var displayFunc = (function() {
 
@@ -184,7 +184,7 @@ $(function() {
 
         params.construction.cid = cid;
 
-        com.popup4page("#stockRecordPopUp", "/views/construction/supervisionDetail.html", "查看");
+        com.popup4page("#stockRecordPopUp", "/views/construction/supervision4detail.html", "查看");
     }
 
     function viewAddReduceIndex(orderId, type) {
@@ -200,7 +200,7 @@ $(function() {
 
         params.construction.orderId = orderId;
 
-        com.popup4page("#stockRecordPopUp", "/views/construction/supervisionRework.html", "返工");
+        com.popup4page("#stockRecordPopUp", "/views/construction/supervision4rework.html", "返工");
     }
 
     function viewDelGold(orderId) {

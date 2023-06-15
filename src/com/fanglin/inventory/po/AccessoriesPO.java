@@ -37,9 +37,15 @@ public class AccessoriesPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	public static final String COLUMN_TYPE_STR = "type";
+
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final String COLUMN_NO_STR = "no";
+
+	public static final short TYPE_COMMON_INT = 0;
+
+	public static final short TYPE_POST_INT = 1;
 
 	public static final short STATUS_INIT_INT = 0; // 初始
 
@@ -54,6 +60,8 @@ public class AccessoriesPO implements Serializable {
 	public static final short STATUS_RETURN_INT = 5; // 退回
 
 	public static final short STATUS_DELIVER_INT = 6; // 到货
+
+	public static final short STATUS_AUDIT_INT = 7; // 审批
 
 	private long aid;
 
@@ -82,6 +90,8 @@ public class AccessoriesPO implements Serializable {
 	private Timestamp fetchTime;
 
 	private Timestamp deliverTime;
+
+	private short type;
 
 	private short status;
 
@@ -229,6 +239,15 @@ public class AccessoriesPO implements Serializable {
 
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "status")

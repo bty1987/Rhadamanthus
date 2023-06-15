@@ -29,7 +29,7 @@ jQuery(function($) {
 
     seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSales);
 
-    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater"]);
+    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
 
     seacher.button([{
         id: "createBalanceSales",
@@ -96,7 +96,12 @@ jQuery(function($) {
         name: "结算时间",
         prop: "balanceTime",
         clazz: "green"
-    }, ];
+    }, {
+        field: "lockTime",
+        name: "锁定时间",
+        prop: "lockTime",
+        clazz: "green"
+    }];
 
     var linebtus = [{
         name: "明细",
@@ -216,7 +221,26 @@ jQuery(function($) {
 
             return (v.status != constant.balance().balanceSales.STATUS_INIT_INT);
         }
-    }, ];
+    }, {
+        name: "删除",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            com.post(api.balance.deleteBalanceSales, {
+                "balanceSales.bsid": v.bsid
+            }, function() {
+
+                com.showAlert(com.info, "删除成功");
+                seacher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
+        }
+    },];
 
     seacher.line("name", lineprops, linebtus).render();
 

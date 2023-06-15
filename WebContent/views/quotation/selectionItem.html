@@ -43,7 +43,7 @@
                 </div>
             </div>
             
-            <div class="modal fade" id="finishSelectionItemModal" tabindex="-1">
+            <div class="modal fade" id="refundSelectionItemModal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -52,17 +52,24 @@
                         </div>
                         <div class="modal-body">
                             <form class="form-horizontal">
+                            	<div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="utilitynum">实用量</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="utilitynum" maxlength="12" class="col-xs-10 col-sm-7 v_float_3" data-toggle="popover" data-trigger='manual'/>
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right orange" for="refnum">退数量</label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="refnum" maxlength="12" class="col-xs-10 col-sm-7 v_required v_float" value="0" data-toggle="popover" data-trigger='manual'/>
+                                        <input type="text" id="refnum" maxlength="12" class="col-xs-10 col-sm-7 v_float_3" data-toggle="popover" data-trigger='manual'/>
                                     </div>
                                 </div>
 
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="finishBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="refundBtn" class="btn btn-primary">保存</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>

@@ -11,7 +11,9 @@ public interface ContractService {
 
 	public void pageContract(Paging paging, List<Filter> filters, int company);
 
-	public List<ContractVO> queryContract(int company);
+	public List<ContractVO> queryContract(ContractVO contract, int company);
+
+	public int countContract(int company) throws FLException;
 
 	public int addContract(ContractVO contractVO, int company) throws FLException;
 

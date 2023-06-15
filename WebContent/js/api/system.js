@@ -230,6 +230,11 @@ $.extend(api, {
             url: "updateOpperation.do",
             server: "communion"
         },
+        updateRoleOperation: {
+            url: "updateRoleOperation.do",
+            server: "communion",
+            intercept: true,
+        },
         updateRoleOperationByRid: {
             url: "updateRoleOperationByRid.do",
             server: "communion"
@@ -241,6 +246,11 @@ $.extend(api, {
         deleteOperation: {
             url: "deleteOperation.do",
             server: "communion"
+        },
+        deleteRoleOperation: {
+            url: "deleteRoleOperation.do",
+            server: "communion",
+            intercept: true,
         },
 
         queryFunctionByModuleId: {

@@ -42,4 +42,6 @@ public interface UserDao extends Dao<UserPO> {
 
 	public int countUserByDid(Integer deptId, Long did, Integer company);
 
+	public int countUserByDeptId(Integer deptId);
+
 }

@@ -89,27 +89,31 @@ public class ConversationServiceImpl implements ConversationService {
 	@Transactional(rollbackFor = Exception.class)
 	public void requestConversation(ConversationVO conversationVO, String userId) throws FLException {
 
-		UserPO creater = userdDao.queryUserByUserId(userId);
+		DroupPO droupPO = null;
+
+		if (conversationVO.getChatId() != null) {
+			droupPO = droupDao.queryDroup(null, conversationVO.getChatId(), null);
+		}
 
 		String orderId = conversationVO.getOrderId();
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
+		if (droupPO == null && orderId != null) {
+			droupPO = droupDao.queryDroup(orderId, null, null);
 		}
-
-		DroupPO droupPO = droupDao.queryDroup(orderId, null, null);
 
 		if (droupPO == null) {
-
 			throw new FLException(330067, "群信息不存在");
 		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(droupPO.getDecoration().getOrderId());
+
+		UserPO creater = userdDao.queryUserByUserId(userId);
 
 		ConversationPO conversationPO = new ConversationPO(creater);
 
 		BeanUtil.copyProperties(conversationVO, conversationPO, Arrays.asList("creater"));
 
+		conversationPO.setOrderId(decorationPO.getOrderId());
 		conversationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		conversationPO.setAtttype(ConversationPO.ATTTYPE_REQU_INT);
@@ -126,6 +130,8 @@ public class ConversationServiceImpl implements ConversationService {
 
 		BeanUtil.copyProperties(conversationPO, conversationVO, Arrays.asList("creater"));
 		BeanUtil.copyProperties(conversationPO.getCreater(), conversationVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+
+		if (droupPO.getType() != 1) return;
 
 		Group group = new Group(droupPO.getChatId(), droupPO.getOpenId());
 
@@ -153,7 +159,6 @@ public class ConversationServiceImpl implements ConversationService {
 
 			UserPO focuser = userdDao.queryUserByUserId(conversationVO.getFocuser().getUserId());
 			messageService.sendMessage(conversationVO.getFocuser().getUserId(), "", conversationVO.getContent(), MessagePO.TYPE_SEND_PERSONEL_INT, focuser.getCompany());
-
 		}
 	}
 
@@ -220,7 +225,7 @@ public class ConversationServiceImpl implements ConversationService {
 
 		String content = String.format("装修单号:%s, 有一条新消息, 请查收.", orderId);
 
-		decorationService.sendMessage(orderId, "消息提醒", content, String.format("pages/customer/conversation?orderId=%s", orderId));
+		decorationService.sendMessage(orderId, "消息提醒", content, String.format("pages/customer/conversation/conversation?orderId=%s", orderId));
 	}
 
 	@Override

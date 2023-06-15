@@ -7,12 +7,12 @@ import com.fanglin.core.dao.Dao;
 
 public interface ConstructerDao extends Dao<ConstructerPO> {
 
-	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Short schedule);
+	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Long csid);
 
-	public List<ConstructerPO> queryConstructerByCid(long cid, Short schedule);
+	public List<ConstructerPO> queryConstructerByCid(long cid, Long csid);
 
-	public ConstructerPO queryConstructerByCrId(long crid);
+	public ConstructerPO queryConstructerByCrid(long crid);
 
-	public int countConstructer(long cid, int wuid, short schedule, short status);
+	public int countConstructer(long cid, int wuid, long csid);
 
 }

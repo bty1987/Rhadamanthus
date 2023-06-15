@@ -28,6 +28,7 @@ import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalDecorationHolonomyService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
+import com.fanglin.approval.service.ApprovalDecorationTerminalService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
@@ -98,6 +99,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalSalesDaymentService approvalSalesDaymentService;
+
+	@Autowired
+	private ApprovalDecorationTerminalService approvalDecorationTerminalService;
 
 	@Autowired
 	private UserDao userDao;
@@ -177,7 +181,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
 				// aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
 				break;
-			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT:
 				approvalDecorationBelongService.approveForDecorationBelong(approvalPO);
 				break;
 			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
@@ -216,9 +220,56 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT:
 				approvalSalesDaymentService.approveForSalesDayment(approvalPO);
 				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT:
+				approvalDecorationTerminalService.approveForDecorationTerminal(approvalPO);
+				break;
 			default:
 				break;
 		}
+
+		approvalDao.update(approvalPO);
+
+		return approvalPO;
+	}
+
+	@Override
+	public ApprovalPO refuse(ApprovalPO approvalPO) throws FLException {
+
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+
+		short type = approvalPO.getType();
+
+		switch (type) {
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
+				approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+				approvalCustomerOriginTDecorationService.refuseForCustomerOriginTDecoration(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
+				approvalCustomerOriginService.refuseForCustomerOrigin(approvalPO);
+				break;
+
+			default:
+				break;
+		}
+
+		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
 
 		approvalDao.update(approvalPO);
 
@@ -230,6 +281,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public int approve(ApprovalVO approvalVO) throws FLException {
 
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
 		if (approvalPO == null) {
 			throw new FLException(240009, "审批信息不存在");
 		}
@@ -267,7 +319,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 
 		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT:
 				approvalDecorationBelongService.confirmForDecorationBelong(approvalPO);
 				break;
 			default:
@@ -285,7 +337,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Transactional(rollbackFor = Exception.class)
 	public int approvalCallback(ApprovalVO approvalVO) throws FLException {
 
-		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getProcessinstanceid());
+		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getPiid());
 
 		if (approvalPO == null) {
 			throw new FLException(240001, "审批信息不存在");
@@ -320,35 +372,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
-		short type = approvalPO.getType();
-
-		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
-				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
-				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
-				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
-				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-				approvalCustomerOriginTDecorationService.refuseForCustomerOriginTDecoration(approvalPO);
-				break;
-			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
-				approvalCustomerOriginService.refuseForCustomerOrigin(approvalPO);
-				break;
-			default:
-				break;
-		}
-
-		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REFUSE_INT);
-
-		approvalDao.update(approvalPO);
+		approvalPO = refuse(approvalPO);
 
 		return 0;
 	}

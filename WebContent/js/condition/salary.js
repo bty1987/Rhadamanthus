@@ -43,7 +43,7 @@ Condition.addupRule("salary", {
             postData: null,
             listPath: [{
                 key: "0",
-                value: "普通"
+                value: "标准"
             }, {
                 key: "1",
                 value: "装修款"
@@ -220,6 +220,22 @@ Condition.addupRule("salary", {
             }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "twotype": {
+        label: "二类",
+        type: "select",
+        submitConfig: {
+            name: "twotype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.salary,
+            postData: {},
+            listPath: "SalaryTwoType",
+            keyPath: "key",
+            valuePath: "name"
         }
     },
     "isCheck": {

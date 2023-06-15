@@ -16,6 +16,8 @@ public interface PaytranService {
 
 	public PaytranVO queryPaytranByPtid(PaytranVO paytran);
 
+	public void sendPaytran(PaytranVO paytran) throws FLException;
+
 	public void addPaytran(PaytranVO paytran, String userId, int company) throws FLException;
 
 	public void checkPaytran(PaytranVO paytran, String userId, int company) throws FLException;
@@ -24,10 +26,12 @@ public interface PaytranService {
 
 	public void updatePaytran(List<Long> ptids, Long rid, Short status, Short type) throws FLException;
 
-	public void sendPaytran(PaytranVO paytran) throws FLException;
+	public void deletePaytran(PaytranVO paytran) throws FLException;
 
 	public void wxpay(Wxpay wxpay) throws FLException;
 
-	public void posPay(PaytranVO paytran, int company) throws FLException;
+	public void pospay(PaytranVO paytran, int company) throws FLException;
+
+	public void codepay(PaytranVO paytran) throws FLException;
 
 }

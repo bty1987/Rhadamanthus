@@ -85,7 +85,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 	@Override
 	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company) {
 
-		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForAcceptance(paging, filters, company);
+		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (ConstructionPO constructionPO : constructionPOs) {
@@ -98,10 +98,11 @@ public class ConstructionServiceImpl implements ConstructionService {
 	@Override
 	public void pageConstructionForBase(Paging paging, List<Filter> filters, Integer company) {
 
-		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForBase(paging, filters, company);
+		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<ConstructionVO> constructionVOs = new ArrayList<ConstructionVO>();
 
 		ConstructionVO constructionVO;
+
 		for (ConstructionPO constructionPO : constructionPOs) {
 
 			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());

@@ -29,6 +29,8 @@ public class MaterialPaymentVO implements Serializable {
 
 	private Short paymentType;
 
+	private String platform;
+
 	public MaterialPaymentVO() {
 		super();
 	}
@@ -112,6 +114,14 @@ public class MaterialPaymentVO implements Serializable {
 
 	public void setPaymentType(Short paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 
 }

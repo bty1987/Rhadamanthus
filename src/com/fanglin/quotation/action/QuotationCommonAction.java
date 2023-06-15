@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.quotation.service.AddReduceService;
 import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.AddReduceVO;
@@ -37,12 +38,14 @@ public class QuotationCommonAction extends BaseListAction {
 	@Autowired
 	private AddReduceService addReduceService;
 
+	@Autowired
+	private SelectionService selectionService;
+
+	private DecorationVO decoration;
+
 	private List<AddReduceVO> addReduces;
 
 	private AddReduceVO addReduce;
-
-	@Autowired
-	private SelectionService selectionService;
 
 	private SelectionVO selection;
 
@@ -57,7 +60,7 @@ public class QuotationCommonAction extends BaseListAction {
 	@Action(value = "affirmAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmAddReduce() throws FLException {
 
-		addReduceService.affirmAddReduce(addReduces);
+		addReduceService.affirmAddReduce(decoration, addReduces);
 
 		return SUCCESS;
 	}
@@ -65,7 +68,7 @@ public class QuotationCommonAction extends BaseListAction {
 	@Action(value = "sendAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendAddReduce() throws FLException {
 
-		addReduceService.sendAddReduce(addReduce);
+		addReduceService.sendAddReduce(addReduce, addReduces);
 
 		return SUCCESS;
 	}
@@ -73,9 +76,17 @@ public class QuotationCommonAction extends BaseListAction {
 	@Action(value = "affirmSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSelection() throws FLException {
 
-		selectionService.affirmSelection(selection, queryCompany());
+		selectionService.affirmSelection(decoration, selection);
 
 		return SUCCESS;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public AddReduceVO getAddReduce() {

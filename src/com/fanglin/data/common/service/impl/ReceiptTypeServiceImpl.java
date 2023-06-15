@@ -101,6 +101,17 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	}
 
 	@Override
+	public ReceiptTypeVO queryReceiptTypeByNo(ReceiptTypeVO receiptType, int company) {
+
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(receiptType.getNo(), company);
+		ReceiptTypeVO receiptTypeVO = new ReceiptTypeVO();
+
+		BeanUtil.copyProperties(receiptTypePO, receiptTypeVO, Arrays.asList("receiptTypeItems"));
+
+		return receiptTypeVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException {
 

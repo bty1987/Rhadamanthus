@@ -11,7 +11,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.MaterialPaymentDao;
 import com.fanglin.customer.service.MaterialPaymentService;
 import com.fanglin.customer.vo.MaterialPaymentVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.po.MaterialPaymentPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Paging;
 
 @Service("materialPaymentOrderService")
@@ -21,10 +25,29 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	@Autowired
 	private MaterialPaymentDao materialPaymentDao;
 
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
 	@Override
 	public void queryCusMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO) {
 
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryCusMaterialByOrderId(paging, filters, materialPaymentVO.getOrderId());
+		String orderId = materialPaymentVO.getOrderId();
+		String platform = "";
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", decorationPO.getGrade()), decorationPO.getCompany());
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", decorationPO.getCompany());
+		}
+
+		if (systemConfigPO != null) platform = systemConfigPO.getValue();
+
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryCusMaterialByOrderId(paging, filters, orderId);
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 
 		if (materialPaymentPOs.size() != 0 && materialPaymentPOs != null) {
@@ -42,6 +65,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				if (materialPaymentPO.getMaterialReceipt() != null) {
 					materialPaymentVO.setCollectTime(materialPaymentPO.getMaterialReceipt().getCollectTime());
 				}
+
+				materialPaymentVO.setPlatform(platform);
 
 				materialPaymentVOs.add(materialPaymentVO);
 			}

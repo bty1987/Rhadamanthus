@@ -3,6 +3,7 @@ package com.fanglin.payment.vo;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class AdvanceReceiptVO implements java.io.Serializable {
@@ -10,37 +11,39 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	private static final long serialVersionUID = 4309455035240158229L;
 
 	private Long arId;
-	
-	private UserBaseVO collecter; 
-	
+
+	private UserBaseVO collecter;
+
 	private Timestamp collectTime;
-	
-	private UserBaseVO confirmer; 
-	
+
+	private UserBaseVO confirmer;
+
 	private Timestamp confirmTime;
-	
+
+	private Long realMoney;
+
 	private Long cash;
-	
+
 	private String cashInfo;
-	
+
 	private Long bank;
-	
+
 	private String bankInfo;
-	
+
 	private Long checkv;
-	
+
 	private String checkvBank;
-	
+
 	private Long installment;
-	
+
 	private String installmentBank;
-	
+
 	private Long accounts;
-	
+
 	private String accountsBank;
-	
+
 	private Long transfer;
-	
+
 	private String comment;
 
 	public AdvanceReceiptVO() {
@@ -54,7 +57,7 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	public void setArId(Long arId) {
 		this.arId = arId;
 	}
-	
+
 	public UserBaseVO getCollecter() {
 		return collecter;
 	}
@@ -71,7 +74,7 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
 	}
-	
+
 	public UserBaseVO getConfirmer() {
 		return confirmer;
 	}
@@ -87,6 +90,14 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
+	}
+
+	public Long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Long getCash() {

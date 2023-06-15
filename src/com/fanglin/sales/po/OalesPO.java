@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
@@ -29,6 +30,10 @@ public class OalesPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
+	public static final String COLUMN_DEPT_STR = "dept.name";
+
+	public static final String COLUMN_REGION_STR = "region.name";
+
 	public static final short STATUS_INIT_INT = 0;// 初始
 
 	public static final short STATUS_SUBMIT_INI = 1;// 提交
@@ -40,6 +45,8 @@ public class OalesPO implements Serializable {
 	public static final short STATUS_CHECK_INT = 4;// 复核
 
 	public static final short STATUS_FINISH_INI = 5;// 完结
+
+	public static final short STATUS_INVALID_INI = 6;// 废单
 
 	private long oid;
 
@@ -66,6 +73,12 @@ public class OalesPO implements Serializable {
 	private UserPO creater;
 
 	private UserPO servicer;
+
+	private UserPO channer;
+
+	private DepartmentPO dept;
+
+	private DepartmentPO region;
 
 	private Timestamp createTime;
 
@@ -229,6 +242,36 @@ public class OalesPO implements Serializable {
 
 	public void setServicer(UserPO servicer) {
 		this.servicer = servicer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chauid", referencedColumnName = "uid")
+	public UserPO getChanner() {
+		return channer;
+	}
+
+	public void setChanner(UserPO channer) {
+		this.channer = channer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "did", referencedColumnName = "did")
+	public DepartmentPO getDept() {
+		return dept;
+	}
+
+	public void setDept(DepartmentPO dept) {
+		this.dept = dept;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "rid", referencedColumnName = "did")
+	public DepartmentPO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentPO region) {
+		this.region = region;
 	}
 
 	@Column(name = "createTime")

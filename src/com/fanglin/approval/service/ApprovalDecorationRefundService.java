@@ -18,7 +18,7 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalDecorationRefundService {
 
-	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalDecorationRefundVO approvalDecorationRefundVO, String userId, int company) throws FLException;
+	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalDecorationRefundVO approvalDecorationRefundVO, String userId, int company, String code, String forms) throws FLException;
 
 	public int approveForDecorationRefund(ApprovalPO approvalPO) throws FLException;
 

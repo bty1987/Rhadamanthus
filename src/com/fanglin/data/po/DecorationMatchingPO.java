@@ -16,6 +16,12 @@ public class DecorationMatchingPO implements Serializable {
 
 	private static final long serialVersionUID = 4438560163739528951L;
 
+	public static final String COLUMN_COMPANY_STR = "company";
+
+	public static final String COLUMN_TYPE_STR = "type";
+
+	public static final String COLUMN_TYPENESS_STR = "typeness";
+
 	private long dmid;
 
 	private String name;
@@ -45,12 +51,6 @@ public class DecorationMatchingPO implements Serializable {
 	private String comment;
 
 	private int company;
-
-	public static final String COLUMN_COMPANY_STR = "company";
-
-	public static final String COLUMN_TYPE_STR = "type";
-
-	public static final String COLUMN_TYPENESS_STR = "typeness";
 
 	public DecorationMatchingPO() {
 		super();

@@ -49,7 +49,7 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 
 	@Autowired
 	private DecorationActivityDao decorationActivityDao;
-	
+
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
 
@@ -63,7 +63,7 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 
 		if (decorationMidpackPO == null) {
 			return _decorationMidpackVO;
-		} 
+		}
 
 		BeanUtil.copyProperties(decorationMidpackPO, _decorationMidpackVO, Arrays.asList("decoration"));
 		_decorationMidpackVO.getDecoration().setEscorter(new UserBaseVO());
@@ -73,6 +73,7 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 
 		return _decorationMidpackVO;
 	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int makeDecorationMidpack(DecorationMidpackVO decorationMidpackVO, String userId) throws FLException {
@@ -85,7 +86,11 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		List<Short> status = Arrays.asList(new Short[] {DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+		if (decorationPO.getType() == DecorationPO.TYPE_MIDPACK_INT) {
+			decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
+		}
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
 		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(140004, "装修单状态不可操作 ");
@@ -108,22 +113,24 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 		if (decorationActivityDao.countDecorationActivity(orderId, DecorationActivityPO.STATUS_INIT_INT) > 0) {
 			throw new FLException(140060, "活动未锁定");
 		}
-		
+
 		// 获取装修单对应的半包信息
 		DecorationMidpackPO decorationMidpackPO = decorationMidpackDao.queryDecorationMidpack(orderId);
 
 		if (decorationMidpackPO == null) {
 			decorationMidpackPO = new DecorationMidpackPO(decorationPO);
-		} 
-		
+		}
+
 		BeanUtil.copyProperties(decorationMidpackVO, decorationMidpackPO, Arrays.asList("decoration"));
-		
+
 		decorationMidpackPO.setDecoration(decorationPO);
-		
+
+		decorationDao.update(decorationPO);
+
 		decorationMidpackDao.saveOrUpdate(decorationMidpackPO);
 
 		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), quotationPO.getCostPrice(), decorationMidpackVO.getPsId(), userId);
-		
+
 		return 0;
 	}
 

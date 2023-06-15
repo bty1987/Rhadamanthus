@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -18,7 +17,13 @@ public class DecorationContractVO implements Serializable {
 
 	private String orderId;
 
-	private ContractVO contract;
+	private Long cid;// 合同ID
+
+	private String no;// 合同编号
+
+	private String name;// 名称
+
+	private String title;// 标题
 
 	private Short type;
 
@@ -61,9 +66,8 @@ public class DecorationContractVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public DecorationContractVO(ContractVO contract, UserBaseVO creater, UserBaseVO signner, UserBaseVO filinner) {
+	public DecorationContractVO(UserBaseVO creater, UserBaseVO signner, UserBaseVO filinner) {
 		super();
-		this.contract = contract;
 		this.creater = creater;
 		this.signner = signner;
 		this.filinner = filinner;
@@ -85,12 +89,36 @@ public class DecorationContractVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public ContractVO getContract() {
-		return contract;
+	public Long getCid() {
+		return cid;
 	}
 
-	public void setContract(ContractVO contract) {
-		this.contract = contract;
+	public void setCid(Long cid) {
+		this.cid = cid;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Short getType() {

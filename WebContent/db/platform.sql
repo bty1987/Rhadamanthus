@@ -68,6 +68,24 @@ CREATE TABLE `paymentfunctionright` (
   PRIMARY KEY (`pfrid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项-功能权限';
 
+DROP TABLE IF EXISTS `fdfsfile`;
+CREATE TABLE `fdfsfile` (
+  `ffid` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(64) NULL DEFAULT '',
+  `module` VARCHAR(32) NULL,
+  `type` TINYINT(1) NULL,
+  `atttype` TINYINT(1) NULL,
+  `pid` INT(11) NULL,
+  `path` VARCHAR(128) NULL DEFAULT '',
+  `group` VARCHAR(32) NULL DEFAULT '',
+  `group1` VARCHAR(32) NULL,
+  `group2` VARCHAR(32) NULL DEFAULT '',
+  `file` VARCHAR(128) NULL DEFAULT '',
+  `postfix` VARCHAR(16) NULL DEFAULT '',
+  `size` INT(10) NULL DEFAULT 0,
+  PRIMARY KEY (`ffid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARACTER=utf8 COMMENT='资源表';
+
 DROP TABLE IF EXISTS `productionfunctionright`;
 CREATE TABLE `productionfunctionright` (
   `pfrid` int(11) NOT NULL AUTO_INCREMENT,

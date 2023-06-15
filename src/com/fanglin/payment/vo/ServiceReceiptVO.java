@@ -21,6 +21,8 @@ public class ServiceReceiptVO implements Serializable {
 
 	private Timestamp confirmTime;
 
+	private Long realMoney;
+
 	private Long cash;
 
 	private String cashInfo;
@@ -40,9 +42,9 @@ public class ServiceReceiptVO implements Serializable {
 	private Long accounts;
 
 	private String accountsBank;
-	
+
 	private Long advance;
-	
+
 	private Short advanceType;
 
 	private String comment;
@@ -102,6 +104,14 @@ public class ServiceReceiptVO implements Serializable {
 
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
+	}
+
+	public Long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Long getCash() {

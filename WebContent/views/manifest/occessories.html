@@ -1,37 +1,101 @@
-<div class="row">
-    <div class="col-xs-12">
-        <div id="condList" class="fl_search clearfix"></div>
-        <div class="clearfix" id="resultList"></div>
-        <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+<div id="occessories">
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+            <div class="clearfix" id="resultList"></div>
+            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+        </div>
     </div>
-</div>
-<div class="modal fade" id="bindOccessoriesModal" tabindex="-1">
-    <div class="modal-dialog" style="margin-top: 10%;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="SaveBind">绑定厂商</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="supplier">厂商</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="supplier" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"/>
-                        </div>
-                    </div>
-                </form>
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+    <div class="modal fade" id="bindOccessoriesModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="SaveBind">绑定厂商</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group bind">
+                            <label class="col-sm-3 control-label no-padding-right" for="supplier">厂商</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="supplier" class="col-xs-10 col-sm-5 v_required"
+                                       data-toggle="popover" data-trigger='manual' maxlength="15"/>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="finishModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="SaveFinish">外辅单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="rate" class="col-md-3 control-label no-padding-right orange">评分</label>
+                            <div class="col-sm-8">
+                                <div id="rate" style="cursor: pointer;"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remake" class="col-md-3 control-label no-padding-right orange">评价</label>
+                            <div class="col-sm-8">
+                                <textarea class="col-xs-8 m-wrap v_required" id="remake" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="finishBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="callBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="drawingModal" tabindex="-1">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">图片</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row-fluid">
+                                <ul class="ace-thumbnails" id="inventoryDrawing"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                        <a class="form-group" id="salesUpload"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
-
-
 <div id="miniPopUp"></div>
 <div id="layerPopUp" class="portlet box page-content"></div>
 

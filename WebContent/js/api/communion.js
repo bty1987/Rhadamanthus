@@ -143,7 +143,13 @@ $.extend(api, {
         },
         updateRoleTask: {
             url: "updateRoleTask.do",
-            server: "communion"
+            server: "communion",
+            intercept: true,
+        },
+        deleteRoleTask: {
+            url: "deleteRoleTask.do",
+            server: "communion",
+            intercept: true,
         },
 
         pageTaskParam: {
@@ -167,6 +173,13 @@ $.extend(api, {
         deleteTaskParam: {
             url: "deleteTaskParam.do",
             server: "communion"
+        },
+
+        queryCustomerRecord: {
+            url: "queryCustomerRecord.do"
+        },
+        addCustomerRecord: {
+            url: "addCustomerRecord.do"
         },
 
     }

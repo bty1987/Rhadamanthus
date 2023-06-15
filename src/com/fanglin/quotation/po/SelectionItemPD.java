@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.po.SoodsPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
@@ -38,7 +39,7 @@ public class SelectionItemPD implements Serializable {
 
 	private long siid;// 选材项ID
 
-	private long sid;// 选材单ID
+	private SelectionPO selection;// 选材单ID
 
 	private long quoteId;// 引用项ID
 
@@ -54,7 +55,11 @@ public class SelectionItemPD implements Serializable {
 
 	private String areaName;// 功能区名字
 
-	private long suid;// 厂商id
+	private UserPO supplier;// 厂商id
+
+	private long qiid;
+
+	private SoodsPO soods;
 
 	private short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
 
@@ -102,8 +107,9 @@ public class SelectionItemPD implements Serializable {
 		super();
 	}
 
-	public SelectionItemPD(GoodsPO goods, DecorationPO decoration, UserPO traner, UserPO checker, UserPO confirmer, UserPO balancer, UserPO finish) {
+	public SelectionItemPD(SelectionPO selection, GoodsPO goods, DecorationPO decoration, UserPO traner, UserPO checker, UserPO confirmer, UserPO balancer, UserPO finish, UserPO supplier, SoodsPO soods) {
 		super();
+		this.selection = selection;
 		this.goods = goods;
 		this.decoration = decoration;
 		this.traner = traner;
@@ -111,6 +117,8 @@ public class SelectionItemPD implements Serializable {
 		this.confirmer = confirmer;
 		this.balancer = balancer;
 		this.finish = finish;
+		this.supplier = supplier;
+		this.soods = soods;
 	}
 
 	@Id
@@ -124,13 +132,14 @@ public class SelectionItemPD implements Serializable {
 		this.siid = siid;
 	}
 
-	@Column(name = "sid")
-	public long getSid() {
-		return sid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "sid", referencedColumnName = "sid")
+	public SelectionPO getSelection() {
+		return selection;
 	}
 
-	public void setSid(long sid) {
-		this.sid = sid;
+	public void setSelection(SelectionPO selection) {
+		this.selection = selection;
 	}
 
 	@Column(name = "quoteId")
@@ -189,13 +198,33 @@ public class SelectionItemPD implements Serializable {
 		this.areaId = areaId;
 	}
 
-	@Column(name = "suid")
-	public long getSuid() {
-		return suid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
 	}
 
-	public void setSuid(long suid) {
-		this.suid = suid;
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
+	}
+
+	@Column(name = "qiid")
+	public long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(long qiid) {
+		this.qiid = qiid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sgid", referencedColumnName = "sid")
+	public SoodsPO getSoods() {
+		return soods;
+	}
+
+	public void setSoods(SoodsPO soods) {
+		this.soods = soods;
 	}
 
 	@Column(name = "status")

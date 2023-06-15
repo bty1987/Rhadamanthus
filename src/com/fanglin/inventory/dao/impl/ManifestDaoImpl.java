@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -53,6 +54,11 @@ public class ManifestDaoImpl extends DaoImpl<ManifestPO> implements ManifestDao 
 		queryFilterExecute(query, filters);
 
 		return query.list();
+	}
+
+	@Override
+	public ManifestPO queryManifest(String code) {
+		return (ManifestPO) session().createCriteria(ManifestPO.class).add(Restrictions.eq("code", code)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

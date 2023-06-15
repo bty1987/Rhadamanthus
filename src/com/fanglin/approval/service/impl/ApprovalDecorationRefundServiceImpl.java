@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationRefundDao;
 import com.fanglin.approval.po.ApprovalDecorationRefundPO;
@@ -28,6 +29,7 @@ import com.fanglin.approval.vo.ApprovalDecorationRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -62,9 +64,12 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	@Autowired
 	private AddReduceDao addReduceDao;
 
+	@Autowired
+	private ApprovalService approvalService;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalDecorationRefundVO approvalDecorationRefundVO, String userId, int company) throws FLException {
+	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalDecorationRefundVO approvalDecorationRefundVO, String userId, int company, String code, String forms) throws FLException {
 
 		long paymentId = approvalDecorationRefundVO.getPaymentId();
 
@@ -108,6 +113,14 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 		approvalDecorationRefundDao.save(approvalDecorationRefundPO);
 
 		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
+
+		if (code != null && !"".equals(code)) {
+			String piid = approvalService.initiateApproval(code, userId, null, null, null, JSONArray.parseArray(forms), company);
+
+			approvalPO.setPiid(piid);
+
+			approvalDao.update(approvalPO);
+		}
 
 		return 0;
 	}
@@ -164,9 +177,14 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			decorationPaymentDao.save(initialDecorationPaymentPO);
 
 			if (decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT) {
-				AddReducePO addReducePO = addReduceDao.queryAddReduce(approvalDecorationRefundPO.getPaymentId());
-				addReducePO.setDpId(initialDecorationPaymentPO.getDpid());
-				addReduceDao.update(addReducePO);
+
+				List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(approvalDecorationRefundPO.getPaymentId());
+
+				for (AddReducePO addReducePO : addReducePOs) {
+					addReducePO.setDpId(initialDecorationPaymentPO.getDpid());
+					addReduceDao.update(addReducePO);
+				}
+
 			}
 		}
 

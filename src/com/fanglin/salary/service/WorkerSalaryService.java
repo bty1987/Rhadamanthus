@@ -15,6 +15,8 @@ public interface WorkerSalaryService {
 
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalary);
 
+	public WorkerSalaryVO queryWorkerSalaryByWsid(WorkerSalaryVO workerSalaryVO) throws FLException;
+
 	public int addWorkerSalary(WorkerSalaryVO workerSalaryVO, String userId, int company) throws FLException;
 
 	public int adoptWorkerSalary(List<WorkerSalaryVO> workerSalarys, String userId, int company) throws FLException;

@@ -80,6 +80,8 @@ public class SalesPO implements Serializable {
 
 	public static final short CTYPE_PASS_INT = 2;
 
+	public static final short ISAFFIRM_AFFIRM_INT = 1;
+
 	public static final String COLUMN_NO_STR = "no";
 
 	public static final String COLUMN_BRAND_STR = "brand";
@@ -99,7 +101,7 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_SALESMANID_STR = "salesman.uid";
 
 	public static final String COLUMN_GUID_STR = "guider.uid";
-	
+
 	public static final String COLUMN_GUIDERUSERID_STR = "guider.userId";
 
 	public static final String COLUMN_ISID_STR = "instorer.uid";
@@ -125,7 +127,9 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_OCUID_STR = "supplier.uid";
-	
+
+	public static final String COLUMN_IUID_STR = "instorer.uid";
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	private long sid;
@@ -159,7 +163,7 @@ public class SalesPO implements Serializable {
 	private DepartmentPO guideDept;
 
 	private UserPO instorer;
-	
+
 	private UserPO finisher;
 
 	private String category;
@@ -175,8 +179,12 @@ public class SalesPO implements Serializable {
 	private Timestamp balanceTime;
 
 	private Timestamp fullpayTime;
-	
+
 	private Timestamp finishTime;
+
+	private Timestamp affirmTime;
+
+	private short isAffirm;
 
 	private short status;
 
@@ -281,7 +289,6 @@ public class SalesPO implements Serializable {
 		this.house = house;
 	}
 
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "cId", referencedColumnName = "cId")
 	public CustomerPO getCustomer() {
@@ -387,7 +394,7 @@ public class SalesPO implements Serializable {
 	public void setInstorer(UserPO instorer) {
 		this.instorer = instorer;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "fuid", referencedColumnName = "uId")
 	public UserPO getFinisher() {
@@ -460,7 +467,7 @@ public class SalesPO implements Serializable {
 	public void setFullpayTime(Timestamp fullpayTime) {
 		this.fullpayTime = fullpayTime;
 	}
-	
+
 	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -468,6 +475,24 @@ public class SalesPO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	@Column(name = "status")

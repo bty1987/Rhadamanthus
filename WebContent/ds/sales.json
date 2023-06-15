@@ -62,7 +62,8 @@
         {"key":"2","value":"确认"},
         {"key":"3","value":"驳回"},
         {"key":"4","value":"复核"},
-        {"key":"5","value":"完结"}
+        {"key":"5","value":"完结"},
+        {"key":"6","value":"废单"}
     ],
     "oalesAtttype": [
         {"key":"0","value":"内购"},

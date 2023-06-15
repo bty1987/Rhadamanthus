@@ -14,13 +14,15 @@ public class ContractVO implements Serializable {
 
 	private String title;
 
-	private Short status;
-
 	private String page;
 
 	private String path;
 
 	private String url;
+
+	private Short status;
+
+	private Short atttype;
 
 	private Integer company;
 
@@ -60,14 +62,6 @@ public class ContractVO implements Serializable {
 		this.title = title;
 	}
 
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-
 	public String getPage() {
 		return page;
 	}
@@ -90,6 +84,22 @@ public class ContractVO implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Integer getCompany() {

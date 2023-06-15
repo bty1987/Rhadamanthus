@@ -56,6 +56,14 @@ public class WorkerSalaryAction extends BaseListAction {
 		return "success";
 	}
 
+	@Action(value = "queryWorkerSalaryByWsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryWorkerSalaryByWsid() throws FLException {
+
+		workerSalary = workerSalaryService.queryWorkerSalaryByWsid(workerSalary);
+
+		return "success";
+	}
+
 	@Action(value = "addWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addWorkerSalary() throws FLException {
 

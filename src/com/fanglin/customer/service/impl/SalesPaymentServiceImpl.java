@@ -11,7 +11,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.SalesPaymentDao;
 import com.fanglin.customer.service.SalesPaymentService;
 import com.fanglin.customer.vo.SalesPaymentVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.po.SalesPaymentPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Paging;
 
 @Service("salesPaymentOrderService")
@@ -21,8 +25,27 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
 
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
 	@Override
 	public void queryCusSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPaymentVO) {
+
+		String orderId = salesPaymentVO.getOrderId();
+		String platform = "";
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", decorationPO.getGrade()), decorationPO.getCompany());
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", decorationPO.getCompany());
+		}
+
+		if (systemConfigPO != null) platform = systemConfigPO.getValue();
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.queryCusSalesPayment(paging, filters, salesPaymentVO.getOrderId());
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
@@ -43,6 +66,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 				if (salesPaymentPO.getSalesReceipt() != null) {
 					salesPaymentVO.setCollectTime(salesPaymentPO.getSalesReceipt().getCollectTime());
 				}
+
+				salesPaymentVO.setPlatform(platform);
 
 				salesPaymentVOs.add(salesPaymentVO);
 			}

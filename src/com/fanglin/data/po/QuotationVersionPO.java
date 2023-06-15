@@ -32,6 +32,8 @@ public class QuotationVersionPO implements Serializable {
 
 	public static final short TYPE_COMMON_INT = -1;
 
+	public static final short TAX_NOTTAXDISCOUNT_INT = 0;
+
 	private long qvId;
 
 	private String no;

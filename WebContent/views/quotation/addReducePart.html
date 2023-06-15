@@ -105,6 +105,14 @@
                                 </div>
                             </div>
 
+							<div class="col-md-12 hide" id="disSwitchDiv">
+								<div class="form-group">
+									<label class=" col-md-5 no-padding-right">打折标识</label>
+									<input type="checkbox" id="disSwitch" class="ace"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+
 							<div class="col-md-12 hr hr-16"></div>
 
 							<div class="col-md-12">
@@ -119,13 +127,6 @@
 									<label id="managePrice" class=" col-md-6  no-padding-left"></label>
 								</div>
 							</div>
-							<!--<div class="col-md-12">-->
-								<!--<div class="form-group">-->
-									<!--<label class=" col-md-5 no-padding-right">管理费计入</label>-->
-									<!--<label id="isCountManageLabel" class=" col-md-6  no-padding-left"></label>-->
-									<!--<span class="lbl"></span>-->
-								<!--</div>-->
-							<!--</div>-->
 							<div class="col-md-12">
 								<div class="form-group">
 									<label class=" col-md-5 no-padding-right">管理费计入</label>
@@ -137,6 +138,27 @@
 								<div class="form-group">
 									<label class=" col-md-5 no-padding-right">管理费折扣</label>
 									<input type="checkbox" id="isCountManageDiscount" class="ace"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<div class="col-md-12 hr hr-16"></div>
+
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class=" col-md-5 no-padding-right">税金比例</label>
+									<label id="taxRate" class=" col-md-6  no-padding-left"></label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class=" col-md-5 no-padding-right">税金价格</label>
+									<label id="taxPrice" class=" col-md-6  no-padding-left"></label>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class=" col-md-5 no-padding-right">税金计入</label>
+									<input type="checkbox" id="isCountTax" class="ace"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -183,20 +205,24 @@
 							<div class="col-md-12 space-6"></div>
 							<div class="col-md-12 ">
 								<div class="ui-pg-div">
-								   	<button id="submitAddReduceBtn" class="btn btn-minier btn-success col-md-5">
+								   	<button id="submitAddReduceBtn" class="btn btn-minier btn-success col-md-5" style="display: none; margin-right: 2px;">
                                         <i class="icon-ok"></i>
                                         <span>提交</span>
                                     </button>
-									<button id="updateAddReduceBtn" class="btn btn-minier btn-yellow col-md-5">
-										<i class="icon-mail-forward"></i>
+                                        <button id="cancelAddReduceBtn" class="btn btn-minier btn-blue col-md-5" style="display: none; margin-right: 2px;">
+                                        <i class="icon-ok"></i>
+                                        <span>撤销</span>
+                                    </button>
+                                    <button id="updateAddReduceBtn" class="btn btn-minier btn-yellow col-md-5">
+                                        <i class="icon-mail-forward"></i>
                                         <span>更新</span>
-									</button>
+                                    </button>
 								</div>
 							</div>
                             <div class="col-md-12 space-6"></div>
                             <div class="col-md-12 ">
                                 <div class="ui-pg-div">
-                                    <button id="discountBtn" class="btn btn-minier btn-inverse col-md-5" style="margin-left: 2px;" >
+                                    <button id="discountBtn" class="btn btn-minier btn-inverse col-md-5">
                                         <i class="icon-pencil"></i>
                                         <span>折扣</span>
                                     </button>
@@ -315,7 +341,7 @@
 			</div>
 		</div>
 
-		<!-- 普通报价项弹层-->
+		<!-- 标准报价项弹层-->
 		<div class="modal fade" id="addNormalItemModal" tabindex="-1" data-backdrop="static">
 			<div class="modal-dialog" style="width:900px;">
 				<div class="modal-content col-md-12">
@@ -323,7 +349,7 @@
 						<button type="button" class="close" data-dismiss="modal">
 							<span>&times;</span><span class="sr-only">Close</span>
 						</button>
-						<h4 class="modal-title" id="addNormalItemDialog">普通报价项</h4>
+						<h4 class="modal-title" id="addNormalItemDialog">标准报价项</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">

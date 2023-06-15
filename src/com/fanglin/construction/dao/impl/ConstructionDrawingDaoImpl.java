@@ -32,12 +32,6 @@ public class ConstructionDrawingDaoImpl extends DaoImpl<ConstructionDrawingPO> i
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<ConstructionDrawingPO> queryConstructionDrawingByType(Short type) {
-		return session().createCriteria(ConstructionDrawingPO.class).add(Restrictions.eq(ConstructionDrawingPO.COLUMN_TYPE_STR, type)).list();
-	}
-
-	@Override
 	public int countConstructionDrawing(Long cid, Short type) {
 
 		String sql = "select count(*) from construction.constructiondrawing where cid = :cid and type = :type";

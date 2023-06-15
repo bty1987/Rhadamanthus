@@ -2,6 +2,8 @@ jQuery(function($) {
 
     var decorationMatching = {
 
+        dmid: null,
+
         btns: {
             addBtn: com.focusPage("#addBtn"),
             saveBtn: com.focusPage("#saveBtn")
@@ -22,22 +24,21 @@ jQuery(function($) {
             trafficDiscount: com.focusPage("#trafficDiscount"),
             manageDiscount: com.focusPage("#manageDiscount"),
             taxDiscount: com.focusPage("input[name=taxDiscount]"),
+            noTaxDiscount: com.focusPage("#noTaxDiscount"),
             manageTaxDiscount: com.focusPage("#manageTaxDiscount"),
             totalTaxDiscount: com.focusPage("#totalTaxDiscount"),
             isShow: com.focusPage("#isShow"),
             comment: com.focusPage("#comment")
         },
 
-        editFlg: false,
         type: {},
-        typeness: {},
-        visionName: [],
+        typeness: [],
+
         visionData: {},
-        decorationMatchingType: {},
         decorationMatchingVision: {},
+
         isShow: ["显示", "隐藏"],
         discount: ["不打折", "打折"],
-        taxDiscount: ["管理税金", "总额税金"]
 
     };
 
@@ -45,134 +46,148 @@ jQuery(function($) {
 
         decorationMatching.decorationMatchingVision = res.visionType.split("key", "value");
         decorationMatching.visionData = res.visionType;
-    });
+    }, null, false);
+    
+    com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
-    com.post(api.ds.decoration, {}, function(res) {
+        $.each(res.decorationAtttypes, function(i, v) {
 
-        decorationMatching.items.typeness.bindData(res.typeness, "key", "value");
-        decorationMatching.decorationMatchingType = res.typeness.split("key", "value");
-
-        $.each(res.typeness, function(i, v) {
-
-            decorationMatching.type[v.key] = v.type;
-            decorationMatching.typeness["typeness[" + i + "]"] = v.key;
+            if (v.status == 0) {
+                decorationMatching.type[v.key] = v.type;
+                decorationMatching.typeness.push(v);
+            }
         });
-
-        reloadDecorationMatching();
+        decorationMatching.items.typeness.bindData(decorationMatching.typeness, 'key', 'name', "请选择");
     });
 
     decorationMatching.btns.saveBtn.bindClick(saveData);
 
-    var displayFunc = (function() {
+    var seacher = new Searcher();
 
-        var renderList = function(tableId, listData) {
+    seacher.base("condList", "pagenation", "resultList", api.data.pageDecorationMatching);
+    seacher.condition(["data-decoration-matching-name"]);
+    seacher.button([{
+        id: "addDecorationMatchingBtn",
+        name: "添加",
+        clazz: "btn-yellow",
+        icon: "icon-plus"
+    }]);
 
-            var $tableWrap = com.focusPage('#' + tableId).empty();
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    seacher.history("decorationMatchingPostData");
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+    var lineprops = [{
+        field: "typeness",
+        name: "类型",
+        prop: "typeness",
+        clazz: "red",
+        dataset: constant.decoration().decoration.typeness.keys
+    }, {
+        field: "base",
+        name: "基数",
+        prop: "base",
+        clazz: "blue",
+    }, {
+        field: "discount",
+        name: "折扣",
+        prop: "discount",
+        clazz: "blue",
+    }, {
+        field: "material",
+        name: "主材配比",
+        prop: "material",
+        clazz: "blue",
+    }, {
+        field: "service",
+        name: "服务配比",
+        prop: "service",
+        clazz: "blue",
+    }, {
+        field: "vision",
+        name: "显示位置",
+        prop: function(v) {
 
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+            var vision = "";
 
-        var creatLine = function(v) {
+            vision += (v.vision & 1) == 1 ? decorationMatching.decorationMatchingVision[1] + "/" : "";
+            vision += (v.vision & 2) == 2 ? decorationMatching.decorationMatchingVision[2] + "/" : "";
+            vision += (v.vision & 4) == 4 ? decorationMatching.decorationMatchingVision[4] + "/" : "";
+            vision += (v.vision & 8) == 8 ? decorationMatching.decorationMatchingVision[8] + "/" : "";
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            return vision.substring(0, vision.length - 1);
+        },
+        clazz: "grey",
+    }, {
+        field: "isShow",
+        name: "默认显示",
+        prop: "isShow",
+        clazz: "red",
+        dataset: decorationMatching.isShow
+    }, {
+        field: "trafficDiscount",
+        name: "车运费折扣",
+        prop: "trafficDiscount",
+        clazz: "red",
+        dataset: decorationMatching.discount
+    }, {
+        field: "manageDiscount",
+        name: "管理费折扣",
+        prop: "manageDiscount",
+        clazz: "red",
+        dataset: decorationMatching.discount
+    }, {
+        field: "taxDiscount",
+        name: "税金折扣",
+        prop: "taxDiscount",
+        clazz: "red",
+        dataset: constant.data.quotationVersion.taxDiscount.keys
+    }, {
+        type: "newline",
+    }, {
+        field: "comment",
+        name: "说明",
+        prop: "comment",
+        clazz: "grey",
+    }, ];
 
-            var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
+    var linebtus = [{
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
 
-            visionKeyAndName(v);
-            decorationMatching.visionName = [];
+            updateData(v);
 
-            $.each(decorationMatching.visionKey, function(j, k) {
+            return false;
+        }
+    }, ];
 
-                if (!decorationMatching.visionName.includes(decorationMatching.decorationMatchingVision[k])) {
-                    decorationMatching.visionName.push(decorationMatching.visionName.length > 1 ? "/" : "");
-                    decorationMatching.visionName.push(decorationMatching.decorationMatchingVision[k]);
-                }
-            });
+    seacher.line("name", lineprops, linebtus).render();
 
-            var propertyArr = [["类型:", decorationMatching.decorationMatchingType[v.typeness], "grey"], ["基数:", v.base, "blue"], ["折扣:", v.discount, "blue"], ["主材配比:", v.material, "blue"], ["服务配比:", v.service, "blue"], ["显示位置:", decorationMatching.visionName, "grey"], ["默认显示:", decorationMatching.isShow[v.isShow], "red"], ["车运费折扣:", decorationMatching.discount[v.trafficDiscount], "red"], ["管理费折扣:", decorationMatching.discount[v.manageDiscount], "red"], ["税金折扣:", decorationMatching.taxDiscount[v.taxDiscount], "red"], ["说明:", v.comment, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong style="font-size:15px ; padding-bottom: 50px;"  ></strong>').html(value[0]).appendTo($liProperty);
-                $('<b style="font-size:15px"></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnUpdate).appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            $btnUpdate.click(function() {
-
-                updateData(v);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                if (!listData.length) {
-                    var $resultList = com.focusPage('#' + tableId).addClass('dz-default dz-message').empty();
-                    var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo($resultList);
-                    var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-                    var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-                    var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-                    return $resultList;
-                }
-
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    function reloadDecorationMatching() {
-
-        var resultList = com.focusPage('#resultList').empty();
-
-        com.post(api.data.queryDecorationMatching, decorationMatching.typeness, function(data) {
-
-            displayFunc.init('resultList', data.decorationMatchings);
-        });
-    };
-
-    decorationMatching.btns.addBtn.click(function() {
+    com.focusPage('#addDecorationMatchingBtn', '#pagenation').on("click", function() {
 
         com.cleanItems(decorationMatching.items);
-        decorationMatching.editFlg = true;
+
+        decorationMatching.dmid = null;
         decorationMatching.visionKey = [];
-        visionData(decorationMatching.visionData);
+
+        visionData(decorationMatching.visionData, 0);
+
         decorationMatching.modals.decorationMatchingModal.modal("show");
     });
 
     function updateData(v) {
 
-        decorationMatching.editFlg = false;
-        visionKeyAndName(v);
+        decorationMatching.dmid = v.dmid;
 
-        visionData(decorationMatching.visionData);
+        visionData(decorationMatching.visionData, v.vision);
 
         decorationMatching.items.isShow.prop('checked', com.isOrNotType[v.isShow == 0 ? "是" : "否"]);
         decorationMatching.items.trafficDiscount.prop('checked', com.isOrNotType[v.trafficDiscount == 0 ? "否" : "是"]);
         decorationMatching.items.manageDiscount.prop('checked', com.isOrNotType[v.manageDiscount == 0 ? "否" : "是"]);
-        decorationMatching.items.manageTaxDiscount.prop("checked", v.taxDiscount == 0);
-        decorationMatching.items.totalTaxDiscount.prop("checked", v.taxDiscount == 1);
+
+        decorationMatching.items.noTaxDiscount.prop("checked", v.taxDiscount == constant.data().quotationVersion.TAX_NOTTAXDISCOUNT_INT);
+        decorationMatching.items.manageTaxDiscount.prop("checked", v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT);
+        decorationMatching.items.totalTaxDiscount.prop("checked", v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT);
+
         decorationMatching.items.dmid = v.dmid;
         decorationMatching.items.name.val(v.name);
         decorationMatching.items.typeness.val(v.typeness);
@@ -185,7 +200,7 @@ jQuery(function($) {
         decorationMatching.modals.decorationMatchingModal.modal("show");
     }
 
-    function visionData(data) {
+    function visionData(data, vision) {
 
         decorationMatching.items.vision.empty();
 
@@ -204,7 +219,7 @@ jQuery(function($) {
 
             $div.appendTo(decorationMatching.items.vision);
 
-            if (decorationMatching.visionKey.indexOf(parseInt(v.key)) != -1) {
+            if ((v.key & vision) == v.key) {
                 $input.attr("checked", true);
             }
 
@@ -215,6 +230,7 @@ jQuery(function($) {
 
         if (com.validate("decorationMatchingForm"))
             return false;
+
         var $inputs = com.focusPage('input[name="visionKey"]:checked');
 
         var url, options;
@@ -225,6 +241,7 @@ jQuery(function($) {
             decorationMatching.number = decorationMatching.number + parseInt($(v).val());
         });
 
+        url = api.data.addDecorationMatching;
         options = {
             "decorationMatching.name": decorationMatching.items.name.val(),
             "decorationMatching.type": decorationMatching.type[decorationMatching.items.typeness.val()],
@@ -238,72 +255,21 @@ jQuery(function($) {
             "decorationMatching.isShow": decorationMatching.items.isShow.prop("checked") ? 0 : 1,
             "decorationMatching.trafficDiscount": decorationMatching.items.trafficDiscount.prop("checked") ? 1 : 0,
             "decorationMatching.manageDiscount": decorationMatching.items.manageDiscount.prop("checked") ? 1 : 0,
-            "decorationMatching.taxDiscount": decorationMatching.items.taxDiscount.prop("checked") ? 0 : 1
+            "decorationMatching.taxDiscount": decorationMatching.items.noTaxDiscount.prop("checked") ? constant.data().quotationVersion.TAX_NOTTAXDISCOUNT_INT : decorationMatching.items.manageTaxDiscount.prop("checked") ? constant.data().quotationVersion.TAX_NODISCOUNT_INT : constant.data().quotationVersion.TAX_DISCOUNT_INT
         };
 
-        decorationMatching.editFlg ? url = api.data.addDecorationMatching : url = api.data.updateDecorationMatching, options["decorationMatching.dmid"] = decorationMatching.items.dmid;
+        if (decorationMatching.dmid) {
+            url = api.data.updateDecorationMatching;
+            options["decorationMatching.dmid"] = decorationMatching.dmid
+        }
 
         com.post(url, options, function(res) {
 
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
-            reloadDecorationMatching();
-        }, null, false);
+            seacher.doSearch();
 
-        decorationMatching.modals.decorationMatchingModal.modal("hide");
+            decorationMatching.modals.decorationMatchingModal.modal("hide");
+        });
+
     }
 
-    function visionKeyAndName(v) {
-
-        decorationMatching.visionKey = [];
-
-        switch (v.vision) {
-            case 1:
-                decorationMatching.visionKey.push(1);
-                break;
-            case 2:
-                decorationMatching.visionKey.push(2);
-                break;
-            case 3:
-                decorationMatching.visionKey.push(1, 2);
-                break;
-            case 4:
-                decorationMatching.visionKey.push(4);
-                break;
-            case 5:
-                decorationMatching.visionKey.push(1, 4);
-                break;
-            case 6:
-                decorationMatching.visionKey.push(2, 4);
-                break;
-            case 7:
-                decorationMatching.visionKey.push(1, 2, 4);
-                break;
-            case 8:
-                decorationMatching.visionKey.push(8);
-                break;
-            case 9:
-                decorationMatching.visionKey.push(1, 8);
-                break;
-            case 10:
-                decorationMatching.visionKey.push(2, 8);
-                break;
-            case 11:
-                decorationMatching.visionKey.push(1, 2, 8);
-                break;
-            case 12:
-                decorationMatching.visionKey.push(4, 8);
-                break;
-            case 13:
-                decorationMatching.visionKey.push(1, 4, 8);
-                break;
-            case 14:
-                decorationMatching.visionKey.push(2, 4, 8);
-                break;
-            case 15:
-                decorationMatching.visionKey.push(1, 2, 4, 8);
-                break;
-        }
-        ;
-    }
 });

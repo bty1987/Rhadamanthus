@@ -31,6 +31,24 @@ public class ProtationItemPO implements Serializable {
 
 	private static final long serialVersionUID = -2130952839756855205L;
 
+	public static final short TYPE_BASICS_INT = 0;// 基础
+
+	public static final short TYPE_PROJECT_INT = 1;// 工程
+
+	public static final short TYPE_PRINCIPAL_INT = 2;// 主材
+
+	public static final short TYPE_ADDWORK_INT = 3;// 增工
+
+	public static final short TYPE_ADDMAIN_INT = 4;// 增主
+
+	public static final short TYPE_CUTWORK_INT = 5;// 减工
+
+	public static final short TYPE_CUTMAIN_INT = 6;// 减主
+
+	public static final short TYPE_ACCWORK_INT = 7;// 赋工
+
+	public static final short TYPE_ACCMAIN_INT = 8;// 赋主
+
 	private long piid;
 
 	private long pid;
@@ -48,6 +66,8 @@ public class ProtationItemPO implements Serializable {
 	private int num;
 
 	private short type;
+
+	private short areaCale;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -121,6 +141,15 @@ public class ProtationItemPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "areaCale")
+	public short getAreaCale() {
+		return areaCale;
+	}
+
+	public void setAreaCale(short areaCale) {
+		this.areaCale = areaCale;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

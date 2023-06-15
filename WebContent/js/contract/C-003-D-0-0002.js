@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 合同html/js文件命名说明: C-<company>-<module>-<type>-<index>.html C-<公司/模式>-<业务类型>-<合同类型>-<序号>.html
  * 
  * 公司/模式: 001 (方林/半包) 002 (1918/大宅) 003 (宜家/半包/整装) 004 (爱林/整装) 005 (恩林/局改/二改)
@@ -265,7 +265,7 @@ jQuery(function($) {
 
         var _index = 0;
 
-        contractEdit.table.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", ""])
+        contractEdit.table.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", ""]);
 
         $.each(v, function(j, qv) {
 
@@ -274,13 +274,13 @@ jQuery(function($) {
                 qv.num = 1;
                 qv.measurementUnit = "项";
 
-                contractEdit.table.datas.push([(_index + 1), qv.itemName, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"])
+                contractEdit.table.datas.push([(_index + 1), qv.itemName, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"]);
             }
 
             _index++;
         });
 
-        index++
+        index++;
     });
 
     com.focusPage('#talkingList').click(function() {

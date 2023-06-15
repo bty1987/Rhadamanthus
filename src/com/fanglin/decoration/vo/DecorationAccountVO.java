@@ -30,6 +30,8 @@ public class DecorationAccountVO implements Serializable {
 
 	private Long servicePrice;
 
+	private Integer paidupMatching;
+
 	private Long difference;
 
 	private Long coupon;
@@ -137,6 +139,14 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setArcal(Short arcal) {
 		this.arcal = arcal;
+	}
+
+	public Integer getPaidupMatching() {
+		return paidupMatching;
+	}
+
+	public void setPaidupMatching(Integer paidupMatching) {
+		this.paidupMatching = paidupMatching;
 	}
 
 	public Long getDiscountBase() {

@@ -16,6 +16,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
 import com.fanglin.inventory.po.OccessoriesItemPO;
@@ -55,6 +57,9 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 	@Autowired
 	private OccessoriesItemDao occessoriesItemDao;
 
+	@Autowired
+	private MessageService messageService;
+
 	@Override
 	public void pageOccessories(Paging paging, List<Filter> filters, int company, OccessoriesVO occessories) {
 
@@ -66,7 +71,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			OccessoriesVO occessoriesVO = new OccessoriesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "balancer"));
+			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "deliver", "receiver", "balancer"));
 
 			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
 			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
@@ -94,7 +99,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			OccessoriesVO occessoriesVO = new OccessoriesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "balancer"));
+			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "deliver", "receiver", "balancer"));
 
 			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
 			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
@@ -106,6 +111,26 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		}
 
 		paging.setData(occessoriesVOs);
+	}
+
+	@Override
+	public OccessoriesVO queryOccessoriesByOid(OccessoriesVO occessoriesVO) {
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) return null;
+
+		occessoriesVO = new OccessoriesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
+		BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "deliver", "receiver", "balancer"));
+
+		occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
+		occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
+		occessoriesVO.getSupplier().setBaseInfo(occessoriesPO.getSupplier());
+
+		occessoriesPO.getDecoration().ptvcascade(occessoriesVO.getDecoration());
+
+		return occessoriesVO;
 	}
 
 	@Override
@@ -148,7 +173,8 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
 
 			OccessoriesItemPO occessoriesItemPO = new OccessoriesItemPO().init(occessoriesPO.getOid(), occessoriesItemVO.getGoods().getGid(), occessoriesItemVO.getNum());
-
+			occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
+			occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 			occessoriesItemDao.save(occessoriesItemPO);
 		}
 
@@ -174,14 +200,21 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		occessoriesDao.update(occessoriesPO);
 
+		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,已经分配完厂商", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo());
+
+		UserPO supervisor = occessoriesPO.getSupervisor();
+
+		messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deliveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs) throws FLException {
+	public int deliveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+		UserPO deliver = userDao.queryUserByUserId(userId);
 
 		if (occessoriesPO == null) {
 			throw new FLException(260023, "辅料单不存在");
@@ -190,7 +223,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_BIND_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
-
+		occessoriesPO.setDeliver(deliver);
 		occessoriesPO.setStatus(OccessoriesPO.STATUS_DELIVE_INT);
 		occessoriesPO.setDeliveTime(DateUtil.getDateToTimestamp(new Date()));
 		occessoriesPO.setContent(occessoriesVO.getContent());
@@ -205,15 +238,21 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			occessoriesItemDao.save(occessoriesItemPO);
 		}
+		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,已经送货", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo());
+
+		UserPO supervisor = occessoriesPO.getSupervisor();
+
+		messageService.sendMessage(supervisor.getUserId(), null, content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, supervisor.getCompany());
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int receiveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs) throws FLException {
+	public int receiveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> occessoriesItemVOs, String userId) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+		UserPO receiver = userDao.queryUserByUserId(userId);
 
 		if (occessoriesPO == null) {
 			throw new FLException(260023, "辅料单不存在");
@@ -223,12 +262,13 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
+		occessoriesPO.setReceiver(receiver);
 		occessoriesPO.setStatus(OccessoriesPO.STATUS_RECEIVE_INT);
 		occessoriesPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
 		occessoriesDao.update(occessoriesPO);
 
-		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
+		for (OccessoriesItemVO occessoriesItemVO : occessoriesItemVOs) {
 
 			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
@@ -242,7 +282,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int balanceOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException {
+	public int balanceOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> occessoriesItemVOs, String userId) throws FLException {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
 
@@ -262,7 +302,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		occessoriesDao.update(occessoriesPO);
 
-		for (OccessoriesItemVO occessoriesItemVO : OccessoriesItemVOs) {
+		for (OccessoriesItemVO occessoriesItemVO : occessoriesItemVOs) {
 
 			OccessoriesItemPO occessoriesItemPO = occessoriesItemDao.get(occessoriesItemVO.getOiid());
 
@@ -270,6 +310,42 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			occessoriesItemDao.save(occessoriesItemPO);
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int finishOccessories(OccessoriesVO occessoriesVO) throws FLException {
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_BALANCE_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+
+		occessoriesPO.setStatus(OccessoriesPO.STATUS_FINISH_INT);
+		occessoriesPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
+		occessoriesDao.update(occessoriesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rateOccessories(OccessoriesVO occessoriesVO) {
+
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		occessoriesPO.setRate(occessoriesVO.getRate());
+		occessoriesPO.setRemake(occessoriesVO.getRemake());
+
+		occessoriesDao.update(occessoriesPO);
 
 		return 0;
 	}

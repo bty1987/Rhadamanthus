@@ -35,6 +35,8 @@ public class SoodsPO implements Serializable {
 
 	private int num;
 
+	private String path;
+
 	private short status;
 
 	private int company;
@@ -78,6 +80,15 @@ public class SoodsPO implements Serializable {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@Column(name = "status")

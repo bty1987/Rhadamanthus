@@ -30,6 +30,7 @@ import com.fanglin.salary.service.WorkerSalaryService;
 import com.fanglin.salary.vo.WorkerSalaryVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -141,6 +142,41 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		}
 
 		return workerSalarys;
+	}
+
+	@Override
+	public WorkerSalaryVO queryWorkerSalaryByWsid(WorkerSalaryVO workerSalaryVO) throws FLException {
+
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsid());
+
+		if (workerSalaryPO == null) return workerSalaryVO;
+
+		if (workerSalaryPO.getDecoration() != null) {
+
+			workerSalaryVO.setDecoration(new DecorationVO());
+			workerSalaryVO.getDecoration().setSupervisor(new UserBaseVO());
+
+			workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
+		}
+
+		workerSalaryVO.setApprover(new UserBaseVO());
+		workerSalaryVO.setCreater(new UserBaseVO());
+		workerSalaryVO.setChecker(new UserBaseVO());
+		workerSalaryVO.setUser(new UserBaseVO(new DutyVO()));
+
+		BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
+
+		BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
+		BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+		BeanUtil.copyProperties(workerSalaryPO.getChecker(), workerSalaryVO.getChecker(), Arrays.asList("dept", "role", "duty"));
+		BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(), Arrays.asList("dept", "role", "duty"));
+
+		BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(), Arrays.asList("departmentType"));
+
+		workerSalaryVO.getDecoration().setDompany(CompanyServiceImpl.encode(workerSalaryPO.getDecoration().getCompany()));
+		workerSalaryVO.getDecoration().setConpany(CompanyServiceImpl.encode(workerSalaryPO.getDecoration().getConpany()));
+
+		return workerSalaryVO;
 	}
 
 	@Override

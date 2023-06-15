@@ -15,10 +15,9 @@ jQuery(function($) {
         items: {
             name: com.focusPage("#name", "#createPresignProduceModal"),
             quotePrice: com.focusPage("#quotePrice", "#createPresignProduceModal"),
-            quoteArea: com.focusPage("#quoteArea", "#createPresignProduceModal"),
-            unitPrice: com.focusPage("#unitPrice", "#createPresignProduceModal"),
+            discount: com.focusPage("#discount", "#createPresignProduceModal"),
+            manageRate: com.focusPage("#manageRate", "#createPresignProduceModal"),
             costPrice: com.focusPage("#costPrice", "#createPresignProduceModal"),
-            preferPrice: com.focusPage("#preferPrice", "#createPresignProduceModal"),
             profitRate: com.focusPage("#profitRate", "#createPresignProduceModal"),
             offset: com.focusPage("#offset", "#createPresignProduceModal"),
             statues: com.focusPage("#status", "#createPresignProduceModal"),
@@ -64,14 +63,14 @@ jQuery(function($) {
         prop: "quotePrice",
         clazz: "blue"
     }, {
-        fieId: "quoteArea",
-        name: "起报面积",
-        prop: "quoteArea",
+        fieId: "discount",
+        name: "折扣",
+        prop: "discount",
         clazz: "blue"
     }, {
-        fieId: "unitPrice",
-        name: "计价单价",
-        prop: "unitPrice",
+        fieId: "manageRate",
+        name: "管理费比例",
+        prop: "manageRate",
         clazz: "blue"
     }, {
         fieId: "costPrice",
@@ -82,11 +81,6 @@ jQuery(function($) {
         fieId: "mostPrice",
         name: "主材成本",
         prop: "mostPrice",
-        clazz: "blue"
-    }, {
-        fieId: "preferPrice",
-        name: "优惠价",
-        prop: "preferPrice",
         clazz: "blue"
     }, {
         fieId: "profitRate",
@@ -119,10 +113,9 @@ jQuery(function($) {
 
             presignProduce.items.name.val(v.name);
             presignProduce.items.quotePrice.val(v.quotePrice);
-            presignProduce.items.quoteArea.val(v.quoteArea);
             presignProduce.items.costPrice.val(v.costPrice);
-            presignProduce.items.unitPrice.val(v.unitPrice);
-            presignProduce.items.preferPrice.val(v.preferPrice);
+            presignProduce.items.discount.val(v.discount);
+            presignProduce.items.manageRate.val(v.manageRate);
             presignProduce.items.profitRate.val(v.profitRate);
             presignProduce.items.offset.val(v.offset);
             presignProduce.items.mostPrice.val(v.mostPrice);
@@ -134,7 +127,7 @@ jQuery(function($) {
             return false;
         }
     }, {
-        name: "预签项",
+        name: "项目",
         clazz: "btn-info",
         handle: function(v) {
 
@@ -145,7 +138,18 @@ jQuery(function($) {
             return false;
         }
     }, {
-        name: "预签成本",
+        name: "价格",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            params.data.presignProduce = v;
+
+            com.popup4page("#presignItemPopUp", "/views/quotation/presignPrice.html", "预签价格");
+
+            return false;
+        }
+    }, {
+        name: "成本",
         clazz: "btn-success",
         handle: function(v) {
 
@@ -192,10 +196,9 @@ jQuery(function($) {
         var options = {
             "presignProduce.name": presignProduce.items.name.val(),
             "presignProduce.quotePrice": presignProduce.items.quotePrice.val(),
-            "presignProduce.quoteArea": presignProduce.items.quoteArea.val(),
-            "presignProduce.unitPrice": presignProduce.items.unitPrice.val(),
+            "presignProduce.discount": presignProduce.items.discount.val(),
+            "presignProduce.manageRate": presignProduce.items.manageRate.val(),
             "presignProduce.costPrice": presignProduce.items.costPrice.val(),
-            "presignProduce.preferPrice": presignProduce.items.preferPrice.val(),
             "presignProduce.profitRate": presignProduce.items.profitRate.val(),
             "presignProduce.offset": presignProduce.items.offset.val(),
             "presignProduce.mostPrice": presignProduce.items.mostPrice.val(),

@@ -36,6 +36,15 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<RoleOperationPO> queryRoleOperation(List<Integer> rids) {
+
+		String sql = "select {ro.*} from communion.roleoperation ro, communion.operation o where ro.rid in :rids and ro.oid = o.oid and o.status = :status group by ro.oid;";
+
+		return session().createSQLQuery(sql).addEntity("ro", RoleOperationPO.class).setParameterList("rids", rids).setShort("status", OperationPO.STATUS_ENABLE_INT).list();
+	}
+
+	@Override
 	public RoleOperationPO queryRoleOperation(String operation, int rid) {
 		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT)).uniqueResult();
 	}
@@ -47,7 +56,7 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 
 	@Override
 	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid) {
-		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.in("rid", rids)).add(Restrictions.eq("operation.oid", oid)).uniqueResult();
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.in("rid", rids)).add(Restrictions.eq("operation.oid", oid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -243,5 +243,23 @@ Condition.addupRule("payment", {
                 "msg": "格式不正确A-Z,0-9"
             }
         }
+    },
+    "name": {
+        label: "姓名",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "phone": {
+        label: "手机号",
+        type: "text",
+        submitConfig: {
+            name: "phone",
+            op: "eq",
+            validate: null
+        }
     }
 });

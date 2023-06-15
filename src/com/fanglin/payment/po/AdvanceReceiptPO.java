@@ -1,11 +1,13 @@
 package com.fanglin.payment.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,62 +18,64 @@ import com.fanglin.personel.po.UserPO;
 public class AdvanceReceiptPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4094999268147934216L;
-	
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_COLLRCT_INT = 1;
-	
+
 	public static final short STATUS_RECEIPTTYPE_INT = 0;
-	
+
 	public static final short STATUS_CONFIRM_INT = 2;
-	
+
 	public static final long COLUMN_MONEY_INT = 0;
-	
+
 	private long arId;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private UserPO collecter;
-	
+
 	private String collecterName;
-	
+
 	private Timestamp collectTime;
-	
+
 	private UserPO confirmer;
-	
+
 	private String confirmerName;
-	
+
 	private Timestamp confirmTime;
-	
+
+	private long realMoney;
+
 	private long cash;
-	
+
 	private String cashInfo;
-	
+
 	private long bank;
-	
+
 	private String bankInfo;
-	
+
 	private long checkv;
-	
+
 	private String checkvBank;
-	
+
 	private long installment;
-	
+
 	private String installmentBank;
-	
+
 	private long accounts;
-	
+
 	private String accountsBank;
-	
+
 	private long transfer;
-	
+
 	private String comment;
 
 	public AdvanceReceiptPO() {
 		super();
-		
+
 		this.bankInfo = "";
 		this.checkvBank = "";
 		this.installmentBank = "";
@@ -89,7 +93,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setArId(long arId) {
 		this.arId = arId;
 	}
-	
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -98,7 +102,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -110,14 +114,14 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
 	@javax.persistence.JoinColumn(nullable = false, name = "cluid", referencedColumnName = "uid")
-	public UserPO getCollecter(){
+	public UserPO getCollecter() {
 		return collecter;
 	}
 
-	public void setCollecter(UserPO collecter){
+	public void setCollecter(UserPO collecter) {
 		this.collecter = collecter;
 	}
-	
+
 	@Column(name = "collecterName")
 	public String getCollecterName() {
 		return collecterName;
@@ -126,23 +130,23 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setCollecterName(String collecterName) {
 		this.collecterName = collecterName;
 	}
-	
-	@Column(name="collectTime")
-	public Timestamp getCollectTime(){
+
+	@Column(name = "collectTime")
+	public Timestamp getCollectTime() {
 		return collectTime;
 	}
 
-	public void setCollectTime(Timestamp collectTime){
+	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
 	}
-	
+
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
 	@javax.persistence.JoinColumn(name = "cfuid", referencedColumnName = "uid")
-	public UserPO getConfirmer(){
+	public UserPO getConfirmer() {
 		return confirmer;
 	}
 
-	public void setConfirmer(UserPO confirmer){
+	public void setConfirmer(UserPO confirmer) {
 		this.confirmer = confirmer;
 	}
 
@@ -155,13 +159,22 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 		this.confirmerName = confirmerName;
 	}
 
-	@Column(name="confirmTime")
-	public Timestamp getConfirmTime(){
+	@Column(name = "confirmTime")
+	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
 
-	public void setConfirmTime(Timestamp confirmTime){
+	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
+	}
+
+	@Column(name = "realMoney")
+	public long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	@Column(name = "cash")
@@ -172,7 +185,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setCash(long cash) {
 		this.cash = cash;
 	}
-	
+
 	@Column(name = "cashInfo")
 	public String getCashInfo() {
 		return cashInfo;
@@ -217,7 +230,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-	
+
 	@Column(name = "installment")
 	public long getInstallment() {
 		return this.installment;

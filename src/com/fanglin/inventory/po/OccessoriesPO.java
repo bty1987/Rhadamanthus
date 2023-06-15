@@ -53,6 +53,8 @@ public class OccessoriesPO implements Serializable {
 
 	public static final short STATUS_BALANCE_INT = 4;
 
+	public static final short STATUS_FINISH_INT = 5;
+
 	private long oid;
 
 	private String no;
@@ -67,6 +69,10 @@ public class OccessoriesPO implements Serializable {
 
 	private UserPO balancer;// 结算人
 
+	private UserPO deliver;// 配送人
+
+	private UserPO receiver;// 接收人
+
 	private Timestamp createTime; // 创建时间
 
 	private Timestamp deliveTime; // 配送时间
@@ -74,6 +80,8 @@ public class OccessoriesPO implements Serializable {
 	private Timestamp receiveTime; // 接收时间
 
 	private Timestamp balanceTime;// 结算时间
+
+	private Timestamp finishTime;// 完成时间
 
 	private short isEnter;// 是否可进园区
 
@@ -90,6 +98,10 @@ public class OccessoriesPO implements Serializable {
 	private String comment; // 备注
 
 	private String content; // 说明
+
+	private int rate; // 评分
+
+	private String remake; // 评价
 
 	public OccessoriesPO() {
 		super();
@@ -143,6 +155,26 @@ public class OccessoriesPO implements Serializable {
 
 	public void setSupervisor(UserPO supervisor) {
 		this.supervisor = supervisor;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "deuid", referencedColumnName = "uid")
+	public UserPO getDeliver() {
+		return deliver;
+	}
+
+	public void setDeliver(UserPO deliver) {
+		this.deliver = deliver;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "reuid", referencedColumnName = "uid")
+	public UserPO getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserPO receiver) {
+		this.receiver = receiver;
 	}
 
 	@Column(name = "createTime")
@@ -209,6 +241,15 @@ public class OccessoriesPO implements Serializable {
 		this.balanceTime = balanceTime;
 	}
 
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
 	public UserPO getBalancer() {
@@ -271,6 +312,24 @@ public class OccessoriesPO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "rate")
+	public int getRate() {
+		return rate;
+	}
+
+	public void setRate(int rate) {
+		this.rate = rate;
+	}
+
+	@Column(name = "remake")
+	public String getRemake() {
+		return remake;
+	}
+
+	public void setRemake(String remake) {
+		this.remake = remake;
 	}
 
 	public OccessoriesPO init(String no, String orderId, UserPO creater, int company, short isEnter, short isLift, short isExceed, short isAttic) {

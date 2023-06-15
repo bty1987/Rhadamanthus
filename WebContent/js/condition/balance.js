@@ -149,6 +149,15 @@ Condition.addupRule("balance", {
             valuePath: "value"
         }
     },
+    "balanceSelse-lockTime": {
+        label: "锁定时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "lockTimeDateRange",
+            op: "cn",
+            validate: null
+        }
+    },
     "balanceDccount-name": {
         label: "名称",
         type: "text",
@@ -170,6 +179,47 @@ Condition.addupRule("balance", {
             url: null,
             postData: null,
             listPath: [{key: "0", value: "有效"}, {key: "1", value: "失效"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelse-balance-no": {
+        label: "结算单号",
+        type: "text",
+        submitConfig: {
+            name: "balanceNo",
+            op: "cn",
+            validate: null
+        }
+    },
+    "balanceSelse-balance-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "balanceType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "支出"}, {key: "1", value: "收款"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelse-balance-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "balanceStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "初始"}, {key: "1", value: "完结"}],
             keyPath: "key",
             valuePath: "value"
         }

@@ -18,9 +18,13 @@ public class PresignItemVO implements Serializable {
 
 	private Long price;
 
+	private Short areaCale;
+
 	private Short type;
 
 	private Short onetype;
+
+	private Short atttype;
 
 	private Short status;
 
@@ -78,6 +82,14 @@ public class PresignItemVO implements Serializable {
 		this.price = price;
 	}
 
+	public Short getAreaCale() {
+		return areaCale;
+	}
+
+	public void setAreaCale(Short areaCale) {
+		this.areaCale = areaCale;
+	}
+
 	public Short getType() {
 		return type;
 	}
@@ -92,6 +104,14 @@ public class PresignItemVO implements Serializable {
 
 	public void setOnetype(Short onetype) {
 		this.onetype = onetype;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Short getStatus() {

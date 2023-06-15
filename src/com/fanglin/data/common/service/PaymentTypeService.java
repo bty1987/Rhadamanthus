@@ -15,6 +15,8 @@ public interface PaymentTypeService {
 
 	public PaymentTypeVO queryPaymentTypeByPtid(PaymentTypeVO paymentType) throws FLException;
 
+	public PaymentTypeVO queryPaymentTypeByName(PaymentTypeVO paymentType, int company) throws FLException;
+
 	public void addPaymentType(PaymentTypeVO paymentType, int company) throws FLException;
 
 	public void updatePaymentType(PaymentTypeVO paymentType) throws FLException;

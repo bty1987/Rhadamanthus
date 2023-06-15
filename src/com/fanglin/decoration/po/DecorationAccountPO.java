@@ -21,11 +21,11 @@ public class DecorationAccountPO implements Serializable {
 	private long daid;
 
 	private String orderId;
-	
+
 	private String name;
 
 	private short type;
-	
+
 	private Short typeness;
 
 	private short arcal;
@@ -42,10 +42,12 @@ public class DecorationAccountPO implements Serializable {
 
 	private long servicePrice;
 
+	private int paidupMatching;
+
 	private long difference;
 
 	private long coupon;
-	
+
 	private long internal;
 
 	private long fulldel;
@@ -164,6 +166,15 @@ public class DecorationAccountPO implements Serializable {
 		this.discountBase = discountBase;
 	}
 
+	@Column(name = "paidupMatching")
+	public int getPaidupMatching() {
+		return paidupMatching;
+	}
+
+	public void setPaidupMatching(int paidupMatching) {
+		this.paidupMatching = paidupMatching;
+	}
+
 	@Column(name = "difference")
 	public long getDifference() {
 		return difference;
@@ -182,15 +193,15 @@ public class DecorationAccountPO implements Serializable {
 		this.coupon = coupon;
 	}
 
-	@Column(name = "internal")	
+	@Column(name = "internal")
 	public long getInternal() {
 		return internal;
 	}
-	
+
 	public void setInternal(long internal) {
 		this.internal = internal;
 	}
-	
+
 	@Column(name = "fulldel")
 	public long getFulldel() {
 		return fulldel;

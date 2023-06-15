@@ -13,6 +13,7 @@
             comment : com.focusPage("#des"),
             isdet : com.focusPage("#isdet"),// 是否定岗
             code : com.focusPage("#code"),
+            limit : com.focusPage("#limit"),// 人员数量上限
             
         },
         modals : {
@@ -87,6 +88,7 @@
                 ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
                 ["管理人员:", com.checkNull(v.manager.userName, "无"), "grey"],
                 ["是否定岗:", com.checkNull(v.isdet == 1?"定岗":"开放"), "grey"],
+                ["人员数量上限:", v.limit , "grey"],
                 ["描述:", v.comment  == ""?'无': v.comment , "grey"],
                 ["code:", v.code  == null?'无': v.code , "grey"]
             ];
@@ -182,6 +184,7 @@
         department.items.comment .val(dept.comment);
         department.items.isdet.val(dept.isdet);
         department.items.code.val(dept.code);
+        department.items.limit.val(dept.limit);
         if(dept.manager) com.updateTypeahead("manager", dept.manager.userId, dept.manager.currentName);
 
         department.modals.modal.modal("show");
@@ -214,7 +217,8 @@
             'dept.manager.userId': com.typeahead("manager"),
             'dept.comment': department.items.comment.val(),
             'dept.isdet': department.items.isdet.val(),
-            'dept.code': department.items.code.val()
+            'dept.code': department.items.code.val(),
+            'dept.limit': department.items.limit.val()
         };
 
         department.editFlg ? (url=api.communion.updateDepartment,options['dept.did'] = department.items.did) : (url = api.communion.addDepartment);

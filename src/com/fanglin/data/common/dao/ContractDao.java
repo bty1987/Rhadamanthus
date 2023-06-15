@@ -11,8 +11,10 @@ public interface ContractDao extends Dao<ContractPO> {
 
 	public List<ContractPO> pageContract(Paging paging, List<Filter> filters, int company);
 
-	public List<ContractPO> queryContract(int company);
+	public List<ContractPO> queryContract(short atttype, int company);
 
 	public int countContract(String no);
+
+	public int countContract(int company);
 
 }

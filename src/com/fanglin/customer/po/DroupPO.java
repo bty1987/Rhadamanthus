@@ -46,6 +46,8 @@ public class DroupPO implements Serializable {
 
 	private String openId;
 
+	private short type; // 1:钉钉 2:微信
+
 	private short status;
 
 	private short isHandle;
@@ -99,6 +101,15 @@ public class DroupPO implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "status")

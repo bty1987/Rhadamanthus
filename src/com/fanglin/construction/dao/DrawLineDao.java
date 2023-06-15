@@ -24,8 +24,6 @@ public interface DrawLineDao extends Dao<DrawLinePO> {
 	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, int company);
 	
 	public List<DrawLinePO> queryDrawLine(List<Filter> filters, int company);
-
-	public List<DrawLinePO> queryDrawLineByOrderId(String orderId);
 	
 	public int countDrawLine(String orderId);
 	

@@ -9,6 +9,7 @@ $(function() {
             saveDeductBtn:com.focusPage("#saveDeductBtn"),
             addBalanceDccountBtn:com.focusPage("#addBalanceCutpayBtn"),
             saveAddBtn:com.focusPage("#saveAddBtn"),
+            printBtn:com.focusPage("#printBtn"),
         },
 
         modals: {
@@ -26,6 +27,7 @@ $(function() {
             balanceCutpayName: com.focusPage("#balanceCutpayName"),
             balanceDccountName: com.focusPage("#balanceDccountName"),
             balanceDccountSurplus: com.focusPage("#balanceDccountSurplus"),
+            balanceDccountCutpay: com.focusPage("#balanceDccountCutpay"),
             balanceCutpayMoney: com.focusPage("#balanceCutpayMoney"),
             balanceCutpayComment: com.focusPage("#balanceCutpayComment"),
         },
@@ -34,6 +36,7 @@ $(function() {
         bcid: null,
         deductName: null,
         bid: params.balance.bid,
+        balance: params.balance,
         balanceCutpayType: {}
     };
 
@@ -70,6 +73,7 @@ $(function() {
             $.each(res.balanceDccountes, function(i, v) {
                 if(com.focusPage("#balanceDccountName").val() == v.bdid){
                     com.focusPage("#balanceDccountSurplus").val(v.surplus);
+                    com.focusPage("#balanceDccountCutpay").val(v.cutpay);
                 }
             });
         });
@@ -146,6 +150,13 @@ $(function() {
     com.focusPage('#addBalanceCutpayBtn').on("click", function () {
 
         balanceCutpay.modals.addBalanceCutpayModal.modal("show");
+    });
+
+    com.focusPage('#printBtn').on("click", function () {
+
+        params.balance = balanceCutpay.balance;
+
+        com.popup("扣款明细表", api.index.balanceCutpay2print.url, null, null, true);
     });
 
     function deductBalanceCutpay(v) {

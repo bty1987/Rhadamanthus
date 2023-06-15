@@ -18,6 +18,8 @@ public class SoodsVO implements Serializable {
 
 	private Integer num;
 
+	private String path;
+
 	private Short status;
 
 	private Integer company;
@@ -72,6 +74,14 @@ public class SoodsVO implements Serializable {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public Short getStatus() {

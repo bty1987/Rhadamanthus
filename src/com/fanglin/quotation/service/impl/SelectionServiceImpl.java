@@ -16,6 +16,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionDao;
@@ -56,13 +57,17 @@ public class SelectionServiceImpl implements SelectionService {
 
 		for (SelectionDO selectionDO : selectionDOs) {
 
-			SelectionVO selectionVO = new SelectionVO(new DecorationVO(), new UserBaseVO());
+			SelectionVO selectionVO = new SelectionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			selectionVO.getDecoration().setSupervisor(new UserBaseVO());
 
-			BeanUtil.copyPropertie(selectionDO, selectionVO, Arrays.asList("decoration", "creater"));
+			BeanUtil.copyPropertie(selectionDO, selectionVO, Arrays.asList("decoration", "creater", "splitter", "traner"));
 
 			BeanUtil.copyProperties(selectionDO.getCreater(), selectionVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			BeanUtil.copyProperties(selectionDO.getSplitter(), selectionVO.getSplitter(), Arrays.asList("duty", "dept", "role"));
+
+			BeanUtil.copyProperties(selectionDO.getTraner(), selectionVO.getTraner(), Arrays.asList("duty", "dept", "role"));
 
 			selectionDO.getDecoration().ptvcascade(selectionVO.getDecoration());
 
@@ -81,7 +86,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 		selectionVO = new SelectionVO();
 
-		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater", "splitter", "traner"));
 
 		return selectionVO;
 	}
@@ -101,7 +106,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 		selectionVO = new SelectionVO();
 
-		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater", "splitter", "traner"));
 
 		return selectionVO;
 	}
@@ -112,7 +117,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 		SelectionPO selectionPO = saveSelection(selectionVO.getQid(), userId);
 
-		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(selectionPO, selectionVO, Arrays.asList("creater", "splitter", "traner"));
 
 		selectionPO.setCreater(userDao.queryUserByUserId(userId));
 		selectionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -131,7 +136,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateSelectionForAdvance(SelectionVO selectionVO) throws FLException {
+	public int updateSelection(SelectionVO selectionVO) throws FLException {
 
 		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
 
@@ -139,7 +144,15 @@ public class SelectionServiceImpl implements SelectionService {
 			throw new FLException(200035, "选材单不存在");
 		}
 
-		BeanUtil.copyProperties(selectionVO, selectionPO, Arrays.asList("creater"));
+		if (selectionVO.getSplitter() != null) {
+			UserPO splitter = userDao.queryUserByUserId(selectionVO.getSplitter().getUserId());
+			selectionPO.setSplitter(splitter);
+		}
+
+		if (selectionVO.getTraner() != null) {
+			UserPO traner = userDao.queryUserByUserId(selectionVO.getTraner().getUserId());
+			selectionPO.setTraner(traner);
+		}
 
 		selectionDao.update(selectionPO);
 
@@ -148,7 +161,40 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSelection(SelectionVO selectionVO, int company) throws FLException {
+	public int updateSelectionForAdvance(SelectionVO selectionVO) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		BeanUtil.copyProperties(selectionVO, selectionPO, Arrays.asList("creater", "splitter", "traner"));
+
+		selectionDao.update(selectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationVO.getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (decorationVO.getCustomer().getPhone() == null || !decorationVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
+			throw new FLException(130115, "客户电话验证失败");
+		}
 
 		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
 
@@ -157,6 +203,7 @@ public class SelectionServiceImpl implements SelectionService {
 		}
 
 		selectionPO.setIsAffirm(selectionPO.ISAFFIRM_CONFIRMED_INT);
+		selectionPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 		selectionDao.update(selectionPO);
 
@@ -168,9 +215,9 @@ public class SelectionServiceImpl implements SelectionService {
 
 		String orderId = selectionVO.getOrderId();
 
-		System.out.println(String.format("pages/selectionDetail/selectionDetail?orderId=%s", orderId));
+		System.out.println(String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您点【详情】查看选材明细，并正式给予点【确认】。", orderId), String.format("pages/selectionDetail/selectionDetail?orderId=%s", orderId));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您点【详情】查看选材明细，并正式给予点【确认】。", orderId), String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 	}
 
 	private SelectionPO saveSelection(Long qid, String userId) throws FLException {

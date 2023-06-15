@@ -14,6 +14,7 @@ jQuery(function($) {
         customerItems: {},
         houseItems: {},
         decorationBusitypes: [],
+        decorationAtttypes: [],
 
         btns: {
             saveBtn: null,
@@ -92,7 +93,7 @@ jQuery(function($) {
 
         deleteVillageData("no");
 
-        com.post(api.data.queryVillageById, {
+        com.post(api.data.queryVillageByVid, {
             "village.no": key
         }, function(res) {
 
@@ -167,19 +168,22 @@ jQuery(function($) {
         orderEntry.orderItems.busitype.bindData(orderEntry.decorationBusitypes, "dbid", "name");
     });
 
-    orderEntry.orderItems.orderType.bindData(constant.decoration.decoration.typeness.datas, 'key', 'value', "请选择");
+    com.post(api.data.queryDecorationAtttype, {}, function(res) {
+
+        $.each(res.decorationAtttypes, function(i, v) {
+
+            if (v.status == 0) {
+                orderEntry.type[v.key] = v.type;
+                orderEntry.decorationAtttypes.push(v);
+            }
+        });
+        orderEntry.orderItems.orderType.bindData(orderEntry.decorationAtttypes, 'key', 'name', "请选择");
+    });
+
     orderEntry.orderItems.houseType.bindData(constant.decoration.decoration.houseType.datas, 'key', 'value');
     orderEntry.orderItems.status.bindData(constant.decoration.decoration.resourceType.datas, 'key', 'value');
     orderEntry.orderItems.houseClass.bindData(constant.decoration.decoration.houseClass.datas, 'key', 'value');
     orderEntry.orderItems.orderGrade.bindData(constant.decoration.decoration.grade.datas, 'key', 'value');
-
-    com.post(api.ds.decoration, {}, function(res) {
-
-        $.each(res.typeness, function(i, v) {
-
-            orderEntry.type[v.key] = v.type;
-        });
-    });
 
     com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value", function(list, key, value) {
 
@@ -341,6 +345,11 @@ jQuery(function($) {
 
     });
 
+    com.focusPage("#notSalesmanRateComment").on("click", function() {
+
+        com.showTip($(this), "支持提点(0-1)比例以及提成(大于1)金额");
+    });
+
     function createOrder() {
 
         var btn = com.focusPage("#saveBtn");
@@ -380,11 +389,6 @@ jQuery(function($) {
 
         if (orderEntry.houseItems.hid == null) {
             com.showAlert(com.error, "房产信息未填写");
-            return;
-        }
-
-        if (orderEntry.orderItems.notSalesmanRate.val() < 0 || orderEntry.orderItems.notSalesmanRate.val() > 1) {
-            com.showTip(orderEntry.orderItems.notSalesmanRate, "非业务提点必须大于0小于1", "right");
             return;
         }
 

@@ -16,6 +16,10 @@ public class PresignProduceVO implements Serializable {
 
 	private Long unitPrice;
 
+	private Integer discount;
+
+	private Integer manageRate;
+
 	private Long costPrice;
 
 	private Integer profitRate;
@@ -25,13 +29,13 @@ public class PresignProduceVO implements Serializable {
 	private Short status;
 
 	private Integer company;
-	
+
 	private Long preferPrice;
-	
+
 	private Long mostPrice;
-	
+
 	private Integer costRate;
-	
+
 	private Integer mostRate;
 
 	public PresignProduceVO() {
@@ -149,5 +153,21 @@ public class PresignProduceVO implements Serializable {
 	public void setMostRate(Integer mostRate) {
 		this.mostRate = mostRate;
 	}
-	
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
+	public Integer getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(Integer manageRate) {
+		this.manageRate = manageRate;
+	}
+
 }

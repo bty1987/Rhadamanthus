@@ -15,9 +15,9 @@ $(function() {
         totalPayable: 0,
         totalSettlementProfit: 0,
         totalCompanyProfit: 0,
-        totalService: 0
+        totalService: 0,
     };
-
+    var serNum = 0;
     var balanceSales = {};
     var brand = {};
     var creater = {};
@@ -33,9 +33,10 @@ $(function() {
     var tabody = $('<tbody> </tbody>');
 
     setTimeout(function() {
-        pageList(1, 50);
         table = createHeader().appendTo(trList);
+        pageList(1, 50);
         tabody.appendTo(table);
+
      }, 500);
 
     var index = 0;
@@ -76,10 +77,12 @@ $(function() {
         var td3 = $('<td colspan="5" style="border: 1px solid;"></td>').text("单号：" + balanceSales.name).appendTo(tr1);
         var tr2 = $('<tr colspan="11" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
-        var num = utils.changeThrDecimal(options.totalPayable);
-        var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" +
+        var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);
+        var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" +
             "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章或签字确认，" +
-            "本次应付账款金额：" + utils.getCNMoney(num) + "(￥"+ num +")，具体明细如下：").appendTo(tr2);
+            "本次应付账款金额：").appendTo(td37);
+        var span2 = $('<span></span>').attr("id", "totalYay").text("").appendTo(span1);
+        var span3 = $('<span></span>').text(")，具体明细如下：").appendTo(span1);
 
         var tr3 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
         var td4 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("序号").appendTo(tr3);
@@ -135,7 +138,7 @@ $(function() {
             }
 
             var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 7px;"></tr>').appendTo(tabody);
-            var td15 = $('<td style="border: 1px solid;"></td>').text(i + 1).appendTo(tr4);
+            var td15 = $('<td style="border: 1px solid;"></td>').text(serNum + 1).appendTo(tr4);
             var td16 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.createTime).appendTo(tr4);
             var td17 = $('<td style="border: 1px solid;"></td>').text(brand.name).appendTo(tr4);
             var td18 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.sales.orderId).appendTo(tr4);
@@ -155,10 +158,14 @@ $(function() {
             options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
             options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);// 合计供应商减免金额
             options.totalService = utils.accAdd(options.totalService, utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable)));
+            serNum = serNum+1;
         });
     }
 
     function createComFooter() {
+
+        $("#totalYay").text(utils.getCNMoney(utils.changeThrDecimal(options.totalPayable)) + "(￥"+ utils.changeThrDecimal(options.totalPayable));
+
         var tr5 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 6px;"></tr>').appendTo(tabody);
         var td26 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
         var td27 = $('<td style="border: 1px solid;"></td>').text("合计").appendTo(tr5);

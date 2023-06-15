@@ -17,6 +17,8 @@ public interface DecorationService {
 
 	public DecorationVO queryCusDecorationForDefault(String unionId) throws FLException;
 
+	public String vodeCusDecoration(DecorationVO decorationVO) throws FLException;
+
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException;
 
 	public int updateCusDecorationForDefault(DecorationVO decorationVO, String unionId) throws FLException;
@@ -24,5 +26,7 @@ public interface DecorationService {
 	public int sendMessage(String orderId, String name, String content);
 
 	public int sendMessage(String orderId, String name, String content, String path);
+
+	public int sendMessage(String key, String orderId, String name, String content, String path);
 
 }

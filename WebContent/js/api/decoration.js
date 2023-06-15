@@ -495,6 +495,9 @@ $.extend(api, {
         changeDecorationForVersionId: {
             url: "changeDecorationForVersionId.do"
         },
+        changeDecorationForPayScale: {
+            url: "changeDecorationForPayScale.do"
+        },
         changeDecorationForStatus: {
             url: "changeDecorationForStatus.do"
         },
@@ -645,7 +648,7 @@ $.extend(api, {
             url: "updateDecorationAccount.do",
             type: "update",
             tranargs: {
-                args: ["decorationAccount.matching", "decorationAccount.discount", "decorationAccount.discountBase", "decorationAccount.serviceRate", "decorationAccount.materialPrice", "decorationAccount.servicePrice", "decorationAccount.difference", "decorationAccount.coupon", "decorationAccount.fulldel", "decorationAccount.cashback"]
+                args: ["decorationAccount.matching", "decorationAccount.discount", "decorationAccount.discountBase", "decorationAccount.serviceRate", "decorationAccount.materialPrice", "decorationAccount.servicePrice", "decorationAccount.difference", "decorationAccount.coupon", "decorationAccount.fulldel", "decorationAccount.cashback", "decorationAccount.paidupMatching"]
             }
         },
 
@@ -750,6 +753,9 @@ $.extend(api, {
                 result: "paging-data-house",
                 args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
+        },
+        downloadDecorationPicture: {
+            url: "downloadDecorationPicture.do"
         },
 
     }

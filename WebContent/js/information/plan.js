@@ -131,18 +131,25 @@ $(function () {
         if (com.validate('addplanModal'))
             return false;
 
-        var str = new Date().getDay();
-        var sty = new Date().getDate();
-        var sts = new Date().getHours();
-
         var keyword = $("#task").val();
+        
         plan.keyword = keyword;
+        
+        var date = plan.items.executeDate.val();
+        var time = plan.items.executeTime.val();
+        
+        var handleTime = new Date(date + " " + time);
+        
+        var str = handleTime.getDay();
+        var sty = handleTime.getDate();
+        var sts = handleTime.getHours();
+        
         var week = plan.week[keyword];
         var day = plan.day[keyword];
         var hour = plan.hour[keyword];
 
         if(!(new RegExp(week).test(str) && new RegExp(day).test(sty) && new RegExp(hour).test(sts))){
-            com.showAlert(com.warning, "当前任务不可用");
+            com.showAlert(com.warning, "执行时间不可用");
             return false;  
         }
 
@@ -178,9 +185,6 @@ $(function () {
         }
 
         args = args.substring(0, args.length - 1);
-
-        var date = plan.items.executeDate.val();
-        var time = plan.items.executeTime.val();
 
         var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
 

@@ -129,13 +129,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<DecorationContractVO> decorationContractVOs = new ArrayList<DecorationContractVO>();
 
 		for (DecorationContractPO decorationContractPO : decorationContractPOs) {
-			DecorationContractVO decorationContractVO = new DecorationContractVO(new ContractVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			DecorationContractVO decorationContractVO = new DecorationContractVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(decorationContractPO, decorationContractVO, Arrays.asList("contract", "creater", "signner", "filinner"));
 			BeanUtil.copyProperties(decorationContractPO.getCreater(), decorationContractVO.getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(decorationContractPO.getSignner(), decorationContractVO.getSignner(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(decorationContractPO.getFilinner(), decorationContractVO.getFilinner(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(decorationContractPO.getContract(), decorationContractVO.getContract());
 
 			decorationContractVOs.add(decorationContractVO);
 		}
@@ -224,17 +223,20 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addDecorationContract(DecorationContractVO decorationContract, String data, String table, String userId) throws FLException {
+	public int addDecorationContract(DecorationContractVO decorationContractVO, ContractVO contractVO, String data, String table, String userId) throws FLException {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		DecorationContractPO decorationContractPO = new DecorationContractPO(new ContractPO(), new UserPO());
+		DecorationContractPO decorationContractPO = new DecorationContractPO(new UserPO());
 
-		BeanUtil.copyProperties(decorationContract, decorationContractPO, Arrays.asList("contract", "creater"));
+		BeanUtil.copyProperties(decorationContractVO, decorationContractPO, Arrays.asList("creater"));
 
-		ContractPO contract = contractDao.get(decorationContract.getContract().getCid());
+		ContractPO contractPO = contractDao.get(contractVO.getCid());
 
-		decorationContractPO.setContract(contract);
+		decorationContractPO.setCid(contractPO.getCid());
+		decorationContractPO.setNo(contractPO.getNo());
+		decorationContractPO.setName(contractPO.getName());
+		decorationContractPO.setTitle(contractPO.getTitle());
 		decorationContractPO.setCreater(creater);
 		decorationContractPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationContractPO.setStatus(DecorationContractPO.STATUS_VALID_INT);
@@ -420,13 +422,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140037, "订单存在未处理审批项");
 		}
 
-		// DecorationContractPO decorationContractPO = decorationContractDao.queryDecorationContractByOrderId(orderId);
-		//
-		// if (decorationContractPO == null) {
-		// decorationContractPO = new DecorationContractPO();
-		// decorationContractPO.setOrderId(orderId);
-		// }
-
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
 		if (quotationPO == null) {
@@ -477,40 +472,48 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationDao.update(decorationPO);
 
-		DecorationOperatePO decorationOperatePO = new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice());
-
-		if (!resignFlag && !prosignFlag) {
+		if (!resignFlag && !prosignFlag) { // 签约
 
 			decorationAdditionPO.clearDesign();
 			decorationAdditionPO.clearSales();
 
 			// 更新归属信息的部门和大区, 更新附加信息
 			for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+
 				decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
 				decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
 
 				decorationAdditionPO.setDesign(decorationBelongPO.getBelonger().getCurrentName(), decorationBelongPO.getBelonger().getDept().getName(), decorationBelongPO.getBelonger().getDept().getFatherDept().getName());
 
 				decorationBelongDao.update(decorationBelongPO);
+
+				decorationOperateDao.save(new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice()).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_DESIGN_INT, decorationBelongPO.getRate()));
 			}
 
 			for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+
 				decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
 				decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
 
 				decorationAdditionPO.setSales(decorationBelongPO.getBelonger().getCurrentName(), decorationBelongPO.getBelonger().getDept().getName(), decorationBelongPO.getBelonger().getDept().getFatherDept().getName());
 
 				decorationBelongDao.update(decorationBelongPO);
+
+				decorationOperateDao.save(new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice()).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_BUSINESS_INT, decorationBelongPO.getRate()));
 			}
 
 			decorationAdditionDao.update(decorationAdditionPO);
-			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);
 
 		} else {
-			decorationOperatePO.setType(DecorationOperatePO.TYPE_SIGNED_DECORATION_ORDER_INT);
-		}
 
-		decorationOperateDao.save(decorationOperatePO);
+			for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+				decorationOperateDao.save(new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice()).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_DESIGN_INT, decorationBelongPO.getRate()));
+			}
+
+			for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+				decorationOperateDao.save(new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice()).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_BUSINESS_INT, decorationBelongPO.getRate()));
+			}
+		}
 
 		return 0;
 	}
@@ -544,8 +547,16 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationDao.update(decorationPO);
 
 		UserPO operater = userDao.queryUserByUserId(userId);
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 
-		decorationOperateDao.save(new DecorationOperatePO().resign(orderId, operater, -decorationPO.getOrderTotalPrice()));
+		for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+			decorationOperateDao.save(new DecorationOperatePO().resign(orderId, operater, decorationPO.getOrderTotalPrice()).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_DESIGN_INT, decorationBelongPO.getRate()));
+		}
+
+		for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+			decorationOperateDao.save(new DecorationOperatePO().resign(orderId, operater, decorationPO.getOrderTotalPrice()).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_BUSINESS_INT, decorationBelongPO.getRate()));
+		}
 
 		// 重签处理过程 , 需要冲减之前计算的设计师/业务员业绩信息
 		// List<DecorationBelongPO> designerOrderBelongInfoPOs = orderBelongInfoDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
@@ -600,6 +611,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		// 更新归属信息的部门和大区, 更新附加信息
 		for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+
 			decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
 			decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
 
@@ -609,6 +621,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+
 			decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
 			decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
 
@@ -628,6 +641,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationDao.update(decorationPO);
 
 		UserPO operater = userDao.queryUserByUserId(userId);
+
 		decorationOperateDao.save(new DecorationOperatePO().prosign(orderId, operater)); // 创建装修单操作信息
 
 		return 0;

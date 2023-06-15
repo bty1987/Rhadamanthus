@@ -22,75 +22,75 @@ import com.fanglin.utils.DateUtil;
 public class DecorationOperatePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5505808285022334255L;
-	
-	public static final short STATUS_INIT_INT = 0;
-	
-	public static final short STATUS_DISABLED_INT = 1;	
-	
-	public static final short TYPE_CREATE_DECORATION_ORDER_INT = 1; 
-	
-	public static final short TYPE_WASTE_DECORATION_ORDER_INT = 2;	
-	
-	public static final short TYPE_TERMINATION_DECORATION_ORDER_INT = 3;	
-	
-	public static final short TYPE_SUB_DECORATION_QUOTATION_NUM_INT = 4;	
-	
-	public static final short TYPE_SIGN_DECORATION_ORDER_INT = 5;		
-	
-	public static final short TYPE_RESIGN_DECORATION_ORDER_INT = 6;		
-	
-	public static final short TYPE_SIGNED_DECORATION_ORDER_INT = 7;		
-	
-	public static final short TYPE_BELONG_DECORATION_ORDER_INT = 8;
-	
-	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;
-	
-	public static final short TYPE_CONTRACT_DECORATION_ORDER_INT = 10;
-	
-	public static final short TYPE_ACCOUNT_DECORATION_ORDER_INT = 11;
-	
-	public static final short TYPE_PROSIGN_DECORATION_ORDER_INT = 12;// 预签
-	
-	private long doid;
-	
-	private String orderId;
-	
-	private UserPO operater;
-	
-	private Timestamp operateTime;
-	
-	private long value;
-	
-	private short type;
-	
-	private short status;
-	
-	private String comment;
 
-	private long dsuid;
-	
-	private long smuid;
-	
-	private long dsdid;
-	
-	private long dsrid;
-	
-	private long smdid;
-	
-	private long smrid;
-	
-	private long drate;
-	
-	private long srate;
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_DISABLED_INT = 1;
+
+	public static final short TYPE_CREATE_DECORATION_ORDER_INT = 1;
+
+	public static final short TYPE_WASTE_DECORATION_ORDER_INT = 2;
+
+	public static final short TYPE_TERMINATION_DECORATION_ORDER_INT = 3;
+
+	public static final short TYPE_SUB_DECORATION_QUOTATION_NUM_INT = 4;
+
+	public static final short TYPE_SIGN_DECORATION_ORDER_INT = 5;
+
+	public static final short TYPE_RESIGN_DECORATION_ORDER_INT = 6;
+
+	public static final short TYPE_SIGNED_DECORATION_ORDER_INT = 7;
+
+	public static final short TYPE_BELONG_DECORATION_ORDER_INT = 8;
+
+	public static final short TYPE_SALESMAN_DECORATION_ORDER_INT = 9;
+
+	public static final short TYPE_CONTRACT_DECORATION_ORDER_INT = 10;
+
+	public static final short TYPE_ACCOUNT_DECORATION_ORDER_INT = 11;
+
+	public static final short TYPE_PROSIGN_DECORATION_ORDER_INT = 12;// 预签
+
+	public static final short ATTTYPE_CURRENCY_INT = 0; // 通用
+
+	public static final short ATTTYPE_DESIGN_INT = 1;// 设计
+
+	public static final short ATTTYPE_BUSINESS_INT = 2;// 业务
+
+	private long doid;
+
+	private String orderId;
+
+	private UserPO operater;
+
+	private Timestamp operateTime;
+
+	private long value;
+
+	private short type;
+
+	private short status;
+
+	private short atttype;// 业务类型
+
+	private long buid;// 归属人id
+
+	private long bdid;// 归属部门id
+
+	private long brid;// 归属分区id
+
+	private int rate;// 比例
+
+	private String comment;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "doid")
-	public long getDoid(){
+	public long getDoid() {
 		return this.doid;
 	}
 
-	public void setDoid(long doid){
+	public void setDoid(long doid) {
 		this.doid = doid;
 	}
 
@@ -104,7 +104,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "ouid", referencedColumnName="uId")
+	@JoinColumn(nullable = true, name = "ouid", referencedColumnName = "uId")
 	public UserPO getOperater() {
 		return operater;
 	}
@@ -158,159 +158,144 @@ public class DecorationOperatePO implements java.io.Serializable {
 		this.comment = comment;
 	}
 
-	@Column(name = "dsuid")
-	public long getDsuid() {
-		return dsuid;
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
 	}
 
-	public void setDsuid(long dsuid) {
-		this.dsuid = dsuid;
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
-	@Column(name = "smuid")
-	public long getSmuid() {
-		return smuid;
+	@Column(name = "buid")
+	public long getBuid() {
+		return buid;
 	}
 
-	public void setSmuid(long smuid) {
-		this.smuid = smuid;
+	public void setBuid(long buid) {
+		this.buid = buid;
 	}
 
-	@Column(name = "dsdid")
-	public long getDsdid() {
-		return dsdid;
+	@Column(name = "bdid")
+	public long getBdid() {
+		return bdid;
 	}
 
-	public void setDsdid(long dsdid) {
-		this.dsdid = dsdid;
+	public void setBdid(long bdid) {
+		this.bdid = bdid;
 	}
 
-	@Column(name = "dsrid")
-	public long getDsrid() {
-		return dsrid;
+	@Column(name = "brid")
+	public long getBrid() {
+		return brid;
 	}
 
-	public void setDsrid(long dsrid) {
-		this.dsrid = dsrid;
+	public void setBrid(long brid) {
+		this.brid = brid;
 	}
 
-	@Column(name = "smdid")
-	public long getSmdid() {
-		return smdid;
+	@Column(name = "rate")
+	public int getRate() {
+		return rate;
 	}
 
-	public void setSmdid(long smdid) {
-		this.smdid = smdid;
+	public void setRate(int rate) {
+		this.rate = rate;
 	}
 
-	@Column(name = "smrid")
-	public long getSmrid() {
-		return smrid;
+	public DecorationOperatePO belong(long buid, long bdid, long brid, short atttype, int rate) {
+
+		setBuid(buid);
+		setBdid(bdid);
+		setBrid(brid);
+
+		setAtttype(atttype);
+		setRate(rate);
+
+		return this;
 	}
 
-	public void setSmrid(long smrid) {
-		this.smrid = smrid;
-	}
+	public DecorationOperatePO create(String orderId, UserPO operater) {
 
-	@Column(name = "drate")
-	public long getDrate() {
-		return drate;
-	}
-
-	public void setDrate(long drate) {
-		this.drate = drate;
-	}
-
-	@Column(name = "srate")
-	public long getSrate() {
-		return srate;
-	}
-
-	public void setSrate(long srate) {
-		this.srate = srate;
-	}
-	
-	public DecorationOperatePO create(String orderId, UserPO operater){
-		
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_CREATE_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		setComment("Create");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO sign(String orderId, UserPO operater, Long value){
-		
+
+	public DecorationOperatePO sign(String orderId, UserPO operater, Long value) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_SIGN_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		setValue(value);
-		
+
 		setComment("Sign");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO resign(String orderId, UserPO operater, Long value){
-		
+
+	public DecorationOperatePO resign(String orderId, UserPO operater, Long value) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_RESIGN_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
 		setValue(value);
-		
+
 		setComment("Resign");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO obsolete(String orderId, UserPO operater){
-		
+
+	public DecorationOperatePO obsolete(String orderId, UserPO operater) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_WASTE_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		
+
 		setComment("Obsolete");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO terminal(String orderId, UserPO operater){
-		
+
+	public DecorationOperatePO terminal(String orderId, UserPO operater) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_TERMINATION_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		
+
 		setComment("Terminal");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO account(String orderId, UserPO operater){
-		
+
+	public DecorationOperatePO account(String orderId, UserPO operater) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_ACCOUNT_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
-		
+
 		setComment("Account");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO subnum(String orderId, UserPO operater){
-		
+
+	public DecorationOperatePO subnum(String orderId, UserPO operater) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -318,21 +303,22 @@ public class DecorationOperatePO implements java.io.Serializable {
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
 
 		setComment("Subnum");
-		
+
 		return this;
 	}
-	
-	public DecorationOperatePO prosign(String orderId, UserPO operater){
-		
+
+	public DecorationOperatePO prosign(String orderId, UserPO operater) {
+
 		setOrderId(orderId);
 		setOperater(operater);
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setType(DecorationOperatePO.TYPE_PROSIGN_DECORATION_ORDER_INT);
 		setStatus(DecorationOperatePO.STATUS_INIT_INT);
+		setValue(value);
 
 		setComment("Prosign");
-		
+
 		return this;
 	}
-	
+
 }

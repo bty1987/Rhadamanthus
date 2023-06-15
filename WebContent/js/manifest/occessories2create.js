@@ -34,20 +34,20 @@ jQuery(function() {
             isExceed: com.focusPage('#isExceed'),
             isAttic: com.focusPage('#isAttic'),
         },
+        balance: null,
     };
 
-    com.initTypeahead("goodsName", api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function(list, k, v) {
+    com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, 'aoodes', 'gid', 'name', function(list, k, v) {
+
 
         $.each(list, function(index, val) {
-
             if (val.gid == k) {
+                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-balance', val.balance);
 
-                occessories.leftitems.goodsHidden.attr('data-gid', val.gid).attr('data-type', val.type).attr('data-selling', val.selling);
-
-                occessories.leftitems.goodsNo.attr('data-no', val.no).val(val.no);
-                occessories.leftitems.category.attr('data-category', val.category).val(val.category);
-                occessories.leftitems.brand.attr('data-brand', val.brand).val(val.brand);
-                occessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.measurementUnit);
+                occessories.leftitems.goodsNo.attr('data-no', val.no).val(val.goods.no);
+                occessories.leftitems.category.attr('data-category', val.category).val(val.goods.category);
+                occessories.leftitems.brand.attr('data-brand', val.brand).val(val.goods.brand);
+                occessories.leftitems.measurementUnit.attr('data-measurementUnit', val.measurementUnit).val(val.goods.measurementUnit);
             }
         });
 
@@ -68,6 +68,7 @@ jQuery(function() {
         var gid = occessories.leftitems.goodsHidden.attr('data-gid');
         var type = occessories.leftitems.goodsHidden.attr('data-type');
         var selling = occessories.leftitems.goodsHidden.attr('data-selling');
+        var balance = occessories.leftitems.goodsHidden.attr('data-balance');
 
         var name = occessories.leftitems.goodsName.val();
         var no = occessories.leftitems.goodsNo.val();
@@ -75,7 +76,7 @@ jQuery(function() {
         var brand = occessories.leftitems.brand.val();
         var measurementUnit = occessories.leftitems.measurementUnit.val();
         var num = occessories.leftitems.num.val();
-        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling);
+        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr("data-balance", balance);
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
@@ -185,8 +186,8 @@ jQuery(function() {
 
             options["occessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
             options["occessoriesItems[" + i + "].num"] = $v.attr('data-num');
+            options["occessoriesItems[" + i + "].rbalance"] = $v.attr('data-balance');
         });
-
         com.post(api.inventory.addOccessories, options, function(data) {
 
             com.showAlert(com.info, "操作成功");

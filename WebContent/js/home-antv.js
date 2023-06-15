@@ -24,7 +24,7 @@ $(function() {
                 priorityText = "重要";
                 priorityStyle = "label-warning";
             } else if (notice.priority == 0) {
-                priorityText = "普通";
+                priorityText = "标准";
                 priorityStyle = "label-yellow";
             }
 
@@ -536,7 +536,7 @@ $(function() {
 
             var v = data;
 
-            var $item = $('<div></div>').addClass('col-sm-12 message-bar weather item center').appendTo($weatherList);
+            var $item = $('<div></div>').addClass('message-bar weather item center col-sm-12').css("float", "none").appendTo($weatherList);
             var $title = $('<span></span>').addClass('blue bigger-200 weather title').text(v.name).appendTo($item);
             $('<div class="hr hr5 hr-dotted"></div>').appendTo($item);
             var $content = $('<span></span>').addClass('grey bigger-120').html(v.weather.text).appendTo($item);

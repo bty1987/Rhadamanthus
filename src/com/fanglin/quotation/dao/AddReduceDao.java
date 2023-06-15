@@ -29,7 +29,7 @@ public interface AddReduceDao extends Dao<AddReducePO> {
 
 	public List<AddReducePO> queryAddReduceByOrderId(String orderId);
 
-	public AddReducePO queryAddReduce(Long dpid);
+	public List<AddReducePO> queryAddReduce(Long dpId);
 
 	public int countAddReduceByOrderId(String orderId);
 

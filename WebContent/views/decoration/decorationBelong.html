@@ -31,9 +31,26 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="belongRate">分配比例</label>
 										<div class="col-sm-9">
-											<input type="text" id="belongRate" class="col-xs-10 col-sm-7 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="5"/>
+											<input type="text" class="col-xs-10 col-sm-7 v_required v_float_3" data-toggle="popover" data-trigger='manual' id="belongRate" maxlength="5"/>
 										</div>
 									</div>
+
+									<div class="form-group">
+										<label for="deptId" class="col-sm-3 control-label no-padding-right">部门</label>
+										<div class="col-md-9">
+											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="deptId" placeholder="请输入部门">
+										</div>
+									</div>
+									<div class="space-4"></div>
+
+									<div class="form-group">
+										<label for="regionId" class="col-sm-3 control-label no-padding-right">分区</label>
+										<div class="col-md-9">
+											<input type="text" class="col-xs-10 col-sm-7 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="regionId" placeholder="请输入分区">
+										</div>
+									</div>
+									<div class="space-4"></div>
+
 									<div class="space-4"></div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="isPresentGraduate">是否默认</label>

@@ -26,17 +26,19 @@ public interface SelectionItemService {
 
 	public int updateSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
+	public int refundSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
+
 	public int deleteSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO) throws FLException;
 
 	public int cutoffSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
 	public int tranSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
-	public int checkSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;
+	public int checkSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
-	public int confirmSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;
+	public int confirmSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
-	public int finishSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;
+	public int finishSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
 	public int reviewSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 

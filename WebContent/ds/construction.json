@@ -43,10 +43,10 @@
 		{"key":"0", "value":"装修" },
 		{"key":"1", "value":"主材"}
 	],	"levelDict" :[
-		{"key":"0", "value":"普通" },
+		{"key":"0", "value":"标准" },
 		{"key":"1", "value":"重要"}
 	],	"backVisitTypeData" :[
-		{"key":"0", "value":"普通" },
+		{"key":"0", "value":"标准" },
 		{"key":"1", "value":"重要"}
 	],  "isAccessory" :[
 	    {"key":"0", "value":"开启" },

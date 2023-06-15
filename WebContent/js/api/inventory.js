@@ -37,7 +37,10 @@ $.extend(api.index, {
     },
     salesSupplement: {
         url: "views/sales/sales2supple.html"
-    }
+    },
+    occessoriesPrintIndex: {
+        url: "/views/manifest/occessories2print.html"
+    },
 });
 
 $.extend(api, {
@@ -275,6 +278,16 @@ $.extend(api, {
         queryStorehouseStock: {
             url: "queryStorehouseStock.do"
         },
+
+        queryInventoryDrawing: {
+            url: "queryInventoryDrawing.do"
+        },
+        addInventoryDrawing: {
+            url: "addInventoryDrawing.do"
+        },
+        deleteInventoryDrawing: {
+            url: "deleteInventoryDrawing.do"
+        },
         queryPurchaseAmount: {
             url: "queryPurchaseAmount.do"
         },
@@ -399,6 +412,9 @@ $.extend(api, {
         preoutAccessories: {
             url: "preoutAccessories.do"
         },
+        auditAccessories: {
+            url: "auditAccessories.do"
+        },
         cancelAccessories: {
             url: "cancelAccessories.do"
         },
@@ -444,37 +460,49 @@ $.extend(api, {
         },
 
         pageOccessories: {
-            url: "pageOccessories.do"
-        },
-        pageOccessoriesForSupplier: {
-            url: "pageOccessoriesForSupplier.do"
-        },
-        queryOccessoriesItemByAid: {
-            url: "queryOccessoriesItemByAid.do",
+            url: "pageOccessories.do",
             type: "query",
             tranargs: [{
-                result: "occessoriesItems",
-                args: ["num", "recnum", "rbalance", "vbalance"]
-            }, {
-                result: "occessoriesItems-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                result: "paging-data",
+                args: ["rate"]
             }]
+        },
+        pageOccessoriesForSupplier: {
+            url: "pageOccessoriesForSupplier.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["rate"]
+            }]
+        },
+        queryOccessoriesByOid: {
+            url: "queryOccessoriesByOid.do",
+            type: "query",
+            tranargs: [{
+                result: "occessories",
+                args: ["rate"]
+            }]
+        },
+        addOccessories: {
+            url: "addOccessories.do",
+            type: "update",
+            tranargs: {
+                args: ["occessoriesItems.num", "occessoriesItems.rbalance"]
+            }
         },
         bindOccessories: {
             url: "bindOccessories.do",
             type: "update",
             tranargs: {
-                args: ["occessories.num"]
+                args: []
             }
         },
         deliveOccessories: {
-            url: "deliveOccessories.do"
-        },
-        deleteOccessories: {
-            url: "deleteOccessories.do"
-        },
-        deleteOccessoriesCost: {
-            url: "deleteOccessoriesCost.do"
+            url: "deliveOccessories.do",
+            type: "update",
+            tranargs: {
+                args: ["occessoriesItems.sennum"]
+            }
         },
         receiveOccessories: {
             url: "receiveOccessories.do",
@@ -490,18 +518,43 @@ $.extend(api, {
                 args: ["occessoriesItems.vbalance"]
             }
         },
+        finishOccessories: {
+            url: "finishOccessories.do"
+        },
+        rateOccessories: {
+            url: "rateOccessories.do",
+            type: "update",
+            tranargs: {
+                args: ["occessories.rate"]
+            }
+        },
+        deleteOccessories: {
+            url: "deleteOccessories.do"
+        },
+
+        queryOccessoriesItemByOid: {
+            url: "queryOccessoriesItemByOid.do",
+            type: "query",
+            tranargs: [{
+                result: "occessoriesItems",
+                args: ["num", "sennum", "recnum", "rbalance", "vbalance"]
+            }, {
+                result: "occessoriesItems-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
+        },
         addOccessoriesItem: {
             url: "addOccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["occessoriesItem.num"]
+                args: ["occessoriesItem.num", "occessoriesItems.rbalance"]
             }
         },
         updateOccessoriesItem: {
             url: "updateOccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["occessoriesItem.recnum", "occessoriesItem.vbalance"]
+                args: ["occessoriesItem.num", "occessoriesItem.sennum", "occessoriesItem.recnum", "occessoriesItem.rbalance", "occessoriesItem.vbalance"]
             }
         },
         deleteOccessoriesItem: {
@@ -516,14 +569,6 @@ $.extend(api, {
                 args: ["initPrice", "price", "cost"]
             }]
         },
-        addOccessories: {
-            url: "addOccessories.do",
-            type: "update",
-            tranargs: {
-                args: ["occessoriesItems.num"]
-            }
-        },
-
         addOccessoriesCost: {
             url: "addOccessoriesCost.do",
             type: "update",
@@ -537,6 +582,9 @@ $.extend(api, {
             tranargs: {
                 args: ["occessoriesCost.price", "occessoriesCost.cost"]
             }
+        },
+        deleteOccessoriesCost: {
+            url: "deleteOccessoriesCost.do"
         },
     }
 });

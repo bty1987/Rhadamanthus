@@ -52,7 +52,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 			UserExperienceVO userExperienceVO = new UserExperienceVO();
 
-			BeanUtil.copyProperties(userExperiencePO, userExperienceVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(userExperiencePO, userExperienceVO, Arrays.asList("creater", "operator"));
 
 			userExperienceVOs.add(userExperienceVO);
 		}
@@ -66,7 +66,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 		UserExperiencePO userExperiencePO = userExperienceDao.get(userExperienceVO.getUpid());
 
-		BeanUtil.copyPropertie(userExperienceVO, userExperiencePO, Arrays.asList("creater"));
+		BeanUtil.copyPropertie(userExperienceVO, userExperiencePO, Arrays.asList("creater", "operator"));
 
 		userExperienceDao.update(userExperiencePO);
 

@@ -45,6 +45,10 @@ jQuery(function($) {
         com.focusPage(".customer", "#form").hide();
     }
 
+    if (contractEdit.contractArgs.type == "1") {
+        com.focusPage(".total", "#form").hide();
+    }
+
     com.post(api.common.current, {}, function(res) {
 
         contractEdit.current = new Date(res.current);
@@ -104,13 +108,13 @@ jQuery(function($) {
     }, function(res) {
 
         var quotation = res.quotation;
-        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))));
+        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, utils.accAdd(quotation.managePrice, quotation.taxPrice)))));
 
         com.focusPage("#con-quotation-total", "#form").val(preprice);
 
         if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT) {
             com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accSub(preprice, quotation.managePrice)));
-            com.focusPage("#con-manage-total", "#form").val(quotation.managePrice);
+            com.focusPage("#con-manage-total", "#form").val(parseInt(quotation.managePrice));
         } else {
             com.focusPage(".total", "#form").hide();
         }
@@ -165,7 +169,7 @@ jQuery(function($) {
         data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
         data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-        if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT) {
+        if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT & contractEdit.contractArgs.type != "1") {
             data["con-quotation-total-undis-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total-undis"]));
             data["con-manage-total-cn"] = utils.getCNMoney(parseFloat(data["con-manage-total"]));
         }

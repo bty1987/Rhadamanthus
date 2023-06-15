@@ -38,6 +38,8 @@ public class AccessoriesVO implements Serializable {
 
 	private Short schedule;
 
+	private Short type;
+
 	private Short status;
 
 	private Long total;
@@ -172,6 +174,14 @@ public class AccessoriesVO implements Serializable {
 
 	public void setSchedule(Short schedule) {
 		this.schedule = schedule;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getStatus() {

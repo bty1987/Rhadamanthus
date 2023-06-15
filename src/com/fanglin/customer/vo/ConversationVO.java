@@ -15,6 +15,8 @@ public class ConversationVO implements Serializable {
 
 	private String orderId;
 
+	private String name;
+
 	private Short type;
 
 	private Short atttype;
@@ -39,6 +41,8 @@ public class ConversationVO implements Serializable {
 
 	private Short status;
 
+	private String chatId;
+
 	public ConversationVO() {
 		super();
 	}
@@ -62,6 +66,14 @@ public class ConversationVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Short getType() {
@@ -161,4 +173,13 @@ public class ConversationVO implements Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
+
+	public String getChatId() {
+		return chatId;
+	}
+
+	public void setChatId(String chatId) {
+		this.chatId = chatId;
+	}
+
 }

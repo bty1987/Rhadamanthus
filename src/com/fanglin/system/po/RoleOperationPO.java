@@ -64,7 +64,7 @@ public class RoleOperationPO implements java.io.Serializable {
 		this.rid = rid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "oid", referencedColumnName = "oid")
 	public OperationPO getOperation() {
 		return operation;

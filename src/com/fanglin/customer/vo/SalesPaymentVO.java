@@ -23,6 +23,8 @@ public class SalesPaymentVO implements Serializable {
 
 	private Timestamp collectTime;
 
+	private String platform;
+
 	public Long getSpid() {
 		return spid;
 	}
@@ -78,6 +80,14 @@ public class SalesPaymentVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 
 }

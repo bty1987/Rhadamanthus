@@ -11,6 +11,7 @@ $(function() {
         accessories.status = res.accessoriesStatus.split("key", "value");
     }, null, false);
 
+    accessories.type = constant.inventory().accessories.type.keys;
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
@@ -37,9 +38,9 @@ $(function() {
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
-            var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,施工环节,状态';
+            var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,施工环节,状态,类型';
 
             $.each(titleName.split(','), function(i, v) {
 
@@ -70,9 +71,9 @@ $(function() {
             _label.append($input).append(_span);
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
 
-            var propertyArr = [[v.no, 'blue'], [v.orderId, 'blue'], [v.creater.userName, 'grey'], [v.createTime, 'green'], [v.approver.userName, 'grey'], [v.approverTime, 'green'], [constant.data.construction.node.keys[v.cnid], 'red'], [accessories.status[v.status], 'red'], ];
+            var propertyArr = [[v.no, 'blue'], [v.orderId, 'blue'], [v.creater.userName, 'grey'], [v.createTime, 'green'], [v.approver.userName, 'grey'], [v.approverTime, 'green'], [constant.data.construction.node.keys[v.cnid], 'red'], [accessories.status[v.status], 'red'], [accessories.type[v.type], 'red'], ];
 
             $.each(propertyArr, function(i, v) {
 
@@ -96,6 +97,7 @@ $(function() {
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
             var $btnDev = $('<li></li>').append($('<a></a>').html('到货'));
             var $btnQuota = $('<li></li>').append($('<a></a>').html('定额'));
+            var $btnCareful = $('<li></li>').append($('<a></a>').html('审核'));
 
             if (accessories.pageType == "advance") {
                 v.status == 0 && ($btnUl.append($btnAdvance).append($btnEdit).append($btnRefuse));// 初始：出货，修改
@@ -107,6 +109,7 @@ $(function() {
                 v.status == 2 && ($btnUl.append($btnView).append($btnDev).append($btnReturn).append($btnPrint).append($btnQuota));// 出货：出货 修改 退回 打印
             }
 
+            v.status == 1 && v.type == constant.inventory().accessories.TYPE_POST_INT && ($btnUl.append($btnCareful));
             v.status == 5 && ($btnUl.append($btnView));
             v.status == 6 && ($btnUl.append($btnView).append($btnReturn).append($btnPrint));
             v.status != 6 && ($btnUl.append($btnEdit));
@@ -142,8 +145,8 @@ $(function() {
 
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
-                    })
-                })
+                    });
+                });
 
             });
 
@@ -175,8 +178,8 @@ $(function() {
 
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
-                    })
-                })
+                    });
+                });
             });
 
             $btnEdit.click(function() {
@@ -207,8 +210,8 @@ $(function() {
 
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
-                    })
-                })
+                    });
+                });
             });
 
             $btnReturn.click(function() {
@@ -233,6 +236,20 @@ $(function() {
                 com.popup4page('#layerPopUp', "views/manifest/quotaItem.html", "辅料单 : " + v.no);
             });
 
+            $btnCareful.click(function() {
+
+                com.showConfirm("是否确认审核辅料单", function() {
+
+                    com.post(api.inventory.auditAccessories, {
+                        "accessories.aid": v.aid
+                    }, function() {
+
+                        com.showAlert(com.info, "操作成功");
+                        searcher.doSearch();
+                    });
+                });
+            });
+
             return $liLine;
         };
 
@@ -250,7 +267,7 @@ $(function() {
     })();
 
     var searcher = new Searcher();
-    var _Array = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts'];
+    var _Array = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts', 'inventory-accessories-type'];
 
     searcher.init(_Array, "condList", api.inventory.pageAccessories, function(data) {
 

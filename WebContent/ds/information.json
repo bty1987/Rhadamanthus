@@ -71,12 +71,16 @@
     {"key":"2","value":"主材"},
     {"key":"3","value":"销售"}
   ],
+    "awardStatus": [
+    {"key":"0","value":"启用"},
+    {"key":"1","value":"禁用"}
+  ],
   "noticeType": [
     {"key":"1","value":"通知"},
     {"key":"2","value":"活动"}
   ],
   "noticePriority": [
-    {"key":"0","value":"普通"},
+    {"key":"0","value":"标准"},
     {"key":"1","value":"重要"},
     {"key":"2","value":"紧急"}
   ],

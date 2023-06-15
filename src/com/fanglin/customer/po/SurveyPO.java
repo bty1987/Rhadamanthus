@@ -26,7 +26,13 @@ public class SurveyPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
-	public static final short STATUS_HANDLE_INT = 0;
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_SEND_INT = 1;
+
+	public static final short STATUS_HANDLE_INT = 2;
+
+	public static final short STATUS_FINISH_INT = 3;
 
 	private long sid;
 
@@ -38,6 +44,10 @@ public class SurveyPO implements Serializable {
 
 	private UserPO creater;
 
+	private UserPO sender;
+
+	private UserPO finisher;
+
 	private Timestamp createTime;
 
 	private short status;
@@ -47,6 +57,10 @@ public class SurveyPO implements Serializable {
 	private Timestamp sendTime;
 
 	private List<SurveyItemPO> items;
+
+	private Timestamp finishTime;
+
+	private Timestamp handleTime;
 
 	public SurveyPO() {
 		super();
@@ -105,6 +119,26 @@ public class SurveyPO implements Serializable {
 		this.creater = creater;
 	}
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	public UserPO getSender() {
+		return sender;
+	}
+
+	public void setSender(UserPO sender) {
+		this.sender = sender;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "fuid", referencedColumnName = "uid")
+	public UserPO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserPO finisher) {
+		this.finisher = finisher;
+	}
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -148,6 +182,24 @@ public class SurveyPO implements Serializable {
 
 	public void setItems(List<SurveyItemPO> items) {
 		this.items = items;
+	}
+
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@Column(name = "handleTime")
+	public Timestamp getHandleTime() {
+		return handleTime;
+	}
+
+	public void setHandleTime(Timestamp handleTime) {
+		this.handleTime = handleTime;
 	}
 
 }

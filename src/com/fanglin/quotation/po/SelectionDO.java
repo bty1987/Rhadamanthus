@@ -35,12 +35,6 @@ public class SelectionDO implements Serializable {
 
 	private DecorationPO decoration;
 
-	private short status;// 状态 , 0: 初始 , 1: 锁定
-
-	private short isAffirm;// 是否确认 , 0: 未确认 , 1: 客户确认
-
-	private int company;
-
 	private long total;// 总额
 
 	private long quotationTotal;// 报价总额
@@ -58,6 +52,16 @@ public class SelectionDO implements Serializable {
 	private Timestamp affirmTime;// 确认时间
 
 	private UserPO creater;
+
+	private UserPO splitter;
+
+	private UserPO traner;
+
+	private short status;// 状态 , 0: 初始 , 1: 锁定
+
+	private short isAffirm;// 是否确认 , 0: 未确认 , 1: 客户确认
+
+	private int company;
 
 	@Id
 	@GeneratedValue
@@ -196,6 +200,26 @@ public class SelectionDO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uid")
+	public UserPO getSplitter() {
+		return splitter;
+	}
+
+	public void setSplitter(UserPO splitter) {
+		this.splitter = splitter;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "tuid", referencedColumnName = "uid")
+	public UserPO getTraner() {
+		return traner;
+	}
+
+	public void setTraner(UserPO traner) {
+		this.traner = traner;
 	}
 
 }

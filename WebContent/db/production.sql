@@ -104,6 +104,7 @@ CREATE TABLE `productionfunction` (
   `comment` varchar(255) DEFAULT '',
   PRIMARY KEY (`pfid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='生产-功能配置';
+
 DROP TABLE IF EXISTS `productionpicture`;
 CREATE TABLE `productionpicture` (
   `ppid` int(11) NOT NULL AUTO_INCREMENT,

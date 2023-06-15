@@ -64,7 +64,7 @@ public class CustypeServiceImpl implements CustypeService {
 	@Override
 	public CustypeVO queryCustype(CustypeVO custype, int company) {
 
-		CustypePO custypePO = custypeDao.queryCustype(company, custype.getDgrade(), custype.getSgrade(), custype.getAtttype());
+		CustypePO custypePO = custypeDao.queryCustype(company, custype.getDgrade(), custype.getSgrade(), custype.getAtttype(), custype.getPlatform());
 		CustypeVO custypeVO = new CustypeVO(new ReceiptTypeVO());
 
 		BeanUtil.copyProperties(custypePO, custypeVO, Arrays.asList("receiptType"));

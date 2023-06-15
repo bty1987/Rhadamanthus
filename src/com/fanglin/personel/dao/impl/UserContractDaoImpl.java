@@ -27,7 +27,7 @@ public class UserContractDaoImpl extends DaoImpl<UserContractPO> implements User
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<UserContractPO> queryUserContract(Long uid) {
+	public List<UserContractPO> queryUserContract(Integer uid) {
 		return session().createCriteria(UserContractPO.class).add(Restrictions.eq("uid", uid)).list();
 	}
 

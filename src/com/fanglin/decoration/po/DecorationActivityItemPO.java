@@ -83,11 +83,11 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private int money;
 
-	private String content;
+	private int cuid;
 
-	private UserPO receiveUserId;
+	private UserPO receiver;
 
-	private String receiveUserName;
+	private Timestamp createTime;
 
 	private Timestamp receiveTime;
 
@@ -102,6 +102,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private short isPayment; // 金额标识
 
 	private short isAffirm; // 是否确认
+
+	private String content;
 
 	public DecorationActivityItemPO() {
 		super();
@@ -190,32 +192,31 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 		this.money = money;
 	}
 
-	@Column(name = "content")
-	public String getContent() {
-		return this.content;
+	public int getCuid() {
+		return cuid;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setCuid(int cuid) {
+		this.cuid = cuid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "ruid", referencedColumnName = "uId")
-	public UserPO getReceiveUserId() {
-		return receiveUserId;
+	@JoinColumn(nullable = true, name = "ruid", referencedColumnName = "uid")
+	public UserPO getReceiver() {
+		return receiver;
 	}
 
-	public void setReceiveUserId(UserPO receiveUserId) {
-		this.receiveUserId = receiveUserId;
+	public void setReceiver(UserPO receiver) {
+		this.receiver = receiver;
 	}
 
-	@Column(name = "receiveUserName")
-	public String getReceiveUserName() {
-		return receiveUserName;
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setReceiveUserName(String receiveUserName) {
-		this.receiveUserName = receiveUserName;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	@Column(name = "receiveTime")
@@ -279,6 +280,15 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setIsAffirm(short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "content")
+	public String getContent() {
+		return this.content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

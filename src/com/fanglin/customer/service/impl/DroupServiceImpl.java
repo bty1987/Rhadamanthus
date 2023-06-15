@@ -97,32 +97,52 @@ public class DroupServiceImpl implements DroupService {
 			throw new FLException(140013, "订单不存在");
 		}
 
+		DroupPO droupPO = null;
+
+		if (orderId == null) {
+			droupPO = droupDao.queryDroup(orderId, null, null);
+		}
+
+		if (droupPO != null) {
+			throw new FLException(330068, "群信息已存在");
+		}
+
+		droupPO = droupDao.queryDroup(null, droupVO.getChatId(), null);
+
+		if (droupPO != null) {
+			throw new FLException(330068, "群信息已存在");
+		}
+
 		String houseNumber = decorationPO.getHouse().getHouseNumber();
 
 		String name = decorationPO.getHouse().getVillage().getName();
 
-		DroupPO droupPO = droupDao.queryDroup(orderId, null, null);
-
-		if (droupPO != null) {
-			throw new FLException(330067, "群信息不存在");
-		}
-
-		Group group = new Group().init();
-
-		group.setName(orderId + houseNumber + name);
-		group.setOwner(userId);
-
-		group.getUsers().add(userId);
-
-		groupService.create(group, decorationPO.getCompany());
-		groupService.template(group, decorationPO.getCompany());
-
 		droupPO = new DroupPO();
 
-		droupPO.setName(droupVO.getName());
-		droupPO.setChatId(group.getChatId());
-		droupPO.setOpenId(group.getOpenId());
+		if (droupVO.getType() == 1) {
+
+			Group group = new Group().init();
+
+			group.setName(orderId + name + houseNumber);
+			group.setOwner(userId);
+
+			group.getUsers().add(userId);
+
+			groupService.create(group, decorationPO.getCompany());
+			groupService.template(group, decorationPO.getCompany());
+
+			droupPO.setName(droupVO.getName());
+			droupPO.setChatId(group.getChatId());
+			droupPO.setOpenId(group.getOpenId());
+
+		} else if (droupVO.getType() == 2) {
+			droupPO.setName(droupVO.getName());
+			droupPO.setChatId(droupVO.getChatId());
+			droupPO.setOpenId(droupVO.getOpenId());
+		}
+
 		droupPO.setDecoration(decorationPO);
+		droupPO.setType(droupVO.getType());
 
 		droupDao.save(droupPO);
 

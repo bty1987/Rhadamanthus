@@ -52,6 +52,14 @@ public class PaymentTypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryPaymentTypeByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPaymentTypeByName() throws FLException {
+
+		paymentType = paymentTypeService.queryPaymentTypeByName(paymentType, queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addPaymentType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPaymentType() throws FLException {
 

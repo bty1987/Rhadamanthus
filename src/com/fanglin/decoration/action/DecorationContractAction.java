@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
@@ -42,6 +43,8 @@ public class DecorationContractAction extends BaseListAction {
 
 	private String table;
 
+	private ContractVO contract;
+
 	@Autowired
 	private DecorationContractService decorationContractService;
 
@@ -64,7 +67,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "addDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationContract() throws FLException {
 
-		decorationContractService.addDecorationContract(decorationContract, data, table, queryUserId());
+		decorationContractService.addDecorationContract(decorationContract, contract, data, table, queryUserId());
 
 		return SUCCESS;
 	}
@@ -228,4 +231,13 @@ public class DecorationContractAction extends BaseListAction {
 	public void setTable(String table) {
 		this.table = table;
 	}
+
+	public ContractVO getContract() {
+		return contract;
+	}
+
+	public void setContract(ContractVO contract) {
+		this.contract = contract;
+	}
+
 }

@@ -13,15 +13,17 @@ public interface SalesDeliveryService {
 
 	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int company);
 
+	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int company);
+
 	public List<SalesDeliveryItemVO> querySalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItemVO);
 
-	public void tranSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
+	public void tranSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException;
 
-	public void checkSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
+	public void checkSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException;
 
 	public void confirmSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException;
 
-	public void finishSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
+	public void finishSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException;
 
 	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String queryUserId) throws FLException;
 

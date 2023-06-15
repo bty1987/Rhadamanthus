@@ -1,15 +1,17 @@
 package com.fanglin.data.common.vo;
 
 public class PaymentScaleVO {
-	
+
 	private Long psid;
-	
+
 	private String cid;
-	
+
 	private String name;
-	
+
+	private Short status;
+
 	private String comment;
-	
+
 	public PaymentScaleVO() {
 		super();
 	}
@@ -36,6 +38,14 @@ public class PaymentScaleVO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 	public String getComment() {

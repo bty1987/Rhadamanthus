@@ -16,6 +16,6 @@ import com.fanglin.personel.po.UserContractPO;
 
 public interface UserContractDao extends Dao<UserContractPO> {
 
-	public List<UserContractPO> queryUserContract(Long uid);
+	public List<UserContractPO> queryUserContract(Integer uid);
 
 }

@@ -119,6 +119,7 @@ jQuery(function($) {
 
             var $cancel = $('<a></a>').addClass('btn btn-minier btn-danger').html('撤销');
             var $check = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
+            var $delete = $('<a></a>').addClass('btn btn-minier btn-inverse').html('删除');
             var $code = $('<a></a>').addClass('btn btn-minier btn-purple').html('收款码');
             var $wechat = $('<a></a>').addClass('btn btn-minier btn-success').html('微信推送');
             var $pos = $('<a></a>').addClass('btn btn-minier btn-warning').html('POS推送');
@@ -131,7 +132,8 @@ jQuery(function($) {
                 ["状态:", constant.payment.paytran.status.keys[v.status] , "red"],
                 ["金额:", v.money, "green"],
                 ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "green"]
+                ["创建时间:", v.createTime, "green"],
+                ["推送时间:", v.pushTime, "green"]
             ];
 
             $.each(propertyArr, function(index, value) {
@@ -142,7 +144,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($cancel).append($check).append($code).append($wechat).append($pos);
+            $divBtnWrap.append($cancel).append($check).append($delete).append($code).append($wechat).append($pos);
 
             if (v.status == constant.payment.paytran.STATUS_INIT_INT) {
                 $divBtnWrap.appendTo($h3);
@@ -166,6 +168,16 @@ jQuery(function($) {
                     com.showAlert(com.info, "验证完成");
                     searcher.doSearch();
 
+                });
+
+                return false;
+            });
+
+            $delete.click(function() {
+
+                com.post(api.payment.deletePaytran, {"paytran.ptid": v.ptid}, function(res) {
+                    com.showAlert(com.info, "删除成功");
+                    searcher.doSearch();
                 });
 
                 return false;
@@ -249,8 +261,8 @@ jQuery(function($) {
             "paytran.type": 6,
             "paytran.atttype": paytran.items.atttype.val(),
             "paytran.no": com.typeahead(paytran.items.bankName),
-            "paytran.sn": paytran.posValues[com.typeahead(paytran.items.bankName)].value
-            // 收据类型中pos的value值
+            "paytran.sn": paytran.posValues[com.typeahead(paytran.items.bankName)].value, // 收据类型中pos的value值
+            "paytran.way": 0
         };
 
         com.post(url, options, function(res) {
