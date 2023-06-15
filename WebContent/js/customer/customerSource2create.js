@@ -54,7 +54,7 @@ jQuery(function($) {
     }, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
-        com.post(api.data.queryVillageById, {
+        com.post(api.data.queryVillageByVid, {
             "village.no": k
         }, function(res) {
 

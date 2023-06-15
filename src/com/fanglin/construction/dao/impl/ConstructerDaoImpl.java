@@ -20,12 +20,12 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements Constr
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Short schedule) {
+	public List<ConstructerPO> queryConstructerByOrderId(String orderId, Long csid) {
 
-		Criteria query = session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
+		Criteria query = session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.ne(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_DISABLE_INT));
 
-		if (schedule != null) {
-			query.add(Restrictions.eq("schedule", schedule));
+		if (csid != null) {
+			query.add(Restrictions.eq("csid", csid));
 		}
 
 		return query.list();
@@ -33,30 +33,30 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements Constr
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructerPO> queryConstructerByCid(long cid, Short schedule) {
+	public List<ConstructerPO> queryConstructerByCid(long cid, Long csid) {
 
-		Criteria query = session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_ENABLE_SHORT));
+		Criteria query = session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CID_STR, cid)).add(Restrictions.ne(ConstructerPO.COLUMN_STATUS_STR, ConstructerPO.STATUS_DISABLE_INT));
 
-		if (schedule != null) {
-			query.add(Restrictions.eq("schedule", schedule));
+		if (csid != null) {
+			query.add(Restrictions.eq("csid", csid));
 		}
 
 		return query.list();
 	}
 
 	@Override
-	public ConstructerPO queryConstructerByCrId(long crid) {
+	public ConstructerPO queryConstructerByCrid(long crid) {
 
 		return (ConstructerPO) session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CRID_STR, crid)).uniqueResult();
-
 	}
 
 	@Override
-	public int countConstructer(long cid, int wuid, short schedule, short status) {
+	public int countConstructer(long cid, int wuid, long csid) {
 
-		String sql = "select count(*) from construction.constructer where cid = :cid and wuid = :wuid and schedule = :schedule and status = :status";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setInteger("wuid", wuid).setInteger("schedule", schedule).setShort("status", status).uniqueResult();
+		String sql = "select count(*) from construction.constructer where cid = :cid and wuid = :wuid and csid = :csid and status != :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setInteger("wuid", wuid).setLong("csid", csid).setShort("status", ConstructerPO.STATUS_DISABLE_INT).uniqueResult();
 
 		return count.intValue();
 	}
+
 }

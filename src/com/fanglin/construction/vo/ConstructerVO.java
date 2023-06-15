@@ -12,9 +12,13 @@ public class ConstructerVO implements java.io.Serializable {
 
 	private Long crid;
 
+	private String orderId;
+
 	private Long cid;
 
-	private String orderId;
+	private Long csid;
+
+	private Long cnid;
 
 	private UserVO user;
 
@@ -22,11 +26,19 @@ public class ConstructerVO implements java.io.Serializable {
 
 	private Short rate;
 
+	private short rate1;
+
+	private short rate2;
+
 	private String assessment;
 
 	private UserVO creater;
 
 	private Timestamp createTime;
+
+	private Timestamp sendTime;
+
+	private Timestamp finishTime;
 
 	private Short status;
 
@@ -53,6 +65,14 @@ public class ConstructerVO implements java.io.Serializable {
 		this.crid = crid;
 	}
 
+	public String getOrderId() {
+		return this.orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	public Long getCid() {
 		return cid;
 	}
@@ -61,12 +81,20 @@ public class ConstructerVO implements java.io.Serializable {
 		this.cid = cid;
 	}
 
-	public String getOrderId() {
-		return this.orderId;
+	public Long getCsid() {
+		return csid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setCsid(Long csid) {
+		this.csid = csid;
+	}
+
+	public Long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(Long cnid) {
+		this.cnid = cnid;
 	}
 
 	public Short getSchedule() {
@@ -85,6 +113,22 @@ public class ConstructerVO implements java.io.Serializable {
 		this.rate = rate;
 	}
 
+	public short getRate1() {
+		return rate1;
+	}
+
+	public void setRate1(short rate1) {
+		this.rate1 = rate1;
+	}
+
+	public short getRate2() {
+		return rate2;
+	}
+
+	public void setRate2(short rate2) {
+		this.rate2 = rate2;
+	}
+
 	public String getAssessment() {
 		return this.assessment;
 	}
@@ -99,6 +143,22 @@ public class ConstructerVO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public Short getStatus() {

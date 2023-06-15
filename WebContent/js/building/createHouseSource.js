@@ -183,7 +183,7 @@ jQuery(function($) {
 	com.initTypeahead('villageId', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value){
 	    houseItemsReadOnlyFlag(false);
 
-        com.post(api.data.queryVillageById, {"village.no" : key}, function(res){
+        com.post(api.data.queryVillageByVid, {"village.no" : key}, function(res){
             createHouseSource.houseItems.rule.html("推荐楼牌号规则: " + res.village.rule ? res.village.rule :"暂无推荐规则");
         }, null, false);
         
@@ -224,7 +224,7 @@ jQuery(function($) {
 		checkHouseAndHouseSource("door");
 	});
 
-	//检查电话号是否已存在
+	// 检查电话号是否已存在
 	createHouseSource.customerItems.phone = com.focusPage("#phone").on("blur", function(){
 		$this = $(this);
 		void 0 == $this.val() || "" == $this.val().trim() ? (com.showTip(com.focusPage("#phone"), "电话号码不能为空", "right"), createHouseSource.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
@@ -238,7 +238,7 @@ jQuery(function($) {
 		});
 	});
 
-	//填写单价
+	// 填写单价
 	com.focusPage("#totalPrice").on("blur", function(){
 		if(com.focusPage("#buildArea").val() == ""){
 			return;
@@ -253,12 +253,12 @@ jQuery(function($) {
 		createHouseSource.items.unitPrice.val(utils.accDiv(com.focusPage("#totalPrice").val(), com.focusPage("#buildArea").val()));
 	});
 
-	//创建客户
+	// 创建客户
 	com.focusPage("#createCustomer").click(function(){
 		createHouseSource.modals.customerModal.modal("show");
 	});
 
-	//编辑OR添加
+	// 编辑OR添加
 	function addHouseSource(){
 
 		if(com.validate("createHouseRow") || createHouseSource.repeatFlg){
@@ -331,7 +331,7 @@ jQuery(function($) {
 		}
 	}
 
-	//创建客户
+	// 创建客户
 	function createCustomer(){
 
 		if(createHouseSource.customerItems.cardType.val() == "身份证"){
@@ -366,7 +366,7 @@ jQuery(function($) {
 		}, false);
 	}
 
-	//清除数据
+	// 清除数据
 	function deleteDate(){
 
 		houseItemsReadOnlyFlag(false);
@@ -387,7 +387,7 @@ jQuery(function($) {
 		
 	}
 
-	//删除房产数据
+	// 删除房产数据
 	function deleteHouseData(){
 	    
 		com.focusPage("#ohousetype").css("display", "none");
@@ -397,7 +397,7 @@ jQuery(function($) {
 		com.cleanItems(createHouseSource.houseItems);
 	}
 
-	//检查房产以及房源是否存在
+	// 检查房产以及房源是否存在
 	function checkHouseAndHouseSource(inputId){
 		validatehouse();
 
@@ -412,7 +412,7 @@ jQuery(function($) {
 
 			com.post(api.building.checkHouseSource, hsOptions, function(data){
 				createHouseSource.houseFlag = false;
-				//绑定房产数据
+				// 绑定房产数据
 				bindHouseData(houses);
 				houseItemsReadOnlyFlag(true);
 			}, function(res){
@@ -421,12 +421,12 @@ jQuery(function($) {
 			}, false);
 		}else{
 			createHouseSource.houseFlag = true;
-			//deleteHouseData();
+			// deleteHouseData();
 			houseItemsReadOnlyFlag(false);
 		}
 	}
 
-	//绑定房产数据
+	// 绑定房产数据
 	function bindHouseData(houses){
 	    
 	    com.updateTypeahead("villageId", houses.village.no, houses.village.name);
@@ -446,7 +446,7 @@ jQuery(function($) {
 		createHouseSource.houseItems.heatingType.val(houses.heatingType);
 	}
 
-	//验证证件号码
+	// 验证证件号码
 	function regCard(cardParam, reg){
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){
@@ -460,7 +460,7 @@ jQuery(function($) {
 		}
 	}
 
-	//删除楼牌号数据
+	// 删除楼牌号数据
 	function deleteVillageData(paramFlag){
 		switch(paramFlag)
 		{

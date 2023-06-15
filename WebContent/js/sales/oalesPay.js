@@ -41,6 +41,7 @@ jQuery(function ($) {
             "paging.rows": 10
         };
         searcher.base("condList", "pagenation", "resultList", url);
+        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime']);
         searcher.history("oalsePayPostData");
         var lineprops = [{
             fieId: "name",
@@ -78,6 +79,106 @@ jQuery(function ($) {
             name: "备注",
             prop: "comment",
             clazz: "blue"
+        }, {
+            type: "newline"
+        }, {
+            fieId: "orderId",
+            name: "装修单号",
+            prop: "oales.decoration.orderId",
+            clazz: "blue"
+        }, {
+            field: "village",
+            name: "楼盘",
+            prop: "oales.decoration.house.village.name",
+            clazz: "grey"
+        }, {
+            field: "houseNumber",
+            name: "楼号",
+            prop: "oales.decoration.house.houseNumber",
+            clazz: "grey"
+        }, {
+            field: "supplier",
+            name: "厂商",
+            prop: "oales.supplier.currentName",
+            clazz: "grey"
+        }, {
+            field: "creater",
+            name: "创建人",
+            prop: "oales.creater.currentName",
+            clazz: "grey"
+        }, {
+            field: "servicer",
+            name: "服务管家",
+            prop: "oales.servicer.currentName",
+            clazz: "grey"
+        }, {
+            field: "materialer",
+            name: "主材员",
+            prop: "oales.materialer.currentName",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "oales.createTime",
+            clazz: "green"
+        }, {
+            field: "checkTime",
+            name: "复核时间",
+            prop: "oales.checkTime",
+            clazz: "green"
+        }, {
+            field: "brand",
+            name: "品牌",
+            prop: "oales.brand",
+            clazz: "grey"
+        }, {
+            field: "category",
+            name: "品类",
+            prop: "oales.category",
+            clazz: "grey"
+        }, {
+            field: "atttype",
+            name: "类型",
+            prop: "oales.atttype",
+            clazz: "red",
+            dataset: constant.sales().oales.atttype.keys,
+        }, {
+            field: "awardType",
+            name: "奖励类型",
+            prop: "oales.awardType",
+            clazz: "red",
+            dataset: constant.sales().oales.awardType.keys,
+        }, {
+            field: "total",
+            name: "总额",
+            prop: "oales.total",
+            clazz: "blue"
+        }, {
+            field: "award",
+            name: "奖励",
+            prop: "oales.award",
+            clazz: "blue"
+        }, {
+            field: "profit",
+            name: "利润",
+            prop: "oales.profit",
+            clazz: "blue"
+        }, {
+            field: "cost",
+            name: "成本",
+            prop: "oales.cost",
+            clazz: "blue"
+        }, {
+            field: "threshold",
+            name: "系数",
+            prop: "oales.threshold",
+            clazz: "blue"
+        }, {
+            fieId: "status",
+            name: "状态",
+            prop: "oales.status",
+            clazz: "red",
+            dataset: constant.sales().oales.status.keys,
         }];
         var linebtns = [{
             name: "编辑",
@@ -100,7 +201,7 @@ jQuery(function ($) {
             },
         },];
         searcher.line("name", lineprops, linebtns).render();
-    }else {
+    } else {
         com.focusPage("#pageing").remove();
         com.focusPage('#fl-statement').statement("外销单", "付款");
         showOalesPay();
@@ -188,14 +289,14 @@ jQuery(function ($) {
             url = api.sales.updateOalesPay;
             options["oalesPay.opid"] = oalesPay.opid;
         }
-        if (oalesPay.pageType != "payment"){
-            options["oalesPay.oid"]= params.sales.oales.oid;
+        if (oalesPay.pageType != "payment") {
+            options["oalesPay.oid"] = params.sales.oales.oid;
         }
 
         com.post(url, options, function (res) {
             if (oalesPay.pageType == "payment") {
                 searcher.doSearch();
-            }else {
+            } else {
                 com.focusPage("#list").empty();
                 showOalesPay();
             }

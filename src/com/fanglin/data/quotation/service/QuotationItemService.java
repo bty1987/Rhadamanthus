@@ -26,6 +26,8 @@ public interface QuotationItemService {
 
 	public QuotationItemVO queryQuotationItemByItemIdAVersionId(QuotationItemVO quotationItemVO) throws FLException;
 
+	public QuotationItemVO queryQuotationItemByQiid(QuotationItemVO quotationItemVO) throws FLException;
+
 	public int addQuotationItem(QuotationItemVO quotationItemVO) throws FLException;
 
 	public int updateQuotationItem(QuotationItemVO quotationItemVO) throws FLException;

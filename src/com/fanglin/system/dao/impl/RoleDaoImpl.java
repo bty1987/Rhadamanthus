@@ -64,22 +64,20 @@ public class RoleDaoImpl extends DaoImpl<RolePO> implements RoleDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 
 			String field = filter.getField();
 			String data = filter.getData();
 			String op = filter.getOp();
-			
-			
+
 			if ("roleName".equals(field)) {
 				query.add(query.getCriterion("name", data, op));
 			} else if ("roleId".equals(field)) {
 				query.add(query.getCriterion("rid", Integer.parseInt(data), op));
 			} else if ("roleNo".equals(field)) {
-				query.add(query.getCriterion("no", data, op));				
+				query.add(query.getCriterion("no", data, op));
 			}
 		}
 	}

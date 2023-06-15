@@ -276,7 +276,7 @@ public class NormtionServiceImpl implements NormtionService {
 				BeanUtil.copyProperties(item, quotationFunctionAreaItemVO, Arrays.asList("normood", "normrice"));
 
 				BeanUtil.copyProperties(normricePO, quotationFunctionAreaItemVO.getNormrice(), Arrays.asList("constructionNode", "quotationItem"));
-				BeanUtil.copyProperties(constructionNodePO, quotationFunctionAreaItemVO.getNormrice().getConstructionNode());
+				BeanUtil.copyProperties(constructionNodePO, quotationFunctionAreaItemVO.getNormrice().getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 
@@ -319,7 +319,7 @@ public class NormtionServiceImpl implements NormtionService {
 				BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
 
 				BeanUtil.copyProperties(normricePO, extensionItemVO.getNormrice(), Arrays.asList("constructionNode", "quotationItem"));
-				BeanUtil.copyProperties(constructionNodePO, extensionItemVO.getNormrice().getConstructionNode());
+				BeanUtil.copyProperties(constructionNodePO, extensionItemVO.getNormrice().getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
 				extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
@@ -363,7 +363,7 @@ public class NormtionServiceImpl implements NormtionService {
 				BeanUtil.copyProperties(addReduceItemPO, addReduceItemVO);
 
 				BeanUtil.copyProperties(normricePO, addReduceItemVO.getNormrice(), Arrays.asList("constructionNode", "quotationItem"));
-				BeanUtil.copyProperties(constructionNodePO, addReduceItemVO.getNormrice().getConstructionNode());
+				BeanUtil.copyProperties(constructionNodePO, addReduceItemVO.getNormrice().getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				addReduceItemVO.setQuotationFunctionAreaId(addReduceItemPO.getQuotationFunctionArea().getQfaId());
 				addReduceItemVO.setQuotationFunctionAreaName(addReduceItemPO.getQuotationFunctionArea().getFunctionAreaName());
@@ -515,7 +515,7 @@ public class NormtionServiceImpl implements NormtionService {
 				NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), null);
 
 				BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
-				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				normriceVO.setAmount(amount);
 
@@ -548,7 +548,7 @@ public class NormtionServiceImpl implements NormtionService {
 				NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), null);
 
 				BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
-				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				normriceVO.setAmount(amount);
 
@@ -581,7 +581,7 @@ public class NormtionServiceImpl implements NormtionService {
 				NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), null);
 
 				BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
-				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				normriceVO.setAmount(amount);
 

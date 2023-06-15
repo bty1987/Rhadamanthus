@@ -1,5 +1,7 @@
 package com.fanglin.decoration.vo;
 
+import java.sql.Timestamp;
+
 import com.fanglin.information.vo.ActivityVO;
 
 public class DecorationActivityVO implements java.io.Serializable {
@@ -13,6 +15,8 @@ public class DecorationActivityVO implements java.io.Serializable {
 	private ActivityVO activity;
 
 	private Long amount;
+
+	private Timestamp createTime;
 
 	private Short status;
 
@@ -46,6 +50,14 @@ public class DecorationActivityVO implements java.io.Serializable {
 
 	public void setAmount(Long amount) {
 		this.amount = amount;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	public Short getStatus() {

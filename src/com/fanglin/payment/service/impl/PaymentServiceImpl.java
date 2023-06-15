@@ -17,15 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.ConstantDao;
 import com.fanglin.communion.dao.CustomerDao;
+import com.fanglin.communion.po.ConstantPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -40,6 +45,8 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -75,6 +82,18 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private PaytranService paytranService;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private ConstantDao constantDao;
+
+	@Autowired
+	private MessageService messageDDService;
+
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
 
 	@Override
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) {
@@ -230,18 +249,36 @@ public class PaymentServiceImpl implements PaymentService {
 			decorationDao.update(decorationPO);
 		}
 
+		String advanceType = "合同";
+
 		if (paymentPO.getPaymentType() == 0) {
-			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
+			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
 		} else if (paymentPO.getPaymentType() == 2) {
 			// 更新装修单上的销售比例
 			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 
-			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
+			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
+
+			advanceType = "主材";
 		}
 
 		// 更新销售点信息
 		if (ptids != null && ptids.size() > 0) {
 			paytranService.updatePaytran(ptids, advanceReceiptPO.getArId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_ADVANCE_INT);
+		}
+
+		// 发送群通知
+		SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADVANCE_PAYMENT", decorationPO.getCompany());
+		ConstantPO status = constantDao.queryConstant("decoration", "decoration", "status", String.valueOf(decorationPO.getStatus()));
+
+		ConstructionNodePO constructionNodePO = constructionNodeDao.get(decorationPO.getProjectStatus());
+
+		String projectStatus = constructionNodePO == null ? "" : constructionNodePO.getName();
+
+		UserPO designer = decorationPO.getDesigner();
+
+		if (key != null) {
+			messageDDService.sendMessage(key.getValue(), String.format("装修单: %s, 楼盘地址: %s%s, 设计师工号: %s, 设计师姓名: %s, 状态: %s, 工程状态: %s, %s预付款收款, 金额: %s .", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), designer.getUserId(), designer.getCurrentName(), status.getValue(), projectStatus, advanceType, Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}
 
 		return 0;
@@ -326,6 +363,7 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptPO.setCollecter(user);
 		advanceReceiptPO.setCollecterName(user.getUserName());
 		advanceReceiptPO.setConfirmerName("");
+		advanceReceiptPO.setRealMoney(paymentVO.getRealMoney());
 
 		advanceReceiptDao.save(advanceReceiptPO);
 
@@ -357,7 +395,7 @@ public class PaymentServiceImpl implements PaymentService {
 			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		}
 
-		decorationService.sendMessage(paymentPO.getOrderId(), name, String.format("%s退款金额%.3f元", name, Arith.div(paymentPO.getRecharge(), 1000.0)));
+		decorationService.sendMessage(paymentPO.getOrderId(), name, String.format("%s退款金额%.3f元", name, Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
 
 		return 0;
 	}
@@ -412,6 +450,7 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptPO.setCollecter(user);
 		advanceReceiptPO.setCollecterName(user.getUserName());
 		advanceReceiptPO.setConfirmerName("");
+		advanceReceiptPO.setRealMoney(0);
 
 		advanceReceiptDao.save(advanceReceiptPO);
 
@@ -457,7 +496,7 @@ public class PaymentServiceImpl implements PaymentService {
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(paymentVO.getOrderId());
 
 		if (advancePaymentPO == null) {
-			advancePaymentPO = new AdvancePaymentPO(new DecorationPO(paymentVO.getOrderId()));
+			advancePaymentPO = new AdvancePaymentPO(decorationPO);
 			advancePaymentDao.save(advancePaymentPO);
 		}
 
@@ -480,6 +519,7 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptPO.setCollecter(user);
 		advanceReceiptPO.setCollecterName(user.getUserName());
 		advanceReceiptPO.setConfirmerName("");
+		advanceReceiptPO.setRealMoney(0);
 
 		advanceReceiptDao.save(advanceReceiptPO);
 
@@ -604,11 +644,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 		String orderId = paymentPO.getOrderId();
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payInfo/payInfo?orderId=%s&pid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
 
 	}
 
-	// 计算各个付款方式总共的操作金额
+	// 计算各个付款方式总共的操作金额&实收金额
 	public static long gatherPayment(PaymentVO paymentVO) {
 
 		long recharge = 0;

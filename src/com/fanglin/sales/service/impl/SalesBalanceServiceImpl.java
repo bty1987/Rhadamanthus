@@ -442,7 +442,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setBalance(balance);
 			salesBalancePO.setType(SalesBalancePO.TYPE_INIT_INT);
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
-			salesBalancePO.setComment(salesPO.getComment());
 			salesBalancePO.setSalesman(salesPO.getSalesman());
 			salesBalancePO.setDept(salesPO.getDept());
 			salesBalancePO.setRegion(salesPO.getRegion());

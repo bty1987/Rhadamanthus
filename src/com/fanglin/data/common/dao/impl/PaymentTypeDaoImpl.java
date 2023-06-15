@@ -20,9 +20,11 @@ public class PaymentTypeDaoImpl extends DaoImpl<PaymentTypePO> implements Paymen
 	}
 
 	@Override
-	public List<PaymentTypePO> pagePaymentType(Paging paging, List<Filter> filters) {
+	public List<PaymentTypePO> pagePaymentType(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<PaymentTypePO> query = pagingQuery(paging, PaymentTypePO.class);
+
+		query.add(Restrictions.eq(PaymentTypePO.COLUMN_COMPANY_STR, company));
 
 		queryFilterExcute(query, filters);
 
@@ -52,6 +54,11 @@ public class PaymentTypeDaoImpl extends DaoImpl<PaymentTypePO> implements Paymen
 		}
 
 		return criteria.list();
+	}
+
+	@Override
+	public PaymentTypePO queryPaymentTypeByName(String name, int company) {
+		return (PaymentTypePO) session().createCriteria(PaymentTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(PaymentTypePO.COLUMN_NAME_STR, name)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

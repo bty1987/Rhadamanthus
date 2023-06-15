@@ -23,6 +23,7 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.DutyPO;
+import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.po.RolePO;
 
 @Entity
@@ -77,6 +78,10 @@ public class UserPO implements Serializable {
 
 	public static final short TYPE_AVENGER_INT = 3;
 
+	public static final short AUTH_STATUS_INIT_INT = 0;
+
+	public static final short AUTH_STATUS_AUTH_INT = 1;
+
 	private int uid;
 
 	private String userId;
@@ -124,6 +129,14 @@ public class UserPO implements Serializable {
 	private String identityPathF;
 
 	private String identityPathB;
+
+	private short authStatus;
+
+	private String authUrl;
+
+	private String signNo;
+
+	private String token;
 
 	public UserPO() {
 		super();
@@ -362,6 +375,47 @@ public class UserPO implements Serializable {
 
 	public void setIdentityPathB(String identityPathB) {
 		this.identityPathB = identityPathB;
+	}
+
+	@Column(name = "authStatus")
+	public short getAuthStatus() {
+		return authStatus;
+	}
+
+	public void setAuthStatus(short authStatus) {
+		this.authStatus = authStatus;
+	}
+
+	@Column(name = "authUrl")
+	public String getAuthUrl() {
+		return authUrl;
+	}
+
+	public void setAuthUrl(String authUrl) {
+		this.authUrl = authUrl;
+	}
+
+	@Column(name = "signNo")
+	public String getSignNo() {
+		return signNo;
+	}
+
+	public void setSignNo(String signNo) {
+		this.signNo = signNo;
+	}
+
+	@Column(name = "token")
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public UserPO ptv(UserVO userVO) {
+
+		return this;
 	}
 
 }

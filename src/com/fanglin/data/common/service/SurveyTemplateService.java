@@ -9,15 +9,17 @@ import com.fanglin.utils.Paging;
 
 public interface SurveyTemplateService {
 
-	public void pageSurveyTemplate(Paging paging, List<Filter> filters, int queryCompany);
+	public void pageSurveyTemplate(Paging paging, List<Filter> filters, int company);
 
-	public List<SurveyTemplateVO> querySurveyTemplate(SurveyTemplateVO surveyTemplate);
+	public List<SurveyTemplateVO> querySurveyTemplate(SurveyTemplateVO surveyTemplate, int company);
 
 	public SurveyTemplateVO querySurveyTemplateByStid(SurveyTemplateVO surveyTemplate);
 
 	public int addSurveyTemplate(SurveyTemplateVO surveyTemplate, int company);
 
 	public void updateSurveyTemplate(SurveyTemplateVO surveyTemplate) throws FLException;
+
+	public void updateSurveyTemplateForStatus(SurveyTemplateVO surveyTemplate) throws FLException;
 
 	public int deleteSurveyTemplate(SurveyTemplateVO surveyTemplate) throws FLException;
 

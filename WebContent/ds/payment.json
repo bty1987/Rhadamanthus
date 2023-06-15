@@ -1,6 +1,6 @@
 {
 	"materialOrderType": [
-    	{"key":"1","value":"普通"},
+    	{"key":"1","value":"标准"},
 		{"key":"2","value":"员工自购"},
 		{"key":"3","value":"老总关系"},
 		{"key":"4","value":"赠送"},
@@ -169,6 +169,8 @@
 		{"key":"38","value":"收单业务商户协议"},
 		{"key":"50","value":"经营场所图1"},
 		{"key":"51","value":"经营场所"}
+	], "proxyPayment":[
+		{"name":"特权卡", "title": "特权卡", "referMoney": 888, "path": "group4/M00/0A/2B/wKgFaGO82VKAA4GgAAMIdAXlJl8021.jpg"}
 	],
     "errorCode": 0,
     "errorMsg": null

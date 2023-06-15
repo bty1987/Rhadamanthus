@@ -125,12 +125,26 @@ jQuery(function($) {
                 "name": "corporabtask",
                 "id": v.tid,
                 "class": "ace"
-            });
+            }).val(v.tid);
+
             var $span = $('<span></span>').html(v.name).addClass('lbl');
+
+            $input.click(function() {
+
+                var ele = $(this);
+                var checked = ele.prop("checked");
+
+                com.post(checked ? api.communion.updateRoleTask : api.communion.deleteRoleTask, {
+                    "role.rid": role.rid,
+                    'task.tid': ele.val()
+                }, function(res) {
+
+                });
+            })
 
             $div.append($input).append($span).appendTo(role.items.taskList);
         });
-    });
+    }, null, false);
 
     com.post(api.system.queryOperationForSelf, {
         'operation.system': 1,
@@ -153,6 +167,19 @@ jQuery(function($) {
             }).val(v.oid);
 
             var $span = $('<span></span>').html(v.name).addClass('lbl');
+
+            $indexInput.click(function() {
+
+                var ele = $(this);
+                var checked = ele.prop("checked");
+
+                com.post(checked ? api.system.updateRoleOperation : api.system.deleteRoleOperation, {
+                    "role.rid": role.rid,
+                    'operation.oid': ele.val()
+                }, function(res) {
+
+                });
+            })
 
             $div.append($indexInput).append($span).appendTo(role.items.operation);
         });
@@ -202,7 +229,7 @@ jQuery(function($) {
             });
 
             if (role.pageType == "advance") {
-                $divBtnWrap.append($chainPage).append($btnModule).append($btnTask).append($officeModule).append($btnOperation).append($btnEdit).append($btnDel).append($btnChart).appendTo($h3);
+                $divBtnWrap.append($chainPage).append($btnModule).append($btnTask).append($officeModule).append($btnOperation).append($btnChart).append($btnEdit).append($btnDel).appendTo($h3);
             } else {
                 $divBtnWrap.append($btnModule).append($btnTask).appendTo($h3);
             }

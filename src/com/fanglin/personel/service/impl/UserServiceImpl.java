@@ -37,6 +37,7 @@ import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserContractDao;
@@ -44,6 +45,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserEducationDao;
 import com.fanglin.personel.dao.UserInfoDao;
 import com.fanglin.personel.dao.UserOperationDao;
+import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.DutmentPO;
 import com.fanglin.personel.po.UserContractPO;
 import com.fanglin.personel.po.UserEducationPO;
@@ -51,6 +53,7 @@ import com.fanglin.personel.po.UserExperiencePO;
 import com.fanglin.personel.po.UserInfoPO;
 import com.fanglin.personel.po.UserOperationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserContractVO;
@@ -91,9 +94,6 @@ public class UserServiceImpl implements UserService {
 	private UserInfoDao userInfoDao;
 
 	@Autowired
-	private UserInfoDao userExperienceDao;
-
-	@Autowired
 	private DepartmentDao departmentDao;
 
 	@Autowired
@@ -101,6 +101,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private RoleDao roleDao;
+
+	@Autowired
+	private UserRoleDao userRoleDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -113,6 +116,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private DutmentDao dutmentDao;
+
+	@Autowired
+	private UserInfoDao userExperienceDao;
 
 	@Autowired
 	private UserContractDao userContractDao;
@@ -370,7 +376,7 @@ public class UserServiceImpl implements UserService {
 		SystemConfigPO userlimit = systemConfigDao.querySystemConfig("userlimit", company);
 
 		if (userDao.countUserByCompany(company) >= (userlimit == null ? 100 : Integer.valueOf(userlimit.getValue()))) {
-			throw new FLException(190008, "人员数已达上限");
+			throw new FLException(190008, "人员数已达上限, 公司上限");
 		}
 
 		UserVO userVO = userInfoVO.getUser();
@@ -381,7 +387,11 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190006, "人员已存在");
 		}
 
-		UserPO userPO = new UserPO();
+		UserPO userPO = userDao.queryUserByLoginId(userVO.getLoginId());
+
+		if (userPO != null) {
+			throw new FLException(190013, "登录名已存在");
+		}
 
 		DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
 
@@ -389,16 +399,16 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(310002, "部门不可添加人员");
 		}
 
-		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
-
-		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && dutmentPO == null) {
-			throw new FLException(130050, "定岗信息不存在");
+		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && departmentPO.getLimit() < userDao.countUserByDeptId(departmentPO.getDid())) {
+			throw new FLException(190011, "人员数量已达上限, 部门上限");
 		}
 
-		if (dutmentPO != null) {
+		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
+
+		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && dutmentPO != null) {
 
 			if (dutmentPO.getNum() >= dutmentPO.getLimit()) {
-				throw new FLException(190011, "人员数量已达上限");
+				throw new FLException(190011, "人员数量已达上限, 定岗上限");
 			}
 
 			dutmentPO.setNum(dutmentPO.getNum() + 1);
@@ -411,6 +421,8 @@ public class UserServiceImpl implements UserService {
 		if (visitor == null) {
 			throw new FLException(230010, "角色不存在");
 		}
+
+		userPO = new UserPO();
 
 		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
 
@@ -445,6 +457,10 @@ public class UserServiceImpl implements UserService {
 
 		userDao.save(userPO);
 
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), operator));
+
 		userVO.setUid(userPO.getUid());
 
 		UserInfoPO userInfoPO = new UserInfoPO();
@@ -455,6 +471,21 @@ public class UserServiceImpl implements UserService {
 			UserPO fangliner = userDao.queryUserByUserId(userInfoVO.getFangliner().getUserId());
 			userInfoPO.setFangliner(fangliner);
 		}
+
+		userInfoPO.setUser(userPO);
+
+		userInfoDao.save(userInfoPO);
+
+		UserExperiencePO userExperiencePO = new UserExperiencePO();
+
+		userExperiencePO.setUid(userPO.getUid());
+		userExperiencePO.setType("入职");
+		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
+		userExperiencePO.setOperator(operator);
+
+		userExperienceDao.save(userExperiencePO);
 
 		if (userContractVOs != null && userContractVOs.size() != 0) {
 
@@ -496,22 +527,6 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
-		userInfoPO.setUser(userPO);
-
-		userInfoDao.save(userInfoPO);
-
-		UserExperiencePO userExperiencePO = new UserExperiencePO();
-
-		UserPO operator = userDao.queryUserByUserId(userId);
-
-		userExperiencePO.setUid(userPO.getUid());
-		userExperiencePO.setType("入职");
-		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
-		userExperiencePO.setOperator(operator);
-
-		userExperienceDao.save(userExperiencePO);
 	}
 
 	@Override
@@ -1014,6 +1029,137 @@ public class UserServiceImpl implements UserService {
 		userExperienceDao.save(userExperiencePO);
 
 		userDao.update(userPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int registUser(UserVO userVO) throws FLException {
+
+		UserPO userPO = userDao.get(userVO.getUid());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		if (userPO.getAuthStatus() != UserPO.AUTH_STATUS_INIT_INT) {
+			throw new FLException(190014, "人员状态不可操作");
+		}
+
+		if (userPO.getSignNo() == null || "".equals(userPO.getSignNo())) {
+			userPO.setSignNo(Signature.register(FormatUtil.fillZero(userPO.getUid(), "00000000")));
+		}
+
+		userDao.update(userPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int resetUser(UserVO userVO) throws FLException {
+
+		UserPO userPO = userDao.get(userVO.getUid());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		if (userPO.getAuthStatus() != UserPO.AUTH_STATUS_INIT_INT) {
+			throw new FLException(190014, "人员状态不可操作");
+		}
+
+		userPO.setToken(null);
+		userPO.setSignNo(null);
+
+		userDao.update(userPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public String authUser(UserVO userVO) throws FLException {
+
+		UserPO userPO = userDao.get(userVO.getUid());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		if (userPO.getAuthStatus() != UserPO.AUTH_STATUS_INIT_INT) {
+			throw new FLException(190014, "人员状态不可操作");
+		}
+
+		String redirect = "";
+
+		if (userPO.getAuthUrl() != null && !"".equals(userPO.getAuthUrl())) {
+			redirect = userPO.getAuthUrl();
+		} else {
+			JSONObject info = Signature.authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity());
+
+			redirect = Signature.decode(info.getString("url"));
+
+			userPO.setToken(info.getString("transactionNo"));
+
+			userDao.update(userPO);
+		}
+
+		return redirect;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmUser(UserVO userVO) throws FLException {
+
+		UserPO userPO = userDao.get(userVO.getUid());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		if (userPO.getAuthStatus() != UserPO.AUTH_STATUS_INIT_INT) {
+			throw new FLException(190014, "人员状态不可操作");
+		}
+
+		JSONObject info = Signature.person(userPO.getToken());
+
+		JSONObject person = info.getJSONObject("person");
+
+		userPO.setUserName(person.getString("personName"));
+		userPO.setIdentity(person.getString("idCard"));
+		userPO.setPhone(person.getString("mobile"));
+
+		userPO.setUserPhoto(person.getString("photoUuid"));
+		userPO.setIdentityPathF(person.getString("headPhotoPath"));
+		userPO.setIdentityPathB(person.getString("backgroundIdCardPath"));
+
+		userPO.setAuthStatus(UserPO.AUTH_STATUS_AUTH_INT);
+
+		userDao.update(userPO);
+
+		userVO.setUserName(userPO.getUserName());
+		userVO.setGender(userPO.getGender());
+		userVO.setPhone(userPO.getPhone());
+		userVO.setIdentity(userPO.getIdentity());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int signateUser(UserVO userVO, String imgbase) throws FLException {
+
+		UserPO userPO = userDao.get(userVO.getUid());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		Signature.signature(userPO.getSignNo(), imgbase);
+
+		userDao.update(userPO);
+
+		return 0;
 	}
 
 }

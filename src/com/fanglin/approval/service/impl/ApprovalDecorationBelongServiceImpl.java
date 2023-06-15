@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongDao;
 import com.fanglin.approval.dao.ApprovalDecorationBelongItemDao;
@@ -29,6 +30,8 @@ import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.vo.ApprovalDecorationBelongItemVO;
 import com.fanglin.approval.vo.ApprovalDecorationBelongVO;
 import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
@@ -37,6 +40,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -76,9 +80,15 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	@Autowired
 	private DecorationService decorationService;
 
+	@Autowired
+	private ApprovalService approvalService;
+
+	@Autowired
+	private DepartmentDao departmentDao;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int submitApprovalForDecorationBelong(ApprovalVO approvalVO, ApprovalDecorationBelongVO approvalDecorationBelongVO, List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs, String userId, int company) throws FLException {
+	public int submitApprovalForDecorationBelong(ApprovalVO approvalVO, ApprovalDecorationBelongVO approvalDecorationBelongVO, List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs, String userId, int company, String code, String forms) throws FLException {
 
 		StringBuffer oldBelongUserName = new StringBuffer();
 		StringBuffer oldBelongRate = new StringBuffer();
@@ -93,7 +103,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 
-		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT, orderId);
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -162,7 +172,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		String content = String.format("装修单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s", orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : "业务"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -181,11 +191,21 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 			approvalDecorationBelongItemPO.setBuid(userDao.queryUserByUserId(approvalDecorationBelongItemVO.getUserId()).getUid());
 			approvalDecorationBelongItemPO.setAdbId(approvalDecorationBelongPO.getAdbId());
+			approvalDecorationBelongItemPO.setBdid(approvalDecorationBelongItemVO.getBdid());
+			approvalDecorationBelongItemPO.setBrid(approvalDecorationBelongItemVO.getBrid());
 
 			approvalDecorationBelongItemDao.save(approvalDecorationBelongItemPO);
 		}
 
 		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
+
+		if (code != null && !"".equals(code)) {
+			String piid = approvalService.initiateApproval(code, userId, null, null, null, JSONArray.parseArray(forms), company);
+
+			approvalPO.setPiid(piid);
+
+			approvalDao.update(approvalPO);
+		}
 
 		return 0;
 	}
@@ -220,14 +240,15 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
 
-		if (approvalDecorationBelongPO.getBelongType() == DecorationBelongPO.BELONGTYPE_DESIGN_INT)
-			decorationAdditionPO.clearDesign();
-		else if (approvalDecorationBelongPO.getBelongType() == DecorationBelongPO.BELONGTYPE_SALESMAN_INT)
-			decorationAdditionPO.clearSales();
+		if (approvalDecorationBelongPO.getBelongType() == DecorationBelongPO.BELONGTYPE_DESIGN_INT) decorationAdditionPO.clearDesign();
+		else if (approvalDecorationBelongPO.getBelongType() == DecorationBelongPO.BELONGTYPE_SALESMAN_INT) decorationAdditionPO.clearSales();
 
 		for (ApprovalDecorationBelongItemPO approvalDecorationBelongItemPO : approvalDecorationBelongItemPOs) {
 
 			UserPO userPO = userDao.get(approvalDecorationBelongItemPO.getbuid());
+
+			DepartmentPO designDept = departmentDao.get(approvalDecorationBelongItemPO.getBdid());
+			DepartmentPO salesDept = departmentDao.get(approvalDecorationBelongItemPO.getBrid());
 
 			if (userPO == null) {
 				throw new FLException(190005, "人员不存在");
@@ -235,13 +256,13 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 			DecorationBelongPO decorationBelongPO = new DecorationBelongPO();
 
-			decorationBelongPO.setDepartment(userPO.getDept());
-			decorationBelongPO.setRegion(userPO.getDept().getFatherDept());
+			decorationBelongPO.setDepartment(designDept);
+			decorationBelongPO.setRegion(salesDept);
 
 			if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) {
-				decorationAdditionPO.setDesign(userPO.getCurrentName(), userPO.getDept().getName(), userPO.getDept().getFatherDept().getName());
+				decorationAdditionPO.setDesign(userPO.getCurrentName(), designDept.getName(), salesDept.getName());
 			} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) {
-				decorationAdditionPO.setSales(userPO.getCurrentName(), userPO.getDept().getName(), userPO.getDept().getFatherDept().getName());
+				decorationAdditionPO.setSales(userPO.getCurrentName(), designDept.getName(), salesDept.getName());
 			}
 
 			if (DecorationBelongPO.DEFAULTFLAG_TRUE_INT.equals(approvalDecorationBelongItemPO.getDefaultFlag())) {
@@ -251,6 +272,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 					decorationPO.setSalesman(userPO);
 				}
 			}
+
 			decorationBelongPO.setOrderId(decorationPO.getOrderId());
 			decorationBelongPO.setBelonger(userPO);
 			decorationBelongPO.setRate(approvalDecorationBelongItemPO.getRate());
@@ -262,7 +284,6 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_INVALID_INT);
 
 			decorationBelongDao.save(decorationBelongPO);
-
 		}
 
 		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));

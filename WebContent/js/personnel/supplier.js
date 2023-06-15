@@ -43,7 +43,9 @@
 
         userId: null,
         company: null,
-        supplierUid: null
+        supplierUid: null,
+
+        pageType: params['urlLoadParams'].type,
     };
 
     supplier.modals.addSupplierModal.on('hidden.bs.modal', function(e) {
@@ -187,7 +189,11 @@
                         defaultPassword(v.userId, v.userName);
                     });
 
-                    $divBtnWrap.append($btnEdit).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
+                    if (supplier.pageType == 'manage') {
+                        $divBtnWrap.append($btnEdit).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
+                    } else {
+                        $divBtnWrap.append($btnEdit).appendTo($h3);
+                    }
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });

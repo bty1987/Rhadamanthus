@@ -22,84 +22,82 @@ import com.fanglin.sales.vo.SalesVO;
 public class SalesActivityItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5034707429644411659L;
-	
+
 	@Autowired
 	private SalesActivityItemService salesActivityItemService;
-	
-	private List<SalesActivityItemVO> salesActivityItems;
-	
-	private SalesVO sales;
-	
-	private SalesActivityItemVO salesActivityItem;
-	
-	private SalesActivityVO salesActivity;
-	
-	private String orderId;
 
-	@Action(value="addSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addSalesActivityItem() throws FLException{
-		
-		salesActivityItemService.addSalesActivityItem(salesActivity, salesActivityItems,queryUserId());
-		
+	private List<SalesActivityItemVO> salesActivityItems;
+
+	private SalesVO sales;
+
+	private SalesActivityItemVO salesActivityItem;
+
+	private SalesActivityVO salesActivity;
+
+	@Action(value = "addSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSalesActivityItem() throws FLException {
+
+		salesActivityItemService.addSalesActivityItem(salesActivity, salesActivityItems, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="abateSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String abateSalesActivityItem() throws FLException{
-		
+
+	@Action(value = "abateSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String abateSalesActivityItem() throws FLException {
+
 		salesActivityItemService.abateSalesActivityItem(salesActivityItem, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="receiveSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String receiveSalesActivityItem() throws FLException{
-		
+
+	@Action(value = "receiveSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String receiveSalesActivityItem() throws FLException {
+
 		salesActivityItemService.receiveSalesActivityItem(salesActivityItem, queryUserId(), queryUserName());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deliveSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deliveSalesActivityItem() throws FLException{
-		
+
+	@Action(value = "deliveSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deliveSalesActivityItem() throws FLException {
+
 		salesActivityItemService.deliveSalesActivityItem(salesActivityItem, queryUserId(), queryUserName());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="unrefundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String unrefundSalesActivityItem() throws FLException{
-		
-		salesActivityItemService.unrefundSalesActivityItem(salesActivityItem,queryUserId());
-		
+
+	@Action(value = "unrefundSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unrefundSalesActivityItem() throws FLException {
+
+		salesActivityItemService.unrefundSalesActivityItem(salesActivityItem, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="refundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String refundSalesActivityItem() throws FLException{
-		
+
+	@Action(value = "refundSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundSalesActivityItem() throws FLException {
+
 		salesActivityItemService.refundSalesActivityItem(salesActivityItem, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="expendSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String expendSalesActivityItem() throws FLException{
-		
-		salesActivityItemService.expendSalesActivityItem(salesActivityItem,queryUserId());
-		
+
+	@Action(value = "expendSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String expendSalesActivityItem() throws FLException {
+
+		salesActivityItemService.expendSalesActivityItem(salesActivityItem, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="discountSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String discountSalesActivityItem() throws FLException{
-		
-		salesActivityItemService.discountSalesActivityItem(salesActivityItem,queryUserId());
-		
+
+	@Action(value = "discountSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String discountSalesActivityItem() throws FLException {
+
+		salesActivityItemService.discountSalesActivityItem(salesActivityItem, queryUserId());
+
 		return SUCCESS;
 	}
-	
+
 	public SalesVO getSales() {
 		return sales;
 	}
@@ -114,14 +112,6 @@ public class SalesActivityItemAction extends BaseListAction {
 
 	public void setSalesActivityItem(SalesActivityItemVO salesActivityItem) {
 		this.salesActivityItem = salesActivityItem;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
 
 	public SalesActivityVO getSalesActivity() {
@@ -139,5 +129,5 @@ public class SalesActivityItemAction extends BaseListAction {
 	public void setSalesActivityItems(List<SalesActivityItemVO> salesActivityItems) {
 		this.salesActivityItems = salesActivityItems;
 	}
-	
+
 }

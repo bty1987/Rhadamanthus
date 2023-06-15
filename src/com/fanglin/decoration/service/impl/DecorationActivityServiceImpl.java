@@ -31,6 +31,8 @@ import com.fanglin.decoration.vo.DecorationActivityVO;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.vo.ActivityVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -46,6 +48,9 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 	@Autowired
 	private ActivityDao activityDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<DecorationActivityVO> queryDecorationActivityByOrderId(DecorationActivityVO decorationActivityVO) {
@@ -83,7 +88,7 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException {
+	public int addDecorationActivity(DecorationActivityVO decorationActivityVO, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityVO.getOrderId());
 
@@ -116,11 +121,17 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		decorationActivityPO.setOrderId(decorationActivityVO.getOrderId());
 		decorationActivityPO.setActivity(activityPO);
 
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		decorationActivityPO.setCuid(creater.getUid());
+		decorationActivityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		decorationActivityDao.save(decorationActivityPO);
 
 		BeanUtil.copyProperties(decorationActivityPO, decorationActivityVO, Arrays.asList("activity"));
 
 		decorationActivityVO.setActivity(new ActivityVO());
+
 		BeanUtil.copyProperties(decorationActivityPO.getActivity(), decorationActivityVO.getActivity(), Arrays.asList("creater"));
 
 		return 0;

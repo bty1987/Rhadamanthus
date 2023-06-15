@@ -30,7 +30,7 @@ var printselectionDetail = (function() {
 
             headHtml += '<table style="font-size: 14px" width="100%" bgcolor="#000000" border="0" cellpadding="1" cellspacing="0">';
             headHtml += '<tbody><tr bgcolor="#FFFFFF">';
-            headHtml += '<td colspan="8" style="font-size: 20px" align="center"> <b>' + "选材订购单" + '</b></td>';
+            headHtml += '<td colspan="8" style="font-size: 20px" align="center"> <b>' + "选材明细列表" + '</b></td>';
             headHtml += '</tr>';
             headHtml += '<tr bgcolor="#FFFFFF">';
             headHtml += '<td colspan="8" height="10"></td>';
@@ -62,6 +62,7 @@ var printselectionDetail = (function() {
             contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
             contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
             contentHtml += '<td width="4%" align="center">序号</td>';
+            contentHtml += '<td width="4%" align="center">图片</td>';
             contentHtml += '<td width="7%" align="center">报价项</td>';
             contentHtml += '<td width="4%" align="center">品牌</td>';
             contentHtml += '<td width="4%" align="center">类型</td>';
@@ -97,7 +98,7 @@ var printselectionDetail = (function() {
 
                 $.each(items, function(j, v) {
 
-                    if (params.quotation.supplierPage == true && params.userInfo.user.uid != v.suid)
+                    if (params.quotation.supplierPage == true && params.userInfo.user.uid != v.supplier.uid)
                         return true;
 
                     var num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
@@ -119,8 +120,15 @@ var printselectionDetail = (function() {
                             "name": addReduceItems[v.quoteId].itemName
                         }
 
+                    var img = $('<img width="40px"/>');
+
+                    if (v.soods.path != null) {
+                        com.showImg(img1, v.soods.path, 40, 40, v.goods.name, null, null);
+                    }
+
                     contentHtml += '<tr bgcolor="#FFFFFF">';
                     contentHtml += '<td width="4%" align="center">' + (j + 1) + '</td>';
+                    contentHtml += '<td width="4%" align="center">' + img[0].outerHTML + '</td>';
                     contentHtml += '<td width="7%" align="center">' + item.name + '</td>';
                     contentHtml += '<td width="4%" align="center">' + v.goods.brand + '</td>';
                     contentHtml += '<td width="4%" align="center">' + selectionDetail.types[v.type] + '</td>';

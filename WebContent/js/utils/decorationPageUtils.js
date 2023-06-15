@@ -81,6 +81,7 @@ $(function() {
             button.prepend(icon);
         if (!checkButton(conf, button))
             return $('<button></button>').attr("class", "hidden");
+
         return button;
     }
 
@@ -151,8 +152,8 @@ $(function() {
         leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "楼盘", "villageName"), createDiv("col-sm-9").append(createInput("villageName", "col-xs-10 col-sm-5", true), createButton(conf, "villageChangeBtn", "btn btn-xs btn-info", "修改房产信息", "button"))));
         leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "楼号", "houseNumber"), createDiv("col-sm-9").append(createInput("houseNumber", "col-xs-10 col-sm-5", true, "text"))));
         leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "设计部", "designDepartment"), createDiv("col-sm-9").append(createInput("designDepartment", "col-xs-10 col-sm-5", true, "text"))));
-        leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "赠送面积", "freeArea"), createDiv("col-sm-9").append(createInput("freeArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0"))));
-        leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "总面积", "totalArea"), createDiv("col-sm-9").append(createInput("totalArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0"))));
+        leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "赠送面积", "freeArea"), createDiv("col-sm-9").append(createInput("freeArea", "col-xs-10 col-sm-5", true, "text", "0"))));
+        leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "总面积", "totalArea"), createDiv("col-sm-9").append(createInput("totalArea", "col-xs-10 col-sm-5", true, "text", "0"))));
         leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "设计师", "designer"), createDiv("col-sm-9").append(createInput("designer", "col-xs-10 col-sm-5", true, "text"))));
         leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务部门", "businessDepartment"), createDiv("col-sm-9").append(createInput("businessDepartment", "col-xs-10 col-sm-5", true, "text"))));
         leftitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务员", "salesman"), createDiv("col-sm-9").append(createInput("salesman", "col-xs-10 col-sm-5", true, "text"))));
@@ -168,9 +169,9 @@ $(function() {
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类别", "houseType"), createDiv("col-sm-9").append(createSelect("houseType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类型", "houseClass"), createDiv("col-sm-9").append(createSelect("houseClass", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
-        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "户型", "houseTypeClass"), createDiv("col-sm-9").append(createInput("houseTypeClass", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0"))));
-        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "建筑面积", "houseArea"), createDiv("col-sm-9").append(createInput("houseArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0"))));
-        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "计价面积", "innerArea"), createDiv("col-sm-9").append(createInput("innerArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0"))));
+        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "户型", "houseTypeClass"), createDiv("col-sm-9").append(createInput("houseTypeClass", "col-xs-10 col-sm-5", true, "text", "0"))));
+        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "建筑面积", "houseArea"), createDiv("col-sm-9").append(createInput("houseArea", "col-xs-10 col-sm-5", true, "text", "0"))));
+        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "计价面积", "innerArea"), createDiv("col-sm-9").append(createInput("innerArea", "col-xs-10 col-sm-5", true, "text", "0"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单状态", "status"), createDiv("col-sm-9").append(createInput("status", "col-xs-10 col-sm-5", true, "text", "0"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "量房时间", "measureTime"), createDiv("col-sm-9").append(createInput("measureTime", "col-xs-10 col-sm-5", true, "text", "0"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "报价员", "quoterId"), createDiv("col-sm-9").append(createInput("quoterId", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
@@ -189,7 +190,7 @@ $(function() {
         var leftitems2 = [];
 
         leftitems2.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员名称", "notSalesmanName"), createDiv("col-sm-9").append(createInput("notSalesmanName", "col-xs-10 col-sm-5 v_name", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "8"))));
-        leftitems2.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务提点", "notSalesmanRate"), createDiv("col-sm-9").append(createInput("notSalesmanRate", "col-xs-10 col-sm-5 v_required v_float", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11").attr("value", "0"))));
+        leftitems2.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务提点", "notSalesmanRate"), createDiv("col-sm-9").append(createInput("notSalesmanRate", "col-xs-10 col-sm-5 v_required v_float_3", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11").attr("value", "0")).append(createSpan("badge badge-purple", "cursor: pointer; margin-left: 5px; margin-top: 7px;", "说明").attr("id", "notSalesmanRateComment"))));
         leftitems2.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员手机", "notSalesmanPhone"), createDiv("col-sm-9").append(createInput("notSalesmanPhone", "col-xs-10 col-sm-5 v_phone", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11"))));
         leftitems2.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务备注", "notSalesmanContent"), createDiv("col-sm-9").append('<textarea id="notSalesmanContent" class="col-xs-10 col-sm-5"rows="3" data-toggle="popover"data-trigger="manual" maxlength="128"readonly="readonly"></textarea>')));
 
@@ -226,7 +227,7 @@ $(function() {
 
     function drawPresign(conf) {
 
-        var row = createDiv("row").append(createDiv("col-md-4 text-right").append(createDiv("form-group").append(createDiv("col-md-2").append($("<p></p>").append(createButton(conf, "btnPrintPresignInfo", "btn btn-primary", "打印预签", null, '<i class="icon-print bigger-120"></i>'))))), createDiv("col-md-12", "presignItemListDiv"));
+        var row = createDiv("row").append($("<div></div>").addClass("col-sm-4").append($("<h3></h3>").append($('<strong></strong>').addClass("blue").attr("id", "product")))).append(createDiv("pull-right").append(createButton(conf, "btnPrintPresignInfo", "btn btn-xs btn-primary", "打印预签", null, '<i class="icon-print bigger-120"></i>')), createDiv("col-md-12", "presignItemListDiv"));
 
         return [row];
     }
@@ -250,6 +251,19 @@ $(function() {
         var $tabContent = createDiv("tab-content").append(createDiv("tab-pane  in active", "ribbonSubset"), createDiv("tab-pane", "workTypeSubset"), createDiv("tab-pane", "selectionCategory"));
         $tabbable.append($tabContent);
         $sortable.appendTo(row);
+
+        return [row];
+    }
+
+    function drawSelect(conf) {
+
+        var row = createDiv("row");
+
+        var selectButtonsDetail = createDiv("pull-right action-buttons").append(createButton(conf, "btnPrintDefaultSelectInfo", "btn btn-xs btn-primary", "打印报价", null, '<i class="icon-print bigger-120"></i>'));
+        var selectItemListDiv = createDiv("tab-pane in active", "selectItemListDiv", "margin-top: 26px;");
+
+        selectButtonsDetail.appendTo(row);
+        selectItemListDiv.appendTo(row);
 
         return [row];
     }
@@ -436,6 +450,14 @@ $(function() {
 
     }
 
+    function drawUsers(conf) {
+
+        var row = createDiv("row").append(createDiv("pull-right").append(createButton(conf, "btnDecorationUser", "btn btn-xs btn-primary", "添加", null, '<i class="icon-plus bigger-120"></i>')), createDiv("col-md-12", "usersInfo"));
+
+        return [row];
+
+    }
+
     drawNode = {
         draw: function(nodes) {
 
@@ -455,6 +477,7 @@ $(function() {
                 "basic": "基本信息",
                 "presign": "预签信息",
                 "quotation": "报价信息",
+                "select": "选材信息",
                 "picture": "图纸信息",
                 "material": "主材信息",
                 "activity": "活动信息",
@@ -462,7 +485,8 @@ $(function() {
                 "belong": "归属信息",
                 "addreduce": "增减项",
                 "account": "决算信息",
-                "service": "服务信息"
+                "service": "服务信息",
+                "users": "人员信息"
             };
 
             if ($.isEmptyObject(nodes))
@@ -482,6 +506,9 @@ $(function() {
                         break;
                     case "quotation":
                         rows = drawQuotaion(v);
+                        break;
+                    case "select":
+                        rows = drawSelect(v);
                         break;
                     case "picture":
                         drawPicture(v, stepPane);
@@ -506,6 +533,9 @@ $(function() {
                         break;
                     case "service":
                         rows = drawService(v);
+                        break;
+                    case "users":
+                        rows = drawUsers(v);
                         break;
                 }
                 $.each(rows, function(j, b) {

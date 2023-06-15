@@ -24,12 +24,15 @@ jQuery(function() {
             orderAddr: com.focusPage('#orderAddr'),
             schedule: com.focusPage('#schedule'),
             fetchTime: com.focusPage('#fetchTime'),
+            type: com.focusPage('#type'),
             comment: com.focusPage('#comment')
         },
         constructionNode: {}
     };
 
     com.datetime(accessories.rightitems.fetchTime, "date", false);
+
+    accessories.rightitems.type.bindData(constant.inventory().accessories.type.datas, 'key', 'value');
 
     accessories.leftitems.goodsName.on("focus", function() {
 
@@ -193,6 +196,7 @@ jQuery(function() {
             "accessories.cnid": accessories.rightitems.schedule.val(),
             "accessories.schedule": accessories.rightitems.schedule.val(),
             "accessories.comment": accessories.rightitems.comment.val(),
+            "accessories.type": accessories.rightitems.type.val(),
             "accessories.total": total
         };
 

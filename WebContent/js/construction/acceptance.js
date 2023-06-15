@@ -72,7 +72,7 @@ jQuery(function ($) {
 
     function viewAcceptanceDetailIndex(orderId) {
         params.construction.orderId = orderId;
-        com.popup4page("#stockRecordPopUp","/views/construction/acceptanceDetail.html","查看");
+        com.popup4page("#stockRecordPopUp","/views/construction/acceptance4detail.html","查看");
     }
 
 });

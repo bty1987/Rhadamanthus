@@ -639,11 +639,46 @@ Condition.addupRule("sales", {
             }
         }
     },
+    "oales-oalesDept": {
+        label: "部门",
+        type: "selectCaching",
+        submitConfig: {
+            name: "dept.name",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.communion.queryDepartment,
+            postData: {},
+            listPath: "deptList",
+            keyPath: "name",
+            valuePath: "name"
+        }
+    },
+    "oales-region":{
+        label: "分区",
+        type: "text",
+        submitConfig: {
+            name: "region.name",
+            op: "cn",
+            validata: null
+        }
+    },
+
     "oales-createTime":{
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "createTimeOales",
+            name: "createTime",
+            op: "cn",
+            validata: null
+        }
+    },
+    "oales-confirmTime":{
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "confirmTime",
             op: "cn",
             validata: null
         }
@@ -664,13 +699,20 @@ Condition.addupRule("sales", {
             valuePath: "value"
         }
     },
-    "oales-brand":{
+    "oales-brand": {
         label: "品牌",
-        type: "text",
+        type: "autofill",
         submitConfig: {
-            name: "brand",
+            name: "brandId",
             op: "eq",
-            validata: null
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryBrandByPinyin,
+            postData: {},
+            listPath: "brands",
+            keyPath: "bid",
+            valuePath: "name",
         }
     },
     "oales-category":{
@@ -679,6 +721,15 @@ Condition.addupRule("sales", {
         submitConfig: {
             name: "category",
             op: "eq",
+            validata: null
+        }
+    },
+    "oalesPay-payTime":{
+        label: "付款时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "payTime",
+            op: "cn",
             validata: null
         }
     },

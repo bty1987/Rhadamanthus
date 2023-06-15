@@ -30,6 +30,8 @@ public interface RoleModuleDao extends Dao<RoleModulePO> {
 
 	public List<RoleModulePO> queryRoleModuleForLink(List<Integer> rids, short system);
 
+	public RoleModulePO queryRoleModule(List<Integer> rids, int mid);
+
 	public RoleModulePO queryRoleModule(int rid, int mid);
 
 	public int countRoleModuleByMid(int mid);

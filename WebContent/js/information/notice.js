@@ -17,7 +17,8 @@ $(function(){
             isPublic : com.focusPage("#isPublic"),
             contents : com.focusPage("#contents"),
             filePath : com.focusPage("#filePath"),
-            fileName : com.focusPage("#fileName")
+            fileName : com.focusPage("#fileName"),
+            exPublic : com.focusPage("#exPublic"),
         },
 
         noticeType: {},
@@ -32,6 +33,7 @@ $(function(){
 
     notice.saveBtn.bindClick(saveData);
     notice.items.isPublic.switchBtn("isOrNot");
+    notice.items.exPublic.switchBtn("isOrNot");
 
     if(notice.pageType == "notice"){
         notice.type = constant.information().notice.TYPE_NOTICE_INT;
@@ -87,6 +89,7 @@ $(function(){
                 ["类型:", constant.information().notice.type.keys[v.type], "red"],
                 ["优先级:", constant.information().notice.priority.keys[v.priority], "red"],
                 ["公开:", constant.information().notice.isPublic.keys[v.isPublic], "red"],
+                ["过期公开:", constant.information().notice.exPublic.keys[v.exPublic], "red"],
                 ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "red"],
                 ["开始时间:", v.startTime, "green"],
                 ["结束时间:", v.endTime, "green"],
@@ -151,6 +154,7 @@ $(function(){
                 notice.items.startTime.val(v.startTime);
                 notice.items.endTime.val(v.endTime);
                 notice.items.isPublic.prop("checked", v.isPublic == constant.information().notice.ISPUBLIC_OPEN_INT);
+                notice.items.exPublic.prop("checked", v.exPublic == constant.information().notice.EXPUBLIC_OPEN_INT);
                 notice.items.contents.val(v.contents);
                 notice.items.filePath.val(v.filePath);
                 notice.items.fileName.val(v.fileName);
@@ -265,6 +269,7 @@ $(function(){
             "notice.startTime": notice.items.startTime.val(),
             "notice.endTime": notice.items.endTime.val(),
             "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
+            "notice.exPublic": notice.items.exPublic.prop("checked") ? 0 : 1,
             "notice.contents": notice.items.contents.val(),
             "notice.filePath": notice.items.filePath.val(),
             "notice.fileName": notice.items.fileName.val()

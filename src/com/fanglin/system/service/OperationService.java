@@ -30,6 +30,8 @@ public interface OperationService {
 
 	public List<OperationVO> queryOperationByRid(OperationVO operationVO, RoleVO roleVO) throws FLException;
 
+	public List<OperationVO> queryOperationForSelf(String userId) throws FLException;
+
 	public OperationVO checkOperation(OperationVO operationVO) throws FLException;
 
 	public boolean checkOperation(String userId, String operation, short rollcall) throws FLException;
@@ -38,10 +40,14 @@ public interface OperationService {
 
 	public int updateOpperation(OperationVO operationVO) throws FLException;
 
+	public int updateRoleOperation(RoleVO roleVO, OperationVO operationVO, String userId) throws FLException;
+
 	public int updateRoleOperationByRid(List<Integer> oids, RoleVO roleVO, String userId) throws FLException;
 
 	public int updateRoleOperationByUserId(List<Integer> oids, UserVO userVO, String userId) throws FLException;
 
 	public int deleteOperation(OperationVO operationVO) throws FLException;
+
+	public int deleteRoleOperation(RoleVO roleVO, OperationVO operationVO);
 
 }

@@ -88,12 +88,12 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 
 	@Override
 	public ApprovalPO queryApproval(short status, short type, String ident) {
-		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident)).add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, status)).uniqueResult();
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident)).add(Restrictions.eq(ApprovalPO.COLUMN_STATUS_STR, status)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public ApprovalPO queryApprovalByChange(List<Short> status, short type, String ident) {
-		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident)).add(Restrictions.in(ApprovalPO.COLUMN_STATUS_STR, status)).uniqueResult();
+		return (ApprovalPO) session().createCriteria(ApprovalPO.class).add(Restrictions.eq(ApprovalPO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(ApprovalPO.COLUMN_IDENT_STR, ident)).add(Restrictions.in(ApprovalPO.COLUMN_STATUS_STR, status)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

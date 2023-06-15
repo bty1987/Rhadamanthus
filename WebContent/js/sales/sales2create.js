@@ -34,7 +34,8 @@ jQuery(function () {
             coupon: com.focusPage('#coupon'), // 券值
             comment: com.focusPage('#comment'), // 备注
             maling: com.focusPage('#maling'), // 抹零
-            totals: com.focusPage('#totals') // 总额
+            totals: com.focusPage('#totals'), // 总额
+            bComment:com.focusPage('#bComment') //品牌备注
         },
         items: {
             left: com.focusPage('#left')
@@ -51,7 +52,8 @@ jQuery(function () {
         customer: null,
         salesman: null,
         house: null,
-        dompany: null
+        dompany: null,
+        bid: null
     };
 
     com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name',function (list, k, v) {
@@ -60,10 +62,11 @@ jQuery(function () {
         sales.items.left.find('select').empty();
 
         $.each(list, function (index, val) {
+
             if (val.gid == k) {
                 
                 sales.goods = val;
-                
+                sales.bid = val.bid;
                 sales.leftitems.goodsNo.val(val.no);
                 sales.leftitems.category.val(val.category);
                 sales.leftitems.brand.val(val.brand);
@@ -80,7 +83,6 @@ jQuery(function () {
                         sales.leftitems.purchase.bindData(res.prices, "pid", "name", false, null, "selling");
                         
                         var price = res.prices[0];
-
                         sales.leftitems.discount.val(1);
                         sales.leftitems.disPrice.val(price.selling);
                         sales.leftitems.postDis.val(1);
@@ -120,6 +122,7 @@ jQuery(function () {
         $.each(list, function (index, val){
             if(val['no'] == k){
                 sales.brand  = val;
+                sales.rightitems.bComment.val(val.comment)
             }
         });
         return v

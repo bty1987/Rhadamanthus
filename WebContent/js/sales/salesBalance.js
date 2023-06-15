@@ -369,11 +369,6 @@ $(function() {
                             return false;
                         }
 
-                        if (v.pbalance == 0) {
-                            com.showAlert(com.warning, "结算值未填写 , 请检查");
-                            return false;
-                        }
-
                         com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', function(index, layero) {
 
                             com.post(api.sales.postSalesBalance, {
@@ -586,6 +581,11 @@ $(function() {
                 v.status = v.status == constant.sales().salesBalance.STATUS_PREBALANCE_INT ? '预结算' : v.status == constant.sales().salesBalance.STATUS_VENDORBALANCE_INT ? "厂商结算" : "结算";
                 v.type = v.type == constant.sales().salesBalance.TYPE_INIT_INT ? "购货" : v.type == constant.sales().salesBalance.TYPE_PREBALANCEREFUNDS_INT ? "预结算退货" : "结算退货";
                 v.voster.currentName = v.voster.currentName == null ? '' : v.voster.currentName;
+
+                v.sales.coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
+                v.sales.maling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.maling;
+                v.sales.venderMaling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.venderMaling;
+
             });
         });
     }
@@ -639,7 +639,7 @@ $(function() {
         for ( var i = 0; i < inputs.length; i++) {
 
             var input = $(inputs[i]);
-
+            console.log(input);
             var status = input.attr("data-status");
             var vbalance = input.attr("data-vbalance");
             var pbalance = input.attr("data-pbalance");

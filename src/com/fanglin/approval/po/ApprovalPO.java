@@ -27,7 +27,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_VILLAGE_INT = 2;
 
-	public static final short APPROVAL_TYPE_ORDER_BELONG_INT = 3;
+	public static final short APPROVAL_TYPE_DECORATION_BELONG_INT = 3;
 
 	public static final short APPROVAL_TYPE_QUOTATION_DISCOUNT_INT = 4;
 
@@ -57,6 +57,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_SALESDAYMENT_INT = 18;
 
+	public static final short APPROVAL_TYPE_DECORATION_TERMINAL_INT = 19;
+
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
@@ -83,7 +85,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final String COLUMN_APPROVALTIME_STR = "approvalTime";
 
-	public static final String COLUMN_PROCESSINSTANCEID_STR = "processinstanceid";
+	public static final String COLUMN_PROCESSINSTANCEID_STR = "piid";
 
 	private long aid;
 

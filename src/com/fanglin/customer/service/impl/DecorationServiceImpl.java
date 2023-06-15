@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPO;
@@ -25,7 +26,10 @@ import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.vo.DecorationUserVO;
 import com.fanglin.dingding.service.MessageService;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
 
@@ -50,6 +54,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public void queryCusDecorationUser(Paging paging, List<Filter> filters, DecorationVO decorationVO) {
@@ -154,6 +161,33 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	public String vodeCusDecoration(DecorationVO decorationVO) throws FLException {
+
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(330009, "无可绑定订单");
+		}
+
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
+
+		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), decorationPO.getCustomer().getPhone());
+
+		JSONObject json = HttpUtil.httpGet(url);
+
+		if (json != null && json.getInteger("errorCode") != null && json.getInteger("errorCode") == 0) {
+			return json.getString("securityCode");
+		}
+
+		if (json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0) {
+			System.out.println(url);
+			System.out.println(json);
+		}
+
+		return null;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException {
 
@@ -254,6 +288,22 @@ public class DecorationServiceImpl implements DecorationService {
 		for (DecorationPO decorationPO : decorationPOs) {
 			messageService.sendMessage(decorationPO.getUnionId(), name, orderId, content, path);
 		}
+
+		return 0;
+	}
+
+	@Override
+	public int sendMessage(String key, String orderId, String name, String content, String path) {
+
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) return 0;
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(key, decorationPO.getCompany());
+
+		if (systemConfigPO != null && !"SEND".equals(systemConfigPO.getValue())) return 0;
+
+		sendMessage(orderId, name, content, path);
 
 		return 0;
 	}

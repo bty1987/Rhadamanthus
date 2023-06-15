@@ -29,6 +29,9 @@ $.extend(api.index, {
     balanceDccountDetailIndex: {
         url: "/views/balance/balanceDccountDetail.html"
     },
+    balanceCutpay2print: {
+        url: "/views/balance/balanceCutpay2print.html"
+    },
 });
 
 $.extend(api, {
@@ -198,6 +201,18 @@ $.extend(api, {
                 args: ["income", "cost", "payment", "profit"]
             }]
         },
+        pageBalanceSalesForBalance: {
+            url: "pageBalanceSalesForBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
         createBalanceSales: {
             url: "createBalanceSales.do",
             type: "update",
@@ -287,6 +302,9 @@ $.extend(api, {
             tranargs: [{
                 result: "balanceCutpays",
                 args: ["money", "cutpay", "total"]
+            }, {
+                result: "balanceCutpays-dccount",
+                args: ["cutpay", "surplus"]
             }]
         },
 
@@ -348,6 +366,9 @@ $.extend(api, {
         updateBalanceDccount: {
             url: "updateBalanceDccount.do",
             demo: true
+        },
+        deleteBalanceSales: {
+            url: "deleteBalanceSales.do"
         },
     }
 });

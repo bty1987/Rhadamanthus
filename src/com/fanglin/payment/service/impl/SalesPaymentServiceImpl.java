@@ -466,8 +466,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_INT);
 		}
 
-		if (salesReceiptVO.getComment() != null) salesReceiptPO.setComment(salesReceiptVO.getComment());
-		else {
+		if (salesReceiptVO.getComment() != null) {
+			salesReceiptPO.setComment(salesReceiptVO.getComment());
+		} else {
 			salesReceiptPO.setComment("");
 		}
 
@@ -479,6 +480,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_INT) {
 			throw new FLException(150025, "款项金额不正确");
 		}
+
+		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
+
 		salesReceiptDao.save(salesReceiptPO);
 
 		salesPayment.setSalesReceipt(salesReceiptPO);
@@ -520,7 +524,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 
-		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
+		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
 
 		return 0;
 	}
@@ -542,6 +546,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesReceiptPO.setCollecter(userPO);
 		salesReceiptPO.setCollecterName(userPO.getUserName());
 		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
+
 		if (salesReceiptVO.getCash() != null && salesReceiptVO.getCash() != 0) {
 			salesReceiptPO.setCash(salesReceiptVO.getCash());
 			salesReceiptPO.setCashInfo(salesReceiptVO.getCashInfo());
@@ -585,8 +590,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_INT);
 		}
 
-		if (salesReceiptVO.getComment() != null) salesReceiptPO.setComment(salesReceiptVO.getComment());
-		else {
+		if (salesReceiptVO.getComment() != null) {
+			salesReceiptPO.setComment(salesReceiptVO.getComment());
+		} else {
 			salesReceiptPO.setComment("");
 		}
 
@@ -615,6 +621,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if (Arith.sub(referMoneySR, referMoneyPY) != SalesReceiptPO.COLUMN_MONEY_INT) {
 			throw new FLException(150025, "款项金额不正确");
 		}
+
+		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
 
 		salesReceiptDao.save(salesReceiptPO);
 
@@ -679,7 +687,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 
-		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)));
+		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
 
 		return 0;
 	}
@@ -749,8 +757,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesReceiptPO.setCouponInfo("");
 		}
 
-		if (salesReceiptVO.getComment() != null) salesReceiptPO.setComment(salesReceiptVO.getComment());
-		else {
+		if (salesReceiptVO.getComment() != null) {
+			salesReceiptPO.setComment(salesReceiptVO.getComment());
+		} else {
 			salesReceiptPO.setComment("");
 		}
 
@@ -763,6 +772,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_INT) {
 			throw new FLException(150025, "款项金额不正确");
 		}
+
+		salesReceiptPO.setRealMoney(salesReceiptVO.getRealMoney());
+
 		salesReceiptDao.save(salesReceiptPO);
 
 		SalesPO sales = salesPayment.getSales();
@@ -796,7 +808,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 
-		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
+		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
 
 		return 0;
 	}
@@ -1116,6 +1128,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150025, "款项金额不正确");
 		}
 
+		salesReceiptPO.setRealMoney(salesReceipt.getRealMoney());
+
 		salesReceiptDao.update(salesReceiptPO);
 
 	}
@@ -1131,7 +1145,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		String orderId = salesPaymentPO.getSales().getOrderId();
 
-		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payInfo/payInfo?orderId=%s&pid=%s&paymentType=3", orderId, salesPaymentPO.getSpid()));
+		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=3", orderId, salesPaymentPO.getSpid()));
 
 	}
 

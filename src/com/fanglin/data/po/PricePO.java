@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "price", catalog = "inventory")
+@Table(name = "price", catalog = "data")
 public class PricePO implements Serializable {
 
 	private static final long serialVersionUID = -3508364908423803950L;
@@ -19,17 +19,17 @@ public class PricePO implements Serializable {
 	public static final String COLUMN_PID_STR = "pid";
 
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short CTYPE_ENABLE_INT = 0;
 
 	public static final short CTYPE_DISABLE_INT = 1;
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long pid;
 
 	private long gid;
@@ -45,7 +45,7 @@ public class PricePO implements Serializable {
 	private short ctype;
 
 	private int cvalue;
-	
+
 	private short status;
 
 	@Id
@@ -108,7 +108,7 @@ public class PricePO implements Serializable {
 	public short getCtype() {
 		return ctype;
 	}
-	
+
 	public void setCtype(short ctype) {
 		this.ctype = ctype;
 	}

@@ -21,6 +21,8 @@ public class OperationPO implements java.io.Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	public static final String COLUMN_TYPE_STR = "type";
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short THROUGH_PASS_INT = 1;

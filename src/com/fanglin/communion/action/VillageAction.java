@@ -45,10 +45,10 @@ public class VillageAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryVillageById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryVillageById() throws FLException {
+	@Action(value = "queryVillageByVid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVillageByVid() throws FLException {
 
-		village = villageService.queryVillageById(village);
+		village = villageService.queryVillageByVid(village);
 
 		return SUCCESS;
 	}

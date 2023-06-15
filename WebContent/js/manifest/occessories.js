@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     var occessories = {
         oid: null,
@@ -7,16 +7,24 @@ $(function() {
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
             cancelBtn: com.focusPage("#cancelBtn"),
+            callBtn: com.focusPage("#callBtn"),
         },
 
         items: {
+
             supplier: com.focusPage("#supplier", "#bindOccessoriesModal"),
+            rate: com.focusPage('#rate', "#finishModal"),
+            remake: com.focusPage('#remake', "#finishModal"),
         },
 
         modals: {
             bindOccessoriesModal: com.focusPage("#bindOccessoriesModal"),
+            finishModal: com.focusPage("#finishModal"),
         },
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function (a) {
 
+            com.clearValidator();
+        }),
         status: {},
         isEnter: {},
         isLift: {},
@@ -24,7 +32,7 @@ $(function() {
         pageType: params.urlLoadParams.type,
     };
 
-    com.post(api.ds.manifest, {}, function(res) {
+    com.post(api.ds.manifest, {}, function (res) {
 
         occessories.status = res.occessoriesStatus.split("key", "value");
         occessories.isEnter = res.occessoriesisEnter.split("key", "value");
@@ -34,7 +42,7 @@ $(function() {
     }, null, false);
 
     var url = api.inventory.pageOccessories;
-    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift', 'inventory-accessories-createTime', ];
+    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift', 'inventory-accessories-createTime',];
     var options = {};
 
     if (occessories.pageType == "supplier") {
@@ -65,9 +73,15 @@ $(function() {
         });
     }
 
-    occessories.modals.bindOccessoriesModal.on("hide.bs.modal", function(e) {
+    occessories.modals.bindOccessoriesModal.on("hide.bs.modal", function (e) {
 
         com.cleanItems(occessories.items);
+    });
+
+    occessories.modals.finishModal.on("hide.bs.modal", function (e) {
+        com.cleanItems(occessories.items);
+        com.focusPage(".occessories").remove();
+        searcher.doSearch();
     });
 
     com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
@@ -109,7 +123,7 @@ $(function() {
         name: "厂商",
         prop: "supplier.currentName",
         clazz: "grey"
-    },{
+    }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
@@ -119,7 +133,7 @@ $(function() {
         name: "送货时间",
         prop: "deliveTime",
         clazz: "green",
-        show: function(v) {
+        show: function (v) {
 
             return [2, 3, 4].indexOf(v.status) != -1;
         }
@@ -128,7 +142,7 @@ $(function() {
         name: "到货时间",
         prop: "receiveTime",
         clazz: "green",
-        show: function(v) {
+        show: function (v) {
 
             return [3, 4].indexOf(v.status) != -1;
         }
@@ -137,7 +151,7 @@ $(function() {
         name: "结算时间",
         prop: "balanceTime",
         clazz: "green",
-        show: function(v) {
+        show: function (v) {
 
             return [4].indexOf(v.status) != -1;
         }
@@ -181,7 +195,17 @@ $(function() {
         name: "说明",
         prop: "content",
         clazz: "grey"
-    }, ];
+    }, {
+        field: "rate",
+        name: "评分",
+        prop: "rate",
+        clazz: "grey"
+    }, {
+        field: "remake",
+        name: "评价",
+        prop: "remake",
+        clazz: "grey"
+    },];
 
     var searcher = new Searcher();
 
@@ -194,7 +218,7 @@ $(function() {
     var linebtns = [{
         name: "到货",
         clazz: "btn-info",
-        handle: function(v) {
+        handle: function (v) {
 
             if (v.status != 2) {
                 com.showAlert(com.warning, "外辅单状态不可操作");
@@ -207,7 +231,7 @@ $(function() {
                 "occessoriesItems[0].recnum": 0
             };
 
-            com.post(api.inventory.receiveOccessories, options, function(data) {
+            com.post(api.inventory.receiveOccessories, options, function (data) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -215,32 +239,32 @@ $(function() {
 
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return occessories.pageType == "delive" && v.status == 2;
         }
     }, {
         name: "送货",
         clazz: "btn-info",
-        handle: function(v) {
+        handle: function (v) {
 
             params.manifest.status = v.status;
             params.manifest.oid = v.oid;
 
-            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
+            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function () {
 
                 searcher.doSearch();
             });
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return v.status == 1;
         }
     }, {
         name: "编辑",
         clazz: "btn-yellow",
-        handle: function(v) {
+        handle: function (v) {
 
             if (v.status != 0) {
                 com.showAlert(com.warning, "外辅单状态不可操作");
@@ -253,14 +277,14 @@ $(function() {
             com.popup4page('#layerPopUp', "views/manifest/occessories2edit.html", "外辅单 : " + v.no);
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return v.status == 0;
         }
     }, {
         name: "结算",
         clazz: "btn-danger",
-        handle: function(v) {
+        handle: function (v) {
 
             if (v.status != 3) {
                 com.showAlert(com.warning, "外辅单状态不可操作");
@@ -269,48 +293,70 @@ $(function() {
 
             params.manifest.oid = v.oid;
 
-            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
+            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function () {
 
                 searcher.doSearch();
             });
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return occessories.pageType == "receive" && v.status == 3;
         }
     }, {
         name: "分配",
         clazz: "btn-success",
-        handle: function(v) {
+        handle: function (v) {
 
             occessories.oid = v.oid;
             occessories.modals.bindOccessoriesModal.modal("show");
 
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return v.status == 0 || (occessories.pageType == "bind" && v.status == 1);
         }
     }, {
+        name: "完成",
+        clazz: "btn-pink",
+        handle: function (v) {
+            finish(v.oid);
+        },
+        show: function (v) {
+
+            return v.status == 4 || (occessories.pageType == "balance");
+        }
+    }, {
         name: "查看",
         clazz: "btn-info",
-        handle: function(v) {
+        handle: function (v) {
 
             params.manifest.oid = v.oid;
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
 
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return true;
         }
     }, {
+        name: "评分",
+        clazz: "btn-inverse",
+        handle: function (v) {
+
+            occessories.oid = v.oid;
+            occessories.items.remake.val(v.remake);
+            rate(v);
+
+            occessories.modals.finishModal.modal("show");
+            return false;
+        }
+    }, {
         name: "费用",
         clazz: "btn-primary",
-        handle: function(v) {
+        handle: function (v) {
 
             params.manifest.oid = v.oid;
 
@@ -318,20 +364,20 @@ $(function() {
 
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return true;
         }
     }, {
         name: "删除",
         clazz: "btn-danger",
-        handle: function(v) {
+        handle: function (v) {
 
             var options = {
                 "occessories.oid": v.oid,
             };
 
-            com.post(api.inventory.deleteOccessories, options, function(data) {
+            com.post(api.inventory.deleteOccessories, options, function (data) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -339,13 +385,134 @@ $(function() {
 
             return false;
         },
-        show: function(v) {
+        show: function (v) {
 
             return v.status == 0;
         }
-    }, ];
+    }, {
+        name: "打印",
+        clazz: "btn-warning",
+        handle: function (v) {
+            printPayment(v.decoration.orderId, v.oid, v);
+            return false;
+        },
+    }, {
+        name: "图片",
+        clazz: "btn-primary",
+        handle: function (v) {
+
+            managedrawing(v);
+            initUploadBtn(v);
+        }
+    },];
 
     searcher.line("no", lineprops, linebtns).render();
+
+    function managedrawing(v) {
+
+        com.focusPage('#inventoryDrawing').html("");
+
+        com.post(api.inventory.queryInventoryDrawing, {
+            "inventoryDrawing.sid": v.oid,
+            "inventoryDrawing.atttype": 0
+        }, function (data) {
+
+            var occessoriesPictures = data.inventoryDrawings;
+            if (occessoriesPictures && occessoriesPictures.length) {
+                $.each(occessoriesPictures, function (i, value) {
+
+                    if (value.status == 0) {
+                        appendGalleryElement("inventoryDrawing", value);
+                    }
+                });
+                com.popup4photos(com.focusPage("#inventoryDrawing"));
+            }
+        }, null, false);
+
+        occessories.drawingModal.modal("show");
+    }
+
+
+
+    function rate(v) {
+        var ratyGroupDiv = $('<div class="occessories">').appendTo(occessories.items.rate);
+        var ratyDiv = $('<div></div>').attr("id", "raty-" + v.oid).appendTo(ratyGroupDiv);
+
+        setWorkerRaty("#raty-" + v.oid, v.rate);
+        com.focusPage("#finishBtn").unbind("click");
+
+        com.focusPage("#finishBtn").click(function () {
+            var rate = parseInt(com.focusPage("#raty-" + v.oid + "-score").val());
+            var options = {};
+            options["occessories.rate"] = v.rate;
+            options["occessories.oid"] = v.oid;
+            options["occessories.rate"] = rate;
+            options["occessories.remake"] = occessories.items.remake.val();
+            com.post(api.inventory.rateOccessories, options, function (res) {
+
+                com.showAlert(com.info, "操作成功");
+                occessories.modals.finishModal.modal("hide");
+            });
+        });
+
+        return false;
+    }
+
+    function setWorkerRaty(id, raty) {
+
+        com.focusPage(id).raty({
+            path: './assets/altogether/images/',
+            start: raty,
+            number: 10,
+            name: ""
+        });
+    }
+
+
+    function initUploadBtn(v) {
+
+        com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 5, function (data) {
+            var options = {};
+            options["inventoryDrawing.sid"] = v.oid;
+            options["inventoryDrawing.name"] = data.strutsUploadsFileName;
+            options["inventoryDrawing.path"] = data.resUrl;
+            options["inventoryDrawing.type"] = 0;
+            options["inventoryDrawing.atttype"] = 0;
+            com.post(api.inventory.addInventoryDrawing, options, function (res) {
+
+                var salesPicture = res.inventoryDrawing;
+
+                appendGalleryElement("inventoryDrawing", salesPicture);
+
+                com.popup4photos("#inventoryDrawing");
+
+            });
+            searcher.doSearch();
+        });
+    }
+
+    function appendGalleryElement(galleryId, value) {
+
+        var gallery = com.focusPage("#" + galleryId);
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.idid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.path, 150, 150, value.name, null, 0);
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
+
+            com.post(api.inventory.deleteInventoryDrawing, {
+                "inventoryDrawing.idid": value.idid
+            }, function (res) {
+
+                com.focusPage("#gallery_li" + value.idid).remove();
+            });
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+    }
 
     function saveData() {
 
@@ -357,11 +524,32 @@ $(function() {
             'occessories.supplier.uid': com.typeahead(occessories.items.supplier),
         };
 
-        com.post(api.inventory.bindOccessories, options, function(res) {
+        com.post(api.inventory.bindOccessories, options, function (res) {
 
             com.showAlert(com.info, "操作成功");
             occessories.modals.bindOccessoriesModal.modal("hide");
             searcher.doSearch();
         });
     }
+
+    function printPayment(orderId, oid, v) {
+
+        params.manifest.occessories = v;
+
+        com.popup("外购辅料单: " + orderId, api.index.occessoriesPrintIndex.url, null, null, true);
+    }
+
+    function finish(oid) {
+        var options = {
+            "occessories.oid": oid,
+        };
+        com.post(api.inventory.finishOccessories, options, function (res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+        });
+    }
+
+
 });

@@ -75,10 +75,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
 			DecorationActivityItemVO decorationActivityItemVO = new DecorationActivityItemVO();
-			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("receiveUserId"));
+			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("receiver"));
 
-			decorationActivityItemVO.setReceiveUserId(new UserBaseVO());
-			BeanUtil.copyProperties(decorationActivityItemPO.getReceiveUserId(), decorationActivityItemVO.getReceiveUserId(), Arrays.asList("dept", "duty"));
+			decorationActivityItemVO.setReceiver(new UserBaseVO());
+			BeanUtil.copyProperties(decorationActivityItemPO.getReceiver(), decorationActivityItemVO.getReceiver(), Arrays.asList("dept", "duty"));
 
 			decorationActivityItemVOs.add(decorationActivityItemVO);
 		}
@@ -88,7 +88,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException {
+	public int addDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
 
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemVO.getAsid());
 
@@ -96,17 +96,21 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(240003, "奖品不存在");
 		}
 
+		UserPO creater = userDao.queryUserByUserId(userId);
+
 		DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
 
-		BeanUtil.copyProperties(decorationActivityItemVO, decorationActivityItemPO);
+		BeanUtil.copyProperties(decorationActivityItemVO, decorationActivityItemPO, Arrays.asList("receiver"));
 
 		decorationActivityItemPO.setAid(decorationActivityItemVO.getAid());
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 		decorationActivityItemPO.setAsid(awardStockPO.getAsId());
-		decorationActivityItemPO.setReceiveUserName("");
 		decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
 		decorationActivityItemPO.setIsStock(DecorationActivityItemPO.ISSTOCK_UNCAL_INT);
 		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
+
+		decorationActivityItemPO.setCuid(creater.getUid());
+		decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityItemDao.save(decorationActivityItemPO);
 
@@ -120,19 +124,19 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
-		decorationActivityItemPO.setReceiveUserId(operater);
-		decorationActivityItemPO.setReceiveUserName(operater.getCurrentName());
+		decorationActivityItemPO.setReceiver(operater);
 		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
@@ -165,11 +169,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -187,8 +191,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		UserPO receiver = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
-		decorationActivityItemPO.setReceiveUserId(receiver);
-		decorationActivityItemPO.setReceiveUserName(receiver.getCurrentName());
+		decorationActivityItemPO.setReceiver(receiver);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
@@ -204,18 +207,18 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
-		decorationActivityItemPO.setReceiveUserId(operater);
-		decorationActivityItemPO.setReceiveUserName(operater.getCurrentName());
+		decorationActivityItemPO.setReceiver(operater);
+		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
@@ -248,18 +251,17 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_RECEIVE_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		UserPO receiver = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_WAIT_INT);
-		decorationActivityItemPO.setReceiveUserId(receiver);
-		decorationActivityItemPO.setReceiveUserName(receiver.getCurrentName());
+		decorationActivityItemPO.setReceiver(receiver);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
@@ -273,13 +275,13 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -291,8 +293,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RETREAT_INT);
-		decorationActivityItemPO.setReceiveUserId(operater);
-		decorationActivityItemPO.setReceiveUserName(operater.getCurrentName());
+		decorationActivityItemPO.setReceiver(operater);
+		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
@@ -323,13 +325,13 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_DISCOUNT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -354,13 +356,13 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
+			throw new FLException(140030, "装修活动物品不存在");
 		}
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_INIT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
-			throw new FLException(140057, "订单活动奖品不可操作");
+			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
@@ -429,15 +431,31 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		String orderId = decorationActivityItemVO.getOrderId();
 
-		System.out.println(String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		System.out.println(String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托设计师代领转交您，点【详情】查看", orderId), String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托设计师代领转交您，点【详情】查看", orderId), String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmDecorationActivityItem(List<DecorationActivityItemVO> decorationActivityItems) throws FLException {
+	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationVO.getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (decorationVO.getCustomer().getPhone() == null || !decorationVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
+			throw new FLException(130115, "客户电话验证失败");
+		}
 
 		for (DecorationActivityItemVO decorationActivityItem : decorationActivityItems) {
 
@@ -452,5 +470,4 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		return 0;
 	}
-
 }

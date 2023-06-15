@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.quotation.vo.SelectionVO;
 import com.fanglin.utils.Paging;
 
@@ -19,9 +20,11 @@ public interface SelectionService {
 
 	public int addSelection(Long qid, String userId) throws FLException;
 
+	public int updateSelection(SelectionVO selectionVO) throws FLException;
+
 	public int updateSelectionForAdvance(SelectionVO selectionVO) throws FLException;
 
-	public int affirmSelection(SelectionVO selectionVO, int company) throws FLException;
+	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO) throws FLException;
 
 	public void sendSelection(SelectionVO selectionVO) throws FLException;
 

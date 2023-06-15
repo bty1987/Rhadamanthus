@@ -29,6 +29,8 @@ public class DecorationPaymentVO implements Serializable {
 
 	private Short sort;
 
+	private String platform;
+
 	public Long getDpid() {
 		return dpid;
 	}
@@ -108,6 +110,14 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setSort(Short sort) {
 		this.sort = sort;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 
 }

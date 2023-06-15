@@ -35,6 +35,8 @@ public class ProtationItemVO implements Serializable {
 
 	private Short type;
 
+	private Short areaCale;
+
 	private String content;
 
 	public Long getPiid() {
@@ -99,6 +101,14 @@ public class ProtationItemVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getAreaCale() {
+		return areaCale;
+	}
+
+	public void setAreaCale(Short areaCale) {
+		this.areaCale = areaCale;
 	}
 
 	public String getContent() {

@@ -12,6 +12,7 @@
         decorationStatus: {},
         repairStatus: {},
         balanceStatus: {},
+        busitype: {},
 
         orderStatus: [],
         businessDepartments: [],
@@ -413,6 +414,15 @@
         order.signItems.conpany.bindData(res.companys, "cid", "name", false);
     });
 
+    com.post(api.data.queryDecorationBusitype, {}, function(res) {
+
+        $.each(res.decorationBusitypes, function(i, v) {
+
+            order.busitype[v.dbid] = v.name;
+
+        });
+    });
+
     order.repairItems.status.bindData(constant.decoration.decoration.repairStatus.datas, "key", "value");
 
     order.decorationStatus = constant.decoration.decoration.status.keys;
@@ -537,7 +547,16 @@
                                 propertyArr.push(["折扣:", com.checkNull(v.discount, 10), "blue"]);
                                 break;
                             case "precontractPrice":
-                                propertyArr.push(["预签额:", v.precontractPrice, "blue"]);
+                                var _text = $("<text>预签额:</text>");
+                                var _info = null;
+
+                                if (v.precontractPrice != 0) {
+                                    _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
+
+                                        netPerformancep(_text, v);
+                                    });
+                                }
+                                propertyArr.push([_text, v.precontractPrice, "blue", _info]);
                                 break;
                             case "orderTotalPrice":
                                 var _text = $("<text>签单额:</text>");
@@ -546,7 +565,7 @@
                                 if ([constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_TERMINATION_INT, constant.decoration.decoration.STATUS_FINAL_INT].contains(v.status)) {
                                     _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
 
-                                        netPerformance(_text, v);
+                                        netPerformanceo(_text, v);
                                     });
                                 }
                                 propertyArr.push([_text, v.orderTotalPrice, "blue", _info]);
@@ -1124,8 +1143,31 @@
             });
         };
 
-        // 净业绩
-        var netPerformance = function(btn, decoration) {
+        // 签单额净业绩
+        var netPerformanceo = function(btn, decoration) {
+
+            var quotation = {};
+            com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                "quotation.orderId": decoration.orderId
+            }, function(res) {
+
+                quotation = res.quotation;
+            }, null, false);
+            var notpoint = 0;// 非业务人员提点金额
+
+            if (decoration.notSalesmanRate > 0 && decoration.notSalesmanRate < 1) {
+                notpoint = utils.accMul(utils.accAdd(quotation.disPrice, utils.accAdd(quotation.undisPrice, quotation.trafficPrice)), decoration.notSalesmanRate);
+            } else {
+                notpoint = decoration.notSalesmanRate;
+            }
+
+            // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-非计入业绩
+            var netPerformance = utils.accSub(utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, notpoint), decoration.couponCut), decoration.thingCut), quotation.unachePrice);
+            com.showTip(btn, "净业绩:" + netPerformance);
+        };
+
+        // 预签额净业绩
+        var netPerformancep = function(btn, decoration) {
 
             var quotation = {};
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
@@ -1135,9 +1177,16 @@
                 quotation = res.quotation;
             }, null, false);
 
-            var feiTi = utils.accMul(utils.accAdd(quotation.disPrice, utils.accAdd(quotation.undisPrice, quotation.trafficPrice)), decoration.notSalesmanRate);
-            // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-非计入业绩
-            var netPerformance = utils.accSub(utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, feiTi), decoration.couponCut), decoration.thingCut), quotation.unachePrice);
+            var notpoint = 0;
+
+            if (decoration.notSalesmanRate > 0 && decoration.notSalesmanRate < 1) {
+                notpoint = utils.accMul(utils.accAdd(quotation.disPrice, utils.accAdd(quotation.undisPrice, quotation.trafficPrice)), decoration.notSalesmanRate);
+            } else {
+                notpoint = decoration.notSalesmanRate;
+            }
+
+            // 净业绩 = 预签额 - 物品金额 - 非提金额
+            var netPerformance = utils.accSub(utils.accSub(decoration.precontractPrice, decoration.thingCut), notpoint);
             com.showTip(btn, "净业绩:" + netPerformance);
         };
 
@@ -1249,10 +1298,17 @@
                 order.drawContractModal.modal("show");
 
                 var contract = utils.accAdd(utils.accAdd(utils.accMul(res.quotation.disPrice, 0.88), res.quotation.undisPrice), utils.accAdd(res.quotation.trafficPrice, res.quotation.managePrice));
-                var notpoint = utils.accMul(utils.accAdd(utils.accAdd(res.quotation.disPrice, res.quotation.undisPrice), res.quotation.trafficPrice), notSalesmanRate);
+                var notpoint = 0;
+
+                if (notSalesmanRate > 0 && notSalesmanRate < 1) {
+                    notpoint = utils.accMul(utils.accAdd(utils.accAdd(res.quotation.disPrice, res.quotation.undisPrice), res.quotation.trafficPrice), notSalesmanRate);
+                } else {
+                    notpoint = notSalesmanRate;
+                }
 
                 var Offer = utils.accAdd(coupon, thing);
-                netperfor = utils.accSub(utils.accSub(orderTotalPrice, utils.accAdd(coupon, thing)), utils.accMul(utils.accAdd(res.quotation.undisPrice, utils.accAdd(res.quotation.trafficPrice, res.quotation.disPrice)), notSalesmanRate));
+
+                netperfor = utils.accSub(utils.accSub(orderTotalPrice, utils.accAdd(coupon, thing)), notpoint);
                 comperfor = utils.changeTwoDecimal(utils.accDiv(utils.accAdd(utils.accSub(utils.accMul(utils.accSub(contract, notpoint), 0.38), Offer), utils.accSub(orderTotalPrice, contract)), 0.38));
 
                 var options = {
@@ -1477,13 +1533,14 @@
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['面积', 'house.buildArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness']],
+                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['面积', 'house.buildArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype']],
                 list: res.paging.data
             }, function(v) {
 
                 v.status = order.decorationStatus[v.status];
                 v.projectStatus = order.projectStatusArr[v.projectStatus];
                 v.typeness = order.typeness[v.typeness];
+                v.busitype = order.busitype[v.busitype];
                 if ([constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_TERMINATION_INT, constant.decoration.decoration.STATUS_FINAL_INT].indexOf(v.status) == -1)
                     v.house.houseNumber = '';
             });

@@ -119,7 +119,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		UserPO creater = userdDao.queryUserByUserId(userId);
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.TYPE_CG_INT, awardStockPO.getStoreroom(), awardStockPO.getIsStock(), awardStockVO.getPrice(), awardStockVO.getNum(), awardStockVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), awardStockPO.getIsStock(), awardStockVO.getPrice(), awardStockVO.getNum(), awardStockVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
 	}
@@ -169,7 +169,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		UserPO creater = userdDao.queryUserByUserId(userId);
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_XG_INT, awardStockVO.getSubtype(), awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_XG_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
 
 		awardStockDao.update(awardStockPO);
 		awardRecordDao.save(awardRecordPO);
@@ -197,7 +197,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		UserPO creater = userdDao.queryUserByUserId(userId);
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_CG_INT, awardStockVO.getSubtype(), awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
 	}

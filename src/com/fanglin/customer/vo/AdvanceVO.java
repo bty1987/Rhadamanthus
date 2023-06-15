@@ -18,6 +18,8 @@ public class AdvanceVO implements Serializable {
 
 	private Long zhenglinBalance;
 
+	private String platform;
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -64,6 +66,14 @@ public class AdvanceVO implements Serializable {
 
 	public void setZhenglinBalance(Long zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 
 }

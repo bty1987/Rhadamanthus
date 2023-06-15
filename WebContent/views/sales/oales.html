@@ -31,7 +31,7 @@
                         <div class="form-group serve">
                             <label class="col-md-3 control-label no-padding-right orange" for="brandName">品牌</label>
                             <div class="col-sm-8">
-                                <input type="text" class="col-xs-8 m-wrap v_required" id="brandName">
+                                <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="brandName">
                             </div>
                         </div>
                         <div class="form-group serve">
@@ -43,7 +43,13 @@
                         <div class="form-group serve">
                             <label class="col-md-3 control-label no-padding-right orange" for="service">服务管家</label>
                             <div class="col-sm-8">
-                                <input type="text" class="col-xs-8 m-wrap v_required" id="service">
+                                <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="service">
+                            </div>
+                        </div>
+                        <div class="form-group serve">
+                            <label class="col-md-3 control-label no-padding-right orange" for="channer">渠道</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="channer">
                             </div>
                         </div>
                         <div class="form-group material">
@@ -55,7 +61,7 @@
                         <div class="form-group material">
                             <label class="col-md-3 control-label no-padding-right orange" for="materialer">主材员</label>
                             <div class="col-sm-8">
-                                <input type="text" class="col-xs-8 m-wrap v_required" id="materialer">
+                                <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="materialer">
                             </div>
                         </div>
                         <div class="form-group material">
@@ -127,5 +133,5 @@
 </div>
 <div id="oalesPayPopUp" class="portlet box"></div>
 <script type="text/javascript">
-    $.loadScript(['js/utils/salesPageUtils.js','js/sales/oales.js', 'js/com/utils.js']);
+    $.loadScript(['js/utils/salesPageUtils.js','js/sales/oales.js']);
 </script>

@@ -478,18 +478,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		Long advance = materialPaymentVO.getAdvance();
 
-		if (materialPaymentVO.getAdvance() != null && materialPaymentVO.getAdvance() != 0) {
-			materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
-			materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
-			realMoney = Arith.add(materialPaymentVO.getAdvance(), realMoney);
-		}
-
-		if (materialPaymentVO.getCoupon() != null && materialPaymentVO.getCoupon() != 0) {
-			materialReceiptPO.setCoupon(materialPaymentVO.getCoupon());
-			materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
-			realMoney = Arith.add(materialPaymentVO.getCoupon(), realMoney);
-		}
-
 		if (materialPaymentVO.getCash() != null && materialPaymentVO.getCash() != 0) {
 			materialReceiptPO.setCash(materialPaymentVO.getCash());
 			materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
@@ -506,10 +494,23 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			realMoney = Arith.add(materialPaymentVO.getCheckv(), realMoney);
 		}
 
+		if (materialPaymentVO.getAdvance() != null && materialPaymentVO.getAdvance() != 0) {
+			materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
+			materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
+			realMoney = Arith.add(materialPaymentVO.getAdvance(), realMoney);
+		}
+
+		if (materialPaymentVO.getCoupon() != null && materialPaymentVO.getCoupon() != 0) {
+			materialReceiptPO.setCoupon(materialPaymentVO.getCoupon());
+			materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
+			realMoney = Arith.add(materialPaymentVO.getCoupon(), realMoney);
+		}
+
 		if (materialPaymentPO.getReferMoney() != realMoney) {
 			throw new FLException(150008, "款项不能进行收款");
 		}
 
+		materialReceiptPO.setRealMoney(materialPaymentVO.getRealMoney());
 		materialReceiptPO.setComment(materialPaymentVO.getComment());
 		materialPaymentPO.setPaymentStatus(MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT);
 
@@ -617,27 +618,30 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		Long checkv = materialReceiptVO.getCheckv();
 		Long coupon = materialReceiptVO.getCoupon();
 
+		if (cash != null && cash != 0) {
+			materialReceiptPO.setCash(materialReceiptVO.getCash());
+			materialReceiptPO.setCashInfo(materialReceiptVO.getCashInfo());
+			total = Arith.add(total, materialReceiptVO.getCash());
+		}
+
+		if (bank != null && bank != 0) {
+			materialReceiptPO.setBank(materialReceiptVO.getBank());
+			materialReceiptPO.setBankInfo(materialReceiptVO.getBankInfo());
+			total = Arith.add(total, materialReceiptVO.getBank());
+		}
+
+		if (checkv != null && checkv != 0) {
+			materialReceiptPO.setCheckv(materialReceiptVO.getCheckv());
+			materialReceiptPO.setCheckvBank(materialReceiptVO.getCheckvBank());
+			total = Arith.add(total, materialReceiptVO.getCheckv());
+		}
+
 		if (advance != null && advance != 0) {
 			materialReceiptPO.setAdvance(materialReceiptVO.getAdvance());
 			materialReceiptPO.setAdvanceType(materialReceiptVO.getAdvanceType());
 			total = Arith.add(total, materialReceiptVO.getAdvance());
 		}
 
-		if (cash != null && cash != 0) {
-			materialReceiptPO.setCash(materialReceiptVO.getCash());
-			materialReceiptPO.setCashInfo(materialReceiptVO.getCashInfo());
-			total = Arith.add(total, materialReceiptVO.getCash());
-		}
-		if (bank != null && bank != 0) {
-			materialReceiptPO.setBank(materialReceiptVO.getBank());
-			materialReceiptPO.setBankInfo(materialReceiptVO.getBankInfo());
-			total = Arith.add(total, materialReceiptVO.getBank());
-		}
-		if (checkv != null && checkv != 0) {
-			materialReceiptPO.setCheckv(materialReceiptVO.getCheckv());
-			materialReceiptPO.setCheckvBank(materialReceiptVO.getCheckvBank());
-			total = Arith.add(total, materialReceiptVO.getCheckv());
-		}
 		if (coupon != null && coupon != 0) {
 			materialReceiptPO.setCoupon(materialReceiptVO.getCoupon());
 			materialReceiptPO.setCouponInfo(materialReceiptVO.getCouponInfo());
@@ -645,11 +649,13 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
+
 		if (userPO != null) {
 			materialReceiptPO.setCollecter(userPO);
 			materialReceiptPO.setCollecterName(userPO.getCurrentName());
 		}
 
+		materialReceiptPO.setRealMoney(materialReceiptVO.getRealMoney());
 		materialReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		materialReceiptPO.setComment(materialReceiptVO.getComment());
 		materialReceiptPO.setType(MaterialReceiptPO.RECEIPT_TYPE_COLLECT_INT);
@@ -854,9 +860,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
+
 		if (userPO != null) {
 			materialReceiptPO.setCollecterName(userPO.getCurrentName());
 		}
+
+		materialReceiptPO.setRealMoney(materialPaymentVO.getRealMoney());
 		materialReceiptPO.setCollecter(userPO);
 		materialReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 		materialReceiptPO.setType(MaterialReceiptPO.RECEIPT_TYPE_REFUND_INT);
@@ -943,6 +952,8 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+
+		materialReceiptPO.setRealMoney(materialReceiptVO.getRealMoney());
 
 		materialReceiptDao.update(materialReceiptPO);
 

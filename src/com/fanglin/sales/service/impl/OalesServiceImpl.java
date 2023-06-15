@@ -13,6 +13,7 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -22,6 +23,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.OalesDao;
+import com.fanglin.sales.dao.OalesPayDao;
 import com.fanglin.sales.po.OalesPO;
 import com.fanglin.sales.service.OalesService;
 import com.fanglin.sales.vo.OalesVO;
@@ -54,6 +56,9 @@ public class OalesServiceImpl implements OalesService {
 	@Autowired
 	private CountingService countingService;
 
+	@Autowired
+	private OalesPayDao oalesPayDao;
+
 	@Override
 	public void pageOales(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException {
 
@@ -62,13 +67,16 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
+			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
 
 			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(oalesPO.getChanner(), oalesVO.getChanner(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(oalesPO.getDept(), oalesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(oalesPO.getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
 			BeanUtil.copyProperties(oalesPO.getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(oalesPO.getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
 
@@ -88,13 +96,16 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
+			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
 
 			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(oalesPO.getChanner(), oalesVO.getChanner(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(oalesPO.getDept(), oalesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(oalesPO.getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
 			BeanUtil.copyProperties(oalesPO.getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(oalesPO.getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
 
@@ -119,6 +130,8 @@ public class OalesServiceImpl implements OalesService {
 		UserPO creater = userDao.queryUserByUserId(userId);
 		UserPO servicer = userDao.queryUserByUserId(oalesVO.getServicer().getUserId());
 
+		UserPO channer = userDao.queryUserByUserId(oalesVO.getChanner().getUserId());
+
 		BrandPO brandPO = brandDao.get(oalesVO.getBid());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
@@ -128,13 +141,16 @@ public class OalesServiceImpl implements OalesService {
 
 		OalesPO oalesPO = new OalesPO();
 
-		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
+		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
 
 		oalesPO.setNo(no);
 		oalesPO.setCompany(company);
 
 		oalesPO.setCreater(creater);
 		oalesPO.setServicer(servicer);
+		oalesPO.setChanner(channer);
+		oalesPO.setDept(channer.getDept());
+		oalesPO.setRegion(channer.getDept().getFatherDept());
 		oalesPO.setSupplier(brandPO.getSupplier());
 
 		oalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -174,7 +190,16 @@ public class OalesServiceImpl implements OalesService {
 			oalesPO.setMaterialer(materialer);
 		}
 
-		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "supplier", "creater", "servicer", "checker", "materialer"));
+		if (oalesVO.getChanner() != null) {
+
+			UserPO channer = userDao.queryUserByUserId(oalesVO.getChanner().getUserId());
+
+			oalesPO.setChanner(channer);
+			oalesPO.setDept(channer.getDept());
+			oalesPO.setRegion(channer.getDept().getFatherDept());
+		}
+
+		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "channer", "dept", "region", "supplier", "creater", "servicer", "checker", "materialer"));
 
 		oalesDao.update(oalesPO);
 	}
@@ -189,7 +214,28 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370021, "外销单不存在");
 		}
 
+		if (oalesPO.getStatus() != OalesPO.STATUS_INIT_INT) {
+			throw new FLException(370022, "外销单状态不可操作");
+		}
+
 		oalesPO.setStatus(OalesPO.STATUS_SUBMIT_INI);
+
+		oalesDao.update(oalesPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void cancelOales(OalesVO oalesVO) throws FLException {
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		if (!(oalesPO.getStatus() == OalesPO.STATUS_SUBMIT_INI || oalesPO.getStatus() == OalesPO.STATUS_REJECT_INT)) {
+			throw new FLException(370022, "外销单状态不可操作");
+		}
+		oalesPO.setStatus(OalesPO.STATUS_INIT_INT);
 
 		oalesDao.update(oalesPO);
 	}
@@ -200,8 +246,15 @@ public class OalesServiceImpl implements OalesService {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
+		if (oalesPayDao.countOalesPayByOid(oalesVO.getOid()) == 0) {
+			throw new FLException(37002, "外销付款不存在");
+		}
+
 		if (oalesPO == null) {
 			throw new FLException(370021, "外销单不存在");
+		}
+		if (oalesPO.getStatus() != OalesPO.STATUS_SUBMIT_INI && oalesPO.getStatus() != OalesPO.STATUS_REJECT_INT) {
+			throw new FLException(370022, "外销单状态不可操作");
 		}
 
 		oalesPO.setStatus(OalesPO.STATUS_CONFIRM_INI);
@@ -221,6 +274,9 @@ public class OalesServiceImpl implements OalesService {
 		if (oalesPO == null) {
 			throw new FLException(370021, "外销单不存在");
 		}
+		if (oalesPO.getStatus() != OalesPO.STATUS_CONFIRM_INI) {
+			throw new FLException(370022, "外销单状态不可操作");
+		}
 
 		oalesPO.setStatus(OalesPO.STATUS_REJECT_INT);
 		oalesPO.setChecker(checker);
@@ -230,18 +286,27 @@ public class OalesServiceImpl implements OalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void checkOales(OalesVO oalesVO) throws FLException {
+	public void checkOales(List<OalesVO> oaleses) throws FLException {
 
-		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+		for (OalesVO oalesVO : oaleses) {
 
-		if (oalesPO == null) {
-			throw new FLException(370021, "外销单不存在");
+			OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+			if (oalesPO == null) {
+				continue;
+			}
+
+			if (oalesPO.getStatus() != OalesPO.STATUS_CONFIRM_INI) {
+				continue;
+			}
+
+			oalesPO.setStatus(OalesPO.STATUS_CHECK_INT);
+
+			oalesPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+
+			oalesDao.update(oalesPO);
 		}
 
-		oalesPO.setStatus(OalesPO.STATUS_CHECK_INT);
-		oalesPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
-
-		oalesDao.update(oalesPO);
 	}
 
 	@Override
@@ -253,9 +318,26 @@ public class OalesServiceImpl implements OalesService {
 		if (oalesPO == null) {
 			throw new FLException(370021, "外销单不存在");
 		}
+		if (oalesPO.getStatus() != OalesPO.STATUS_CHECK_INT) {
+			throw new FLException(370022, "外销单状态不可操作");
+		}
 
 		oalesPO.setStatus(OalesPO.STATUS_FINISH_INI);
 		oalesPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
+		oalesDao.update(oalesPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void abateOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+		oalesPO.setStatus(OalesPO.STATUS_INVALID_INI);
 
 		oalesDao.update(oalesPO);
 	}

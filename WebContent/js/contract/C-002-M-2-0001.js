@@ -45,6 +45,10 @@ jQuery(function($) {
         com.focusPage(".customer", "#form").hide();
     }
 
+    if (contractEdit.contractArgs.type != "1") {
+        com.focusPage(".second", "#form").hide();
+    }
+
     com.post(api.common.current, {}, function(res) {
 
         contractEdit.current = new Date(res.current);
@@ -77,6 +81,7 @@ jQuery(function($) {
 
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
         com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-contract-total", "#form").val(data.orderTotalPrice);
 
         contractEdit.cover["sin-company-phone"] = customer.companyPhone;
 
@@ -87,6 +92,17 @@ jQuery(function($) {
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
     }, null, false);
+
+    com.post(api.decoration.queryDecorationHolonomy, {
+        "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId
+    }, function(res) {
+        var holonomy = res.decorationHolonomy;
+
+        if (!holonomy.materialPrice)
+            holonomy.materialPrice = 0;
+
+        com.focusPage("#con-material-total", "#form").val(holonomy.materialPrice);
+    });
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
 
@@ -119,6 +135,7 @@ jQuery(function($) {
         data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
         data["con-material-total-cn"] = utils.getCNMoney(parseFloat(data["con-material-total"]));
+        data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
 
         if (contractEdit.contractArgs.company == "1") {
             delete data["con-customer-ident"];
@@ -143,6 +160,9 @@ jQuery(function($) {
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data)
             };
+
+            console.log(data);
+            console.log(options);
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
 

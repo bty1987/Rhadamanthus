@@ -541,7 +541,7 @@ Condition.addupRule("data", {
             postData: null,
             listPath: [{
                 key: "0",
-                value: "普通"
+                value: "标准"
             }, {
                 key: "1",
                 value: "外辅"
@@ -1117,6 +1117,44 @@ Condition.addupRule("data", {
             validate: null
         }
     },
+
+    "decoration-matching-name": {
+        label: "类型名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    "decoration-busitype-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "status",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "decoration-busitype-name": {
+        label: "类型名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+
     "constant-module": {
         label: "模块",
         type: "text",
@@ -1144,5 +1182,29 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-
+    "surveyTemplate-name": {
+        label: "类型名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "surveyTemplate-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "surveyTemplateStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

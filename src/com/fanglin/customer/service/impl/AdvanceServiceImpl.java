@@ -10,6 +10,8 @@ import com.fanglin.customer.vo.AdvanceVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.po.AdvancePaymentPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 
 @Service("advanceOrderService")
 @Transactional(readOnly = true)
@@ -21,10 +23,23 @@ public class AdvanceServiceImpl implements AdvanceService {
 	@Autowired
 	private DecorationDao decorationDao;
 
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
 	@Override
 	public AdvanceVO queryCusAdvance(String orderId) {
 
+		String platform = "";
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", decorationPO.getGrade()), decorationPO.getCompany());
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", decorationPO.getCompany());
+		}
+
+		if (systemConfigPO != null) platform = systemConfigPO.getValue();
 
 		AdvancePaymentPO advancePaymentPO = advanceDao.queryCusAdvance(orderId);
 
@@ -36,9 +51,9 @@ public class AdvanceServiceImpl implements AdvanceService {
 			advanceVO.setMaterialBalance(advancePaymentPO.getMaterialBalance());
 			advanceVO.setProjectBalance(advancePaymentPO.getProjectBalance());
 			advanceVO.setZhenglinBalance(advancePaymentPO.getZhenglinBalance());
-		}
 
-		if (decorationPO.getCompany() != 2) advanceVO.setOrderId(orderId);
+			advanceVO.setPlatform(platform);
+		}
 
 		return advanceVO;
 	}

@@ -22,6 +22,8 @@ public class BrandVO implements java.io.Serializable {
 
 	private String categoryName;
 
+	private String comment;
+
 	private int company;
 
 	private String kino;
@@ -117,6 +119,14 @@ public class BrandVO implements java.io.Serializable {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public int getCompany() {

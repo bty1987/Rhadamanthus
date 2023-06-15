@@ -16,6 +16,10 @@ public interface ServicePaymentService {
 
 	public List<ServicePaymentVO> queryServicePaymentForNotInitBySrId(ServiceReceiptVO serviceReceiptVO);
 
+	public ServicePaymentVO queryServicePaymentBySpid(ServicePaymentVO servicePayment);
+
+	public void makeServicePayment(ServicePaymentVO servicePayment, String cuid, int company) throws FLException;
+
 	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> ptids, String cuid, Integer company) throws FLException;
 
 	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
@@ -25,5 +29,7 @@ public interface ServicePaymentService {
 	public int confirmServicePayment(List<Long> spids, String userId) throws FLException;
 
 	public void updateServicePayment(ServicePaymentVO servicePayment, ServiceReceiptVO serviceReceipt) throws FLException;
+
+	public void sendServicePayment(ServicePaymentVO servicePaymentVO) throws FLException;
 
 }

@@ -12,4 +12,6 @@ public interface ConstantDao extends Dao<ConstantPO> {
 	public List<ConstantPO> pageConstant(Paging paging, List<Filter> filters);
 
 	public List<ConstantPO> queryConstant(String module, String clazz, String type);
+
+	public ConstantPO queryConstant(String module, String clazz, String type, String key);
 }

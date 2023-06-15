@@ -27,6 +27,8 @@ public class ProtationVO implements Serializable {
 
 	private Long ppid;
 
+	private String product;
+
 	private String orderId;
 
 	private DecorationVO decoration;
@@ -81,6 +83,14 @@ public class ProtationVO implements Serializable {
 
 	private Long totalProfit;
 
+	private Long accdPrice;
+
+	private Long accmPrice;
+
+	private Integer discount;
+
+	private Integer manageRate;
+
 	private String comment;
 
 	public ProtationVO() {
@@ -91,6 +101,7 @@ public class ProtationVO implements Serializable {
 		super();
 		this.decoration = decoration;
 		this.creater = creater;
+
 	}
 
 	public Long getPid() {
@@ -107,6 +118,14 @@ public class ProtationVO implements Serializable {
 
 	public void setPpid(Long ppid) {
 		this.ppid = ppid;
+	}
+
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
 	}
 
 	public String getOrderId() {
@@ -324,6 +343,38 @@ public class ProtationVO implements Serializable {
 
 	public void setTotalProfit(Long totalProfit) {
 		this.totalProfit = totalProfit;
+	}
+
+	public Long getAccdPrice() {
+		return accdPrice;
+	}
+
+	public void setAccdPrice(Long accdPrice) {
+		this.accdPrice = accdPrice;
+	}
+
+	public Long getAccmPrice() {
+		return accmPrice;
+	}
+
+	public void setAccmPrice(Long accmPrice) {
+		this.accmPrice = accmPrice;
+	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
+	public Integer getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(Integer manageRate) {
+		this.manageRate = manageRate;
 	}
 
 	public String getComment() {

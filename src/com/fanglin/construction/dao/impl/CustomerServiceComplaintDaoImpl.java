@@ -24,38 +24,45 @@ import com.fanglin.utils.Paging;
 @Repository("customerServiceComplaintDao")
 public class CustomerServiceComplaintDaoImpl extends DaoImpl<CustomerServiceComplaintPO> implements CustomerServiceComplaintDao {
 
-	public CustomerServiceComplaintDaoImpl(){
+	public CustomerServiceComplaintDaoImpl() {
 		super(CustomerServiceComplaintPO.class);
 	}
 
 	@Override
-	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaint(Paging paging, List<Filter> filters){
-		
+	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaint(Paging paging, List<Filter> filters) {
+
 		PagingQuery<CustomerServiceComplaintPO> query = pagingQuery(paging, CustomerServiceComplaintPO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
 
 	@Override
-	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaintByOrderId(Paging paging, List<Filter> filters, String orderId){
-		
+	public List<CustomerServiceComplaintPO> pageCustomerServiceComplaintByOrderId(Paging paging, List<Filter> filters, String orderId) {
+
 		PagingQuery<CustomerServiceComplaintPO> query = pagingQuery(paging, CustomerServiceComplaintPO.class);
-		
+
 		query.add(query.getCriterion(CustomerServiceComplaintPO.COLUMN_ORDERID_STR, orderId, "eq"));
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.add(query.getCriterion(field, data, op));
+		}
+
 	}
 
 }

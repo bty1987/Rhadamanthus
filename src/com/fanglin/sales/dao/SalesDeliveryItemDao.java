@@ -13,6 +13,8 @@ public interface SalesDeliveryItemDao extends Dao<SalesDeliveryItemPO> {
 
 	public List<SalesDeliveryItemPO> pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, int uid);
 
+	public List<SalesDeliveryItemPO> pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, int company, int uid);
+
 	public List<SalesDeliveryItemPO> querySalesDeliveryItem(long sid);
 
 	public SalesDeliveryItemPO querySalesDeliveryItemBySiid(Long siid);

@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.TaskVO;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class PlanVO implements Serializable {

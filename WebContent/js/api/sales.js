@@ -268,6 +268,9 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["money"]
+            }, {
+                result: "paging-data-oales",
+                args: ["total", "award", "profit", "cost", "threshold"]
             }]
         },
         queryOalesPay: {
@@ -537,6 +540,14 @@ $.extend(api, {
         },
         pageSalesDeliveryItemForSupplier: {
             url: "pageSalesDeliveryItemForSupplier.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-salesItem",
+                args: ["initnum", "num"]
+            }]
+        },
+        pageSalesDeliveryItemForInstorer: {
+            url: "pageSalesDeliveryItemForInstorer.do",
             type: "query",
             tranargs: [{
                 result: "paging-data-salesItem",

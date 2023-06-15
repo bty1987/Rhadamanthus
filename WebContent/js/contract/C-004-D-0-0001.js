@@ -142,8 +142,8 @@ jQuery(function($) {
         com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
 
         com.focusPage("#con-innerarea", "#form").val(data.house.innerArea);
-        com.focusPage("#con-precontract-total", "#form").val(Math.round(utils.accSub(contractEdit.totalPrice, contractEdit.amount)));
-        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(utils.accSub(contractEdit.totalPrice, contractEdit.amount), 0.3)));
+        com.focusPage("#con-precontract-total", "#form").val(Math.round(utils.accSub(data.precontractPrice, data.couponCut)));
+        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(utils.accSub(data.precontractPrice, data.couponCut), 0.3)));
 
         contractEdit.decoration = data;
 
@@ -180,16 +180,6 @@ jQuery(function($) {
         contractEdit.totalPrice = res.protation.totalPrice;
     }, null, false);
 
-    // 获取计入款项的券总额
-    com.post(api.decoration.amountDecorationActivity, {
-        "decorationActivity.orderId": contractEdit.decorationOrderId,
-        "decorationActivityItem.isPayment": 0,
-        "decorationActivityItem.type": 0
-    }, function(res) {
-
-        contractEdit.amount = res.decorationActivity.amount;
-    }, null, false);
-
     com.post(api.decoration.queryDecorationActivityByOrderId, {
         "decorationActivity.orderId": contractEdit.decorationOrderId
     }, function(res) {
@@ -211,15 +201,28 @@ jQuery(function($) {
     }, function(res) {
 
         quotationUtils.quotationDetail.protationItems = res.protationItems;
-        console.log(res);
+    }, null, false);
+
+    com.post(api.quotation.queryProtationByPid, {
+        "protation.pid": quotationUtils.quotationDetail.protation.pid
+    }, function(res) {
+
+        protation = res;
+    }, null, false);
+
+    com.post(api.quotation.queryPresignProduceByPpid, {
+        "presignProduce.ppid": protation.protation.ppid
+    }, function(res) {
+
+        presignProduce = res.presignProduce;
     }, null, false);
 
     contractEdit.table = {
         "insertWay": 1,
-        "keyword": "家装项目列表",
+        "keyword": "家装项目预签列表",
         "pageBegin": 1,
-        "headers": ["序号", "名称", "数量", "单位", "工艺说明"],
-        "colWidthPercent": [1, 3, 1, 1, 5],
+        "headers": ["", "", ""],
+        "colWidthPercent": [3, 3, 3],
         "headersAlignment": 1,
         "cellHorizontalAlignment": 0,
         "cellVerticalAlignment": 5,
@@ -228,62 +231,95 @@ jQuery(function($) {
 
     var protationItems = {
         0:{
-            name:"基础",
-            items:[]
+            name:"标配产品",
+            items:[],
+            totals:[]
         },
         1:{
-            name:"标配",
-            items:[]
+            name:"赋能产品",
+            items:[],
+            totals:[]
         },
         2:{
-            name:"个性",
-            items:[]
+            name:"标配外功能区",
+            items:[],
+            totals:[]
         },
         3:{
-            name:"减项",
-            items:[]
+            name:"个性化产品",
+            items:[],
+            totals:[]
+        },
+        4:{
+            name:"标配产品减项",
+            items:[],
+            totals:[]
         }
     };
 
-    var index = 1;
-
+    var empowermentTotal = 0;
+    var functionTotal = 0;
+    var subtractTotal = 0;
+    protationItems[1].items.push(["项目", "数量", "金额"]);
+    protationItems[2].items.push(["项目", "数量", "金额"]);
+    protationItems[3].items.push(["项目", "数量", "金额"]);
+    protationItems[4].items.push(["项目", "数量", "金额"]);
     $.each(quotationUtils.quotationDetail.protationItems, function(i, qv) {
- 
-        if (qv.type == 0) {
 
-            qv.measurementUnit = "项";
+        if (qv.type == 0 && utils.accSub(qv.num, qv.basicNum) > 0) {
 
-            protationItems[0].items.push([ (i + 1), qv.name, qv.num, qv.measurementUnit, qv.content ? qv.content : "" ]);
-        }
+            qv.total = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, utils.accSub(qv.num, qv.basicNum))) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, utils.accSub(qv.num, qv.basicNum)), protation.protation.quoteArea));
 
-        if (qv.type == 1 || qv.type == 2) {
+            protationItems[2].items.push([qv.name, utils.accSub(qv.num, qv.basicNum), qv.total]);
 
-            qv.measurementUnit = "项";
-
-            protationItems[1].items.push([ (i + 1), qv.name, qv.num, qv.measurementUnit, qv.content ? qv.content : "" ]);
-        }
-
-        if (qv.type == 3 || qv.type == 4) {
-
-            qv.measurementUnit = "项";
-
-            protationItems[2].items.push([ (i + 1), qv.name, qv.num, qv.measurementUnit, qv.content ? qv.content : "" ]);
+            functionTotal = utils.accAdd(functionTotal, qv.total);
         }
 
         if (qv.type == 5 || qv.type == 6) {
 
-            qv.measurementUnit = "项";
+            qv.total = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
 
-            protationItems[3].items.push([ (i + 1), qv.name, qv.num, qv.measurementUnit, qv.content ? qv.content : "" ]);
+            protationItems[4].items.push([qv.name, -qv.num, qv.total]);
+
+            subtractTotal = utils.accAdd(subtractTotal, qv.total);
+        }
+
+        if (qv.type == 7 || qv.type == 8) {
+
+            qv.total = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
+
+            protationItems[1].items.push([qv.name, qv.num, qv.total]);
+
+            empowermentTotal = utils.accAdd(empowermentTotal, qv.total);
         }
     });
 
+    contractEdit.table.datas.push([presignProduce.name, '', '']);
+    contractEdit.table.datas.push(["项目", "计价面积", "金额"]);
+    contractEdit.table.datas.push([protation.protation.name, protation.protation.quoteArea, utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))]);
+    protationItems[0].items.push(["项目", "数量", "金额"]);
+    protationItems[0].items.push(["标配产品", 1, protation.protation.quotePrice]);
+    protationItems[0].items.push(["优惠金额", '', protation.protation.preferPrice]);
+    protationItems[0].items.push(["管理费收取比例", 1, protation.protation.manageRate]);
+    protationItems[0].items.push(["折后管理费", 1, protation.protation.managePrice]);
+    protationItems[3].items.push(["基础增项", 1, protation.protation.adddPrice]);
+    protationItems[3].items.push(["主材增项", 1, protation.protation.addmPrice]);
+    protationItems[0].totals.push(["小计", '', utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(protation.protation.quotePrice, protation.protation.managePrice), protation.protation.preferPrice), utils.accAdd(protation.protation.subdPrice, protation.protation.submPrice)))]);
+    protationItems[1].totals.push(["小计", '', empowermentTotal]);
+    protationItems[2].totals.push(["小计", '', functionTotal]);
+    protationItems[3].totals.push(["小计", '', utils.changeThrDecimal(utils.accAdd(protation.protation.adddPrice, protation.protation.addmPrice))]);
+    protationItems[4].totals.push(["小计", '', subtractTotal]);
     $.each(protationItems, function(i, q) {
-        contractEdit.table.datas.push([utils.getBigNumber(index++), q.name, "", "", ""]);
-        $.each(q.items, function(i, qi) {
-            contractEdit.table.datas.push(qi)
-        })
-    })
+        contractEdit.table.datas.push([q.name, '', '']);
+        $.each(q.items, function(j, qi) {
+            contractEdit.table.datas.push(qi);
+        });
+        $.each(q.totals, function(k, qt) {
+            contractEdit.table.datas.push(qt);
+        });
+    });
+
+    contractEdit.table.datas.push(["预签计价合计", '', protation.protation.totalPrice]);
 
     com.focusPage('#talkingList').click(function() {
 
@@ -320,8 +356,7 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    }
-    ;
+    };
 
     var displayFunc = (function() {
 

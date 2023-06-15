@@ -4,16 +4,17 @@ $(function() {
 
         modals: {
             updateSelectionItemModal: com.focusPage('#updateSelectionItemModal'),
-            finishSelectionItemModal: com.focusPage('#finishSelectionItemModal'),
+            refundSelectionItemModal: com.focusPage('#refundSelectionItemModal'),
         },
         btns: {
             updateBtn: com.focusPage('#updateBtn'),
-            finishBtn: com.focusPage('#finishBtn'),
+            refundBtn: com.focusPage('#refundBtn'),
         },
         items: {
             num: com.focusPage("#num"),
             comment: com.focusPage('#comment'),
             refnum: com.focusPage('#refnum'),
+            utilitynum: com.focusPage('#utilitynum')
         },
         title: com.focusPage("#myModalLabel"),
         dcomment: com.focusPage("#dcomment"),
@@ -28,68 +29,57 @@ $(function() {
         postData: '',
         editFlg: true,
 
-        url: api.quotation.pageSelectionItem,
         pageType: params.urlLoadParams.type,
-        query: ["quotation-selection-decoration-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"],
 
         selectList: [],
+
+        status: {},
+
+        pageConfig: null
+
     };
 
     if (selectionItem.pageType == "supplier") {
-        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-status", "quotation-selection-item-createTime", "quotation-selection-item-tranTime", "quotation-selection-item-checkTime", "quotation-selection-item-confirmTime", "quotation-selection-item-finishTime", "quotation-selection-item-balanceTime"])
-        selectionItem.url = api.quotation.pageSelectionItemForSupplier;
         selectionItem.postData = "selectionItemForSupplierPostData";
     } else if (selectionItem.pageType == "escorter") {
         selectionItem.escorter = true;
-        selectionItem.url = api.quotation.pageSelectionItemForEscorter;
+
         selectionItem.postData = "selectionItemForEscorterPostData";
     } else if (selectionItem.pageType == "expert") {
-        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-status", "quotation-selection-item-createTime", "quotation-selection-item-tranTime", "quotation-selection-item-checkTime", "quotation-selection-item-confirmTime", "quotation-selection-item-finishTime", "quotation-selection-item-balanceTime"])
-        selectionItem.status = {
-            "selectionItem.status": null
-        };
+
+        selectionItem.status["selectionItem.status"] = null;
         selectionItem.postData = "selectionItemForExpertPostData";
     } else if (selectionItem.pageType == "init") {
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_INIT_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_INIT_INT;
         selectionItem.postData = "selectionItemForInitPostData";
     } else if (selectionItem.pageType == "tran") {
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_TRAN_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_TRAN_INT;
         selectionItem.postData = "selectionItemForTranPostData";
     } else if (selectionItem.pageType == "check") {
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_CHECK_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_CHECK_INT;
         selectionItem.postData = "selectionItemForCheckPostData";
     } else if (selectionItem.pageType == "confirm") {
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_CONFIRM_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_CONFIRM_INT;
         selectionItem.postData = "selectionItemForConfirmPostData";
     } else if (selectionItem.pageType == "finish") {
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_FINISH_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_FINISH_INT;
         selectionItem.postData = "selectionItemForFinishPostData";
     } else if (selectionItem.pageType == "review") {
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_REVIEW_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_REVIEW_INT;
         selectionItem.postData = "selectionItemForReviewPostData";
     } else if (selectionItem.pageType == "balance") {
-        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-balanceTime"])
-        selectionItem.status = {
-            "selectionItem.status": constant.quotation().selectionItem.STATUS_BALANCE_INT
-        };
+
+        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_BALANCE_INT
         selectionItem.postData = "selectionItemForBalancePostData";
     } else if (selectionItem.pageType == "material") {
-        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-status", "quotation-selection-item-createTime", "quotation-selection-item-tranTime", "quotation-selection-item-checkTime", "quotation-selection-item-confirmTime", "quotation-selection-item-finishTime", "quotation-selection-item-balanceTime"])
-        selectionItem.status = {
-            "selectionItem.status": null
-        };
+
+        selectionItem.status["selectionItem.status"] = null;
         selectionItem.postData = "selectionItemForMaterialPostData";
     }
 
@@ -105,14 +95,16 @@ $(function() {
         com.cleanItems(selectionItem.items);
     });
 
-    selectionItem.modals.finishSelectionItemModal.on("hide.bs.modal", function() {
+    selectionItem.modals.refundSelectionItemModal.on("hide.bs.modal", function() {
 
         com.clearValidator();
         com.cleanItems(selectionItem.items);
     });
 
     selectionItem.btns.updateBtn.bindClick(updateData);
-    selectionItem.btns.finishBtn.bindClick(finishSelectionItem);
+    selectionItem.btns.refundBtn.bindClick(refundSelectionItem);
+
+    selectionItem.pageConfig = getConfig(params['urlLoadParams'].type, 8);
 
     var displayFunc = (function() {
 
@@ -142,6 +134,7 @@ $(function() {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnRefnum = $('<a></a>').addClass('btn btn-minier btn-primary').html('退数量');
             var $btnRran = $('<a></a>').addClass('btn btn-minier btn-success').html('配送');
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
             var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
@@ -185,27 +178,8 @@ $(function() {
 
             $h3.append($label.append($input).append($span));
 
-            var propertyArr = [["品牌:", v.goods.brand, "grey"], ["品类:", v.goods.category, "grey"], ["商品编号:", v.goods.no, "blue"], ["功能区:", v.areaName, "grey"], ["类型:", selectionItem.typeList[v.type], "red"], ["状态:", selectionItem.statusList[v.status], "red"], ["数量:", [2, 4].indexOf(v.type) != -1 ? -v.num : v.num, "blue"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "green"], ["配送人:", v.traner.currentName, "grey"], ["配送时间:", v.tranTime, "green"], ["审核人:", v.checker.currentName, "grey"], ["审核时间:", v.checkTime, "green"], ["确认人:", v.confirmer.currentName, "grey"], ["确认时间:", v.confirmTime, "green"], ["完结人:", v.finish.currentName, "grey"], ["完结时间:", v.finishTime, "green"], ["核对人:", v.reviewer.currentName, "grey"], ["核对时间:", v.reviewTime, "green"], ["结算人:", v.balancer.currentName, "grey"], ["结算时间:", v.balanceTime, "green"], ["备注:", v.comment, "grey"], ];
-
-            var _propertyArr = [["装修单号:", v.decoration.orderId, "blue"], ["楼盘:", v.decoration.house.village.name, "grey"], ["地址:", v.decoration.house.houseNumber, "grey"], ["建筑面积:", v.decoration.house.buildArea, "blue"], ["设计师:", v.decoration.designer.currentName, "grey"], ["业务员:", v.decoration.salesman.currentName, "grey"], ["监理:", v.decoration.supervisor.currentName != null ? v.decoration.supervisor.currentName : "无", "grey"], ["监理电话:", v.decoration.supervisor.phone != null ? v.decoration.supervisor.phone : "无", "grey"], ["跟单员:", v.decoration.escorter.currentName != null ? v.decoration.escorter.currentName : "无", "grey"], ];
-
-            if (v.status <= 1 && selectionItem.pageType != "supplier") {// 显示工程量
-                var initNumArr = ["工程量:", v.initNum, "blue"];
-
-                propertyArr.splice(7, 0, initNumArr);
-            }
-
-            if (v.status >= 4) {
-                propertyArr.splice(7, 0, ["退数量:", v.refnum, "blue"], ["剩余数量:", utils.changeThrDecimal(utils.accSub(parseFloat(v.num), parseFloat(v.refnum))), "blue"]);
-            }
-
-            if (selectionItem.pageType == "supplier" || (v.status >= 4 && selectionItem.pageType != "material")) {// 显示结算价
-                propertyArr.splice(6, 0, ["结算价:", v.postprice, "blue"], ["预算金额:", v.preprice, "blue"]);
-            }
-
-            if (selectionItem.pageType == "expert") {
-                propertyArr.splice(6, 0, ["报价版本:", v.decoration.version.name, "blue"], ["报价项单价:", v.preprice, "blue"]);
-            }
+            var propertyArr = getPropertyArr(v);
+            var propertyArrDecoration = getPropertyArrDecoration(v);
 
             $.each(propertyArr, function(index, value) {
 
@@ -215,7 +189,7 @@ $(function() {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $.each(_propertyArr, function(index, value) {
+            $.each(propertyArrDecoration, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -223,33 +197,47 @@ $(function() {
                 $liProperty.appendTo($_ulProperty);
             });
 
-            if (selectionItem.pageType == "supplier") {
-                v.status == 2 ? $divBtnWrap.append($btnConfirm) : null;
-                v.status == 4 ? $divBtnWrap.append($btnReview) : null;
-            } else {
-                switch (v.status) {
-                    case 0:
-                        $divBtnWrap.append($btnCompile).append($btnRran).append($btnDel);
-                        break;
-                    case 1:
-                        $divBtnWrap.append($btnCompile).append($btnCheck).append($btnDel);
-                        break;
-                    case 2:
-                        $divBtnWrap.append($btnConfirm).append($btnDel);
-                        break;
-                    case 3:
-                        $divBtnWrap.append($btnFinish).append($btnDel);
-                        break;
-                    case 4:
-                        $divBtnWrap.append($btnReview).append($btnDel);
-                        break;
-                    case 5:
-                        $divBtnWrap.append($btnBalance).append($btnDel);
-                        break;
-                }
-            }
+            if (selectionItem.pageConfig.pageBtn.contains("compile"))
+                $divBtnWrap.append($btnCompile);
 
-            $divBtnWrap.append($btnPrint).appendTo($h3);
+            if (selectionItem.pageConfig.pageBtn.contains("refnumBtn"))
+                $divBtnWrap.append($btnRefnum);
+
+            if (selectionItem.pageConfig.pageBtn.contains("rran"))
+                $divBtnWrap.append($btnRran);
+
+            if (selectionItem.pageConfig.pageBtn.contains("check"))
+                $divBtnWrap.append($btnCheck);
+
+            if (selectionItem.pageConfig.pageBtn.contains("confirm"))
+                $divBtnWrap.append($btnConfirm);
+
+            if (selectionItem.pageConfig.pageBtn.contains("finish"))
+                $divBtnWrap.append($btnFinish);
+
+            if (selectionItem.pageConfig.pageBtn.contains("review"))
+                $divBtnWrap.append($btnReview);
+
+            if (selectionItem.pageConfig.pageBtn.contains("balance"))
+                $divBtnWrap.append($btnBalance);
+
+            if (selectionItem.pageConfig.pageBtn.contains("delete"))
+                $divBtnWrap.append($btnDel);
+
+            if (selectionItem.pageConfig.pageBtn.contains("print"))
+                $divBtnWrap.append($btnPrint);
+
+            v.status == constant.quotation().selectionItem.STATUS_INIT_INT || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCompile.show() : $btnCompile.hide();
+            v.status == constant.quotation().selectionItem.STATUS_INIT_INT ? $btnRran.show() : $btnRran.hide();
+            v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCheck.show() : $btnCheck.hide();
+            v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? $btnConfirm.show() : $btnConfirm.hide();
+            v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? $btnFinish.show() : $btnFinish.hide();
+            v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? $btnReview.show() : $btnReview.hide();
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnBalance.show() : $btnBalance.hide();
+            v.status != constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnDel.show() : $btnDel.hide();
+
+            $divBtnWrap.appendTo($h3);
+
             $liLine.append($h3).append($ulProperty).append($_ulProperty);
 
             $btnCompile.click(function(e) {
@@ -261,6 +249,15 @@ $(function() {
                 selectionItem.dcomment.show();
                 selectionItem.modals.updateSelectionItemModal.modal("show");
             });
+
+            $btnRefnum.click(function(e) {
+
+                selectionItem.parameters.status = v.status;
+                selectionItem.parameters.siid = v.siid;
+                selectionItem.parameters.num = v.num;
+
+                selectionItem.modals.refundSelectionItemModal.modal('show');
+            })
 
             $btnRran.click(function(e) {
 
@@ -304,11 +301,13 @@ $(function() {
 
             $btnFinish.click(function(e) {
 
-                selectionItem.parameters.siid = v.siid;
-                selectionItem.parameters.num = v.num;
-                selectionItem.items.refnum.val(0);
+                com.post(api.quotation.finishSelectionItem, {
+                    "selectionItems[0].siid": v.siid
+                }, function(e) {
 
-                selectionItem.modals.finishSelectionItemModal.modal('show');
+                    searcher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             $btnReview.click(function(e) {
@@ -375,7 +374,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(selectionItem.query, "condList", selectionItem.url, function(data) {
+    searcher.init(selectionItem.pageConfig.condArr, "condList", selectionItem.pageConfig.apiPage, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", selectionItem.postData, selectionItem.status, false, null, function() {
@@ -395,38 +394,40 @@ $(function() {
             pageExportStoreImport();
         });
 
-        btns.push($checka);
+        if (selectionItem.pageConfig.pageBtn.contains("checkAll")) {
+            btns.push($checka);
+        }
 
-        if (selectionItem.pageType == "expert" || selectionItem.pageType == "supplier") {
+        if (selectionItem.pageConfig.pageBtn.contains("export")) {
             btns.push($checkaExportSelects);
         }
 
-        if (selectionItem.pageType == "init" || selectionItem.pageType == "expert") {
+        if (selectionItem.pageConfig.pageBtn.contains("batchDelivery")) {
             var $a = createbtn("batchDelivery", "批量配送", "btn-success");
             btns.push($a);
         }
 
-        if (selectionItem.pageType == "review" || selectionItem.pageType == "expert") {
+        if (selectionItem.pageConfig.pageBtn.contains("batchBalance")) {
             var $a = createbtn("batchBalance", "批量结算", "btn-info");
             btns.push($a);
         }
 
-        if (selectionItem.pageType == "tran" || selectionItem.pageType == "expert") {
+        if (selectionItem.pageConfig.pageBtn.contains("batchCheck")) {
             var $a = createbtn("batchCheck", "批量审核", "btn-warning");
             btns.push($a);
         }
 
-        if (selectionItem.pageType == "check" || selectionItem.pageType == "expert" || selectionItem.pageType == "supplier") {
+        if (selectionItem.pageConfig.pageBtn.contains("batchConfirm")) {
             var $a = createbtn("batchConfirm", "批量确认", "btn-inverse");
             btns.push($a);
         }
 
-        if (selectionItem.pageType == "confirm" || selectionItem.pageType == "expert") {
+        if (selectionItem.pageConfig.pageBtn.contains("batchFinish")) {
             var $a = createbtn("batchFinish", "批量完结", "btn-danger");
             btns.push($a);
         }
 
-        if (selectionItem.pageType == "finish" || selectionItem.pageType == "expert" || selectionItem.pageType == "supplier") {
+        if (selectionItem.pageConfig.pageBtn.contains("batchReview")) {
             var $a = createbtn("batchReview", "批量核对", "btn-pink");
             btns.push($a);
         }
@@ -458,7 +459,7 @@ $(function() {
             return false;
         }
 
-        com.post(selectionItem.url, $.extend({}, params[selectionItem.postData], {
+        com.post(selectionItem.pageConfig.apiPage, $.extend({}, params[selectionItem.postData], {
             "paging.noPage": 1
         }), function(res) {
 
@@ -521,9 +522,6 @@ $(function() {
         $.each(selectionItem.selectList, function(i, v) {
 
             options["selectionItems[" + i + "].siid"] = v;
-            if (url == api.quotation.finishSelectionItem) {
-                options["selectionItems[" + i + "].refnum"] = 0;
-            }
         });
 
         com.post(url, options, function(res) {
@@ -597,10 +595,20 @@ $(function() {
         selectionItem.modals.updateSelectionItemModal.modal("hide");
     }
 
-    function finishSelectionItem() {
+    function refundSelectionItem() {
 
-        if (com.validate('finishSelectionItemModal'))
+        if (com.validate('refundSelectionItemModal'))
             return false;
+
+        if (selectionItem.items.refnum.val() == "" && selectionItem.items.utilitynum.val() == "") {
+            com.showAlert(com.warning, '实用量与退数量需要填写一项');
+            return false;
+        }
+
+        if (selectionItem.items.refnum.val() != "" && selectionItem.items.utilitynum.val() != "") {
+            com.showAlert(com.warning, '实用量与退数量只可填写一项');
+            return false;
+        }
 
         if (selectionItem.items.refnum.val() > selectionItem.parameters.num) {
             com.showAlert(com.warning, '退数量不能大于当前数量');
@@ -608,17 +616,245 @@ $(function() {
         }
 
         var options = {
-            "selectionItems[0].refnum": selectionItem.items.refnum.val(),
-            "selectionItems[0].siid": selectionItem.parameters.siid
+            "selectionItem.refnum": selectionItem.items.refnum.val() != "" ? selectionItem.items.refnum.val() : utils.changeThrDecimal(utils.accSub(selectionItem.parameters.num, selectionItem.items.utilitynum.val())),
+            "selectionItem.siid": selectionItem.parameters.siid
         };
 
-        com.post(api.quotation.finishSelectionItem, options, function(res) {
+        com.post(api.quotation.refundSelectionItem, options, function(res) {
 
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
 
-        selectionItem.modals.finishSelectionItemModal.modal("hide");
+        selectionItem.modals.refundSelectionItemModal.modal("hide");
+    }
+
+    function getConfig(page, type) {
+
+        var pageConfig = {
+            "apiPage": null,
+            "pageBtn": [],
+            "postDataName": page + "PostData",
+            "condArr": [],
+            "extraParam": [],
+            "propertyArr": []
+        };
+
+        function packageConfig(o, props, value, subtype) {
+
+            var prop = props.shift();
+            if (props.length != 0) {
+                if (!o[prop])
+                    o[prop] = {};
+                packageConfig(o[prop], props, value, subtype);
+                return;
+            }
+
+            if (subtype == 0) {
+                o[prop] = value;
+            } else if (subtype == 1 && !o[prop]) {
+                o[prop] = [value];
+            } else if (subtype == 1 && o[prop]) {
+                o[prop].push(value);
+            }
+        }
+
+        function getApi(o, props) {
+
+            var prop = props.shift();
+
+            if (props.length == 0) {
+                return o[prop];
+            } else if (o[prop]) {
+                return getApi(o[prop], props);
+            }
+            return "";
+        }
+
+        com.post(api.right.queryQuotationFunctionRight, {
+            "quotationFunctionRight.name": page,
+            "quotationFunctionRight.type": type
+        }, function(res) {
+
+            var rights = res.quotationFunctionRights.sort(function(a, b) {
+
+                return a.quotationFunction.sort - b.quotationFunction.sort;
+            });
+
+            $.each(rights, function(i, v) {
+
+                var data = v.quotationFunction;
+
+                if (data.type == 1)
+                    data.value = getApi({
+                        "api": api
+                    }, data.value.split("."));
+
+                packageConfig(pageConfig, data.key.split("."), data.value, data.subtype);
+            });
+        }, null, false);
+
+        return pageConfig;
+    }
+
+    function getPropertyArrDecoration(v) {
+
+        var propertyArr = [];
+        $.each(selectionItem.pageConfig.propertyArr, function(pi, pv) {
+
+            switch (pv) {
+                case "decorationOrderId":
+                    propertyArr.push(["装修单号:", v.decoration.orderId, "blue"]);
+                    break;
+                case "decorationHouseVillageName":
+                    propertyArr.push(["楼盘:", v.decoration.house.village.name, "grey"]);
+                    break;
+                case "decorationHouseHouseNumber":
+                    propertyArr.push(["地址: ", v.decoration.house.houseNumber, "grey"]);
+                    break;
+                case "decorationCustomerName":
+                    propertyArr.push(["客户名: ", v.decoration.customer.name, "grey"]);
+                    break;
+                case "decorationDesignerCurrentName":
+                    propertyArr.push(["设计师: ", v.decoration.designer.currentName, "grey"]);
+                    break;
+                case "decorationSalesmanCurrentName":
+                    propertyArr.push(["业务员: ", v.decoration.salesman.currentName, "grey"]);
+                    break;
+                case "decorationHouseBuildArea":
+                    propertyArr.push(["面积: ", v.decoration.house.buildArea, "blue"]);
+                    break;
+                case "decorationStatus":
+                    propertyArr.push(["订单状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"]);
+                    break;
+                case "decorationCreateTime":
+                    propertyArr.push(["创建时间: ", v.decoration.createTime, "green"]);
+                    break;
+                case "decorationHouseClass":
+                    propertyArr.push(["房屋类型: ", v.decoration.houseClass, "grey"]);
+                    break;
+                case "decorationSupervisorCurrentName":
+                    propertyArr.push(["监理: ", v.decoration.supervisor.currentName != null ? v.decoration.supervisor.currentName : "无", "grey"]);
+                    break;
+                case "decorationSupervisorPhone":
+                    propertyArr.push(["监理电话: ", v.decoration.supervisor.phone != null ? v.decoration.supervisor.phone : "无", "grey"]);
+                    break;
+                case "decorationEscorterCurrentName":
+                    propertyArr.push(["跟单员: ", v.decoration.escorter.currentName != null ? v.decoration.escorter.currentName : "无", "grey"]);
+                    break;
+            }
+        });
+        return propertyArr;
+    }
+
+    function getPropertyArr(v) {
+
+        var propertyArr = [];
+        $.each(selectionItem.pageConfig.propertyArr, function(pi, pv) {
+
+            switch (pv) {
+                case "selectionItemGoodsBrand":
+                    propertyArr.push(["品牌:", v.goods.brand, "grey"]);
+                    break;
+                case "selectionItemGoodsCategory":
+                    propertyArr.push(["品类:", v.goods.category, "grey"]);
+                    break;
+                case "selectionItemGoodsNo":
+                    propertyArr.push(["商品编号:", v.goods.no, "blue"]);
+                    break;
+                case "areaName":
+                    propertyArr.push(["功能区:", v.areaName, "grey"]);
+                    break;
+                case "type":
+                    propertyArr.push(["类型:", selectionItem.typeList[v.type], "red"]);
+                    break;
+                case "status":
+                    propertyArr.push(["状态:", selectionItem.statusList[v.status], "red"]);
+                    break;
+                case "num":
+                    propertyArr.push(["拆单量:", [2, 4].indexOf(v.type) != -1 ? -v.num : v.num, "blue"]);
+                    break;
+                case "postprice":
+                    propertyArr.push(["结算价:", v.postprice, "blue"]);
+                    break;
+                case "preprice":
+                    propertyArr.push(["预算金额:", v.preprice, "blue"]);
+                    break;
+                case "selectionItemDecorationVersionName":
+                    propertyArr.push(["报价版本:", v.decoration.version.name, "blue"]);
+                    break;
+                case "quotationItemPrice":
+                    propertyArr.push(["报价项单价:", v.preprice, "blue"]);
+                    break;
+                case "initNum":
+                    propertyArr.push(["预算量:", v.initNum, "blue"]);
+                    break;
+                case "refnum":
+                    propertyArr.push(["退数量:", v.refnum, "blue"]);
+                    break;
+                case "utility":
+                    propertyArr.push(["实用量:", utils.changeThrDecimal(utils.accSub(parseFloat(v.num), parseFloat(v.refnum))), "blue"]);
+                    break;
+                case "selectionItemCreaterCurrentName":
+                    propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
+                    break;
+                case "createTime":
+                    propertyArr.push(["拆单时间:", v.createTime, "green"]);
+                    break;
+                case "selectionItemTranerCurrentName":
+                    propertyArr.push(["配送人:", v.traner.currentName, "grey"]);
+                    break;
+                case "tranTime":
+                    propertyArr.push(["下单时间:", v.tranTime, "green"]);
+                    break;
+                case "selectionItemCheckerCurrentName":
+                    propertyArr.push(["审核人:", v.checker.currentName, "grey"]);
+                    break;
+                case "checkTime":
+                    propertyArr.push(["审核时间:", v.checkTime, "green"]);
+                    break;
+                case "selectionItemConfirmerCurrentName":
+                    propertyArr.push(["确认人:", v.confirmer.currentName, "grey"]);
+                    break;
+                case "confirmTime":
+                    propertyArr.push(["确认时间:", v.confirmTime, "green"]);
+                    break;
+                case "selectionItemFinishCurrentName":
+                    propertyArr.push(["完结人:", v.finish.currentName, "grey"]);
+                    break;
+                case "finishTime":
+                    propertyArr.push(["完结时间:", v.finishTime, "green"]);
+                    break;
+                case "selectionItemReviewerCurrentName":
+                    propertyArr.push(["核对人:", v.reviewer.currentName, "grey"]);
+                    break;
+                case "reviewTime":
+                    propertyArr.push(["核对时间:", v.reviewTime, "green"]);
+                    break;
+                case "selectionItemBalancerCurrentName":
+                    propertyArr.push(["结算人:", v.balancer.currentName, "grey"]);
+                    break;
+                case "balanceTime":
+                    propertyArr.push(["结算时间:", v.balanceTime, "green"]);
+                    break;
+                case "comment":
+                    propertyArr.push(["备注:", v.comment, "grey"]);
+                    break;
+                case "selectionItemSupplierUserName":
+                    propertyArr.push(["厂商:", v.supplier.userName, "grey"]);
+                    break;
+                case "selectionItemSupplierPhone":
+                    propertyArr.push(["电话:", v.supplier.phone, "grey"]);
+                    break;
+                case "selectionItemSelectionSplitterCurrentName":
+                    propertyArr.push(["拆单员:", v.selection.splitter.currentName, "grey"]);
+                    break;
+                case "selectionItemSelectionTranerCurrentName":
+                    propertyArr.push(["下单员:", v.selection.traner.currentName, "grey"]);
+                    break;
+            }
+        });
+        return propertyArr;
     }
 
 });

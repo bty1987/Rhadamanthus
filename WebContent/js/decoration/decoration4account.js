@@ -37,12 +37,17 @@ $(function() {
             addMatch: com.focusPage("#addMatch", "#decorationAccountContent"),
             addUncalPrice: com.focusPage("#addUncalPrice", "#decorationAccountContent"),
             addDone: com.focusPage("#addDone", "#decorationAccountContent"),
+            addTaxPrice: com.focusPage("#addTaxPrice", "#decorationAccountContent"),
+            addTotal: com.focusPage("#addTotal", "#decorationAccountContent"),
             minusFoldFrontTotal: com.focusPage("#minusFoldFrontTotal", "#decorationAccountContent"),
             minusManagePrice: com.focusPage("#minusManagePrice", "#decorationAccountContent"),
             minusMatch: com.focusPage("#minusMatch", "#decorationAccountContent"),
             minusUncalPrice: com.focusPage("#minusUncalPrice", "#decorationAccountContent"),
             minusDone: com.focusPage("#minusDone", "#decorationAccountContent"),
+            minusTaxPrice: com.focusPage("#reduceTaxPrice", "#decorationAccountContent"),
+            minusTotal: com.focusPage("#reduceTotal", "#decorationAccountContent"),
             asDifference: com.focusPage("#asDifference", "#decorationAccountContent"),
+
         },
         advanceItems: {
             contractAdvance: com.focusPage("#contractAdvance", "#decorationAccountContent"),
@@ -115,18 +120,24 @@ $(function() {
         servicePrice: 0,
 
         addPredisPrice: 0,
+        addPredisManagePrice: 0,
         addManagePrice: 0,
         addCalPrice: 0,
         addUncalPrice: 0,
         addTotalPrice: 0,
+        addDisPrice: 0,
+        addUndisPrice: 0,
+        addTaxPrice: 0,
 
         reducePredisPrice: 0,
+        reducePredisManagePrice: 0,
         reduceManagePrice: 0,
         reduceCalPrice: 0,
         reduceUncalPrice: 0,
         reduceTotalPrice: 0,
         reduceDisPrice: 0,
         reduceUndisPrice: 0,
+        reduceTaxPrice: 0,
         asDifference: 0,
 
         accountForehead: 0,
@@ -141,6 +152,7 @@ $(function() {
         base: 0,
         material: 0,
         service: 0,
+        discount: 0,
 
         cal: false,
 
@@ -263,6 +275,7 @@ $(function() {
         accountBasic.taxPrice = quotation.taxPrice;
         accountBasic.taxRate = quotation.taxRate;
         accountBasic.taxDiscount = quotation.taxDiscount;
+        accountBasic.discount = quotation.discount;
 
         accountBasic.foldFrontTotal = Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.managePrice);
         accountBasic.foldFrontFee = Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice);
@@ -339,21 +352,31 @@ $(function() {
             if (v.type == 0) { // 0增项 1减项
 
                 accountBasic.addPredisPrice = utils.accAdd(accountBasic.addPredisPrice, utils.accAdd(v.undisPrice, v.disPrice));
-                accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(v.discount, 10)) : v.managePrice);// 增项管理费
+                accountBasic.addPredisManagePrice = utils.accAdd(accountBasic.addPredisManagePrice, v.managePrice);
+                accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 增项管理费
                 accountBasic.addCalPrice = utils.accAdd(accountBasic.addCalPrice, v.calPrice);
                 accountBasic.addUncalPrice = utils.accAdd(accountBasic.addUncalPrice, v.uncalPrice);
                 accountBasic.addTotalPrice = utils.accAdd(accountBasic.addTotalPrice, v.total);
+                accountBasic.addDisPrice = utils.accAdd(accountBasic.addDisPrice, v.disPrice);
+                accountBasic.addUndisPrice = utils.accAdd(accountBasic.addUndisPrice, v.undisPrice);
+                accountBasic.addTaxPrice = utils.accAdd(accountBasic.addTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
+
+                accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.addDisPrice * (accountBasic.dd / 10) + accountBasic.addUndisPrice + Math.round(accountBasic.addManagePrice) - Math.round(accountBasic.addTotalPrice));
             } else {
 
                 accountBasic.reducePredisPrice = utils.accAdd(accountBasic.reducePredisPrice, utils.accAdd(v.undisPrice, v.disPrice));
-                accountBasic.reduceManagePrice = utils.accAdd(accountBasic.reduceManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(v.discount, 10)) : v.managePrice);// 减项管理费
+                accountBasic.reducePredisManagePrice = utils.accAdd(accountBasic.reducePredisManagePrice, v.managePrice);
+                accountBasic.reduceManagePrice = utils.accAdd(accountBasic.reduceManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 减项管理费
                 accountBasic.reduceCalPrice = utils.accAdd(accountBasic.reduceCalPrice, v.calPrice);
                 accountBasic.reduceUncalPrice = utils.accAdd(accountBasic.reduceUncalPrice, v.uncalPrice);
                 accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, v.total);
                 accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
                 accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
-                accountBasic.asDifference = accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice);
+                accountBasic.reduceTaxPrice = utils.accAdd(accountBasic.reduceTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
+
+                accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice));
             }
+
         });
 
         decorationDetail.AddReduceItems.addFoldFrontTotal.html(Math.round(accountBasic.addPredisPrice));
@@ -361,12 +384,17 @@ $(function() {
         decorationDetail.AddReduceItems.addMatch.html(Math.round(accountBasic.addCalPrice));
         decorationDetail.AddReduceItems.addUncalPrice.html(Math.round(accountBasic.addUncalPrice));
         decorationDetail.AddReduceItems.addDone.html(Math.round(accountBasic.addTotalPrice));
+        decorationDetail.AddReduceItems.addTaxPrice.html(Math.round(accountBasic.addTaxPrice));
+        decorationDetail.AddReduceItems.addTotal.html(Math.round(accountBasic.addTotalPrice));
 
         decorationDetail.AddReduceItems.minusFoldFrontTotal.html(Math.round(accountBasic.reducePredisPrice));
         decorationDetail.AddReduceItems.minusManagePrice.html(Math.round(accountBasic.reduceManagePrice));
         decorationDetail.AddReduceItems.minusMatch.html(Math.round(accountBasic.reduceCalPrice));
         decorationDetail.AddReduceItems.minusUncalPrice.html(Math.round(accountBasic.reduceUncalPrice));
         decorationDetail.AddReduceItems.minusDone.html(Math.round(accountBasic.reduceTotalPrice));
+        decorationDetail.AddReduceItems.minusTaxPrice.html(Math.round(accountBasic.reduceTaxPrice));
+        decorationDetail.AddReduceItems.minusTotal.html(Math.round(accountBasic.reduceTotalPrice));
+
         decorationDetail.AddReduceItems.asDifference.html(Math.round(accountBasic.asDifference));
 
     }, null, false);
@@ -503,6 +531,7 @@ $(function() {
                 "decorationAccount.serviceRate": accountBasic.service,
                 "decorationAccount.materialPrice": accountBasic.materialAccount,
                 "decorationAccount.servicePrice": accountBasic.accountServicePrice,
+                "decorationAccount.paidupMatching": accountBasic.flowerRatio,
                 "decorationAccount.difference": accountBasic.balanceSum,
                 "decorationAccount.coupon": accountBasic.preferences,
                 "decorationAccount.internal": accountBasic.internalCoupon,
@@ -571,7 +600,7 @@ $(function() {
         //
         // 超配比 = (实收额 - 决算主材额) / 决算主材额
 
-        var contartval = 0, _ = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, materialAccount = 0, taxPrice = 0;
+        var contartval = 0, _ = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, materialAccount = 0, _taxPrice = 0;
 
         var flag = accountBasic.cal && accountBasic.type == 2 ? 1 : 0;
 
@@ -583,15 +612,21 @@ $(function() {
 
             beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice;
 
-            taxPrice = accountBasic.taxDiscount == 0 ? beforeTotal * accountBasic.taxRate : (beforeTotal + _managePrice) * accountBasic.taxRate;
+            if (accountBasic.taxDiscount == 1) {
+                _taxPrice = beforeTotal * accountBasic.taxRate;
+            }
 
-            contartval = accountBasic.disPrice * accountBasic.dd / 10 + accountBasic.undisPrice + accountBasic.trafficPrice + _managePrice + taxPrice;
+            if (accountBasic.taxDiscount == 2) {
+                _taxPrice = (beforeTotal + _managePrice) * accountBasic.taxRate;
+            }
 
-            direct = beforeTotal + accountBasic.managePrice + taxPrice;
+            contartval = accountBasic.disPrice * accountBasic.dd / 10 + accountBasic.undisPrice + accountBasic.trafficPrice + _managePrice + _taxPrice;
+
+            direct = beforeTotal + accountBasic.managePrice + accountBasic.taxPrice;
 
             management = _managePrice;
 
-            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.reduceDisPrice * (accountBasic.discount / 10) - accountBasic.reduceUndisPrice - Math.round(accountBasic.reduceManagePrice) + Math.round(accountBasic.reduceTotalPrice) - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
+            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.reduceDisPrice * (accountBasic.discount / 10) - accountBasic.reduceUndisPrice - Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTaxPrice) + Math.round(accountBasic.reduceTotalPrice) - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
 
         }
 
@@ -600,23 +635,29 @@ $(function() {
 
             _ = accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
 
+            beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice;
+
             _managePrice = accountBasic.managePrice * (accountBasic.manageDiscount == 1 ? accountBasic.discount / 10 : 1);
 
-            contartval = (_ - (_) % accountBasic.base) * (accountBasic.discount / 10) + (_) % accountBasic.base + _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
+            if (accountBasic.taxDiscount == 1) {
+                _taxPrice = Math.round(beforeTotal * accountBasic.taxRate * (accountBasic.manageDiscount == 1 ? accountBasic.discount / 10 : 1));
+            }
+
+            if (accountBasic.taxDiscount == 2) {
+                _taxPrice = Math.round((beforeTotal + accountBasic.managePrice) * accountBasic.taxRate);
+            }
+
+            contartval = (_ - (_) % accountBasic.base) * (accountBasic.discount / 10) + (_) % accountBasic.base + _managePrice + _taxPrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
 
             service = (_ + accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag) * accountBasic.material * accountBasic.service;
 
-            beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice;
-
             afterTotal = (beforeTotal - (beforeTotal) % accountBasic.base) * (accountBasic.discount / 10) + (beforeTotal) % accountBasic.base + _managePrice;
 
-            taxPrice = accountBasic.taxDiscount == 0 ? beforeTotal * accountBasic.taxRate : afterTotal * accountBasic.taxRate;
-
-            direct = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.managePrice + taxPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
+            direct = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.managePrice + accountBasic.taxPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag + accountBasic.addPredisManagePrice * flag - accountBasic.reducePredisManagePrice * flag;
 
             beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
 
-            management = _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
+            management = _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag + accountBasic.addTaxPrice * flag - accountBasic.reduceTaxPrice * flag;
 
             sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.addTotalPrice * flag + accountBasic.reduceTotalPrice * flag + accountBasic.addUncalPrice * flag - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
 
@@ -655,7 +696,7 @@ $(function() {
         decorationDetail.accountItems.flowerRatio.html(accountBasic.flowerRatio);
         decorationDetail.accountItems.difference.html(accountBasic.difference);
         decorationDetail.accountItems.superRatio.html(accountBasic.superRatio);
-        decorationDetail.accountItems.taxPrice.html(taxPrice);
+        decorationDetail.accountItems.taxPrice.html(_taxPrice);
     }
 
 });

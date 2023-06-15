@@ -44,6 +44,8 @@ public class QuotationItemVO implements Serializable {
 
 	private MeasurementUnitVO unit;
 
+	private QuotationCtemVO quotationCtem;
+
 	private Integer addPrice;
 
 	private Integer unitPrice;
@@ -69,7 +71,7 @@ public class QuotationItemVO implements Serializable {
 		this.version = version;
 	}
 
-	public QuotationItemVO(QuotationVersionVO version, QuotationTypeVO category, QuotationClassificationVO classification, QuotationBigCategoryVO bigCategory, QuotationSmallCategoryVO smallCategory, WorkTypeVO workType, MeasurementUnitVO unit) {
+	public QuotationItemVO(QuotationVersionVO version, QuotationTypeVO category, QuotationClassificationVO classification, QuotationBigCategoryVO bigCategory, QuotationSmallCategoryVO smallCategory, WorkTypeVO workType, MeasurementUnitVO unit, QuotationCtemVO quotationCtem) {
 		super();
 		this.version = version;
 		this.category = category;
@@ -78,6 +80,7 @@ public class QuotationItemVO implements Serializable {
 		this.smallCategory = smallCategory;
 		this.workType = workType;
 		this.unit = unit;
+		this.quotationCtem = quotationCtem;
 	}
 
 	public Long getQiid() {
@@ -158,6 +161,14 @@ public class QuotationItemVO implements Serializable {
 
 	public void setUnit(MeasurementUnitVO unit) {
 		this.unit = unit;
+	}
+
+	public QuotationCtemVO getQuotationCtem() {
+		return quotationCtem;
+	}
+
+	public void setQuotationCtem(QuotationCtemVO quotationCtem) {
+		this.quotationCtem = quotationCtem;
 	}
 
 	public Integer getAddPrice() {

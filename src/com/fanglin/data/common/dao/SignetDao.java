@@ -11,7 +11,7 @@ public interface SignetDao extends Dao<SignetPO> {
 
 	public List<SignetPO> pageSignet(Paging paging, List<Filter> filters, int company);
 
-	public List<SignetPO> querySignet(int company);
+	public List<SignetPO> querySignet(Short type, int company);
 
 	public int countSignet(String no);
 

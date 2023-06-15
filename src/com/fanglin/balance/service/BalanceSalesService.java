@@ -12,6 +12,8 @@ public interface BalanceSalesService {
 
 	public void pageBalanceSales(Paging paging, List<Filter> filters, int company);
 
+	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, int company);
+
 	public int createBalanceSales(BalanceSalesVO balanceSalesVO, String userId, int company) throws FLException;
 
 	public List<BalanceSalesVO> queryBalanceSales(BalanceSalesVO balanceSalesVO, int company);
@@ -30,4 +32,5 @@ public interface BalanceSalesService {
 	
 	public int unlockBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException;
 
+	public int deleteBalanceSales(BalanceSalesVO balanceSales) throws FLException;
 }

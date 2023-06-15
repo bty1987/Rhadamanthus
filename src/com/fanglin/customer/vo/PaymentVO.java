@@ -19,6 +19,8 @@ public class PaymentVO implements Serializable {
 
 	private Short type;
 
+	private String platform;
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -58,6 +60,14 @@ public class PaymentVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
 	}
 
 }

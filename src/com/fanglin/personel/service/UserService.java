@@ -68,4 +68,14 @@ public interface UserService {
 
 	public void tranUser(UserVO userVO, String userId) throws FLException;
 
+	public int registUser(UserVO userVO) throws FLException;
+
+	public int resetUser(UserVO userVO) throws FLException;
+
+	public String authUser(UserVO userVO) throws FLException;
+
+	public int confirmUser(UserVO userVO) throws FLException;
+
+	public int signateUser(UserVO userVO, String imgbase) throws FLException;
+
 }

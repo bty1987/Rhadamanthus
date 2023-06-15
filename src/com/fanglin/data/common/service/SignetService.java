@@ -11,7 +11,9 @@ public interface SignetService {
 
 	public void pageSignet(Paging paging, List<Filter> filters, int company);
 
-	public List<SignetVO> querySignet(int company);
+	public List<SignetVO> querySignet(SignetVO signetVO, int company);
+
+	public SignetVO querySignet(SignetVO signetVO);
 
 	public int addSignet(SignetVO signet, int company) throws FLException;
 
@@ -32,5 +34,7 @@ public interface SignetService {
 	public int cancelSignet(SignetVO signetVO) throws FLException;
 
 	public int copySignet(SignetVO signetVO) throws FLException;
+
+	public int moveSignet(SignetVO signetVO) throws FLException;
 
 }

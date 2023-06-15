@@ -84,7 +84,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 	@Override
 	public UserPO queryUserByLoginId(String loginId) {
-		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("loginId", loginId)).uniqueResult();
+		return (UserPO) createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("loginId", loginId), Restrictions.eq("userId", loginId))).uniqueResult();
 	}
 
 	@Override
@@ -148,10 +148,18 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		return count.intValue();
 	}
 
+	@Override
+	public int countUserByDeptId(Integer deptId) {
+
+		String sql = "select count(*) from communion.user where deptId =:deptId and status = 0";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("deptId", deptId).uniqueResult();
+
+		return count.intValue();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		query.alias("dept", "dept");
 		query.alias("role", "role");

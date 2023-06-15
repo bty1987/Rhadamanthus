@@ -20,6 +20,8 @@ public interface RoleOperationDao extends Dao<RoleOperationPO> {
 
 	public List<RoleOperationPO> queryRoleOperationByRid(int rid);
 
+	public List<RoleOperationPO> queryRoleOperation(List<Integer> rids);
+
 	public RoleOperationPO queryRoleOperation(String operation, int rid);
 
 	public RoleOperationPO queryRoleOperation(int rid, int oid);

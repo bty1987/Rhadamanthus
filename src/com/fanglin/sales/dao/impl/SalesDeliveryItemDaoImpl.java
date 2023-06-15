@@ -49,6 +49,20 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 	}
 
 	@Override
+	public List<SalesDeliveryItemPO> pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, int company, int uid) {
+
+		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
+
+		query.alias("sales", "sales").alias("sales.instorer", "instorer").add(query.getCriterion(SalesPO.COLUMN_IUID_STR, uid, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("sdiid");
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<SalesDeliveryItemPO> querySalesDeliveryItem(long sid) {
 		return session().createCriteria(SalesDeliveryItemPO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).list();

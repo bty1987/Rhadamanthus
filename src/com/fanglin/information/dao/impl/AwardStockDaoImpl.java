@@ -33,17 +33,16 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AwardStockPO> queryAwardStock(short type, short storeroom,int company) {		
+	public List<AwardStockPO> queryAwardStock(short type, short storeroom, int company) {
 		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("storeroom", storeroom)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq(AwardStockPO.STATUS_TYPE_STR, type)).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<AwardStockPO> queryAwardStockByName(String name, int limit, int company) {
-		
-	
+
 		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.ilike(AwardStockPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE)).setMaxResults(limit).list();
-				
+
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
@@ -59,6 +58,8 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 				} else if (AwardStockPO.STATUS_STOREROOM_STR.equals(filter.getField())) {
 					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 				} else if (AwardStockPO.COLUMN_SUBTYPE_STR.equals(filter.getField())) {
+					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+				} else if (AwardStockPO.COLUMN_STATUS_STR.equals(filter.getField())) {
 					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 				}
 			}

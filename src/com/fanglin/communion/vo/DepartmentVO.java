@@ -38,11 +38,15 @@ public class DepartmentVO implements Serializable {
 
 	private String kiname;
 
+	private Integer limit;
+
 	private UserVO manager;
 
 	private String comment;
 
 	private Integer company;
+
+	private String code;
 
 	public DepartmentVO() {
 		super();
@@ -149,6 +153,14 @@ public class DepartmentVO implements Serializable {
 		this.kiname = kiname;
 	}
 
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
 	public UserVO getManager() {
 		return manager;
 	}
@@ -163,6 +175,14 @@ public class DepartmentVO implements Serializable {
 
 	public void setIsdet(Short isdet) {
 		this.isdet = isdet;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public DepartmentVO setBaseInfo(DepartmentPO departmentPO) {

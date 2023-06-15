@@ -52,14 +52,6 @@ public class UserAction extends BaseListAction {
 
 	private String pinyinName;
 
-	private String duty;
-
-	private List<UserBaseVO> userBases;
-
-	private List<String> dutys;
-
-	private List<String> dutysO;
-
 	private List<KeyValueVO> autoFillKeyValue;
 
 	private List<String> autoFillList;
@@ -77,6 +69,10 @@ public class UserAction extends BaseListAction {
 	private List<UserEducationVO> userEducations;
 
 	private List<UserOperationVO> userOperations;
+
+	private String redirect;
+
+	private String imgbase;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException {
@@ -138,9 +134,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserByPinyin() throws FLException {
 
-		userBases = userService.queryUserByPinyin(pinyinName, user, departmentType, queryCompany());
-
-		packageUserName(userBases);
+		packageUserName(userService.queryUserByPinyin(pinyinName, user, departmentType, queryCompany()));
 
 		return SUCCESS;
 	}
@@ -148,9 +142,7 @@ public class UserAction extends BaseListAction {
 	@Action(value = "queryUserByUids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserByUids() throws FLException {
 
-		userBases = userService.queryUserByUids(uids);
-
-		packageUserName(userBases);
+		packageUserName(userService.queryUserByUids(uids));
 
 		return SUCCESS;
 	}
@@ -267,6 +259,62 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "registUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String registUser() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userService.registUser(user);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "resetUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetUser() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userService.resetUser(user);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "authUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String authUser() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		redirect = userService.authUser(user);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmUser() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userService.confirmUser(user);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "signateUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String signateUser() throws FLException {
+
+		userService.signateUser(user, imgbase);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateUserForBaseInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserForBaseInfo() throws FLException {
 
@@ -354,38 +402,6 @@ public class UserAction extends BaseListAction {
 		this.pinyinName = pinyinName;
 	}
 
-	public String getDuty() {
-		return duty;
-	}
-
-	public void setDuty(String duty) {
-		this.duty = duty;
-	}
-
-	public List<String> getDutys() {
-		return dutys;
-	}
-
-	public void setDutys(List<String> dutys) {
-		this.dutys = dutys;
-	}
-
-	public List<String> getDutysO() {
-		return dutysO;
-	}
-
-	public void setDutysO(List<String> dutysO) {
-		this.dutysO = dutysO;
-	}
-
-	public List<UserBaseVO> getUserBases() {
-		return userBases;
-	}
-
-	public void setUserBases(List<UserBaseVO> userBases) {
-		this.userBases = userBases;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -456,6 +472,22 @@ public class UserAction extends BaseListAction {
 
 	public void setApprove(String approve) {
 		this.approve = approve;
+	}
+
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+
+	public String getImgbase() {
+		return imgbase;
+	}
+
+	public void setImgbase(String imgbase) {
+		this.imgbase = imgbase;
 	}
 
 }

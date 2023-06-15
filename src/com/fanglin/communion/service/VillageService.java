@@ -11,7 +11,7 @@ public interface VillageService {
 
 	public void pageVillage(Paging paging, List<Filter> filters, Integer company);
 
-	public VillageVO queryVillageById(VillageVO villageVO) throws FLException;
+	public VillageVO queryVillageByVid(VillageVO villageVO) throws FLException;
 
 	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName, Integer company);
 

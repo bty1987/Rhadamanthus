@@ -54,8 +54,9 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 	@Override
 	public void pageDecorationInclusive(Paging paging, List<Filter> filters, int company) {
 
-		if (filters.size() == 0)
+		if (filters.size() == 0) {
 			return;
+		}
 
 		List<DecorationInclusivePO> decorationInclusivePOs = decorationInclusiveDao.pageDecorationInclusive(paging, filters, company);
 		List<DecorationInclusiveVO> decorationInclusiveVOs = new ArrayList<DecorationInclusiveVO>();
@@ -83,8 +84,9 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		DecorationInclusiveVO _decorationInclusiveVO = new DecorationInclusiveVO(new DecorationVO());
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(decorationInclusiveVO.getDecoration().getOrderId());
 
-		if (decorationInclusivePO == null)
+		if (decorationInclusivePO == null) {
 			return null;
+		}
 
 		BeanUtil.copyPropertie(decorationInclusivePO, _decorationInclusiveVO, Arrays.asList("decoration"));
 
@@ -168,6 +170,8 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		decorationInclusivePO.setMaterialPaidup(DecorationInclusivePO.MONEY_ZERO_LONG);
 		decorationInclusivePO.setManagePrice(quotationPO.getManagePrice());
 		decorationInclusivePO.setManageRate(quotationPO.getManageRate());
+
+		decorationDao.update(decorationPO);
 
 		decorationInclusiveDao.saveOrUpdate(decorationInclusivePO);
 

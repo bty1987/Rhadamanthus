@@ -25,29 +25,29 @@ public class SalesCommonAction extends BaseListAction {
 
 	@Autowired
 	private SalesActivityItemService salesActivityItemService;
-	
+
 	private List<SalesActivityItemVO> salesActivityItems;
-	
+
 	private SalesVO sales;
-	
+
 	private SalesActivityItemVO salesActivityItem;
-	
+
 	private SalesActivityVO salesActivity;
-	
+
 	private String orderId;
-	
-	@Action(value="querySalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySalesActivityItem() throws FLException{
-		
+
+	@Action(value = "querySalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesActivityItem() throws FLException {
+
 		salesActivityItems = salesActivityItemService.querySalesActivityItem(orderId);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "affirmSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSalesActivityItem() throws FLException {
 
-		salesActivityItemService.affirmSalesActivityItem(salesActivityItems);
+		salesActivityItemService.affirmSalesActivityItem(sales, salesActivityItems);
 
 		return SUCCESS;
 	}
@@ -59,7 +59,7 @@ public class SalesCommonAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	public SalesVO getSales() {
 		return sales;
 	}
@@ -99,5 +99,5 @@ public class SalesCommonAction extends BaseListAction {
 	public void setSalesActivityItems(List<SalesActivityItemVO> salesActivityItems) {
 		this.salesActivityItems = salesActivityItems;
 	}
-	
+
 }

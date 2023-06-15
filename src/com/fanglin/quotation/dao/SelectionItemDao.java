@@ -12,7 +12,7 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public List<SelectionItemPD> pageSelectionItem(Paging paging, List<Filter> filters, Short status, Integer company);
 
-	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Long suid, Integer company);
+	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Integer suid, Integer company);
 
 	public List<SelectionItemPD> pageSelectionItemForEscorter(Paging paging, List<Filter> filters, String userId);
 

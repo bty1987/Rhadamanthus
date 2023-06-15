@@ -62,11 +62,13 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	private UserPO creater;
 
-	private Timestamp createTime;
-
 	private UserPO balancer;
 
+	private Timestamp createTime;
+
 	private Timestamp balanceTime;
+
+	private Timestamp lockTime;
 
 	public BalanceSalesPO() {
 		super();
@@ -215,6 +217,15 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@Column(name = "lockTime")
+	public Timestamp getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Timestamp lockTime) {
+		this.lockTime = lockTime;
 	}
 
 }

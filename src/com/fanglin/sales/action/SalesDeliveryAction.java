@@ -46,6 +46,14 @@ public class SalesDeliveryAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageSalesDeliveryItemForInstorer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesDeliveryItemForInstorer() throws FLException {
+
+		salesDeliveryService.pageSalesDeliveryItemForInstorer(getPaging(), getFilters(), queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "querySalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesDeliveryItem() throws FLException {
 
@@ -57,7 +65,7 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Action(value = "tranSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranSalesDeliveryItem() throws FLException {
 
-		salesDeliveryService.tranSalesDeliveryItem(salesDeliveryItem, queryUserId());
+		salesDeliveryService.tranSalesDeliveryItem(salesDeliveryItems, queryUserId());
 
 		return SUCCESS;
 	}
@@ -65,7 +73,7 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Action(value = "checkSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkSalesDeliveryItem() throws FLException {
 
-		salesDeliveryService.checkSalesDeliveryItem(salesDeliveryItem, queryUserId());
+		salesDeliveryService.checkSalesDeliveryItem(salesDeliveryItems, queryUserId());
 
 		return SUCCESS;
 	}
@@ -81,7 +89,7 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Action(value = "finishSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishSalesDeliveryItem() throws FLException {
 
-		salesDeliveryService.finishSalesDeliveryItem(salesDeliveryItem, queryUserId());
+		salesDeliveryService.finishSalesDeliveryItem(salesDeliveryItems, queryUserId());
 
 		return SUCCESS;
 	}

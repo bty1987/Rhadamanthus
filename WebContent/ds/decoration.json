@@ -44,7 +44,12 @@
         {"key":"3", "value":"满减","type":"2"},
         {"key":"4", "value":"减上捡","type":"2"},
         {"key":"5", "value":"达额减","type":"0"},
-        {"key":"6", "value":"新满减","type":"2"}
+        {"key":"6", "value":"新满减","type":"2"},
+        {"key":"7", "value":"局改","type":"2"},
+        {"key":"8", "value":"全翻","type":"2"},
+        {"key":"9", "value":"全案","type":"2"},
+        {"key":"10", "value":"新达额减","type":"2"},
+        {"key":"11", "value":"满额减","type":"2"}
     ], "paymentType": [
         {"key":"0-0","value":"设计费"},
         {"key":"0-3","value":"VIP卡"},

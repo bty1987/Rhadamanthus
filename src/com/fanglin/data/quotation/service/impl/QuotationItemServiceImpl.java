@@ -37,6 +37,7 @@ import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.service.QuotationItemService;
+import com.fanglin.data.quotation.vo.QuotationCtemVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.BeanUtil;
@@ -58,7 +59,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();
 
 		for (QuotationItemPO quotationItemPO : quotationItemPOs) {
-			quotationItemVOs.add(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO())));
+			quotationItemVOs.add(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
 		}
 
 		paging.setData(quotationItemVOs);
@@ -77,7 +78,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 			List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 
 			for (QuotationItemPO quotationItemPO : quotationItemPOs) {
-				quotationItemVOs.add(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO())));
+				quotationItemVOs.add(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
 			}
 		}
 
@@ -90,7 +91,19 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		QuotationItemPO quotationItemPO = quotationItemDao.queryQuotationItemByIdAVersionId(quotationItemVO.getNo(), quotationItemVO.getVersion().getNo());
 
 		if (quotationItemPO != null) {
-			quotationItemVO = quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO()));
+			quotationItemVO = quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null)));
+		}
+
+		return quotationItemVO;
+	}
+
+	@Override
+	public QuotationItemVO queryQuotationItemByQiid(QuotationItemVO quotationItemVO) throws FLException {
+
+		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());
+
+		if (quotationItemPO != null) {
+			quotationItemVO = quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null)));
 		}
 
 		return quotationItemVO;
@@ -111,7 +124,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 		quotationItemPO = new QuotationItemPO();
 
-		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion"));
+		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion", "quotationCtem"));
 
 		quotationItemPO.setQuotationVersion(new QuotationVersionPO(quotationItemVO.getVersion().getNo()));
 		quotationItemPO.setQuotationType(new QuotationTypePO(quotationItemVO.getCategory().getId()));
@@ -136,7 +149,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 			throw new FLException(200013, "报价项不存在");
 		}
 
-		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("itemId", "quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion"));
+		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("itemId", "quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion", "quotationCtem"));
 
 		quotationItemPO.setQuotationType(new QuotationTypePO(quotationItemVO.getCategory().getId()));
 		quotationItemPO.setQuotationClassification(new QuotationClassificationPO(quotationItemVO.getClassification().getId()));

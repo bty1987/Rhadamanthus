@@ -1,6 +1,5 @@
 package com.fanglin.construction.dao.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -59,21 +58,6 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).uniqueResult();
 	}
 
-	@Override
-	public ConstructionSchedulePO queryConstructionSchedule(long cid, long cnid) {
-		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CNID_STR, cnid)).uniqueResult();
-	}
-
-	@Override
-	public int countConstructionSchedule(long cid) {
-
-		String sql = "select count(*) from construction.constructionschedule where cid = :cid";
-
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).uniqueResult();
-
-		return count.intValue();
-	}
-
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
@@ -93,13 +77,13 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 				query.alias("decoration.house", "house");
 				query.add(query.getCriterion("decoration.orderId", data, op));
 			} else if ("decorationStatus".equals(field)) {
-				query.add(query.getCriterion("decoration.projectStatus", Short.parseShort(filter.getData()), filter.getOp()));
+				query.add(query.getCriterion("decoration.projectStatus", Short.parseShort(data), op));
 			} else if ("village".equals(field)) {
 				query.alias("house.village", "village");
 				query.add(query.getCriterion("village.no", data, op));
-			} else if ("designer".equals(filter.getField())) {
+			} else if ("designer".equals(field)) {
 				query.alias("decoration.designer", "designer");
-				query.add(query.getCriterion("designer.userId", (filter.getData()), filter.getOp()));
+				query.add(query.getCriterion("designer.userId", (data), op));
 			} else if ("salesman".equals(field)) {
 				query.alias("decoration.salesman", "salesman");
 				query.add(query.getCriterion("salesman.userId", data, op));
@@ -110,16 +94,16 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 				query.alias("designerDept.fatherDept", "designerRegion");
 				query.add(query.getCriterion("designerRegion.no", data, op));
 			} else if ("status".equals(field)) {
-				query.add(query.getCriterion("status", Short.parseShort(filter.getData()), filter.getOp()));
+				query.add(query.getCriterion("status", Short.parseShort(data), op));
 			} else if ("schedule".equals(field)) {
-				query.add(query.getCriterion("schedule", Short.parseShort(filter.getData()), filter.getOp()));
+				query.add(query.getCriterion("schedule", Short.parseShort(data), op));
 			} else if ("cnid".equals(field)) {
-				query.add(query.getCriterion("cnid", Long.parseLong(filter.getData()), filter.getOp()));
-			} else if ("startTime".equals(filter.getField())) {
+				query.add(query.getCriterion("cnid", Long.parseLong(data), op));
+			} else if ("startTime".equals(field)) {
 				query.timeranges(ConstructionScheduleDO.COLUMN_STATUSTIME_STR, data);
-			} else if ("endTime".equals(filter.getField())) {
+			} else if ("endTime".equals(field)) {
 				query.timeranges(ConstructionScheduleDO.COLUMN_FINISHTIME_STR, data);
-			} else if ("createTime".equals(filter.getField())) {
+			} else if ("createTime".equals(field)) {
 				query.timeranges(ConstructionScheduleDO.COLUMN_CREATETIME_STR, data);
 			}
 		}

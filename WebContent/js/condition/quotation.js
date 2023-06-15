@@ -79,6 +79,37 @@ Condition.addupRule("quotation", {
             valuePath: "value"
         }
     },
+    "presignPrice-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "presignPrice-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "presignItem-type": {
         label: "类型",
         type: "select",
@@ -88,18 +119,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: null,
-            postData: null,
-            listPath: [{
-                key: "0",
-                value: "基础"
-            }, {
-                key: "1",
-                value: "工程"
-            }, {
-                key: "2",
-                value: "主材"
-            }],
+            url: api.ds.quotation,
+            postData: {},
+            listPath: "presignItemType",
             keyPath: "key",
             valuePath: "value"
         }
@@ -181,11 +203,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationOrderStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -291,11 +311,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationOrderStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -404,11 +422,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationOrderStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -530,11 +546,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationOrderStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -793,11 +807,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationOrderStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -904,6 +916,15 @@ Condition.addupRule("quotation", {
         type: "dateRangePicker",
         submitConfig: {
             name: "affirmTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "addreduce-sendTime": {
+        label: "推送时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sendTime",
             op: "eq",
             validate: null
         }

@@ -2,63 +2,67 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class SalesReceiptVO  implements Serializable{
+public class SalesReceiptVO implements Serializable {
 
 	private static final long serialVersionUID = 1851130876530178256L;
 
-	private Long srId;        			
-	
+	private Long srId;
+
 	private UserBaseVO collecter;
-	
+
 	private UserBaseVO confirmer;
-	
+
 	private Timestamp collectTime;
-	
+
 	private Timestamp confirmTime;
-	
-	private Long cash;                
-	
-	private String cashInfo;          
-	
-	private Long bank;                
-	
-	private String bankInfo;           
-	
-	private Long checkv;             
-	
+
+	private Long realMoney;
+
+	private Long cash;
+
+	private String cashInfo;
+
+	private Long bank;
+
+	private String bankInfo;
+
+	private Long checkv;
+
 	private String checkvBank;
-	
-	private Long installment;         
-	
-	private String installBank;       
-	
-	private Long accounts;            
-	
-	private String accountsBank; 
-	
-	private Long advance;             
-	
-	private Short advanceType;         
-	
-	private Long coupon;              
-	
-	private String couponInfo;         
-	
-	private String comment;                
-	
+
+	private Long installment;
+
+	private String installBank;
+
+	private Long accounts;
+
+	private String accountsBank;
+
+	private Long advance;
+
+	private Short advanceType;
+
+	private Long coupon;
+
+	private String couponInfo;
+
+	private String comment;
+
 	public SalesReceiptVO() {
 		super();
 	}
-	
+
 	public SalesReceiptVO(UserBaseVO collecter) {
 		super();
 		this.collecter = collecter;
 	}
 
-	public SalesReceiptVO(UserBaseVO collecter,UserBaseVO confirmer) {
+	public SalesReceiptVO(UserBaseVO collecter, UserBaseVO confirmer) {
 		super();
 		this.collecter = collecter;
 		this.confirmer = confirmer;
@@ -71,7 +75,7 @@ public class SalesReceiptVO  implements Serializable{
 	public void setSrId(Long srId) {
 		this.srId = srId;
 	}
-	
+
 	public UserBaseVO getCollecter() {
 		return collecter;
 	}
@@ -79,7 +83,7 @@ public class SalesReceiptVO  implements Serializable{
 	public void setCollecter(UserBaseVO collecter) {
 		this.collecter = collecter;
 	}
-	
+
 	public UserBaseVO getConfirmer() {
 		return confirmer;
 	}
@@ -104,6 +108,14 @@ public class SalesReceiptVO  implements Serializable{
 
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
+	}
+
+	public Long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Long getCash() {
@@ -225,5 +237,5 @@ public class SalesReceiptVO  implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

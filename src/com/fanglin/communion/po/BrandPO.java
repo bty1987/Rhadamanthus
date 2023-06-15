@@ -39,12 +39,14 @@ public class BrandPO implements java.io.Serializable {
 
 	private CategoryPO category;
 
+	private String comment;
+
 	private int company;
 
 	private String kino;
 
 	private String kiname;
-	
+
 	private UserPO supplier;
 
 	public BrandPO() {
@@ -102,6 +104,15 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setCategory(CategoryPO category) {
 		this.category = category;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Column(name = "company")

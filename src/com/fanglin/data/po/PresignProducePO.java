@@ -26,6 +26,10 @@ public class PresignProducePO implements Serializable {
 
 	private long unitPrice;
 
+	private int discount;
+
+	private int manageRate;
+
 	private long costPrice;
 
 	private int profitRate;
@@ -35,15 +39,15 @@ public class PresignProducePO implements Serializable {
 	private short status;
 
 	private int company;
-	
+
 	private long preferPrice;
 
 	private long mostPrice;
-	
+
 	private int costRate;
-	
+
 	private int mostRate;
-	
+
 	public PresignProducePO() {
 		super();
 	}
@@ -175,7 +179,22 @@ public class PresignProducePO implements Serializable {
 	public void setMostRate(int mostRate) {
 		this.mostRate = mostRate;
 	}
-	
-	
 
+	@Column(name = "discount")
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+
+	@Column(name = "manageRate")
+	public int getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(int manageRate) {
+		this.manageRate = manageRate;
+	}
 }

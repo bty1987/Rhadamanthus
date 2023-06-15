@@ -24,6 +24,10 @@ public class OccessoriesVO implements Serializable {
 
 	private UserBaseVO supplier;
 
+	private UserBaseVO deliver;// 配送人
+
+	private UserBaseVO receiver;// 接收人
+
 	private Timestamp createTime; // 创建时间
 
 	private Timestamp deliveTime; // 配送时间
@@ -31,6 +35,8 @@ public class OccessoriesVO implements Serializable {
 	private Timestamp receiveTime; // 接收时间
 
 	private Timestamp balanceTime;// 结算时间
+
+	private Timestamp finishTime;// 完成时间
 
 	private short isEnter;// 是否可进园区
 
@@ -49,6 +55,10 @@ public class OccessoriesVO implements Serializable {
 	private String comment;
 
 	private String content;
+
+	private Integer rate; // 评分
+
+	private String remake; // 评价
 
 	public OccessoriesVO() {
 		super();
@@ -105,6 +115,22 @@ public class OccessoriesVO implements Serializable {
 		this.supervisor = supervisor;
 	}
 
+	public UserBaseVO getDeliver() {
+		return deliver;
+	}
+
+	public void setDeliver(UserBaseVO deliver) {
+		this.deliver = deliver;
+	}
+
+	public UserBaseVO getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserBaseVO receiver) {
+		this.receiver = receiver;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -139,6 +165,15 @@ public class OccessoriesVO implements Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public short getIsEnter() {
@@ -219,6 +254,22 @@ public class OccessoriesVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Integer getRate() {
+		return rate;
+	}
+
+	public void setRate(Integer rate) {
+		this.rate = rate;
+	}
+
+	public String getRemake() {
+		return remake;
+	}
+
+	public void setRemake(String remake) {
+		this.remake = remake;
 	}
 
 }

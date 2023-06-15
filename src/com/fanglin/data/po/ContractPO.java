@@ -20,6 +20,8 @@ public class ContractPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	public static final String COLUMN_ATTTYPE_STR = "atttype";
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	private long cid;
@@ -35,6 +37,8 @@ public class ContractPO implements Serializable {
 	private String path;
 
 	private short status;
+
+	private short atttype;
 
 	private int company;
 
@@ -105,6 +109,15 @@ public class ContractPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "company")

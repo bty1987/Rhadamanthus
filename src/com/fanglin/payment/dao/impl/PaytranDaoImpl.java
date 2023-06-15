@@ -64,6 +64,38 @@ public class PaytranDaoImpl extends DaoImpl<PaytranPO> implements PaytranDao {
 	}
 
 	@Override
+	public PaytranPO queryPaytran(Long pid, Short type, Short atttype, Long rid, Short way, Short status) {
+
+		Criteria criteria = session().createCriteria(PaytranPO.class);
+
+		if (type != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_TYPE_STR, type));
+		}
+
+		if (atttype != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_ATTTYPE_STR, atttype));
+		}
+
+		if (rid != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_RID_STR, rid));
+		}
+
+		if (pid != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_PID_STR, pid));
+		}
+
+		if (status != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_STATUS_STR, status));
+		}
+
+		if (way != null) {
+			criteria.add(Restrictions.eq("way", way));
+		}
+
+		return (PaytranPO) criteria.setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public void updatePaytran(List<Long> ptids, Long rid, Short status, Short type) {
 
 		String sql = "update payment.paytran set status = :status, rid = :rid, type = :type where ptid in :ptids";

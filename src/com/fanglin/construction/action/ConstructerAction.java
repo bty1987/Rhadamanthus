@@ -17,57 +17,81 @@ import com.fanglin.core.interceptor.FLException;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ConstructerAction extends BaseListAction{
+public class ConstructerAction extends BaseListAction {
 
 	private static final long serialVersionUID = 8606860452338747125L;
-	
+
 	@Autowired
 	private ConstructerService constructerService;
 
 	private ConstructerVO constructer;
-	
+
 	private List<ConstructerVO> constructers;
 
 	@Action(value = "queryConstructerByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructerByOrderId() throws FLException{
-		
+	public String queryConstructerByOrderId() throws FLException {
+
 		constructers = constructerService.queryConstructerByOrderId(constructer);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryConstructerByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructerByCid(){
-	
+	public String queryConstructerByCid() {
+
 		constructers = constructerService.queryConstructerByCid(constructer);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "queryConstructerByCrid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructerByCrid() {
+
+		constructer = constructerService.queryConstructerByCrid(constructer);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addConstructer() throws FLException{
-		
+	public String addConstructer() throws FLException {
+
 		constructerService.addConstructer(constructer, queryUserId());
-		
-		 return SUCCESS;
+
+		return SUCCESS;
 	}
-	
+
+	@Action(value = "rateConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rateConstructer() throws FLException {
+
+		constructerService.rateConstructer(constructer);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateConstructerForRate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructerForRate() throws FLException{
-		
+	public String updateConstructerForRate() throws FLException {
+
 		constructerService.updateConstructerForRate(constructers);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "sendConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendConstructer() throws FLException {
+
+		constructerService.sendConstructer(constructer);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteConstructer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteConstructer() throws FLException{
-		
+	public String deleteConstructer() throws FLException {
+
 		constructerService.deleteConstructer(constructer);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public ConstructerVO getConstructer() {
 		return constructer;
 	}
@@ -75,7 +99,6 @@ public class ConstructerAction extends BaseListAction{
 	public void setConstructer(ConstructerVO constructer) {
 		this.constructer = constructer;
 	}
-	
 
 	public List<ConstructerVO> getConstructers() {
 		return constructers;

@@ -82,8 +82,9 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public AddReducePO queryAddReduce(Long dpid) {
-		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, dpid)).setMaxResults(1).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<AddReducePO> queryAddReduce(Long dpId) {
+		return createCriteria(AddReducePO.class).add(Restrictions.eq("dpId", dpId)).list();
 	}
 
 	@Override
@@ -138,6 +139,8 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 				query.timeranges("confirmTime", "confirmTime", data);
 			} else if ("affirmTime".equals(field)) {
 				query.timeranges("affirmTime", "affirmTime", data);
+			} else if ("sendTime".equals(field)) {
+				query.timeranges("sendTime", "sendTime", data);
 			}
 		}
 	}

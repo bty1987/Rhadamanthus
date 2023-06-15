@@ -8,11 +8,11 @@ import com.fanglin.system.po.RolePO;
 import com.fanglin.utils.Paging;
 
 public interface RoleDao extends Dao<RolePO> {
-	
-	public List<RolePO> pageRole(Paging paging, List<Filter> filters,Integer company);
+
+	public List<RolePO> pageRole(Paging paging, List<Filter> filters, Integer company);
 
 	public List<RolePO> queryRole(Integer company);
-	
+
 	public List<RolePO> queryRoleByName(Paging paging, String name, Integer company);
-	
+
 }

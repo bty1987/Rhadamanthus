@@ -2,20 +2,42 @@ $(function() {
 
     var balanceDccountDetail = {
 
-    	bdid: params.balance.bdid,
+        bdid: params.balance.bdid,
+
+        btns: {
+            saveAddBtn: com.focusPage("#saveAddBtn"),
+            cancelBtn:com.focusPage("#cancelBtn"),
+        },
+
+        items: {
+            name: com.focusPage("#name1"),
+            money: com.focusPage("#money"),
+            comment: com.focusPage("#comment1"),
+        },
+
+        modals: {
+            addBalanceCutpayModal:com.focusPage("#addBalanceCutpayModal")
+        },
     };
 
     var seacher = new Searcher();
 
-	seacher.base("condList1", "pagenation1", "resultList1",api.balance.pageBalanceCutpay);
+    seacher.base("condList1", "pagenation1", "resultList1",api.balance.pageBalanceCutpay);
 
     seacher.param({
         "balanceCutpay.dccount.bdid": balanceDccountDetail.bdid
     });	
 
-	seacher.history("balanceDccountDetailPostData");
+    seacher.button([{
+        id : "addBalanceCutpay",
+        name : "添加",
+        clazz : "btn-yellow",
+        icon : "icon-plus"
+    }]);
 
-	var lineprops = [{
+    seacher.history("balanceDccountDetailPostData");
+
+    var lineprops = [{
         fieId: "operater.currentName",
         name: "操作人",
         prop: "operater.currentName",
@@ -43,8 +65,35 @@ $(function() {
         clazz: "grey",
     }, ];
 
-	var linebtus = [];
+    var linebtus = [];
 
-	seacher.line("name", lineprops, linebtus).render();
+    seacher.line("name", lineprops, linebtus).render();
 
+    com.focusPage('#addBalanceCutpay').on("click", function() {
+
+        balanceDccountDetail.modals.addBalanceCutpayModal.modal("show");
+    });
+
+    com.focusPage('#saveAddBtn').on("click", function() {
+
+        if (com.validate('addBalanceCutpayModal')) {
+            return false;
+        };
+
+        var options = {
+            "balanceCutpay.dccount.bdid" : balanceDccountDetail.bdid,
+            "balanceCutpay.name": balanceDccountDetail.items.name.val(),
+            "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
+            "balanceCutpay.money": balanceDccountDetail.items.money.val(),
+            "balanceCutpay.comment": balanceDccountDetail.items.comment.val(),
+        };
+
+        com.post(api.balance.addBalanceCutpay, options, function(res) {
+
+            com.showAlert(com.info, "添加成功");
+            seacher.doSearch();
+        });
+
+        balanceDccountDetail.modals.addBalanceCutpayModal.modal("hide");
+    });
 });

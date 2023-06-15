@@ -19,11 +19,11 @@ import com.fanglin.system.po.OperationPO;
 import com.fanglin.utils.Paging;
 
 public interface OperationDao extends Dao<OperationPO> {
-	
+
 	public List<OperationPO> pageOperation(Paging paging, List<Filter> filters);
-	
+
 	public List<OperationPO> queryOperation();
-	
+
 	public OperationPO queryOperationByOperation(String operation);
-	
+
 }

@@ -71,7 +71,7 @@ $(function() {
 
     searcher.base("condList", "pagenation", "resultList", api.information.pageAwardStock);
 
-    searcher.condition(['information-award-no', 'information-award-name', 'information-awardStock-type', 'information-awardStock-subtype', 'information-awardStock-room']);
+    searcher.condition(['information-award-no', 'information-award-name', 'information-awardStock-type', 'information-awardStock-subtype', 'information-awardStock-room', 'information-awardStock-status']);
 
     searcher.button(function() {
 

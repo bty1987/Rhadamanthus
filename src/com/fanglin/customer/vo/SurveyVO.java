@@ -22,6 +22,10 @@ public class SurveyVO implements Serializable {
 
 	private UserVO creater;
 
+	private UserVO sender;
+
+	private UserVO finisher;
+
 	private Timestamp createTime;
 
 	private Short status;
@@ -32,14 +36,26 @@ public class SurveyVO implements Serializable {
 
 	private List<SurveyItemVO> items;
 
+	private Timestamp finishTime;
+
+	private Timestamp handleTime;
+
 	public SurveyVO() {
 		super();
 	}
 
-	public SurveyVO(List<SurveyItemVO> items, UserVO creater) {
+	public SurveyVO(Long stid, String orderId) {
+		super();
+		this.stid = stid;
+		this.orderId = orderId;
+	}
+
+	public SurveyVO(List<SurveyItemVO> items, UserVO creater, UserVO sender, UserVO finisher) {
 		super();
 		this.items = items;
 		this.creater = creater;
+		this.sender = sender;
+		this.finisher = finisher;
 	}
 
 	public Long getSid() {
@@ -82,12 +98,27 @@ public class SurveyVO implements Serializable {
 		this.creater = creater;
 	}
 
+	public UserVO getSender() {
+		return sender;
+	}
+
+	public void setSender(UserVO sender) {
+		this.sender = sender;
+	}
+
+	public UserVO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserVO finisher) {
+		this.finisher = finisher;
+	}
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
@@ -113,7 +144,6 @@ public class SurveyVO implements Serializable {
 		return sendTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public void setSendTime(Timestamp sendTime) {
 		this.sendTime = sendTime;
 	}
@@ -124,6 +154,24 @@ public class SurveyVO implements Serializable {
 
 	public void setItems(List<SurveyItemVO> items) {
 		this.items = items;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getHandleTime() {
+		return handleTime;
+	}
+
+	public void setHandleTime(Timestamp handleTime) {
+		this.handleTime = handleTime;
 	}
 
 }

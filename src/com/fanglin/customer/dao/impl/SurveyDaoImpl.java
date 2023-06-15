@@ -54,6 +54,12 @@ public class SurveyDaoImpl extends DaoImpl<SurveyPO> implements SurveyDao {
 				query.timeranges("createTime", data);
 			} else if ("sendTime".equals(field)) {
 				query.timeranges("sendTime", data);
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("finishTime".equals(field)) {
+				query.timeranges("finishTime", data);
+			} else if ("handleTime".equals(field)) {
+				query.timeranges("handleTime", data);
 			}
 		}
 

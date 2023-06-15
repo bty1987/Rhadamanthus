@@ -137,6 +137,7 @@ jQuery(function($) {
 
             $btnBalanceCutpay.click(function() {
 
+                params.balance = v;
                 params.balance.bid = v.bid;
                 params.balance.uid = v.belonger.uid;
                 com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");

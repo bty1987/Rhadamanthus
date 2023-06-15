@@ -56,9 +56,6 @@ $.extend(api.index, {
     macontrol: {
         url: "/views/personnel/macontrol.html"
     },
-    userContracts: {
-        url: "/views/personnel/userContracts.html"
-    },
     userContract4create: {
         url: "/views/personnel/userContract4create.html"
     },
@@ -228,6 +225,9 @@ $.extend(api, {
         queryUserCompany: {
             url: "queryUserCompany.do"
         },
+        queryUserCompanyForSelf: {
+            url: "queryUserCompanyForSelf.do"
+        },
         updateUserCompany: {
             url: "updateUserCompany.do",
             server: "communion"
@@ -395,19 +395,24 @@ $.extend(api, {
         },
 
         registUser: {
-            url: "registUser.do"
+            url: "registUser.do",
+            server: "communion"
         },
         resetUser: {
-            url: "resetUser.do"
+            url: "resetUser.do",
+            server: "communion"
         },
         authUser: {
-            url: "authUser.do"
+            url: "authUser.do",
+            server: "communion"
         },
         confirmUser: {
-            url: "confirmUser.do"
+            url: "confirmUser.do",
+            server: "communion"
         },
         signateUser: {
-            url: "signateUser.do"
+            url: "signateUser.do",
+            server: "communion"
         },
 
         sendUserContractForAuth: {
@@ -423,19 +428,24 @@ $.extend(api, {
             url: "viewUserContract.do"
         },
         signUserContractForCompany: {
-            url: "signUserContractForCompany.do"
+            url: "signUserContractForCompany.do",
+            server: "communion"
         },
         signUserContractForUser: {
-            url: "signUserContractForUser.do"
+            url: "signUserContractForUser.do",
+            server: "communion"
         },
         affixUserContract: {
-            url: "affixUserContract.do"
+            url: "affixUserContract.do",
+            server: "communion"
         },
         expireUserContract: {
-            url: "expireUserContract.do"
+            url: "expireUserContract.do",
+            server: "communion"
         },
         filingUserContract: {
-            url: "filingUserContract.do"
+            url: "filingUserContract.do",
+            server: "communion"
         },
 
     }

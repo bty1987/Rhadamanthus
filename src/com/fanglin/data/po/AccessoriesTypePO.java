@@ -16,7 +16,7 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.WorkTypePO;
 
 @Entity
-@Table(name = "accessoriestype", catalog = "inventory")
+@Table(name = "accessoriestype", catalog = "data")
 public class AccessoriesTypePO implements Serializable {
 
 	private static final long serialVersionUID = 3057953925525624710L;
@@ -46,7 +46,7 @@ public class AccessoriesTypePO implements Serializable {
 	public AccessoriesTypePO() {
 		super();
 	}
-	
+
 	public AccessoriesTypePO(long atid) {
 		super();
 		this.atid = atid;

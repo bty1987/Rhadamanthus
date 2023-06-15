@@ -82,6 +82,19 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	}
 
 	@Override
+	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int queryCompany) {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
+
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItemForInstorer(paging, filters, queryCompany, userPO.getUid());
+		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);
+
+		paging.setData(salesDeliveryItemVOs);
+	}
+
+	@Override
 	public List<SalesDeliveryItemVO> querySalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItemVO) {
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.querySalesDeliveryItem(salesDeliveryItemVO.getSales().getSid());
@@ -92,59 +105,64 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void tranSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException {
-
-		SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItem.getSdiid());
-
-		if (salesDeliveryItemPO == null) {
-			throw new FLException(260065, "配送项不存在");
-		}
-
-		if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_INIT_INT) {
-			throw new FLException(260066, "配送项状态不可操作");
-		}
+	public void tranSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException {
 
 		UserPO traner = userDao.queryUserByUserId(userId);
 
-		salesDeliveryItemPO.setTraner(traner);
-		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
-		salesDeliveryItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+		for (SalesDeliveryItemVO salesDeliveryItemVO : salesDeliveryItems) {
 
-		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+			SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
 
-		if (rights != null && rights.size() != 0) {
-			checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, traner);
+			if (salesDeliveryItemPO == null) {
+				continue;
+			}
+
+			if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_INIT_INT) {
+				continue;
+			}
+
+			salesDeliveryItemPO.setTraner(traner);
+			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
+			salesDeliveryItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, traner);
+			}
+
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
-
-		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void checkSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException {
-
-		SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItem.getSdiid());
-
-		if (salesDeliveryItemPO == null) {
-			throw new FLException(260065, "配送项不存在");
-		}
-
-		if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_TRAN_INT) {
-			throw new FLException(260066, "配送项状态不可操作");
-		}
+	public void checkSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException {
 
 		UserPO checker = userDao.queryUserByUserId(userId);
-		salesDeliveryItemPO.setChecker(checker);
-		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
-		salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
-		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+		for (SalesDeliveryItemVO salesDeliveryItemVO : salesDeliveryItems) {
 
-		if (rights != null && rights.size() != 0) {
-			checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
+			SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
+
+			if (salesDeliveryItemPO == null) {
+				continue;
+			}
+
+			if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_TRAN_INT) {
+				continue;
+			}
+
+			salesDeliveryItemPO.setChecker(checker);
+			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
+			salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
+			}
+
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
-
-		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
 
 	@Override
@@ -180,30 +198,33 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void finishSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException {
-
-		SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItem.getSdiid());
-
-		if (salesDeliveryItemPO == null) {
-			throw new FLException(260065, "配送项不存在");
-		}
-
-		if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_CONFIRM_INT) {
-			throw new FLException(260066, "配送项状态不可操作");
-		}
+	public void finishSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException {
 
 		UserPO finisher = userDao.queryUserByUserId(userId);
 
-		salesDeliveryItemPO.setFinisher(finisher);
-		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_FINISH_INT);
-		salesDeliveryItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
-		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+		for (SalesDeliveryItemVO salesDeliveryItemVO : salesDeliveryItems) {
 
-		if (rights != null && rights.size() != 0) {
-			checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
+			SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
+
+			if (salesDeliveryItemPO == null) {
+				continue;
+			}
+
+			if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_CONFIRM_INT) {
+				continue;
+			}
+
+			salesDeliveryItemPO.setFinisher(finisher);
+			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_FINISH_INT);
+			salesDeliveryItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
+			}
+
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
-
-		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
 
 	@Override

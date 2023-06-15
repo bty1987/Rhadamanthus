@@ -114,11 +114,6 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		if (filters.size() == 0) return drawLineVOs;
 
-		List<String> files = new ArrayList<String>();
-		for (Filter filter : filters) {
-			files.add(filter.getField());
-		}
-
 		List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLine(filters, company);
 
 		for (DrawLinePO drawLinePO : drawLinePOs) {

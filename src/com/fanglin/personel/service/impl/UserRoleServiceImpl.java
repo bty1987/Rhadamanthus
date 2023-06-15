@@ -46,9 +46,9 @@ public class UserRoleServiceImpl implements UserRoleService {
 
 			userRoleVO = new UserRoleVO(new RoleVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(userRolePO, userRoleVO, Arrays.asList("rid", "creater"));
+			BeanUtil.copyProperties(userRolePO, userRoleVO, Arrays.asList("role", "creater"));
 
-			BeanUtil.copyProperties(userRolePO.getRole(), userRoleVO.getRole());
+			BeanUtil.copyProperties(userRolePO.getRole(), userRoleVO.getRole(), Arrays.asList("creater"));
 
 			userRoleVOs.add(userRoleVO);
 		}
@@ -70,15 +70,19 @@ public class UserRoleServiceImpl implements UserRoleService {
 		if (rids == null || rids.size() == 0) return 0;
 
 		if (operater.getRole().getRid() == userPO.getRole().getRid()) return 0;
-		if (userPO.getRole().getLevel() >= operater.getRole().getLevel()) return 0;
+
+		if (userPO.getRole().getLevel() >= operater.getRole().getLevel()) {
+			throw new FLException(-1, "无操作权限");
+		}
 
 		for (Integer rid : rids) {
 
 			RolePO rolePO = roleDao.get(rid);
 
-			if (rolePO == null) {
-				throw new FLException(230010, "角色不存在");
-			}
+			if (rolePO == null) continue;
+
+			if (rolePO.getRid() == operater.getRole().getRid()) continue;
+			if (rolePO.getLevel() >= operater.getRole().getLevel()) continue;
 
 			userRoleDao.save(new UserRolePO(uid, rolePO, operater));
 		}

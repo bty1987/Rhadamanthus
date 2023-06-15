@@ -35,7 +35,11 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 
 	private List<SalesItemVO> salesItems;
 
-	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	private String code;
+
+	private String forms;
+
+	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalSalesRefundItem() throws FLException {
 
 		approvalSalesRefundItem = approvalSalesRefundService.queryApprovalSalesRefundItem(approval);
@@ -43,10 +47,10 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 		return SUCCESS;
 	};
 
-	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "submitApprovalForSalesRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForSalesRefund() throws FLException {
 
-		approvalSalesRefundService.submitApprovalForSalesRefund(approval,approvalSalesRefund, approvalSalesRefundItem, queryUserId(),queryCompany());
+		approvalSalesRefundService.submitApprovalForSalesRefund(approval, approvalSalesRefund, approvalSalesRefundItem, queryUserId(), queryCompany(), code, forms);
 
 		return SUCCESS;
 	}
@@ -63,8 +67,7 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 		return approvalSalesRefundItem;
 	}
 
-	public void setApprovalSalesRefundItem(
-			List<ApprovalSalesRefundItemVO> approvalSalesRefundItem) {
+	public void setApprovalSalesRefundItem(List<ApprovalSalesRefundItemVO> approvalSalesRefundItem) {
 		this.approvalSalesRefundItem = approvalSalesRefundItem;
 	}
 
@@ -82,6 +85,22 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 
 	public void setApproval(ApprovalVO approval) {
 		this.approval = approval;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getForms() {
+		return forms;
+	}
+
+	public void setForms(String forms) {
+		this.forms = forms;
 	}
 
 }

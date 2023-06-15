@@ -39,7 +39,7 @@ public class SalesPictureAction extends BaseListAction {
 	@Action(value = "addSalesPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesPicture() throws FLException {
 
-		salesPictureService.addSalesPicture(salesPicture, queryUserId());
+		salesPictureService.addSalesPicture(salesPicture, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

@@ -102,6 +102,7 @@ $(function() {
         grade: ["A", "B", "C", "D"],
         currentCustomerSource: {},
         decorationTypes: [],
+        decorationAtttypes: [],
         decorationBusitypeList: {},
         grade1: ["A", "B", "C", "D"],
     };
@@ -163,14 +164,23 @@ $(function() {
     com.post(api.ds.decoration, {}, function(res) {
 
         customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
-        customerSource.items.orderType.bindData(res.typeness, 'key', 'value');
         customerSource.items.resourceType.bindData(res.status, 'key', 'value');
 
-        $.each(res.typeness, function(i, v) {
+    }, null, false);
+
+    com.post(api.data.queryDecorationAtttype, {}, function(res) {
+
+        $.each(res.decorationAtttypes, function(i, v) {
 
             customerSource.decorationTypes[v.key] = v.type;
+
+            if (v.status == 0) {
+                customerSource.decorationAtttypes.push(value);
+            }
         });
-    }, null, false);
+
+        customerSource.items.orderType.bindData(customerSource.decorationAtttypes, 'key', 'name', "请选择");
+    });
 
     com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0
@@ -186,7 +196,7 @@ $(function() {
     }, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('villageNoBind', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
-        com.post(api.data.queryVillageById, {
+        com.post(api.data.queryVillageByVid, {
             "village.no": k
         }, function(res) {
 
@@ -202,7 +212,7 @@ $(function() {
     }, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
-        com.post(api.data.queryVillageById, {
+        com.post(api.data.queryVillageByVid, {
             "village.no": k
         }, function(res) {
 
@@ -376,14 +386,14 @@ $(function() {
             $record.click(function() {
 
                 params.customer.csid = v.csid;
-                com.popup4page('#customerRecordPopup', api.index.customerRecord.url, "记录内容");
+                com.popup4page('#customerRecordPopup', api.index.customerOriginRecord.url, "记录内容");
             });
 
             $release.click(function() {
 
                 if (v.belonger.userId == null) {
                     com.showAlert(com.warning, "无归属人信息!");
-                    return;
+                    return false;
                 }
                 release(v.csid);
             });
@@ -597,7 +607,7 @@ $(function() {
             "customerOrigin.house.hid": hid,
             "customerOrigin.customer.cid": cid,
             "customerOrigin.phone": customerSource.items.phoneBind.val()
-            // 为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
+        // 为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
         };
 
         com.post(api.customer.bindCustomerOrigin, options, function(res) {

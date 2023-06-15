@@ -317,8 +317,24 @@ public abstract class GenericDaoImpl implements GenericDao {
 		}
 
 		public void timeranges(String profield, String postfield, String datetime) {
+
 			String sTime = datetime.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 			String eTime = datetime.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+			Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+			Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+			Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+			Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+			add(getCriterion(profield, sTimestamp, "ge"));
+			add(getCriterion(postfield, eTimestamp, "le"));
+		}
+
+		public void timeranges(String profield, String postfield, String start, String end) {
+
+			String sTime = start.replaceAll("/", "-") + " 00:00:00";
+			String eTime = end.replaceAll("/", "-") + " 23:59:59";
 
 			Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
 			Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");

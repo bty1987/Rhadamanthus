@@ -536,6 +536,10 @@ $(function() {
         options["balanceSales.cost"] = utils.accAdd(cost, balanceSales.cost);
         options["balanceSales.payment"] = utils.accAdd(payment, balanceSales.payment);
         options["balanceSales.profit"] = utils.accAdd(profit, balanceSales.profit);
+        if (options["balanceSales.payment"] > 1000000) {
+            com.showAlert(com.warning, "结算总额过大");
+            return false;
+        }
 
         com.post(api.balance.submitBalanceSales, options, function(res) {
 

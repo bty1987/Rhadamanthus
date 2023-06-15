@@ -37,7 +37,7 @@ public class NormoodServiceImpl implements NormoodService {
 		
 		for (NormoodPO normoodPO : normoodPOs) {
 
-			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
+			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
 
 			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
 			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));
@@ -58,7 +58,7 @@ public class NormoodServiceImpl implements NormoodService {
 
 		for (NormoodPO normoodPO : normoodPOs) {
 
-			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
+			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
 
 			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
 			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));

@@ -31,6 +31,8 @@ public interface ApprovalService {
 
 	public ApprovalPO approve(ApprovalPO approvalPO) throws FLException;
 
+	public ApprovalPO refuse(ApprovalPO approvalPO) throws FLException;
+
 	public int approve(ApprovalVO approvalVO) throws FLException;
 
 	public int affirm(ApprovalVO approvalVO) throws FLException;

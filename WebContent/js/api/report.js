@@ -158,12 +158,12 @@ $.extend(api, {
         queryApproval7Achievement: {
             url: "queryApproval7Achievement.do"
         },
-        updataDecoration7Construction: {
-            url: "updataDecoration7Construction.do",
+        updateDecoration7Construction: {
+            url: "updateDecoration7Construction.do",
             demo: true
         },
-        updataDecoration7Achievement: {
-            url: "updataDecoration7Achievement.do",
+        updateDecoration7Achievement: {
+            url: "updateDecoration7Achievement.do",
             demo: true
         },
         rankAddReduce: {

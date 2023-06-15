@@ -128,6 +128,10 @@ $.extend(api, {
         queryCustomerForName: {
             url: "queryCustomerForName.do"
         },
+        queryCustomerForPhone: {
+            url: "queryCustomerForPhone.do",
+            server: "communion"
+        },
         checkCustomerForPhone: {
             url: "checkCustomerForPhone.do",
             intercept: true
@@ -202,8 +206,8 @@ $.extend(api, {
         queryVillage: {
             url: "queryVillage.do"
         },
-        queryVillageById: {
-            url: "queryVillageById.do"
+        queryVillageByVid: {
+            url: "queryVillageByVid.do"
         },
         queryVillageForNameByPinyin: {
             url: "queryVillageForNameByPinyin.do",
@@ -331,6 +335,14 @@ $.extend(api, {
                 args: ["precheck", "postcheck", "stacheck", "fincheck"]
             }]
         },
+        queryConstructionNodeByCnid: {
+            url: "queryConstructionNodeByCnid.do",
+            type: "query",
+            tranargs: [{
+                result: "contructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }]
+        },
         queryConstructionNodeByOrderId: {
             url: "queryConstructionNodeByOrderId.do",
             type: "query",
@@ -357,14 +369,17 @@ $.extend(api, {
             url: "updateConstructionNodeForStatus.do"
         },
 
-        queryPaymentScaleByCid: {
-            url: "queryPaymentScaleByCid.do"
+        queryPaymentScale: {
+            url: "queryPaymentScale.do"
         },
         addPaymentScale: {
             url: "addPaymentScale.do",
         },
         deletePaymentScale: {
             url: "deletePaymentScale.do"
+        },
+        updatePaymentScaleForStatus: {
+            url: "updatePaymentScaleForStatus.do"
         },
         queryPaymentScaleItemByPsid: {
             url: "queryPaymentScaleItemByPsid.do",
@@ -453,6 +468,9 @@ $.extend(api, {
         },
         updateSurveyTemplate: {
             url: "updateSurveyTemplate.do"
+        },
+        updateSurveyTemplateForStatus: {
+            url: "updateSurveyTemplateForStatus.do"
         },
         deleteSurveyTemplate: {
             url: "deleteSurveyTemplate.do"
@@ -697,7 +715,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["totalimit"]
+                args: ["totalimit", "balance"]
             }, {
                 result: "paging-data-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -708,6 +726,9 @@ $.extend(api, {
             url: "queryAoods.do",
             type: "query",
             tranargs: [{
+                result: "aoodes",
+                args: ["totalimit", "balance"]
+            }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
             }]
@@ -717,6 +738,9 @@ $.extend(api, {
             url: "queryAoodsByName.do",
             type: "query",
             tranargs: [{
+                result: "aoodes",
+                args: ["totalimit", "balance"]
+            }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
             }]
@@ -725,6 +749,9 @@ $.extend(api, {
             url: "queryAoodsByAtid.do",
             type: "query",
             tranargs: [{
+                result: "aoodes",
+                args: ["totalimit", "balance"]
+            }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
             }]
@@ -733,14 +760,14 @@ $.extend(api, {
             url: "addAoods.do",
             type: "update",
             tranargs: {
-                args: ["aoods.totalimit"]
+                args: ["aoods.totalimit", "aoods.balance"]
             }
         },
         updateAoods: {
             url: "updateAoods.do",
             type: "update",
             tranargs: {
-                args: ["aoods.totalimit"]
+                args: ["aoods.totalimit", "aoods.balance"]
             }
         },
         updateAoodsForStatus: {
@@ -913,6 +940,37 @@ $.extend(api, {
             server: "communion"
         },
 
+        // 公共项-工费
+        pageCormrice: {
+            url: "pageCormrice.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["trannum", "salary"]
+            }]
+        },
+        queryCormriceByQcid: {
+            url: "queryCormriceByQcid.do",
+            type: "query",
+            tranargs: [{
+                result: "cormrices",
+                args: ["trannum", "salary"]
+            }, {
+                result: "cormrices-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+            }]
+        },
+        addCormrice: {
+            url: "addCormrice.do",
+            type: "update",
+            tranargs: {
+                args: ["cormrice.trannum", "cormrice.salary"]
+            }
+        },
+        deleteCormrice: {
+            url: "deleteCormrice.do"
+        },
+
         // 定额
         pageNormrice: {
             url: "pageNormrice.do",
@@ -1013,6 +1071,22 @@ $.extend(api, {
             url: "updateDecorationBusitypeForStatus.do"
         },
 
+        pageDecorationAtttype: {
+            url: "pageDecorationAtttype.do",
+            demo: true
+        },
+        queryDecorationAtttype: {
+            url: "queryDecorationAtttype.do"
+        },
+
+        pageDecorationMatching: {
+            url: "pageDecorationMatching.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["base", "discount", "material", "service"]
+            }]
+        },
         queryDecorationMatching: {
             url: "queryDecorationMatching.do",
             type: "query",
@@ -1080,6 +1154,9 @@ $.extend(api, {
         querySignet: {
             url: "querySignet.do"
         },
+        querySignetBySid: {
+            url: "querySignetBySid.do"
+        },
         addSignet: {
             url: "addSignet.do"
         },
@@ -1109,6 +1186,9 @@ $.extend(api, {
         },
         selectSignet: {
             url: "selectSignet.do"
+        },
+        moveSignet: {
+            url: "moveSignet.do"
         },
 
         pollingSignature: {
@@ -1221,6 +1301,9 @@ $.extend(api, {
         queryReceiptTypeByType: {
             url: "queryReceiptTypeByType.do"
         },
+        queryReceiptTypeByNo: {
+            url: "queryReceiptTypeByNo.do"
+        },
         addReceiptType: {
             url: "addReceiptType.do"
         },
@@ -1259,6 +1342,14 @@ $.extend(api, {
         },
         queryPaymentTypeByPtid: {
             url: "queryPaymentTypeByPtid.do",
+            type: "query",
+            tranargs: [{
+                result: "paymentType",
+                args: ["taxrate"]
+            }]
+        },
+        queryPaymentTypeByName: {
+            url: "queryPaymentTypeByName.do",
             type: "query",
             tranargs: [{
                 result: "paymentType",

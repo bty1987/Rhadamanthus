@@ -21,94 +21,96 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class MaterialPaymentVO implements Serializable{
+public class MaterialPaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 7379370514634255371L;
-	
+
 	private Long mpId;
-	
+
 	private Long mrId;
-	
+
 	private MaterialVO material;
-	
+
 	private String category;
-	
+
 	private String brand;
-	
+
 	private Short paymentType;
-	
+
 	private Short paymentStatus;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserBaseVO collecter;
-	
+
 	private Timestamp collectTime;
-	
+
 	private UserBaseVO confirmer;
-	
+
 	private Timestamp confirmTime;
-	
+
 	private Long referMoney;
-	
+
+	private Long realMoney;
+
 	private Long cash;
-	
+
 	private String cashInfo;
-	
+
 	private Long bank;
-	
+
 	private String bankInfo;
-	
+
 	private Long checkv;
-	
+
 	private String checkvBank;
-	
+
 	private Long installment;
-	
+
 	private String installmentBank;
-	
+
 	private Long accounts;
-	
+
 	private String accountsBank;
-	
+
 	private Long advance;
-	
+
 	private Short advanceType;
-	
+
 	private Long coupon;
-	
+
 	private Short couponType;
-	
+
 	private String couponInfo;
-	
+
 	private String comment;
-	
+
 	private Integer company;
-	
+
 	private String paymentTypes;
-	
+
 	public MaterialPaymentVO() {
 		super();
 	}
-	
+
 	public MaterialPaymentVO(MaterialVO material) {
 		super();
 		this.material = material;
 	}
-	
-	public MaterialPaymentVO(MaterialVO material,UserBaseVO creater) {
+
+	public MaterialPaymentVO(MaterialVO material, UserBaseVO creater) {
 		super();
 		this.material = material;
 		this.creater = creater;
 	}
-	
-	public Long getMpId(){
+
+	public Long getMpId() {
 		return mpId;
 	}
 
-	public void setMpId(Long mpId){
+	public void setMpId(Long mpId) {
 		this.mpId = mpId;
 	}
 
@@ -127,7 +129,7 @@ public class MaterialPaymentVO implements Serializable{
 	public void setMaterial(MaterialVO material) {
 		this.material = material;
 	}
-	
+
 	public String getCategory() {
 		return category;
 	}
@@ -144,19 +146,19 @@ public class MaterialPaymentVO implements Serializable{
 		this.brand = brand;
 	}
 
-	public Short getPaymentType(){
+	public Short getPaymentType() {
 		return paymentType;
 	}
 
-	public void setPaymentType(Short paymentType){
+	public void setPaymentType(Short paymentType) {
 		this.paymentType = paymentType;
 	}
 
-	public Short getPaymentStatus(){
+	public Short getPaymentStatus() {
 		return paymentStatus;
 	}
 
-	public void setPaymentStatus(Short paymentStatus){
+	public void setPaymentStatus(Short paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 
@@ -167,8 +169,8 @@ public class MaterialPaymentVO implements Serializable{
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
-	
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -193,21 +195,21 @@ public class MaterialPaymentVO implements Serializable{
 		this.confirmer = confirmer;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getCollectTime(){
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCollectTime() {
 		return collectTime;
 	}
 
-	public void setCollectTime(Timestamp collectTime){
+	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getConfirmTime(){
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
 
-	public void setConfirmTime(Timestamp confirmTime){
+	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
 	}
 
@@ -217,6 +219,14 @@ public class MaterialPaymentVO implements Serializable{
 
 	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
+	}
+
+	public Long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Long getCash() {
@@ -315,30 +325,30 @@ public class MaterialPaymentVO implements Serializable{
 		this.couponType = couponType;
 	}
 
-	public Short getAdvanceType(){
+	public Short getAdvanceType() {
 		return advanceType;
 	}
 
-	public void setAdvanceType(Short advanceType){
+	public void setAdvanceType(Short advanceType) {
 		this.advanceType = advanceType;
 	}
 
-	public String getCouponInfo(){
+	public String getCouponInfo() {
 		return couponInfo;
 	}
 
-	public void setCouponInfo(String couponInfo){
+	public void setCouponInfo(String couponInfo) {
 		this.couponInfo = couponInfo;
 	}
 
-	public String getBankInfo(){
+	public String getBankInfo() {
 		return bankInfo;
 	}
 
-	public void setBankInfo(String bankInfo){
+	public void setBankInfo(String bankInfo) {
 		this.bankInfo = bankInfo;
 	}
-	
+
 	public String getComment() {
 		return comment;
 	}

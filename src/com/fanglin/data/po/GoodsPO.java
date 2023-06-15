@@ -1,18 +1,18 @@
 package com.fanglin.data.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "goods", catalog = "inventory")
+@Table(name = "goods", catalog = "data")
 public class GoodsPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8157873351014476905L;

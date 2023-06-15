@@ -24,38 +24,45 @@ import com.fanglin.utils.Paging;
 @Repository("customerServiceBackVisitDao")
 public class CustomerServiceBackVisityDaoImpl extends DaoImpl<CustomerServiceBackVisitPO> implements CustomerServiceBackVisitDao {
 
-	public CustomerServiceBackVisityDaoImpl(){
+	public CustomerServiceBackVisityDaoImpl() {
 		super(CustomerServiceBackVisitPO.class);
 	}
 
 	@Override
-	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisit(Paging paging, List<Filter> filters){
-		
+	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisit(Paging paging, List<Filter> filters) {
+
 		PagingQuery<CustomerServiceBackVisitPO> query = pagingQuery(paging, CustomerServiceBackVisitPO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
 
 	@Override
-	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisitByOrderId(Paging paging, List<Filter> filters, String orderId){
-		
+	public List<CustomerServiceBackVisitPO> pageCustomerServiceBackVisitByOrderId(Paging paging, List<Filter> filters, String orderId) {
+
 		PagingQuery<CustomerServiceBackVisitPO> query = pagingQuery(paging, CustomerServiceBackVisitPO.class);
-		
+
 		query.add(query.getCriterion(CustomerServiceBackVisitPO.COLUMN_ORDERID_STR, orderId, "eq"));
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.add(query.getCriterion(field, data, op));
+		}
+
 	}
 
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -18,6 +19,8 @@ import com.fanglin.sales.dao.SalesPictureDao;
 import com.fanglin.sales.po.SalesPicturePO;
 import com.fanglin.sales.service.SalesPictureService;
 import com.fanglin.sales.vo.SalesPictureVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -31,10 +34,13 @@ public class SalesPictureServiceImpl implements SalesPictureService {
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
 	@Override
 	public List<SalesPictureVO> querySalesPicture(SalesPictureVO salesPictureVO) {
 
-		List<SalesPicturePO> salesPicturePOs = salesPictureVO.getSiid() != null ? salesPictureDao.querysalesPictureBySiid(salesPictureVO.getSiid()) : salesPictureDao.querySalesPictureBySid(salesPictureVO.getSid());
+		List<SalesPicturePO> salesPicturePOs = salesPictureVO.getSiid() != null ? salesPictureDao.querySalesPictureBySiid(salesPictureVO.getSiid()) : salesPictureDao.querySalesPictureBySid(salesPictureVO.getSid());
 		List<SalesPictureVO> salesPictureVOs = new ArrayList<SalesPictureVO>();
 
 		for (SalesPicturePO salesPicturePO : salesPicturePOs) {
@@ -46,7 +52,13 @@ public class SalesPictureServiceImpl implements SalesPictureService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addSalesPicture(SalesPictureVO salesPictureVO, String userId) {
+	public int addSalesPicture(SalesPictureVO salesPictureVO, String userId, int company) throws FLException {
+
+		SystemConfigPO limit = systemConfigDao.querySystemConfig("SALES_PICTURE_LIMIT", company);
+
+		if (salesPictureDao.countSalesPicture(salesPictureVO.getSid(), salesPictureVO.getType()) > (limit == null ? 4 : Integer.parseInt(limit.getValue()))) {
+			throw new FLException(110017, "资源数已达上限");
+		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 

@@ -95,6 +95,14 @@ public class SelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "refundSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundSelectionItem() throws FLException {
+
+		selectionItemService.refundSelectionItem(selectionItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "tranSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranSelectionItem() throws FLException {
 
@@ -106,7 +114,7 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "checkSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkSelectionItem() throws FLException {
 
-		selectionItemService.checkSelectionItem(selectionItem, queryUserId());
+		selectionItemService.checkSelectionItem(selectionItems, queryUserId());
 
 		return SUCCESS;
 	}
@@ -114,7 +122,7 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "confirmSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmSelectionItem() throws FLException {
 
-		selectionItemService.confirmSelectionItem(selectionItem, queryUserId());
+		selectionItemService.confirmSelectionItem(selectionItems, queryUserId());
 
 		return SUCCESS;
 	}
@@ -122,7 +130,7 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "finishSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishSelectionItem() throws FLException {
 
-		selectionItemService.finishSelectionItem(selectionItem, queryUserId());
+		selectionItemService.finishSelectionItem(selectionItems, queryUserId());
 
 		return SUCCESS;
 	}

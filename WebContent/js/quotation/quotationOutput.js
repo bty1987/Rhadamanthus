@@ -368,6 +368,8 @@ function printCustomerTable(subtype, orderType) {
                 if (qv.showItem == true) {
                     qv.num = 1;
                     qv.measurementUnit = "项";
+                    qv.unitPrice = 0;
+                    qv.total = 0;
                 }
 
                 if (orderType == 1) {
@@ -376,8 +378,8 @@ function printCustomerTable(subtype, orderType) {
                     contentHtml += '<td width="18%" align="left">' + qv.itemName + '</td>';
                     contentHtml += '<td width="4%" align="center">' + qv.measurementUnit + '</td>';
                     contentHtml += '<td width="3%" align="center">' + qv.num + '</td>';
-                    contentHtml += '<td width="5%" align="center">' + qv.dcp + '</td>';
-                    contentHtml += '<td width="5%" align="center">' + qv.dcpt + '</td>';
+                    contentHtml += '<td width="5%" align="center">' + qv.unitPrice + '</td>';
+                    contentHtml += '<td width="5%" align="center">' + qv.total + '</td>';
                     contentHtml += '<td width="62%" align="left">' + (qv.content ? qv.content : "-") + '</td>';
                 } else {
                     contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
@@ -723,7 +725,7 @@ jQuery(function($) {
 
     quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 
-    generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, params.quotation.orderType, printConf.showType);
+    generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, quotationUtils.quotationDetail.quotation.decoration.type, printConf.showType);
 
 });
 

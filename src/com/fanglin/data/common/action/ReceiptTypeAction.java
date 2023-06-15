@@ -52,6 +52,14 @@ public class ReceiptTypeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryReceiptTypeByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryReceiptTypeByNo() throws FLException {
+
+		receiptType = receiptTypeService.queryReceiptTypeByNo(receiptType, queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addReceiptType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addReceiptType() throws FLException {
 

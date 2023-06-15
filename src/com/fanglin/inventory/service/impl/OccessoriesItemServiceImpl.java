@@ -18,7 +18,6 @@ import com.fanglin.inventory.po.OccessoriesItemPO;
 import com.fanglin.inventory.po.OccessoriesPO;
 import com.fanglin.inventory.service.OccessoriesItemService;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
-import com.fanglin.inventory.vo.OccessoriesVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("occessoriesItemService")
@@ -32,7 +31,7 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 	private OccessoriesDao occessoriesDao;
 
 	@Override
-	public List<OccessoriesItemVO> queryOccessoriesItemByAid(OccessoriesItemVO occessoriesItemVO) {
+	public List<OccessoriesItemVO> queryOccessoriesItemByOid(OccessoriesItemVO occessoriesItemVO) {
 
 		List<OccessoriesItemPO> occessoriesItemPOs = occessoriesItemDao.queryOccessoriesItemByOid(occessoriesItemVO.getOid());
 		List<OccessoriesItemVO> occessoriesItemVOs = new ArrayList<OccessoriesItemVO>();
@@ -61,9 +60,9 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO) throws FLException {
+	public int addOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException {
 
-		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesItemVO.getOid());
 
 		if (occessoriesPO == null) {
 			throw new FLException(260023, "辅料单不存在");
@@ -73,7 +72,10 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		OccessoriesItemPO occessoriesItemPO = new OccessoriesItemPO().init(occessoriesVO.getOid(), occessoriesItemVO.getGoods().getGid(), occessoriesItemVO.getNum());
+		OccessoriesItemPO occessoriesItemPO = new OccessoriesItemPO().init(occessoriesItemVO.getOid(), occessoriesItemVO.getGoods().getGid(), occessoriesItemVO.getNum());
+
+		occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
+		occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 
 		occessoriesItemDao.save(occessoriesItemPO);
 
@@ -92,12 +94,11 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesItemPO.getOid());
 
-		if (occessoriesPO.getStatus() != 4) {
+		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		occessoriesItemPO.setRecnum(occessoriesItemVO.getRecnum());
-		occessoriesItemPO.setVbalance(occessoriesItemVO.getVbalance());
+		occessoriesItemPO.setNum(occessoriesItemVO.getNum());
 
 		occessoriesItemDao.update(occessoriesItemPO);
 

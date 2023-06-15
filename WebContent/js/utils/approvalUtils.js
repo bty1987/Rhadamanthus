@@ -28,7 +28,7 @@ var approvalUtils = {
 
                 var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
             });
-        });
+        }, null, false);
     },
     addspan: function(px, name, value) {
 

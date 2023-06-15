@@ -56,10 +56,20 @@ jQuery(function($) {
             com.focusPage("#belongRegion").val(res.user.dept.fatherDept.name);
             com.focusPage("#belongDeptId").val(res.user.dept.no);
             com.focusPage("#belongRegionId").val(res.user.dept.fatherDept.no);
+            com.updateTypeahead("deptId", res.user.dept.did, res.user.dept.name);
+            com.updateTypeahead("regionId", res.user.dept.fatherDept.did, res.user.dept.fatherDept.name);
         });
 
         return value;
     });
+
+    com.initTypeahead('deptId', api.communion.queryDepartmentByName, "dept.name", {
+        "dept.type.dtid": decorationBelong.type != 0 ? 0 : 2
+    }, 'deptList', 'did', 'name', null);
+
+    com.initTypeahead('regionId', api.communion.queryDepartmentByName, "dept.name", {
+        "dept.type.dtid": decorationBelong.type != 0 ? 3 : 1
+    }, 'deptList', 'did', 'name', null);
 
     com.focusPage("#defaultFlag").switchBtn("isOrNot");
     com.focusPage("#updateDefaultFlag").switchBtn("isOrNot");
@@ -83,11 +93,11 @@ jQuery(function($) {
         addRow.region = {};
         addRow.belonger.userId = com.typeahead("belongUserId");
         addRow.belonger.currentName = com.focusPage("#belongUser").val();
-        addRow.department.name = com.focusPage("#belongDept").val();
-        addRow.region.name = com.focusPage("#belongRegion").val();
+        addRow.department.name = com.focusPage("#deptId").val();
+        addRow.region.name = com.focusPage("#regionId").val();
         addRow.rate = com.focusPage("#belongRate").val();
-        addRow.department.deptId = com.focusPage("#belongDeptId").val();
-        addRow.region.deptId = com.focusPage("#belongRegionId").val();
+        addRow.department.did = com.typeahead("deptId");
+        addRow.region.did = com.typeahead("regionId");
         addRow.defaultFlag = com.focusPage("#defaultFlag").prop("checked") ? 1 : 0;
 
         if (addRow.rate < 0 || addRow.rate > 1) {
@@ -145,10 +155,12 @@ jQuery(function($) {
 
             options["approvalDecorationBelongItems[" + num + "].orderId"] = decorationBelong.orderId;
             options["approvalDecorationBelongItems[" + num + "].userId"] = $v.attr("belongUserId");
+            options["approvalDecorationBelongItems[" + num + "].bdid"] = $v.attr("deptId");
+            options["approvalDecorationBelongItems[" + num + "].brid"] = $v.attr("regionId");
             options["approvalDecorationBelongItems[" + num + "].rate"] = $belongRate;
             options["approvalDecorationBelongItems[" + num + "].defaultFlag"] = $defaultFlag;
 
-            current += "编号:" + info.belonger.userId + ", 姓名: " + info.belonger.currentName + ", 部门: " + info.department.name + ", 分区:" + info.region.name + ", 比例:" + $belongRate + "\n"
+            current += "编号:" + info.belonger.userId + ", 姓名: " + info.belonger.currentName + ", 部门: " + info.department.name + ", 分区:" + info.region.name + ", 比例:" + $belongRate + "\n";
 
             if ($defaultFlag == 1) {
                 defaultCount++;
@@ -202,9 +214,10 @@ jQuery(function($) {
         }, {
             "name": "备注",
             "value": comment
-        }, ]
+        }, ];
 
-        options["code"] = "PROC-AA84B687-1572-4203-85D9-5ADE611042A0";
+        options["code"] = "PROC-AA84B687-1572-4203-85D9-5ADE611042A0"; // test
+        options["code"] = "PROC-12D5DBE9-1974-4B95-89C9-0BB85DA00CEB"; // product
         options["forms"] = JSON.stringify(args);
 
         com.post(api.approval.submitApprovalForDecorationBelong, options, function(res) {
@@ -277,7 +290,7 @@ jQuery(function($) {
 
         $divBtnWrap.append($btnUpdate).append($btnDel).appendTo($h4);
 
-        $liLine.attr('id', v.belonger.userId).attr('belongUserId', v.belonger.userId).attr('belongRate', v.rate).attr('defaultFlag', v.defaultFlag);
+        $liLine.attr('id', v.belonger.userId).attr('belongUserId', v.belonger.userId).attr('belongRate', v.rate).attr('defaultFlag', v.defaultFlag).attr('deptId', v.department.did).attr('regionId', v.region.did);
         $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 
         return $liLine;
@@ -310,6 +323,8 @@ jQuery(function($) {
     function changeItem() {
 
         com.cleanTypeahead('belongUserId');
+        com.cleanTypeahead('deptId');
+        com.cleanTypeahead('regionId');
         com.focusPage('#belongRate').val(0);
     }
 
@@ -334,7 +349,7 @@ jQuery(function($) {
         if (decorationBelongs && decorationBelongs.length > 0) {
             $.each(decorationBelongs, function(i, v) {
 
-                decorationBelong.original += "编号:" + v.belonger.userId + ", 姓名: " + v.belonger.currentName + ", 部门: " + v.department.name + ", 分区:" + v.region.name + ", 比例:" + v.rate + "\n"
+                decorationBelong.original += "编号:" + v.belonger.userId + ", 姓名: " + v.belonger.currentName + ", 部门: " + v.department.name + ", 分区:" + v.region.name + ", 比例:" + v.rate + "\n";
 
                 $resultList.append(displayFunc(v));
             });

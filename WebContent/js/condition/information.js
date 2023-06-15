@@ -1,6 +1,5 @@
-
 Condition.addupRule("information", {
-    
+
     "v-activity-name": {
         label: "名称",
         type: "text",
@@ -21,7 +20,13 @@ Condition.addupRule("information", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+            listPath: [{
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -46,7 +51,13 @@ Condition.addupRule("information", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+            listPath: [{
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -87,7 +98,7 @@ Condition.addupRule("information", {
         submitConfig: {
             name: "mno",
             op: "eq",
-            validate:null,
+            validate: null,
         }
     },
     "v-payment-brand": {
@@ -98,12 +109,12 @@ Condition.addupRule("information", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.data.queryBrandByPinyin,//获取数据要调用的接口
-            postData: {},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "value",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
+            postData: {},// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "value",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "v-payment-creater-name": {
@@ -116,20 +127,22 @@ Condition.addupRule("information", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"0" },
+            postData: {
+                "user.status": "0"
+            },
             listPath: "userBases",
             keyPath: "userId",
             valuePath: "currentName"
         }
     },
-    
+
     "award-no": {
         label: "物品编号",
         type: "text",
         submitConfig: {
             name: "no",
             op: "eq",
-            validate:null
+            validate: null
         }
     },
     "award-name": {
@@ -138,7 +151,7 @@ Condition.addupRule("information", {
         submitConfig: {
             name: "name",
             op: "cn",
-            validate:null
+            validate: null
         }
     },
     "awardStock-type": {
@@ -149,12 +162,12 @@ Condition.addupRule("information", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.information,
             postData: {},
             listPath: "awardStockType",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "awardStock-subtype": {
@@ -170,7 +183,7 @@ Condition.addupRule("information", {
             postData: {},
             listPath: "awardSubtype",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "awardStock-room": {
@@ -181,15 +194,31 @@ Condition.addupRule("information", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.information,
             postData: {},
             listPath: "awardStoreRoom",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
-    
+    "awardStock-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.information,
+            postData: {},
+            listPath: "awardStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "awardRecord-orderId": {
         label: "装修单号",
         type: "text",
@@ -199,7 +228,7 @@ Condition.addupRule("information", {
             validate: null
         }
     },
-    "awardRecord-name":{
+    "awardRecord-name": {
         label: "物品名称",
         type: "text",
         submitConfig: {
@@ -221,7 +250,7 @@ Condition.addupRule("information", {
             postData: {},
             listPath: "StockType",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "awardRecord-onetype": {
@@ -232,15 +261,15 @@ Condition.addupRule("information", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.information,
             postData: {},
             listPath: "awardStockOneType",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
-    "awardRecord-subtype":{
+    "awardRecord-subtype": {
         label: "子类",
         type: "select",
         submitConfig: {
@@ -253,7 +282,7 @@ Condition.addupRule("information", {
             postData: {},
             listPath: "awardRecordSubtype",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "awardRecord-recordTime": {
@@ -265,39 +294,48 @@ Condition.addupRule("information", {
             validate: null
         }
     },
-    
+
     "activity-name": {
-        label: "名称", //中文名
+        label: "名称", // 中文名
         type: "text", // 类型
         submitConfig: { // 向后台提交的配置
             name: "name", // 接口中的参数名
             op: "cn", // 查询方式
-            validate: null // 校验规则
+            validate: null
+        // 校验规则
         }
     },
     "activity-status": {
-        label: "状态", //中文名
+        label: "状态", // 中文名
         type: "select", // 类型
         submitConfig: { // 向后台提交的配置
             name: "status", // 接口中的参数名
             op: "eq", // 查询方式
-            validate: null // 校验规则
+            validate: null
+        // 校验规则
         },
         dataSource: { // 从后台取数据的各种配置
             url: null, // 获取数据要调用的接口
             postData: null, // 获取数据时的请求参数
-            listPath: [{key: "0", value: "\u6709\u6548"}, {key: "1", value: "\u65e0\u6548"}], // 响应list的json路径
+            listPath: [{
+                key: "0",
+                value: "\u6709\u6548"
+            }, {
+                key: "1",
+                value: "\u65e0\u6548"
+            }], // 响应list的json路径
             keyPath: "key", // 用来向后台提交的字段的json路径
             valuePath: "value" // 用来在页面显示的字段的json路径
         }
     },
     "activity-type": {
-        label: "类型", //中文名
+        label: "类型", // 中文名
         type: "select", // 类型
         submitConfig: { // 向后台提交的配置
             name: "type", // 接口中的参数名
             op: "eq", // 查询方式
-            validate: null // 校验规则
+            validate: null
+        // 校验规则
         },
         dataSource: { // 从后台取数据的各种配置
             url: api.ds.information, // 获取数据要调用的接口
@@ -307,27 +345,30 @@ Condition.addupRule("information", {
             valuePath: "value" // 用来在页面显示的字段的json路径
         }
     },
-    
+
     "notice-theme": {
-        label: "主题", //中文名
+        label: "主题", // 中文名
         type: "text", // 类型
         submitConfig: { // 向后台提交的配置
             name: "theme", // 接口中的参数名
             op: "cn", // 查询方式
-            validate: null // 校验规则
+            validate: null
+        // 校验规则
         }
     },
-    "notice-creater-name" : {
+    "notice-creater-name": {
         label: "发布人",
         type: "autofill",
         submitConfig: {
-            name: "creater",//后台判断匹配
+            name: "creater",// 后台判断匹配
             op: "eq",
             validate: null
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status": ""},
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -343,18 +384,20 @@ Condition.addupRule("information", {
             validate: null
         }
     },
-    
-    "plan-task" : {
-        label:"任务名称",
-        type:"select",
-        submitConfig : {
-            name : "taskName",
-            op : "eq",
-            validate:null
+
+    "plan-task": {
+        label: "任务名称",
+        type: "select",
+        submitConfig: {
+            name: "taskName",
+            op: "eq",
+            validate: null
         },
         dataSource: {
             url: api.communion.queryTask,
-            postData: {"task.level": 0},
+            postData: {
+                "task.level": 0
+            },
             listPath: "tasks",
             keyPath: "tid",
             valuePath: "name"
@@ -369,7 +412,7 @@ Condition.addupRule("information", {
             validate: null
         }
     },
-    "plan-status":{
+    "plan-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -385,8 +428,8 @@ Condition.addupRule("information", {
             valuePath: "value"
         }
     },
-    
-    "worksheet-code" : {
+
+    "worksheet-code": {
         label: "单号",
         type: "text",
         submitConfig: {
@@ -421,7 +464,9 @@ Condition.addupRule("information", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"" },
+            postData: {
+                "user.status": ""
+            },
             listPath: "userBases",
             keyPath: "userId",
             valuePath: "currentName"
@@ -437,7 +482,9 @@ Condition.addupRule("information", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"" },
+            postData: {
+                "user.status": ""
+            },
             listPath: "userBases",
             keyPath: "userId",
             valuePath: "currentName"
@@ -456,7 +503,7 @@ Condition.addupRule("information", {
             postData: {},
             listPath: "awardPurchaseStatus",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "awardPurchase-createTime": {
@@ -486,7 +533,7 @@ Condition.addupRule("information", {
             validate: null
         }
     },
-    "awardPurchase-name":{
+    "awardPurchase-name": {
         label: "物品名称",
         type: "text",
         submitConfig: {
@@ -501,7 +548,7 @@ Condition.addupRule("information", {
         submitConfig: {
             name: "awardStock.no",
             op: "eq",
-            validate:null
+            validate: null
         }
     },
     "awardPurchase-type": {
@@ -512,12 +559,12 @@ Condition.addupRule("information", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.information,
             postData: {},
             listPath: "awardStockType",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
 

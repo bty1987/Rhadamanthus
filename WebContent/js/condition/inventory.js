@@ -118,6 +118,22 @@ Condition.addupRule("inventory", {
             valuePath: "value"
         }
     },
+    "accessories-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.manifest,
+            postData: {},
+            listPath: "accessoriesType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
     /* -------外辅单--------- */
     "occessories-no": {

@@ -53,7 +53,7 @@ public class RoleModulePO implements java.io.Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "rmId")
+	@Column(name = "rmid")
 	public int getRmId() {
 		return this.rmId;
 	}
@@ -71,8 +71,8 @@ public class RoleModulePO implements java.io.Serializable {
 		this.rid = rid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "mId", referencedColumnName = "mId")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "mid", referencedColumnName = "mid")
 	public ModulePO getModule() {
 		return module;
 	}
@@ -97,7 +97,7 @@ public class RoleModulePO implements java.io.Serializable {
 		this.access = access;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;

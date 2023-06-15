@@ -60,7 +60,39 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 			}
 
 			userCompanyVOs.add(userCompanyVO);
+		}
 
+		return userCompanyVOs;
+	}
+
+	@Override
+	public List<UserCompanyVO> queryUserCompanyForSelf(String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		List<UserCompanyVO> userCompanyVOs = new ArrayList<UserCompanyVO>();
+
+		if (userPO == null) return userCompanyVOs;
+
+		List<UserCompanyPO> userCompanyPOs = userCompanyDao.queryUserCompany(userPO.getUid());
+
+		UserCompanyVO userCompanyVO;
+
+		for (UserCompanyPO userCompanyPO : userCompanyPOs) {
+
+			userCompanyVO = new UserCompanyVO(new CompanyVO(), new UserBaseVO());
+
+			BeanUtil.copyProperties(userCompanyPO, userCompanyVO, Arrays.asList("company", "creater"));
+
+			BeanUtil.copyProperties(userCompanyPO.getCompany(), userCompanyVO.getCompany(), Arrays.asList("cid", "drganization", "srganization"));
+
+			try {
+				userCompanyVO.getCompany().setCid(AESHelper.encrypt(FormatUtil.encodeCompany(userCompanyPO.getCompany().getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
+			} catch (Exception e) {
+				throw new FLException(230015, "公司不存在");
+			}
+
+			userCompanyVOs.add(userCompanyVO);
 		}
 
 		return userCompanyVOs;
@@ -80,8 +112,13 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 
 		if (cids == null) return 0;
 
-		if (operater.getRole().getRid() == userPO.getRole().getRid()) return 0;
-		if (userPO.getRole().getLevel() >= operater.getRole().getLevel()) return 0;
+		if (operater.getRole().getRid() == userPO.getRole().getRid()) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if (userPO.getRole().getLevel() >= operater.getRole().getLevel()) {
+			throw new FLException(-1, "无操作权限");
+		}
 
 		for (String encrypt : cids) {
 

@@ -72,7 +72,7 @@ $(function() {
             });
             var $span = $('<span></span>').addClass('lbl status-lbl');
 
-            var propertyArr = [["创建人:", v.creater.currentName, "grey"], ["开始时间:", v.startTime, "green"], ["结束时间:", v.endTime, "green"], ["状态:", v.status == constant.information().activity.STATUS_VALID_INT ? "有效" : "无效", "red"], ["类型:", constant.information().activity.type.keys[v.type], "red"], ["倍数:", v.multiple, "blue"], ["默认标识:", v.defaults == constant.information().activity.DEFAULTS_DEFAULT_INT ? "默认" : "普通", "red"], ["说明:", v.content, "grey"]];
+            var propertyArr = [["创建人:", v.creater.currentName, "grey"], ["开始时间:", v.startTime, "green"], ["结束时间:", v.endTime, "green"], ["状态:", v.status == constant.information().activity.STATUS_VALID_INT ? "有效" : "无效", "red"], ["类型:", constant.information().activity.type.keys[v.type], "red"], ["倍数:", v.multiple, "blue"], ["默认标识:", v.defaults == constant.information().activity.DEFAULTS_DEFAULT_INT ? "默认" : "标准", "red"], ["说明:", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 

@@ -24,6 +24,20 @@ public class PresignItemPO implements Serializable {
 
 	public static final short ONETYPE_STANDARD_INT = 1;
 
+	public static final short TYPE_BASICS_INT = 0;// 功能区
+
+	public static final short TYPE_OPTIONAL_INT = 1;// 可选配
+
+	public static final short TYPE_CUSTOM_INT = 2;// 个性
+
+	public static final short TYPE_ADDTION_INT = 3;// 赋能
+
+	public static final short ATTTYPE_CURRENT_INT = 0;// 通用
+
+	public static final short ATTTYPE_ENGINEERING_INT = 1;// 工程
+
+	public static final short ATTTYPE_MATERIAL_INT = 2;// 主材
+
 	private long piid;
 
 	private long ppid;
@@ -36,9 +50,13 @@ public class PresignItemPO implements Serializable {
 
 	private long price;
 
+	private short areaCale;
+
 	private short type;
 
 	private short onetype;
+
+	private short atttype;
 
 	private short status;
 
@@ -109,6 +127,15 @@ public class PresignItemPO implements Serializable {
 		this.price = price;
 	}
 
+	@Column(name = "areaCale")
+	public short getAreaCale() {
+		return areaCale;
+	}
+
+	public void setAreaCale(short areaCale) {
+		this.areaCale = areaCale;
+	}
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -125,6 +152,15 @@ public class PresignItemPO implements Serializable {
 
 	public void setOnetype(short onetype) {
 		this.onetype = onetype;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "status")

@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "format", catalog = "inventory")
+@Table(name = "format", catalog = "data")
 public class FormatPO implements Serializable {
 
 	private static final long serialVersionUID = -260512360916421162L;

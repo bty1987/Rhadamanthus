@@ -12,6 +12,10 @@ public class ApprovalDecorationBelongItemVO implements java.io.Serializable {
 
 	private String userId;
 
+	private Integer bdid;
+
+	private Integer brid;
+
 	private Integer rate;
 
 	private Short defaultFlag;
@@ -46,6 +50,22 @@ public class ApprovalDecorationBelongItemVO implements java.io.Serializable {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public Integer getBdid() {
+		return bdid;
+	}
+
+	public void setBdid(Integer bdid) {
+		this.bdid = bdid;
+	}
+
+	public Integer getBrid() {
+		return brid;
+	}
+
+	public void setBrid(Integer brid) {
+		this.brid = brid;
 	}
 
 	public Integer getRate() {

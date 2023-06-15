@@ -28,11 +28,6 @@ $(function() {
         com.cleanItems(decoration7Achievement.items);
     });
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        decoration7Achievement.typeness = res.typeness.split("key", "value");
-    }, null, false);
-
     var searcher = new Searcher();
 
     searcher.base("condList", "decoration7Achievement", "resultList", api.report.queryDecoration7Achievement);
@@ -79,7 +74,7 @@ $(function() {
         name: "类型",
         prop: "typeness",
         clazz: "red",
-        dataset: decoration7Achievement.typeness
+        dataset: constant.decoration().decoration.typeness.keys
     }, {
         field: "cs0",
         name: "签单户数",
@@ -151,7 +146,7 @@ $(function() {
             "decorationAchievement.month": decoration7Achievement.items.month.val(),
         };
 
-        com.post(api.report.updataDecoration7Achievement, options, function() {
+        com.post(api.report.updateDecoration7Achievement, options, function() {
 
             searcher.doSearch();
             com.showAlert(com.info, "更新成功");

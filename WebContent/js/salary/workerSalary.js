@@ -84,7 +84,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.salary.pageWorkerSalary);
 
-    searcher.condition(["salary-orderId", "salary-salaryWorkduty", "salary-jober", 'salary-checker', "salary-salaryschedule", "salary-worker-count", 'salary-salarystatus', 'salary-isCheck', "salary-createTime", 'salary-approveTime', 'salary-checkTime']);
+    searcher.condition(["salary-orderId", "salary-salaryWorkduty", "salary-jober", 'salary-checker', "salary-salaryschedule", "salary-worker-count", 'salary-salarystatus', 'salary-twotype', 'salary-isCheck', "salary-createTime", 'salary-approveTime', 'salary-checkTime']);
 
     searcher.history("workersalaryPostData");
 
@@ -364,6 +364,19 @@ jQuery(function($) {
         show: function(v) {
 
             return salary.pageType == "checker" && v.isCheck != 1;
+        }
+    }, {
+        name: "同步金蝶",
+        clazz: "btn-warning",
+        handle: function(v) {
+            
+            kingdeeUtils.workerSalary(v);
+            
+            return false;
+        },
+        show: function(v) {
+
+            return salary.pageType != "checker" && v.decoration != null && v.decoration.orderId != null && v.status == 1;
         }
     }, ];
 

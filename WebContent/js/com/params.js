@@ -2,6 +2,9 @@ var params = {
 
     historyPage: null,
 
+    errorCount: 0,
+    errorTime: 0,
+
     urlLoadParams: {},
     selectCaching: {},
     apiHistory: {},

@@ -54,6 +54,7 @@ import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -70,6 +71,8 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -173,6 +176,15 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private CustomerDao customerDao;
+
+	@Autowired
+	private ExtensionItemDao extensionItemDao;
+
+	@Autowired
+	private ExtensionDao extensionDao;
+
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
 
 	@Override
 	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses) {
@@ -740,7 +752,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public DecorationVO checkDecoration(DecorationVO decorationVO, Authentication authentication) {
+	public DecorationVO checkDecoration(DecorationVO decorationVO, Authentication authentication) throws FLException {
 
 		long hid = decorationVO.getHouse().getHid();
 
@@ -751,6 +763,8 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationPO == null) return new DecorationVO();
 
 		decorationPO.ptvcascade(decorationVO);
+
+		decorationVO.setDompany(CompanyServiceImpl.encode(decorationPO.getCompany()));
 
 		return decorationVO;
 	}
@@ -1084,6 +1098,10 @@ public class DecorationServiceImpl implements DecorationService {
 			quotationDao.delete(quotationPO);
 		}
 
+		extensionItemDao.deleteExtensionItem(orderId);
+
+		extensionDao.deleteExtension(orderId);
+
 		decorationDao.update(decorationPO);
 
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,报价版本修改,原报价版本:%s,修改报价版本为:%s", orderId, oldVersionId, versionId)));
@@ -1174,13 +1192,12 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void terminalDecoration(DecorationVO decorationVO, List<DecorationPaymentVO> decorationPaymentVOs, Authentication authentication) throws FLException {
+	public void terminalDecoration(DecorationVO decorationVO, List<DecorationPaymentVO> decorationPaymentVOs, String userId, int company) throws FLException {
 
 		long backup = 0;
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+		String orderId = decorationVO.getOrderId();
 
-		String userId = authentication.getUserId();
-		int company = authentication.getCompany();
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
@@ -1250,7 +1267,7 @@ public class DecorationServiceImpl implements DecorationService {
 		} else if (decorationPO.getStatus() == DecorationPO.STATUS_SIGNED_INT) {
 
 			Short[] status = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
-			long amount = decorationPaymentDao.amountDecorationPayment(decorationVO.getOrderId(), status, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
+			long amount = decorationPaymentDao.amountDecorationPayment(orderId, status, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
 			long refund = Arith.sub(amount, backup);
 
 			if (refund > amount) {
@@ -1288,7 +1305,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 					decorationPaymentDao.save(backupPaymentPO);
 				}
-
 			}
 
 			DecorationPaymentPO refundPaymentPO = new DecorationPaymentPO();
@@ -1312,7 +1328,17 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
 		decorationDao.update(decorationPO);
 
-		decorationOperateDao.save(new DecorationOperatePO().terminal(decorationPO.getOrderId(), operater));
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+
+		for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+			decorationOperateDao.save(new DecorationOperatePO().terminal(orderId, operater).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_DESIGN_INT, decorationBelongPO.getRate()));
+		}
+
+		for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+			decorationOperateDao.save(new DecorationOperatePO().terminal(orderId, operater).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_BUSINESS_INT, decorationBelongPO.getRate()));
+		}
+
 	}
 
 	@Override
@@ -1424,6 +1450,20 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setCustomer(customerPO);
 		decorationDao.update(decorationPO);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void changeDecorationForPayScale(DecorationVO decorationVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 
 	}
 }

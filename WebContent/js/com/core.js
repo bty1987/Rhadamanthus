@@ -237,7 +237,31 @@
                         com.showAlert(com.info, "操作成功");
                         return res;
                     }
+                } else if (res.errorCode == 110000) {
+
+                    params.errorCount += 1;
+
+                    var currentTime = new Date().getTime();
+
+                    if (params.errorCount >= 10 && (currentTime - params.errorTime) <= 60000) {
+                        if (parent.window.isPC) {
+                            document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
+                        } else {
+                            window.location.href = '/';
+                        }
+                    }
+
+                    params.errorTime = currentTime;
+
+                    if (params.errorCount >= 5) {
+                        com.showAlert(com.error, res.errorMsg + "<br>请重新登录或联系管理员");
+                        return res;
+                    }
+
+                    com.showAlert(com.error, res.errorMsg);
+
                 } else if (res.errorCode == 110005) {
+
                     if (parent.window.isPC) {
                         document.getElementById('myiframe').contentWindow.document.getElementById("userLock").click();
                     } else {
@@ -1101,7 +1125,7 @@
                     }).text(title).appendTo(divM);
 
                     var btns = $('<div class="layui-layer-btn layui-layer-btn-" style="float: right; width: 65%; padding: 0px;"></div>').appendTo(divM);
-                    var btn1 = $('<a class="layui-layer-btn0">普通打印</a>').appendTo(btns);
+                    var btn1 = $('<a class="layui-layer-btn0">标准打印</a>').appendTo(btns);
                     var btn2 = $('<a class="layui-layer-btn0">热敏打印</a>').appendTo(btns);
 
                     btn1.click(function() {
@@ -1276,8 +1300,13 @@
 
         var _holder = com.focusPage(holder);
 
-        var _width = $(window).width() * 0.8;
-        var _height = $(window).height() * 0.8;
+        var _rate = 0.8;
+
+        if (utils.isMobile())
+            _rate = 1;
+
+        var _width = $(window).width() * _rate;
+        var _height = $(window).height() * _rate;
 
         var _area = [_width + "px", _height + "px"]
 

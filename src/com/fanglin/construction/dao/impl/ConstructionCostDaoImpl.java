@@ -45,16 +45,16 @@ public class ConstructionCostDaoImpl extends DaoImpl<ConstructionCostPO> impleme
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				String field = filter.getField();
-				String op = filter.getOp();
-				String data = filter.getData();
+		for (Filter filter : filters) {
 
-				if (field.equals("name")) {
-					query.add(query.getCriterion("name", data, op));
-				}
+			String field = filter.getField();
+			String op = filter.getOp();
+			String data = filter.getData();
+
+			if (field.equals("name")) {
+				query.add(query.getCriterion("name", data, op));
 			}
 		}
 	}

@@ -8,7 +8,46 @@
     </div>
 </div>
 
+<div class="modal fade" id="addBalanceCutpayModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="addModalLabel">添加扣款</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label no-padding-right">名称</label>
+                        <div class="col-md-9">
+                            <input type="text" id="name1" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right">金额</label>
+                        <div class="col-md-9">
+                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="money" name="money" data-required="1" data-toggle="popover" data-trigger='manual'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-sm-9">
+                            <textarea id="comment1" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveAddBtn" class="btn btn-primary">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div id="layerPopUp" class="portlet box"></div>
 <script type="text/javascript">
-	$.loadScript(['js/balance/balanceDccountDetail.js']);
+    $.loadScript(['js/balance/balanceDccountDetail.js']);
 </script>

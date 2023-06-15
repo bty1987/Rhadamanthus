@@ -2,20 +2,9 @@ function printHeader(headStr) {
 
     var headHtml = "";
 
-    headHtml += '<table style="font-size: 14px" width="100%" bgcolor="#000000" border="0" cellpadding="1" cellspacing="0">';
+    headHtml += '<table style="font-size: 14px" width="100%" border="0" cellpadding="1" cellspacing="0">';
     headHtml += '<tbody><tr bgcolor="#FFFFFF">';
-    headHtml += '<td colspan="8" style="font-size: 20px" align="center"> <b>' + headStr + '</b></td>';
-    headHtml += '</tr>';
-    headHtml += '<tr bgcolor="#FFFFFF">';
-    headHtml += '<td colspan="8" height="10"></td>';
-    headHtml += '</tr>';
-    headHtml += '<tr bgcolor="#FFFFFF">';
-    headHtml += '<td colspan="3" width="40%">装修单号: ' + params.quotation.orderId + '</td>';
-    headHtml += '<td colspan="3" width="40%">起报价: ' + protation.protation.quotePrice + '</td>';
-    headHtml += '</tr>';
-    headHtml += '<tr bgcolor="#FFFFFF">';
-    headHtml += '<td colspan="3" width="40%">计价单价: ' + protation.protation.unitPrice + '</td>';
-    headHtml += '<td colspan="3" width="40%">优惠价: ' + protation.protation.preferPrice + '</td>';
+    headHtml += '<td colspan="8" style="font-size: 18px" align="center"> <b>' + headStr + '</b></td>';
     headHtml += '</tr>';
     headHtml += '<tr bgcolor="#FFFFFF">';
     headHtml += '<td colspan="8" height="10"></td>';
@@ -27,54 +16,219 @@ function printHeader(headStr) {
 
 function printProjectTable() {
 
+    var contentHtml = '';
+    var _quoteArea = protation.protation.quoteArea;
+    var _quotePrice = protation.protation.quotePrice;
+    var _manageRate = protation.protation.manageRate;
+    var _accdPrice = protation.protation.accdPrice;
+    var _accmPrice = protation.protation.accmPrice;
+    var _managePrice = protation.protation.managePrice;
+    var _preferPrice = protation.protation.preferPrice;
+    var _subdPrice = protation.protation.subdPrice;
+    var _submPrice = protation.protation.submPrice;
+
+    contentHtml += '<table style="font-size: 12px" width="100%" border="1" cellpadding="1" cellspacing="0">';
+    contentHtml += '<tbody><tr>';
+    contentHtml += '<td colspan="4" style="font-size: 15px; font-weight: bold;" align="center">' + presignProduce.name + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="font-weight: bold;">';
+    contentHtml += '<td width="5%" align="center">项目</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">计价面积</td>';
+    contentHtml += '<td width="5%" align="center">金额</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">' + protation.protation.name + '</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">' + _quoteArea + '</td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(utils.accMul(_quotePrice, utils.accAdd(1, _manageRate)), utils.accAdd(_accdPrice, _accmPrice))) + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td colspan="4" style="font-size: 15px; font-weight: bold;" align="center">标配产品</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="font-weight: bold;">';
+    contentHtml += '<td width="5%" align="center">项目</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">数量</td>';
+    contentHtml += '<td width="5%" align="center">金额</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">标配产品</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + _quotePrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">优惠金额</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center"></td>';
+    contentHtml += '<td width="5%" align="center">' + _preferPrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">管理费收取比例</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + _manageRate + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">折后管理费</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + _managePrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="background-color: #DDDDDD;">';
+    contentHtml += '<td width="5%" align="center">小计</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center"></td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(_quotePrice, _managePrice), _preferPrice), utils.accAdd(_subdPrice, _submPrice))) + '</td>';
+    contentHtml += '</tr>';
+
+    return contentHtml;
+}
+
+function addtionTable() {
+
     var index = 0;
     var contentHtml = '';
-    var protationItems = protationItems;
+    var price = 0;
 
-    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
-    contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
-    contentHtml += '<td width="4%" align="center">序号</td>';
-    contentHtml += '<td width="7%" align="center">编号</td>';
-    contentHtml += '<td width="18%" align="center">项目名称</td>';
-    contentHtml += '<td width="5%" align="center">数量</td>';
-    contentHtml += '<td width="5%" align="center">单价</td>';
+    contentHtml += '<tr>';
+    contentHtml += '<td colspan="4" style="font-size: 15px; font-weight: bold;" align="center">赋能产品</td>';
     contentHtml += '</tr>';
-    contentHtml += '</tbody></table>';
-
-    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
-    contentHtml += '<tbody>';
+    contentHtml += '<tr style="font-weight: bold;">';
+    contentHtml += '<td width="5%" align="center">项目</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">数量</td>';
+    contentHtml += '<td width="5%" align="center">金额</td>';
+    contentHtml += '</tr>';
 
     $.each(protationItems, function(i, qv) {
 
-        contentHtml += '<tr bgcolor="#FFFFFF">';
-        contentHtml += '<td width="4%" align="center">' + (index + 1) + '</td>';
-        contentHtml += '<td width="7%" align="center">' + qv.piid + '</td>';
-        contentHtml += '<td width="18%" align="left">' + qv.name + '</td>';
-        contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
-        contentHtml += '<td width="5%" align="center">' + qv.price + '</td>';
-        contentHtml += '</tr>';
+        price = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
+
+        if (qv.type == constant.quotation().protationItem.TYPE_ACCWORK_INT || qv.type == constant.quotation().protationItem.TYPE_ACCMAIN_INT) {
+            contentHtml += '<tr>';
+            contentHtml += '<td width="5%" align="center">' + qv.name + '</td>';
+            contentHtml += '<td colspan="2" width="5%" align="center">' + qv.num + '</td>';
+            contentHtml += '<td width="5%" align="center">' + price + '</td>';
+            contentHtml += '</tr>';
+        }
 
         index++;
     });
 
-    contentHtml += '<tr bgcolor="#FFFFFF">';
-    contentHtml += '<td colspan="12" align="left">装修单预签总价:' + protation.protation.totalPrice + '元</td>';
+    contentHtml += '<tr style="background-color: #DDDDDD;">';
+    contentHtml += '<td width="5%" align="center">小计</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center"></td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)) + '</td>';
     contentHtml += '</tr>';
 
-    contentHtml += '</tbody>';
-    contentHtml += '</table>';
+    return contentHtml;
+}
 
-    contentHtml += '<table style="font-size: 12px" width="100%" border="0" cellpadding="1" cellspacing="0">';
-    contentHtml += '<tbody>';
+function optionalTable() {
+
+    var index = 0;
+    var contentHtml = '';
+    var price = 0;
+
     contentHtml += '<tr>';
-    contentHtml += '<td height="10"></td>';
+    contentHtml += '<td colspan="4" style="font-size: 15px; font-weight: bold;" align="center">标配外功能区</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="font-weight: bold;">';
+    contentHtml += '<td width="5%" align="center">项目</td>';
+    contentHtml += '<td width="2%" align="center">基础量</td>';
+    contentHtml += '<td width="3%" align="center">数量</td>';
+    contentHtml += '<td width="5%" align="center">金额</td>';
+    contentHtml += '</tr>';
+
+    $.each(protationItems, function(i, qv) {
+
+        price = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, utils.accSub(qv.num, qv.basicNum))) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, utils.accSub(qv.num, qv.basicNum)), protation.protation.quoteArea));
+
+        if (qv.type == constant.quotation().protationItem.TYPE_BASE_INT) {
+            contentHtml += '<tr>';
+            contentHtml += '<td width="5%" align="center">' + qv.name + '</td>';
+            contentHtml += '<td width="5%" align="center">' + qv.basicNum + '</td>';
+            contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
+            contentHtml += '<td width="5%" align="center">' + price + '</td>';
+            contentHtml += '</tr>';
+        }
+
+        index++;
+    });
+
+    contentHtml += '<tr style="background-color: #DDDDDD;">';
+    contentHtml += '<td width="5%" align="center">小计</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center"></td>';
+    contentHtml += '<td width="5%" align="center">' + protation.protation.basicPrice + '</td>';
+    contentHtml += '</tr>';
+
+    return contentHtml;
+}
+
+function customTable() {
+
+    var contentHtml = '';
+
+    contentHtml += '<tr>';
+    contentHtml += '<td  colspan="4" style="font-size: 15px; font-weight: bold;" align="center">个性化产品</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="font-weight: bold">';
+    contentHtml += '<td width="5%" align="center">项目</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">数量</td>';
+    contentHtml += '<td width="5%" align="center">金额</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
-    contentHtml += '<td><b>&nbsp;客户签字:</b></td>';
-    contentHtml += '<td><b>设计师签字:</b></td>';
-    contentHtml += '<td><b>项目经理签字:</b></td>';
-    contentHtml += '</tr><tr>';
-    contentHtml += '</tr></tbody></table>';
+    contentHtml += '<td width="5%" align="center">基础增项</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + protation.protation.adddPrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">主材增项</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + protation.protation.addmPrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="background-color: #DDDDDD;">';
+    contentHtml += '<td width="5%" align="center">小计</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center"></td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(protation.protation.adddPrice, protation.protation.addmPrice)) + '</td>';
+    contentHtml += '</tr>';
+
+    return contentHtml;
+}
+
+function subtractTable() {
+
+    var index = 0;
+    var contentHtml = '';
+    var price = 0;
+
+    contentHtml += '<tr>';
+    contentHtml += '<td colspan="4" style="font-size: 15px; font-weight: bold;" align="center">标配产品减项</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr style="font-weight: bold;">';
+    contentHtml += '<td width="5%" align="center">项目</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">数量</td>';
+    contentHtml += '<td width="5%" align="center">金额</td>';
+    contentHtml += '</tr>';
+
+    $.each(protationItems, function(i, qv) {
+
+        price = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
+
+        if (qv.type == constant.quotation().protationItem.TYPE_CUTWORK_INT || qv.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT) {
+            contentHtml += '<tr>';
+            contentHtml += '<td width="5%" align="center">' + qv.name + '</td>';
+            contentHtml += '<td colspan="2" width="5%" align="center">' + utils.accSub(0, qv.num) + '</td>';
+            contentHtml += '<td width="5%" align="center">' + price + '</td>';
+            contentHtml += '</tr>';
+        }
+
+        index++;
+    });
+
+    contentHtml += '<tr style="background-color: #DDDDDD;">';
+    contentHtml += '<td width="5%" align="center">小计</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center"></td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(protation.protation.subdPrice, protation.protation.submPrice)) + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" style="font-size: 15px;font-weight: bold;" align="center">预签计价合计</td>';
+    contentHtml += '<td colspan="3" width="5%" align="center">' + protation.protation.totalPrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '</tbody></table>';
 
     return contentHtml;
 }
@@ -90,9 +244,14 @@ jQuery(function($) {
     params = parent.params;
     constant = parent.constant;
 
-    pid = params.quotation.protationId
+    pid = params.quotation.protationId;
+
+    if (pid == null)
+        return false;
+
     protation = null;
     protationItems = null;
+    presignProduce = null;
 
     quotationUtils.quotationDetail = {};
 
@@ -110,16 +269,27 @@ jQuery(function($) {
         protationItems = res.protationItems;
     }, null, false);
 
-    generatePrintPage();
+    com.post(api.quotation.queryPresignProduceByPpid, {
+        "presignProduce.ppid": protation.protation.ppid
+    }, function(res) {
 
-})
+        presignProduce = res.presignProduce;
+    }, null, false);
 
-function generatePrintPage() {
+    generatePrintPage(params.company.drganization.name);
+
+});
+
+function generatePrintPage(company) {
 
     var html = "";
 
-    html += printHeader("装修单预签");
+    html += printHeader(company + "家装项目预签单");
     html += printProjectTable();
+    html += addtionTable();
+    html += optionalTable();
+    html += customTable();
+    html += subtractTable();
 
-    $("#protationLits").html(html)
+    $("#protationLits").html(html);
 }

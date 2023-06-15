@@ -88,6 +88,14 @@ public class OperationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryOperationForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String queryOperationForSelf() throws FLException {
+
+		operations = operationService.queryOperationForSelf(queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String addOperation() throws FLException {
 
@@ -108,6 +116,18 @@ public class OperationAction extends BaseListAction {
 		}
 
 		operationService.updateOpperation(operation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateRoleOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String updateRoleOperation() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		operationService.updateRoleOperation(role, operation, queryUserId());
 
 		return SUCCESS;
 	}
@@ -144,6 +164,18 @@ public class OperationAction extends BaseListAction {
 		}
 
 		operationService.deleteOperation(operation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteRoleOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String deleteRoleOperation() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		operationService.deleteRoleOperation(role, operation);
 
 		return SUCCESS;
 	}

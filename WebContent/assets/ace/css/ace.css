@@ -1658,7 +1658,7 @@ blockquote,blockquote.pull-right {
     }
     .ace-nav>li {
         display: inline-block;
-        float: none !important;
+        float: right !important;
         text-align: left;
         letter-spacing: normal
     }

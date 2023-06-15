@@ -53,11 +53,9 @@ public class DecorationCommonAction extends BaseListAction {
 
 	private short result;
 
-	private String orderId;
-
 	private String redirect;
 
-	@Action(value = "queryDecorationSchedule", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "queryDecorationSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationProcess() throws FLException {
 
 		result = decorationAdditionService.queryDecorationSchedule(decoration);
@@ -65,7 +63,7 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "queryDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationContract() throws FLException {
 
 		decorationContracts = decorationContractService.queryDecorationContractByOrderId(decorationContract);
@@ -81,15 +79,15 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmDecorationInfo() throws FLException {
 
-		decorationInfoService.confirmDecorationInfo(decorationInfo, queryUserId());
+		decorationInfoService.confirmDecorationInfo(decoration, decorationInfo);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "redirectDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "redirectDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String redirectDecorationContract() throws FLException {
 
 		redirect = decorationContractService.redirectDecorationContract(decorationContract);
@@ -97,15 +95,15 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "affirmDecorationActivityItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "affirmDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmAddReduce() throws FLException {
 
-		decorationActivityItemService.affirmDecorationActivityItem(decorationActivityItems);
+		decorationActivityItemService.affirmDecorationActivityItem(decoration, decorationActivityItems);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "sendDecorationActivityItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "sendDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendAddReduce() throws FLException {
 
 		decorationActivityItemService.sendDecorationActivityItem(decorationActivityItem);
@@ -151,14 +149,6 @@ public class DecorationCommonAction extends BaseListAction {
 
 	public void setResult(short result) {
 		this.result = result;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
 
 	public String getRedirect() {

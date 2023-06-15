@@ -200,6 +200,21 @@ $(function() {
 
     params.reporter = methods;
 
+    function getApi(o, props) {
+
+        var prop = props.shift();
+
+        if (props.length == 0) {
+            return o[prop];
+        } else if (o[prop]) {
+            return getApi(o[prop], props);
+        }
+        return "";
+    }
+
+    if (utils.isMobile())
+        return false;
+
     com.post(api.data.queryChartForLogin, {}, function(res) {
 
         var args = {
@@ -213,17 +228,5 @@ $(function() {
             }, v.api.split(".")), $.extend({}, JSON.parse(v.param), args), JSON.parse(v.clazz), JSON.parse(v.style), null, getApi(methods, v.method.split(".")));
         });
     });
-
-    function getApi(o, props) {
-
-        var prop = props.shift();
-
-        if (props.length == 0) {
-            return o[prop];
-        } else if (o[prop]) {
-            return getApi(o[prop], props);
-        }
-        return "";
-    }
 
 });

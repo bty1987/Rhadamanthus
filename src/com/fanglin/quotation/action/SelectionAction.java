@@ -48,6 +48,14 @@ public class SelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSelection() throws FLException {
+
+		selectionService.updateSelection(selection);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateSelectionForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSelectionForAdvance() throws FLException {
 

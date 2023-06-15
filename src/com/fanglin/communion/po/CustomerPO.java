@@ -52,6 +52,8 @@ public class CustomerPO implements Serializable {
 
 	private String email;
 
+	private String career;
+
 	private String address;
 
 	private String relationshipType;
@@ -214,6 +216,15 @@ public class CustomerPO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Column(name = "career")
+	public String getCareer() {
+		return career;
+	}
+
+	public void setCareer(String career) {
+		this.career = career;
 	}
 
 	@Column(name = "address")

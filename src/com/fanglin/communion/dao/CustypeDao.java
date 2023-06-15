@@ -11,6 +11,6 @@ public interface CustypeDao extends Dao<CustypePO> {
 
 	public List<CustypePO> pageCustype(Paging paging, List<Filter> filters, int company);
 
-	public CustypePO queryCustype(int company, String dgrade, String sgrade, Short atttype);
+	public CustypePO queryCustype(int company, String dgrade, String sgrade, Short atttype, Short platform);
 
 }

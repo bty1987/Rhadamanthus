@@ -25,6 +25,8 @@ public class DroupVO implements Serializable {
 
 	private String userId;
 
+	private Short type;
+
 	private Short status;
 
 	private Short isHandle;
@@ -76,6 +78,14 @@ public class DroupVO implements Serializable {
 
 	public void setOpenId(String openId) {
 		this.openId = openId;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getStatus() {

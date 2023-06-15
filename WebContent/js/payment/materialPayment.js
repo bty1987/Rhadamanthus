@@ -412,6 +412,7 @@ jQuery(function($) {
 		};
 
 		var realPayment = 0;
+		var realMoney = 0;
 		var referPayment = materialPayment.items.referMoney.val();
 		var type = 0;
 		var isCollects = materialPayment.isCollects;
@@ -449,6 +450,7 @@ jQuery(function($) {
 		var cash = paymentUtils.paramCash(materialPayment, objectName, options);
 
 		realPayment = utils.accAdd(realPayment, parseFloat(cash));
+		realMoney = utils.accAdd(realMoney, parseFloat(cash));
 
 		var bank = paymentUtils.paramBank(materialPayment, materialPayment.payment, objectName, options, type);
 
@@ -458,10 +460,12 @@ jQuery(function($) {
 		}
 
 		realPayment = utils.accAdd(realPayment, parseFloat(bank));
+		realMoney = utils.accAdd(realMoney, parseFloat(bank));
 
 		var checkv = paymentUtils.paramCheckv(materialPayment, objectName, options);
 
 		realPayment = utils.accAdd(realPayment, parseFloat(checkv));
+		realMoney = utils.accAdd(realMoney, parseFloat(checkv));
 
 		var advance = paymentUtils.paramAdvance(materialPayment, materialPayment.payment, objectName, options, "advance", type);
 
@@ -487,6 +491,7 @@ jQuery(function($) {
 		}
 
 		options["materialPayment.mpId"] = payment.mpId;
+		options[objectName + ".realMoney"] = realMoney;
 
 		com.post(url, options, function(res){
 			searcher.doSearch();

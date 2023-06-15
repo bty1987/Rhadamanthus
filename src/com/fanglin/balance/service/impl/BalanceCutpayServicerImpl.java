@@ -92,33 +92,16 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 	@Transactional(rollbackFor=Exception.class)
 	public int addBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
 
-		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
-
-		if (balancePO == null) {
-			throw new FLException(350006, "结算单不存在");
-		}
-
-		if (balancePO.getSurplus() < balanceCutpayVO.getMoney()) {
-			throw new FLException(350003, "结算单金额不足");
-		}
-
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		BalanceCutpayPO balanceCutpayPO = new BalanceCutpayPO();
 
 		balanceCutpayPO.setName(balanceCutpayVO.getName());
-		balanceCutpayPO.setBalance(balancePO);
 		balanceCutpayPO.setOperater(operater);
 		balanceCutpayPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceCutpayPO.setMoney(balanceCutpayVO.getMoney());
 		balanceCutpayPO.setType(balanceCutpayVO.getType());
 		balanceCutpayPO.setComment(balanceCutpayVO.getComment());
-
-		if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT){
-			balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-		} else {
-			balanceCutpayPO.setTotal(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-		}
 
 		if (balanceCutpayVO.getDccount() != null) {
 
@@ -141,9 +124,29 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		balanceCutpayDao.save(balanceCutpayPO);
 
-		balancePO.setCutpay(balanceCutpayPO.getTotal());
+		if (balanceCutpayVO.getBalance() != null) {
+			BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
 
-		balanceDao.update(balancePO);
+			if (balancePO == null) {
+				throw new FLException(350006, "结算单不存在");
+			}
+
+			if (balancePO.getSurplus() < balanceCutpayVO.getMoney()) {
+				throw new FLException(350003, "结算单金额不足");
+			}
+
+			balanceCutpayPO.setBalance(balancePO);
+
+			if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT){
+				balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+			} else {
+				balanceCutpayPO.setTotal(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+			}
+			
+			balancePO.setCutpay(balanceCutpayPO.getTotal());
+
+			balanceDao.update(balancePO);
+		}
 
 		return 0;
 	}

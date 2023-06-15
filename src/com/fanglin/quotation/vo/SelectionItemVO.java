@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.material.vo.SoodsVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -15,7 +16,7 @@ public class SelectionItemVO implements Serializable {
 
 	private Long siid;// 选材项ID
 
-	private Long sid;// 选材单ID
+	private SelectionVO selection;// 选材单ID
 
 	private Long quoteId;// 引用项ID
 
@@ -31,7 +32,11 @@ public class SelectionItemVO implements Serializable {
 
 	private String areaName;// 功能区名字
 
-	private Long suid;// 厂商id
+	private UserBaseVO supplier;// 厂商id
+
+	private Long qiid;
+
+	private SoodsVO soods;
 
 	private Short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
 
@@ -84,8 +89,9 @@ public class SelectionItemVO implements Serializable {
 		this.goods = goods;
 	}
 
-	public SelectionItemVO(GoodsVO goods, DecorationVO decoration, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finish, UserBaseVO reviewer, UserBaseVO balancer) {
+	public SelectionItemVO(SelectionVO selection, GoodsVO goods, DecorationVO decoration, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finish, UserBaseVO reviewer, UserBaseVO balancer, UserBaseVO supplier, SoodsVO soods) {
 		super();
+		this.selection = selection;
 		this.goods = goods;
 		this.decoration = decoration;
 		this.creater = creater;
@@ -95,6 +101,8 @@ public class SelectionItemVO implements Serializable {
 		this.finish = finish;
 		this.reviewer = reviewer;
 		this.balancer = balancer;
+		this.supplier = supplier;
+		this.soods = soods;
 	}
 
 	public Long getSiid() {
@@ -105,12 +113,12 @@ public class SelectionItemVO implements Serializable {
 		this.siid = siid;
 	}
 
-	public Long getSid() {
-		return sid;
+	public SelectionVO getSelection() {
+		return selection;
 	}
 
-	public void setSid(Long sid) {
-		this.sid = sid;
+	public void setSelection(SelectionVO selection) {
+		this.selection = selection;
 	}
 
 	public Long getQuoteId() {
@@ -161,12 +169,28 @@ public class SelectionItemVO implements Serializable {
 		this.areaId = areaId;
 	}
 
-	public Long getSuid() {
-		return suid;
+	public UserBaseVO getSupplier() {
+		return supplier;
 	}
 
-	public void setSuid(Long suid) {
-		this.suid = suid;
+	public void setSupplier(UserBaseVO supplier) {
+		this.supplier = supplier;
+	}
+
+	public Long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(Long qiid) {
+		this.qiid = qiid;
+	}
+
+	public SoodsVO getSoods() {
+		return soods;
+	}
+
+	public void setSoods(SoodsVO soods) {
+		this.soods = soods;
 	}
 
 	public Short getStatus() {

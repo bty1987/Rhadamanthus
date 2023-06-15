@@ -28,11 +28,9 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Integer money;
 
-	private String content;
+	private UserBaseVO receiver;
 
-	private UserBaseVO receiveUserId;
-
-	private String receiveUserName;
+	private Timestamp createTime;
 
 	private Timestamp receiveTime;
 
@@ -47,6 +45,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 	private Short isPayment; // 金额标识
 
 	private Short isAffirm; // 是否确认
+
+	private String content;
 
 	public DecorationActivityItemVO() {
 		super();
@@ -132,20 +132,21 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.content = content;
 	}
 
-	public UserBaseVO getReceiveUserId() {
-		return receiveUserId;
+	public UserBaseVO getReceiver() {
+		return receiver;
 	}
 
-	public void setReceiveUserId(UserBaseVO receiveUserId) {
-		this.receiveUserId = receiveUserId;
+	public void setReceiver(UserBaseVO receiver) {
+		this.receiver = receiver;
 	}
 
-	public String getReceiveUserName() {
-		return receiveUserName;
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setReceiveUserName(String receiveUserName) {
-		this.receiveUserName = receiveUserName;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

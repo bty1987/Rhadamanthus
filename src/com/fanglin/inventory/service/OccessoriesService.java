@@ -14,15 +14,21 @@ public interface OccessoriesService {
 
 	public void pageOccessoriesForSupplier(Paging paging, List<Filter> filters, String userId, OccessoriesVO occessoriesVO);
 
+	public OccessoriesVO queryOccessoriesByOid(OccessoriesVO occessoriesVO);
+
 	public int addOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
 
 	public int bindOccessories(OccessoriesVO occessoriesVO) throws FLException;
 
-	public int deliveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs) throws FLException;
+	public int deliveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
 
-	public int receiveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs) throws FLException;
+	public int receiveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
 
 	public int balanceOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
+
+	public int finishOccessories(OccessoriesVO occessories) throws FLException;
+
+	public int rateOccessories(OccessoriesVO occessories);
 
 	public int deleteOccessories(OccessoriesVO occessoriesVO) throws FLException;
 

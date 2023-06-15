@@ -220,17 +220,33 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		RoleModulePO roleModulePO = roleModuleDao.queryRoleModule(rolePO.getRid(), modulePO.getMid());
+		if (RolePO.SUPER_NO_STR.equals(userPO.getRole().getNo())) {
 
-		if (roleModulePO == null && !RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
-			throw new FLException(-1, "无操作权限");
+			convertModule(modulePO, moduleVO);
+		} else {
+
+			List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
+
+			if (userRolePOs == null || userRolePOs.size() == 0) return moduleVO;
+
+			List<Integer> rids = new ArrayList<Integer>(userRolePOs.size());
+
+			for (UserRolePO userRolePO : userRolePOs) {
+				rids.add(userRolePO.getRole().getRid());
+			}
+
+			RoleModulePO roleModulePO = roleModuleDao.queryRoleModule(rids, modulePO.getMid());
+
+			if (roleModulePO == null) {
+				throw new FLException(-1, "无操作权限");
+			}
+
+			if (roleModulePO.getAccess() == ModulePO.ACCESS_DISABLE_INT) {
+				throw new FLException(-1, "无操作权限");
+			}
+
+			convertModule(modulePO, moduleVO);
 		}
-
-		if (roleModulePO != null && roleModulePO.getAccess() == ModulePO.ACCESS_DISABLE_INT) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		convertModule(modulePO, moduleVO);
 
 		return moduleVO;
 	}
@@ -275,15 +291,13 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		if (roleCO.getRid() == rolePO.getRid()) {
-			throw new FLException(-1, "无操作权限");
-		}
+		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
+
+		if (roleCO.getRid() == rolePO.getRid()) throw new FLException(-1, "无操作权限");
 
 		if (roleCO.getLevel() < rolePO.getLevel()) {
 			throw new FLException(-1, "无操作权限");
 		}
-
-		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
 
 		UserPO operator = userDao.queryUserByUserId(userId);
 

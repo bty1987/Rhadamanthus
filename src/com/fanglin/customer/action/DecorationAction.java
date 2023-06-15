@@ -98,6 +98,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "vodeCusDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String vodeCusDecoration() throws FLException {
+
+		securityCode = decorationOrderService.vodeCusDecoration(decoration);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "bindingCusDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String bindingCusDecoration() throws FLException {
 

@@ -40,7 +40,7 @@ public class CustypeDaoImpl extends DaoImpl<CustypePO> implements CustypeDao {
 	}
 
 	@Override
-	public CustypePO queryCustype(int company, String dgrade, String sgrade, Short atttype) {
+	public CustypePO queryCustype(int company, String dgrade, String sgrade, Short atttype, Short platform) {
 		Criteria criteria = session().createCriteria(CustypePO.class).add(Restrictions.eq(CustypePO.COLUMN_STATUS_STR, CustypePO.STATUS_ENABLE_INT)).add(Restrictions.eq(CustypePO.COLUMN_COMPANY_STR, company));
 
 		if (dgrade != null) {
@@ -53,6 +53,10 @@ public class CustypeDaoImpl extends DaoImpl<CustypePO> implements CustypeDao {
 
 		if (atttype != null) {
 			criteria.add(Restrictions.eq(CustypePO.COLUMN_ATTTYPE_STR, atttype));
+		}
+
+		if (platform != null) {
+			criteria.add(Restrictions.eq(CustypePO.COLUMN_PLATFORM_STR, platform));
 		}
 
 		return (CustypePO) criteria.setMaxResults(1).uniqueResult();

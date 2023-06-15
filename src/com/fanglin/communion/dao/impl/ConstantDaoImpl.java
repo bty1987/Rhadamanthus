@@ -50,6 +50,11 @@ public class ConstantDaoImpl extends DaoImpl<ConstantPO> implements ConstantDao 
 		return query.add(Restrictions.eq("status", ConstantPO.STATUS_ENABLE_INT)).list();
 	}
 
+	@Override
+	public ConstantPO queryConstant(String module, String clazz, String type, String key) {
+		return (ConstantPO) session().createCriteria(ConstantPO.class).add(Restrictions.eq("module", module)).add(Restrictions.eq("clazz", clazz)).add(Restrictions.eq("type", type)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

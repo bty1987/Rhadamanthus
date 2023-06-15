@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardRecordPO;
@@ -24,6 +26,7 @@ import com.fanglin.sales.service.SalesActivityItemService;
 import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.vo.SalesActivityItemVO;
 import com.fanglin.sales.vo.SalesActivityVO;
+import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -34,6 +37,9 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Autowired
 	private SalesActivityItemDao salesActivityItemDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -309,15 +315,30 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 		String orderId = salesActivityItemVO.getOrderId();
 
-		System.out.println(String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
+		System.out.println(String.format("pages/decoration/activityItem/activityItem?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托主材销售管家代领转交您，点【详情】查看", orderId), String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
-
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托主材销售管家代领转交您，点【详情】查看", orderId), String.format("pages/decoration/activityItem/activityItem?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSalesActivityItem(List<SalesActivityItemVO> salesActivityItems) throws FLException {
+	public int affirmSalesActivityItem(SalesVO salesVO, List<SalesActivityItemVO> salesActivityItems) throws FLException {
+
+		String orderId = salesVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (salesVO.getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (salesVO.getCustomer().getPhone() == null || !salesVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
 
 		for (SalesActivityItemVO salesActivityItem : salesActivityItems) {
 

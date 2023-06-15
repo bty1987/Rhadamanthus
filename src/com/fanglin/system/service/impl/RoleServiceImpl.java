@@ -62,12 +62,19 @@ public class RoleServiceImpl implements RoleService {
 		List<RolePO> rolePOs = roleDao.pageRole(paging, filters, company);
 		List<RoleVO> roleVOs = new ArrayList<RoleVO>();
 
+		RoleVO roleVO;
+
 		for (RolePO rolePO : rolePOs) {
-			if (rolePO != null && !RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
-				RoleVO roleVO = new RoleVO();
-				BeanUtil.copyProperties(rolePO, roleVO, Arrays.asList("creater"));
-				roleVOs.add(roleVO);
-			}
+
+			if (rolePO == null) continue;
+
+			if (RolePO.SUPER_NO_STR.equals(rolePO.getNo())) continue;
+
+			roleVO = new RoleVO();
+
+			BeanUtil.copyProperties(rolePO, roleVO, Arrays.asList("creater"));
+
+			roleVOs.add(roleVO);
 		}
 
 		paging.setData(roleVOs);
@@ -79,13 +86,20 @@ public class RoleServiceImpl implements RoleService {
 		List<RolePO> rolePOs = roleDao.queryRole(company);
 		List<RoleVO> roleVOs = new ArrayList<RoleVO>();
 
+		RoleVO roleVO;
+
 		for (RolePO rolePO : rolePOs) {
-			if (rolePO != null && !RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
-				RoleVO roleVO = new RoleVO(new UserBaseVO());
-				BeanUtil.copyProperties(rolePO, roleVO, Arrays.asList("creater"));
-				BeanUtil.copyProperties(rolePO.getCreater(), roleVO.getCreater(), Arrays.asList("duty", "dept", "role"));
-				roleVOs.add(roleVO);
-			}
+
+			if (rolePO == null) continue;
+
+			if (RolePO.SUPER_NO_STR.equals(rolePO.getNo())) continue;
+
+			roleVO = new RoleVO(new UserBaseVO());
+
+			BeanUtil.copyProperties(rolePO, roleVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(rolePO.getCreater(), roleVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			roleVOs.add(roleVO);
 		}
 
 		return roleVOs;
@@ -107,12 +121,16 @@ public class RoleServiceImpl implements RoleService {
 	public List<RoleVO> queryRoleByName(RoleVO roleVO, Integer company) {
 
 		Paging paging = new Paging(0, 10);
+
 		List<RolePO> rolePOs = roleDao.queryRoleByName(paging, roleVO.getName(), company);
 		List<RoleVO> roleVOs = new ArrayList<RoleVO>();
 
 		for (RolePO rolePO : rolePOs) {
+
 			roleVO = new RoleVO();
+
 			BeanUtil.copyPropertie(rolePO, roleVO, Arrays.asList("creater"));
+
 			roleVOs.add(roleVO);
 		}
 
@@ -155,26 +173,19 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateRole(RoleVO roleVO) {
+	public int updateRole(RoleVO roleVO) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
-		String name = roleVO.getName();
-		if (rolePO != null) {
 
-			BeanUtil.copyProperties(roleVO, rolePO, Arrays.asList("no", "creater"));
-			rolePO.setPinyin(PinYin4Util.getPinyin(name).get(0).toString());
-
-			roleDao.saveOrUpdate(rolePO);
+		if (rolePO == null) {
+			throw new FLException(230010, "角色不存在");
 		}
 
-		return 0;
-	}
+		BeanUtil.copyProperties(roleVO, rolePO, Arrays.asList("no", "creater"));
 
-	@Override
-	@Transactional
-	public int deleteRole(RoleVO roleVO) {
+		rolePO.setPinyin(PinYin4Util.getPinyin(roleVO.getName()).get(0).toString());
 
-		roleDao.deleteById(roleVO.getRid());
+		roleDao.saveOrUpdate(rolePO);
 
 		return 0;
 	}

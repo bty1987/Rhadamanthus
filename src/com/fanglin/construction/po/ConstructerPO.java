@@ -31,15 +31,23 @@ public class ConstructerPO implements java.io.Serializable {
 
 	public static final String COLUMN_USERID_STR = "user.userId";
 
-	public static final short STATUS_ENABLE_SHORT = 0;
+	public static final short STATUS_INIT_INT = 0;
 
-	public static final short STATUS_DISABLE_SHORT = 1;
+	public static final short STATUS_DISABLE_INT = 1;
+
+	public static final short STATUS_SEND_INT = 2;
+
+	public static final short STATUS_FINISH_INT = 3;
 
 	private long crid;
 
+	private String orderId;
+
 	private long cid;
 
-	private String orderId;
+	private long csid;
+
+	private long cnid;
 
 	private UserPO user;
 
@@ -47,11 +55,19 @@ public class ConstructerPO implements java.io.Serializable {
 
 	private short rate;
 
+	private short rate1;
+
+	private short rate2;
+
 	private String assessment;
 
 	private UserPO creater;
 
 	private Timestamp createTime;
+
+	private Timestamp sendTime;
+
+	private Timestamp finishTime;
 
 	private short status;
 
@@ -81,6 +97,15 @@ public class ConstructerPO implements java.io.Serializable {
 		this.crid = crid;
 	}
 
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return this.orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	@Column(name = "cid")
 	public long getCid() {
 		return cid;
@@ -90,13 +115,22 @@ public class ConstructerPO implements java.io.Serializable {
 		this.cid = cid;
 	}
 
-	@Column(name = "orderId")
-	public String getOrderId() {
-		return this.orderId;
+	@Column(name = "csid")
+	public long getCsid() {
+		return csid;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setCsid(long csid) {
+		this.csid = csid;
+	}
+
+	@Column(name = "cnid")
+	public long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(long cnid) {
+		this.cnid = cnid;
 	}
 
 	@Column(name = "schedule")
@@ -115,6 +149,24 @@ public class ConstructerPO implements java.io.Serializable {
 
 	public void setRate(short rate) {
 		this.rate = rate;
+	}
+
+	@Column(name = "rate1")
+	public short getRate1() {
+		return rate1;
+	}
+
+	public void setRate1(short rate1) {
+		this.rate1 = rate1;
+	}
+
+	@Column(name = "rate2")
+	public short getRate2() {
+		return rate2;
+	}
+
+	public void setRate2(short rate2) {
+		this.rate2 = rate2;
 	}
 
 	@Column(name = "assessment")
@@ -143,6 +195,24 @@ public class ConstructerPO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "sendTime")
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
+	}
+
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	@Column(name = "status")

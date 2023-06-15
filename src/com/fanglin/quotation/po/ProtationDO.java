@@ -36,6 +36,8 @@ public class ProtationDO implements Serializable {
 
 	private long ppid;
 
+	private String product;
+
 	private DecorationPO decoration;
 
 	private String name;
@@ -88,6 +90,14 @@ public class ProtationDO implements Serializable {
 
 	private long totalProfit;
 
+	private long accdPrice;
+
+	private long accmPrice;
+
+	private int discount;
+
+	private int manageRate;
+
 	private String comment;
 
 	@Id
@@ -108,6 +118,15 @@ public class ProtationDO implements Serializable {
 
 	public void setPpid(long ppid) {
 		this.ppid = ppid;
+	}
+
+	@Column(name = "product")
+	public String getProduct() {
+		return product;
+	}
+
+	public void setProduct(String product) {
+		this.product = product;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -344,6 +363,42 @@ public class ProtationDO implements Serializable {
 
 	public void setTotalProfit(long totalProfit) {
 		this.totalProfit = totalProfit;
+	}
+
+	@Column(name = "accdPrice")
+	public long getAccdPrice() {
+		return accdPrice;
+	}
+
+	public void setAccdPrice(long accdPrice) {
+		this.accdPrice = accdPrice;
+	}
+
+	@Column(name = "accmPrice")
+	public long getAccmPrice() {
+		return accmPrice;
+	}
+
+	public void setAccmPrice(long accmPrice) {
+		this.accmPrice = accmPrice;
+	}
+
+	@Column(name = "discount")
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+
+	@Column(name = "manageRate")
+	public int getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(int manageRate) {
+		this.manageRate = manageRate;
 	}
 
 	@Column(name = "comment")

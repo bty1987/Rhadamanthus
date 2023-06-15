@@ -35,10 +35,10 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 	@Autowired
 	private AccessoriesDao accessoriesDao;
-	
+
 	@Autowired
 	private ConstructionDao constructionDao;
-	
+
 	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
 
@@ -102,38 +102,42 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
-		
-		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
-		
-		long total = accessoriesItemVO.getTotal();
-		
-		if(Arith.add(constructionPO.getAccessoryTotal(), total) > constructionPO.getAccessoryLimit()){
-			throw new FLException(260058, "辅料总额已达上限");
-		}
-		
-		constructionPO.setAccessoryTotal(Arith.add(constructionPO.getAccessoryTotal(), accessoriesItemVO.getTotal()));
-		constructionDao.update(constructionPO);
-		
-		ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),accessoriesItemVO.getGoods().getGid());
-		
-		if(constructionAccessoryPO != null){
-			if(constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT){
-				if (Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()) > constructionAccessoryPO.getNumLimit()) {
-					throw new FLException(260059, "辅料总数已达上限");
-				}
-			}
-			
-			constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), total));
-			constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()));
-			
-			constructionAccessoryDao.update(constructionAccessoryPO);
-		}
-		
+
 		AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum());
 
 		accessoriesItemDao.save(accessoriesItemPO);
 
 		accessoriesItemVO.setAiid(accessoriesItemPO.getAiid());
+
+		if (accessoriesVO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
+			return 0;
+		}
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
+
+		long total = accessoriesItemVO.getTotal();
+
+		if (Arith.add(constructionPO.getAccessoryTotal(), total) > constructionPO.getAccessoryLimit()) {
+			throw new FLException(260058, "辅料总额已达上限");
+		}
+
+		constructionPO.setAccessoryTotal(Arith.add(constructionPO.getAccessoryTotal(), accessoriesItemVO.getTotal()));
+		constructionDao.update(constructionPO);
+
+		ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(), accessoriesItemVO.getGoods().getGid());
+
+		if (constructionAccessoryPO != null) {
+			if (constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT) {
+				if (Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()) > constructionAccessoryPO.getNumLimit()) {
+					throw new FLException(260059, "辅料总数已达上限");
+				}
+			}
+
+			constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), total));
+			constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()));
+
+			constructionAccessoryDao.update(constructionAccessoryPO);
+		}
 
 		return 0;
 	}
@@ -153,39 +157,43 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
-		
-		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
-		
+
 		long totals = Arith.mul(accessoriesItemPO.getSelling(), accessoriesItemPO.getNum());
 		int num = Arith.sub(accessoriesItemVO.getNum(), accessoriesItemPO.getNum());
 		long total = Arith.sub(accessoriesItemVO.getTotal(), totals);
-		
-		if(Arith.add(constructionPO.getAccessoryTotal(), total) > constructionPO.getAccessoryLimit()){
-			throw new FLException(260058, "辅料总额已达上限");
-		}
-		
-		constructionPO.setAccessoryTotal(Arith.add(constructionPO.getAccessoryTotal(), total));
-		constructionDao.update(constructionPO);
-		
-		ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),accessoriesItemPO.getGoods().getGid());
-		
-		if (constructionAccessoryPO != null) {
-			if(constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT){
-				if (Arith.add(constructionAccessoryPO.getNum(), num) > constructionAccessoryPO.getNumLimit()) {
-					throw new FLException(260059, "辅料总数已达上限");
-				}
-			}
-			
-			constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), total));
-			constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), num));
-			
-			constructionAccessoryDao.update(constructionAccessoryPO);
-		}
-		
+
 		accessoriesItemPO.setNum(accessoriesItemVO.getNum());
 		accessoriesItemPO.setSurplus(accessoriesItemVO.getNum());
 
 		accessoriesItemDao.update(accessoriesItemPO);
+
+		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
+			return 0;
+		}
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
+
+		if (Arith.add(constructionPO.getAccessoryTotal(), total) > constructionPO.getAccessoryLimit()) {
+			throw new FLException(260058, "辅料总额已达上限");
+		}
+
+		constructionPO.setAccessoryTotal(Arith.add(constructionPO.getAccessoryTotal(), total));
+		constructionDao.update(constructionPO);
+
+		ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(), accessoriesItemPO.getGoods().getGid());
+
+		if (constructionAccessoryPO != null) {
+			if (constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT) {
+				if (Arith.add(constructionAccessoryPO.getNum(), num) > constructionAccessoryPO.getNumLimit()) {
+					throw new FLException(260059, "辅料总数已达上限");
+				}
+			}
+
+			constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), total));
+			constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), num));
+
+			constructionAccessoryDao.update(constructionAccessoryPO);
+		}
 
 		return 0;
 	}
@@ -199,26 +207,30 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		if (accessoriesItemPO == null) {
 			throw new FLException(260025, "辅料项不存在");
 		}
-		
+
 		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesItemPO.getAid());
 
 		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
-		
+
+		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
+			return 0;
+		}
+
 		long total = Arith.mul(accessoriesItemPO.getSelling(), accessoriesItemPO.getNum());
-		
+
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
-		
+
 		constructionPO.setAccessoryTotal(Arith.sub(constructionPO.getAccessoryTotal(), total));
 		constructionDao.update(constructionPO);
-		
-		ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),accessoriesItemPO.getGoods().getGid());
+
+		ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(), accessoriesItemPO.getGoods().getGid());
 
 		if (constructionAccessoryPO != null) {
 			constructionAccessoryPO.setTotal(Arith.sub(constructionAccessoryPO.getTotal(), total));
 			constructionAccessoryPO.setNum(Arith.sub(constructionAccessoryPO.getNum(), accessoriesItemPO.getNum()));
-			
+
 			constructionAccessoryDao.update(constructionAccessoryPO);
 		}
 

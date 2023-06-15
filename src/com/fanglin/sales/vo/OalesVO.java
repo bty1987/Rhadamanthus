@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -40,6 +41,12 @@ public class OalesVO implements Serializable {
 
 	private UserBaseVO servicer;
 
+	private UserBaseVO channer;
+
+	private DepartmentVO dept;
+
+	private DepartmentVO region;
+
 	private Timestamp createTime;
 
 	private Long total;
@@ -72,13 +79,16 @@ public class OalesVO implements Serializable {
 		super();
 	}
 
-	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO servicer, UserBaseVO checker, UserBaseVO materialer) {
+	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO channer, DepartmentVO dept, DepartmentVO region, UserBaseVO servicer, UserBaseVO checker, UserBaseVO materialer) {
 
 		super();
 
 		this.decoration = decoration;
 		this.creater = creater;
 		this.supplier = supplier;
+		this.channer = channer;
+		this.dept = dept;
+		this.region = region;
 		this.servicer = servicer;
 		this.checker = checker;
 		this.materialer = materialer;
@@ -229,6 +239,30 @@ public class OalesVO implements Serializable {
 
 	public void setServicer(UserBaseVO servicer) {
 		this.servicer = servicer;
+	}
+
+	public UserBaseVO getChanner() {
+		return channer;
+	}
+
+	public void setChanner(UserBaseVO channer) {
+		this.channer = channer;
+	}
+
+	public DepartmentVO getDept() {
+		return dept;
+	}
+
+	public void setDept(DepartmentVO dept) {
+		this.dept = dept;
+	}
+
+	public DepartmentVO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentVO region) {
+		this.region = region;
 	}
 
 	@JSON(format = "yyyy-MM-dd")

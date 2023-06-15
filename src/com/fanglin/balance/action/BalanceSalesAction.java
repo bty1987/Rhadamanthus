@@ -39,6 +39,14 @@ public class BalanceSalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageBalanceSalesForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageBalanceSalesForBalance() throws FLException {
+
+		balanceSalesService.pageBalanceSalesForBalance(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "createBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createBalanceSales() throws FLException {
 
@@ -107,6 +115,13 @@ public class BalanceSalesAction extends BaseListAction {
 
 		balanceSalesService.unlockBalanceSales(balanceSales);
 
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteBalanceSales() throws FLException {
+
+		balanceSalesService.deleteBalanceSales(balanceSales);
 		return SUCCESS;
 	}
 

@@ -28,7 +28,7 @@ public class NormriceServiceImpl implements NormriceService {
 
 	@Autowired
 	public NormriceDao normriceDao;
-	
+
 	@Override
 	public void pageNormrice(Paging paging, List<Filter> filters) {
 
@@ -37,10 +37,10 @@ public class NormriceServiceImpl implements NormriceService {
 
 		for (NormricePO normricePO : normricePOs) {
 
-			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
+			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
 
 			BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
-			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode());
+			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 			normricePO.getQuotationItem().ptv(normriceVO.getQuotationItem());
 
@@ -58,10 +58,10 @@ public class NormriceServiceImpl implements NormriceService {
 
 		for (NormricePO normricePO : normricePOs) {
 
-			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
+			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
 
 			BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
-			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode());
+			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 			normricePO.getQuotationItem().ptv(normriceVO.getQuotationItem());
 
@@ -78,7 +78,7 @@ public class NormriceServiceImpl implements NormriceService {
 		NormricePO normricePO = new NormricePO(new QuotationItemPO(), new ConstructionNodePO());
 
 		BeanUtil.copyPropertie(normriceVO, normricePO, Arrays.asList("constructionNode", "quotationItem"));
-		BeanUtil.copyProperties(normriceVO.getConstructionNode(), normricePO.getConstructionNode());
+		BeanUtil.copyProperties(normriceVO.getConstructionNode(), normricePO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 		normricePO.setQuotationItem(new QuotationItemPO(normriceVO.getQuotationItem().getQiid()));
 

@@ -49,6 +49,8 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageSurveyTemplate);
+    
+    searcher.condition(["data-surveyTemplate-name", "data-surveyTemplate-status"]);
 
     searcher.button([{
         id: "addSurveyTemplate",
@@ -67,15 +69,16 @@ jQuery(function($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: surveyTemplate.status
+        dataset: constant.data().surveyTemplate.status.keys
     }, ];
 
     var linebtns = [{
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
-
+            
             surveyTemplate.stid = v.stid;
+
             editSurveyTemplate(v);
             return false;
         }
@@ -96,6 +99,20 @@ jQuery(function($) {
         },
         show: function(v){
             return false;
+        }
+    },{
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+            com.post(api.data.updateSurveyTemplateForStatus, {
+                "surveyTemplate.stid": v.stid,
+                "surveyTemplate.status": check ? 0 : 1
+            });
+            return false;
+        },
+        init: function(v) {
+            return !v.status;
         }
     }, ];
 
@@ -228,7 +245,7 @@ jQuery(function($) {
                 }
             });
         });
-        surveyTemplate.stid = null;
+
         surveyTemplate.modals.surveyTemplateModal.modal("show");
     }
 
@@ -241,10 +258,12 @@ jQuery(function($) {
             return
         }
 
-        var args = {
-            "surveyTemplate.name": surveyTemplate.items.name.val()
-        };
         var url;
+
+        var args = {
+            "surveyTemplate.name": surveyTemplate.items.name.val(),
+        };
+
         com.focusPage("#itemlist").find(".typeitem").each(function(i, v) {
 
             var item = $(v);
@@ -279,19 +298,22 @@ jQuery(function($) {
 
             }
         });
+        
+         if (surveyTemplate.stid) {
 
-        if (surveyTemplate.stid) {
-            url = api.data.updateSurveyTemplate;
-            args["surveyTemplate.stid"] = surveyTemplate.stid;
-        } else {
-            url = api.data.addSurveyTemplate;
-        }
+             args["surveyTemplate.stid"] = surveyTemplate.stid;
+             url = api.data.updateSurveyTemplate;
+        
+         } else {
+             url = api.data.addSurveyTemplate;
+         }
 
-        com.post(url, args, function(res) {
+        com.post(url, args, function() {
 
             searcher.doSearch();
+            surveyTemplate.modals.surveyTemplateModal.modal("hide");
         });
+        
+    }      
 
-        surveyTemplate.modals.surveyTemplateModal.modal("hide");
-    }
 });

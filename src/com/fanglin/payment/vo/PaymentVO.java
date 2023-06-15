@@ -52,6 +52,8 @@ public class PaymentVO implements Serializable {
 
 	private Short status;
 
+	private Long realMoney = 0L;
+
 	private Long cash = 0L;
 
 	private String cashInfo;
@@ -206,6 +208,14 @@ public class PaymentVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Long getRealMoney() {
+		return realMoney;
+	}
+
+	public void setRealMoney(Long realMoney) {
+		this.realMoney = realMoney;
 	}
 
 	public Long getCash() {

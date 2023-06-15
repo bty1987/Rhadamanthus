@@ -108,7 +108,7 @@
         "id": "userName",
         "name": "姓名",
         "type": "text",
-        "validator": "v_required v_name_cn"
+        "validator": "v_required v_name"
     }, {
         "id": "currentName",
         "name": "现用名",
@@ -195,7 +195,6 @@
                     var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
                     var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
                     var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
-                    var $btnlookContract = $('<a></a>').addClass('btn btn-minier btn-purple').html('查看合同');
                     var $btnlookEducation = $('<a></a>').addClass('btn btn-minier btn-yellow').html('教育信息');
                     var $btnlookOperation = $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
                     var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
@@ -440,12 +439,6 @@
                         });
                     });
 
-                    $btnlookContract.click(function() {
-
-                        params.personel.uid = v.uid;
-                        com.popup4page("#layerPopUp", api.index.userContract.url, "合同信息");
-                    });
-
                     $btnlookEducation.click(function() {
 
                         params.personel.uid = v.uid;
@@ -514,7 +507,7 @@
 
                         params.historyPage = api.index.userIndex.url;
 
-                        com.switchPage(api.index.userContracts.url);
+                        com.switchPage(api.index.userContract.url);
                     };
 
                     // 删除点击事件
@@ -557,13 +550,13 @@
                     });
 
                     if (type == 'expert' && v.status == constant.personel.user.STATUS_ONJOB_INT) {
-                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).append($btnContract).appendTo($h3);
+                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).append($btnContract).appendTo($h3);
                     } else if (type == 'expert' && v.status == constant.personel.user.STATUS_OFFJOB_INT || v.status == constant.personel.user.STATUS_KEEPJOB_INT) {
-                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).append($btnContract).appendTo($h3);
+                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).append($btnContract).appendTo($h3);
                     } else if (v.status == constant.personel.user.STATUS_OFFJOB_INT || v.status == constant.personel.user.STATUS_KEEPJOB_INT) {
-                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
+                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
                     } else {
-                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
+                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
                     }
 
                     $liLine.append($urldiv).append($h3).append($ulProperty).appendTo($ul);

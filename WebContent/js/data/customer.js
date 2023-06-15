@@ -24,6 +24,7 @@ jQuery(function($) {
             email: com.focusPage("#email", "#customerModal"),
             address: com.focusPage("#address", "#customerModal"),
             relationshipType: com.focusPage("#relationshipType", "#customerModal"),
+            career: com.focusPage("#career", "#customerModal"),
 
             type: com.focusPage("#type", "#customerModal"),
 
@@ -122,6 +123,11 @@ jQuery(function($) {
         name: "客户关系",
         prop: "relationshipType",
         clazz: "red"
+    }, {
+        field: "career",
+        name: "职业",
+        prop: "career",
+        clazz: "grey"
     }, {
         field: "email",
         name: "邮箱",
@@ -256,6 +262,8 @@ jQuery(function($) {
             customer.items.email.val(v.email);
             customer.items.address.val(v.address);
             customer.items.relationshipType.val(v.relationshipType);
+            customer.items.type.val(v.type);
+            customer.items.career.val(v.career);
 
             customer.items.gender.prop('checked', com.genderType[v.gender]);
 
@@ -308,6 +316,7 @@ jQuery(function($) {
             "customer.wechat": customer.items.wechat.val(),
             "customer.email": customer.items.email.val(),
             "customer.relationshipType": customer.items.relationshipType.val(),
+            "customer.career": customer.items.career.val(),
             "customer.address": customer.items.address.val(),
             "customer.companyNo": customer.items.companyNo.val(),
             "customer.companyName": customer.items.companyName.val(),
@@ -317,6 +326,7 @@ jQuery(function($) {
             "customer.companyBankno": customer.items.companyBankno.val(),
         };
 
+        var urls;
         var option = {
             "customer.type": customer.items.type.val(),
             "customer.name": customer.items.customerName.val(),
@@ -329,11 +339,14 @@ jQuery(function($) {
         };
 
         if (customer.cid) {
-            url = api.data.updateCustomer;
-            options['customer.cid'] = customer.cid;
+            if (customer.items.type.val() == constant.customer().customer.STATUS_INIT_INT) {
+                url = api.data.updateCustomer;
+                options['customer.cid'] = customer.cid;
+            } else if (customer.items.type.val() == constant.customer().customer.STATUS_COMPANY_INT) {
 
-            url = api.data.updateCustomerForBase;
-            option['customer.cid'] = customer.cid;
+                urls = api.data.updateCustomerForBase;
+                option['customer.cid'] = customer.cid;
+            }
         } else {
             url = api.data.addCustomer;
 
@@ -347,7 +360,7 @@ jQuery(function($) {
             searcher.doSearch();
         });
 
-        com.post(url, option, function(res) {
+        com.post(urls, option, function(res) {
 
             searcher.doSearch();
         });
@@ -371,7 +384,18 @@ jQuery(function($) {
             $.each(res.customerPhones, function(i, v) {
 
                 var phonelist = $('<div></div>').prop("id", "customerPhone" + i);
-                phonelist.append(addspan('10', '客户姓名 : ', customer.items.name)).append(addspan('40', '电话号码  : ', v.phone));
+                phonelist.append(addspan('40', '电话号码  : ', v.phone).click(function() {
+
+                    var phoneInfo = $(this);
+
+                    com.post(api.data.queryCustomerForPhone, {
+                        "customerPhone.cid": v.cid,
+                        "customerPhone.cpid": v.cpid
+                    }, function(res) {
+
+                        phoneInfo.html(addspan('0', '电话号码  : ', res.customer.phone));
+                    })
+                }));
 
                 var $btnStatus = $('<div style="float: right;"></div>');
                 var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({

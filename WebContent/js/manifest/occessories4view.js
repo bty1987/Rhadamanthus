@@ -31,7 +31,7 @@ jQuery(function($) {
         com.closePopup();
     });
 
-    com.post(api.inventory.queryOccessoriesItemByAid, {
+    com.post(api.inventory.queryOccessoriesItemByOid, {
         "occessoriesItem.oid": occessories.oid
     }, function(res) {
 
@@ -160,13 +160,13 @@ jQuery(function($) {
         }, {
             cellClass: "sennum blue", // 到货数量
             hasInput: true,
-            validate: "v_required"
+            validate: "v_required v_float_3"
         }, {
             cellClass: "rbalance blue" // 原结算价
         }, {
-            cellClass: "vbalance", // 结算值
+            cellClass: "vbalance blue", // 结算值
             hasInput: true,
-            validate: "v_required"
+            validate: "v_required v_float_3"
         }];
 
         var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');

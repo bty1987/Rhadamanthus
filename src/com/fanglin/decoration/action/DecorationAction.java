@@ -250,7 +250,7 @@ public class DecorationAction extends BaseListAction {
 	@Action(value = "terminalDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String terminalDecoration() throws FLException {
 
-		decorationService.terminalDecoration(decoration, decorationPayments, authentication());
+		decorationService.terminalDecoration(decoration, decorationPayments, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -283,6 +283,14 @@ public class DecorationAction extends BaseListAction {
 	public String changeDecorationForCustomer() throws FLException {
 
 		decorationService.changeDecorationForCustomer(decoration);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "changeDecorationForPayScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForPayScale() throws FLException {
+
+		decorationService.changeDecorationForPayScale(decoration);
 
 		return SUCCESS;
 	}

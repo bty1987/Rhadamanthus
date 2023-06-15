@@ -30,9 +30,12 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.SupplierDao;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
+import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.UserInfoPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.personel.service.SupplierService;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
@@ -53,6 +56,12 @@ public class SupplierServiceImpl implements SupplierService {
 
 	@Autowired
 	private SupplierDao supplierDao;
+
+	@Autowired
+	private UserDao userDao;
+
+	@Autowired
+	private UserRoleDao userRoleDao;
 
 	@Autowired
 	private UserInfoDao userInfoDao;
@@ -76,7 +85,7 @@ public class SupplierServiceImpl implements SupplierService {
 		List<UserVO> supplierVOs = new ArrayList<UserVO>();
 
 		for (UserPO supplierPO : supplierPOs) {
-			supplierVOs.add(convertBean(supplierPO));
+			supplierVOs.add(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()).ptv(supplierPO));
 		}
 
 		paging.setData(supplierVOs);
@@ -85,20 +94,19 @@ public class SupplierServiceImpl implements SupplierService {
 	@Override
 	public List<UserVO> querySupplierByPinyin(String pinyin, int company) throws FLException {
 
-		List<UserVO> userBaseVOs = new ArrayList<UserVO>();
+		List<UserVO> supplierVOs = new ArrayList<UserVO>();
+		List<UserPO> supplierPOs = supplierDao.querySupplierByPinyin(pinyin, company);
 
-		List<UserPO> userPOs = supplierDao.querySupplierByPinyin(pinyin, company);
-
-		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(convertBean(userPO));
+		for (UserPO supplierPO : supplierPOs) {
+			supplierVOs.add(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()).ptv(supplierPO));
 		}
 
-		return userBaseVOs;
+		return supplierVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addSupplier(UserVO supplierVO, int company) throws FLException {
+	public void addSupplier(UserVO supplierVO, String userId, int company) throws FLException {
 
 		CompanyPO companyPO = companyDao.get(company);
 
@@ -120,9 +128,9 @@ public class SupplierServiceImpl implements SupplierService {
 			throw new FLException(310002, "部门不可添加人员");
 		}
 
-		SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor"); // 游客角色ID
+		SystemConfigPO supplier = systemConfigDao.querySystemConfig("supplier"); // 游客角色ID
 
-		if (visitor == null) {
+		if (supplier == null) {
 			throw new FLException(230010, "角色不存在");
 		}
 
@@ -142,7 +150,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 		supplierPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
 
-		supplierPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
+		supplierPO.setRole(new RolePO(Integer.valueOf(supplier.getValue())));
 		supplierPO.setDuty(new DutyPO(supplierVO.getDuty().getDid()));
 		supplierPO.setDept(departmentPO);
 
@@ -154,6 +162,10 @@ public class SupplierServiceImpl implements SupplierService {
 		supplierPO.setType(UserPO.TYPE_SUPPLIER_INT);
 
 		supplierDao.save(supplierPO);
+
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		userRoleDao.save(new UserRolePO(supplierPO.getUid(), supplierPO.getRole(), operator));
 
 		supplierVO.setUid(supplierPO.getUid());
 
@@ -181,19 +193,6 @@ public class SupplierServiceImpl implements SupplierService {
 		supplierPO.setOldUserId(supplier.getOldUserId());
 
 		supplierDao.update(supplierPO);
-	}
-
-	private UserVO convertBean(UserPO userPO) throws FLException {
-
-		UserVO userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
-
-		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-
-		BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
-
-		BeanUtil.copyProperties(userPO.getDept(), userVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		return userVO;
 	}
 
 }

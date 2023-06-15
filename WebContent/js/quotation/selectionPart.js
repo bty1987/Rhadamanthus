@@ -81,6 +81,44 @@ var selectionDetail = (function() {
 
             });
 
+            com.initTypeahead('splitter', api.personel.queryUserByPinyin, "pinyinName", {
+                "user.status": 0,
+                "departmentType.name": ""
+            }, "autoFillKeyValue", "key", "value");
+
+            com.initTypeahead('traner', api.personel.queryUserByPinyin, "pinyinName", {
+                "user.status": 0,
+                "departmentType.name": ""
+            }, "autoFillKeyValue", "key", "value");
+
+            com.focusPage('#saveConfigBtn').on('click', function() {
+
+                com.focusPage('#saveConfigModal').modal("show");
+
+            });
+
+            com.focusPage('#saveFunctionAreaBtn').on('click', function() {
+
+                var option = {
+                    "selection.sid": selection.basicParams['selection.sid']
+                };
+
+                if (com.focusPage('#splitter').val()) {
+                    option["selection.splitter.userId"] = com.typeahead("splitter");
+                }
+
+                if (com.focusPage('#traner').val()) {
+                    option["selection.traner.userId"] = com.typeahead("traner");
+                }
+
+                com.post(api.quotation.updateSelection, option, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    com.focusPage('#saveConfigModal').modal("hide");
+                });
+
+            });
+
             saveMaterialBtn: com.focusPage('#saveMaterialBtn').on('click', function() {
 
                 selection.modals.quotationItemMateria.modal("show");
@@ -96,6 +134,8 @@ var selectionDetail = (function() {
                             "selectionItem.initNum": 0,
                             "selectionItem.num": 0,
                             "selectionItem.quoteId": soods.sid,
+                            "selectionItem.soods.sid": soods.sid,
+                            "selectionItem.qiid": 0,
                             "selectionItem.type": constant.quotation().selectionItem.TYPE_ALONE_INT,
                             "selectionItem.areaId": 0,
                             "selectionItem.areaName": '未匹配',
@@ -341,6 +381,8 @@ var selectionDetail = (function() {
                 "selectionItem.type": selection.nowEditQuote.attr('data-type'),
                 "selectionItem.areaId": selection.nowEditQuote.attr('data-areaId'),
                 "selectionItem.areaName": selection.nowEditQuote.attr('data-areaName'),
+                "selectionItem.qiid": selection.quotationItem.quotationItemId,
+                "selectionItem.soods.sid": soods.sid,
                 "selection.sid": selection.basicParams['selection.sid'],
                 "selection.total": selection.basicParams['selection.total'],
                 "selection.quotationTotal": selection.basicParams['selection.quotationTotal'],

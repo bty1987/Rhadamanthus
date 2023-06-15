@@ -127,7 +127,17 @@ public class SoodsServiceImpl implements SoodsService {
 
 		SoodsPO soodsPO = soodsDao.get(soodsVO.getSid());
 
-		soodsPO.setSelling(soodsVO.getSelling());
+		if (soodsPO == null) {
+			throw new FLException(130033, "选材不存在");
+		}
+
+		if (soodsVO.getSelling() != null) {
+			soodsPO.setSelling(soodsVO.getSelling());
+		}
+
+		if (soodsVO.getPath() != null) {
+			soodsPO.setPath(soodsVO.getPath());
+		}
 
 		soodsDao.update(soodsPO);
 

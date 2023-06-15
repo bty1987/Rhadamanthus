@@ -69,7 +69,14 @@ $(function() {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($ulProperty);
             var $btnshow = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看').appendTo($divBtnWrap);
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success ').html('删除');
-            var propertyArr = [["款项名称:", v.name, "grey"], ["说明:", v.comment, "grey"]];
+            var $btnStatus = $('<div></div>').addClass('pull-right').appendTo($divBtnWrap);
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
+            var $span = $('<span></span>').addClass('lbl status-lbl');
+            var propertyArr = [["款项名称:", v.name, "grey"], ["说明:", v.comment, "grey"], ["状态:", v.status == 0 ? "启用" : "禁用", 'red']];
+
+            $btnStatus.append($statusSwitch).append($span);
 
             $.each(propertyArr, function(index, value) {
 
@@ -88,6 +95,13 @@ $(function() {
 
                 deletePaymentScale(v.psid);
             });
+
+            v.status == 0 && $statusSwitch.prop("checked", true);
+            $statusSwitch.prop("checked", v.status == 0 ? true : false).switchBtn("status-lbl").on("click", function() {
+
+                updateStatus(v.psid, $statusSwitch.prop("checked") ? 0 : 1);
+            });
+
         };
 
         return {
@@ -111,7 +125,7 @@ $(function() {
 
         var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo(resultList);
 
-        com.post(api.data.queryPaymentScaleByCid, {
+        com.post(api.data.queryPaymentScale, {
             "paymentScale.cid": params.company.cid
         }, function(data) {
 
@@ -123,6 +137,18 @@ $(function() {
 
         com.post(api.data.deletePaymentScale, {
             "paymentScale.psid": psid
+        }, function() {
+
+            reloadPaymentScale();
+        });
+    }
+
+    // 启用禁用功能
+    function updateStatus(psid, status) {
+
+        com.post(api.data.updatePaymentScaleForStatus, {
+            "paymentScale.psid": psid,
+            "paymentScale.status": status,
         }, function() {
 
             reloadPaymentScale();

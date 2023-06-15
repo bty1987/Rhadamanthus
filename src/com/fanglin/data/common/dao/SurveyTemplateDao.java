@@ -11,4 +11,6 @@ public interface SurveyTemplateDao extends Dao<SurveyTemplatePO> {
 
 	public List<SurveyTemplatePO> pageSurveyTemplate(Paging paging, List<Filter> filters, int company);
 
+	public List<SurveyTemplatePO> querySurveyTemplate(int company);
+
 }

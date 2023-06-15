@@ -76,6 +76,8 @@ public class DroupDaoImpl extends DaoImpl<DroupPO> implements DroupDao {
 				query.timeranges("handleTime", data);
 			} else if ("isHandle".equals(field)) {
 				query.add(query.getCriterion("isHandle", Short.valueOf(data), op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
 			}
 		}
 

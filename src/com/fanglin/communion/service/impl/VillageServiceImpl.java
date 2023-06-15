@@ -55,7 +55,7 @@ public class VillageServiceImpl implements VillageService {
 	}
 
 	@Override
-	public VillageVO queryVillageById(VillageVO villageVO) throws FLException {
+	public VillageVO queryVillageByVid(VillageVO villageVO) throws FLException {
 
 		VillagePO villagePO = villageDao.get(villageVO.getNo());
 

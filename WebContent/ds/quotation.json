@@ -5,17 +5,17 @@
         {"key":"1", "value":"整装"},
         {"key":"2", "value":"满减"}
     ], "quotationItemType": [
-        {"key":"0", "value":"普通"},
+        {"key":"0", "value":"标准"},
         {"key":"1", "value":"成本"},
         {"key":"4", "value":"非业绩"},
         {"key":"5", "value":"隐藏"},
         {"key":"2", "value":"自定义"},
         {"key":"3", "value":"不计"}       
     ], "quotationType": [
-		{"key":"1", "value":"普通"},
+		{"key":"1", "value":"标准"},
 		{"key":"2", "value":"大宅"}
 	], "quotationClassification": [
-		{"key":"1", "value":"普通部分"},
+		{"key":"1", "value":"标准部分"},
 		{"key":"2", "value":"其它部分"},
 		{"key":"3", "value":"一次性包死"},
 		{"key":"4", "value":"综合项目"},
@@ -63,7 +63,7 @@
         {"key":"499", "value":"499"},
         {"key":"599", "value":"699"}
     ], "addReduceItemType": [
-        {"key":"0", "value":"普通报价项"},
+        {"key":"0", "value":"标准报价项"},
         {"key":"1", "value":"系统定义项"},
         {"key":"2", "value":"自定义"},
         {"key":"3", "value":"报价中报价项"},
@@ -112,7 +112,17 @@
         {"key":"1", "value":"禁用"}
     ],
     "presignItemType": [
-        {"key":"0", "value":"基础"},
+        {"key":"0", "value":"功能区"},
+        {"key":"1", "value":"可选配"},
+        {"key":"2", "value":"个性"},
+        {"key":"3", "value":"赋能"}
+    ],
+    "presignItemAreaCale": [
+        {"key":"0", "value":"数量"},
+        {"key":"1", "value":"面积"}
+    ],
+    "presignItemAtttype": [
+        {"key":"0", "value":"通用"},
         {"key":"1", "value":"工程"},
         {"key":"2", "value":"主材"}
     ],

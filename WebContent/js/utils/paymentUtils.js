@@ -265,7 +265,10 @@ var paymentUtils = {
 
             $.each(res.paytrans, function(i, v) {
 
-                if (status.indexOf(v.status) < 0 || v.pid != 0)
+                if (status.indexOf(v.status) < 0)
+                    return true;
+
+                if (payment.htmlName != "proxy" && v.pid != 0)
                     return true;
 
                 paymentUtils.addPos(payment, v);
@@ -280,20 +283,26 @@ var paymentUtils = {
         if (com.validate("bankGroup"))
             return false;
 
-        if (!orderId) {
-            com.showAlert(com.warning, "无款项信息");
-            return false;
-        }
-
         // 转换款使用之后会更新成是哪个类型的款项使用的
         var options = {
-            "paytran.orderId": orderId,
             "paytran.type": payment.typeNo,
             "paytran.atttype": payment.atttype,
             "paytran.no": com.typeahead(payment.items.bankName),
             "paytran.sn": payment.posValues[com.typeahead(payment.items.bankName)].value, // 收据类型中pos的value值
-            "paytran.money": payment.items.bank.val()
+            "paytran.money": payment.items.bank.val(),
+            "paytran.way": 0
         };
+
+        if (payment.htmlName != "proxy") {
+            if (!orderId) {
+                com.showAlert(com.warning, "无款项信息");
+                return false;
+            }
+
+            options["paytran.orderId"] = orderId;
+        } else {
+            options["paytran.pid"] = payment.payment.ppid;
+        }
 
         com.post(api.payment.addPaytran, options, function(res) {
 
@@ -458,7 +467,7 @@ var paymentUtils = {
             var _s = bankInfo.split('#');
             for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
                 var _i = _s[i].split('|');
-                info += bankArray[_i[0]] + " " + _i[1] + ", ";
+                info += bankArray[_i[0]] == null ? "无匹配" : bankArray[_i[0]] + " " + _i[1] + ", ";
 
                 if (flag) {
                     info +=  _i[2] + ", ";
@@ -515,7 +524,8 @@ var paymentUtils = {
     // 获取收款类型的基础信息 info信息是分页显示信息的, util和cash,bank,checkv是下拉框信息(下拉框不显示禁用)
     getReceiptType: function(payment) {
 
-        var notCouponPageName = ["payment", "paymentCheck", "service", "serviceCheck", "paymentPos", "servicePos"];
+        var notCouponPageName = ["payment", "paymentCheck", "service", "serviceCheck", "paymentPos", "servicePos", "proxy"];
+        var noAccountsPageName = ["proxy"];
         com.post(api.data.queryReceiptType, {}, function(res) {
 
             $.each(res.receiptTypes, function(i, v) {
@@ -549,8 +559,10 @@ var paymentUtils = {
                     }
                     payment.checkvInfo[v.no] = v.name;
                 } else if (v.type == 4) {
-                    payment.accounts.push(v);
-                    payment.accountsInfo[v.no] = v.name;
+                    if (!(noAccountsPageName.contains(payment.htmlName))) {
+                        payment.accounts.push(v);
+                        payment.accountsInfo[v.no] = v.name;
+                    }
                 }
 
                 if (!(notCouponPageName.contains(payment.htmlName))) {
@@ -604,7 +616,7 @@ var paymentUtils = {
 
         var styleArr = [];
 
-        payment.cash != null && payment.cash != "0" ? styleArr.push(["现金:", payment.cash + " " + (paymentPageData.cashInfo ? paymentPageData.cashInfo[payment.cashInfo] : ""), "blue"]) : true;
+        payment.cash != null && payment.cash != "0" ? styleArr.push(["现金:", payment.cash + " " + (paymentPageData.cashInfo ? paymentPageData.cashInfo[payment.cashInfo] == null ? "无匹配" : paymentPageData.cashInfo[payment.cashInfo] : ""), "blue"]) : true;
         payment.bank != null && payment.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(payment.bank, payment.bankInfo, paymentPageData.bankInfo), "blue"]) : true;
         payment.checkv != null && payment.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(payment.checkv, payment.checkvBank, paymentPageData.checkvInfo), "blue"]) : true;
         payment.installment != null && payment.installment != "0" ? styleArr.push(["分期:", payment.installment, "blue"]) : true;
@@ -707,7 +719,8 @@ var paymentUtils = {
                     propertyArr.push(["会员号:", v.mno, "grey"]);
                     break;
                 case "orderId":
-                    propertyArr.push(["装修单号:", decoration.orderId, "blue"]);
+                    var orderId  = decoration.orderId ? decoration.orderId : "无";
+                    propertyArr.push(["装修单号:", orderId, "blue"]);
                     break;
                 case "materialNo":
                     propertyArr.push(["主材号:", decoration.no, "blue"]);
@@ -719,7 +732,8 @@ var paymentUtils = {
                     propertyArr.push(["客户:", decoration.customer.name, "grey"]);
                     break;
                 case "address":
-                    propertyArr.push(["楼盘地址:", decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + " " + decoration.house.houseNumber, "grey"]);
+                    var address = decoration.house == null ? v.address : decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + " " + decoration.house.houseNumber;
+                    propertyArr.push(["楼盘地址:", address, "grey"]);
                     break;
                 case "designerName":
                     propertyArr.push(["设计师:", decoration.designer.currentName, "grey"]);
@@ -737,7 +751,7 @@ var paymentUtils = {
                     propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
                     break;
                 case "createTime":
-                    propertyArr.push(["创建时间:", v.createTime, "blue"]);
+                    propertyArr.push(["创建时间:", v.createTime, "green"]);
                     break;
                 case "type":
                     propertyArr.push(["类型:", payment.paymentType[v.type], "red"]);
@@ -797,33 +811,46 @@ var paymentUtils = {
                     propertyArr.push(["管理费:", v.managePrice, "blue"]);
                     break;
                 case "collectUser":
-                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var collecter = ["payment"].contains(payment.htmlName) ? obj.collectUser : obj.collecter;
                     propertyArr.push(["收款人:", collecter != null ? collecter.currentName : "暂无", "grey"]);
                     break;
                 case "collectTime":
-                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["收款时间:", obj.collectTime, "green"]);
                     break;
                 case "confirmUser":
-                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var confirmer = ["payment"].contains(payment.htmlName) ? obj.confirmUser : obj.confirmer;
                     propertyArr.push(["确认人:", confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无", "grey"]);
                     break;
                 case "confirmTime":
-                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["确认时间:", obj.confirmTime, "green"]);
                     break;
                 case "status":
-                    var status = ["payment", "sales", "service", "activity"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
+                    var status = ["payment", "sales", "service", "activity", "proxy"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
                     propertyArr.push(["状态:", status, "red"]);
                     break;
                 case "comment":
-                    var obj = payment.htmlName == "sales" ? v.salesReceipt : v;
+                    var obj = ["sales", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["备注:", obj.comment, "grey"]);
                     break;
                 case "salesDept":
                     propertyArr.push(["渠道部门:", decoration.dept.name, "grey"]);
+                    break;
+                case "title":
+                    propertyArr.push(["标题:", v.title, "grey"]);
+                    break;
+                case "name":
+                    propertyArr.push(["姓名:", v.name, "grey"]);
+                    break;
+                case "phone":
+                    propertyArr.push(["电话:", v.phone.substring(0, 3)+"****"+v.phone.substr(v.phone.length-4), "grey"]);
+                    break;
+                case "realMoney":
+                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    propertyArr.push(["实收额:", obj.realMoney, "blue"]);
                     break;
             }
         });
@@ -971,7 +998,7 @@ var paymentUtils = {
 
     bindSignet: function(id) {
 
-        com.post(api.data.querySignet, {}, function(res) {
+        com.post(api.data.querySignet, {"signet.type": 1}, function(res) {
 
             var signets = res.signets;
 

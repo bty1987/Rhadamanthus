@@ -22,6 +22,8 @@ import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.customer.service.SurveyService;
+import com.fanglin.customer.vo.SurveyVO;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
@@ -57,6 +59,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private SurveyService surveyService;
 
 	@Autowired
 	private MessageService messageService;
@@ -104,7 +109,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
 
-			BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode());
+			BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 			constructionScheduleVOs.add(constructionScheduleVO);
 		}
@@ -126,7 +131,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
 
-			BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode());
+			BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 			constructionScheduleVOs.add(constructionScheduleVO);
 		}
@@ -147,14 +152,14 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
 
-		BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode());
+		BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 		return constructionScheduleVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException {
 
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
 
@@ -193,6 +198,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		constructionScheduleDao.update(constructionSchedulePO);
 
+		if (constructionNodePO.getStartSurvey() != null && constructionNodePO.getStartSurvey().getStatus() == ConstructionNodePO.STATUS_INIT_SHORT) {
+			surveyService.makeSurvey(new SurveyVO(constructionNodePO.getStartSurvey().getStid(), constructionPO.getDecoration().getOrderId()), userId, constructionPO.getDecoration().getCompany());
+		}
+
 		ConstructionNodePO projectStatus = constructionNodeDao.get(decorationPO.getProjectStatus());
 
 		if (projectStatus != null && projectStatus.getSort() < constructionNodePO.getSort()) {
@@ -207,14 +216,14 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			constructionDao.update(constructionPO);
 		}
 
-		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s准备进场", constructionNodePO.getName()));
+		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s准备进场. %s", constructionNodePO.getName(), constructionNodePO.getStartalk()));
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException {
 
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
 
@@ -253,7 +262,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		constructionScheduleDao.update(constructionSchedulePO);
 
-		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s已完工", constructionNodePO.getName()));
+		if (constructionNodePO.getEndSurvey() != null && constructionNodePO.getEndSurvey().getStatus() == ConstructionNodePO.STATUS_INIT_SHORT) {
+			surveyService.makeSurvey(new SurveyVO(constructionNodePO.getEndSurvey().getStid(), constructionPO.getDecoration().getOrderId()), userId, constructionPO.getDecoration().getCompany());
+		}
+
+		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s已完工. %s", constructionNodePO.getName(), constructionNodePO.getEndtalk()));
 
 		ConstructionInfoPO constructionInfo = constructionInfoDao.queryConstructionInfoByOrderId(decorationPO.getOrderId());
 
@@ -265,7 +278,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			finishTime = DateUtil.getDateToDateString(DateUtil.getDateToTimestamp(constructionInfo.getFinishTime()), "yyyy年MM月dd日");
 		}
 
-		String content = String.format("装修单: %s, 地址: %s-%s, 预计完工时间: %s , 还剩%s日 , 请及时对接完工安排 ", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), finishTime, finishDay + 1);
+		String content = String.format("装修单: %s, 地址: %s %s, 预计完工时间: %s , 还剩%s日 , 请及时对接完工安排 ", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), finishTime, finishDay + 1);
 
 		messageService.sendMessage(constructionPO.getSupervisor().getUserId(), decorationPO.getCreater().getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationPO.getCompany());
 

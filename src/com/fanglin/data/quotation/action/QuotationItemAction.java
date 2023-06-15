@@ -29,68 +29,76 @@ import com.fanglin.data.quotation.vo.QuotationItemVO;
 public class QuotationItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = -9139698916609681549L;
-	
+
 	@Autowired
 	private QuotationItemService quotationItemService;
-	
+
 	private QuotationItemVO quotationItem;
-	
-	@Action(value="pageQuotationItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationItem() throws FLException{
-		
-		quotationItemService.pageQuotationItem(getPaging(), getFilters(),queryCompany());
-	    
+
+	@Action(value = "pageQuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationItem() throws FLException {
+
+		quotationItemService.pageQuotationItem(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="pageQuotationItemByVersionId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageQuotationItemByVersionId(){
-		
+
+	@Action(value = "pageQuotationItemByVersionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationItemByVersionId() {
+
 		quotationItemService.pageQuotationItemByVersionId(getPaging(), getFilters(), quotationItem);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryQuotationItemByItemIdAVersionId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryQuotationItemByItemIdAVersionId() throws FLException{
-		
+
+	@Action(value = "queryQuotationItemByItemIdAVersionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationItemByItemIdAVersionId() throws FLException {
+
 		quotationItem = quotationItemService.queryQuotationItemByItemIdAVersionId(quotationItem);
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addQuotationItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addQuotationItem() throws FLException{
+
+	@Action(value = "queryQuotationItemByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationItemByQiid() throws FLException {
+
+		quotationItem = quotationItemService.queryQuotationItemByQiid(quotationItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addQuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationItem() throws FLException {
 
 		quotationItemService.addQuotationItem(quotationItem);
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateQuotationItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateQuotationItem() throws FLException{
+
+	@Action(value = "updateQuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItem() throws FLException {
 
 		quotationItemService.updateQuotationItem(quotationItem);
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateQuotationItemForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateQuotationItemForStatus() throws FLException{
-		
+
+	@Action(value = "updateQuotationItemForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItemForStatus() throws FLException {
+
 		quotationItemService.updateQuotationItemForStatus(quotationItem);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateQuotationItemForDiscount", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateQuotationItemForDiscount() throws FLException{
-		
+
+	@Action(value = "updateQuotationItemForDiscount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItemForDiscount() throws FLException {
+
 		quotationItemService.updateQuotationItemForDiscount(quotationItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public QuotationItemVO getQuotationItem() {
 		return quotationItem;
 	}
@@ -98,5 +106,5 @@ public class QuotationItemAction extends BaseListAction {
 	public void setQuotationItem(QuotationItemVO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
-	
+
 }

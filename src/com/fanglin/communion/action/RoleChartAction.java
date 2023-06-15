@@ -14,24 +14,24 @@ import com.fanglin.communion.vo.ChartVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
 @Controller
 public class RoleChartAction extends BaseListAction {
 
-
 	private static final long serialVersionUID = -203252776782704397L;
-	
+
 	@Autowired
 	private RoleChartService roleChartService;
-	
+
 	private List<ChartVO> charts;
-	
+
 	private RoleVO role;
-	
+
 	private List<Long> cids;
-	
+
 	@Action(value = "queryChartForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryChartForLogin() throws FLException {
 
@@ -39,15 +39,19 @@ public class RoleChartAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryChartByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryChartByRid() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
 
 		charts = roleChartService.queryChartByRid(role);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateRoleChartByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRoleChartByRid() throws FLException {
 

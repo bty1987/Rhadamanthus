@@ -313,29 +313,32 @@ public class SalesServiceImpl implements SalesService {
 
 		BeanUtil.copyProperties(salesVO, salesPO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "brand", "category", "guideDept", "house", "customer", "maling", "venderMaling", "depositpayStatus", "fullpayStatus", "supplier"));
 
+		salesPO.setNo(no);
 		salesPO.setSalesman(salesman);
 		salesPO.setDept(salesman.getDept());
 		salesPO.setRegion(salesman.getDept().getFatherDept());
+		salesPO.setSupplier(brandPO.getSupplier());
 		salesPO.setInstorer(instorer);
 		salesPO.setGuider(guider);
 		salesPO.setGuideDept(guider.getDept());
-		salesPO.setHouse(new HousePO(salesVO.getHouse().getHid()));
-		salesPO.setCustomer(new CustomerPO(salesVO.getCustomer().getCid()));
+		salesPO.setHouse(decorationPO.getHouse());
+		salesPO.setCustomer(decorationPO.getCustomer());
 		salesPO.setBrand(brandPO.getName());
 		salesPO.setCategory(brandPO.getCategory().getName());
+
+		salesPO.setAmount(salesVO.getTotal());
+		salesPO.setTotal(salesVO.getTotal());
 		salesPO.setMaling(0);
 		salesPO.setVenderMaling(salesVO.getMaling());
 		salesPO.setDepositpay(0);
 		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
 		salesPO.setFullpay(0);
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
-		salesPO.setNo(no);
+
 		salesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		salesPO.setCompany(company);
 		salesPO.setDompany(dompany);
-		salesPO.setAmount(salesVO.getTotal());
-		salesPO.setTotal(salesVO.getTotal());
-		salesPO.setSupplier(brandPO.getSupplier());
 
 		salesPO.setCtype(SalesPO.CTYPE_PASS_INT);
 		salesPO.setCvalue(0);
@@ -507,6 +510,38 @@ public class SalesServiceImpl implements SalesService {
 		}
 
 		salesPO.setStatus(SalesPO.STATUS_INIT_SHORT);
+
+		salesDao.update(salesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmSales(SalesVO salesVO) throws FLException {
+
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (salesVO.getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (salesVO.getCustomer().getPhone() == null || !salesVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
+			throw new FLException(130115, "客户电话验证失败");
+		}
+
+		salesPO.setIsAffirm(SalesPO.ISAFFIRM_AFFIRM_INT);
+		salesPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 		salesDao.update(salesPO);
 

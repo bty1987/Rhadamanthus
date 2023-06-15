@@ -77,7 +77,7 @@ public class DecorationReportServiceImpl implements DecorationReportService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updataDecoration7Construction() throws Exception {
+	public void updateDecoration7Construction() throws Exception {
 
 		List<Object[]> decorationConstruction = (List<Object[]>) decorationReportDao.countDecorationForConstruction();
 		List<Integer> year = Arrays.asList(new Integer[] { 2015, 2016, 2017, 2018, 2019, 2020 });
@@ -118,7 +118,7 @@ public class DecorationReportServiceImpl implements DecorationReportService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updataDecoration7Achievement(DecorationAchievementVO decorationAchievement, int company) throws Exception {
+	public void updateDecoration7Achievement(DecorationAchievementVO decorationAchievement, int company) throws Exception {
 
 		int year = decorationAchievement.getYear();
 		int month = decorationAchievement.getMonth();

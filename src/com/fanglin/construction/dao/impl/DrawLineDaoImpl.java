@@ -14,18 +14,14 @@ package com.fanglin.construction.dao.impl;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.construction.dao.DrawLineDao;
 import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("drawLineDao")
@@ -62,12 +58,6 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<DrawLinePO> queryDrawLineByOrderId(String orderId) {
-		return createCriteria(DrawLinePO.class).add(Restrictions.eq("orderId", orderId)).addOrder(Order.desc("dlid")).list();
-	}
-
-	@Override
 	public int countDrawLine(String orderId) {
 
 		List<Short> status = Arrays.asList(DrawLinePO.STATUS_QUEUE_INT, DrawLinePO.STATUS_APPLICATION_INT, DrawLinePO.STATUS_SUCCESS_INT);
@@ -96,59 +86,40 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
-		if (filters != null) {
 
-			query.alias("decoration", "decoration");
+		if (filters == null) return;
 
-			for (Filter filter : filters) {
+		query.alias("decoration", "decoration");
 
-				String data = filter.getData();
+		for (Filter filter : filters) {
 
-				if ("orderId".equals(filter.getField())) {
-					query.add(query.getCriterion("decoration.orderId", (filter.getData()), filter.getOp()));
-				} else if ("drawLineGroupName".equals(filter.getField())) {
-					query.add(query.getCriterion("drawLineGroupId", (filter.getData()), filter.getOp()));
-				} else if ("salesman".equals(filter.getField())) {
-					query.alias("decoration.salesman", "salesman");
-					query.add(query.getCriterion("salesman.userId", (filter.getData()), filter.getOp()));
-				} else if ("designer".equals(filter.getField())) {
-					query.alias("decoration.designer", "designer");
-					query.add(query.getCriterion("designer.userId", (filter.getData()), filter.getOp()));
-				} else if ("status".equals(filter.getField())) {
-					query.add(query.getCriterion("status", Short.parseShort(filter.getData()), filter.getOp()));
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				} else if ("actualDate".equals(filter.getField())) {
+			if ("orderId".equals(field)) {
+				query.add(query.getCriterion("decoration.orderId", (data), op));
+			} else if ("drawLineGroupName".equals(field)) {
+				query.add(query.getCriterion("drawLineGroupId", (data), op));
+			} else if ("salesman".equals(field)) {
+				query.alias("decoration.salesman", "salesman");
+				query.add(query.getCriterion("salesman.userId", (data), op));
+			} else if ("designer".equals(field)) {
+				query.alias("decoration.designer", "designer");
+				query.add(query.getCriterion("designer.userId", (data), op));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.parseShort(data), op));
+			} else if ("actualDate".equals(field)) {
 
-					if ("between".equals(filter.getOp())) {
-						String sTime = filter.getData() + " 00:00:00";
-						String eTime = filter.getData() + " 23:59:59";
-
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						query.add(query.getCriterion(DrawLinePO.COLUMN_STARTTIME_STR, sTimestamp, "ge"));
-						query.add(query.getCriterion(DrawLinePO.COLUMN_ENDTIME_STR, eTimestamp, "le"));
-					} else {
-						query.add(query.getCriterion(DrawLinePO.COLUMN_STARTTIME_STR, filter.getData(), filter.getOp()));
-					}
-
-				} else if ("applayTime".equals(filter.getField())) {
-
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(DrawLinePO.COLUMN_APPLAYTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(DrawLinePO.COLUMN_APPLAYTIME_STR, sTimestamp, "ge"));
-
+				if ("between".equals(op)) {
+					query.timeranges(DrawLinePO.COLUMN_STARTTIME_STR, DrawLinePO.COLUMN_ENDTIME_STR, data, data);
+				} else {
+					query.add(query.getCriterion(DrawLinePO.COLUMN_STARTTIME_STR, data, op));
 				}
+
+			} else if ("applayTime".equals(field)) {
+				query.timeranges(DrawLinePO.COLUMN_APPLAYTIME_STR, DrawLinePO.COLUMN_APPLAYTIME_STR, data);
+
 			}
 		}
 	}

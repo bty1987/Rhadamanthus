@@ -205,7 +205,7 @@ public class BrandServiceImpl implements BrandService {
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
 		brandPO.setSupplier(supplier);
 
-		if (brandVO.getName() != null) {
+		if (brandVO.getName() != null && brandVO.getName() != "") {
 			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		}
 

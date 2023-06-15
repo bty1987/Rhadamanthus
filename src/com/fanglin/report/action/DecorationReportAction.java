@@ -40,18 +40,18 @@ public class DecorationReportAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updataDecoration7Construction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updataDecoration7Construction() throws Exception {
+	@Action(value = "updateDecoration7Construction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecoration7Construction() throws Exception {
 
-		decorationReportService.updataDecoration7Construction();
+		decorationReportService.updateDecoration7Construction();
 
 		return SUCCESS;
 	}
 
-	@Action(value = "updataDecoration7Achievement", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updataDecoration7Achievement() throws Exception {
+	@Action(value = "updateDecoration7Achievement", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecoration7Achievement() throws Exception {
 
-		decorationReportService.updataDecoration7Achievement(decorationAchievement, queryCompany());
+		decorationReportService.updateDecoration7Achievement(decorationAchievement, queryCompany());
 
 		return SUCCESS;
 	}

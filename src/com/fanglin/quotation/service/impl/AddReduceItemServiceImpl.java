@@ -122,8 +122,6 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 
-		List<Short> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
-
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
 		if (addReducePO == null) {
@@ -136,8 +134,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (!statuses.contains(addReducePO.getStatus())) {
-			throw new FLException(140035, "当前增减项款项状态不可操作");
+		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
+			throw new FLException(200061, "增减单状态不可操作");
 		}
 
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
@@ -216,6 +214,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140018, "增减项不存在");
 		}
 
+		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
+			throw new FLException(200061, "增减单状态不可操作");
+		}
+
 		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
 
 		if (addReduceItemPO == null) {
@@ -237,16 +239,14 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 
-		List<Short> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
-
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
 		if (addReducePO == null) {
 			throw new FLException(140018, "增减项不存在");
 		}
 
-		if (!statuses.contains(addReducePO.getStatus())) {
-			throw new FLException(140035, "当前增减项款项状态不可操作");
+		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
+			throw new FLException(200061, "增减单状态不可操作");
 		}
 
 		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());

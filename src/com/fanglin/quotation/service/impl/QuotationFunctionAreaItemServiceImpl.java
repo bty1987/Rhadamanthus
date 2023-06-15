@@ -154,6 +154,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			if (count == 0 && selectionItemPO != null) {
 
 				selectionItemPO.setQuoteId(qfaiid);
+				selectionItemPO.setQiid(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
 				selectionItemPO.setAreaId(areaId);
 				selectionItemPO.setAreaName(areaName);
 				selectionItemPO.setInitNum(quotationFunctionAreaItemPO.getInitNum());

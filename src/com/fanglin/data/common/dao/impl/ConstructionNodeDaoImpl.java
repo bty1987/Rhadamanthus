@@ -2,16 +2,14 @@ package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
 
-
-/*import org.hibernate.criterion.Criterion;*/
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.data.common.dao.ConstructionNodeDao;
-import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionNodeDao")
@@ -48,18 +46,18 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				String field = filter.getField();
-				String op = filter.getOp();
-				String data = filter.getData();
+		for (Filter filter : filters) {
 
-				if (field.equals("name")) {
-					query.add(query.getCriterion("name", data, op));
-				}else if ("status".equals(filter.getField())) {
-			          query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
-		        }
+			String field = filter.getField();
+			String op = filter.getOp();
+			String data = filter.getData();
+
+			if (field.equals("name")) {
+				query.add(query.getCriterion("name", data, op));
+			} else if ("status".equals(filter.getField())) {
+				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			}
 		}
 	}

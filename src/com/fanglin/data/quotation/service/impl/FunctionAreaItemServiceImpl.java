@@ -22,6 +22,7 @@ import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
 import com.fanglin.data.quotation.service.FunctionAreaItemService;
 import com.fanglin.data.quotation.vo.FunctionAreaItemVO;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
+import com.fanglin.data.quotation.vo.QuotationCtemVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.BeanUtil;
@@ -63,7 +64,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 			functionAreaItemVO.setFormula(functionAreaItemPO.getFormula());
 			functionAreaItemVO.setFunctionArea(functionAreaVO);
 
-			functionAreaItemVO.setQuotationItem(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO())));
+			functionAreaItemVO.setQuotationItem(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
 
 			functionAreaItemVOs.add(functionAreaItemVO);
 		}

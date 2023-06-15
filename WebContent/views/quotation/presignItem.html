@@ -45,6 +45,19 @@
                                 <input type="text" id="price" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">面积规则</label>
+                            <div class="col-sm-9">
+                                <input type="radio" id="number" name="areaCale" class="ace"/>
+                                <span class="lbl"></span>
+                                <label>数量</label>
+                            
+                                <input type="radio" id="area" name="areaCale" class="ace"/>
+                                <span class="lbl"></span>
+                                <label>面积</label>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
@@ -52,15 +65,24 @@
                                 <select id="type" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="onetype">一类</label>
                             <div class="col-sm-9">
                                 <select id="onetype" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
-									<option value="0">普通</option>
+									<option value="0">标准</option>
 									<option value="1">标配</option>
 								</select>
                             </div>
                         </div>
+
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="atttype">业务类型</label>
+                            <div class="col-sm-9">
+                                <select id="atttype" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="content">说明</label>
                             <div class="col-sm-9">

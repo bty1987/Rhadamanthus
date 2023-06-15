@@ -15,9 +15,11 @@ public interface SurveyService {
 
 	public SurveyVO querySurveyBySid(SurveyVO surveyVO);
 
-	public int sendSurvey(SurveyVO surveyVO);
+	public int sendSurvey(SurveyVO surveyVO, String userId) throws FLException;
 
 	public int makeSurvey(SurveyVO surveyVO, String userId, int company) throws FLException;
 
-	public void handleSurvey(SurveyVO surveyVO);
+	public void handleSurvey(SurveyVO surveyVO) throws FLException;
+
+	public void finishSurvey(SurveyVO surveyVO, String userId) throws FLException;
 }

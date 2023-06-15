@@ -87,6 +87,12 @@ public class AddReduceDO implements Serializable {
 
 	private short manageDiscount;
 
+	private long taxPrice;
+
+	private int taxRate;
+
+	private short taxDiscount;
+
 	private long consPrice;
 
 	private long total;
@@ -102,6 +108,8 @@ public class AddReduceDO implements Serializable {
 	private Timestamp createTime;
 
 	private Timestamp confirmTime;
+
+	private Timestamp sendTime;
 
 	private Timestamp affirmTime;
 
@@ -289,6 +297,33 @@ public class AddReduceDO implements Serializable {
 		this.manageDiscount = manageDiscount;
 	}
 
+	@Column(name = "taxPrice")
+	public long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(long taxPrice) {
+		this.taxPrice = taxPrice;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxDiscount")
+	public short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(short taxDiscount) {
+		this.taxDiscount = taxDiscount;
+	}
+
 	@Column(name = "confirmTime")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
@@ -296,6 +331,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setConfirmTime(Timestamp confirmTime) {
 		this.confirmTime = confirmTime;
+	}
+
+	@Column(name = "sendTime")
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@Column(name = "affirmTime")

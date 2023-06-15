@@ -22,8 +22,4 @@ public interface ConstructionScheduleDao extends Dao<ConstructionSchedulePO> {
 
 	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, short schedule);
 
-	public ConstructionSchedulePO queryConstructionSchedule(long cid, long cnid);
-
-	public int countConstructionSchedule(long cid);
-
 }

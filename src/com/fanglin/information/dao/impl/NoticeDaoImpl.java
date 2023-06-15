@@ -55,8 +55,7 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		}
 
 		query.add(Restrictions.eq("type", type));
-		query.add(Restrictions.le("startTime", DateUtil.current("yyyy-MM-dd")));
-		query.add(Restrictions.ge("endTime", DateUtil.current("yyyy-MM-dd")));
+		query.add(Restrictions.or(Restrictions.eq("exPublic", NoticePO.EXPUBLIC_OPEN_INT), Restrictions.and(Restrictions.le("startTime", DateUtil.current("yyyy-MM-dd")), Restrictions.ge("endTime", DateUtil.current("yyyy-MM-dd")))));
 
 		queryFilterExcute(query, filters);
 

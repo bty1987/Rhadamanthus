@@ -46,6 +46,17 @@
             "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
         }
     }
+    
+    if(module && module == "personel"){
+    
+        url = "../../redirectUserContract.do";
+        
+        args = {
+            "userContract.ucid": dcid,
+            "userContract.type": type,
+            "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+        }
+    }
 
     $.ajax({
         type: "POST",

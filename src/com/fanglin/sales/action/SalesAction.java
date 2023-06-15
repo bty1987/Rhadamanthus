@@ -22,234 +22,242 @@ import com.fanglin.sales.vo.SalesVO;
 public class SalesAction extends BaseListAction {
 
 	private static final long serialVersionUID = -4124455926491393165L;
-	
+
 	@Autowired
 	private SalesService salesService;
-	
+
 	@Autowired
 	private SalesItemService salesItemService;
-	
+
 	private SalesItemVO salesItem;
-	
+
 	private SalesVO sales;
-	
+
 	private List<Long> sids;
-	
+
 	private List<SalesItemVO> salesItems;
-	
+
 	@Action(value = "pageSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSales() throws FLException{
-		
-		salesService.pageSales(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSales() throws FLException {
+
+		salesService.pageSales(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForAdvance() throws FLException{
-		
-		salesService.pageSalesForAdvance(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForAdvance() throws FLException {
+
+		salesService.pageSalesForAdvance(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForBalance() throws FLException{
-		
-		salesService.pageSalesForBalance(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForBalance() throws FLException {
+
+		salesService.pageSalesForBalance(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForDompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForDompany() throws FLException{
-		
-		salesService.pageSalesForDompany(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForDompany() throws FLException {
+
+		salesService.pageSalesForDompany(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForBalanceByDompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForBalanceByDompany() throws FLException{
-		
-		salesService.pageSalesForBalanceByDompany(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForBalanceByDompany() throws FLException {
+
+		salesService.pageSalesForBalanceByDompany(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForPompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForPompany() throws FLException{
-		
-		salesService.pageSalesForPompany(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForPompany() throws FLException {
+
+		salesService.pageSalesForPompany(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForBalanceByPompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForBalanceByPompany() throws FLException{
-		
-		salesService.pageSalesForBalanceByPompany(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForBalanceByPompany() throws FLException {
+
+		salesService.pageSalesForBalanceByPompany(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesForSupplier() throws FLException{
-		
-		salesService.pageSalesForSupplier(getPaging(), getFilters(),queryUserId(),queryCompany());
-		
+	public String pageSalesForSupplier() throws FLException {
+
+		salesService.pageSalesForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesByOrderId() throws FLException{
-		
+	public String pageSalesByOrderId() throws FLException {
+
 		salesService.pageSalesByOrderId(getPaging(), getFilters(), queryCompany(), queryUserId(), sales.getOrderId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySalesBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesBySid() throws FLException{
-		
+	public String querySalesBySid() throws FLException {
+
 		sales = salesService.querySalesBySid(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySalesByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesByNo() throws FLException{
-		
+	public String querySalesByNo() throws FLException {
+
 		sales = salesService.querySalesByNo(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "checkSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkSales() throws FLException{
-		
-		salesService.checkSales(sales); 
-		
+	public String checkSales() throws FLException {
+
+		salesService.checkSales(sales);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addSales() throws FLException{
-		
-		salesService.addSales(sales, salesItems,queryCompany()); 
-		
+	public String addSales() throws FLException {
+
+		salesService.addSales(sales, salesItems, queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSales() throws FLException{
-		
+	public String updateSales() throws FLException {
+
 		salesService.updateSales(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesForCoupon", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSalesForCoupon() throws FLException{
-		
+	public String updateSalesForCoupon() throws FLException {
+
 		salesService.updateSalesForCoupon(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesForMaling", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSalesForMaling() throws FLException{
-		
+	public String updateSalesForMaling() throws FLException {
+
 		salesService.updateSalesForMaling(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySalesItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesItemBySid(){
-		
+	public String querySalesItemBySid() {
+
 		salesItems = salesItemService.querySalesItemBySid(sales);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySalesItemBySids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesItemBySids(){
-		
+	public String querySalesItemBySids() {
+
 		salesItems = salesItemService.querySalesItemBySids(sids);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addSalesItem() throws FLException{
-		
+	public String addSalesItem() throws FLException {
+
 		salesItemService.addSalesItem(sales, salesItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSalesItem() throws FLException{
-		
+	public String updateSalesItem() throws FLException {
+
 		salesItemService.updateSalesItem(sales, salesItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesItemForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSalesItemForBalance() throws FLException{
-		
+	public String updateSalesItemForBalance() throws FLException {
+
 		salesItemService.updateSalesItemForBalance(salesItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteSalesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteSalesItem() throws FLException{
-		
+	public String deleteSalesItem() throws FLException {
+
 		salesItemService.deleteSalesItem(sales, salesItem);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateSalesForActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSalesForActivity() throws FLException{
-		
+
+	@Action(value = "updateSalesForActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSalesForActivity() throws FLException {
+
 		salesService.updateSalesForActivity(sales);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateSalesForBelong", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSalesForBelong() throws FLException{
-		
+
+	@Action(value = "updateSalesForBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSalesForBelong() throws FLException {
+
 		salesService.updateSalesForBelong(sales);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateSalesForAdvance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateSalesForAdvance() throws FLException{
-		
+
+	@Action(value = "updateSalesForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSalesForAdvance() throws FLException {
+
 		salesService.updateSalesForAdvance(sales);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="terminalSales", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String terminalSales() throws FLException{
-		
+
+	@Action(value = "affirmSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSales() throws FLException {
+
+		salesService.affirmSales(sales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "terminalSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String terminalSales() throws FLException {
+
 		salesService.terminalSales(sales);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="finishSales", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String finishSales() throws FLException{
-		
+
+	@Action(value = "finishSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishSales() throws FLException {
+
 		salesService.finishSales(sales, queryUserId());
-		
+
 		return SUCCESS;
 	}
 

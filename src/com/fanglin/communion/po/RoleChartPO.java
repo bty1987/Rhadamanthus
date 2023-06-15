@@ -16,15 +16,15 @@ public class RoleChartPO implements java.io.Serializable {
 	private static final long serialVersionUID = -6566273229389992941L;
 
 	private int rcid;
-	
+
 	private int rid;
-	
+
 	private ChartPO chartPO;
 
 	public RoleChartPO() {
 		super();
 	}
-	
+
 	public RoleChartPO(int rid, ChartPO chartPO) {
 		super();
 		this.rid = rid;
@@ -51,7 +51,7 @@ public class RoleChartPO implements java.io.Serializable {
 		this.rid = rid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public ChartPO getChartPO() {
 		return chartPO;
@@ -60,6 +60,5 @@ public class RoleChartPO implements java.io.Serializable {
 	public void setChartPO(ChartPO chartPO) {
 		this.chartPO = chartPO;
 	}
-	
 
 }

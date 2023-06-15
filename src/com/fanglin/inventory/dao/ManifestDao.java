@@ -24,4 +24,6 @@ public interface ManifestDao extends Dao<ManifestPO> {
 
 	public List<ManifestPO> queryManifest(List<Filter> filters);
 
+	public ManifestPO queryManifest(String code);
+
 }

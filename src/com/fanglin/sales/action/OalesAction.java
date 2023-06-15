@@ -70,6 +70,14 @@ public class OalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "cancelOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelOales() throws FLException {
+
+		oalesService.cancelOales(oales);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "confirmOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmOales() throws FLException {
 
@@ -89,7 +97,7 @@ public class OalesAction extends BaseListAction {
 	@Action(value = "checkOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkOales() throws FLException {
 
-		oalesService.checkOales(oales);
+		oalesService.checkOales(oaleses);
 
 		return SUCCESS;
 	}
@@ -98,6 +106,14 @@ public class OalesAction extends BaseListAction {
 	public String finishOales() throws FLException {
 
 		oalesService.finishOales(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "abateOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String abateOales() throws FLException {
+
+		oalesService.abateOales(oales);
 
 		return SUCCESS;
 	}

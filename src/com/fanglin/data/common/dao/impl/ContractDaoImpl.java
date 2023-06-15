@@ -33,8 +33,8 @@ public class ContractDaoImpl extends DaoImpl<ContractPO> implements ContractDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ContractPO> queryContract(int company) {
-		return session().createCriteria(ContractPO.class).add(Restrictions.eq(ContractPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(ContractPO.COLUMN_STATUS_STR, ContractPO.STATUS_ENABLE_INT)).list();
+	public List<ContractPO> queryContract(short atttype, int company) {
+		return session().createCriteria(ContractPO.class).add(Restrictions.eq(ContractPO.COLUMN_ATTTYPE_STR, atttype)).add(Restrictions.eq(ContractPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(ContractPO.COLUMN_STATUS_STR, ContractPO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
@@ -42,6 +42,15 @@ public class ContractDaoImpl extends DaoImpl<ContractPO> implements ContractDao 
 
 		String sql = "select count(*) from data.contract where no = :no";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("no", no).uniqueResult();
+
+		return count != null ? count.intValue() : 0;
+	}
+
+	@Override
+	public int countContract(int company) {
+
+		String sql = "select count(*) from data.contract where company = :company";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).uniqueResult();
 
 		return count != null ? count.intValue() : 0;
 	}
@@ -55,6 +64,8 @@ public class ContractDaoImpl extends DaoImpl<ContractPO> implements ContractDao 
 					query.add(query.getCriterion("name", filter));
 				} else if ("status".equals(filter.getField())) {
 					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+				} else if ("atttype".equals(filter.getField())) {
+					query.add(Restrictions.eq("atttype", Short.valueOf(filter.getData())));
 				}
 			}
 		}

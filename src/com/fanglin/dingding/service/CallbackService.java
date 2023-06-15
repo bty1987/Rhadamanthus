@@ -11,7 +11,9 @@
 
 package com.fanglin.dingding.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptException;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationAccountService;
 import com.fanglin.decoration.service.DecorationContractService;
@@ -50,7 +54,13 @@ public class CallbackService {
 	private DecorationContractService decorationContractService;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private ApprovalService dpprovalService;
+
+	@Autowired
+	private com.fanglin.approval.service.ApprovalService approvalService;
+
+	@Autowired
+	private ApprovalDao approvalDao;
 
 	@Transactional(rollbackFor = Exception.class)
 	public Map<String, String> callback(String signature, String nonce, String timestamp, String encrypt) throws FLException {
@@ -94,9 +104,15 @@ public class CallbackService {
 
 			String no = response.getString("processInstanceId");
 
+			List<String> codes = new ArrayList<String>();
+
+			codes.add("PROC-107F873B-508F-459A-9FA0-D32538B4411D"); // ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT
+			codes.add("PROC-9B7CBC59-96FB-4941-BF01-608DB3E37C5E"); // ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT
+			codes.add("PROC-12D5DBE9-1974-4B95-89C9-0BB85DA00CEB"); // ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT
+
 			if ("PROC-EEA1011C-8ABD-47F1-983F-68F3D5EA1D4A".equals(code) && "finish".equals(type) && "agree".equals(result)) {
 
-				String orderId = approvalService.getApproval(no, "TextField-IG4N9OD3");
+				String orderId = dpprovalService.getApproval(no, "TextField-IG4N9OD3");
 
 				System.out.println(response.toJSONString());
 				System.out.println(orderId);
@@ -106,7 +122,7 @@ public class CallbackService {
 
 			if ("PROC-94A6270F-10A1-45E4-B9A3-86EB39ED0D6E".equals(code) && "finish".equals(type) && "agree".equals(result)) {
 
-				String orderId = approvalService.getApproval(no, "TextField-IG4UCGW1");
+				String orderId = dpprovalService.getApproval(no, "TextField-IG4UCGW1");
 
 				System.out.println(response.toJSONString());
 				System.out.println(orderId);
@@ -116,12 +132,28 @@ public class CallbackService {
 
 			if ("PROC-B852629C-D4F7-44E1-A9E2-6E1F830E38CB".equals(code) && "finish".equals(type) && "agree".equals(result)) {
 
-				String orderId = approvalService.getApproval(no, "TextField-K2AD4O5B");
+				String orderId = dpprovalService.getApproval(no, "TextField-K2AD4O5B");
 
 				System.out.println(response.toJSONString());
 				System.out.println(orderId);
 
 				decorationAccountService.makeDecorationAccount(new DecorationAccountVO(orderId), userId);
+			}
+
+			if (codes.contains(code) && "finish".equals(type)) {
+
+				ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(no);
+
+				if (approvalPO != null) {
+
+					System.out.println(response.toJSONString());
+					System.out.println(approvalPO.getAid());
+
+					approvalPO.setPiid(null);
+
+					if ("agree".equals(result)) approvalService.approve(approvalPO);
+					else approvalService.refuse(approvalPO);
+				}
 			}
 		}
 

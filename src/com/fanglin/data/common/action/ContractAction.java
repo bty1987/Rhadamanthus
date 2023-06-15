@@ -28,6 +28,8 @@ public class ContractAction extends BaseListAction {
 
 	private ContractVO contract;
 
+	private int count;
+
 	@Action(value = "pageContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageContract() throws FLException {
 
@@ -39,7 +41,15 @@ public class ContractAction extends BaseListAction {
 	@Action(value = "queryContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryContract() throws FLException {
 
-		contracts = contractService.queryContract(queryCompany());
+		contracts = contractService.queryContract(contract, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "countContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String contractCount() throws FLException {
+
+		count = contractService.countContract(queryCompany());
 
 		return SUCCESS;
 	}
@@ -82,6 +92,14 @@ public class ContractAction extends BaseListAction {
 
 	public void setContract(ContractVO contract) {
 		this.contract = contract;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

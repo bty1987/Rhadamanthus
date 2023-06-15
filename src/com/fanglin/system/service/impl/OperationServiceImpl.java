@@ -109,15 +109,31 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 
-		for (RoleOperationPO roleOperationPO : roleOperationPOs) {
-			OperationVO _operationVO = new OperationVO();
+		if (RolePO.SUPER_NO_STR.equals(userPO.getRole().getNo())) {
 
-			BeanUtil.copyProperties(roleOperationPO.getOperation(), _operationVO, Arrays.asList("module"));
+			List<OperationPO> operationPOs = operationDao.queryOperation();
 
-			operationVOs.add(_operationVO);
+			for (OperationPO operationPO : operationPOs) {
+
+				operationVO = new OperationVO();
+
+				BeanUtil.copyProperties(operationPO, operationVO, Arrays.asList("module"));
+
+				operationVOs.add(operationVO);
+			}
+		} else {
+
+			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid());
+
+			for (RoleOperationPO roleOperationPO : roleOperationPOs) {
+				OperationVO _operationVO = new OperationVO();
+
+				BeanUtil.copyProperties(roleOperationPO.getOperation(), _operationVO, Arrays.asList("module"));
+
+				operationVOs.add(_operationVO);
+			}
 		}
 
 		return operationVOs;
@@ -132,15 +148,84 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid());
 		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
 
-		for (RoleOperationPO roleOperationPO : roleOperationPOs) {
-			OperationVO _operationVO = new OperationVO();
+		if (RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
 
-			BeanUtil.copyProperties(roleOperationPO.getOperation(), _operationVO, Arrays.asList("module"));
+			List<OperationPO> operationPOs = operationDao.queryOperation();
 
-			operationVOs.add(_operationVO);
+			for (OperationPO operationPO : operationPOs) {
+
+				operationVO = new OperationVO();
+
+				BeanUtil.copyProperties(operationPO, operationVO, Arrays.asList("module"));
+
+				operationVOs.add(operationVO);
+			}
+		} else {
+
+			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid());
+
+			for (RoleOperationPO roleOperationPO : roleOperationPOs) {
+				OperationVO _operationVO = new OperationVO();
+
+				BeanUtil.copyProperties(roleOperationPO.getOperation(), _operationVO, Arrays.asList("module"));
+
+				operationVOs.add(_operationVO);
+			}
+		}
+
+		return operationVOs;
+	}
+
+	@Override
+	public List<OperationVO> queryOperationForSelf(String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) {
+			throw new FLException(220005, "员工不存在");
+		}
+
+		List<OperationVO> operationVOs = new ArrayList<OperationVO>();
+
+		if (RolePO.SUPER_NO_STR.equals(userPO.getRole().getNo())) {
+
+			List<OperationPO> operationPOs = operationDao.queryOperation();
+
+			for (OperationPO operationPO : operationPOs) {
+
+				OperationVO operationVO = new OperationVO();
+
+				BeanUtil.copyProperties(operationPO, operationVO, Arrays.asList("module"));
+
+				operationVOs.add(operationVO);
+			}
+		} else {
+
+			List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
+
+			if (userRolePOs == null || userRolePOs.size() == 0) return operationVOs;
+
+			List<Integer> rids = new ArrayList<Integer>();
+
+			for (UserRolePO userRolePO : userRolePOs) {
+				rids.add(userRolePO.getRole().getRid());
+			}
+
+			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperation(rids);
+
+			OperationVO operationVO;
+
+			for (RoleOperationPO roleOperationPO : roleOperationPOs) {
+
+				operationVO = new OperationVO();
+
+				BeanUtil.copyProperties(roleOperationPO.getOperation(), operationVO, Arrays.asList("module"));
+
+				operationVOs.add(operationVO);
+
+			}
 		}
 
 		return operationVOs;
@@ -223,6 +308,33 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateRoleOperation(RoleVO roleVO, OperationVO operationVO, String userId) throws FLException {
+
+		RolePO rolePO = roleDao.get(roleVO.getRid());
+
+		if (rolePO == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		if (operator.getRole().getRid() == rolePO.getRid()) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if (operator.getRole().getLevel() < rolePO.getLevel()) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(roleVO.getRid(), operationVO.getOid());
+
+		if (roleOperationPO == null) roleOperationDao.save(new RoleOperationPO(new OperationPO(operationVO.getOid()), rolePO.getRid(), operator));
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateRoleOperationByRid(List<Integer> oids, RoleVO roleVO, String userId) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
@@ -264,6 +376,8 @@ public class OperationServiceImpl implements OperationService {
 
 		roleOperationDao.deleteRoleOperationByRid(userPO.getRole().getRid());
 
+		if (oids == null || oids.size() == 0) return 0;
+
 		UserPO operator = userDao.queryUserByUserId(userId);
 
 		if (operator.getRole().getRid() == userPO.getRole().getRid()) {
@@ -273,8 +387,6 @@ public class OperationServiceImpl implements OperationService {
 		if (operator.getRole().getLevel() < userPO.getRole().getLevel()) {
 			throw new FLException(-1, "无操作权限");
 		}
-
-		if (oids == null || oids.size() == 0) return 0;
 
 		for (Integer oid : oids) {
 			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), userPO.getRole().getRid(), operator));
@@ -294,6 +406,17 @@ public class OperationServiceImpl implements OperationService {
 		}
 
 		operationDao.deleteById(oid);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteRoleOperation(RoleVO roleVO, OperationVO operationVO) {
+
+		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(roleVO.getRid(), operationVO.getOid());
+
+		if (roleOperationPO != null) roleOperationDao.delete(roleOperationPO);
 
 		return 0;
 	}

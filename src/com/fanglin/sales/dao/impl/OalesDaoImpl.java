@@ -61,10 +61,18 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 				query.timeranges("createTime", data);
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
-			} else if ("brand".equals(field)) {
-				query.add(query.getCriterion("brand", data, op));
+			} else if ("brandId".equals(field)) {
+				query.add(query.getCriterion("bid", Long.valueOf(data), op));
 			} else if ("category".equals(field)) {
 				query.add(query.getCriterion("category", data, op));
+			} else if ("confirmTime".equals(field)) {
+				query.timeranges("confirmTime", data);
+			} else if (OalesPO.COLUMN_REGION_STR.equals(field)) {
+				query.alias("region", "region");
+				query.add(query.getCriterion(OalesPO.COLUMN_REGION_STR, data, op));
+			} else if (OalesPO.COLUMN_DEPT_STR.equals(field)) {
+				query.alias("dept", "dept");
+				query.add(query.getCriterion(OalesPO.COLUMN_DEPT_STR, data, op));
 			}
 		}
 	}

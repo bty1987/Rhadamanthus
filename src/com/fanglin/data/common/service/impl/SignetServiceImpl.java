@@ -15,6 +15,7 @@ import com.fanglin.data.common.service.SignetService;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.fadada.signature.Signature;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -34,7 +35,7 @@ public class SignetServiceImpl implements SignetService {
 		for (SignetPO signetPO : signetPOs) {
 			SignetVO signetVO = new SignetVO();
 
-			BeanUtil.copyProperties(signetPO, signetVO);
+			BeanUtil.copyProperties(signetPO, signetVO, "company");
 
 			signetVOs.add(signetVO);
 		}
@@ -43,20 +44,30 @@ public class SignetServiceImpl implements SignetService {
 	}
 
 	@Override
-	public List<SignetVO> querySignet(int company) {
+	public List<SignetVO> querySignet(SignetVO signetVO, int company) {
 
-		List<SignetPO> signetPOs = signetDao.querySignet(company);
+		List<SignetPO> signetPOs = signetDao.querySignet(signetVO.getType(), company);
 		List<SignetVO> signetVOs = new ArrayList<SignetVO>();
 
 		for (SignetPO signetPO : signetPOs) {
-			SignetVO signetVO = new SignetVO();
+			signetVO = new SignetVO();
 
-			BeanUtil.copyProperties(signetPO, signetVO);
+			BeanUtil.copyProperties(signetPO, signetVO, "company");
 
 			signetVOs.add(signetVO);
 		}
 
 		return signetVOs;
+	}
+
+	@Override
+	public SignetVO querySignet(SignetVO signetVO) {
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetPO != null) BeanUtil.copyProperties(signetPO, signetVO, "company");
+
+		return signetVO;
 	}
 
 	@Override
@@ -69,7 +80,7 @@ public class SignetServiceImpl implements SignetService {
 
 		SignetPO signetPO = new SignetPO();
 
-		BeanUtil.copyPropertie(signetVO, signetPO);
+		BeanUtil.copyPropertie(signetVO, signetPO, "company");
 
 		signetPO.setCompany(company);
 
@@ -241,32 +252,54 @@ public class SignetServiceImpl implements SignetService {
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int copySignet(SignetVO signetVO) throws FLException {
 
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
 
+		if (signetPO == null) {
+			throw new FLException(130045, "签章不存在");
+		}
+
 		if (signetDao.countSignet(signetVO.getNo()) > 0) {
 			throw new FLException(130046, "签章已存在");
 		}
-		SignetPO signetPO2 = new SignetPO();
-		signetPO2.setNo(signetVO.getNo());
-		signetPO2.setName(signetVO.getName());
-		signetPO2.setKeyword(signetPO.getKeyword());
-		signetPO2.setType(signetPO.getType());
-		signetPO2.setPath(signetPO.getPath());
-		signetPO2.setAuthurl(signetPO.getAuthurl());
-		signetPO2.setSignno(signetPO.getSignno());
-		signetPO2.setToken(signetPO.getToken());
-		signetPO2.setCompany(signetPO.getCompany());
-		signetPO2.setSignid(signetPO.getSignid());
-		signetPO2.setStatus(signetPO.getStatus());
-		
-		signetDao.save(signetPO2);
-		
+
+		SignetPO newSignetPO = new SignetPO();
+
+		newSignetPO.setNo(signetVO.getNo());
+		newSignetPO.setName(signetVO.getName());
+		newSignetPO.setKeyword(signetPO.getKeyword());
+		newSignetPO.setType(signetPO.getType());
+		newSignetPO.setPath(signetPO.getPath());
+		newSignetPO.setAuthurl(signetPO.getAuthurl());
+		newSignetPO.setSignno(signetPO.getSignno());
+		newSignetPO.setToken(signetPO.getToken());
+		newSignetPO.setCompany(signetPO.getCompany());
+		newSignetPO.setSignid(signetPO.getSignid());
+		newSignetPO.setStatus(signetPO.getStatus());
+
+		signetDao.save(newSignetPO);
+
 		return 0;
 	}
-	
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int moveSignet(SignetVO signetVO) throws FLException {
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetPO == null) {
+			throw new FLException(130045, "签章不存在");
+		}
+
+		signetPO.setCompany(CompanyServiceImpl.decode(signetVO.getCompany()));
+
+		signetDao.update(signetPO);
+
+		return 0;
+	}
 }

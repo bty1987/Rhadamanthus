@@ -23,39 +23,46 @@ import com.fanglin.utils.Paging;
 
 @Repository("inspectionRecordDao")
 public class InspectionRecordDaoImpl extends DaoImpl<InspectionRecordPO> implements InspectionRecordDao {
-	
-	public InspectionRecordDaoImpl(){
+
+	public InspectionRecordDaoImpl() {
 		super(InspectionRecordPO.class);
 	}
 
 	@Override
-	public List<InspectionRecordPO> pageInspectionRecord(Paging paging, List<Filter> filters){
-		
+	public List<InspectionRecordPO> pageInspectionRecord(Paging paging, List<Filter> filters) {
+
 		PagingQuery<InspectionRecordPO> query = pagingQuery(paging, InspectionRecordPO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
 
 	@Override
-	public List<InspectionRecordPO> pageInspectionRecordByOrderId(Paging paging, List<Filter> filters, String orderId){
-		
+	public List<InspectionRecordPO> pageInspectionRecordByOrderId(Paging paging, List<Filter> filters, String orderId) {
+
 		PagingQuery<InspectionRecordPO> query = pagingQuery(paging, InspectionRecordPO.class);
-		
+
 		query.add(query.getCriterion(InspectionRecordPO.COLUMN_ORDERID_STR, orderId, "eq"));
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.add(query.getCriterion(field, data, op));
+		}
+
 	}
 
 }

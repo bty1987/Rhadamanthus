@@ -9,6 +9,8 @@ public interface SalesPictureDao extends Dao<SalesPicturePO> {
 
 	public List<SalesPicturePO> querySalesPictureBySid(Long sid);
 
-	public List<SalesPicturePO> querysalesPictureBySiid(Long siid);
+	public List<SalesPicturePO> querySalesPictureBySiid(Long siid);
+
+	public int countSalesPicture(Long sid, short type);
 
 }

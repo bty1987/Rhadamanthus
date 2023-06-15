@@ -374,13 +374,14 @@ jQuery(function($) {
 					"paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
 					"paytran.no": com.typeahead(bankDiv),
 					"paytran.sn": payment.posValues[bankVal].value, // 收据类型中pos的value值
-					"paytran.money": v.recharge
+					"paytran.money": v.recharge,
+					"paytran.way": 0
 				};
 
 				com.post(api.payment.addPaytran, options, function(res) {
 					var sendOption = {
 						"paytran.ptid": res.paytran.ptid,
-						"paytran.way": "wxpay"
+						"paytran.way": 1
 					};
 
 					com.post(api.payment.posPay, sendOption, function(res) {
@@ -566,6 +567,8 @@ jQuery(function($) {
 			com.showAlert(com.warning, "无收款方式信息");
 			return false;
 		}
+
+		options["payment.realMoney"] = realPayment;
 
 		if(payment.typeUpdate == 0){
 

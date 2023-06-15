@@ -1,18 +1,21 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.data.common.dao.ConstructionNodeDao;
-import com.fanglin.data.common.service.ConstructionNodeService;
-import com.fanglin.data.common.vo.ConstructionNodeVO;
-import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.common.dao.SurveyTemplateDao;
+import com.fanglin.data.common.service.ConstructionNodeService;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.data.common.vo.SurveyTemplateVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.BeanUtil;
@@ -28,22 +31,18 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 	@Autowired
 	private DecorationDao decorationDao;
 
+	@Autowired
+	private SurveyTemplateDao surveyTemplateDao;
+
 	@Override
 	public void pageConstructionNode(Paging paging, List<Filter> filters, int company) {
 
 		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.pageConstructionNode(paging, filters, company);
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
 
-		ConstructionNodeVO constructionNodeVO;
+		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
 
-		if (constructionNodePOs != null) {
-			for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
-				constructionNodeVO = new ConstructionNodeVO();
-
-				BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
-
-				constructionNodeVOs.add(constructionNodeVO);
-			}
+			constructionNodeVOs.add(ptv(constructionNodePO));
 		}
 
 		paging.setData(constructionNodeVOs);
@@ -56,17 +55,24 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNode(company);
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
 
-		ConstructionNodeVO constructionNodeVO;
-
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
-			constructionNodeVO = new ConstructionNodeVO();
 
-			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
-
-			constructionNodeVOs.add(constructionNodeVO);
+			constructionNodeVOs.add(ptv(constructionNodePO));
 		}
 
 		return constructionNodeVOs;
+	}
+
+	@Override
+	public ConstructionNodeVO queryConstructionNodeByCnid(ConstructionNodeVO constructionNodeVO) {
+
+		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
+
+		if (constructionNodePO != null) {
+			constructionNodeVO = ptv(constructionNodePO);
+		}
+
+		return constructionNodeVO;
 	}
 
 	@Override
@@ -86,7 +92,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
 			constructionNodeVO = new ConstructionNodeVO();
 
-			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO);
+			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO, Arrays.asList("startSurvey", "endSurvey"));
 
 			constructionNodeVOs.add(constructionNodeVO);
 		}
@@ -101,16 +107,18 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		ConstructionNodePO constructionNodePO = new ConstructionNodePO();
 
 		constructionNodePO.setName(constructionNodeVO.getName());
-		
+
 		constructionNodePO.setPrecheck(0);
 		constructionNodePO.setPostcheck(0);
 		constructionNodePO.setStacheck(0);
 		constructionNodePO.setFincheck(0);
-		
+
 		constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
 		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
+		constructionNodePO.setKino(constructionNodeVO.getKino());
+		constructionNodePO.setKiname(constructionNodeVO.getKiname());
 		constructionNodePO.setTimeLimit(0);
-		
+
 		constructionNodeDao.save(constructionNodePO);
 	}
 
@@ -130,8 +138,22 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setFincheck(constructionNodeVO.getFincheck());
 		constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
 		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
+
+		constructionNodePO.setKino(constructionNodeVO.getKino());
+		constructionNodePO.setKiname(constructionNodeVO.getKiname());
+
 		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
-		
+
+		constructionNodePO.setStartSurvey(null);
+		constructionNodePO.setEndSurvey(null);
+
+		if (constructionNodeVO.getStartSurvey() != null && constructionNodeVO.getStartSurvey().getStid() != null) {
+			constructionNodePO.setStartSurvey(surveyTemplateDao.get(constructionNodeVO.getStartSurvey().getStid()));
+		}
+
+		if (constructionNodeVO.getEndSurvey() != null && constructionNodeVO.getEndSurvey().getStid() != null) {
+			constructionNodePO.setEndSurvey(surveyTemplateDao.get(constructionNodeVO.getEndSurvey().getStid()));
+		}
 
 		constructionNodeDao.update(constructionNodePO);
 	}
@@ -145,6 +167,18 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setStatus(constructionNodeVO.getStatus());
 
 		constructionNodeDao.update(constructionNodePO);
+	}
+
+	public ConstructionNodeVO ptv(ConstructionNodePO constructionNodePO) {
+
+		ConstructionNodeVO constructionNodeVO = new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO());
+
+		BeanUtil.copyProperties(constructionNodePO, constructionNodeVO, Arrays.asList("startSurvey", "endSurvey"));
+
+		constructionNodeVO.getStartSurvey().setBaseInfo(constructionNodePO.getStartSurvey());
+		constructionNodeVO.getEndSurvey().setBaseInfo(constructionNodePO.getEndSurvey());
+
+		return constructionNodeVO;
 	}
 
 }

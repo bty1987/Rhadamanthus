@@ -135,7 +135,15 @@ var printAddReduceDetail = (function() {
                         "measurementUnit": "-",
                         "num": "-",
                         "unitPrice": "-",
-                        "total": v.manageDiscount == 1 ? utils.changeThrDecimal(utils.accMul(v.managePrice, utils.accDiv(v.discount == 0 ? addReduceDetail.quotation.discount : discount, 10))) : v.managePrice,
+                        "total": v.manageDiscount == 1 ? utils.changeThrDecimal(utils.accMul(v.managePrice, utils.accDiv(v.discount == 0 ? addReduceDetail.quotation.discount : v.discount, 10))) : v.managePrice,
+                        "type": v.type,
+                    }, {
+                        "itemName": "税金",
+                        "quotationFunctionAreaName": "-",
+                        "measurementUnit": "-",
+                        "num": "-",
+                        "unitPrice": "-",
+                        "total": v.manageDiscount == 1 ? utils.changeThrDecimal(utils.accMul(v.taxPrice, utils.accDiv(v.discount == 0 ? addReduceDetail.quotation.discount : v.discount, 10))) : v.taxPrice,
                         "type": v.type,
                     }, ];
 
@@ -168,18 +176,10 @@ var printAddReduceDetail = (function() {
                     // 减项类型/增项类型
                     var addReduceType = [1, 3, 4, 5].indexOf(addReduceItem.type) != -1 ? 1 : 0;
 
-                    var discount = null;
+                    var discount = ([1, 3].indexOf(addReduceItem.discount) != -1) ? quotationDiscount : 1; // 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
 
-                    if (addReduceType == 0) { // 增项, 不打折
+                    if (addReduceItem.type == 4 || addReduceItem.type == 5) { // 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
                         discount = 1;
-                    } else if (addReduceItem.type == 4 || addReduceItem.type == 5) { // 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
-                        discount = 1;
-                        // 装修单类型为2 (半价, 满减, 减上减) 打折
-                    } else if (decorationType == 2) {
-                        discount = quotationDiscount;
-                        // 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
-                    } else {
-                        discount = ([1, 3].indexOf(addReduceItem.discount) != -1) ? quotationDiscount : 1;
                     }
 
                     var discountPrice = utils.accMul(addReduceItem.unitPrice, discount);

@@ -11,6 +11,7 @@ package com.fanglin.postar.airpos;
  * @Describing	: 
  */
 
+import java.util.Date;
 import java.util.Properties;
 import java.util.TreeMap;
 
@@ -22,9 +23,11 @@ import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.postar.utils.HttpUtil;
 import com.fanglin.postar.utils.RsaUtil;
+import com.fanglin.postar.utils.SM4Utils;
 import com.fanglin.postar.utils.ShaUtil;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.SystemConfig;
 
 public class Airpos {
@@ -34,6 +37,10 @@ public class Airpos {
 	private static String version;
 
 	private static String ip;
+
+	private static String codepay_secret_key;
+
+	private static String codepay_iv;
 
 	private static String postar_pay_url;
 
@@ -54,6 +61,9 @@ public class Airpos {
 			version = prop.getProperty("VERSION");
 			ip = prop.getProperty("IP");
 
+			codepay_secret_key = prop.getProperty("SECRETKEY");
+			codepay_iv = prop.getProperty("IV");
+
 			String host = prop.getProperty("HOST");
 			postar_pay_url = String.format("%s%s", host, "/yyfsevr/order/pay");
 			postar_pos_pay_url = String.format("%s%s", host, "/yyfsevr/order/cashierPay");
@@ -64,7 +74,7 @@ public class Airpos {
 		}
 	}
 
-	public static void pospay(String way, PaytranPO paytranPO, CustypePO custypePO) throws FLException {
+	public static void pospay(PaytranPO paytranPO, CustypePO custypePO) throws FLException {
 
 		if (custypePO == null) {
 			throw new FLException(130105, "商户不存在");
@@ -74,7 +84,7 @@ public class Airpos {
 
 		String payway = "00";
 
-		if (way.equals("acquire")) {
+		if (paytranPO.getWay() == PaytranPO.WAY_ACQUIRE_SHORT) {
 			payway = "01";
 		}
 
@@ -116,6 +126,23 @@ public class Airpos {
 			paytranPO.setRstmsg(result.getString("msg"));
 		}
 
+	}
+
+	public static String codepay(PaytranPO paytranPO, CustypePO custypePO) throws FLException {
+
+		if (custypePO == null) {
+			throw new FLException(130105, "商户不存在");
+		}
+
+		String plainText = String.format("custId=%s&orderNo=%s&txamt=%s&code=%s", custypePO.getNo(), paytranPO.getOutOrderNo(), Arith.div(paytranPO.getMoney(), 1000.0), PaytranPO.CODESTATUS_PAY_SHORT);
+
+		try {
+			return new SM4Utils(codepay_secret_key, codepay_iv, true).encrypt(plainText);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println(plainText);
+			throw new FLException(110008, "验证信息错误");
+		}
 	}
 
 	public static void wxpay(Wxpay wxpay, CustypePO custypePO, CompanyPO companyPO) throws FLException {
@@ -185,7 +212,6 @@ public class Airpos {
 		wxpay.setJsapiTimestamp(data.getString("jsapiTimestamp"));
 		wxpay.setOrderNo(data.getString("orderNo"));
 		wxpay.setOrderTime(data.getString("orderTime"));
-		wxpay.setThreeOrderNo(data.getString("threeOrderNo"));
 
 	}
 
@@ -243,7 +269,15 @@ public class Airpos {
 				paytranPO.setMsgId(data.getString("orderNo"));
 			}
 		} else if (code.equals("222222")) {
-			throw new FLException(150045, "转换款支付正在处理");
+
+			long pushTime = paytranPO.getPushTime().getTime();
+			long currentTime = DateUtil.getDateToTimestamp(new Date()).getTime();
+
+			if (Arith.sub(currentTime, pushTime) < PaytranPO.CHECK_INVALIDTIME_LONG) throw new FLException(150045, "转换款支付正在处理");
+
+			paytranPO.setStatus(PaytranPO.STATUS_INVALID_INT);
+			paytranPO.setRstcode(code);
+			paytranPO.setRstmsg(msg);
 		} else {
 
 			System.out.println(postar_query_url);

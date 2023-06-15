@@ -56,7 +56,7 @@ public interface DecorationService {
 
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException;
 
-	public DecorationVO checkDecoration(DecorationVO decorationVO, Authentication authentication);
+	public DecorationVO checkDecoration(DecorationVO decorationVO, Authentication authentication) throws FLException;
 
 	public void checkDecorationForExist(DecorationVO decorationVO);
 
@@ -80,7 +80,7 @@ public interface DecorationService {
 
 	public void obsoleteDecoration(DecorationVO decorationVO, String userName) throws FLException;
 
-	public void terminalDecoration(DecorationVO decorationVO, List<DecorationPaymentVO> decorationPaymentVOs, Authentication authentication) throws FLException;
+	public void terminalDecoration(DecorationVO decorationVO, List<DecorationPaymentVO> decorationPaymentVOs, String userId, int company) throws FLException;
 
 	public void subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 
@@ -89,5 +89,7 @@ public interface DecorationService {
 	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException;
 
 	public void changeDecorationForCustomer(DecorationVO decorationVO) throws FLException;
+
+	public void changeDecorationForPayScale(DecorationVO decorationVO) throws FLException;
 
 }

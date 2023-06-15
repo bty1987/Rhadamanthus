@@ -146,6 +146,8 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				query.add(query.getCriterion("checker.userId", data, op));
 			} else if ("isCheck".equals(filet)) {
 				query.add(query.getCriterion("isCheck", Short.valueOf(data), op));
+			} else if ("twotype".equals(filet)) {
+				query.add(query.getCriterion("twotype", Short.valueOf(data), op));
 			}
 		}
 	}

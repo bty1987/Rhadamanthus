@@ -39,7 +39,15 @@ public class SignetAction extends BaseListAction {
 	@Action(value = "querySignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySignet() throws FLException {
 
-		signets = signetService.querySignet(queryCompany());
+		signets = signetService.querySignet(signet == null ? new SignetVO() : signet, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySignetBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySignetBySid() throws FLException {
+
+		signet = signetService.querySignet(signet);
 
 		return SUCCESS;
 	}
@@ -123,7 +131,15 @@ public class SignetAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "moveSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String moveSignet() throws FLException {
+
+		signetService.moveSignet(signet);
+
+		return SUCCESS;
+	}
+
 	public List<SignetVO> getSignets() {
 		return signets;
 	}

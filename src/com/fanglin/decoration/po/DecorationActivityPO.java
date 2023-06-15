@@ -2,6 +2,8 @@ package com.fanglin.decoration.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,9 +22,9 @@ public class DecorationActivityPO implements java.io.Serializable {
 	private static final long serialVersionUID = 5426521470719770019L;
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final short STATUS_INIT_INT = 0; // 初始
-	
+
 	public static final short STATUS_LOCK_INT = 1; // 锁定
 
 	private long daId;
@@ -30,7 +32,11 @@ public class DecorationActivityPO implements java.io.Serializable {
 	private String orderId;
 
 	private ActivityPO activity;
-	
+
+	private Timestamp createTime;
+
+	private int cuid;
+
 	private short status;
 
 	@Id
@@ -54,7 +60,7 @@ public class DecorationActivityPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "aId", referencedColumnName = "aId")
+	@JoinColumn(name = "aid", referencedColumnName = "aid")
 	public ActivityPO getActivity() {
 		return activity;
 	}
@@ -62,7 +68,25 @@ public class DecorationActivityPO implements java.io.Serializable {
 	public void setActivity(ActivityPO activity) {
 		this.activity = activity;
 	}
-	
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "cuid")
+	public int getCuid() {
+		return cuid;
+	}
+
+	public void setCuid(int cuid) {
+		this.cuid = cuid;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -71,7 +95,5 @@ public class DecorationActivityPO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
-	
 
 }

@@ -52,20 +52,20 @@ public class SupplierAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		supplierService.addSupplier(supplier, queryCompany());
+		supplierService.addSupplier(supplier, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSupplier() throws FLException {
-		
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		supplierService.updateSupplier(supplier);
-		
+
 		return SUCCESS;
 	}
 

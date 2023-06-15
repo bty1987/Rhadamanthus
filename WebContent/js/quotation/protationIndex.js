@@ -1,6 +1,8 @@
-$(function() {
+﻿$(function() {
 
     var protation = {
+
+        protation: null,
 
         protationList: com.focusPage("#protationList"),
         decorationInfo: com.focusPage("#decorationInfo"),
@@ -14,25 +16,19 @@ $(function() {
             name: com.focusPage("#name", "#protationModal"),
             produce: com.focusPage("#produce", "#protationModal"),
             comment: com.focusPage("#comment", "#protationModal"),
+            quoteArea: com.focusPage("#quoteArea", "#protationModal"),
             preferPrice: com.focusPage("#preferPrice", "#protationModal"),
-            managePrice: com.focusPage("#managePrice", "#protationModal"),
             decorationInfo: com.focusPage("#decorationInfo"),
         },
 
         datasets: {
-
             status: {},
-
             decorationStatus: {},
         },
 
         orderId: params.quotation.orderId,
 
         pageType: params.urlLoadParams.type,
-
-        editFlg: 0,
-        leftflg: false,
-        rightflg: false,
 
     };
 
@@ -48,9 +44,14 @@ $(function() {
 
     com.focusPage('#createProtation').on('click', function() {
 
-        protation.editFlg = 0;
+        protation.protation = null;
+
+        protation.items.quoteArea.removeAttr("disabled");
+        protation.items.preferPrice.removeAttr("disabled");
+
         com.clearValidator();
         com.cleanItems(protation.items);
+
         protation.modals.protationModal.modal("show");
     });
 
@@ -59,49 +60,40 @@ $(function() {
         if (com.validate("protationModal"))
             return false;
 
-        if (protation.editFlg == 0) {
+        if (protation.protation == null) {
+
             var options = {
                 "protation.ppid": protation.items.produce.val(),
                 "protation.orderId": protation.orderId,
                 "protation.name": protation.items.name.val(),
-                "protation.comment": protation.items.comment.val(),
                 "protation.preferPrice": protation.items.preferPrice.val(),
-                "protation.managePrice": protation.items.managePrice.val()
+                "protation.managePrice": 0,
+                "protation.quoteArea": protation.items.quoteArea.val(),
+                "protation.comment": protation.items.comment.val(),
             };
             com.post(api.quotation.addProtation, options, function(res) {
 
                 protation.modals.protationModal.modal("hide");
+
                 searcher.doSearch();
-            }, null, false);
-        } else if (protation.editFlg == 1) {
+            });
+        } else {
+
             var options = {
                 "protation.orderId": protation.orderId,
-                "protation.pid": protation.items.pid.val(),
+                "protation.pid": protation.protation.pid,
                 "protation.name": protation.items.name.val(),
                 "protation.comment": protation.items.comment.val(),
-                "protation.preferPrice": protation.items.preferPrice.val(),
-                "protation.managePrice": protation.items.managePrice.val()
             };
 
             com.post(api.quotation.updateProtation, options, function(res) {
 
-                var _pid = protation.items.pid.val();
-                var name = protation.items.name.val();
-                var comment = protation.items.comment.val();
-                var preferPrice = protation.items.preferPrice.val();
-                var managePrice = protation.items.managePrice.val();
-
-                com.focusPage("#h4name_" + _pid).text(name);
-                com.focusPage("#name_" + _pid).text('名称:' + name);
-                com.focusPage("#comment" + _pid).text('备注:' + comment);
-                com.focusPage('#preferPrice' + _pid).text('优惠价:' + preferPrice);
-                com.focusPage('#managePrice' + _pid).text('管理费:' + managePrice);
-
                 com.showAlert(com.info, "操作成功");
-                protation.modals.protationModal.modal("hide");
-                searcher.doSearch();
-            }, null, false);
 
+                protation.modals.protationModal.modal("hide");
+
+                searcher.doSearch();
+            });
         }
     });
 
@@ -141,14 +133,17 @@ $(function() {
 
     var searcher = new Searcher();
 
-    var cardbtns = [{
+    var btnUpdate = {
         name: "修改",
         clazz: "btn-blue",
         handle: function(v) {
 
-            protation.editFlg = 1;
+            protation.protation = v;
 
             com.clearValidator();
+
+            protation.items.quoteArea.attr("disabled", "disabled");
+            protation.items.preferPrice.attr("disabled", "disabled");
 
             com.post(api.quotation.queryProtationByPid, {
                 "protation.pid": v.pid
@@ -157,13 +152,17 @@ $(function() {
                 protation.items.pid.val(res.protation.pid);
                 protation.items.name.val(res.protation.name);
                 protation.items.comment.val(res.protation.comment);
+                protation.items.quoteArea.val(res.protation.quoteArea);
                 protation.items.preferPrice.val(res.protation.preferPrice);
-                protation.items.managePrice.val(res.protation.managePrice);
+
+                protation.protation = res.protation;
 
                 protation.modals.protationModal.modal("show");
             });
         }
-    }, {
+    };
+
+    var btnView = {
         name: "查看",
         clazz: "btn-success",
         handle: function(v) {
@@ -176,7 +175,9 @@ $(function() {
 
             com.switchPage(api.index.protationPart.url);
         }
-    }, {
+    };
+
+    var btnDelete = {
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
@@ -192,14 +193,16 @@ $(function() {
 
                 com.post(api.quotation.deleteProtation, {
                     "protation.pid": v.pid,
-                    "protation.orderId": protation.orderId
+                    "protation.orderId": protation.pageType != null ? v.decoration.orderId : protation.orderId,
                 }, function(res) {
 
                     searcher.doSearch();
                 });
             });
         }
-    }, {
+    };
+
+    var btnDefault = {
         name: "默认",
         clazz: "btn-inverse",
         handle: function(v) {
@@ -208,7 +211,7 @@ $(function() {
                 var that = $(this)
                 var options = {
                     "protation.pid": v.pid,
-                    "protation.orderId": protation.orderId,
+                    "protation.orderId": protation.pageType != null ? v.decoration.orderId : protation.orderId,
                 }
 
                 com.post(api.quotation.changeProtationForDefault, options, function(res) {
@@ -223,7 +226,9 @@ $(function() {
 
             return (v.defaults == constant.quotation().protation.DEFAULT_COMMON_INT);
         }
-    }, {
+    };
+
+    var btnLock = {
         name: "锁定",
         clazz: "btn-pink",
         handle: function(v) {
@@ -247,7 +252,9 @@ $(function() {
 
             return (v.status == constant.quotation().protation.STATUS_INIT_INT);
         }
-    }, {
+    };
+
+    var btnUnlock = {
         name: "解锁",
         clazz: "btn-info",
         handle: function(v) {
@@ -271,7 +278,7 @@ $(function() {
 
             return (v.status == constant.quotation().protation.STATUS_LOCK_INT);
         }
-    }];
+    };
 
     if (protation.pageType == null) {
 
@@ -281,6 +288,8 @@ $(function() {
         com.focusPage("#pagenation").hide();
 
         initProtationList();
+
+        var cardbtns = [btnUpdate, btnView, btnDelete, btnDefault, btnLock, btnUnlock];
 
         searcher.set("pageltList", "pageltList", "resultList", api.quotation.queryProtationByOrderId, {
             "protation.orderId": protation.orderId,
@@ -309,166 +318,344 @@ $(function() {
 
     if (protation.pageType == "page") {
 
+        protation.pageConfig = getConfig(params['urlLoadParams'].depage, 2);
+
         com.focusPage("#protationIndexPageContent").removeClass("page-content");
 
-        searcher.base("condList", "pagenation", "resultList", api.quotation.pageProtation);
-        searcher.condition(["quotation-protation-decoration-orderId", "quotation-protation-decoration-village", "quotation-protation-decoration-designer", "quotation-protation-decoration-salesman", "quotation-protation-decoration-status", "quotation-protation-createTime", "quotation-protation-status"]);
+        var cardbtns = [];
+
+        if (protation.pageConfig.pageBtn.contains("update"))
+            cardbtns.push(btnUpdate);
+
+        if (protation.pageConfig.pageBtn.contains("view"))
+            cardbtns.push(btnView);
+
+        if (protation.pageConfig.pageBtn.contains("delete"))
+            cardbtns.push(btnDelete);
+
+        if (protation.pageConfig.pageBtn.contains("default"))
+            cardbtns.push(btnDefault);
+
+        if (protation.pageConfig.pageBtn.contains("lock"))
+            cardbtns.push(btnLock);
+
+        if (protation.pageConfig.pageBtn.contains("unlock"))
+            cardbtns.push(btnUnlock);
+
+        searcher.base("condList", "pagenation", "resultList", protation.pageConfig.apiPage);
+        searcher.condition(protation.pageConfig.condArr);
         searcher.history("protationPostData");
 
         var cardprops = [{
             field: "decoration.orderId",
             name: "装修单号",
             prop: "decoration.orderId",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationOrderId");
+            }
         }, {
             field: "name",
             name: "楼盘",
             prop: "decoration.house.village.name",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationHouseVillageName");
+            }
         }, {
             field: "houseNumber",
             name: "楼号",
             prop: "decoration.house.houseNumber",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+            }
         }, {
             field: "name",
             name: "客户名",
             prop: "decoration.customer.name",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationCustomerName");
+            }
         }, {
             field: "currentName",
             name: "设计师",
             prop: "decoration.designer.currentName",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+            }
         }, {
             field: "currentName",
             name: "业务员",
             prop: "decoration.salesman.currentName",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+            }
         }, {
             field: "buildArea",
             name: "面积",
             prop: "decoration.house.buildArea",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationHouseBuildArea");
+            }
         }, {
             field: "decoration.status",
             name: "订单状态",
             prop: "decoration.status",
             dataset: constant.decoration().decoration.status.keys,
-            clazz: "red"
+            clazz: "red",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("decorationStatus");
+            }
         }, {
             type: "newline"
         }, {
             field: "name",
             name: "名称",
             prop: "name",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("name");
+            }
         }, {
             field: "createTime",
             name: "创建时间",
             prop: "createTime",
-            clazz: "green"
+            clazz: "green",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("createTime");
+            }
         }, {
             field: "creater.currentName",
             name: "创建人",
             prop: "creater.currentName",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("createrCurrentName");
+            }
         }, {
             field: "quotePrice",
             name: "起报价",
             prop: "quotePrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("quotePrice");
+            }
         }, {
             field: "quoteArea",
-            name: "起报面积",
+            name: "面积",
             prop: "quoteArea",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("quoteArea");
+            }
         }, {
             field: "unitPrice",
             name: "计价单价",
             prop: "unitPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("unitPrice");
+            }
         }, {
             field: "profitRate",
             name: "利润率",
             prop: "profitRate",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("profitRate");
+            }
         }, {
             field: "basicPrice",
             name: "基础额",
             prop: "basicPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("basicPrice");
+            }
         }, {
             field: "comdPrice",
             name: "工程额",
             prop: "comdPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("comdPrice");
+            }
         }, {
             field: "commPrice",
             name: "主材额",
             prop: "commPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("commPrice");
+            }
         }, {
             field: "adddPrice",
             name: "增工额",
             prop: "adddPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("adddPrice");
+            }
         }, {
             field: "addmPrice",
             name: "增主额",
             prop: "addmPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("addmPrice");
+            }
         }, {
             field: "subdPrice",
             name: "减工额",
             prop: "subdPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("subdPrice");
+            }
         }, {
             field: "submPrice",
             name: "减主额",
             prop: "submPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("submPrice");
+            }
         }, {
             field: "totalPrice",
             name: "总额",
             prop: "totalPrice",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("totalPrice");
+            }
         }, {
             field: "mostPrice",
             name: "主材成本",
             prop: "mostPrice",
-            clazz: "grey"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("mostPrice");
+            }
         }, {
             field: "costRate",
             name: "工程增项成本比例",
             prop: "costRate",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("costRate");
+            }
         }, {
             field: "mostRate",
             name: "主材增项成本比例",
             prop: "mostRate",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("mostRate");
+            }
         }, {
             field: "totalCost",
             name: "成本总额",
             prop: "totalCost",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("totalCost");
+            }
         }, {
             field: "totalProfit",
             name: "利润总额",
             prop: "totalProfit",
-            clazz: "blue"
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("totalProfit");
+            }
+        }, {
+            field: "discount",
+            name: "折扣",
+            prop: "discount",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("discount");
+            }
+        }, {
+            field: "manageRate",
+            name: "管理费比例",
+            prop: "manageRate",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("manageRate");
+            }
+        }, {
+            field: "managePrice",
+            name: "管理费",
+            prop: "managePrice",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("managePrice");
+            }
+        }, {
+            field: "preferPrice",
+            name: "优惠价",
+            prop: "preferPrice",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("preferPrice");
+            }
         }, {
             field: "comment",
             name: "备注",
             prop: "comment",
-            clazz: "grey"
+            clazz: "grey",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("comment");
+            }
         }, {
             field: "status",
             name: "状态",
             prop: "status",
             dataset: constant.quotation().protation.status.keys,
-            clazz: "red"
+            clazz: "red",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("status");
+            }
         }];
 
         searcher.line("decoration.orderId", cardprops, cardbtns);
@@ -476,4 +663,72 @@ $(function() {
     }
 
     searcher.render();
+
+    function getConfig(page, type) {
+
+        var pageConfig = {
+            "apiPage": null,
+            "pageBtn": [],
+            "postDataName": page + "PostData",
+            "condArr": [],
+            "extraParam": [],
+            "propertyArr": []
+        };
+
+        function packageConfig(o, props, value, subtype) {
+
+            var prop = props.shift();
+            if (props.length != 0) {
+                if (!o[prop])
+                    o[prop] = {};
+                packageConfig(o[prop], props, value, subtype);
+                return;
+            }
+
+            if (subtype == 0) {
+                o[prop] = value;
+            } else if (subtype == 1 && !o[prop]) {
+                o[prop] = [value];
+            } else if (subtype == 1 && o[prop]) {
+                o[prop].push(value);
+            }
+        }
+
+        function getApi(o, props) {
+
+            var prop = props.shift();
+
+            if (props.length == 0) {
+                return o[prop];
+            } else if (o[prop]) {
+                return getApi(o[prop], props);
+            }
+            return "";
+        }
+
+        com.post(api.right.queryQuotationFunctionRight, {
+            "quotationFunctionRight.name": page,
+            "quotationFunctionRight.type": type
+        }, function(res) {
+
+            var rights = res.quotationFunctionRights.sort(function(a, b) {
+
+                return a.quotationFunction.sort - b.quotationFunction.sort;
+            });
+
+            $.each(rights, function(i, v) {
+
+                var data = v.quotationFunction;
+
+                if (data.type == 1)
+                    data.value = getApi({
+                        "api": api
+                    }, data.value.split("."));
+
+                packageConfig(pageConfig, data.key.split("."), data.value, data.subtype);
+            });
+        }, null, false);
+
+        return pageConfig;
+    }
 });

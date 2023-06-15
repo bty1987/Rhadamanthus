@@ -23,7 +23,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.ContractPO;
 import com.fanglin.fadada.bean.Contract;
 import com.fanglin.personel.po.UserPO;
 
@@ -53,7 +52,13 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	private String orderId;
 
-	private ContractPO contract;
+	private long cid;// 合同ID
+
+	private String no;// 合同编号
+
+	private String name;// 名称
+
+	private String title;// 标题
 
 	private String download;
 
@@ -85,9 +90,8 @@ public class DecorationContractPO implements Serializable, Contract {
 		super();
 	}
 
-	public DecorationContractPO(ContractPO contract, UserPO creater) {
+	public DecorationContractPO(UserPO creater) {
 		super();
-		this.contract = contract;
 		this.creater = creater;
 	}
 
@@ -111,14 +115,40 @@ public class DecorationContractPO implements Serializable, Contract {
 		this.orderId = orderId;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cid", referencedColumnName = "cid")
-	public ContractPO getContract() {
-		return contract;
+	@Column(name = "cid")
+	public long getCid() {
+		return cid;
 	}
 
-	public void setContract(ContractPO contract) {
-		this.contract = contract;
+	public void setCid(long cid) {
+		this.cid = cid;
+	}
+
+	@Column(name = "no")
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "title")
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Column(name = "download")
@@ -245,7 +275,7 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	@Override
 	public String templateCode() {
-		return contract.getNo();
+		return getNo();
 	}
 
 	@Override
@@ -255,7 +285,7 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	@Override
 	public String title() {
-		return contract.getTitle();
+		return getTitle();
 	}
 
 	@Override

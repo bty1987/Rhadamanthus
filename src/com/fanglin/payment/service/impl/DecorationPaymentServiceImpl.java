@@ -632,10 +632,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		if (DecorationPaymentPO.PAYMENTTYPE_ADD_STR.equals(paymentType)) {
-			AddReducePO addReducePO = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
-			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 
-			addReduceDao.update(addReducePO);
+			List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
+
+			for (AddReducePO addReducePO : addReducePOs) {
+				addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
+				addReduceDao.update(addReducePO);
+			}
 
 			// 增项款发送群通知
 			SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADDREDUCE", company);
@@ -656,7 +659,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			messageService.sendMessage(decorationPO.getSupervisor().getUserId(), "", String.format("订单:%s,地址:%s %s,款项金额:%.3f,%s完成收款", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), Arith.div(decorationPaymentPO.getReferMoney(), 1000.0), decorationPaymentPO.getPaymentType()), MessagePO.TYPE_PAYMENT_INT, decorationPO.getCompany());
 		}
 
-		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
+		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
 
 		return 0;
 	}
@@ -737,10 +740,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		if (DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())) {
-			AddReducePO addReducePO = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
-			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 
-			addReduceDao.update(addReducePO);
+			List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
+
+			for (AddReducePO addReducePO : addReducePOs) {
+				addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
+				addReduceDao.update(addReducePO);
+			}
 
 			// 减项款发送群通知
 			SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADDREDUCE", company);
@@ -756,7 +762,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		// 更新装修单上的付款比例
 		decorationAdditionService.updateDecorationForPayScale(decorationPaymentPO.getDecoration());
 
-		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
+		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
 
 		return 0;
 	}
@@ -875,7 +881,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			}
 		}
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payInfo/payInfo?orderId=%s&pid=%s&paymentType=1", orderId, decorationPaymentPO.getDpid()));
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=1", orderId, decorationPaymentPO.getDpid()));
 
 	}
 

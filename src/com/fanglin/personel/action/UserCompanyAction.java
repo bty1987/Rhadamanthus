@@ -40,6 +40,14 @@ public class UserCompanyAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryUserCompanyForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserCompanyForSelf() throws FLException {
+
+		userCompanys = userCompanyService.queryUserCompanyForSelf(queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateUserCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateUserCompany() throws FLException {
 

@@ -62,7 +62,7 @@ public class DecorationActivityDaoImpl extends DaoImpl<DecorationActivityPO> imp
 		if (type != null) {
 			sqlQuery.setShort("type", type);
 		}
-		
+
 		if (isPrefor != null) {
 			sqlQuery.setShort("isPrefor", isPrefor);
 		}
