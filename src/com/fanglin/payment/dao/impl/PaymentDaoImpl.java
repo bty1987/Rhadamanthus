@@ -15,7 +15,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.PaymentDO;
 import com.fanglin.payment.po.PaymentPO;
@@ -29,7 +31,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters) {
+	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<PaymentDO> query = pagingQuery(paging, PaymentDO.class);
 
@@ -39,7 +41,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	public List<PaymentPO> queryPayment(List<Filter> filters) {
+	public List<PaymentPO> queryPayment(List<Filter> filters) throws FLException {
 
 		PagingQuery<PaymentPO> query = pagingQuery(new Paging(), PaymentPO.class);
 
@@ -61,32 +63,30 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		return session().createCriteria(PaymentPO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).list();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
-		if (filters != null) {
+		if (filters == null) return;
 
-			query.alias("customer", "customer");
+		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
 
-			for (Filter filter : filters) {
+		query.alias("customer", "customer");
 
-				if ("customerId".equals(filter.getField())) {
-					query.add(query.getCriterion("customer.no", filter));
-				} else if ("customerName".equals(filter.getField())) {
-					query.add(query.getCriterion("customer.customerName", filter));
-				} else if ("orderId".equals(filter.getField())) {
-					query.alias("decoration", "decoration");
-					query.add(query.getCriterion("decoration.orderId", filter));
-				} else if ("collectTime".equals(filter.getField())) {
-					query.alias("advanceReceipt", "advanceReceipt");
-					query.timeranges("advanceReceipt.collectTime", "advanceReceipt.collectTime", filter.getData());
-				} else if ("confirmTime".equals(filter.getField())) {
-					query.alias("advanceReceipt", "advanceReceipt");
-					query.timeranges("advanceReceipt.confirmTime", "advanceReceipt.confirmTime", filter.getData());
-				} else if ("status".equals(filter.getField())) {
-					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
-				} else if ("company".equals(filter.getField())) {
-					query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
-				}
+		for (Filter filter : filters) {
+
+			if ("customerId".equals(filter.getField())) {
+				query.add(query.getCriterion("customer.no", filter));
+			} else if ("customerName".equals(filter.getField())) {
+				query.add(query.getCriterion("customer.customerName", filter));
+			} else if ("collectTime".equals(filter.getField())) {
+				query.alias("advanceReceipt", "advanceReceipt");
+				query.timeranges("advanceReceipt.collectTime", "advanceReceipt.collectTime", filter.getData());
+			} else if ("confirmTime".equals(filter.getField())) {
+				query.alias("advanceReceipt", "advanceReceipt");
+				query.timeranges("advanceReceipt.confirmTime", "advanceReceipt.confirmTime", filter.getData());
+			} else if ("status".equals(filter.getField())) {
+				query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
+			} else if ("company".equals(filter.getField())) {
+				query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
 			}
 		}
 	}

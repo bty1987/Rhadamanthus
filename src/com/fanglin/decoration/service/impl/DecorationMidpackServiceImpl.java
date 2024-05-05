@@ -32,6 +32,7 @@ import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("decorationMidpackService")
@@ -123,7 +124,26 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 
 		BeanUtil.copyProperties(decorationMidpackVO, decorationMidpackPO, Arrays.asList("decoration"));
 
+		Long projectPrice = Arith.add(Arith.add(quotationPO.getDisPrice(), quotationPO.getUndisPrice()), quotationPO.getTrafficPrice());
+
+		// 工程基础额 与报价额相同
+		Long projectBase = Arith.add(projectPrice, Arith.add(quotationPO.getManagePrice(), quotationPO.getTaxPrice()));
+
+		// 主材总额 = 工程总额 * 主材配比
+		Long materialPrice = Arith.mul(Arith.div(Arith.mul(projectBase, decorationMidpackVO.getMaterialRate()), 1000000), 1000000);
+
+		// 服务费 = 服务费 * 服务费比例
+		Long servicePrice = Arith.mul(Arith.div(Arith.mul(materialPrice, decorationMidpackVO.getServiceRate()), 1000000), 1000000);
+
 		decorationMidpackPO.setDecoration(decorationPO);
+		decorationMidpackPO.setMaterialPrice(materialPrice);
+		decorationMidpackPO.setMaterialOrigin(materialPrice);
+		decorationMidpackPO.setServicePrice(servicePrice);
+
+		if (decorationMidpackVO.getMaterialRate() == 0) {
+			decorationMidpackPO.setMaterialPrice(decorationMidpackVO.getMaterialPrice());
+			decorationMidpackPO.setMaterialOrigin(decorationMidpackVO.getMaterialPrice());
+		}
 
 		decorationDao.update(decorationPO);
 

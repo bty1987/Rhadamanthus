@@ -86,14 +86,6 @@ public class ConstructionNodeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public ConstructionNodeService getConstructionNodeService() {
-		return constructionNodeService;
-	}
-
-	public void setConstructionNodeService(ConstructionNodeService constructionNodeService) {
-		this.constructionNodeService = constructionNodeService;
-	}
-
 	public ConstructionNodeVO getConstructionNode() {
 		return constructionNode;
 	}

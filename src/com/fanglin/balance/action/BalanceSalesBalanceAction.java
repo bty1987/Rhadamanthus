@@ -20,7 +20,7 @@ import com.fanglin.core.interceptor.FLException;
 @Controller
 public class BalanceSalesBalanceAction extends BaseListAction {
 
-	private static final long serialVersionUID = 4861644463792131364L;
+	private static final long serialVersionUID = 3683011826956315171L;
 
 	@Autowired
 	private BalanceSalesBalanceService balanceSalesBalanceService;
@@ -32,8 +32,8 @@ public class BalanceSalesBalanceAction extends BaseListAction {
 	private List<BalanceSalesBalanceVO> balanceSalesBalances;
 
 	private List<BalanceSalesVO> balanceSaleses;
-	
-	private int bsidCount;
+
+	private int count;
 
 	@Action(value = "pageBalanceSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalanceSalesBalance() throws FLException {
@@ -50,10 +50,12 @@ public class BalanceSalesBalanceAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "countBalanceSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String countBalanceSalesBalance() throws FLException {
-		bsidCount = balanceSalesBalanceService.countBalanceSalesBalance(balanceSales.getBsid());
+
+		count = balanceSalesBalanceService.countBalanceSalesBalance(balanceSales);
+
 		return SUCCESS;
 	}
 
@@ -89,12 +91,12 @@ public class BalanceSalesBalanceAction extends BaseListAction {
 		this.balanceSales = balanceSales;
 	}
 
-	public int getBsidCount() {
-		return bsidCount;
+	public int getCount() {
+		return count;
 	}
 
-	public void setBsidCount(int bsidCount) {
-		this.bsidCount = bsidCount;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

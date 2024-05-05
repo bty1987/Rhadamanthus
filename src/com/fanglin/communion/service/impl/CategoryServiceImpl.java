@@ -47,8 +47,12 @@ public class CategoryServiceImpl implements CategoryService {
 		List<CategoryPO> categoryPOs = categoryDao.pageCategory(paging, filters);
 		List<CategoryVO> categoryVOs = new ArrayList<CategoryVO>();
 
+		CategoryVO categoryVO;
+
 		for (CategoryPO categoryPO : categoryPOs) {
-			CategoryVO categoryVO = new CategoryVO();
+
+			categoryVO = new CategoryVO();
+
 			BeanUtil.copyProperties(categoryPO, categoryVO);
 
 			categoryVOs.add(categoryVO);
@@ -58,13 +62,17 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<CategoryVO> queryCategory() {
+	public List<CategoryVO> queryCategory(CategoryVO categoryVO) {
 
-		List<CategoryPO> categoryPOs = categoryDao.list();
+		if (categoryVO == null) categoryVO = new CategoryVO();
+
+		List<CategoryPO> categoryPOs = categoryDao.queryCategory(categoryVO.getIsCoupon(), categoryVO.getIsCount());
 		List<CategoryVO> categoryVOs = new ArrayList<CategoryVO>();
 
 		for (CategoryPO categoryPO : categoryPOs) {
-			CategoryVO categoryVO = new CategoryVO();
+
+			categoryVO = new CategoryVO();
+
 			BeanUtil.copyProperties(categoryPO, categoryVO);
 
 			categoryVOs.add(categoryVO);

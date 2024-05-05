@@ -153,6 +153,14 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "deleteDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDecorationPayment() throws FLException {
+
+		decorationPaymentService.deleteDecorationPayment(decorationPayment);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "sendDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendDecorationPayment() throws FLException {
 

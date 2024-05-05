@@ -7,7 +7,7 @@ $(function() {
     printer = parent.printer;
 
     var options = {
-        total: 0,
+        total: 0
     };
 
     var balance = params.balance;
@@ -16,6 +16,7 @@ $(function() {
     var tabody = $('<tbody> </tbody>');
 
     setTimeout(function() {
+
         table = createComHeader().appendTo(trList);
         pageList(1, 50);
         tabody.appendTo(table);
@@ -25,6 +26,7 @@ $(function() {
     function pageList(page, rows) {
 
         com.post(api.balance.queryBalanceCutpay, {"balanceCutpay.balance.bid": balance.bid}, function(res) {
+
             createComLine(res.balanceCutpays);
             createComFooter();
         }, null, false);
@@ -32,6 +34,7 @@ $(function() {
     };
 
     function createComHeader() {
+
          var div = $('<div align="center" class="col-xs-12"></div>');
          var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">').appendTo(div);
          var caption = $('<caption style="line-height: 65px;font-size:20px;">供应商费用扣款明细确认表</caption>').appendTo(table);
@@ -50,10 +53,10 @@ $(function() {
     }
 
     function createComLine(items) {
-        $.each(items, function(i, v) {
-            console.log(v.dccount)
 
+        $.each(items, function(i, v) {
             if (v.dccount.bdid != null){
+
                 var tr3 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 7px;"></tr>').appendTo(tabody);
                 var td8 = $('<td style="border: 1px solid;"></td>').text(v.dccount.name).appendTo(tr3);
                 var td9 = $('<td style="border: 1px solid;"></td>').text(v.dccount.cutpay).appendTo(tr3);

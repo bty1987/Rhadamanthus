@@ -24,7 +24,7 @@ jQuery(function($) {
             updateName : com.focusPage("#updata"),
         },
         bdid : null,
-        status : {},
+        status : {}
     };
 
     balanceDccount.btns.saveBtn.bindClick(saveData);
@@ -33,12 +33,14 @@ jQuery(function($) {
     com.datetime(com.focusPage("#endTime"));
 
     balanceDccount.modals.createBalanceDccountModal.on("hide.bs.modal",function() {
+
         com.clearValidator();
         com.cleanTypeahead("belonger");
         com.cleanItems(balanceDccount.items);
     });
 
     balanceDccount.modals.updateBalanceDccountModal.on("hide.bs.modal",function() {
+
         com.clearValidator();
         com.cleanItems(balanceDccount.items);
     });
@@ -53,25 +55,33 @@ jQuery(function($) {
 
     seacher.condition([ "balance-balanceDccount-name","balance-balanceDccount-status" ]);
 
-    seacher.button([ {
+    seacher.button([{
         id : "createBalanceDccount",
         name : "创建",
         clazz : "btn-yellow",
         icon : "icon-plus"
-    } ]);
+    }]);
 
     seacher.history("balanceDccountPostData");
 
-    var lineprops = [ {
+    var lineprops = [{
         fieId : "belonger.currentName",
         name : "归属人",
         prop : "belonger.currentName",
-        clazz : "grey"
+        clazz : "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.belonger.userId);
+        }
     }, {
         fieId : "creater.currentName",
         name : "创建人",
         prop : "creater.currentName",
-        clazz : "grey"
+        clazz : "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
+        }
     }, {
         fieId : "createTime",
         name : "创建时间",
@@ -114,7 +124,7 @@ jQuery(function($) {
         name : "说明",
         prop : "comment",
         clazz : "grey"
-    }, ];
+    }];
 
     var linebtus = [{
         name : "明细",
@@ -123,15 +133,15 @@ jQuery(function($) {
             params.balance.bdid = v.bdid;
             com.popup4page("#stockRecordPopUp", api.index.balanceDccountDetailIndex.url, "明细");
         },
-    },{
+    }, {
         name : "更新",
         clazz : "btn-yellow",
         handle : function(v) {
             balanceDccount.bdid = v.bdid;
             updateBalanceDccount(v);
             return false;
-        },
-    },{
+        }
+    }, {
         name : "有效",
         clazz : "btn-info",
         handle : function(v) {
@@ -150,7 +160,7 @@ jQuery(function($) {
 
             return (v.status == constant.balance().balanceDccount.STATUS_UNVALID_SHORT);
         }
-    },{
+    }, {
         name : "失效",
         clazz : "btn-danger",
         handle : function(v) {
@@ -169,7 +179,7 @@ jQuery(function($) {
 
             return (v.status == constant.balance().balanceDccount.STATUS_VALID_SHORT);
         }
-    }, ];
+    }];
 
     seacher.line("name", lineprops, linebtus).render();
 
@@ -179,6 +189,7 @@ jQuery(function($) {
     });
 
     function updateBalanceDccount(v) {
+
         com.focusPage("#updata").val(v.name);
         balanceDccount.modals.updateBalanceDccountModal.modal("show");
     };

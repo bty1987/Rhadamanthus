@@ -470,7 +470,7 @@ var paymentUtils = {
                 info += bankArray[_i[0]] == null ? "无匹配" : bankArray[_i[0]] + " " + _i[1] + ", ";
 
                 if (flag) {
-                    info +=  _i[2] + ", ";
+                    info += _i[2] + ", ";
                 }
             }
         } else {
@@ -573,23 +573,6 @@ var paymentUtils = {
                 }
             });
         }, null, false);
-    },
-
-    // 显示装修单信息
-    decorationInfoShow: function(orderId, decorationType) {
-
-        com.focusPage("text").css("line-height", "27px");
-        com.post(api.decoration.queryDecorationByOrderId, {
-            "decorationOrderId": orderId
-        }, function(res) {
-
-            var decorationInfo = res.decoration;
-            com.focusPage("#orderId").html(decorationInfo.orderId);
-            com.focusPage("#address").html(decorationInfo.house.village.cityProper.city.name + ' ' + decorationInfo.house.village.cityProper.name + ' ' + decorationInfo.house.village.name + ' ' + decorationInfo.house.houseNumber);
-            com.focusPage("#type").html(decorationType[decorationInfo.typeness].value);
-            com.focusPage("#grade").html(decorationInfo.grade);
-            com.focusPage("#decorationInfo").modal("show");
-        });
     },
 
     // 全选
@@ -719,27 +702,53 @@ var paymentUtils = {
                     propertyArr.push(["会员号:", v.mno, "grey"]);
                     break;
                 case "orderId":
-                    var orderId  = decoration.orderId ? decoration.orderId : "无";
-                    propertyArr.push(["装修单号:", orderId, "blue"]);
+                    var orderId = decoration.orderId ? decoration.orderId : "无";
+                    propertyArr.push(["装修单号:", orderId, "blue", function(btn) {
+
+                        tools.decoration.info(btn, orderId);
+                    }]);
                     break;
                 case "materialNo":
                     propertyArr.push(["主材号:", decoration.no, "blue"]);
                     break;
                 case "salesNo":
-                    propertyArr.push(["销售单号:", decoration.no, "blue"]);
+                    propertyArr.push(["销售单号:", decoration.no, "blue", function(btn) {
+
+                        tools.sales.info(btn, decoration.sid);
+                    }]);
                     break;
                 case "customerName":
-                    propertyArr.push(["客户:", decoration.customer.name, "grey"]);
+                    propertyArr.push(["客户:", decoration.customer.name, "grey", function(btn) {
+
+                        tools.customer.info(btn, decoration.customer.cid);
+                    }]);
                     break;
                 case "address":
-                    var address = decoration.house == null ? v.address : decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + " " + decoration.house.houseNumber;
-                    propertyArr.push(["楼盘地址:", address, "grey"]);
+                    propertyArr.push(["地址:", v.address, "grey"]);
+                    break;
+                case "village":
+                    propertyArr.push(["楼盘:", decoration.house.village.name, "grey", function(btn) {
+
+                        tools.village.info(btn, decoration.house.village.no);
+                    }]);
+                    break;
+                case "house":
+                    propertyArr.push(["楼号:", decoration.house.houseNumber, "grey", function(btn) {
+
+                        tools.house.info(btn, decoration.house.hid);
+                    }]);
                     break;
                 case "designerName":
-                    propertyArr.push(["设计师:", decoration.designer.currentName, "grey"]);
+                    propertyArr.push(["设计师:", decoration.designer.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, decoration.designer.userId);
+                    }]);
                     break;
                 case "designDepartment":
-                    propertyArr.push(["设计部:", decoration.designer.dept.name, "grey"]);
+                    propertyArr.push(["设计部:", decoration.designer.dept.name, "grey", function(btn) {
+
+                        tools.department.info(btn, decoration.designer.dept.did);
+                    }]);
                     break;
                 case "grade":
                     propertyArr.push(["等级:", decoration.grade, "red"]);
@@ -748,7 +757,10 @@ var paymentUtils = {
                     propertyArr.push(["销售单等级:", decoration.grade, "red"]);
                     break;
                 case "creater":
-                    propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
+                    propertyArr.push(["创建人:", v.creater.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, v.creater.userId);
+                    }]);
                     break;
                 case "createTime":
                     propertyArr.push(["创建时间:", v.createTime, "green"]);
@@ -763,9 +775,6 @@ var paymentUtils = {
                     var brand = payment.htmlName == "sales" ? decoration.brand : v.brand;
                     propertyArr.push(["品牌:", brand == null || brand == "" ? "---" : brand, "grey"]);
                     break;
-                case "operator":
-                    propertyArr.push(["操作人:", v.creater.currentName, "grey"]);
-                    break;
                 case "referMoney":
                     var referMoney = payment.htmlName == "activity" ? v.money : v.referMoney;
                     propertyArr.push(["应收金额:", referMoney, "blue"]);
@@ -773,14 +782,8 @@ var paymentUtils = {
                 case "contractBalance":
                     propertyArr.push(["合同预付款:", v.balance, "blue"]);
                     break;
-                case "projectBalance":
-                    propertyArr.push(["工程预付款:", v.projectBalance, "blue"]);
-                    break;
                 case "materialBalance":
                     propertyArr.push(["主材预付款:", v.materialBalance, "blue"]);
-                    break;
-                case "zhenglinBalance":
-                    propertyArr.push(["正林预付款:", v.zhenglinBalance, "blue"]);
                     break;
                 case "collectType":
                     propertyArr.push(["收款类型:", payment.typeData[v.type], "red"]);
@@ -813,7 +816,10 @@ var paymentUtils = {
                 case "collectUser":
                     var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var collecter = ["payment"].contains(payment.htmlName) ? obj.collectUser : obj.collecter;
-                    propertyArr.push(["收款人:", collecter != null ? collecter.currentName : "暂无", "grey"]);
+                    propertyArr.push(["收款人:", collecter != null ? collecter.currentName : "暂无", "grey", function(btn) {
+
+                        tools.personel.info(btn, collecter.userId);
+                    }]);
                     break;
                 case "collectTime":
                     var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
@@ -822,7 +828,10 @@ var paymentUtils = {
                 case "confirmUser":
                     var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var confirmer = ["payment"].contains(payment.htmlName) ? obj.confirmUser : obj.confirmer;
-                    propertyArr.push(["确认人:", confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无", "grey"]);
+                    propertyArr.push(["确认人:", confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无", "grey", function(btn) {
+
+                        tools.personel.info(btn, confirmer.userId);
+                    }]);
                     break;
                 case "confirmTime":
                     var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
@@ -837,7 +846,10 @@ var paymentUtils = {
                     propertyArr.push(["备注:", obj.comment, "grey"]);
                     break;
                 case "salesDept":
-                    propertyArr.push(["渠道部门:", decoration.dept.name, "grey"]);
+                    propertyArr.push(["渠道部门:", decoration.dept.name, "grey", function(btn) {
+
+                        tools.department.info(btn, decoration.dept.did);
+                    }]);
                     break;
                 case "title":
                     propertyArr.push(["标题:", v.title, "grey"]);
@@ -846,11 +858,14 @@ var paymentUtils = {
                     propertyArr.push(["姓名:", v.name, "grey"]);
                     break;
                 case "phone":
-                    propertyArr.push(["电话:", v.phone.substring(0, 3)+"****"+v.phone.substr(v.phone.length-4), "grey"]);
+                    propertyArr.push(["电话:", v.phone.substring(0, 3) + "****" + v.phone.substr(v.phone.length - 4), "grey"]);
                     break;
                 case "realMoney":
                     var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["实收额:", obj.realMoney, "blue"]);
+                    break;
+                case "isexpire":
+                    propertyArr.push(["过期标识:", payment.isexpires[v.isexpire], "red"]);
                     break;
             }
         });
@@ -867,7 +882,6 @@ var paymentUtils = {
             dataType: "json",
             success: function(data) {
 
-                console.log(data);
                 wallet.phoneCode = data;
             }
         });
@@ -998,7 +1012,9 @@ var paymentUtils = {
 
     bindSignet: function(id) {
 
-        com.post(api.data.querySignet, {"signet.type": 1}, function(res) {
+        com.post(api.data.querySignet, {
+            "signet.type": 1
+        }, function(res) {
 
             var signets = res.signets;
 
@@ -1117,12 +1133,18 @@ var paymentUtils = {
     },
 
     pushPosBank: function(flag, bankUtil, id, html) {
+
         var $span = $('<span></span>').addClass('fl-filter-inline pull-right');
         var $label = $('<label></label>').html("默认方式:");
-        var $input = $('<input/>').prop("id", html+"paytranBankName").attr({"type":"text", "data-type":"autofill", "autocomplete":"off"});
+        var $input = $('<input/>').prop("id", html + "paytranBankName").attr({
+            "type": "text",
+            "data-type": "autofill",
+            "autocomplete": "off"
+        });
         $span.append($label).append($input);
 
-        if (flag) $span.appendTo(id);
+        if (flag)
+            $span.appendTo(id);
 
         com.selectTypeahead($input, bankUtil, "key", "value", null);
     }

@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 
-
 public class NormriceVO implements Serializable {
 
 	private static final long serialVersionUID = -935031505848098477L;
@@ -21,9 +20,13 @@ public class NormriceVO implements Serializable {
 
 	private Integer salary;// 工费
 
+	private Integer stuff;
+
 	private Short status;
 
 	private Long amount;
+
+	private Integer num;
 
 	public NormriceVO() {
 		super();
@@ -83,6 +86,14 @@ public class NormriceVO implements Serializable {
 		this.salary = salary;
 	}
 
+	public Integer getStuff() {
+		return stuff;
+	}
+
+	public void setStuff(Integer stuff) {
+		this.stuff = stuff;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -97,6 +108,14 @@ public class NormriceVO implements Serializable {
 
 	public void setAmount(Long amount) {
 		this.amount = amount;
+	}
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
 	}
 
 }

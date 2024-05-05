@@ -23,32 +23,34 @@ $(function() {
 
         currentCtid: null,
         status: {},
-        atttype: {},
+        atttype: constant.payment().receipt.paymentType.keys,
         dgrade: {},
-        sgrade: {}
-
+        sgrade: {},
+        platforms: constant.data().custype.platform.keys
     };
 
-    com.post(api.ds.data, {}, function (res) {
-        $.each(res.custypeStatus, function(i, v){
+    com.post(api.ds.data, {}, function(res) {
+
+        $.each(res.custypeStatus, function(i, v) {
+
             custype.status[v.key] = v.value;
         });
-        $.each(res.custypeAtttype, function(i, v){
-            custype.atttype[v.key] = v.value;
-        });
-        $.each(res.custypeDgrade, function(i, v){
+        $.each(res.custypeDgrade, function(i, v) {
+
             custype.dgrade[v.key] = v.value;
         });
-        $.each(res.custypeSgrade, function(i, v){
+        $.each(res.custypeSgrade, function(i, v) {
+
             custype.sgrade[v.key] = v.value;
         });
 
-        custype.items.atttype.bindData(res.custypeAtttype, "key", "value");
+        custype.items.atttype.bindData(constant.payment().receipt.paymentType.datas, "key", "value");
         custype.items.dgrade.bindData(res.custypeDgrade, "key", "value");
         custype.items.sgrade.bindData(res.custypeSgrade, "key", "value");
     }, null, false);
 
     custype.modals.addCustypeModal.on("hide.bs.modal", function(a) {
+
         com.cleanItems(custype.items);
         com.clearValidator();
         custype.currentCtid = null;
@@ -106,7 +108,8 @@ $(function() {
         name: "装修等级",
         prop: "dgrade",
         clazz: "green",
-        show: function(v){
+        show: function(v) {
+
             return v.dgrade = com.checkNull(v.dgrade, "无");
         }
     }, {
@@ -114,7 +117,8 @@ $(function() {
         name: "销售等级",
         prop: "sgrade",
         clazz: "green",
-        show: function(v){
+        show: function(v) {
+
             return v.sgrade = com.checkNull(v.sgrade, "无");
         }
     }, {
@@ -122,7 +126,8 @@ $(function() {
         name: "收据类型名称",
         prop: "receiptType.name",
         clazz: "blue",
-        show: function(v){
+        show: function(v) {
+
             return v.receiptType.name = com.checkNull(v.receiptType.name, "无");
         }
     }, {
@@ -130,15 +135,23 @@ $(function() {
         name: "收据类型键值",
         prop: "receiptType.no",
         clazz: "blue",
-        show: function(v){
+        show: function(v) {
+
             return v.receiptType.no = com.checkNull(v.receiptType.no, "无");
         }
+    }, {
+        fieId: "platform",
+        name: "支付平台",
+        prop: "platform",
+        clazz: "grey",
+        dataset: custype.platforms
     }];
 
     var linebtns = [{
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
+
             custype.currentCtid = v.ctid;
 
             custype.items.name.val(v.name);
@@ -152,19 +165,27 @@ $(function() {
 
             custype.modals.addCustypeModal.modal("show");
             return false;
-        }},{
+        }
+    }, {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",
-        handle: function(v, check){
-            com.post(api.data.updateCustype, {"custype.ctid": v.ctid, "custype.status": check ? 0 : 1}, function(res){
+        handle: function(v, check) {
+
+            com.post(api.data.updateCustype, {
+                "custype.ctid": v.ctid,
+                "custype.status": check ? 0 : 1
+            }, function(res) {
+
                 searcher.doSearch();
                 return false;
             });
-        }, init: function(v){
+        },
+        init: function(v) {
+
             return !v.status;
-        }}
-    ];
+        }
+    }];
 
     searcher.line("name", lineprops, linebtns).render();
 
@@ -172,12 +193,14 @@ $(function() {
     com.focusPage('#addCustype', '#pagenation').hide();
 
     com.focusPage('#addCustype', '#pagenation').on("click", function() {
+
         custype.modals.addCustypeModal.modal("show");
     });
 
     function saveData() {
 
-        if (com.validate('addCustypeModal')) return false;
+        if (com.validate('addCustypeModal'))
+            return false;
 
         var url = api.data.addCustype;
         var options = {
@@ -201,6 +224,7 @@ $(function() {
         }
 
         com.post(url, options, function() {
+
             searcher.doSearch();
             custype.modals.addCustypeModal.modal("hide");
         });

@@ -1,21 +1,5 @@
 {
-    "constructionSchedule": [
-		{"key":"0", "value":"初始", "name": "initial"},
-		{"key":"1", "value":"开工", "name": "startWorking"},
-		{"key":"2", "value":"完工", "name": "completion"},
-		{"key":"3", "value":"砌墙", "name":"wall"},
-	    {"key":"4", "value":"铲大白", "name":"chan"},
-		{"key":"5", "value":"放线", "name":"putline"},
-		{"key":"6", "value":"力工", "name":"force"},
-		{"key":"7", "value":"水工", "name":"waterwayCircuitPower"},
-		{"key":"8", "value":"电工", "name":"electrician"},
-		{"key":"9", "value":"瓦工", "name":"bricklay"},
-		{"key":"10", "value":"地面找平", "name":"groundLeveling"},
-		{"key":"11", "value":"木工", "name":"carpent"},
-		{"key":"12", "value":"油工", "name":"oil"},
-		{"key":"13", "value":"水电验收", "name":"waterwayCircuitCheck"},
-		{"key":"14", "value":"保洁", "name":"cleaning"}
-    ], "scheduleInfos": {
+    "scheduleInfos": {
     	"铲大白":[10, "progress-bar-primary"], 
     	"放线":[10, "progress-bar-warning"], 
     	"水电力":[20, "progress-bar-danger"], 
@@ -25,36 +9,7 @@
     	"油工":[10, "progress-bar-pink"], 
     	"水电验收":[10, "progress-bar-danger"], 
     	"保洁":[10, "progress-bar-success"]
-    }, "drawLineStatus": [
-		{"key":"0", "value":"排队" },
-		{"key":"1", "value":"申请放线"},
-		{"key":"2", "value":"成功放线"},
-		{"key":"3", "value":"失败放线"}
-	], "isHovel" :[
-		{"key":"0", "value":"公司" },
-		{"key":"1", "value":"客户"}
-	], "isKey" :[
-		{"key":"0", "value":"工程中心" },
-		{"key":"1", "value":"客户"}
-	], "isCeremony" :[
-		{"key":"0", "value":"有" },
-		{"key":"1", "value":"无"}
-	], "typeDict" :[
-		{"key":"0", "value":"装修" },
-		{"key":"1", "value":"主材"}
-	],	"levelDict" :[
-		{"key":"0", "value":"标准" },
-		{"key":"1", "value":"重要"}
-	],	"backVisitTypeData" :[
-		{"key":"0", "value":"标准" },
-		{"key":"1", "value":"重要"}
-	],  "isAccessory" :[
-	    {"key":"0", "value":"开启" },
-	    {"key":"1", "value":"锁定"}
-    ], "isCheckup" :[
-	    {"key":"0", "value":"验证" },
-	    {"key":"1", "value":"通过"}
-    ],
+    },
     "errorCode": 0,
     "errorMsg": null
 }

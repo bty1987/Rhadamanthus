@@ -4,10 +4,12 @@ $(function() {
 
         gid: null,
         keyword: null,
+
         items: {
             no: com.focusPage("#no"),
             type: com.focusPage("#type"),
             name: com.focusPage("#name"),
+            alias: com.focusPage("#alias"),
             barcode: com.focusPage("#barcode"),
             category: com.focusPage("#category"),
             brand: com.focusPage("#brand"),
@@ -16,9 +18,24 @@ $(function() {
             selling: com.focusPage("#selling"),
             pieceNum: com.focusPage("#pieceNum"),
             accessoriesType: com.focusPage("#accessoriesType"),
+
+            executeTimes: com.focusPage("#executeTimes"),
+            executeDates: com.focusPage("#executeDates"),
+
+            filePath: com.focusPage("#filePath")
         },
-        submitBtn: com.focusPage("#submitBtn")
+
+        btns: {
+            submitBtn: com.focusPage("#submitBtn"),
+            importBtn: com.focusPage("#importBtn"),
+            exportBtn: com.focusPage("#exportBtn")
+        },
+
+        pageType: params['urlLoadParams'].type
     };
+
+    com.datetime(goods.items.executeDates, "date", false);
+    com.datetime(goods.items.executeTimes, "time", false);
 
     goods.items.type.bindData([{
         gid: 0,
@@ -43,7 +60,17 @@ $(function() {
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", function(list, k, v) {
+    goods.btns.importBtn.click(function() {
+
+        importGoods();
+    });
+
+    goods.btns.exportBtn.click(function() {
+
+        exportGoods();
+    });
+
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", function(list, k, v) {
 
         $.each(list, function(index, val) {
 
@@ -59,234 +86,434 @@ $(function() {
                 });
             }
         });
-        return v;
 
+        return v;
     });
 
-    var displayFunc = (function() {
+    var searcher = new Searcher();
 
-        var renderList = function(tableId, listData) {
+    searcher.base("gCondList", "gPagenation", "gResultList", api.data.pageGoods);
 
-            var $tableWrap = com.focusPage('#' + tableId);
+    if (goods.pageType == "basic" || goods.pageType == "senior") {
+        searcher.base("gCondList", "gPagenation", "gResultList", api.data.pageGoodsForAdvance);
+    }
 
-            if (listData && listData.length) {
+    searcher.condition(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status']);
+    searcher.history("goodsPageDataHistory" + goods.pageType);
 
-                var $ulTitle = createTableTitle();
-                var $ulData = $('<ul></ul>').addClass('flex-table');
-                $tableWrap.append($ulTitle).append($ulData);
+    if (goods.pageType == "senior") {
 
-                $.each(listData, function(i, v) {
+        searcher.button(function() {
 
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'add').css({
+                'margin-left': '4px'
+            });
+            var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+            var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-                    $liLine.appendTo($ulTitle);
-                });
-            }
-        };
+            var $exportGroup = $("<div></div>").addClass("btn-group pull-left");
+            var $addaExport = $('<a></a>').addClass('btn btn-minier btn-success dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
+                'margin-left': '4px'
+            }).appendTo($exportGroup);
+            $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaExport);
+            $('<span></span>').text('导出').appendTo($addaExport);
+            $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaExport);
 
-        // 绘制表格头
-        var createTableTitle = function() {
+            var $addExportUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($exportGroup);
+            var $exportGoods = $("<li></li>").append($("<a></a>").attr("id", "exportGood").text("导出商品")).appendTo($addExportUl);
+            var $exportColor = $("<li></li>").append($("<a></a>").attr("id", "exportColor").text("导出颜色")).appendTo($addExportUl);
+            var $exportFormat = $("<li></li>").append($("<a></a>").attr("id", "exportFormat").text("导出规格")).appendTo($addExportUl);
+            var $exportPrice = $("<li></li>").append($("<a></a>").attr("id", "exportPrice").text("导出价格")).appendTo($addExportUl);
 
-            var $ulTitle = $('<ul></ul>').addClass('flex-table');
-            var $liTitle = $('<li></li>').addClass('line table-title');
+            var $importGroup = $("<div></div>").addClass("btn-group pull-left");
+            var $addaImport = $('<a></a>').addClass('btn btn-minier btn-warning dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
+                'margin-left': '4px'
+            }).appendTo($importGroup);
+            $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImport);
+            $('<span></span>').text('导入').appendTo($addaImport);
+            $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaImport);
 
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+            var $addImportUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($importGroup);
+            var $importGoods = $("<li></li>").append($("<a></a>").attr("id", "importGoo").text("导入商品")).appendTo($addImportUl);
+            var $importColor = $("<li></li>").append($("<a></a>").attr("id", "importCol").text("导入颜色")).appendTo($addImportUl);
+            var $importFormat = $("<li></li>").append($("<a></a>").attr("id", "importFor").text("导入规格")).appendTo($addImportUl);
+            var $importPrice = $("<li></li>").append($("<a></a>").attr("id", "importPri").text("导入价格")).appendTo($addImportUl);
 
-            var titleName = '编号,商品,条形码,品类,品牌,单位,控价,售价,件数,辅类,类型,状态';
+            var $deletePrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('id', 'deletePri').css({
+                'margin-left': '4px'
+            });
+            var $deletePricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($deletePrice);
+            var $deletePricespan = $('<span></span>').text('删除价格').appendTo($deletePrice);
 
-            $.each(titleName.split(','), function(i, v) {
+            return [$exportGroup, $importGroup, $deletePrice, $adda];
+        })
 
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
+    } else {
+
+        searcher.button([{
+            id: "add",
+            name: "添加",
+            clazz: "btn-success",
+            icon: "icon-plus"
+        }, {
+            id: "export",
+            name: "导出",
+            clazz: "btn-yellow",
+            icon: "icon-download-alt"
+        }]);
+    }
+
+    var lineprops = [{
+        field: "no",
+        name: "编号",
+        prop: "no",
+        clazz: "blue"
+    }, {
+        field: "alias",
+        name: "别名",
+        prop: "alias",
+        clazz: "grey"
+    }, {
+        field: "barcode",
+        name: "条形码",
+        prop: "barcode",
+        clazz: "blue"
+    }, {
+        field: "category",
+        name: "品类",
+        prop: "category",
+        clazz: "grey"
+    }, {
+        field: "brand",
+        name: "品牌",
+        prop: "brand",
+        clazz: "grey"
+    }, {
+        field: "measurementUnit",
+        name: "单位",
+        prop: "measurementUnit",
+        clazz: "grey"
+    }, {
+        field: "purchase",
+        name: "控价",
+        prop: "purchase",
+        clazz: "blue"
+    }, {
+        field: "selling",
+        name: "售价",
+        prop: "selling",
+        clazz: "blue"
+    }, {
+        field: "pieceNum",
+        name: "件数 ",
+        prop: "pieceNum",
+        clazz: "blue"
+    }, {
+        field: "accessoriesType.name",
+        name: "辅类",
+        prop: "accessoriesType.name",
+        clazz: "grey"
+    }, {
+        field: "type",
+        name: "类型 ",
+        prop: function(v) {
+
+            return v.type == "0" ? "商品" : "套餐";
+        },
+        clazz: "red"
+    }, {
+        field: "status",
+        name: "状态 ",
+        prop: function(v) {
+
+            return v.status == "0" ? "启用" : "禁用";
+        },
+        clazz: "red"
+    }];
+
+    var linebtns = [{
+        name: "编辑",
+        clazz: "btn-primary",
+        handle: function(v) {
+
+            readonly("disabled");
+
+            // com.updateTypeahead('brand', v.bid, v.brand);
+
+            goods.gid = v.gid;
+            goods.bid = v.bid;
+
+            goods.items.no.val(v.no);
+            goods.items.type.val(v.type);
+            goods.items.name.val(v.name);
+            goods.items.alias.val(v.alias);
+            goods.items.barcode.val(v.barcode);
+            goods.items.brand.val(v.brand);
+            goods.items.category.val(v.category);
+
+            goods.items.measurementUnit.val(v.measurementUnit);
+            goods.items.purchase.val(v.purchase);
+            goods.items.selling.val(v.selling);
+            goods.items.pieceNum.val(v.pieceNum);
+            goods.items.accessoriesType.val(v.accessoriesType.atid);
+
+            com.popup4model("#addLayer", "编辑");
+        },
+        show: function(v) {
+
+            return goods.pageType == "senior";
+        }
+    }, {
+        name: "颜色",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            params.data.goods = v;
+
+            com.popup4page('#layerPopUp', 'views/data/color.html', '颜色');
+        }
+    }, {
+        name: "规格",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            params.data.goods = v;
+
+            com.popup4page('#layerPopUp', 'views/data/format.html', '规格');
+        }
+    }, {
+        name: "价格",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            params.data.goods = v;
+            params.pageType = goods.pageType;
+            com.popup4page('#layerPopUp', 'views/data/price.html', '价格');
+        },
+        show: function(v) {
+
+            return goods.pageType == "senior" || !goods.pageType;
+        }
+    }, {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+
+            com.post(api.data.updateGoodsForStatus, {
+                "goods.gid": v.gid,
+                "goods.status": v.status == 0 ? 1 : 0
+            }, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
             });
 
-            var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
+            return false;
+        },
+        init: function(v) {
 
-            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
+            return !v.status;
+        },
+        show: function(v) {
 
-            return $ulTitle;
-        };
-        // 绘制表格体
-        var creatLine = function(i, v, lastFlag) {
+            return goods.pageType == "senior" || !goods.pageType;
+        }
+    }];
 
-            var $liLine = $('<li></li>').addClass('line');
+    console.log(goods.pageType)
 
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
+    searcher.line("name", lineprops, linebtns);
 
-            var propertyArr = [[v.no, 'blue'], [v.name, 'grey'], [v.barcode, 'blue'], [v.category, 'grey'], [v.brand, 'grey'], [v.measurementUnit, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.pieceNum, 'blue'], [v.accessoriesType.name, 'grey'], [v.type == "0" ? "商品" : "套餐", 'red'], [v.status == "0" ? "启用" : "禁用", 'red']];
+    searcher.render();
 
-            $.each(propertyArr, function(i, v) {
+    com.focusPage('#add', '#gPagenation').on("click", function() {
 
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
+        com.cleanItems(goods.items);
+
+        readonly(null);
+
+        goods.gid = null;
+        goods.bid = null;
+
+        com.popup4model("#addLayer", "添加");
+    });
+
+    com.focusPage('#export', '#gPagenation').on("click", function() {
+
+        var total = com.focusPage('span[name="totalRecords"]').text();
+
+        if (total == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
+            return false;
+        }
+
+        com.post(!goods.pageType ? api.data.pageGoods : api.data.pageGoodsForAdvance, $.extend({}, params["goodsPageDataHistory" + goods.pageType], {
+            "paging.noPage": 1
+        }), function(res) {
+
+            $.exceler({
+                column: [['商品ID', 'gid'], ['商品编码', 'no'], ['商品名称', 'name'], ['别名', 'alias'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌ID', 'bid'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['类型', 'type']],
+                list: res.paging.data
+            }, function(v) {
+
+                v.type = v.type == "0" ? "商品" : "套餐";
             });
-
-            var $optionWrap = $('<div></div>').addClass('line-wrap action');
-            var $cellOption = $('<div></div>').addClass('cell option');
-
-            var $btnGroup = $('<div></div>').addClass('btn-group');
-            var $btn = $('<button></button>').addClass('btn btn-primary dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
-            var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
-
-            var $btnColor = $('<li></li>').append($('<a></a>').html('颜色'));
-            var $btnFormat = $('<li></li>').append($('<a></a>').html('规格'));
-            var $btnPrice = $('<li></li>').append($('<a></a>').html('价格'));
-            var $btnSuit = $('<li></li>').append($('<a></a>').html('查看'));
-            var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
-            var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
-
-            $btnUl.append($btnColor).append($btnFormat).append($btnPrice).append($btnStart).append($btnStop);
-
-            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
-
-            $cellOption.appendTo($optionWrap);
-
-            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
-
-            $btnColor.click(function() {
-
-                params.data.goods = v;
-
-                com.popup4page('#layerPopUp', 'views/data/color.html', '颜色');
-            });
-
-            $btnFormat.click(function() {
-
-                params.data.goods = v;
-
-                com.popup4page('#layerPopUp', 'views/data/format.html', '规格');
-            });
-
-            $btnPrice.click(function() {
-
-                params.data.goods = v;
-
-                com.popup4page('#layerPopUp', 'views/data/price.html', '价格');
-            });
-
-            $btnSuit.click(function() {
-
-                params.data.goods = v;
-
-                com.popup4page('#layerPopUp', 'views/data/goods4package.html', '套餐');
-            });
-
-            $btnStart.click(function() {
-
-                if (v.status == 0) {
-                    com.showAlert(com.warning, "已启用");
-                    return false;
-                }
-
-                updateStatus(v.gid, 0);
-            });
-
-            $btnStop.click(function() {
-
-                if (v.status == 1) {
-                    com.showAlert(com.warning, "已禁用");
-                    return false;
-                }
-
-                updateStatus(v.gid, 1);
-            });
-
-            return $liLine;
-
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var goodsSeacher = new Searcher();
-
-    goodsSeacher.init(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'], "condList", api.data.pageGoods, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "goodsPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({
-            'margin-left': '4px'
         });
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    });
 
-        var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods');
-        var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
-        var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportGoods);
+    com.focusPage('#deletePri', '#gPagenation').on("click", function() {
 
-        $adda.click(function() {
+        goods.keyword = "delete_price";
 
-            com.cleanItems(goods.items);
+        var form = com.focusPage("#deletePriceForm");
 
-            readonly(null);
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").removeClass("hide");
 
-            goods.gid = null;
-            goods.bid = null;
+        goods.btns.importBtn.removeClass("hide");
+        goods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#addLayer", "添加")
-        });
+        com.popup4model("#deletePrice", "删除价格");
+    });
 
-        $addaExportGoods.click(function() {
+    com.focusPage('#exportGood', '#gPagenation').on("click", function() {
 
-            var total = com.focusPage('span[name="totalRecords"]').text();
+        var total = com.focusPage('span[name="totalRecords"]').text();
 
-            if (total == 0) {
-                com.showAlert(com.warning, "请通过条件进行查询");
-                return false;
-            }
+        goods.keyword = "export_inventory_goods";
 
-            if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
-                com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
-                return false;
-            }
+        var form = com.focusPage("#exportGoodsForm");
 
-            com.post(api.data.pageGoods, $.extend({}, params.goodsPostData, {
-                "paging.noPage": 1
-            }), function(res) {
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").addClass("hide");
 
-                $.exceler({
-                    column: [['商品ID', 'gid'], ['商品编码', 'no'], ['商品名称', 'name'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌ID', 'bid'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['类型', 'type']],
-                    list: res.paging.data
-                });
-            });
+        goods.btns.importBtn.addClass("hide");
+        goods.btns.exportBtn.removeClass("hide");
 
-        });
+        com.popup4model("#exportGoods", "导出商品");
+    });
 
-        return [$addaExportGoods, $adda];
+    com.focusPage('#exportColor', '#gPagenation').on("click", function() {
 
-    }, 'resultList');
+        var total = com.focusPage('span[name="totalRecords"]').text();
 
-    goods.submitBtn.click(function() {
+        goods.keyword = "export_goods_color";
+
+        var form = com.focusPage("#exportModalForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").addClass("hide");
+
+        goods.btns.importBtn.addClass("hide");
+        goods.btns.exportBtn.removeClass("hide");
+
+        com.popup4model("#exportModal", "导出颜色");
+    });
+
+    com.focusPage('#exportFormat', '#gPagenation').on("click", function() {
+
+        var total = com.focusPage('span[name="totalRecords"]').text();
+
+        goods.keyword = "export_goods_format";
+
+        var form = com.focusPage("#exportModalForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").addClass("hide");
+
+        goods.btns.importBtn.addClass("hide");
+        goods.btns.exportBtn.removeClass("hide");
+
+        com.popup4model("#exportModal", "导出规格");
+    });
+
+    com.focusPage('#exportPrice', '#gPagenation').on("click", function() {
+
+        var total = com.focusPage('span[name="totalRecords"]').text();
+
+        goods.keyword = "export_goods_price";
+
+        var form = com.focusPage("#exportModalForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").addClass("hide");
+
+        goods.btns.importBtn.addClass("hide");
+        goods.btns.exportBtn.removeClass("hide");
+
+        com.popup4model("#exportModal", "导出价格");
+    });
+
+    com.focusPage('#importGoo', '#gPagenation').on("click", function() {
+
+        goods.keyword = "import_goods";
+
+        var form = com.focusPage("#importGoodsForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").removeClass("hide");
+
+        goods.btns.importBtn.removeClass("hide");
+        goods.btns.exportBtn.addClass("hide");
+
+        com.popup4model("#importGoods", "导入商品");
+    });
+
+    com.focusPage('#importCol', '#gPagenation').on("click", function() {
+
+        goods.keyword = "import_color";
+
+        var form = com.focusPage("#importColorForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").removeClass("hide");
+
+        goods.btns.importBtn.removeClass("hide");
+        goods.btns.exportBtn.addClass("hide");
+
+        com.popup4model("#importColor", "导入颜色");
+    });
+
+    com.focusPage('#importFor', '#gPagenation').on("click", function() {
+
+        goods.keyword = "import_format";
+
+        var form = com.focusPage("#importFormatForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").removeClass("hide");
+
+        goods.btns.importBtn.removeClass("hide");
+        goods.btns.exportBtn.addClass("hide");
+
+        com.popup4model("#importFormat", "导入规格");
+    });
+
+    com.focusPage('#importPri', '#gPagenation').on("click", function() {
+
+        goods.keyword = "import_price";
+
+        var form = com.focusPage("#importPriceForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").removeClass("hide");
+
+        goods.btns.importBtn.removeClass("hide");
+        goods.btns.exportBtn.addClass("hide");
+
+        com.popup4model("#importPrice", "导入价格");
+    });
+
+    goods.btns.submitBtn.click(function() {
 
         saveData();
     });
-
-    function updateStatus(gid, status) {
-
-        var options = {
-            "goods.gid": gid,
-            "goods.status": status
-        };
-
-        com.post(api.data.updateGoodsForStatus, options, function(res) {
-
-            com.showAlert(com.info, "操作成功");
-            goodsSeacher.doSearch();
-        });
-    }
 
     function saveData() {
 
@@ -300,6 +527,7 @@ $(function() {
         var url = api.data.updateGoods;
         var options = {
             "goods.type": goods.items.type.val(),
+            "goods.alias": goods.items.alias.val(),
             "goods.purchase": goods.items.purchase.val(),
             "goods.selling": goods.items.selling.val(),
             "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
@@ -309,6 +537,7 @@ $(function() {
             url = api.data.addGoods;
             options["goods.no"] = goods.items.no.val();
             options["goods.name"] = goods.items.name.val();
+            options["goods.alias"] = goods.items.alias.val();
             options["goods.barcode"] = goods.items.barcode.val();
             options["goods.bid"] = goods.bid;
             options["goods.category"] = goods.items.category.val();
@@ -320,10 +549,12 @@ $(function() {
 
         com.post(url, options, function(res) {
 
-            com.closePopup();
-            goodsSeacher.doSearch();
-        });
+            com.showAlert(com.info, "操作成功");
 
+            com.closePopup();
+
+            searcher.doSearch();
+        });
     }
 
     function readonly(disabled) {
@@ -337,5 +568,105 @@ $(function() {
         goods.items.measurementUnit.attr("disabled", disabled);
         goods.items.pieceNum.attr("disabled", disabled);
     }
+
+    function importGoods() {
+
+        if (com.validate("uploaddiv")) {
+            return false;
+        }
+
+        var filePath = goods.items.filePath.val();
+
+        if (filePath == null || filePath == "") {
+            com.showAlert(com.warning, "上传文件不能为空");
+            return false;
+        }
+
+        var args = filePath;
+
+        var date = goods.items.executeDates.val();
+        var time = goods.items.executeTimes.val();
+
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = goods.items.executeDates.val() + ' ' + goods.items.executeTimes.val();
+        var checkTime = new Date(times);
+
+        if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
+            return false;
+        }
+
+        var options = {
+            "plan.task.keyWord": goods.keyword,
+            "plan.executeTime": executeTime,
+            "plan.args": args
+        };
+
+        com.post(api.information.createPlan, options, function(res) {
+
+            com.showAlert(com.info, "计划创建成功");
+            com.closePopup();
+        });
+
+    }
+
+    function exportGoods() {
+
+        if (com.validate("uploaddiv")) {
+            return false;
+        }
+
+        var filtersName = ['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'];
+        
+        var args = "";
+
+        $.each(filtersName, function(i, v) {
+
+            var val = com.focusPage("[name='" + v + "']").val();
+            var columnName = $("[name='" + v + "']").attr("data-rqs");
+
+            if (val != "undefined" && val != null && val != "") {
+                args = args + columnName + "-" + val + ",";
+            }
+        });
+
+        if (args == null || args == "") {
+            args = ","
+        }
+
+        var date = goods.items.executeDates.val();
+        var time = goods.items.executeTimes.val();
+
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = goods.items.executeDates.val() + ' ' + goods.items.executeTimes.val();
+        var checkTime = new Date(times);
+
+        if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
+            return false;
+        }
+
+        var options = {
+            "plan.task.keyWord": goods.keyword,
+            "plan.executeTime": executeTime,
+            "plan.args": args
+        };
+
+        com.post(api.information.createPlan, options, function(res) {
+
+            com.showAlert(com.info, "计划创建成功");
+            com.closePopup();
+        });
+
+    }
+
+    com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls", {
+        'uploadType': 3
+    }, 1, function(data) {
+
+        0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
+    });
 
 });

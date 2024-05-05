@@ -11,10 +11,16 @@ public interface WorksheetService {
 
 	public void pageWorksheet(Paging paging, List<Filter> filters, int company) throws FLException;
 
+	public List<WorksheetVO> queryWorksheet(WorksheetVO worksheet, String queryUserId);
+
 	public void addWorksheet(WorksheetVO worksheet, String userId, int company) throws FLException;
+
+	public void updateWorksheet(WorksheetVO worksheet) throws FLException;
 
 	public void cancelWorksheet(WorksheetVO worksheet, String userId, int company) throws FLException;
 
 	public void handleWorksheet(WorksheetVO worksheet, String userId, int company) throws FLException;
+
+	public void finishWorksheet(WorksheetVO worksheet) throws FLException;
 
 }

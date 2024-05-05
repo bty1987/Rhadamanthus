@@ -23,6 +23,9 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.report.service.DecorationRankService;
+import com.fanglin.report.vo.DecorationDepartmentRankVO;
+import com.fanglin.report.vo.DecorationRankVO;
+import com.fanglin.report.vo.DecorationRegionRankVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -30,65 +33,95 @@ import com.fanglin.report.service.DecorationRankService;
 public class DecorationRankAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3985855196344696431L;
-	
+
 	@Autowired
 	private DecorationRankService decorationRankService;
-	
+
+	private DecorationRankVO decorationRank;
+
+	private DecorationDepartmentRankVO decorationDepartmentRank;
+
+	private DecorationRegionRankVO decorationRegionRank;
+
 	private List<?> ranks;
-	
-	@Action(value="queryDecorationDesignerRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationDesignerRank()throws FLException{
-		
-		ranks = decorationRankService.queryDecorationDesignerRankForTop(-1,queryCompany());
-		
+
+	@Action(value = "queryDecorationRank", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationRank() throws FLException {
+
+		ranks = decorationRankService.queryDecorationRankForTop(decorationRank, -1, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryDecorationDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationDesignerDepartmentRank() throws FLException{
-		
-		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), -1,queryCompany());
-		
+
+	@Action(value = "queryDecorationDepartmentRank", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationDepartmentRank() throws FLException {
+
+		ranks = decorationRankService.queryDecorationDepartmentRankForTop(decorationDepartmentRank, -1, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryDecorationDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationDesignerRegionRank() throws FLException{
-		
-		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), -1,queryCompany());
-		
+
+	@Action(value = "queryDecorationRegionRank", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationRegionRank() throws FLException {
+
+		ranks = decorationRankService.queryDecorationRegionRankForTop(decorationRegionRank, -1, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="decorationDesignerRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String decorationDesignerRank()throws FLException{
-		
-		ranks = decorationRankService.queryDecorationDesignerRankForTop(10,queryCompany());
-		
+
+	@Action(value = "decorationRank", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String decorationDesignerRank() throws FLException {
+
+		ranks = decorationRankService.queryDecorationRankForTop(decorationRank, 10, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="decorationDesignerDepartmentRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String decorationDesignerDepartmentRank() throws FLException{
-		
-		ranks = decorationRankService.queryDecorationDesignerDepartmentRankForTop(queryUserId(), 10,queryCompany());
-		
+
+	@Action(value = "decorationDepartmentRank", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String decorationDesignerDepartmentRank() throws FLException {
+
+		ranks = decorationRankService.queryDecorationDepartmentRankForTop(decorationDepartmentRank, 10, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="decorationDesignerRegionRank", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String decorationDesignerRegionRank() throws FLException{
-		
-		ranks = decorationRankService.queryDecorationDesignerRegionRankForTop(queryUserId(), 10,queryCompany());
-		
+
+	@Action(value = "decorationRegionRank", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String decorationRegionRank() throws FLException {
+
+		ranks = decorationRankService.queryDecorationRegionRankForTop(decorationRegionRank, 10, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	public List<?> getRanks(){
+
+	public DecorationRankVO getDecorationRank() {
+		return decorationRank;
+	}
+
+	public void setDecorationRank(DecorationRankVO decorationRank) {
+		this.decorationRank = decorationRank;
+	}
+
+	public DecorationDepartmentRankVO getDecorationDepartmentRank() {
+		return decorationDepartmentRank;
+	}
+
+	public void setDecorationDepartmentRank(DecorationDepartmentRankVO decorationDepartmentRank) {
+		this.decorationDepartmentRank = decorationDepartmentRank;
+	}
+
+	public DecorationRegionRankVO getDecorationRegionRank() {
+		return decorationRegionRank;
+	}
+
+	public void setDecorationRegionRank(DecorationRegionRankVO decorationRegionRank) {
+		this.decorationRegionRank = decorationRegionRank;
+	}
+
+	public List<?> getRanks() {
 		return ranks;
 	}
 
-	public void setRanks(List<?> ranks){
+	public void setRanks(List<?> ranks) {
 		this.ranks = ranks;
 	}
 

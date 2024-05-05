@@ -1356,7 +1356,7 @@ textarea[readonly] {
 }
 
 .help-content {
-    padding: 0px 8%;
+    padding: 16px 4%;
 }
 
 .nav-tabs>li>a,.nav-tabs>li>a:focus,.nav-tabs>li.active>a,.nav-tabs>li.active>a:hover,.nav-tabs>li.active>a:focus,.tab-content {

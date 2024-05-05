@@ -80,6 +80,10 @@ jQuery(function($) {
         approvalTrack.url = api.approval.pageApprovalForReceiveDept;
         approvalTrack.postData = "approvalDeptTrackPostData";
         approvalTrack.condition = ["approval-sender-name", "approval-type", "approval-status"];
+    } else if (params.urlLoadParams.type == 'senior') {
+        approvalTrack.url = api.approval.pageApproval;
+        approvalTrack.postData = "approvalTrackPostData";
+        approvalTrack.condition = ["approval-orderId", "approval-receiver-name", "approval-sender-name", "approval-type", "approval-status"];
     }
 
     approvalTrack.approvalTypeData = constant.approval().approval.type.keys;
@@ -177,7 +181,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send' && v.piid == null;
+            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
         }
     }, {
         name: "拒绝",
@@ -189,7 +193,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send' && v.piid == null;
+            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
         }
     }, ];
 
@@ -234,7 +238,8 @@ jQuery(function($) {
 
             searcher.doSearch();
         });
-    };
+    }
+    ;
 
     com.focusPage('#addappro', '#pagenation').on("click", function() {
 

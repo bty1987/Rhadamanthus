@@ -66,7 +66,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 			SalesActivityItemVO salesActivityItemVO = new SalesActivityItemVO();
 
-			BeanUtil.copyProperties(salesActivityItemPO, salesActivityItemVO, Arrays.asList("creater", "operater"));
+			BeanUtil.copyProperties(salesActivityItemPO, salesActivityItemVO, Arrays.asList("creater", "operater", "refunder"));
 
 			if (salesActivityItemPO.getAsid() != 0) {
 				BeanUtil.copyProperties(salesActivityItemPO.getAsid(), salesActivityItemVO.getAsid());
@@ -119,14 +119,21 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT) {// 0--初始
+		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 
-		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		salesActivityItemPO.setOperater(operater);
 		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNVALID_INT);
 		salesActivityItemPO.setIsStock(SalesActivityItemPO.STATUS_UNVALID_INT);
+
+		salesActivityItemPO.setContent(salesActivityItemVO.getContent());
+
+		salesActivityItemDao.update(salesActivityItemPO);
 
 		return 0;
 	}
@@ -141,10 +148,15 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_RECEIVE_INT);
 		salesActivityItemPO.setIsStock(SalesActivityItemPO.STATUS_VALID_INT);
-		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+
 		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesActivityItemPO.setOperater(operater);
+
+		salesActivityItemPO.setContent(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
 
@@ -153,13 +165,13 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT) {// 0--计入库存
 
 			if (awardStockPO == null) {
-				throw new FLException(160043, "物品不存在!");
+				throw new FLException(160043, "物品不存在");
 			}
 
 			int num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
 
 			if (num < 0) {
-				throw new FLException(160038, "奖品库存数量不足!");
+				throw new FLException(160038, "库存不足");
 			}
 
 			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
@@ -184,34 +196,65 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT) {// 0--初始
+		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 
-		UserPO creater = userDao.queryUserByUserId(userId);
+		UserPO operater = userDao.queryUserByUserId(userId);
 
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DELIVERY_INT);// 更改为状态4--配送
-		salesActivityItemPO.setOperater(creater);
+		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DELIVERY_INT);
+
+		salesActivityItemPO.setOperater(operater);
 		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesActivityItemPO.setContent(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
 
 		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
 
-		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT) {// 计入库存
+		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT) {
 
 			int num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
+
 			if (num < 0) {
-				throw new FLException(160038, "奖品库存数量不足!");
+				throw new FLException(160038, "库存不足");
 			}
+
 			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
 
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void discountSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException {
+
+		SalesActivityItemPO salesActivityItemPO = salesActivityItemDao.get(salesActivityItemVO.getSaiid());
+
+		if (salesActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+
+		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT) {
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DISCOUNT_INT);
+
+		salesActivityItemPO.setOperater(operater);
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesActivityItemPO.setContent(salesActivityItemVO.getContent());
+
+		salesActivityItemDao.update(salesActivityItemPO);
 	}
 
 	@Override
@@ -224,13 +267,18 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT) {// 已领--2
+		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 
-		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
-		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNRETURNED_INT);// 更改为状态5--未退
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNRETURNED_INT);
+
+		salesActivityItemPO.setRefunder(operater);
+		salesActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesActivityItemPO.setComment(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
 	}
@@ -248,9 +296,15 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_UNRETURNED_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT) {// 已领--2, 未退--5, 配送--4
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
-		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_REFUND_INT);// 更改为状态3--退货
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_REFUND_INT);
+
+		salesActivityItemPO.setRefunder(operater);
+		salesActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesActivityItemPO.setComment(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
 
@@ -278,34 +332,18 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DISCOUNT_INT) {// 已领--2, 配送--4
+		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DISCOUNT_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 
-		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
-		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_CONSUME_INT);// 更改为状态7--消耗
+		UserPO operater = userDao.queryUserByUserId(userId);
 
-		salesActivityItemDao.update(salesActivityItemPO);
-	}
+		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_CONSUME_INT);
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void discountSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException {
+		salesActivityItemPO.setRefunder(operater);
+		salesActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
 
-		SalesActivityItemPO salesActivityItemPO = salesActivityItemDao.get(salesActivityItemVO.getSaiid());
-
-		if (salesActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-
-		if (salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-
-		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
-		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DISCOUNT_INT);// 更改为状态8--抵现
+		salesActivityItemPO.setComment(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
 	}
@@ -317,7 +355,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 		System.out.println(String.format("pages/decoration/activityItem/activityItem?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托主材销售管家代领转交您，点【详情】查看", orderId), String.format("pages/decoration/activityItem/activityItem?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", String.format("请您及时查收点确认礼品领取信息."), String.format("pages/decoration/activityItem/activityItem?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
 	}
 
 	@Override
@@ -336,8 +374,13 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		if (salesVO.getCustomer().getPhone() == null || !salesVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
-			throw new FLException(130115, "客户电话不匹配");
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(orderId);
+		cusDecorationVO.setUnionId(salesVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		for (SalesActivityItemVO salesActivityItem : salesActivityItems) {
@@ -346,7 +389,17 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 			if (salesActivityItemPO == null) continue;
 
-			salesActivityItemPO.setIsAffirm(salesActivityItemPO.ISAFFIRM_CONFIRMED_INT);
+			if (salesActivityItemPO.getIsAffirm() == SalesActivityItemPO.ISAFFIRM_UNSUBMIT_INT && salesActivityItemPO.getState() == SalesActivityItemPO.STATUS_VALID_INT) {
+
+				salesActivityItemPO.setIsAffirm(SalesActivityItemPO.ISAFFIRM_CONFIRMED_INT);
+				salesActivityItemPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+			}
+
+			if (salesActivityItemPO.getIsAffirm() == SalesActivityItemPO.ISAFFIRM_CONFIRMED_INT && !Arrays.asList(SalesActivityItemPO.STATUS_VALID_INT, SalesActivityItemPO.STATUS_REFUND_INT, SalesActivityItemPO.STATUS_CONSUME_INT).contains(salesActivityItemPO.getState())) {
+
+				salesActivityItemPO.setIsAffirm(SalesActivityItemPO.ISAFFIRM_CHECKED_INT);
+				salesActivityItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+			}
 
 			salesActivityItemDao.update(salesActivityItemPO);
 		}

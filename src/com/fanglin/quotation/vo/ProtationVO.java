@@ -63,7 +63,11 @@ public class ProtationVO implements Serializable {
 
 	private Long submPrice;
 
+	private Long subcPrice;
+
 	private Long preferPrice;
+
+	private String manageFormula;
 
 	private Long managePrice;
 
@@ -265,12 +269,28 @@ public class ProtationVO implements Serializable {
 		this.submPrice = submPrice;
 	}
 
+	public Long getSubcPrice() {
+		return subcPrice;
+	}
+
+	public void setSubcPrice(Long subcPrice) {
+		this.subcPrice = subcPrice;
+	}
+
 	public Long getPreferPrice() {
 		return preferPrice;
 	}
 
 	public void setPreferPrice(Long preferPrice) {
 		this.preferPrice = preferPrice;
+	}
+
+	public String getManageFormula() {
+		return manageFormula;
+	}
+
+	public void setManageFormula(String manageFormula) {
+		this.manageFormula = manageFormula;
 	}
 
 	public Long getManagePrice() {

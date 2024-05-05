@@ -51,6 +51,8 @@ public class QuotetionVO implements Serializable {
 
 	private Long costPrice;
 
+	private Long unachePrice;
+
 	private String content;
 
 	public Long getQid() {
@@ -228,6 +230,14 @@ public class QuotetionVO implements Serializable {
 
 	public void setCostPrice(Long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	public Long getUnachePrice() {
+		return unachePrice;
+	}
+
+	public void setUnachePrice(Long unachePrice) {
+		this.unachePrice = unachePrice;
 	}
 
 }

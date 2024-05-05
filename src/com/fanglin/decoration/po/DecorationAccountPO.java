@@ -3,6 +3,7 @@ package com.fanglin.decoration.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,10 @@ public class DecorationAccountPO implements Serializable {
 	private static final long serialVersionUID = -2745701305737937262L;
 
 	public static final String DECORATIONACCOUNT_ORDERID_STR = "orderId";
+
+	public static final short ISAFFIRM_INIT_INT = 0;
+
+	public static final short ISAFFIRM_CONFIRMED_INT = 1;
 
 	private long daid;
 
@@ -48,11 +53,15 @@ public class DecorationAccountPO implements Serializable {
 
 	private long coupon;
 
-	private long internal;
-
 	private long fulldel;
 
 	private long cashback;
+
+	private long internal;
+
+	private short isAffirm;
+
+	private Timestamp affirmTime;
 
 	private String comment;
 
@@ -193,15 +202,6 @@ public class DecorationAccountPO implements Serializable {
 		this.coupon = coupon;
 	}
 
-	@Column(name = "internal")
-	public long getInternal() {
-		return internal;
-	}
-
-	public void setInternal(long internal) {
-		this.internal = internal;
-	}
-
 	@Column(name = "fulldel")
 	public long getFulldel() {
 		return fulldel;
@@ -218,6 +218,33 @@ public class DecorationAccountPO implements Serializable {
 
 	public void setCashback(long cashback) {
 		this.cashback = cashback;
+	}
+
+	@Column(name = "internal")
+	public long getInternal() {
+		return internal;
+	}
+
+	public void setInternal(long internal) {
+		this.internal = internal;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	@Column(name = "comment")

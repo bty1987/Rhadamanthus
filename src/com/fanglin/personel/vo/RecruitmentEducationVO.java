@@ -7,26 +7,26 @@ import org.apache.struts2.json.annotations.JSON;
 
 public class RecruitmentEducationVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8355720607905809394L;
 
 	private Long reid;
-	
+
 	private Long rid;
-	
+
 	private String beginTime;
-	
-	private String endTime;	
-	
+
+	private String endTime;
+
 	private Timestamp createTime;
-	
+
 	private String content;
-	
+
 	private String organ;
-	
+
 	private String specialty;
-	
+
 	private String certificate;
-	
+
 	public RecruitmentEducationVO() {
 		super();
 	}
@@ -63,7 +63,6 @@ public class RecruitmentEducationVO implements Serializable {
 		this.certificate = certificate;
 	}
 
-	
 	public String getBeginTime() {
 		return beginTime;
 	}
@@ -71,7 +70,7 @@ public class RecruitmentEducationVO implements Serializable {
 	public void setBeginTime(String beginTime) {
 		this.beginTime = beginTime;
 	}
-	
+
 	public String getEndTime() {
 		return endTime;
 	}
@@ -95,7 +94,7 @@ public class RecruitmentEducationVO implements Serializable {
 	public void setSpecialty(String specialty) {
 		this.specialty = specialty;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -105,5 +104,4 @@ public class RecruitmentEducationVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	
 }

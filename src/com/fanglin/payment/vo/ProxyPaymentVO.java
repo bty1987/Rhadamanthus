@@ -43,6 +43,8 @@ public class ProxyPaymentVO implements Serializable {
 
 	private Short status;
 
+	private Short isexpire;
+
 	private Integer company;
 
 	public ProxyPaymentVO() {
@@ -174,6 +176,14 @@ public class ProxyPaymentVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIsexpire() {
+		return isexpire;
+	}
+
+	public void setIsexpire(Short isexpire) {
+		this.isexpire = isexpire;
 	}
 
 	public Integer getCompany() {

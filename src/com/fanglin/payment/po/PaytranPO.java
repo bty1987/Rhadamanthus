@@ -66,11 +66,13 @@ public class PaytranPO implements java.io.Serializable {
 
 	public static final short ATTTYPE_MATERIAL_INT = 1; // 主材
 
-	public static final short WAY_ACQUIRE_SHORT = 0; // 刷卡
+	public static final short WAY_ACQUIRE_SHORT = 0; // pos机
 
-	public static final short WAY_WXPAY_SHORT = 1; // 微信
+	public static final short WAY_WXPAY_SHORT = 1; // 微信小程序
 
 	public static final short WAY_ALIPAY_SHORT = 2; // 支付宝
+
+	public static final short WAY_CODEPAY_SHORT = 3; // pos扫码
 
 	public static final long CHECK_INVALIDTIME_LONG = 120000; // 失效时长2m
 

@@ -244,14 +244,18 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 		@SuppressWarnings("unchecked")
 		public List<T> list() {
+
 			Criteria criteria = criteria(true);
+
 			if (maxResults > 0) {
 				criteria.setMaxResults(maxResults);
 			}
+
 			return criteria.list();
 		}
 
 		protected Criteria criteria(boolean sortable) {
+
 			Criteria criteria = createCriteria(clazz);
 
 			if (criterions != null) {
@@ -400,7 +404,7 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 			String hql = String.format("%s %s %s", select, from, where);
 
-			int totalCount = ((Number) createQuery(String.format("select count(%s) %s %s", id, from, where)).uniqueResult()).intValue();
+			int totalCount = ((Number) createSQLQuery(String.format("SELECT count(%s) FROM (%s %s %s) _", id, select, from, where)).uniqueResult()).intValue();
 			paging.setTotalRecords(totalCount);
 
 			if (totalCount <= (paging.getPage() - 1) * paging.getRows()) {
@@ -414,7 +418,7 @@ public abstract class GenericDaoImpl implements GenericDao {
 					paging.setPage(1);
 				}
 
-				results = createQuery(hql).setFirstResult((paging.getPage() - 1) * paging.getRows()).setMaxResults(paging.getRows()).list();
+				results = createSQLQuery(hql).addEntity(clazz).setFirstResult((paging.getPage() - 1) * paging.getRows()).setMaxResults(paging.getRows()).list();
 
 				int offset = totalCount % (paging.getRows()) == 0 ? 0 : 1;
 				paging.setTotalPage(totalCount / (paging.getRows()) + offset);

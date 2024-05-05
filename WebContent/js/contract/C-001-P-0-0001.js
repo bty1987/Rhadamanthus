@@ -95,8 +95,6 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            console.log(data);
-
             data["cov-sign-year"] = com.focusPage("#cov-sign-data").val().substr(0, 4);
             data["cov-sign-month"] = com.focusPage("#cov-sign-data").val().substr(5, 2);
             data["cov-sign-day"] = com.focusPage("#cov-sign-data").val().substr(8, 2);
@@ -142,8 +140,6 @@ jQuery(function($) {
                 delete data["con-company-addr"];
                 delete data["con-company-name"];
             }
-
-            console.log(data);
 
             var options = {
                 "userContract.uid": contractEdit.uid,

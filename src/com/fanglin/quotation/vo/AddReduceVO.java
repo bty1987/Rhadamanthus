@@ -64,6 +64,8 @@ public class AddReduceVO implements Serializable {
 
 	private Long total;
 
+	private Short schedule;
+
 	private Short status;
 
 	private Short isAffirm;
@@ -250,6 +252,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+
+	public Short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(Short schedule) {
+		this.schedule = schedule;
 	}
 
 	public Short getStatus() {

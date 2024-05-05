@@ -34,6 +34,10 @@ public class QuotationVersionPO implements Serializable {
 
 	public static final short TAX_NOTTAXDISCOUNT_INT = 0;
 
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final short STATUS_ENABLE_INT = 0;
+
 	private long qvId;
 
 	private String no;
@@ -57,6 +61,8 @@ public class QuotationVersionPO implements Serializable {
 	private short type;
 
 	private short defaultFlag;
+
+	private short status;
 
 	private String comment;
 
@@ -177,6 +183,15 @@ public class QuotationVersionPO implements Serializable {
 
 	public void setDefaultFlag(short defaultFlag) {
 		this.defaultFlag = defaultFlag;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	@Column(name = "comment")

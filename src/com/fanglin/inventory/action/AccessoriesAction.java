@@ -127,6 +127,22 @@ public class AccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryAccessoriesItemByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAccessoriesItemByOrderId() {
+
+		accessoriesItems = accessoriesItemService.queryAccessoriesItemByOrderId(accessories);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "checkAccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkAccessoriesItem() throws FLException {
+
+		accessoriesItemService.checkAccessoriesItem(accessories, accessoriesItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addAccessoriesItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAccessoriesItem() throws FLException {
 

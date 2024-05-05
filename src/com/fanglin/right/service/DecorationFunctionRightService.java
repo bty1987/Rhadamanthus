@@ -5,9 +5,9 @@ import java.util.List;
 import com.fanglin.right.vo.DecorationFunctionRightVO;
 
 public interface DecorationFunctionRightService {
-	
-	public List<DecorationFunctionRightVO> queryDecorationFunctionRightByName(DecorationFunctionRightVO decorationFunctionRightVO);
-	
+
+	public List<DecorationFunctionRightVO> queryDecorationFunctionRightByName(DecorationFunctionRightVO decorationFunctionRightVO, int company);
+
 	public void updateDecorationFunctionRight(DecorationFunctionRightVO decorationFunctionRightVO, List<Long> dfids, int company);
 
 }

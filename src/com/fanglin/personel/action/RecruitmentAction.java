@@ -21,7 +21,7 @@ import com.fanglin.personel.vo.RecruitmentVO;
 @Controller
 public class RecruitmentAction extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5770397152301340601L;
 
 	private RecruitmentVO recruitment;
 

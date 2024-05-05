@@ -21,7 +21,7 @@ public interface CategoryService {
 
 	public void pageCategory(Paging paging, List<Filter> filters);
 
-	public List<CategoryVO> queryCategory();
+	public List<CategoryVO> queryCategory(CategoryVO categoryVO);
 
 	public CategoryVO queryCategoryByCId(CategoryVO categoryVO);
 

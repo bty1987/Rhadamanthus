@@ -15,8 +15,9 @@ $(function() {
         totalPayable: 0,
         totalSettlementProfit: 0,
         totalCompanyProfit: 0,
-        totalService: 0,
+        totalService: 0
     };
+
     var serNum = 0;
     var balanceSales = {};
     var brand = {};
@@ -24,6 +25,7 @@ $(function() {
     var trList = $("#reslist");
 
     com.post(api.balance.queryBalanceSalesByBsid, {"balanceSales.bsid": params.balance.bsid}, function(res) {
+
         balanceSales = res.balanceSales;
         brand = balanceSales.brand;
         creater = balanceSales.creater;
@@ -33,6 +35,7 @@ $(function() {
     var tabody = $('<tbody> </tbody>');
 
     setTimeout(function() {
+
         table = createHeader().appendTo(trList);
         pageList(1, 50);
         tabody.appendTo(table);
@@ -41,6 +44,7 @@ $(function() {
 
     var index = 0;
     function pageList(page, rows) {
+
         var option = {
             "paging.page": page,
             "paging.rows": rows,
@@ -57,16 +61,19 @@ $(function() {
     };
 
     if (params.balance.type == 1) {
+
         createHeader = createComHeader;
         createLine = createComLine;
         createFooter = createComFooter;
     } else {
+
         createHeader = createPreHeader;
         createLine = createPreLine;
         createFooter = createPreFooter;
     }
 
     function createComHeader() {
+
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">').appendTo(div);
         var caption = $('<caption style="line-height: 65px;font-size:20px;">供应商对账单</caption>').appendTo(table);
@@ -79,10 +86,14 @@ $(function() {
 
         var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);
         var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" +
-            "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章或签字确认，" +
-            "本次应付账款金额：").appendTo(td37);
-        var span2 = $('<span></span>').attr("id", "totalYay").text("").appendTo(span1);
-        var span3 = $('<span></span>').text(")，具体明细如下：").appendTo(span1);
+            "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章并签字确认，" +
+            "本次账单代收款的金额为：人民币").appendTo(td37);
+        var span2 = $('<span></span>').attr("id", "totalInc").text("").appendTo(span1);
+        var span3 = $('<span></span>').text(")，本次账单服务费的金额为：人民币").appendTo(span1);
+        var span4 = $('<span></span>').attr("id", "totalSer").text("").appendTo(span1);
+        var span5 = $('<span></span>').text(")，本次账单差额的金额为：人民币").appendTo(span1);
+        var span6 = $('<span></span>').attr("id", "totalPay").text("").appendTo(span1);
+        var span7 = $('<span></span>').text(")").appendTo(span1);
 
         var tr3 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
         var td4 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("序号").appendTo(tr3);
@@ -101,36 +112,46 @@ $(function() {
     }
 
     function createComLine(items) {
+
         $.each(items, function(i, v) {
+            
             var oneType = v.salesBalance.onetype;
             var Type = v.salesBalance.type;
-            var salesRevenue = null;
-            var salesAmount = null;
-            var accountsPayable = null;
-            var venderMaling = Math.round(v.salesBalance.sales.venderMaling);
-            var allowance = Math.round(v.salesBalance.allowance);
+            
+            var salesRevenue = 0;
+            var salesAmount = 0;
+            var accountsPayable = 0;
+            var venderMaling = (v.salesBalance && v.salesBalance.sales && v.salesBalance.sales.venderMaling) ? Math.round(v.salesBalance.sales.venderMaling) : 0;
+            var allowance = (v.salesBalance && v.salesBalance.allowance) ? v.salesBalance.allowance : 0;
 
             if (oneType == 0) {
+
                 if (Type == 3) {
+
                     venderMaling = 0;
                     allowance = 0;
                     salesRevenue = v.salesBalance.sales.depositpay;
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
                 } else {
+
                     salesRevenue = utils.accAdd(v.salesBalance.sales.depositpay, v.salesBalance.sales.fullpay);
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
                 }
             }
+
             if (oneType == 1) {
+
                 venderMaling = 0;
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(v.salesBalance.total, allowance);
                 accountsPayable = v.salesBalance.pbalance;
                 venderMaling = (-venderMaling);
             }
+
             if (oneType == 2 || oneType == 3) {
+
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(utils.accSub(v.salesBalance.total, venderMaling), allowance);
                 accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
@@ -146,9 +167,9 @@ $(function() {
             var td20 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(salesRevenue)).appendTo(tr4);
             var td21 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(salesAmount)).appendTo(tr4);
             var td22 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.pbalance).appendTo(tr4);
-            var td29 = $('<td style="border: 1px solid;"></td>').text(venderMaling).appendTo(tr4);
+            var td29 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(venderMaling)).appendTo(tr4);
             var td24 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(accountsPayable)).appendTo(tr4);
-            var td25 = $('<td style="border: 1px solid;"></td>').text(utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable))).appendTo(tr4);
+            var td25 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable))).appendTo(tr4);
             var td26 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
 
             options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);// 合计销售收入
@@ -158,13 +179,16 @@ $(function() {
             options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
             options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);// 合计供应商减免金额
             options.totalService = utils.accAdd(options.totalService, utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable)));
+            
             serNum = serNum+1;
         });
     }
 
     function createComFooter() {
 
-        $("#totalYay").text(utils.getCNMoney(utils.changeThrDecimal(options.totalPayable)) + "(￥"+ utils.changeThrDecimal(options.totalPayable));
+        $("#totalInc").text(utils.getCNMoney(utils.changeThrDecimal(options.totalIncome)) + "(￥" + utils.changeThrDecimal(options.totalIncome));
+        $("#totalSer").text(utils.getCNMoney(utils.changeThrDecimal(options.totalService)) + "(￥" + utils.changeThrDecimal(options.totalService));
+        $("#totalPay").text(utils.getCNMoney(utils.changeThrDecimal(options.totalPayable)) + "(￥" + utils.changeThrDecimal(options.totalPayable));
 
         var tr5 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 6px;"></tr>').appendTo(tabody);
         var td26 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
@@ -182,6 +206,7 @@ $(function() {
     }
 
     function createPreHeader() {
+
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">').appendTo(div);
         var caption = $('<caption style="line-height: 65px;font-size:20px;">'+params.company.name+'主材销售分析明细表</caption>').appendTo(table);
@@ -224,33 +249,41 @@ $(function() {
 
             var oneType = v.salesBalance.onetype;
             var Type = v.salesBalance.type;
-            var salesRevenue = null;
-            var salesAmount = null;
-            var accountsPayable = null;
-            var venderMaling = Math.round(v.salesBalance.sales.venderMaling);
-            var allowance = Math.round(v.salesBalance.allowance);
+            var salesRevenue = 0;
+            var salesAmount = 0;
+            var accountsPayable = 0;
+            var venderMaling = (v.salesBalance && v.salesBalance.sales && v.salesBalance.sales.venderMaling) ? Math.round(v.salesBalance.sales.venderMaling) : 0;
+            var allowance = (v.salesBalance && v.salesBalance.allowance) ? v.salesBalance.allowance : 0;
 
             if (oneType == 0) {
+
                 if (Type == 3) {
+
                     venderMaling = 0;
                     allowance = 0;
+                    
                     salesRevenue = v.salesBalance.sales.depositpay;
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
                 } else {
+
                     salesRevenue = utils.accAdd(v.salesBalance.sales.depositpay, v.salesBalance.sales.fullpay);
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
                 }
             }
+
             if (oneType == 1) {
+
                 venderMaling = 0;
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(v.salesBalance.total, allowance);
                 accountsPayable = v.salesBalance.pbalance;
                 venderMaling = (-venderMaling);
             }
+
             if (oneType == 2 || oneType == 3) {
+
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(utils.accSub(v.salesBalance.total, venderMaling), allowance);
                 accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
@@ -258,6 +291,7 @@ $(function() {
             }
 
             index = index + 1;
+            
             var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center;font-size: 5px;"></tr>').appendTo(tabody);
             var td24 = $('<td style="border: 1px solid;"></td>').text(index).appendTo(tr4);
             var td25 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.createTime).appendTo(tr4);
@@ -266,15 +300,15 @@ $(function() {
             var td28 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(salesRevenue)).appendTo(tr4);
             var td29 = $('<td style="border: 1px solid;"></td>').text(venderMaling).appendTo(tr4);
             var td30 = $('<td style="border: 1px solid;"></td>').text(allowance).appendTo(tr4);
-            var td31 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.accMul(utils.changeTwoDecimal(utils.accSub(1, utils.accDiv(allowance, salesAmount))), 100) + "%").appendTo(tr4);
+            var td31 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accMul(utils.accSub(1, utils.accDiv(allowance, salesAmount)), 100)) + "%").appendTo(tr4);
             var td32 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(salesAmount)).appendTo(tr4);
             var td33 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.pbalance).appendTo(tr4);
-            var td34 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(v.salesBalance.pbalance, salesAmount)), 100) + "%").appendTo(tr4);
+            var td34 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accMul(utils.accDiv(v.salesBalance.pbalance, salesAmount), 100)) + "%").appendTo(tr4);
             var td35 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(accountsPayable)).appendTo(tr4);
             var td36 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(utils.accSub(salesAmount, v.salesBalance.pbalance))).appendTo(tr4);
-            var td37 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount)), 100) + "%").appendTo(tr4);
+            var td37 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accMul(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount), 100)) + "%").appendTo(tr4);
             var td38 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable))).appendTo(tr4);
-            var td39 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accAdd(salesRevenue, venderMaling))), 100) + "%").appendTo(tr4);
+            var td39 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accMul(utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accAdd(salesRevenue, venderMaling)), 100)) + "%").appendTo(tr4);
             var td40 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
 
             options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);// 合计销售收入
@@ -289,6 +323,7 @@ $(function() {
     }
 
     function createPreFooter() {
+
         var tr5 = $('<tr style="border: 1px solid;height: 25px;text-align: center;font-size: 6px;"></tr>').appendTo(tabody);
         var td41 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
         var td42 = $('<td style="border: 1px solid;"></td>').text("合计").appendTo(tr5);
@@ -297,15 +332,15 @@ $(function() {
         var td45 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalIncome)).appendTo(tr5);
         var td46 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalRelief)).appendTo(tr5);
         var td47 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalDiscount)).appendTo(tr5);
-        var td48 = $('<td style="border: 1px solid;"></td>').text(utils.accMul(utils.changeTwoDecimal(utils.accSub(1, utils.accDiv(options.totalDiscount, options.totalSalesAmount))), 100) + "%").appendTo(tr5);
+        var td48 = $('<td style="border: 1px solid;"></td>').text(utils.changeTwoDecimal(utils.accMul(utils.accSub(1, utils.accDiv(options.totalDiscount, options.totalSalesAmount)), 100)) + "%").appendTo(tr5);
         var td49 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalSalesAmount)).appendTo(tr5);
         var td50 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalCost)).appendTo(tr5);
-        var td51 = $('<td style="border: 1px solid;"></td>').text(utils.accMul(utils.changeTwoDecimal(utils.accDiv(options.totalCost, options.totalSalesAmount)), 100) + "%").appendTo(tr5);
+        var td51 = $('<td style="border: 1px solid;"></td>').text(utils.changeTwoDecimal(utils.accMul(utils.accDiv(options.totalCost, options.totalSalesAmount), 100)) + "%").appendTo(tr5);
         var td52 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalPayable)).appendTo(tr5);
         var td53 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalSettlementProfit)).appendTo(tr5);
-        var td54 = $('<td style="border: 1px solid;"></td>').text(utils.accMul(utils.changeTwoDecimal(utils.accDiv(options.totalSettlementProfit, options.totalSalesAmount)), 100) + "%").appendTo(tr5);
+        var td54 = $('<td style="border: 1px solid;"></td>').text(utils.changeTwoDecimal(utils.accMul(utils.accDiv(options.totalSettlementProfit, options.totalSalesAmount), 100)) + "%").appendTo(tr5);
         var td55 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalCompanyProfit)).appendTo(tr5);
-        var td56 = $('<td style="border: 1px solid;"></td>').text(utils.accMul(utils.changeTwoDecimal(utils.accDiv(options.totalCompanyProfit, utils.accAdd(options.totalIncome, options.totalRelief))), 100) + "%").appendTo(tr5);
+        var td56 = $('<td style="border: 1px solid;"></td>').text(utils.changeTwoDecimal(utils.accMul(utils.accDiv(options.totalCompanyProfit, utils.accAdd(options.totalIncome, options.totalRelief)), 100)) + "%").appendTo(tr5);
         var td57 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
 
     }

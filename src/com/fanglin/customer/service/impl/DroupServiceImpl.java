@@ -97,11 +97,7 @@ public class DroupServiceImpl implements DroupService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		DroupPO droupPO = null;
-
-		if (orderId == null) {
-			droupPO = droupDao.queryDroup(orderId, null, null);
-		}
+		DroupPO droupPO = droupDao.queryDroup(orderId, null, null);
 
 		if (droupPO != null) {
 			throw new FLException(330068, "群信息已存在");
@@ -119,7 +115,7 @@ public class DroupServiceImpl implements DroupService {
 
 		droupPO = new DroupPO();
 
-		if (droupVO.getType() == 1) {
+		if (droupVO.getType() == DroupPO.TYPE_DINGTALK_INT) {
 
 			Group group = new Group().init();
 
@@ -135,10 +131,11 @@ public class DroupServiceImpl implements DroupService {
 			droupPO.setChatId(group.getChatId());
 			droupPO.setOpenId(group.getOpenId());
 
-		} else if (droupVO.getType() == 2) {
-			droupPO.setName(droupVO.getName());
+		} else if (droupVO.getType() == DroupPO.TYPE_WECHAT_INT) {
+
+			droupPO.setName(orderId + name + houseNumber);
 			droupPO.setChatId(droupVO.getChatId());
-			droupPO.setOpenId(droupVO.getOpenId());
+			droupPO.setOpenId(droupVO.getChatId());
 		}
 
 		droupPO.setDecoration(decorationPO);

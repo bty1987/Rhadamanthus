@@ -20,6 +20,8 @@ public interface TaskService {
 
 	public int addTask(TaskVO taskVO) throws FLException;
 
+	public int updateTask(TaskVO taskVO) throws FLException;
+
 	public int updateTaskForStatus(TaskVO taskVO) throws FLException;
 
 	public int updateTaskForIsShow(TaskVO taskVO) throws FLException;

@@ -180,10 +180,10 @@ jQuery(function($) {
         orderEntry.orderItems.orderType.bindData(orderEntry.decorationAtttypes, 'key', 'name', "请选择");
     });
 
-    orderEntry.orderItems.houseType.bindData(constant.decoration.decoration.houseType.datas, 'key', 'value');
-    orderEntry.orderItems.status.bindData(constant.decoration.decoration.resourceType.datas, 'key', 'value');
-    orderEntry.orderItems.houseClass.bindData(constant.decoration.decoration.houseClass.datas, 'key', 'value');
-    orderEntry.orderItems.orderGrade.bindData(constant.decoration.decoration.grade.datas, 'key', 'value');
+    orderEntry.orderItems.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
+    orderEntry.orderItems.status.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
+    orderEntry.orderItems.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    orderEntry.orderItems.orderGrade.bindData(constant.decoration().decoration.grade.datas, 'key', 'value');
 
     com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value", function(list, key, value) {
 
@@ -251,7 +251,7 @@ jQuery(function($) {
             }, function(des) {
 
                 if (des.decoration && des.decoration.orderId) {
-                    com.showTip(orderEntry.orderItems.houseNumber, "装修单已存在.装修单号:" + des.decoration.orderId + " 所属设计师:" + des.decoration.designer.currentName, "right");
+                    com.showTip(orderEntry.orderItems.houseNumber, "装修单已存在.", "right");
                     orderEntry.repeatFlg = true;
                 } else {
                     com.showConfirm("已有该房产信息,是否绑定?", function() {

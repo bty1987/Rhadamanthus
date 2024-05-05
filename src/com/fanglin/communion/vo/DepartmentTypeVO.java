@@ -6,15 +6,15 @@ public class DepartmentTypeVO implements Serializable {
 
 	private static final long serialVersionUID = -5617161964738001838L;
 
-	private int dtid;
+	private Integer dtid;
 
 	private String name;
 
-	public int getDtid() {
+	public Integer getDtid() {
 		return dtid;
 	}
 
-	public void setDtid(int dtid) {
+	public void setDtid(Integer dtid) {
 		this.dtid = dtid;
 	}
 

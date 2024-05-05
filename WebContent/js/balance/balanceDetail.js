@@ -2,7 +2,7 @@ $(function() {
 
     var balanceDetail = {
 
-        bid: params.balance.bid,
+        bid: params.balance.bid
     };
 
     var initList = function(listData) {
@@ -21,17 +21,44 @@ $(function() {
         } else if (listData && listData.length) {
 
             $.each(listData, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $title = $('<small></small>').addClass('blue').html(' ' + v.account.name);
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                var propertyArr = [["归属人:", v.account.belonger.currentName, "grey"], ["创建人:", v.account.creater.currentName, "grey"], ["创建时间:", v.account.createTime, "green"], ["操作人:", v.operater.currentName, "grey"], ["操作时间:", v.operateTime, "green"], ["金额:", v.money, "blue"], ];
+                var propertyArr = [
+                    ["归属人:", v.account.belonger.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, v.account.belonger.userId);
+                    }],
+                    ["创建人:", v.account.creater.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, v.account.creater.userId);
+                    }],
+                    ["创建时间:", v.account.createTime, "green"],
+                    ["操作人:", v.operater.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, v.operater.userId);
+                    }],
+                    ["操作时间:", v.operateTime, "green"],
+                    ["金额:", v.money, "blue"]
+                ];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                    if (value[3]) {
+
+                        $b.click(function() {
+
+                            value[3]($b);
+                        });
+                    }
+
                     $liProperty.appendTo($ulProperty);
                 });
 
@@ -55,6 +82,7 @@ $(function() {
 
             initList(data.balanceDetails);
         }, function(e) {
+
             com.showAlert(com.error, e.errorMsg);
         }, false);
     };

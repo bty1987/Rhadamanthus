@@ -1,10 +1,8 @@
-<div id="goodsPageContent">
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-            <div class="clearfix" id="resultList"></div> <!--查询结果-->
-            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div> <!--分页-->
-        </div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="gCondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+        <div id="gResultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+        <div id="gPagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
     </div>
 </div>
 
@@ -31,6 +29,13 @@
                     <label class="col-md-3 control-label no-padding-right orange">名称</label>
                     <div class="col-md-9">
                         <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">别名</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7" id="alias" name="alias" data-required="1" data-toggle="popover" data-trigger='manual' >
                     </div>
                 </div>
 
@@ -103,8 +108,286 @@
 
 <div id="layerPopUp" class="portlet box page-content"></div>
 
+<div id="importGoods" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="importGoodsForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品编号 商品名 条形码 品类 品牌 单位 件数 辅类</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">商品编号</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">条形码</div>
+                            <div class="cell">品类</div>
+                            <div class="cell">品牌ID</div>
+                            <div class="cell">品牌</div>
+                            <div class="cell">单位</div>
+                            <div class="cell">件数</div>
+                            <div class="cell">辅类</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">JF-ZSH-A013</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">134679852</div>
+                            <div class="cell">饰品</div>
+                            <div class="cell">101</div>
+                            <div class="cell">森盛</div>
+                            <div class="cell">幅</div>
+                            <div class="cell">2</div>
+                            <div class="cell">力工</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<div id="importColor" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="importColorForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 颜色</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">颜色</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">蓝色</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<div id="importFormat" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="importFormatForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 规格</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">规格</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">400*400</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="importPrice" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="importPriceForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 控价 售价 结算类型 结算值</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p>价格类型请填写0或1, 0: 正价, 1: 特价</p>
+                <p>结算类型请填写0或1, 0: 底价, 1: 点位</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col7">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">价格说明</div>
+                            <div class="cell">类型</div>
+                            <div class="cell">控价</div>
+                            <div class="cell">售价</div>
+                            <div class="cell">结算类型</div>
+                            <div class="cell">结算值</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col7">
+                            <div class="cell">1331</div>
+                            <div class="cell">测试</div>
+                            <div class="cell">0</div>
+                            <div class="cell">100</div>
+                            <div class="cell">200</div>
+                            <div class="cell">0</div>
+                            <div class="cell">150</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="deletePrice" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="deletePriceForm">
+
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col2">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名称</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col2">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="exportGoods" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="exportGoodsForm">
+        
+            <div class="form-group alert alert-info">
+                <p>格式: 商品编号 商品名 条形码 品类 品牌 单位 件数 辅类</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">商品编号</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">条形码</div>
+                            <div class="cell">品类</div>
+                            <div class="cell">品牌ID</div>
+                            <div class="cell">品牌</div>
+                            <div class="cell">单位</div>
+                            <div class="cell">件数</div>
+                            <div class="cell">辅类</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">JF-ZSH-A013</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">134679852</div>
+                            <div class="cell">饰品</div>
+                            <div class="cell">101</div>
+                            <div class="cell">森盛</div>
+                            <div class="cell">幅</div>
+                            <div class="cell">2</div>
+                            <div class="cell">力工</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        
+        </form>
+    </div>
+</div>
+
+<div id="exportModal" style="display: none; " class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="exportModalForm">
+        
+            <div class="form-group alert alert-info">
+                <p>颜色格式: 商品ID 商品编号 商品名 颜色 品类 品牌</p>
+            </div>
+            
+            <div class="form-group alert alert-info">
+                <p>规格格式: 商品ID 商品编号 商品名 规格说明 品类 品牌</p>
+            </div>
+            
+            <div class="form-group alert alert-info">
+                <p>价格格式: 商品ID 商品编号 商品名 价格说明 控价 售价 结算类型 结算值 类型 品类 品牌</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-group hide" style="margin: 0px;" id="uploaddiv">
+	<div id="fileUpload" class="hide">
+	    <label class="col-sm-3 control-label no-padding-right" for="attachment"></label>
+	    <div class="col-sm-9">
+	        <div id="attachment"></div>
+	        <input type="text" class="hidden" id="filePath"/>
+	    </div>
+	</div>
+	
+	<label class="col-sm-3 control-label no-padding-right" for="executeDates"><strong>执行日期</strong></label>
+	<div class="col-sm-9">
+	    <input class="date-picker v_required " id="executeDates" type="text" readonly="readonly"
+	           data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+	</div>
+	
+	<label class="col-sm-3 control-label no-padding-right" for="executeTimes"><strong>执行时间</strong></label>
+	<div class="col-sm-9">
+	    <div class="bootstrap-timepicker">
+	        <input id="executeTimes" type="text" class="v_required"/>
+	    </div>
+	</div>
+	
+	<label class="col-sm-3 control-label no-padding-right"></label>
+	<div class="col-sm-9">
+		<a class="btn btn-success btn-sm" id="importBtn">导入</a>
+		<a class="btn btn-sm" id="exportBtn">导出</a>
+	</div>
+</div>
+
 <script type="text/javascript">
-    $.loadScript(['js/data/goods.js']);
+    $.loadScript(['js/utils/planUtils.js','js/data/goods.js']);
 </script>
 
 

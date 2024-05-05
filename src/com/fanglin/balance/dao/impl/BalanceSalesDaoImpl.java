@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.balance.dao.BalanceSalesDao;
@@ -42,8 +43,6 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 
 		query.add(Restrictions.eq("company", company));
 
-		query.add(Restrictions.ne("balance.bid", Long.valueOf(0)));
-
 		queryFilterExcute(query, filters);
 
 		query.desc("bsid");
@@ -55,6 +54,16 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	@SuppressWarnings("unchecked")
 	public List<BalanceSalesPO> queryBalanceSales(String name, int company) {
 		return session().createCriteria(BalanceSalesPO.class).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).add(Restrictions.eq("status", BalanceSalesPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("bsid")).setMaxResults(10).list();
+	}
+
+	@Override
+	public Object[] amountBalanceSales(long bsid) {
+
+		String sql = "select sum(if(sb.onetype = 0, if(sb.type = 3, s.depositpay, s.depositpay+s.fullpay), if(sb.onetype = 1, sb.total, if(onetype in (2, 3), sb.total, 0)))) as 'income',sum(pbalance) as 'cost',sum(if(sb.onetype = 0, sb.pbalance - round(s.venderMaling, 0), if(sb.onetype = 1, sb.pbalance, if(onetype in (2, 3), sb.pbalance + round(s.venderMaling, 0), 0)))) as 'payment' from balance.balancesalesbalance bsb, sales.salesbalance sb, sales.sales s where bsb.bsid = :bsid and bsb.sbid = sb.sbid and sb.sid = s.sid";
+
+		Object[] amount = (Object[]) session().createSQLQuery(sql).addScalar("income", StandardBasicTypes.LONG).addScalar("cost", StandardBasicTypes.LONG).addScalar("payment", StandardBasicTypes.LONG).setLong("bsid", bsid).uniqueResult();
+
+		return amount;
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -90,6 +99,9 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 			} else if ("balanceStatus".equals(field)) {
 				query.alias("balance", "balance");
 				query.add(query.getCriterion("balance.status", Short.valueOf(data), op));
+			} else if ("balanceIsPay".equals(field)) {
+				query.alias("balance", "balance");
+				query.add(query.getCriterion("balance.isPay", Short.valueOf(data), op));
 			} else if ("lockTimeDateRange".equals(field)) {
 				query.timeranges("lockTime", "lockTime", data);
 			}

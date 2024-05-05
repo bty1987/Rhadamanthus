@@ -32,6 +32,9 @@ import com.fanglin.log.vo.LoginLogVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.service.CompanyService;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
@@ -50,6 +53,9 @@ public class LoginAction extends BaseListAction {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private CompanyService companyService;
 
 	@Autowired
 	private LoginService loginService;
@@ -108,6 +114,8 @@ public class LoginAction extends BaseListAction {
 			if ((user.getIsLogin() & UserPO.ISLOGIN_FIP_INT) != UserPO.ISLOGIN_FIP_INT) {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
+
+			companyService.validateCompany(new CompanyVO(CompanyServiceImpl.encode(Integer.parseInt(user.getCompanys()))));
 
 			Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRid(), (new Date()).getTime(), false, Integer.parseInt(user.getCompanys()), user.getFreedom());
 
@@ -170,6 +178,8 @@ public class LoginAction extends BaseListAction {
 			if (getAuthentication() == null) {
 				throw new FLException(110008, "验证信息错误");
 			}
+
+			companyService.validateCompany(new CompanyVO(getCompany()));
 
 			setAuthentication(loginService.changeAuthCode(getAuthentication(), getCompany()));
 		} catch (FLException e) {

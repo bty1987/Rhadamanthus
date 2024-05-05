@@ -37,6 +37,14 @@ public class PresignItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pagePresignItemByPpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pagePresignItemByPpid() throws FLException {
+
+		presignItemService.pagePresignItemByPpid(getPaging(), getFilters(), presignItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryPresignItemByPiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPresignItemByPiid() throws FLException {
 

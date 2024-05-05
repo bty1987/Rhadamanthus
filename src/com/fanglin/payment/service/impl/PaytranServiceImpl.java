@@ -1,6 +1,7 @@
 package com.fanglin.payment.service.impl;
 
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -243,14 +244,15 @@ public class PaytranServiceImpl implements PaytranService {
 		// 获取商户
 		CustypePO custypePO = custypeDao.queryCustype(company, dgrade, sgrade, paytranPO.getType(), CustypePO.PLATFORM_POSPAY_INT);
 
-		if (custypePO != null) {
-			paytranPO.setCtid(custypePO.getCtid());
+		if (custypePO == null) {
+			throw new FLException(130105, "商户不存在");
 		}
 
 		if (paytranPO.getNo() == null) {
 			paytranPO.setNo(custypePO.getReceiptType().getNo());
 		}
 
+		paytranPO.setCtid(custypePO.getCtid());
 		paytranPO.setStatus(PaytranPO.STATUS_INIT_INT);
 
 		paytranPO.setCreater(creater);
@@ -300,6 +302,8 @@ public class PaytranServiceImpl implements PaytranService {
 			path = "PAYMENT_PLATFORM_WXPAY_PATH_STR";
 		} else if (paytranPO.getWay() == PaytranPO.WAY_ALIPAY_SHORT) {
 			path = "PAYMENT_PLATFORM_WXPAY_PATH_STR";
+		} else if (paytranPO.getWay() == PaytranPO.WAY_CODEPAY_SHORT) {
+			path = "PAYMENT_PLATFORM_POSPAY_PATH_STR";
 		}
 
 		SystemConfigPO airpos = systemConfigDao.querySystemConfig(path, company);
@@ -464,6 +468,8 @@ public class PaytranServiceImpl implements PaytranService {
 		long money = Arith.mul(wxpay.getPaymentMoney(), 10000);
 
 		DecorationPO decorationPO = null;
+		int company = 0;
+		String grade = "B"; // 代付款默认商户等级
 
 		// 代付款没有装修单号
 		if (oderId != null) {
@@ -472,6 +478,9 @@ public class PaytranServiceImpl implements PaytranService {
 			if (decorationPO == null) {
 				throw new FLException(140013, "订单不存在");
 			}
+
+			company = decorationPO.getCompany();
+			grade = decorationPO.getGrade();
 		}
 
 		short atttype = 0;
@@ -598,23 +607,18 @@ public class PaytranServiceImpl implements PaytranService {
 
 		wxpay.setThreeOrderNo(orderNo);
 
-		int company = 0;
-		String grade = "";
+		SystemConfigPO airpos = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_%s_STR", paytranPO.getAtttype(), grade), company);
 
-		if (decorationPO == null) {
-			if (wxpay.getPaymentType() == PaytranPO.TYPE_PROXY_INT) {
-				grade = "B"; // 代付款默认商户等级
-				company = 1;
-			}
-		} else {
-			company = decorationPO.getCompany();
-			grade = decorationPO.getGrade();
+		if (airpos == null) {
+			airpos = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", grade), company);
 		}
-
-		SystemConfigPO airpos = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", grade), company);
 
 		if (airpos == null) {
 			airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", company);
+		}
+
+		if (airpos == null) {
+			airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_PATH_STR", company);
 		}
 
 		if (airpos == null || "".equals(airpos.getValue())) {
@@ -700,6 +704,10 @@ public class PaytranServiceImpl implements PaytranService {
 
 		SystemConfigPO airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_POSPAY_PATH_STR", company);
 
+		if (airpos == null) {
+			airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_PATH_STR", company);
+		}
+
 		if (airpos == null || "".equals(airpos.getValue())) {
 			throw new FLException(150071, "不支持其他支付平台");
 		}
@@ -712,6 +720,7 @@ public class PaytranServiceImpl implements PaytranService {
 				throw new FLException(150072, "不支持其他支付平台");
 			}
 
+			paytranPO.setWay(paytranVO.getWay());
 			Class.forName(String.format("%s.Airpos", airpos.getValue())).getMethod("pospay", PaytranPO.class, CustypePO.class).invoke(null, paytranPO, custypePO);
 
 		} catch (FLException e) {
@@ -732,6 +741,7 @@ public class PaytranServiceImpl implements PaytranService {
 			throw new FLException(150044, "推送失败");
 		}
 
+		paytranPO.setWay(PaytranPO.WAY_ACQUIRE_SHORT);
 		paytranPO.setPushTime(DateUtil.getDateToTimestamp(new Date()));
 		paytranDao.update(paytranPO);
 
@@ -851,7 +861,8 @@ public class PaytranServiceImpl implements PaytranService {
 		for (PaytranPO paytran : paytrans) {
 			ptids.add(paytran.getPtid());
 			paidMoney = Arith.add(paidMoney, paytran.getMoney());
-			String info = String.format("%s|%s|%s|%s#", paytran.getNo(), Arith.div(paytran.getMoney(), 1000.0), paytran.getCreateTime(), paytran.getPtid());
+			Timestamp collectTime = new Timestamp(System.currentTimeMillis());
+			String info = String.format("%s|%s|%s|%s#", paytran.getNo(), Arith.div(paytran.getMoney(), 1000.0), collectTime, paytran.getPtid());
 			bankInfo = String.format("%s%s", bankInfo, info);
 		}
 

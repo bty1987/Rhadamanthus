@@ -11,15 +11,23 @@ public class DecorationMidpackVO implements Serializable {
 	private DecorationVO decoration;
 
 	private Long psId;
-	
+
 	private String name;
-	
+
+	private Integer materialRate;
+
+	private Long materialOrigin;
+
 	private Long materialPrice;
-	
-	private Long servicePrice;
-	
+
 	private Long materialPaidup;
-	
+
+	private Integer serviceRate;
+
+	private Long servicePrice;
+
+	private Long servicePaidup;
+
 	private Short status;
 
 	public DecorationMidpackVO() {
@@ -63,12 +71,44 @@ public class DecorationMidpackVO implements Serializable {
 		this.name = name;
 	}
 
+	public Integer getMaterialRate() {
+		return materialRate;
+	}
+
+	public void setMaterialRate(Integer materialRate) {
+		this.materialRate = materialRate;
+	}
+
+	public Long getMaterialOrigin() {
+		return materialOrigin;
+	}
+
+	public void setMaterialOrigin(Long materialOrigin) {
+		this.materialOrigin = materialOrigin;
+	}
+
 	public Long getMaterialPrice() {
 		return materialPrice;
 	}
 
 	public void setMaterialPrice(Long materialPrice) {
 		this.materialPrice = materialPrice;
+	}
+
+	public Long getMaterialPaidup() {
+		return materialPaidup;
+	}
+
+	public void setMaterialPaidup(Long materialPaidup) {
+		this.materialPaidup = materialPaidup;
+	}
+
+	public Integer getServiceRate() {
+		return serviceRate;
+	}
+
+	public void setServiceRate(Integer serviceRate) {
+		this.serviceRate = serviceRate;
 	}
 
 	public Long getServicePrice() {
@@ -79,12 +119,12 @@ public class DecorationMidpackVO implements Serializable {
 		this.servicePrice = servicePrice;
 	}
 
-	public Long getMaterialPaidup() {
-		return materialPaidup;
+	public Long getServicePaidup() {
+		return servicePaidup;
 	}
 
-	public void setMaterialPaidup(Long materialPaidup) {
-		this.materialPaidup = materialPaidup;
+	public void setServicePaidup(Long servicePaidup) {
+		this.servicePaidup = servicePaidup;
 	}
 
 	public Short getStatus() {

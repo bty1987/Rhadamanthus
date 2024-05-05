@@ -9,16 +9,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.QuotationBigCategoryVO;
+import com.fanglin.communion.vo.QuotationClassificationVO;
+import com.fanglin.communion.vo.QuotationSmallCategoryVO;
+import com.fanglin.communion.vo.QuotationTypeVO;
 import com.fanglin.communion.vo.WorkTypeVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.material.dao.NoodsDao;
+import com.fanglin.data.material.vo.NoodsVO;
+import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormoodPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.NormoodDao;
 import com.fanglin.data.quotation.service.NormoodService;
 import com.fanglin.data.quotation.vo.NormoodVO;
+import com.fanglin.data.quotation.vo.QuotationCtemVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -27,20 +35,23 @@ import com.fanglin.utils.Paging;
 public class NormoodServiceImpl implements NormoodService {
 
 	@Autowired
-	NormoodDao normoodDao;
-	
+	private NormoodDao normoodDao;
+
+	@Autowired
+	private NoodsDao noodsDao;
+
 	@Override
 	public void pageNormood(Paging paging, List<Filter> filters) {
 
 		List<NormoodPO> normoodPOs = normoodDao.pageNormood(paging, filters);
 		List<NormoodVO> normoodVOs = new ArrayList<NormoodVO>();
-		
+
 		for (NormoodPO normoodPO : normoodPOs) {
 
-			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
+			NormoodVO normoodVO = new NormoodVO(new NoodsVO(), new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO()));
 
-			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
-			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("noods", "quotationItem"));
+			BeanUtil.copyPropertie(normoodPO.getNoods(), normoodVO.getNoods());
 
 			normoodPO.getQuotationItem().ptv(normoodVO.getQuotationItem());
 
@@ -58,10 +69,10 @@ public class NormoodServiceImpl implements NormoodService {
 
 		for (NormoodPO normoodPO : normoodPOs) {
 
-			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
+			NormoodVO normoodVO = new NormoodVO(new NoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO(), null));
 
-			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
-			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("noods", "quotationItem"));
+			BeanUtil.copyPropertie(normoodPO.getNoods(), normoodVO.getNoods());
 
 			normoodPO.getQuotationItem().ptv(normoodVO.getQuotationItem());
 
@@ -73,13 +84,20 @@ public class NormoodServiceImpl implements NormoodService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addNormood(NormoodVO normoodVO) {
+	public int addNormood(NormoodVO normoodVO) throws FLException {
 
-		NormoodPO normoodPO = new NormoodPO(new QuotationItemPO(), new GoodsPO());
+		NormoodPO normoodPO = new NormoodPO();
 
-		BeanUtil.copyPropertie(normoodVO, normoodPO, Arrays.asList("goods", "quotationItem"));
-		BeanUtil.copyProperties(normoodVO.getGoods(), normoodPO.getGoods(), Arrays.asList("accessoriesType"));
+		BeanUtil.copyPropertie(normoodVO, normoodPO, Arrays.asList("noods", "quotationItem"));
 
+		NoodsPO noodsPO = noodsDao.get(normoodVO.getNoods().getNid());
+
+		if (noodsPO == null) {
+			throw new FLException(130118, "定材不存在");
+		}
+
+		normoodPO.setName(noodsPO.getName());
+		normoodPO.setNoods(noodsPO);
 		normoodPO.setQuotationItem(new QuotationItemPO(normoodVO.getQuotationItem().getQiid()));
 
 		normoodPO.setStatus(NormoodPO.STATUS_VALID_STR);

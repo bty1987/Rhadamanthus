@@ -31,10 +31,13 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters, int company) {
+	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters, Integer company) {
 
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
-		query.add(Restrictions.eq("company", company));
+
+		if (company != null) {
+			query.add(Restrictions.eq("company", company));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -42,28 +45,21 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, Integer company) {
+	public List<BrandPO> pageBrand(Paging paging, String pinyin, Short atttype, Integer company) {
 
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 
-		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_NAME_STR, pinyinName, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_PINYIN_STR, pinyinName, MatchMode.ANYWHERE)));
-		if(company != null){
+		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_NAME_STR, pinyin, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE)));
+
+		if (company != null) {
 			query.add(Restrictions.eq("company", company));
 		}
 
-		return query.list();
-	}
-
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if (BrandPO.COLUMN_CATEGORYNO_STR.equals(filter.getField())) {
-					query.add(query.getCriterion("category.cid", Long.valueOf(filter.getData()), filter.getOp()));
-				} else {
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}
-			}
+		if (atttype != null) {
+			query.add(Restrictions.eq("atttype", atttype));
 		}
+
+		return query.list();
 	}
 
 	@Override
@@ -88,4 +84,23 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_NO_STR, no)).uniqueResult();
 	}
 
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (BrandPO.COLUMN_CATEGORYNO_STR.equals(field)) {
+				query.add(query.getCriterion("category.cid", Long.valueOf(data), op));
+			} else if (BrandPO.COLUMN_STATUS_ATTTYPE.equals(field)) {
+				query.add(Restrictions.eq("atttype", Short.valueOf(filter.getData())));
+			} else {
+				query.add(query.getCriterion(field, filter.getData(), op));
+			}
+		}
+	}
 }

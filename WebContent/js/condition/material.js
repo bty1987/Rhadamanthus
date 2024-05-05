@@ -1,6 +1,5 @@
-
 Condition.addupRule("material", {
-    
+
     orderId: {
         label: "装修单号",
         type: "text",
@@ -55,7 +54,7 @@ Condition.addupRule("material", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.data.queryCategory,
             postData: {},
             listPath: "categorys",
@@ -79,12 +78,14 @@ Condition.addupRule("material", {
             name: "brand",
             op: "eq",
             validate: null
-        }, dataSource: {//从后台取数据的各种配置
-            url: api.data.queryBrandByPinyin,//获取数据要调用的接口
-            postData: {},//获取数据时的请求参数
-            listPath: "brands",//响应list的json路径
-            keyPath: "name",//用来向后台提交的字段的json路径
-            valuePath: "name"//用来在页面显示的字段的json路径
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
+            query: "brand.pinyin",
+            postData: {},// 获取数据时的请求参数
+            listPath: "brands",// 响应list的json路径
+            keyPath: "name",// 用来向后台提交的字段的json路径
+            valuePath: "name"// 用来在页面显示的字段的json路径
         }
     },
     "no": {
@@ -97,35 +98,42 @@ Condition.addupRule("material", {
         }
     },
     "designer": {
-        label: "设计师",//中文名
-        type: "autofill",//类型
-        submitConfig: {//向后台提交的配置
-            name: "designerName",//接口中的参数名
-            op: "cn",//查询方式
-            validate: null//校验规则
+        label: "设计师",// 中文名
+        type: "autofill",// 类型
+        submitConfig: {// 向后台提交的配置
+            name: "designerName",// 接口中的参数名
+            op: "cn",// 查询方式
+            validate: null
+        // 校验规则
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "salesman": {
         label: "业务员",
         type: "autofill",
-        submitConfig: {//向后台提交的配置
-            name: "salesmanId",//接口中的参数名
-            op: "eq",//查询方式
+        submitConfig: {// 向后台提交的配置
+            name: "salesmanId",// 接口中的参数名
+            op: "eq",// 查询方式
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: {"user.status":"","departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": "",
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "fullpayTime": {
@@ -163,8 +171,8 @@ Condition.addupRule("material", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.payment,
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.material,
             postData: {},
             listPath: "balanceStatus",
             keyPath: "key",
@@ -179,8 +187,8 @@ Condition.addupRule("material", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.payment,
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.material,
             postData: {},
             listPath: "balanceType",
             keyPath: "key",
@@ -213,6 +221,6 @@ Condition.addupRule("material", {
             op: "between",
             validate: null
         }
-    }, 
-    
+    },
+
 });

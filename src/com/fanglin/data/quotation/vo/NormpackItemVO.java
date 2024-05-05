@@ -2,34 +2,37 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.data.material.vo.GoodsVO;
-
+import com.fanglin.data.material.vo.NoodsVO;
 
 public class NormpackItemVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 3442779774850710276L;
 
 	private long npiid;
 
 	private long npid;
 
-	private GoodsVO goods;
+	private String name;
+
+	private NoodsVO noods;
 
 	private String normunit;// 定额单位
 
 	private Integer normnum;// 定额数量
-	
+
 	private String storeunit;// 库房单位
 
 	private Integer storenum;// 库房数量
 
+	private int price;
+
 	public NormpackItemVO() {
 		super();
 	}
-	
-	public NormpackItemVO(GoodsVO goods) {
+
+	public NormpackItemVO(NoodsVO noods) {
 		super();
-		this.goods = goods;
+		this.noods = noods;
 	}
 
 	public long getNpiid() {
@@ -48,12 +51,20 @@ public class NormpackItemVO implements Serializable {
 		this.npid = npid;
 	}
 
-	public GoodsVO getGoods() {
-		return goods;
+	public String getName() {
+		return name;
 	}
 
-	public void setGoods(GoodsVO goods) {
-		this.goods = goods;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public NoodsVO getNoods() {
+		return noods;
+	}
+
+	public void setNoods(NoodsVO noods) {
+		this.noods = noods;
 	}
 
 	public String getNormunit() {
@@ -86,6 +97,14 @@ public class NormpackItemVO implements Serializable {
 
 	public void setStorenum(Integer storenum) {
 		this.storenum = storenum;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 }

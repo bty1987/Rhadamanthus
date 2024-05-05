@@ -1,5 +1,5 @@
 /**
- * @File Name		: AddReducePO.java
+ * @File Name		: java
  * @Package   	: com.fanglin.entity
  * @Version		: 1.0
  * @Date			: 2014-9-22
@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.AddReduceVO;
 
 @Entity
 @Table(name = "addreduce", catalog = "quotation")
@@ -111,6 +112,8 @@ public class AddReducePO implements Serializable {
 	private long consPrice;
 
 	private long total;
+
+	private short schedule;
 
 	private short status;
 
@@ -300,6 +303,15 @@ public class AddReducePO implements Serializable {
 		this.total = total;
 	}
 
+	@Column(name = "schedule")
+	public short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(short schedule) {
+		this.schedule = schedule;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -371,5 +383,23 @@ public class AddReducePO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	public AddReducePO ptvadvance(AddReduceVO addReduceVO) {
+
+		setManageRate(addReduceVO.getManageRate());
+		setManagePrice(addReduceVO.getManagePrice());
+		setManageDiscount(addReduceVO.getManageDiscount());
+		setTaxRate(addReduceVO.getTaxRate());
+		setTaxPrice(addReduceVO.getTaxPrice());
+		setTaxDiscount(addReduceVO.getTaxDiscount());
+		setUndisPrice(addReduceVO.getUndisPrice());
+		setDisPrice(addReduceVO.getDisPrice());
+		setUncalPrice(addReduceVO.getUncalPrice());
+		setCalPrice(addReduceVO.getCalPrice());
+		setConsPrice(addReduceVO.getConsPrice());
+		setTotal(addReduceVO.getTotal());
+
+		return this;
 	}
 }

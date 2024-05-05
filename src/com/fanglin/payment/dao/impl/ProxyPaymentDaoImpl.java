@@ -60,7 +60,7 @@ public class ProxyPaymentDaoImpl extends DaoImpl<ProxyPaymentPO> implements Prox
 
 				query.alias("proxyReceipt", "proxyReceipt");
 
-				if ("between".equals(filter.getOp())) {
+				if ("between".equals(op)) {
 					query.timeranges(ProxyPaymentPO.COLUMN_COLLECTTIME_STR, ProxyPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData());
 				} else {
 					query.add(query.getCriterion(ProxyPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData(), filter.getOp()));
@@ -69,11 +69,20 @@ public class ProxyPaymentDaoImpl extends DaoImpl<ProxyPaymentPO> implements Prox
 
 				query.alias("proxyReceipt", "proxyReceipt");
 
-				if ("between".equals(filter.getOp())) {
+				if ("between".equals(op)) {
 					query.timeranges(ProxyPaymentPO.COLUMN_CONFIRMTIME_STR, ProxyPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData());
 				} else {
 					query.add(query.getCriterion(ProxyPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData(), filter.getOp()));
 				}
+			} else if (field.equals("createTime")) {
+
+				if ("between".equals(op)) {
+					query.timeranges(ProxyPaymentPO.COLUMN_CREATETIME_STR, ProxyPaymentPO.COLUMN_CREATETIME_STR, filter.getData());
+				} else {
+					query.add(query.getCriterion(ProxyPaymentPO.COLUMN_CREATETIME_STR, filter.getData(), filter.getOp()));
+				}
+			} else if (field.equals("isexpire")) {
+				query.add(query.getCriterion(ProxyPaymentPO.COLUMN_ISEXPIRE_STR, Short.valueOf(data), op));
 			}
 		}
 	}

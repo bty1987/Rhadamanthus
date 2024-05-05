@@ -85,7 +85,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 	private PaymentService paymentService;
 
 	@Override
-	public void pageServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePayment, Integer company) {
+	public void pageServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePayment, Integer company) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -493,7 +493,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 	@Override
 	public void sendServicePayment(ServicePaymentVO servicePaymentVO) throws FLException {
 
-		System.out.println(servicePaymentVO.getSpid());
 		ServicePaymentPO servicePaymentPO = servicePaymentDao.get(servicePaymentVO.getSpid());
 
 		if (servicePaymentPO == null) {
@@ -502,7 +501,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 
 		String orderId = servicePaymentPO.getDecoration().getOrderId();
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=4", orderId, servicePaymentPO.getSpid()));
+		decorationService.sendMessage(orderId, "装修收款", String.format("服务待付款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=4", orderId, servicePaymentPO.getSpid()));
 
 	}
 

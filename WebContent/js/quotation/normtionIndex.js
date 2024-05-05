@@ -21,6 +21,28 @@ $(function() {
 
     var cardbtns = [];
 
+    var btnStatus = {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+
+            com.post(api.quotation.updateNormtionForStatus, {
+                "normtion.nid": v.nid,
+                "normtion.status": check ? 0 : 1
+            }, function(res) {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        init: function(v) {
+
+            return !v.status;
+        }
+    };
+
     var btnView = {
         name: "查看",
         clazz: "btn-success",
@@ -35,6 +57,8 @@ $(function() {
         }
     };
 
+    if (norm.pageConfig.pageBtn.contains("btnStatus"))
+        cardbtns.push(btnStatus);
     if (norm.pageConfig.pageBtn.contains("view"))
         cardbtns.push(btnView);
 
@@ -51,6 +75,10 @@ $(function() {
         name: "装修单号",
         prop: "decoration.orderId",
         clazz: "blue",
+        click: function(btn, v) {
+
+            tools.decoration.info(btn, v.decoration.orderId);
+        },
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("decorationOrderId");
@@ -63,6 +91,10 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("decorationHouseVillageName");
+        },
+        click: function(btn, v) {
+
+            tools.village.info(btn, v.decoration.house.village.no);
         }
     }, {
         field: "houseNumber",
@@ -72,6 +104,10 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+        },
+        click: function(btn, v) {
+
+            tools.house.info(btn, v.decoration.house.hid);
         }
     }, {
         field: "name",
@@ -81,6 +117,10 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("decorationCustomerName");
+        },
+        click: function(btn, v) {
+
+            tools.customer.info(btn, v.decoration.customer.cid);
         }
     }, {
         field: "currentName",
@@ -90,6 +130,10 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+        },
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.decoration.designer.userId);
         }
     }, {
         field: "currentName",
@@ -99,6 +143,10 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+        },
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.decoration.salesman.userId);
         }
     }, {
         field: "buildArea",
@@ -138,6 +186,10 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("createrCurrentName");
+        },
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
         }
     }, {
         field: "moodTotal",
@@ -165,6 +217,16 @@ $(function() {
         show: function(v) {
 
             return norm.pageConfig.propertyArr.contains("mricePriceNum");
+        }
+    }, {
+        field: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: constant.quotation().normtion.status.keys,
+        show: function(v) {
+
+            return norm.pageConfig.propertyArr.contains("status");
         }
     }];
 

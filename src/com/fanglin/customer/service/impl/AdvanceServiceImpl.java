@@ -33,10 +33,17 @@ public class AdvanceServiceImpl implements AdvanceService {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", decorationPO.getGrade()), decorationPO.getCompany());
+		String grade = decorationPO.getGrade();
+		int company = decorationPO.getCompany();
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", grade), company);
 
 		if (systemConfigPO == null) {
-			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", decorationPO.getCompany());
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", company);
+		}
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_PATH_STR", company);
 		}
 
 		if (systemConfigPO != null) platform = systemConfigPO.getValue();

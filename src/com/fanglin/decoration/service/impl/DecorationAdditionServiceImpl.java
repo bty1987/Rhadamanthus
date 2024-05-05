@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
@@ -66,6 +68,9 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 	@Autowired
 	private DecorationHolonomyDao decorationHolonomyDao;
 
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
+
 	@Override
 	public DecorationAdditionVO queryDecorationAdditionByOrderId(DecorationAdditionVO decorationAdditionVO) {
 
@@ -113,8 +118,18 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationVO.getOrderId());
 
+		if (quotationPO == null) {
+			throw new FLException(200017, "默认报价不存在");
+		}
+
+		ConstructionNodePO constructionNoderPO = constructionNodeDao.get(decorationPO.getProjectStatus());
+
+		if (constructionNoderPO == null) {
+			throw new FLException(130026, "工程节点不存在");
+		}
+
 		short status = decorationPO.getStatus();
-		long projectStatus = decorationPO.getProjectStatus();
+		long projectStatus = constructionNoderPO.getSort();
 
 		short schedule = 0;// 默认值 0.订单生成
 
@@ -146,19 +161,26 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 	public void updateDecorationForPayScale(DecorationPO decorationPO) throws FLException {
 
 		long payTotal = 0;
-		long factPrice = decorationPO.getFactPrice();
+		long factPrice = 0;
 
-		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
+		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT, DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
 		for (DecorationPaymentPO decorationPayment : decorationPaymentPOs) {
-			payTotal = Arith.add(payTotal, decorationPayment.getReferMoney());
+
+			if (decorationPayment.getSort() == 0) continue;
+
+			if (decorationPayment.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
+				payTotal = Arith.add(payTotal, decorationPayment.getReferMoney());
+			}
+
+			factPrice = Arith.add(factPrice, decorationPayment.getReferMoney());
 		}
 
-		short decorationPayScale = (short) (factPrice != 0 ? Arith.mul(Arith.div(payTotal, factPrice), 100) : 0);
+		long payScale = factPrice != 0 ? Arith.mul(Arith.div(payTotal, factPrice), 100) : 0;
 
-		decorationPO.setPaySacle(decorationPayScale > 100 ? (short) 100 : decorationPayScale);
+		decorationPO.setPaySacle((short) (payScale > 100 ? 100 : payScale));
 
 		decorationDao.update(decorationPO);
 	}

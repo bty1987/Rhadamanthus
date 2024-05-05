@@ -6,6 +6,7 @@ $(function() {
 
         modals: {
             updateQuotationVersionModal: com.focusPage("#updateQuotationVersionModal").on("show.bs.modal", function(a) {
+
                 com.clearValidator();
             }),
         },
@@ -37,11 +38,9 @@ $(function() {
         types: [],
     };
 
-    com.post(api.ds.quotation, {}, function(res) {
-        quotationVersion.types = res.quotationVersionType.split("key", "value");
+    quotationVersion.types = constant.data().quotationVersion.type.keys;
 
-        quotationVersion.items.type.bindData(res.quotationVersionType, "key", "value");
-    }, null, false);
+    quotationVersion.items.type.bindData(constant.data().quotationVersion.type.datas, "key", "value");
 
     var searcher = new Searcher();
 
@@ -176,6 +175,23 @@ $(function() {
         init: function(v) {
 
             return v.defaultFlag;
+        }
+    }, {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+
+            com.post(api.quotation.updateQuotationVersionForStatus, {
+                "quotationVersion.no": v.no,
+                "quotationVersion.status": check ? constant.data().quotationVersion.STATUS_ENABLE_INT : constant.data().quotationVersion.STATUS_DISABLE_INT
+            });
+
+            return false;
+        },
+        init: function(v) {
+
+            return !v.status;
         }
     }, ];
 

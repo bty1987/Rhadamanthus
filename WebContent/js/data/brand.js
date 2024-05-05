@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var brand = {
 
@@ -17,6 +17,7 @@ jQuery(function ($) {
             name: com.focusPage("#name", "#brandModal"),
             comment: com.focusPage("#comment", "#brandModal"),
             category: com.focusPage("#category", "#brandModal"),
+            atttype: com.focusPage("#atttype", "#brandModal"),
             supplier: com.focusPage("#supplier", "#brandModal"),
             kino: com.focusPage("#kino", "#brandModal"),
             kiname: com.focusPage("#kiname", "#brandModal"),
@@ -40,31 +41,34 @@ jQuery(function ($) {
 
     com.focusPage('#fl-statement').statement("主材品牌", "主材品牌信息列表");
 
-    brand.modals.brandModal.on('show.bs.modal', function (e) {
+    brand.items.atttype.bindData(constant.data.brand.atttype.datas, 'key', 'value');
+
+    brand.modals.brandModal.on('show.bs.modal', function(e) {
 
         com.clearValidator();
     });
 
-    brand.modals.deliveryModal.on('show.bs.modal', function (e) {
+    brand.modals.deliveryModal.on('show.bs.modal', function(e) {
 
         com.clearValidator();
     });
 
-    brand.modals.brandModal.on('hide.bs.modal', function (e) {
+    brand.modals.brandModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
         com.cleanTypeahead('supplier');
         com.closeTip();
     });
 
-    brand.modals.deliveryModal.on('hide.bs.modal', function (e) {
+    brand.modals.deliveryModal.on('hide.bs.modal', function(e) {
+
         com.clearValidator();
         com.focusPage("input[type='checkbox']").removeAttr("checked");
         // com.focusPage(":checked").prop("checked",false);
         com.closeTip();
     });
 
-    com.post(api.data.queryCategory, {}, function (res) {
+    com.post(api.data.queryCategory, {}, function(res) {
 
         brand.items.category.bindData(res.categorys, "cid", "name");
     });
@@ -74,13 +78,14 @@ jQuery(function ($) {
     }, "suppliers", "userId", "userName", null);
 
     var url = api.data.pageBrand;
-    var conditions = ["data-brand-category", "data-brand-name"];
+    var conditions = ["data-brand-name", "data-brand-category", "data-brand-atttype"];
 
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", url);
     searcher.condition(conditions);
     searcher.history("brandPostData");
+
     if (brand.pageType == "default") {
         searcher.button([{
             id: "addBrand",
@@ -110,6 +115,12 @@ jQuery(function ($) {
         prop: "supplier.currentName",
         clazz: "grey"
     }, {
+        fieId: "atttype",
+        name: "业务类型",
+        prop: "atttype",
+        clazz: "red",
+        dataset: constant.data().brand.atttype.keys,
+    }, {
         field: "comment",
         name: "说明",
         prop: "comment",
@@ -118,17 +129,18 @@ jQuery(function ($) {
     var linebtns = [{
         name: "配送状态",
         clazz: "btn-success",
-        handle: function (v) {
+        handle: function(v) {
+
             editDelivery(v);
         },
-        show: function () {
+        show: function() {
 
             return (brand.pageType == "default");
         }
     }, {
         name: "编辑",
         clazz: "btn-yellow",
-        handle: function (v) {
+        handle: function(v) {
 
             brand.brand = v;
 
@@ -137,32 +149,36 @@ jQuery(function ($) {
             brand.items.category.val(v.cid);
             brand.items.kino.val(v.kino);
             brand.items.kiname.val(v.kiname);
+            brand.items.atttype.val(v.atttype);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
 
             brand.modals.brandModal.modal("show");
+
             return false;
         },
-        show: function () {
+        show: function() {
 
             return (brand.pageType == "default");
         }
     }, {
         name: "结算",
         clazz: "btn-danger",
-        handle: function (v) {
+        handle: function(v) {
+
             params.data.brand = v;
 
-            com.popup4page("#brandPopUp", "/views/data/brandBalance.html", "结算");
+            com.popup4page("#brandPopUp", "/views/data/brand4balance.html", "结算");
         },
-        show: function () {
+        show: function() {
 
             return (brand.pageType == "default");
         }
     }, {
         name: "编辑",
         clazz: "btn-yellow",
-        handle: function (v) {
+        handle: function(v) {
+
             brand.brand = v;
             brand.items.name.val(v.name);
             brand.items.comment.val(v.comment);
@@ -175,14 +191,16 @@ jQuery(function ($) {
             brand.modals.brandModal.modal("show");
             return false;
         },
-        show: function (v) {
+        show: function(v) {
 
             return (brand.pageType == "comment");
         }
-    },];
+    }, ];
 
+    searcher.line(function(v) {
 
-    searcher.line("no", lineprops, linebtns).render();
+        return v.no + " " + v.name;
+    }, lineprops, linebtns).render();
 
     com.focusPage('#addBrand', '#pagenation').on("click", function() {
 
@@ -192,11 +210,13 @@ jQuery(function ($) {
 
     var contentDiv = $('<div class="col-md-12 hr8"></div>').appendTo(brand.items.itemlist);
 
-    $.each(constant.right().salesDeliveryStatusRight.status.keys, function (i, v) {
+    $.each(constant.right().salesDeliveryStatusRight.status.keys, function(i, v) {
+
         contentDiv.prepend(line(i, v));
     });
 
     function line(i, v) {
+
         var $div = $('<div></div>').addClass('dd-handle clearfix').text(v).appendTo(contentDiv);
 
         var $input = $('<input name="checkbox">').attr({
@@ -220,9 +240,10 @@ jQuery(function ($) {
 
         com.post(api.right.querySalesDeliveryStatusRight, {
             "salesDeliveryStatusRight.bid": brand.brand.bid
-        }, function (res) {
+        }, function(res) {
 
-            $.each(res.salesDeliveryStatusRights, function (i, v) {
+            $.each(res.salesDeliveryStatusRights, function(i, v) {
+
                 com.focusPage("input[type='checkbox'][value='" + v.status + "']").prop({
                     "checked": "checked"
                 });
@@ -237,7 +258,7 @@ jQuery(function ($) {
 
         var options = {};
 
-        com.focusPage("input[type='checkbox']:checked").each(function (i, v) {
+        com.focusPage("input[type='checkbox']:checked").each(function(i, v) {
 
             var that = $(this);
 
@@ -246,7 +267,7 @@ jQuery(function ($) {
             options["salesDeliveryStatusRights[" + i + "].status"] = that.val();
         });
 
-        com.post(api.right.updateSalesDeliveryStatusRight, options, function (res) {
+        com.post(api.right.updateSalesDeliveryStatusRight, options, function(res) {
 
             brand.modals.deliveryModal.modal("hide");
         });
@@ -264,7 +285,8 @@ jQuery(function ($) {
             'brand.cid': brand.items.category.val(),
             'brand.supplier.userId': com.typeahead("supplier"),
             'brand.kino': brand.items.kino.val(),
-            'brand.kiname': brand.items.kiname.val()
+            'brand.kiname': brand.items.kiname.val(),
+            'brand.atttype': brand.items.atttype.val()
         };
 
         if (brand.brand) {
@@ -273,7 +295,7 @@ jQuery(function ($) {
             url = api.data.updateBrand;
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
 
             searcher.doSearch();
         });
@@ -281,4 +303,3 @@ jQuery(function ($) {
         brand.modals.brandModal.modal("hide");
     }
 });
-

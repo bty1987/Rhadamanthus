@@ -18,49 +18,49 @@ import com.fanglin.salary.vo.SalaryVO;
 public class SalaryAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1273872797458372209L;
-	
+
 	@Autowired
 	private SalaryService salaryService;
-	
+
 	private SalaryVO salary;
-	
-	@Action(value="pageSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageSalary() throws FLException{
-	  
-		salaryService.pageSalary(getPaging(), getFilters());
-    
+
+	@Action(value = "pageSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalary() throws FLException {
+
+		salaryService.pageSalary(getPaging(), getFilters(), salary);
+
 		return "success";
 	}
-	
-	@Action(value="addSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addSalary() throws FLException{
-	  
+
+	@Action(value = "addSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSalary() throws FLException {
+
 		salaryService.addSalary(salary);
-    
+
 		return "success";
 	}
-	
-	@Action(value="passSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String passSalary() throws FLException{
-	  
-		salaryService.passSalary(salary,queryUserId());
-    
+
+	@Action(value = "passSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String passSalary() throws FLException {
+
+		salaryService.passSalary(salary, queryUserId());
+
 		return "success";
 	}
-	
-	@Action(value="rejectSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String rejectSalary() throws FLException{
-	  
-		salaryService.rejectSalary(salary,queryUserId());
-    
+
+	@Action(value = "rejectSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectSalary() throws FLException {
+
+		salaryService.rejectSalary(salary, queryUserId());
+
 		return "success";
 	}
-	
-	@Action(value="cancelSalary", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String cancelSalary() throws FLException{
-	  
-		salaryService.cancelSalary(salary,queryUserId());
-    
+
+	@Action(value = "cancelSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelSalary() throws FLException {
+
+		salaryService.cancelSalary(salary, queryUserId());
+
 		return "success";
 	}
 

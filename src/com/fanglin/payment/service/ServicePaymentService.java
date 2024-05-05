@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface ServicePaymentService {
 
-	public void pageServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePayment, Integer company);
+	public void pageServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePayment, Integer company) throws FLException;
 
 	public List<ServicePaymentVO> queryServicePaymentByOrderId(ServicePaymentVO ServicePaymentVO);
 

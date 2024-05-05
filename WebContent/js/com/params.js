@@ -9,6 +9,8 @@ var params = {
     selectCaching: {},
     apiHistory: {},
 
+    condition: {},
+
     approval: {},
     balance: {},
     building: {},

@@ -2,7 +2,7 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.material.vo.NoodsVO;
 
 public class NormoodVO implements Serializable {
 
@@ -10,29 +10,35 @@ public class NormoodVO implements Serializable {
 
 	private Long ngid;// 定定额材料id
 
-	private GoodsVO goods;// 商品
+	private String name;
+
+	private NoodsVO noods; // 定材
 
 	private QuotationItemVO quotationItem;// 报价id
 
 	private String normunit;// 定额单位
 
 	private Integer normnum;// 定额数量
-	
+
 	private String storeunit;// 库房单位
 
 	private Integer storenum;// 库房数量
-	
+
+	private Integer price;
+
 	private Short status;
 
 	private Long amount;
-	
+
 	public NormoodVO() {
 		super();
 	}
 
-	public NormoodVO(GoodsVO goods, QuotationItemVO quotationItem) {
+	public NormoodVO(NoodsVO noods, QuotationItemVO quotationItem) {
+
 		super();
-		this.goods = goods;
+
+		this.noods = noods;
 		this.quotationItem = quotationItem;
 	}
 
@@ -44,12 +50,20 @@ public class NormoodVO implements Serializable {
 		this.ngid = ngid;
 	}
 
-	public GoodsVO getGoods() {
-		return goods;
+	public String getName() {
+		return name;
 	}
 
-	public void setGoods(GoodsVO goods) {
-		this.goods = goods;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public NoodsVO getNoods() {
+		return noods;
+	}
+
+	public void setNoods(NoodsVO noods) {
+		this.noods = noods;
 	}
 
 	public QuotationItemVO getQuotationItem() {
@@ -59,7 +73,7 @@ public class NormoodVO implements Serializable {
 	public void setQuotationItem(QuotationItemVO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
-	
+
 	public String getNormunit() {
 		return normunit;
 	}
@@ -92,6 +106,14 @@ public class NormoodVO implements Serializable {
 		this.storenum = storenum;
 	}
 
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -107,5 +129,5 @@ public class NormoodVO implements Serializable {
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
-	
+
 }

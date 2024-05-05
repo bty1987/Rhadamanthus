@@ -15,23 +15,27 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "normpackItem", catalog = "data")
-public class NormpackItemPO implements Serializable{
+public class NormpackItemPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7190674851409830922L;
 
 	private long npiid;
 
 	private long npid;
 
-	private GoodsPO goods;
+	private String name;
+
+	private NoodsPO noods;
 
 	private String normunit;// 定额单位
 
 	private int normnum;// 定额数量
 
 	private String storeunit;// 库房单位
-	
+
 	private int storenum;// 库房数量
+
+	private int price;
 
 	public NormpackItemPO() {
 		super();
@@ -42,9 +46,9 @@ public class NormpackItemPO implements Serializable{
 		this.npiid = npiid;
 	}
 
-	public NormpackItemPO(GoodsPO goods) {
+	public NormpackItemPO(NoodsPO noods) {
 		super();
-		this.goods = goods;
+		this.noods = noods;
 	}
 
 	@Id
@@ -67,16 +71,25 @@ public class NormpackItemPO implements Serializable{
 		this.npid = npid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gid", referencedColumnName="gid")
-	public GoodsPO getGoods() {
-		return goods;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setGoods(GoodsPO goods) {
-		this.goods = goods;
+	public void setName(String name) {
+		this.name = name;
 	}
-	
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "nid", referencedColumnName = "nid")
+	public NoodsPO getNoods() {
+		return noods;
+	}
+
+	public void setNoods(NoodsPO noods) {
+		this.noods = noods;
+	}
+
 	@Column(name = "normunit")
 	public String getNormunit() {
 		return normunit;
@@ -112,5 +125,14 @@ public class NormpackItemPO implements Serializable{
 	public void setStorenum(int storenum) {
 		this.storenum = storenum;
 	}
-	
+
+	@Column(name = "price")
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
 }

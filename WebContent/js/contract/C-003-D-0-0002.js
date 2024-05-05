@@ -40,8 +40,6 @@ jQuery(function($) {
         current: new Date(),
     };
 
-    console.log(contractEdit.contractArgs);
-
     if (contractEdit.contractArgs.agent == "1") {
         com.focusPage(".agent", "#form").hide();
     }
@@ -67,11 +65,8 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        contractEdit.decorationType = res.typeness.split("key", "value");
-        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
-    });
+    contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -242,8 +237,6 @@ jQuery(function($) {
 
     quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensionItems, params.orderType, false, params.showType);
 
-    console.log(quotationUtils.quotationDetail.quotationFunctionAreaItemCs);
-
     contractEdit.table = {
         "insertWay": 1,
         "keyword": "家装项目列表",
@@ -318,7 +311,8 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    };
+    }
+    ;
 
     var displayFunc = (function() {
 
@@ -402,8 +396,6 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            console.log(data);
-
             data["cov-innerarea"] = data["con-innerarea"];
             data["cov-address"] = data["con-village-name"] + " " + data["con-housenumber"];
 
@@ -437,7 +429,6 @@ jQuery(function($) {
                 "table": JSON.stringify(contractEdit.table)
             };
 
-            console.log(data);
             console.log(options);
 
             var popup = com.focusPage("#popup-page");

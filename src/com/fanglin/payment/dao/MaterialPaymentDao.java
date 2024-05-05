@@ -19,31 +19,31 @@ import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
-	
+
 	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(List<Filter> filters);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByMids(List<Long> mids);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMid(long mid);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMid(long mid);
 
 	public List<MaterialPaymentPO> queryMaterialPaymentByMidAType(long mid, Short paymentType);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypes(long msoId, List<Short> paymentTypes);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypeAStatus(long mid, Short paymentType, Short paymentStatus);
 
 	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMrId(long mrId);
-	
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByReceiptId(long mrId);
-	
+
 	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String no, Short paymentType);
-	
+
 	public int countMaterialPaymentByMidAType(long mid, Short paymentType);
 
 }

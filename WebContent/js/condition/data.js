@@ -53,6 +53,52 @@ Condition.addupRule("data", {
         }
     },
 
+    "houseLa-name": {
+        label: "户型名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "houseLa-village": {
+        label: "楼盘名称",
+        type: "text",
+        submitConfig: {
+            name: "villageName",
+            op: "cn",
+            validate: null
+        }
+    },
+    "houseLa-layout": {
+        label: "房型",
+        type: "text",
+        submitConfig: {
+            name: "layout",
+            op: "cn",
+            validate: null
+        }
+    },
+    "houseLa-area": {
+        label: "面积",
+        type: "select",
+        submitConfig: {
+            name: "area",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.building,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "area",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "receiptType-name": {
         label: "名称",
         type: "text",
@@ -138,9 +184,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.quotation,
-            postData: {},
-            listPath: "quotationVersionType",
+            url: null,
+            postData: null,
+            listPath: constant.data().quotationVersion.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -252,6 +298,16 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
+    "quotation-price-createTime": {
+        label: "创建时间",
+        type: "select",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "between",
+            validate: null
+        }
+    },
     "quotation-normadd-name": {
         label: "名称",
         type: "text",
@@ -347,12 +403,13 @@ Condition.addupRule("data", {
             validate: null
         // 校验规则
         },
-        dataSource: {// 从后台取数据的各种配置
-            url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
-            postData: {},// 获取数据时的请求参数
-            listPath: "autoFillKeyValue",// 响应list的json路径
-            keyPath: "value",// 用来向后台提交的字段的json路径
-            valuePath: "value"// 用来在页面显示的字段的json路径
+        dataSource: { // 从后台取数据的各种配置
+            url: api.data.queryBrandByPinyin, // 获取数据要调用的接口
+            query: "brand.pinyin",
+            postData: {}, // 获取数据时的请求参数
+            listPath: "brands", // 响应list的json路径
+            keyPath: "name", // 用来向后台提交的字段的json路径
+            valuePath: "name" // 用来在页面显示的字段的json路径
         }
     },
     "model-righter": {
@@ -385,6 +442,15 @@ Condition.addupRule("data", {
         }
     },
     "goods-name": {
+        label: "商品名",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "goods-name-one": {
         label: "商品名",
         type: "text",
         submitConfig: {
@@ -452,6 +518,28 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
+    "brand-atttype": {
+        label: "业务类型",
+        type: "select",
+        submitConfig: {
+            name: "atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "内销"
+            }, {
+                key: "1",
+                value: "外销"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "category-name": {
         label: "名称",
         type: "text",
@@ -459,6 +547,50 @@ Condition.addupRule("data", {
             name: "name",
             op: "eq",
             validate: null
+        }
+    },
+    "category-isCoupon": {
+        label: "券标识",
+        type: "select",
+        submitConfig: {
+            name: "isCoupon",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "优惠"
+            }, {
+                key: "1",
+                value: "标准"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "category-isCount": {
+        label: "统计标识 ",
+        type: "select",
+        submitConfig: {
+            name: "isCount",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "统计"
+            }, {
+                key: "1",
+                value: "标准"
+            }],
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "goods-brand-name": {
@@ -633,6 +765,16 @@ Condition.addupRule("data", {
             listPath: "status",
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+
+    "noods-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
         }
     },
 
@@ -1128,6 +1270,57 @@ Condition.addupRule("data", {
         }
     },
 
+    "decoration-matching-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "decoration-matching-typeness": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "typeness",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryDecorationAtttype,
+            postData: {},
+            listPath: "decorationAtttypes",
+            keyPath: "key",
+            valuePath: "name"
+        }
+    },
+
+    "decoration-matching-isShow": {
+        label: "显示",
+        type: "select",
+        submitConfig: {
+            name: "isShow",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().decorationMatching.isShow.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "decoration-busitype-status": {
         label: "状态",
         type: "select",
@@ -1207,4 +1400,149 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
+    "assistance-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "normood-quotationItem": {
+        label: "报价项",
+        type: "text",
+        submitConfig: {
+            name: "quotationItem.name",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "normood-quotation-version": {
+        label: "报价版本",
+        type: "select",
+        submitConfig: {
+            name: "quotationItem.quotationVersion.no",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.quotation.queryQuotationVersion,
+            postData: {},
+            listPath: "quotationVersions",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "normood-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "normood-no": {
+        label: "编号",
+        type: "text",
+        submitConfig: {
+            name: "quotationItem.no",
+            op: "eq",
+            validate: null
+        }
+    },
+    "normood-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().normood.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "normrice-quotationItem": {
+        label: "报价项",
+        type: "text",
+        submitConfig: {
+            name: "quotationItem.name",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "normrice-quotation-version": {
+        label: "报价版本",
+        type: "select",
+        submitConfig: {
+            name: "quotationItem.quotationVersion.no",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.quotation.queryQuotationVersion,
+            postData: {},
+            listPath: "quotationVersions",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "normrice-constructionNode": {
+        label: "施工节点",
+        type: "text",
+        submitConfig: {
+            name: "constructionNode.name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "normrice-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().normood.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "constructionPace-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "constructionPace-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().constructionPace.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
 });

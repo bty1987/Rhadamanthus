@@ -72,6 +72,8 @@ public class TaskPO implements Serializable {
 
 	private short isShow;
 
+	private String comment;
+
 	public TaskPO() {
 		super();
 	}
@@ -189,6 +191,15 @@ public class TaskPO implements Serializable {
 
 	public void setIsShow(short isShow) {
 		this.isShow = isShow;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Column(name = "keyWord")

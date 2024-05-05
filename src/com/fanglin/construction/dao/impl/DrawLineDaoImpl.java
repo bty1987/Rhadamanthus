@@ -21,7 +21,9 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.construction.dao.DrawLineDao;
 import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("drawLineDao")
@@ -32,7 +34,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 
 	@Override
-	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, int company) {
+	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DrawLinePO> query = pagingQuery(paging, DrawLinePO.class);
 
@@ -44,15 +46,13 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 	}
 
 	@Override
-	public List<DrawLinePO> queryDrawLine(List<Filter> filters, int company) {
+	public List<DrawLinePO> queryDrawLine(List<Filter> filters, int company) throws FLException {
 
-		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(), DrawLinePO.class);
+		PagingQuery<DrawLinePO> query = pagingQuery(new Paging(0, 99), DrawLinePO.class);
 
 		query.add(query.getCriterion("company", company, "eq"));
 
 		queryFilterExcute(query, filters);
-
-		query.notPaging();
 
 		return query.list();
 	}
@@ -85,11 +85,11 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
 
-		query.alias("decoration", "decoration");
+		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
 
 		for (Filter filter : filters) {
 
@@ -97,17 +97,7 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("orderId".equals(field)) {
-				query.add(query.getCriterion("decoration.orderId", (data), op));
-			} else if ("drawLineGroupName".equals(field)) {
-				query.add(query.getCriterion("drawLineGroupId", (data), op));
-			} else if ("salesman".equals(field)) {
-				query.alias("decoration.salesman", "salesman");
-				query.add(query.getCriterion("salesman.userId", (data), op));
-			} else if ("designer".equals(field)) {
-				query.alias("decoration.designer", "designer");
-				query.add(query.getCriterion("designer.userId", (data), op));
-			} else if ("status".equals(field)) {
+			if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.parseShort(data), op));
 			} else if ("actualDate".equals(field)) {
 

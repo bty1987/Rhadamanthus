@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesDeliveryItemDao;
 import com.fanglin.sales.po.SalesDeliveryItemPO;
@@ -21,7 +22,7 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 	}
 
 	@Override
-	public List<SalesDeliveryItemPO> pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company) {
+	public List<SalesDeliveryItemPO> pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
@@ -35,7 +36,7 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 	}
 
 	@Override
-	public List<SalesDeliveryItemPO> pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, int uid) {
+	public List<SalesDeliveryItemPO> pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, int uid) throws FLException {
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
@@ -49,7 +50,7 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 	}
 
 	@Override
-	public List<SalesDeliveryItemPO> pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, int company, int uid) {
+	public List<SalesDeliveryItemPO> pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, int company, int uid) throws FLException {
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
@@ -83,9 +84,11 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 		return count.intValue();
 	}
 
-	private void queryFilterExcute(PagingQuery<SalesDeliveryItemPO> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<SalesDeliveryItemPO> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
+
+		SalesDaoImpl.queryFilterExcute(query, filters, "sales");
 
 		for (Filter filter : filters) {
 
@@ -93,20 +96,10 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			query.alias("sales", "sales");
-
-			if (SalesDeliveryItemPO.COLUMN_SALESNO_STR.equals(field)) {
-				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESNO_STR, data, op));
-			} else if ("status".equals(field)) {
+			if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			} else if ("statuses".equals(field)) {
 				query.add(query.getCriterion("status", filter.getShorts(), "in"));
-			} else if (SalesDeliveryItemPO.COLUMN_SALESBRAND_STR.equals(field)) {
-				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESBRAND_STR, data, op));
-			} else if (SalesDeliveryItemPO.COLUMN_SALESORDERID_STR.equals(field)) {
-				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESORDERID_STR, data, op));
-			} else if (SalesDeliveryItemPO.COLUMN_SALESCATEGROY_STR.equals(field)) {
-				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESCATEGROY_STR, data, op));
 			} else if (SalesDeliveryItemPO.COLUMN_CREATETIME_STR.equals(field)) {
 				query.timeranges(SalesDeliveryItemPO.COLUMN_CREATETIME_STR, filter.getData());
 			} else if (SalesDeliveryItemPO.COLUMN_TRANTIME_STR.equals(field)) {

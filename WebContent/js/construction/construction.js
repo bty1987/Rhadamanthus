@@ -62,33 +62,73 @@ jQuery(function($) {
 
     searcher.base("constructionCondList", "constructionPagenation", "constructionResultList", api.construction.pageConstructionForBase);
 
-    searcher.condition(["construction-orderId", "construction-village-name", "construction-houseNumber-name", "construction-designer", "construction-schedule", "construction-projectStatusFlag"]);
+    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus"]);
 
     var lineprops = [{
         field: "decoration",
-        name: "楼盘名",
+        name: "装修单",
+        prop: "decoration.orderId",
+        clazz: "blue",
+        click: function(btn, v) {
+
+            tools.decoration.info(btn, v.decoration.orderId);
+        }
+    }, {
+        field: "village",
+        name: "楼盘",
         prop: "decoration.house.village.name",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.house.info(btn, v.decoration.house.hid);
+        }
     }, {
         field: "houseNumber",
-        name: "楼牌号",
+        name: "楼号",
         prop: "decoration.house.houseNumber",
         clazz: "grey"
+    }, {
+        field: "customer",
+        name: "客户",
+        prop: "decoration.customer.name",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.customer.info(btn, v.decoration.customer.cid);
+        }
     }, {
         field: "designer",
         name: "设计师",
         prop: "decoration.designer.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.decoration.designer.userId);
+        }
     }, {
         field: "supervisor",
         name: "监理",
         prop: "supervisor.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.supervisor.userId);
+        }
     }, {
         field: "orderTotalPrice",
         name: "总价",
         prop: "decoration.orderTotalPrice",
         clazz: "blue"
+    }, {
+        field: "orderTotalPrice",
+        name: "合同额",
+        prop: "decoration.orderTotalPrice",
+        clazz: "blue"
+    }, {
+        field: "version",
+        name: "报价版本",
+        prop: "decoration.version.name",
+        clazz: "grey"
     }, {
         field: "buildArea",
         name: "面积",
@@ -124,7 +164,11 @@ jQuery(function($) {
         field: "currentName",
         name: "锁定人",
         prop: "locker.currentName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.locker.userId);
+        }
     }, {
         field: "lockTime",
         name: "锁定时间",
@@ -136,7 +180,7 @@ jQuery(function($) {
         prop: "accessory",
         dataset: constant.construction().construction.isAccessory.keys,
         clazz: "red"
-    }, ];
+    }];
 
     var linebtns = [{
         name: "信息",
@@ -219,7 +263,7 @@ jQuery(function($) {
             params.construction.orderId = v.decoration.orderId;
             params.construction.cid = v.cid;
 
-            com.popup4page("#stockRecordPopUp", "/views/construction/accessory.html", "工程辅料")
+            com.popup4page("#stockRecordPopUp", "/views/construction/accessory.html", "工程辅料");
 
             return false;
         }

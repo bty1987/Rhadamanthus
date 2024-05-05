@@ -2,10 +2,15 @@ package com.fanglin.salary.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.salary.po.SalaryPO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 public class SalaryVO implements Serializable {
 
@@ -141,6 +146,18 @@ public class SalaryVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public SalaryVO init(SalaryPO salaryPO, String comment) {
+
+		BeanUtil.copyProperties(salaryPO, this, Arrays.asList("user", "operater"));
+
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		setComment(comment);
+
+		return this;
 	}
 
 }

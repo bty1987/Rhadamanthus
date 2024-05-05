@@ -43,6 +43,8 @@ public class UpgradePO implements Serializable {
 
 	private long fileSize;
 
+	private short isRestart;
+
 	private short status;
 
 	@Id
@@ -108,6 +110,15 @@ public class UpgradePO implements Serializable {
 
 	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
+	}
+
+	@Column(name = "isRestart")
+	public short getIsRestart() {
+		return isRestart;
+	}
+
+	public void setIsRestart(short isRestart) {
+		this.isRestart = isRestart;
 	}
 
 	@Column(name = "status")

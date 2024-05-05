@@ -11,7 +11,7 @@ public interface RoleService {
 
 	public void pageRole(Paging paging, List<Filter> filters, Integer company);
 
-	public List<RoleVO> querylRole(Integer company);
+	public List<RoleVO> queryRole(Integer company);
 
 	public RoleVO queryRoleByRid(RoleVO roleVO);
 

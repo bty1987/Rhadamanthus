@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name = "recruitment", catalog = "communion")
 public class RecruitmentPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6378706172020278109L;
 
 	public static final String COLUMN_STATUS_STR = "status";
 

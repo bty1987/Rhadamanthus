@@ -1,32 +1,4 @@
 {
-  "isType" :[
-      {"key":"0", "value":"支出"},
-      {"key":"1", "value":"收款"},
-      {"key":"2", "value":"提款"}
-  ],  "isStatus" :[
-      {"key":"0", "value":"初始"},
-      {"key":"1", "value":"完结"}
-  ],  "isBalanceAccountType" :[
-      {"key":"0", "value":"结算"},
-      {"key":"1", "value":"出纳"}
-  ], "isBalanceAccountStatus" :[
-      {"key":"0", "value":"有效"},
-      {"key":"1", "value":"无效"}
-  ], "balanceSalesStatus" :[
-      {"key":"0", "value":"初始"},
-      {"key":"1", "value":"锁定"},
-      {"key":"2", "value":"结算"},
-      {"key":"3", "value":"完结"}
-  ],  "balanceSalesGrade" :[
-      {"key":"A", "value":"A"},
-      {"key":"B", "value":"B"}
-  ],  "balanceCutpayType" :[
-      {"key":"0", "value":"扣款"},
-      {"key":"1", "value":"返款"}
-  ],  "balanceDccountType" :[
-      {"key":"0", "value":"扣款"},
-      {"key":"1", "value":"返款"}
-  ],
   "errorCode": 0,
   "errorMsg": null
 }

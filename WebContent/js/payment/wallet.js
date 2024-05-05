@@ -26,8 +26,8 @@ jQuery(function ($) {
             transferBtn: com.focusPage("#transferBtn", "#wallet"),
             transfergetCode: com.focusPage("#transfergetCode", "#wallet")
         },
-        types: constant.payment.wallet.type.keys,
-        status: constant.payment.wallet.status.keys,
+        types: constant.payment().wallet.type.keys,
+        status: constant.payment().wallet.status.keys,
         currentWallet: null,
         //phoneCode: null,
         phoneCode: "1111",

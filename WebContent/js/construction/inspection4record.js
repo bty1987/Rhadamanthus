@@ -94,7 +94,7 @@ jQuery(function ($) {
             drawLine: function (v) {
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
@@ -155,9 +155,9 @@ jQuery(function ($) {
     function delRecord(irId) {
         com.showConfirm("确认删除吗?", function () {
 
-                com.post(api.construction.deleteInspectionRecord, {"irIds[0]": irId}, function (res) {
-                    searcher.doSearch();
-                });
+            com.post(api.construction.deleteInspectionRecord, {"irIds[0]": irId}, function (res) {
+                searcher.doSearch();
+            });
 
         });
     }

@@ -4,7 +4,7 @@ Condition.addupRule("salary", {
         label: "姓名",
         type: "autofill",
         submitConfig: {
-            name: "userName",
+            name: "userId",
             op: "eq",
             validate: null
         },
@@ -290,5 +290,164 @@ Condition.addupRule("salary", {
             keyPath: "key",
             valuePath: "value"
         }
-    }
-})
+    },
+
+    "decoraitonSalary-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "decoraitonSalary-belonger": {
+        label: "归属人",
+        type: "autofill",
+        submitConfig: {
+            name: "userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": "",
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "decoraitonSalary-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.salary().decorationSalary.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "decoraitonSalary-atttype": {
+        label: "业务类型",
+        type: "select",
+        submitConfig: {
+            name: "atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.salary().decorationSalary.atttype.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "decoraitonSalary-stage": {
+        label: "阶段",
+        type: "select",
+        submitConfig: {
+            name: "stage",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.salary().decorationSalary.stage.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "decoraitonSalary-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validata: null
+        }
+    },
+
+    "materialSalary-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "materialSalary-sales-no": {
+        label: "销售单号",
+        type: "text",
+        submitConfig: {
+            name: "sales.no",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "materialSalary-belonger": {
+        label: "归属人",
+        type: "autofill",
+        submitConfig: {
+            name: "userId",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialSalary-stage": {
+        label: "阶段",
+        type: "select",
+        submitConfig: {
+            name: "stage",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.salary,
+            postData: {},
+            listPath: "stage",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialSalary-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validata: null
+        }
+    },
+
+});

@@ -37,12 +37,7 @@ $(function() {
         quotetion: null,
         cuotetion: null,
 
-        canChangeStatus: 0,
-        editFlg: 0,
         version: [],
-
-        leftflg: false,
-        rightflg: false,
 
         replicaType: [{
             "key": "0",
@@ -51,10 +46,16 @@ $(function() {
             "key": "1",
             "value": "装修单号"
         }, ],
-        pageConfig: null
+
+        pageConfig: null,
+
+        datasets: {
+            "quotetionLimit": 20,
+            "quotetionNum": 0,
+        }
     };
 
-    com.focusPage('#quotetion-statement').statement("报价", "报价列表");
+    com.focusPage('#quotetion-statement').statement("报价", "预报");
 
     com.post(api.quotation.queryQuotationVersion, {}, function(res) {
 
@@ -67,6 +68,14 @@ $(function() {
     }, null, false);
 
     quotetion.items.replicaType.bindData(quotetion.replicaType, 'key', 'value');
+
+    com.post(api.system.querySystemConfigByKey, {
+        "systemConfig.key": "quotetionlimit"
+    }, function(res) {
+
+        if (res.systemConfig.value)
+            quotetion.datasets.quotetionLimit = res.systemConfig.value;
+    }, null, false);
 
     quotetion.items.replicaOrderId.on("blur", function() {
 
@@ -323,7 +332,10 @@ $(function() {
         }
     }];
 
-    searcher.card("name", cardprops, cardbtns).render();
+    searcher.card("name", cardprops, cardbtns).render(function() {
+
+        init();
+    });
 
     function getConfig(page, type) {
 
@@ -391,5 +403,24 @@ $(function() {
         }, null, false);
 
         return pageConfig;
+    }
+
+    function init() {
+
+        quotetion.datasets.quotetionNum = com.focusPage("#resultList").find("div.widget-box").length;
+
+        var sub = quotetion.datasets.quotetionLimit - quotetion.datasets.quotetionNum;
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-4").prependTo(com.focusPage("#quotetionContent"));
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-green").appendTo($box);
+        var name = $('<h4></h4>').attr('id', 'worksheet4content').text("预报单").appendTo($header);
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('可用数量: ' + quotetion.datasets.quotetionLimit)).appendTo($main);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('已用数量: ' + quotetion.datasets.quotetionNum)).appendTo($main);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('剩余数量: ' + sub)).appendTo($main);
+
     }
 });

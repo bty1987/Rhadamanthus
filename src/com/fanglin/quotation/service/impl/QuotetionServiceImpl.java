@@ -115,7 +115,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotetionVO.getVersion());
 
-		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 20 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
@@ -144,13 +144,13 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionFunctionAreaDao.save(autogeneration);
 
 		QuotetionFunctionAreaItemPO trafficPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
-		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), 0, 0, "0", 0, QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
 		QuotetionFunctionAreaItemPO managePrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
-		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), 0, 0, "0", 0, QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
 		QuotetionFunctionAreaItemPO taxPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
-		convertQuotetionPOForAdvance(taxPrice, "税金", "", "其他", quotationVersionPO.getTaxRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_TAX_INT, quotationVersionPO.getTaxDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		convertQuotetionPOForAdvance(taxPrice, "税金", "", "其他", quotationVersionPO.getTaxRate(), 0, 0, "0", 0, QuotetionFunctionAreaItemPO.TYPE_TAX_INT, quotationVersionPO.getTaxDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
 		quotetionFunctionAreaItemDao.save(trafficPrice);
 		quotetionFunctionAreaItemDao.save(managePrice);
@@ -237,7 +237,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
 
-		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 20 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
@@ -268,7 +268,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
 
-		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 20 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
@@ -293,7 +293,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
 
-		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
+		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 20 : Integer.parseInt(quotetionlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
@@ -439,15 +439,18 @@ public class QuotetionServiceImpl implements QuotetionService {
 		if (quotetionVO.getTaxDiscount() != null) quotetionPO.setTaxDiscount(quotetionVO.getTaxDiscount());
 
 		quotetionPO.setCostPrice(quotetionVO.getCostPrice());
+		quotetionPO.setUnachePrice(quotetionVO.getUnachePrice());
 
 	}
 
-	private void convertQuotetionPOForAdvance(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO, String name, String measurementUnit, String workType, int unitPrice, String formula, int num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content, short subtype) {
+	private void convertQuotetionPOForAdvance(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO, String name, String measurementUnit, String workType, int unitPrice, int addPrice, int subPrice, String formula, int num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content, short subtype) {
 
 		quotetionFunctionAreaItemPO.setName(name);
 		quotetionFunctionAreaItemPO.setMeasurementUnit(measurementUnit);
 		quotetionFunctionAreaItemPO.setWorkType(workType);
 		quotetionFunctionAreaItemPO.setUnitPrice(unitPrice);
+		quotetionFunctionAreaItemPO.setAddPrice(addPrice);
+		quotetionFunctionAreaItemPO.setSubPrice(subPrice);
 		quotetionFunctionAreaItemPO.setFormula(formula);
 		quotetionFunctionAreaItemPO.setNum(num);
 		quotetionFunctionAreaItemPO.setType(type);

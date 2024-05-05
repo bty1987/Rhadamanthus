@@ -34,7 +34,11 @@ public class QuotationFunctionAreaItemMO implements Serializable {
 
 	private String workType;
 
+	private int addPrice;
+
 	private int unitPrice;
+
+	private int subPrice;
 
 	private String formula;
 
@@ -49,6 +53,8 @@ public class QuotationFunctionAreaItemMO implements Serializable {
 	private short discount;
 
 	private long quotationFunctionAreaId;
+
+	private long quotationItemId;
 
 	private String content;
 
@@ -92,6 +98,15 @@ public class QuotationFunctionAreaItemMO implements Serializable {
 		this.workType = workType;
 	}
 
+	@Column(name = "addPrice")
+	public int getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(int addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	@Column(name = "unitPrice")
 	public int getUnitPrice() {
 		return unitPrice;
@@ -99,6 +114,15 @@ public class QuotationFunctionAreaItemMO implements Serializable {
 
 	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	@Column(name = "subPrice")
+	public int getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(int subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	@Column(name = "formula")
@@ -155,12 +179,22 @@ public class QuotationFunctionAreaItemMO implements Serializable {
 		this.discount = discount;
 	}
 
+	@Column(name = "quotationFunctionAreaId")
 	public long getQuotationFunctionAreaId() {
 		return quotationFunctionAreaId;
 	}
 
 	public void setQuotationFunctionAreaId(long quotationFunctionAreaId) {
 		this.quotationFunctionAreaId = quotationFunctionAreaId;
+	}
+
+	@Column(name = "quotationItemId")
+	public long getQuotationItemId() {
+		return quotationItemId;
+	}
+
+	public void setQuotationItemId(long quotationItemId) {
+		this.quotationItemId = quotationItemId;
 	}
 
 	@Column(name = "content")

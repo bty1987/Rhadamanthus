@@ -9,11 +9,20 @@ jQuery(function($) {
 
         items: {
             changeReason: com.focusPage("#changeReason"),
-            updateBelongRate: com.focusPage("#updateBelongRate")
+            updateBelongRate: com.focusPage("#updateBelongRate"),
+
+            defaultFlag: com.focusPage("#defaultFlag"),
+            updateDefaultFlag: com.focusPage("#updateDefaultFlag"),
         },
         modals: {
             approveModal: com.focusPage("#approveModal"),
             updateModal: com.focusPage("#updateModal")
+        },
+        btns: {
+            appendUserBtn: com.focusPage("#appendUserBtn"),
+            applyApprovalBtn: com.focusPage("#applyApprovalBtn"),
+            updateBelongBtn: com.focusPage("#updateBelongBtn"),
+            submitApproveBtn: com.focusPage("#submitApproveBtn"),
         },
 
         lastEditId: -1,
@@ -21,7 +30,7 @@ jQuery(function($) {
         original: "",
     };
 
-    com.focusPage('#fl-statement').statement("订单归属", "归属详细信息");
+    com.focusPage('#fl-statement').statement("装修归属", "归属信息");
 
     decorationBelong.modals.approveModal.on('hide.bs.modal', function(e) {
 
@@ -71,17 +80,12 @@ jQuery(function($) {
         "dept.type.dtid": decorationBelong.type != 0 ? 3 : 1
     }, 'deptList', 'did', 'name', null);
 
-    com.focusPage("#defaultFlag").switchBtn("isOrNot");
-    com.focusPage("#updateDefaultFlag").switchBtn("isOrNot");
+    decorationBelong.items.defaultFlag.switchBtn("isOrNot");
+    decorationBelong.items.updateDefaultFlag.switchBtn("isOrNot");
 
-    com.focusPage('#detailBckBtn').on("click", function() {
+    decorationBelong.btns.applyApprovalBtn.on("click", applyApproval);
 
-        com.switchPage(api.index.decorationBelongIndex.url);
-    });
-
-    com.focusPage('#saveBelongInfoBtn').on("click", saveOrderBelongInfo);
-
-    com.focusPage("#addNewUserBtn").on("click", function(event) {
+    decorationBelong.btns.appendUserBtn.on("click", function(event) {
 
         if (com.validate("addUserModal"))
             return false;
@@ -123,7 +127,7 @@ jQuery(function($) {
         return false;
     });
 
-    com.focusPage("#cApproveSaveBtn").on("click", function() {
+    decorationBelong.btns.submitApproveBtn.on("click", function() {
 
         if (com.validate("approveModal")) {
             return false;
@@ -216,9 +220,11 @@ jQuery(function($) {
             "value": comment
         }, ];
 
-        options["code"] = "PROC-AA84B687-1572-4203-85D9-5ADE611042A0"; // test
-        options["code"] = "PROC-12D5DBE9-1974-4B95-89C9-0BB85DA00CEB"; // product
-        options["forms"] = JSON.stringify(args);
+        if (com.focusPage("#dingApprove", "#violation").prop("checked")) {
+            options["code"] = "PROC-AA84B687-1572-4203-85D9-5ADE611042A0"; // test
+            options["code"] = "PROC-12D5DBE9-1974-4B95-89C9-0BB85DA00CEB"; // product
+            options["forms"] = JSON.stringify(args);
+        }
 
         com.post(api.approval.submitApprovalForDecorationBelong, options, function(res) {
 
@@ -229,7 +235,7 @@ jQuery(function($) {
         com.focusPage("#approveModal").modal("hide");
     });
 
-    com.focusPage('#updateBtn').on('click', function() {
+    decorationBelong.btns.updateBelongBtn.on('click', function() {
 
         if (com.validate("updateModal")) {
             return false;
@@ -280,12 +286,12 @@ jQuery(function($) {
 
         $btnUpdate.click(function() {
 
-            dialogUpdate(v.belonger.userId);
+            updateBelong(v.belonger.userId);
         });
 
         $btnDel.click(function() {
 
-            delRow(v.belonger.userId);
+            deleteBelong(v.belonger.userId);
         });
 
         $divBtnWrap.append($btnUpdate).append($btnDel).appendTo($h4);
@@ -296,7 +302,7 @@ jQuery(function($) {
         return $liLine;
     }
 
-    function dialogUpdate(belongUserId) {
+    function updateBelong(belongUserId) {
 
         decorationBelong.belongUserId = belongUserId;
 
@@ -315,7 +321,7 @@ jQuery(function($) {
         com.focusPage('#updateModal').modal('show');
     }
 
-    function delRow(id) {
+    function deleteBelong(id) {
 
         com.focusPage('#' + id).remove();
     }
@@ -328,7 +334,7 @@ jQuery(function($) {
         com.focusPage('#belongRate').val(0);
     }
 
-    function saveOrderBelongInfo() {
+    function applyApproval() {
 
         com.cleanItems(decorationBelong.items);
 

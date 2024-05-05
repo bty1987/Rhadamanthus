@@ -90,8 +90,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 
 			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.queryFunctionAreaItemByIdAFunctionAreaId(faid, qiid);
 
-			if (functionAreaItemPO != null)
-				continue;
+			if (functionAreaItemPO != null) continue;
 
 			functionAreaItemPO = new FunctionAreaItemPO();
 
@@ -113,12 +112,12 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 		if (functionAreaItemPO == null) {
 			throw new FLException(200010, "功能区不存在");
 		}
-		
+
 		functionAreaItemPO.setFormula(functionAreaItemVO.getFormula());
 
 		functionAreaItemDao.update(functionAreaItemPO);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteFunctionAreaItemByIds(List<Long> qfiids) {

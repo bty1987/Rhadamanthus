@@ -22,7 +22,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right orange" for="taskName">结算名</label>
                         <div class="col-sm-9">
-                            <input id="balanceSales" type="text" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            <input id="balanceSales" type="text" class="col-xs-10 col-sm-5 v_required v_typeahead" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                         </div>
                     </div>
                 </form>
@@ -42,5 +42,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/utils/salesPageUtils.js','js/sales/salesBalance4check.js','js/com/utils.js']);
+    $.loadScript(['js/utils/salesPageUtils.js','js/sales/salesBalance4check.js']);
 </script>

@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.OalesPayDao;
 import com.fanglin.sales.po.OalesPayOO;
@@ -22,7 +23,7 @@ public class OalesPayDaoImpl extends DaoImpl<OalesPayPO> implements OalesPayDao 
 	}
 
 	@Override
-	public List<OalesPayOO> pageOalesPay(Paging paging, List<Filter> filters) {
+	public List<OalesPayOO> pageOalesPay(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<OalesPayOO> query = pagingQuery(paging, OalesPayOO.class);
 
@@ -51,29 +52,18 @@ public class OalesPayDaoImpl extends DaoImpl<OalesPayPO> implements OalesPayDao 
 		return count.intValue();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
+
+		OalesDaoImpl.queryFilterExecute(query, filters, "oales");
 
 		for (Filter filter : filters) {
 
 			String field = filter.getField();
 			String data = filter.getData();
-			String op = filter.getOp();
-			query.alias("oales", "oales");
-			if ("no".equals(field)) {
-				query.add(query.getCriterion("oales.no", data, op));
-			} else if ("orderId".equals(field)) {
-				query.add(query.getCriterion("oales.decoration.orderId", data, op));
-			} else if ("createTime".equals(field)) {
-				query.timeranges("oales.createTime", data);
-			} else if ("status".equals(field)) {
-				query.add(query.getCriterion("oales.status", Short.valueOf(data), op));
-			} else if ("brand".equals(field)) {
-				query.add(query.getCriterion("oales.brand", data, op));
-			} else if ("category".equals(field)) {
-				query.add(query.getCriterion("oales.category", data, op));
-			} else if ("payTime".equals(field)) {
+
+			if ("payTime".equals(field)) {
 				query.timeranges("payTime", data);
 			}
 		}

@@ -13,6 +13,7 @@ package com.fanglin.data.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,20 @@ import com.fanglin.communion.vo.QuotationTypeVO;
 import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.po.QuotationCtemPO;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
+import com.fanglin.data.quotation.dao.QuotationPriceDao;
+import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.QuotationItemService;
 import com.fanglin.data.quotation.vo.QuotationCtemVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
+import com.fanglin.data.quotation.vo.QuotationPriceVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("quotationItemService")
@@ -49,6 +56,12 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 	@Autowired
 	private QuotationItemDao quotationItemDao;
+
+	@Autowired
+	private QuotationVersionDao quotationVersionDao;
+
+	@Autowired
+	private QuotationPriceDao quotationPriceDao;
 
 	@Override
 	public void pageQuotationItem(Paging paging, List<Filter> filters, int company) {
@@ -70,16 +83,33 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();
 
-		if (quotationItemVO != null) {
+		if (quotationItemVO == null) return;
 
-			filters.add(new Filter(QuotationItemPO.COLUMN_STATUS_STR, String.valueOf(QuotationItemPO.STATUS_ENABLE_INT), "eq"));
-			filters.add(new Filter("versionId", quotationItemVO.getVersion().getNo(), "eq"));
+		filters.add(new Filter(QuotationItemPO.COLUMN_STATUS_STR, String.valueOf(QuotationItemPO.STATUS_ENABLE_INT), "eq"));
+		filters.add(new Filter("versionId", quotationItemVO.getVersion().getNo(), "eq"));
 
-			List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
+		List<QuotationItemPO> quotationItemPOs = quotationItemDao.pageQuotationItem(paging, filters);
 
-			for (QuotationItemPO quotationItemPO : quotationItemPOs) {
-				quotationItemVOs.add(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
-			}
+		for (QuotationItemPO quotationItemPO : quotationItemPOs) {
+			quotationItemVOs.add(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
+		}
+
+		paging.setData(quotationItemVOs);
+	}
+
+	@Override
+	public void pageQuotationItemForPrice(Paging paging, List<Filter> filters, QuotationItemVO quotationItemVO, QuotationPriceVO quotationPriceVO) {
+
+		List<QuotationItemVO> quotationItemVOs = new ArrayList<QuotationItemVO>();
+
+		if (quotationItemVO == null) return;
+
+		if (quotationPriceVO == null) return;
+
+		List<QuotationPricePO> quotationPricePOs = quotationPriceDao.pageQuotationPrice(paging, filters, quotationItemVO.getVersion().getNo(), quotationPriceVO.getUpdateTime());
+
+		for (QuotationPricePO quotationPricePO : quotationPricePOs) {
+			quotationItemVOs.add(quotationPricePO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
 		}
 
 		paging.setData(quotationItemVOs);
@@ -126,6 +156,9 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion", "quotationCtem"));
 
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationItemVO.getVersion().getNo());
+
+		quotationItemPO.setQvid(quotationVersionPO.getQvId());
 		quotationItemPO.setQuotationVersion(new QuotationVersionPO(quotationItemVO.getVersion().getNo()));
 		quotationItemPO.setQuotationType(new QuotationTypePO(quotationItemVO.getCategory().getId()));
 		quotationItemPO.setQuotationClassification(new QuotationClassificationPO(quotationItemVO.getClassification().getId()));
@@ -133,8 +166,22 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemPO.setQuotationSmallCategory(new QuotationSmallCategoryPO(quotationItemVO.getSmallCategory().getId()));
 		quotationItemPO.setMeasurementUnit(new MeasurementUnitPO(quotationItemVO.getUnit().getId()));
 		quotationItemPO.setWorkType(new WorkTypePO(quotationItemVO.getWorkType().getId()));
+		quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
 
 		quotationItemDao.save(quotationItemPO);
+
+		QuotationPricePO quotationPricePO = new QuotationPricePO();
+
+		quotationPricePO.setQuotationItem(quotationItemPO);
+
+		quotationPricePO.setAddPrice(quotationItemPO.getAddPrice());
+		quotationPricePO.setUnitPrice(quotationItemPO.getUnitPrice());
+		quotationPricePO.setSubPrice(quotationItemPO.getSubPrice());
+
+		quotationPricePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		quotationPricePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		quotationPriceDao.save(quotationPricePO);
 
 		return 0;
 	}
@@ -157,6 +204,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationItemPO.setQuotationSmallCategory(new QuotationSmallCategoryPO(quotationItemVO.getSmallCategory().getId()));
 		quotationItemPO.setMeasurementUnit(new MeasurementUnitPO(quotationItemVO.getUnit().getId()));
 		quotationItemPO.setWorkType(new WorkTypePO(quotationItemVO.getWorkType().getId()));
+		quotationItemPO.setQuotationCtem(new QuotationCtemPO(quotationItemVO.getQuotationCtem().getQcid()));
 
 		quotationItemDao.update(quotationItemPO);
 
@@ -191,6 +239,41 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		}
 
 		quotationItemPO.setDiscount(quotationItemVO.getDiscount());
+
+		quotationItemDao.update(quotationItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationItemForFormula(QuotationItemVO quotationItemVO) throws FLException {
+
+		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());
+
+		if (quotationItemPO == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		quotationItemPO.setFormula(quotationItemVO.getFormula());
+
+		quotationItemDao.update(quotationItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationItemForCost(QuotationItemVO quotationItemVO) throws FLException {
+
+		QuotationItemPO quotationItemPO = quotationItemDao.get(quotationItemVO.getQiid());
+
+		if (quotationItemPO == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		quotationItemPO.setCost(quotationItemVO.getCost());
+		quotationItemPO.setAchePrice(quotationItemVO.getAchePrice());
 
 		quotationItemDao.update(quotationItemPO);
 

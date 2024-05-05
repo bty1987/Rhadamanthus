@@ -22,6 +22,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.quotation.service.QuotationItemService;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
+import com.fanglin.data.quotation.vo.QuotationPriceVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -35,6 +36,8 @@ public class QuotationItemAction extends BaseListAction {
 
 	private QuotationItemVO quotationItem;
 
+	private QuotationPriceVO quotationPrice;
+
 	@Action(value = "pageQuotationItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageQuotationItem() throws FLException {
 
@@ -47,6 +50,14 @@ public class QuotationItemAction extends BaseListAction {
 	public String pageQuotationItemByVersionId() {
 
 		quotationItemService.pageQuotationItemByVersionId(getPaging(), getFilters(), quotationItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageQuotationItemForPrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationItemForPrice() {
+
+		quotationItemService.pageQuotationItemForPrice(getPaging(), getFilters(), quotationItem, quotationPrice);
 
 		return SUCCESS;
 	}
@@ -99,12 +110,36 @@ public class QuotationItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateQuotationItemForFormula", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItemForFormula() throws FLException {
+
+		quotationItemService.updateQuotationItemForFormula(quotationItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateQuotationItemForCost", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationItemForCost() throws FLException {
+
+		quotationItemService.updateQuotationItemForCost(quotationItem);
+
+		return SUCCESS;
+	}
+
 	public QuotationItemVO getQuotationItem() {
 		return quotationItem;
 	}
 
 	public void setQuotationItem(QuotationItemVO quotationItem) {
 		this.quotationItem = quotationItem;
+	}
+
+	public QuotationPriceVO getQuotationPrice() {
+		return quotationPrice;
+	}
+
+	public void setQuotationPrice(QuotationPriceVO quotationPrice) {
+		this.quotationPrice = quotationPrice;
 	}
 
 }

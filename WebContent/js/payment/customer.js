@@ -31,13 +31,13 @@ jQuery(function ($) {
         posValues: {},
 
         pageConfig: {},
-        salesPaymentTypeData: constant.payment.materialPayment.paymentType.keys,
+        salesPaymentTypeData: constant.payment().materialPayment.paymentType.keys,
         count: 0,
         typeNo: 6,
         atttype: 0
     };
 
-    customerPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+    customerPayment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
     com.post(api.data.queryReceiptTypeByType, {"receiptType.type": 2}, function(res){
         $.each(res.receiptTypes, function(i, v){
@@ -149,7 +149,7 @@ jQuery(function ($) {
 
         com.post(api.payment.pageAdvancePayment, advanceOption, function (res) {
             customerPayment.pageConfig.propertyArr = [];
-            customerPayment.pageConfig.propertyArr = ["orderId", "customerName", "address", "designerName", "grade", "contractBalance", "projectBalance", "materialBalance", "zhenglinBalance"];
+            customerPayment.pageConfig.propertyArr = ["orderId", "customerName", "address", "designerName", "grade", "contractBalance", "materialBalance"];
             displayFunc.init('advance', res.paging.data);
             customerPayment.count += res.paging.data.length;
         }, null, false);

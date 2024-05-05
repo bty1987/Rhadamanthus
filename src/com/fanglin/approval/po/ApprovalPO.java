@@ -73,6 +73,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_STATUS_REJECT_INT = 7; // 客户拒绝
 
+	public static final String COLUMN_ORDERID_STR = "orderId";
+
 	public static final String COLUMN_TYPE_STR = "type";
 
 	public static final String COLUMN_IDENT_STR = "ident";

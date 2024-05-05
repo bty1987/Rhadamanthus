@@ -205,7 +205,13 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 			throw new FLException(130096, "调研模版不存在");
 		}
 
-		surveyTemplatePO.setStatus(surveyTemplateVO.getStatus());
+		if (surveyTemplateVO.getStatus() != null) {
+			surveyTemplatePO.setStatus(surveyTemplateVO.getStatus());
+		}
+
+		if (surveyTemplateVO.getIsSend() != null) {
+			surveyTemplatePO.setIsSend(surveyTemplateVO.getIsSend());
+		}
 
 		surveyTemplateDao.update(surveyTemplatePO);
 

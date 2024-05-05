@@ -55,9 +55,7 @@
         $.each(res.userCompanys, function(i, v) {
 
             user.companysel.push(v.company);
-        })
-
-        console.log(user.companysel)
+        });
 
     }, null, false);
 
@@ -68,7 +66,7 @@
         user.task = res.tasks;
     }, null, false);
 
-    user.items.company.bindData(user.companysel, "cid", "name");
+    com.selectTypeahead(user.items.company, user.companysel, 'cid', 'name');
 
     com.initTypeahead("roleSel", api.system.queryRoleByName, 'role.name', {}, "roleList", 'rid', 'name');
     com.initTypeahead("role", api.system.queryRoleByName, 'role.name', {}, "roleList", 'rid', 'name', function(list, k, v) {
@@ -111,17 +109,17 @@
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-                    var $role = $('<a></a>').addClass('btn btn-minier btn-purple').html('角色');
+                    var $role = $('<a></a>').addClass('btn btn-minier btn-yellow').html('角色');
                     var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
-                    var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
-                    var $btnMacontrol = $('<a></a>').addClass('btn btn-minier btn-warning').html('权限');
-                    var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-danger').html('装修单设计');
-                    var $btnSales = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修单业务');
-                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单状态');
-                    var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-yellow').html('房源权配');
-                    var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-success').html('客源权配');
-                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-warning').html('重置密码');
-                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-insverse').html('默认密码');
+                    var $btnRight = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权配');
+                    var $btnMacontrol = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权限');
+                    var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修设计');
+                    var $btnSales = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修业务');
+                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修状态');
+                    var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
+                    var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-pink').html('客源权配');
+                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
+                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('默认密码');
                     var $btnlogout = $('<a></a>').addClass('btn btn-minier btn-danger').html('登出');
 
                     var propertyArr = [["员工编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["角色:", v.role.name, "grey"], ["联系方式:", v.phone, "grey"]];
@@ -680,6 +678,8 @@
             user.items.oldcompany.val(userinfo.companys);
             com.updateTypeahead("roleSel", userinfo.role.rid, userinfo.role.name);
 
+            com.cleanTypeahead(user.items.company);
+
             user.modals.userAdvanceModal.modal("show");
 
         }, null, false);
@@ -700,7 +700,7 @@
             "user.isLogin": user.items.isLogin.prop("checked") ? constant.personel.user.ISLOGIN_FIP_INT : constant.personel.user.ISLOGIN_NOT_INT,
             "user.extranet": extranet,
             "user.role.rid": com.typeahead("roleSel"),
-            "user.companys": user.items.company.val()
+            "user.companys": com.typeahead(user.items.company)
         };
 
         com.post(api.personel.updateUserForAdvance, options, function(res) {

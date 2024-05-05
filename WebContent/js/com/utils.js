@@ -671,3 +671,7 @@ var utils = {
         return mobile_flag;
     }
 };
+
+var tools = {
+
+}

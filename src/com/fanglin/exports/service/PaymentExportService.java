@@ -13,14 +13,15 @@ package com.fanglin.exports.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.exports.vo.DecorationPaymentExportVO;
 import com.fanglin.exports.vo.MaterialPaymentExportVO;
 
 public interface PaymentExportService {
-	
-	public List<DecorationPaymentExportVO> queryDecorationPaymentExport(List<Filter> filters);
-	
+
+	public List<DecorationPaymentExportVO> queryDecorationPaymentExport(List<Filter> filters) throws FLException;
+
 	public List<MaterialPaymentExportVO> queryMaterialPaymentExport(List<Filter> filters);
-	
+
 }

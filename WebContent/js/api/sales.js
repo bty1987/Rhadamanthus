@@ -9,7 +9,7 @@ $.extend(api.index, {
         url: "views/sales/sales2add.html"
     },
     refundsItemDetialIndex: {
-        url: "views/sales/refundsItem.html"
+        url: "views/sales/salesRefundsItem.html"
     },
     salesCollectionIndex: {
         url: "views/sales/sales4payment.html"
@@ -21,7 +21,7 @@ $.extend(api.index, {
         url: "/views/sales/sales2print.html"
     },
     salesRefundsPrintIndex: {
-        url: "/views/sales/refunds2print.html"
+        url: "/views/sales/salesRefunds2print.html"
     },
     salesActivityIndex: {
         url: "/views/sales/sales4activity.html"
@@ -33,13 +33,6 @@ $.extend(api.index, {
 
 $.extend(api, {
     sales: {
-        addSales: {
-            url: "addSales.do",
-            type: "update",
-            tranargs: {
-                args: ["sales.total", "sales.maling", "sales.coupon", "salesItems.purchase", "salesItems.selling", "salesItems.discount", "salesItems.disPrice", "salesItems.postDis", "salesItems.price", "salesItems.num", "salesItems.total", "salesItems.rawCvalue", "salesItems.cvalue"]
-            }
-        },
         pageSales: {
             url: "pageSales.do",
             type: "query",
@@ -72,7 +65,6 @@ $.extend(api, {
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
-
         pageSalesForBalanceByDompany: {
             url: "pageSalesForBalanceByDompany.do",
             type: "query",
@@ -81,7 +73,6 @@ $.extend(api, {
                 args: ["total", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
-
         querySalesBySid: {
             url: "querySalesBySid.do",
             type: "query",
@@ -92,6 +83,13 @@ $.extend(api, {
         },
         querySalesByNo: {
             url: "querySalesByNo.do"
+        },
+        addSales: {
+            url: "addSales.do",
+            type: "update",
+            tranargs: {
+                args: ["sales.total", "sales.maling", "sales.coupon", "salesItems.purchase", "salesItems.selling", "salesItems.discount", "salesItems.disPrice", "salesItems.postDis", "salesItems.price", "salesItems.num", "salesItems.total", "salesItems.rawCvalue", "salesItems.cvalue"]
+            }
         },
         updateSales: {
             url: "updateSales.do"
@@ -118,6 +116,12 @@ $.extend(api, {
         },
         updateSalesForAdvance: {
             url: "updateSalesForAdvance.do"
+        },
+        sendSales: {
+            url: "sendSales.do"
+        },
+        affirmSales: {
+            url: "affirmSales.do"
         },
         terminalSales: {
             url: "terminalSales.do"
@@ -182,18 +186,26 @@ $.extend(api, {
                 args: ["sales.total", "salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num", "salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"]
             }
         },
-
-        queryRefundsBySid: {
-            url: "queryRefundsBySid.do",
+        pageSalesRefunds: {
+            url: "pageSalesRefunds.do",
             type: "query",
             tranargs: [{
-                result: "refundVOs",
+                result: "paging-data",
                 args: ["total"]
             }]
         },
 
-        queryRefundsItemBySid: {
-            url: "queryRefundsItemBySid.do",
+        querySalesRefundsBySid: {
+            url: "querySalesRefundsBySid.do",
+            type: "query",
+            tranargs: [{
+                result: "refundses",
+                args: ["total"]
+            }]
+        },
+
+        querySalesRefundsItemBySid: {
+            url: "querySalesRefundsItemBySid.do",
             type: "query",
             tranargs: [{
                 result: "refundsItems",
@@ -203,6 +215,18 @@ $.extend(api, {
                 args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue"]
             }]
         },
+        querySalesRefundsItemByRid: {
+            url: "querySalesRefundsItemByRid.do",
+            type: "query",
+            tranargs: [{
+                result: "refundsItems",
+                args: ["num", "total"]
+            }, {
+                result: "refundsItems-salesItem",
+                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue"]
+            }]
+        },
+
         pageOales: {
             url: "pageOales.do",
             type: "query",
@@ -304,7 +328,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -316,7 +340,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -463,7 +487,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -484,7 +508,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -495,7 +519,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -597,6 +621,23 @@ $.extend(api, {
         deleteSalesPicture: {
             url: "deleteSalesPicture.do"
         },
+    }
+});
 
+$.extend(tools, {
+    sales: {
+        info: function(content, sid) {
+
+            com.post(api.sales.querySalesBySid, {
+                "sales.sid": sid
+            }, function(res) {
+
+                var sales = res.sales;
+
+                var isAffirm = constant.sales().sales.isAffirm.keys[sales.isAffirm];
+
+                com.showTip(content, "装修单号:" + sales.orderId + "<br\>销售单号:" + sales.no + "<br\>是否确认:" + isAffirm, "bottom");
+            });
+        }
     }
 });

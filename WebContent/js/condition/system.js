@@ -213,4 +213,29 @@ Condition.addupRule("system", {
             valuePath: "value",// 元素的value值
         }
     },
+    "module-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "module-level": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
+            name: "level",// 字段
+            op: "eq",// 查询方式
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.system,// 请求接口
+            postData: {},// 获取数据时的请求参数
+            listPath: "level",
+            keyPath: "key",// 元素的key值
+            valuePath: "value",// 元素的value值
+        }
+    },
 });

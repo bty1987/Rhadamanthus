@@ -66,11 +66,8 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        contractEdit.decorationType = res.typeness.split("key", "value");
-        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
-    });
+    contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": contractEdit.decorationOrderId

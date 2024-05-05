@@ -97,6 +97,8 @@ public class AccessoriesPO implements Serializable {
 
 	private short schedule;
 
+	private long total;
+
 	private int printnum; // 打印次数
 
 	private String comment;
@@ -257,6 +259,15 @@ public class AccessoriesPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "total")
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
 	}
 
 	@Column(name = "printnum")

@@ -38,7 +38,7 @@ jQuery(function($) {
         paytran.decoration = null;
     });
 
-    paytran.items.way.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+    paytran.items.way.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
     com.post(api.data.queryReceiptType, {}, function(res) {
 
@@ -74,9 +74,9 @@ jQuery(function($) {
         var grade = "";
         var atttype = paytran.items.atttype.val();
 
-        if (atttype == constant.payment.paytran.ATTTYPE_DECORATION_INT) {
+        if (atttype == constant.payment().paytran.ATTTYPE_DECORATION_INT) {
             grade = ["A", "C"].contains(paytran.decoration.grade) ? "A" : "";
-        } else if (atttype == constant.payment.paytran.ATTTYPE_MATERIAL_INT) {
+        } else if (atttype == constant.payment().paytran.ATTTYPE_MATERIAL_INT) {
             grade = paytran.decoration.grade == "C" ? "B" : "";
         }
 
@@ -113,7 +113,7 @@ jQuery(function($) {
         var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(constant.payment.receipt.paymentType.keys[v.type]));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(constant.payment().receipt.paymentType.keys[v.type]));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -129,7 +129,7 @@ jQuery(function($) {
                 ["业务类型:", v.atttype == 0 ? "装修" : "主材", "red"],
                 ["收据名称:", v.no, "blue"],
                 ["机器编号:", v.sn, "blue"],
-                ["状态:", constant.payment.paytran.status.keys[v.status] , "red"],
+                ["状态:", constant.payment().paytran.status.keys[v.status] , "red"],
                 ["金额:", v.money, "green"],
                 ["创建人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "green"],
@@ -146,7 +146,7 @@ jQuery(function($) {
 
             $divBtnWrap.append($cancel).append($check).append($delete).append($code).append($wechat).append($pos);
 
-            if (v.status == constant.payment.paytran.STATUS_INIT_INT) {
+            if (v.status == constant.payment().paytran.STATUS_INIT_INT) {
                 $divBtnWrap.appendTo($h3);
             }
 

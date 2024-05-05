@@ -13,47 +13,54 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "events", catalog = "information")
 public class EventsPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6821683708554610678L;
-	
+
 	public static final String COLUMN_HODERID_STR = "holder.uid";
-	
+
 	public static final String COLUMN_SHOWDATE_STR = "showDate";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final short TYPE_SYSTEM_INT = 1;
-	
+
 	public static final short TYPE_CUSTOM_INT = 2;
 
+	public static final short ATTTYPE_CONSTRUCTION_DRAWING_INT = 1;
+
 	private long eid;
-	
+
+	private String orderId;
+
 	private String title;
-	
+
 	private String content;
-	
-	private UserPO creater; //创建人
-		
-	private UserPO holder;	//所有人
-	
-	private DepartmentPO department; //归属部门
-	
-	private DepartmentPO region;	//归属分区
-	
+
+	private UserPO creater; // 创建人
+
+	private UserPO holder; // 所有人
+
+	private DepartmentPO department; // 归属部门
+
+	private DepartmentPO region; // 归属分区
+
 	private short type;
-	
+
+	private short atttype;
+
 	private Timestamp createTime;
-	
-	private Date showDate;
+
+	private int showDate;
+
+	private short isSend;
 
 	public EventsPO() {
 		super();
@@ -68,6 +75,15 @@ public class EventsPO implements java.io.Serializable {
 
 	public void setEid(long eid) {
 		this.eid = eid;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@Column(name = "title")
@@ -89,7 +105,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "cuid", referencedColumnName="uid")
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -99,7 +115,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "huid", referencedColumnName="uid")
+	@JoinColumn(nullable = true, name = "huid", referencedColumnName = "uid")
 	public UserPO getHolder() {
 		return holder;
 	}
@@ -109,7 +125,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "did", referencedColumnName="did")
+	@JoinColumn(nullable = true, name = "did", referencedColumnName = "did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -119,7 +135,7 @@ public class EventsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "rid", referencedColumnName="did")
+	@JoinColumn(nullable = true, name = "rid", referencedColumnName = "did")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -137,13 +153,12 @@ public class EventsPO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Temporal(TemporalType.DATE)
 	@Column(name = "showDate")
-	public Date getShowDate() {
+	public int getShowDate() {
 		return this.showDate;
 	}
 
-	public void setShowDate(Date showDate) {
+	public void setShowDate(int showDate) {
 		this.showDate = showDate;
 	}
 
@@ -156,4 +171,40 @@ public class EventsPO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
+	}
+
+	@Column(name = "isSend")
+	public short getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(short isSend) {
+		this.isSend = isSend;
+	}
+
+	public EventsPO init(String orderId, String title, String content, UserPO holder, short atttype) {
+
+		setOrderId(orderId);
+
+		setTitle(title);
+		setContent(content);
+
+		setCreater(holder);
+		setHolder(holder);
+
+		setType(TYPE_SYSTEM_INT);
+		setAtttype(atttype);
+
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		setShowDate(Integer.parseInt(DateUtil.current("yyyyMMdd")));
+
+		return this;
+	}
 }

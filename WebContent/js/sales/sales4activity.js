@@ -21,6 +21,7 @@ $(function() {
         },
         modal: {
             salesActivityCommentModal: com.focusPage("#salesActivityCommentModal"),
+            QRcodeModal: com.focusPage("#QRcodeModal"),
         },
         btn: {
             submitSalesActivityCommentBtn: com.focusPage("#submitSalesActivityCommentBtn"),
@@ -54,7 +55,7 @@ $(function() {
     com.focusPage("#thingsAdd").unbind().click(function() {
 
         if (com.validate("thingsInputs", "bottom")) {
-            return;
+            return false;
         }
         createOne("things");
         salesActivityItem.items.thingsName.val("");
@@ -64,7 +65,7 @@ $(function() {
     com.focusPage("#couponsAdd").unbind().click(function() {
 
         if (com.validate("couponInputs", "bottom")) {
-            return;
+            return false;
         }
         createOne("coupons");
         salesActivityItem.items.couponsName.val("");
@@ -73,7 +74,7 @@ $(function() {
     com.focusPage("#paperAdd").unbind().click(function() {
 
         if (com.validate("paperInputs", "bottom")) {
-            return;
+            return false;
         }
         createOne("paper");
         salesActivityItem.items.paperName.val("");
@@ -170,7 +171,7 @@ $(function() {
 
         var $btnImport = $('<a></a>').addClass('btn btn-minier btn-dark').html('导出').appendTo($divBtnWrap);
         var $btnSend = $('<a></a>').addClass('btn btn-minier btn-info').html('发送').appendTo($divBtnWrap);
-
+        var $QRCode = $('<button></button>').attr("id", "salesQRCode").addClass('btn btn-minier btn-info icon-qrcode').css("margin-left", "0px").appendTo($divBtnWrap);
         var $divWarp = com.focusPage("#paramsOrder").append($h4);
 
         $divBtnWrap.append($btnSub).appendTo($h4);
@@ -209,6 +210,11 @@ $(function() {
 
             sends();
         });
+
+        $QRCode.click(function() {
+
+            qrcode();
+        })
 
         return $divWarp;
     }
@@ -349,7 +355,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(["sales-activity", "sales-activity-category-name", "sales-activity-brand-name"], "condLists", api.sales.pageSalesActivity, function(data) {
+    searcher.init(["sales-activity-name", "sales-category-name", "sales-brand"], "condLists", api.sales.pageSalesActivity, function(data) {
 
         displayFunc.init('resultLists', data);
     }, "pagenations", "sales4activityPostData", options, false, null, null, "resultLists");
@@ -360,6 +366,7 @@ $(function() {
         com.post(api.sales.querySalesActivityItem, options, function(res) {
 
             salesActivityItem.salesActivityItems = res.salesActivityItems;
+
             var salesActivityItems = res.salesActivityItems;
 
             var salesActivityContent = com.focusPage("#salesActivityItems").empty();
@@ -433,6 +440,30 @@ $(function() {
                 var createTimeState = $("<strong></strong>").text("创建时间:").appendTo(createTimeLi);
                 var createTimeSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.createTime).text(v.createTime).appendTo(createTimeLi);
 
+                var operateTimeLi = $("<li></li>").appendTo(ul);
+                var operateTimeState = $("<strong></strong>").text("首次操作时间:").appendTo(operateTimeLi);
+                var operateTimeSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.operateTime).text(v.operateTime == null ? "" : v.operateTime).appendTo(operateTimeLi);
+
+                var refundTimeLi = $("<li></li>").appendTo(ul);
+                var refundTimeState = $("<strong></strong>").text("二次操作时间:").appendTo(refundTimeLi);
+                var refundTimeSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.refundTime).text(v.refundTime == null ? "" : v.refundTime).appendTo(refundTimeLi);
+
+                var affirmTimeLi = $("<li></li>").appendTo(ul);
+                var affirmTimeState = $("<strong></strong>").text("首次确认时间:").appendTo(affirmTimeLi);
+                var affirmTimeSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.affirmTime).text(v.affirmTime == null ? "" : v.affirmTime).appendTo(affirmTimeLi);
+
+                var checkTimeLi = $("<li></li>").appendTo(ul);
+                var checkTimeState = $("<strong></strong>").text("二次确认时间:").appendTo(checkTimeLi);
+                var checkTimeSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.checkTime).text(v.checkTime == null ? "" : v.checkTime).appendTo(checkTimeLi);
+
+                var comment = $("<li></li>").appendTo(ul);
+                var commentState = $("<strong></strong>").text("说明:").appendTo(comment);
+                var commentSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.comment).text(v.comment == null ? "" : v.comment).appendTo(comment);
+
+                var content = $("<li></li>").appendTo(ul);
+                var contentState = $("<strong></strong>").text("备注:").appendTo(content);
+                var contentSpan = $("<span></span>").addClass("green").attr("id", "money_" + v.content).text(v.content == null ? "" : v.content).appendTo(content);
+
                 var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetMain);
 
                 if (uiBtnMethod != null) {
@@ -478,7 +509,11 @@ $(function() {
         // 失效按钮
         abateBtn.on("click", function() {
 
-            abateSalesActivityItem(activityItem.saiid, activityItem.activity);
+            salesActivityItem.items.commentName.html("失效");
+            salesActivityItem.saiid = activityItem.saiid;
+            salesActivityItem.url = api.sales.abateSalesActivityItem;
+            salesActivityItem.info = "失效!";
+            salesActivityItem.modal.salesActivityCommentModal.modal("show");
         });
 
         // 领取按钮
@@ -524,13 +559,23 @@ $(function() {
         // 点击补款按钮
         expendBtn.click(function() {
 
-            expendSalesActivityItem(activityItem.saiid, activityItem.activity);
+            salesActivityItem.items.commentName.html("补款");
+            salesActivityItem.saiid = activityItem.saiid;
+            salesActivityItem.url = api.sales.expendSalesActivityItem;
+            salesActivityItem.info = "补款成功!";
+            salesActivityItem.modal.salesActivityCommentModal.modal("show");
+
         });
 
         // 点击抵现按钮
         discountBtn.click(function() {
 
-            discountSalesActivityItem(activityItem.saiid, activityItem.activity);
+            salesActivityItem.items.commentName.html("抵现");
+            salesActivityItem.saiid = activityItem.saiid;
+            salesActivityItem.url = api.sales.discountSalesActivityItem;
+            salesActivityItem.info = "抵现成功!";
+            salesActivityItem.modal.salesActivityCommentModal.modal("show");
+
         });
 
     }
@@ -661,12 +706,36 @@ $(function() {
         });
     }
 
+    function qrcode() {
+
+        com.focusPage('#QRcode').html("");
+
+        var $inputs = com.focusPage('input[name="saiids"]:checked');
+
+        var saiid = "";
+
+        $.each($inputs, function(i, v) {
+
+            saiid += $(v).val() + ",";
+        });
+
+        com.focusPage('#QRcode').qrcode({
+            render: "canvas",
+            width: 150,
+            height: 150,
+            text: "http://fanglin.vip/wx/activityItem?orderId=" + salesActivityItem.orderId + "&saiids=" + saiid
+
+        });
+
+        salesActivityItem.modal.QRcodeModal.modal("show");
+    }
+
     // 领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function() {
 
         if (salesActivityItem.items.things.html() == "" && salesActivityItem.items.coupons.html() == "" && salesActivityItem.items.paper.html() == "") {
             com.showAlert(com.warning, "活动物品或券或红包需要选择才能提交");
-            return;
+            return false;
         }
 
         var submitFlag = true;
@@ -741,7 +810,7 @@ $(function() {
         });
 
         if (!submitFlag) {
-            return;
+            return false;
         }
 
         options["salesActivity.amount"] = amount;
@@ -752,6 +821,7 @@ $(function() {
             amountSalesActivityForActivity();
             integral();
         });
+
         salesActivityItem.salesActivityItemModal.modal("hide");
     });
 

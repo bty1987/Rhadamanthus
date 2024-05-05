@@ -5,6 +5,8 @@
         orderId: params.quotation.orderId,
 
         arid: null,
+        qid: null,
+        nid: null,
 
         items: {
             addReduceDes: com.focusPage("#addReduceDes"),
@@ -36,9 +38,22 @@
         pageConfig: null,
     };
 
+    addReduce.items.addReduceType.bindData(constant.quotation().addreduce.type.datas, "key", "value");
+
+    addReduce.items.atttype.bindData(constant.quotation().addreduce.atttype.datas, "key", "value");
+
     function initDecorationInfo() {
 
         var quotationList = com.focusPage("#quotationList").html("");
+
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": addReduce.orderId
+        }, function(res) {
+
+            addReduce.qid = res.quotation.qid;
+
+            drawquotation(res.quotation);
+        }, null, false);
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": addReduce.orderId
@@ -55,7 +70,7 @@
 
         var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
         var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
-        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+        var $header = $('<div></div>').addClass("widget-header header-color-blue").appendTo($box);
 
         var name = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header);
 
@@ -68,6 +83,25 @@
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
+    }
+
+    function drawquotation(quotation) {
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+
+        var name = $('<h4></h4>').attr('id', 'h4name_').text("报价单").appendTo($header);
+
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + quotation.version.name)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('折扣: ' + quotation.discount)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('管理费: ' + quotation.managePrice)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('税金: ' + quotation.taxPrice)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('总额: ' + quotation.totalPrice)).appendTo($info);
     }
 
     var searcher = new Searcher();
@@ -181,9 +215,28 @@
         }
     };
 
+    var btnMake = {
+        name: "定额",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            var params = {
+                "addReduce.arId": v.arId,
+                "normtion.qid": addReduce.qid,
+                "normtion.orderId": addReduce.orderId,
+                "normtion.moodPrintNum": 0,
+                "normtion.moodTotal": 0,
+                "normtion.mricePriceNum": 0,
+                "normtion.mriceTotal": 0
+            };
+
+            com.post(api.quotation.makeNormtionForAddReduce, params);
+        }
+    };
+
     if (addReduce.pageType == null) {
 
-        var linebtns = [viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, ];
+        var linebtns = [btnMake, viewbtn, submitbtn, cancelbtn, allocationbtn, specialbtn, norefundbtn, affirmbtn, deletebtn, ];
 
         com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
@@ -281,13 +334,13 @@
             clazz: "green"
         }, {
             field: "confirmTime",
-            name: "确认时间",
+            name: "款项确认时间",
             prop: "confirmTime",
             clazz: "green",
             dataset: addReduce.confirmTime
         }, {
             field: "affirmTime",
-            name: "确认时间",
+            name: "客户确认时间",
             prop: "affirmTime",
             clazz: "green",
             dataset: addReduce.affirmTime
@@ -353,16 +406,7 @@
                         clazz: "blue",
                         click: function(btn, v) {
 
-                            com.post(api.decoration.queryDecorationForCommonByOrderId, {
-                                "decoration.orderId": v.decoration.orderId
-                            }, function(res) {
-
-                                var decoration = res.decoration;
-                                var address = decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + ' ' + decoration.house.houseNumber;
-                                var typeness = constant.decoration().decoration.typeness.keys[decoration.typeness];
-
-                                com.showTip(btn, "装修单号:" + decoration.orderId + "<br\>楼盘地址:" + address + "<br\>类型:" + typeness + "<br\>等级:" + decoration.grade, "bottom");
-                            });
+                            tools.decoration.info(btn, v.decoration.orderId);
                         }
                     });
                     break;
@@ -371,7 +415,11 @@
                         field: "name",
                         name: "楼盘",
                         prop: "decoration.house.village.name",
-                        clazz: "grey"
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.village.info(btn, v.decoration.house.village.no);
+                        }
                     });
                     break;
                 case "decorationHouseHouseNumber":
@@ -379,7 +427,11 @@
                         field: "houseNumber",
                         name: "楼号",
                         prop: "decoration.house.houseNumber",
-                        clazz: "grey"
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.house.info(btn, v.decoration.house.hid);
+                        }
                     });
                     break;
                 case "decorationCustomerName":
@@ -387,7 +439,11 @@
                         field: "customerName",
                         name: "客户名",
                         prop: "decoration.customer.name",
-                        clazz: "grey"
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.customer.info(btn, v.decoration.customer.cid);
+                        }
                     });
                     break;
                 case "decorationDesignerCurrentName":
@@ -395,7 +451,11 @@
                         field: "currentName",
                         name: "设计师",
                         prop: "decoration.designer.currentName",
-                        clazz: "grey"
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.decoration.designer.userId);
+                        }
                     });
                     break;
                 case "decorationSalesmanCurrentName":
@@ -403,7 +463,11 @@
                         field: "currentName",
                         name: "业务员",
                         prop: "decoration.salesman.currentName",
-                        clazz: "grey"
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.decoration.salesman.userId);
+                        }
                     });
                     break;
                 case "decorationHouseBuildArea":
@@ -602,13 +666,17 @@
                         field: "creater.currentName",
                         name: "创建人",
                         prop: "creater.currentName",
-                        clazz: "grey"
+                        clazz: "grey",
+                        click: function(btn, v) {
+
+                            tools.personel.info(btn, v.creater.userId);
+                        }
                     });
                     break;
                 case "confirmTime":
                     lineprops.push({
                         field: "confirmTime",
-                        name: "确认时间",
+                        name: "款项确认时间",
                         prop: "confirmTime",
                         clazz: "green",
                         dataset: addReduce.confirmTime
@@ -617,7 +685,7 @@
                 case "affirmTime":
                     lineprops.push({
                         field: "affirmTime",
-                        name: "确认时间",
+                        name: "客户确认时间",
                         prop: "affirmTime",
                         clazz: "green",
                         dataset: addReduce.affirmTime
@@ -772,6 +840,7 @@
         options["addReduce.total"] = 0;
         options["addReduce.managePrice"] = 0;
         options["addReduce.taxPrice"] = 0;
+        options["addReduce.taxDiscount"] = constant.quotation().addreduce.TAX_MANAGETAXDISCOUNT_INT;
 
         com.post(url, options, function(res) {
 

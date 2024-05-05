@@ -1,7 +1,5 @@
 jQuery(function ($) {
 
-    var constructionNodes = {};
-
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -25,21 +23,52 @@ jQuery(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("查看");
+            var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("验收");
 
             var propertyArr = [
-                ["楼盘名:", v.house.village.name, "grey"],
-                ["设计部门:", v.designer.dept.name, "grey"],
-                ["设计师:", v.designer.userName, "grey"],
-                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"],
+                ["装修单: ", v.orderId, "blue", function(btn) {
+
+                    tools.decoration.info(btn, v.orderId);
+                }],
+                ["楼盘: ", v.house.village.name, "grey", function(btn) {
+
+                    tools.house.info(btn, v.house.hid);
+                }],
+                ["楼号: ", v.house.houseNumber, "grey"],
+                ["客户: ", v.customer.name, "grey", function(btn) {
+
+                    tools.customer.info(btn, v.customer.cid);
+                }],
+                ["设计部门:", v.designer.dept.name, "grey", function(btn) {
+
+                    tools.department.info(btn, v.designer.dept.did);
+                }],
+                ["设计师:", v.designer.userName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.designer.userId);
+                }],
+                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey", function(btn) {
+
+                    tools.personel.info(btn, v.supervisor.userId);
+                }],
                 ["面积:", v.house.buildArea, "blue"],
+                ["合同额: ", v.orderTotalPrice, "blue"],
+                ["报价版本: ", v.version.name, "grey"],
                 ["进度:", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -62,11 +91,11 @@ jQuery(function ($) {
             drawLine: function (v) {
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
-    searcher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-supervisor', 'construction-acceptanceFlag'], "condList", api.construction.pageConstructionForAcceptance, function (list) {
+    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'construction-supervisor', 'decoration-projectStatus', 'construction-acceptanceFlag'], "condList", api.construction.pageConstructionForAcceptance, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "acceptanceSeacherSeacherPostData");
 

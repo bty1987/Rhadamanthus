@@ -108,13 +108,13 @@ jQuery(function($) {
     }, function(res) {
 
         var quotation = res.quotation;
-        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, utils.accAdd(quotation.managePrice, quotation.taxPrice)))));
+        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, utils.accAdd(quotation.managePrice, quotation.taxDiscount == 1 ? quotation.taxPrice : 0)))));
 
         com.focusPage("#con-quotation-total", "#form").val(preprice);
 
         if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT) {
-            com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accSub(preprice, quotation.managePrice)));
-            com.focusPage("#con-manage-total", "#form").val(parseInt(quotation.managePrice));
+            com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, quotation.trafficPrice))));
+            com.focusPage("#con-manage-total", "#form").val(parseInt(utils.accAdd(quotation.managePrice, quotation.taxDiscount == 1 ? quotation.taxPrice : 0)));
         } else {
             com.focusPage(".total", "#form").hide();
         }
@@ -158,8 +158,6 @@ jQuery(function($) {
             data[content.attr("id")] = content.val();
         });
 
-        console.log(data);
-
         data = $.extend({}, data, contractEdit.cover);
 
         data["con-material-total-cn"] = utils.getCNMoney(parseFloat(data["con-material-total"]));
@@ -186,8 +184,6 @@ jQuery(function($) {
         if (contractEdit.contractArgs.company != "1") {
             delete data["sin-company-phone"];
         }
-
-        console.log(data);
 
         com.showConfirm("请仔细认真检查合同填写内容", function() {
 

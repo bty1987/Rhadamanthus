@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 public class CityVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2592916808478012106L;
 
 	private Integer cid;
 

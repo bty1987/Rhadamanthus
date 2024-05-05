@@ -6,49 +6,84 @@ $(function() {
         gid: null,
 
         items: {
-            name: com.focusPage("#name", "#addLayer"),
+            aoodName: com.focusPage("#aoodName", "#addLayer"),
+            goodsName: com.focusPage("#goodsName", "#addLayer"),
+            nood: com.focusPage("#nood", "#addLayer"),
             accessoriesType: com.focusPage("#accessoriesType", "#addLayer"),
             bcompany: com.focusPage("#bcompany", "#addLayer"),
             atttype: com.focusPage("#atttype", "#addLayer"),
             balance: com.focusPage("#balance", "#addLayer"),
+            selling: com.focusPage("#selling", "#addLayer"),
+            constructionNode: com.focusPage("#constructionNode", "#addLayer"),
 
+            editName: com.focusPage("#editName", "#editLayer"),
             editAccessoriesType: com.focusPage("#editAccessoriesType", "#editLayer"),
+            editNood: com.focusPage("#editNood", "#editLayer"),
             editBcompany: com.focusPage("#editBcompany", "#editLayer"),
             old: com.focusPage("#old", "#editLayer"),
             editAtttype: com.focusPage("#editAtttype", "#editLayer"),
             editBalance: com.focusPage("#editBalance", "#editLayer"),
+            editSelling: com.focusPage("#editSelling", "#editLayer"),
+            editConstructionNode: com.focusPage("#editConstructionNode", "#editLayer"),
 
             ccompany: com.focusPage("#ccompany", "#copyLayer"),
+            quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal"),
         },
 
         btns: {
             submitBtn: com.focusPage("#submitBtn", "#addLayer"),
             editBtn: com.focusPage("#editBtn", "#editLayer"),
             copyBtn: com.focusPage("#copyBtn", "#copyLayer"),
+            confirmItemBtn: com.focusPage("#confirmItemBtn", "#quotationVersionModal"),
+        },
+
+        modals: {
+            addLayer: com.focusPage("#addLayer"),
+            editLayer: com.focusPage("#editLayer"),
+            quotationVersionModal: com.focusPage("#quotationVersionModal"),
+            addQuotaionItemModal: com.focusPage("#addQuotaionItemModal"),
+            normoodsModal: com.focusPage("#normoodsModal")
         },
 
         status: ["启用", "禁用"],
         atttype: ["标准", "外辅"],
+
         pageType: params.urlLoadParams.type,
     };
 
     com.post(api.data.queryAccessoriesType, {}, function(res) {
 
         aoods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
-        com.focusPage('select[name="editAccessoriesType"]').bindData(res.accessoriesTypes, 'atid', 'name', false);
+        com.focusPage('select[name="editAccessoriesType"]').bindData(res.accessoriesTypes, 'atid', 'name', true);
+    });
+
+    com.initTypeahead('nood', api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
+    com.initTypeahead('editNood', api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
+
+    com.post(api.quotation.queryQuotationVersion, {}, function(res) {
+
+        aoods.items.quotationVersion.bindData(res.quotationVersions, 'no', 'name');
     });
 
     com.post(api.system.queryCompany, {}, function(res) {
 
         aoods.items.bcompany.bindData(res.companys, 'cid', 'name', true);
         aoods.items.ccompany.bindData(res.companys, 'cid', 'name', true);
-        com.focusPage('select[name="editBcompany"]').bindData(res.companys, 'cid', 'name', false);
+
+        aoods.items.editBcompany.bindData(res.companys, 'cid', 'name', true);
     });
+
+    com.post(api.data.queryConstructionNode, {}, function(res) {
+
+        aoods.items.editConstructionNode.bindData(res.constructionNodes, "cnid", "name", true);
+        aoods.items.constructionNode.bindData(res.constructionNodes, "cnid", "name", true);
+    });
+
     com.post(api.ds.data, {}, function(res) {
 
-        com.focusPage('select[name="editAtttype"]').bindData(res.aoodsAtttype, "key", "value", false);
-        com.focusPage('select[name="atttype"]').bindData(res.aoodsAtttype, "key", "value", false);
-    }, null, false);
+        aoods.items.atttype.bindData(res.aoodsAtttype, "key", "value", false);
+        aoods.items.editAtttype.bindData(res.aoodsAtttype, "key", "value", false);
+    });
 
     aoods.btns.submitBtn.click(function() {
 
@@ -65,22 +100,13 @@ $(function() {
         copyAoods();
     });
 
-    com.initTypeahead("name", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
-
-        $.each(list, function(index, val) {
-
-            if (val.gid == k) {
-                aoods.gid = k;
-            }
-        });
-        return v;
-    });
+    com.initTypeahead(aoods.items.goodsName, api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name");
 
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageAoods);
-
     searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-bompany", "data-aoods-atttype"]);
+    searcher.history("aoodsHistoryData");
 
     if (aoods.pageType == "bompany") {
         searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-atttype"]);
@@ -95,7 +121,7 @@ $(function() {
         name: "添加",
         clazz: "btn-yellow",
         icon: "icon-plus"
-    }, ]);
+    }]);
 
     if (aoods.pageType == "company") {
         searcher.button([{
@@ -103,10 +129,15 @@ $(function() {
             name: "复制",
             clazz: "btn-success",
             icon: "icon-download-alt"
-        }])
+        }]);
     }
 
     var lineprops = [{
+        field: "name",
+        name: "名称",
+        prop: "name",
+        clazz: "grey"
+    }, {
         field: "goods.brand",
         name: "品牌",
         prop: "goods.brand",
@@ -120,17 +151,22 @@ $(function() {
         field: "goods.measurementUnit",
         name: "单位",
         prop: "goods.measurementUnit",
-        clazz: "grey"
+        clazz: "red"
     }, {
-        field: "goods.selling",
+        field: "selling",
         name: "售价",
-        prop: "goods.selling",
-        clazz: "grey"
+        prop: "selling",
+        clazz: "blue"
+    }, {
+        field: "balance",
+        name: "结算价",
+        prop: "balance",
+        clazz: "blue"
     }, {
         field: "accessoriesType.name",
         name: "辅类",
         prop: "accessoriesType.name",
-        clazz: "grey"
+        clazz: "red"
     }, {
         field: "status",
         name: "状态 ",
@@ -146,30 +182,51 @@ $(function() {
         field: "atttype",
         name: "业务类型 ",
         prop: "atttype",
-        clazz: "grey",
+        clazz: "red",
         dataset: aoods.atttype
     }, {
-        field: "balance",
-        name: "结算价",
-        prop: "balance",
+        field: "noods.name",
+        name: "定材 ",
+        prop: "noods.name",
         clazz: "grey"
-    },
-
-    ];
+    }, {
+        field: "constructionNode.name",
+        name: "施工节点 ",
+        prop: "constructionNode.name",
+        clazz: "grey"
+    }, ];
 
     var linebtns = [{
+        name: "定材",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            aoods.aid = v.aid;
+            aoods.modals.quotationVersionModal.modal("show");
+        }
+    }, {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
 
             com.cleanItems(aoods.items);
-            aoods.items.editBalance.val(v.balance);
-            aoods.aid = v.aid;
-            aoods.items.editAccessoriesType.val(v.accessoriesType.atid);
-            aoods.items.old.val(v.bompany);
-            aoods.items.editAtttype.val(v.atttype);
 
-            com.popup4model("#editLayer", "编辑")
+            aoods.aid = v.aid;
+            aoods.gid = v.goods.gid;
+
+            com.updateTypeahead(aoods.items.editNood, v.noods.nid, v.noods.name);
+
+            aoods.items.old.val(v.bompany);
+
+            aoods.items.editName.val(v.name);
+            aoods.items.editNood.val(v.noods.name);
+            aoods.items.editBalance.val(v.balance);
+            aoods.items.editSelling.val(v.selling);
+            aoods.items.editAccessoriesType.val(v.accessoriesType.atid);
+            aoods.items.editAtttype.val(v.atttype);
+            aoods.items.editConstructionNode.val(v.constructionNode.cnid);
+
+            com.popup4model("#editLayer", "编辑");
         }
     }, {
         name: "成本",
@@ -189,13 +246,14 @@ $(function() {
                 "aoods.aid": v.aid,
                 "aoods.status": check ? 0 : 1
             });
+
             return false;
         },
         init: function(v) {
 
             return !v.status;
         }
-    }, ];
+    }];
 
     searcher.line("goods.name", lineprops, linebtns);
 
@@ -219,23 +277,22 @@ $(function() {
             return false;
         }
 
-        var gid = aoods.gid;
-        var atid = aoods.items.accessoriesType.val();
-        var bcid = aoods.items.bcompany.val();
-        var atttype = aoods.items.atttype.val();
-        var balance = aoods.items.balance.val();
-
         var options = {
-            "aoods.goods.gid": gid,
-            "aoods.accessoriesType.atid": atid,
-            "aoods.bompany": bcid,
-            "aoods.atttype": atttype,
-            "aoods.balance": balance,
+            "aoods.name": aoods.items.aoodName.val(),
+            "aoods.goods.gid": com.typeahead(aoods.items.goodsName),
+            "aoods.noods.nid": com.typeahead(aoods.items.nood),
+            "aoods.accessoriesType.atid": aoods.items.accessoriesType.val(),
+            "aoods.bompany": aoods.items.bcompany.val(),
+            "aoods.atttype": aoods.items.atttype.val(),
+            "aoods.balance": aoods.items.balance.val(),
+            "aoods.selling": aoods.items.selling.val(),
+            "aoods.constructionNode.cnid": aoods.items.constructionNode.val()
         };
 
         com.post(api.data.addAoods, options, function(res) {
 
             com.closePopup();
+
             searcher.doSearch();
         });
     }
@@ -245,21 +302,18 @@ $(function() {
         if (com.validate("editAoods", "right")) {
             return false;
         }
-        var atid = aoods.items.editAccessoriesType.val();
-        var bcid = aoods.items.editBcompany.val();
-        var atttype = aoods.items.editAtttype.val();
-        var balance = aoods.items.editBalance.val();
-
-        // var checkup = aoods.items.editCheckup.val();
 
         var options = {
             "aoods.aid": aoods.aid,
-            // "aoods.checkup": checkup,
-            "aoods.accessoriesType.atid": atid,
-            "aoods.bompany": bcid,
-            "aoods.atttype": atttype,
-            "aoods.balance": balance,
-
+            "aoods.name": aoods.items.editName.val(),
+            "aoods.goods.gid": aoods.gid,
+            "aoods.noods.nid": com.typeahead(aoods.items.editNood),
+            "aoods.accessoriesType.atid": aoods.items.editAccessoriesType.val(),
+            "aoods.bompany": aoods.items.editBcompany.val(),
+            "aoods.atttype": aoods.items.editAtttype.val(),
+            "aoods.balance": aoods.items.editBalance.val(),
+            "aoods.selling": aoods.items.editSelling.val(),
+            "aoods.constructionNode.cnid": aoods.items.editConstructionNode.val()
         };
 
         com.post(api.data.updateAoods, options, function(res) {
@@ -269,36 +323,201 @@ $(function() {
         });
     }
 
-    function updateStatus(id, status, failcallBack) {
-
-        com.post(api.data.updateAoodsForStatus, {
-            "aoods.aid": id,
-            "aoods.status": status
-        }, function() {
-
-            searcher.doSearch();
-        }, function() {
-
-            failcallBack && failcallBack();
-        });
-    }
-
     function copyAoods() {
 
         if (com.validate("copyAoods", "right")) {
             return false;
         }
 
-        var bcid = aoods.items.ccompany.val();
-
-        var options = {
-            "aoods.bompany": bcid,
-        };
-
-        com.post(api.data.copyAoods, options, function(res) {
+        com.post(api.data.copyAoods, {
+            "aoods.bompany": aoods.items.ccompany.val(),
+        }, function(res) {
 
             com.closePopup();
+
             searcher.doSearch();
         });
     }
+
+    var painter = {
+        /**
+         * 创建添加数据中报价项弹窗中的报价项
+         * 
+         * @param v
+         * @param id
+         * @param name
+         * @returns
+         */
+        createDataItemModal: function(v, id, name) {
+
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').css({
+                "margin-bottom": 0
+            });
+
+            var $label = $('<label></label>');
+            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
+            var $btnDiv = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
+
+            var $btnSelect = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('选择').appendTo($btnDiv);
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+            var propertyArr = [];
+            propertyArr.push(["类型: ", v.category.name, "red"]);
+            propertyArr.push(["分类: ", v.classification.name, "red"]);
+            propertyArr.push(["大类: ", v.bigCategory.name, "red"]);
+            propertyArr.push(["小类: ", v.smallCategory.name, "red"]);
+            propertyArr.push(["单位: ", v.unit.name, "red"]);
+            propertyArr.push(["工种: ", v.workType.name, "red"]);
+            propertyArr.push(["单价: ", v.unitPrice, "blue"]);
+            propertyArr.push(["版本: ", v.version.name, "grey"]);
+            propertyArr.push(["说明: ", v.comment, "grey"]);
+
+            $.each(propertyArr, function(index, value) {
+
+                var $liProperty = $('<li></li>');
+
+                if (value[1]) {
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                    $liProperty.appendTo($ulProperty);
+                }
+
+                if (value[3]) {
+                    $liProperty.addClass(value[3]);
+                }
+            });
+
+            $label.append($span).appendTo($h3);
+            $liLine.append($h3).append($ulProperty);
+
+            $btnSelect.click(function() {
+
+                if (com.validate("addQuotaionItemModal"))
+                    return false;
+
+                var _params = {
+                    "normood.quotationItem.qiid": v.qiid
+                };
+                com.post(api.data.queryNormoodByQiid, _params, function(res) {
+
+                    var $tableWrap = com.focusPage('#normoodList', aoods.modals.normoodsModal).empty();
+                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                    if (res.normoods && res.normoods.length) {
+                        $.each(res.normoods, function(i, v) {
+
+                            painter.createNormoodsModal(v).appendTo($ul);
+                        });
+                        $ul.appendTo($tableWrap);
+                    }
+                }, null, false);
+
+                aoods.modals.addQuotaionItemModal.modal("hide");
+                aoods.modals.normoodsModal.modal("show");
+            });
+
+            return $liLine;
+        },
+        /**
+         * 创建添加报价中定额材料
+         * 
+         * @param v
+         * @param id
+         * @param name
+         * @returns
+         */
+        createNormoodsModal: function(v) {
+
+            var $liLine = $('<li></li>').addClass('item-blue clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').css({
+                "margin-bottom": 0
+            });
+
+            var $label = $('<label></label>');
+            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $btnDiv = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
+            var $btnSelect1 = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('选择').appendTo($btnDiv);
+
+            var propertyArr = [];
+            propertyArr.push(["定额单位: ", v.normunit, "gray"]);
+            propertyArr.push(["定额数量: ", v.normnum, "blue"]);
+            propertyArr.push(["库房单位: ", v.storeunit, "gray"]);
+            propertyArr.push(["库房数量: ", v.storenum, "blue"]);
+            propertyArr.push(["状态: ", constant.data().normood.status.keys[v.status], "red"]);
+
+            $.each(propertyArr, function(index, value) {
+
+                var $liProperty = $('<li></li>');
+
+                if (value[1]) {
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                    $liProperty.appendTo($ulProperty);
+                }
+
+                if (value[3]) {
+                    $liProperty.addClass(value[3]);
+                }
+            });
+
+            $label.append($span).appendTo($h3);
+            $liLine.append($h3).append($ulProperty);
+
+            $btnSelect1.click(function() {
+
+                var options = {
+                    "aoods.aid": aoods.aid,
+                    "aoods.noods.nid": v.noods.nid,
+                };
+
+                com.post(api.data.updateAoodsForNorm, options, function(res) {
+
+                    aoods.modals.normoodsModal.modal("hide");
+                    searcher.doSearch();
+                }, null, false);
+
+            });
+
+            return $liLine;
+        },
+    };
+
+    com.focusPage('#confirmItemBtn').off().on('click', function() {
+
+        if (com.validate("quotationVersionModal"))
+            return false;
+
+        var versionId = com.focusPage('#quotationVersion').val();
+
+        var extraParams = {
+            "quotationItem.version.no": versionId
+        };
+
+        var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
+        var quotationSeacher = new Searcher();
+        quotationSeacher.init(_condArrn, "condListn1", api.quotation.pageQuotationItemByVersionId, function(data) {
+
+            var $tableWrap = com.focusPage('#resultListn1').empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if (data && data.length) {
+                $.each(data, function(i, v) {
+
+                    v.measurementUnit = v.unit.name;
+                    v.workType = v.workType.name;
+                    v.quotationItemDes = v.comment;
+                    painter.createDataItemModal(v, "qiid", "name").appendTo($ul);
+                });
+                $ul.appendTo($tableWrap);
+            }
+        }, "pagenationn1", "addQuotaionItemModalPostDatan", extraParams);
+
+        aoods.modals.quotationVersionModal.modal("hide");
+        aoods.modals.addQuotaionItemModal.modal("show");
+
+    });
+
 });

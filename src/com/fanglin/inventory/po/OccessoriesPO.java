@@ -83,6 +83,8 @@ public class OccessoriesPO implements Serializable {
 
 	private Timestamp finishTime;// 完成时间
 
+	private long total;
+
 	private short isEnter;// 是否可进园区
 
 	private short isLift;// 是否有电梯
@@ -248,6 +250,15 @@ public class OccessoriesPO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@Column(name = "total")
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)

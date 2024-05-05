@@ -23,16 +23,17 @@ jQuery(function($) {
             statues: com.focusPage("#status", "#createPresignProduceModal"),
             mostPrice: com.focusPage("#mostPrice", "#createPresignProduceModal"),
             costRate: com.focusPage("#costRate", "#createPresignProduceModal"),
-            mostRate: com.focusPage("#mostRate", "#createPresignProduceModal")
+            mostRate: com.focusPage("#mostRate", "#createPresignProduceModal"),
+            manageFormula: com.focusPage("#manageFormula", "#createPresignProduceModal"),
         },
 
         status: {},
     };
-    com.post(api.ds.quotation, {}, function(res) {
-        presignProduce.status = res.presignProduceStatus.split("key", "value");
-    }, null, false);
+
+    presignProduce.status = constant.data().presignProduce.status.keys;
 
     presignProduce.modals.createPresignProduceModal.on('hide.bs.modal', function() {
+
         com.clearValidator();
         com.cleanItems(presignProduce.items);
     });
@@ -72,6 +73,16 @@ jQuery(function($) {
         name: "管理费比例",
         prop: "manageRate",
         clazz: "blue"
+    }, {
+        fieId: "manageFormula",
+        name: "管理费公式",
+        prop: function(v) {
+
+            var manageFormula = v.manageFormula != null ? paramToFormula(v.manageFormula) : "";
+
+            return manageFormula;
+        },
+        clazz: "grey"
     }, {
         fieId: "costPrice",
         name: "成本单价",
@@ -121,6 +132,7 @@ jQuery(function($) {
             presignProduce.items.mostPrice.val(v.mostPrice);
             presignProduce.items.costRate.val(v.costRate);
             presignProduce.items.mostRate.val(v.mostRate);
+            presignProduce.items.manageFormula.val(v.manageFormula ? paramToFormula(v.manageFormula) : "");
 
             presignProduce.modals.createPresignProduceModal.modal("show");
 
@@ -173,6 +185,7 @@ jQuery(function($) {
             return false;
         },
         init: function(v) {
+
             return !v.status;
         }
     }, ];
@@ -193,6 +206,22 @@ jQuery(function($) {
 
         var url = api.quotation.addPresignProduce;
 
+        var manageFormula = presignProduce.items.manageFormula.val();
+
+        if (manageFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+
+            com.showAlert(com.warning, "公式存在无效参数");
+
+            return false;
+        }
+
+        if (evals(formulaToParam(manageFormula))) {
+
+            com.showAlert(com.warning, "公式运算结果失败");
+
+            return false;
+        }
+
         var options = {
             "presignProduce.name": presignProduce.items.name.val(),
             "presignProduce.quotePrice": presignProduce.items.quotePrice.val(),
@@ -203,7 +232,8 @@ jQuery(function($) {
             "presignProduce.offset": presignProduce.items.offset.val(),
             "presignProduce.mostPrice": presignProduce.items.mostPrice.val(),
             "presignProduce.costRate": presignProduce.items.costRate.val(),
-            "presignProduce.mostRate": presignProduce.items.mostRate.val()
+            "presignProduce.mostRate": presignProduce.items.mostRate.val(),
+            "presignProduce.manageFormula": formulaToParam(manageFormula),
         };
 
         if (presignProduce.ppid) {
@@ -212,9 +242,37 @@ jQuery(function($) {
         }
 
         com.post(url, options, function(res) {
+
             seacher.doSearch();
         });
 
         presignProduce.modals.createPresignProduceModal.modal("hide");
+    }
+
+    function formulaToParam(formula) {
+
+        return formula.replace(/\u8d77\u62a5\u4ef7/g, "{a}").replace(/\u4f18\u60e0\u989d/g, "{b}").replace(/\u529f\u80fd\u533a/g, "{c}").replace(/\u4e2a\u6027/g, "{d}").replace(/\u51cf\u9879/g, "{e}").replace(/\u8d4b\u80fd/g, "{f}");
+    }
+
+    function paramToFormula(param) {
+
+        return param.replace(/\{a\}/g, "\u8d77\u62a5\u4ef7").replace(/\{b\}/g, "\u4f18\u60e0\u989d").replace(/\{c\}/g, "\u529f\u80fd\u533a").replace(/\{d\}/g, "\u4e2a\u6027").replace(/\{e\}/g, "\u51cf\u9879").replace(/\{f\}/g, "\u8d4b\u80fd")
+        \u8d4b\u80fd;
+    }
+
+    function evals(formula) {
+
+        formula = com.format(formula, {
+            "a": 1,
+            "b": 1,
+            "c": 1,
+            "d": 1,
+            "e": 1,
+            "f": 1,
+        });
+
+        var res = new Function("return function(){return " + formula + "}")()();
+
+        return isNaN(res) || !Number.isFinite(res);
     }
 });

@@ -24,6 +24,7 @@ import com.fanglin.utils.PinYin4Util;
 @Service("dutyService")
 @Transactional(readOnly = true)
 public class DutyServiceImpl implements DutyService {
+
 	@Autowired
 	private DutyDao dutyDao;
 
@@ -37,6 +38,7 @@ public class DutyServiceImpl implements DutyService {
 		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
 
 		for (DutyPO dutyPO : dutyPOs) {
+
 			DutyVO dutyVO = new DutyVO(new DepartmentTypeVO());
 
 			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
@@ -58,6 +60,7 @@ public class DutyServiceImpl implements DutyService {
 		DutyVO dutyVO;
 
 		for (DutyPO dutyPO : dutyPOs) {
+
 			dutyVO = new DutyVO(new DepartmentTypeVO());
 
 			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
@@ -71,22 +74,48 @@ public class DutyServiceImpl implements DutyService {
 	}
 
 	@Override
-	public List<DutyVO> queryDutyByDtid(DutyVO duty) {
+	public List<DutyVO> queryDutyByName(String name, DutyVO dutyVO) {
 
-		List<DutyPO> dutyPOs = dutyDao.queryDutyByDtid(duty.getDepartmentType().getDtid());
+		if (dutyVO == null) dutyVO = new DutyVO();
+
+		Integer dtid = null;
+
+		if (dutyVO.getDepartmentType() != null) dtid = dutyVO.getDepartmentType().getDtid();
+
+		List<DutyPO> dutyPOs = dutyDao.pageDutyByName(new Paging(0, 10), name, dtid, dutyVO.getStatus());
 		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
 
-		DutyVO dutyVO;
+		for (DutyPO dutyPO : dutyPOs) {
+
+			dutyVO = new DutyVO(new DepartmentTypeVO());
+
+			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(dutyPO.getDepartmentType(), dutyVO.getDepartmentType());
+
+			dutyVOs.add(dutyVO);
+		}
+
+		return dutyVOs;
+	}
+
+	@Override
+	public List<DutyVO> queryDutyByDtid(DutyVO dutyVO) {
+
+		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
+
+		if (dutyVO == null) return dutyVOs;
+
+		if (dutyVO.getDepartmentType() == null) return dutyVOs;
+
+		List<DutyPO> dutyPOs = dutyDao.queryDutyByDtid(dutyVO.getDepartmentType().getDtid());
 
 		for (DutyPO dutyPO : dutyPOs) {
+
 			dutyVO = new DutyVO(new DepartmentTypeVO());
 
 			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
 
-			if (dutyPO.getDepartmentType() != null) {
-
-				BeanUtil.copyProperties(dutyPO.getDepartmentType(), dutyVO.getDepartmentType());
-			}
+			if (dutyPO.getDepartmentType() != null) BeanUtil.copyProperties(dutyPO.getDepartmentType(), dutyVO.getDepartmentType());
 
 			dutyVOs.add(dutyVO);
 		}
@@ -129,7 +158,7 @@ public class DutyServiceImpl implements DutyService {
 
 		DepartmentTypePO departmentTypePO = departmentTypeDao.get(dutyVO.getDepartmentType().getDtid());
 
-		BeanUtil.copyProperties(dutyVO, dutyPO, Arrays.asList("departmentType"));
+		BeanUtil.copyProperties(dutyVO, dutyPO, Arrays.asList("departmentType", "status"));
 
 		dutyPO.setDepartmentType(departmentTypePO);
 
@@ -143,42 +172,16 @@ public class DutyServiceImpl implements DutyService {
 	public int updateDutyForStatus(DutyVO dutyVO) throws FLException {
 
 		DutyPO dutyPO = dutyDao.get(dutyVO.getDid());
+
 		if (dutyPO == null) {
 			throw new FLException(130015, "职位不存在");
 		}
-		BeanUtil.copyProperties(dutyVO, dutyPO);
+
 		dutyPO.setStatus(dutyVO.getStatus());
+
 		dutyDao.update(dutyPO);
 
 		return 0;
 	}
 
-	@Override
-	public List<DutyVO> queryDutyByName(String pinYinName, DutyVO dutyVO) {
-
-		if (dutyVO.getStatus() == null) {
-			dutyVO.setStatus((short) 0);
-		}
-
-		int dtid = 0;
-
-		if (dutyVO.getDepartmentType() != null && dutyVO.getDepartmentType().getDtid() != 0) {
-
-			dtid = dutyVO.getDepartmentType().getDtid();
-		}
-
-		List<DutyPO> dutyPOs = dutyDao.pageDutyByName(new Paging(0, 10), pinYinName, dtid, dutyVO.getStatus());
-		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
-
-		for (DutyPO dutyPO : dutyPOs) {
-			dutyVO = new DutyVO(new DepartmentTypeVO());
-
-			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(dutyPO.getDepartmentType(), dutyVO.getDepartmentType());
-
-			dutyVOs.add(dutyVO);
-		}
-
-		return dutyVOs;
-	}
 }

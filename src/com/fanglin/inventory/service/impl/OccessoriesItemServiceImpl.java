@@ -10,14 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.OccessoriesDao;
 import com.fanglin.inventory.dao.OccessoriesItemDao;
 import com.fanglin.inventory.po.OccessoriesItemPO;
 import com.fanglin.inventory.po.OccessoriesPO;
 import com.fanglin.inventory.service.OccessoriesItemService;
 import com.fanglin.inventory.vo.OccessoriesItemVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("occessoriesItemService")
@@ -29,6 +32,9 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 
 	@Autowired
 	private OccessoriesDao occessoriesDao;
+
+	@Autowired
+	private GoodsDao goodsDao;
 
 	@Override
 	public List<OccessoriesItemVO> queryOccessoriesItemByOid(OccessoriesItemVO occessoriesItemVO) {
@@ -77,6 +83,8 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		occessoriesItemPO.setRbalance(occessoriesItemVO.getRbalance());
 		occessoriesItemPO.setVbalance(occessoriesItemVO.getRbalance());
 
+		occessoriesPO.setTotal(Arith.add(occessoriesPO.getTotal(), (occessoriesItemVO.getGoods().getSelling() * occessoriesItemVO.getNum())));
+
 		occessoriesItemDao.save(occessoriesItemPO);
 
 		return 0;
@@ -97,7 +105,13 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
+		GoodsPO goodsPO = goodsDao.get(occessoriesItemVO.getGoods().getGid());
 
+		long oldTotal = occessoriesPO.getTotal();
+		long totals = Arith.mul(occessoriesItemPO.getNum(), goodsPO.getSelling());
+		long total = Arith.mul(occessoriesItemVO.getNum(), goodsPO.getSelling());
+
+		occessoriesPO.setTotal(Arith.sub(oldTotal, (Arith.sub(totals, total))));
 		occessoriesItemPO.setNum(occessoriesItemVO.getNum());
 
 		occessoriesItemDao.update(occessoriesItemPO);
@@ -120,6 +134,10 @@ public class OccessoriesItemServiceImpl implements OccessoriesItemService {
 		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
+
+		long total = Arith.mul(occessoriesItemPO.getGoods().getSelling(), occessoriesItemPO.getNum());
+
+		occessoriesPO.setTotal(Arith.sub(occessoriesPO.getTotal(), total));
 
 		occessoriesItemDao.delete(occessoriesItemPO);
 

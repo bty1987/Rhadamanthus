@@ -111,25 +111,25 @@ $(function () {
                         propertyArr.push(["完结时间:", v.finishTime, "green"]);
                         break;
                     case "creater":
-                        propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
+                        propertyArr.push(["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
                         break;
                     case "traner":
-                        propertyArr.push(["配送人:", v.traner.currentName, "grey"]);
+                        propertyArr.push(["配送人:", v.traner.currentName, "grey", tools.personel.info, v.traner.userId]);
                         break;
                     case "checker":
-                        propertyArr.push(["审核人:", v.checker.currentName, "grey"]);
+                        propertyArr.push(["审核人:", v.checker.currentName, "grey", tools.personel.info, v.checker.userId]);
                         break;
                     case "confirmer":
-                        propertyArr.push(["确认人:", v.confirmer.currentName, "grey"]);
+                        propertyArr.push(["确认人:", v.confirmer.currentName, "grey", tools.personel.info, v.confirmer.userId]);
                         break;
                     case "finisher":
-                        propertyArr.push(["完结人:", v.finisher.currentName, "grey"]);
+                        propertyArr.push(["完结人:", v.finisher.currentName, "grey", tools.personel.info, v.finisher.userId]);
                         break;
                     case "comment":
                         propertyArr.push(["备注:", v.comment, "grey"]);
                         break;
                     case "brand":
-                        propertyArr.push(["品牌:", v.salesItem.goods.brand, "grey"]);
+                        propertyArr.push(["品牌:", v.salesItem.goods.brand, "grey", tools.brand.info, v.sales.bid]);
                         break;
                     case "category":
                         propertyArr.push(["品类:", v.salesItem.goods.category, "grey"]);
@@ -144,7 +144,7 @@ $(function () {
                         propertyArr.push(["楼盘地址:", (v.sales.house.village.name + " " + v.sales.house.houseNumber), "grey"]);
                         break;
                     case "orderId":
-                        propertyArr.push(["装修单号:", v.sales.orderId, "blue"]);
+                        propertyArr.push(["装修单号:", v.sales.orderId, "blue", tools.decoration.info, v.sales.orderId]);
                         break;
                     case "protranTime":
                         propertyArr.push(["预计配送时间:", v.protranTime, "green"]);
@@ -152,12 +152,20 @@ $(function () {
                 }
             });
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
 
-                var $liProperty = $('<li></li>');
+                var $liProperty = $('<li></li>').appendTo($ulProperty);
+
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
+
+                if (value.length == 5) {
+                    $liProperty.click(function() {
+
+                        value[3]($liProperty, value[4]);
+
+                    }).css("cursor", "pointer");
+                }
             });
 
             $divBtnWrap.append($btnDecoration);

@@ -39,7 +39,11 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO im
 
 	private String workType;
 
+	private int addPrice;
+
 	private int unitPrice;
+
+	private int subPrice;
 
 	private String formula;
 
@@ -99,6 +103,15 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO im
 		this.workType = workType;
 	}
 
+	@Column(name = "addPrice")
+	public int getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(int addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	@Column(name = "unitPrice")
 	public int getUnitPrice() {
 		return unitPrice;
@@ -106,6 +119,15 @@ public class QuotationFunctionAreaItemPO2 extends QuotationFunctionAreaItemPO im
 
 	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	@Column(name = "subPrice")
+	public int getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(int subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	@Column(name = "formula")

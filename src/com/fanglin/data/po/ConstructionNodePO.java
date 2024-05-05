@@ -61,6 +61,11 @@ public class ConstructionNodePO implements Serializable {
 		super();
 	}
 
+	public ConstructionNodePO(long cnid) {
+		super();
+		this.cnid = cnid;
+	}
+
 	public ConstructionNodePO(SurveyTemplatePO startSurvey, SurveyTemplatePO endSurvey) {
 		super();
 		this.startSurvey = startSurvey;

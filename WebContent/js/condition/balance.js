@@ -1,6 +1,5 @@
-
 Condition.addupRule("balance", {
-    
+
     "balanceAccount-name": {
         label: "名称",
         type: "text",
@@ -21,7 +20,13 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "有效"}, {key: "1", value: "无效"}],
+            listPath: [{
+                key: "0",
+                value: "有效"
+            }, {
+                key: "1",
+                value: "无效"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -46,7 +51,13 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "支出"}, {key: "1", value: "收款"}],
+            listPath: [{
+                key: "0",
+                value: "支出"
+            }, {
+                key: "1",
+                value: "收款"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -62,7 +73,35 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "初始"}, {key: "1", value: "完结"}],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "完结"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balance-isPay": {
+        label: "付款标识",
+        type: "select",
+        submitConfig: {
+            name: "isPay",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "未付"
+            }, {
+                key: "1",
+                value: "已付"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -86,40 +125,41 @@ Condition.addupRule("balance", {
         },
         dataSource: {
             url: api.data.queryBrandByPinyin,
+            query: "brand.pinyin",
             postData: {},
             listPath: "brands",
             keyPath: "bid",
             valuePath: "name",
         }
     },
-    "balanceSelse-grade" : {
-        label:"等级",
-        type:"select",
-        submitConfig:{
+    "balanceSelse-grade": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
             name: "grade",
             op: "eq",
-            validate: null 
+            validate: null
         },
         dataSource: {
-            url: api.ds.balance,
+            url: null,
             postData: {},
-            listPath: "balanceSalesGrade",
+            listPath: constant.balance().balanceSales.grade.datas,
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "balanceSelse-status" : {
-        label:"状态",
-        type:"select",
-        submitConfig:{
+    "balanceSelse-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
             name: "status",
             op: "eq",
-            validate: null 
+            validate: null
         },
         dataSource: {
-            url: api.ds.balance,
+            url: null,
             postData: {},
-            listPath: "balanceSalesStatus",
+            listPath: constant.balance().balanceSales.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -143,7 +183,10 @@ Condition.addupRule("balance", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":""},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -178,7 +221,13 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "有效"}, {key: "1", value: "失效"}],
+            listPath: [{
+                key: "0",
+                value: "有效"
+            }, {
+                key: "1",
+                value: "失效"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -203,7 +252,13 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "支出"}, {key: "1", value: "收款"}],
+            listPath: [{
+                key: "0",
+                value: "支出"
+            }, {
+                key: "1",
+                value: "收款"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -219,9 +274,129 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "初始"}, {key: "1", value: "完结"}],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "完结"
+            }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "balanceSelse-balance-isPay": {
+        label: "付款标识",
+        type: "select",
+        submitConfig: {
+            name: "balanceIsPay",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "未付"
+            }, {
+                key: "1",
+                value: "已付"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelection-balance-no": {
+        label: "结算单号",
+        type: "text",
+        submitConfig: {
+            name: "balanceNo",
+            op: "cn",
+            validate: null
+        }
+    },
+    "balanceSelection-balance-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "balanceType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "支出"
+            }, {
+                key: "1",
+                value: "收款"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelection-balance-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "balanceStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "完结"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelection-balance-isPay": {
+        label: "付款标识",
+        type: "select",
+        submitConfig: {
+            name: "balanceIsPay",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "未付"
+            }, {
+                key: "1",
+                value: "已付"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelection-brand": {
+        label: "品牌",
+        type: "autofill",
+        submitConfig: {
+            name: "brandId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryBrandByPinyin,
+            query: "brand.pinyin",
+            postData: {},
+            listPath: "brands",
+            keyPath: "bid",
+            valuePath: "name",
         }
     },
 });

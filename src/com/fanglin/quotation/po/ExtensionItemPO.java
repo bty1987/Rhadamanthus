@@ -17,6 +17,18 @@ public class ExtensionItemPO implements Serializable {
 
 	private static final long serialVersionUID = 6856979622166928634L;
 
+	public static final short TYPE_ADD_DATA_INT = 0;
+
+	public static final short TYPE_ADD_CUSTOM_INT = 1;
+
+	public static final short TYPE_SUB_DATA_INT = 2;
+
+	public static final short TYPE_SUB_REDUCE_INT = 3;
+
+	public static final short TYPE_SUB_QUOTE_INT = 4;
+
+	public static final short TYPE_ADD_QUOTE_INT = 5;
+
 	public static final String COLUMN_EID_STR = "eid";
 
 	private long eiid;

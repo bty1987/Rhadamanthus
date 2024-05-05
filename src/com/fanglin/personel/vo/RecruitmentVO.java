@@ -2,93 +2,92 @@ package com.fanglin.personel.vo;
 
 import java.io.Serializable;
 
+public class RecruitmentVO implements Serializable {
 
-public class RecruitmentVO implements Serializable{
+	private static final long serialVersionUID = -3459232664793776704L;
 
-	private static final long serialVersionUID = 1L;
-	
 	private Long rid;
-	 
+
 	private String name;
-	 
+
 	private String identity;
 
 	private String nation;
-	 
+
 	private String place;
-	 
+
 	private Integer weight;
-	 
+
 	private Integer height;
-	 
+
 	private Short employWay;
-	 
+
 	private Short householdType;
-	 
+
 	private Short political;
-	 
+
 	private Short education;
-	 
+
 	private String phone;
-	 
+
 	private String wechat;
-	 
+
 	private String qq;
-	 
+
 	private String address;
-	 
+
 	private String nativePlace;
-	 
+
 	private String hometownPlace;
-	 
+
 	private String specialty;
-	 
+
 	private String emergencyMan;
-	 
+
 	private String emergencyPhone;
-	 
+
 	private Short isMarried;
-	 
+
 	private Short isBirth;
-	 
+
 	private Short isHouse;
-	 
+
 	private Short isCar;
-	 
+
 	private Short isHouseLoan;
-	 
+
 	private Short isCarLoan;
-	 
+
 	private Short isCarID;
-	 
+
 	private Short isPassID;
-	 
+
 	private Short isHMID;
-	 
+
 	private Short isTWID;
-	 
+
 	private Short isContract;
-	 
+
 	private Short isSnsurance;
-	 
+
 	private Short isFire;
-	 
+
 	private Short isCnsurance;
-	 
+
 	private Short isCompete;
-	 
+
 	private Short isTrain;
-	 
+
 	private Short isCriminal;
-	 
+
 	private Short isDisease;
-	
+
 	private Short status;
-	
+
 	private String photoPath;
-	 
+
 	private String identityPathF;
-	
+
 	private String identityPathB;
 
 	public Long getRid() {
@@ -182,7 +181,7 @@ public class RecruitmentVO implements Serializable{
 	public String getPhone() {
 		return phone;
 	}
-	
+
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}

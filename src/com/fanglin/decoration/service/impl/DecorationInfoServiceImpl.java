@@ -64,13 +64,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		if (decorationPO.getSourceStatus() == decorationInfoVO.getSourceStatus()) return;
 
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT && decorationPO.getSourceStatus() == DecorationPO.STATUS_INITIA_INT) {
-			decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 您的合同设计方案已完成 , 请及时查收 , 当前无变更请点确认 , 代表您对设计方案满意. 放线开工前 , 如有修改可随时联系设计师调整 . 感谢您的配合 , 祝生活愉快 .", orderId), String.format("pages/construction/drawLine/drawLine?orderId=%s&type=1", orderId));
+			decorationService.sendMessage(orderId, "装修单", "初稿方案请查收确认, 如有修改可以调整.", String.format("pages/construction/drawLine/drawLine?orderId=%s&type=1", orderId));
 		}
 
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT && decorationPO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
-			decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 为使您的工程进度有序进展 , 请您对预计放线开工的方案及时查收 , 无变更请点确认 , 代表可按该方案为您准备放线进场事项 . 感谢您的配合 , 祝您生活愉快 .", orderId), String.format("pages/construction/drawLine/drawLine?orderId=%s&type=2", orderId));
+			decorationService.sendMessage(orderId, "装修单", "施工方案请查收确认, 已便安排放线进场.", String.format("pages/construction/drawLine/drawLine?orderId=%s&type=2", orderId));
 		}
-
 	}
 
 	@Override
@@ -89,8 +88,13 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		if (decorationVO.getCustomer().getPhone() == null || !decorationVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
-			throw new FLException(130115, "客户电话验证失败");
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(orderId);
+		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		if (decorationPO.getSourceStatus() >= decorationInfoVO.getSourceStatus()) {

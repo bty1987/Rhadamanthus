@@ -4,7 +4,7 @@
         <div class="col-xs-12">
             <div class="page-header">
                 <h1>
-                    <span id="activityName">订单活动物品</span>
+                    <span id="activityName">装修活动物品</span>
                 </h1>
             </div>
             <div class="col-md-12">
@@ -35,6 +35,7 @@
                 <div class="col-xs-12 col-sm-12 pricing-span-body" style="padding: 13px;">
                     <h2 class="blue">
                         <span>奖品</span>
+                        <a class="btn btn-minier btn-info pull-right icon-qrcode hide" id="btnNoticeQRCode"></a>
                         <a class="btn btn-minier btn-info pull-right hide" id="btnNotice">
                             <span>发送</span>
                         </a>
@@ -259,6 +260,26 @@
             <div class="modal-footer">
                 <button type="button" id="commentActivityBtn" class="btn btn-primary">保存</button>
                 <button type="button" id="commentBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="QRcodeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content col-md-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">二维码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="qrcode" id="QRcode" style="border: 0px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

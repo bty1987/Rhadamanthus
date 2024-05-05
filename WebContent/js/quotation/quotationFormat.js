@@ -6,7 +6,6 @@
         items: {
             name: com.focusPage('#name', "#addQuotationFormatModal"),
             format: com.focusPage('#format', "#addQuotationFormatModal"),
-            price: com.focusPage('#price', "#addQuotationFormatModal")
         },
         modals: {
             addQuotationFormatModal: com.focusPage('#addQuotationFormatModal')
@@ -27,9 +26,8 @@
         handle: function(v) {
 
             quotationFormat.qfid = v.qfid;
-            quotationFormat.items.name.val(v.name);
+            quotationFormat.items.name.val(v.name).attr("disabled", "disabled");
             quotationFormat.items.format.val(v.format);
-            quotationFormat.items.price.val(v.price);
 
             quotationFormat.modals.addQuotationFormatModal.modal("show");
         }
@@ -70,28 +68,18 @@
     }, null, null, "quotationFormats", true);
 
     var lineprops = [{
-        field: "name",
-        name: "名字",
-        prop: "name",
-        clazz: "grey"
-    }, {
         field: "format",
         name: "规格",
         prop: "format",
         clazz: "grey"
     }, {
-        field: "pinyin",
-        name: "拼音",
-        prop: "pinyin",
+        field: "name",
+        name: "名字",
+        prop: "name",
         clazz: "grey"
-    }, {
-        field: "price",
-        name: "价格",
-        prop: "price",
-        clazz: "blue"
     }];
 
-    searcher.line("name", lineprops, linebtns).render();
+    searcher.line("format", lineprops, linebtns).render();
 
     quotationFormat.btns.quotationFormatBackBtn.click(function() {
 
@@ -101,9 +89,8 @@
     quotationFormat.btns.addQuotationFormatBtn.click(function() {
 
         quotationFormat.qfid = null;
-        quotationFormat.items.name.val("");
+        quotationFormat.items.name.val("").removeAttr("disabled");
         quotationFormat.items.format.val("");
-        quotationFormat.items.price.val("");
 
         quotationFormat.modals.addQuotationFormatModal.modal("show");
     });
@@ -120,7 +107,6 @@
             "quotationFormat.quotationCtem.qcid": quotationFormat.qcid,
             "quotationFormat.name": quotationFormat.items.name.val(),
             "quotationFormat.format": quotationFormat.items.format.val(),
-            "quotationFormat.price": quotationFormat.items.price.val(),
         };
 
         if (quotationFormat.qfid != null) {

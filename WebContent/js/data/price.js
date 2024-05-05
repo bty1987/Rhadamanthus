@@ -1,87 +1,168 @@
-$(function() {
+jQuery(function($) {
 
-    var goods = {
+    var price = {
+
         gid: params.data.goods.gid,
+
+        btns: {
+            savePrice: com.focusPage("#savePrice").on("click", saveData),
+            addPrice: com.focusPage("#addPrice"),
+        },
+        modals: {
+            priceModal: com.focusPage("#priceModal")
+        },
+        items: {
+            name: com.focusPage("#name", "#priceModal"),
+            purchase: com.focusPage("#purchase", "#priceModal"),
+            selling: com.focusPage("#selling", "#priceModal"),
+            cvalue: com.focusPage("#cvalue", "#priceModal"),
+            ctype: com.focusPage("#ctype", "#priceModal"),
+            type: com.focusPage("#type", "#priceModal"),
+        },
+
+        pageType: params['urlLoadParams'].type,
     };
 
-    com.post(api.data.queryPriceByGid, {
-        "price.gid": goods.gid
-    }, function(res) {
-        displayFunc.init('resultListPrice', res.prices);
+    if (price.pageType != "senior") {
+        price.btns.addPrice.addClass("hide");
+    }
+
+    price.items.type.bindData(constant.data().price.type.datas, "key", "value");
+    price.items.ctype.bindData(constant.data().price.ctype.datas, "key", "value");
+
+    var searcher = new Searcher();
+
+    searcher.base("pcondlist", "ppagenation", "presultlist", api.data.queryPriceByGid);
+    searcher.result("prices").isPage(true);
+    searcher.param({
+        "price.gid": price.gid
     });
 
-    var displayFunc = (function() {
+    var lineprops = [{
+        fieId: "name",
+        name: "价格说明",
+        prop: "name",
+        clazz: "grey"
+    }, {
+        fieId: "purchase",
+        name: "控价",
+        prop: "purchase",
+        clazz: "blue"
+    }, {
+        fieId: "selling",
+        name: "售价",
+        prop: "selling",
+        clazz: "grey"
+    }, {
+        fieId: "ctype",
+        name: "结算类型",
+        prop: function(v) {
 
-        var renderList = function(tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
+            return v.ctype == "0" ? "底价" : "点位";
+        },
+        clazz: "red"
+    }, {
+        fieId: "cvalue",
+        name: "结算值",
+        prop: "cvalue",
+        clazz: "blue"
+    }, {
+        fieId: "type",
+        name: "结算值",
+        prop: function(v) {
 
-            if (listData && listData.length) {
+            return v.type == "0" ? "正价" : "特价";
+        },
+        clazz: "red"
+    }];
 
-                var $ulTitle = createTableTitle();
-                var $ulData = $('<ul></ul>').addClass('flex-table');
-                $tableWrap.append($ulTitle).append($ulData);
+    var linebtns = [{
+        name: "删除",
+        clazz: "btn-warning",
+        handle: function(v) {
 
-                $.each(listData, function(i, v) {
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
+            com.post(api.data.deletePrice, {
+                "price.pid": v.pid
+            }, function(res) {
 
-                    $liLine.appendTo($ulTitle);
-                });
-            }
-        };
+                com.showAlert(com.info, "操作成功");
 
-        var createTableTitle = function() {
-
-            var $ulTitle = $('<ul></ul>').addClass('flex-table');
-            var $liTitle = $('<li></li>').addClass('line table-title');
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col5');
-
-            var titleName = '价格说明,控价,售价,结算类型,结算值';
-
-            $.each(titleName.split(','), function(i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
+                searcher.doSearch();
             });
+        },
+        show: function(v) {
 
-            $liTitle.append($indexWrap).append($contentWrap).appendTo($ulTitle);
-
-            return $ulTitle;
-        };
-
-        var creatLine = function(i, v, lastFlag) {
-
-            var $liLine = $('<li></li>').addClass('line');
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col5');
-
-            var propertyArr = [
-            // v.gid,
-            [v.name, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.ctype == "0" ? "底价" : "点位", 'red'], [v.cvalue, 'blue']];
-
-            $.each(propertyArr, function(i, v) {
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
-            });
-
-            var $cellOption = $('<div></div>').addClass('cell option');
-
-            $liLine.append($indexWrap).append($contentWrap);
-
-            return $liLine;
-
-        };
-
-        return {
-            init: function(tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-                return creatLine(v);
-            }
+            return price.pageType == "senior"
         }
-    })();
+    }, {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
 
+            var status = null;
+
+            if (v.status == 0) {
+                status = 1;
+            } else {
+                status = 0;
+            }
+
+            com.post(api.data.updatePriceForStatus, {
+                "price.pid": v.pid,
+                "price.status": status
+            }, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        init: function(v) {
+
+            return !v.status;
+        },
+        show: function(v) {
+
+            return price.pageType == "senior"
+        }
+    }];
+
+    searcher.line("name", lineprops, linebtns).render();
+
+    com.focusPage('#addPrice').on("click", function() {
+
+        com.cleanItems(price.items);
+
+        price.modals.priceModal.modal("show");
+    });
+
+    function saveData() {
+
+        if (com.validate('priceModal'))
+            return false;
+
+        var url = api.data.addPrice;
+
+        var options = {
+            "price.gid": price.gid,
+            "price.name": price.items.name.val(),
+            "price.purchase": price.items.purchase.val(),
+            "price.selling": price.items.selling.val(),
+            "price.ctype": price.items.ctype.val(),
+            "price.cvalue": price.items.cvalue.val(),
+            "price.type": price.items.type.val(),
+        };
+
+        com.post(url, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+
+            price.modals.priceModal.modal("hide");
+        });
+
+    }
 });

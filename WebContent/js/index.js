@@ -534,6 +534,11 @@
                 });
                 var $i = $('<i></i>').addClass(v.icon);
                 var $span = $('<span></span>').addClass('menu-text').text(v.name);
+
+                if (v.module == 'salary') {
+                    $span.append($('<span class="badge badge-danger" style="margin-right: 20px;">新</span>'));
+                }
+
                 $a.append($i).append($span).appendTo($li);
                 menuObj.level1[v.mid] = $li;
                 $li.appendTo($tree);

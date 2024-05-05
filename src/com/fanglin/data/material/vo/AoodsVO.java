@@ -2,40 +2,60 @@ package com.fanglin.data.material.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+
 public class AoodsVO implements Serializable {
 
 	private static final long serialVersionUID = -7147159224652861599L;
 
 	private Long aid;
-	
-	private GoodsVO goods;
-	
-	private AccessoriesTypeVO accessoriesType;
-	
-	private Short checkup;
-	
-	private Short status;
-	
-	private Integer company;
-	
-	private String bompany;
-	
-	private Long gid;
-	
+
 	private String name;
-	
+
+	private GoodsVO goods;
+
+	private AccessoriesTypeVO accessoriesType;
+
+	private NoodsVO noods;
+
+	private ConstructionNodeVO constructionNode;
+
+	private Short checkup;
+
+	private Short status;
+
+	private Integer company;
+
+	private String bompany;
+
+	private Long gid;
+
 	private int balance;
-	
+
+	private Integer selling;
+
 	private short atttype;
-	
-	public AoodsVO(){
+
+	public AoodsVO() {
 		super();
 	}
 
 	public AoodsVO(GoodsVO goods, AccessoriesTypeVO accessoriesType) {
+
 		super();
+
 		this.goods = goods;
 		this.accessoriesType = accessoriesType;
+	}
+
+	public AoodsVO(GoodsVO goods, AccessoriesTypeVO accessoriesType, NoodsVO noods, ConstructionNodeVO constructionNode) {
+
+		super();
+
+		this.goods = goods;
+		this.accessoriesType = accessoriesType;
+		this.noods = noods;
+		this.constructionNode = constructionNode;
 	}
 
 	public Long getAid() {
@@ -44,6 +64,14 @@ public class AoodsVO implements Serializable {
 
 	public void setAid(Long aid) {
 		this.aid = aid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public GoodsVO getGoods() {
@@ -60,6 +88,22 @@ public class AoodsVO implements Serializable {
 
 	public void setAccessoriesType(AccessoriesTypeVO accessoriesType) {
 		this.accessoriesType = accessoriesType;
+	}
+
+	public NoodsVO getNoods() {
+		return noods;
+	}
+
+	public void setNoods(NoodsVO noods) {
+		this.noods = noods;
+	}
+
+	public ConstructionNodeVO getConstructionNode() {
+		return constructionNode;
+	}
+
+	public void setConstructionNode(ConstructionNodeVO constructionNode) {
+		this.constructionNode = constructionNode;
 	}
 
 	public Short getCheckup() {
@@ -102,20 +146,20 @@ public class AoodsVO implements Serializable {
 		this.gid = gid;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	public int getBalance() {
 		return balance;
 	}
 
 	public void setBalance(int balance) {
 		this.balance = balance;
+	}
+
+	public Integer getSelling() {
+		return selling;
+	}
+
+	public void setSelling(Integer selling) {
+		this.selling = selling;
 	}
 
 	public short getAtttype() {

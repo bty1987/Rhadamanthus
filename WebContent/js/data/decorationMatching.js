@@ -37,7 +37,6 @@ jQuery(function($) {
         visionData: {},
         decorationMatchingVision: {},
 
-        isShow: ["显示", "隐藏"],
         discount: ["不打折", "打折"],
 
     };
@@ -47,7 +46,7 @@ jQuery(function($) {
         decorationMatching.decorationMatchingVision = res.visionType.split("key", "value");
         decorationMatching.visionData = res.visionType;
     }, null, false);
-    
+
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
         $.each(res.decorationAtttypes, function(i, v) {
@@ -65,7 +64,7 @@ jQuery(function($) {
     var seacher = new Searcher();
 
     seacher.base("condList", "pagenation", "resultList", api.data.pageDecorationMatching);
-    seacher.condition(["data-decoration-matching-name"]);
+    seacher.condition(["data-decoration-matching-name", "data-decoration-matching-type", "data-decoration-matching-typeness", "data-decoration-matching-isShow"]);
     seacher.button([{
         id: "addDecorationMatchingBtn",
         name: "添加",
@@ -121,7 +120,7 @@ jQuery(function($) {
         name: "默认显示",
         prop: "isShow",
         clazz: "red",
-        dataset: decorationMatching.isShow
+        dataset: constant.data().decorationMatching.isShow.keys
     }, {
         field: "trafficDiscount",
         name: "车运费折扣",
@@ -139,7 +138,7 @@ jQuery(function($) {
         name: "税金折扣",
         prop: "taxDiscount",
         clazz: "red",
-        dataset: constant.data.quotationVersion.taxDiscount.keys
+        dataset: constant.data().quotationVersion.taxDiscount.keys
     }, {
         type: "newline",
     }, {
@@ -260,7 +259,7 @@ jQuery(function($) {
 
         if (decorationMatching.dmid) {
             url = api.data.updateDecorationMatching;
-            options["decorationMatching.dmid"] = decorationMatching.dmid
+            options["decorationMatching.dmid"] = decorationMatching.dmid;
         }
 
         com.post(url, options, function(res) {

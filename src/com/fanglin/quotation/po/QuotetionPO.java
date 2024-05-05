@@ -61,6 +61,8 @@ public class QuotetionPO implements Serializable {
 
 	private long costPrice;
 
+	private long unachePrice;
+
 	private String content;
 
 	public QuotetionPO() {
@@ -270,6 +272,15 @@ public class QuotetionPO implements Serializable {
 
 	public void setCostPrice(long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	@Column(name = "unachePrice")
+	public long getUnachePrice() {
+		return unachePrice;
+	}
+
+	public void setUnachePrice(long unachePrice) {
+		this.unachePrice = unachePrice;
 	}
 
 	public void ptp(String name, String version, long cuid) {

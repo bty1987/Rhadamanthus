@@ -38,6 +38,8 @@ public class SalesVO implements Serializable {
 
 	private DepartmentVO region;
 
+	private UserBaseVO creater;
+
 	private UserBaseVO guider;
 
 	private DepartmentVO guideDept;
@@ -114,7 +116,7 @@ public class SalesVO implements Serializable {
 		this.instorer = instorer;
 	}
 
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher) {
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher, UserBaseVO creater) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -126,6 +128,7 @@ public class SalesVO implements Serializable {
 		this.instorer = instorer;
 		this.supplier = supplier;
 		this.finisher = finisher;
+		this.creater = creater;
 	}
 
 	public Long getSid() {
@@ -222,6 +225,14 @@ public class SalesVO implements Serializable {
 
 	public void setRegion(DepartmentVO region) {
 		this.region = region;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 	public UserBaseVO getGuider() {

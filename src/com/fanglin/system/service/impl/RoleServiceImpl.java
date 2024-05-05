@@ -81,7 +81,7 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public List<RoleVO> querylRole(Integer company) {
+	public List<RoleVO> queryRole(Integer company) {
 
 		List<RolePO> rolePOs = roleDao.queryRole(company);
 		List<RoleVO> roleVOs = new ArrayList<RoleVO>();

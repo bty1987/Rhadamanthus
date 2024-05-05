@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.NormaddPO;
 import com.fanglin.data.quotation.dao.impl.NormaddDaoImpl;
 import com.fanglin.quotation.dao.NormriceItemDao;
@@ -33,6 +35,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 	@Autowired
 	private QuotationDao quotationDao;
+
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
 
 	@Override
 	public List<NormriceItemVO> queryNormriceItem(NormriceItemVO normriceItem) {
@@ -59,31 +64,57 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normtionVO.getQid());
 
-		NormaddPO normaddPO = normaddDaoImpl.get(normriceItemVO.getSid());
-
 		NormriceItemPO normriceItemPO = new NormriceItemPO();
 
-		normriceItemPO.setQid(quotationPO.getQid());
-		normriceItemPO.setSid(quotationPO.getQid());
+		if (normriceItemVO.getSid() != null) {
+			NormaddPO normaddPO = normaddDaoImpl.get(normriceItemVO.getSid());
 
-		normriceItemPO.setType(NormriceItemPO.TYPE_OFFER_INT);
-		normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_ADD_INT);
-		normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
-		normriceItemPO.setNum(normriceItemVO.getNum());
+			normriceItemPO.setQid(quotationPO.getQid());
+			normriceItemPO.setSid(quotationPO.getQid());
 
-		normriceItemPO.setConstructionNode(normaddPO.getConstructionNode());
+			normriceItemPO.setType(NormriceItemPO.TYPE_OFFER_INT);
+			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_ADD_INT);
+			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+			normriceItemPO.setNum(normriceItemVO.getNum());
 
-		normriceItemPO.setName(normaddPO.getName());
-		normriceItemPO.setUnit(normaddPO.getUnit());
-		normriceItemPO.setTrannum(0);
-		normriceItemPO.setSalary(normaddPO.getPrice());
+			normriceItemPO.setConstructionNode(normaddPO.getConstructionNode());
 
-		normriceItemDao.save(normriceItemPO);
+			normriceItemPO.setName(normaddPO.getName());
+			normriceItemPO.setUnit(normaddPO.getUnit());
+			normriceItemPO.setTrannum(0);
+			normriceItemPO.setSalary(normaddPO.getPrice());
 
-		normriceItemVO.setConstructionNode(new ConstructionNodeVO());
+			normriceItemDao.save(normriceItemPO);
 
-		BeanUtil.copyProperties(normriceItemPO, normriceItemVO, Arrays.asList("constructionNode"));
-		BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+			normriceItemVO.setConstructionNode(new ConstructionNodeVO());
+
+			BeanUtil.copyProperties(normriceItemPO, normriceItemVO, Arrays.asList("constructionNode"));
+			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+		} else {
+
+			normriceItemPO.setQid(quotationPO.getQid());
+
+			ConstructionNodePO constructionNodePO = constructionNodeDao.get(normriceItemVO.getConstructionNode().getCnid());
+
+			normriceItemPO.setConstructionNode(constructionNodePO);
+
+			normriceItemPO.setName(normriceItemVO.getName());
+			normriceItemPO.setNum(normriceItemVO.getNum());
+			normriceItemPO.setTrannum(normriceItemVO.getTrannum());
+			normriceItemPO.setSalary(normriceItemVO.getSalary());
+
+			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
+			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
+			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+
+			normriceItemDao.save(normriceItemPO);
+
+			normriceItemVO.setConstructionNode(new ConstructionNodeVO());
+
+			BeanUtil.copyProperties(normriceItemPO, normriceItemVO, Arrays.asList("constructionNode"));
+			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+
+		}
 
 		return 0;
 	}

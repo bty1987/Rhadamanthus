@@ -11,26 +11,24 @@ import com.fanglin.right.po.DecorationFunctionRightPO;
 
 @Repository("decorationFunctionRightDao")
 public class DecorationFunctionRightDaoImpl extends DaoImpl<DecorationFunctionRightPO> implements DecorationFunctionRightDao {
-	
-	public DecorationFunctionRightDaoImpl(){
+
+	public DecorationFunctionRightDaoImpl() {
 		super(DecorationFunctionRightPO.class);
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationFunctionRightPO> queryDecorationFunctionRightByName(String name) {
-		return session().createCriteria(DecorationFunctionRightPO.class).add(Restrictions.eq("name", name)).list();
 	}
 
 	@Override
-	public int deleteDecorationFunctionRightByName(String name) {
-		
-		String sql = "delete from platform.decorationfunctionright where name = :name";
-		session().createSQLQuery(sql).setString("name", name).executeUpdate();
-		
+	@SuppressWarnings("unchecked")
+	public List<DecorationFunctionRightPO> queryDecorationFunctionRightByName(String name, Integer company) {
+		return session().createCriteria(DecorationFunctionRightPO.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("company", company)).list();
+	}
+
+	@Override
+	public int deleteDecorationFunctionRightByName(String name, Integer company) {
+
+		String sql = "delete from platform.decorationfunctionright where name = :name and company = :company";
+		session().createSQLQuery(sql).setString("name", name).setInteger("company", company).executeUpdate();
+
 		return 0;
 	}
-	
-	
 
 }

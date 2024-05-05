@@ -133,7 +133,7 @@ jQuery(function($) {
             drawLine: function(v) {
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
@@ -188,4 +188,4 @@ jQuery(function($) {
         accessory.modals.updateModal.modal("hide");
     };
 
-})
+});

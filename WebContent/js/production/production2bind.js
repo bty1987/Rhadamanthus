@@ -32,11 +32,6 @@ $(function(){
         productionSales.items.salesType.bindData(res.salesType, "key", "value", false);
     });
 
-    com.post(api.ds.sales, {}, function (res){
-        productionSales.sales.status = res.statues.split("key", "value");
-        productionSales.sales.balanceStatus = res.balanceStatuses.split("key", "value");
-    },null ,false);
-
     com.post(api.ds.material, {}, function(res){
         productionSales.material.status = res.status.split("key", "value");
     },null ,false);
@@ -66,8 +61,8 @@ $(function(){
                                 ["品牌:", data.brand, "grey"],
                                 ["创建时间:", data.createTime , "green"],
                                 ["总价:", data.total, "blue"],
-                                ["状态:", productionSales.sales.status[data.status], "red"],
-                                ["结算状态:", productionSales.sales.balanceStatus[data.balanceStatus], "red"]
+                                ["状态:", constant.sales().sales.status.keys[data.status], "red"],
+                                ["结算状态:", constant.sales().sales.balanceStatus.keys[data.balanceStatus], "red"]
                             ];
                             creatLine(propertyArr,data,v,$ul);
 

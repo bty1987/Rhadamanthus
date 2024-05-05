@@ -54,9 +54,9 @@ jQuery(function() {
     }, 'autoFillKeyValue', 'key', 'value', null);
 
     // 绑定券信息
-    com.post(api.ds.payment, {}, function(res) {
+    com.post(api.ds.sales, {}, function(res) {
 
-        sales.items.SupplementCouponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
+        sales.items.SupplementCouponInfo.bindData(res.coupons, 'key', 'value', false);
     }, null, false);
 
     var initList = function(listData) {

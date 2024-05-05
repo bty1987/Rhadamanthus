@@ -39,8 +39,6 @@ var Printer = function(){
             打印机规格 , 佳博GP1324D蓝牙版
             纸张规格 , 热敏打印纸110x50
          */
-        
-        console.log(options);
     
         if(lib == null || iconv == null || ffi == null) return false;
         

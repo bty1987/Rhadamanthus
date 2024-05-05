@@ -12,6 +12,8 @@ public class AwardPurchaseVO implements java.io.Serializable {
 
 	private Long apid;
 
+	private Long fapid;
+
 	private AwardStockVO awardStock;
 
 	private Integer inprice;
@@ -20,11 +22,19 @@ public class AwardPurchaseVO implements java.io.Serializable {
 
 	private Integer num;
 
+	private Integer surplus;
+
 	private UserBaseVO creater;
 
 	private UserBaseVO purchaser;
 
 	private UserBaseVO instorer;
+
+	private String activity;
+
+	private String dept;
+
+	private String comment;
 
 	private Timestamp createTime;
 
@@ -56,6 +66,14 @@ public class AwardPurchaseVO implements java.io.Serializable {
 
 	public void setApid(Long apid) {
 		this.apid = apid;
+	}
+
+	public Long getFapid() {
+		return fapid;
+	}
+
+	public void setFapid(Long fapid) {
+		this.fapid = fapid;
 	}
 
 	public AwardStockVO getAwardStock() {
@@ -90,6 +108,14 @@ public class AwardPurchaseVO implements java.io.Serializable {
 		this.num = num;
 	}
 
+	public Integer getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(Integer surplus) {
+		this.surplus = surplus;
+	}
+
 	public UserBaseVO getCreater() {
 		return creater;
 	}
@@ -112,6 +138,30 @@ public class AwardPurchaseVO implements java.io.Serializable {
 
 	public void setInstorer(UserBaseVO instorer) {
 		this.instorer = instorer;
+	}
+
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
+
+	public String getDept() {
+		return dept;
+	}
+
+	public void setDept(String dept) {
+		this.dept = dept;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@JSON(format = "yyyy-MM-dd")

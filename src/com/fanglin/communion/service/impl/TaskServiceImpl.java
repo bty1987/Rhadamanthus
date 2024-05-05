@@ -1,6 +1,7 @@
 package com.fanglin.communion.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,9 +110,7 @@ public class TaskServiceImpl implements TaskService {
 
 		List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
-		if (userRolePOs == null || userRolePOs.size() == 0) return taskVOs;
-
-		List<Integer> rids = new ArrayList<Integer>();
+		List<Integer> rids = new ArrayList<Integer>(Arrays.asList(userPO.getRole().getRid()));
 
 		for (UserRolePO userRolePO : userRolePOs) {
 			rids.add(userRolePO.getRole().getRid());
@@ -144,6 +143,23 @@ public class TaskServiceImpl implements TaskService {
 		taskPO.setStatus(TaskPO.STATUS_ENABLE_INT);
 
 		taskDao.save(taskPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateTask(TaskVO taskVO) throws FLException {
+
+		TaskPO taskPO = taskDao.get(taskVO.getTid());
+
+		if (taskPO == null) {
+			throw new FLException(160027, "任务不存在");
+		}
+
+		BeanUtil.copyProperties(taskVO, taskPO);
+
+		taskDao.update(taskPO);
 
 		return 0;
 	}

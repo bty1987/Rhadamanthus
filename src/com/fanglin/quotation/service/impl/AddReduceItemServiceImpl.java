@@ -33,6 +33,8 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionDao;
@@ -40,8 +42,10 @@ import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.quotation.po.SelectionPO;
 import com.fanglin.quotation.service.AddReduceItemService;
@@ -68,6 +72,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	private SystemDefineItemDao systemDefineItemDao;
 
 	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
+	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+
+	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 
 	@Autowired
@@ -83,10 +93,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	private SelectionItemDao selectionItemDao;
 
 	@Autowired
-	private SelectionDao selectionDao;
+	private NormoodItemDao normoodItemDao;
 
 	@Autowired
-	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+	private SelectionDao selectionDao;
 
 	@Override
 	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO) throws FLException {
@@ -138,7 +148,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(200061, "增减单状态不可操作");
 		}
 
-		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
+		addReducePO.ptvadvance(addReduceVO);
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemVO.getQuotationFunctionAreaId());
 
@@ -154,7 +164,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 			addReduceItemPO = new AddReduceItemPO();
 
-			BeanUtil.copyProperties(addReduceItemVO, addReduceItemPO);
+			BeanUtil.copyProperties(addReduceItemVO, addReduceItemPO, Arrays.asList("num", "initNum"));
 
 			if (addReduceItemVO.getQuoteItemId() != null) addReduceItemPO.setQiid(addReduceItemVO.getQuoteItemId());
 
@@ -214,10 +224,6 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140018, "增减项不存在");
 		}
 
-		if (addReducePO.getStatus() != AddReducePO.STATUS_UNSUBMIT_INT) {
-			throw new FLException(200061, "增减单状态不可操作");
-		}
-
 		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
 
 		if (addReduceItemPO == null) {
@@ -249,6 +255,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(200061, "增减单状态不可操作");
 		}
 
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(addReducePO.getOrderId());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
 		AddReduceItemPO addReduceItemPO = addReduceItemDao.get(addReduceItemVO.getAriId());
 
 		if (addReduceItemPO == null) {
@@ -269,9 +281,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			handleExtensionItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		}
 
-		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
+		addReducePO.ptvadvance(addReduceVO);
 
 		handleDecorationPayment(addReducePO);
+
+		normoodItemDao.deleteNormoodItem(quotationPO.getQid(), addReducePO.getArId(), addReduceItemPO.getAriId(), NormoodItemPO.TYPE_ADDCUT_INT);
 
 		addReduceItemDao.delete(addReduceItemPO);
 		addReduceDao.update(addReducePO);

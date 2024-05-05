@@ -118,6 +118,7 @@ public class ApprovalService {
 		} else {
 			System.out.println(senderId);
 			System.out.println(url);
+			System.out.println(params.toJSONString());
 			System.out.println(String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 
 			throw new FLException(270014, String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));

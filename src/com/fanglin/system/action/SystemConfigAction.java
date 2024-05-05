@@ -25,14 +25,30 @@ public class SystemConfigAction extends BaseListAction {
 	@Autowired
 	private SystemConfigService systemConfigService;
 
-	private SystemConfigVO systemConfig;
+	private List<SystemConfigVO> systemConfigs;
 
-	private List<SystemConfigVO> systemConfigVOs;
+	private SystemConfigVO systemConfig;
 
 	@Action(value = "pageSystemConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCityProper() throws FLException {
 
-		systemConfigVOs = systemConfigService.pageSystemConfig(getPaging(), getFilters());
+		systemConfigService.pageSystemConfig(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySystemConfigByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySystemConfigByCid() throws FLException {
+
+		systemConfigs = systemConfigService.querySystemConfigByCid(queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySystemConfigByKey", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySystemConfigByKey() throws FLException {
+
+		systemConfig = systemConfigService.querySystemConfigByKey(systemConfig, queryCompany());
 
 		return SUCCESS;
 	}
@@ -45,14 +61,6 @@ public class SystemConfigAction extends BaseListAction {
 		}
 
 		systemConfigService.addSystemConfig(systemConfig, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "querySystemConfigByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySystemConfigByCid() throws FLException {
-
-		systemConfigVOs = systemConfigService.querySystemConfigByCid(queryCompany());
 
 		return SUCCESS;
 	}
@@ -77,12 +85,12 @@ public class SystemConfigAction extends BaseListAction {
 		this.systemConfig = systemConfig;
 	}
 
-	public List<SystemConfigVO> getSystemConfigVOs() {
-		return systemConfigVOs;
+	public List<SystemConfigVO> getSystemConfigs() {
+		return systemConfigs;
 	}
 
-	public void setSystemConfigVOs(List<SystemConfigVO> systemConfigVOs) {
-		this.systemConfigVOs = systemConfigVOs;
+	public void setSystemConfigs(List<SystemConfigVO> systemConfigs) {
+		this.systemConfigs = systemConfigs;
 	}
 
 }

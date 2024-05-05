@@ -12,7 +12,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.SalesPO;
-import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("salesDao")
@@ -24,7 +23,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 	@Override
 	public List<SalesPO> pageSales(Paging paging, List<Filter> filters, int company, int uid) throws FLException {
-		
+
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
 		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
@@ -150,16 +149,16 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 		return query.list();
 	}
-	
+
 	@Override
 	public List<SalesPO> pageSalesByOrderId(Paging paging, List<Filter> filters, int company, String orderId) {
-		
+
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
-		
+
 		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
-		
+
 		query.add(query.getCriterion("orderId", orderId, "eq"));
-		
+
 		return query.list();
 	}
 
@@ -183,53 +182,91 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 		return count.intValue();
 	}
-	
+
 	private void queryFilterExcute(PagingQuery<SalesPO> query, List<Filter> filters) throws FLException {
-		if (filters != null) {
-			for (Filter filter : filters) {
+		queryFilterExcute(query, filters, "");
+	}
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
 
-				query.alias("instorer", "instorer");
-				query.alias("salesman", "salesman");
-				query.alias("guider", "guider");
-				query.alias("dept", "dept");
-				if (SalesPO.COLUMN_NO_STR.equals(field)) {
-					query.add(query.getCriterion(field, data, op));
-				} else if (SalesPO.COLUMN_ORDERID_STR.equals(field)) {
-					query.add(query.getCriterion(field, data, op));
-				} else if (SalesPO.COLUMN_BRAND_STR.equals(field)) {
-					query.add(query.getCriterion(SalesPO.COLUMN_BRAND_STR, data, op));
-				}else if (SalesPO.COLUMN_CATEGORY_STR.equals(field)) {
-						query.add(query.getCriterion(SalesPO.COLUMN_CATEGORY_STR, data, op));
-				} else if (SalesPO.COLUMN_BID_STR.equals(field)) {
-					query.add(query.getCriterion(SalesPO.COLUMN_BID_STR, Long.valueOf(data), op));
-				} else if (SalesPO.COLUMN_STATUS_STR.equals(field)) {
-					query.add(query.getCriterion(SalesPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
-				}else if (SalesPO.COLUMN_FULLPAYSTATUS_STR.equals(field)) {
-						query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYSTATUS_STR, Short.valueOf(data), op));
-				} else if ("instorer".equals(field)) {
-					query.add(query.getCriterion(SalesPO.COLUMN_INSTORERID_STR, data, op));
-				} else if ("salesman".equals(field)) {
-					query.add(query.getCriterion(SalesPO.COLUMN_SALESMANUSERID_STR, data, op));
-				}else if ("guider".equals(field)) {
-					query.add(query.getCriterion(SalesPO.COLUMN_GUIDERUSERID_STR, data, op));
-				} else if (SalesPO.COLUMN_DOMPANY_STR.equals(field)) {
-					int cid = CompanyServiceImpl.decode(filter.getData());
-					query.add(query.getCriterion(SalesPO.COLUMN_DOMPANY_STR, cid, op));
-				} else if (SalesPO.COLUMN_FULLPAYTIME_RANGE_STR.equals(field)) {
-					query.timeranges(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, filter.getData());
-				} else if (SalesPO.COLUMN_DEPT_STR.equals(field)) {
-					query.add(query.getCriterion(field, data, op));
-				} else if (SalesPO.COLUMN_FULLPAYTIME_STR.equals(field)) {
-					query.timeranges(SalesPO.COLUMN_FULLPAYTIME_STR, filter.getData());
-				}else if (SalesPO.COLUMN_CREATETIME_STR.equals(field)) {
-					query.timeranges(SalesPO.COLUMN_CREATETIME_STR, filter.getData());
-				}
+		if (filters == null) return;
+
+		if (prefix == null) {
+			prefix = "";
+		}
+
+		if (!"".equals(prefix)) {
+
+			query.alias(prefix, prefix);
+			prefix = String.format("%s.", prefix);
+		}
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (field.contains("house")) {
+				query.alias(String.format("%shouse", prefix), "house");
+			} else if (field.contains("village")) {
+				query.alias(String.format("%shouse", prefix), "house");
+				query.alias("house.village", "village");
+			} else if (field.contains("instorer")) {
+				query.alias(String.format("%sinstorer", prefix), "instorer");
+			} else if (field.contains("salesman")) {
+				query.alias(String.format("%ssalesman", prefix), "salesman");
+			} else if (field.contains("guider")) {
+				query.alias(String.format("%sguider", prefix), "guider");
+			} else if (field.contains("region")) {
+				query.alias(String.format("%sregion", prefix), "region");
+			} else if (field.contains("dept")) {
+				query.alias(String.format("%sdept", prefix), "dept");
+			} else if (field.contains("department")) {
+				query.alias(String.format("%sdept", prefix), "dept");
+			}
+
+			if ("sales.no".equals(field)) {
+				query.add(query.getCriterion(String.format("%sno", prefix), data, op));
+			} else if ("sales.orderId".equals(field)) {
+				query.add(query.getCriterion(String.format("%sorderId", prefix), data, op));
+			} else if ("sales.house.houseNumber".equals(field)) {
+				query.add(query.getCriterion("house.houseNumber", data, op));
+			} else if ("sales.village.no".equals(field)) {
+				query.add(query.getCriterion("village.no", data, op));
+			} else if ("sales.grade".equals(field)) {
+				query.add(query.getCriterion(String.format("%sgrade", prefix), data, op));
+			} else if ("sales.brand".equals(field)) {
+				query.add(query.getCriterion(String.format("%sbrand", prefix), data, op));
+			} else if ("sales.category".equals(field)) {
+				query.add(query.getCriterion(String.format("%scategory", prefix), data, op));
+			} else if ("sales.brand.bid".equals(field)) {
+				query.add(query.getCriterion(String.format("%sbid", prefix), Long.valueOf(data), op));
+			} else if ("sales.status".equals(field)) {
+				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+			} else if ("sales.fullpayStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%sfullpayStatus", prefix), Short.valueOf(data), op));
+			} else if ("sales.instorer.userId".equals(field)) {
+				query.add(query.getCriterion("instorer.userId", data, op));
+			} else if ("sales.salesman.userId".equals(field)) {
+				query.add(query.getCriterion("salesman.userId", data, op));
+			} else if ("sales.guider.userId".equals(field)) {
+				query.add(query.getCriterion("guider.userId", data, op));
+			} else if ("sales.department.name".equals(field)) {
+				query.add(query.getCriterion("dept.name", data, op));
+			} else if ("sales.region.name".equals(field)) {
+				query.add(query.getCriterion("region.name", data, op));
+			} else if ("sales.fullpayTime.range".equals(field)) {
+				query.timeranges(String.format("%sfullpayTime", prefix), filter.getData());
+			} else if ("sales.createTime.range".equals(field)) {
+				query.timeranges("createTime", filter.getData());
+			} else if ("sales.dompany".equals(field)) {
+				query.add(query.getCriterion(field, Integer.valueOf(data), op));
+			} else if ("sales.company".equals(field)) {
+				query.add(query.getCriterion(field, Integer.valueOf(data), op));
+			} else if ("sales.pompany".equals(field)) {
+				query.add(query.getCriterion(field, Integer.valueOf(data), op));
 			}
 		}
 	}
-
 }

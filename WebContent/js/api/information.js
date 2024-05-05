@@ -120,6 +120,15 @@ $.extend(api, {
                 args: ["money", "integral"]
             }]
         },
+        queryActivityItemByAiid: {
+            url: "queryActivityItemByAiid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "activityItem",
+                args: ["money"]
+            }]
+        },
         addActivity: {
             url: "addActivity.do",
             type: "update",
@@ -392,8 +401,16 @@ $.extend(api, {
             url: "pageWorksheet.do",
             demo: true
         },
+        queryWorksheet: {
+            url: "queryWorksheet.do",
+            demo: true
+        },
         addWorksheet: {
             url: "addWorksheet.do",
+            demo: true
+        },
+        updateWorksheet: {
+            url: "updateWorksheet.do",
             demo: true
         },
         cancelWorksheet: {
@@ -404,13 +421,17 @@ $.extend(api, {
             url: "handleWorksheet.do",
             demo: true
         },
+        finishWorksheet: {
+            url: "finishWorksheet.do",
+            demo: true
+        },
 
         pageAwardPurchase: {
             url: "pageAwardPurchase.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["inprice", "baprice", "num"]
+                args: ["inprice", "baprice", "num", "surplus"]
             }]
         },
         addAwardPurchase: {
@@ -432,7 +453,7 @@ $.extend(api, {
             demo: true,
             type: "update",
             tranargs: {
-                args: ["awardPurchase.inprice"]
+                args: ["awardPurchase.inprice", "awardPurchase.num"]
             }
         },
         balanceAwardPurchase: {

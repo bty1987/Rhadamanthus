@@ -11,19 +11,16 @@
 
 package com.fanglin.information.service;
 
-import java.text.ParseException;
 import java.util.List;
-
-import org.hibernate.HibernateException;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.information.vo.EventsVO;
 
 public interface EventsService {
 
-	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId) throws HibernateException, ParseException;
+	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId);
 
-	public int addEvents(EventsVO eventsVO, String userId) throws ParseException, FLException;
+	public int addEvents(EventsVO eventsVO, String userId) throws FLException;
 
 	public int deleteEvents(EventsVO eventsVO, String userId) throws FLException;
 

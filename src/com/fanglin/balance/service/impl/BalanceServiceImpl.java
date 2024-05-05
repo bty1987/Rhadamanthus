@@ -246,5 +246,22 @@ public class BalanceServiceImpl implements BalanceService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int payedBalance(BalanceVO balanceVO) throws FLException {
+
+		BalancePO balancePO = balanceDao.get(balanceVO.getBid());
+
+		if (balancePO == null) {
+			throw new FLException(350006, "结算单不存在");
+		}
+
+		balancePO.setIsPay(BalancePO.ISPAY_PAYED_INT);
+
+		balanceDao.update(balancePO);
+
+		return 0;
+	}
+
 
 }

@@ -15,6 +15,8 @@ public interface CompanyService {
 
 	public CompanyVO queryCompanyByCid(CompanyVO companyVO) throws FLException;
 
+	public CompanyVO validateCompany(CompanyVO companyVO) throws FLException;
+
 	public int createCompany(CompanyVO companyVO, String securityCode, String verifyCode) throws FLException;
 
 	public int addCompany(CompanyVO companyVO) throws FLException;

@@ -17,16 +17,18 @@ $(function() {
             comment: com.focusPage("#comment"),
         },
 
-        bid: params.balance.bid,
+        bid: params.balance.bid
     };
 
     apportDetail.modals.apportDetailModal.on("hide.bs.modal", function() {
+
         com.cleanItems(apportDetail.items);
         com.clearValidator();
         com.closeTip();
     });
 
     apportDetail.btns.addApportDetailBtn.click(function() {
+
         com.clearValidator();
         apportDetail.modals.apportDetailModal.modal("show");
     });
@@ -39,6 +41,7 @@ $(function() {
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (!listData.length) {
+
             var $resultList = com.focusPage("#list").addClass('dz-default dz-message').html('');
             var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
             var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
@@ -47,6 +50,7 @@ $(function() {
         } else if (listData && listData.length) {
 
             $.each(listData, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $title = $('<small></small>').addClass('blue').html(' '+ v.creater.currentName);
@@ -60,6 +64,7 @@ $(function() {
                 ];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -72,7 +77,7 @@ $(function() {
 
             });
             $ul.appendTo($tableWrap);
-            
+
         }
     };
 
@@ -84,12 +89,14 @@ $(function() {
 
             initList(data.apportDetails);
         }, function(e) {
+
             com.showAlert(com.error, e.errorMsg);
         }, false);
     };
 
     function saveDate(){
         if (com.validate('apportDetailModal')) {
+
             return false;
         };
 

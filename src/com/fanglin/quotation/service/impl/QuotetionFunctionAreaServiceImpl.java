@@ -2,6 +2,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.po.FunctionAreaItemPO;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
-import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
+import com.fanglin.data.quotation.dao.QuotationPriceDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
@@ -28,6 +29,7 @@ import com.fanglin.quotation.vo.QuotetionVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("quotetionFunctionAreaService")
 @Transactional(readOnly = true)
@@ -37,7 +39,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 	private FunctionAreaDao functionAreaDao;
 
 	@Autowired
-	private FunctionAreaItemDao functionAreaItemDao;
+	private QuotationPriceDao quotationPriceDao;
 
 	@Autowired
 	private QuotetionDao quotetionDao;
@@ -113,7 +115,10 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
 		for (Long functionAreaId : functionAreaIds) {
+
 			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
+
+			if (functionAreaPO == null) continue;
 
 			QuotetionFunctionAreaVO quotetionFunctionAreaVO = new QuotetionFunctionAreaVO();
 
@@ -126,44 +131,59 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			QuotetionFunctionAreaPO quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
 
 			BeanUtil.copyProperties(quotetionFunctionAreaVO, quotetionFunctionAreaPO);
+
 			quotetionFunctionAreaPO.setIndex(index);
 
 			quotetionFunctionAreaDao.saveOrUpdate(quotetionFunctionAreaPO);
 
-			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
+			List<QuotationPricePO> quotationPricePOs = quotationPriceDao.queryQuotationPrice(functionAreaPO.getFaid(), DateUtil.getDateToTimestamp(new Date()));
 
 			List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
 
-			for (FunctionAreaItemPO functionAreaItemPO : functionAreaItemPOs) {
+			for (QuotationPricePO quotationPricePO : quotationPricePOs) {
 
 				short itemType = QuotationFunctionAreaItemPO.TYPE_COMMON_INT;
 
 				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
 
-				QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
+				QuotationItemPO quotationItemPO = quotationPricePO.getQuotationItem();
 
-				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_IGNORE_INT) {
+				if (functionAreaPO.getType() == FunctionAreaPO.TYPE_IGNORE_INT) {
 					itemType = QuotationFunctionAreaItemPO.TYPE_IGNORE_INT;
 				}
 
-				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_COST_INT) {
+				if (functionAreaPO.getType() == FunctionAreaPO.TYPE_COST_INT) {
 					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
+				}
+
+				if (functionAreaPO.getType() == FunctionAreaPO.TYPE_UNACHE_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_UNACHE_INT;
 				}
 
 				if (quotationItemPO.getType() == QuotationItemPO.TYPE_COST_INT) {
 					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
 				}
 
-				quotetionFunctionAreaItemVO.setQfaid(quotetionFunctionAreaPO.getQfaId());
+				if (quotationItemPO.getType() == QuotationItemPO.TYPE_UNACHE_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_UNACHE_INT;
+				}
+
 				quotetionFunctionAreaItemVO.setQiid(quotationItemPO.getQiid());
+				quotetionFunctionAreaItemVO.setQfaid(quotetionFunctionAreaPO.getQfaId());
+
 				quotetionFunctionAreaItemVO.setName(quotationItemPO.getName());
-				quotetionFunctionAreaItemVO.setUnitPrice(quotationItemPO.getUnitPrice());
-				quotetionFunctionAreaItemVO.setNum(0);
-				quotetionFunctionAreaItemVO.setType(itemType);
-				quotetionFunctionAreaItemVO.setSubtype((short) functionAreaItemPO.getQuotationItem().getQuotationType().getId());
 				quotetionFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
 				quotetionFunctionAreaItemVO.setWorkType(quotationItemPO.getWorkType().getName());
+
+				quotetionFunctionAreaItemVO.setNum(0);
 				quotetionFunctionAreaItemVO.setDiscount(quotationItemPO.getDiscount());
+				quotetionFunctionAreaItemVO.setUnitPrice(quotationPricePO.getUnitPrice());
+				quotetionFunctionAreaItemVO.setAddPrice(quotationPricePO.getAddPrice());
+				quotetionFunctionAreaItemVO.setSubPrice(quotationPricePO.getSubPrice());
+
+				quotetionFunctionAreaItemVO.setType(itemType);
+				quotetionFunctionAreaItemVO.setSubtype((short) quotationPricePO.getQuotationItem().getQuotationType().getId());
+
 				quotetionFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);

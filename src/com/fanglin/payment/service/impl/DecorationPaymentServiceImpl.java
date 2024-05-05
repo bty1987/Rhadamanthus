@@ -125,7 +125,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	private com.fanglin.dingding.service.MessageService messageDDService;
 
 	@Override
-	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) {
+	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -148,7 +148,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 
 	@Override
-	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO, List<Filter> filters, Integer company) {
+	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO, List<Filter> filters, Integer company) throws FLException {
 
 		String orderId = decorationPaymentVO.getDecoration().getOrderId();
 		Short oneType = decorationPaymentVO.getOneType();
@@ -157,7 +157,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		if (orderId == "") return null;
 
 		if (orderId != null && orderId != "") {
-			filters.add(new Filter("orderId", orderId, "eq"));
+			filters.add(new Filter("decoration.orderId", orderId, "eq"));
 		}
 
 		if (oneType != null) {
@@ -858,6 +858,25 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException {
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		if (decorationPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		if (decorationPaymentPO.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
+			throw new FLException(150036, "款项状态不可操作");
+		}
+
+		decorationReceiptDao.delete(decorationPaymentPO);
+
+		return 0;
+	}
+
+	@Override
 	public void sendDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException {
 
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
@@ -911,7 +930,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		return decorationPaymentVO;
 	}
 
-	private void pageDecorationPayment(Paging paging, List<Filter> filters) {
+	private void pageDecorationPayment(Paging paging, List<Filter> filters) throws FLException {
 
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 		List<DecorationPaymentPO> decorationPaymentPOs = null;

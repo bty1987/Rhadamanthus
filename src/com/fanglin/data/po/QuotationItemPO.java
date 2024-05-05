@@ -60,6 +60,10 @@ public class QuotationItemPO implements Serializable {
 
 	private String name;
 
+	private String alias;
+
+	private long qvid;
+
 	private QuotationTypePO quotationType;
 
 	private QuotationClassificationPO quotationClassification;
@@ -82,11 +86,17 @@ public class QuotationItemPO implements Serializable {
 
 	private int subPrice; // 退减价
 
+	private int cost;
+
+	private int achePrice;
+
 	private short type;
 
 	private short status;
 
 	private short discount;
+
+	private String formula;
 
 	private String comment;
 
@@ -125,6 +135,24 @@ public class QuotationItemPO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "alias")
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	@Column(name = "qvid")
+	public long getQvid() {
+		return qvid;
+	}
+
+	public void setQvid(long qvid) {
+		this.qvid = qvid;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
@@ -234,6 +262,24 @@ public class QuotationItemPO implements Serializable {
 		this.subPrice = subPrice;
 	}
 
+	@Column(name = "cost")
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
+	@Column(name = "achePrice")
+	public int getAchePrice() {
+		return achePrice;
+	}
+
+	public void setAchePrice(int achePrice) {
+		this.achePrice = achePrice;
+	}
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -259,6 +305,15 @@ public class QuotationItemPO implements Serializable {
 
 	public void setDiscount(short discount) {
 		this.discount = discount;
+	}
+
+	@Column(name = "formula")
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 
 	@Column(name = "comment")

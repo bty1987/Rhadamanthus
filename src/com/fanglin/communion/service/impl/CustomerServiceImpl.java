@@ -419,7 +419,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+		if (!Arrays.asList(CustomerPO.STATUS_INIT_INT, CustomerPO.STATUS_AUTH_INT, CustomerPO.STATUS_AUTHED_INT).contains(customerPO.getStatus())) {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 

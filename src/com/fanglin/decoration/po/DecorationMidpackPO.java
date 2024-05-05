@@ -29,26 +29,33 @@ import javax.persistence.Table;
 public class DecorationMidpackPO implements Serializable {
 
 	private static final long serialVersionUID = -6559570220039192269L;
-	
+
 	public static final long MONEY_SERVICEPAIDUP_INT = 0;
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
 
 	private long dmid;
-	
+
 	private DecorationPO decoration;
-	
+
 	private String name;
-	
+
+	private int materialRate;
+
+	private long materialOrigin;
+
 	private long materialPrice;
-	
-	private long servicePrice;
-	
+
 	private long materialPaidup;
-	
+
+	private int serviceRate;
+
+	private long servicePrice;
+
+	private long servicePaidup;
+
 	private short status;
 
-	
 	public DecorationMidpackPO() {
 		super();
 	}
@@ -88,6 +95,24 @@ public class DecorationMidpackPO implements Serializable {
 		this.name = name;
 	}
 
+	@Column(name = "materialRate")
+	public int getMaterialRate() {
+		return materialRate;
+	}
+
+	public void setMaterialRate(int materialRate) {
+		this.materialRate = materialRate;
+	}
+
+	@Column(name = "materialOrigin")
+	public long getMaterialOrigin() {
+		return materialOrigin;
+	}
+
+	public void setMaterialOrigin(long materialOrigin) {
+		this.materialOrigin = materialOrigin;
+	}
+
 	@Column(name = "materialPrice")
 	public long getMaterialPrice() {
 		return materialPrice;
@@ -95,6 +120,24 @@ public class DecorationMidpackPO implements Serializable {
 
 	public void setMaterialPrice(long materialPrice) {
 		this.materialPrice = materialPrice;
+	}
+
+	@Column(name = "materialPaidup")
+	public long getMaterialPaidup() {
+		return materialPaidup;
+	}
+
+	public void setMaterialPaidup(long materialPaidup) {
+		this.materialPaidup = materialPaidup;
+	}
+
+	@Column(name = "serviceRate")
+	public int getServiceRate() {
+		return serviceRate;
+	}
+
+	public void setServiceRate(int serviceRate) {
+		this.serviceRate = serviceRate;
 	}
 
 	@Column(name = "servicePrice")
@@ -106,13 +149,13 @@ public class DecorationMidpackPO implements Serializable {
 		this.servicePrice = servicePrice;
 	}
 
-	@Column(name = "materialPaidup")
-	public long getMaterialPaidup() {
-		return materialPaidup;
+	@Column(name = "servicePaidup")
+	public long getServicePaidup() {
+		return servicePaidup;
 	}
 
-	public void setMaterialPaidup(long materialPaidup) {
-		this.materialPaidup = materialPaidup;
+	public void setServicePaidup(long servicePaidup) {
+		this.servicePaidup = servicePaidup;
 	}
 
 	@Column(name = "status")

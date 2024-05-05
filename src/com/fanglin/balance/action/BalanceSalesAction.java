@@ -47,14 +47,6 @@ public class BalanceSalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "createBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String createBalanceSales() throws FLException {
-
-		balanceSalesService.createBalanceSales(balanceSales, queryUserId(), queryCompany());
-
-		return SUCCESS;
-	}
-
 	@Action(value = "queryBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBalanceSales() throws FLException {
 
@@ -70,7 +62,15 @@ public class BalanceSalesAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "createBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String createBalanceSales() throws FLException {
+
+		balanceSalesService.createBalanceSales(balanceSales, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateBalanceSales() throws FLException {
 
@@ -93,7 +93,7 @@ public class BalanceSalesAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "balanceBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceBalanceSales() throws FLException {
 
@@ -101,7 +101,7 @@ public class BalanceSalesAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "lockBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String lockBalanceSales() throws FLException {
 
@@ -109,7 +109,7 @@ public class BalanceSalesAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "unlockBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String unlockBalanceSales() throws FLException {
 
@@ -122,6 +122,13 @@ public class BalanceSalesAction extends BaseListAction {
 	public String deleteBalanceSales() throws FLException {
 
 		balanceSalesService.deleteBalanceSales(balanceSales);
+		return SUCCESS;
+	}
+
+	@Action(value = "amountBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountBalanceSales() throws FLException {
+
+		balanceSalesService.amountBalanceSales(balanceSales);
 		return SUCCESS;
 	}
 

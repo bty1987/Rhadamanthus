@@ -10,20 +10,22 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.Paging;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
+import com.fanglin.sales.dao.impl.SalesDaoImpl;
+import com.fanglin.utils.Paging;
 
 @Repository("salesPaymentDao")
 public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements SalesPaymentDao {
 
-	public SalesPaymentDaoImpl(){
+	public SalesPaymentDaoImpl() {
 		super(SalesPaymentPO.class);
 	}
-	
+
 	@Override
-	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) {
+	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
 
@@ -31,13 +33,13 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 		return query.list();
 	}
-	
+
 	@Override
-	public List<SalesPaymentPO> querySalesPaymentByOrderId(String orderId, List<Filter> filters) {
-		
+	public List<SalesPaymentPO> querySalesPaymentByOrderId(String orderId, List<Filter> filters) throws FLException {
+
 		PagingQuery<SalesPaymentPO> query = pagingQuery(new Paging(), SalesPaymentPO.class);
-		
-		if(orderId != null && orderId != ""){
+
+		if (orderId != null && orderId != "") {
 			query.alias("sales", "sales").add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_ORDERID_STR, orderId));
 		}
 
@@ -49,113 +51,93 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SalesPaymentPO> querySalesPaymentsBySid(long sid)
-	{
+	public List<SalesPaymentPO> querySalesPaymentsBySid(long sid) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", Long.valueOf(sid))).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids) {		
+	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.in("sales.sid", sids)).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
 	}
-	
+
 	@Override
 	public SalesPaymentPO querySalesPayment(long sid, List<Short> types) {
 		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).uniqueResult();
 	}
-	
+
 	@Override
 	public int countSalesPayment(long sid, List<Short> types) {
-		
+
 		StringBuffer sql = new StringBuffer();
 		sql.append("select count(*) from payment.salespayment where sid =:sid");
-		
-		if(types != null && types.size() > 0){
+
+		if (types != null && types.size() > 0) {
 			sql.append(" and type in :types");
 		}
-		
+
 		Query query = session().createSQLQuery(sql.toString()).setLong("sid", sid);
-		
-		if(types != null && types.size() > 0){
+
+		if (types != null && types.size() > 0) {
 			query.setParameterList("types", types);
 		}
-		
+
 		BigInteger num = (BigInteger) query.uniqueResult();
-		
+
 		return num.intValue();
 	}
 
 	@Override
 	public long amountSalesPayment(String orderId) {
-		
+
 		String sql = "select sum(if(type in (2, 3, 8), referMoney, -refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status != 0";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
-		
+
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
-		if(filters != null && filters.size() > 0){
+		if (filters == null) return;
 
-			for(Filter filter: filters){
+		SalesDaoImpl.queryFilterExcute(query, filters, "sales");
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				query.alias("sales", "sales");
-				query.alias("sales.salesman", "salesman");
-				query.alias("sales.house", "house");
-				query.alias("house.village", "village");
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				if("orderId".equals(field)){
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_ORDERID_STR, data, op));
-				}else if("no".equals(field)){
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_NO_STR, data, op));
-				}else if("designer".equals(field)){
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_SALESMAN_USERID_STR, data, op));
-				}else if("village".equals(field)){
-					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_VILLAGE_NO_STR, data, op));
-				}else if("status".equals(field)){
-					query.add(query.getCriterion(field, Short.valueOf(data), op));
-				}else if("collectTime".equals(field)){
-					//因srId第一次为NULL 所以在链接时放在这里
-					query.alias("salesReceipt","salesReceipt");
-					
-					if("between".equals(filter.getOp())){
-						query.timeranges(SalesPaymentPO.COLUMN_COLLECTTIME_STR, SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData());
-					}else{
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData(), filter.getOp()));
-					}
-				}else if("confirmTime".equals(field)){
+			if ("status".equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if ("collectTime".equals(field)) {
+				query.alias("salesReceipt", "salesReceipt");
 
-					query.alias("salesReceipt","salesReceipt");
-					
-					if("between".equals(filter.getOp())){
-						query.timeranges(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData());
-					}else{
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData(), filter.getOp()));
-					}
-				}else if("company".equals(field)){
-					query.add(query.getCriterion(field, Integer.valueOf(data), op));
-				}else if("sales.dompany".equals(filter.getField())){
-					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
-				}else if("sales.company".equals(filter.getField())){
-					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
-				}else if("sales.pompany".equals(filter.getField())){
-					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
-				}else if("type".equals(field)){
-					List<Short> type = JSONArray.parseArray(data, Short.class);
-					query.add(query.getCriterion(field, type, op));
+				if ("between".equals(op)) {
+					query.timeranges(SalesPaymentPO.COLUMN_COLLECTTIME_STR, SalesPaymentPO.COLUMN_COLLECTTIME_STR, data);
+				} else {
+					query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, data, op));
 				}
+			} else if ("confirmTime".equals(field)) {
+
+				query.alias("salesReceipt", "salesReceipt");
+
+				if ("between".equals(op)) {
+					query.timeranges(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, SalesPaymentPO.COLUMN_CONFIRMTIME_STR, data);
+				} else {
+					query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, data, op));
+				}
+			} else if ("company".equals(field)) {
+				query.add(query.getCriterion(field, Integer.valueOf(data), op));
+			} else if ("type".equals(field)) {
+				List<Short> type = JSONArray.parseArray(data, Short.class);
+				query.add(query.getCriterion(field, type, op));
 			}
 		}
 	}

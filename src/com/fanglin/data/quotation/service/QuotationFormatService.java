@@ -7,6 +7,8 @@ import com.fanglin.data.quotation.vo.QuotationFormatVO;
 
 public interface QuotationFormatService {
 
+	public List<QuotationFormatVO> queryQuotationFormat(QuotationFormatVO quotationFormatVO);
+
 	public List<QuotationFormatVO> queryQuotationFormatByQcid(Long qcid);
 
 	public int addQuotationFormat(QuotationFormatVO quotationFormatVO) throws FLException;

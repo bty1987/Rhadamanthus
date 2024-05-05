@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.PresignItemPO;
+import com.fanglin.data.po.PresignItemPP;
 import com.fanglin.data.quotation.dao.PresignItemDao;
 import com.fanglin.utils.Paging;
 
@@ -41,9 +42,19 @@ public class PresignItemDaoImpl extends DaoImpl<PresignItemPO> implements Presig
 	}
 
 	@Override
+	public List<PresignItemPP> pagePresignItem(Paging paging, List<Filter> filters) {
+
+		PagingQuery<PresignItemPP> query = pagingQuery(paging, PresignItemPP.class);
+
+		queryFilterExcute(query, filters);
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<PresignItemPO> queryPresignItem(long ppid) {
-		return session().createCriteria(PresignItemPO.class).add(Restrictions.eq("ppid", ppid)).add(Restrictions.eq("onetype", PresignItemPO.ONETYPE_STANDARD_INT)).add(Restrictions.eq("status", PresignItemPO.STATUS_ENABLE_INT)).list();
+		return session().createCriteria(PresignItemPO.class).add(Restrictions.eq("ppid", ppid)).add(Restrictions.or(Restrictions.eq("onetype", PresignItemPO.ONETYPE_STANDARD_INT), Restrictions.eq("onetype", PresignItemPO.ONETYPE_MATESUB_INT))).add(Restrictions.eq("status", PresignItemPO.STATUS_ENABLE_INT)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

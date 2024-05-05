@@ -1,17 +1,19 @@
 package com.fanglin.payment.dao;
 
 import java.util.List;
+
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.ServicePaymentPO;
 import com.fanglin.utils.Paging;
 
-public interface ServicePaymentDao extends Dao<ServicePaymentPO>{
+public interface ServicePaymentDao extends Dao<ServicePaymentPO> {
 
-	public List<ServicePaymentPO> pageServicePayment(Paging paging, List<Filter> filters);
-	
+	public List<ServicePaymentPO> pageServicePayment(Paging paging, List<Filter> filters) throws FLException;
+
 	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId);
-	
+
 	public List<ServicePaymentPO> queryServicePaymentForNotInitBySrId(long drId);
-	
+
 }

@@ -156,6 +156,12 @@ $(function () {
             return [4].indexOf(v.status) != -1;
         }
     }, {
+        field: "total",
+        name: "总价",
+        prop: "total",
+        clazz: "green",
+        dataset: occessories.total
+    }, {
         field: "status",
         name: "状态",
         prop: "status",
@@ -536,7 +542,7 @@ $(function () {
 
         params.manifest.occessories = v;
 
-        com.popup("外购辅料单: " + orderId, api.index.occessoriesPrintIndex.url, null, null, true);
+        com.popup("外购辅料单: " + v.no, api.index.occessoriesPrintIndex.url, null, null, true);
     }
 
     function finish(oid) {

@@ -48,9 +48,11 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 			query.add(pinyinDisjunction);
 		}
 
-		query.add(Restrictions.eq("status", status));
+		if (status != null) {
+			query.add(Restrictions.eq("status", status));
+		}
 
-		if (type != 0) {
+		if (type != null) {
 
 			query.alias("departmentType", "departmentType");
 			query.add(Restrictions.eq("departmentType.dtid", type));
@@ -80,8 +82,7 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 
@@ -89,9 +90,10 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			query.alias("departmentType", "departmentType");
-
 			if ("name".equals(field)) {
+				query.add(query.getCriterion(DutyPO.COLUMN_NAME_STR, data, op));
+			} else if ("type".equals(field)) {
+				query.alias("departmentType", "departmentType");
 				query.add(query.getCriterion(DutyPO.COLUMN_DID_STR, Long.valueOf(data), op));
 			}
 		}

@@ -96,6 +96,16 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
+		if (salesItemVO.getGoods() == null || salesItemVO.getGoods().getGid() == null) {
+			throw new FLException(260004, "商品不存在");
+		}
+		if (salesItemVO.getColor() == null || salesItemVO.getColor().getCid() == null) {
+			throw new FLException(260014, "颜色不存在");
+		}
+		if (salesItemVO.getFormat() == null || salesItemVO.getFormat().getFid() == null) {
+			throw new FLException(260015, "规格不存在");
+		}
+
 		SalesItemPO salesItemPO = new SalesItemPO(new GoodsPO(salesItemVO.getGoods().getGid()), new ColorPO(salesItemVO.getColor().getCid()), new FormatPO(salesItemVO.getFormat().getFid()));
 
 		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));

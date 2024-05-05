@@ -1,45 +1,11 @@
 
-/**=============================================================
- * 标签组件（基于jQuery和typeahead），在原有ace 自带的tag.js基础上扩展了
- * 动态匹配：1.从后台获取list，2.从后台获取map
- * =============================================================
- * 使用方法
- * 1.动态key val
-    var tag_input = $('#form-field-tags');
-    tag_input.tag({
-        placeholder:tag_input.attr('placeholder'),
-        isStaticResource : false,
-        flsource: {
-            url : api.personel.queryUserForNameByDuty,
-            postData : { "duty" : "设计师" },
-            resultList : "autoFillKeyValue",
-            keyPath : "key",
-            valuePath : "value",
-            isResultTypeMap : true, //是否是key - value 形式的列表
-        },
-    });
-
- * 2.动态 list
-    var tag_input1 = $('#form-field-tags1');
-    tag_input1.tag({
-        placeholder:tag_input.attr('placeholder'),
-        isStaticResource : false,
-        flsource: {
-        url : api.personel.queryUserForNameByDuty,
-            postData : { "duty" : "设计师" },
-            resultList : "autoFillList",
-            isResultTypeMap : false, //是否是key - value 形式的列表
-        },
-    });
-
- * 3.静态 list
-     var tag_input2 = $('#form-field-tags2');
-     tag_input2.tag({
-        placeholder:tag_input.attr('placeholder'),
-        isStaticResource : true,
-        source: ace.variable_US_STATES,
-    });
- **/
+/**
+ * ============================================================= 标签组件（基于jQuery和typeahead），在原有ace 自带的tag.js基础上扩展了 动态匹配：1.从后台获取list，2.从后台获取map ============================================================= 使用方法 1.动态key val var tag_input = $('#form-field-tags'); tag_input.tag({ placeholder:tag_input.attr('placeholder'), isStaticResource : false, flsource: { url : api.personel.queryUserForNameByDuty, postData : { "duty" : "设计师" }, resultList : "autoFillKeyValue", keyPath : "key", valuePath : "value", isResultTypeMap : true, //是否是key - value 形式的列表 }, });
+ * 
+ * 2.动态 list var tag_input1 = $('#form-field-tags1'); tag_input1.tag({ placeholder:tag_input.attr('placeholder'), isStaticResource : false, flsource: { url : api.personel.queryUserForNameByDuty, postData : { "duty" : "设计师" }, resultList : "autoFillList", isResultTypeMap : false, //是否是key - value 形式的列表 }, });
+ * 
+ * 3.静态 list var tag_input2 = $('#form-field-tags2'); tag_input2.tag({ placeholder:tag_input.attr('placeholder'), isStaticResource : true, source: ace.variable_US_STATES, });
+ */
 
 !
     function(c) {
@@ -115,17 +81,16 @@
                         },
                         updater: c.proxy(d.add, d)
                     } : {
-                        /*source: d.options.source,
-                         matcher: function(e) {
-                         return ~e.toLowerCase().indexOf(this.query.toLowerCase()) && (d.inValues(e) == -1 || d.options.allowDuplicates)
-                         },
-                         updater: c.proxy(d.add, d)*/
+                        /*
+                         * source: d.options.source, matcher: function(e) { return ~e.toLowerCase().indexOf(this.query.toLowerCase()) && (d.inValues(e) == -1 || d.options.allowDuplicates) }, updater: c.proxy(d.add, d)
+                         */
 
                         url: d.options.flsource.url,
                         list: [],
                         postData: d.options.flsource.postData,
                         source: function (query, process) {
-                            var options = $.extend({pinyinName: query}, this.options.postData);
+                            var options = $.extend({}, this.options.postData);
+                            options[d.options.flsource.query ? d.options.flsource.query : "pinyinName"] = query;
                             com.post(this.options.url, options, $.proxy(this.options.callback, this));
                         }, matcher: function (item) {
                             return true;

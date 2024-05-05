@@ -96,7 +96,7 @@ public class PaymentServiceImpl implements PaymentService {
 	private ConstructionNodeDao constructionNodeDao;
 
 	@Override
-	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) {
+	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -251,9 +251,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 		String advanceType = "合同";
 
-		if (paymentPO.getPaymentType() == 0) {
+		if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT) {
 			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
-		} else if (paymentPO.getPaymentType() == 2) {
+		} else if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT) {
 			// 更新装修单上的销售比例
 			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 
@@ -386,9 +386,9 @@ public class PaymentServiceImpl implements PaymentService {
 		paymentVO.setPid(paymentPO.getPid());
 
 		String name = "";
-		if (paymentPO.getPaymentType() == 0) {
+		if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT) {
 			name = "合同预付款";
-		} else if (paymentPO.getPaymentType() == 2) {
+		} else if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT) {
 			name = "主材预付款";
 
 			// 更新装修单上的销售比例

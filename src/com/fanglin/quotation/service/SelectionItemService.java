@@ -16,6 +16,8 @@ public interface SelectionItemService {
 
 	public void pageSelectionItemForEscorter(Paging paging, List<Filter> filters, String userId) throws FLException;
 
+	public void pageSelectionItemForAccount(Paging paging, List<Filter> filters, Integer company) throws FLException;
+
 	public List<SelectionItemVO> querySelectionItem(SelectionVO selectionVO) throws FLException;
 
 	public List<SelectionItemVO> querySelectionItemByOrderId(SelectionItemVO selectionItemVO) throws FLException;
@@ -31,6 +33,8 @@ public interface SelectionItemService {
 	public int deleteSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO) throws FLException;
 
 	public int cutoffSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
+
+	public int rejectSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
 	public int tranSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 

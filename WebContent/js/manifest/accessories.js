@@ -2,317 +2,256 @@ $(function() {
 
     var accessories = {
         status: {},
+        type: {},
+        cnid: {},
         schedule: {},
         pageType: params.urlLoadParams.type,
     };
-
-    com.post(api.ds.manifest, {}, function(res) {
-
-        accessories.status = res.accessoriesStatus.split("key", "value");
-    }, null, false);
-
     accessories.type = constant.inventory().accessories.type.keys;
-    var displayFunc = (function() {
+    accessories.status = constant.inventory().accessories.status.keys;
+    accessories.cnid = constant.data().construction.node.keys;
+    var conditions = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts', 'inventory-accessories-type'];
+
+    var lineprops = [{
+        fieId: "no",
+        name: "辅料单号",
+        prop: "no",
+        clazz: "blue"
+    }, {
+        fieId: "orderId",
+        name: "装修单号",
+        prop: "orderId",
+        clazz: "blue"
+    }, {
+        field: "creater",
+        name: "创建人",
+        prop: "creater.currentName",
+        clazz: "grey"
+    }, {
+        field: "createTime",
+        name: "创建时间",
+        prop: "createTime",
+        clazz: "green"
+    }, {
+        field: "approverTime",
+        name: "审批人",
+        prop: "approver.userName",
+        clazz: "grey"
+    }, {
+        field: "approverTime",
+        name: "审批时间",
+        prop: "approverTime",
+        clazz: "green"
+    }, {
+        field: "total",
+        name: "总价",
+        prop: "total",
+        clazz: "green"
+    }, {
+        field: "cnid",
+        name: "施工环节",
+        prop: "cnid",
+        clazz: "red",
+        dataset: constant.data().construction.node.keys,
+    }, {
+        field: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: constant.inventory().accessories.status.keys,
+    }, {
+        field: "type",
+        name: "类型",
+        prop: "type",
+        clazz: "red",
+        dataset: constant.inventory().accessories.type.keys,
+    }];
 
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-
-            if (listData && listData.length) {
-
-                var $ulTitle = createTableTitle();
-                var $ulData = $('<ul></ul>').addClass('flex-table');
-
-                $tableWrap.append($ulTitle).append($ulData);
-
-                $.each(listData, function(i, v) {
-
-                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
-                });
-            }
-        };
-
-        var createTableTitle = function() {
-
-            var $ulTitle = $('<ul></ul>').addClass('flex-table');
-            var $liTitle = $('<li></li>').addClass('line table-title');
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
-
-            var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,施工环节,状态,类型';
-
-            $.each(titleName.split(','), function(i, v) {
-
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
-            });
-
-            var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
-
-            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
-
-            return $ulTitle;
-        };
-
-        var creatLine = function(i, v, lastFlag) {
-
-            var $liLine = $('<li></li>').addClass('line');
-            var _label = $('<label></label>');
-
-            var $input = $('<input>').attr({
-                "type": "checkbox"
-            }).addClass('ace ace-checkbox-2 hide').attr('data.aid', v.aid).attr({
-                "data-pid": v.pid,
-                "data-status": v.status
-            });
-            var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
-
-            _label.append($input).append(_span);
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col9');
-
-            var propertyArr = [[v.no, 'blue'], [v.orderId, 'blue'], [v.creater.userName, 'grey'], [v.createTime, 'green'], [v.approver.userName, 'grey'], [v.approverTime, 'green'], [constant.data.construction.node.keys[v.cnid], 'red'], [accessories.status[v.status], 'red'], [accessories.type[v.type], 'red'], ];
-
-            $.each(propertyArr, function(i, v) {
-
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
-            });
-
-            var $optionWrap = $('<div></div>').addClass('line-wrap action');
-            var $cellOption = $('<div></div>').addClass('cell option').appendTo($optionWrap);
-
-            var $btnGroup = $('<div></div>').addClass('btn-group');
-            var $btn = $('<button></button>').addClass('btn btn-info dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
-            var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
-
-            var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
-            var $btnAdvance = $('<li></li>').append($('<a></a>').html('预出'));
-            var $btnOut = $('<li></li>').append($('<a></a>').html('出货'));
-            var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
-            var $btnRefuse = $('<li></li>').append($('<a></a>').html('拒绝'));
-            var $btnReturn = $('<li></li>').append($('<a></a>').html('退货'));
-            var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
-            var $btnDev = $('<li></li>').append($('<a></a>').html('到货'));
-            var $btnQuota = $('<li></li>').append($('<a></a>').html('定额'));
-            var $btnCareful = $('<li></li>').append($('<a></a>').html('审核'));
-
-            if (accessories.pageType == "advance") {
-                v.status == 0 && ($btnUl.append($btnAdvance).append($btnEdit).append($btnRefuse));// 初始：出货，修改
-                v.status == 1 && ($btnUl.append($btnPrint));// 出货：出货 修改 退回 打印
-                v.status == 2 && ($btnUl.append($btnPrint));
-            } else {
-                v.status == 0 && ($btnUl.append($btnOut).append($btnEdit).append($btnRefuse));// 初始：出货，修改
-                v.status == 1 && ($btnUl.append($btnOut).append($btnPrint));
-                v.status == 2 && ($btnUl.append($btnView).append($btnDev).append($btnReturn).append($btnPrint).append($btnQuota));// 出货：出货 修改 退回 打印
-            }
-
-            v.status == 1 && v.type == constant.inventory().accessories.TYPE_POST_INT && ($btnUl.append($btnCareful));
-            v.status == 5 && ($btnUl.append($btnView));
-            v.status == 6 && ($btnUl.append($btnView).append($btnReturn).append($btnPrint));
-            v.status != 6 && ($btnUl.append($btnEdit));
-
-            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
-
-            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
-
-            $btnView.click(function() {
-
-                if (v.status == 0) {
-                    com.showAlert(com.warning, "辅料单状态不可操作");
-                    return false;
-                }
-
-                params.manifest.aid = v.aid;
-
-                com.popup4page('#layerPopUp', "views/manifest/accessories4view.html", "辅料单 : " + v.no);
-            });
-
-            $btnDev.click(function() {
-
-                if (v.status != 2) {
-                    com.showAlert(com.warning, "辅料单状态不可操作");
-                    return false;
-                }
-
-                com.showConfirm("确认到货?", function() {
-
-                    com.post(api.inventory.deliveAccessories, {
-                        "accessories.aid": v.aid
-                    }, function() {
-
-                        com.showAlert(com.info, "操作成功");
-                        searcher.doSearch();
-                    });
-                });
-
-            });
-
-            $btnOut.click(function() {
-
-                if (v.status != 0 && v.status != 1) {
-                    com.showAlert(com.warning, "辅料单状态不可操作");
-                    return false;
-                }
-
-                params.manifest.aid = v.aid;
-                params.manifest.orderId = v.orderId;
-
-                com.popup4page('#layerPopUp', "views/manifest/accessories2out.html", "辅料单 : " + v.no);
-            });
-
-            $btnRefuse.click(function() {
-
-                if (v.status != 0) {
-                    com.showAlert(com.warning, "辅料单状态不可操作");
-                    return false;
-                }
-
-                com.showConfirm("是否确认拒绝辅料单", function() {
-
-                    com.post(api.inventory.refuseAccessories, {
-                        "accessories.aid": v.aid
-                    }, function() {
-
-                        com.showAlert(com.info, "操作成功");
-                        searcher.doSearch();
-                    });
-                });
-            });
-
-            $btnEdit.click(function() {
-
-                if (v.status != 0) {
-                    com.showAlert(com.warning, "辅料单状态不可操作");
-                    return false;
-                }
-
-                params.manifest.aid = v.aid;
-                params.manifest.orderId = v.orderId;
-
-                com.popup4page('#layerPopUp', "views/manifest/accessories2edit.html", "辅料单 : " + v.no);
-            });
-
-            $btnAdvance.click(function() {
-
-                if (v.status != 0) {
-                    com.showAlert(com.warning, "辅料单状态不可操作");
-                    return false;
-                }
-
-                com.showConfirm("是否确认预出辅料单", function() {
-
-                    com.post(api.inventory.preoutAccessories, {
-                        "accessories.aid": v.aid
-                    }, function() {
-
-                        com.showAlert(com.info, "操作成功");
-                        searcher.doSearch();
-                    });
-                });
-            });
-
-            $btnReturn.click(function() {
-
-                params.manifest.aid = v.aid;
-                params.manifest.accessories = v;
-
-                com.popup4page('#layerPopUp', "views/manifest/accessories4refund.html", "辅料单 : " + v.no);
-            });
-
-            $btnPrint.click(function() {
-
-                params.manifest.accessories = v;
-
-                printAccessoriesItem(v.aid, v.no);
-            });
-
-            $btnQuota.click(function() {
-
-                params.quotation.orderId = v.orderId;
-
-                com.popup4page('#layerPopUp', "views/manifest/quotaItem.html", "辅料单 : " + v.no);
-            });
-
-            $btnCareful.click(function() {
-
-                com.showConfirm("是否确认审核辅料单", function() {
-
-                    com.post(api.inventory.auditAccessories, {
-                        "accessories.aid": v.aid
-                    }, function() {
-
-                        com.showAlert(com.info, "操作成功");
-                        searcher.doSearch();
-                    });
-                });
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
 
     var searcher = new Searcher();
-    var _Array = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts', 'inventory-accessories-type'];
+    searcher.base("condList", "pagenation", "resultList", api.inventory.pageAccessories);
+    searcher.condition(conditions);
+    searcher.history("accessoriesPostData");
+    var linebtns = [{
+        name: "查看",
+        clazz: "btn-info",
+        handle: function (v) {
+            if (v.status == constant.inventory().accessories.STATUS_INIT_INT) {
+                com.showAlert(com.warning, "辅料单状态不可操作");
+                return false;
+            }
+            params.manifest.aid = v.aid;
 
-    searcher.init(_Array, "condList", api.inventory.pageAccessories, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "accessoriesPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-success btn-minier pull-left').attr('name', 'shipment').css('margin-top', '-2px').html('批量出货');
-
-        $adda.click(function() {
-
-            batchout();
-        });
-
-        return [];
-    }, 'resultList');
-
-    function batchout() {
-
-        var $checks = $('input[type="checkbox"]:checked', '.line');
-        var $aids = [];
-
-        if ($checks.length == 0) {
-            com.showAlert(com.warning, "请选择辅料单");
+            com.popup4page('#layerPopUp', "views/manifest/accessories4view.html", "辅料单 : " + v.no);
             return false;
+        },
+        show: function (v) {
+            return (v.status == constant.inventory().accessories.STATUS_RETURN_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT || (accessories.pageType == "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT))
         }
-
-        for ( var i = 0; i < $checks.length; i++) {
-
-            var $check = $checks[i];
-
-            if ($check.attr("data-status") != 0) {
+    }, {
+        name: "预出",
+        clazz: "btn-info",
+        handle: function (v) {
+            if (v.status != 0) {
                 com.showAlert(com.warning, "辅料单状态不可操作");
                 return false;
             }
 
-            $aids.push($check.attr("data-aid"));
+            com.showConfirm("是否确认预出辅料单", function() {
+
+                com.post(api.inventory.preoutAccessories, {
+                    "accessories.aid": v.aid
+                }, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+            return false;
+        },
+        show: function (v) {
+            return (accessories.pageType == "advance" && v.status == constant.inventory().accessories.STATUS_INIT_INT)
         }
+    }, {
+        name: "出货",
+        clazz: "btn-yellow",
+        handle: function (v) {
+            if (v.status != constant.inventory().accessories.STATUS_INIT_INT && v.status != constant.inventory().accessories.STATUS_ADVANCE_INT) {
+                com.showAlert(com.warning, "辅料单状态不可操作");
+                return false;
+            }
 
-        params.manifest.aids = $aids;
+            params.manifest.aid = v.aid;
+            params.manifest.orderId = v.orderId;
 
-        com.popup4page('#layerPopUp', "views/manifest/accessories2batchout.html", "批量出货", function() {
+            com.popup4page('#layerPopUp', "views/manifest/accessories2out.html", "辅料单 : " + v.no);
+            return false;
+        },
+        show: function (v) {
+            return (accessories.pageType != "advance" && (v.status == constant.inventory().accessories.STATUS_INIT_INT || v.status == constant.inventory().accessories.STATUS_ADVANCE_INT))
+        }
+    }, {
+        name: "修改",
+        clazz: "btn-danger",
+        handle: function (v) {
+            if (v.status != constant.inventory().accessories.STATUS_INIT_INT) {
+                com.showAlert(com.warning, "辅料单状态不可操作");
+                return false;
+            }
 
-            searcher.doSearch();
-        });
-    }
+            params.manifest.aid = v.aid;
+            params.manifest.type = v.type;
+            params.manifest.orderId = v.orderId;
+
+            com.popup4page('#layerPopUp', "views/manifest/accessories2edit.html", "辅料单 : " + v.no);
+            return false;
+        },
+        show: function (v) {
+            return (v.status != constant.inventory().accessories.STATUS_DELIVER_INT)
+        }
+    }, {
+        name: "拒绝",
+        clazz: "btn-success",
+        handle: function (v) {
+            if (v.status != 0) {
+                com.showAlert(com.warning, "辅料单状态不可操作");
+                return false;
+            }
+
+            com.showConfirm("是否确认拒绝辅料单", function() {
+
+                com.post(api.inventory.refuseAccessories, {
+                    "accessories.aid": v.aid
+                }, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+            return false;
+        },
+        show: function (v) {
+            return (v.status == constant.inventory().accessories.STATUS_INIT_INT)
+        }
+    }, {
+        name: "退货",
+        clazz: "btn-pink",
+        handle: function (v) {
+            params.manifest.aid = v.aid;
+            params.manifest.accessories = v;
+
+            com.popup4page('#layerPopUp', "views/manifest/accessories4refund.html", "辅料单 : " + v.no);
+            return false;
+        },
+        show: function (v) {
+            return (v.status == constant.inventory().accessories.STATUS_DELIVER_INT ||(accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_DELIVER_INT) )
+        }
+    }, {
+        name: "打印",
+        clazz: "btn-warning",
+        handle: function (v) {
+            params.manifest.accessories = v;
+            printAccessoriesItem(v.aid, v.no);
+            return false;
+        },
+        show: function (v) {
+            return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT || v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT || v.status == constant.inventory().accessories.STATUS_DELIVER_INT)
+        }
+    }, {
+        name: "到货",
+        clazz: "btn-pink",
+        handle: function (v) {
+            if (v.status != constant.inventory().accessories.STATUS_BATCHOUT_INT) {
+                com.showAlert(com.warning, "辅料单状态不可操作");
+                return false;
+            }
+            com.showConfirm("确认到货?", function() {
+
+                com.post(api.inventory.deliveAccessories, {
+                    "accessories.aid": v.aid
+                }, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+            return false;
+        },
+        show: function (v) {
+            return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
+        }
+    }, {
+        name: "定额",
+        clazz: "btn-pink",
+        handle: function (v) {
+            params.quotation.orderId = v.orderId;
+            com.popup4page('#layerPopUp', "views/manifest/quotaItem.html", "辅料单 : " + v.no);
+            return false;
+        },
+        show: function (v) {
+            return (accessories.pageType != "advance" && v.status == constant.inventory().accessories.STATUS_BATCHOUT_INT)
+        }
+    }, {
+        name: "审核",
+        clazz: "btn-primary",
+        handle: function (v) {
+            com.showConfirm("是否确认审核辅料单", function() {
+
+                com.post(api.inventory.auditAccessories, {
+                    "accessories.aid": v.aid
+                }, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+            return false;
+        },
+        show: function (v) {
+            return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT && v.type == constant.inventory().accessories.TYPE_POST_INT)
+        }
+    },];
+    searcher.line("no", lineprops, linebtns).render();
 
     // 打印货单项
     function printAccessoriesItem(aid, no) {
@@ -331,5 +270,4 @@ $(function() {
             }, null, false)
         });
     }
-
 });

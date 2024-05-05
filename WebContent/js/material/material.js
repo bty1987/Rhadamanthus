@@ -100,10 +100,11 @@ jQuery(function($) {
     materialSubOrderPostData["materialSubOrder.designerId"] = params.designerId;
     materialSubOrderPostData["materialSubOrder.designerName"] = params.designerName;
 
-    com.post(api.ds.payment, {}, function(res) {
+    com.post(api.ds.material, {}, function(res) {
 
-        material.couponType = res.materialCouponTypes;
+        material.couponType = res.coupons;
         material.materialStatus = res.materialStatus;
+
         com.focusPage("#couponType").bindData(material.couponType, 'key', 'value', false);
     }, null, false);
 

@@ -102,9 +102,9 @@ Condition.addupRule("payment", {
             validate: null
         },
         dataSource: {
-            url: api.ds.payment,
+            url: null,
             postData: {},
-            listPath: "receiptPaymentType",
+            listPath: constant.payment().receipt.paymentType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -118,9 +118,9 @@ Condition.addupRule("payment", {
             validate: null
         },
         dataSource: {
-            url: api.ds.payment,
+            url: null,
             postData: {},
-            listPath: "receiptType",
+            listPath: constant.payment().receiptType.receiptType.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -160,6 +160,7 @@ Condition.addupRule("payment", {
         },
         dataSource: {
             url: api.data.queryBrandByPinyin,
+            query: "brand.pinyin",
             postData: {},
             listPath: "brands",
             keyPath: "name",
@@ -209,9 +210,9 @@ Condition.addupRule("payment", {
             validate: null
         },
         dataSource: {
-            url: api.ds.payment,
+            url: null,
             postData: {},
-            listPath: "pointStatus",
+            listPath: constant.payment().paytran.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -259,6 +260,72 @@ Condition.addupRule("payment", {
         submitConfig: {
             name: "phone",
             op: "eq",
+            validate: null
+        }
+    },
+    "isexpire" : {
+        label: "过期标识",
+        type: "select",
+        submitConfig: {
+            name: "isexpire",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().proxyPayment.isexpire.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "statement-custNo": {
+        label: "商户号",
+        type: "text",
+        submitConfig: {
+            name: "custNo",
+            op: "eq",
+            validate: null
+        }
+    },
+    "statement-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().statement.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "statement-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().statement.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "statement-payTime": {
+        label: "付款时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "payTime",
+            op: "between",
             validate: null
         }
     }

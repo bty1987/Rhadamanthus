@@ -17,7 +17,7 @@ $(function() {
 
         modals: {
             addBalanceCutpayModal:com.focusPage("#addBalanceCutpayModal")
-        },
+        }
     };
 
     var seacher = new Searcher();
@@ -42,28 +42,32 @@ $(function() {
         name: "操作人",
         prop: "operater.currentName",
         clazz: "grey",
-    },{
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.operater.userId);
+        }
+    }, {
         fieId: "operateTime",
         name: "操作时间",
         prop: "operateTime",
         clazz: "green",
-    },{
+    }, {
         field: "money",
         name: "金额",
         prop: "money",
         clazz: "blue",
-    },{
+    }, {
         fieId: "type",
         name: "类型",
         prop: "type",
         clazz: "red",
         dataset: constant.balance().balanceCutpay.type.keys,
-    },{
+    }, {
         fieId: "comment",
         name: "说明",
         prop: "comment",
         clazz: "grey",
-    }, ];
+    }];
 
     var linebtus = [];
 
@@ -77,6 +81,7 @@ $(function() {
     com.focusPage('#saveAddBtn').on("click", function() {
 
         if (com.validate('addBalanceCutpayModal')) {
+
             return false;
         };
 

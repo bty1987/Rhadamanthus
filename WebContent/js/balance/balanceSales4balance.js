@@ -9,14 +9,14 @@ jQuery(function($) {
 
         items: {},
 
-        status: {},
+        status: {}
     };
 
     var seacher = new Searcher();
 
     seacher.base("bscondList1", "bspagenation1", "bsresultList1", api.balance.pageBalanceSalesForBalance);
 
-    seacher.condition(["balance-balanceSelse-balance-no", "balance-balanceSelse-balance-type", "balance-balanceSelse-balance-status", "balance-balanceSelse-brand"]);
+    seacher.condition(["balance-balanceSelse-balance-no", "balance-balanceSelse-balance-type", "balance-balanceSelse-balance-status", "balance-balanceSelse-brand", "balance-balanceSelse-balance-isPay"]);
 
     seacher.history("balanceSalesPostData");
 
@@ -24,12 +24,20 @@ jQuery(function($) {
         fieId: "balance.belonger.userName",
         name: "归属人",
         prop: "balance.belonger.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.balance.belonger.userId);
+        }
     }, {
         fieId: "balance.creater.userName",
         name: "创建人",
         prop: "balance.creater.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.balance.creater.userId);
+        }
     }, {
         fieId: "balance.createTime",
         name: "创建时间",
@@ -57,6 +65,12 @@ jQuery(function($) {
         prop: "balance.status",
         clazz: "red",
         dataset: constant.balance().balance.status.keys
+    }, {
+        fieId: "balance.isPay",
+        name: "付款标识",
+        prop: "balance.isPay",
+        clazz: "red",
+        dataset: constant.balance().balance.isPay.keys
     }, {
         type: "newline"
     }, {
@@ -104,7 +118,11 @@ jQuery(function($) {
         field: "creater",
         name: "创建人",
         prop: "creater.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
+        }
     }, {
         field: "createTime",
         name: "创建时间",
@@ -114,7 +132,11 @@ jQuery(function($) {
         field: "balancer",
         name: "结算人",
         prop: "balancer.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.balancer.userId);
+        }
     }, {
         field: "balanceTime",
         name: "结算时间",
@@ -123,6 +145,25 @@ jQuery(function($) {
     }];
 
     var linebtus = [{
+        name: "付款",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            com.post(api.balance.payedBalance, {
+                "balance.bid": v.balance.bid
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                seacher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.balance.isPay == constant.balance().balance.ISPAY_NOTPAY_INT && v.balance.bid != 0);
+        }
+    }, {
         name: "结算销售",
         clazz: "btn-inverse",
         handle: function(v) {
@@ -140,8 +181,12 @@ jQuery(function($) {
             params.balance.bid = v.balance.bid;
             params.balance.uid = v.balance.belonger.uid;
             com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
+        },
+        show: function(v) {
+
+            return (v.balance.belonger.uid != null);
         }
-    },];
+    }];
 
     seacher.line("balance.no", lineprops, linebtus).render();
 

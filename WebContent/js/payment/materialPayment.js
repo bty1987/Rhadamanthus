@@ -5,7 +5,7 @@ jQuery(function($) {
 		htmlName: "material",
 		type: params['urlLoadParams'].paytype,
 		paytypes: [],
-		paymentStatusArray: constant.payment.materialPayment.status.keys,
+		paymentStatusArray: constant.payment().materialPayment.status.keys,
 		payment: null,
 
 		items: {
@@ -90,13 +90,13 @@ jQuery(function($) {
 		functions: [],
 		mpids: [],
 		isCollects: false,
-		materialPaymentTypeData: constant.payment.materialPayment.paymentType.keys,
+		materialPaymentTypeData: constant.payment().materialPayment.paymentType.keys,
 		decorationType: constant.decoration().decoration.typeness.datas,
 		pageConfig: {},
 		typeNo: 2,
 		atttype: 1,
-		collectType: [constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_FULL_INT],
-		refundType:[constant.payment.materialPayment.PAYMENTTYPE_TYPE_REJECT_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_FULL_REFUND_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT]
+		collectType: [constant.payment().materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_FULL_INT],
+		refundType:[constant.payment().materialPayment.PAYMENTTYPE_TYPE_REJECT_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_FULL_REFUND_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT]
 	};
 
 	// 隐藏触发
@@ -123,8 +123,8 @@ jQuery(function($) {
 		com.cleanItems(materialPayment.items);
 	});
 
-	materialPayment.items.advanceType.bindData(constant.payment.materialPayment.advanceType.datas, 'key', 'value');
-	materialPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+	materialPayment.items.advanceType.bindData(constant.payment().materialPayment.advanceType.datas, 'key', 'value');
+	materialPayment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
 	// checkbox选中时联动
 	com.focusPage("#collectModal :checkbox", "#materialPayment").on("change", function(){
@@ -190,7 +190,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-yellow').html("装修单信息");
+			var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-yellow').html("装修单");
 			var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
@@ -210,7 +210,14 @@ jQuery(function($) {
             $.each(propertyArr, function (index,value) {
             	var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+				if (value[3]) {
+					$b.click(function() {
+						value[3]($b);
+					});
+				}
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -224,8 +231,8 @@ jQuery(function($) {
 
 			if (materialPayment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecoration);
 			if(materialPayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
-			if(v.paymentStatus != constant.payment.materialPayment.STATUS_INIT_INT && materialPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if(v.paymentStatus == constant.payment.materialPayment.STATUS_COLLECT_INT && materialPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+			if(v.paymentStatus != constant.payment().materialPayment.STATUS_INIT_INT && materialPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if(v.paymentStatus == constant.payment().materialPayment.STATUS_COLLECT_INT && materialPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
 
 			// 收款
             $btnCollect.click(function(){
@@ -238,7 +245,7 @@ jQuery(function($) {
 
 			// 显示装修单信息
 			$btnDecoration.click(function(){
-				paymentUtils.decorationInfoShow(v.material.orderId, materialPayment.decorationType);
+				tools.decoration.info($(this), v.material.orderId);
 			});
 
 			// 打印
@@ -334,7 +341,7 @@ jQuery(function($) {
 		materialPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
 		materialPayment.items.comment.removeAttr("disabled");
 
-		var type = materialPayment.refundType.contains(payment.paymentType) ? 1 : 0; // 0: 收款类型 , 1: 退款类型
+		var type = materialPayment.refundType.contains(payment.paymentType) ? 1 : 0; // 0:收款类型1:退款类型
 
 		if(materialPayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(materialPayment);
 		if(materialPayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(materialPayment, type);
@@ -680,7 +687,7 @@ jQuery(function($) {
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? materialPayment.accountsInfo[v.accountsBank] : '';
 
 				v.paymentType = materialPayment.materialPaymentTypeData[v.paymentType];
-				v.paymentStatus = v.paymentStatus == constant.payment.materialPayment.STATUS_COLLECT_INT ? '已付款' : '已确认';
+				v.paymentStatus = v.paymentStatus == constant.payment().materialPayment.STATUS_COLLECT_INT ? '已付款' : '已确认';
 			});
 		});
 	});

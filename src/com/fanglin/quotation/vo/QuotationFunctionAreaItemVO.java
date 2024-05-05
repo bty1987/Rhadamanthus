@@ -21,6 +21,8 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 
 	private String formula;
 
+	private String expres;
+
 	private Integer initNum;
 
 	private Integer num;
@@ -107,6 +109,14 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 
 	public void setFormula(String formula) {
 		this.formula = formula;
+	}
+
+	public String getExpres() {
+		return expres;
+	}
+
+	public void setExpres(String expres) {
+		this.expres = expres;
 	}
 
 	public Integer getInitNum() {

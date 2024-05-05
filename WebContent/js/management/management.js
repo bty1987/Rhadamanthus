@@ -112,6 +112,7 @@ jQuery(function($) {
     management.items.orderId4constructionschedule = com.focusPage("#orderId4constructionschedule");
     management.items.csid4constructionschedule = com.focusPage("#csid4constructionschedule");
     management.items.check4constructionschedule = com.focusPage("#check4constructionschedule");
+    management.items.orderIdForPayScale = com.focusPage("#orderIdForPayScale");
 
     management.decorationForOrderIdModal = com.focusPage("#decorationForOrderIdModal").on('hide.bs.modal', function(e) {
 
@@ -243,6 +244,12 @@ jQuery(function($) {
         com.clearValidator();
     });
 
+    management.changeDecorationForPayScaleModal = com.focusPage("#changeDecorationForPayScaleModal").on('hide.bs.modal', function(e) {
+
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+
     com.datetime(com.focusPage(".date-picker-date"), "date");
     com.datetime(com.focusPage(".maskInput"), "time");
 
@@ -369,10 +376,7 @@ jQuery(function($) {
 
     com.focusPage("#changeDecorationForStatus").click(function() {
 
-        com.post(api.ds.decoration, {}, function(res) {
-
-            com.focusPage("#orderStatus").bindData(res.decorationOrderStatus, 'key', 'value');
-        });
+        com.focusPage("#orderStatus").bindData(constant.decoration().decoration.status.datas, 'key', 'value');
 
         management.decorationForStatusModal.modal("show");
     });
@@ -392,6 +396,11 @@ jQuery(function($) {
     com.focusPage("#updateDecorationHolonomy").click(function() {
 
         management.updateDecorationHolonomyModal.modal("show");
+    });
+
+    com.focusPage("#changeDecorationForPayScale").click(function() {
+
+        management.changeDecorationForPayScaleModal.modal("show");
     });
 
     // com.focusPage("#refundOrderForOrderId").click(function(){
@@ -860,6 +869,24 @@ jQuery(function($) {
         });
 
         management.checkoutConstructionScheduleModal.modal("hide");
+    });
+
+    com.focusPage("#saveDecorationForPayScaleBtn").click(function() {
+
+        if (com.validate("changeDecorationForPayScaleModal")) {
+            return false;
+        }
+
+        var options = {
+            "decoration.orderId": management.items.orderIdForPayScale.val()
+        };
+
+        com.post(api.decoration.changeDecorationForPayScale, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+        });
+
+        management.changeDecorationForPayScaleModal.modal("hide");
     });
 
     com.focusPage("#exportMaterialPaymentBtn").click(function() {

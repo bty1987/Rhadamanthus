@@ -31,9 +31,19 @@ public class ProtationItemVO implements Serializable {
 
 	private Long price;
 
+	private Long addPrice;
+
+	private Long subPrice;
+
+	private Long achePrice;
+
 	private Integer num;
 
 	private Short type;
+
+	private Short onetype;
+
+	private Short atttype;
 
 	private Short areaCale;
 
@@ -87,6 +97,30 @@ public class ProtationItemVO implements Serializable {
 		this.price = price;
 	}
 
+	public Long getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Long addPrice) {
+		this.addPrice = addPrice;
+	}
+
+	public Long getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Long subPrice) {
+		this.subPrice = subPrice;
+	}
+
+	public Long getAchePrice() {
+		return achePrice;
+	}
+
+	public void setAchePrice(Long achePrice) {
+		this.achePrice = achePrice;
+	}
+
 	public Integer getNum() {
 		return num;
 	}
@@ -101,6 +135,22 @@ public class ProtationItemVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(Short onetype) {
+		this.onetype = onetype;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Short getAreaCale() {

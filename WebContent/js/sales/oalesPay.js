@@ -54,11 +54,6 @@ jQuery(function ($) {
             prop: "money",
             clazz: "grey"
         }, {
-            field: "creater",
-            name: "创建人",
-            prop: "creater.currentName",
-            clazz: "grey"
-        }, {
             field: "createTime",
             name: "创建时间",
             prop: "createTime",
@@ -85,7 +80,11 @@ jQuery(function ($) {
             fieId: "orderId",
             name: "装修单号",
             prop: "oales.decoration.orderId",
-            clazz: "blue"
+            clazz: "blue",
+            click: function(btn, v) {
+
+                tools.decoration.info(btn, v.oales.decoration.orderId);
+            }
         }, {
             field: "village",
             name: "楼盘",
@@ -100,22 +99,34 @@ jQuery(function ($) {
             field: "supplier",
             name: "厂商",
             prop: "oales.supplier.currentName",
-            clazz: "grey"
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.personel.info(btn, v.oales.supplier.userId);
+            }
         }, {
             field: "creater",
             name: "创建人",
-            prop: "oales.creater.currentName",
-            clazz: "grey"
+            prop: "creater.currentName",
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.personel.info(btn, v.creater.userId);
+            }
         }, {
             field: "servicer",
             name: "服务管家",
             prop: "oales.servicer.currentName",
-            clazz: "grey"
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.personel.info(btn, v.oales.servicer.userId);
+            }
         }, {
             field: "materialer",
             name: "主材员",
             prop: "oales.materialer.currentName",
-            clazz: "grey"
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.personel.info(btn, v.oales.materialer.userId);
+            }
         }, {
             field: "createTime",
             name: "创建时间",
@@ -130,7 +141,10 @@ jQuery(function ($) {
             field: "brand",
             name: "品牌",
             prop: "oales.brand",
-            clazz: "grey"
+            clazz: "grey",
+            click: function(btn, v) {
+                tools.brand.info(btn, v.oales.bid);
+            }
         }, {
             field: "category",
             name: "品类",

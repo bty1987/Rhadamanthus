@@ -1,11 +1,10 @@
-
 Condition.addupRule("sales", {
-    
+
     "orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
-            name: "orderId",
+            name: "sales.orderId",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
@@ -13,23 +12,23 @@ Condition.addupRule("sales", {
             }
         }
     },
-    "no" : {
-        label:"销售单号",
-        type:"text",
-        submitConfig : {
-            name : "no",
-            op : "eq",
-            validate:{
-                "reg" : /^[A-Z0-9]*$/,
-                "msg" : "格式不正确A-Z,0-9"
+    "no": {
+        label: "销售单号",
+        type: "text",
+        submitConfig: {
+            name: "sales.no",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
             }
         }
     },
-    "village":{
+    "village": {
         label: "楼盘",
         type: "autofill",
         submitConfig: {
-            name: "village.no",
+            name: "sales.village.no",
             op: "eq",
             validate: null
         },
@@ -41,46 +40,47 @@ Condition.addupRule("sales", {
             valuePath: "value"
         }
     },
-    "category-name" : {
+    "category-name": {
         label: "品类",
         type: "text",
         submitConfig: {
-            name: "category",
+            name: "sales.category",
             op: "cn",
             validate: null
         },
     },
-    "brand-name" : {
+    "brand-name": {
         label: "品牌",
         type: "text",
         submitConfig: {
-            name: "brand",
+            name: "sales.brand",
             op: "cn",
             validate: null
         },
     },
-    "brand":{
+    "brand": {
         label: "品牌",
         type: "autofill",
         submitConfig: {
-            name: "bid",
+            name: "sales.brand.bid",
             op: "eq",
             validate: null
         },
         dataSource: {
             url: api.data.queryBrandByPinyin,
+            query: "brand.pinyin",
             postData: {},
             listPath: "brands",
             keyPath: "bid",
             valuePath: "name"
         }
     },
-    "brand-all":{
+    "brand-all": {
         label: "品牌",
         type: "text",
         submitConfig: {
             name: "brand",
-            op: "cn",        
+            op: "cn",
             validate: null
         },
         dataSource: {
@@ -91,87 +91,115 @@ Condition.addupRule("sales", {
             valuePath: "name"
         }
     },
-    "status":{
+    "status": {
         label: "状态",
         type: "select",
         submitConfig: {
-            name: "status",
+            name: "sales.status",
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.sales,
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
             postData: {},
-            listPath: "statues",
+            listPath: constant.sales().sales.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "fullpayStatus":{
+    "fullpayStatus": {
         label: "补款状态",
         type: "select",
         submitConfig: {
-            name: "fullpayStatus",
+            name: "sales.fullpayStatus",
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.sales,
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
             postData: {},
-            listPath: "fullpayStatus",
+            listPath: constant.sales().sales.fullpayStatus.datas,
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "instorer" : {
+    "instorer": {
         label: "驻店员",
         type: "autofill",
-        submitConfig: {//向后台提交的配置
-            name: "instorer",//接口中的参数名
-            op: "eq",//查询方式
+        submitConfig: {// 向后台提交的配置
+            name: "sales.instorer.userId",// 接口中的参数名
+            op: "eq",// 查询方式
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
-    "salesman" : {
-        label: "渠道",
+    "designer": {
+        label: "设计师",
         type: "autofill",
-        submitConfig: {//向后台提交的配置
-            name: "salesman",//接口中的参数名
-            op: "eq",//查询方式
+        submitConfig: {// 向后台提交的配置
+            name: "sales.salesman.userId",// 接口中的参数名
+            op: "eq",// 查询方式
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: { "user.status":0,"departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
+        }
+    },
+    "salesman": {
+        label: "渠道",
+        type: "autofill",
+        submitConfig: {// 向后台提交的配置
+            name: "sales.salesman.userId",// 接口中的参数名
+            op: "eq",// 查询方式
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "guider": {
         label: "导购",
         type: "autofill",
-        submitConfig: {//向后台提交的配置
-            name: "guider",//接口中的参数名
-            op: "eq",//查询方式
+        submitConfig: {// 向后台提交的配置
+            name: "sales.guider.userId",// 接口中的参数名
+            op: "eq",// 查询方式
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: { "user.status":0,"departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
-    "region-name":{
+    "region-name": {
         label: "大区名称",
         type: "text",
         submitConfig: {
@@ -180,7 +208,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "dept-name":{
+    "dept-name": {
         label: "归属部门",
         type: "text",
         submitConfig: {
@@ -193,7 +221,7 @@ Condition.addupRule("sales", {
         label: "部门",
         type: "selectCaching",
         submitConfig: {
-            name: "dept.name",
+            name: "sales.department.name",
             op: "eq",
             validate: null
         },
@@ -205,20 +233,20 @@ Condition.addupRule("sales", {
             valuePath: "name"
         }
     },
-    "fullpayTime" : {
-        label:"补款时间",
-        type:"dateRangePicker",
-        submitConfig : {
-            name : "fullpayTimeRange",
-            op : "between",
-            validate:null
+    "fullpayTime": {
+        label: "补款时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sales.fullpayTime.range",
+            op: "between",
+            validate: null
         }
     },
-    "dompany": {
+    "dompany1": {
         label: "公司",
         type: "select",
         submitConfig: {
-            name: "dompany",
+            name: "sales.dompany",
             op: "eq",
             validate: null
         },
@@ -230,14 +258,15 @@ Condition.addupRule("sales", {
             valuePath: "name"
         }
     },
-    
-    "activity" : {
-        label: "活动名称", //中文名
+
+    "activity-name": {
+        label: "活动名称", // 中文名
         type: "text", // 类型
         submitConfig: { // 向后台提交的配置
-            name: "activity.name", // 接口中的参数名
+            name: "sales.activity.name", // 接口中的参数名
             op: "cn", // 查询方式
-            validate: null // 校验规则
+            validate: null
+        // 校验规则
         }
     },
     "activity-category-name": {
@@ -249,7 +278,7 @@ Condition.addupRule("sales", {
             validate: null
         },
     },
-    "activity-brand-name" : {
+    "activity-brand-name": {
         label: "品牌",
         type: "text",
         submitConfig: {
@@ -258,8 +287,8 @@ Condition.addupRule("sales", {
             validate: null
         },
     },
-    
-    "balance-orderId":{
+
+    "balance-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
@@ -268,7 +297,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "balance-no":{
+    "balance-no": {
         label: "销售单号",
         type: "text",
         submitConfig: {
@@ -277,7 +306,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "balance-category-name" : {
+    "balance-category-name": {
         label: "品类",
         type: "text",
         submitConfig: {
@@ -286,7 +315,7 @@ Condition.addupRule("sales", {
             validate: null
         },
     },
-    "balance-brand-name" : {
+    "balance-brand-name": {
         label: "品牌",
         type: "text",
         submitConfig: {
@@ -294,24 +323,26 @@ Condition.addupRule("sales", {
             op: "cn",
             validate: null
         },
-    },    
-    "balance-brand":{
-        label: "品牌",//中文名
-        type: "autofill",//类型
-        submitConfig: {//向后台提交的配置
-            name: "sales.brand",//接口中的参数名
-            op: "eq",//查询方式
-            validate: null//校验规则
+    },
+    "balance-brand": {
+        label: "品牌",// 中文名
+        type: "autofill",// 类型
+        submitConfig: {// 向后台提交的配置
+            name: "sales.brand",// 接口中的参数名
+            op: "eq",// 查询方式
+            validate: null
+        // 校验规则
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.data.queryBrandByPinyin,//获取数据要调用的接口
-            postData: {},//获取数据时的请求参数
-            listPath: "brands",//响应list的json路径
-            keyPath: "name",//用来向后台提交的字段的json路径
-            valuePath: "name"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
+            query: "brand.pinyin",
+            postData: {},// 获取数据时的请求参数
+            listPath: "brands",// 响应list的json路径
+            keyPath: "name",// 用来向后台提交的字段的json路径
+            valuePath: "name"// 用来在页面显示的字段的json路径
         }
     },
-    "balance-status":{
+    "balance-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -319,15 +350,15 @@ Condition.addupRule("sales", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.payment,
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.sales,
             postData: {},
             listPath: "balanceStatus",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "balance-type":{
+    "balance-type": {
         label: "类型",
         type: "select",
         submitConfig: {
@@ -335,15 +366,63 @@ Condition.addupRule("sales", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.payment,
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.sales,
             postData: {},
             listPath: "balanceType",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "balance-fullpayTime":{
+    "balance-deliverStatus": {
+        label: "配送状态",
+        type: "select",
+        submitConfig: {
+            name: "deliverStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().salesBalance.deliverStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balance-verifyStatus": {
+        label: "审核状态",
+        type: "select",
+        submitConfig: {
+            name: "verifyStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().salesBalance.verifyStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balance-confirmStatus": {
+        label: "确认状态",
+        type: "select",
+        submitConfig: {
+            name: "confirmStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().salesBalance.confirmStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balance-fullpayTime": {
         label: "补款时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -352,7 +431,7 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
-    "balance-createTime":{
+    "balance-createTime": {
         label: "预结时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -361,7 +440,7 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
-    "balance-venderTime":{
+    "balance-venderTime": {
         label: "厂结时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -370,7 +449,7 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
-    "balance-postTime":{
+    "balance-postTime": {
         label: "结算时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -379,7 +458,7 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
-    "balance-grade":{
+    "balance-grade": {
         label: "等级",
         type: "select",
         submitConfig: {
@@ -387,7 +466,7 @@ Condition.addupRule("sales", {
             op: "cn",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.sales,
             postData: {},
             listPath: "balanceGrade",
@@ -395,17 +474,17 @@ Condition.addupRule("sales", {
             valuePath: "value"
         }
     },
-    
-    "sale-createTime":{
+
+    "sale-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "createTime",
+            name: "sales.createTime.range",
             op: "between",
             validate: null
         }
     },
-    "salesDelivery-no":{
+    "salesDelivery-no": {
         label: "销售单号",
         type: "text",
         submitConfig: {
@@ -414,7 +493,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-orderId":{
+    "salesDelivery-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
@@ -423,7 +502,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-category":{
+    "salesDelivery-category": {
         label: "品类",
         type: "text",
         submitConfig: {
@@ -432,7 +511,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-brand":{
+    "salesDelivery-brand": {
         label: "品牌",
         type: "text",
         submitConfig: {
@@ -441,7 +520,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-goods":{
+    "salesDelivery-goods": {
         label: "商品名",
         type: "text",
         submitConfig: {
@@ -450,7 +529,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-createTime":{
+    "salesDelivery-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -459,7 +538,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-tranTime":{
+    "salesDelivery-tranTime": {
         label: "配送时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -468,7 +547,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-checkTime":{
+    "salesDelivery-checkTime": {
         label: "审核时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -477,7 +556,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-confirmTime":{
+    "salesDelivery-confirmTime": {
         label: "确认时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -486,7 +565,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-finishTime":{
+    "salesDelivery-finishTime": {
         label: "完结时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -495,7 +574,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesDelivery-traner":{
+    "salesDelivery-traner": {
         label: "配送人",
         type: "autofill",
         submitConfig: {
@@ -505,13 +584,16 @@ Condition.addupRule("sales", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":0,"departmentType.name":""},
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "salesDelivery-creater":{
+    "salesDelivery-creater": {
         label: "创建人",
         type: "autofill",
         submitConfig: {
@@ -521,13 +603,16 @@ Condition.addupRule("sales", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":0,"departmentType.name":""},
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "salesDelivery-checker":{
+    "salesDelivery-checker": {
         label: "审核人",
         type: "autofill",
         submitConfig: {
@@ -537,13 +622,16 @@ Condition.addupRule("sales", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":0,"departmentType.name":""},
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "salesDelivery-confirmer":{
+    "salesDelivery-confirmer": {
         label: "确认人",
         type: "autofill",
         submitConfig: {
@@ -553,13 +641,16 @@ Condition.addupRule("sales", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":0,"departmentType.name":""},
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "salesDelivery-finisher":{
+    "salesDelivery-finisher": {
         label: "完结人",
         type: "autofill",
         submitConfig: {
@@ -569,13 +660,16 @@ Condition.addupRule("sales", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":0,"departmentType.name":""},
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "salesDelivery-status":{
+    "salesDelivery-status": {
         label: "配送状态",
         type: "select",
         submitConfig: {
@@ -583,15 +677,15 @@ Condition.addupRule("sales", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.sales,
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
             postData: {},
-            listPath: "deliveryStatus",
+            listPath: constant.sales().salesDeliveryItem.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "salesActivity-no":{
+    "salesActivity-no": {
         label: "销售单号",
         type: "text",
         submitConfig: {
@@ -600,7 +694,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesActivity-orderId":{
+    "salesActivity-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
@@ -609,7 +703,7 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "salesActivity-createTime":{
+    "salesActivity-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -618,72 +712,8 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
-    "oales-no": {
-        label: "外销单号",
-        type: "text",
-        submitConfig: {
-            name: "no",
-            op: "eq",
-            validate: null
-        }
-    },
-    "oales-orderId": {
-        label: "装修单号",
-        type: "text",
-        submitConfig: {
-            name: "orderId",
-            op: "eq",
-            validate: {
-                "reg": /^[A-Z0-9]*$/,
-                "msg": "格式不正确A-Z,0-9"
-            }
-        }
-    },
-    "oales-oalesDept": {
-        label: "部门",
-        type: "selectCaching",
-        submitConfig: {
-            name: "dept.name",
-            op: "eq",
-            validate: null
-        },
-        dataSource: {// 从后台取数据的各种配置
-            url: api.communion.queryDepartment,
-            postData: {},
-            listPath: "deptList",
-            keyPath: "name",
-            valuePath: "name"
-        }
-    },
-    "oales-region":{
-        label: "分区",
-        type: "text",
-        submitConfig: {
-            name: "region.name",
-            op: "cn",
-            validata: null
-        }
-    },
 
-    "oales-createTime":{
-        label: "创建时间",
-        type: "dateRangePicker",
-        submitConfig: {
-            name: "createTime",
-            op: "cn",
-            validata: null
-        }
-    },
-    "oales-confirmTime":{
-        label: "确认时间",
-        type: "dateRangePicker",
-        submitConfig: {
-            name: "confirmTime",
-            op: "cn",
-            validata: null
-        }
-    },
-    "oales-status":{
+    "refunds-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -692,9 +722,102 @@ Condition.addupRule("sales", {
             validate: null
         },
         dataSource: {
-            url: api.ds.sales,
+            url: null,
             postData: {},
-            listPath: "oalesStatus",
+            listPath: constant.sales().refunds.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oales-no": {
+        label: "外销单号",
+        type: "text",
+        submitConfig: {
+            name: "oales.no",
+            op: "eq",
+            validate: null
+        }
+    },
+    "oales-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "decoration.orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "oales-dept": {
+        label: "部门",
+        type: "autofill",
+        submitConfig: {
+            name: "oales.dept.no",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {
+                "dept.type.dtid": 2
+            },
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "oales-region": {
+        label: "分区",
+        type: "autofill",
+        submitConfig: {
+            name: "oales.region.no",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {
+                "dept.type.dtid": 1
+            },
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "oales-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "oales.createTime",
+            op: "cn",
+            validata: null
+        }
+    },
+    "oales-confirmTime": {
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "oales.confirmTime",
+            op: "cn",
+            validata: null
+        }
+    },
+    "oales-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "oales.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.sales().oales.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -703,28 +826,29 @@ Condition.addupRule("sales", {
         label: "品牌",
         type: "autofill",
         submitConfig: {
-            name: "brandId",
+            name: "oales.brand.bid",
             op: "eq",
             validate: null
         },
         dataSource: {
             url: api.data.queryBrandByPinyin,
+            query: "brand.pinyin",
             postData: {},
             listPath: "brands",
             keyPath: "bid",
             valuePath: "name",
         }
     },
-    "oales-category":{
+    "oales-category": {
         label: "品类",
         type: "text",
         submitConfig: {
-            name: "category",
+            name: "oales.category",
             op: "eq",
             validata: null
         }
     },
-    "oalesPay-payTime":{
+    "oalesPay-payTime": {
         label: "付款时间",
         type: "dateRangePicker",
         submitConfig: {

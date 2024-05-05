@@ -36,10 +36,10 @@ public class WorksheetServiceImpl implements WorksheetService {
 	@Transactional(rollbackFor = Exception.class)
 	public void pageWorksheet(Paging paging, List<Filter> filters, int company) throws FLException {
 
-		List<WorksheetPO> WorksheetPOs = worksheetDao.pageWorksheet(paging, filters, company);
-		List<WorksheetVO> WorksheetVOs = new ArrayList<WorksheetVO>();
+		List<WorksheetPO> worksheetPOs = worksheetDao.pageWorksheet(paging, filters, company);
+		List<WorksheetVO> worksheetVOs = new ArrayList<WorksheetVO>();
 
-		for (WorksheetPO worksheetPO : WorksheetPOs) {
+		for (WorksheetPO worksheetPO : worksheetPOs) {
 
 			WorksheetVO worksheetVO = new WorksheetVO(new UserVO(), new UserVO());
 
@@ -47,26 +47,64 @@ public class WorksheetServiceImpl implements WorksheetService {
 			BeanUtil.copyProperties(worksheetPO.getCreater(), worksheetVO.getCreater(), Arrays.asList("dept", "duty", "role"));
 			BeanUtil.copyProperties(worksheetPO.getHandler(), worksheetVO.getHandler(), Arrays.asList("dept", "duty", "role"));
 
-			WorksheetVOs.add(worksheetVO);
+			worksheetVOs.add(worksheetVO);
 		}
 
-		paging.setData(WorksheetVOs);
+		paging.setData(worksheetVOs);
+	}
+
+	@Override
+	public List<WorksheetVO> queryWorksheet(WorksheetVO worksheet, String userId) {
+
+		List<WorksheetPO> worksheetPOs = worksheetDao.queryWorksheet(userId);
+		List<WorksheetVO> worksheetVOs = new ArrayList<WorksheetVO>();
+
+		for (WorksheetPO worksheetPO : worksheetPOs) {
+
+			WorksheetVO worksheetVO = new WorksheetVO(new UserVO(), new UserVO());
+
+			BeanUtil.copyProperties(worksheetPO, worksheetVO, Arrays.asList("creater", "handler"));
+
+			BeanUtil.copyProperties(worksheetPO.getCreater(), worksheetVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(worksheetPO.getHandler(), worksheetVO.getHandler(), Arrays.asList("dept", "role", "duty"));
+
+			worksheetVOs.add(worksheetVO);
+
+		}
+
+		return worksheetVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addWorksheet(WorksheetVO worksheetVO, String userId, int company) throws FLException {
 
+		WorksheetPO worksheetPO = new WorksheetPO();
+
+		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		WorksheetPO worksheetPO = new WorksheetPO();
 		worksheetPO.setCreater(creater);
 		worksheetPO.setStatus(WorksheetPO.STATUS_INIT_INT);
 		worksheetPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
-		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
-
 		worksheetDao.save(worksheetPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateWorksheet(WorksheetVO worksheetVO) throws FLException {
+
+		WorksheetPO worksheetPO = worksheetDao.get(worksheetVO.getWsid());
+
+		if (worksheetPO == null) {
+			throw new FLException(160050, "工单不存在");
+		}
+
+		worksheetPO.setPath(worksheetVO.getPath());
+
+		worksheetDao.update(worksheetPO);
 	}
 
 	@Override
@@ -88,8 +126,6 @@ public class WorksheetServiceImpl implements WorksheetService {
 		worksheetPO.setHandler(handler);
 		worksheetPO.setStatus(WorksheetPO.STATUS_CANCEL_INT);
 		worksheetPO.setHandTime(DateUtil.getDateToTimestamp(new Date()));
-
-		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
 
 		worksheetDao.update(worksheetPO);
 	}
@@ -113,8 +149,26 @@ public class WorksheetServiceImpl implements WorksheetService {
 		worksheetPO.setHandler(handler);
 		worksheetPO.setStatus(WorksheetPO.STATUS_HANDL_INT);
 		worksheetPO.setHandTime(DateUtil.getDateToTimestamp(new Date()));
+		worksheetPO.setResult(worksheetVO.getResult());
 
-		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
+		worksheetDao.update(worksheetPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void finishWorksheet(WorksheetVO worksheetVO) throws FLException {
+
+		WorksheetPO worksheetPO = worksheetDao.get(worksheetVO.getWsid());
+
+		if (worksheetPO == null) {
+			throw new FLException(160050, "工单不存在");
+		}
+
+		if (worksheetPO.getStatus() != WorksheetPO.STATUS_HANDL_INT) {
+			throw new FLException(160051, "工单不可操作");
+		}
+
+		worksheetPO.setStatus(WorksheetPO.STATUS_FINISH_INT);
 
 		worksheetDao.update(worksheetPO);
 	}

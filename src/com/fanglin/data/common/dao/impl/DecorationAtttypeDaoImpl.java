@@ -33,6 +33,6 @@ public class DecorationAtttypeDaoImpl extends DaoImpl<DecorationAtttypePO> imple
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationAtttypePO> queryDecorationAtttype(int company) {
-		return session().createCriteria(DecorationAtttypePO.class).add(Restrictions.eq("company", company)).list();
+		return session().createCriteria(DecorationAtttypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", DecorationAtttypePO.STATUS_ENABLE_INT)).list();
 	}
 }

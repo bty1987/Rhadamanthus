@@ -66,7 +66,7 @@ public interface UserService {
 
 	public void quitUser(UserVO userVO, String userId) throws FLException;
 
-	public void tranUser(UserVO userVO, String userId) throws FLException;
+	public void tranUser(UserVO userVO, String userId, int roleId) throws FLException;
 
 	public int registUser(UserVO userVO) throws FLException;
 

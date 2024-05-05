@@ -120,8 +120,6 @@ jQuery(function($) {
             data[content.attr("id")] = content.val();
         });
 
-        console.log(data);
-
         data = $.extend({}, data, contractEdit.cover);
 
         data["con-service-total-cn"] = utils.getCNMoney(parseFloat(data["con-service-total"]));
@@ -140,8 +138,6 @@ jQuery(function($) {
         if (contractEdit.contractArgs.company != "1") {
             delete data["sin-company-phone"];
         }
-
-        console.log(data);
 
         com.showConfirm("请仔细认真检查合同填写内容", function() {
 

@@ -213,7 +213,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
 		decorationVO.setDesigner(new UserBaseVO(customerOriginPO.getDesigner().getUserId()));
 		decorationVO.setSalesman(new UserBaseVO(approvalCustomerOriginTDecorationPO.getSalesman().getUserId()));
-		decorationVO.setGrade("A");
+		decorationVO.setGrade("C");
 		decorationVO.setNotSalesmanRate(0);
 		decorationVO.setBusitype(approvalCustomerOriginTDecorationPO.getDecorationBusitype().getDbid());
 

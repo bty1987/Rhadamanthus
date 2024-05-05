@@ -61,7 +61,7 @@ Condition.addupRule("construction", {
         label: "进度",
         type: "select",
         submitConfig: {
-            name: "cnid",
+            name: "construction.schedule",
             op: "eq",
             validate: null
         },
@@ -99,7 +99,7 @@ Condition.addupRule("construction", {
         label: "监理",// 中文名
         type: "autofill",// 类型
         submitConfig: {// 向后台提交的配置
-            name: "supervisor",// 接口中的参数名
+            name: "construction.supervisor",// 接口中的参数名
             op: "eq",// 查询方式
             validate: null
         // 校验规则
@@ -156,7 +156,6 @@ Condition.addupRule("construction", {
             valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
-
     "schedule-decoration-design-region": {
         label: "设计中心",
         type: "autofill",
@@ -251,7 +250,7 @@ Condition.addupRule("construction", {
         label: "环节状态",
         type: "select",
         submitConfig: {
-            name: "status",
+            name: "construction.status",
             op: "eq",
             validate: null
         },

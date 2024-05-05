@@ -32,6 +32,10 @@ public class PresignPricePO implements Serializable {
 
 	private long price;
 
+	private int costPrice;
+
+	private int mostPrice;
+
 	private short status;
 
 	public PresignPricePO() {
@@ -97,6 +101,24 @@ public class PresignPricePO implements Serializable {
 
 	public void setPrice(long price) {
 		this.price = price;
+	}
+
+	@Column(name = "costPrice")
+	public int getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(int costPrice) {
+		this.costPrice = costPrice;
+	}
+
+	@Column(name = "mostPrice")
+	public int getMostPrice() {
+		return mostPrice;
+	}
+
+	public void setMostPrice(int mostPrice) {
+		this.mostPrice = mostPrice;
 	}
 
 	@Column(name = "status")

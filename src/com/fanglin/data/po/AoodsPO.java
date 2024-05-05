@@ -18,60 +18,81 @@ import javax.persistence.Table;
 public class AoodsPO implements Serializable {
 
 	private static final long serialVersionUID = -7644266247269577044L;
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_BOMPANY_STR = "bompany";
-	
+
 	public static final String COLUMN_AID_STR = "aid";
-	
+
 	public static final String COLUMN_NAME_STR = "goods.name";
-	
+
 	public static final String COLUMN_ANAME_STR = "accessoriesType.name";
-	
+
 	public static final String COLUMN_NO_STR = "goods.no";
-	
+
 	public static final String COLUMN_PINYIN_STR = "goods.pinyin";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_STATUS_ATTTYPE = "atttype";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short CHECKUP_CHECK_INT = 0;
-	
+
 	private long aid;
-	
+
+	private String name;
+
 	private GoodsPO goods;
-	
+
 	private AccessoriesTypePO accessoriesType;
-	
+
+	private NoodsPO noods;
+
+	private ConstructionNodePO constructionNode;
+
 	private short checkup;
-	
+
 	private short status;
-	
+
 	private int company;
-	
+
 	private int bompany;
-	
+
 	private int balance;
-	
+
+	private int selling;
+
 	private short atttype;
 
-	public AoodsPO(){
+	public AoodsPO() {
 		super();
 	}
-	
+
 	public AoodsPO(long aid) {
 		super();
 		this.aid = aid;
 	}
-	
+
 	public AoodsPO(AccessoriesTypePO accessoriesType, GoodsPO goods) {
 		super();
 		this.accessoriesType = accessoriesType;
 		this.goods = goods;
+	}
+
+	public AoodsPO(ConstructionNodePO constructionNode) {
+		super();
+		this.constructionNode = constructionNode;
+	}
+
+	public AoodsPO(AccessoriesTypePO accessoriesType, GoodsPO goods, NoodsPO noods, ConstructionNodePO constructionNode) {
+		super();
+		this.accessoriesType = accessoriesType;
+		this.goods = goods;
+		this.noods = noods;
+		this.constructionNode = constructionNode;
 	}
 
 	@Id
@@ -83,6 +104,15 @@ public class AoodsPO implements Serializable {
 
 	public void setAid(long aid) {
 		this.aid = aid;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -103,6 +133,26 @@ public class AoodsPO implements Serializable {
 
 	public void setAccessoriesType(AccessoriesTypePO accessoriesType) {
 		this.accessoriesType = accessoriesType;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "nid", referencedColumnName = "nid")
+	public NoodsPO getNoods() {
+		return noods;
+	}
+
+	public void setNoods(NoodsPO noods) {
+		this.noods = noods;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getConstructionNode() {
+		return constructionNode;
+	}
+
+	public void setConstructionNode(ConstructionNodePO constructionNode) {
+		this.constructionNode = constructionNode;
 	}
 
 	@Column(name = "checkup")
@@ -140,6 +190,7 @@ public class AoodsPO implements Serializable {
 	public void setBompany(int bompany) {
 		this.bompany = bompany;
 	}
+
 	@Column(name = "balance")
 	public int getBalance() {
 		return balance;
@@ -148,6 +199,16 @@ public class AoodsPO implements Serializable {
 	public void setBalance(int balance) {
 		this.balance = balance;
 	}
+
+	@Column(name = "selling")
+	public int getSelling() {
+		return selling;
+	}
+
+	public void setSelling(int selling) {
+		this.selling = selling;
+	}
+
 	@Column(name = "atttype")
 	public short getAtttype() {
 		return atttype;

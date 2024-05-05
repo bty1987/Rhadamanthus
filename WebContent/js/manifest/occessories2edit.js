@@ -124,6 +124,7 @@ jQuery(function($) {
 
             var oiid = $line.attr('data-oiid');
             var gid = $line.attr('data-gid');
+            var selling = $line.attr('data-selling');
             var name = $line.find(".name input").val();
             var num = $line.find('.number input').val();
             var balance = $line.attr('data-balance');
@@ -131,17 +132,20 @@ jQuery(function($) {
             var url = api.inventory.addOccessoriesItem;
             var options = {
                 "occessoriesItem.num": num,
+                "occessoriesItem.goods.selling" : selling,
+                "occessoriesItem.goods.gid" : gid
             };
 
             if (oiid) {
                 url = api.inventory.updateOccessoriesItem;
                 options["occessoriesItem.oiid"] = oiid;
+
             } else {
                 options["occessoriesItem.oid"] = occessories.oid;
                 options["occessoriesItem.goods.gid"] = gid;
                 options["occessoriesItem.rbalance"] = balance;
-            }
 
+            }
             com.post(url, options, function(data) {
 
                 com.showAlert(com.info, "操作成功");

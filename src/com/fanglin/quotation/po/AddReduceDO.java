@@ -99,6 +99,8 @@ public class AddReduceDO implements Serializable {
 
 	private int discount;
 
+	private short schedule;
+
 	private short status;
 
 	private short isAffirm;
@@ -223,6 +225,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setConsPrice(long consPrice) {
 		this.consPrice = consPrice;
+	}
+
+	@Column(name = "schedule")
+	public short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(short schedule) {
+		this.schedule = schedule;
 	}
 
 	@Column(name = "status")

@@ -41,12 +41,14 @@ $(function() {
     };
 
     balanceCutpay.modals.balanceCutpayModal.on("hide.bs.modal", function() {
+
         com.cleanItems(balanceCutpay.items);
         com.clearValidator();
         com.closeTip();
     });
 
     balanceCutpay.modals.addBalanceCutpayModal.on("hide.bs.modal", function(e) {
+
         com.clearValidator();
         com.cleanTypeahead("name1");
         com.cleanItems(balanceCutpay.items);
@@ -58,7 +60,9 @@ $(function() {
         balanceDccountes.push({name:" "});
 
         $.each(res.balanceDccountes, function(i, v) {
+
             if (v.status == 0){
+
                 balanceDccountes.push(v);
             }
         });
@@ -71,7 +75,9 @@ $(function() {
         com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
 
             $.each(res.balanceDccountes, function(i, v) {
+
                 if(com.focusPage("#balanceDccountName").val() == v.bdid){
+
                     com.focusPage("#balanceDccountSurplus").val(v.surplus);
                     com.focusPage("#balanceDccountCutpay").val(v.cutpay);
                 }
@@ -90,7 +96,11 @@ $(function() {
         name: "操作人",
         prop: "operater.currentName",
         clazz: "grey",
-    },{
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.operater.userId);
+        }
+    }, {
         fieId: "operateTime",
         name: "操作时间",
         prop: "operateTime",
@@ -126,7 +136,7 @@ $(function() {
         name: "说明",
         prop: "comment",
         clazz: "grey",
-    },];
+    }];
 
     var linebtns = [{
         name: "抵扣",
@@ -138,7 +148,7 @@ $(function() {
             deductBalanceCutpay(v);
             return false;
         }
-    },];
+    }];
 
     searcher.line("name", lineprops, linebtns).render();
 
@@ -167,6 +177,7 @@ $(function() {
     balanceCutpay.btns.saveBtn.on("click", function() {
 
         if (com.validate('balanceCutpayModal')) {
+
             return false;
         };
 
@@ -188,7 +199,9 @@ $(function() {
     });
 
     balanceCutpay.btns.saveDeductBtn.on("click", function() {
+
         if (com.validate('deductBalanceCutpayModal')) {
+
             return false;
         };
 
@@ -213,6 +226,7 @@ $(function() {
     balanceCutpay.btns.saveAddBtn.on("click", function() {
 
         if (com.validate('addBalanceCutpayModal')) {
+
             return false;
         };
 

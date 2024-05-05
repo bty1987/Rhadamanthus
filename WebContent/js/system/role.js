@@ -14,6 +14,7 @@ jQuery(function($) {
             chartList: com.focusPage("#chartList"),
             currentchartPage: com.focusPage("#currentchartPage"),
 
+            task: com.focusPage("#task", "#taskModal"),
             taskList: com.focusPage("#taskList"),
             taskPermList: com.focusPage("#taskPermList"),
 
@@ -37,6 +38,8 @@ jQuery(function($) {
             saveOperationBtn: com.focusPage('button[name="saveBtn"]', '#operationModal').on("click", saveOperation),
             saveModuleBtn: com.focusPage('button[name="saveBtn"]', '#moduleModal').on("click", saveModule),
             saveTaskBtn: com.focusPage('button[name="saveTaskBtn"]').bind('click', saveTask),
+
+            addRoleModuleBtn: com.focusPage('#addRoleModuleBtn').bind('click', addRoleTask),
         },
 
         validator: {
@@ -143,6 +146,21 @@ jQuery(function($) {
             })
 
             $div.append($input).append($span).appendTo(role.items.taskList);
+
+            com.selectTypeahead(role.items.task, res.tasks, 'tid', 'name', function(list, k, v) {
+
+                var tag = com.focusPage("#" + k, "#taskList");
+
+                if (!tag)
+                    return v;
+
+                com.focusPage(".tag", "#taskList").css("background-color", "");
+                tag.parent(".tag").css("background-color", "#d6487eac");
+
+                tag.prop("checked", "checked");
+
+                return v;
+            });
         });
     }, null, false);
 
@@ -176,8 +194,6 @@ jQuery(function($) {
                 com.post(checked ? api.system.updateRoleOperation : api.system.deleteRoleOperation, {
                     "role.rid": role.rid,
                     'operation.oid': ele.val()
-                }, function(res) {
-
                 });
             })
 
@@ -737,6 +753,20 @@ jQuery(function($) {
             role.rid = null;
 
             role.modals.taskModal.modal("hide");
+        });
+    }
+
+    function addRoleTask() {
+
+        if (com.validate("taskModal")) {
+            return false;
+        }
+
+        console.log(com.typeahead(role.items.task))
+
+        com.post(api.communion.updateRoleTask, {
+            "role.rid": role.rid,
+            'task.tid': com.typeahead(role.items.task)
         });
     }
 

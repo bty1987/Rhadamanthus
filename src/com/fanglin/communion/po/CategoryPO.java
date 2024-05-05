@@ -18,17 +18,25 @@ public class CategoryPO implements java.io.Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
+	public static final String COLUMN_ISCOUPON_STR = "isCoupon";
+
+	public static final String COLUMN_ISCOUNT_STR = "isCount";
+
 	private long cid;
 
 	private String no;
 
 	private String name;
 
+	private short type;
+
+	private short isCoupon;
+
+	private short isCount;
+
 	private String kino;
 
 	private String kiname;
-	
-	private short type;
 
 	public CategoryPO() {
 		super();
@@ -68,6 +76,33 @@ public class CategoryPO implements java.io.Serializable {
 		this.name = name;
 	}
 
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "isCoupon")
+	public short getIsCoupon() {
+		return isCoupon;
+	}
+
+	public void setIsCoupon(short isCoupon) {
+		this.isCoupon = isCoupon;
+	}
+
+	@Column(name = "isCount")
+	public short getIsCount() {
+		return isCount;
+	}
+
+	public void setIsCount(short isCount) {
+		this.isCount = isCount;
+	}
+
 	@Column(name = "kino")
 	public String getKino() {
 		return kino;
@@ -84,15 +119,6 @@ public class CategoryPO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
-	}
-	
-	@Column(name = "type")
-	public short getType() {
-		return type;
-	}
-
-	public void setType(short type) {
-		this.type = type;
 	}
 
 }

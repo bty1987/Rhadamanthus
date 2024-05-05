@@ -156,16 +156,13 @@ var printAddReduceDetail = (function() {
 
             function disposeAddReduceItemData(addReduceItems, discount) {
 
-                // 报价折扣
-                var quotationDiscount = utils.accDiv(discount == 0 ? addReduceDetail.quotation.discount : discount, 10);
-                var decorationType = addReduceDetail.decoration.type;
-                // 用于处理数据顺序为题
-                addReduceItems = addReduceItems.reverse();
+                var quotationDiscount = utils.accDiv(discount == 0 ? addReduceDetail.quotation.discount : discount, 10); // 报价折扣
+
+                addReduceItems = addReduceItems.reverse(); // 用于处理数据顺序为题
 
                 $.each(addReduceItems, function(i, addReduceItem) {
 
-                    // 4 (增项中报价项)
-                    if (addReduceItem.type == 4) {
+                    if (addReduceItem.type == 4) { // 增项中报价项
                         if (reduceNums[addReduceItem.quoteItemId]) {
                             reduceNums[addReduceItem.quoteItemId] = utils.changeThrDecimal(utils.accAdd(reduceNums[addReduceItem.quoteItemId], addReduceItem.num));
                         } else {
@@ -173,14 +170,7 @@ var printAddReduceDetail = (function() {
                         }
                     }
 
-                    // 减项类型/增项类型
-                    var addReduceType = [1, 3, 4, 5].indexOf(addReduceItem.type) != -1 ? 1 : 0;
-
                     var discount = ([1, 3].indexOf(addReduceItem.discount) != -1) ? quotationDiscount : 1; // 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
-
-                    if (addReduceItem.type == 4 || addReduceItem.type == 5) { // 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
-                        discount = 1;
-                    }
 
                     var discountPrice = utils.accMul(addReduceItem.unitPrice, discount);
 
@@ -188,7 +178,6 @@ var printAddReduceDetail = (function() {
                     addReduceItem.total = utils.changeThrDecimal(utils.accMul(addReduceItem.num, discountPrice));
 
                     addReduceDetail.items[addReduceItem.arId].unshift(addReduceItem);
-
                 });
             }
 

@@ -11,9 +11,8 @@ package com.fanglin.communion.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +24,11 @@ import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.DepartmentTypeDao;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.service.DepartmentService;
-import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
@@ -61,17 +58,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public void pageDepartment(Paging paging, List<Filter> filters, DepartmentVO departmentVO, int company) throws FLException {
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
+
+		Integer dtid = null;
 
 		if (departmentVO != null && departmentVO.getType() != null) {
-			filters.add(new Filter("type", String.valueOf(departmentVO.getType().getDtid()), "eq"));
+			filters.add(new Filter("deptType", String.valueOf(departmentVO.getType().getDtid()), "eq"));
 		}
 
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartment(paging, filters, company);
+		if (departmentVO != null && departmentVO.getType() != null) {
+			dtid = departmentVO.getType().getDtid();
+		}
+
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartment(paging, filters, dtid, company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {
-			departmentVOs.add(convertBean(departmentPO));
+			departmentVOs.add(departmentPO.ptv());
 		}
 
 		paging.setData(departmentVOs);
@@ -83,33 +85,25 @@ public class DepartmentServiceImpl implements DepartmentService {
 		List<DepartmentPO> departmentPOs;
 
 		if (departmentVO != null && departmentVO.getType() != null) {
+
 			String name = departmentVO.getType().getName();
-			int dtid = departmentVO.getType().getDtid();
+			Integer dtid = departmentVO.getType().getDtid();
+
 			if (name != null && !name.equals("")) {
 				departmentPOs = departmentDao.queryDepartment(departmentTypeDao.queryDepartmentTypeByName(name).getDtid(), company);
-			} else {
+			} else if (dtid != null) {
 				departmentPOs = departmentDao.queryDepartment(dtid, company);
+			} else {
+				departmentPOs = departmentDao.queryDepartment(null, company);
 			}
 		} else {
-			departmentPOs = departmentDao.queryDepartment(0, company);
+			departmentPOs = departmentDao.queryDepartment(null, company);
 		}
 
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
-		Map<Integer, Integer> companys = new HashMap<Integer, Integer>();
-
 		for (DepartmentPO departmentPO : departmentPOs) {
-
-			company = companys.get(departmentPO.getCompany());
-
-			if (company == null) {
-				company = Integer.parseInt(FormatUtil.encodeCompany(departmentPO.getCompany()));
-				companys.put(departmentPO.getCompany(), company);
-			}
-
-			departmentVO = convertBean(departmentPO);
-
-			departmentVOs.add(departmentVO);
+			departmentVOs.add(departmentPO.ptv());
 		}
 
 		return departmentVOs;
@@ -118,13 +112,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO, int company) {
 
-		List<DepartmentPO> departmentPOs = departmentDao.queryDepartmentBytype(departmentVO.getType().getDtid(), company);
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(departmentVO.getType().getDtid(), company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {
-			departmentVO = convertBean(departmentPO);
-
-			departmentVOs.add(departmentVO);
+			departmentVOs.add(departmentPO.ptv());
 		}
 
 		return departmentVOs;
@@ -132,11 +124,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 	@Override
 	public DepartmentVO queryDepartmentByDid(DepartmentVO dept) {
+
 		DepartmentPO departmentPO = departmentDao.get(dept.getDid());
 		DepartmentVO departmentVO = null;
 
 		if (departmentPO != null) {
-			departmentVO = convertBean(departmentPO);
+			departmentVO = departmentPO.ptv();
 		}
 
 		return departmentVO;
@@ -146,11 +139,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public DepartmentVO queryDepartmentByNo(DepartmentVO dept) {
 
 		DepartmentPO departmentPO = departmentDao.queryDepartmentByNo(dept.getNo());
-
 		DepartmentVO departmentVO = null;
 
 		if (departmentPO != null) {
-			departmentVO = convertBean(departmentPO);
+			departmentVO = departmentPO.ptv();
 		}
 
 		return departmentVO;
@@ -159,7 +151,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
 
-		int dtid = 0;
+		Integer dtid = null;
 
 		if (departmentVO.getType() != null && departmentVO.getType().getDtid() != 0) {
 			dtid = departmentVO.getType().getDtid();
@@ -171,11 +163,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 			_company = null;
 		}
 
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), _company, dtid);
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), dtid, _company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {
-			departmentVOs.add(convertBean(departmentPO));
+			departmentVOs.add(departmentPO.ptv());
 		}
 
 		return departmentVOs;
@@ -214,7 +206,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
 		departmentPO.setCompany(company);
-		departmentPO.setCreateTime(DateUtil.current());
+		departmentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		if (userPO != null) {
 			departmentPO.setManager(userPO);
@@ -274,28 +266,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		departmentPO.setStatus(departmentVO.getStatus());
 
 		departmentDao.update(departmentPO);
-	}
-
-	public DepartmentVO convertBean(DepartmentPO departmentPO) {
-
-		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO());
-
-		BeanUtil.copyProperties(departmentPO, departmentVO, Arrays.asList("fatherDept", "type", "manager"));
-
-		if (departmentPO.getType() != null) {
-			BeanUtil.copyProperties(departmentPO.getType(), departmentVO.getType());
-		}
-
-		if (departmentPO.getFatherDept() != null) {
-			BeanUtil.copyProperties(departmentPO.getFatherDept(), departmentVO.getFatherDept(), Arrays.asList("fatherDept", "cityProper", "type", "manager"));
-		}
-
-		if (departmentPO.getManager() != null && departmentPO.getManager().getUid() != 0) {
-			BeanUtil.copyProperties(departmentPO.getManager(), departmentVO.getManager(), Arrays.asList("role", "dept", "duty"));
-		}
-
-		return departmentVO;
-
 	}
 
 }

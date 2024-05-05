@@ -6,7 +6,6 @@
         dutyTypeMap: {},
         saveBtn: null,
         cancelBtn: null,
-        items: {},
         editLoginId: null,
         deptList: {},
         loginFlag: false,
@@ -14,32 +13,65 @@
         userPhoto: "",
         identityPathF: "",
         identityPathB: "",
+        postParam: {},
+        userAdvanceItems: {},
+        companysel: [],
+        task: {},
+        rolesel: {},
+        uid: null,
+        userId: null,
 
         btn: {
             saveBtns: com.focusPage("#saveBtns").on("click", saveBtns),
             save: com.focusPage("#save").on("click", save),
+
+            advanceSaveBtn: com.focusPage("#advanceSaveBtn").on("click", saveAdvanceData),
+            advanceCancelBtn: com.focusPage("#advanceCancelBtn"),
+
+            saveRoleBtn: com.focusPage("#saveRoleBtn").on("click", saveUserRole),
+            saveCompanyBtn: com.focusPage("#saveCompanyBtn").on("click", saveUserCompany)
         },
 
         modals: {
             pictureModal: com.focusPage("#pictureModal"),
             transferModal: com.focusPage("#transferModal"),
+
+            userAdvanceModal: com.focusPage("#userAdvanceModal"),
+            userCompanyModal: com.focusPage("#userCompanyModal"),
+            usertaskModal: com.focusPage("#taskModal"),
+            userRoleModal: com.focusPage("#userRoleModal")
         },
         items: {
             userPhoto: com.focusPage("#userPhoto", "#pictureModal"),
             identityPathF: com.focusPage("#identityPathF", "#pictureModal"),
             identityPathB: com.focusPage("#identityPathB", "#pictureModal"),
+
+            isLogin: com.focusPage("#isLogin").switchBtn("isOrNot"),
+            ips: com.focusPage("#ips").switchBtn("isOrNot"),
+            macs: com.focusPage("#macs").switchBtn("isOrNot"),
+            qcode: com.focusPage("#qcode").switchBtn("isOrNot"),
+            webs: com.focusPage("#webs").switchBtn("isOrNot"),
+            pcs: com.focusPage("#pcs").switchBtn("isOrNot"),
+
+            roleTran: com.focusPage("#roleTran"),
+            company: com.focusPage("#company"),
+            usercompany: com.focusPage("#usercompany", "#userCompanyModal"),
+            taskpermissions: com.focusPage("#taskpermissions"),
+            oldcompany: com.focusPage("#oldcompany"),
+
+            userrole: com.focusPage("#userrole", "#userRoleModal"),
+            role: com.focusPage("#role", "#userRoleModal"),
+            selectrole: com.focusPage("#roles", "#userRoleModal")
         },
         postData: null,
-        isExpert: true
+        isExpert: true,
+        pageType: params['urlLoadParams'].type,
+        pageConfig: {}
     };
 
-    var type = params['urlLoadParams'].type
-
-    if (type == 'expert') {
-        user.postData = 'userExpertPostData';
+    if (user.pageType == 'expert') {
         user.isExpert = true;
-    } else {
-        user.postData = 'userPostData';
+    } else if (user.pageType == 'common') {
         user.isExpert = false;
     }
 
@@ -55,6 +87,9 @@
         com.cleanItems(user.items);
         com.clearValidator();
     });
+
+    // 不同页面的不同参数
+    user.pageConfig = userUtils.getConfig(user.pageType);
 
     com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {
         'uploadType': 0
@@ -91,7 +126,6 @@
         "id": "import",
         "type": "div"
     }], []);
-    user.items.import = com.focusPage("#import");
 
     user.modals.ddModal = com.initForm("ddModal", "钉钉部门", [{
         "id": "tree3",
@@ -157,7 +191,7 @@
         "name": "状态",
         "type": "select",
         "validator": "v_required"
-    }, ], [{
+    }], [{
         "id": "saveUserBtn",
         "clazz": "btn btn-primary",
         "name": "保存"
@@ -167,6 +201,50 @@
 
         user.deptType = res.departmentTypes;
     }, null, false);
+
+    com.post(api.personel.queryUserCompanyForSelf, {}, function(res) {
+
+        $.each(res.userCompanys, function(i, v) {
+
+            user.companysel.push(v.company);
+        });
+
+    }, null, false);
+
+    com.post(api.communion.queryTask, {
+        "task.level": 0
+    }, function(res) {
+
+        user.task = res.tasks;
+    }, null, false);
+
+    com.selectTypeahead(user.items.company, user.companysel, 'cid', 'name');
+
+    com.initTypeahead("roleTran", api.system.queryRoleByName, 'role.name', {}, "roleList", 'rid', 'name');
+    com.initTypeahead("role", api.system.queryRoleByName, 'role.name', {}, "roleList", 'rid', 'name', function(list, k, v) {
+
+        var $li = $("<li></li>").css({
+            "background-color": "#91b8d0",
+            "margin-bottom": "5px",
+            "margin-right": "5px"
+        }).attr("rid", k).appendTo(user.items.selectrole);
+
+        var $span = $("<span></span>").css({
+            'color': '#fff'
+        }).attr('role', v).attr('rid', user.items.role.attr('data-typeahead-key')).html(v).appendTo($li);
+        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({
+            'color': '#d15b47'
+        }).appendTo($li);
+
+        $a.click(function() {
+
+            $li.remove();
+        });
+
+        com.cleanItems(user.items);
+
+        return "";
+    });
 
     var displayFunc = (function() {
 
@@ -189,22 +267,40 @@
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $qrcode = $('<a></a>').addClass('btn btn-minier btn-yellow').html('二维码');
-                    var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-                    var $addDD = $('<a></a>').addClass('btn btn-minier btn-warning').html('添加到钉钉');
-                    var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
-                    var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
-                    var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
-                    var $btnlookEducation = $('<a></a>').addClass('btn btn-minier btn-yellow').html('教育信息');
-                    var $btnlookOperation = $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
-                    var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
-                    var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-warning').html('打印');
-                    var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-purple').html('图片');
-                    var $btnOffjob = $('<a></a>').addClass('btn btn-minier btn-inverse').html('离职');
-                    var $btnTransfer = $('<a></a>').addClass('btn btn-minier btn-danger').html('调职');
-                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-pink').html('合同');
 
-                    var propertyArr = [["员工编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["角色:", v.role.name, "grey"], ["联系方式:", v.phone, "grey"], ["身份证:", v.identity.replace(/(\d{6})\d{8}(\w{4})/, '$1********$2'), "grey"]];
+                    var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html('查看');
+                    var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-info').html('汇总');
+                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+
+                    var $addDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('添加钉钉');
+                    var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉');
+                    var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('删除钉钉');
+
+                    var $usersalary = $('<a></a>').addClass('btn btn-minier btn-pink').html('薪资');
+                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-pink').html('合同');
+                    var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('经历');
+                    var $btnlookEducation = $('<a></a>').addClass('btn btn-minier btn-pink').html('教育');
+                    var $btnlookOperation = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作');
+                    var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-pink').html('资料');
+
+                    var $btnOffjob = $('<a></a>').addClass('btn btn-minier btn-danger').html('离职');
+                    var $btnTransfer = $('<a></a>').addClass('btn btn-minier btn-danger').html('调职');
+                    var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-danger').html('打印');
+
+                    var $role = $('<a></a>').addClass('btn btn-minier btn-yellow').html('角色');
+                    var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
+                    var $btnRight = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权配');
+                    var $btnMacontrol = $('<a></a>').addClass('btn btn-minier btn-yellow').html('权限');
+                    var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修设计');
+                    var $btnSales = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修业务');
+                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-pink').html('装修状态');
+                    var $btnHouse = $('<a></a>').addClass('btn btn-minier btn-pink').html('房源权配');
+                    var $btnCustomer = $('<a></a>').addClass('btn btn-minier btn-pink').html('客源权配');
+                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
+                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('默认密码');
+                    var $btnlogout = $('<a></a>').addClass('btn btn-minier btn-danger').html('登出');
+
+                    var propertyArr = userUtils.getPropertyArr(user.pageConfig.propertyArr, v);
 
                     $.each(propertyArr, function(index, value) {
 
@@ -439,15 +535,26 @@
                         });
                     });
 
+                    $usersalary.click(function() {
+
+                        params.salary.belonger = {
+                            userId: v.userId
+                        };
+
+                        com.popup4page("#layerPopUp", "views/salary/salary4common.html", "薪资信息");
+                    });
+
                     $btnlookEducation.click(function() {
 
                         params.personel.uid = v.uid;
+
                         com.popup4page("#layerPopUp", api.index.userEducation.url, "教育信息");
                     });
 
                     $btnlookOperation.click(function() {
 
                         params.personel.uid = v.uid;
+
                         com.popup4page("#layerPopUp", api.index.userOperation.url, "工作信息");
                     });
 
@@ -456,6 +563,7 @@
                         params.personel.userId = v.userId;
                         params.personel.uid = v.uid;
                         params.personel.isExpert = user.isExpert;
+
                         com.popup4page("#layerPopUp", api.index.userDetail.url, "人员信息");
                     });
 
@@ -463,25 +571,29 @@
 
                         params.personel.userId = v.userId;
                         params.personel.uid = v.uid;
+
                         com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
                     });
 
                     $btnPicture.click(function() {
 
                         user.modals.pictureModal.modal("show");
+
                         params.personel.userId = v.userId;
                         params.personel.uid = v.uid;
-                        initUser(v);
 
+                        initUser(v);
                     });
 
                     $btnOffjob.click(function() {
 
                         com.post(api.personel.quitUser, {
-                            "user.userId": v.userId
+                            "userId": v.userId,
+                            "approve": "agree"
                         }, function(v) {
 
                             com.showAlert(com.info, "离职成功");
+
                             userSeacher.doSearch();
                         });
                     });
@@ -489,26 +601,23 @@
                     $btnTransfer.click(function() {
 
                         user.modals.transferModal.modal("show");
+
                         params.personel.userId = v.userId;
+
                         transfer(v);
+
                         return false;
                     });
 
                     $btnContract.click(function() {
 
-                        modalAgreementModal(v.userId, v.uid);
-                    });
-
-                    var modalAgreementModal = function(userId, uid) {
-
                         params.personel.userId = v.userId;
-
                         params.personel.uid = v.uid;
-
                         params.historyPage = api.index.userIndex.url;
 
+                        // com.popup4page("#layerPopUp", api.index.userContract.url, "合同信息");
                         com.switchPage(api.index.userContract.url);
-                    };
+                    });
 
                     // 删除点击事件
                     $deleteDD.click(function() {
@@ -549,38 +658,428 @@
                         com.popup4page("#layerPopUp", api.index.userExperience.url, "工作经历");
                     });
 
-                    if (type == 'expert' && v.status == constant.personel.user.STATUS_ONJOB_INT) {
-                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).append($btnContract).appendTo($h3);
-                    } else if (type == 'expert' && v.status == constant.personel.user.STATUS_OFFJOB_INT || v.status == constant.personel.user.STATUS_KEEPJOB_INT) {
-                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).append($btnContract).appendTo($h3);
-                    } else if (v.status == constant.personel.user.STATUS_OFFJOB_INT || v.status == constant.personel.user.STATUS_KEEPJOB_INT) {
-                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
-                    } else {
-                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
+                    $role.unbind().bind('click', function() {
+
+                        user.uid = v.uid;
+
+                        var options = {
+                            "user.uid": v.uid
+                        };
+
+                        user.items.userrole.html("");
+                        user.items.selectrole.html("");
+
+                        user.modals.userRoleModal.modal("show");
+
+                        com.post(api.personel.queryUserRole, options, function(res) {
+
+                            $.each(res.userRoles, function(i, va) {
+
+                                var $div = $('<div></div>').appendTo(user.items.userrole);
+                                var $span = $('<span class="tag"></span>').html(va.role.name).appendTo($div);
+                            });
+                        });
+
+                    });
+
+                    $company.unbind().bind('click', function() {
+
+                        user.uid = v.uid;
+
+                        $("#companydiv").empty();
+
+                        var companyname = [];
+
+                        var options = {
+                            "user.uid": v.uid
+                        };
+
+                        user.items.usercompany.html("");
+
+                        user.modals.userCompanyModal.modal("show");
+
+                        com.post(api.personel.queryUserCompany, options, function(res) {
+
+                            $.each(res.userCompanys, function(i, va) {
+
+                                companyname.push(va.company.name);
+                            });
+                        }, null, false);
+
+                        $.each(user.companysel, function(i, va) {
+
+                            var $div = $('<div class="tag"></div>');
+                            var $input = $('<input/>').attr({
+                                "type": "checkbox",
+                                "value": va.name,
+                                "name": "corporab",
+                                "id": va.cid,
+                                "class": "ace"
+                            });
+                            var $span = $('<span></span>').addClass('lbl');
+                            var $spans = $('<span></span>').html(va.name);
+                            $div.append($input).append($span).append($spans).appendTo(com.focusPage("#companydiv"));
+                            if (companyname.indexOf(va.name) != -1) {
+                                $input.attr("checked", true);
+                            }
+                        });
+
+                        companyname && companyname.length && $.each(companyname, function(i, v) {
+
+                            var $div = $('<div></div>').appendTo(user.items.usercompany);
+                            var $span = $('<span class="tag"></span>').html(v).appendTo($div);
+                        });
+
+                    });
+
+                    $btnMacontrol.click(function() {
+
+                        params["user.uid"] = v.uid;
+                        com.popup4page("#layerPopUp", api.index.macontrol.url, "权限");
+                    });
+
+                    $btnRight.click(function() {
+
+                        dialogUserAdvanceIndex(v.userId);
+                    });
+
+                    $btnDesigne.click(function() {
+
+                        binding.openDesignDialog(v.userId);
+                    });
+
+                    $btnSales.unbind().bind('click', function() {
+
+                        binding.openSalesDialog(v.userId);
+                    });
+
+                    $btnStatus.click(function() {
+
+                        binding.openOrderDialog(v.userId);
+                    });
+
+                    $btnHouse.click(function() {
+
+                        binding.openHouseDialog(v.userId);
+                    });
+
+                    $btnCustomer.click(function() {
+
+                        binding.openCustomerDialog(v.userId);
+                    });
+
+                    $resetPassword.click(function() {
+
+                        resetPassword(v.userId, v.userName);
+                    });
+
+                    $defaultPassword.click(function() {
+
+                        defaultPassword(v.userId, v.userName);
+                    });
+
+                    $btnlogout.click(function() {
+
+                        binding.openlogoutDialog(v.userId);
+                    });
+
+                    if (user.pageConfig.pageBtn.contains("qrcode") && v.status == constant.personel.user.STATUS_ONJOB_INT)
+                        $divBtnWrap.append($qrcode);
+
+                    if (user.pageConfig.pageBtn.contains("view"))
+                        $divBtnWrap.append($btnCheck);
+
+                    if (user.pageConfig.pageBtn.contains("total"))
+                        $divBtnWrap.append($btnDetail);
+
+                    if (user.pageConfig.pageBtn.contains("edit"))
+                        $divBtnWrap.append($btnEdit);
+
+                    if (user.pageConfig.pageBtn.contains("addDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
+                        $divBtnWrap.append($addDD);
+
+                    if (user.pageConfig.pageBtn.contains("syncDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
+                        $divBtnWrap.append($updateDD);
+
+                    if (user.pageConfig.pageBtn.contains("delDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
+                        $divBtnWrap.append($deleteDD);
+
+                    if (user.pageConfig.pageBtn.contains("salary"))
+                        $divBtnWrap.append($usersalary);
+
+                    if (user.pageConfig.pageBtn.contains("contract"))
+                        $divBtnWrap.append($btnContract);
+
+                    if (user.pageConfig.pageBtn.contains("experience"))
+                        $divBtnWrap.append($userexception);
+
+                    if (user.pageConfig.pageBtn.contains("education"))
+                        $divBtnWrap.append($btnlookEducation);
+
+                    if (user.pageConfig.pageBtn.contains("job"))
+                        $divBtnWrap.append($btnlookOperation);
+
+                    if (user.pageConfig.pageBtn.contains("data"))
+                        $divBtnWrap.append($btnPicture);
+
+                    if (user.pageConfig.pageBtn.contains("leave"))
+                        $divBtnWrap.append($btnOffjob);
+
+                    if (user.pageConfig.pageBtn.contains("transferred"))
+                        $divBtnWrap.append($btnTransfer);
+
+                    if (user.pageConfig.pageBtn.contains("print"))
+                        $divBtnWrap.append($btnPrint);
+
+                    if (user.pageConfig.pageBtn.contains("role"))
+                        $divBtnWrap.append($role);
+
+                    if (user.pageConfig.pageBtn.contains("company"))
+                        $divBtnWrap.append($company);
+
+                    if (user.pageConfig.pageBtn.contains("right"))
+                        $divBtnWrap.append($btnRight);
+
+                    if (user.pageConfig.pageBtn.contains("macontrol"))
+                        $divBtnWrap.append($btnMacontrol);
+
+                    if (user.pageConfig.pageBtn.contains("design"))
+                        $divBtnWrap.append($btnDesigne);
+
+                    if (user.pageConfig.pageBtn.contains("sales"))
+                        $divBtnWrap.append($btnSales);
+
+                    if (user.pageConfig.pageBtn.contains("status"))
+                        $divBtnWrap.append($btnStatus);
+
+                    if (user.pageConfig.pageBtn.contains("house"))
+                        $divBtnWrap.append($btnHouse);
+
+                    if (user.pageConfig.pageBtn.contains("customer"))
+                        $divBtnWrap.append($btnCustomer);
+
+                    if (user.pageConfig.pageBtn.contains("reset"))
+                        $divBtnWrap.append($resetPassword);
+
+                    if (user.pageConfig.pageBtn.contains("default"))
+                        $divBtnWrap.append($defaultPassword);
+
+                    if (user.pageConfig.pageBtn.contains("exit"))
+                        $divBtnWrap.append($btnlogout);
+
+                    if (user.pageConfig.propertyArr.contains("picture")) {
+                        $liLine.append($urldiv);
                     }
 
-                    $liLine.append($urldiv).append($h3).append($ulProperty).appendTo($ul);
+                    $divBtnWrap.appendTo($h3);
+                    $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
             }
         };
+
+        var binding = {
+
+            $dialog: com.focusPage('#moduleModal'),
+            postConf: {
+                "user.userId": null,
+                path: null,
+                name: null
+            },
+
+            openDesignDialog: function(userId) { // 设计权限配置
+
+                var $dialog = this.$dialog;
+                showDepaermentModal("设计部");
+                com.post(api.right.queryDecorationDesignDepartmentRightByUserId, {
+                    "user.userId": userId
+                }, function(data) {
+
+                    if (data.dids.length) {
+                        $.each(data.dids, function(i, v) {
+
+                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                        });
+                    }
+                }, null, false);
+                $dialog.modal("show");
+                this.postConf.path = api.right.updateDecorationDesignDepartmentRight;
+                this.postConf.name = "dids";
+                this.postConf["user.userId"] = userId;
+            },
+
+            openSalesDialog: function(userId) { // 业务权限配置
+
+                var $dialog = this.$dialog;
+                showDepaermentModal("");
+                com.post(api.right.queryDecorationSalesmanDepartmentRightByUserId, {
+                    "user.userId": userId
+                }, function(data) {
+
+                    if (data.dids.length) {
+                        $.each(data.dids, function(i, v) {
+
+                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                        });
+                    }
+                }, null, false);
+                $dialog.modal("show");
+                this.postConf.path = api.right.updateDecorationSalesmanDepartmentRight;
+                this.postConf.name = "dids";
+                this.postConf["user.userId"] = userId;
+            },
+
+            openOrderDialog: function(userId) { // 订单权限配置
+
+                var $dialog = this.$dialog;
+                var list = [{
+                    key: "-1",
+                    value: "全部"
+                }], userList;
+                var $list = $('.modal-body', $dialog);
+                $list.empty();
+
+                list = list.concat(constant.decoration().decoration.status.datas);
+
+                com.post(api.right.queryDecorationStatusRightByUserId, {
+                    "user.userId": userId
+                }, function(data) {
+
+                    userList = data.statuses;
+                }, null, false);
+
+                list && list.length && $.each(list, function(i, v) {
+
+                    var $label = $('<label  style="margin-right:20px;display: inline-block;min-width: 25%;"></label>');
+                    var $input = $('<input>').attr({
+                        "type": "checkbox",
+                        "name": "module",
+                        "class": "ace"
+                    }).val(v.key);
+                    var $span = $('<span></span>').addClass('lbl').html(v.value);
+                    $label.append($input).append($span).appendTo($list);
+                });
+
+                userList && userList.length && $.each(userList, function(i, v) {
+
+                    com.focusPage('input[name="module"][value="' + v + '"]', $list).prop('checked', true);
+                });
+
+                $dialog.modal("show");
+
+                this.postConf.path = api.right.updateDecorationStatusRight;
+                this.postConf.name = "statuses";
+                this.postConf["user.userId"] = userId;
+
+            },
+
+            openHouseDialog: function(userId) { // 房源权配
+
+                var $dialog = this.$dialog;
+                showDepaermentModal("置业房产");
+                com.post(api.right.queryHouseSourceDepartmentRightByUserId, {
+                    "user.userId": userId
+                }, function(data) {
+
+                    if (data.dids.length) {
+                        $.each(data.dids, function(i, v) {
+
+                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                        });
+                    }
+                }, null, false);
+                $dialog.modal("show");
+                this.postConf.path = api.right.updateHouseSourceDepartmentRight;
+                this.postConf.name = "dids";
+                this.postConf["user.userId"] = userId;
+            },
+
+            openCustomerDialog: function(userId) { // 客源权配
+
+                var $dialog = this.$dialog;
+                showDepaermentModal("");
+                com.post(api.right.queryCustomerSourceDepartmentRightByUserId, {
+                    "user.userId": userId
+                }, function(data) {
+
+                    if (data.dids.length) {
+                        $.each(data.dids, function(i, v) {
+
+                            $wrap.find('input[value="' + v + '"]').prop('checked', true);
+                        });
+                    }
+                }, null, false);
+                $dialog.modal("show");
+                this.postConf.path = api.right.updateCustomerSourceDepartmentRight;
+                this.postConf.name = "dids";
+                this.postConf["user.userId"] = userId;
+            },
+
+            // 登出
+            openlogoutDialog: function(userId) {
+
+                com._post_(api.home.library, {
+                    "api": "system.login.logout",
+                    "userId": userId,
+                    "redis": 0
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                });
+            },
+
+            setAdvance: function() {
+
+                var $dialog = this.$dialog;
+                var postConf = this.postConf;
+
+                com.focusPage('button[name="saveBtn"]').click(function() {
+
+                    var list = $('input[name="module"]:checked', $dialog);
+
+                    var params = {
+                        "user.userId": postConf["user.userId"]
+                    };
+
+                    if (!list.length || list.length == 0)
+                        return false;
+
+                    $.each(list, function(i, v) {
+
+                        var $v = $(this).val();
+                        params[postConf.name + "[" + i + "]"] = $v;
+                        if ($v == -1 || $v == '全部')
+                            return false;
+                    });
+
+                    com.post(postConf.path, params, function(data) {
+
+                        $dialog.modal("hide");
+                    });
+                });
+            }
+        };
+
         return {
             init: function(tableId, listData) {
 
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
+            },
+            setAdvance: function() {
+
+                binding.setAdvance();
             }
         }
     })();
 
-    var _condArr = ['personel-userId', 'personel-userName', 'personel-roleId', 'personel-deptId', 'personel-userstatus', 'personel-identity', 'personel-phone'];
     var userSeacher = new Searcher();
 
-    userSeacher.init(_condArr, "condList", api.personel.pageUser, function(data) {
+    userSeacher.init(user.pageConfig.condArr, "condList", user.pageConfig.apiPage, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", user.postData, null, false, null, function() {
+    }, "pagenation", user.pageType + "UserPostData", null, false, null, function() {
 
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
         var $addiS = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
@@ -598,11 +1097,24 @@
         var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
         var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
 
-        var btns = [$addaS, $adda, $importa];
-        user.isExpert ? btns.push($exporta) : btns; // 是否为员工-高级页面
+        var btns = [];
+
+        if (user.pageConfig.pageBtn.contains("simplifyAdd"))
+            btns.push($addaS);
+
+        if (user.pageConfig.pageBtn.contains("add"))
+            btns.push($adda);
+
+        if (user.pageConfig.pageBtn.contains("uploading"))
+            btns.push($importa);
+
+        if (user.pageConfig.pageBtn.contains("export"))
+            btns.push($exporta);
 
         return btns;
     });
+
+    displayFunc.setAdvance();
 
     com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
 
@@ -624,7 +1136,7 @@
         user.modals.importModal.modal("show");
     });
 
-    com.uploadify(user.items.import, "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {
+    com.uploadify(com.focusPage("#import"), "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {
         'uploadType': 4
     }, 1);
 
@@ -823,9 +1335,25 @@
 
             user.items.dept.val(v.dept.did);
             user.items.duty.val(v.duty.did);
-        }),
+        });
+
+        com.cleanTypeahead(user.items.company);
+
+        com.post(api.personel.queryUserByUserId, {
+            "user.userId": v.userId
+        }, function(res) {
+
+            var v = res.user;
+
+            user.items.oldcompany.val(v.companys);
+
+            com.updateTypeahead("roleTran", v.role.rid, v.role.name);
+            com.updateTypeahead("company", v.companyNo, v.companys);
+
+        }, null, false);
 
         user.modals.transferModal.modal("show");
+
     }
 
     function save() {
@@ -835,9 +1363,14 @@
 
         var param = {
             "user.userId": params.personel.userId,
+
+            "user.companys": com.typeahead(user.items.company),
             "user.dtid": user.items.deptType.val(),
             "user.dept.did": user.items.dept.val(),
             "user.duty.did": user.items.duty.val(),
+            "user.role.rid": com.typeahead("roleTran"),
+
+            "approve": "agree"
         };
 
         com.post(api.personel.tranUser, param, function(res) {
@@ -849,6 +1382,305 @@
             userSeacher.doSearch();
         });
     }
-    ;
+
+    function showDepaermentModal(value) {
+
+        $wrap = com.focusPage('#moduleModal').find('.modal-body').empty();
+        com.post(api.communion.queryDepartment, {
+            "dept.type.name": value
+        }, function(res) {
+
+            var tree = res.deptList;
+            var childtree = [];
+
+            if (!tree || !tree.length) {
+                return;
+            }
+            var menuArr = {
+                level1: [],
+                level2: [],
+                level3: []
+            };
+            var menuObj = {
+                level1: {},
+                level2: {},
+                level3: {}
+            };
+            var $tree = $('<ol class="dd-list"></ol>');
+            $wrap.append($tree);
+            menuArr.level1 = [{
+                did: -1,
+                name: "全部"
+            }];
+
+            $.each(tree, function(i, va) {
+
+                var aa = true;
+                if (menuArr.level2.length > 0) {
+                    $.each(menuArr.level2, function(j, vl) {
+
+                        if (va.fatherDept.did == vl.did) {
+                            aa = false;
+                            return false;
+                        }
+                    })
+                } else if (va.fatherDept.did != null && va.fatherDept.did != 0) {
+                    aa = false;
+                    menuArr.level2.push(va.fatherDept);
+                }
+                if (aa) {
+                    if (va.fatherDept.did != null && va.fatherDept.did != 0)
+                        menuArr.level2.push(va.fatherDept);
+                }
+                if (va.fatherDept.did == null || va.fatherDept.did == 0) {
+                    childtree.push(va)
+                }
+            });
+
+            $.each(childtree, function(j, vb) {
+
+                var bb = true;
+                $.each(menuArr.level2, function(j, vl) {
+
+                    if (vb.did == vl.did) {
+                        bb = false;
+                        return false;
+                    }
+                });
+                if (bb) {
+                    menuArr.level2.push(vb);
+                }
+            });
+
+            $.each(menuArr.level2, function(i, va) {
+
+                $.each(tree, function(index, value) {
+
+                    if (value.fatherDept.did == va.did) {
+                        menuArr.level3.push(value)
+                    }
+                })
+            });
+
+            if (menuArr.level1.length) {
+                $.each(menuArr.level1, function(i, va) {
+
+                    var $li = $('<li></li>').addClass('dd-item');
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.name);
+                    var $input = $('<input>').attr({
+                        type: 'checkbox',
+                        name: 'module'
+                    }).addClass('ace').val(va.did);
+                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
+                        'margin-bottom': '0',
+                        'margin-top': '-5px'
+                    });
+                    var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+                    $indexCheck.append($label).appendTo($div);
+                    $li.append($div).appendTo($tree);
+                    menuObj.level1[va.did] = $li;
+                });
+            }
+
+            if (menuArr.level2.length) {
+                $.each(menuArr.level2, function(i, va) {
+
+                    var $li = $('<li></li>').addClass('dd-item');
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.name);
+                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
+                        'margin-bottom': '0',
+                        'margin-top': '-5px'
+                    });
+                    var $label = $('<label></label>').append('<span class="lbl"></span>');
+                    $indexCheck.append($label).appendTo($div);
+                    menuObj.level2[va.did] = $li;
+                    $li.append($div);
+
+                    var $parent = menuObj.level1[-1];
+                    $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+                    if (!$parent.children('button').length) {
+                        var $title = $parent.children('div');
+                        $('<button type="button" data-action="collapse" class="minus hide">Collapse</button>').insertBefore($title);
+                        $('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
+                    }
+
+                    var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id", "one");
+                    $li.appendTo($pol);
+                });
+            }
+
+            if (menuArr.level3.length) {
+                $.each(menuArr.level3, function(i, va) {
+
+                    var $li = $('<li></li>').addClass('dd-item');
+                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(va.name);
+                    var $input = $('<input>').attr({
+                        type: 'checkbox',
+                        name: 'module'
+                    }).addClass('ace').val(va.did);
+                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
+                        'margin-bottom': '0',
+                        'margin-top': '-5px'
+                    });
+                    var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+                    $indexCheck.append($label).appendTo($div);
+                    menuObj.level3[va.did] = $li;
+                    $li.append($div);
+
+                    var $parent = menuObj.level2[va.fatherDept.did];
+                    $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
+                    if (!$parent.children('button').length) {
+                        var $title = $parent.children('div');
+                        // 减号
+                        $('<button type="button" data-action="collapse" class="minus ">Collapse</button>').insertBefore($title);
+                        $('<button type="button" data-action="expand" class="plus">Expand</button>').insertBefore($title);
+                    }
+
+                    var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list hide').appendTo($parent).attr("id", "two");
+                    $li.appendTo($pol);
+                });
+            }
+
+            com.focusPage('button[data-action="collapse"]').click(function() {
+
+                var $this = $(this);
+                $this.siblings('ol').addClass('hide');
+                $this.parent().find('.plus').toggleClass('hide');
+                $this.parent().find('.minus').removeClass('hide');
+                $this.siblings('ol').find('.dd-list').addClass('hide');
+                $this.toggleClass('hide');
+            });
+
+            com.focusPage('button[data-action="expand"]').click(function() {
+
+                var $this = $(this);
+                $this.siblings('ol').removeClass('hide');
+                $this.parent().find('.minus').toggleClass('hide');
+                $this.parent().find('.plus').removeClass('hide');
+                $this.toggleClass('hide');
+            });
+
+        }, null, false);
+    }
+
+    function dialogUserAdvanceIndex(userId) {
+
+        user.userId = userId;
+
+        var options = {
+            "user.userId": userId
+        };
+
+        com.post(api.personel.queryUserByUserId, options, function(res) {
+
+            var userinfo = res.user;
+
+            user.items.isLogin.prop("checked", (userinfo.isLogin & constant.personel.user.ISLOGIN_FIP_INT) == constant.personel.user.ISLOGIN_FIP_INT);
+            user.items.macs.prop("checked", (userinfo.extranet & constant.personel.user.EXTRANET_MAC_INT) == constant.personel.user.EXTRANET_MAC_INT);
+            user.items.ips.prop("checked", (userinfo.extranet & constant.personel.user.EXTRANET_IP_INT) == constant.personel.user.EXTRANET_IP_INT);
+            user.items.qcode.prop("checked", (userinfo.extranet & constant.personel.user.EXTRANET_QCODE_INT) == constant.personel.user.EXTRANET_QCODE_INT);
+            user.items.webs.prop("checked", (userinfo.extranet & constant.personel.user.EXTRANET_WEB_INT) == constant.personel.user.EXTRANET_WEB_INT);
+            user.items.pcs.prop("checked", (userinfo.extranet & constant.personel.user.EXTRANET_PC_INT) == constant.personel.user.EXTRANET_PC_INT);
+
+            user.modals.userAdvanceModal.modal("show");
+
+        }, null, false);
+    }
+
+    function saveAdvanceData() {
+
+        var extranet = constant.personel.user.EXTRANET_NONE_INT;
+
+        extranet += (user.items.macs.prop("checked") ? constant.personel.user.EXTRANET_MAC_INT : constant.personel.user.EXTRANET_NONE_INT);
+        extranet += (user.items.ips.prop("checked") ? constant.personel.user.EXTRANET_IP_INT : constant.personel.user.EXTRANET_NONE_INT);
+        extranet += (user.items.qcode.prop("checked") ? constant.personel.user.EXTRANET_QCODE_INT : constant.personel.user.EXTRANET_NONE_INT);
+        extranet += (user.items.webs.prop("checked") ? constant.personel.user.EXTRANET_WEB_INT : constant.personel.user.EXTRANET_NONE_INT);
+        extranet += (user.items.pcs.prop("checked") ? constant.personel.user.EXTRANET_PC_INT : constant.personel.user.EXTRANET_NONE_INT);
+
+        var options = {
+            "user.userId": user.userId,
+            "user.isLogin": user.items.isLogin.prop("checked") ? constant.personel.user.ISLOGIN_FIP_INT : constant.personel.user.ISLOGIN_NOT_INT,
+            "user.extranet": extranet,
+        };
+
+        com.post(api.personel.updateUserForAdvance, options, function(res) {
+
+            com.showAlert(com.info, "提交成功");
+        });
+
+        user.modals.userAdvanceModal.modal("hide");
+
+        return false;
+    }
+
+    function resetPassword(userId, userName) {
+
+        com.showConfirm("确定要重置(" + userName + ")的密码吗?", function(result) {
+
+            com.post(api.personel.resetPassword, {
+                'user.userId': userId
+            });
+        });
+    }
+
+    function defaultPassword(userId, userName) {
+
+        com.showConfirm("确定要重置(" + userName + ")密码为默认密码?", function(result) {
+
+            com.post(api.personel.defaultPassword, {
+                'user.userId': userId
+            });
+        });
+    }
+
+    function saveUserRole() {
+
+        var $span = com.focusPage('#roles>li');
+
+        var params = {
+            "user.uid": user.uid
+        };
+
+        $.each($span, function(i, v) {
+
+            var $input = $(v);
+
+            var row = {
+                "vpid": $input.attr('rid')
+            };
+
+            params["rids[" + i + "]"] = row.vpid;
+        });
+
+        com.post(api.personel.updateUserRole, params, function(res) {
+
+            user.modals.userRoleModal.modal("hide");
+        });
+    }
+
+    function saveUserCompany() {
+
+        var $inputs = com.focusPage('input[name="corporab"]:checked');
+
+        var params = {
+            "user.uid": user.uid
+        };
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            var row = {
+                "vpid": $input.attr('id')
+            };
+
+            params["cids[" + i + "]"] = row.vpid;
+        });
+
+        com.post(api.personel.updateUserCompany, params, function(res) {
+
+            user.modals.userCompanyModal.modal("hide");
+        });
+    }
 
 });

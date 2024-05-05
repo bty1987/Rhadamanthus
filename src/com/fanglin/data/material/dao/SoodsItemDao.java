@@ -25,6 +25,6 @@ public interface SoodsItemDao extends Dao<SoodsItemPO> {
 
 	public int deleteSoodsItem(long sid);
 
-	public int deleteSoodsItem(long sid, long qiid);
+	public int deleteSoodsItemByQiid(long qiid);
 
 }

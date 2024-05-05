@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface WorkerSalaryService {
 
-	public void pageWorkerSalary(Paging paging, List<Filter> filters, int company);
+	public void pageWorkerSalary(Paging paging, List<Filter> filters, WorkerSalaryVO workerSalaryVO, int company);
 
 	public void pageWorkerSalaryByUserId(Paging paging, List<Filter> filters);
 

@@ -12,11 +12,8 @@
 package com.fanglin.information.dao.impl;
 
 import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -34,7 +31,7 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 	}
 
 	@Override
-	public List<EventsPO> queryEvents(List<Filter> filters) throws ParseException {
+	public List<EventsPO> queryEvents(List<Filter> filters) {
 
 		PagingQuery<EventsPO> query = pagingQuery(new Paging(), EventsPO.class);
 
@@ -45,20 +42,20 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<EventsPO> queryEvents(int uid, String beginDate, String endDate) throws HibernateException, ParseException {
-		return session().createCriteria(EventsPO.class).createAlias("holder", "holder").add(Restrictions.eq("holder.uid", uid)).add(Restrictions.ge(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(beginDate))).add(Restrictions.le(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(endDate))).list();
+	public List<EventsPO> queryEvents(int uid, Integer beginDate, Integer endDate) {
+		return session().createCriteria(EventsPO.class).createAlias("holder", "holder").add(Restrictions.eq("holder.uid", uid)).add(Restrictions.ge(EventsPO.COLUMN_SHOWDATE_STR, beginDate)).add(Restrictions.le(EventsPO.COLUMN_SHOWDATE_STR, endDate)).list();
 	}
 
 	@Override
-	public int countEvents(int uid, String showDate) throws ParseException {
+	public int countEvents(int uid, Integer showDate) {
 
 		String sql = "select count(*) from information.events where huid = :huid and showDate = :showDate";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("huid", uid).setString("showDate", showDate).uniqueResult();
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("huid", uid).setInteger("showDate", showDate).uniqueResult();
 
 		return count.intValue();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws ParseException {
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
 		for (Filter filter : filters) {
 
@@ -67,7 +64,7 @@ public class EventsDaoImpl extends DaoImpl<EventsPO> implements EventsDao {
 			String op = filter.getOp();
 
 			if ("showDate".equals(field)) {
-				query.add(query.getCriterion(EventsPO.COLUMN_SHOWDATE_STR, new SimpleDateFormat("yyyy-MM-dd").parse(data), op));
+				query.add(query.getCriterion(EventsPO.COLUMN_SHOWDATE_STR, data, op));
 			} else if ("showDateRange".equals(field)) {
 				query.timeranges(EventsPO.COLUMN_SHOWDATE_STR, EventsPO.COLUMN_SHOWDATE_STR, data);
 			}

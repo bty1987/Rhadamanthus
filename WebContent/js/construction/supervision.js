@@ -1,4 +1,4 @@
-$(function() {
+﻿$(function() {
 
     var constructionNodes = {
 
@@ -71,31 +71,65 @@ $(function() {
 
         var creatLine = function(v) {
 
-            var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-success').html("查看");
+            var $btnView = $('<a></a>').addClass('btn btn-minier btn-success').html("施工节点");
             var $btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-warning').html('增减项');
-            var $btnRe = $('<a></a>').addClass('btn btn-minier btn-inverse').html('返工');
+//            var $btnRe = $('<a></a>').addClass('btn btn-minier btn-inverse').html('返工');
             var $btnMoney = $('<a></a>').addClass('btn btn-minier btn-info').html('扣款');
             var $btnQuota = $('<a></a>').addClass('btn btn-minier btn-purple').html("定额材料");
             var $btnQuopt = $('<a></a>').addClass('btn btn-minier btn-danger').html('定额工费');
 
-            var propertyArr = [["楼盘名:", v.house.village.name + " " + v.house.houseNumber, "grey"], ["设计师:", v.designer.userName, "grey"], ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"], ["总价:", v.orderTotalPrice, "blue"], ["面积:", v.house.buildArea, "blue"], ["进度:", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"]];
+            var propertyArr = [
+                ["装修单: ", v.orderId, "blue", function(btn) {
+
+                    tools.decoration.info(btn, v.orderId);
+                }],
+                ["楼盘: ", v.house.village.name, "grey", function(btn) {
+
+                    tools.house.info(btn, v.house.hid);
+                }],
+                ["楼号: ", v.house.houseNumber, "grey"],
+                ["客户: ", v.customer.name, "grey", function(btn) {
+
+                    tools.customer.info(btn, v.customer.cid);
+                }],
+                ["设计师:", v.designer.userName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.designer.userId);
+                }],
+                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey", function(btn) {
+
+                    tools.personel.info(btn, v.supervisor.userId);
+                }],
+                ["总价:", v.orderTotalPrice, "blue"],
+                ["面积:", v.house.buildArea, "blue"],
+                ["合同额: ", v.orderTotalPrice, "blue"],
+                ["报价版本: ", v.version.name, "grey"],
+                ["进度:", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"]
+            ];
 
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnQuota).append($btnQuopt).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnQuota).append($btnQuopt).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -114,10 +148,10 @@ $(function() {
                 viewAddReduceIndex(v.orderId, v.type);
             });
 
-            $btnRe.click(function() {
-
-                viewReworkIndex(v.orderId);
-            });
+//            $btnRe.click(function() {
+//
+//                viewReworkIndex(v.orderId);
+//            });
 
             $btnMoney.click(function() {
 
@@ -128,7 +162,7 @@ $(function() {
 
                 params.quotation.orderId = v.orderId;
 
-                com.popup4page("#stockRecordPopUp", "/views/manifest/quotaItem.html", "定额材料")
+                com.popup4page("#stockRecordPopUp", "/views/construction/normtion.html", "定额材料");
             });
 
             $btnQuopt.click(function() {
@@ -168,12 +202,12 @@ $(function() {
 
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var seacher = new Searcher();
 
-    seacher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule', 'construction-projectStatusFlag'], "supervisionCondList", api.construction.pageConstruction, function(list) {
+    seacher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-projectStatus'], "supervisionCondList", api.construction.pageConstruction, function(list) {
 
         displayFunc.init('supervisionResultList', list);
     }, "supervisionPagenation", "supervisionSeacherPostData", null, false, null, null, "supervisionResultList");
@@ -208,7 +242,7 @@ $(function() {
         params.decoration.orderId = orderId;
         params.decoration.auditStatusType = "select";
 
-        com.popup4page("#stockRecordPopUp", "/views/decoration/audit4record.html", "扣款")
+        com.popup4page("#stockRecordPopUp", "/views/decoration/audit4record.html", "扣款");
     }
 
     function viewConstructionInfo(orderId) {

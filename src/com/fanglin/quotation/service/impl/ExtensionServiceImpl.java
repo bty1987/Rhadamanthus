@@ -59,6 +59,8 @@ public class ExtensionServiceImpl implements ExtensionService {
 	@Override
 	public void pageExtension(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
+		if (filters.size() == 0) return;
+
 		List<ExtensionDO> extensionDOs = extensionDao.pageExtension(paging, filters, company);
 
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
@@ -171,6 +173,9 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
+		extensionPO.setManageRate(extensionVO.getManageRate());
+		extensionPO.setManagePrice(extensionVO.getManagePrice());
+		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);

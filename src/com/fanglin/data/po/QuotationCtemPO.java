@@ -113,7 +113,7 @@ public class QuotationCtemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "quotationTypeId")
+	@javax.persistence.JoinColumn(name = "quotationTypeId")
 	public QuotationTypePO getQuotationType() {
 		return quotationType;
 	}
@@ -123,7 +123,7 @@ public class QuotationCtemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "quotationClassificationId")
+	@javax.persistence.JoinColumn(name = "quotationClassificationId")
 	public QuotationClassificationPO getQuotationClassification() {
 		return quotationClassification;
 	}
@@ -133,7 +133,7 @@ public class QuotationCtemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "quotationBigCategoryId")
+	@javax.persistence.JoinColumn(name = "quotationBigCategoryId")
 	public QuotationBigCategoryPO getQuotationBigCategory() {
 		return quotationBigCategory;
 	}
@@ -143,7 +143,7 @@ public class QuotationCtemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "quotationSmallCategoryId")
+	@javax.persistence.JoinColumn(name = "quotationSmallCategoryId")
 	public QuotationSmallCategoryPO getQuotationSmallCategory() {
 		return quotationSmallCategory;
 	}
@@ -153,7 +153,7 @@ public class QuotationCtemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "measurementUnitId")
+	@javax.persistence.JoinColumn(name = "measurementUnitId")
 	public MeasurementUnitPO getMeasurementUnit() {
 		return measurementUnit;
 	}
@@ -163,7 +163,7 @@ public class QuotationCtemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "workTypeId")
+	@javax.persistence.JoinColumn(name = "workTypeId")
 	public WorkTypePO getWorkType() {
 		return workType;
 	}
@@ -174,19 +174,14 @@ public class QuotationCtemPO implements Serializable {
 
 	public QuotationCtemVO ptv(QuotationCtemVO quotationCtemVO) {
 
-		BeanUtil.copyProperties(this, quotationCtemVO, Arrays.asList("category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
+		BeanUtil.copyProperties(this, quotationCtemVO, Arrays.asList("quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType"));
 
-		if (quotationCtemVO.getCategory() != null) BeanUtil.copyPropertie(getQuotationType(), quotationCtemVO.getCategory());
-
-		if (quotationCtemVO.getClassification() != null) BeanUtil.copyPropertie(getQuotationClassification(), quotationCtemVO.getClassification());
-
-		if (quotationCtemVO.getBigCategory() != null) BeanUtil.copyPropertie(getQuotationBigCategory(), quotationCtemVO.getBigCategory());
-
-		if (quotationCtemVO.getSmallCategory() != null) BeanUtil.copyPropertie(getQuotationSmallCategory(), quotationCtemVO.getSmallCategory());
-
-		if (quotationCtemVO.getUnit() != null) BeanUtil.copyPropertie(getMeasurementUnit(), quotationCtemVO.getUnit());
-
-		if (quotationCtemVO.getWorkType() != null) BeanUtil.copyPropertie(getWorkType(), quotationCtemVO.getWorkType());
+		if (quotationCtemVO.getCategory() != null && getQuotationType() != null) BeanUtil.copyPropertie(getQuotationType(), quotationCtemVO.getCategory());
+		if (quotationCtemVO.getClassification() != null && getQuotationClassification() != null) BeanUtil.copyPropertie(getQuotationClassification(), quotationCtemVO.getClassification());
+		if (quotationCtemVO.getBigCategory() != null && getQuotationBigCategory() != null) BeanUtil.copyPropertie(getQuotationBigCategory(), quotationCtemVO.getBigCategory());
+		if (quotationCtemVO.getSmallCategory() != null && getQuotationSmallCategory() != null) BeanUtil.copyPropertie(getQuotationSmallCategory(), quotationCtemVO.getSmallCategory());
+		if (quotationCtemVO.getUnit() != null && getMeasurementUnit() != null) BeanUtil.copyPropertie(getMeasurementUnit(), quotationCtemVO.getUnit());
+		if (quotationCtemVO.getWorkType() != null && getWorkType() != null) BeanUtil.copyPropertie(getWorkType(), quotationCtemVO.getWorkType());
 
 		return quotationCtemVO;
 	}

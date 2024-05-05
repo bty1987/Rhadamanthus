@@ -21,7 +21,7 @@ import com.fanglin.utils.Paging;
 
 public interface DrawLineService {
 
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company);
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<DrawLineVO> queryDrawLine(List<Filter> filters, int company) throws FLException;
 

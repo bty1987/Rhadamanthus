@@ -32,6 +32,8 @@ public interface ModuleService {
 
 	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException;
 
+	public List<ModuleVO> queryModuleByFatherModule(ModuleVO moduleVO) throws FLException;
+
 	public ModuleVO checkModule(ModuleVO moduleVO, String userId) throws FLException;
 
 	public int addModule(ModuleVO moduleVO) throws FLException;

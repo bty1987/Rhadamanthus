@@ -179,9 +179,7 @@ public class ModuleServiceImpl implements ModuleService {
 
 			List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
-			if (userRolePOs == null || userRolePOs.size() == 0) return new ArrayList<ModuleVO>();
-
-			List<Integer> rids = new ArrayList<Integer>(userRolePOs.size());
+			List<Integer> rids = new ArrayList<Integer>(Arrays.asList(userPO.getRole().getRid()));
 
 			for (UserRolePO userRolePO : userRolePOs) {
 				rids.add(userRolePO.getRole().getRid());
@@ -197,6 +195,25 @@ public class ModuleServiceImpl implements ModuleService {
 
 			return new ArrayList<ModuleVO>(modules.values());
 		}
+	}
+
+	@Override
+	public List<ModuleVO> queryModuleByFatherModule(ModuleVO moduleVO) throws FLException {
+
+		List<ModulePO> modulePOs = moduleDao.queryModuleByFatherModule(moduleVO.getSystem(), moduleVO.getFatherModule().getMid());
+
+		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
+
+		for (ModulePO modulePO : modulePOs) {
+
+			moduleVO = new ModuleVO();
+
+			convertModule(modulePO, moduleVO);
+
+			moduleVOs.add(moduleVO);
+		}
+
+		return moduleVOs;
 	}
 
 	@Override
@@ -227,9 +244,7 @@ public class ModuleServiceImpl implements ModuleService {
 
 			List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
-			if (userRolePOs == null || userRolePOs.size() == 0) return moduleVO;
-
-			List<Integer> rids = new ArrayList<Integer>(userRolePOs.size());
+			List<Integer> rids = new ArrayList<Integer>(Arrays.asList(userPO.getRole().getRid()));
 
 			for (UserRolePO userRolePO : userRolePOs) {
 				rids.add(userRolePO.getRole().getRid());

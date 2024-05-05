@@ -74,8 +74,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		List<DecorationActivityItemVO> decorationActivityItemVOs = new ArrayList<DecorationActivityItemVO>();
 
 		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
+
 			DecorationActivityItemVO decorationActivityItemVO = new DecorationActivityItemVO();
-			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("receiver"));
+
+			BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("creater", "receiver", "refunder"));
 
 			decorationActivityItemVO.setReceiver(new UserBaseVO());
 			BeanUtil.copyProperties(decorationActivityItemPO.getReceiver(), decorationActivityItemVO.getReceiver(), Arrays.asList("dept", "duty"));
@@ -100,19 +102,21 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		DecorationActivityItemPO decorationActivityItemPO = new DecorationActivityItemPO();
 
-		BeanUtil.copyProperties(decorationActivityItemVO, decorationActivityItemPO, Arrays.asList("receiver"));
+		BeanUtil.copyProperties(decorationActivityItemVO, decorationActivityItemPO, Arrays.asList("creater", "receiver", "refunder"));
 
 		decorationActivityItemPO.setAid(decorationActivityItemVO.getAid());
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
 		decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 		decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
-		decorationActivityItemPO.setIsStock(DecorationActivityItemPO.ISSTOCK_UNCAL_INT);
+		decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 		decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
-		decorationActivityItemPO.setCuid(creater.getUid());
+		decorationActivityItemPO.setCreater(creater);
 		decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationActivityItemDao.save(decorationActivityItemPO);
+
+		BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("creater", "receiver", "refunder"));
 
 		return 0;
 	}
@@ -134,8 +138,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+
 		decorationActivityItemPO.setReceiver(operater);
 		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+
 		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
@@ -165,7 +171,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int abateDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
-		// 失效状态
+
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
@@ -188,13 +194,16 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140004, "装修单已签约");
 		}
 
-		UserPO receiver = userDao.queryUserByUserId(userId);
+		UserPO operater = userDao.queryUserByUserId(userId);
 
+		decorationActivityItemPO.setReceiver(operater);
+		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
-		decorationActivityItemPO.setReceiver(receiver);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
+
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
@@ -217,7 +226,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
+
 		decorationActivityItemPO.setReceiver(operater);
+		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+
 		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
@@ -258,12 +270,25 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
-		UserPO receiver = userDao.queryUserByUserId(userId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_WAIT_INT);
-		decorationActivityItemPO.setReceiver(receiver);
+
+		decorationActivityItemPO.setRefunder(operater);
+		decorationActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationActivityItemPO.setComment(decorationActivityItemVO.getComment());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
+		decorationActivityItemDao.flush();
+
+		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
 	}
@@ -293,11 +318,15 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RETREAT_INT);
-		decorationActivityItemPO.setReceiver(operater);
-		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
+
+		decorationActivityItemPO.setRefunder(operater);
+		decorationActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationActivityItemPO.setComment(decorationActivityItemVO.getComment());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
+
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
@@ -309,7 +338,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getComment());
 
 		awardRecordDao.save(awardRecordPO);
 
@@ -340,10 +369,18 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140013, "订单不存在");
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_CONSUME_INT);
+
+		decorationActivityItemPO.setRefunder(operater);
+		decorationActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationActivityItemPO.setComment(decorationActivityItemVO.getComment());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
+
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
@@ -359,9 +396,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140030, "装修活动物品不存在");
 		}
 
-		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_INIT_INT });
-
-		if (!status.contains(decorationActivityItemPO.getState())) {
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140057, "装修活动奖品不可操作");
 		}
 
@@ -371,10 +406,18 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140013, "订单不存在");
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DISCOUNT_INT);
+
+		decorationActivityItemPO.setReceiver(operater);
+		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationActivityItemPO.setContent(decorationActivityItemVO.getContent());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
+
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
@@ -412,20 +455,6 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		return 0;
 	}
 
-	private void subDecorationForCut(DecorationPO decorationPO, DecorationActivityItemPO decorationActivityItemPO) {
-
-		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT);
-
-		long couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_COUPON_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
-		long thingCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_THING_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
-
-		decorationPO.setCouponCut(couponCut);
-		decorationPO.setThingCut(thingCut);
-		decorationPO.setFactPrice(Arith.sub(decorationPO.getOrderTotalPrice(), couponCut));
-
-		decorationDao.update(decorationPO);
-	}
-
 	@Override
 	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException {
 
@@ -433,8 +462,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		System.out.println(String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托设计师代领转交您，点【详情】查看", orderId), String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
-
+		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认礼品领取信息.", String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 	}
 
 	@Override
@@ -453,8 +481,13 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(130002, "客户不存在");
 		}
 
-		if (decorationVO.getCustomer().getPhone() == null || !decorationVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
-			throw new FLException(130115, "客户电话验证失败");
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(orderId);
+		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		for (DecorationActivityItemVO decorationActivityItem : decorationActivityItems) {
@@ -463,11 +496,35 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 			if (decorationActivityItemPO == null) continue;
 
-			decorationActivityItemPO.setIsAffirm(decorationActivityItemPO.ISAFFIRM_CONFIRMED_INT);
+			if (decorationActivityItemPO.getIsAffirm() == DecorationActivityItemPO.ISAFFIRM_INIT_INT && decorationActivityItemPO.getState() == DecorationActivityItemPO.STATUS_INIT_INT) {
+
+				decorationActivityItemPO.setIsAffirm(DecorationActivityItemPO.ISAFFIRM_CONFIRMED_INT);
+				decorationActivityItemPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+			}
+
+			if (decorationActivityItemPO.getIsAffirm() == DecorationActivityItemPO.ISAFFIRM_CONFIRMED_INT && !Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RETREAT_INT, DecorationActivityItemPO.STATUS_CONSUME_INT).contains(decorationActivityItemPO.getState())) {
+
+				decorationActivityItemPO.setIsAffirm(DecorationActivityItemPO.ISAFFIRM_CHECKED_INT);
+				decorationActivityItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+			}
 
 			decorationActivityItemDao.update(decorationActivityItemPO);
 		}
 
 		return 0;
+	}
+
+	private void subDecorationForCut(DecorationPO decorationPO, DecorationActivityItemPO decorationActivityItemPO) {
+
+		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT);
+
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_COUPON_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
+		long thingCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_THING_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
+
+		decorationPO.setCouponCut(couponCut);
+		decorationPO.setThingCut(thingCut);
+		decorationPO.setFactPrice(Arith.sub(decorationPO.getOrderTotalPrice(), couponCut));
+
+		decorationDao.update(decorationPO);
 	}
 }

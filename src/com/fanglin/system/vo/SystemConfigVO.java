@@ -1,29 +1,38 @@
 package com.fanglin.system.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
 
-public class SystemConfigVO implements Serializable{
+public class SystemConfigVO implements Serializable {
 
 	private static final long serialVersionUID = 7156788273515784461L;
 
 	private Long scid;
-	
+
 	private String key;
-	
+
 	private String value;
-	
-	private Integer cuid;
-	
-	private String createName;
-	
-	private String createTime;
-	
+
+	private UserBaseVO creater;
+
+	private Timestamp createTime;
+
 	private String comment;
-	
-	private Integer company; 
+
+	private Integer company;
+
+	public SystemConfigVO() {
+		super();
+	}
+
+	public SystemConfigVO(UserBaseVO creater) {
+		super();
+		this.creater = creater;
+	}
 
 	public Long getScid() {
 		return scid;
@@ -49,28 +58,20 @@ public class SystemConfigVO implements Serializable{
 		this.value = value;
 	}
 
-	public Integer getCuid() {
-		return cuid;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCuid(Integer cuid) {
-		this.cuid = cuid;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
-	public String getCreateName() {
-		return createName;
-	}
-
-	public void setCreateName(String createName) {
-		this.createName = createName;
-	}
-
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public String getCreateTime() {
+	@JSON(format = "yyyy-MM-dd HH:mm")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
@@ -89,5 +90,5 @@ public class SystemConfigVO implements Serializable{
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }

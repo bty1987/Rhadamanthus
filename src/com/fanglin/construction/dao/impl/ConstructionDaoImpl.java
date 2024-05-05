@@ -19,8 +19,9 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionDao")
@@ -31,7 +32,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 
 	@Override
-	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer company) {
+	public List<ConstructionPO> pageConstruction(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
 
@@ -45,7 +46,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 	}
 
 	@Override
-	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, int suid) {
+	public List<ConstructionPO> pageConstructionForSupervision(Paging paging, List<Filter> filters, int suid) throws FLException {
 
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
 
@@ -66,11 +67,25 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		return (ConstructionPO) session().createCriteria(ConstructionPO.class).add(Restrictions.eq(ConstructionPO.COLUMN_CID_STR, cid)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException{
+		queryFilterExcute(query, filters, "");
+	}
 
-		query.alias("decoration", "decoration");
+	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException{
 
 		if (filters == null) return;
+
+		if (prefix == null) {
+			prefix = "";
+		}
+
+		if (!"".equals(prefix)) {
+
+			query.alias(prefix, prefix);
+			prefix = String.format("%s.", prefix);
+		}
+
+		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
 
 		for (Filter filter : filters) {
 
@@ -78,41 +93,18 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if (field.startsWith("design")) {
-				query.alias("decoration.designer", "designer");
-			} else if ((field.startsWith("business") || field.startsWith("salesman"))) {
-				query.alias("decoration.salesman", "salesman");
-			} else if (field.startsWith("village")) {
-				query.alias("decoration.house", "house");
-				query.alias("house.village", "village");
+			if (field.contains("cnid")) {
+				query.add(query.getCriterion("cnid", Long.valueOf(data), op));
 			}
 
-			if ("orderId".equals(field)) {
-				query.add(query.getCriterion("decoration.orderId", data, op));
-			} else if ("houseNumber".equals(field)) {
-				query.alias("decoration.house", "house");
-				query.add(query.getCriterion("house.houseNumber", data, op));
-			} else if ("designer".equals(field)) {
-				query.add(query.getCriterion("designer.userId", data, op));
-			} else if ("salesman".equals(field)) {
-				query.add(query.getCriterion("salesman.userId", data, op));
-			} else if ("supervisor".equals(field)) {
-				query.alias("decoration.supervisor", "supervisor");
+			if ("construction.schedule".equals(field)) {
+				query.add(query.getCriterion("schedule", Short.parseShort(data), op));
+			} else if ("construction.supervisor".equals(field)) {
+				query.alias("supervisor", "supervisor");
 				query.add(query.getCriterion("supervisor.userId", data, op));
-			} else if ("village".equals(field)) {
-				query.add(query.getCriterion("village.no", data, op));
-			} else if (ConstructionPO.COLUMN_SCHEDULE_STR.equals(field)) {
-				query.add(Restrictions.eq(field, Integer.valueOf(data)));
-			} else if ("cnid".equals(field)) {
-				query.add(Restrictions.eq(field, Long.valueOf(data)));
-			} else if ("projectStatus".equals(field) && !"other".equals(data)) {
-				if ("未完工".equals(data)) {
-					query.add(query.getCriterion("decoration.projectStatus", DecorationPO.PROJECTSTATUS_START_INT, "ne"));
-				} else {
-					query.add(query.getCriterion("decoration.projectStatus", DecorationPO.PROJECTSTATUS_FINISH_INT, "eq"));
-				}
+			} else if ("construction.status".equals(field)) {
+				query.add(query.getCriterion("status", Short.parseShort(data), op));
 			}
 		}
 	}
-
 }

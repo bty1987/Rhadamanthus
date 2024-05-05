@@ -23,6 +23,8 @@ public interface AoodsService {
 
 	public int updateAoodsForStatus(AoodsVO aoodsVO) throws FLException;
 
+	public int updateAoodsForNorm(AoodsVO aoodsVO) throws FLException;
+
 	public int copyAoods(AoodsVO aoodsVO, int company) throws FLException;
 
 }

@@ -101,7 +101,17 @@ jQuery(function($) {
                 disposeStatus = "已处理";
             }
 
-            var propertyArr = [["客户名:", v.customerName, "grey"], ["创建人:", v.createrName, "grey"], ["操作人:", v.operaterName, "grey"], ["等级:", constant.construction().customerServiceComplaint.levelDict.keys[v.level], null], ["类型:", constant.construction().customerServiceComplaint.typeDict.keys[v.type], "red "], ["时间:", v.createTime, "green "], ["备注:", v.des, "grey"], ["状态:", disposeStatus, "grey"], ["处理信息:", v.handle, "grey"]];
+            var propertyArr = [
+                ["客户名:", v.customerName, "grey"],
+                ["创建人:", v.createrName, "grey"],
+                ["操作人:", v.operaterName, "grey"],
+                ["等级:", constant.construction().customerServiceComplaint.levelDict.keys[v.level], null],
+                ["类型:", constant.construction().customerServiceComplaint.typeDict.keys[v.type], "red "],
+                ["时间:", v.createTime, "green "],
+                ["备注:", v.des, "grey"],
+                ["状态:", disposeStatus, "grey"],
+                ["处理信息:", v.handle, "grey"]
+            ];
 
             $.each(propertyArr, function(index, value) {
 

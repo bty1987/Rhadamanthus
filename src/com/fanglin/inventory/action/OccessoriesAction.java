@@ -27,6 +27,8 @@ public class OccessoriesAction extends BaseListAction {
 
 	private OccessoriesVO occessories;
 
+	private List<OccessoriesVO> occessoriess;
+
 	private List<OccessoriesItemVO> occessoriesItems;
 
 	@Action(value = "pageOccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -41,6 +43,14 @@ public class OccessoriesAction extends BaseListAction {
 	public String pageOccessoriesForSupplier() throws FLException {
 
 		occessoriesService.pageOccessoriesForSupplier(getPaging(), getFilters(), queryUserId(), occessories);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryOccessoriesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOccessoriesByOrderId() throws FLException {
+
+		occessoriess = occessoriesService.queryOccessoriesByOrderId(occessories);
 
 		return SUCCESS;
 	}
@@ -123,6 +133,14 @@ public class OccessoriesAction extends BaseListAction {
 
 	public void setOccessories(OccessoriesVO occessories) {
 		this.occessories = occessories;
+	}
+
+	public List<OccessoriesVO> getOccessoriess() {
+		return occessoriess;
+	}
+
+	public void setOccessoriess(List<OccessoriesVO> occessoriess) {
+		this.occessoriess = occessoriess;
 	}
 
 	public List<OccessoriesItemVO> getOccessoriesItems() {

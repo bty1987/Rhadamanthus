@@ -107,6 +107,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private UserDao userDao;
 
 	@Override
+	public void pageApproval(Paging paging, List<Filter> filters, int company) {
+
+		List<ApprovalPO> approvalPOs = approvalDao.pageApproval(paging, filters, company);
+		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
+
+		for (ApprovalPO approvalPO : approvalPOs) {
+			approvalVOs.add(convertBean(approvalPO));
+		}
+
+		paging.setData(approvalVOs);
+	}
+
+	@Override
 	public void pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company) {
 
 		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForReceive(paging, filters, userId, company);
@@ -159,6 +172,30 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		return convertBean(approvalPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int countApprovalForReceive(String userId, int company) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		int ruId = userPO.getUid();
+
+		int count = approvalDao.countApprovalForReceive(ApprovalPO.APPROVAL_STATUS_INIT_INT, ruId, company);
+
+		return count;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int countApprovalForSend(String userId, int company) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+		int suId = userPO.getUid();
+
+		int count = approvalDao.countApprovalForSend(ApprovalPO.APPROVAL_STATUS_INIT_INT, suId, company);
+
+		return count;
 	}
 
 	@Override
@@ -308,49 +345,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirm(ApprovalVO approvalVO) throws FLException {
-
-		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-
-		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
-			throw new FLException(240001, "审批状态不可操作");
-		}
-
-		short type = approvalPO.getType();
-
-		switch (type) {
-			case ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT:
-				approvalDecorationBelongService.confirmForDecorationBelong(approvalPO);
-				break;
-			default:
-				break;
-		}
-
-		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT);
-
-		approvalDao.update(approvalPO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int approvalCallback(ApprovalVO approvalVO) throws FLException {
-
-		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getPiid());
-
-		if (approvalPO == null) {
-			throw new FLException(240001, "审批信息不存在");
-		}
-
-		approvalPO = approve(approvalPO);
-
-		approvalDao.update(approvalPO);
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public int refuse(ApprovalVO approvalVO) throws FLException {
 
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
@@ -379,26 +373,47 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int countApprovalForReceive(String userId, int company) throws FLException {
+	public int affirm(ApprovalVO approvalVO) throws FLException {
 
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		int ruId = userPO.getUid();
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
 
-		int count = approvalDao.countApprovalForReceive(ApprovalPO.APPROVAL_STATUS_INIT_INT, ruId, company);
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
+			throw new FLException(240001, "审批状态不可操作");
+		}
 
-		return count;
+		short type = approvalPO.getType();
+
+		switch (type) {
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_BELONG_INT:
+				approvalDecorationBelongService.confirmForDecorationBelong(approvalPO);
+				break;
+			default:
+				break;
+		}
+
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT);
+
+		approvalDao.update(approvalPO);
+
+		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int countApprovalForSend(String userId, int company) throws FLException {
+	public int callback(ApprovalVO approvalVO, String approve) throws FLException {
 
-		UserPO userPO = userDao.queryUserByUserId(userId);
-		int suId = userPO.getUid();
+		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getPiid());
 
-		int count = approvalDao.countApprovalForSend(ApprovalPO.APPROVAL_STATUS_INIT_INT, suId, company);
+		if (approvalPO == null) {
+			throw new FLException(240001, "审批信息不存在");
+		}
 
-		return count;
+		if ("agree".equals(approve)) approvalPO = approve(approvalPO);
+		else approvalPO = refuse(approvalPO);
+
+		approvalDao.update(approvalPO);
+
+		return 0;
 	}
 
 	private ApprovalVO convertBean(ApprovalPO approvalPO) {

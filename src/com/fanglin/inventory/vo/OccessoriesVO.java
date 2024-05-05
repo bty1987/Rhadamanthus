@@ -38,6 +38,8 @@ public class OccessoriesVO implements Serializable {
 
 	private Timestamp finishTime;// 完成时间
 
+	private Long total;
+
 	private short isEnter;// 是否可进园区
 
 	private short isLift;// 是否有电梯
@@ -174,6 +176,14 @@ public class OccessoriesVO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 
 	public short getIsEnter() {

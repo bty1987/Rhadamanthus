@@ -2,14 +2,26 @@ $.extend(api.index, {
     userIndex: {
         url: "/views/personnel/user.html"
     },
+    user4condition: {
+        url: "/views/personnel/user4condition.html"
+    },
     userViewIndex: {
         url: "/views/personnel/user4view.html"
     },
     userEditIndex: {
         url: '/views/personnel/user2edit.html'
     },
+    userEdit: {
+        url: "/views/personnel/userEdit.html"
+    },
+    userDetail: {
+        url: "/views/personnel/userDetail.html"
+    },
     userContractIndex: {
         url: "/views/personnel/userContract.html"
+    },
+    userContract4create: {
+        url: "/views/personnel/userContract4create.html"
     },
     userExperienceIndex: {
         url: "/views/personnel/userExperience.html"
@@ -20,11 +32,11 @@ $.extend(api.index, {
     userOutputIndex: {
         url: "/views/personnel/user2export.html"
     },
+    department4condition: {
+        url: "/views/personnel/department4condition.html"
+    },
     dutment: {
         url: "/views/personnel/dutment.html"
-    },
-    userEdit: {
-        url: "/views/personnel/userEdit.html"
     },
     selectRecruitment: {
         url: "/views/personnel/selectRecruitment.html"
@@ -47,19 +59,12 @@ $.extend(api.index, {
     userOperation: {
         url: "/views/personnel/userOperation.html"
     },
-    userDetail: {
-        url: "/views/personnel/userDetail.html"
-    },
     userExperience: {
         url: "/views/personnel/userExperience.html"
     },
     macontrol: {
         url: "/views/personnel/macontrol.html"
-    },
-    userContract4create: {
-        url: "/views/personnel/userContract4create.html"
-    },
-
+    }
 });
 
 $.extend(api, {
@@ -91,9 +96,6 @@ $.extend(api, {
         },
         queryUserByPinyin: {
             url: "queryUserByPinyin.do"
-        },
-        querySupplierByPinyin: {
-            url: "querySupplierByPinyin.do"
         },
         queryUserByUids: {
             url: "queryUserByUids.do"
@@ -448,5 +450,25 @@ $.extend(api, {
             server: "communion"
         },
 
+        queryUserFunction: {
+            url: "queryUserFunction.do"
+        }
+
+    }
+});
+
+$.extend(tools, {
+    personel: {
+        info: function(content, userId) {
+
+            com.post(api.personel.queryUserByUserId, {
+                "user.userId": userId
+            }, function(res) {
+
+                var user = res.user;
+
+                com.showTip(content, "编号:" + user.userId + "<br\>姓名:" + user.currentName + "<br\>部门:" + user.dept.name, "bottom");
+            });
+        }
     }
 });

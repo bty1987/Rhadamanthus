@@ -255,7 +255,8 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 		
 		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
-	    
+
+		goodsPO.setAlias(goodsVO.getAlias());
 		goodsPO.setPinyin((String)pinyins.get(0));
 		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
 		goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
@@ -290,10 +291,12 @@ public class GoodsServiceImpl implements GoodsService {
 			goodsPO.setAccessoriesType(accessoriesTypePO);
 			goodsPO.setPurchase(goodsVO.getPurchase());
 			goodsPO.setSelling(goodsVO.getSelling());
+			goodsPO.setAlias(goodsVO.getAlias());
 		}else{
 			goodsPO.setAccessoriesType(null);
 			goodsPO.setPurchase(goodsVO.getPurchase());
 			goodsPO.setSelling(goodsVO.getSelling());
+			goodsPO.setAlias(goodsVO.getAlias());
 		}
 		
 		goodsDao.update(goodsPO);
@@ -338,6 +341,7 @@ public class GoodsServiceImpl implements GoodsService {
 	    
 		goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
 		
+		goodsPO.setAlias(goodsVO.getAlias());
 		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
 		goodsPO.setType(GoodsPO.TYPE_SUIT_INT);
 		goodsPO.setCompany(company);

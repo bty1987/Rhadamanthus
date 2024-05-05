@@ -19,14 +19,13 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("decoratioDao")
 public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements DecorationDao {
@@ -36,9 +35,13 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters) {
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
+
+		if (company != null) {
+			query.add(query.getCriterion("company", company, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -48,7 +51,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company) {
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -74,7 +77,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company) {
+	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -88,7 +91,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company) {
+	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -99,13 +102,14 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		query.add(Restrictions.not(Restrictions.in("status", nostatus)));
 
 		queryFilterExcute(query, filters);
+
 		query.desc("doid");
 
 		return query.list();
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForGrade(Paging paging, List<Filter> filters, int company) {
+	public List<DecorationPO> pageDecorationForGrade(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -120,7 +124,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForDesign(Paging paging, List<Filter> filters, int company) {
+	public List<DecorationPO> pageDecorationForDesign(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -134,7 +138,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company) {
+	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -148,7 +152,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company) {
+	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -172,7 +176,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses) {
+	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
@@ -194,11 +198,12 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> queryDecoration(List<Filter> filters) {
+	public List<DecorationPO> queryDecoration(List<Filter> filters) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(new Paging(), DecorationPO.class);
 
 		queryFilterExcute(query, filters);
+
 		query.notPaging();
 
 		return query.list();
@@ -211,11 +216,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public DecorationPO queryDecorationByHid(long hid, int company) {
+	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys) {
 
 		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT);
 
-		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.not(Restrictions.in("status", statuss))).add(Restrictions.eq("company", company)).uniqueResult();
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.not(Restrictions.in("status", statuss))).add(Restrictions.in("company", companys)).uniqueResult();
 	}
 
 	@Override
@@ -225,11 +230,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, int company) {
+	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys) {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT });
 
-		Criteria criteria = session().createCriteria(DecorationPO.class).add(Restrictions.eq("company", company)).createAlias("customer", "customer").add(Restrictions.not(Restrictions.in("status", status)));
+		Criteria criteria = session().createCriteria(DecorationPO.class).add(Restrictions.in("company", companys)).createAlias("customer", "customer").add(Restrictions.not(Restrictions.in("status", status)));
 
 		if (cid != null) {
 			criteria.add(Restrictions.eq("customer.cid", cid));
@@ -241,7 +246,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public double countDecorationForTotalPrice(List<Filter> filters) {
+	public double countDecorationForTotalPrice(List<Filter> filters) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(new Paging(), DecorationPO.class);
 
@@ -258,167 +263,166 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
-
-		if (filters != null) {
-			for (Filter filter : filters) {
-
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				query.alias("house", "house");
-
-				if (field.startsWith("design")) {
-					query.alias("designer", "designer");
-
-					if (field.contains("Department")) {
-						query.alias("designer.dept", "designerDept");
-					}
-
-					if (field.contains("Region")) {
-						query.alias("designer.dept", "designerDept");
-						query.alias("designerDept.fatherDept", "designerRegion");
-					}
-				} else if ((field.startsWith("business") || field.startsWith("salesman"))) {
-
-					query.alias("salesman", "salesman");
-
-					if (field.contains("Department")) {
-						query.alias("salesman.dept", "salesmanDept");
-					}
-
-					if (field.contains("Region")) {
-						query.alias("salesman.dept", "salesmanDept");
-						query.alias("salesmanDept.fatherDept", "salesmanRegion");
-					}
-				} else if (field.startsWith("village")) {
-					query.alias("house.village", "village");
-				} else if (field.startsWith("customer")) {
-					query.alias("customer", "customer");
-				} else if (field.startsWith("quoter")) {
-					query.alias("quoter", "quoter");
-
-					if (field.contains("Department")) {
-						query.alias("quoter.dept", "quoterDept");
-					}
-
-					if (field.contains("Region")) {
-						query.alias("quoter.dept", "quoterDept");
-						query.alias("quoterDept.fatherDept", "quoterRegion");
-					}
-				} else if (field.startsWith("escorter")) {
-					query.alias("escorter", "escorter");
-
-					if (field.contains("Department")) {
-						query.alias("escorter.dept", "escorterDept");
-					}
-
-					if (field.contains("Region")) {
-						query.alias("escorter.dept", "escorterDept");
-						query.alias("escorterDept.fatherDept", "escorterRegion");
-					}
-				}
-
-				if ("orderId".equals(field)) {
-					query.add(query.getCriterion("orderId", data, op));
-				} else if ("customerId".equals(field)) {
-					query.add(query.getCriterion("customer.no", data, op));
-				} else if ("customercid".equals(field)) {
-					query.add(query.getCriterion("customer.cid", Long.valueOf(data), op));
-				} else if ("houseNumber".equals(field)) {
-					query.add(query.getCriterion("house.houseNumber", data, op));
-				} else if ("houseId".equals(field)) {
-					query.add(query.getCriterion("house.hid", Long.valueOf(data), op));
-				} else if ("houseClass".equals(field)) {
-					query.add(query.getCriterion("houseClass", data, op));
-				} else if ("status".equals(field)) {
-					query.add(query.getCriterion("status", Short.valueOf(data), op));
-				} else if ("statuses".equals(field)) {
-					query.add(query.getCriterion("status", filter.getShorts(), op));
-				} else if ("otherStatus".equals(field)) {
-					query.add(query.getCriterion("otherStatus", data, "and"));
-				} else if ("designerId".equals(field)) {
-					query.add(query.getCriterion("designer.userId", data, op));
-				} else if ("salesmanId".equals(field)) {
-					query.add(query.getCriterion("salesman.userId", data, op));
-				} else if ("villageId".equals(field)) {
-					query.add(query.getCriterion("village.no", data, op));
-				} else if ("designerDepartmentId".equals(field)) {
-					query.add(query.getCriterion("designerDept.no", data, op));
-				} else if ("salesmanDepartmentId".equals(field)) {
-					query.add(query.getCriterion("salesmanDept.no", data, op));
-				} else if ("designer".equals(field)) {
-					query.add(query.getCriterion("designer.currentName", data, op));
-				} else if ("salesman".equals(field)) {
-					query.add(query.getCriterion("salesman.currentName", data, op));
-				} else if ("supervisor".equals(field)) {
-					query.alias("orderSupervisorPO", "supervisor");
-					query.add(query.getCriterion("supervisor.currentName", data, op));
-				} else if ("quoterId".equals(field)) {
-					query.add(query.getCriterion("quoter.userId", data, op));
-				} else if ("quoter".equals(field)) {
-					query.add(query.getCriterion("quoter.currentName", data, op));
-				} else if ("escorterId".equals(field)) {
-					query.add(query.getCriterion("escorter.userId", data, op));
-				} else if ("escorter".equals(field)) {
-					query.add(query.getCriterion("escorter.currentName", data, op));
-				} else if ("village".equals(field)) {
-					query.add(query.getCriterion("village.name", data, op));
-				} else if ("company".equals(field)) {
-					try {
-						int cid = FormatUtil.decodeCompany(AESHelper.decrypt(filter.getData(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-						query.add(query.getCriterion("company", cid, op));
-					} catch (Exception e) {
-					}
-				} else if ("salesmanDepartment".equals(field)) {
-					query.add(query.getCriterion("salesmanDept.name", data, op));
-				} else if ("designerDepartment".equals(field)) {
-					query.add(query.getCriterion("designerDept.name", data, op));
-				} else if ("designerRegionId".equals(field)) {
-					query.add(query.getCriterion("designerRegion.no", data, op));
-				} else if ("salesmanRegionId".equals(field)) {
-					query.add(query.getCriterion("salesmanRegion.no", data, op));
-				} else if ("orderType".equals(field)) {
-					query.add(query.getCriterion("typeness", Short.valueOf(data), op));
-				} else if ("busitype".equals(field)) {
-					query.add(query.getCriterion("busitype", Long.valueOf(data), op));
-				} else if ("houseArea".equals(field)) {
-					int dataF = Integer.parseInt(data);
-					query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
-				} else if ("designStatus".equals(field)) {
-					query.add(query.getCriterion("designStatus", Short.valueOf(data), op));
-				} else if ("projectStatus".equals(field)) {
-					query.add(query.getCriterion("projectStatus", Long.valueOf(data), op));
-				} else if ("sourceStatus".equals(field)) {
-					query.add(query.getCriterion("sourceStatus", Short.valueOf(data), op));
-				} else if ("repairStatus".equals(field)) {
-					query.add(query.getCriterion("repairStatus", Short.valueOf(data), op));
-				} else if ("balanceStatus".equals(field)) {
-					query.add(query.getCriterion("balanceStatus", Short.valueOf(data), op));
-				} else if ("signTimeDateRange".equals(field)) {
-					query.timeranges("contractTime", "contractTime", data);
-				} else if ("createTimeDateRange".equals(field)) {
-					query.timeranges("createTime", "createTime", data);
-				} else if ("measureTimeDateRange".equals(field)) {
-					query.timeranges("measureTime", "measureTime", data);
-				} else if ("depositTimeDateRange".equals(field)) {
-					query.timeranges("depositTime", "depositTime", data);
-				} else if ("precontractTime".equals(field)) {
-					query.timeranges("precontractTime", "precontractTime", data);
-				} else if ("accountTime".equals(field)) {
-					query.timeranges("accountTime", "accountTime", data);
-				} else if ("designTimeRange".equals(field)) {
-					query.timeranges("sdesignTime", "edesignTime", data);
-				} else if ("sdesignTime".equals(field)) {
-					query.timeranges("sdesignTime", "sdesignTime", data);
-				} else if ("edesignTime".equals(field)) {
-					query.timeranges("edesignTime", "edesignTime", data);
-				} else if ("balanceTime".equals(field)) {
-					query.timeranges("balanceTime", "balanceTime", data);
-				}
-			}
-		}
-
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
+		queryFilterExcute(query, filters, "");
 	}
 
+	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
+
+		if (filters == null) return;
+
+		if (prefix == null) {
+			prefix = "";
+		}
+
+		if (!"".equals(prefix)) {
+
+			query.alias(prefix, prefix);
+			prefix = String.format("%s.", prefix);
+		}
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (field.contains("house")) {
+				query.alias(String.format("%shouse", prefix), "house");
+			} else if (field.contains("village")) {
+				query.alias(String.format("%shouse", prefix), "house");
+				query.alias("house.village", "village");
+			} else if (field.contains("customer")) {
+				query.alias(String.format("%scustomer", prefix), "customer");
+			} else if (field.contains("designer")) {
+
+				query.alias(String.format("%sdesigner", prefix), "designer");
+
+				if (field.contains("department")) {
+					query.alias("designer.dept", "designerDept");
+				}
+
+				if (field.contains("region")) {
+					query.alias("designer.dept", "designerDept");
+					query.alias("designerDept.fatherDept", "designerRegion");
+				}
+			} else if ((field.contains("business") || field.contains("salesman"))) {
+
+				query.alias(String.format("%ssalesman", prefix), "salesman");
+
+				if (field.contains("department")) {
+					query.alias("salesman.dept", "salesmanDept");
+				}
+
+				if (field.contains("region")) {
+					query.alias("salesman.dept", "salesmanDept");
+					query.alias("salesmanDept.fatherDept", "salesmanRegion");
+				}
+			} else if (field.contains("supervisor")) {
+
+				query.alias(String.format("%ssupervisor", prefix), "supervisor");
+			} else if (field.contains("quoter")) {
+
+				query.alias(String.format("%squoter", prefix), "quoter");
+			} else if (field.contains("escorter")) {
+
+				query.alias(String.format("%sescorter", prefix), "escorter");
+			}
+
+			if ("decoration.orderId".equals(field)) {
+				query.add(query.getCriterion(String.format("%sorderId", prefix), data, op));
+			} else if ("decoration.customer.no".equals(field)) {
+				query.add(query.getCriterion("customer.no", data, op));
+			} else if ("decoration.customer.cid".equals(field)) {
+				query.add(query.getCriterion("customer.cid", Long.valueOf(data), op));
+			} else if ("decoration.house.houseNumber".equals(field)) {
+				query.add(query.getCriterion("house.houseNumber", data, op));
+			} else if ("decoration.house.hid".equals(field)) {
+				query.add(query.getCriterion("house.hid", Long.valueOf(data), op));
+			} else if ("decoration.houseClass".equals(field)) {
+				query.add(query.getCriterion(String.format("%shouseClass", prefix), data, op));
+			} else if ("decoration.status".equals(field)) {
+				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+			} else if ("decoration.statuses".equals(field)) {
+				query.add(query.getCriterion(String.format("%sstatus", prefix), filter.getShorts(), op));
+			} else if ("decoration.otherStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%sotherStatus", prefix), data, "and"));
+			} else if ("decoration.designer.userId".equals(field)) {
+				query.add(query.getCriterion("designer.userId", data, op));
+			} else if ("decoration.salesman.userId".equals(field)) {
+				query.add(query.getCriterion("salesman.userId", data, op));
+			} else if ("decoration.village.no".equals(field)) {
+				query.add(query.getCriterion("village.no", data, op));
+			} else if ("decoration.designer.department.no".equals(field)) {
+				query.add(query.getCriterion("designerDept.no", data, op));
+			} else if ("decoration.salesman.department.no".equals(field)) {
+				query.add(query.getCriterion("salesmanDept.no", data, op));
+			} else if ("decoration.designer.name".equals(field)) {
+				query.add(query.getCriterion("designer.currentName", data, op));
+			} else if ("decoration.salesman.name".equals(field)) {
+				query.add(query.getCriterion("salesman.currentName", data, op));
+			} else if ("decoration.supervisor.userId".equals(field)) {
+				query.add(query.getCriterion("supervisor.userId", data, op));
+			} else if ("decoration.supervisor.name".equals(field)) {
+				query.add(query.getCriterion("supervisor.currentName", data, op));
+			} else if ("decoration.quoter.userId".equals(field)) {
+				query.add(query.getCriterion("quoter.userId", data, op));
+			} else if ("decoration.quoter.name".equals(field)) {
+				query.add(query.getCriterion("quoter.currentName", data, op));
+			} else if ("decoration.escorter.userId".equals(field)) {
+				query.add(query.getCriterion("escorter.userId", data, op));
+			} else if ("decoration.escorter.name".equals(field)) {
+				query.add(query.getCriterion("escorter.currentName", data, op));
+			} else if ("decoration.village.name".equals(field)) {
+				query.add(query.getCriterion("village.name", data, op));
+			} else if ("decoration.company".equals(field)) {
+				query.add(query.getCriterion(String.format("%scompany", prefix), CompanyServiceImpl.decode(filter.getData()), op));
+			} else if ("decoration.salesman.department.name".equals(field)) {
+				query.add(query.getCriterion("salesmanDept.name", data, op));
+			} else if ("decoration.designer.department.name".equals(field)) {
+				query.add(query.getCriterion("designerDept.name", data, op));
+			} else if ("decoration.designer.region.no".equals(field)) {
+				query.add(query.getCriterion("designerRegion.no", data, op));
+			} else if ("decoration.salesman.region.no".equals(field)) {
+				query.add(query.getCriterion("salesmanRegion.no", data, op));
+			} else if ("decoration.orderType".equals(field)) {
+				query.add(query.getCriterion(String.format("%stypeness", prefix), Short.valueOf(data), op));
+			} else if ("decoration.busitype".equals(field)) {
+				query.add(query.getCriterion(String.format("%sbusitype", prefix), Long.valueOf(data), op));
+			} else if ("decoration.houseArea".equals(field)) {
+				int dataF = Integer.parseInt(data);
+				query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
+			} else if ("decoration.designStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%sdesignStatus", prefix), Short.valueOf(data), op));
+			} else if ("decoration.projectStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%sprojectStatus", prefix), Long.valueOf(data), op));
+			} else if ("decoration.sourceStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%ssourceStatus", prefix), Short.valueOf(data), op));
+			} else if ("decoration.repairStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%srepairStatus", prefix), Short.valueOf(data), op));
+			} else if ("decoration.balanceStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%sbalanceStatus", prefix), Short.valueOf(data), op));
+			} else if ("decoration.signTime.range".equals(field)) {
+				query.timeranges(String.format("%scontractTime", prefix), String.format("%scontractTime", prefix), data);
+			} else if ("decoration.createTime.range".equals(field)) {
+				query.timeranges(String.format("%screateTime", prefix), String.format("%screateTime", prefix), data);
+			} else if ("decoration.measureTime.range".equals(field)) {
+				query.timeranges(String.format("%smeasureTime", prefix), String.format("%smeasureTime", prefix), data);
+			} else if ("decoration.depositTime.range".equals(field)) {
+				query.timeranges(String.format("%sdepositTime", prefix), String.format("%sdepositTime", prefix), data);
+			} else if ("decoration.precontractTime.range".equals(field)) {
+				query.timeranges(String.format("%sprecontractTime", prefix), String.format("%sprecontractTime", prefix), data);
+			} else if ("decoration.accountTime.range".equals(field)) {
+				query.timeranges(String.format("%saccountTime", prefix), String.format("%saccountTime", prefix), data);
+			} else if ("decoration.designTime.range".equals(field)) {
+				query.timeranges(String.format("%ssdesignTime", prefix), String.format("%sedesignTime", prefix), data);
+			} else if ("decoration.sdesignTime.range".equals(field)) {
+				query.timeranges(String.format("%ssdesignTime", prefix), String.format("%ssdesignTime", prefix), data);
+			} else if ("decoration.edesignTime.range".equals(field)) {
+				query.timeranges(String.format("%sedesignTime", prefix), String.format("%sedesignTime", prefix), data);
+			} else if ("decoration.balanceTime.range".equals(field)) {
+				query.timeranges(String.format("%sbalanceTime", prefix), String.format("%sbalanceTime", prefix), data);
+			}
+		}
+	}
 }

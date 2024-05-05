@@ -55,40 +55,66 @@ jQuery(function($) {
         var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid')
+            var $h3 = $('<h3></h3>').addClass('oid');
             var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
+            var $btnIsPayBalance = $("<a></a>").addClass("btn btn-minier btn-inverse").html("付款");
             var $btnBalance = $("<a></a>").addClass("btn btn-minier btn-yellow").html("结算");
             var $btnPayBalance = $("<a></a>").addClass("btn btn-minier btn-danger").html("出纳");
             var $btnBalanceDetail = $("<a></a>").addClass("btn btn-minier btn-success").html("结算明细");
             var $btnApportDetail = $("<a></a>").addClass("btn btn-minier btn-warning").html("分摊明细");
             var $btnBalanceSales = $("<a></a>").addClass("btn btn-minier btn-inverse").html("结算销售");
-            var $btnBalanceCutpay = $("<a></a>").addClass("btn btn-minier btn-yellow").html("结算扣款");
+            var $btnBalanceCutpay = $("<a></a>").addClass("btn btn-minier btn-info").html("结算扣款");
 
             var propertyArr = [];
 
-            propertyArr.push(["归属人: ", v.belonger.userName, "grey"]);
-            propertyArr.push(["创建人: ", v.creater.userName, "grey"]);
+            propertyArr.push(["归属人: ", v.belonger.userName, "grey", function(btn) {
+
+                tools.personel.info(btn, v.belonger.userId);
+            }]);
+            propertyArr.push(["创建人: ", v.creater.userName, "grey", function(btn) {
+
+                tools.personel.info(btn, v.creater.userId);
+            }]);
             propertyArr.push(["创建时间: ", v.createTime, "green"]);
             propertyArr.push(["金额: ", v.amount, "blue"]);
             propertyArr.push(["扣款总额: ", v.cutpay, "blue"]);
-//            propertyArr.push(["余额: ", v.surplus, "blue"]);
+            // propertyArr.push(["余额: ", v.surplus, "blue"]);
             propertyArr.push(["类型: ", constant.balance().balance.type.keys[v.type], "red"]);
             propertyArr.push(["状态: ", constant.balance().balance.status.keys[v.status], "red"]);
+            propertyArr.push(["付款标识: ", constant.balance().balance.isPay.keys[v.isPay], "red"]);
 
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
             $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($btnBalanceSales).append($btnBalanceCutpay);
+            $btnDiv.append($btnIsPayBalance).append($btnBalance).append($btnBalanceDetail).append($btnBalanceCutpay).append($btnApportDetail);
             $h3.append($title).append($btnDiv);
+
+            $btnIsPayBalance.click(function() {
+
+                com.post(api.balance.payedBalance, {"balance.bid": v.bid}, function() {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
 
             $btnBalance.click(function() {
 
@@ -157,21 +183,21 @@ jQuery(function($) {
 
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
 
-    searcher.init(["balance-balance-no", "balance-balance-type", "balance-balance-status"], "condList", api.balance.pageBalance, function(data) {
+    searcher.init(["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-balance-isPay"], "condList", api.balance.pageBalance, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "balancePostData", null, false, null, function() {
 
-//        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
-//        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-//        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        // var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
+        // var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        // var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-//        return [$adda];
+        // return [$adda];
     }, 'resultList');
 
     com.focusPage("#addBalance").click(function() {
@@ -189,7 +215,7 @@ jQuery(function($) {
             "balance.belonger.userId": com.typeahead("belongerName"),
             "balance.amount": balance.items.amount.val(),
             "balance.type": balance.items.type.val()
-        }
+        };
 
         com.post(api.balance.addBalance, options, function(res) {
 
@@ -200,4 +226,4 @@ jQuery(function($) {
         balance.modals.addModal.modal("hide");
     }
 
-})
+});

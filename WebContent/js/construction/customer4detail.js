@@ -63,7 +63,7 @@ jQuery(function($) {
 
                 $('<div class="alert alert-info">').text("当前进度没有分配工人!").appendTo($("#" + schedule + "WorkerInfos"));
 
-                return false
+                return false;
             }
 
             $.each(constructers, function(i, v) {

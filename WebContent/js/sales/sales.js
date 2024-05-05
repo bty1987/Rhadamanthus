@@ -102,10 +102,9 @@ $(function() {
         "user.status": 0,
         "departmentType.name": ""
     }, 'autoFillKeyValue', 'key', 'value', null);
-    com.initTypeahead('uSupplier', api.personel.queryUserByPinyin, "pinyinName", {
-        "user.status": 0,
-        "departmentType.name": ""
-    }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('uSupplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
+        "user.status": 0
+    }, "suppliers", "userId", "userName", null);
 
     // 活动名
     com.post(api.information.queryActivityForValid, {
@@ -147,7 +146,7 @@ $(function() {
                     var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnAdd = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('添项');
-                    var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-success').html('子项');
+                    var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-success').html('项目');
                     var $btnSupplement = $('<a></a>').addClass('btn btn-minier btn-primary').html('补单');
                     var $btnMoney = $('<a></a>').addClass(' btn btn-minier btn-warning').html('款项');
                     var $btnCollect = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('收款');
@@ -160,43 +159,48 @@ $(function() {
                     var $inventory = $('<a></a>').addClass('btn btn-minier btn-blue').html('仓储');
                     var $ascription = $('<a></a>').addClass('btn btn-minier btn-inverse').html('归属');
                     var $finish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完结');
+                    var $send = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
                     var $terminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
+                    
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
 
                         switch (pv) {
                             case "orderId":
-                                propertyArr.push(["装修单号:", v.orderId, "blue"]);
+                                propertyArr.push(["装修单号:", v.orderId, "blue", tools.decoration.info, v.orderId]);
                                 break;
                             case "address":
                                 propertyArr.push(["楼盘地址:", (v.house.village.name + " " + v.house.houseNumber), "grey"]);
                                 break;
                             case "customer":
-                                propertyArr.push(["客户名:", v.customer.name, "grey"]);
+                                propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
                                 break;
                             case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey"]);
+                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
                                 break;
                             case "dept":
-                                propertyArr.push(["部门:", v.dept.name, "grey"]);
+                                propertyArr.push(["部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
                                 break;
                             case "region":
-                                propertyArr.push(["分区:", v.region.name, "grey"]);
+                                propertyArr.push(["分区:", v.region.name, "grey", tools.department.info, v.region.did]);
+                                break;
+                            case "creater":
+                                propertyArr.push(["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
                                 break;
                             case "guider":
-                                propertyArr.push(["导购:", v.guider.currentName, "grey"]);
+                                propertyArr.push(["导购:", v.guider.currentName, "grey", tools.personel.info, v.guider.userId]);
                                 break;
                             case "instorer":
-                                propertyArr.push(["驻店:", v.instorer.currentName, "grey"]);
+                                propertyArr.push(["驻店:", v.instorer.currentName, "grey", tools.personel.info, v.instorer.userId]);
                                 break;
                             case "guideDept":
-                                propertyArr.push(["主材部:", v.guideDept.name, "grey"]);
+                                propertyArr.push(["主材部:", v.guideDept.name, "grey", tools.department.info, v.guideDept.did]);
                                 break;
                             case "category":
                                 propertyArr.push(["品类:", v.category, "grey"]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.brand, "grey"]);
+                                propertyArr.push(["品牌:", v.brand, "grey", tools.brand.info, v.bid]);
                                 break;
                             case "depositpay":
                                 propertyArr.push(["定金:", v.depositpay, "blue"]);
@@ -213,11 +217,17 @@ $(function() {
                             case "fullpayTime":
                                 propertyArr.push(["补款时间:", v.fullpayTime, "green"]);
                                 break;
+                            case "affirmTime":
+                                propertyArr.push(["确认时间:", v.affirmTime, "green"]);
+                                break;
+                            case "isAffirm":
+                                propertyArr.push(["确认状态:", constant.sales().sales.isAffirm.keys[v.isAffirm], "red"]);
+                                break;
                             case "status":
                                 propertyArr.push(["状态:", constant.sales().sales.status.keys[v.status], "red"]);
                                 break;
                             case "finisher":
-                                propertyArr.push(["完结人:", v.finisher.currentName, "red"]);
+                                propertyArr.push(["完结人:", v.finisher.currentName, "red", tools.personel.info, v.finisher.userId]);
                                 break;
                             case "finishTime":
                                 propertyArr.push(["完结时间:", v.finishTime, "green"]);
@@ -260,13 +270,20 @@ $(function() {
                                 break;
                         }
                     });
-
                     $.each(propertyArr, function(index, value) {
 
-                        var $liProperty = $('<li></li>');
+                        var $liProperty = $('<li></li>').appendTo($ulProperty);
+
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
+
+                        if (value.length == 5) {
+                            $liProperty.click(function() {
+
+                                value[3]($liProperty, value[4]);
+
+                            }).css("cursor", "pointer");
+                        }
                     });
 
                     $liLine.appendTo($ul);
@@ -302,6 +319,9 @@ $(function() {
                                 break;
                             case "refund":
                                 $btnDiv.append($btnRefund);
+                                break;
+                            case "send":
+                                $btnDiv.append($send);
                                 break;
                             case "terminal":
                                 if (v.status != constant.sales().sales.STATUS_WAST_INT) {
@@ -390,7 +410,7 @@ $(function() {
                         params.sales.sales = v;
                         params.sales.dompany = sales.pageType;
 
-                        com.popup4page("#layerPopUp", "views/sales/salesItem.html", "子项", '', function() {
+                        com.popup4page("#layerPopUp", "views/sales/salesItem.html", "项目", '', function() {
 
                             salesSearcher.doSearch();
                         })
@@ -458,7 +478,7 @@ $(function() {
                         sales.items.coupon.val(v.coupon);
                         sales.items.couponInf.val(v.couponInfo.substring(1, v.couponInfo.length - 1));
 
-                        com.post(api.ds.payment, {}, function(res) {
+                        com.post(api.ds.sales, {}, function(res) {
 
                             sales.items.couponType.bindData(res.materialCouponTypes, 'key', 'value', false);
                         }, null, false);
@@ -481,8 +501,9 @@ $(function() {
                     $btnRefund.click(function() {
 
                         params.sales.sales = v;
+                        params.flag = "sales"
 
-                        com.popup4page("#layerPopUp", "views/sales/refundsItem.html", "退货");
+                        com.popup4page("#layerPopUp", "views/sales/salesRefundsItem.html", "退货");
 
                     });
 
@@ -545,6 +566,15 @@ $(function() {
                         printPayment(v.orderId, v.sid, v, "fullPay", "sales");
 
                     });
+                    $send.click(function() {
+
+                        com.post(api.sales.sendSales, {
+                            "sales.sid": v.sid
+                        }, function() {
+
+                            com.showAlert(com.info, "推送成功");
+                        });
+                    });
 
                     $terminal.click(function() {
 
@@ -554,7 +584,7 @@ $(function() {
                                 "sales.sid": v.sid
                             }, function() {
 
-                                com.showAlert(com.info, "更新成功");
+                                com.showAlert(com.info, "操作成功");
                                 salesSearcher.doSearch();
                             });
                         });
@@ -728,10 +758,11 @@ $(function() {
 
             printSales = res.sales
         }, null, false);
-        
-        if(printSales.depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT) printPayment(printSales.orderId, printSales.sid, printSales, "deposit", "sales");
-        if(printSales.depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT) printPayment(printSales.orderId, printSales.sid, printSales, "deposit", "refund");
-        
+
+        if (printSales.depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT)
+            printPayment(printSales.orderId, printSales.sid, printSales, "deposit", "sales");
+        if (printSales.depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT)
+            printPayment(printSales.orderId, printSales.sid, printSales, "deposit", "refund");
 
         return false;
     });
@@ -1298,16 +1329,14 @@ $(function() {
         return val == "" || val < 0 ? 0 : val;
     }
 
-
-
     function printPayment(orderId, sid, v, flag, type) {
 
         params.sales.sales = v;
         params.sales.flag = flag;
-        
+
         if (type == "sales") {
             com.popup("销售购货单: " + orderId, api.index.salesPrintIndex.url, null, null, true);
-        } else if (type == "refund"){
+        } else if (type == "refund") {
             com.popup("销售退货单: " + orderId, api.index.salesRefundsPrintIndex.url, null, null, true);
         }
 
@@ -1334,7 +1363,7 @@ $(function() {
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var propertyArr = [["结算ID:", v.bbid, "grey"], ["品牌ID:", v.bid, "grey"], ["类型:", constant.data().brandBalance.ctype.keys[v.ctype], "red"], ["结算值:", v.cvalue, "red"], ["说明:", v.comment, "grey"], ];
+                    var propertyArr = [["类型:", constant.data().brandBalance.ctype.keys[v.ctype], "red"], ["结算值:", v.cvalue, "blue"], ["说明:", v.comment, "grey"], ];
 
                     var $label = $('<label></label>').addClass('control-label').css({
                         'color': 'grey',

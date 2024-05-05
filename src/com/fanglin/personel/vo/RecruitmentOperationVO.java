@@ -7,26 +7,26 @@ import org.apache.struts2.json.annotations.JSON;
 
 public class RecruitmentOperationVO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8399773740057535788L;
 
 	private Long roid;
-	
+
 	private Long rid;
-	
+
 	private String company;
-	
+
 	private String trade;
-	
+
 	private String duty;
-	
+
 	private String beginTime;
-	
+
 	private String endTime;
-	
+
 	private Timestamp createTime;
-	
+
 	private Long salary;
-		
+
 	private String comment;
 
 	public RecruitmentOperationVO() {
@@ -113,7 +113,5 @@ public class RecruitmentOperationVO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
-	
 
 }

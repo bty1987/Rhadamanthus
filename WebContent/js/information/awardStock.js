@@ -58,7 +58,7 @@ $(function() {
     awardStock.items.isStock.bindData(constant.information().awardStock.isStock.datas, "key", "value");
     awardStock.items.isPayment.bindData(constant.information().awardStock.isPayment.datas, "key", "value");
 
-    $.each(constant.information().awardStock.subtype.datas, function(i, v) {
+    $.each(constant.information().awardRecord.subtype.datas, function(i, v) {
 
         if (v.key != 1 && v.key % 2 == 0) {
             awardStock.subtypeOfWarehousing.push(v);

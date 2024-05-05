@@ -110,10 +110,13 @@ public class SoodsServiceImpl implements SoodsService {
 			throw new FLException(130036, "商品无关联厂商");
 		}
 
+		soodsPO.setName(soodsVO.getName());
 		soodsPO.setGoods(goodsPO);
 		soodsPO.setNum(soodsVO.getNum());
 		soodsPO.setStatus(SoodsPO.STATUS_INVALID_INT);
 		soodsPO.setSelling(soodsVO.getSelling());
+		soodsPO.setCost(soodsVO.getCost());
+		soodsPO.setBalance(soodsVO.getBalance());
 		soodsPO.setCompany(company);
 
 		soodsDao.save(soodsPO);
@@ -131,13 +134,7 @@ public class SoodsServiceImpl implements SoodsService {
 			throw new FLException(130033, "选材不存在");
 		}
 
-		if (soodsVO.getSelling() != null) {
-			soodsPO.setSelling(soodsVO.getSelling());
-		}
-
-		if (soodsVO.getPath() != null) {
-			soodsPO.setPath(soodsVO.getPath());
-		}
+		BeanUtil.copyProperties(soodsVO, soodsPO, Arrays.asList("sid", "name", "goods", "num", "status", "company"));
 
 		soodsDao.update(soodsPO);
 
@@ -166,7 +163,7 @@ public class SoodsServiceImpl implements SoodsService {
 	@Transactional(rollbackFor = Exception.class)
 	public int copySoods(SoodsVO soodsVO) throws FLException {
 
-		soodsItemDao.deleteSoodsItem(soodsVO.getSid(), soodsVO.getQuotationItem().getQiid());
+		soodsItemDao.deleteSoodsItemByQiid(soodsVO.getQuotationItem().getQiid());
 		soodsItemDao.copySoodsItem(soodsVO.getQiid(), soodsVO.getQuotationItem().getQiid());
 
 		return 0;

@@ -40,8 +40,6 @@ jQuery(function($) {
         current: new Date(),
     };
 
-    console.log(contractEdit.contractArgs);
-
     if (contractEdit.contractArgs.agent == "1") {
         com.focusPage(".agent", "#form").hide();
     }
@@ -72,11 +70,8 @@ jQuery(function($) {
         contractEdit.current = new Date(res.current);
     }, null, false);
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        contractEdit.decorationType = res.typeness.split("key", "value");
-        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
-    });
+    contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -255,8 +250,6 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            console.log(data);
-
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
 
             if (contractEdit.contractArgs.company == "1") {
@@ -268,8 +261,6 @@ jQuery(function($) {
                 delete data["cov-company-name"];
                 delete data["sin-customer-name"];
             }
-
-            console.log(data);
 
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,

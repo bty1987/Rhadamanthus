@@ -41,7 +41,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function (res) {
+    com.post(api.ds.data, {}, function(res) {
 
         surveyTemplate.status = res.surveyTemplateStatus.split("key", "value");
     }, null, false);
@@ -49,7 +49,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageSurveyTemplate);
-    
+
     searcher.condition(["data-surveyTemplate-name", "data-surveyTemplate-status"]);
 
     searcher.button([{
@@ -70,13 +70,38 @@ jQuery(function($) {
         prop: "status",
         clazz: "red",
         dataset: constant.data().surveyTemplate.status.keys
+    }, {
+        fieId: "content",
+        name: "推送标识",
+        prop: "isSend",
+        clazz: "red",
+        dataset: constant.data().surveyTemplate.isSend.keys
     }, ];
 
     var linebtns = [{
+        name: "推送标识",
+        type: "switch",
+        clazz: "autoble-lbl",
+        handle: function(v, check) {
+
+            com.post(api.data.updateSurveyTemplateForStatus, {
+                "surveyTemplate.stid": v.stid,
+                "surveyTemplate.isSend": check ? 1 : 0
+            }, function(res) {
+
+                searcher.doSearch();
+            });
+            return false;
+        },
+        init: function(v) {
+
+            return v.isSend;
+        }
+    }, {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
-            
+
             surveyTemplate.stid = v.stid;
 
             editSurveyTemplate(v);
@@ -87,7 +112,8 @@ jQuery(function($) {
         clazz: "btn-success",
         handle: function(v) {
 
-            com.showConfirm("是否确认删除", function(){
+            com.showConfirm("是否确认删除", function() {
+
                 com.post(api.data.deleteSurveyTemplate, {
                     "surveyTemplate.stid": v.stid
                 }, function(res) {
@@ -97,21 +123,27 @@ jQuery(function($) {
                 return false;
             });
         },
-        show: function(v){
+        show: function(v) {
+
             return false;
         }
-    },{
+    }, {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",
         handle: function(v, check) {
+
             com.post(api.data.updateSurveyTemplateForStatus, {
                 "surveyTemplate.stid": v.stid,
                 "surveyTemplate.status": check ? 0 : 1
+            }, function(res) {
+
+                searcher.doSearch();
             });
             return false;
         },
         init: function(v) {
+
             return !v.status;
         }
     }, ];
@@ -124,14 +156,16 @@ jQuery(function($) {
     });
 
     function drawtext(v) {
+
         var group = $('<div class="form-group typetext typeitem"></div>').appendTo(surveyTemplate.items.itemlist);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("文本内容").appendTo(group);
         var item = $('<div class="col-sm-8"></div>').appendTo(group);
         var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required"></div>').val(v.content).appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function(){
+        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function() {
+
             var _group = $(this).parents(".typetext");
             var _hr = _group.next("hr");
-            
+
             _hr.remove();
             _group.remove();
 
@@ -142,6 +176,7 @@ jQuery(function($) {
     }
 
     function drawradio(type, v) {
+
         var group = $('<div class="form-group typeitem"></div>').addClass("type" + type).appendTo(surveyTemplate.items.itemlist);
 
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("题目").appendTo(group);
@@ -156,15 +191,16 @@ jQuery(function($) {
 
         var label = $('<label class="col-md-3 control-label no-padding-right option" style="margin-top: 10px" for="name"></label>').html("所有选项").appendTo(group);
         var items = $('<div class="col-sm-8 items" style="margin-top: 10px" id="seleted"></div>').appendTo(group);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function(){
+        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function() {
+
             var _group = $(this).parents("." + "type" + type);
             var _hr = _group.next("hr");
 
             _hr.remove();
             _group.remove();
+
             return false;
         });
-
 
         btn.click(function() {
 
@@ -182,8 +218,8 @@ jQuery(function($) {
             com.focusPage("#event").val("");
 
             itemdel.click(function() {
-                var that = $(this);
 
+                var that = $(this);
                 var span = that.parent();
 
                 span.remove();
@@ -191,7 +227,6 @@ jQuery(function($) {
 
             return false;
         });
-
 
         $('<hr/>').appendTo(surveyTemplate.items.itemlist);
 
@@ -211,17 +246,18 @@ jQuery(function($) {
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("输入内容").appendTo(group);
         var item = $('<div class="col-sm-8"></div>').appendTo(group);
         var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required"></div>').val(v ? v.name : "").appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function(){
+        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function() {
+
             var _group = $(this).parents(".typeinput");
             var _hr = _group.next("hr");
 
             _hr.remove();
             _group.remove();
+
             return false;
         });
 
         $('<hr/>').appendTo(surveyTemplate.items.itemlist);
-
     }
 
     function editSurveyTemplate() {
@@ -251,22 +287,25 @@ jQuery(function($) {
 
     function saveData() {
 
-        if(com.validate("surveyTemplateModal")) return;
+        if (com.validate("surveyTemplateModal"))
+            return false;
 
-        if(com.focusPage("#itemlist").html().length == 0){
+        if (com.focusPage("#itemlist").html().length == 0) {
+
             com.showAlert(com.info, "请填写题目后再点击保存");
-            return
+            return false;
         }
 
-        var url;
+        var url = api.data.addSurveyTemplate;
 
         var args = {
             "surveyTemplate.name": surveyTemplate.items.name.val(),
-        };
+        }
 
         com.focusPage("#itemlist").find(".typeitem").each(function(i, v) {
 
             var item = $(v);
+
             if (item.hasClass("typetext")) {
 
                 args["surveyTemplate.items[" + i + "].name"] = "";
@@ -295,25 +334,22 @@ jQuery(function($) {
                 args["surveyTemplate.items[" + i + "].name"] = item.find("textarea").val();
                 args["surveyTemplate.items[" + i + "].type"] = 1;
                 args["surveyTemplate.items[" + i + "].content"] = "";
-
             }
         });
-        
-         if (surveyTemplate.stid) {
 
-             args["surveyTemplate.stid"] = surveyTemplate.stid;
-             url = api.data.updateSurveyTemplate;
-        
-         } else {
-             url = api.data.addSurveyTemplate;
-         }
+        if (surveyTemplate.stid) {
+
+            args["surveyTemplate.stid"] = surveyTemplate.stid;
+            url = api.data.updateSurveyTemplate;
+
+        }
 
         com.post(url, args, function() {
 
             searcher.doSearch();
+
             surveyTemplate.modals.surveyTemplateModal.modal("hide");
         });
-        
-    }      
+    }
 
 });

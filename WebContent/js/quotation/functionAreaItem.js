@@ -284,9 +284,16 @@
 
         var formula = functionAreaItem.items.formula.val();
 
-        if (formula.replace(/(\u5468\u957f|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u957f|\u6d1e\u9ad8|\u7a97\u957f|\u7a97\u9ad8|\u6881\u957f|\u6881\u9ad8)/g, "").replace(/[\+\-\*\/\(\)]/g, "") != "") {
+        if (formula.replace(/(\u5468\u957f|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u9762|\u53c2\u6570|\u7a97\u9762|\u53d8\u91cf|\u6881\u957f|\u6881\u9ad8)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
 
             com.showAlert(com.warning, "公式存在无效参数");
+
+            return false;
+        }
+
+        if (evals(formulaToParam(formula))) {
+
+            com.showAlert(com.warning, "公式运算结果失败");
 
             return false;
         }
@@ -299,20 +306,41 @@
         com.post(api.quotation.updateFunctionAreaItem, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
+
             initFunctionAreaItemList();
+
+            functionAreaItem.modals.updateModal.modal("hide");
         });
 
-        functionAreaItem.modals.updateModal.modal("hide");
     }
 
     function formulaToParam(formula) {
 
-        return formula.replace(/\u5468\u957f/g, "{a}").replace(/\u9762\u79ef/g, "{b}").replace(/\u4e3e\u67b6/g, "{c}").replace(/\u6d1e\u957f/g, "{d}").replace(/\u6d1e\u9ad8/g, "{e}").replace(/\u7a97\u957f/g, "{f}").replace(/\u7a97\u9ad8/g, "{g}").replace(/\u6881\u957f/g, "{h}").replace(/\u6881\u9ad8/g, "{i}");
+        return formula.replace(/\u5468\u957f/g, "{a}").replace(/\u9762\u79ef/g, "{b}").replace(/\u4e3e\u67b6/g, "{c}").replace(/\u6d1e\u9762/g, "{d}").replace(/\u7a97\u9762/g, "{f}").replace(/\u6881\u957f/g, "{h}").replace(/\u6881\u9ad8/g, "{i}").replace(/\u53c2\u6570/g, "{e}").replace(/\u53d8\u91cf/g, "{g}");
     }
 
     function paramToFormula(param) {
 
-        return param.replace(/\{a\}/g, "\u5468\u957f").replace(/\{b\}/g, "\u9762\u79ef").replace(/\{c\}/g, "\u4e3e\u67b6").replace(/\{d\}/g, "\u6d1e\u957f").replace(/\{e\}/g, "\u6d1e\u9ad8").replace(/\{f\}/g, "\u7a97\u957f").replace(/\{g\}/g, "\u7a97\u9ad8").replace(/\{h\}/g, "\u6881\u957f").replace(/\{i\}/g, "\u6881\u9ad8");
+        return param.replace(/\{a\}/g, "\u5468\u957f").replace(/\{b\}/g, "\u9762\u79ef").replace(/\{c\}/g, "\u4e3e\u67b6").replace(/\{d\}/g, "\u6d1e\u9762").replace(/\{f\}/g, "\u7a97\u9762").replace(/\{h\}/g, "\u6881\u957f").replace(/\{i\}/g, "\u6881\u9ad8").replace(/\{e\}/g, "\u53c2\u6570").replace(/\{g\}/g, "\u53d8\u91cf");
+    }
+
+    function evals(formula) {
+
+        formula = com.format(formula, {
+            "a": 1,
+            "b": 1,
+            "c": 1,
+            "d": 1,
+            "e": 1,
+            "f": 1,
+            "g": 1,
+            "h": 1,
+            "i": 1,
+        });
+
+        var res = new Function("return function(){return " + formula + "}")()();
+
+        return isNaN(res) || !Number.isFinite(res);
     }
 
 });

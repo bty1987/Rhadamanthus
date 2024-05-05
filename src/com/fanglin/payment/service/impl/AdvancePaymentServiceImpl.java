@@ -66,7 +66,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	private DecorationDao decorationDao;
 
 	@Override
-	public void pageAdvancePayment(Paging paging, List<Filter> filters, int company) {
+	public void pageAdvancePayment(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -167,7 +167,9 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 		// 收款(余额加上操作金额),付款(预付款余额减去操作的金额)之后得到的余额
 		long overBalance = 0;
-		if (type == PaymentPO.PAYMENT_TYPE_COLLECTION_INT) {
+		List<Short> types = Arrays.asList(PaymentPO.PAYMENT_TYPE_COLLECTION_INT, PaymentPO.PAYMENT_TYPE_RETURN_INT);
+
+		if (types.contains(type)) {
 			overBalance = Arith.add(balance, recharge);
 		} else {
 			if (balance < recharge) {

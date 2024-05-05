@@ -20,46 +20,46 @@ import com.fanglin.salary.vo.WithholdVO;
 public class WithholdAction extends BaseListAction {
 
 	private static final long serialVersionUID = 7852458050731739973L;
-	
+
 	@Autowired
 	private WithholdService withholdService;
-	
+
 	private List<WithholdVO> withholds;
-	
+
 	private WithholdVO withhold;
 
-	@Action(value="pageWithhold", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageWithhold() throws FLException{
-	  
-		withholdService.pageWithhold(getPaging(), getFilters());
-    
+	@Action(value = "pageWithhold", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageWithhold() throws FLException {
+
+		withholdService.pageWithhold(getPaging(), getFilters(), withhold);
+
 		return "success";
 	}
-	
-	@Action(value="queryWithhold", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryWithhold() throws FLException{
-	  
+
+	@Action(value = "queryWithhold", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryWithhold() throws FLException {
+
 		withholds = withholdService.queryWithhold(withhold);
-    
+
 		return "success";
 	}
-	
-	@Action(value="addWithhold", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addWithhold() throws FLException{
-	  
+
+	@Action(value = "addWithhold", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addWithhold() throws FLException {
+
 		withholdService.addWithhold(withhold, queryUserId());
-		
+
 		return "success";
 	}
-	
-	@Action(value="updateWithholdForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateWithholdForStatus() throws FLException{
-	  
+
+	@Action(value = "updateWithholdForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateWithholdForStatus() throws FLException {
+
 		withholdService.updateWithholdForStatus(withhold, queryUserId());
-    
+
 		return "success";
 	}
-	
+
 	public List<WithholdVO> getWithholds() {
 		return withholds;
 	}
@@ -75,5 +75,5 @@ public class WithholdAction extends BaseListAction {
 	public void setWithhold(WithholdVO withhold) {
 		this.withhold = withhold;
 	}
-	
+
 }

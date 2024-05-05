@@ -49,6 +49,10 @@ public class ProtationItemPO implements Serializable {
 
 	public static final short TYPE_ACCMAIN_INT = 8;// 赋主
 
+	public static final short TYPE_PRCURRENT_INT = 9;// 通用
+
+	public static final short TYPE_CUTCURRENT_INT = 11;// 减通
+
 	private long piid;
 
 	private long pid;
@@ -63,9 +67,19 @@ public class ProtationItemPO implements Serializable {
 
 	private long price;
 
+	private long addPrice;
+
+	private long subPrice;
+
+	private long achePrice;
+
 	private int num;
 
 	private short type;
+
+	private short onetype;
+
+	private short atttype;
 
 	private short areaCale;
 
@@ -125,6 +139,33 @@ public class ProtationItemPO implements Serializable {
 		this.price = price;
 	}
 
+	@Column(name = "addPrice")
+	public long getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(long addPrice) {
+		this.addPrice = addPrice;
+	}
+
+	@Column(name = "subPrice")
+	public long getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(long subPrice) {
+		this.subPrice = subPrice;
+	}
+
+	@Column(name = "achePrice")
+	public long getAchePrice() {
+		return achePrice;
+	}
+
+	public void setAchePrice(long achePrice) {
+		this.achePrice = achePrice;
+	}
+
 	@Column(name = "num")
 	public int getNum() {
 		return num;
@@ -141,6 +182,24 @@ public class ProtationItemPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "onetype")
+	public short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(short onetype) {
+		this.onetype = onetype;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "areaCale")

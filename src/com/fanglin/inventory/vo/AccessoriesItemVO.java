@@ -13,7 +13,7 @@ public class AccessoriesItemVO implements Serializable {
 	private Long aiid;
 
 	private Long aid;
-	
+
 	private Long miid;
 
 	private GoodsVO goods;
@@ -23,19 +23,23 @@ public class AccessoriesItemVO implements Serializable {
 	private FormatVO format;
 
 	private StorehouseVO storehouse;
-	
+
 	private Integer selling;
-	
+
 	private Integer outprice;
 
 	private Integer num;
-	
+
 	private Integer surplus;
-	
+
 	private Short checkup;
-	
+
 	private Long caid;
-	
+
+	private Long nid;
+
+	private Short schedule;
+
 	private Long total;
 
 	public AccessoriesItemVO() {
@@ -149,6 +153,22 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setCaid(Long caid) {
 		this.caid = caid;
+	}
+
+	public Long getNid() {
+		return nid;
+	}
+
+	public void setNid(Long nid) {
+		this.nid = nid;
+	}
+
+	public Short getSchedule() {
+		return schedule;
+	}
+
+	public void setSchedule(Short schedule) {
+		this.schedule = schedule;
 	}
 
 	public Long getTotal() {

@@ -21,9 +21,17 @@ public class ExtensionVO implements Serializable {
 
 	private Short type;
 
+	private Short atttype;
+
 	private Long undisPrice;
 
 	private Long disPrice;
+
+	private Long manageRate;
+
+	private Short manageDiscount;
+
+	private Long managePrice;
 
 	private Long total;
 
@@ -39,6 +47,11 @@ public class ExtensionVO implements Serializable {
 
 	public ExtensionVO() {
 		super();
+	}
+
+	public ExtensionVO(Long eid) {
+		super();
+		this.eid = eid;
 	}
 
 	public ExtensionVO(DecorationVO decoration, UserBaseVO creater) {
@@ -79,6 +92,14 @@ public class ExtensionVO implements Serializable {
 		this.type = type;
 	}
 
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
+	}
+
 	public Long getUndisPrice() {
 		return undisPrice;
 	}
@@ -93,6 +114,30 @@ public class ExtensionVO implements Serializable {
 
 	public void setDisPrice(Long disPrice) {
 		this.disPrice = disPrice;
+	}
+
+	public Long getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(Long manageRate) {
+		this.manageRate = manageRate;
+	}
+
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	public Long getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(Long managePrice) {
+		this.managePrice = managePrice;
 	}
 
 	public Long getTotal() {

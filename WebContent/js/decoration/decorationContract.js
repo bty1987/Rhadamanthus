@@ -62,7 +62,7 @@ jQuery(function($) {
         decorationContract.authFlag = [1, 2].indexOf(decoration.customer.status) != -1;
     });
 
-    decorationContract.status = constant.decoration.decorationContract.status.keys;
+    decorationContract.status = constant.decoration().decorationContract.status.keys;
 
     com.post(api.data.querySignet, {}, function(res) {
 
@@ -299,7 +299,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
         },
         show: function(v) {
 
@@ -310,7 +310,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=2");
         },
         show: function(v) {
 
@@ -367,7 +367,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
         },
         show: function() {
 

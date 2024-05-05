@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.customer.vo.DecorationVO;
-import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.utils.BeanUtil;
 
 @Entity(name = "com.fanglin.customer.po.DecorationPO")
@@ -90,9 +89,7 @@ public class DecorationPO implements Serializable {
 		this.defaultFlag = defaultFlag;
 	}
 
-	public void ptv(DecorationVO decorationVO, DecorationDao decorationDao) {
-
-		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(this.getOrderId());
+	public void ptv(DecorationVO decorationVO, com.fanglin.decoration.po.DecorationPO decorationPO) {
 
 		BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("dept", "duty"));

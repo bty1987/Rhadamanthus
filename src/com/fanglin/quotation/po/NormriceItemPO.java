@@ -22,9 +22,19 @@ public class NormriceItemPO implements Serializable {
 
 	public static final short TYPE_OFFER_INT = 0;
 
+	public static final short TYPE_EXPAND_INT = 1;
+
+	public static final short TYPE_ADDCUT_INT = 2;
+
+	public static final short TYPE_QUOTA_INT = 3;
+
+	public static final short NORMTYPE_WORKFEE_INT = 0;
+
 	public static final short NORMTYPE_ADD_INT = 1;
 
 	public static final short ATTTYPE_COLLECTION_INT = 0;
+
+	public static final short ATTTYPE_SUB_INT = 1;
 
 	private long npiid;
 

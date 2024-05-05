@@ -2,7 +2,7 @@ jQuery(function($) {
 
     var decorationFunction = {
         modal: {
-            apiModal : com.focusPage("#apiModal"),
+            apiModal: com.focusPage("#apiModal"),
         },
         btn: {
             apiBtn: com.focusPage("#apiBtn"),
@@ -14,15 +14,19 @@ jQuery(function($) {
             functionData: com.focusPage("#functionData"),
             nodeData: com.focusPage("#nodeData"),
             statusData: com.focusPage("#statusData"),
+            companyData: com.focusPage("#companyData"),
         },
-        
+
         name: {},
-        dfids : [],
+        dfids: [],
     };
 
-    com.post(api.decoration.queryDecorationFunction, {"decorationFunction.type": 0}, function (res) {
+    com.post(api.decoration.queryDecorationFunction, {
+        "decorationFunction.type": 0
+    }, function(res) {
 
-        $.each(res.decorationFunctions, function (i, v) {
+        $.each(res.decorationFunctions, function(i, v) {
+
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             var $li = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name + " " + (v.comment ? v.comment : "")));
@@ -34,93 +38,121 @@ jQuery(function($) {
 
             $h3.appendTo($li.appendTo($ul));
 
-            $btnView.on('click', function () {
+            $btnView.on('click', function() {
+
                 apiConfig(v.key);
             });
-            
+
             $ul.appendTo(com.focusPage("#resultList"));
         });
     });
 
-    //显示所有api进行配置
+    // 显示所有api进行配置
     function apiConfig(key) {
 
         decorationFunction.name = key;
         decorationFunction.dfids = [];
 
-        com.post(api.right.queryDecorationFunctionRightByName, {"decorationFunctionRight.name" : decorationFunction.name}, function (res) {
-            $.each(res.decorationFunctionRights, function (i, va) {
+        com.post(api.right.queryDecorationFunctionRightByName, {
+            "decorationFunctionRight.name": decorationFunction.name
+        }, function(res) {
+
+            $.each(res.decorationFunctionRights, function(i, va) {
+
                 decorationFunction.dfids.push(va.decorationFunction.dfid);
             });
         }, null, false);
-        
-        com.post(api.decoration.queryDecorationFunction, {"decorationFunction.type": ""}, function (res) {
-            
+
+        com.post(api.decoration.queryDecorationFunction, {
+            "decorationFunction.type": ""
+        }, function(res) {
+
             decorationFunction.items.apiData.empty();
             decorationFunction.items.condArrData.empty();
             decorationFunction.items.fieldData.empty();
             decorationFunction.items.functionData.empty();
             decorationFunction.items.nodeData.empty();
             decorationFunction.items.statusData.empty();
+            decorationFunction.items.companyData.empty();
             var decorationFunctionArr = res.decorationFunctions;
 
-            $.each(decorationFunctionArr.sort(function (x, y) { return x['sort'] - y['sort']}), function (i, v) {
+            $.each(decorationFunctionArr.sort(function(x, y) {
+
+                return x['sort'] - y['sort'];
+            }), function(i, v) {
+
                 var $div = $('<div></div>').addClass('col-sm-4').attr("name", "function");
                 var $label = $('<label></label>');
-                var $input = $('<input>').attr({"type": "checkbox", "name": "dfids", "class": "ace"}).val(v.dfid);
-                var $span = $('<span></span>').addClass('lbl blue').text(v.name + (v.type == 1 ? v.comment :""));
+                var $input = $('<input>').attr({
+                    "type": "checkbox",
+                    "name": "dfids",
+                    "class": "ace"
+                }).val(v.dfid);
+
+                var $span = $('<span></span>').addClass('lbl blue').text(v.name + (v.type == 1 ? v.comment : ""));
 
                 $label.append($input).append($span).appendTo($div);
 
-                if(v.type == 1){
+                if (v.type == 1) {
                     $input.attr("type", "radio");
                     $div.appendTo(decorationFunction.items.apiData);
                 }
 
-                if(v.type == 2){
+                if (v.type == 2) {
                     $div.appendTo(decorationFunction.items.condArrData);
                 }
 
-                if(v.type == 3){
+                if (v.type == 3) {
                     $div.appendTo(decorationFunction.items.fieldData);
                 }
 
-                if(v.type == 4){
+                if (v.type == 4) {
                     $div.appendTo(decorationFunction.items.functionData);
                 }
 
-                if(v.type == 5){
+                if (v.type == 5) {
                     $div.appendTo(decorationFunction.items.nodeData);
                 }
 
-                if(v.type == 6){
+                if (v.type == 6) {
                     $div.appendTo(decorationFunction.items.statusData);
                 }
 
-                if(decorationFunction.dfids.indexOf(v.dfid)!= -1){
-                    $input.attr("checked",true);
+                if (v.type == 7) {
+                    $input.attr("type", "radio").attr("name", "comDfids");
+                    $div.appendTo(decorationFunction.items.companyData);
+                }
+
+                if (decorationFunction.dfids.indexOf(v.dfid) != -1) {
+                    $input.attr("checked", true);
                 }
             });
         });
-        
+
         decorationFunction.modal.apiModal.modal("show");
     }
 
-    //配置完成确定按钮
-    decorationFunction.btn.apiBtn.click(function () {
+    // 配置完成确定按钮
+    decorationFunction.btn.apiBtn.click(function() {
+
         var $inputs = com.focusPage('input[name="dfids"]:checked');
+        var $comInput = com.focusPage('input[name="comDfids"]:checked');
 
         var options = {};
 
-        $.each($inputs,function (i, v) {
+        $.each($inputs, function(i, v) {
+
             options["decorationFunctionRight.name"] = decorationFunction.name;
             options["dfids[" + i + "]"] = $(v).val();
 
         });
-        com.post(api.right.updateDecorationFunctionRight, options, function (res) {
+        options["dfids[" + $inputs.length + "]"] = $comInput.val();
+
+        com.post(api.right.updateDecorationFunctionRight, options, function(res) {
+
             com.showAlert(com.info, "配置成功");
             decorationFunction.modal.apiModal.modal("hide");
-        })
+        });
     });
 
 });

@@ -58,7 +58,7 @@ public class PaymentTypeDaoImpl extends DaoImpl<PaymentTypePO> implements Paymen
 
 	@Override
 	public PaymentTypePO queryPaymentTypeByName(String name, int company) {
-		return (PaymentTypePO) session().createCriteria(PaymentTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(PaymentTypePO.COLUMN_NAME_STR, name)).uniqueResult();
+		return (PaymentTypePO) session().createCriteria(PaymentTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(PaymentTypePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(PaymentTypePO.COLUMN_STATUS_STR, PaymentTypePO.STATUS_ENABLE_INT)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

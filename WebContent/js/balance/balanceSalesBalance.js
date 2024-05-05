@@ -6,7 +6,7 @@ $(function() {
 
         types: {},
         onetypes: {},
-        statues: {},
+        statues: {}
     };
 
     com.focusPage('#fl-statement').statement("结算销售", "明细");
@@ -30,6 +30,7 @@ $(function() {
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
+
                 $.each(listData, function(i, v) {
 
                     creatLine(v).appendTo($ul);
@@ -48,13 +49,28 @@ $(function() {
             var $title = $('<small></small>').addClass('blue').html(' ' + v.salesBalance.sales.no).appendTo($h3);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
 
-            var propertyArr = [["装修单号:", v.salesBalance.sales.orderId, "blue"], ["楼盘地址:", v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber, "grey"], ["品类:", v.salesBalance.sales.category, "grey"], ["品牌:", v.salesBalance.sales.brand, "grey"], ["类型:", balanceSalesBalance.types[v.salesBalance.type], "red"], ["结算值:", v.salesBalance.pbalance, "blue"], ["一类:", constant.sales().salesBalance.onetype.keys[v.salesBalance.onetype], "red"], ["状态:", constant.balance().balanceSales.status.keys[v.salesBalance.status], "red"], ];
+            var propertyArr = [["装修单号:", v.salesBalance.sales.orderId, "blue", function(btn) {
+
+                tools.decoration.info(btn, v.salesBalance.sales.orderId);
+            }], ["楼盘地址:", v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber, "grey", function(btn) {
+
+                tools.house.info(btn, v.salesBalance.sales.house.hid);
+            }], ["品类:", v.salesBalance.sales.category, "grey"], ["品牌:", v.salesBalance.sales.brand, "grey"], ["类型:", balanceSalesBalance.types[v.salesBalance.type], "red"], ["结算值:", v.salesBalance.pbalance, "blue"], ["一类:", constant.sales().salesBalance.onetype.keys[v.salesBalance.onetype], "red"], ["状态:", constant.balance().balanceSales.status.keys[v.salesBalance.status], "red"]];
 
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -62,43 +78,54 @@ $(function() {
 
             var oneType = v.salesBalance.onetype;
             var Type = v.salesBalance.type;
-            var salesRevenue = null;
-            var salesAmount = null;
-            var accountsPayable = null;
-            var venderMaling = Math.round(v.salesBalance.sales.venderMaling);
-            var allowance = Math.round(v.salesBalance.allowance);
-            var comProfits = null;
+            
+            var salesRevenue = 0;
+            var salesAmount = 0;
+            var accountsPayable = 0;
+            var comProfits = 0;
+            
+            var venderMaling = (v.salesBalance && v.salesBalance.sales && v.salesBalance.sales.venderMaling) ? Math.round(v.salesBalance.sales.venderMaling) : 0;
+            var allowance = (v.salesBalance && v.salesBalance.allowance) ? v.salesBalance.allowance : 0;
+            
 
             if (oneType == constant.sales().salesBalance.ONETYPE_INIT_INT) {
+
                 if (Type == constant.sales().salesBalance.TYPE_DEPOSITPAY_INT) {
+
                     venderMaling = 0;
                     allowance = 0;
                     salesRevenue = v.salesBalance.sales.depositpay;
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
                 } else {
+
                     salesRevenue = utils.accAdd(v.salesBalance.sales.depositpay, v.salesBalance.sales.fullpay);
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
                 }
+
                 comProfits = utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accAdd(salesRevenue, venderMaling));
             }
+
             if (oneType == constant.sales().salesBalance.ONETYPE_REFUND_INT) {
+
                 venderMaling = 0;
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(v.salesBalance.total, allowance);
                 accountsPayable = v.salesBalance.pbalance;
                 comProfits = utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accSub(salesRevenue, venderMaling));
             }
+
             if (oneType == constant.sales().salesBalance.ONETYPE_ALLBACK_INT || oneType == constant.sales().salesBalance.ONETYPE_DBACKORDER_INT) {
+
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(utils.accSub(v.salesBalance.total, venderMaling), allowance);
                 accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
                 comProfits = utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accSub(salesRevenue, venderMaling));
             }
 
-            var detailArr = [["供应商减免金额: ", venderMaling, "blue"], ["折扣/抹零金额: ", allowance, "blue"], ["销售收入: ", utils.changeThrDecimal(salesRevenue), "blue"], ["销售金额: ", utils.changeThrDecimal(salesAmount), "blue"], ["销售成本: ", v.salesBalance.pbalance, "blue"], ["应付账款: ", utils.changeThrDecimal(accountsPayable), "blue"], ["结算利润: ", utils.changeThrDecimal(utils.accSub(salesAmount, v.salesBalance.pbalance)), "blue"], ["公司利润: ", utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable)), "blue"], ["收款时间: ", v.salesBalance.createTime, "green"], ["销售成本比例: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accDiv(v.salesBalance.pbalance, salesAmount)), "blue"], ["结算利润占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount)), "blue"], ["公司利润占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(comProfits), "blue"],
-                ["主材打折占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accSub(1, utils.accDiv(allowance, salesAmount))), "blue"], ];
+            var detailArr = [["供应商减免金额: ", venderMaling, "blue"], ["折扣/抹零金额: ", allowance, "blue"], ["销售收入: ", utils.changeThrDecimal(salesRevenue), "blue"], ["销售金额: ", utils.changeThrDecimal(salesAmount), "blue"], ["销售成本: ", v.salesBalance.pbalance, "blue"], ["应付账款: ", utils.changeThrDecimal(accountsPayable), "blue"], ["结算利润: ", utils.changeThrDecimal(utils.accSub(salesAmount, v.salesBalance.pbalance)), "blue"], ["公司利润: ", utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable)), "blue"], ["收款时间: ", v.salesBalance.createTime, "green"], ["销售成本比例: ", salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(v.salesBalance.pbalance, salesAmount)), "blue"], ["结算利润占比: ", salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount)), "blue"], ["公司利润占比: ", salesAmount == 0 ? 0 : utils.changeThrDecimal(comProfits), "blue"],
+                ["主材打折占比: ", salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accSub(1, utils.accDiv(allowance, salesAmount))), "blue"]];
 
             $.each(detailArr, function(index, value) {
 
@@ -112,6 +139,7 @@ $(function() {
             $divBtnWrap.append($unbound).appendTo($h3);
 
             if (balanceSales.status != constant.balance().balanceSales.STATUS_INIT_INT) {
+
                 $divBtnWrap.hide();
             }
 
@@ -146,6 +174,7 @@ $(function() {
                     });
                 });
             });
+
             return $liLine;
         };
         // 返回结果给searcher , searcher利用返回的方法完成具体分页显示的过程
@@ -155,6 +184,7 @@ $(function() {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
+
             drawLine: function(v) {
 
                 return creatLine(v);
@@ -179,6 +209,10 @@ $(function() {
         var $profitPrinti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($profitPrint);
         var $profitPrintBtn = $('<span></span>').text('利润打印').appendTo($profitPrint);
 
+        var $export = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'export').css("margin", "0px 3px");
+        var $exporti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($export);
+        var $exportBtn = $('<span></span>').text('导出').appendTo($export);
+
         $profitPrintBtn.click(function() {
 
             params.balance.bsid = balanceSalesBalance.bsid;
@@ -195,12 +229,112 @@ $(function() {
             com.popup("明细表", api.index.balanceSales2print.url, null, null, true);
         });
 
+        $export.click(function() {
+
+            if (com.focusPage('#bsbpagenation>span[name="totalRecords"]', "#bsbpagenation").text() > 2000) {
+                com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+                return false;
+            }
+
+            com.post(api.balance.pageBalanceSalesBalance, $.extend({}, params[history], {
+                "paging.noPage": 1,
+                "balanceSales.bsid": balanceSalesBalance.bsid
+            }), function(res) {
+
+                $.exceler({
+                    column: [['销售单号', 'salesBalance.sales.no'], ['装修单号', 'salesBalance.sales.orderId'], ['楼盘地址', 'address'], ['品类', 'salesBalance.sales.category'], ['品牌', 'salesBalance.sales.brand'], ['类型', 'salesBalance.type'], ['结算值', 'salesBalance.pbalance'], ['一类', 'salesBalance.onetype'], ['状态', 'salesBalance.status'], ['供应商减免金额', 'venderMaling'], ['折扣/抹零金额', 'salesBalance.allowance'], ['销售收入', 'salesRevenue'], ['销售金额', 'salesAmount'], ['销售成本', 'salesBalance.pbalance'], ['应付账款', 'accountsPayable'], ['结算利润', 'settlementProfit'], ['公司利润', 'corporateProfits'], ['收款时间', 'salesBalance.createTime'], ['销售成本比例', 'salesCostRatio'], ['结算利润占比', 'proportionOfSettlementProfit'], ['公司利润占比', 'comProfits'], ['主材打折占比', 'discountProportionOfMainMaterials']],
+                    list: res.paging.data,
+                }, function(v) {
+
+                    var oneType = v.salesBalance.onetype;
+                    var Type = v.salesBalance.type;
+
+                    var salesRevenue = 0;
+                    var salesAmount = 0;
+                    var accountsPayable = 0;
+                    
+                    var venderMaling = (v.salesBalance && v.salesBalance.sales && v.salesBalance.sales.venderMaling) ? Math.round(v.salesBalance.sales.venderMaling) : 0;
+                    var allowance = (v.salesBalance && v.salesBalance.allowance) ? v.salesBalance.allowance : 0;
+
+                    v.address = v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber;
+                    v.salesBalance.status = constant.balance().balanceSales.status.keys[v.salesBalance.status];
+                    v.venderMaling = venderMaling;
+
+                    if (oneType == constant.sales().salesBalance.ONETYPE_INIT_INT) {
+
+                        if (Type == constant.sales().salesBalance.TYPE_DEPOSITPAY_INT) {
+
+                            venderMaling = 0;
+                            allowance = 0;
+                            salesRevenue = v.salesBalance.sales.depositpay;
+                            salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
+                            accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
+
+                            v.salesRevenue = utils.changeThrDecimal(salesRevenue);
+                            v.salesAmount = utils.changeThrDecimal(salesAmount);
+                            v.accountsPayable = utils.changeThrDecimal(accountsPayable);
+                        } else {
+
+                            salesRevenue = utils.accAdd(v.salesBalance.sales.depositpay, v.salesBalance.sales.fullpay);
+                            salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
+                            accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
+
+                            v.salesRevenue = utils.changeThrDecimal(salesRevenue);
+                            v.salesAmount = utils.changeThrDecimal(salesAmount);
+                            v.accountsPayable = utils.changeThrDecimal(accountsPayable);
+                        }
+
+                        v.venderMaling = utils.changeThrDecimal(venderMaling);
+                        v.comProfits = salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accAdd(salesRevenue, venderMaling)));
+                    }
+
+                    if (oneType == constant.sales().salesBalance.ONETYPE_REFUND_INT) {
+
+                        venderMaling = 0;
+                        salesRevenue = v.salesBalance.total;
+                        salesAmount = utils.accAdd(v.salesBalance.total, allowance);
+                        accountsPayable = v.salesBalance.pbalance;
+                        
+                        v.salesRevenue = utils.changeThrDecimal(salesRevenue);
+                        v.salesAmount = utils.changeThrDecimal(salesAmount);
+                        v.accountsPayable = utils.changeThrDecimal(accountsPayable);
+                        v.venderMaling = utils.changeThrDecimal(venderMaling);
+                        
+                        v.comProfits = salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accSub(salesRevenue, venderMaling)));
+                    }
+
+                    if (oneType == constant.sales().salesBalance.ONETYPE_ALLBACK_INT || oneType == constant.sales().salesBalance.ONETYPE_DBACKORDER_INT) {
+
+                        salesRevenue = v.salesBalance.total;
+                        salesAmount = utils.accAdd(utils.accSub(v.salesBalance.total, venderMaling), allowance);
+                        accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
+
+                        v.salesRevenue = utils.changeThrDecimal(salesRevenue);
+                        v.salesAmount = utils.changeThrDecimal(salesAmount);
+                        v.accountsPayable = utils.changeThrDecimal(accountsPayable);
+                        v.venderMaling = utils.changeThrDecimal(-venderMaling);
+                        
+                        v.comProfits = salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accSub(salesRevenue, venderMaling)));
+                    }
+
+                    v.salesBalance.onetype = constant.sales().salesBalance.onetype.keys[v.salesBalance.onetype];
+                    v.salesBalance.type = balanceSalesBalance.types[v.salesBalance.type];
+                    v.settlementProfit = utils.changeThrDecimal(utils.accSub(salesAmount, v.salesBalance.pbalance));
+                    v.corporateProfits = utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable));
+                    v.salesCostRatio = salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(v.salesBalance.pbalance, salesAmount));
+                    v.proportionOfSettlementProfit = salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount));
+                    v.discountProportionOfMainMaterials = salesAmount == 0 ? 0 : utils.changeThrDecimal(utils.accSub(1, utils.accDiv(allowance, salesAmount)));
+                });
+            });
+        });
+
         if (balanceSales.status == constant.balance().balanceSales.STATUS_INIT_INT) {
+
             $adda.hide();
             $profitPrint.hide();
         }
 
-        return [$adda, $profitPrint];
+        return [$adda, $profitPrint, $export];
     }, 'bsbresultList');
 
 });

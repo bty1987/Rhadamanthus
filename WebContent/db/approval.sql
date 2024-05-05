@@ -111,6 +111,8 @@ CREATE TABLE `approvaldecorationbelongitem` (
   `adbid` int(11) NOT NULL,
   `orderId` varchar(15) NOT NULL,
   `buid` int(11) NOT NULL COMMENT '归属人ID',
+  `bdid` int(11) DEFAULT NULL COMMENT '归属部门ID',
+  `brid` int(11) DEFAULT NULL COMMENT '归属分区ID',
   `rate` int(5) NOT NULL COMMENT '比例',
   `defaultFlag` tinyint(1) NOT NULL COMMENT '默认标识',
   PRIMARY KEY (`adbiid`)
@@ -132,6 +134,24 @@ CREATE TABLE `approvaldecorationrefund` (
   `paymentId` int(11) NOT NULL COMMENT '装修款ID',
   PRIMARY KEY (`adrid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单退款审批表';
+
+DROP TABLE IF EXISTS `approvaldecorationterminal`;
+CREATE TABLE `approvaldecorationterminal` (
+  `adtid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批ID',
+  `orderId` varchar(15) NOT NULL COMMENT '装修单号',
+  PRIMARY KEY (`adtid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同终止审批';
+
+DROP TABLE IF EXISTS `approvaldecorationterminalitem`;
+CREATE TABLE `approvaldecorationterminalitem` (
+  `adtiid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批ID',
+  `adtid` int(11) NOT NULL COMMENT '合同终止审批ID',
+  `refermoney` bigint(10) NOT NULL COMMENT '金额',
+  `paymenttype` varchar(15) NOT NULL COMMENT '款项类型',
+  PRIMARY KEY (`adtiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同终止审批';
 
 DROP TABLE IF EXISTS `approvalmanifestdb`;
 CREATE TABLE `approvalmanifestdb` (

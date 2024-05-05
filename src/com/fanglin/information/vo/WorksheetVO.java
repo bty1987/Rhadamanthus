@@ -3,6 +3,8 @@ package com.fanglin.information.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserVO;
 
 public class WorksheetVO implements Serializable {
@@ -16,6 +18,8 @@ public class WorksheetVO implements Serializable {
 	private String module;
 
 	private String content;
+
+	private String path;
 
 	private UserVO creater;
 
@@ -71,6 +75,14 @@ public class WorksheetVO implements Serializable {
 		this.content = content;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	public UserVO getCreater() {
 		return creater;
 	}
@@ -79,6 +91,7 @@ public class WorksheetVO implements Serializable {
 		this.creater = creater;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -103,6 +116,7 @@ public class WorksheetVO implements Serializable {
 		this.handler = handler;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getHandTime() {
 		return handTime;
 	}

@@ -19,6 +19,7 @@ import com.fanglin.salary.po.SalaryPO;
 import com.fanglin.salary.service.SalaryService;
 import com.fanglin.salary.vo.SalaryVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("salaryService")
@@ -32,14 +33,30 @@ public class SalaryServiceImpl implements SalaryService {
 	private UserDao userDao;
 
 	@Override
-	public void pageSalary(Paging paging, List<Filter> filters) {
+	public void pageSalary(Paging paging, List<Filter> filters, SalaryVO salaryVO) {
+
+		if (salaryVO == null) {
+			salaryVO = new SalaryVO();
+		}
+
+		if (salaryVO.getUser() != null) {
+			filters.add(new Filter("userId", salaryVO.getUser().getUserId(), "eq"));
+		}
+
+		if (salaryVO.getCreateTime() != null) {
+
+			String start = DateUtil.getDateToDateString(DateUtil.getFirstDay(DateUtil.getTimestampToDate(salaryVO.getCreateTime())), "yyyy/MM/dd");
+			String end = DateUtil.getDateToDateString(DateUtil.getLastDay(DateUtil.getTimestampToDate(salaryVO.getCreateTime())), "yyyy/MM/dd");
+
+			filters.add(new Filter("createTime", String.format("%s-%s", start, end), "eq"));
+		}
 
 		List<SalaryPO> salaryPOs = salaryDao.pageSalary(paging, filters);
 		List<SalaryVO> salaryVOs = new ArrayList<SalaryVO>();
 
 		for (SalaryPO salaryPO : salaryPOs) {
 
-			SalaryVO salaryVO = new SalaryVO(new UserBaseVO(), new UserBaseVO());
+			salaryVO = new SalaryVO(new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(salaryPO, salaryVO, Arrays.asList("user", "operater"));
 			BeanUtil.copyProperties(salaryPO.getUser(), salaryVO.getUser(), Arrays.asList("duty", "dept", "role"));
@@ -47,6 +64,13 @@ public class SalaryServiceImpl implements SalaryService {
 
 			salaryVOs.add(salaryVO);
 		}
+
+		if (salaryVOs.size() == 0) {
+			salaryVOs.add(new SalaryVO(new UserBaseVO(), new UserBaseVO()).init(new SalaryPO(), "基本薪资"));
+			salaryVOs.add(new SalaryVO(new UserBaseVO(), new UserBaseVO()).init(new SalaryPO(), "餐食补助"));
+			salaryVOs.add(new SalaryVO(new UserBaseVO(), new UserBaseVO()).init(new SalaryPO(), "交通补助"));
+		}
+
 		paging.setData(salaryVOs);
 	}
 

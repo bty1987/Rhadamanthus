@@ -1,6 +1,18 @@
 
 Condition.addupRule("approval", {
-    
+
+    "orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
     "approver-username": {
         label: "姓名",
         type: "autofill",
@@ -18,7 +30,7 @@ Condition.addupRule("approval", {
         }
     },
     "receiver-name": {
-        label: "姓名",
+        label: "审批人",
         type: "autofill",
         submitConfig: {
             name: "receiverName",
@@ -34,7 +46,7 @@ Condition.addupRule("approval", {
         }
     },
     "sender-name": {
-        label: "姓名",
+        label: "申请人",
         type: "autofill",
         submitConfig: {
             name: "senderName",

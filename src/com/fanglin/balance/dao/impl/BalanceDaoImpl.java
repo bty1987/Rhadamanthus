@@ -71,6 +71,8 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
 			} else if (BalancePO.COLUMN_TYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if (BalancePO.COLUMN_ISPAY_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
 			} else {
 				query.add(query.getCriterion(field, data, op));
 			}

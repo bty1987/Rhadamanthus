@@ -55,8 +55,12 @@ public class BrandServiceImpl implements BrandService {
 		List<BrandPO> brandPOs = brandDao.pageBrand(paging, filters, company);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 
+		BrandVO brandVO;
+
 		for (BrandPO brandPO : brandPOs) {
-			BrandVO brandVO = new BrandVO(new UserBaseVO());
+
+			brandVO = new BrandVO(new UserBaseVO());
+
 			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 			BeanUtil.copyProperties(brandPO.getSupplier(), brandVO.getSupplier(), Arrays.asList("role", "dept", "duty"));
 
@@ -73,13 +77,17 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public List<BrandVO> queryBrand(int company) {
+	public List<BrandVO> queryBrand(Integer company) {
 
 		List<BrandPO> brandPOs = brandDao.list();
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 
+		BrandVO brandVO;
+
 		for (BrandPO brandPO : brandPOs) {
-			BrandVO brandVO = new BrandVO();
+
+			brandVO = new BrandVO();
+
 			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 
 			CategoryPO categoryPO = brandPO.getCategory();
@@ -95,11 +103,11 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName, Integer company) {
+	public List<BrandVO> queryBrand(BrandVO brandVO, Integer company) {
 
 		Paging paging = new Paging(0, 10);
 
-		List<BrandPO> brandPOs = brandDao.pageBrandByPinYinName(paging, pinyinName, company);
+		List<BrandPO> brandPOs = brandDao.pageBrand(paging, brandVO.getPinyin(), brandVO.getAtttype(), company);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 
 		for (BrandPO brandPO : brandPOs) {
@@ -122,8 +130,10 @@ public class BrandServiceImpl implements BrandService {
 	public BrandVO queryBrandByBid(BrandVO brandVO) {
 
 		BrandPO brandPO = brandDao.queryBrandByBid(brandVO.getBid());
+		brandVO = new BrandVO(new UserBaseVO());
 
 		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
+		BeanUtil.copyProperties(brandPO.getSupplier(), brandVO.getSupplier(), Arrays.asList("role", "dept", "duty"));
 
 		CategoryPO categoryPO = brandPO.getCategory();
 
@@ -174,6 +184,7 @@ public class BrandServiceImpl implements BrandService {
 	public int addBrand(BrandVO brandVO, int company) {
 
 		BrandPO brandPO = new BrandPO();
+
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BRAND_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 
 		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
@@ -182,11 +193,16 @@ public class BrandServiceImpl implements BrandService {
 		brandNo.append(SystemConfig.getString("brandIdent", "B_"));
 		brandNo.append(FormatUtil.fillZero(count, "000"));
 		brandPO.setNo(brandNo.toString());
-		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category", "supplier"));
-		brandPO.setCompany(company);
+
+		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category", "supplier", "company"));
+
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
 		brandPO.setSupplier(supplier);
+
 		brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
+		brandPO.setAtttype(brandVO.getAtttype());
+		brandPO.setCompany(company);
+
 		brandDao.save(brandPO);
 
 		return 0;
@@ -200,10 +216,11 @@ public class BrandServiceImpl implements BrandService {
 
 		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
 
-		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("category", "supplier", "company"));
+		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category", "supplier", "company"));
 
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
 		brandPO.setSupplier(supplier);
+		brandPO.setAtttype(brandVO.getAtttype());
 
 		if (brandVO.getName() != null && brandVO.getName() != "") {
 			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
@@ -216,10 +233,10 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteBrandByBIds(List<Long> bIds) {
+	public int deleteBrand(List<BrandVO> brandVOs) {
 
-		for (long bId : bIds) {
-			brandDao.deleteById(bId);
+		for (BrandVO brand : brandVOs) {
+			brandDao.deleteById(brand.getBid());
 		}
 
 		return 0;

@@ -46,7 +46,7 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationVersionPO> queryQuotationVersion(int company) {
-		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).addOrder(Order.desc("defaultFlag")).list();
+		return createCriteria(QuotationVersionPO.class).add(Restrictions.eq(QuotationVersionPO.COLUMN_STATUS_STR, QuotationVersionPO.STATUS_ENABLE_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("defaultFlag")).list();
 	}
 
 	@Override

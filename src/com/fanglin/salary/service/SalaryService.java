@@ -9,14 +9,14 @@ import com.fanglin.utils.Paging;
 
 public interface SalaryService {
 
-	public void pageSalary(Paging paging,List<Filter> filters);
-	
+	public void pageSalary(Paging paging, List<Filter> filters, SalaryVO salaryVO);
+
 	public int addSalary(SalaryVO salaryVO);
-	
-	public int passSalary(SalaryVO salaryVO,String userId) throws FLException;
-	
-	public int rejectSalary(SalaryVO salaryVO,String userId) throws FLException;
-	
-	public int cancelSalary(SalaryVO salaryVO,String userId) throws FLException;
-	
+
+	public int passSalary(SalaryVO salaryVO, String userId) throws FLException;
+
+	public int rejectSalary(SalaryVO salaryVO, String userId) throws FLException;
+
+	public int cancelSalary(SalaryVO salaryVO, String userId) throws FLException;
+
 }

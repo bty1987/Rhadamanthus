@@ -40,6 +40,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.personel.dao.DutmentDao;
+import com.fanglin.personel.dao.UserCompanyDao;
 import com.fanglin.personel.dao.UserContractDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserEducationDao;
@@ -104,6 +105,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRoleDao userRoleDao;
+
+	@Autowired
+	private UserCompanyDao userCompanyDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -315,7 +319,7 @@ public class UserServiceImpl implements UserService {
 		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid);
 
 		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(convertBaseBean(userPO));
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO()).ptv(userPO));
 		}
 
 		return userBaseVOs;
@@ -357,7 +361,7 @@ public class UserServiceImpl implements UserService {
 		List<UserPO> userPOs = userDao.queryUserByUids(uids);
 
 		for (UserPO userPO : userPOs) {
-			userBaseVOs.add(convertBaseBean(userPO));
+			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO()).ptv(userPO));
 		}
 
 		return userBaseVOs;
@@ -441,7 +445,7 @@ public class UserServiceImpl implements UserService {
 		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
 
 		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
-		userPO.setExtranet(UserPO.EXTRANET_QCODE_INT);
+		userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
 		userPO.setType(UserPO.TYPE_USER_INT);
 		userPO.setCompany(company);
 
@@ -482,7 +486,7 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setType("入职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
+		userExperiencePO.setComment(String.format("公司:%s, 部门:%s, 职位:%s. ", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
 		userExperiencePO.setOperator(operator);
 
 		userExperienceDao.save(userExperiencePO);
@@ -591,6 +595,16 @@ public class UserServiceImpl implements UserService {
 
 		if (newstatus != oldstatus || newdept.getDid() != olddept.getDid() || oldduty.getDid() != newduty.getDid()) {
 
+			if (newstatus == UserPO.STATUS_ONJOB_INT) {
+				userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
+			} else {
+				userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
+				userPO.setExtranet(UserPO.EXTRANET_NONE_INT);
+
+				userRoleDao.deleteUserRole(userPO.getUid());
+				userCompanyDao.deleteUserCompany(userPO.getUid());
+			}
+
 			DutmentPO olddutment = dutmentDao.queryDutmentByDids(olddept.getDid(), oldduty.getDid());
 			DutmentPO newdutment = dutmentDao.queryDutmentByDids(newdept.getDid(), newduty.getDid());
 
@@ -622,7 +636,7 @@ public class UserServiceImpl implements UserService {
 			UserPO operator = userDao.queryUserByUserId(userId);
 
 			userExperiencePO.setUid(userPO.getUid());
-			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus == 0 ? "入职" : "离职");
+			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus == UserPO.STATUS_ONJOB_INT ? "入职" : "离职");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -709,42 +723,44 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		Short isLogin = userVO.getIsLogin();
+		if (isLogin != null) {
+			userPO.setIsLogin(userVO.getIsLogin());
+		}
+
+		Short extranet = userVO.getExtranet();
+		if (extranet != null) {
+			userPO.setExtranet(userVO.getExtranet());
+		}
+
 		RolePO roleCO = roleDao.get(rid);
 
 		if (roleCO == null) {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		RolePO rolePO = roleDao.get(userVO.getRole().getRid());
+		RolePO rolePO = null;
 
-		if (rolePO == null) {
-			throw new FLException(230010, "角色不存在");
+		if (userVO.getRole() != null && userVO.getRole().getRid() != null) {
+
+			rolePO = roleDao.get(userVO.getRole().getRid());
+
+			if (rolePO == null) {
+				throw new FLException(230010, "角色不存在");
+			}
+
+			if (roleCO.getRid() == rolePO.getRid()) {
+				throw new FLException(-1, "无操作权限");
+			}
+
+			if (roleCO.getLevel() <= rolePO.getLevel()) {
+				throw new FLException(-1, "无操作权限");
+			}
+
+			userPO.setRole(rolePO);
 		}
 
-		if (roleCO.getRid() == rolePO.getRid()) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		if (roleCO.getLevel() <= rolePO.getLevel()) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		Short isLogin = userVO.getIsLogin();
-		int oldCompany = userPO.getCompany();
-
-		if (isLogin != null) {
-			userPO.setIsLogin(userVO.getIsLogin());
-		}
-
-		userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
-
-		userPO.setRole(rolePO);
-		userPO.setExtranet(userVO.getExtranet());
-		userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
-
-		userDao.update(userPO);
-
-		if (roleCO.getRid() != rolePO.getRid()) {
+		if (rolePO != null && roleCO.getRid() != rolePO.getRid()) {
 
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 
@@ -759,7 +775,16 @@ public class UserServiceImpl implements UserService {
 			userExperienceDao.save(userExperiencePO);
 		}
 
-		if (oldCompany != userPO.getCompany()) {
+		Integer oldCompany = null;
+
+		if (userVO.getCompanys() != null) {
+
+			oldCompany = userPO.getCompany();
+
+			userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
+		}
+
+		if (oldCompany != null && oldCompany != userPO.getCompany()) {
 
 			CompanyPO newCompanyPO = companyDao.get(userPO.getCompany());
 			CompanyPO oldCompanyPO = companyDao.get(oldCompany);
@@ -776,6 +801,10 @@ public class UserServiceImpl implements UserService {
 
 			userExperienceDao.save(userExperiencePO);
 		}
+
+		userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
+
+		userDao.update(userPO);
 	}
 
 	@Override
@@ -920,30 +949,21 @@ public class UserServiceImpl implements UserService {
 		return userVO;
 	}
 
-	private UserBaseVO convertBaseBean(UserPO userPO) throws FLException {
-
-		UserBaseVO userBaseVO = new UserBaseVO(new DutyVO(), new DepartmentVO());
-
-		BeanUtil.copyProperties(userPO, userBaseVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-
-		BeanUtil.copyProperties(userPO.getDuty(), userBaseVO.getDuty(), Arrays.asList("departmentType"));
-
-		BeanUtil.copyProperties(userPO.getDept(), userBaseVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		return userBaseVO;
-	}
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void quitUser(UserVO userVO, String userId) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
-		SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor");
-
 		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");
 		}
+
+		if (userPO.getStatus() == UserPO.STATUS_OFFJOB_INT) {
+			return;
+		}
+
+		SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor");
 
 		if (visitor == null) {
 			throw new FLException(230010, "角色不存在");
@@ -952,8 +972,11 @@ public class UserServiceImpl implements UserService {
 		userPO.setStatus(UserPO.STATUS_OFFJOB_INT);
 		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
 
+		userRoleDao.deleteUserRole(userPO.getUid());
+		userCompanyDao.deleteUserCompany(userPO.getUid());
+
 		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
-		userPO.setExtranet(UserPO.EXTRANET_MAC_INT);
+		userPO.setExtranet(UserPO.EXTRANET_NONE_INT);
 
 		UserExperiencePO userExperiencePO = new UserExperiencePO();
 
@@ -976,7 +999,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void tranUser(UserVO userVO, String userId) throws FLException {
+	public void tranUser(UserVO userVO, String userId, int roleId) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
@@ -984,47 +1007,113 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		UserPO operator = userDao.queryUserByUserId(userId);
+
 		StringBuffer comment = new StringBuffer();
 
-		if (userVO.getCompanys() != null && !"".equals(userVO.getCompanys())) {
-
-			CompanyPO newcom = companyDao.get(CompanyServiceImpl.decode(userVO.getCompanys()));
-			CompanyPO oldcom = companyDao.get(userPO.getCompany());
-
-			userPO.setCompany(newcom.getCid());
-
-			comment.append(String.format("原司: %s, 现司: %s", oldcom.getName(), newcom.getName()));
-		}
+		DepartmentPO newdept = null;
+		DepartmentPO olddept = userPO.getDept();
 
 		if (userVO.getDept() != null && userVO.getDept().getDid() != null) {
 
-			DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
+			newdept = departmentDao.get(userVO.getDept().getDid());
 
-			if (departmentPO.getFatherDept() == null) {
-				throw new FLException(310002, "部门不可添加人员");
+			if (newdept == null) {
+				throw new FLException(310001, "部门不存在");
 			}
 
-			DepartmentPO newdept = departmentPO;
-			DepartmentPO olddept = userPO.getDept();
+			if (newdept.getFatherDept() == null) {
+				throw new FLException(310002, "部门不可添加人员");
+			}
+		}
+
+		if (newdept != null && olddept.getDid() != newdept.getDid()) {
 
 			userPO.setDept(newdept);
 
-			if (comment.length() != 0) comment.append(", ");
+			comment.append(String.format("原部: %s, 现部: %s. ", olddept.getName(), newdept.getName()));
+		}
 
-			comment.append(String.format("原部: %s, 现部: %s", olddept.getName(), newdept.getName()));
+		DutyPO newduty = null;
+		DutyPO oldduty = userPO.getDuty();
+
+		if (userVO.getDuty() != null && userVO.getDuty().getDid() != null) {
+
+			newduty = dutyDao.get(userVO.getDuty().getDid());
+
+			if (newdept == null) {
+				throw new FLException(130015, "职位不存在");
+			}
+		}
+
+		if (newduty != null && oldduty.getDid() != newduty.getDid()) {
+
+			userPO.setDuty(newduty);
+
+			comment.append(String.format("原职: %s, 现职: %s. ", oldduty.getName(), newduty.getName()));
+		}
+
+		RolePO newrole = null;
+		RolePO oldrole = userPO.getRole();
+
+		if (userVO.getRole() != null && userVO.getRole().getRid() != null) {
+
+			newrole = roleDao.get(userVO.getRole().getRid());
+
+			if (newrole == null) {
+				throw new FLException(230010, "角色不存在");
+			}
+		}
+
+		if (userVO.getRole() != null && userVO.getRole().getRid() != null) {
+
+			RolePO roleCO = roleDao.get(roleId);
+
+			if (roleCO == null) {
+				throw new FLException(230010, "角色不存在");
+			}
+
+			if (roleCO.getRid() == newrole.getRid()) {
+				throw new FLException(-1, "无操作权限");
+			}
+
+			if (roleCO.getLevel() <= newrole.getLevel()) {
+				throw new FLException(-1, "无操作权限");
+			}
+		}
+
+		if (newrole != null && oldrole.getRid() != newrole.getRid()) {
+
+			userPO.setRole(newrole);
+
+			comment.append(String.format("原角色:%s, 现角色:%s. ", oldrole.getName(), newrole.getName()));
+		}
+
+		CompanyPO newcompany = null;
+		CompanyPO oldcompany = companyDao.get(userPO.getCompany());
+
+		if (userVO.getCompanys() != null && !"".equals(userVO.getCompanys())) {
+
+			newcompany = companyDao.get(CompanyServiceImpl.decode(userVO.getCompanys()));
+		}
+
+		if (newcompany != null && oldcompany.getCid() != newcompany.getCid()) {
+
+			userPO.setCompany(newcompany.getCid());
+
+			comment.append(String.format("原司:%s, 现司:%s. ", oldcompany.getName(), newcompany.getName()));
 		}
 
 		UserExperiencePO userExperiencePO = new UserExperiencePO();
 
-		UserPO operator = userDao.queryUserByUserId(userId);
-
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("调职");
+
+		userExperiencePO.setOperator(operator);
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		userExperiencePO.setComment(comment.toString());
-		userExperiencePO.setOperator(operator);
 
 		userExperienceDao.save(userExperiencePO);
 

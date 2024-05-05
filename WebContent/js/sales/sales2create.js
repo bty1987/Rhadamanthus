@@ -1,7 +1,7 @@
-jQuery(function () {
+jQuery(function() {
 
     var sales = {
-            
+
         leftitems: {
             goods: com.focusPage('#goods'),
             goodsNo: com.focusPage('#goodsNo'),
@@ -9,17 +9,16 @@ jQuery(function () {
             brand: com.focusPage('#brand'),
             measurementUnit: com.focusPage('#measurementUnit'),
 
-            purchase: com.focusPage('#purchase'),//售价
-            discount: com.focusPage('#discount'),//折扣
-            disPrice: com.focusPage('#disPrice'),//折扣价
-            postDis: com.focusPage('#postDis'),//折让
-            selling: com.focusPage('#selling'),//折让价
-            num: com.focusPage('#num'),//数量
-            total: com.focusPage('#total'),//总价
-            
+            purchase: com.focusPage('#purchase'),// 售价
+            discount: com.focusPage('#discount'),// 折扣
+            disPrice: com.focusPage('#disPrice'),// 折扣价
+            postDis: com.focusPage('#postDis'),// 折让
+            selling: com.focusPage('#selling'),// 折让价
+            num: com.focusPage('#num'),// 数量
+            total: com.focusPage('#total'),// 总价
 
-            color: com.focusPage('#color'),//颜色
-            format: com.focusPage('#format'),//规格
+            color: com.focusPage('#color'),// 颜色
+            format: com.focusPage('#format'),// 规格
             remark: com.focusPage('#remark')
         },
         rightitems: {
@@ -35,16 +34,18 @@ jQuery(function () {
             comment: com.focusPage('#comment'), // 备注
             maling: com.focusPage('#maling'), // 抹零
             totals: com.focusPage('#totals'), // 总额
-            bComment:com.focusPage('#bComment') //品牌备注
+            bComment: com.focusPage('#bComment')
+        // 品牌备注
         },
         items: {
             left: com.focusPage('#left')
         },
-        btns:{
-            submit: com.focusPage('#submit'),//提交
-            refresh: com.focusPage('#refresh')//重置
+        btns: {
+            submit: com.focusPage('#submit'),// 提交
+            refresh: com.focusPage('#refresh')
+        // 重置
         },
-        model:{
+        model: {
             packageModel: com.focusPage('#itemModel')
         },
         goods: null,
@@ -56,101 +57,78 @@ jQuery(function () {
         bid: null
     };
 
-    com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name',function (list, k, v) {
-        
+    com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function(list, k, v) {
+
         com.cleanItems(sales.leftitems);
         sales.items.left.find('select').empty();
 
-        $.each(list, function (index, val) {
+        $.each(list, function(index, val) {
 
             if (val.gid == k) {
-                
-                sales.goods = val;
-                sales.bid = val.bid;
-                sales.leftitems.goodsNo.val(val.no);
-                sales.leftitems.category.val(val.category);
-                sales.leftitems.brand.val(val.brand);
-                sales.leftitems.measurementUnit.val(val.measurementUnit);
 
-                //赋值售价信息
-                com.post(api.data.queryPriceByGid, {"price.gid": k}, function (res) {
-                    if (res.prices.length != 0) {
-
-                        $.each(res.prices, function (key, value) {
-                            value.name = value.selling + " "  + value.name;
-                        });
-
-                        sales.leftitems.purchase.bindData(res.prices, "pid", "name", false, null, "selling");
-                        
-                        var price = res.prices[0];
-                        sales.leftitems.discount.val(1);
-                        sales.leftitems.disPrice.val(price.selling);
-                        sales.leftitems.postDis.val(1);
-                        sales.leftitems.selling.val(price.selling);
-                        sales.leftitems.num.val(1);
-                        sales.leftitems.total.val(price.selling);
-                    } else {
-                        com.showAlert(com.warning, "该商品暂无价格信息,请录入");
-                    }
-                });
-                //赋值颜色信息
-                com.post(api.data.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
-                    if (colorData.colors.length != 0) {
-                        sales.leftitems.color.bindData(colorData.colors, "cid", "name");
-                    } else {
-                        com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
-                    }
-                });
-                //赋值规格信息
-                com.post(api.data.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
-                    if (formatData.formats.length != 0) {
-                        sales.leftitems.format.bindData(formatData.formats, "fid", "info");
-                    } else {
-                        com.showAlert(com.warning, "该商品暂无规格信息,请录入");
-                    }
-                });
+                fillLeftItem(val);
             }
         });
-        
+
         return v;
     });
 
-    com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
-    com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
-    com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
-    com.initTypeahead('brands', api.data.queryBrandByPinyin, "pinyinName", {}, 'brands', 'no', 'alias',function (list, k, v) {
-        $.each(list, function (index, val){
-            if(val['no'] == k){
-                sales.brand  = val;
+    com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('brands', api.data.queryBrandByPinyin, "brand.pinyin", {
+        "brand.atttype": 0
+    }, 'brands', 'no', 'name', function(list, k, v) {
+
+        $.each(list, function(index, val) {
+
+            if (val['no'] == k) {
+                sales.brand = val;
                 sales.rightitems.bComment.val(val.comment)
             }
         });
         return v
     });
 
-    //绑定券信息
-    com.post(api.ds.payment, {}, function (res) {
-        sales.rightitems.couponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
-    }, null, false);
+    com.post(api.data.queryCategory, {
+        "category.isCoupon": 0
+    }, function(res) {
 
-    com.focusPage('#itemModel').on('hidden.bs.modal', function (e) {
+        sales.rightitems.couponInfo.bindData(res.categorys, 'name', 'name', false);
+    });
+
+    com.focusPage('#itemModel').on('hidden.bs.modal', function(e) {
+
         com.focusPage('#itemList').html("");
     });
 
-    //点击添加按钮
-    com.focusPage("#add").click(function () {
-        
-        if(com.validate('left', 'bottom')) return false;
-        
+    // 点击添加按钮
+    com.focusPage("#add").click(function() {
+
+        if (com.validate('left', 'bottom'))
+            return false;
+
         var price = {};
-        
-        com.post(api.data.queryPriceByPid, {"price.pid": sales.leftitems.purchase.val()}, function (data) {
+
+        com.post(api.data.queryPriceByPid, {
+            "price.pid": sales.leftitems.purchase.val()
+        }, function(data) {
+
             price = data.price;
-        },null, false);
-        
+        }, null, false);
+
         var goods = sales.leftitems.goods.val();
         var goodsNo = sales.leftitems.goodsNo.val();
-        
+
         var $purchase = price.purchase;
         var $selling = sales.leftitems.selling.val(); // 折让价
         var $disPrice = sales.leftitems.disPrice.val(); // 折扣价
@@ -159,15 +137,15 @@ jQuery(function () {
         var $total = sales.leftitems.total.val();
 
         var $otherStatus = $selling != $disPrice ? 1 : 0;
-        
-        if(price.ctype == 0 && $disPrice < price.purchase) {
+
+        if (price.ctype == 0 && $disPrice < price.purchase) {
             com.showAlert(com.warning, "折扣价低于控价");
             return false;
         }
 
         var $liList = $('<li></li>').addClass('list-group-item').attr({
             'data-discount': $discount,
-            'data-selling': price.selling,//售价
+            'data-selling': price.selling,// 售价
             'data-purchase': $purchase,
             'data-disPrice': $disPrice,
             'data-postDis': sales.leftitems.postDis.val(),
@@ -184,93 +162,94 @@ jQuery(function () {
             'data-ctype': price.ctype,
             'data-cvalue': price.cvalue,
             'data-priceType': price.type,
-            'data-price':$selling //折让价
+            'data-price': $selling
+        // 折让价
         });
 
         var $h4 = $('<h4></h4>').html(goods + ' ' + goodsNo).attr('addGid', sales.goods.gid);
 
-        var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除')).click(function(){
+        var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除')).click(function() {
+
             $(this).parents('.list-group-item').remove();
             cycTotal();
         });
-        
-        var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
+
+        var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function() {
+
             salesUtils.showPackage(sales.model.packageModel, com.focusPage('#itemList'), $h4.attr('addGid'));
         });
 
         $h4.append($delete).appendTo($liList);
-        
-        if (sales.goods.type == 1) $h4.append($edit);
 
-        var propertyArr = [
-            ['品类: ', sales.leftitems.category.val()],
-            ['品牌: ', sales.leftitems.brand.val()],
-            ['单位: ', sales.leftitems.measurementUnit.val()],
-            ['颜色: ', sales.leftitems.color.find("option:selected").text()],
-            ['规格: ', sales.leftitems.format.find("option:selected").text()],
-            ['售价: ', price.selling, 'blue'],
-            ['折扣价: ', $disPrice],
-            ['折让价: ', $selling, 'blue'],
-            ['数量: ', $num, 'red'],
-            ['总价: ', $total, 'blue'],
-            ['备注: ', sales.leftitems.remark.val()]
-        ];
+        if (sales.goods.type == 1)
+            $h4.append($edit);
 
-        $.each(propertyArr, function (index, value) {
+        var propertyArr = [['品类: ', sales.leftitems.category.val()], ['品牌: ', sales.leftitems.brand.val()], ['单位: ', sales.leftitems.measurementUnit.val()], ['颜色: ', sales.leftitems.color.find("option:selected").text()], ['规格: ', sales.leftitems.format.find("option:selected").text()], ['售价: ', price.selling, 'blue'], ['折扣价: ', $disPrice], ['折让价: ', $selling, 'blue'], ['数量: ', $num, 'red'], ['总价: ', $total, 'blue'], ['备注: ', sales.leftitems.remark.val()]];
+
+        $.each(propertyArr, function(index, value) {
 
             var $span = $('<span></span>').addClass(value[1]);
             var $b = $('<b></b>');
-            
-            if (value[0] != null) $span.html(value[0]);
-            if (value[1] != null) $b.html(value[1]);
-            if (value[2] != null) $b.addClass(value[2]);
-            
+
+            if (value[0] != null)
+                $span.html(value[0]);
+            if (value[1] != null)
+                $b.html(value[1]);
+            if (value[2] != null)
+                $b.addClass(value[2]);
+
             $span.append($b);
             $liList.append($span);
         });
-        
+
         com.focusPage('#salesItemList').append($liList);
-        
-        //清空左侧
+
+        // 清空左侧
         sales.items.left.find('select').empty();
         com.cleanItems(sales.leftitems);
 
         cycTotal();
     });
 
-    sales.leftitems.purchase.on("change", function () {
+    sales.leftitems.purchase.on("change", function() {
+
         count(true, true);
     });
-    sales.leftitems.disPrice.on("change", function () {
+    sales.leftitems.disPrice.on("change", function() {
+
         count(true, false);
     });
-    sales.leftitems.postDis.on("change", function () {
+    sales.leftitems.postDis.on("change", function() {
+
         count(true, false);
     });
-    sales.leftitems.num.on("change", function () {
+    sales.leftitems.num.on("change", function() {
+
         count(false, true);
     });
-    sales.leftitems.selling.on("change", function () {
+    sales.leftitems.selling.on("change", function() {
+
         count(false, true);
     });
 
-    sales.rightitems.orderId.on("change", function () {
+    sales.rightitems.orderId.on("change", function() {
 
         var option = {
             "decoration.orderId": sales.rightitems.orderId.val()
         };
 
-        com.post(api.decoration.queryDecorationForCommonByOrderId, option, function (data) {
+        com.post(api.decoration.queryDecorationForCommonByOrderId, option, function(data) {
 
             sales.rightitems.customer.val(data.decoration.customer.name);
             sales.rightitems.orderAddr.val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
             com.updateTypeahead("salesman", data.decoration.designer.userId, data.decoration.designer.currentName);
             sales.customer = data.decoration.customer;
             sales.salesman = data.decoration.designer;
-            sales.house =  data.decoration.house;
+            sales.house = data.decoration.house;
             sales.dompany = data.decoration.dompany;
 
-        }, function (e) {
+        }, function(e) {
+
             com.showAlert(com.warning, "未查询到此订单!");
             sales.rightitems.customer.val("");
             sales.rightitems.orderAddr.val("");
@@ -278,18 +257,21 @@ jQuery(function () {
         });
     });
 
-    //重置按钮
-    sales.btns.refresh.click(function () {
+    // 重置按钮
+    sales.btns.refresh.click(function() {
+
         com.cleanItems(sales.leftitems);
         sales.items.left.find('select').empty();
     });
 
     // 销售单区 提交
-    sales.btns.submit.click(function () {
-        
-        if(com.validate('searchInfo', 'bottom')) return false;
-        if (checkBrand() == false) return false;
-        
+    sales.btns.submit.click(function() {
+
+        if (com.validate('searchInfo', 'bottom'))
+            return false;
+        if (checkBrand() == false)
+            return false;
+
         var popup = com.focusPage("#sales2create");
         var mask = com.mask(popup, popup);
 
@@ -307,14 +289,14 @@ jQuery(function () {
             "sales.total": sales.rightitems.totals.val(),
             "sales.house.hid": sales.house.hid,
             "sales.dompanys": sales.dompany,
-            "sales.otherStatus":com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0
+            "sales.otherStatus": com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0
         };
 
         var $lis = com.focusPage('.list-group-item');
-        
+
         var total = 0;
 
-        $lis && $lis.length && $.each($lis, function (i, v) {
+        $lis && $lis.length && $.each($lis, function(i, v) {
 
             var $v = $(v);
             var data = $v.data();
@@ -327,7 +309,7 @@ jQuery(function () {
             options["salesItems[" + i + "].discount"] = data.discount;
             options["salesItems[" + i + "].disPrice"] = data.disprice;
             options["salesItems[" + i + "].postDis"] = data.postdis;
-            options["salesItems[" + i + "].price"] = data.price;//折让价
+            options["salesItems[" + i + "].price"] = data.price;// 折让价
             options["salesItems[" + i + "].num"] = data.num;
             options["salesItems[" + i + "].total"] = data.total;
             options["salesItems[" + i + "].comment"] = data.comment;
@@ -336,36 +318,38 @@ jQuery(function () {
             options["salesItems[" + i + "].ctype"] = data.ctype;
             options["salesItems[" + i + "].cvalue"] = data.cvalue;
             options["salesItems[" + i + "].priceType"] = data.pricetype;
-            
+
             total = utils.changeThrDecimal(utils.accAdd(total, data.total));
         });
-        
-        if(total != sales.rightitems.totals.val()){
+
+        if (total != sales.rightitems.totals.val()) {
             com.showAlert(com.error, "销售单总额不匹配");
-            
+
             return false;
         }
 
-        com.post(api.sales.addSales, options, function () {
-            
+        com.post(api.sales.addSales, options, function() {
+
             com.showAlert(com.info, "添加成功");
-            
+
             com.focusPage('#salesItemList').empty();
             sales.items.left.find('select').empty();
-            
+
             com.cleanItems(sales.leftitems);
             com.cleanItems(sales.rightitems);
             sales.rightitems.coupon.val(0);
             sales.rightitems.maling.val(0);
             sales.rightitems.totals.val(0);
         });
-        
-        setTimeout(function(){
+
+        setTimeout(function() {
+
             com.closeMask(mask, popup);
         }, 800);
     });
-    
+
     function count(flag, boolean) {
+
         if (flag == true && boolean == true) {
             sales.leftitems.disPrice.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.leftitems.purchase.find('option:selected').attr("other")), parseFloat(sales.leftitems.discount.val()))));
             sales.leftitems.selling.val(utils.changeThrDecimal(utils.accMul(parseFloat(sales.leftitems.disPrice.val()), parseFloat(sales.leftitems.postDis.val()))));
@@ -384,7 +368,8 @@ jQuery(function () {
         var _total = 0;
         var $li = com.focusPage('.list-group-item');
 
-        $li.length && $li.each(function (i, v) {
+        $li.length && $li.each(function(i, v) {
+
             var $v = $(v);
             var data = $v.data();
             _total = utils.changeThrDecimal(utils.accAdd(_total, data.total));
@@ -392,17 +377,17 @@ jQuery(function () {
         sales.rightitems.totals.val(_total);
     }
 
-    //判断品牌差异
+    // 判断品牌差异
     function checkBrand() {
-        
+
         var $list = com.focusPage('.list-group-item');
-        
-        for(var i=0;i<$list.length;i++){
+
+        for ( var i = 0; i < $list.length; i++) {
             var $v = $($list[i]);
-            
+
             var data = $v.data();
             var brand = data.brand;
-            
+
             if (sales.brand.name != brand) {
                 com.showAlert(com.warning, "销售项第" + (i + 1) + "项中品牌与主材品牌不符,请检查");
                 return false;
@@ -410,4 +395,80 @@ jQuery(function () {
         }
         return true;
     }
+
+    function fillLeftItem(v) {
+
+        if (!v)
+            return false;
+
+        sales.goods = v;
+        sales.bid = v.bid;
+        sales.leftitems.goodsNo.val(v.no);
+        sales.leftitems.category.val(v.category);
+        sales.leftitems.brand.val(v.brand);
+        sales.leftitems.measurementUnit.val(v.measurementUnit);
+
+        // 赋值售价信息
+        com.post(api.data.queryPriceByGid, {
+            "price.gid": v.gid
+        }, function(res) {
+
+            if (res.prices.length != 0) {
+
+                $.each(res.prices, function(key, value) {
+
+                    value.name = value.selling + " " + value.name;
+                });
+
+                sales.leftitems.purchase.bindData(res.prices, "pid", "name", false, null, "selling");
+
+                var price = res.prices[0];
+                sales.leftitems.discount.val(1);
+                sales.leftitems.disPrice.val(price.selling);
+                sales.leftitems.postDis.val(1);
+                sales.leftitems.selling.val(price.selling);
+                sales.leftitems.num.val(1);
+                sales.leftitems.total.val(price.selling);
+            } else {
+                com.showAlert(com.warning, "该商品暂无价格信息,请录入");
+            }
+        });
+
+        // 赋值颜色信息
+        com.post(api.data.queryColorForEnableByGid, {
+            "color.gid": v.gid
+        }, function(colorData) {
+
+            if (colorData.colors.length != 0) {
+                sales.leftitems.color.bindData(colorData.colors, "cid", "name");
+            } else {
+                com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
+            }
+        });
+
+        // 赋值规格信息
+        com.post(api.data.queryFormatForEnableByGid, {
+            "format.gid": v.gid
+        }, function(formatData) {
+
+            if (formatData.formats.length != 0) {
+                sales.leftitems.format.bindData(formatData.formats, "fid", "info");
+            } else {
+                com.showAlert(com.warning, "该商品暂无规格信息,请录入");
+            }
+        });
+    }
+
+    com.focusPage('.select').dblclick(function(res) {
+
+        com.popup4page("#layerPopUp", api.index.goods4condition.url, "商品", null, function() {
+
+            if (!params.data.goods)
+                return false;
+
+            com.updateTypeahead('goods', params.data.goods.gid, params.data.goods.name);
+
+            fillLeftItem(params.data.goods);
+        });
+    });
 });

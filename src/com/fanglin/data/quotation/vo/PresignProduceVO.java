@@ -20,6 +20,8 @@ public class PresignProduceVO implements Serializable {
 
 	private Integer manageRate;
 
+	private String manageFormula;
+
 	private Long costPrice;
 
 	private Integer profitRate;
@@ -168,6 +170,14 @@ public class PresignProduceVO implements Serializable {
 
 	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public String getManageFormula() {
+		return manageFormula;
+	}
+
+	public void setManageFormula(String manageFormula) {
+		this.manageFormula = manageFormula;
 	}
 
 }

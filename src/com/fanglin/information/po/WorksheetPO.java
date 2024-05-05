@@ -19,32 +19,38 @@ public class WorksheetPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -649765382182810264L;
 
-	public static final short STATUS_INIT_INT = 0; //初始
-	
-	public static final short STATUS_CANCEL_INT = 1; //取消
-	
-	public static final short STATUS_HANDL_INT = 2; //已处理
-	
+	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_CANCEL_INT = 1; // 取消
+
+	public static final short STATUS_HANDL_INT = 2; // 已处理
+
+	public static final short STATUS_FINISH_INT = 3; // 完成
+
+	public static final String COLUMN_USERID_STR = "creater.userId";
+
 	private long wsid;
-	
+
 	private String code;
-	
+
 	private String module;
-	
+
 	private String content;
-	
+
+	private String path;
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
-	
+
 	private UserPO handler;
-	
+
 	private Timestamp handTime;
-	
+
 	private String result;
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name = "wsid")
@@ -73,7 +79,7 @@ public class WorksheetPO implements java.io.Serializable {
 	public void setModule(String module) {
 		this.module = module;
 	}
-	
+
 	@Column(name = "content")
 	public String getContent() {
 		return content;
@@ -81,6 +87,15 @@ public class WorksheetPO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -138,5 +153,5 @@ public class WorksheetPO implements java.io.Serializable {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	
+
 }

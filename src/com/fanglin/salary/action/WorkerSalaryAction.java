@@ -35,7 +35,7 @@ public class WorkerSalaryAction extends BaseListAction {
 	@Action(value = "pageWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageWorkerSalary() throws FLException {
 
-		workerSalaryService.pageWorkerSalary(getPaging(), getFilters(), queryCompany());
+		workerSalaryService.pageWorkerSalary(getPaging(), getFilters(), workerSalary, queryCompany());
 
 		return "success";
 	}

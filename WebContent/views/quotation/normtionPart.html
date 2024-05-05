@@ -31,11 +31,11 @@
                         <div class="widget-main">
                             <div class="row">
                                 <div id="normoodSumList" class="col-md-12">
-									<div class="form-group">
+									<div class="form-group hide">
 									    <label class=" col-md-6  no-padding-right">打包定额总量:</label>
 									    <label id="normnumtotal" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
-									<div class="form-group">
+									<div class="form-group hide">
 									    <label class=" col-md-6  no-padding-right">打包库房总量:</label>
 									    <label id="storenumtotal" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
@@ -60,7 +60,7 @@
 					    <div class="widget-main">
 					        <div class="row">
 					            <div id="normriceSumList" class="col-md-12">
-									<div class="form-group">
+									<div class="form-group hide">
 									    <label class=" col-md-6  no-padding-right">附加定额总额:</label>
 									    <label id="normricetotal" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
@@ -78,42 +78,53 @@
     
             <!--左下角按钮-->
             <div class="col-xs-12 col-md-3" style="position:fixed; bottom:10px; background-color: white;">
-                <div class="col-md-12">
-					<div class="col-md-12">
-					    <div class="ui-pg-div">
-					        <button class="btn btn-minier col-md-4" id="openFunctionAreasBtn">
-					            <i class="icon-folder-close"></i>展开功能区
-					        </button>
-					        <button class="btn btn-minier col-md-4" id="closeFunctionAreasBtn" style="margin-left: 2px;">
-					            <i class="icon-folder-open "></i>收起功能区
-					        </button>
-					    </div>
-					</div>
-					<div class="col-md-12 space-8"></div>
-                    <div class="col-md-12">
-                    	<div class="ui-pg-div">
-                    		<button id="packageitem" class="btn btn-minier btn-primary col-md-3">
-                    		    <i class="icon-print"></i>打包项
-                    		</button>
-                            <button id="addtionitem" class="btn btn-minier btn-warning col-md-3" style="margin-left: 2px;">
-                                <i class="icon-print"></i>附加项
-                            </button>
-                    	</div>
-                    </div>
-                    <div class="col-md-12 space-8"></div>
-                    <div class="col-md-12">
-                        <div class="ui-pg-div">
-                            <button id="saveProtationBtn" class="btn btn-minier btn-inverse col-md-3" data-loading-text="Loading...">
-                                <i class="icon-save"></i>保存
-                            </button>
-                            <button id="asdf" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;">
-                                <i class="icon-print"></i>打印
-                            </button>
-                            <button id="detailBckBtn" class="btn btn-minier btn-info col-md-3" style="margin-left: 2px;">
-                                <i class="icon-mail-forward"></i>返回
-                            </button>
-                        </div>
-                    </div>
+			    <div class="ui-pg-div">
+			        <button class="btn btn-minier col-md-4" id="openFunctionAreasBtn">
+			            <i class="icon-folder-close"></i>
+                        <span>展开功能区</span>
+			        </button>
+			        <button class="btn btn-minier col-md-4" id="closeFunctionAreasBtn" style="margin-left: 2px;">
+			            <i class="icon-folder-open "></i>
+                        <span>收起功能区</span>
+			        </button>
+			    </div>
+				<div class="col-md-12 space-8"></div>
+            	<div class="ui-pg-div">
+            		<button id="packageitem" class="btn btn-minier btn-primary col-md-3 hide">
+            		    <i class="icon-print"></i>
+                        <span>打包项</span>
+            		</button>
+                    <button id="addtionitem" class="btn btn-minier btn-warning col-md-3 hide" style="margin-left: 2px;">
+                        <i class="icon-print"></i>
+                        <span>附加项</span>
+                    </button>
+                    <button id=makeQuotation class="btn btn-minier btn-pink col-md-3">
+                        <i class="icon-print"></i>
+                        <span>定额</span>
+                    </button>
+                    <button id="normooditem" class="btn btn-minier btn-success col-md-3" style="margin-left: 2px;">
+                        <i class="icon-print"></i>
+                        <span>材料项</span>
+                    </button>
+                    <button id="normriceitem" class="btn btn-minier btn-purple col-md-3" style="margin-left: 2px;">
+                        <i class="icon-print"></i>
+                        <span>工费项</span>
+                    </button>
+            	</div>
+                <div class="col-md-12 space-8"></div>
+                <div class="ui-pg-div">
+                    <button id="saveProtationBtn" class="btn btn-minier btn-inverse col-md-3" data-loading-text="Loading...">
+                        <i class="icon-save"></i>
+                        <span>保存</span>
+                    </button>
+                    <button id="asdf" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;">
+                        <i class="icon-print"></i>
+                        <span>打印</span>
+                    </button>
+                    <button id="detailBckBtn" class="btn btn-minier btn-info col-md-3" style="margin-left: 2px;">
+                        <i class="icon-mail-forward"></i>
+                        <span>返回</span>
+                    </button>
                 </div>
             </div>
     
@@ -144,6 +155,52 @@
 			    </div>
 			</div>
 			
+			<div class="modal fade" id="normoodModal" tabindex="-1" data-backdrop="static">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <button type="button" class="close" data-dismiss="modal">
+			                    <span>&times;</span><span class="sr-only">Close</span>
+			                </button>
+			                <h4 class="modal-title" id="functionAreaTemplateDialog">材料项</h4>
+			            </div>
+			            
+						<div class="modal-body">
+							<form class="form-horizontal">
+					            <div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="noodsName">定材</label>
+									<div class="col-sm-9">
+										<input type="text" id="noodsName" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+								<div class="form-group">
+		                            <label class="col-sm-3 control-label no-padding-right" for="unit">单位</label>
+		                            <div class="col-sm-9">
+		                                <select id="unit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+		                            </div>
+		                        </div>
+		                        <div class="space-4"></div>
+								
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="normoNum">数量</label>
+									<div class="col-sm-9">
+										<input type="text" id="normoNum" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+							</form>
+						</div>
+			
+			            <div class="modal-footer">
+			                <button type="button" id="addNormood" class="btn btn-primary">保存</button>
+			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
 			<div class="modal fade" id="normriceItemModal" tabindex="-1" data-backdrop="static">
 			    <div class="modal-dialog">
 			        <div class="modal-content">
@@ -158,6 +215,52 @@
 			
 			            <div class="modal-footer">
 			                <button type="button" id="addNormriceItem" class="btn btn-primary">保存</button>
+			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<div class="modal fade" id="normriceModal" tabindex="-1" data-backdrop="static">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <button type="button" class="close" data-dismiss="modal">
+			                    <span>&times;</span><span class="sr-only">Close</span>
+			                </button>
+			                <h4 class="modal-title" id="functionAreaTemplateDialog">工费项</h4>
+			            </div>
+			            
+			            <div class="modal-body">
+							<form class="form-horizontal">
+					            <div class="form-group">
+		                            <label class="col-sm-3 control-label no-padding-right" for="constructionNode">施工节点</label>
+		                            <div class="col-sm-9">
+		                                <select id="constructionNode" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+		                            </div>
+		                        </div>
+		                        <div class="space-4"></div>
+		                        
+		                        <div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="normrName">名称</label>
+									<div class="col-sm-9">
+										<input type="text" id="normrName" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+								
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="salary">薪资</label>
+									<div class="col-sm-9">
+										<input type="text" id="salary" class="col-xs-10 col-sm-5 v_required"  maxlength='15'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+							</form>
+						</div>
+			
+			            <div class="modal-footer">
+			                <button type="button" id="addNormrice" class="btn btn-primary">保存</button>
 			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			            </div>
 			        </div>

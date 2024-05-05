@@ -461,8 +461,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
 
-		if (!resignFlag) {
+		if (decorationPO.getDesignStatus() == DecorationPO.DESIGNSTATUS_INITIA_INT) {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
+		}
+
+		if (!resignFlag) {
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 

@@ -90,7 +90,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	@Override
 	public int copySoodsItem(long sqiid, long tqiid) {
 
-		String sql = "insert into data.soodsitem (sid, qiid) select sid,:tqiid company from data.soodsitem where qiid = :sqiid";
+		String sql = "insert into data.soodsitem (sid, gid, status, qiid) select sid,gid,status,:tqiid company from data.soodsitem where qiid = :sqiid";
 
 		session().createSQLQuery(sql).setLong("tqiid", tqiid).setLong("sqiid", sqiid).executeUpdate();
 
@@ -98,10 +98,10 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	}
 
 	@Override
-	public int deleteSoodsItem(long sid, long qiid) {
+	public int deleteSoodsItemByQiid(long qiid) {
 
-		String sql = "delete from data.soodsitem where sid = :sid AND qiid = :qiid";
-		session().createSQLQuery(sql).setLong("sid", sid).setLong("qiid", qiid).executeUpdate();
+		String sql = "delete from data.soodsitem where qiid = :qiid";
+		session().createSQLQuery(sql).setLong("qiid", qiid).executeUpdate();
 
 		return 0;
 	}

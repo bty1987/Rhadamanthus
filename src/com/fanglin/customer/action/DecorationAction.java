@@ -17,6 +17,7 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.customer.vo.DecorationActivityVO;
 import com.fanglin.customer.vo.DecorationHolonomyVO;
 import com.fanglin.customer.vo.DecorationVO;
+import com.fanglin.data.common.vo.TalkingVO;
 
 @ParentPackage("common")
 @Namespace("/")
@@ -49,6 +50,10 @@ public class DecorationAction extends BaseListAction {
 	private String securityCode;
 
 	private String verifyCode;
+
+	private TalkingVO talking;
+
+	private List<TalkingVO> talkings;
 
 	@Action(value = "queryCusDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusDecoration() throws FLException {
@@ -94,6 +99,14 @@ public class DecorationAction extends BaseListAction {
 	public String queryCusDecorationHolonomy() throws FLException {
 
 		decorationHolonomy = decorationHolonomyService.queryCusDecorationHolonomy(decorationHolonomy);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCusTalking", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCusTalking() throws FLException {
+
+		talkings = decorationOrderService.queryTalking(decoration, talking);
 
 		return SUCCESS;
 	}
@@ -184,6 +197,22 @@ public class DecorationAction extends BaseListAction {
 
 	public void setDecorationHolonomy(DecorationHolonomyVO decorationHolonomy) {
 		this.decorationHolonomy = decorationHolonomy;
+	}
+
+	public List<TalkingVO> getTalkings() {
+		return talkings;
+	}
+
+	public void setTalkings(List<TalkingVO> talkings) {
+		this.talkings = talkings;
+	}
+
+	public TalkingVO getTalking() {
+		return talking;
+	}
+
+	public void setTalking(TalkingVO talking) {
+		this.talking = talking;
 	}
 
 }

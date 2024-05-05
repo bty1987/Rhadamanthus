@@ -3,6 +3,8 @@ jQuery(function($) {
     var extension = {
 
         orderId: params.quotation.orderId,
+        qid: null,
+        nid: null,
 
         saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         cancellBtn: com.focusPage("#cancelBtn"),
@@ -11,6 +13,7 @@ jQuery(function($) {
         items: {
             addExtensionDes: com.focusPage("#extensionDes"),
             addExtensionType: com.focusPage("#extensionType"),
+            addExtensionAtttype: com.focusPage("#extensionAtttype"),
 
             decorationInfo: com.focusPage("#decorationInfo"),
         },
@@ -27,6 +30,10 @@ jQuery(function($) {
 
         pageConfig: null
     };
+
+    extension.items.addExtensionType.bindData(constant.quotation().extension.type.datas, "key", "value");
+
+    extension.items.addExtensionAtttype.bindData(constant.quotation().extension.atttype.datas, "key", "value");
 
     function initDecorationInfo() {
 
@@ -47,6 +54,15 @@ jQuery(function($) {
 
     function initQuotationList() {
 
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": extension.orderId
+        }, function(res) {
+
+            extension.qid = res.quotation.qid;
+
+            drawquotation(res.quotation);
+        }, null, false);
+
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": extension.orderId
         }, function(res) {
@@ -59,7 +75,7 @@ jQuery(function($) {
 
         var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
         var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
-        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+        var $header = $('<div></div>').addClass("widget-header header-color-blue").appendTo($box);
 
         var name = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header);
 
@@ -73,6 +89,26 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
     }
+
+    function drawquotation(quotation) {
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+
+        var name = $('<h4></h4>').attr('id', 'h4name_').text("报价单").appendTo($header);
+
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + quotation.version.name)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('折扣: ' + quotation.discount)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('管理费: ' + quotation.managePrice)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('税金: ' + quotation.taxPrice)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('总额: ' + quotation.totalPrice)).appendTo($info);
+    }
+
     var searcher = new Searcher();
 
     var btnView = {
@@ -110,6 +146,25 @@ jQuery(function($) {
         }
     };
 
+    var btnMake = {
+        name: "定额",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            var params = {
+                "extension.eid": v.eid,
+                "normtion.qid": extension.qid,
+                "normtion.orderId": extension.orderId,
+                "normtion.moodPrintNum": 0,
+                "normtion.moodTotal": 0,
+                "normtion.mricePriceNum": 0,
+                "normtion.mriceTotal": 0
+            };
+
+            com.post(api.quotation.makeNormtionForExtension, params);
+        }
+    };
+
     if (extension.pageType == null) {
 
         com.focusPage('#fl-statement').statement("报价", "扩展").show();
@@ -119,7 +174,7 @@ jQuery(function($) {
 
         initQuotationList();
 
-        var linebtns = [btnView, btnDelete];
+        var linebtns = [btnMake, btnView, btnDelete];
 
         var lineprops = [{
             field: "type",
@@ -128,9 +183,31 @@ jQuery(function($) {
             clazz: "red",
             dataset: constant.quotation().extension.type.keys,
         }, {
+            field: "atttype",
+            name: "业务类型",
+            prop: "atttype",
+            clazz: "red",
+            dataset: constant.quotation().extension.atttype.keys,
+        }, {
             field: "undisPrice",
             name: "打折项总额",
             prop: "undisPrice",
+            clazz: "blue"
+        }, {
+            field: "manageRate",
+            name: "管理费比例",
+            prop: "manageRate",
+            clazz: "blue"
+        }, {
+            field: "manageDiscount",
+            name: "管理费折扣",
+            prop: "manageDiscount",
+            clazz: "red",
+            dataset: constant.quotation().extension.manageDiscount.keys
+        }, {
+            field: "managePrice",
+            name: "管理费",
+            prop: "managePrice",
             clazz: "blue"
         }, {
             field: "total",
@@ -192,6 +269,10 @@ jQuery(function($) {
             name: "装修单号",
             prop: "decoration.orderId",
             clazz: "blue",
+            click: function(btn, v) {
+
+                tools.decoration.info(btn, v.decoration.orderId);
+            },
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("decorationOrderId");
@@ -204,6 +285,10 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("decorationHouseVillageName");
+            },
+            click: function(btn, v) {
+
+                tools.village.info(btn, v.decoration.house.village.no);
             }
         }, {
             field: "houseNumber",
@@ -213,6 +298,10 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+            },
+            click: function(btn, v) {
+
+                tools.house.info(btn, v.decoration.house.hid);
             }
         }, {
             field: "name",
@@ -222,6 +311,10 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("decorationCustomerName");
+            },
+            click: function(btn, v) {
+
+                tools.customer.info(btn, v.decoration.customer.cid);
             }
         }, {
             field: "currentName",
@@ -231,6 +324,10 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.decoration.designer.userId);
             }
         }, {
             field: "currentName",
@@ -240,6 +337,10 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.decoration.salesman.userId);
             }
         }, {
             field: "buildArea",
@@ -273,6 +374,16 @@ jQuery(function($) {
                 return extension.pageConfig.propertyArr.contains("type");
             }
         }, {
+            field: "atttype",
+            name: "业务类型",
+            prop: "atttype",
+            clazz: "red",
+            dataset: constant.quotation().extension.atttype.keys,
+            show: function(v) {
+
+                return extension.pageConfig.propertyArr.contains("atttype");
+            }
+        }, {
             field: "undisPrice",
             name: "打折项总额",
             prop: "undisPrice",
@@ -280,6 +391,34 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("undisPrice");
+            }
+        }, {
+            field: "manageRate",
+            name: "管理费比例",
+            prop: "manageRate",
+            clazz: "blue",
+            show: function(v) {
+
+                return extension.pageConfig.propertyArr.contains("manageRate");
+            }
+        }, {
+            field: "manageDiscount",
+            name: "管理费折扣",
+            prop: "manageDiscount",
+            clazz: "red",
+            dataset: constant.quotation().extension.manageDiscount.keys,
+            show: function(v) {
+
+                return extension.pageConfig.propertyArr.contains("manageDiscount");
+            }
+        }, {
+            field: "managePrice",
+            name: "管理费",
+            prop: "managePrice",
+            clazz: "blue",
+            show: function(v) {
+
+                return extension.pageConfig.propertyArr.contains("managePrice");
             }
         }, {
             field: "total",
@@ -307,6 +446,10 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("createrCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.creater.userId);
             }
         }, {
             field: "status",
@@ -378,7 +521,8 @@ jQuery(function($) {
             "extension.type": extension.items.addExtensionType.val(),
             "extension.orderId": extension.orderId,
             "extension.status": constant.quotation().extension.STATUS_INIT_SHORT,
-            "extension.total": 0
+            "extension.total": 0,
+            "extension.atttype": extension.items.addExtensionAtttype.val(),
         };
 
         com.post(url, options, function(res) {

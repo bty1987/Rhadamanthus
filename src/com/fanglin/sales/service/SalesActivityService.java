@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface SalesActivityService {
 
-	public void pageSalesActivity(Paging paging, List<Filter> filter, String orderId);
+	public void pageSalesActivity(Paging paging, List<Filter> filter, String orderId) throws FLException;
 
 	public List<SalesActivityVO> amountSalesActivity(String orderId);
 

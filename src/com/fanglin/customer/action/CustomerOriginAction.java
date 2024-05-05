@@ -26,6 +26,10 @@ public class CustomerOriginAction extends BaseListAction {
 
 	private String user;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "pageCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerOrigin() throws FLException {
 
@@ -38,6 +42,14 @@ public class CustomerOriginAction extends BaseListAction {
 	public String pageCustomerOriginForAdvance() throws FLException {
 
 		customerOriginService.pageCustomerOriginForAdvance(getPaging(), getFilters(), queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCustomerOriginByCsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerOriginByCsid() {
+
+		customerOrigin = customerOriginService.queryCustomerOriginByCsid(customerOrigin);
 
 		return SUCCESS;
 	}
@@ -106,6 +118,14 @@ public class CustomerOriginAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "confirmCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmCustomerOrigin() throws FLException {
+
+		customerOriginService.confirmCustomerOrigin(customerOrigin, securityCode, verifyCode);
+
+		return SUCCESS;
+	}
+
 	public CustomerOriginVO getCustomerOrigin() {
 		return customerOrigin;
 	}
@@ -120,6 +140,22 @@ public class CustomerOriginAction extends BaseListAction {
 
 	public void setUser(String user) {
 		this.user = user;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

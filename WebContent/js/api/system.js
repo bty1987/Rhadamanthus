@@ -21,10 +21,10 @@ $.extend(api.index, {
         url: "/views/system/userProfile.html"
     },
     changePasswordIndex: {
-        url: "/views/system/changePassword.html"
+        url: "/views/system/password2change.html"
     },
     resetPasswordIndex: {
-        url: "/views/system/resetPassword.html"
+        url: "/views/system/password2reset.html"
     },
     versionIndex: {
         url: "/version.html"
@@ -159,7 +159,10 @@ $.extend(api, {
             url: "deleteRoleByRid.do",
             server: "communion"
         },
-
+        pageModule: {
+            url: "pageModule.do",
+            demo: true
+        },
         queryModule: {
             url: "queryModule.do",
             demo: true
@@ -182,6 +185,10 @@ $.extend(api, {
         },
         queryModuleByRid: {
             url: "queryModuleByRid.do",
+            demo: true
+        },
+        queryModuleByFatherModule: {
+            url: "queryModuleByFatherModule.do",
             demo: true
         },
         checkModule: {
@@ -315,6 +322,12 @@ $.extend(api, {
         pageSystemConfig: {
             url: "pageSystemConfig.do"
         },
+        querySystemConfigByCid: {
+            url: "querySystemConfigByCid.do"
+        },
+        querySystemConfigByKey: {
+            url: "querySystemConfigByKey.do"
+        },
         addSystemConfig: {
             url: "addSystemConfig.do",
             server: "communion"
@@ -326,9 +339,6 @@ $.extend(api, {
         updateSystemConfig: {
             url: "updateSystemConfig.do",
             server: "communion"
-        },
-        querySystemConfigByCid: {
-            url: "querySystemConfigByCid.do"
         },
 
         pageDuty: {

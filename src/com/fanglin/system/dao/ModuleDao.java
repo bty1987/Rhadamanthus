@@ -28,4 +28,6 @@ public interface ModuleDao extends Dao<ModulePO> {
 
 	public int deleteModule(int mId);
 
+	public List<ModulePO> queryModuleByFatherModule(Short system, int mId);
+
 }

@@ -8,67 +8,73 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class SalesBalanceVO implements Serializable{
+public class SalesBalanceVO implements Serializable {
 
 	private static final long serialVersionUID = 8746688072267319344L;
-	
+
 	private Long sbid;
-	
+
 	private SalesVO sales;
-	
-	private RefundsVO refunds;
-	
+
+	private SalesRefundsVO refunds;
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO salesman;
-	
+
 	private DepartmentVO dept;
-	
+
 	private DepartmentVO region;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserBaseVO poster;
-	
+
 	private Timestamp postTime;
-	
+
 	private UserBaseVO voster;
-	
+
 	private Timestamp venderTime;
-	
+
 	private UserBaseVO checker;
-	
+
 	private Timestamp checkTime;
-		
+
 	private Long allowance;
-	
+
+	private Long coupon;
+
 	private Long total;
-	
+
 	private Long balance;
-	
+
 	private Long difference;
-	
+
 	private Long vbalance;
-	
+
 	private Long pbalance;
-	
+
 	private Short type;
-	
+
 	private Short onetype;
-	
+
 	private Short status;
-	
-	private short checkStatus;
-	
+
+	private Short deliverStatus;
+
+	private Short verifyStatus;
+
+	private Short confirmStatus;
+
+	private Short checkStatus;
+
 	private String comment;
-	
+
 	public SalesBalanceVO() {
 		super();
 	}
-	
-	public SalesBalanceVO(SalesVO sales, RefundsVO refunds, UserBaseVO creater,
-			UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept,
-			DepartmentVO region,UserBaseVO checker) {
+
+	public SalesBalanceVO(SalesVO sales, SalesRefundsVO refunds, UserBaseVO creater, UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO checker) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
@@ -79,10 +85,8 @@ public class SalesBalanceVO implements Serializable{
 		this.region = region;
 		this.checker = checker;
 	}
-	
-	public SalesBalanceVO(SalesVO sales, RefundsVO refunds, UserBaseVO creater,
-			UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept,
-			DepartmentVO region,UserBaseVO checker, UserBaseVO voster) {
+
+	public SalesBalanceVO(SalesVO sales, SalesRefundsVO refunds, UserBaseVO creater, UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO checker, UserBaseVO voster) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
@@ -94,7 +98,7 @@ public class SalesBalanceVO implements Serializable{
 		this.checker = checker;
 		this.voster = voster;
 	}
-	
+
 	public Long getSbid() {
 		return sbid;
 	}
@@ -111,11 +115,11 @@ public class SalesBalanceVO implements Serializable{
 		this.sales = sales;
 	}
 
-	public RefundsVO getRefunds() {
+	public SalesRefundsVO getRefunds() {
 		return refunds;
 	}
 
-	public void setRefunds(RefundsVO refunds) {
+	public void setRefunds(SalesRefundsVO refunds) {
 		this.refunds = refunds;
 	}
 
@@ -126,7 +130,7 @@ public class SalesBalanceVO implements Serializable{
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
-	
+
 	public UserBaseVO getSalesman() {
 		return salesman;
 	}
@@ -151,7 +155,7 @@ public class SalesBalanceVO implements Serializable{
 		this.region = region;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -168,7 +172,7 @@ public class SalesBalanceVO implements Serializable{
 		this.poster = poster;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getPostTime() {
 		return postTime;
 	}
@@ -185,7 +189,7 @@ public class SalesBalanceVO implements Serializable{
 		this.voster = voster;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getVenderTime() {
 		return venderTime;
 	}
@@ -193,7 +197,7 @@ public class SalesBalanceVO implements Serializable{
 	public void setVenderTime(Timestamp venderTime) {
 		this.venderTime = venderTime;
 	}
-	
+
 	public UserBaseVO getChecker() {
 		return checker;
 	}
@@ -209,13 +213,21 @@ public class SalesBalanceVO implements Serializable{
 	public void setCheckTime(Timestamp checkTime) {
 		this.checkTime = checkTime;
 	}
-	
+
 	public Long getAllowance() {
 		return allowance;
 	}
-	
+
 	public void setAllowance(Long allowance) {
 		this.allowance = allowance;
+	}
+
+	public Long getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(Long coupon) {
+		this.coupon = coupon;
 	}
 
 	public Long getTotal() {
@@ -265,11 +277,11 @@ public class SalesBalanceVO implements Serializable{
 	public void setType(Short type) {
 		this.type = type;
 	}
-	
+
 	public Short getOnetype() {
 		return onetype;
 	}
-	
+
 	public void setOnetype(Short onetype) {
 		this.onetype = onetype;
 	}
@@ -282,14 +294,38 @@ public class SalesBalanceVO implements Serializable{
 		this.status = status;
 	}
 
-	public short getCheckStatus() {
+	public Short getDeliverStatus() {
+		return deliverStatus;
+	}
+
+	public void setDeliverStatus(Short deliverStatus) {
+		this.deliverStatus = deliverStatus;
+	}
+
+	public Short getVerifyStatus() {
+		return verifyStatus;
+	}
+
+	public void setVerifyStatus(Short verifyStatus) {
+		this.verifyStatus = verifyStatus;
+	}
+
+	public Short getConfirmStatus() {
+		return confirmStatus;
+	}
+
+	public void setConfirmStatus(Short confirmStatus) {
+		this.confirmStatus = confirmStatus;
+	}
+
+	public Short getCheckStatus() {
 		return checkStatus;
 	}
 
-	public void setCheckStatus(short checkStatus) {
+	public void setCheckStatus(Short checkStatus) {
 		this.checkStatus = checkStatus;
 	}
-	
+
 	public String getComment() {
 		return comment;
 	}

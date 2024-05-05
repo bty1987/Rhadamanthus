@@ -10,90 +10,92 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.vo.SalesVO;
 
-public class SalesPaymentVO  implements Serializable{
+public class SalesPaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 1075349217063354824L;
 
-	private Long spid;                 
-	
-	private SalesReceiptVO salesReceipt;  
-	
-	private SalesVO sales;             
-	
-	private Short type;                
-	
-	private Short status;              
-	
-	private UserBaseVO creater;            
-	
+	private Long spid;
+
+	private SalesReceiptVO salesReceipt;
+
+	private SalesVO sales;
+
+	private String orderId;
+
+	private Short type;
+
+	private Short status;
+
+	private UserBaseVO creater;
+
 	private Timestamp createTime;
-	
-	private UserBaseVO collecter;          
-	
-	private Timestamp collectTime;	  
-	
-	private UserBaseVO confirmer;         
-	
-	private Timestamp confirmTime;     
-	
-	private Long referMoney;          
-	
-	private Long cash;                
-	
-	private String cashInfo;           
-	
-	private Long bank;                
-	
-	private String bankInfo;           
-	
-	private Long checkv;              
-	
+
+	private UserBaseVO collecter;
+
+	private Timestamp collectTime;
+
+	private UserBaseVO confirmer;
+
+	private Timestamp confirmTime;
+
+	private Long referMoney;
+
+	private Long cash;
+
+	private String cashInfo;
+
+	private Long bank;
+
+	private String bankInfo;
+
+	private Long checkv;
+
 	private String checkvBank;
-	
-	private Long installment;        
-	
-	private String installBank;        
-	
-	private Long accounts;            
-	
+
+	private Long installment;
+
+	private String installBank;
+
+	private Long accounts;
+
 	private String accountsBank;
-	
-	private Long coupon;              
-	
-	private String couponInfo;        
-	
-	private Long advance;             
-	
-	private Short advanceType;         
-	
+
+	private Long coupon;
+
+	private String couponInfo;
+
+	private Long advance;
+
+	private Short advanceType;
+
 	private String comment;
-	
+
 	private Integer company;
-	
+
 	private String types;
 
 	public SalesPaymentVO() {
 		super();
 	}
-	
+
 	public SalesPaymentVO(Long spid) {
 		super();
 		this.spid = spid;
 	}
-	
-	public SalesPaymentVO(UserBaseVO creater,SalesVO sales) {
+
+	public SalesPaymentVO(UserBaseVO creater, SalesVO sales) {
 		super();
 		this.creater = creater;
 		this.sales = sales;
 	}
-	
-	public SalesPaymentVO(UserBaseVO creater,SalesVO sales, SalesReceiptVO salesReceipt) {
+
+	public SalesPaymentVO(UserBaseVO creater, SalesVO sales, SalesReceiptVO salesReceipt) {
 		super();
 		this.creater = creater;
 		this.sales = sales;
 		this.salesReceipt = salesReceipt;
 	}
-	
+
 	public SalesPaymentVO(SalesReceiptVO salesReceipt) {
 		super();
 		this.salesReceipt = salesReceipt;
@@ -106,13 +108,21 @@ public class SalesPaymentVO  implements Serializable{
 	public void setSpid(Long spid) {
 		this.spid = spid;
 	}
-	
+
 	public SalesVO getSales() {
 		return sales;
 	}
 
 	public void setSales(SalesVO sales) {
 		this.sales = sales;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public Short getType() {
@@ -138,7 +148,7 @@ public class SalesPaymentVO  implements Serializable{
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -173,7 +183,7 @@ public class SalesPaymentVO  implements Serializable{
 		this.confirmer = confirmer;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}

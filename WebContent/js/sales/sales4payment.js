@@ -59,11 +59,6 @@ jQuery(function() {
 
     }, null, false);
 
-    com.post(api.ds.payment, {}, function(res) {
-
-        salesPaymentForStatus.salesPaymentType = res.materialPaymentType.split("key", "value");
-    }, null, false);
-
     com.post(api.payment.querySalesPaymentBySid, {
         "salesPayment.sales.sid": salesPayment.sid
     }, function(listData) {
@@ -86,7 +81,7 @@ jQuery(function() {
                 var $liLine = $('<li></li>').addClass('item-orange  clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
-                var $small = $('<small></small>').addClass('blue').html(salesPaymentForStatus.salesPaymentType[v.type]);
+                var $small = $('<small></small>').addClass('blue').html(constant.payment().materialPayment.paymentType.keys[v.type]);
                 var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
 
                 var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');

@@ -5,15 +5,19 @@ public class HouseLayoutVO implements java.io.Serializable {
 	private static final long serialVersionUID = -7238188136462418037L;
 
 	private Long hlid;
-	
-	private Long vid;
-	
+
+	private VillageVO village;
+
 	private String name;
-	
+
 	private String comment;
-	
+
+	private String layout;
+
+	private String houseType;
+
 	private Long area;
-	
+
 	public HouseLayoutVO() {
 		super();
 	}
@@ -21,6 +25,11 @@ public class HouseLayoutVO implements java.io.Serializable {
 	public HouseLayoutVO(Long hlid) {
 		super();
 		this.hlid = hlid;
+	}
+
+	public HouseLayoutVO(VillageVO village) {
+		super();
+		this.village = village;
 	}
 
 	public Long getHlid() {
@@ -31,12 +40,12 @@ public class HouseLayoutVO implements java.io.Serializable {
 		this.hlid = hlid;
 	}
 
-	public Long getVid() {
-		return vid;
+	public VillageVO getVillage() {
+		return village;
 	}
 
-	public void setVid(Long vid) {
-		this.vid = vid;
+	public void setVillage(VillageVO village) {
+		this.village = village;
 	}
 
 	public String getName() {
@@ -55,6 +64,22 @@ public class HouseLayoutVO implements java.io.Serializable {
 		this.comment = comment;
 	}
 
+	public String getLayout() {
+		return layout;
+	}
+
+	public void setLayout(String layout) {
+		this.layout = layout;
+	}
+
+	public String getHouseType() {
+		return houseType;
+	}
+
+	public void setHouseType(String houseType) {
+		this.houseType = houseType;
+	}
+
 	public Long getArea() {
 		return area;
 	}
@@ -62,5 +87,5 @@ public class HouseLayoutVO implements java.io.Serializable {
 	public void setArea(Long area) {
 		this.area = area;
 	}
-	
+
 }

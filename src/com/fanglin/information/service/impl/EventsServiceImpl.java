@@ -11,13 +11,11 @@
 
 package com.fanglin.information.service.impl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +43,7 @@ public class EventsServiceImpl implements EventsService {
 	private UserDao userDao;
 
 	@Override
-	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId) throws HibernateException, ParseException {
+	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId) {
 
 		UserPO user = userDao.queryUserByUserId(userId);
 
@@ -70,7 +68,7 @@ public class EventsServiceImpl implements EventsService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addEvents(EventsVO eventsVO, String userId) throws ParseException, FLException {
+	public int addEvents(EventsVO eventsVO, String userId) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -78,7 +76,7 @@ public class EventsServiceImpl implements EventsService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		if (eventsDao.countEvents(userPO.getUid(), DateUtil.getDateToDateString(eventsVO.getShowDate(), "yyyy-MM-dd")) >= 5) {
+		if (eventsDao.countEvents(userPO.getUid(), eventsVO.getShowDate()) >= 5) {
 			throw new FLException(160014, "事件数量到达上限");
 		}
 

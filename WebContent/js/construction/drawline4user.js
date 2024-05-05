@@ -27,6 +27,11 @@ jQuery(function($) {
 
         com.cleanItems(drawline.items);
         com.cleanTypeahead("supervisor");
+        com.cleanTypeahead("qualiter1");
+        com.cleanTypeahead("qualiter2");
+        com.cleanTypeahead("qualiter3");
+        com.cleanTypeahead("qualiter4");
+        com.cleanTypeahead("qualiter5");
         com.closeTip();
     });
 
@@ -34,6 +39,12 @@ jQuery(function($) {
         "departmentType.name": "工程部",
         "user.status": 0
     }, "autoFillKeyValue", "key", "value", null);
+
+    com.initTypeahead('qualiter1', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('qualiter2', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('qualiter3', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('qualiter4', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('qualiter5', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
 
     com.post(api.system.queryCompany, {
         "company.atttype": "3"
@@ -71,13 +82,49 @@ jQuery(function($) {
 
             var $btnDeploy = $('<a></a>').addClass('btn btn-minier btn-yellow').html('人员部署');
 
-            var propertyArr = [["楼盘地址:", v.house.village.name + ' ' + v.house.houseNumber, "grey"], ["客户:", v.customer.name, "grey"], ["设计师:", v.designer.userName, "grey"], ["面积:", v.house.buildArea, "blue"], ["创建时间:", v.createTime, "green"], ["进度:",constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"], ["状态:", constant.decoration().decoration.status.keys [v.status], "red"]];
+            var propertyArr = [
+                ["装修单: ", v.orderId, "blue", function(btn) {
+
+                    tools.decoration.info(btn, v.orderId);
+                }],
+                ["楼盘: ", v.house.village.name, "grey", function(btn) {
+
+                    tools.house.info(btn, v.house.hid);
+                }],
+                ["楼号: ", v.house.houseNumber, "grey"],
+                ["客户: ", v.customer.name, "grey", function(btn) {
+
+                    tools.customer.info(btn, v.customer.cid);
+                }],
+                ["设计师: ", v.designer.currentName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.designer.userId);
+                }],
+                ["监理: ", v.supervisor == null ? "" : v.supervisor.currentName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.supervisor.userId);
+                }],
+                ["面积: ", v.house.buildArea, "blue"],
+                ["合同额: ", v.orderTotalPrice, "blue"],
+                ["报价版本: ", v.version.name, "grey"],
+                ["创建时间: ", v.createTime, "green"],
+                ["进度: ", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"],
+                ["状态: ", constant.decoration().decoration.status.keys[v.status], "red"]
+            ];
 
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -103,12 +150,12 @@ jQuery(function($) {
 
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
 
-    searcher.init(["construction-orderId", "construction-designer", "construction-salesman"], "condList", api.construction.pageConstruction, function(data) {
+    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer'], "condList", api.construction.pageConstruction, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLinePersonPostData");
@@ -143,6 +190,40 @@ jQuery(function($) {
                 com.cleanTypeahead("supervisor");
             }
 
+            com.post(api.construction.queryQualiter, {
+                "qualiter.decoration.orderId": res.construction.orderId
+            }, function(e) {
+
+                $.each(e.qualiters, function(i, v) {
+
+                    if (v.user) {
+
+                        if (v.schedule == 7) {
+                            com.updateTypeahead("qualiter1", v.user.userId, v.user.userName);
+                        }
+                        if (v.schedule == 8) {
+                            com.updateTypeahead("qualiter2", v.user.userId, v.user.userName);
+                        }
+                        if (v.schedule == 9) {
+                            com.updateTypeahead("qualiter3", v.user.userId, v.user.userName);
+                        }
+                        if (v.schedule == 11) {
+                            com.updateTypeahead("qualiter4", v.user.userId, v.user.userName);
+                        }
+                        if (v.schedule == 12) {
+                            com.updateTypeahead("qualiter5", v.user.userId, v.user.userName);
+                        }
+                    } else {
+                        com.cleanTypeahead("qualiter1");
+                        com.cleanTypeahead("qualiter2");
+                        com.cleanTypeahead("qualiter3");
+                        com.cleanTypeahead("qualiter4");
+                        com.cleanTypeahead("qualiter5");
+                    }
+                });
+
+            });
+
             drawline.modals.setupModal.modal("show");
         });
 
@@ -158,6 +239,21 @@ jQuery(function($) {
         var options = {
             "construction.orderId": drawline.items.orderId,
             "construction.supervisor.userId": com.typeahead("supervisor"),
+
+            "qualiters[0].user.userId": com.typeahead("qualiter1"),
+            "qualiters[0].schedule": 7,
+
+            "qualiters[1].user.userId": com.typeahead("qualiter2"),
+            "qualiters[1].schedule": 8,
+
+            "qualiters[2].user.userId": com.typeahead("qualiter3"),
+            "qualiters[2].schedule": 9,
+
+            "qualiters[3].user.userId": com.typeahead("qualiter4"),
+            "qualiters[3].schedule": 11,
+
+            "qualiters[4].user.userId": com.typeahead("qualiter5"),
+            "qualiters[4].schedule": 12
         };
 
         if (drawline.items.conpany.val()) {

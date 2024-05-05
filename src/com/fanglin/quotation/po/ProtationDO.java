@@ -70,7 +70,11 @@ public class ProtationDO implements Serializable {
 
 	private long submPrice;
 
+	private long subcPrice;
+
 	private long preferPrice;
+
+	private String manageFormula;
 
 	private long managePrice;
 
@@ -275,6 +279,15 @@ public class ProtationDO implements Serializable {
 		this.submPrice = submPrice;
 	}
 
+	@Column(name = "subcPrice")
+	public long getSubcPrice() {
+		return subcPrice;
+	}
+
+	public void setSubcPrice(long subcPrice) {
+		this.subcPrice = subcPrice;
+	}
+
 	@Column(name = "preferPrice")
 	public long getPreferPrice() {
 		return preferPrice;
@@ -282,6 +295,15 @@ public class ProtationDO implements Serializable {
 
 	public void setPreferPrice(long preferPrice) {
 		this.preferPrice = preferPrice;
+	}
+
+	@Column(name = "manageFormula")
+	public String getManageFormula() {
+		return manageFormula;
+	}
+
+	public void setManageFormula(String manageFormula) {
+		this.manageFormula = manageFormula;
 	}
 
 	@Column(name = "managePrice")

@@ -38,6 +38,8 @@ public class SelectionItemVO implements Serializable {
 
 	private SoodsVO soods;
 
+	private Short accountStatus;// 对账状态
+
 	private Short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
 
 	private Integer initNum;// 工程量
@@ -62,6 +64,8 @@ public class SelectionItemVO implements Serializable {
 
 	private Timestamp balanceTime;// 结算时间
 
+	private Timestamp accountTime;// 对账时间
+
 	private UserBaseVO creater; // 创建人
 
 	private UserBaseVO traner;// 配送人
@@ -75,6 +79,8 @@ public class SelectionItemVO implements Serializable {
 	private UserBaseVO reviewer; // 核对人
 
 	private UserBaseVO balancer;// 结算人
+
+	private UserBaseVO accounter;// 对账人
 
 	private String comment;// 注释
 
@@ -90,10 +96,12 @@ public class SelectionItemVO implements Serializable {
 	}
 
 	public SelectionItemVO(SelectionVO selection, GoodsVO goods, DecorationVO decoration, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finish, UserBaseVO reviewer, UserBaseVO balancer, UserBaseVO supplier, SoodsVO soods) {
+
 		super();
-		this.selection = selection;
-		this.goods = goods;
+
 		this.decoration = decoration;
+		this.selection = selection;
+
 		this.creater = creater;
 		this.traner = traner;
 		this.checker = checker;
@@ -102,6 +110,8 @@ public class SelectionItemVO implements Serializable {
 		this.reviewer = reviewer;
 		this.balancer = balancer;
 		this.supplier = supplier;
+
+		this.goods = goods;
 		this.soods = soods;
 	}
 
@@ -191,6 +201,14 @@ public class SelectionItemVO implements Serializable {
 
 	public void setSoods(SoodsVO soods) {
 		this.soods = soods;
+	}
+
+	public Short getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(Short accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 
 	public Short getStatus() {
@@ -296,6 +314,15 @@ public class SelectionItemVO implements Serializable {
 		this.reviewTime = reviewTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAccountTime() {
+		return accountTime;
+	}
+
+	public void setAccountTime(Timestamp accountTime) {
+		this.accountTime = accountTime;
+	}
+
 	public UserBaseVO getCreater() {
 		return creater;
 	}
@@ -350,6 +377,14 @@ public class SelectionItemVO implements Serializable {
 
 	public void setFinish(UserBaseVO finish) {
 		this.finish = finish;
+	}
+
+	public UserBaseVO getAccounter() {
+		return accounter;
+	}
+
+	public void setAccounter(UserBaseVO accounter) {
+		this.accounter = accounter;
 	}
 
 	public String getComment() {

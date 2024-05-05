@@ -6,23 +6,6 @@ jQuery(function($) {
 
     var materialSubOrderCollection = {
 
-        materialPaymentTypeData: {
-            "1": "预付款",
-            "2": "定金",
-            "3": "补款",
-            "4": "退款",
-            "5": "补款退款",
-            "6": "券退款"
-        },
-        materialPaymentRevTypeData: {
-            "预付款": "1",
-            "定金": "2",
-            "补款": "3",
-            "退款": "4",
-            "补款退款": "5",
-            "券退款": "6"
-        },
-
         bankType: {},
         couponType: {},
         accountsType: {},
@@ -85,15 +68,6 @@ jQuery(function($) {
         com.focusPage("#couponType").bindData(materialSubOrderCollection.couponType, 'no', 'value');
     }, null, false);
 
-    com.post(api.ds.payment, {}, function(res) {
-
-        for ( var i = 0; i < res.materialPaymentType.length; i++) {
-            var paymentType = res.materialPaymentType[i];
-            materialSubOrderCollection.materialPaymentTypeData[paymentType.key] = paymentType.value;
-            materialSubOrderCollection.materialPaymentRevTypeData[paymentType.value] = paymentType.key;
-        }
-    }, null, false);
-
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
@@ -106,7 +80,7 @@ jQuery(function($) {
 
                     if (materialSubOrderCollection.paymentType == 0 || materialSubOrderCollection.flag == true) {
                         var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                        var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(materialSubOrderCollection.materialPaymentTypeData[v.paymentType]));
+                        var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(materialSubOrderCollection.constant.payment().materialPayment.paymentType.keys[v.paymentType]));
                         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                         var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                         var propertyArr = [["主材单号:", v.material.no, "blue"], ["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["应收额:", v.referMoney, "blue"], ["实收额:", v.referMoney, "blue"], ["收款时间:", v.collectTime, "green"], ["状态:", v.paymentStatus == 0 ? '待收款' : v.paymentStatus == 1 ? '待确认' : '已确认', "red"]];
@@ -151,7 +125,7 @@ jQuery(function($) {
                     } else {
                         if (materialSubOrderCollection.queryMpid == v.mpId) {
                             var $_liLine = $('<li></li>').addClass('item-orange clearfix');
-                            var $_h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(materialSubOrderCollection.materialPaymentTypeData[v.paymentType]));
+                            var $_h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(materialSubOrderCollection.constant.payment().materialPayment.paymentType.keys[v.paymentType]));
                             var $_ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                             var $_ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 

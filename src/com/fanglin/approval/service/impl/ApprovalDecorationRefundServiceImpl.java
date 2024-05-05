@@ -28,6 +28,8 @@ import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.vo.ApprovalDecorationRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.dao.PaymentTypeDao;
+import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.information.po.MessagePO;
@@ -66,6 +68,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 	@Autowired
 	private ApprovalService approvalService;
+
+	@Autowired
+	private PaymentTypeDao paymentTypeDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -147,9 +152,16 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			throw new FLException(140013, "订单不存在");
 		}
 
+		PaymentTypePO refundPaymentType = paymentTypeDao.queryPaymentTypeByName(decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_REFUND_STR, decorationPO.getCompany());
+
+		if (refundPaymentType == null) {
+			throw new FLException(130091, "款项类型不存在");
+		}
+
 		DecorationPaymentPO decorationRefundPO = new DecorationPaymentPO();
 		decorationRefundPO.setDecoration(decorationPaymentPO.getDecoration());
 		decorationRefundPO.setPaymentType(decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_REFUND_STR);
+		decorationRefundPO.setPtid(refundPaymentType.getPtid());
 		decorationRefundPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
 		decorationRefundPO.setTwoType(decorationPaymentPO.getTwoType());
 		decorationRefundPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
@@ -162,12 +174,19 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 		if (decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && (decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT || decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT)) {
 
+			PaymentTypePO paymentType = paymentTypeDao.queryPaymentTypeByName(decorationPaymentPO.getPaymentType(), decorationPO.getCompany());
+
+			if (paymentType == null) {
+				throw new FLException(130091, "款项类型不存在");
+			}
+
 			DecorationPaymentPO initialDecorationPaymentPO = new DecorationPaymentPO();
 			BeanUtil.copyProperties(decorationRefundPO, initialDecorationPaymentPO);
 
 			initialDecorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
 			initialDecorationPaymentPO.setTwoType(decorationPaymentPO.getTwoType());
 			initialDecorationPaymentPO.setPaymentType(decorationPaymentPO.getPaymentType());
+			initialDecorationPaymentPO.setPtid(paymentType.getPtid());
 			initialDecorationPaymentPO.setCompany(decorationPO.getCompany());
 
 			if (decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT) {

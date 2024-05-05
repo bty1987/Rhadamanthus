@@ -6,8 +6,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.po.DecorationHolonomyPO;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.payment.dao.ServicePaymentDao;
 import com.fanglin.payment.po.ServicePaymentPO;
 import com.fanglin.utils.Paging;
@@ -20,7 +21,7 @@ public class ServicePaymentDaoImpl extends DaoImpl<ServicePaymentPO> implements 
 	}
 
 	@Override
-	public List<ServicePaymentPO> pageServicePayment(Paging paging, List<Filter> filters) {
+	public List<ServicePaymentPO> pageServicePayment(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<ServicePaymentPO> query = pagingQuery(paging, ServicePaymentPO.class);
 
@@ -41,43 +42,33 @@ public class ServicePaymentDaoImpl extends DaoImpl<ServicePaymentPO> implements 
 		return session().createCriteria(ServicePaymentPO.class).createAlias("serviceReceipt", "serviceReceipt").add(Restrictions.eq("serviceReceipt.srId", srId)).add(Restrictions.ne("status", ServicePaymentPO.COLUMN_INITIALSTATUS_INT)).list();
 	}
 
-	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
-		if (filters != null && filters.size() > 0) {
+		if (filters == null) return;
 
-			for (Filter filter : filters) {
+		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				query.alias("decoration", "decoration");
-				query.alias("decoration.house", "house");
-				query.alias("house.village", "village");
-				query.alias("decoration.designer", "designer");
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				if ("orderId".equals(field)) {
-					query.add(query.getCriterion(DecorationHolonomyPO.COLUMN_ORDERID_STR, data, op));
-				} else if ("designer".equals(field)) {
-					query.add(query.getCriterion("designer.userId", data, op));
-				} else if ("village".equals(field)) {
-					query.add(query.getCriterion("village.no", data, op));
-				} else if ("status".equals(field)) {
-					query.add(query.getCriterion(field, Short.valueOf(data), op));
-				} else if ("collectTime".equals(filter.getField())) {
-					query.alias("serviceReceipt", "servicereceipt");
+			if ("status".equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if ("collectTime".equals(field)) {
+				query.alias("serviceReceipt", "servicereceipt");
 
-					if ("between".equals(filter.getOp())) {
-						query.timeranges("servicereceipt.collectTime", "servicereceipt.collectTime", filter.getData());
-					} else {
-						query.add(query.getCriterion("servicereceipt.collectTime", filter.getData(), filter.getOp()));
-					}
-				} else if ("confirmTime".equals(filter.getField())) {
-					query.alias("serviceReceipt", "servicereceipt");
-					query.timeranges("servicereceipt.confirmTime", "servicereceipt.confirmTime", filter.getData());
-				} else if ("company".equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				if ("between".equals(filter.getOp())) {
+					query.timeranges("servicereceipt.collectTime", "servicereceipt.collectTime", data);
+				} else {
+					query.add(query.getCriterion("servicereceipt.collectTime", data, op));
 				}
+			} else if ("confirmTime".equals(field)) {
+				query.alias("serviceReceipt", "servicereceipt");
+				query.timeranges("servicereceipt.confirmTime", "servicereceipt.confirmTime", data);
+			} else if ("company".equals(field)) {
+				query.add(query.getCriterion(field, Integer.valueOf(data), op));
 			}
 		}
 	}

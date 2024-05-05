@@ -31,17 +31,23 @@ public class SoodsPO implements Serializable {
 
 	private long sid;
 
+	private String name;
+
 	private GoodsPO goods;
 
 	private int num;
+
+	private int selling;
+
+	private int cost;
+
+	private int balance;
 
 	private String path;
 
 	private short status;
 
 	private int company;
-
-	private int selling;// 售价
 
 	public SoodsPO() {
 		super();
@@ -61,6 +67,15 @@ public class SoodsPO implements Serializable {
 
 	public void setSid(long sid) {
 		this.sid = sid;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -116,6 +131,24 @@ public class SoodsPO implements Serializable {
 
 	public void setSelling(int selling) {
 		this.selling = selling;
+	}
+
+	@Column(name = "cost")
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
+	@Column(name = "balance")
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
 	}
 
 }

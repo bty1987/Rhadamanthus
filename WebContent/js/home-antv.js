@@ -114,7 +114,7 @@ $(function() {
 
         $.each(res.adverts, function(i, v) {
 
-            var $div = $('<div></div>').html(v).appendTo(advertList.find("div:first"));
+            var $div = $('<div style="background: #fff;"></div>').html(v).appendTo(advertList.find("div:first"));
         });
 
         carousel.render({
@@ -304,6 +304,14 @@ $(function() {
         $('.breadcrumb').empty().append('<i class="fa fa-fw icon-home"></i>&nbsp;&nbsp;&nbsp;首页');
     });
 
+    $("#worksheetTab").click(function() {
+
+        params.urlLoadParams.pageType = "creater";
+        $("#worksheetPage").load("/views/information/worksheet.html");
+
+        $('.breadcrumb').empty().append('<i class="fa fa-fw icon-calendar"></i>&nbsp;&nbsp;&nbsp;工单');
+    });
+
     $("#calendarTab").click(function() {
 
         $('.breadcrumb').empty().append('<i class="fa fa-fw icon-calendar"></i>&nbsp;&nbsp;&nbsp;日历');
@@ -358,18 +366,23 @@ $(function() {
                     if (com.validate('addEvent')) {
                         return false;
                     }
+                    var time = $.fullCalendar.formatDate(start, "yyyy-MM-dd").toString();
 
+                    var times = time.replace(/-/g, '');
                     var params = {
                         "event.title": items.title.val(),
                         "event.content": items.content.val(),
-                        "event.showDate": $.fullCalendar.formatDate(start, "yyyy-MM-dd")
+                        "event.showDate": times
                     };
-
                     com.post(api.information.addEvent, params, function(res) {
 
+                        var str = (res.event.showDate).toString();
+                        var Str = str.replace(/(.{4})/, "$1-");
+                        var newStr = Str.replace(/(.{7})/, "$1-");
                         calendar.fullCalendar('renderEvent', {
+
                             title: res.event.title,
-                            start: new Date(res.event.showDate),
+                            start: new Date(newStr),
 
                             className: 'label-success',
                             creater: res.event.creater,
@@ -428,13 +441,17 @@ $(function() {
             var viewEnd = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
             $("#calendar").fullCalendar('removeEvents');// 清空事件
 
+            var timeSrart = viewStart.toString();
+            var timeStarts = timeSrart.replace(/-/g, '');
+            var timeEnd = viewEnd.toString();
+            var timeEnds = timeEnd.replace(/-/g, '');
+
             com.post(api.information.queryEvent, {
-                "event.beginDate": viewStart,
-                "event.endDate": viewEnd
+                "event.beginDate": Number(timeStarts),
+                "event.endDate": Number(timeEnds)
             }, function(data) {
 
                 var resultCollection = data.events;
-
                 if (!resultCollection.length)
                     return false;
 
@@ -442,8 +459,12 @@ $(function() {
 
                 $.each(resultCollection, function(index, term) {
 
-                    var start = new Date(term.showDate);
-                    var end = new Date(term.endDate || term.showDate);
+                    var str = (term.showDate).toString();
+                    var Str = str.replace(/(.{4})/, "$1-");
+                    var newStr = Str.replace(/(.{7})/, "$1-");
+
+                    var start = new Date(newStr);
+                    var end = new Date(newStr || newStr);
 
                     events.push({
                         title: term.title,
@@ -459,6 +480,7 @@ $(function() {
                 callback(events);
             }, null);// 把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
         },
+
         viewDisplay: function(view) {
 
         },// 动态把数据查出,按照月份动态查询
@@ -482,8 +504,8 @@ $(function() {
 
         $(".flpage.nav-tab").removeClass("active");
         $(".flpage.tab-pane").removeClass("active");
-        $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(1)").remove();
-        $("#home .flpage.tab-content div.flpage.tab-pane:gt(1)").remove();
+        $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(2)").remove();
+        $("#home .flpage.tab-content div.flpage.tab-pane:gt(2)").remove();
 
         $("#homeNav > #operateTab").removeClass("open");
         $("#homeNav > #homeTab").addClass("active");

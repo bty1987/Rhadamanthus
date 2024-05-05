@@ -60,7 +60,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right orange" for="refnum">退数量</label>
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="refnum">退货</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="refnum" maxlength="12" class="col-xs-10 col-sm-7 v_float_3" data-toggle="popover" data-trigger='manual'/>
                                     </div>
@@ -76,6 +76,32 @@
                 </div>
             </div>
 
+            <div class="modal fade" id="balanceSelectionItemModal" tabindex="-1">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <button type="button" class="close" data-dismiss="modal">
+			                    <span>&times;</span><span class="sr-only">Close</span>
+			                </button>
+			                <h4 class="modal-title" id="decorationInfoDialog">结算单</h4>
+			            </div>
+			            <div class="modal-body">
+			                <form class="form-horizontal">
+			                    <div class="form-group">
+			                        <label class="col-sm-3 control-label no-padding-right orange" for="taskName">结算名</label>
+			                        <div class="col-sm-9">
+			                            <input id="balanceSales" type="text" class="col-xs-10 col-sm-5 v_required v_typeahead" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+			                        </div>
+			                    </div>
+			                </form>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" id="balanceSalesBtn" class="btn btn-primary">提交</button>
+			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
         </div>
     </div>
 </div>

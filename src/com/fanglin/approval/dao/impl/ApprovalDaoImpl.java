@@ -31,6 +31,20 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	}
 
 	@Override
+	public List<ApprovalPO> pageApproval(Paging paging, List<Filter> filters, int company) {
+
+		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
+
+		query.add(Restrictions.eq("company", company));
+
+		queryFilterExcute(filters, query);
+
+		query.desc("aid");
+
+		return query.list();
+	}
+
+	@Override
 	public List<ApprovalPO> pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company) {
 
 		PagingQuery<ApprovalPO> query = pagingQuery(paging, ApprovalPO.class);
@@ -140,7 +154,9 @@ public class ApprovalDaoImpl extends DaoImpl<ApprovalPO> implements ApprovalDao 
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ApprovalPO> query) {
 
 		for (Filter filter : filters) {
-			if ("status".equals(filter.getField())) {
+			if (ApprovalPO.COLUMN_ORDERID_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(ApprovalPO.COLUMN_ORDERID_STR, String.valueOf(filter.getData()), filter.getOp()));
+			} else if ("status".equals(filter.getField())) {
 				query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
 			} else if ("type".equals(filter.getField())) {
 				query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));

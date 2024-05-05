@@ -25,14 +25,21 @@
                                 <input id="current" type="text" class="planitem col-xs-12 col-sm-7" readonly="readonly"/>
                             </div>
                         </div>
-
+                        
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="task">任务选择</label>
                             <div class="col-sm-9">
-                                <select id="task" class="planitem col-xs-12 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'></select>
+                                <input id="task" type="text" class="planitem col-xs-12 col-sm-7 v_required v_typeahead"/>
                             </div>
                         </div>
-
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="task"></label>
+                            <div class="col-sm-9">
+                                <div id="tasklist" class="col-xs-12 col-sm-7" style="height: 100px; overflow-y: overlay; border: 1px solid #DDD;"></div>
+                            </div>
+                        </div>
+                        
                         <div id="pluginss"></div>
 
                         <div class="hide" id="timediv">
@@ -64,7 +71,8 @@
     </div>
 </div>
 
-<div id="stockRecordPopUp" class="portlet box page-content"></div>
+<div id="planPopUp" class="portlet box page-content"></div>
+
 <script type="text/javascript">
     $.loadScript(['js/utils/planUtils.js', 'js/information/plan.js']);
 </script>

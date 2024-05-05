@@ -28,6 +28,14 @@ public class CustomerRecordAction extends BaseListAction {
 	@Autowired
 	private CustomerRecordService customerRecordService;
 
+	@Action(value = "pageCustomerRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageCustomerRecord() throws FLException {
+
+		customerRecordService.pageCustomerRecord(getPaging(), getFilters(), customerRecord);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryCustomerRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerRecord() throws FLException {
 

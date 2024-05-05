@@ -54,8 +54,6 @@ public class ProxyPaymentServiceImpl implements ProxyPaymentService {
 
 		if (proxyPayment != null) proxyPayment.filter(filters);
 
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
 		List<ProxyPaymentPO> proxyPaymentPOs = proxyPaymentDao.pageProxyPayment(paging, filters);
 		List<ProxyPaymentVO> proxyPaymentVOs = new ArrayList<ProxyPaymentVO>();
 

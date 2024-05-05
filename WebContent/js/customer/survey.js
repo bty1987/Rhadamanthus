@@ -3,12 +3,12 @@ jQuery(function($) {
     var survey = {
 
         btns: {
-            save: com.focusPage("#saveSurvey").on("click", save),
+            save: com.focusPage("#saveSurvey").on("click", save)
         },
 
         modals: {
             surveyModal: com.focusPage("#surveyModal"),
-            makeSurveyModal: com.focusPage("#makeSurveyModal"),
+            makeSurveyModal: com.focusPage("#makeSurveyModal")
         },
 
         items: {
@@ -18,6 +18,7 @@ jQuery(function($) {
             title: com.focusPage("#title", "#surveyModal"),
             orderId: com.focusPage("#orderId", "#makeSurveyModal"),
             surveyTemplate: com.focusPage("#surveyTemplate", "#makeSurveyModal"),
+            particulars: com.focusPage("#particulars", "#surveyModal")
         },
         sid: null,
         stid: null,
@@ -32,6 +33,7 @@ jQuery(function($) {
 
         com.cleanItems(survey.items);
         com.focusPage("#itemlist").html("");
+        com.focusPage("#exDiv").remove();
         com.cleanTypeahead("surveyTemplate");
         com.clearValidator();
         com.closeTip();
@@ -64,22 +66,38 @@ jQuery(function($) {
         fieId: "orderId",
         name: "装修单号",
         prop: "orderId",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.decoration.info(btn, v.orderId);
+        }
     }, {
         field: "creater",
         name: "创建人",
         prop: "creater.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
+        }
     }, {
         field: "sender",
         name: "推送人",
         prop: "sender.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.sender.userId);
+        }
     }, {
         field: "finisher",
         name: "完成人",
         prop: "finisher.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.finisher.userId);
+        }
     }, {
         field: "createTime",
         name: "创建时间",
@@ -173,7 +191,7 @@ jQuery(function($) {
 
     searcher.line("name", lineprops, linebtns).render();
 
-    com.focusPage('#makeSurvey', '#pagenation').on("click", function() {
+    com.focusPage('#makeSurvey', '#surveypagenation').on("click", function() {
 
         survey.modals.makeSurveyModal.modal("show");
     });
@@ -185,48 +203,140 @@ jQuery(function($) {
         }, function(res) {
 
             survey.items.name.html(res.survey.name);
-
+            var state = res.survey.status;
             $.each(res.survey.items, function(i, v) {
 
-                if (v.type != constant.customer().survey.TYPE_SELECT_INT) {
+                if (v.type != constant.customer().survey.TYPE_TEXT_INT) {
                     var contentDiv = $('<div class="col-md-12 hr8"></div>').appendTo(survey.items.itemlist);
                     var titleSpan = $('<span class="col-md-12"></span>').html((i) + ". " + v.name).appendTo(contentDiv);
                 }
-
+                var type= v.type;
                 if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
                     survey.items.title.html(v.content);
                 } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
-                    var textArea = $('<textarea class="col-md-12" disabled></textarea>').html(v.content).appendTo(contentDiv);
+                    if (state != constant.customer().survey.STATUS_SEND_INT) {
+                        var textArea = $('<textarea class="col-md-12 text" disabled></textarea>').html(v.content).appendTo(contentDiv);
+                    }else{
+                        var textArea = $('<textarea class="col-md-12 text"></textarea>').html(v.content).appendTo(contentDiv);
+                    }
                 } else if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
                     var ridioDivAll = $('<div class="col-md-12 control-group"></div>').appendTo(contentDiv);
+                    ridioDivAll.prop('id', v.siid);
                     $.each(v.options, function(j, option) {
-
-                        elect(ridioDivAll, option);
+                        elect(ridioDivAll, option, type, state);
                     });
                 } else if (v.type == constant.customer().survey.TYPE_MULTIPLE_INT) {
                     var checkDivAll = $('<div class="col-md-12 control-group"></div>').appendTo(contentDiv);
+                    checkDivAll.prop('id', v.siid);
                     $.each(v.options, function(j, option) {
-
-                        elect(checkDivAll, option);
+                        elect(checkDivAll, option, type, state);
                     });
                 }
+
+            });
+            if (v.status == constant.customer().survey.STATUS_SEND_INT){
+                var $execute = $('<div class="modal-footer" id="exDiv"></div>').appendTo(survey.items.particulars);
+                var $button = $('<button class="btn btn-primary" type="button" id="execute">执行</button>').appendTo($execute);
+
+            }
+            survey.modals.surveyModal.modal("show");
+
+            com.focusPage("#execute").click(function () {
+                var options = {};
+                options["survey.sid"] = res.survey.sid;
+
+                $.each(res.survey.items, function (i, v) {
+                    if (v.type != constant.customer().survey.TYPE_TEXT_INT) {
+                        options["survey.items[" + i + "].siid"] = v.siid;
+                        options["survey.items[" + i + "].name"] = v.name;
+                    }
+                    if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
+                        options["survey.items[" + i + "].siid"] = v.siid;
+                        options["survey.items[" + i + "].content"] = v.content;
+                    } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
+                        options["survey.items[" + i + "].siid"] = v.siid;
+                        options["survey.items[" + i + "].content"] = com.focusPage(".text").val();
+                    }
+
+                    if (v.options.length != 0){
+                        //单选
+                        if (v.type == constant.customer().survey.TYPE_SINGLE_INT){
+
+                            var checkbox = com.focusPage("input[type='radio']");
+                            $.each(checkbox, function (k, n) {
+                                if (k >= v.options.length) {
+                                    return
+                                }
+                                if ($(n).prop("checked")){
+                                    options["survey.items[" + i + "].options[" + k + "].checked"] = 0;
+                                }else {
+                                    options["survey.items[" + i + "].options[" + k + "].checked"] = 1;
+                                }
+                                $(n).remove()
+                            });
+                        }else {
+                            //多选
+                            var checkboxs = com.focusPage("input[type='checkbox']");
+                            $.each(checkboxs, function (k, n) {
+                                if (k >= v.options.length) {
+                                    return
+                                }
+                                if ($(n).prop("checked")){
+                                    options["survey.items[" + i + "].options[" + k + "].checked"] = 0;
+                                }else {
+                                    options["survey.items[" + i + "].options[" + k + "].checked"] = 1;
+                                }
+                                $(n).remove()
+                            });
+                        }
+                    }
+
+                    $.each(v.options, function (j, b) {
+
+                        options["survey.items[" + i + "].siid"] = v.siid;
+                        if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
+                            options["survey.items[" + i + "].options[" + j + "].soid"] = b.soid;
+                            options["survey.items[" + i + "].options[" + j + "].title"] = b.title;
+
+                        } else if (v.type == constant.customer().survey.TYPE_MULTIPLE_INT) {
+                            options["survey.items[" + i + "].options[" + j + "].soid"] = b.soid;
+                            options["survey.items[" + i + "].options[" + j + "].title"] = b.title;
+                        }
+                    })
+                });
+                com.showConfirm("是否确认执行调研信息", function() {
+
+                    com.post(api.customer.handleSurvey, options, function() {
+                        survey.modals.surveyModal.modal("hide");
+                        searcher.doSearch();
+                    });
+                });
             });
 
-            survey.modals.surveyModal.modal("show");
         });
     }
 
-    function elect(contentDiv, option) {
+    function elect(contentDiv, option, type, status) {
 
         var ridioDiv = $('<div class="col-md-12"></div>').appendTo(contentDiv);
         var div = $('<div></div>').addClass("checkbox").appendTo(ridioDiv);
         var label = $('<label class="col-md-5"></label>').appendTo(div);
+        if (status != constant.customer().survey.STATUS_SEND_INT) {
+            var input = $('<input class="ace check" disabled>').attr({
+                'name': 'form-field-checkbox' + option.siid
+            }).appendTo(label);
 
-        var input = $('<input class="ace" disabled/>').attr({
-            'name': 'form-field-checkbox'
-        }).prop({
-            'type': "checkbox"
-        }).appendTo(label);
+        }else {
+            var input = $('<input class="ace check">').attr({
+                'name': 'form-field-checkbox' + option.siid
+            }).appendTo(label);
+        }
+
+        if (type == constant.customer().survey.TYPE_SINGLE_INT) {
+            input.prop({'type': 'radio'})
+        }else if (type == constant.customer().survey.TYPE_MULTIPLE_INT) {
+            input.prop({'type': 'checkbox'})
+        }
 
         var span = $('<span class="lbl"</span>').html(option.title).appendTo(label);
 
@@ -250,8 +360,9 @@ jQuery(function($) {
         };
 
         com.post(api.customer.makeSurvey, options, function(res) {
-
-            send(res.survey.sid);
+            survey.items.orderId.val("");
+            survey.items.surveyTemplate.val("");
+            searcher.doSearch();
         });
 
         survey.modals.makeSurveyModal.modal("hide");

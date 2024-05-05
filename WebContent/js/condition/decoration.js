@@ -4,7 +4,7 @@ Condition.addupRule("decoration", {
         label: "装修单号",
         type: "text",
         submitConfig: {
-            name: "orderId",
+            name: "decoration.orderId",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
@@ -16,7 +16,7 @@ Condition.addupRule("decoration", {
         label: "楼盘",
         type: "autofill",
         submitConfig: {
-            name: "villageId",
+            name: "decoration.village.no",
             op: "eq ",
             validate: null
         },
@@ -26,13 +26,19 @@ Condition.addupRule("decoration", {
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
+        },
+        detail: {
+            url: api.index.village4condition.url,
+            content: "layerPopUp",
+            key: "no",
+            value: "name"
         }
     },
     "houseNumber": {
         label: "楼号",
         type: "text",
         submitConfig: {
-            name: "houseNumber",
+            name: "decoration.house.houseNumber",
             op: "cn",
             validate: null
         }
@@ -41,7 +47,7 @@ Condition.addupRule("decoration", {
         label: "面积",
         type: "text",
         submitConfig: {
-            name: "houseArea",
+            name: "decoration.houseArea",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
@@ -53,7 +59,7 @@ Condition.addupRule("decoration", {
         label: "设计师",
         type: "autofill",
         submitConfig: {
-            name: "designerId",
+            name: "decoration.designer.userId",
             op: "eq",
             validate: null
         },
@@ -66,13 +72,19 @@ Condition.addupRule("decoration", {
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
+        },
+        detail: {
+            url: api.index.user4condition.url,
+            content: "layerPopUp",
+            key: "userId",
+            value: "currentName"
         }
     },
     "salesman": {
         label: "业务员",
         type: "autofill",
         submitConfig: {
-            name: "salesmanId",
+            name: "decoration.salesman.userId",
             op: "eq",
             validate: null
         },
@@ -85,13 +97,19 @@ Condition.addupRule("decoration", {
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
+        },
+        detail: {
+            url: api.index.user4condition.url,
+            content: "layerPopUp",
+            key: "userId",
+            value: "currentName"
         }
     },
     "quoter": {
         label: "报价员",
         type: "autofill",
         submitConfig: {
-            name: "quoterId",
+            name: "decoration.quoter.userId",
             op: "eq",
             validate: null
         },
@@ -110,7 +128,7 @@ Condition.addupRule("decoration", {
         label: "跟单员",
         type: "autofill",
         submitConfig: {
-            name: "escorterId",
+            name: "decoration.escorter.userId",
             op: "eq",
             validate: null
         },
@@ -129,7 +147,7 @@ Condition.addupRule("decoration", {
         label: "监理",
         type: "autofill",
         submitConfig: {
-            name: "supervisor",
+            name: "decoration.supervisor.userId",
             op: "eq",
             validate: null
         },
@@ -167,7 +185,7 @@ Condition.addupRule("decoration", {
         label: "订单类型",
         type: "select",
         submitConfig: {
-            name: "orderType",
+            name: "decoration.orderType",
             op: "eq",
             validate: null
         },
@@ -183,7 +201,7 @@ Condition.addupRule("decoration", {
         label: "业务类型",
         type: "select",
         submitConfig: {
-            name: "busitype",
+            name: "decoration.busitype",
             op: "eq",
             validate: null
         },
@@ -201,16 +219,14 @@ Condition.addupRule("decoration", {
         label: "房屋类型",
         type: "select",
         submitConfig: {
-            name: "houseClass",
+            name: "decoration.houseClass",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "houseClass",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.houseClass.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -219,7 +235,7 @@ Condition.addupRule("decoration", {
         label: "设计中心",
         type: "autofill",
         submitConfig: {
-            name: "designerRegionId",
+            name: "decoration.designer.region.no",
             op: "eq",
             validate: null
         },
@@ -232,13 +248,22 @@ Condition.addupRule("decoration", {
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
+        },
+        detail: {
+            url: api.index.department4condition.url,
+            content: "layerPopUp",
+            data: {
+                "dept.type.dtid": 1
+            },
+            key: "no",
+            value: "name"
         }
     },
     "design-dept": {
         label: "设计部",
         type: "autofill",
         submitConfig: {
-            name: "designerDepartmentId",
+            name: "decoration.designer.department.no",
             op: "eq",
             validate: null
         },
@@ -257,7 +282,7 @@ Condition.addupRule("decoration", {
         label: "业务中心",
         type: "autofill",
         submitConfig: {
-            name: "salesmanRegionId",
+            name: "decoration.salesman.region.no",
             op: "eq",
             validate: null
         },
@@ -276,7 +301,7 @@ Condition.addupRule("decoration", {
         label: "业务部",
         type: "autofill",
         submitConfig: {
-            name: "salesmanDepartmentId",
+            name: "decoration.salesman.department.no",
             op: "eq",
             validate: null
         },
@@ -295,7 +320,7 @@ Condition.addupRule("decoration", {
         label: "设计中心",
         type: "autofill",
         submitConfig: {
-            name: "designerRegionId",
+            name: "decoration.designer.region.no",
             op: "eq",
             validate: null
         },
@@ -315,7 +340,7 @@ Condition.addupRule("decoration", {
         label: "设计部",
         type: "autofill",
         submitConfig: {
-            name: "designerDepartmentId",
+            name: "decoration.designer.department.no",
             op: "eq",
             validate: null
         },
@@ -335,7 +360,7 @@ Condition.addupRule("decoration", {
         label: "业务中心",
         type: "autofill",
         submitConfig: {
-            name: "salesmanRegionId",
+            name: "decoration.salesman.region.no",
             op: "eq",
             validate: null
         },
@@ -355,7 +380,7 @@ Condition.addupRule("decoration", {
         label: "业务部",
         type: "autofill",
         submitConfig: {
-            name: "salesmanDepartmentId",
+            name: "decoration.salesman.department.no",
             op: "eq",
             validate: null
         },
@@ -375,7 +400,7 @@ Condition.addupRule("decoration", {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "createTimeDateRange",
+            name: "decoration.createTime.range",
             op: "cn",
             validate: null
         }
@@ -384,7 +409,7 @@ Condition.addupRule("decoration", {
         label: "量尺时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "measureTimeDateRange",
+            name: "decoration.measureTime.range",
             op: "cn",
             validate: null
         }
@@ -393,7 +418,7 @@ Condition.addupRule("decoration", {
         label: "定金时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "depositTimeDateRange",
+            name: "decoration.depositTime.range",
             op: "cn",
             validate: null
         }
@@ -402,7 +427,7 @@ Condition.addupRule("decoration", {
         label: "预签时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "precontractTime",
+            name: "decoration.precontractTime.range",
             op: "cn",
             validate: null
         }
@@ -411,7 +436,7 @@ Condition.addupRule("decoration", {
         label: "合同确认",
         type: "dateRangePicker",
         submitConfig: {
-            name: "sdesignTime",
+            name: "decoration.sdesignTime.range",
             op: "between",
             validate: null
         }
@@ -420,7 +445,7 @@ Condition.addupRule("decoration", {
         label: "放线确认",
         type: "dateRangePicker",
         submitConfig: {
-            name: "edesignTime",
+            name: "decoration.edesignTime.range",
             op: "between",
             validate: null
         }
@@ -429,7 +454,7 @@ Condition.addupRule("decoration", {
         label: "设计时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "designTimeRange",
+            name: "decoration.designTime.range",
             op: "between",
             validate: null
         }
@@ -438,7 +463,7 @@ Condition.addupRule("decoration", {
         label: "签单时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "signTimeDateRange",
+            name: "decoration.signTime.range",
             op: "cn",
             validate: null
         }
@@ -447,7 +472,7 @@ Condition.addupRule("decoration", {
         label: "决算时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "accountTime",
+            name: "decoration.accountTime.range",
             op: "cn",
             validate: null
         }
@@ -465,7 +490,7 @@ Condition.addupRule("decoration", {
         label: "内决时间",
         type: "dateRangePicker",
         submitConfig: {
-            name: "balanceTime",
+            name: "decoration.balanceTime.range",
             op: "cn",
             validate: null
         }
@@ -474,16 +499,14 @@ Condition.addupRule("decoration", {
         label: "内决状态",
         type: "select",
         submitConfig: {
-            name: "balanceStatus",
+            name: "decoration.balanceStatus",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "balanceStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.balanceStatus.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -492,16 +515,14 @@ Condition.addupRule("decoration", {
         label: "订单状态",
         type: "select",
         submitConfig: {
-            name: "status",
+            name: "decoration.status",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationOrderStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -510,16 +531,14 @@ Condition.addupRule("decoration", {
         label: "设计状态",
         type: "select",
         submitConfig: {
-            name: "designStatus",
+            name: "decoration.designStatus",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "designStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.designStatus.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -528,16 +547,14 @@ Condition.addupRule("decoration", {
         label: "确认状态",
         type: "select",
         submitConfig: {
-            name: "sourceStatus",
+            name: "decoration.sourceStatus",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "sourceStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.sourceStatus.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -546,7 +563,7 @@ Condition.addupRule("decoration", {
         label: "工程状态",
         type: "selectCaching",
         submitConfig: {
-            name: "projectStatus",
+            name: "decoration.projectStatus",
             op: "eq",
             validate: null
         },
@@ -577,11 +594,9 @@ Condition.addupRule("decoration", {
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "auditStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().audit.auditStatus.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -603,7 +618,7 @@ Condition.addupRule("decoration", {
         label: "公司",
         type: "select",
         submitConfig: {
-            name: "company",
+            name: "decoration.company",
             op: "eq",
             validate: null
         },
@@ -619,16 +634,14 @@ Condition.addupRule("decoration", {
         label: "保修状态",
         type: "select",
         submitConfig: {
-            name: "repairStatus",
+            name: "decoration.repairStatus",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "repairStatus",
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.repairStatus.datas,
             keyPath: "key",
             valuePath: "value"
         }

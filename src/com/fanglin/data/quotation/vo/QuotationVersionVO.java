@@ -41,6 +41,8 @@ public class QuotationVersionVO implements Serializable {
 
 	private Short defaultFlag;
 
+	private Short status;
+
 	private String comment;
 
 	public Long getQvId() {
@@ -137,6 +139,14 @@ public class QuotationVersionVO implements Serializable {
 
 	public void setDefaultFlag(Short defaultFlag) {
 		this.defaultFlag = defaultFlag;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 	public String getComment() {

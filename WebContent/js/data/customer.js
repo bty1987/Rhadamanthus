@@ -229,6 +229,14 @@ jQuery(function($) {
 
             return false;
         }
+    }, {
+        name: "记录",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            params.customer.cid = v.cid;
+            com.popup4page('#customerRecordPopUp', api.index.customerRecordIndex.url, "记录");
+        }
     }, ];
 
     searcher.line("name", lineprops, linebtns).render();
