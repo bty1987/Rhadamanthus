@@ -28,15 +28,17 @@ public class AccessoriesItemPO implements Serializable {
 	private long aiid;
 
 	private long aid;
-	
+
 	private long caid;
 
+	private long nid;
+
 	private GoodsPO goods;
-	
+
 	private int selling;
 
 	private int num;
-	
+
 	private int surplus;
 
 	public AccessoriesItemPO() {
@@ -95,7 +97,7 @@ public class AccessoriesItemPO implements Serializable {
 	public void setNum(int num) {
 		this.num = num;
 	}
-	
+
 	@Column(name = "surplus")
 	public int getSurplus() {
 		return surplus;
@@ -114,16 +116,28 @@ public class AccessoriesItemPO implements Serializable {
 		this.caid = caid;
 	}
 
-	public AccessoriesItemPO init(long aid, long gid, int selling, int num){
-		
+	@Column(name = "nid")
+	public long getNid() {
+		return nid;
+	}
+
+	public void setNid(long nid) {
+		this.nid = nid;
+	}
+
+	public AccessoriesItemPO init(long aid, long caid, long gid, Long nid, int selling, int num) {
+
 		setAid(aid);
-		
+		setCaid(caid);
+
+		if (nid != null) setNid(nid);
+
 		setGoods(new GoodsPO(gid));
-		
+
 		setSelling(selling);
 		setNum(num);
 		setSurplus(num);
-		
+
 		return this;
 	}
 

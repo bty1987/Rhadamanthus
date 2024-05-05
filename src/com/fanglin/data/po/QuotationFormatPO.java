@@ -3,6 +3,7 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.MeasurementUnitPO;
+import com.fanglin.data.quotation.vo.QuotationFormatVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "quotationformat", catalog = "quotation")
 public class QuotationFormatPO implements Serializable {
@@ -20,6 +25,10 @@ public class QuotationFormatPO implements Serializable {
 	private static final long serialVersionUID = 6581325512288639780L;
 
 	public static final String COLUMN_QCID_STR = "quotationCtem.qcid";
+
+	public static final String COLUMN_PINYIN_STR = "pinyin";
+
+	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short STATUS_ENABLE_STR = 0;
 
@@ -35,15 +44,12 @@ public class QuotationFormatPO implements Serializable {
 
 	private int price;
 
+	private MeasurementUnitPO measurementUnit;
+
 	private short status;
 
 	public QuotationFormatPO() {
 		super();
-	}
-
-	public QuotationFormatPO(QuotationCtemPO quotationCtem) {
-		super();
-		this.quotationCtem = quotationCtem;
 	}
 
 	@Id
@@ -103,6 +109,16 @@ public class QuotationFormatPO implements Serializable {
 		this.price = price;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "unit")
+	public MeasurementUnitPO getMeasurementUnit() {
+		return measurementUnit;
+	}
+
+	public void setMeasurementUnit(MeasurementUnitPO measurementUnit) {
+		this.measurementUnit = measurementUnit;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -110,6 +126,20 @@ public class QuotationFormatPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	public QuotationFormatVO ptv(QuotationFormatVO quotationFormatVO) {
+
+		BeanUtil.copyProperties(this, quotationFormatVO, Arrays.asList("quotationCtem", "measurementUnit"));
+
+		if (getQuotationCtem() != null && quotationFormatVO.getQuotationCtem() != null) BeanUtil.copyPropertie(getQuotationCtem(), quotationFormatVO.getQuotationCtem(), Arrays.asList("quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType"));
+		if (getMeasurementUnit() != null && quotationFormatVO.getUnit() != null) BeanUtil.copyPropertie(getMeasurementUnit(), quotationFormatVO.getUnit());
+
+		if (getQuotationCtem() != null) quotationFormatVO.setQcid(getQuotationCtem().getQcid());
+
+		quotationFormatVO.setName(quotationFormatVO.getName() + "-" + quotationFormatVO.getFormat());
+
+		return quotationFormatVO;
 	}
 
 }

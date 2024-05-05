@@ -55,6 +55,14 @@ public class SelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageSelectionItemForAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSelectionItemForAccount() throws FLException {
+
+		selectionItemService.pageSelectionItemForAccount(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "querySelectionItemByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySelectionItemByOrderId() throws FLException {
 
@@ -163,6 +171,14 @@ public class SelectionItemAction extends BaseListAction {
 	public String cutoffSelectionItem() throws FLException {
 
 		selectionItemService.cutoffSelectionItem(selectionItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "rejectSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectSelectionItem() throws FLException {
+
+		selectionItemService.rejectSelectionItem(selectionItem);
 
 		return SUCCESS;
 	}

@@ -1,7 +1,6 @@
 package com.fanglin.information.vo;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -13,28 +12,34 @@ public class EventsVO implements java.io.Serializable {
 	private static final long serialVersionUID = -5649016541644991485L;
 
 	private Long eid;
-	
+
+	private String orderId;
+
 	private String title;
-	
+
 	private String content;
-	
+
 	private UserVO creater;
-	
+
 	private UserVO holder;
-	
+
 	private DepartmentVO department;
-	
+
 	private DepartmentVO region;
-	
+
 	private Short type;
-	
+
+	private Short atttype;
+
 	private Timestamp createTime;
-	
-	private Date showDate;
-	
-	private String beginDate;
-	
-	private String endDate;
+
+	private Integer showDate;
+
+	private Integer beginDate;
+
+	private Integer endDate;
+
+	private Short isSend;
 
 	public EventsVO() {
 		super();
@@ -54,6 +59,14 @@ public class EventsVO implements java.io.Serializable {
 
 	public void setEid(Long eid) {
 		this.eid = eid;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public String getTitle() {
@@ -112,7 +125,7 @@ public class EventsVO implements java.io.Serializable {
 		this.type = type;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -121,29 +134,44 @@ public class EventsVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd")
-	public Date getShowDate() {
+	public Integer getShowDate() {
 		return showDate;
 	}
 
-	public void setShowDate(Date showDate) {
+	public void setShowDate(Integer showDate) {
 		this.showDate = showDate;
 	}
 
-	public String getBeginDate() {
+	public Integer getBeginDate() {
 		return beginDate;
 	}
 
-	public void setBeginDate(String beginDate) {
+	public void setBeginDate(Integer beginDate) {
 		this.beginDate = beginDate;
 	}
 
-	public String getEndDate() {
+	public Integer getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(String endDate) {
+	public void setEndDate(Integer endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public Short getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(Short isSend) {
+		this.isSend = isSend;
 	}
 
 }

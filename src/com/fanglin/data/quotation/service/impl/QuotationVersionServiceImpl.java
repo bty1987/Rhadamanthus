@@ -157,4 +157,21 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationVersionForStatus(QuotationVersionVO quotationVersionVO) throws FLException {
+
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
+
+		if (quotationVersionPO == null) {
+			throw new FLException(200022, "报价版本不存在");
+		}
+
+		quotationVersionPO.setStatus(quotationVersionVO.getStatus());
+
+		quotationVersionDao.update(quotationVersionPO);
+
+		return 0;
+	}
+
 }

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 合同html/js文件命名说明: C-<company>-<module>-<type>-<index>.html C-<公司/模式>-<业务类型>-<合同类型>-<序号>.html
  * 
  * 公司/模式: 001 (方林/半包) 002 (1918/大宅) 003 (宜家/半包/整装) 004 (爱林/整装) 005 (恩林/局改/二改)
@@ -65,11 +65,8 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        contractEdit.decorationType = res.typeness.split("key", "value");
-        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
-    });
+    contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -174,7 +171,7 @@ jQuery(function($) {
         var decorationActivitys = res.decorationActivitys;
 
         if (decorationActivitys.length != 0)
-            com.focusPage("#con-activity-name", "#form").val(decorationActivitys[0].activity.name);
+            contractEdit.cover["con-activity-name1"] = decorationActivitys[0].activity.name;
     });
 
     quotationUtils.quotationDetail = {
@@ -231,8 +228,6 @@ jQuery(function($) {
     }, null, false);
 
     quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.orderType, false, params.showType);
-
-    console.log(quotationUtils.quotationDetail.quotationFunctionAreaItemCs);
 
     contractEdit.table = {
         "insertWay": 1,
@@ -308,7 +303,8 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    };
+    }
+    ;
 
     var displayFunc = (function() {
 
@@ -399,8 +395,6 @@ jQuery(function($) {
             data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
             data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-            data["con-activity-name1"] = data["con-activity-name"];
-
             data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
 
             data["con-precontract-total-cn"] = utils.getCNMoney(parseFloat(data["con-precontract-total"]));
@@ -417,9 +411,6 @@ jQuery(function($) {
                 data["sin-company-name"] = data["con-company-name"];
                 data["sin-company-phone"] = data["con-company-phone"];
             }
-            console.log(data);
-            console.log(contractEdit.table);
-
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,
                 "contract.cid": params.decoration.contractargs.cid,

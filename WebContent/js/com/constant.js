@@ -100,6 +100,10 @@ var Constant = function() {
 
                     return handle("construction");
                 },
+                salary: function() {
+
+                    return handle("salary");
+                },
                 sales: function() {
 
                     return handle("sales");
@@ -115,6 +119,18 @@ var Constant = function() {
                 right: function() {
 
                     return handle("right");
+                },
+                inventory: function() {
+
+                    return handle("inventory");
+                },
+                personel: function() {
+
+                    return handle("personel");
+                },
+                balance: function() {
+
+                    return handle("balance");
                 },
             };
 

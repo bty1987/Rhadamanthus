@@ -31,31 +31,36 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 	}
 
 	@Override
-	public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters, int company) {
+	public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters, Integer type, int company) {
 
 		PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
+
 		query.add(Restrictions.eq("company", company));
+
+		if (type != null) {
+			query.alias("type", "type").add(Restrictions.eq(DepartmentPO.COLUMN_TYPE_STR, type));
+		}
+
 		queryFilterExcute(query, filters);
 
 		return query.list();
 	}
 
 	@Override
-	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company, int type) {
+	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer type, Integer company) {
 
 		PagingQuery<DepartmentPO> query = pagingQuery(paging, DepartmentPO.class);
 
 		query.add(Restrictions.or(Restrictions.ilike(DepartmentPO.COLUMN_DEPTNAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(DepartmentPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
 
 		query.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
-		
+
 		if (company != null) {
 			query.add(Restrictions.eq(DepartmentPO.COLUMN_COMPANY_STR, company));
 		}
 
-		if (type != 0) {
-			query.alias("type", "type");
-			query.add(Restrictions.eq(DepartmentPO.COLUMN_TYPE_STR, type));
+		if (type != null) {
+			query.alias("type", "type").add(Restrictions.eq(DepartmentPO.COLUMN_TYPE_STR, type));
 		}
 
 		return query.list();
@@ -63,15 +68,14 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DepartmentPO> queryDepartment(int type, Integer company) {
+	public List<DepartmentPO> queryDepartment(Integer type, Integer company) {
 
 		Criteria criteria = session().createCriteria(DepartmentPO.class);
 
 		criteria.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
 
-		if (type != 0) {
-			criteria.createAlias("type", "type");
-			criteria.add(Restrictions.eq("type.dtid", type));
+		if (type != null) {
+			criteria.createAlias("type", "type").add(Restrictions.eq("type.dtid", type));
 		}
 
 		if (company != null) {
@@ -84,32 +88,39 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<DepartmentPO> queryDepartment(Integer did) {
+		return session().createCriteria(DepartmentPO.class).createAlias("fatherDept", "fatherDept").add(Restrictions.eq("fatherDept.did", did)).list();
+	}
+
+	@Override
 	public DepartmentPO queryDepartmentByNo(String no) {
 
 		return (DepartmentPO) session().createCriteria(DepartmentPO.class).add(Restrictions.eq("no", no)).uniqueResult();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DepartmentPO> queryDepartmentBytype(int type, Integer company) {
-		return session().createCriteria(DepartmentPO.class).createAlias("type", "type").add(Restrictions.eq("type.dtid", type)).add(Restrictions.eq("company", company)).add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT)).list();
-	}
-
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
-		if (filters != null) {
-			query.alias("type", "type");
-			for (Filter filter : filters) {
-				if ("deptType".equals(filter.getField())) {
-					query.add(query.getCriterion("type.dtid", Integer.valueOf(filter.getData()), filter.getOp()));
-				} else if ("deptName".equals(filter.getField())) {
-					query.add(query.getCriterion("did", Integer.valueOf(filter.getData()), filter.getOp()));
-				} else if ("company".equals(filter.getField())) {
-					query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
-				} else if("status".equals(filter.getField())) {
-					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
-				}else if("isdet".equals(filter.getField())) {
-					query.add(query.getCriterion("isdet", Short.valueOf(filter.getData()), filter.getOp()));
-				}
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("deptType".equals(field)) {
+				query.alias("type", "type").add(query.getCriterion("type.dtid", Integer.valueOf(data), op));
+			} else if ("deptName".equals(field)) {
+				query.add(query.getCriterion("did", Integer.valueOf(data), op));
+			} else if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("isdet".equals(field)) {
+				query.add(query.getCriterion("isdet", Short.valueOf(data), op));
+			} else if ("company".equals(field)) {
+				query.add(query.getCriterion("company", Integer.valueOf(data), op));
 			}
 		}
 	}

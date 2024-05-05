@@ -8,13 +8,13 @@ import com.fanglin.salary.vo.WithholdVO;
 import com.fanglin.utils.Paging;
 
 public interface WithholdService {
-	
-	public void pageWithhold(Paging paging,List<Filter> filters);
-	
+
+	public void pageWithhold(Paging paging, List<Filter> filters, WithholdVO withholdVO);
+
 	public List<WithholdVO> queryWithhold(WithholdVO withhold);
-	
-	public int addWithhold(WithholdVO withhold, String userId)throws FLException;
-	
-	public int updateWithholdForStatus(WithholdVO withhold, String userId)throws FLException;
+
+	public int addWithhold(WithholdVO withhold, String userId) throws FLException;
+
+	public int updateWithholdForStatus(WithholdVO withhold, String userId) throws FLException;
 
 }

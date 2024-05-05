@@ -66,7 +66,9 @@
         cache: false,
         success: function (msg) {
             if (msg.errorCode == 0) {
-                window.location.href = msg.redirect;
+                //window.location.href = msg.redirect;
+                window.location.replace(msg.redirect + '&timestamp=' + new Date().getTime() + Math.random());
+                return true;
             } else {
                 alert(msg.errorMsg);
             }

@@ -29,6 +29,14 @@ public class HouseLayoutAction extends BaseListAction {
 
 	private List<HouseLayoutVO> houseLayouts;
 
+	@Action(value = "pageHouseLayout", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageHouseLayout() throws FLException {
+
+		houseLayoutService.pageHouseLayout(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryHouseLayout", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryHouseLayout() throws FLException {
 

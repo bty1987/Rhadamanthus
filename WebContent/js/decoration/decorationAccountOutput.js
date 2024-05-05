@@ -19,11 +19,38 @@ jQuery(function($) {
     }, null, false);
 
     com.post(api.construction.queryAcceptance, {
-        "acceptance.orderId": params.decoration.orderId
+        "acceptance.orderId": decoration.orderId
     }, function(res) {
 
         drawTime = res.acceptance.acceptanceTime;
     }, null, false);
+
+    com.post(api.data.queryTalking, {
+        "types[0]": 7
+    }, function(v) {
+
+        var talkings = v.talkings;
+
+        if (!talkings || talkings.length == 0)
+            return false;
+
+        $.each(talkings, function(i, v) {
+
+            if (!v.content)
+                return true;
+
+            var tr = $('<tr></tr>').appendTo($("#talk tbody"));
+
+            if (i == 0) {
+
+                var td_1 = $('<td colspan="1" rowspan="' + talkings.length + '" style="height: 80px;" >备注</td>').appendTo(tr);
+            }
+
+            var td_2 = $('<td colspan="7"></td>').html(v.content).appendTo(tr);
+
+        });
+
+    });
 
     $("#titleText").text(orderTypeness[decoration.typeness] + "更" + orderTypeness[accountBasic.typeness] + "增减" + (accountBasic.cal ? '计' : '不计') + "配比");
     $("#contractTime").text(decoration.contractTime);
@@ -42,7 +69,8 @@ jQuery(function($) {
 
     $("#foldFrontTotal").text(accountBasic.foldFrontTotal);
     $("#foldFrontFee").text(accountBasic.foldFrontFee);
-    $("#managePrice").text(accountBasic.managePrice);
+    $("#managePrice").text(accountBasic.managePredisPrice);
+    $("#taxPrice").text(accountBasic.taxPredisPrice);
     $("#basdiscount").text(accountBasic.discount);
 
     $("#signPrice").text(accountBasic.signPrice);
@@ -66,6 +94,7 @@ jQuery(function($) {
     $("#direct").text(accountBasic.direct);
     $("#beforeTotal").text(accountBasic.beforeTotal);
     $("#management").text(accountBasic.management);
+    $("#taxment").text(accountBasic.taxment);
     $("#flowerRatio").text(accountBasic.flowerRatio);
     $("#materialAccount").text(accountBasic.materialAccount);
     $("#accountForehead").text(accountBasic.accountForehead);

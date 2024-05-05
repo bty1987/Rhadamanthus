@@ -28,7 +28,8 @@ jQuery(function($) {
 
         item: {
             houseType: com.focusPage("#con-housetype"),
-            invoiceType: com.focusPage("#con-invoice-type")
+            invoiceType: com.focusPage("#con-invoice-type"),
+            showMoney: com.focusPage("#showMoney")
         },
 
         contractArgs: params.decoration.contractargs,
@@ -38,10 +39,8 @@ jQuery(function($) {
 
         $input: null,
 
-        current: new Date(),
+        current: new Date()
     };
-
-    console.log(contractEdit.contractArgs);
 
     if (contractEdit.contractArgs.agent == "1") {
         com.focusPage(".agent", "#form").hide();
@@ -68,11 +67,8 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        contractEdit.decorationType = res.typeness.split("key", "value");
-        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
-    });
+    contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -221,8 +217,8 @@ jQuery(function($) {
         "insertWay": 1,
         "keyword": "家装项目预签列表",
         "pageBegin": 1,
-        "headers": ["", "", ""],
-        "colWidthPercent": [3, 3, 3],
+        "headers": [],
+        "colWidthPercent": [],
         "headersAlignment": 1,
         "cellHorizontalAlignment": 0,
         "cellVerticalAlignment": 5,
@@ -230,40 +226,42 @@ jQuery(function($) {
     };
 
     var protationItems = {
-        0:{
-            name:"标配产品",
-            items:[],
-            totals:[]
+        0: {
+            name: "标配产品",
+            item: [],
+            items: [],
+            totals: []
         },
-        1:{
-            name:"赋能产品",
-            items:[],
-            totals:[]
+        1: {
+            name: "赋能产品",
+            item: [],
+            items: [],
+            totals: []
         },
-        2:{
-            name:"标配外功能区",
-            items:[],
-            totals:[]
+        2: {
+            name: "标配外功能区",
+            item: [],
+            items: [],
+            totals: []
         },
-        3:{
-            name:"个性化产品",
-            items:[],
-            totals:[]
+        3: {
+            name: "个性化产品",
+            item: [],
+            items: [],
+            totals: []
         },
-        4:{
-            name:"标配产品减项",
-            items:[],
-            totals:[]
+        4: {
+            name: "标配产品减项",
+            item: [],
+            items: [],
+            totals: []
         }
     };
 
     var empowermentTotal = 0;
     var functionTotal = 0;
     var subtractTotal = 0;
-    protationItems[1].items.push(["项目", "数量", "金额"]);
-    protationItems[2].items.push(["项目", "数量", "金额"]);
-    protationItems[3].items.push(["项目", "数量", "金额"]);
-    protationItems[4].items.push(["项目", "数量", "金额"]);
+
     $.each(quotationUtils.quotationDetail.protationItems, function(i, qv) {
 
         if (qv.type == 0 && utils.accSub(qv.num, qv.basicNum) > 0) {
@@ -271,6 +269,7 @@ jQuery(function($) {
             qv.total = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, utils.accSub(qv.num, qv.basicNum))) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, utils.accSub(qv.num, qv.basicNum)), protation.protation.quoteArea));
 
             protationItems[2].items.push([qv.name, utils.accSub(qv.num, qv.basicNum), qv.total]);
+            protationItems[2].item.push([qv.name, utils.accSub(qv.num, qv.basicNum)]);
 
             functionTotal = utils.accAdd(functionTotal, qv.total);
         }
@@ -280,6 +279,7 @@ jQuery(function($) {
             qv.total = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
 
             protationItems[4].items.push([qv.name, -qv.num, qv.total]);
+            protationItems[4].item.push([qv.name, -qv.num]);
 
             subtractTotal = utils.accAdd(subtractTotal, qv.total);
         }
@@ -289,37 +289,29 @@ jQuery(function($) {
             qv.total = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
 
             protationItems[1].items.push([qv.name, qv.num, qv.total]);
+            protationItems[1].item.push([qv.name, qv.num]);
 
             empowermentTotal = utils.accAdd(empowermentTotal, qv.total);
         }
     });
 
-    contractEdit.table.datas.push([presignProduce.name, '', '']);
-    contractEdit.table.datas.push(["项目", "计价面积", "金额"]);
-    contractEdit.table.datas.push([protation.protation.name, protation.protation.quoteArea, utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))]);
-    protationItems[0].items.push(["项目", "数量", "金额"]);
     protationItems[0].items.push(["标配产品", 1, protation.protation.quotePrice]);
     protationItems[0].items.push(["优惠金额", '', protation.protation.preferPrice]);
     protationItems[0].items.push(["管理费收取比例", 1, protation.protation.manageRate]);
     protationItems[0].items.push(["折后管理费", 1, protation.protation.managePrice]);
     protationItems[3].items.push(["基础增项", 1, protation.protation.adddPrice]);
     protationItems[3].items.push(["主材增项", 1, protation.protation.addmPrice]);
+    protationItems[0].item.push(["标配产品", 1]);
+    protationItems[0].item.push(["优惠金额", '']);
+    protationItems[0].item.push(["管理费收取比例", 1]);
+    protationItems[0].item.push(["折后管理费", 1]);
+    protationItems[3].item.push(["基础增项", 1]);
+    protationItems[3].item.push(["主材增项", 1]);
     protationItems[0].totals.push(["小计", '', utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(protation.protation.quotePrice, protation.protation.managePrice), protation.protation.preferPrice), utils.accAdd(protation.protation.subdPrice, protation.protation.submPrice)))]);
     protationItems[1].totals.push(["小计", '', empowermentTotal]);
     protationItems[2].totals.push(["小计", '', functionTotal]);
     protationItems[3].totals.push(["小计", '', utils.changeThrDecimal(utils.accAdd(protation.protation.adddPrice, protation.protation.addmPrice))]);
     protationItems[4].totals.push(["小计", '', subtractTotal]);
-    $.each(protationItems, function(i, q) {
-        contractEdit.table.datas.push([q.name, '', '']);
-        $.each(q.items, function(j, qi) {
-            contractEdit.table.datas.push(qi);
-        });
-        $.each(q.totals, function(k, qt) {
-            contractEdit.table.datas.push(qt);
-        });
-    });
-
-    contractEdit.table.datas.push(["预签计价合计", '', protation.protation.totalPrice]);
 
     com.focusPage('#talkingList').click(function() {
 
@@ -347,6 +339,53 @@ jQuery(function($) {
         });
     });
 
+    function showControl(v) {
+
+        if (v == 3) {
+
+            contractEdit.table.headers.push('', '', '');
+            contractEdit.table.colWidthPercent.push(3, 3, 3);
+            contractEdit.table.datas.push([presignProduce.name, '', '']);
+            contractEdit.table.datas.push(["项目", "计价面积", "金额"]);
+            contractEdit.table.datas.push([protation.protation.name, protation.protation.quoteArea, utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))]);
+
+            $.each(protationItems, function(i, q) {
+
+                contractEdit.table.datas.push([q.name, '', '']);
+                contractEdit.table.datas.push(["项目", "数量", "金额"]);
+                $.each(q.items, function(j, qi) {
+
+                    contractEdit.table.datas.push(qi);
+                });
+                $.each(q.totals, function(k, qt) {
+
+                    contractEdit.table.datas.push(qt);
+                });
+
+            });
+
+            contractEdit.table.datas.push(["预签计价合计", '', protation.protation.totalPrice]);
+        } else {
+
+            contractEdit.table.headers.push('', '');
+            contractEdit.table.colWidthPercent.push(3, 3);
+            contractEdit.table.datas.push([presignProduce.name, '']);
+            contractEdit.table.datas.push(["项目", "计价面积"]);
+            contractEdit.table.datas.push([protation.protation.name, protation.protation.quoteArea]);
+
+            $.each(protationItems, function(i, q) {
+
+                contractEdit.table.datas.push([q.name, '']);
+                contractEdit.table.datas.push(["项目", "数量"]);
+                $.each(q.item, function(j, qi) {
+
+                    contractEdit.table.datas.push(qi);
+                });
+            });
+        }
+
+    }
+
     function talkingData(content, types) {
 
         contractEdit.$input = content;
@@ -356,7 +395,8 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    };
+    }
+    ;
 
     var displayFunc = (function() {
 
@@ -440,8 +480,6 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            console.log(data);
-
             data["cov-innerarea"] = data["con-innerarea"];
             data["cov-address"] = data["con-village-name"] + " " + data["con-housenumber"];
 
@@ -461,6 +499,8 @@ jQuery(function($) {
 
             data["con-precontract-total"] = data["con-precontract-total"];
 
+            delete data["showMoney"];
+
             if (contractEdit.contractArgs.company == "1") {
                 delete data["con-customer-name"];
                 delete data["con-customer-ident"];
@@ -471,8 +511,11 @@ jQuery(function($) {
                 data["sin-company-phone"] = data["con-company-phone"];
             }
 
-            console.log(data);
-            console.log(contractEdit.table);
+            if (contractEdit.item.showMoney.val() == 1) {
+                showControl(3);
+            } else {
+                showControl(2);
+            }
 
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,

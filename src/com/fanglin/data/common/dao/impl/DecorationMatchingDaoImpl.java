@@ -68,8 +68,10 @@ public class DecorationMatchingDaoImpl extends DaoImpl<DecorationMatchingPO> imp
 				query.add(Restrictions.ilike("name", data, MatchMode.ANYWHERE));
 			} else if ("type".equals(field)) {
 				query.add(query.getCriterion("type", Short.valueOf(data), op));
-			} else if ("status".equals(field)) {
-				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("typeness".equals(field)) {
+				query.add(query.getCriterion("typeness", Short.valueOf(data), op));
+			} else if ("isShow".equals(field)) {
+				query.add(query.getCriterion("isShow", Short.valueOf(data), op));
 			}
 		}
 	}

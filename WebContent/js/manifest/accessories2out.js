@@ -12,13 +12,7 @@ jQuery(function($) {
         decorationStatus: {}
     };
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        $.each(res.decorationOrderStatus, function(i, e) {
-
-            accessories.decorationStatus[e.key] = e.value;
-        })
-    }, null, false);
+    accessories.decorationStatus = constant.decoration().decoration.status.keys;
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": accessories.orderId

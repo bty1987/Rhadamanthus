@@ -8,7 +8,7 @@ jQuery(function($) {
         type: params['urlLoadParams'].paytype,
 
         paytypes: [],
-        paymentStatusArray: constant.payment.decorationPayment.paymentStatus.keys,
+        paymentStatusArray: constant.payment().decorationPayment.paymentStatus.keys,
 
         payment: null,
 
@@ -78,7 +78,7 @@ jQuery(function($) {
             collectModal: com.focusPage("#collectModal", "#decorationPayment"),
             addReduceModal: com.focusPage("#addReduceModal", "#decorationPayment"),
             withholdModal: com.focusPage("#withholdModal", "#decorationPayment"),
-            codepayModal: com.focusPage("#decorationCodeQrcodeModal"),
+            codepayModal: com.focusPage("#decorationCodeQrcodeModal")
         },
 
         cash: [],
@@ -146,7 +146,7 @@ jQuery(function($) {
         decorationPayment.payment = null;
     });
 
-    decorationPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+    decorationPayment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
     com.post(api.ds.salary, {}, function(res) {
 
@@ -267,48 +267,55 @@ jQuery(function($) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
             $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
-            if (v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT)
+            if (v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT)
                 $btnCollect.text('收款').addClass("btn-info");
-            if (v.oneType == constant.payment.decorationPayment.ONETYPE_REFUND_INT)
+            if (v.oneType == constant.payment().decorationPayment.ONETYPE_REFUND_INT)
                 $btnCollect.text('退款').addClass("btn-danger");
-            if (v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && v.twoType == constant.payment.decorationPayment.TWOTYPE_ADD_REDUCE_INT)
+            if (v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && v.twoType == constant.payment().decorationPayment.TWOTYPE_ADD_REDUCE_INT)
                 $btnCollect.text('增项款').addClass("btn-info");
-            if (v.oneType == constant.payment.decorationPayment.ONETYPE_REFUND_INT && v.twoType == constant.payment.decorationPayment.TWOTYPE_ADD_REDUCE_INT)
+            if (v.oneType == constant.payment().decorationPayment.ONETYPE_REFUND_INT && v.twoType == constant.payment().decorationPayment.TWOTYPE_ADD_REDUCE_INT)
                 $btnCollect.text('减项款').addClass("btn-danger");
 
             if (decorationPayment.pageConfig.pageBtn.contains("payway"))
                 paymentUtils.drawHistoryData(decorationPayment, v, $liLine, "");
 
-            if (v.twoType == constant.payment.decorationPayment.TWOTYPE_ADD_REDUCE_INT && decorationPayment.pageConfig.pageBtn.contains("addreduce"))
+            if (v.twoType == constant.payment().decorationPayment.TWOTYPE_ADD_REDUCE_INT && decorationPayment.pageConfig.pageBtn.contains("addreduce"))
                 $divBtnWrap.append($btnDetail);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
                 $divBtnWrap.append($btnPosPush);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
                 $divBtnWrap.append($btnCodepay);
             if (decorationPayment.pageConfig.pageBtn.contains("collect"))
                 $divBtnWrap.append($btnCollect);
-            if (v.paymentStatus != constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && decorationPayment.pageConfig.pageBtn.contains("print"))
+            if (v.paymentStatus != constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && decorationPayment.pageConfig.pageBtn.contains("print"))
                 $divBtnWrap.append($btnPrint);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_PAY_INT && decorationPayment.pageConfig.pageBtn.contains("update"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_PAY_INT && decorationPayment.pageConfig.pageBtn.contains("update"))
                 $divBtnWrap.append($btnUpdate);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_CONFIRM_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && v.twoType != constant.payment.decorationPayment.TWOTYPE_ADD_REDUCE_INT && decorationPayment.pageConfig.pageBtn.contains("refund"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_CONFIRM_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && v.twoType != constant.payment().decorationPayment.TWOTYPE_ADD_REDUCE_INT && decorationPayment.pageConfig.pageBtn.contains("refund"))
                 $divBtnWrap.append($btnRefund); // 已确认的 收款 不是增加项款项的可以退款
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_CONFIRM_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("withhold"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_CONFIRM_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("withhold"))
                 $divBtnWrap.append($btnWithhold); // 扣款
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("collectCode"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("collectCode"))
                 $divBtnWrap.append($btnCode);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("codePush"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("codePush"))
                 $divBtnWrap.append($btnCodePush);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("check"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("check"))
                 $divBtnWrap.append($btnCheck);
-            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_CONFIRM_INT && decorationPayment.pageConfig.pageBtn.contains("toKingdee"))
+            if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_CONFIRM_INT && decorationPayment.pageConfig.pageBtn.contains("toKingdee"))
                 $divBtnWrap.append($btnKingdee);
 
             // 退款 增减项款 收款点击显示模态框
@@ -316,7 +323,7 @@ jQuery(function($) {
 
                 decorationPayment.typeUpdate = 1;
 
-                if (v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT)
+                if (v.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT)
                     paymentUtils.showPos(decorationPayment, {
                         "paytran.orderId": v.decoration.orderId,
                         "paytran.atttype": decorationPayment.atttype
@@ -390,8 +397,8 @@ jQuery(function($) {
                 // pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
                 var checkOptions = {
                     "paytran.pid": v.dpid,
-                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_DECORATION_INT,
-                    "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT
+                    "paytran.type": constant.payment().receipt.PAYMENTTYPE_DECORATION_INT,
+                    "paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT
                 };
 
                 com.showConfirm("是否验证收款信息?", function(result) {
@@ -441,8 +448,8 @@ jQuery(function($) {
                 var options = {
                     "paytran.orderId": v.decoration.orderId,
                     "paytran.pid": v.dpid,
-                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_DECORATION_INT,
-                    "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+                    "paytran.type": constant.payment().receipt.PAYMENTTYPE_DECORATION_INT,
+                    "paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT,
                     "paytran.no": com.typeahead(bankDiv),
                     "paytran.sn": decorationPayment.posValues[bankVal].value, // 收据类型中pos的value值
                     "paytran.money": v.referMoney,
@@ -469,8 +476,8 @@ jQuery(function($) {
                 var options = {
                     "paytran.orderId": v.decoration.orderId,
                     "paytran.pid": v.dpid,
-                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_DECORATION_INT,
-                    "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+                    "paytran.type": constant.payment().receipt.PAYMENTTYPE_DECORATION_INT,
+                    "paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT,
                     "paytran.money": v.referMoney,
                     "paytran.way": 3
                 };
@@ -489,7 +496,7 @@ jQuery(function($) {
             // 同步金蝶
             $btnKingdee.click(function() {
 
-                kingdeeUtils.decorationPayment(v);
+                kingdeeUtils.payment(v, decorationPayment.htmlName);
             });
 
             return $liLine;
@@ -705,7 +712,7 @@ jQuery(function($) {
         decorationPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
         decorationPayment.items.comment.removeAttr("disabled");
 
-        var type = payment.oneType == constant.payment.decorationPayment.ONETYPE_REFUND_INT ? constant.payment.decorationPayment.ONETYPE_REFUND_INT : constant.payment.decorationPayment.ONETYPE_ADD_INT; // 0: 收款类型 , 1: 退款类型
+        var type = payment.oneType == constant.payment().decorationPayment.ONETYPE_REFUND_INT ? constant.payment().decorationPayment.ONETYPE_REFUND_INT : constant.payment().decorationPayment.ONETYPE_ADD_INT; // 0: 收款类型 , 1: 退款类型
 
         if (decorationPayment.pageConfig.paytypes.contains("cash"))
             paymentUtils.initCash(decorationPayment);
@@ -726,7 +733,7 @@ jQuery(function($) {
         // 根据等级在数组中筛选出符合要求的用于显示
         paymentUtils.initBankGrade(decorationPayment, grade);
 
-        if (type == constant.payment.decorationPayment.ONETYPE_REFUND_INT) {// 退款
+        if (type == constant.payment().decorationPayment.ONETYPE_REFUND_INT) {// 退款
 
             com.focusPage("#myModalPayLabel").text("退款信息");
 
@@ -797,14 +804,14 @@ jQuery(function($) {
 
         var payment = decorationPayment.payment;
 
-        if (payment.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && payment.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT) {
+        if (payment.oneType == constant.payment().decorationPayment.ONETYPE_ADD_INT && payment.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT) {
             url = api.payment.collectDecorationPayment;
             options["decorationPayment.comment"] = comment;
-        } else if (payment.oneType == constant.payment.decorationPayment.ONETYPE_REFUND_INT && payment.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT) {
+        } else if (payment.oneType == constant.payment().decorationPayment.ONETYPE_REFUND_INT && payment.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_UNPAY_INT) {
             url = api.payment.refundDecorationPayment;
             options["decorationPayment.comment"] = comment;
             type = 1;
-        } else if (payment.oneType != constant.payment.decorationPayment.ONETYPE_HISTORY_INT && payment.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_PAY_INT) {
+        } else if (payment.oneType != constant.payment().decorationPayment.ONETYPE_HISTORY_INT && payment.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_PAY_INT) {
             url = api.payment.updateDecorationPayment;
             type = 2;
         }

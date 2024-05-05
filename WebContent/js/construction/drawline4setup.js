@@ -98,10 +98,10 @@ jQuery(function($) {
     com.datetime(drawline.items.startTime, "time");
     com.datetime(drawline.items.endTime, "time");
 
-    drawline.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
-    drawline.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
-    drawline.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
-    drawline.items.status.bindData(constant.construction().drawLine.status.datas,"key","value");
+    drawline.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas, "key", "value");
+    drawline.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
+    drawline.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
+    drawline.items.status.bindData(constant.construction().drawLine.status.datas, "key", "value");
 
     com.post(api.data.queryDrawlineGroup, {}, function(res) {
 
@@ -166,13 +166,55 @@ jQuery(function($) {
             }
             var actualTime = v.actualTime;
 
-            var propertyArr = [["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"], ["面积:", v.decoration.house.buildArea, "blue"], ["合同额:", v.decoration.orderTotalPrice, "blue"], ["申请人:", v.appler.currentName, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["监理:", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["放线时间:", actualTime, "green"], ["开始时间:", startTime, "green"], ["结束时间:", endTime, "green"], ["报价版本:", v.decoration.version.name, "green"], ["状态:", constant.construction().drawLine.status.keys[v.status], "red"], ["描述:", v.content, "grey"]];
+            var propertyArr = [
+                ["装修单: ", v.decoration.orderId, "blue", function(btn) {
+
+                    tools.decoration.info(btn, v.decoration.orderId);
+                }],
+                ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
+
+                    tools.house.info(btn, v.decoration.house.hid);
+                }],
+                ["楼号: ", v.decoration.house.houseNumber, "grey"],
+                ["客户: ", v.decoration.customer.name, "grey", function(btn) {
+
+                    tools.customer.info(btn, v.decoration.customer.cid);
+                }],
+                ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.decoration.designer.userId);
+                }],
+                ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.decoration.supervisor.userId);
+                }],
+                ["面积: ", v.decoration.house.buildArea, "blue"],
+                ["合同额: ", v.decoration.orderTotalPrice, "blue"],
+                ["报价版本: ", v.decoration.version.name, "grey"],
+                ["申请人: ", v.appler.currentName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.appler.userId);
+                }],
+                ["放线时间: ", actualTime, "green"],
+                ["开始时间: ", startTime, "green"],
+                ["结束时间: ", endTime, "green"],
+                ["状态: ", constant.construction().drawLine.status.keys[v.status], "red"],
+                ["描述: ", v.content, "grey"]
+            ];
 
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -218,11 +260,11 @@ jQuery(function($) {
 
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
-    searcher.init(['construction-orderId', 'construction-designer', "construction-drawLine-status", "construction-drawLine-actualDate"], "condList", api.construction.queryDrawLine, function(data) {
+    searcher.init(['decoration-orderId', 'construction-drawLine-status', 'construction-drawLine-actualDate'], "condList", api.construction.queryDrawLine, function(data) {
 
         com.focusPage("#resultList").html("");
         displayFunc.init('resultList', data);
@@ -362,7 +404,7 @@ jQuery(function($) {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '6px');
 
-            var propertyArr = [["工期:", null, "grey"], ];
+            var propertyArr = [["工期: ", null, "grey"]];
 
             var $label = $('<label></label>').addClass('control-label').css({
                 'color': 'grey',
@@ -405,7 +447,7 @@ jQuery(function($) {
                 $liLi.append($h3).append($ulPro);
             });
 
-            $liLi.append($h3).append($ulPro).appendTo($uli)
+            $liLi.append($h3).append($ulPro).appendTo($uli);
         });
 
         $uli.appendTo(drawline.items.contructionNodes);

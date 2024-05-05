@@ -24,31 +24,35 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationService {
 
-	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses);
+	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses, Short companyType) throws FLException;
 
-	public void pageDecorationForGeneral(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForGeneral(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForCompany(Paging paging, List<Filter> filters, int company, List<Short> statuses);
+	public void pageDecorationForCompany(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException;
 
-	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company);
+	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone, int company);
+	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone, int company) throws FLException;
 
-	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForSalesman(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForDesignerDept(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForDesignerManager(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForQuoter(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForSalesman(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForEscorter(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForSalesmanDept(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForDesignerManager(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
-	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication);
+	public void pageDecorationForQuoter(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
+
+	public void pageDecorationForEscorter(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
+
+	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
 	public List<DecorationVO> queryDecorationByCustomerId(DecorationVO decorationVO, Authentication authentication) throws FLException;
 
@@ -66,6 +70,8 @@ public interface DecorationService {
 
 	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException;
 
+	public void changeDecorationForCustomer(DecorationVO decorationVO) throws FLException;
+
 	public void changeDecorationForHouse(DecorationVO decorationVO, String userId) throws FLException;
 
 	public void changeDecorationForOrderId(String oldOrderId, String newOrderId, String userId) throws FLException;
@@ -74,7 +80,11 @@ public interface DecorationService {
 
 	public void changeDecorationForVersionId(DecorationVO decorationVO, String userId) throws FLException;
 
+	public void changeDecorationForPayScale(DecorationVO decorationVO, String userId) throws FLException;
+
 	public void changeDecorationForStatus(DecorationVO decorationVO, String userId) throws FLException;
+
+	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException;
 
 	public void changeDecorationForType(DecorationVO decorationVO, String userId) throws FLException;
 
@@ -86,10 +96,8 @@ public interface DecorationService {
 
 	public void tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException;
 
-	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException;
+	public void updateDecorationForPayScale(DecorationVO decorationVO) throws FLException;
 
-	public void changeDecorationForCustomer(DecorationVO decorationVO) throws FLException;
-
-	public void changeDecorationForPayScale(DecorationVO decorationVO) throws FLException;
+	public void updateDecorationForSaleScale(DecorationVO decorationVO) throws FLException;
 
 }

@@ -11,6 +11,8 @@
 
 package com.fanglin.construction.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -19,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.ConstructionService;
+import com.fanglin.construction.service.QualiterService;
 import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.construction.vo.QualiterVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
@@ -33,7 +37,14 @@ public class ConstructionAction extends BaseListAction {
 	@Autowired
 	private ConstructionService constructionService;
 
+	@Autowired
+	private QualiterService qualiterService;
+
 	private ConstructionVO construction;
+
+	private QualiterVO qualiter;
+
+	private List<QualiterVO> qualiters;
 
 	@Action(value = "pageConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstruction() throws FLException {
@@ -58,11 +69,19 @@ public class ConstructionAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageConstructionForBase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstructionForBase() throws FLException {
 
 		constructionService.pageConstructionForBase(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageConstructionForQualiter", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstructionForQualiter() throws FLException {
+
+		qualiterService.pageConstructionForQualiter(getPaging(), getFilters(), queryUserId());
 
 		return SUCCESS;
 	}
@@ -78,11 +97,11 @@ public class ConstructionAction extends BaseListAction {
 	@Action(value = "updateConstructionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionByOrderId() throws FLException {
 
-		constructionService.updateConstructionByOrderId(construction);
+		constructionService.updateConstructionByOrderId(construction, qualiters);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateConstructionForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionForAdvance() throws FLException {
 
@@ -98,7 +117,7 @@ public class ConstructionAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "lockAccessory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String lockAccessory() throws FLException {
 
@@ -106,7 +125,7 @@ public class ConstructionAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	public ConstructionVO getConstruction() {
 		return construction;
 	}
@@ -114,4 +133,21 @@ public class ConstructionAction extends BaseListAction {
 	public void setConstruction(ConstructionVO construction) {
 		this.construction = construction;
 	}
+
+	public QualiterVO getQualiter() {
+		return qualiter;
+	}
+
+	public void setQualiter(QualiterVO qualiter) {
+		this.qualiter = qualiter;
+	}
+
+	public List<QualiterVO> getQualiters() {
+		return qualiters;
+	}
+
+	public void setQualiters(List<QualiterVO> qualiters) {
+		this.qualiters = qualiters;
+	}
+
 }

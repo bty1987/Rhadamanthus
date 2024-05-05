@@ -4,7 +4,10 @@ $(function() {
         gid: null,
         keyword: null,
         items: {
+            soodsName: com.focusPage("#soodsName"),
             selling: com.focusPage("#selling"),
+            cost: com.focusPage("#cost"),
+            balance: com.focusPage("#balance"),
             goods: com.focusPage("#goodsName"),
             name: com.focusPage("#name"),
             quote: com.focusPage("#quote"),
@@ -16,14 +19,19 @@ $(function() {
 
             filePath: com.focusPage("#filePath"),
         },
+
         uitems: {
-            uSelling: com.focusPage("#uSelling")
+            uSoodsName: com.focusPage("#uSoodsName"),
+            uSelling: com.focusPage("#uSelling"),
+            uCost: com.focusPage("#uCost"),
+            uBalance: com.focusPage("#uBalance")
         },
 
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
 
             com.clearValidator();
         }),
+
         btns: {
             importBtn: com.focusPage("#importBtn"),
             exportBtn: com.focusPage("#exportBtn")
@@ -90,6 +98,7 @@ $(function() {
             var $drawingUrl = $('<div style="float: left;"></div>').css("text-align", "center").css("width", "75px").css("height", "75px").css("margin-right", "10px");
             var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
             var img = $('<img/>').appendTo($drawingUrl);
+
             $imgDiv.qrcode({
                 render: "canvas",
                 width: 75,
@@ -120,7 +129,8 @@ $(function() {
                 $invalid.append($statusSwitch).append($span);
                 $divBtnWrap.append($invalid).appendTo($h3);
             }
-            var propertyArr = [["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "red"], ["结算价: ", v.selling, "blue"], ["数量: ", v.num, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ];
+
+            var propertyArr = [["名称: ", v.name, "grey"], ["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "red"], ["售价: ", v.selling, "blue"], ["成本: ", v.cost, "blue"], ["结算价: ", v.balance, "blue"], ["数量: ", v.num, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ];
             var $label = $('<label></label>');
             var $input = $('<input>').attr({
                 "type": "checkbox",
@@ -143,6 +153,7 @@ $(function() {
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
+
             if (soods.pageType == "basic") {
                 $divBtnWrap.append($btnProject).append($drawingedit).appendTo($h3);
             } else {
@@ -166,6 +177,10 @@ $(function() {
 
             $btnCompile.click(function() {
 
+                soods.uitems.uSoodsName.val(v.name);
+                soods.uitems.uSelling.val(v.selling);
+                soods.uitems.uCost.val(v.cost);
+                soods.uitems.uBalance.val(v.balance);
                 soods.sid = v.sid;
                 soods.updateSoodsModal.modal("show");
             });
@@ -214,7 +229,7 @@ $(function() {
 
                 return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher = new Searcher();
@@ -271,7 +286,7 @@ $(function() {
             soods.btns.importBtn.removeClass("hide");
             soods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#updateMa", "批量更新")
+            com.popup4model("#updateMa", "批量更新");
         });
 
         $starta.click(function() {
@@ -333,7 +348,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["名称: ", 'goods.name'], ["选材ID: ", 'sid'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
+                column: [["选材: ", 'name'], ["商品: ", 'goods.name'], ["选材ID: ", 'sid'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
                 list: res.paging.data
             }, function(v) {
 
@@ -359,7 +374,10 @@ $(function() {
 
         var option = {
             "soods.sid": soods.sid,
-            "soods.selling": soods.uitems.uSelling.val()
+            "soods.name": soods.uitems.uSoodsName.val(),
+            "soods.selling": soods.uitems.uSelling.val(),
+            "soods.cost": soods.uitems.uCost.val(),
+            "soods.balance": soods.uitems.uBalance.val()
         };
 
         com.post(api.data.updateSoods, option, function(e) {
@@ -386,9 +404,12 @@ $(function() {
         }
 
         var option = {
+            "soods.name": soods.items.soodsName.val(),
             "soods.goods.gid": gid,
             "soods.num": soods.items.soodsnum.val(),
             "soods.selling": soods.items.selling.val(),
+            "soods.cost": soods.items.cost.val(),
+            "soods.balance": soods.items.balance.val()
         };
 
         com.post(api.data.addSoods, option, function(e) {

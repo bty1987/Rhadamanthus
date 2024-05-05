@@ -38,7 +38,9 @@ jQuery(function($) {
         atttypes: {},
         awardTypes: {},
 
-        pageType: params.urlLoadParams.pagetype
+        pageType: params.urlLoadParams.pagetype,
+
+        creater: params.userInfo.user
     };
 
     oales.modals.oalesModal.on('hide.bs.modal', function(e) {
@@ -51,7 +53,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.initTypeahead("brandName", api.data.queryBrandByPinyin, "pinyinName", {}, 'brands', 'bid', 'alias', function(list, k, v) {
+    com.initTypeahead("brandName", api.data.queryBrandByPinyin, "brand.pinyin", {}, 'brands', 'bid', 'name', function(list, k, v) {
 
         $.each(list, function(index, val) {
 
@@ -81,14 +83,14 @@ jQuery(function($) {
 
     var url = api.sales.pageOales;
 
-    var conditions = ['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-confirmTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category'];
+    var conditions = ['sales-oales-no', 'sales-oales-orderId', 'sales-oales-category', 'sales-oales-brand', 'sales-oales-createTime', 'sales-oales-confirmTime', 'sales-oales-status'];
     var options = {};
     var history = "oalsePostData";
 
     if (oales.pageType == "serve") {
         history = "oalesServicePostDate";
     } else if (oales.pageType == "material") {
-        conditions.splice(2, 0, 'sales-oales-oalesDept', 'sales-oales-region');
+        conditions.splice(4, 0, 'sales-oales-region', 'sales-oales-dept');
         options = $.extend({}, options, {
             "statuses[0]": 1,
             "statuses[1]": 3
@@ -149,7 +151,11 @@ jQuery(function($) {
         fieId: "orderId",
         name: "装修单号",
         prop: "decoration.orderId",
-        clazz: "blue"
+        clazz: "blue",
+        click: function(btn, v) {
+
+            tools.decoration.info(btn, v.decoration.orderId);
+        },
     }, {
         field: "village",
         name: "楼盘",
@@ -164,22 +170,47 @@ jQuery(function($) {
         field: "supplier",
         name: "厂商",
         prop: "supplier.currentName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.supplier.userId);
+        }
     }, {
         field: "creater",
         name: "创建人",
         prop: "creater.currentName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
+        }
     }, {
         field: "servicer",
         name: "服务管家",
         prop: "servicer.currentName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.servicer.userId);
+        }
+    }, {
+        field: "channer",
+        name: "渠道",
+        prop: "channer.currentName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.channer.userId);
+        }
     }, {
         field: "materialer",
         name: "主材员",
         prop: "materialer.currentName",
         clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.materialer.userId);
+        },
         show: function(v) {
 
             return (v.status == constant.sales().oales.STATUS_CHECK_INT || v.status == constant.sales().oales.STATUS_CONFIRM_INI);
@@ -189,6 +220,10 @@ jQuery(function($) {
         name: "客户名",
         prop: "decoration.customer.name",
         clazz: "grey",
+        click: function(btn, v) {
+
+            tools.customer.info(btn, v.decoration.customer.cid);
+        },
         show: function(v) {
 
             return (oales.pageType == "material");
@@ -198,6 +233,10 @@ jQuery(function($) {
         name: "渠道",
         prop: "channer.currentName",
         clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.channer.userId);
+        },
         show: function(v) {
 
             return (oales.pageType == "material");
@@ -207,6 +246,10 @@ jQuery(function($) {
         name: "部门",
         prop: "dept.name",
         clazz: "grey",
+        click: function(btn, v) {
+
+            tools.department.info(btn, v.dept.did);
+        },
         show: function(v) {
 
             return (oales.pageType == "material");
@@ -216,6 +259,10 @@ jQuery(function($) {
         name: "分区",
         prop: "region.name",
         clazz: "grey",
+        click: function(btn, v) {
+
+            tools.department.info(btn, v.region.did);
+        },
         show: function(v) {
 
             return (oales.pageType == "material");
@@ -243,7 +290,11 @@ jQuery(function($) {
         field: "brand",
         name: "品牌",
         prop: "brand",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.brand.info(btn, v.bid);
+        }
     }, {
         field: "category",
         name: "品类",
@@ -625,7 +676,7 @@ jQuery(function($) {
 
             com.showAlert(com.info, "操作成功");
 
-            oales.modals.oalesModal.modal("hide");
+            com.cleanTypeahead("brandName");
         });
 
     }
@@ -821,5 +872,26 @@ jQuery(function($) {
             searcher.doSearch();
         });
     }
+
+    oales.items.orderId.on("change", function() {
+
+        var option = {
+            "decorationOrderId": oales.items.orderId.val()
+        };
+
+        com.post(api.decoration.queryDecorationByOrderId, option, function(data) {
+
+            com.updateTypeahead("service", oales.creater.userId, oales.creater.currentName);
+            oales.items.service = data.decoration.creater;
+
+            if (data.decoration.designer != null) {
+                com.updateTypeahead("channer", data.decoration.designer.userId, data.decoration.designer.currentName);
+                oales.items.channer = data.decoration.designer;
+            }
+        }, function(e) {
+
+            com.showAlert(com.warning, "装修单号输入错误!");
+        });
+    });
 
 });

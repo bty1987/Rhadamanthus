@@ -10,6 +10,8 @@ public class PresignItemVO implements Serializable {
 
 	private Long ppid;
 
+	private PresignProduceVO presignProduce;
+
 	private String name;
 
 	private Integer basicNum;
@@ -17,6 +19,12 @@ public class PresignItemVO implements Serializable {
 	private Long cost;
 
 	private Long price;
+
+	private Integer addPrice;
+
+	private Integer subPrice;
+
+	private Integer achePrice;
 
 	private Short areaCale;
 
@@ -34,6 +42,11 @@ public class PresignItemVO implements Serializable {
 		super();
 	}
 
+	public PresignItemVO(PresignProduceVO presignProduce) {
+		super();
+		this.presignProduce = presignProduce;
+	}
+
 	public Long getPiid() {
 		return piid;
 	}
@@ -48,6 +61,14 @@ public class PresignItemVO implements Serializable {
 
 	public void setPpid(Long ppid) {
 		this.ppid = ppid;
+	}
+
+	public PresignProduceVO getPresignProduce() {
+		return presignProduce;
+	}
+
+	public void setPresignProduce(PresignProduceVO presignProduce) {
+		this.presignProduce = presignProduce;
 	}
 
 	public String getName() {
@@ -80,6 +101,30 @@ public class PresignItemVO implements Serializable {
 
 	public void setPrice(Long price) {
 		this.price = price;
+	}
+
+	public Integer getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Integer addPrice) {
+		this.addPrice = addPrice;
+	}
+
+	public Integer getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Integer subPrice) {
+		this.subPrice = subPrice;
+	}
+
+	public Integer getAchePrice() {
+		return achePrice;
+	}
+
+	public void setAchePrice(Integer achePrice) {
+		this.achePrice = achePrice;
 	}
 
 	public Short getAreaCale() {

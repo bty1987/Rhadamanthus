@@ -17,6 +17,8 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	private Short subtype;
 
+	private Short itemtype;
+
 	private String measurementUnit;
 
 	private String workType;
@@ -103,6 +105,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setSubtype(Short subtype) {
 		this.subtype = subtype;
+	}
+
+	public Short getItemtype() {
+		return itemtype;
+	}
+
+	public void setItemtype(Short itemtype) {
+		this.itemtype = itemtype;
 	}
 
 	public String getMeasurementUnit() {

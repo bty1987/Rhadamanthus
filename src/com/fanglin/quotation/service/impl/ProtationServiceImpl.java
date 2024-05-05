@@ -87,6 +87,8 @@ public class ProtationServiceImpl implements ProtationService {
 	@Override
 	public void pageProtation(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
+		if (filters.size() == 0) return;
+
 		List<ProtationDO> protationDOs = protationDao.pageProtation(paging, filters, company);
 
 		List<ProtationVO> protationVOs = new ArrayList<ProtationVO>();
@@ -182,21 +184,27 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setCreater(userDao.queryUserByUserId(userId));
 		protationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
+		protationPO.setProduct(presignProducePO.getName());
+		protationPO.setUnitPrice(presignProducePO.getUnitPrice());
+		protationPO.setManageFormula(presignProducePO.getManageFormula());
+		protationPO.setCostPrice(presignProducePO.getCostPrice());
+
+		protationPO.setProfitRate(presignProducePO.getProfitRate());
+		protationPO.setCostRate(presignProducePO.getCostRate());
+		protationPO.setMostRate(presignProducePO.getMostRate());
+		protationPO.setManageRate(presignProducePO.getManageRate());
+
 		PresignPricePO presignPricePO = presignPriceDao.queryPresignPricePrice(ppid, protationVO.getQuoteArea());
 
 		if (presignPricePO != null) {
 			protationPO.setQuotePrice(presignPricePO.getPrice());
+			protationPO.setCostPrice(presignPricePO.getCostPrice());
+			protationPO.setMostPrice(presignPricePO.getMostPrice());
 		} else {
 			protationPO.setQuotePrice(presignProducePO.getQuotePrice());
+			protationPO.setCostPrice(presignProducePO.getCostPrice());
+			protationPO.setMostPrice(presignProducePO.getMostPrice());
 		}
-		protationPO.setCostPrice(presignProducePO.getCostPrice());
-		protationPO.setProfitRate(presignProducePO.getProfitRate());
-		protationPO.setUnitPrice(presignProducePO.getUnitPrice());
-		protationPO.setMostPrice(presignProducePO.getMostPrice());
-		protationPO.setCostRate(presignProducePO.getCostRate());
-		protationPO.setMostRate(presignProducePO.getMostRate());
-		protationPO.setManageRate(presignProducePO.getManageRate());
-		protationPO.setProduct(presignProducePO.getName());
 
 		ProtationPO defaultProtationPO = protationDao.queryProtationForDefaultByOrderId(orderId);
 
@@ -224,7 +232,9 @@ public class ProtationServiceImpl implements ProtationService {
 				protationItemPO.setType(ProtationItemPO.TYPE_BASICS_INT);
 			}// 功能区
 
-			if (presignItemPO.getType() == PresignItemPO.TYPE_OPTIONAL_INT && presignItemPO.getAtttype() == PresignItemPO.ATTTYPE_ENGINEERING_INT) {
+			if (presignItemPO.getType() == PresignItemPO.TYPE_OPTIONAL_INT && presignItemPO.getAtttype() == PresignItemPO.ATTTYPE_CURRENT_INT) {
+				protationItemPO.setType(ProtationItemPO.TYPE_PRCURRENT_INT);
+			} else if (presignItemPO.getType() == PresignItemPO.TYPE_OPTIONAL_INT && presignItemPO.getAtttype() == PresignItemPO.ATTTYPE_ENGINEERING_INT) {
 				protationItemPO.setType(ProtationItemPO.TYPE_PROJECT_INT);
 			} else if (presignItemPO.getType() == PresignItemPO.TYPE_OPTIONAL_INT) {
 				protationItemPO.setType(ProtationItemPO.TYPE_PRINCIPAL_INT);
@@ -247,8 +257,13 @@ public class ProtationServiceImpl implements ProtationService {
 			protationItemPO.setName(presignItemPO.getName());
 			protationItemPO.setCost(presignItemPO.getCost());
 			protationItemPO.setPrice(presignItemPO.getPrice());
+			protationItemPO.setAddPrice(presignItemPO.getAddPrice());
+			protationItemPO.setSubPrice(presignItemPO.getSubPrice());
+			protationItemPO.setAchePrice(presignItemPO.getAchePrice());
 			protationItemPO.setNum(presignItemPO.getBasicNum());
 			protationItemPO.setAreaCale(presignItemPO.getAreaCale());
+			protationItemPO.setOnetype(presignItemPO.getOnetype());
+			protationItemPO.setAtttype(presignItemPO.getAtttype());
 			protationItemPO.setItem(presignItemPO);
 
 			protationItemDao.save(protationItemPO);
@@ -430,6 +445,7 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setAddmPrice(protationVO.getAddmPrice());
 		protationPO.setSubdPrice(protationVO.getSubdPrice());
 		protationPO.setSubmPrice(protationVO.getSubmPrice());
+		protationPO.setSubcPrice(protationVO.getSubcPrice());
 		protationPO.setAccdPrice(protationVO.getAccdPrice());
 		protationPO.setAccmPrice(protationVO.getAccmPrice());
 		protationPO.setTotalPrice(protationVO.getTotalPrice());

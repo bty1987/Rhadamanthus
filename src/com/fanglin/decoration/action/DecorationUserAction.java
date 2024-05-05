@@ -17,41 +17,57 @@ import com.fanglin.decoration.vo.DecorationUserVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DecorationUserAction extends BaseListAction{
+public class DecorationUserAction extends BaseListAction {
 
 	private static final long serialVersionUID = -7534255012777666910L;
-	
+
 	@Autowired
 	private DecorationUserService decorationUserService;
-	
+
 	private DecorationUserVO decorationUser;
-	
+
 	private List<DecorationUserVO> decorationUsers;
 
-	@Action(value = "queryDecorationUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationUser() throws FLException{
-		
-		decorationUsers = decorationUserService.queryDecorationUser(getPaging(), getFilters(),decorationUser);
+	@Action(value = "pageDecorationForUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForUser() throws FLException {
+
+		decorationUserService.pageDecorationForUser(getPaging(), getFilters(), queryUserId());
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "addDecorationUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDecorationUser() throws FLException{
 
-		decorationUserService.addDecorationUser(decorationUser,authentication());
+	@Action(value = "queryDecorationUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationUser() throws FLException {
+
+		decorationUsers = decorationUserService.queryDecorationUser(getPaging(), getFilters(), decorationUser);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteDecorationUser", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteDecorationUser() throws FLException{
+
+	@Action(value = "addDecorationUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationUser() throws FLException {
+
+		decorationUserService.addDecorationUser(decorationUser);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateDecorationUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationUser() throws FLException {
+
+		decorationUserService.updateDecorationUser(decorationUser);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteDecorationUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteDecorationUser() throws FLException {
 
 		decorationUserService.deleteDecorationUser(decorationUser);
 
 		return SUCCESS;
 	}
-	
+
 	public DecorationUserVO getDecorationUser() {
 		return decorationUser;
 	}
@@ -67,8 +83,5 @@ public class DecorationUserAction extends BaseListAction{
 	public void setDecorationUsers(List<DecorationUserVO> decorationUsers) {
 		this.decorationUsers = decorationUsers;
 	}
-	
-	
-	
 
 }

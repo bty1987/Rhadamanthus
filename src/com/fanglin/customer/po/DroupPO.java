@@ -36,6 +36,10 @@ public class DroupPO implements Serializable {
 
 	public static final short ISREAD_RESP_INT = 1;
 
+	public static final short TYPE_DINGTALK_INT = 1;
+
+	public static final short TYPE_WECHAT_INT = 2;
+
 	private long did;
 
 	private String name;

@@ -36,27 +36,30 @@ public class WithholdDaoImpl extends DaoImpl<WithholdPO> implements WithholdDao 
 
 	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
+
+		query.alias("user", "user");
 
 		for (Filter filter : filters) {
 
-			String filet = filter.getField();
+			String field = filter.getField();
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("userName".equals(filet)) {
-				query.alias("user", "user");
+			if ("userId".equals(field)) {
+
 				query.add(query.getCriterion("user.userId", data, op));
-			} else if ("orderId".equals(filet)) {
+			} else if ("userName".equals(field)) {
+				query.add(query.getCriterion("user.userName", data, op));
+			} else if ("orderId".equals(field)) {
 				query.add(query.getCriterion("orderId", data, op));
-			} else if ("type".equals(filet)) {
+			} else if ("type".equals(field)) {
 				query.add(query.getCriterion("type", Short.parseShort(data), op));
-			} else if ("status".equals(filet)) {
+			} else if ("status".equals(field)) {
 				query.add(query.getCriterion(WithholdPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
-			} else if ("operateTime".equals(filter.getField())) {
+			} else if ("operateTime".equals(field)) {
 				query.timeranges(WithholdPO.COLUMN_OPERATETIME_STR, data);
-			} else if ("createTime".equals(filter.getField())) {
+			} else if ("createTime".equals(field)) {
 				query.timeranges(WithholdPO.COLUMN_CREATETIME_STR, data);
 			}
 		}

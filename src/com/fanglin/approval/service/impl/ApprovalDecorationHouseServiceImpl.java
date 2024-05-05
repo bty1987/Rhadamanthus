@@ -87,7 +87,7 @@ public class ApprovalDecorationHouseServiceImpl implements ApprovalDecorationHou
 			throw new FLException(320005, "房源不存在");
 		}
 
-		DecorationPO decorationPOs = decorationDao.queryDecorationByHid(newHouseId, company);
+		DecorationPO decorationPOs = decorationDao.queryDecorationByHid(newHouseId, Arrays.asList(company));
 
 		if (decorationPOs != null) {
 			throw new FLException(320004, "房源已存在");// 130019 房产已存在
@@ -129,16 +129,21 @@ public class ApprovalDecorationHouseServiceImpl implements ApprovalDecorationHou
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
+
 		long newHouseId = aprovalDecorationHousePO.getThid();
+
 		HousePO newhousePO = houseDao.get(newHouseId);
 
 		if (newhousePO == null) {
 			throw new FLException(320005, "房源不存在");
 		}
-		DecorationPO decorationPOs = decorationDao.queryDecorationByHid(newHouseId, approvalPO.getCompany());
+
+		DecorationPO decorationPOs = decorationDao.queryDecorationByHid(newHouseId, Arrays.asList(approvalPO.getCompany()));
+
 		if (decorationPOs != null) {
 			throw new FLException(320004, "房源已存在");// 130019 房产已存在
 		}
+
 		decorationPO.setHouse(newhousePO);
 
 		decorationDao.update(decorationPO);

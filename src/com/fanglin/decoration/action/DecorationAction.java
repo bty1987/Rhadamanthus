@@ -45,12 +45,14 @@ public class DecorationAction extends BaseListAction {
 
 	private List<Short> statuses;
 
+	private Short companyType;
+
 	private String customerPhone;
 
 	@Action(value = "pageDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecoration() throws FLException {
 
-		decorationService.pageDecoration(getPaging(), getFilters(), authentication(), statuses);
+		decorationService.pageDecoration(getPaging(), getFilters(), authentication(), statuses, companyType);
 
 		return SUCCESS;
 	}
@@ -103,6 +105,22 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageDecorationForDesignerDept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForDesignerDept() throws FLException {
+
+		decorationService.pageDecorationForDesignerDept(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageDecorationForDesignerManager", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForDesignerManager() throws FLException {
+
+		decorationService.pageDecorationForDesignerManager(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "pageDecorationForSalesman", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationForSalesman() throws FLException {
 
@@ -111,10 +129,18 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "pageDecorationForBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForBelong() throws FLException {
+	@Action(value = "pageDecorationForSalesmanDept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForSalesmanDept() throws FLException {
 
-		decorationService.pageDecorationForBelong(getPaging(), getFilters(), authentication());
+		decorationService.pageDecorationForSalesmanDept(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageDecorationForSalesmanManager", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForSalesmanManager() throws FLException {
+
+		decorationService.pageDecorationForSalesmanManager(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -135,18 +161,10 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "pageDecorationForDesignerManager", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForDesignerManager() throws FLException {
+	@Action(value = "pageDecorationForBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForBelong() throws FLException {
 
-		decorationService.pageDecorationForDesignerManager(getPaging(), getFilters(), authentication());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "pageDecorationForSalesmanManager", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationForSalesmanManager() throws FLException {
-
-		decorationService.pageDecorationForSalesmanManager(getPaging(), getFilters(), authentication());
+		decorationService.pageDecorationForBelong(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}
@@ -199,6 +217,30 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "changeDecorationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForAdvance() throws FLException {
+
+		decorationService.changeDecorationForAdvance(decoration, decorationInfo, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "changeDecorationForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForCustomer() throws FLException {
+
+		decorationService.changeDecorationForCustomer(decoration);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "changeDecorationForHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForHouse() throws FLException {
+
+		decorationService.changeDecorationForHouse(decoration, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "changeDecorationForOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String changeDecorationForOrderId() throws FLException {
 
@@ -223,6 +265,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "changeDecorationForPayScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForPayScale() throws FLException {
+
+		decorationService.changeDecorationForPayScale(decoration, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "changeDecorationForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String changeDecorationForStatus() throws FLException {
 
@@ -231,10 +281,10 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "changeDecorationForHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationForHouse() throws FLException {
+	@Action(value = "changeDecorationForRepairStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForRepairStatus() throws FLException {
 
-		decorationService.changeDecorationForHouse(decoration, queryUserId());
+		decorationService.changeDecorationForRepairStatus(decoration);
 
 		return SUCCESS;
 	}
@@ -255,14 +305,6 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "changeDecorationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationForAdvance() throws FLException {
-
-		decorationService.changeDecorationForAdvance(decoration, decorationInfo, queryUserId());
-
-		return SUCCESS;
-	}
-
 	@Action(value = "subDecorationForQuotationTime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String subDecorationForQuotationTime() throws FLException {
 
@@ -271,26 +313,18 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "changeDecorationForRepairStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationForRepairStatus() throws FLException {
+	@Action(value = "updateDecorationForPayScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationForPayScale() throws FLException {
 
-		decorationService.changeDecorationForRepairStatus(decoration);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "changeDecorationForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationForCustomer() throws FLException {
-
-		decorationService.changeDecorationForCustomer(decoration);
+		decorationService.updateDecorationForPayScale(decoration);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "changeDecorationForPayScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeDecorationForPayScale() throws FLException {
+	@Action(value = "updateDecorationForSaleScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationForSaleScale() throws FLException {
 
-		decorationService.changeDecorationForPayScale(decoration);
+		decorationService.updateDecorationForSaleScale(decoration);
 
 		return SUCCESS;
 	}
@@ -357,6 +391,14 @@ public class DecorationAction extends BaseListAction {
 
 	public void setStatusas(List<Short> statuses) {
 		this.statuses = statuses;
+	}
+
+	public Short getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(Short companyType) {
+		this.companyType = companyType;
 	}
 
 	public String getCustomerPhone() {

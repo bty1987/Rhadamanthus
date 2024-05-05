@@ -33,6 +33,7 @@ import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("workerSalaryService")
@@ -61,7 +62,23 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private SystemConfigDao systemConfigDao;
 
 	@Override
-	public void pageWorkerSalary(Paging paging, List<Filter> filters, int company) {
+	public void pageWorkerSalary(Paging paging, List<Filter> filters, WorkerSalaryVO workerSalaryVO, int company) {
+
+		if (workerSalaryVO == null) {
+			workerSalaryVO = new WorkerSalaryVO();
+		}
+
+		if (workerSalaryVO.getUser() != null) {
+			filters.add(new Filter("userId", workerSalaryVO.getUser().getUserId(), "eq"));
+		}
+
+		if (workerSalaryVO.getCreateTime() != null) {
+
+			String start = DateUtil.getDateToDateString(DateUtil.getFirstDay(DateUtil.getTimestampToDate(workerSalaryVO.getCreateTime())), "yyyy/MM/dd");
+			String end = DateUtil.getDateToDateString(DateUtil.getLastDay(DateUtil.getTimestampToDate(workerSalaryVO.getCreateTime())), "yyyy/MM/dd");
+
+			filters.add(new Filter("createTime", String.format("%s-%s", start, end), "eq"));
+		}
 
 		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging, filters, company);
 
@@ -69,7 +86,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs) {
 
-			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			if (workerSalaryPO.getDecoration() != null) {
 

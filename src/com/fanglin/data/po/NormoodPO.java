@@ -21,34 +21,47 @@ public class NormoodPO implements Serializable {
 
 	public static final String COLUMN_QIID_STR = "quotationItem.qiid";
 
+	public static final String COLUMN_QUOTATIONITEMNAME_STR = "quotationItem.name";
+
+	public static final String COLUMN_QUOTATIONVERSION_STR = "quotationItem.quotationVersion.no";
+
+	public static final String COLUMN_NAME_STR = "name";
+
+	public static final String COLUMN_QUOTATIONITEMNO_STR = "quotationItem.no";
+
+	public static final String COLUMN_STATUS_STR = "status";
+
 	public static final short STATUS_VALID_STR = 0;
 
 	public static final short STATUS_INVALID_STR = 1;
 
 	private long ngid;// 定定额材料id
 
-	private QuotationItemPO quotationItem;// 报价id
+	private String name;
 
-	private GoodsPO goods;// 商品
+	private QuotationItemPO quotationItem; // 报价id
 
-	private String normunit;// 定额单位
+	private NoodsPO noods; // 定材
 
-	private int normnum;// 定额数量
+	private String normunit; // 定额单位
 
-	private String storeunit;// 库房单位
-	
-	private int storenum;// 库房数量
-	
+	private int normnum; // 定额数量
+
+	private String storeunit; // 库房单位
+
+	private int storenum; // 库房数量
+
+	private int price;
+
 	private short status;// 状态
 
 	public NormoodPO() {
 		super();
 	}
 
-	public NormoodPO(QuotationItemPO quotationItem, GoodsPO goods) {
+	public NormoodPO(QuotationItemPO quotationItem) {
 		super();
 		this.quotationItem = quotationItem;
-		this.goods = goods;
 	}
 
 	@Id
@@ -62,6 +75,15 @@ public class NormoodPO implements Serializable {
 		this.ngid = ngid;
 	}
 
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "qiid", referencedColumnName = "qiid")
 	public QuotationItemPO getQuotationItem() {
@@ -73,15 +95,15 @@ public class NormoodPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gid", referencedColumnName = "gid")
-	public GoodsPO getGoods() {
-		return goods;
+	@JoinColumn(name = "nid", referencedColumnName = "nid")
+	public NoodsPO getNoods() {
+		return noods;
 	}
 
-	public void setGoods(GoodsPO goods) {
-		this.goods = goods;
+	public void setNoods(NoodsPO noods) {
+		this.noods = noods;
 	}
-	
+
 	@Column(name = "normunit")
 	public String getNormunit() {
 		return normunit;
@@ -116,6 +138,15 @@ public class NormoodPO implements Serializable {
 
 	public void setStorenum(int storenum) {
 		this.storenum = storenum;
+	}
+
+	@Column(name = "price")
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	@Column(name = "status")

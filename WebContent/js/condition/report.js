@@ -27,13 +27,11 @@
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "typeness",
+            url: api.data.queryDecorationAtttype,
+            postData: {},
+            listPath: "decorationAtttypes",
             keyPath: "key",
-            valuePath: "value"
+            valuePath: "name"
         }
     },
     "sales-year": {

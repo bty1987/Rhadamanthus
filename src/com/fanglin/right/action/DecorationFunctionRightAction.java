@@ -20,29 +20,29 @@ import com.fanglin.right.vo.DecorationFunctionRightVO;
 public class DecorationFunctionRightAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6788183414191506157L;
-	
+
 	@Autowired
 	private DecorationFunctionRightService decorationFunctionRightService;
-	
+
 	private List<DecorationFunctionRightVO> decorationFunctionRights;
-	
+
 	private DecorationFunctionRightVO decorationFunctionRight;
-	
+
 	private List<Long> dfids;
-	
-	@Action(value="queryDecorationFunctionRightByName", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationFunctionRightByName() throws FLException{
-		
-		decorationFunctionRights = decorationFunctionRightService.queryDecorationFunctionRightByName(decorationFunctionRight);
-		
+
+	@Action(value = "queryDecorationFunctionRightByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationFunctionRightByName() throws FLException {
+
+		decorationFunctionRights = decorationFunctionRightService.queryDecorationFunctionRightByName(decorationFunctionRight, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateDecorationFunctionRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateDecorationFunctionRight() throws FLException{
-		
+
+	@Action(value = "updateDecorationFunctionRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationFunctionRight() throws FLException {
+
 		decorationFunctionRightService.updateDecorationFunctionRight(decorationFunctionRight, dfids, queryCompany());
-		
+
 		return SUCCESS;
 	}
 
@@ -50,8 +50,7 @@ public class DecorationFunctionRightAction extends BaseListAction {
 		return decorationFunctionRights;
 	}
 
-	public void setDecorationFunctionRights(
-			List<DecorationFunctionRightVO> decorationFunctionRights) {
+	public void setDecorationFunctionRights(List<DecorationFunctionRightVO> decorationFunctionRights) {
 		this.decorationFunctionRights = decorationFunctionRights;
 	}
 
@@ -59,8 +58,7 @@ public class DecorationFunctionRightAction extends BaseListAction {
 		return decorationFunctionRight;
 	}
 
-	public void setDecorationFunctionRight(
-			DecorationFunctionRightVO decorationFunctionRight) {
+	public void setDecorationFunctionRight(DecorationFunctionRightVO decorationFunctionRight) {
 		this.decorationFunctionRight = decorationFunctionRight;
 	}
 

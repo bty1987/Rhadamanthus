@@ -11,7 +11,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesPO;
-import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("salesBalanceDao")
@@ -101,8 +100,9 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 
 	private void queryFilterExcute(PagingQuery<SalesBalancePO> query, List<Filter> filters) throws FLException {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
+
+		SalesDaoImpl.queryFilterExcute(query, filters, "sales");
 
 		for (Filter filter : filters) {
 
@@ -110,41 +110,22 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			query.alias("sales", "sales");
-			query.alias("sales.house", "house");
-			query.alias("house.village", "village");
-			query.alias("sales.region", "region");
-			query.alias("sales.dept", "dept");
-
-			if (SalesBalancePO.COLUMN_ORDERID_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_ORDERID_STR, data, op));
-			} else if (SalesBalancePO.COLUMN_SALESNO_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESNO_STR, data, op));
-			} else if (SalesBalancePO.COLUMN_SALESBRAND_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESBRAND_STR, data, op));
-			} else if (SalesBalancePO.COLUMN_SALESVILLAGE_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESVILLAGE_STR, data, op));
-			} else if (SalesBalancePO.COLUMN_SALESREGION_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESREGION_STR, data, op));
-			} else if (SalesBalancePO.COLUMN_SALESDEPT_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESDEPT_STR, data, op));
-			} else if (SalesBalancePO.COLUMN_STATUS_STR.equals(field)) {
+			if (SalesBalancePO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(SalesBalancePO.COLUMN_STATUS_STR, Short.valueOf(data), op));
 			} else if (SalesBalancePO.COLUMN_TYPE_STR.equals(field)) {
 				query.add(query.getCriterion(SalesBalancePO.COLUMN_TYPE_STR, Short.valueOf(data), op));
-			} else if ("dompany".equals(field)) {
-				int cid = CompanyServiceImpl.decode(filter.getData());
-				query.add(query.getCriterion("sales.dompany", cid, op));
-			} else if (SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR.equals(field)) {
-				query.timeranges(SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR, filter.getData());
+			} else if (SalesBalancePO.COLUMN_DELIVERSTATUS_STR.equals(field)) {
+				query.add(query.getCriterion(SalesBalancePO.COLUMN_DELIVERSTATUS_STR, Short.valueOf(data), op));
+			} else if (SalesBalancePO.COLUMN_VERIFYSTATUS_STR.equals(field)) {
+				query.add(query.getCriterion(SalesBalancePO.COLUMN_VERIFYSTATUS_STR, Short.valueOf(data), op));
+			} else if (SalesBalancePO.COLUMN_CONFIRMSTATUS_STR.equals(field)) {
+				query.add(query.getCriterion(SalesBalancePO.COLUMN_CONFIRMSTATUS_STR, Short.valueOf(data), op));
 			} else if (SalesBalancePO.COLUMN_CREATETIME_STR.equals(field)) {
 				query.timeranges(SalesBalancePO.COLUMN_CREATETIME_STR, filter.getData());
 			} else if (SalesBalancePO.COLUMN_VENDERTIME_STR.equals(field)) {
 				query.timeranges(SalesBalancePO.COLUMN_VENDERTIME_STR, filter.getData());
 			} else if (SalesBalancePO.COLUMN_POSTTIME_STR.equals(field)) {
 				query.timeranges(SalesBalancePO.COLUMN_POSTTIME_STR, filter.getData());
-			} else if (SalesBalancePO.COLUMN_GRADE_STR.equals(field)) {
-				query.add(query.getCriterion(SalesBalancePO.COLUMN_GRADE_STR, data, op));
 			}
 		}
 	}

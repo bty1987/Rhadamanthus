@@ -7,22 +7,23 @@ jQuery(function($) {
             addNormpackItemModal: com.focusPage("#addNormpackItemModal")
         },
         items: {
-            goodsName: com.focusPage('#goodsName', "#addNormpackItemModal"),
+            name: com.focusPage('#name', "#addNormpackItemModal"),
             normunit: com.focusPage('#normunit', "#addNormpackItemModal"),
             normnum: com.focusPage('#normnum', "#addNormpackItemModal"),
             storeunit: com.focusPage('#storeunit', "#addNormpackItemModal"),
-            storenum: com.focusPage('#storenum', "#addNormpackItemModal")
+            storenum: com.focusPage('#storenum', "#addNormpackItemModal"),
+            price: com.focusPage('#price', "#addNormpackItemModal")
         },
         flag: true
     };
 
-    com.initTypeahead('goodsName', api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", null);
-
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
         normpackItem.items.normunit.bindData(res.measurementUnits, "name", "name");
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
         normpackItem.items.storeunit.bindData(res.measurementUnits, "name", "name");
     });
 
@@ -42,6 +43,7 @@ jQuery(function($) {
         } else if (listData && listData.length) {
 
             $.each(listData, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $title = $('<small></small>').addClass('blue').html(' ' + v.npiid);
@@ -49,9 +51,10 @@ jQuery(function($) {
 
                 var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger pull-right action-buttons').html('删除');
 
-                var propertyArr = [["商品:", v.goods.name, "grey"], ["定额单位: ", v.normunit, "gray"], ["定额数量: ", v.normnum, "blue"], ["库房单位: ", v.storeunit, "gray"], ["库房数量: ", v.storenum, "blue"]];
+                var propertyArr = [["名称:", v.name, "grey"], ["定额单位: ", v.normunit, "gray"], ["定额数量: ", v.normnum, "blue"], ["库房单位: ", v.storeunit, "gray"], ["库房数量: ", v.storenum, "blue"], ["价格: ", v.price, "blue"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -63,6 +66,7 @@ jQuery(function($) {
                 $h3.append($title).append($btnDel);
 
                 $btnDel.bindClick(function() {
+
                     deleteNormpackItem(v.npiid);
                 });
 
@@ -81,17 +85,22 @@ jQuery(function($) {
 
             initList(data.normpackItems);
         }, null, false);
-    };
+    }
+    ;
 
     com.focusPage('#addBtn').click(function() {
+
         normpackItem.flag = true;
         normpackItem.modals.addNormpackItemModal.modal("show");
     });
 
     normpackItem.modals.addNormpackItemModal.on("hide.bs.modal", function() {
+
         com.clearValidator();
         com.cleanItems(normpackItem.items);
     });
+
+    com.initTypeahead(normpackItem.items.name, api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
 
     function deleteNormpackItem(npiid) {
 
@@ -108,23 +117,19 @@ jQuery(function($) {
 
     com.focusPage("#saveBtn").bindClick(function() {
 
-        if (com.validate("addNormpackItemModal")) { return false; }
-
-        var gid = com.typeahead("goodsName");
-
-        if (!gid) {
-            com.showAlert(com.error, "数据绑定失败");
-            normpackItem.modals.addNormpackItemModal.modal("hide");
+        if (com.validate("addNormpackItemModal")) {
             return false;
         }
 
         var options = {
             "normpackItem.npid": normpackItem.npid,
-            "normpackItem.goods.gid": gid,
+            "normpackItem.noods.nid": com.typeahead(normpackItem.items.name),
             "normpackItem.normunit": normpackItem.items.normunit.val(),
             "normpackItem.normnum": normpackItem.items.normnum.val(),
             "normpackItem.storeunit": normpackItem.items.storeunit.val(),
-            "normpackItem.storenum": normpackItem.items.storenum.val()
+            "normpackItem.storenum": normpackItem.items.storenum.val(),
+            "normpackItem.name": normpackItem.items.name.val(),
+            "normpackItem.price": normpackItem.items.price.val()
         };
 
         com.post(api.data.addNormpackItem, options, function(res) {

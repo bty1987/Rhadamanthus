@@ -42,11 +42,11 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 	private UserDao userDao;
 
 	@Override
-	public void pageDecorationBalance(Paging paging, List<Filter> filters) {
+	public void pageDecorationForBalance(Paging paging, List<Filter> filters) throws FLException {
 
 		if (filters.size() == 0) return;
 
-		List<DecorationBalancePO> decorationBalancePOs = decorationBalanceDao.pageDecorationBalance(paging, filters);
+		List<DecorationBalancePO> decorationBalancePOs = decorationBalanceDao.pageDecorationForBalance(paging, filters);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationBalancePO decorationBalancePO : decorationBalancePOs) {

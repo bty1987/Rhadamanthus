@@ -143,6 +143,7 @@ public class SoodsItemServiceImpl implements SoodsItemService {
 
 		soodsItemPO.setQuotationItem(new QuotationItemPO(soodsItemVO.getQuotationItem().getQiid()));
 		soodsItemPO.setSoods(soodsPO);
+		soodsItemPO.setGid(soodsPO.getGoods().getGid());
 
 		soodsItemPO.setStatus(SoodsItemPO.STATUS_INIT_INT);
 

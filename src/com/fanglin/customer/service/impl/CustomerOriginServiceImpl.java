@@ -174,7 +174,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.save(customerOriginPO);
 
-		creatCustomerOriginRecord(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), (short) 1, userDao.queryUserByUserId(userId));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 				oldVillageName = customerOriginPO.getVillage().getName();
 			}
 
-			creatCustomerOriginRecord(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), customerOriginVO.getPhone(), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), (short) 0, userDao.queryUserByUserId(userId));
+			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), customerOriginVO.getPhone(), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
 			customerOriginPO.setVillage(villagePO);
 		}
 
@@ -231,7 +231,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			oldBelongFatherDept = customerOriginPO.getBelonger().getDept().getFatherDept().getName();
 		}
 
-		creatCustomerOriginRecord(customerOriginPO.getCsid(), String.format("原归属人:%s,原归属部门:%s,原归属分区:%s,新归属人:%s,新归属部门:%s,新归属分区:%s", oldBelongName, oldBelongDept, oldBelongFatherDept, belonger.getUserName(), belonger.getDept().getName(), belonger.getDept().getFatherDept().getName()), (short) 1, userDao.queryUserByUserId(userId));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原归属人:%s,原归属部门:%s,原归属分区:%s,新归属人:%s,新归属部门:%s,新归属分区:%s", oldBelongName, oldBelongDept, oldBelongFatherDept, belonger.getUserName(), belonger.getDept().getName(), belonger.getDept().getFatherDept().getName()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 
 		customerOriginPO.setBelonger(belonger);
 		customerOriginPO.setDepartment(belonger.getDept());
@@ -262,7 +262,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330002, "客源归属人错误");
 		}
 
-		creatCustomerOriginRecord(customerOriginPO.getCsid(), String.format("原归属人姓名:%s,原归属人员工号:%s,原归属人电话:%s", customerOriginPO.getBelonger().getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), (short) 1, userDao.queryUserByUserId(userId));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原归属人姓名:%s,原归属人员工号:%s,原归属人电话:%s", customerOriginPO.getBelonger().getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 
 		customerOriginPO.setBelonger(null);
 
@@ -295,7 +295,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.update(customerOriginPO);
 
-		creatCustomerOriginRecord(customerOriginPO.getCsid(), String.format("认领人姓名:%s,认领人员工号:%s,认领人电话:%s", userDao.queryUserByUserId(userId).getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), (short) 1, userDao.queryUserByUserId(userId));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("认领人姓名:%s,认领人员工号:%s,认领人电话:%s", userDao.queryUserByUserId(userId).getUserName(), userId, userDao.queryUserByUserId(userId).getPhone()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 	}
 
 	@Override
@@ -455,19 +455,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		return customerOriginVO;
-	}
-
-	public void creatCustomerOriginRecord(long csid, String comment, Short type, UserPO operater) {
-
-		CustomerOriginRecordPO customerOriginRecordPO = new CustomerOriginRecordPO();
-
-		customerOriginRecordPO.setCsid(csid);
-		customerOriginRecordPO.setComment(comment);
-		customerOriginRecordPO.setType(type);
-		customerOriginRecordPO.setOperater(operater);
-		customerOriginRecordPO.setOperatTime(new Timestamp(System.currentTimeMillis()));
-
-		customerOrginRecordDao.save(customerOriginRecordPO);
 	}
 
 }

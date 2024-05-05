@@ -96,12 +96,15 @@ jQuery(function($) {
     com.post(api.decoration.queryDecorationHolonomy, {
         "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
+
         var holonomy = res.decorationHolonomy;
 
         if (!holonomy.materialPrice)
             holonomy.materialPrice = 0;
 
         com.focusPage("#con-material-total", "#form").val(holonomy.materialPrice);
+        com.focusPage("#con-material-first", "#form").val(Math.round(utils.accMul(holonomy.materialPrice, 0.5)));
+        com.focusPage("#con-material-final", "#form").val(Math.round(utils.accMul(holonomy.materialPrice, 0.5)));
     });
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
@@ -161,7 +164,6 @@ jQuery(function($) {
                 "data": JSON.stringify(data)
             };
 
-            console.log(data);
             console.log(options);
 
             com.post(api.decoration.addDecorationContract, options, function(res) {

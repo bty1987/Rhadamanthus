@@ -91,9 +91,9 @@ jQuery(function($) {
 		functions: [],
 		decorationType: constant.decoration().decoration.typeness.datas,
 
-		typeData: constant.payment.advancePayment.type.keys,
-		paymentTypeData: constant.payment.advancePayment.paymentType.keys,
-		statusData: constant.payment.payment.status.keys,
+		typeData: constant.payment().advancePayment.type.keys,
+		paymentTypeData: constant.payment().advancePayment.paymentType.keys,
+		statusData: constant.payment().payment.status.keys,
 		typeUpdate: "",
 		currentOrderId: "",
 		pageConfig: {},
@@ -121,7 +121,7 @@ jQuery(function($) {
 		com.cleanItems(payment.items);
 	});
 
-	payment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+	payment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
 	com.focusPage("#collectModal :checkbox", "#payment").on("change", function(){
 		var that = $(this);
@@ -213,90 +213,98 @@ jQuery(function($) {
 	payment.pageConfig = paymentUtils.getConfig(payment.type, 1);
 
 	var displayFunc  = (function(){
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+		var renderList = function(tableId,listData){
+			var $tableWrap = com.focusPage('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){ 
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+					$liLine.appendTo($ul);
+				});
+				$ul.appendTo($tableWrap);
+			}
+		};
 
-        var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+		var creatLine = function(v){
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var orderId = v.decoration ? v.decoration.orderId : v.orderId;
-            var $h3 = $('<h3></h3>').addClass('oid');
+			var $h3 = $('<h3></h3>').addClass('oid');
 			var $label = $('<label></label>').appendTo($h3);
 
 			var $input = $('<input>').attr({"type": "checkbox", "name": "pids", "class": "ace ace-checkbox-2"});
 			if (payment.pageConfig.pageBtn.contains("selectall")) $label.append($input.attr({"pid": v.pid}));
 
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').html(orderId).appendTo($label);
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr("id",orderId+"ul");
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr("id",orderId+"ul");
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 			var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
-            var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
-            var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
-            var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
-            var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
+			var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
+			var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
+			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
+			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
 			var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
+			var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
 
-			var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
+			var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单');
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 			var $btnUpdateP = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
-			var project =  ["common", "pos", "check"].contains(payment.type) ? v.decoration : v;
-            var propertyArr = paymentUtils.getPropertyArr(payment, v, project, payment.statusData);
+			var propertyArr = paymentUtils.getPropertyArr(payment, v, v.decoration, payment.statusData);
 
-            $.each(propertyArr, function (index,value) {
-            	var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-           
-            $divBtnWrap.appendTo($h3);
-            $liLine.append($h3).append($ulProperty);
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+				if (value[3]) {
+					$b.click(function() {
+						value[3]($b);
+					});
+				}
+
+				$liProperty.appendTo($ulProperty);
+			});
+
+			$divBtnWrap.appendTo($h3);
+			$liLine.append($h3).append($ulProperty);
 
 			if(payment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(payment, v, $liLine, "");
 
-			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
+			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
 
 			if (payment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
 			if (payment.pageConfig.pageBtn.contains("withdraw")) $divBtnWrap.append($btnCashout);
 
-			if (v.status != constant.payment.payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
-			if (v.status != constant.payment.payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == constant.payment.payment.STATUS_PAID_INT && v.type != constant.payment.advancePayment.TYPE_PAYED_INT && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
-			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
-			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
-			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
+			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
+			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if (v.status == constant.payment().payment.STATUS_PAID_INT && v.type != constant.payment().advancePayment.TYPE_PAYED_INT && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
+			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
+			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
+			if (v.status == constant.payment().payment.STATUS_CONFIRMED_INT && payment.pageConfig.pageBtn.contains("toKingdee")) $divBtnWrap.append($btnKingdee);
 
 			//收款
-            $btnCollect.click(function(){
-            	v.decoration.paymentType = "收款";
+			$btnCollect.click(function(){
+				v.decoration.paymentType = "收款";
 				payment.typeUpdate = 0;
 				payment.currentOrderId = v.decoration.orderId;
 
 				paymentUtils.showPos(payment, {"paytran.orderId": v.decoration.orderId, "paytran.atttype": payment.atttype}, [0, 1]);
 
-            	initCollect(v.decoration);
-            });
+				initCollect(v.decoration);
+			});
 
 			//提款
-            $btnCashout.click(function(){
+			$btnCashout.click(function(){
 				v.decoration.paymentType = "提款";
 				payment.typeUpdate = 1;
 
 				com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": v.decoration.orderId}, function(res){
 					initCollect(v.decoration, res);
 				});
-            });
+			});
 
 			//更新
 			$btnUpdateP.click(function(){
@@ -308,7 +316,7 @@ jQuery(function($) {
 
 			//查看装修单
 			$btnDecorationInfo.click(function(){
-				paymentUtils.decorationInfoShow(v.decoration.orderId, payment.decorationType);
+				tools.decoration.info($(this), v.decoration.orderId);
 			});
 
 			//打印
@@ -327,8 +335,8 @@ jQuery(function($) {
 				// pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
 				var checkOptions = {
 					"paytran.pid": v.pid,
-					"paytran.type": constant.payment.receipt.PAYMENTTYPE_ADVANCE_INT,
-					"paytran.atttype": v.paymentType == 2 ? constant.payment.paytran.ATTTYPE_MATERIAL_INT : constant.payment.paytran.ATTTYPE_DECORATION_INT
+					"paytran.type": constant.payment().receipt.PAYMENTTYPE_ADVANCE_INT,
+					"paytran.atttype": v.paymentType == 2 ? constant.payment().paytran.ATTTYPE_MATERIAL_INT : constant.payment().paytran.ATTTYPE_DECORATION_INT
 				};
 
 				com.showConfirm("是否验证收款信息?", function(result) {
@@ -370,8 +378,8 @@ jQuery(function($) {
 				var options = {
 					"paytran.orderId": v.decoration.orderId,
 					"paytran.pid": v.pid,
-					"paytran.type": constant.payment.receipt.PAYMENTTYPE_ADVANCE_INT,
-					"paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+					"paytran.type": constant.payment().receipt.PAYMENTTYPE_ADVANCE_INT,
+					"paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT,
 					"paytran.no": com.typeahead(bankDiv),
 					"paytran.sn": payment.posValues[bankVal].value, // 收据类型中pos的value值
 					"paytran.money": v.recharge,
@@ -390,20 +398,26 @@ jQuery(function($) {
 				});
 			});
 
-            return $liLine;
-        };
-      
-        return {
-            init : function(tableId,listData){
+			// 同步金蝶
+			$btnKingdee.click(function() {
+
+				kingdeeUtils.payment(v, payment.htmlName);
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
 				com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        }
-    })();
-	
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
 	var searcher = new Searcher();
 
 	var extraParams = {};
@@ -497,7 +511,7 @@ jQuery(function($) {
 		payment.modals.collectModal.modal("show");
 
 	}
-	
+
 	//更新
 	function initUpdate(v){
 
@@ -741,13 +755,13 @@ jQuery(function($) {
 			payment.bankGrade = payment.bankUtil;
 			payment.checkvGrade = payment.checkvUtil;
 		}else{
-			if(paymentType == constant.payment.advancePayment.PAYMENTTYPE_BALANCE_INT){
+			if(paymentType == constant.payment().advancePayment.PAYMENTTYPE_BALANCE_INT){
 				if(decorationGrade == "A" || decorationGrade == "C"){
 					gradeParam = "A";
 				}else{
 					gradeParam = "";
 				}
-			}else if(paymentType  == constant.payment.advancePayment.PAYMENTTYPE_MATERIAL_INT){
+			}else if(paymentType  == constant.payment().advancePayment.PAYMENTTYPE_MATERIAL_INT){
 				if(decorationGrade == "C"){
 					gradeParam = "B";
 				}else{

@@ -27,8 +27,9 @@ var printselectionDetail = (function() {
             var quoterName = decoration.quoter.currentName ? decoration.quoter.currentName : " ";
             var escorterName = decoration.escorter.currentName ? decoration.escorter.currentName : " ";
             var escorterPhone = decoration.escorter.phone ? decoration.escorter.phone : " ";
+            var affirmTime = params.selection.affirmTime != null ? params.selection.affirmTime : "";
 
-            headHtml += '<table style="font-size: 14px" width="100%" bgcolor="#000000" border="0" cellpadding="1" cellspacing="0">';
+            headHtml += '<table style="font-size: 14px" width="100%" border="0" cellpadding="1" cellspacing="0">';
             headHtml += '<tbody><tr bgcolor="#FFFFFF">';
             headHtml += '<td colspan="8" style="font-size: 20px" align="center"> <b>' + "选材明细列表" + '</b></td>';
             headHtml += '</tr>';
@@ -44,6 +45,10 @@ var printselectionDetail = (function() {
             headHtml += '<td colspan="1" width="33%">设计师: ' + decoration.designer.currentName + '</td>';
             headHtml += '<td colspan="1" width="33%">预算员: ' + quoterName + '</td>';
             headHtml += '<td colspan="1" width="33%">主材员: ' + escorterName + '</td>';
+            headHtml += '</tr>';
+            headHtml += '<tr bgcolor="#FFFFFF">';
+            headHtml += '<td colspan="1" width="33%">确认状态: ' + constant.quotation().selection.isAffirm.keys[params.selection.isAffirm] + '</td>';
+            headHtml += '<td colspan="1" width="33%">确认时间: ' + affirmTime + '</td>';
             headHtml += '</tr>';
             headHtml += '<tr bgcolor="#FFFFFF">';
             headHtml += '<td colspan="8" height="10"></td>';
@@ -123,7 +128,7 @@ var printselectionDetail = (function() {
                     var img = $('<img width="40px"/>');
 
                     if (v.soods.path != null) {
-                        com.showImg(img1, v.soods.path, 40, 40, v.goods.name, null, null);
+                        com.showImg(img, v.soods.path, 40, 40, v.goods.name, null, null);
                     }
 
                     contentHtml += '<tr bgcolor="#FFFFFF">';
@@ -167,12 +172,9 @@ var printselectionDetail = (function() {
     return {
         init: function() {
 
-            selectionDetail.orderId = params.quotation.orderId;
+            selectionDetail.orderId = params.selection.orderId;
 
-            com.post(api.ds.quotation, {}, function(res) {
-
-                selectionDetail.types = res.selectionItemType.split("key", "value");
-            }, null, false);
+            selectionDetail.types = constant.quotation().selectionItem.type.keys;
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": selectionDetail.orderId

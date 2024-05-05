@@ -158,6 +158,8 @@ public class SalesPO implements Serializable {
 
 	private DepartmentPO region;
 
+	private UserPO creater;
+
 	private UserPO guider;
 
 	private DepartmentPO guideDept;
@@ -363,6 +365,16 @@ public class SalesPO implements Serializable {
 
 	public void setRegion(DepartmentPO region) {
 		this.region = region;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -641,17 +653,31 @@ public class SalesPO implements Serializable {
 
 	public void ptv(SalesVO salesVO) {
 
-		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
-		BeanUtil.copyProperties(this.getSalesman(), salesVO.getSalesman(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(this.getFinisher(), salesVO.getFinisher(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(this.getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-		BeanUtil.copyProperties(this.getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-		BeanUtil.copyProperties(this.getGuider(), salesVO.getGuider(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(this.getInstorer(), salesVO.getInstorer(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(this.getGuideDept(), salesVO.getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
-		BeanUtil.copyProperties(this.getHouse(), salesVO.getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(this.getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		BeanUtil.copyProperties(this.getCustomer(), salesVO.getCustomer());
+		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher", "creater"));
+
+		if (salesVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), salesVO.getHouse(), Arrays.asList("village"));
+		if (salesVO.getHouse() != null && salesVO.getHouse().getVillage() != null) BeanUtil.copyProperties(getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		if (salesVO.getHouse() != null && salesVO.getHouse().getVillage() != null && salesVO.getHouse().getVillage().getCityProper() != null) BeanUtil.copyProperties(getHouse().getVillage().getCityProper(), salesVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+		if (salesVO.getHouse() != null && salesVO.getHouse().getVillage() != null && salesVO.getHouse().getVillage().getCityProper() != null && salesVO.getHouse().getVillage().getCityProper().getCity() != null) BeanUtil.copyProperties(getHouse().getVillage().getCityProper().getCity(), salesVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
+
+		if (salesVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), salesVO.getCustomer());
+
+		if (salesVO.getDept() != null) BeanUtil.copyProperties(getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesVO.getGuideDept() != null) BeanUtil.copyProperties(getGuideDept(), salesVO.getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (salesVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), salesVO.getCreater(), Arrays.asList("dept", "duty"));
+		if (salesVO.getSalesman() != null) BeanUtil.copyProperties(getSalesman(), salesVO.getSalesman(), Arrays.asList("dept", "duty"));
+		if (salesVO.getGuider() != null) BeanUtil.copyProperties(getGuider(), salesVO.getGuider(), Arrays.asList("dept", "duty"));
+		if (salesVO.getInstorer() != null) BeanUtil.copyProperties(getInstorer(), salesVO.getInstorer(), Arrays.asList("dept", "duty"));
+		if (salesVO.getSupplier() != null) BeanUtil.copyProperties(getSupplier(), salesVO.getSupplier(), Arrays.asList("dept", "duty"));
+		if (salesVO.getFinisher() != null) BeanUtil.copyProperties(getFinisher(), salesVO.getFinisher(), Arrays.asList("dept", "duty"));
+
+		if (salesVO.getSupplier() != null) BeanUtil.copyPropertie(getSupplier(), salesVO.getSupplier(), Arrays.asList("dept", "duty"));
+
+		if (salesVO.getSalesman() != null && salesVO.getSalesman().getDept() != null) BeanUtil.copyProperties(getSalesman().getDept(), salesVO.getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesVO.getGuider() != null && salesVO.getGuider().getDept() != null) BeanUtil.copyProperties(getGuider().getDept(), salesVO.getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesVO.getInstorer() != null && salesVO.getInstorer().getDept() != null) BeanUtil.copyProperties(getInstorer().getDept(), salesVO.getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
 	}
 

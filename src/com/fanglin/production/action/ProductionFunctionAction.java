@@ -17,28 +17,28 @@ import com.fanglin.production.vo.ProductionFunctionVO;
 @Namespace("/")
 public class ProductionFunctionAction extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -195184450928885373L;
 
 	@Autowired
 	private ProductionFunctionService productionFunctionService;
-	
+
 	private List<ProductionFunctionVO> productionFunctions;
-	
+
 	private ProductionFunctionVO productionFunction;
 
-	@Action(value = "queryProductionFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionFunction() throws FLException{
-		
+	@Action(value = "queryProductionFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryProductionFunction() throws FLException {
+
 		productionFunctions = productionFunctionService.queryProductionFunction(productionFunction);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryProductionFunctionByName", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionFunctionByName() throws FLException{
-		
+
+	@Action(value = "queryProductionFunctionByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryProductionFunctionByName() throws FLException {
+
 		productionFunctions = productionFunctionService.queryProductionFunctionByName(productionFunction);
-		
+
 		return SUCCESS;
 	}
 
@@ -46,8 +46,7 @@ public class ProductionFunctionAction extends BaseListAction {
 		return productionFunctions;
 	}
 
-	public void setProductionFunctions(
-			List<ProductionFunctionVO> productionFunctions) {
+	public void setProductionFunctions(List<ProductionFunctionVO> productionFunctions) {
 		this.productionFunctions = productionFunctions;
 	}
 
@@ -58,5 +57,5 @@ public class ProductionFunctionAction extends BaseListAction {
 	public void setProductionFunction(ProductionFunctionVO productionFunction) {
 		this.productionFunction = productionFunction;
 	}
-	
+
 }

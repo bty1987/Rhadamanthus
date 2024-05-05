@@ -1,6 +1,5 @@
-
 Condition.addupRule("personel", {
-    
+
     userId: {
         label: "员工号",
         type: "text",
@@ -27,13 +26,13 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {
             url: api.system.queryRoleByName,
             postData: {},
             listPath: "roleList",
             keyPath: "rid",
             valuePath: "name",
-            query:"role.name"// 请求参数
+            query: "role.name"
         }
     },
     deptId: {
@@ -44,13 +43,15 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": ""},//获取数据时的请求参数
-            listPath: "deptList",//响应list的json路径
-            keyPath: "did",//用来向后台提交的字段的json路径
-            valuePath: "name"//用来在页面显示的字段的json路径
+            postData: {
+                "dept.type.dtid": "0"
+            },
+            listPath: "deptList",
+            keyPath: "did",
+            valuePath: "name"
         }
     },
     userstatus: {
@@ -61,12 +62,10 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.personel,
-            postData: {},
-            listPath: "statusType",
+        dataSource: {
+            listPath: constant.personel().user.status.datas,
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     name: {
@@ -87,7 +86,7 @@ Condition.addupRule("personel", {
             validate: null
         }
     },
-    phone: { //
+    phone: {
         label: "手机号",
         type: "text",
         submitConfig: {
@@ -99,7 +98,8 @@ Condition.addupRule("personel", {
             }
         }
     },
-    status :{
+
+    "recruitment-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -107,49 +107,38 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.personel,
-            postData: {},
-            listPath: "status",
+        dataSource: {
+            listPath: constant.personel().recruitment.status.datas,
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
 
-    "info-level" :{
+    "info-level": {
         label: "职级",
-            type: "select",
-            submitConfig: {
-            name: "level",
-                op: "eq",
-                validate: null
-        },
-        dataSource: {
-            url: api.ds.personel,
-                postData: {},
-            listPath: "userLevel",
-                keyPath: "key",
-                valuePath:"value"
-        }
-    },
-    
-    "duty-name": {
-        label: "职位名称",
-        type: "autofill",
+        type: "select",
         submitConfig: {
-            name: "name",
+            name: "level",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.system.queryDutyByName,
-            postData: {"duty.status":"", "duty.departmentType.dtid": ""},//获取数据时的请求参数
-            listPath: "dutys",//响应list的json路径
-            keyPath: "did",//用来向后台提交的字段的json路径
-            valuePath: "name"//用来在页面显示的字段的json路径
+            listPath: constant.personel().userInfo.level.datas,
+            keyPath: "key",
+            valuePath: "value"
         }
     },
-    
+
+    "duty-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+
     "region-name": {
         label: "大区名称",
         type: "text",
@@ -159,9 +148,9 @@ Condition.addupRule("personel", {
             validate: null
         }
     },
-    
-    "dept-name": {
-        label: "部门名称",
+
+    "dept": {
+        label: "名称",
         type: "autofill",
         submitConfig: {
             name: "deptName",
@@ -171,16 +160,26 @@ Condition.addupRule("personel", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": ""},//获取数据时的请求参数
-            listPath: "deptList",//响应list的json路径
-            keyPath: "did",//用来向后台提交的字段的json路径
-            valuePath: "name"//用来在页面显示的字段的json路径
+            postData: {
+                "dept.type.dtid": ""
+            },
+            listPath: "deptList",
+            keyPath: "did",
+            valuePath: "name"
         }
     },
-    
+    "dept-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
     "dept-type": {
-        label: "部门类型",
-        type: "select",	
+        label: "类型",
+        type: "select",
         submitConfig: {
             name: "deptType",
             op: "eq",
@@ -191,28 +190,24 @@ Condition.addupRule("personel", {
             postData: {},
             listPath: "departmentTypes",
             keyPath: "dtid",
-            valuePath: "name" 	
+            valuePath: "name"
         }
     },
-    
-    "dept-isdet" :{
-        label: "是否定岗",
+    "dept-isdet": {
+        label: "定岗",
         type: "select",
         submitConfig: {
             name: "isdet",
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.department,
-            postData: {},
-            listPath: "deptIsdet",
+        dataSource: {
+            listPath: constant.personel().dept.isdet.datas,
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
-    }, 	
-   
-    "dept-status" :{
+    },
+    "dept-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -220,15 +215,13 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.department,
-            postData: {},
-            listPath: "deptStatus",
+        dataSource: {
+            listPath: constant.personel().dept.status.datas,
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
-    
+
     "performance-type": {
         label: "绩效类型",
         type: "select",
@@ -237,12 +230,12 @@ Condition.addupRule("personel", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {
             url: api.ds.personel,
             postData: {},
             listPath: "perType",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "performance-startTime": {
@@ -263,15 +256,15 @@ Condition.addupRule("personel", {
             validate: null
         }
     },
-    
+
     "label-name": {
-        label:"名称",
-        type:"text",
-        submitConfig : {
-            name : "name",
-            op : "eq",
-            validate:null
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
         }
     }
-    
+
 });

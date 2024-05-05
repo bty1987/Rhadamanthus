@@ -28,6 +28,14 @@ public class QuotationFormatAction extends BaseListAction {
 
 	private QuotationFormatVO quotationFormat;
 
+	@Action(value = "queryQuotationFormat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationFormat() throws FLException {
+
+		quotationFormats = quotationFormatService.queryQuotationFormat(quotationFormat);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryQuotationFormatByQcid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationFormatByQcid() throws FLException {
 

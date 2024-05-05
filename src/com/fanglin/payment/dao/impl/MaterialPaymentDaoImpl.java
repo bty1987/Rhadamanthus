@@ -28,46 +28,46 @@ import com.fanglin.utils.Paging;
 
 @Repository("materialPaymentDao")
 public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implements MaterialPaymentDao {
-	
-	public MaterialPaymentDaoImpl(){
+
+	public MaterialPaymentDaoImpl() {
 		super(MaterialPaymentPO.class);
 	}
-	
+
 	@Override
-	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters){
-		
+	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters) {
+
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
 
 	@Override
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(List<Filter> filters) {
-		
+
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(new Paging(), MaterialPaymentPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		query.notPaging();
-		
+
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus){
-		
+	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus) {
+
 		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid));
-		
-		if(paymentStatus != null){
+
+		if (paymentStatus != null) {
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus));
 		}
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMids(List<Long> mids) {
@@ -76,55 +76,49 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMidAType(long mid, Short paymentType){
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidAType(long mid, Short paymentType) {
 		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid));
-		
-		if(paymentType != null){
+
+		if (paymentType != null) {
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType));
 		}
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypes(long mid, List<Short> paymentType){
+	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypes(long mid, List<Short> paymentType) {
 		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid)).add(Restrictions.in(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentByMidATypeAStatus(long mid, Short paymentType, Short paymentStatus) {
-		
+
 		Criteria query = session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid));
-		
-		if(paymentType != null){
+
+		if (paymentType != null) {
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType));
 		}
-		
-		if(paymentStatus != null){
+
+		if (paymentStatus != null) {
 			query.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus));
 		}
-		
+
 		return query.list();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked") 
-	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMid(long mid){
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material")
-				.add(Restrictions.eq("material.mid", mid))
-				.add(Restrictions.ne(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
-				.list();
+	@SuppressWarnings("unchecked")
+	public List<MaterialPaymentPO> queryMaterialPaymentForNotInitByMid(long mid) {
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid)).add(Restrictions.ne(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT)).list();
 	}
-	
+
 	@Override
-	@SuppressWarnings("unchecked") 
+	@SuppressWarnings("unchecked")
 	public List<MaterialPaymentPO> queryMaterialPaymentForInitByMid(long mid) {
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material")
-				.add(Restrictions.eq("material.mid", mid))
-				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT))
-				.list();
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.mid", mid)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT)).list();
 	}
 
 	@Override
@@ -138,69 +132,66 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	public List<MaterialPaymentPO> queryMaterialPaymentByReceiptId(long mrId) {
 		return session().createCriteria(MaterialPaymentPO.class).createAlias("materialReceipt", "materialReceipt").add(Restrictions.eq("materialReceipt.mrId", mrId)).list();
 	}
-	
+
 	@Override
-	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Short paymentType){
-		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material")
-				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_NO_STR, msoNo))
-				.add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType))
-				.uniqueResult();
+	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String msoNo, Short paymentType) {
+		return (MaterialPaymentPO) session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq(MaterialPaymentPO.COLUMN_NO_STR, msoNo)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentType)).uniqueResult();
 	}
-	
+
 	@Override
 	public int countMaterialPaymentByMidAType(long mid, Short paymentType) {
 
 		String sql = "select count(*) from payment.materialpayment where mid =:mid and paymentType =:paymentType";
-		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("mid", mid).setInteger("paymentType", paymentType).uniqueResult();
+		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("mid", mid).setInteger("paymentType", paymentType).uniqueResult();
 		return num.intValue();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
 		query.alias("material", "material");
 		query.alias("material.house", "house");
 		query.alias("house.village", "village");
 		query.alias("material.salesman", "salesman");
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				
-				if(MaterialPaymentPO.COLUMN_ORDERID_STR.equals(field)){
-					query.add(query.getCriterion("material.orderId", data, op));
-				}else if("village".equals(field)){
-					query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
-				}else if(MaterialPO.COLUMN_NO_STR.equals(field)){
-					query.add(query.getCriterion("material.no", data, op));
-				}else if(MaterialPaymentPO.COLUMN_NO_STR.equals(field)){
-					query.add(query.getCriterion(field, data, op));
-				}else if("designer".equals(field)){
-					query.add(query.getCriterion("salesman.userId", filter.getData(), filter.getOp()));
-				}else if(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(field)){
-					query.add(query.getCriterion(field, Short.valueOf(data), op));
-				}else if(MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(field)){
-					query.alias("materialReceipt", "materialReceipt");
-					
-					if("between".equals(op)){
-						query.timeranges("materialReceipt.collectTime", "materialReceipt.collectTime", data);
-					}else{
-						query.add(query.getCriterion("materialReceipt.collectTime", data, op));
-					}
-				}else if("confirmTime".equals(field)){
-					
-					query.alias("materialReceipt", "materialReceipt");
-					
-					query.timeranges("materialReceipt.confirmTime", "materialReceipt.confirmTime", data);
-					
-				}else if("company".equals(filter.getField())){
-					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
-				}else if("paymentType".equals(field)){
-					List<Short> type = JSONArray.parseArray(data, Short.class);
-					query.add(query.getCriterion(field, type, op));
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (MaterialPaymentPO.COLUMN_ORDERID_STR.equals(field)) {
+				query.add(query.getCriterion("material.orderId", data, op));
+			} else if ("village".equals(field)) {
+				query.add(query.getCriterion("village.no", data, op));
+			} else if (MaterialPO.COLUMN_NO_STR.equals(field)) {
+				query.add(query.getCriterion("material.no", data, op));
+			} else if (MaterialPaymentPO.COLUMN_NO_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if ("designer".equals(field)) {
+				query.add(query.getCriterion("salesman.userId", data, op));
+			} else if (MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			} else if (MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(field)) {
+				query.alias("materialReceipt", "materialReceipt");
+
+				if ("between".equals(op)) {
+					query.timeranges("materialReceipt.collectTime", "materialReceipt.collectTime", data);
+				} else {
+					query.add(query.getCriterion("materialReceipt.collectTime", data, op));
 				}
+			} else if ("confirmTime".equals(field)) {
+
+				query.alias("materialReceipt", "materialReceipt");
+
+				query.timeranges("materialReceipt.confirmTime", "materialReceipt.confirmTime", data);
+
+			} else if ("company".equals(field)) {
+				query.add(query.getCriterion(field, Integer.valueOf(data), op));
+			} else if ("paymentType".equals(field)) {
+				List<Short> type = JSONArray.parseArray(data, Short.class);
+				query.add(query.getCriterion(field, type, op));
 			}
 		}
 	}

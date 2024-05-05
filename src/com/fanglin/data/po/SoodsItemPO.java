@@ -45,6 +45,8 @@ public class SoodsItemPO implements Serializable {
 
 	private QuotationItemPO quotationItem;
 
+	private long gid;
+
 	private short status;
 
 	public SoodsItemPO() {
@@ -80,6 +82,14 @@ public class SoodsItemPO implements Serializable {
 
 	public void setSoods(SoodsPO soods) {
 		this.soods = soods;
+	}
+
+	public long getGid() {
+		return gid;
+	}
+
+	public void setGid(long gid) {
+		this.gid = gid;
 	}
 
 	@Column(name = "status")

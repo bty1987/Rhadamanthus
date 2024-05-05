@@ -21,6 +21,12 @@ public class NormricePO implements Serializable {
 
 	public static final String COLUMN_QIID_STR = "quotationItem.qiid";
 
+	public static final String COLUMN_QUOTATIONITEMNAME_STR = "quotationItem.name";
+
+	public static final String COLUMN_QUOTATIONVERSION_STR = "quotationItem.quotationVersion.no";
+
+	public static final String COLUMN_CONSTRUCTIONNODENAME_STR = "constructionNode.name";
+
 	public static final short STATUS_VALID_STR = 0;
 
 	public static final short STATUS_INVALID_STR = 1;
@@ -36,6 +42,8 @@ public class NormricePO implements Serializable {
 	private int trannum;
 
 	private int salary;// 工费
+
+	private int stuff;
 
 	private short status;// 状态
 
@@ -105,6 +113,15 @@ public class NormricePO implements Serializable {
 
 	public void setSalary(int salary) {
 		this.salary = salary;
+	}
+
+	@Column(name = "stuff")
+	public int getStuff() {
+		return stuff;
+	}
+
+	public void setStuff(int stuff) {
+		this.stuff = stuff;
 	}
 
 	@Column(name = "status")

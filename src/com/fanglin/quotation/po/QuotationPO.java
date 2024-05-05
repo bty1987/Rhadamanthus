@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
 
@@ -52,6 +53,8 @@ public class QuotationPO implements Serializable {
 	private Timestamp createTime;
 
 	private UserPO creater;
+
+	private QuotationVersionPO version;
 
 	private long basePrice;
 
@@ -90,6 +93,8 @@ public class QuotationPO implements Serializable {
 	private short status;
 
 	private String content;
+
+	private short index;
 
 	public QuotationPO() {
 		super();
@@ -154,6 +159,16 @@ public class QuotationPO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "qvid", referencedColumnName = "qvId")
+	public QuotationVersionPO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionPO version) {
+		this.version = version;
 	}
 
 	@Column(name = "basePrice")
@@ -327,6 +342,15 @@ public class QuotationPO implements Serializable {
 		this.content = content;
 	}
 
+	@Column(name = "[index]")
+	public short getIndex() {
+		return index;
+	}
+
+	public void setIndex(short index) {
+		this.index = index;
+	}
+
 	public void ptp(String orderId, UserPO userPO, String name, String style) {
 
 		this.setOrderId(orderId);
@@ -336,8 +360,6 @@ public class QuotationPO implements Serializable {
 		this.setStyle(style);
 		this.setDiscount(10000);
 		this.setTotalPrice(0L);
-
-		this.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT); // 设置复制报价为默认报价
 
 		this.setContent("");
 	}

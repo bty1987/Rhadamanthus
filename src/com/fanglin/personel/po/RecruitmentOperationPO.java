@@ -14,26 +14,26 @@ import javax.persistence.Table;
 @Table(name = "recruitmentoperation", schema = "communion")
 public class RecruitmentOperationPO implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5513596955101087689L;
 
 	private long roid;
-	
+
 	private long rid;
-	
+
 	private String company;
-	
+
 	private String trade;
-	
+
 	private String duty;
-	
+
 	private String beginTime;
-	
+
 	private String endTime;
-	
+
 	private Timestamp createTime;
-	
+
 	private long salary;
-		
+
 	private String comment;
 
 	public RecruitmentOperationPO() {
@@ -132,5 +132,4 @@ public class RecruitmentOperationPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	
 }

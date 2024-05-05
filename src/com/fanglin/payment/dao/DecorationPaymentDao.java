@@ -14,34 +14,35 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
-	
-	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters);
-	
+
+	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters) throws FLException;
+
 	public List<DecorationPaymentPO> queryDecorationPaymentByDpids(List<Long> dpids);
-	
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters);
-	
+
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters) throws FLException;
+
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType);
-	
+
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType);
-	
+
 	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId);
-	
+
 	public List<DecorationPaymentPO> queryDecorationPaymentByDrid(long drId);
-	
+
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort);
-	
+
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId);
-	
+
 	public int deleteDecorationPaymentForBase(String orderId);
-	
+
 	public long amountDecorationPayment(String orderId, Short[] paymentStatus, short oneType, short twoType);
-	
+
 	public int countDecorationPayment(String orderId, List<Short> onetypes, List<Short> twotypes, List<Short> statuses);
-	
+
 }

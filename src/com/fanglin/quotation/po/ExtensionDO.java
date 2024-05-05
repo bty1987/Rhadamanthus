@@ -40,9 +40,17 @@ public class ExtensionDO implements Serializable {
 
 	private short type;
 
+	private short atttype;
+
 	private long undisPrice;
 
 	private long disPrice;
+
+	private long manageRate;
+
+	private short manageDiscount;
+
+	private long managePrice;
 
 	private long total;
 
@@ -84,6 +92,15 @@ public class ExtensionDO implements Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
+	}
+
 	@Column(name = "undisPrice")
 	public long getUndisPrice() {
 		return undisPrice;
@@ -100,6 +117,33 @@ public class ExtensionDO implements Serializable {
 
 	public void setDisPrice(long disPrice) {
 		this.disPrice = disPrice;
+	}
+
+	@Column(name = "manageRate")
+	public long getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(long manageRate) {
+		this.manageRate = manageRate;
+	}
+
+	@Column(name = "manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	@Column(name = "managePrice")
+	public long getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(long managePrice) {
+		this.managePrice = managePrice;
 	}
 
 	@Column(name = "total")

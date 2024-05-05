@@ -33,6 +33,8 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
@@ -40,8 +42,10 @@ import com.fanglin.quotation.po.AddReduceDO;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.AddReduceService;
 import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
@@ -64,6 +68,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 	private ExtensionItemDao extensionItemDao;
 
 	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 
 	@Autowired
@@ -83,6 +90,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private AddReduceItemServiceImpl addReduceItemService;
+
+	@Autowired
+	private NormoodItemDao normoodItemDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -113,6 +123,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 		if (statuses != null) {
 			filters.add(new Filter("statuses", statuses, "eq", Filter.RANGE_TYPE_SHORT_INT));
 		}
+
+		if (filters.size() == 0) return;
 
 		List<AddReduceDO> addReduceDOs = addReduceDao.pageAddReduce(paging, filters, company);
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
@@ -199,7 +211,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		System.out.println(String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您点【详情】查看与监理核对后的增减项明细，并正式给予点【确认】，温馨提示如已付款我们将办理落款项，如未付款请您及时联系监理付款。", orderId), String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认增减项, 如未付款请付款。", String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
 
 		for (AddReduceVO addReduce : addReduceVOs) {
 
@@ -215,11 +227,23 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addAddReduce(AddReduceVO addReduceVO, String userId) {
+	public int addAddReduce(AddReduceVO addReduceVO, String userId) throws FLException {
 
 		AddReducePO addReducePO = new AddReducePO();
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReduceVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (addReduceVO.getType() == AddReducePO.TYPE_REDUCE_INT && Arrays.asList(DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus())) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
 		BeanUtil.copyProperties(addReduceVO, addReducePO, Arrays.asList("arId", "creater"));
+
+		addReducePO.setSchedule(decorationPO.getStatus());
 
 		addReducePO.setCreater(userDao.queryUserByUserId(userId));
 		addReducePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -473,8 +497,13 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		if (decorationVO.getCustomer().getPhone() == null || !decorationVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
-			throw new FLException(130115, "客户电话不匹配");
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(orderId);
+		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		for (AddReduceVO addReduce : addReduceVOs) {
@@ -550,6 +579,12 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(150019, "款项不能撤销");
 		}
 
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(addReducePO.getOrderId());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItem(arId);
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
@@ -603,6 +638,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 			decorationPaymentDao.delete(decorationPaymentPO);
 		}
 
+		normoodItemDao.deleteNormoodItem(quotationPO.getQid(), arId, NormoodItemPO.TYPE_ADDCUT_INT);
+
 		addReduceDao.delete(addReducePO);
 
 		return 0;
@@ -636,22 +673,6 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		return addReduceItemVOs;
-	}
-
-	public static void convertAddReduceVOToPOForAdvance(AddReduceVO addReduceVO, AddReducePO addReducePO) {
-
-		addReducePO.setManageRate(addReduceVO.getManageRate());
-		addReducePO.setManagePrice(addReduceVO.getManagePrice());
-		addReducePO.setManageDiscount(addReduceVO.getManageDiscount());
-		addReducePO.setTaxRate(addReduceVO.getTaxRate());
-		addReducePO.setTaxPrice(addReduceVO.getTaxPrice());
-		addReducePO.setTaxDiscount(addReduceVO.getTaxDiscount());
-		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
-		addReducePO.setDisPrice(addReduceVO.getDisPrice());
-		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
-		addReducePO.setCalPrice(addReduceVO.getCalPrice());
-		addReducePO.setConsPrice(addReduceVO.getConsPrice());
-		addReducePO.setTotal(addReduceVO.getTotal());
 	}
 
 }

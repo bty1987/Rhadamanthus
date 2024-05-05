@@ -68,12 +68,7 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 
 			AwardPurchaseVO awardPurchaseVO = new AwardPurchaseVO(new AwardStockVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(awardPurchasePO, awardPurchaseVO, Arrays.asList("awardStock", "creater", "purchaser", "instorer"));
-			BeanUtil.copyPropertie(awardPurchasePO.getAwardStock(), awardPurchaseVO.getAwardStock());
-			BeanUtil.copyProperties(awardPurchasePO.getCreater(), awardPurchaseVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(awardPurchasePO.getPurchaser(), awardPurchaseVO.getPurchaser(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(awardPurchasePO.getInstorer(), awardPurchaseVO.getInstorer(), Arrays.asList("dept", "role", "duty"));
-			awardPurchaseVOs.add(awardPurchaseVO);
+			awardPurchaseVOs.add(awardPurchasePO.ptv(awardPurchaseVO));
 		}
 
 		paging.setData(awardPurchaseVOs);
@@ -87,14 +82,7 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 
 		AwardStockPO awardStock = awardStockDao.get(awardPurchaseVO.getAwardStock().getAsId());
 
-		AwardPurchasePO awardPurchasePO = new AwardPurchasePO(null, creater, null, null);
-
-		BeanUtil.copyProperties(awardPurchaseVO, awardPurchasePO, Arrays.asList("awardStock", "creater", "purchaser", "instorer"));
-
-		awardPurchasePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_INIT_INT);
-		awardPurchasePO.setCompany(company);
-		awardPurchasePO.setAwardStock(awardStock);
+		AwardPurchasePO awardPurchasePO = new AwardPurchasePO(awardStock, creater, null, null).init(awardStock, creater, null, null, AwardPurchasePO.STATUS_INIT_INT, company, awardPurchaseVO.getNum(), awardPurchaseVO.getActivity(), awardPurchaseVO.getDept(), awardPurchaseVO.getComment());
 
 		awardPurchaseDao.save(awardPurchasePO);
 
@@ -145,22 +133,47 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 			throw new FLException(160058, "奖品采购不可操作");
 		}
 
+		if (awardPurchasePO.getSurplus() < awardPurchaseVO.getNum()) {
+			throw new FLException(160059, "奖品采购入库量大于剩余量");
+		}
+
 		AwardStockPO awardStockPO = awardStockDao.get(awardPurchasePO.getAwardStock().getAsId());
 
 		UserPO instorer = userdDao.queryUserByUserId(userId);
 
-		awardPurchasePO.setInstorer(instorer);
-		awardPurchasePO.setInprice(awardPurchaseVO.getInprice());
-		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_WARE_INT);
-		awardPurchasePO.setInstoreTime(DateUtil.getDateToTimestamp(new Date()));
+		AwardPurchasePO purchasePO = new AwardPurchasePO(awardPurchasePO.getAwardStock(), awardPurchasePO.getCreater(), awardPurchasePO.getPurchaser(), instorer);
+
+		BeanUtil.copyProperties(awardPurchasePO, purchasePO, Arrays.asList("awardStock", "creater", "purchaser", "instorer"));
+
+		purchasePO.setFapid(awardPurchasePO.getApid());
+		purchasePO.setNum(awardPurchaseVO.getNum());
+		purchasePO.setSurplus(0);
+		purchasePO.setInprice(awardPurchaseVO.getInprice());
+
+		purchasePO.setInstoreTime(DateUtil.getDateToTimestamp(new Date()));
+		purchasePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		purchasePO.setPurchaseTime(awardPurchasePO.getPurchaseTime());
+
+		purchasePO.setStatus(AwardPurchasePO.STATUS_WARE_INT);
+
+		awardPurchaseDao.save(purchasePO);
+
+		if (awardPurchaseVO.getNum() == awardPurchasePO.getSurplus()) {
+
+			awardPurchasePO.setInstorer(instorer);
+			awardPurchasePO.setInstoreTime(DateUtil.getDateToTimestamp(new Date()));
+			awardPurchasePO.setStatus(AwardPurchasePO.STATUS_CLOSE_INT);
+		}
+
+		awardPurchasePO.setSurplus(Arith.sub(awardPurchasePO.getSurplus(), awardPurchaseVO.getNum()));
 
 		if (awardStockPO.getIsStock() == AwardStockPO.ISSTOCK_CAL_INT) {
 
-			awardStockPO.setNum(Arith.add(awardPurchasePO.getAwardStock().getNum(), awardPurchasePO.getNum()));
+			awardStockPO.setNum(Arith.add(awardPurchasePO.getAwardStock().getNum(), awardPurchaseVO.getNum()));
 
 			awardStockDao.update(awardStockPO);
 
-			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardPurchasePO.getInprice(), awardPurchasePO.getNum(), null);
+			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardPurchasePO.getInprice(), awardPurchaseVO.getNum(), null);
 
 			awardRecordDao.save(awardRecordPO);
 		}

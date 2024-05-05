@@ -72,6 +72,22 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 
 	@Override
+	public List<SelectionItemPD> pageSelectionItemForAccount(Paging paging, List<Filter> filters, Integer company) {
+
+		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
+
+		query.add(query.getCriterion(SelectionItemPO.COLUMN_COMPANY_STR, company, "eq"));
+
+		query.add(query.getCriterion("accountStatus", SelectionItemPO.ACCOUNT_STATUS_INIT_INT, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("siid");
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<SelectionItemPO> querySelectionItem(long sid) {
 		return createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).list();
@@ -129,6 +145,15 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 
 	@Override
+	public int countSelectionItem(String orderId, long areaId, List<Long> quoteIds, short type) {
+
+		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND areaId = :areaId AND quoteId in :quoteId AND type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setLong(SelectionItemPO.COLUMN_AREAID_STR, areaId).setParameterList(SelectionItemPO.COLUMN_QUOTEID_STR, quoteIds).setShort(SelectionItemPO.COLUMN_TYPE_STR, type).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
 	public int countSelectionItem(String orderId, List<Short> statuses) {
 
 		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND status in :statuses";
@@ -154,6 +179,8 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 				query.add(query.getCriterion(SelectionItemPD.COLUMN_DECORATION_ORDERID_STR, data, op));
 			} else if (SelectionItemPD.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(SelectionItemPD.COLUMN_STATUS_STR, Short.valueOf(data), op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
 			} else if (SelectionItemPD.COLUMN_GOODS_NAME_STR.equals(field)) {
 				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_NAME_STR, data, op));
 			} else if (SelectionItemPD.COLUMN_GOODS_CATEGORY_STR.equals(field)) {

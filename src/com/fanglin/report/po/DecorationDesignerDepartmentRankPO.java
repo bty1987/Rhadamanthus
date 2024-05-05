@@ -4,44 +4,51 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.communion.po.DepartmentPO;
 
 @Entity
 @Table(name = "decorationdesignerdepartmentrank", catalog = "report")
 public class DecorationDesignerDepartmentRankPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 2372235683512893572L;
-	
+
 	public static final int STATUS_TYPE_INIT_INT = 0;
-	
+
 	public static final int STATUS_TYPE_DISABLED_INT = 1;
-	
-	public static final String COLUMN_DESIGNERDEPTID_STR = "designerDeptId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_RANK_STR = "rank";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	private int dddrId;
-	
-	private String designerDeptId;
-	
-	private String designerDeptName;
-	
-	private String createTime;
-	
-	private String endTime;
-	
+
+	private DepartmentPO region;
+
+	private DepartmentPO depte;
+
+	private int month;
+
 	private double rank;
-	
+
+	private int rank1;
+
+	private int rank2;
+
+	private short type;
+
 	private int status;
 
 	private int company;
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "dddrId")
@@ -53,40 +60,33 @@ public class DecorationDesignerDepartmentRankPO implements java.io.Serializable 
 		this.dddrId = dddrId;
 	}
 
-	@Column(name = "designerDeptId")
-	public String getDesignerDeptId() {
-		return this.designerDeptId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "drid", referencedColumnName = "did")
+	public DepartmentPO getRegion() {
+		return region;
 	}
 
-	public void setDesignerDeptId(String designerDeptId) {
-		this.designerDeptId = designerDeptId;
+	public void setRegion(DepartmentPO region) {
+		this.region = region;
 	}
 
-	@Column(name = "designerDeptName")
-	public String getDesignerDeptName() {
-		return this.designerDeptName;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ddid", referencedColumnName = "did")
+	public DepartmentPO getDepte() {
+		return depte;
 	}
 
-	public void setDesignerDeptName(String designerDeptName) {
-		this.designerDeptName = designerDeptName;
+	public void setDepte(DepartmentPO depte) {
+		this.depte = depte;
 	}
 
-	@Column(name = "createTime")
-	public String getCreateTime() {
-		return this.createTime;
+	@Column(name = "month")
+	public int getMonth() {
+		return month;
 	}
 
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
-
-	@Column(name = "endTime")
-	public String getEndTime() {
-		return this.endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
+	public void setMonth(int month) {
+		this.month = month;
 	}
 
 	@Column(name = "rank")
@@ -98,6 +98,33 @@ public class DecorationDesignerDepartmentRankPO implements java.io.Serializable 
 		this.rank = rank;
 	}
 
+	@Column(name = "rank1")
+	public int getRank1() {
+		return rank1;
+	}
+
+	public void setRank1(int rank1) {
+		this.rank1 = rank1;
+	}
+
+	@Column(name = "rank2")
+	public int getRank2() {
+		return rank2;
+	}
+
+	public void setRank2(int rank2) {
+		this.rank2 = rank2;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
 	@Column(name = "status")
 	public int getStatus() {
 		return this.status;
@@ -106,7 +133,7 @@ public class DecorationDesignerDepartmentRankPO implements java.io.Serializable 
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;

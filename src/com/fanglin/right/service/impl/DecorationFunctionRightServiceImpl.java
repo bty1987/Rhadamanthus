@@ -23,47 +23,46 @@ public class DecorationFunctionRightServiceImpl implements DecorationFunctionRig
 
 	@Autowired
 	private DecorationFunctionRightDao decorationFunctionRightDao;
-	
+
 	@Autowired
 	private DecorationFunctionDao decorationFunctionDao;
-	
+
 	@Override
-	public List<DecorationFunctionRightVO> queryDecorationFunctionRightByName(DecorationFunctionRightVO decorationFunctionRightVO) {
-		
-		List<DecorationFunctionRightPO> decorationFunctionRightPOs = decorationFunctionRightDao.queryDecorationFunctionRightByName(decorationFunctionRightVO.getName());
+	public List<DecorationFunctionRightVO> queryDecorationFunctionRightByName(DecorationFunctionRightVO decorationFunctionRightVO, int company) {
+
+		List<DecorationFunctionRightPO> decorationFunctionRightPOs = decorationFunctionRightDao.queryDecorationFunctionRightByName(decorationFunctionRightVO.getName(), company);
 		List<DecorationFunctionRightVO> decorationFunctionRightVOs = new ArrayList<DecorationFunctionRightVO>();
-		
-		for(DecorationFunctionRightPO decorationFunctionRightPO : decorationFunctionRightPOs){
-			
+
+		for (DecorationFunctionRightPO decorationFunctionRightPO : decorationFunctionRightPOs) {
+
 			decorationFunctionRightVO = new DecorationFunctionRightVO(new DecorationFunctionVO());
-			
+
 			BeanUtil.copyPropertie(decorationFunctionRightPO, decorationFunctionRightVO, Arrays.asList("decorationFunction"));
 			BeanUtil.copyPropertie(decorationFunctionRightPO.getDecorationFunction(), decorationFunctionRightVO.getDecorationFunction());
-			
+
 			decorationFunctionRightVOs.add(decorationFunctionRightVO);
 		}
-		
+
 		return decorationFunctionRightVOs;
 	}
 
-	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateDecorationFunctionRight(DecorationFunctionRightVO decorationFunctionRightVO, List<Long> dfids, int company) {
-		
-		decorationFunctionRightDao.deleteDecorationFunctionRightByName(decorationFunctionRightVO.getName());
-		
+
+		decorationFunctionRightDao.deleteDecorationFunctionRightByName(decorationFunctionRightVO.getName(), company);
+
 		for (Long dfid : dfids) {
 			DecorationFunctionRightPO decorationFunctionRightPO = new DecorationFunctionRightPO();
 			DecorationFunctionPO decorationFunctionPO = decorationFunctionDao.get(dfid);
-			
+
 			decorationFunctionRightPO.setName(decorationFunctionRightVO.getName());
 			decorationFunctionRightPO.setDecorationFunction(decorationFunctionPO);
 			decorationFunctionRightPO.setCompany(company);
-			
+
 			decorationFunctionRightDao.save(decorationFunctionRightPO);
 		}
-		
+
 	}
 
 }

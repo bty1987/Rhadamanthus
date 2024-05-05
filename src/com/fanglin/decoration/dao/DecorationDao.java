@@ -14,41 +14,42 @@ package com.fanglin.decoration.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationDao extends Dao<DecorationPO> {
 
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters);
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company);
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company);
+	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company);
+	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForGrade(Paging paging, List<Filter> filters, int company);
+	public List<DecorationPO> pageDecorationForGrade(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForDesign(Paging paging, List<Filter> filters, int company);
+	public List<DecorationPO> pageDecorationForDesign(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company);
+	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company);
+	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses);
+	public List<DecorationPO> pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, List<Integer> salesmanDepartmentIds, List<Short> statuses) throws FLException;
 
-	public List<DecorationPO> queryDecoration(List<Filter> filters);
+	public List<DecorationPO> queryDecoration(List<Filter> filters) throws FLException;
 
 	public List<DecorationPO> queryDecorationByCustomerId(Long customerId);
 
-	public DecorationPO queryDecorationByHid(long hid, int company);
+	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys);
 
 	public DecorationPO queryDecorationByOrderId(String orderId);
 
-	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, int company);
+	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys);
 
-	public double countDecorationForTotalPrice(List<Filter> filters);
+	public double countDecorationForTotalPrice(List<Filter> filters) throws FLException;
 
 	public void changeDecorationForOrderId(String newOrderId, String oldOrderId);
 

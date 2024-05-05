@@ -169,7 +169,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			}
 
-			decorationActivityItemPO.setCuid(approvalPO.getSender().getUid());
+			decorationActivityItemPO.setCreater(approvalPO.getSender());
 			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationActivityItemDao.save(decorationActivityItemPO);

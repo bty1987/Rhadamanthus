@@ -34,17 +34,27 @@ public class AwardPurchaseDaoImpl extends DaoImpl<AwardPurchasePO> implements Aw
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
+
 			String field = filter.getField();
 			String data = filter.getData();
 			String op = filter.getOp();
 
 			query.alias("awardStock", "awardStock");
 
-			if ("status".equals(field)) {
+			if ("awardStock.no".equals(field)) {
+				query.add(query.getCriterion("awardStock.no", data, op));
+			} else if ("awardStock.name".equals(field)) {
+				query.add(query.getCriterion("awardStock.name", data, op));
+			} else if ("activity".equals(field)) {
+				query.add(query.getCriterion("activity", data, op));
+			} else if ("dept".equals(field)) {
+				query.add(query.getCriterion("dept", data, op));
+			} else if ("awardStock.type".equals(field)) {
+				query.add(query.getCriterion("awardStock.type", Short.valueOf(data), op));
+			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			} else if ("createTimeAwardPurchase".equals(field)) {
 				query.timeranges("createTime", data);
@@ -52,15 +62,8 @@ public class AwardPurchaseDaoImpl extends DaoImpl<AwardPurchasePO> implements Aw
 				query.timeranges("purchaseTime", data);
 			} else if ("instoreTimeAwardPurchase".equals(field)) {
 				query.timeranges("instoreTime", data);
-			} else if ("awardStock.name".equals(field)) {
-				query.add(query.getCriterion("awardStock.name", data, op));
-			} else if ("awardStock.type".equals(field)) {
-				query.add(query.getCriterion("awardStock.type", Short.valueOf(data), op));
-			} else if ("awardStock.no".equals(field)) {
-				query.add(query.getCriterion("awardStock.no", Short.valueOf(data), op));
 			}
 
 		}
 	}
-
 }

@@ -14,6 +14,7 @@ import com.fanglin.customer.vo.DecorationPaymentVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
+import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Paging;
@@ -39,10 +40,21 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", decorationPO.getGrade()), decorationPO.getCompany());
+		String grade = decorationPO.getGrade();
+		int company = decorationPO.getCompany();
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_%s_STR", PaytranPO.ATTTYPE_DECORATION_INT, grade), company);
 
 		if (systemConfigPO == null) {
-			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", decorationPO.getCompany());
+			systemConfigPO = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", grade), company);
+		}
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", company);
+		}
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_PATH_STR", company);
 		}
 
 		if (systemConfigPO != null) platform = systemConfigPO.getValue();

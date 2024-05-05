@@ -1,14 +1,18 @@
 jQuery(function() {
 
     var accessories = {
+
         cid: null,
+
         postData: {
             orderId: null,
             supervisor: null,
             house: null,
             fetchTime: null,
         },
+
         itemlist: com.focusPage('#accessoriesItemList'),
+
         leftitems: {
             goodsHidden: com.focusPage('#goodsHidden'),
             goodsName: com.focusPage('#goodsName'),
@@ -16,8 +20,10 @@ jQuery(function() {
             category: com.focusPage('#category'),
             brand: com.focusPage('#brand'),
             measurementUnit: com.focusPage('#measurementUnit'),
+            constructionNode: com.focusPage('#constructionNode'),
             num: com.focusPage('#num')
         },
+
         rightitems: {
             orderId: com.focusPage('#orderId'),
             supervisorName: com.focusPage('#supervisorName'),
@@ -27,6 +33,7 @@ jQuery(function() {
             type: com.focusPage('#type'),
             comment: com.focusPage('#comment')
         },
+
         constructionNode: {}
     };
 
@@ -46,12 +53,15 @@ jQuery(function() {
 
                 if (val.goods.gid == k) {
 
-                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.caid);
+                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid);
 
                     accessories.leftitems.goodsNo.attr('data-no', val.goods.no).val(val.goods.no);
                     accessories.leftitems.category.attr('data-category', val.goods.category).val(val.goods.category);
                     accessories.leftitems.brand.attr('data-brand', val.goods.brand).val(val.goods.brand);
                     accessories.leftitems.measurementUnit.attr('data-measurementUnit', val.goods.measurementUnit).val(val.goods.measurementUnit);
+
+                    if (val.constructionNode)
+                        accessories.leftitems.constructionNode.attr('data-constructionNode', val.constructionNode.cnid).attr('data-schedule', val.constructionNode.sort).val(val.constructionNode.name);
                 }
             });
 
@@ -65,19 +75,50 @@ jQuery(function() {
             return false;
         }
 
+        var caid = accessories.leftitems.goodsHidden.attr('data-caid');
         var gid = accessories.leftitems.goodsHidden.attr('data-gid');
         var type = accessories.leftitems.goodsHidden.attr('data-type');
         var selling = accessories.leftitems.goodsHidden.attr('data-selling');
+        var nid = accessories.leftitems.goodsHidden.attr("data-nid");
 
         var name = accessories.leftitems.goodsName.val();
         var no = accessories.leftitems.goodsNo.val();
         var category = accessories.leftitems.category.val();
         var brand = accessories.leftitems.brand.val();
         var measurementUnit = accessories.leftitems.measurementUnit.val();
+        var schedule = accessories.leftitems.constructionNode.attr("data-schedule");
         var num = accessories.leftitems.num.val();
 
-        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling);
+        if (schedule && schedule != accessories.rightitems.schedule.val()) {
+            com.showAlert(com.warning, "施工环节不匹配");
+            return false;
+        }
+
+        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr('data-caid', caid);
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
+
+        if (schedule) {
+            $liList.attr("data-schedule", schedule);
+        }
+
+        if (nid) {
+            $liList.attr("data-nid", nid);
+
+            var itemcheck = false;
+
+            com.post(api.inventory.checkAccessoriesItem, {
+                "accessories.orderId": accessories.rightitems.orderId.val(),
+                "accessoriesItem.nid": nid,
+                "accessoriesItem.num": num
+            }, function(res) {
+
+                itemcheck = true;
+            }, null, false);
+
+            if (!itemcheck) {
+                return false;
+            }
+        }
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
         var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function() {
@@ -116,16 +157,21 @@ jQuery(function() {
 
         var $span = $('<span></span>').addClass(sclass);
         var $b = $('<b></b>');
+
         if (sValue != null) {
             $span.html(sValue);
         }
+
         if (bValue != null) {
             $b.html(bValue);
         }
+
         if (color != null) {
             $b.addClass(color + " " + attrs).attr('addData', addData);
         }
+
         $span.append($b);
+
         return $span;
     }
 
@@ -174,7 +220,7 @@ jQuery(function() {
         var $list = com.focusPage('.list-group-item');
 
         if ($list.length == 0) {
-            com.showAlert(com.warning, "请添加辅料项!");
+            com.showAlert(com.warning, "请添加辅料项");
             return false;
         }
 
@@ -207,6 +253,13 @@ jQuery(function() {
             options["accessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
             options["accessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["accessoriesItems[" + i + "].selling"] = $v.attr('data-selling');
+            options["accessoriesItems[" + i + "].caid"] = $v.attr('data-caid');
+
+            if ($v.attr('data-nid'))
+                options["accessoriesItems[" + i + "].nid"] = $v.attr('data-nid');
+
+            if ($v.attr('data-schedule'))
+                options["accessoriesItems[" + i + "].schedule"] = $v.attr('data-schedule');
 
             options["accessoriesItems[" + i + "].total"] = utils.accMul($v.attr('data-num'), $v.attr('data-selling'));
         });

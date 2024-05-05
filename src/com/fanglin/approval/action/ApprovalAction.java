@@ -37,6 +37,18 @@ public class ApprovalAction extends BaseListAction {
 
 	private int count;
 
+	private String piid;
+
+	private String approve;
+
+	@Action(value = "pageApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageApproval() throws FLException {
+
+		approvalService.pageApproval(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "pageApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageApprovalForReceive() throws FLException {
 
@@ -69,6 +81,22 @@ public class ApprovalAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "countApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countApprovalForReceive() throws FLException {
+
+		count = approvalService.countApprovalForReceive(queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "countApprovalForSend", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countApprovalForSend() throws FLException {
+
+		count = approvalService.countApprovalForSend(queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "approveApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String approve() throws FLException {
 
@@ -93,18 +121,14 @@ public class ApprovalAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "countApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countApprovalForReceive() throws FLException {
+	@Action(value = "callbackApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String callbackApproval() throws FLException {
 
-		count = approvalService.countApprovalForReceive(queryUserId(), queryCompany());
+		if (approval == null) approval = new ApprovalVO();
 
-		return SUCCESS;
-	}
+		if (piid != null) approval.setPiid(piid);
 
-	@Action(value = "countApprovalForSend", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countApprovalForSend() throws FLException {
-
-		count = approvalService.countApprovalForSend(queryUserId(), queryCompany());
+		approvalService.callback(approval, approve);
 
 		return SUCCESS;
 	}
@@ -123,6 +147,22 @@ public class ApprovalAction extends BaseListAction {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public String getPiid() {
+		return piid;
+	}
+
+	public void setPiid(String piid) {
+		this.piid = piid;
+	}
+
+	public String getApprove() {
+		return approve;
+	}
+
+	public void setApprove(String approve) {
+		this.approve = approve;
 	}
 
 }

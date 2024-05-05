@@ -1,214 +1,181 @@
-$(function(){
-	
-	var accessoriesType = {
-			
-		items: {
-			atid: com.focusPage('#atid'),
-			name: com.focusPage('#name'),
-			workType: com.focusPage('#workType'),
-			comment: com.focusPage('#comment'),
+$(function() {
+
+    var accessoriesType = {
+
+        items: {
+            name: com.focusPage('#name'),
+            workType: com.focusPage('#workType'),
+            comment: com.focusPage('#comment'),
+
+        },
+
+        btns: {
             submitBtn: com.focusPage("#submitBtn"),
-		}
-	};
+        },
 
-    var displayFunc  = (function(){
-    	
-        var renderList = function(tableId,listData){
-        	
-            var $tableWrap = com.focusPage('#' + tableId);
-            
-            if(listData && listData.length){
-            	
-                var $ulTitle = createTableTitle();
-                var $ulData = $('<ul></ul>').addClass('flex-table');
-                
-                $tableWrap.append($ulTitle).append($ulData);
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
-                });
-            }
-        };
-        
-        var createTableTitle = function(){
-        	
-            var $ulTitle = $('<ul></ul>').addClass('flex-table');
-            var $liTitle = $('<li></li>').addClass('line table-title');
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col4');
-            var titleName = '名称,工种,说明,状态';
-            
-            $.each(titleName.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
-            });
-            
-            var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
-            
-            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
-            
-            return $ulTitle;
-        };
-        
-        var creatLine = function(i, v, lastFlag){
-        	
-            var $liLine = $('<li></li>').addClass('line');
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col4');
-            
-            var propertyArr = [
-                [v.name,'grey'],
-                [v.workType.name,'grey'],
-                [v.comment,'grey'],
-                [v.status=="0"?"启用":"禁用",'red']
-            ];
-            
-            $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
-            });
-            
-            var $optionWrap = $('<div></div>').addClass('line-wrap action');
-            var $cellOption = $('<div></div>').addClass('cell option');
-            var $btnGroup = $('<div></div>').addClass('btn-group');
-            var $btn = $('<button></button>').addClass('btn btn-primary dropdown-toggle').attr('data-toggle','dropdown').append('操作').append('<i class="icon-angle-down"></i>');
-            
-            var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
-            var $btnEdit = $('<li></li>').append($('<a></a>').html('编辑')) ;
-            var $btnStart = $('<li></li>').append($('<a></a>').html('启用')) ;
-            var $btnStop = $('<li></li>').append($('<a></a>').html('禁用')) ;
-            
-            $btnUl.append($btnEdit).append($btnStart).append($btnStop);
-            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
-            $cellOption.appendTo($optionWrap);
-            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
-            
-            $btnEdit.click(function(){
-                
-                accessoriesType.items.atid.val(v.atid);
-                accessoriesType.items.name.val(v.name);
-                accessoriesType.items.workType.val(v.workType.id);
-                accessoriesType.items.comment.val(v.comment);
+        modules: {
 
-                com.popup4model('#layerAdd','编辑')
-            });
+        },
 
-            $btnStart.click(function(){
-            	updateStatus(v.atid, 0);
-            });
-            
-            $btnStop.click(function () {
-            	updateStatus(v.atid, 1);
-            });
-            
-            return $liLine;
-        };
+        atid: null,
 
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+    };
 
-            },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        };
-    })();
-    
-    var accessoriesTypeSearcher = new Searcher();
-    
-    com.post(api.common.queryWorkType, {}, function(res){
-        com.focusPage('select[name="workType"]').bindData(res.workTypes,"id","name");
+    com.post(api.common.queryWorkType, {}, function(res) {
+
+        accessoriesType.items.workType.bindData(res.workTypes, "id", "name")
     });
 
-    accessoriesTypeSearcher.init( ["workTypeName"], "condList", api.data.pageAccessoriesType, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "accessoriesTypePostData", null, false, null, function(){
+    var searcher = new Searcher();
 
+    searcher.history("normoodPostData");
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addAccessoriesType').css({'margin-top':'-2px','margin-left':'4px'});
+    var lineprops = [{
+        fieId: "name",
+        name: "名称",
+        prop: "name",
+        clazz: "grey"
+    }, {
+        fieId: "workType",
+        name: "工种",
+        prop: "workType.name",
+        clazz: "grey"
+    }, {
+        fieId: "status",
+        name: "状态",
+        prop: function(v) {
+
+            return v.status == "0" ? "启用" : "禁用";
+        },
+        clazz: "red"
+    }, {
+        fieId: "comment",
+        name: "备注",
+        prop: "comment",
+        clazz: "grey"
+    }, ];
+
+    var linebtns = [{
+        name: "编辑",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            com.clearValidator();
+
+            accessoriesType.items.name.val("");
+            accessoriesType.items.workType.val(0);
+            accessoriesType.items.comment.val("");
+
+            com.closePopup();
+
+            accessoriesType.atid = v.atid;
+
+            accessoriesType.items.name.val(v.name);
+            accessoriesType.items.workType.val(v.workType.id);
+            accessoriesType.items.comment.val(v.comment);
+
+            com.popup4model('#layerAdd', '编辑');
+        }
+    }, {
+        name: "启用",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+
+            com.post(api.data.updateAccessoriesTypeForStatus, {
+                "accessoriesType.atid": v.atid,
+                "accessoriesType.status": check ? 0 : 1
+            }, function(res) {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        init: function(v) {
+
+            return !v.status;
+        }
+    }, ];
+
+    searcher.base("condList", "pagenation", "resultList", api.data.pageAccessoriesType);
+    searcher.condition(["data-worktype"]);
+
+    searcher.button(function() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addAccessoriesType').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
-        
+
         var $importAccessoriesType = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('id', 'import').css('margin-top', '-2px');
         var $addaAccessoriesType = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($importAccessoriesType);
         var $addaAccessoriesTypespan = $('<span></span>').text('导入').appendTo($importAccessoriesType);
 
         return [$importAccessoriesType, $adda];
-
-    },'resultList');
-
-    com.focusPage("#addAccessoriesType").click(function(){
-        com.popup4model('#layerAdd','添加')
     });
 
-    accessoriesType.items.submitBtn.click(function () {
-        saveData();
-    });
+    searcher.line("name", lineprops, linebtns).render();
 
-    com.focusPage("#import").click(function(){
-        com.popup4model('#importLayer','导入辅类')
-    });
-    
-    com.uploadify("#importSelectAccessoriesType", "上传文件", api.data.importAccessoriesType, 'btn btn-success col-sm-6', "*.xls;*.xlsx", {'uploadType': 4}, 1, function(data){
-        accessoriesTypeSearcher.doSearch();
-    });
-    
-    function clearForm(){
-        
+    com.focusPage("#addAccessoriesType").click(function() {
+
         com.clearValidator();
-        
-        accessoriesType.items.atid.val("");
+
         accessoriesType.items.name.val("");
         accessoriesType.items.workType.val(0);
         accessoriesType.items.comment.val("");
 
         com.closePopup();
-    }
 
-    function updateStatus(atid, status){
+        accessoriesType.atid = null;
 
-    	var options = {
-			"accessoriesType.atid": atid,
-			"accessoriesType.status": status
-    	};
-    	
-    	com.post(api.data.updateAccessoriesTypeForStatus, options, function(res){
-            accessoriesTypeSearcher.doSearch();
-            
-            com.showAlert(com.info, "操作成功");
-        });
-    }
+        com.popup4model('#layerAdd', '添加')
+    });
 
-    function saveData(){
-    	
-    	if(com.validate('form1',"right")){
+    accessoriesType.btns.submitBtn.click(function() {
+
+        saveData();
+    });
+
+    com.focusPage("#import").click(function() {
+
+        com.popup4model('#importLayer', '导入辅类')
+    });
+
+    com.uploadify("#importSelectAccessoriesType", "上传文件", api.data.importAccessoriesType, 'btn btn-success col-sm-6', "*.xls;*.xlsx", {
+        'uploadType': 4
+    }, 1, function(data) {
+
+        searcher.doSearch();
+    });
+
+    function saveData() {
+
+        if (com.validate('form1', "right")) {
             return false;
-    	}
-        
-        var atid = accessoriesType.items.atid.val();
+        }
+
         var name = accessoriesType.items.name.val();
         var workType = accessoriesType.items.workType.val();
         var comment = accessoriesType.items.comment.val();
-        
+
         var url = api.data.addAccessoriesType;
         var options = {
-        	"accessoriesType.name": name,
-        	"accessoriesType.workType.id": workType,
-        	"accessoriesType.comment": comment
+            "accessoriesType.name": name,
+            "accessoriesType.workType.id": workType,
+            "accessoriesType.comment": comment
         };
-        
-        if(atid > 0){
-        	url = api.data.updateAccessoriesType;
-        	options["accessoriesType.atid"] = atid;
+
+        if (accessoriesType.atid) {
+            url = api.data.updateAccessoriesType;
+            options["accessoriesType.atid"] = accessoriesType.atid;
         }
-        
-        com.post(url, options, function(res){
-        	
-            accessoriesTypeSearcher.doSearch();
-            
-            clearForm();
+
+        com.post(url, options, function(res) {
+
+            searcher.doSearch();
         });
     }
 

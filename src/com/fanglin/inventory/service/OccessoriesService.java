@@ -14,6 +14,8 @@ public interface OccessoriesService {
 
 	public void pageOccessoriesForSupplier(Paging paging, List<Filter> filters, String userId, OccessoriesVO occessoriesVO);
 
+	public List<OccessoriesVO> queryOccessoriesByOrderId(OccessoriesVO occessories);
+
 	public OccessoriesVO queryOccessoriesByOid(OccessoriesVO occessoriesVO);
 
 	public int addOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;

@@ -53,7 +53,7 @@ public class CategoryAction extends BaseListAction {
 	@Action(value = "queryCategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCategory() throws FLException {
 
-		categorys = categoryService.queryCategory();
+		categorys = categoryService.queryCategory(category);
 
 		return SUCCESS;
 	}

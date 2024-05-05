@@ -30,9 +30,9 @@
 	                                    <div class="col-md-12">
 	
 	                                        <div class="form-group">
-	                                            <label for="goodsName" class="col-md-3 control-label no-padding-right">商品</label>
+	                                            <label for="name" class="col-md-3 control-label no-padding-right orange">名称</label>
 	                                            <div class="col-md-9">
-	                                                <input type="text" id="goodsName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+	                                                <input type="text" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 	                                            </div>
 	                                        </div>
 	
@@ -46,7 +46,7 @@
 						                    <div class="form-group">
 						                    	<label class="col-md-3 control-label no-padding-right orange">定额数量</label>
 						                    	<div class="col-md-9">
-						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="normnum" name="normnum" data-required="1" data-toggle="popover" data-trigger='manual'>
+						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3 v_required" id="normnum" name="normnum" data-required="1" data-toggle="popover" data-trigger='manual'>
 						                    	</div>
 						                	</div>
 						                    
@@ -60,7 +60,14 @@
 						                    <div class="form-group">
 						                    	<label class="col-md-3 control-label no-padding-right orange">库房数量</label>
 						                    	<div class="col-md-9">
-						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="storenum" name="storenum" data-required="1" data-toggle="popover" data-trigger='manual'>
+						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3 v_required" id="storenum" name="storenum" data-required="1" data-toggle="popover" data-trigger='manual'>
+						                    	</div>
+						                	</div>
+						                	
+						                	<div class="form-group">
+						                    	<label class="col-md-3 control-label no-padding-right orange" for="price">价格</label>
+						                    	<div class="col-md-9">
+						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3 v_required" id="price" name="price" data-required="1" data-toggle="popover" data-trigger='manual'>
 						                    	</div>
 						                	</div>
 	

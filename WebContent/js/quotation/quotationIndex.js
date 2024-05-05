@@ -19,15 +19,11 @@
         },
 
         orderId: params.quotation.orderId,
-
         type: params.orderType,
-
         pageType: params.urlLoadParams.type,
 
         editFlg: 0,
         defaultsQid: null,
-        leftflg: false,
-        rightflg: false,
 
         compareType: [{
             "key": "0",
@@ -36,7 +32,12 @@
             "key": "1",
             "value": "装修单号"
         }, ],
-        pageConfig: null
+        pageConfig: null,
+
+        datasets: {
+            "quotationLimit": 3,
+            "quotationNum": 0,
+        }
     };
 
     quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
@@ -197,6 +198,7 @@
             "decoration.orderId": quotation.orderId
         }, function(res) {
 
+            drawquotation(res.decoration);
             drawdecoration(res.decoration);
         }, null, false);
 
@@ -204,9 +206,9 @@
 
     function drawdecoration(decoration) {
 
-        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(quotation.decorationInfo);
         var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
-        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+        var $header = $('<div></div>').addClass("widget-header header-color-blue").appendTo($box);
 
         var name = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header);
 
@@ -219,6 +221,28 @@
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
+    }
+
+    function drawquotation(decoration) {
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "quotationlimit"
+        }, function(res) {
+
+            if (res.systemConfig.value)
+                quotation.datasets.quotationLimit = res.systemConfig.value;
+        }, null, false);
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(quotation.decorationInfo);
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+        var name = $('<h4></h4>').attr('id', 'worksheet4content').text("报价单").appendTo($header);
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('可用数量: ' + quotation.datasets.quotationLimit)).appendTo($main);
+        $('<div></div>').append($('<label></label>').attr('id', 'quotationNum').attr('for', 'form-field').text('已用数量: ')).appendTo($main);
+        $('<div></div>').append($('<label></label>').attr('id', 'subNum').attr('for', 'form-field').text('剩余数量: ')).appendTo($main);
     }
 
     var searcher = new Searcher();
@@ -387,9 +411,7 @@
         clazz: "btn-purple",
         handle: function(v) {
 
-            params.quotation.editFlg = true;
             params.quotation.orderId = quotation.orderId;
-            params.quotation.quotation = v;
 
             params.historyPage = api.index.quotationIndex.url;
 
@@ -434,6 +456,10 @@
             name: "名称",
             prop: "name"
         }, {
+            field: "version.name",
+            name: "报价版本",
+            prop: "version.name"
+        }, {
             field: "style",
             name: "风格",
             prop: "style"
@@ -451,7 +477,15 @@
             prop: "content"
         }];
 
-        searcher.card("name", cardprops, cardbtns);
+        searcher.card("name", cardprops, cardbtns).render(function() {
+
+            quotation.datasets.quotationNum = com.focusPage("#resultList").find("div.widget-box").length;
+
+            var sub = quotation.datasets.quotationLimit - quotation.datasets.quotationNum;
+
+            com.focusPage("#quotationNum").text('已用数量: ' + quotation.datasets.quotationNum);
+            com.focusPage("#subNum").text('剩余数量: ' + sub);
+        });
     }
 
     if (quotation.pageType == "page") {
@@ -489,6 +523,10 @@
             name: "装修单号",
             prop: "decoration.orderId",
             clazz: "blue",
+            click: function(btn, v) {
+
+                tools.decoration.info(btn, v.decoration.orderId);
+            },
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("decorationOrderId");
@@ -501,6 +539,10 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("decorationHouseVillageName");
+            },
+            click: function(btn, v) {
+
+                tools.village.info(btn, v.decoration.house.village.no);
             }
         }, {
             field: "houseNumber",
@@ -510,6 +552,10 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+            },
+            click: function(btn, v) {
+
+                tools.house.info(btn, v.decoration.house.hid);
             }
         }, {
             field: "name",
@@ -519,6 +565,10 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("decorationCustomerName");
+            },
+            click: function(btn, v) {
+
+                tools.customer.info(btn, v.decoration.customer.cid);
             }
         }, {
             field: "currentName",
@@ -528,6 +578,10 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.decoration.designer.userId);
             }
         }, {
             field: "currentName",
@@ -537,6 +591,10 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.decoration.salesman.userId);
             }
         }, {
             field: "buildArea",
@@ -603,6 +661,10 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("createrCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.creater.userId);
             }
         }, {
             field: "discount",

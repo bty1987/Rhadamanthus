@@ -28,12 +28,6 @@ public interface MaterialDao extends Dao<MaterialPO> {
 
 	public List<MaterialPO> pageMaterialPreBalance(Paging paging, List<Filter> filters, int company);
 
-	public List<MaterialPO> pageMaterialPostBalance(Paging paging, List<Filter> filters, int company);
-
-	public List<MaterialPO> queryMaterial(List<Filter> filters);
-
-	public List<MaterialPO> queryMaterialByMid(List<Long> mids);
-
 	public List<MaterialPO> queryMaterialByOrderId(String orderId);
 
 	public MaterialPO queryMaterialByNo(String no);

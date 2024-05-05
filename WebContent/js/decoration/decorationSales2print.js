@@ -14,7 +14,7 @@ $(function() {
 
     var decoration = {};
     // 订单类型
-    var orderType = constant.decoration.decoration.typeness.keys;
+    var orderType = constant.decoration().decoration.typeness.keys;
     var decorationHolonomy = {};
     var materialBalance;
     var brandName = [];
@@ -75,7 +75,7 @@ $(function() {
 
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
-        var caption = $('<caption style="line-height: 65px;font-size:25px;">' + params.company.name + '主材消费明细</caption>').appendTo(table);
+        var caption = $('<caption style="line-height: 65px;font-size:25px;">' + params.company.name + '主材销售明细</caption>').appendTo(table);
 
         var tr1 = $('<tr></tr>').appendTo(table);
         var td1 = $('<td colspan="2" style="border: 1px solid;"></td>').text("客户姓名：" + decoration.customer.name).appendTo(tr1);
@@ -165,16 +165,21 @@ $(function() {
     function createFooter() {
 
         var tr6 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
-        var td18 = $('<td rowspan="3" style="border: 1px solid;"></td>').text("备注说明").appendTo(tr6);
+        var td18 = $('<td rowspan="4" style="border: 1px solid;"></td>').text("备注说明").appendTo(tr6);
         var td19 = $('<td colspan="5" style="border: 1px none;border-right:1px solid;"></td>').text("1、此表格为客户在我公司消费的主材款项明细，方便客户查询。").appendTo(tr6);
 
         var tr7 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
         var td20 = $('<td colspan="5" style="border: 1px none;border-right:1px solid;"></td>').text("2、此表格数据为导出打印即时数据，如后期款项发生变化以当时数据为准。").appendTo(tr7);
 
         var tr8 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
-        var td21 = $('<td colspan="5" style="border: 1px solid;border-top:1px none;"></td>').text("3、此数据为系统数据，可能会有延迟，如有任何疑问联系销售管家进行核实。").appendTo(tr8);
+        var td21 = $('<td colspan="5" style="border: 1px none;border-right:1px solid;"></td>').text("3、此数据为系统数据，可能会有延迟，如有任何疑问联系销售管家进行核实。").appendTo(tr8);
+
+        var tr9 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
+        var td22 = $('<td colspan="5" style="border: 1px solid;border-top:1px none;"></td>').text("4 、我司为代收代付性质，发票由厂家开具。").appendTo(tr9);
 
         $("#tr3_total").text("合计消费金额：" + $total);
     }
+
+    var suffix = $('<span style="margin-top: 50px"></span>').text('此表格为入驻我司展馆的商家自行和客户交易的主材款项明细，方便客户查询。我司提供展馆会展服务，款项由我司代收代付，不参与具体主材销售。实际交易双方为展馆内商家和客户，发票开具由商家开给客户。').appendTo(trList);
 
 });

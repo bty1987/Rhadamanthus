@@ -29,18 +29,18 @@ import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.sales.dao.RefundsDao;
-import com.fanglin.sales.dao.RefundsItemDao;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesBalanceItemDao;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
-import com.fanglin.sales.po.RefundsItemPO;
-import com.fanglin.sales.po.RefundsPO;
+import com.fanglin.sales.dao.SalesRefundsDao;
+import com.fanglin.sales.dao.SalesRefundsItemDao;
 import com.fanglin.sales.po.SalesBalanceItemPO;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.po.SalesRefundsItemPO;
+import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.utils.Arith;
@@ -67,13 +67,13 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	private SalesDao salesDao;
 
 	@Autowired
-	private RefundsItemDao refundsItemDao;
+	private SalesRefundsItemDao salesRefundsItemDao;
 
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
 
 	@Autowired
-	private RefundsDao refundsDao;
+	private SalesRefundsDao salesRefundsDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -120,6 +120,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getGoods(), approvalSalesRefundItemVO.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getColor(), approvalSalesRefundItemVO.getSalesItem().getColor());
 			BeanUtil.copyProperties(approvalSalesRefundItemPO.getSalesItem().getFormat(), approvalSalesRefundItemVO.getSalesItem().getFormat());
+
 			approvalSalesRefundItemVOs.add(approvalSalesRefundItemVO);
 		}
 
@@ -236,6 +237,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO();
 
 		salesPaymentPO.setSales(salesPO);
+		salesPaymentPO.setOrderId(salesPO.getOrderId());
 		salesPaymentPO.setCreater(approvalPO.getSender());
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());// 退款金额
@@ -247,18 +249,18 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPaymentDao.save(salesPaymentPO);
 
 		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
-		RefundsPO refundsPO = new RefundsPO();
+		SalesRefundsPO salesRefundsPO = new SalesRefundsPO();
 
-		refundsPO.setSid(salesPO.getSid());
-		refundsPO.setSpid(salesPaymentPO.getSpid());
-		refundsPO.setCreater(userPO);
-		refundsPO.setTotal(approvalSalesRefundPO.getRefund());
-		refundsPO.setType(approvalSalesRefundPO.getType());
-		refundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		refundsPO.setStatus(RefundsPO.STATUS_TYPE_REFUNDS_INT);
-		refundsPO.setComment(approvalPO.getComment());
+		salesRefundsPO.setSales(salesPO);
+		salesRefundsPO.setSpid(salesPaymentPO.getSpid());
+		salesRefundsPO.setCreater(userPO);
+		salesRefundsPO.setTotal(approvalSalesRefundPO.getRefund());
+		salesRefundsPO.setType(approvalSalesRefundPO.getType());
+		salesRefundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesRefundsPO.setStatus(SalesRefundsPO.STATUS_TYPE_REFUNDS_INT);
+		salesRefundsPO.setComment(approvalPO.getComment());
 
-		refundsDao.save(refundsPO);
+		salesRefundsDao.save(salesRefundsPO);
 
 		List<Short> balanceStatuses = Arrays.asList(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT, SalesPO.BALANCESTATUS_SETTLEMENT_SHORT, SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
 
@@ -267,7 +269,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
 
 			salesBalancePO.setSales(salesPO);
-			salesBalancePO.setRefunds(refundsPO);
+			salesBalancePO.setRefunds(salesRefundsPO);
 			salesBalancePO.setCreater(approvalPO.getReceiver());
 			salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
@@ -293,19 +295,19 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			int price = salesItemPO.getPrice();// 折让价
 			int disPrice = salesItemPO.getDisPrice();// 折扣价
 
-			RefundsItemPO refundsItemPO = new RefundsItemPO();
+			SalesRefundsItemPO salesRefundsItemPO = new SalesRefundsItemPO();
 
 			long num = approvalSalesRefundItemPO.getNum();// 退货数量
 			long total = approvalSalesRefundItemPO.getTotal();// 退货金额
 
-			BeanUtil.copyProperties(salesItemPO, refundsItemPO);
-			refundsItemPO.setRid(refundsPO.getRid());
-			refundsItemPO.setTotal(total);
-			refundsItemPO.setNum(num);
-			refundsItemPO.setSid(approvalSalesRefundItemPO.getSid());
-			refundsItemPO.setSalesItem(approvalSalesRefundItemPO.getSalesItem());
+			BeanUtil.copyProperties(salesItemPO, salesRefundsItemPO);
+			salesRefundsItemPO.setRid(salesRefundsPO.getRid());
+			salesRefundsItemPO.setTotal(total);
+			salesRefundsItemPO.setNum(num);
+			salesRefundsItemPO.setSid(approvalSalesRefundItemPO.getSid());
+			salesRefundsItemPO.setSalesItem(approvalSalesRefundItemPO.getSalesItem());
 
-			refundsItemDao.save(refundsItemPO);
+			salesRefundsItemDao.save(salesRefundsItemPO);
 
 			if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
 
@@ -341,7 +343,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
 
-			long vbalance = Arith.sub(Arith.round(-refundsPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
+			long vbalance = Arith.sub(Arith.round(-salesRefundsPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
 
 			salesBalancePO.setAllowance(allowance);
 			salesBalancePO.setBalance(balance);

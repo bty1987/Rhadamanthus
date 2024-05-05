@@ -50,7 +50,7 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 			BeanUtil.copyProperties(oalesPayOO.getCreater(), oalesPayVO.getCreater(), Arrays.asList("dept", "duty"));
 
-			BeanUtil.copyProperties(oalesPayOO.getOales(), oalesPayVO.getOales(), Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
+			BeanUtil.copyProperties(oalesPayOO.getOales(), oalesPayVO.getOales(), Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
 
 			BeanUtil.copyProperties(oalesPayOO.getOales().getCreater(), oalesPayVO.getOales().getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(oalesPayOO.getOales().getSupplier(), oalesPayVO.getOales().getSupplier(), Arrays.asList("dept", "duty"));

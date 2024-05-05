@@ -228,7 +228,7 @@ var decorationUtils = {
                     return true;
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.material.no + " " + materialUtils.materialPaymentTypeData[v.paymentType]));
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.material.no + " " + constant.payment().materialPayment.paymentType.keys[v.paymentType]));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
@@ -358,7 +358,7 @@ var decorationUtils = {
                     ;
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.no + " " + materialUtils.materialPaymentTypeData[v.type]));
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.no + " " + constant.payment().materialPayment.paymentType.keys[v.type]));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
@@ -528,6 +528,24 @@ var decorationUtils = {
         }
         return material;
     },
+    decorationActivityInfo: function(orderId, activitys, wizard) {
+
+        var uiBtnMethod = wizard["activityBtnMethod"];
+
+        var options = {
+            "decorationActivity.orderId": orderId,
+        };
+
+        activitys.html('');
+
+        com.post(api.decoration.queryDecorationActivityByOrderId, options, function(res) {
+
+            var decorationActivitys = res.decorationActivitys;
+            for ( var i = 0; i < decorationActivitys.length; i++) {
+                decorationUtils.addDecorationActivityForDiv(activitys, decorationActivitys[i], uiBtnMethod);
+            }
+        });
+    },
     addDecorationActivityForDiv: function(_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
 
         var pricingSpan = $("<div></div>").addClass("col-md-4").css("margin", "5px 0px").attr("id", "dactivity_" + _decorationActivity.daId).prependTo(_activitys);
@@ -548,7 +566,8 @@ var decorationUtils = {
 
         com.focusPage("#dactivity_" + _decorationActivity.daId).attr("status", _decorationActivity.status);
 
-        if (uiBtnMethod != null) {
+        if (uiBtnMethod) {
+
             if (uiBtnMethod == "activityBtnMethod") {
                 var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + _decorationActivity.daId).appendTo(uiPgDiv);
 
@@ -563,28 +582,15 @@ var decorationUtils = {
                         });
                     }
                 });
+
             } else {
                 uiBtnMethod(uiPgDiv, _decorationActivity);
             }
         }
     },
-    decorationActivityInfo: function(activitys, uiBtnMethod, orderId) {
+    decorationActivityItemInfo: function(orderId, infopack, itempack, config, wizard) {
 
-        var options = {
-            "decorationActivity.orderId": orderId,
-        };
-
-        activitys.html('');
-
-        com.post(api.decoration.queryDecorationActivityByOrderId, options, function(res) {
-
-            var decorationActivitys = res.decorationActivitys;
-            for ( var i = 0; i < decorationActivitys.length; i++) {
-                decorationUtils.addDecorationActivityForDiv(activitys, decorationActivitys[i], uiBtnMethod);
-            }
-        });
-    },
-    decorationActivityItemInfo: function(infopack, itempack, uiBtnMethod, orderId, config) {
+        var uiBtnMethod = wizard["uiBtnMethod"];
 
         com.post(api.decoration.queryDecorationActivityItem, {
             "decoration.orderId": orderId
@@ -597,11 +603,9 @@ var decorationUtils = {
 
             itempack.html("");
 
-            var nodeBtnSend = params.decoration.decorationActivityBtnSend;
-            var nodeContent = params.decoration.decorationActivityContent;
-
-            if (nodeBtnSend == "btnSend") {
+            if (wizard.btnSend == "btnSend") {
                 com.focusPage("#btnNotice").removeClass("hide");
+                com.focusPage("#btnNoticeQRCode").removeClass("hide");
             }
 
             for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
@@ -614,7 +618,7 @@ var decorationUtils = {
                     thingCut = utils.accAdd(thingCut, utils.accMul(item.money, item.num));
                 }
 
-                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, nodeContent);
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, wizard.content);
             }
 
             infopack.html("");
@@ -688,16 +692,34 @@ var decorationUtils = {
             var isAffirmLi = $("<li></li>").appendTo(ul);
             var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
             var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "isAffirm" + _activityItem.daiId).text(config.isAffirms[_activityItem.isAffirm]).appendTo(isAffirmLi);
+            var receiveTimeLi = $("<li></li>").appendTo(ul);
+            var receiveTimeState = $("<strong></strong>").text("首次操作时间:").appendTo(receiveTimeLi);
+            var receiveTimeSpan = $("<span></span>").addClass("green").text(com.checkNull(_activityItem.receiveTime)).appendTo(receiveTimeLi);
+            var refundTimeLi = $("<li></li>").appendTo(ul);
+            var refundTimeState = $("<strong></strong>").text("二次操作时间:").appendTo(refundTimeLi);
+            var refundTimeSpan = $("<span></span>").addClass("green").text(com.checkNull(_activityItem.refundTime)).appendTo(refundTimeLi);
+            var affirmTimeLi = $("<li></li>").appendTo(ul);
+            var affirmTimeState = $("<strong></strong>").text("首次确认时间:").appendTo(affirmTimeLi);
+            var affirmTimeSpan = $("<span></span>").addClass("green").text(com.checkNull(_activityItem.affirmTime)).appendTo(affirmTimeLi);
+            var checkTimeLi = $("<li></li>").appendTo(ul);
+            var checkTimeState = $("<strong></strong>").text("二次确认时间:").appendTo(checkTimeLi);
+            var checkTimeSpan = $("<span></span>").addClass("green").text(com.checkNull(_activityItem.checkTime)).appendTo(checkTimeLi);
+
         }
 
         var contentLi = $("<li></li>").appendTo(ul);
-        var contentState = $("<strong></strong>").text("说明:").appendTo(contentLi);
-        var contentSpan = $("<span></span>").addClass("blue").attr("id", "content_" + _activityItem.daiId).text(_activityItem.content).appendTo(contentLi);
+        var contentState = $("<strong></strong>").text("备注:").appendTo(contentLi);
+        var contentSpan = $("<span></span>").addClass("blue").attr("id", "content_" + _activityItem.daiId).text(com.checkNull(_activityItem.content)).appendTo(contentLi);
+        var commentLi = $("<li></li>").appendTo(ul);
+        var commentState = $("<strong></strong>").text("说明:").appendTo(commentLi);
+        var commentSpan = $("<span></span>").addClass("blue").attr("id", "comment_" + _activityItem.daiId).text(com.checkNull(_activityItem.comment)).appendTo(commentLi);
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetMain);
 
         if (uiBtnMethod != null) {
+
             if (uiBtnMethod == "uiBtnMethod") {
+
                 var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + _activityItem.daiId).appendTo(uiPgDiv);
 
                 abateBtn.on("click", function() {
@@ -721,7 +743,7 @@ var decorationUtils = {
             }
         }
     },
-    decorationSalesActivityItemInfo: function(itempack, orderId, uiBtnMethod, config) {
+    salesActivityItemInfo: function(orderId, itempack, config, wizard) {
 
         com.post(api.sales.querySalesActivityItem, {
             "orderId": orderId
@@ -769,6 +791,13 @@ var decorationUtils = {
             }
         });
     },
+    initAdvancePayment: function(orederId, wizard) {
+
+        if (wizard.advance != "advance") {
+
+            com.focusPage('#advancePayment').html("");
+        }
+    },
     initPayment: function(decorationDetail, isDesign) {
 
         var totalMoney = 0;
@@ -790,9 +819,7 @@ var decorationUtils = {
         }, function(res) {
 
             com.focusPage("#balanceAdvance").text(res.balanceAdvance);
-            com.focusPage("#projectAdvance").text(res.projectAdvance);
             com.focusPage("#materialAdvance").text(res.materialAdvance);
-            com.focusPage("#zaterialAdvance").text(res.zaterialAdvance);
 
             materialAdvance = res.materialAdvance;
         }, null, false);
@@ -815,7 +842,7 @@ var decorationUtils = {
 
             $.each(sortPayments, function(i, v) {
 
-                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("id", "decorationPayment_" + v.dpid);
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.paymentType));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -873,12 +900,34 @@ var decorationUtils = {
                     decorationDetail.refundDecorationPaymentModal.modal("show");
                 });
 
+                var $deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px");
+
+                $deleteBtn.on("click", function() {
+
+                    com.showConfirm("确定要删除其他款项吗?", function() {
+
+                        com.post(api.payment.deleteDecorationPayment, {
+                            "decorationPayment.dpid": v.dpid
+                        }, function(res) {
+
+                            com.showAlert(com.info, "操作成功");
+                            com.focusPage("#decorationPayment_" + res.decorationPayment.dpid).remove();
+                        });
+
+                    });
+
+                });
+
                 if (isDesign) {
                     if (v.paymentStatus == 2 && v.oneType == 0) {
                         if (v.twoType != 2) {
                             $divBtnWrap.append($refundBtn);
                         }
                     }
+                }
+
+                if (v.twoType == 3 && v.paymentStatus == 0) {
+                    $divBtnWrap.append($deleteBtn);
                 }
 
                 $divBtnWrap.appendTo($h4);
@@ -929,6 +978,7 @@ var decorationUtils = {
         com.focusPage('#reduceTotal').html(reduceMoney);
 
         var predisPrice = 0;
+
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": decorationDetail.orderId
         }, function(res) {
@@ -949,45 +999,120 @@ var decorationUtils = {
 
         com.focusPage('#materialAmount').html(materialAmount);
         com.focusPage('#materialRate').html(predisPrice == 0 ? 0 : utils.accMul(utils.changeThrDecimal(utils.accDiv(utils.accAdd(materialAmount, materialAdvance), predisPrice)), 100) + "%");
-
     },
-    initDecorationMidpack: function(orederId) {
+    initServicePayment: function(decoration) {
 
-        var mainDiv = com.focusPage('#preparePayment').parent();
-        com.focusPage('#preparePayment').remove();
+        var mainDiv = com.focusPage('#preparePayment');
 
-        var paymentDiv = $("<div></div>").addClass('row');
-        var paymentHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("预付款项信息")));
-        var paymentBody = $("<div></div>").addClass('widget-body');
-        var paymentTable = $("<div></div>").addClass('clearfix').css({
+        var serviceHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("服务款")));
+        var serviceBody = $("<div></div>").addClass('widget-body');
+
+        serviceBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
+        mainDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceHeader, serviceBody)));
+
+        com.post(api.payment.queryServicePaymentByOrderId, {
+            "servicePayment.decoration.orderId": decoration.orderId
+        }, function(res) {
+
+            drawList(res.servicePayments);
+        });
+
+        function drawList(data) {
+
+            var $tableWrap = com.focusPage('#hoServiceMoney');
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            $.each(data, function(i, v) {
+
+                var serviceReceipt = v.serviceReceipt;
+
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.type == 0 ? "收款" : "退款"));
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+                var propertyArr = [["预付款金额:", v.advanceMoney, "grey"], ["服务费:", v.serviceMoney, "grey"], ["收款时间:", v.createTime, "grey"], ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已收款" : "已确认"), "red"]];
+
+                $.each(propertyArr, function(index, value) {
+
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                var styleArr = [];
+
+                serviceReceipt.cash != null && serviceReceipt.cash != "0" ? styleArr.push(["现金:", serviceReceipt.cash, "grey"]) : true;
+                serviceReceipt.bank != null && serviceReceipt.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
+
+                    var info = bank + ", ";
+                    var _s = bankInfo.split('#');
+                    for ( var i = 1; i < _s.length - 1; i++) {
+                        var _i = _s[i].split('|');
+                        info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
+                    }
+
+                    return info;
+                })(serviceReceipt.bank, serviceReceipt.bankInfo), "grey"]) : true;
+                serviceReceipt.checkv != null && serviceReceipt.checkv != "0" ? styleArr.push(["转账:", serviceReceipt.checkv, "grey"]) : true;
+                serviceReceipt.installment != null && serviceReceipt.installment != "0" ? styleArr.push(["分期:", serviceReceipt.installment, "grey"]) : true;
+                serviceReceipt.accounts != null && serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", serviceReceipt.accounts, "grey"]) : true;
+                serviceReceipt.advance != null && serviceReceipt.advance != "0" ? styleArr.push(["预付款:", serviceReceipt.advance, "grey"]) : true;
+                serviceReceipt.coupon != null && serviceReceipt.coupon != "0" ? styleArr.push(["优惠券:", serviceReceipt.coupon + serviceReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
+
+                $.each(styleArr, function(index, value) {
+
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulStyle);
+                });
+
+                $liLine.append($h4).append($ulProperty).append($ulStyle);
+                $liLine.appendTo($ul);
+            });
+
+            $ul.appendTo($tableWrap);
+        }
+    },
+    initDecorationMidpack: function(decoration, wizard) {
+
+        var mainDiv = com.focusPage('#preparePayment').html("");
+
+        var midpackDiv = $("<div></div>").appendTo(mainDiv);
+        var midpackHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').attr('id', 'name').html(decoration.typeness[decoration.orderTypeness])));
+        var midpackBody = $("<div></div>").addClass('widget-body');
+        var midpackTable = $("<div></div>").addClass('clearfix').css({
             "margin-top": "15px",
             "margin-bottom": "15px"
         });
 
-        var inclusiveDiv = $("<div></div>").addClass('row');
-        var inclusiveHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("半包-款项信息")));
-        var inclusiveBody = $("<div></div>").addClass('widget-body');
-        var inclusiveTable = $("<div></div>").addClass('clearfix').css({
-            "margin-top": "15px",
-            "margin-bottom": "15px"
-        });
+        midpackBody.append($("<div></div>").addClass('widget-body-inner').append(midpackTable.append(this.createDivForPayment("col-md-4", "折前总价", "quotationPrice", true), this.createDivForPayment("col-md-4", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-4", "管理费", "managePrice", false), this.createDivForPayment("col-md-4", "主材总额", "materialPrice", true), this.createDivForPayment("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForPayment("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForPayment("col-md-4", "服务费", "servicePrice", true), this.createDivForPayment("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForPayment("col-md-4", "服务费百分比", "servicePercent", false))));
+        midpackDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(midpackHeader, midpackBody)))
 
-        var serviceMoneyBody = $("<div></div>").addClass('widget-body');
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": decoration.orderId,
+        }, function(res) {
 
-        paymentBody.append($("<div></div>").addClass('widget-body-inner').append(paymentTable.append(this.createDivForHolonomy("col-md-3", "合同预付款", "balanceAdvance", true)).append(this.createDivForHolonomy("col-md-3", "工程预付款", "projectAdvance", true)).append(this.createDivForHolonomy("col-md-3", "主材预付款", "materialAdvance", true)).append(this.createDivForHolonomy("col-md-3", "正林预付款", "zaterialAdvance", false))));
-        paymentDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(paymentHeader, paymentBody)));
-        $('<div></div>').addClass('hr col-md-12').appendTo(paymentDiv);
-        paymentDiv.prependTo(mainDiv);
+            var quotation = res.quotation;
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-3", "主材额", "materialPrice", true), this.createDivForHolonomy("col-md-3", "主材实付额", "materialPaidup", true), this.createDivForHolonomy("col-md-3", "服务费", "servicePrice", true), this.createDivForHolonomy("col-md-3", "服务实付费", "servicePaidup", false))));
-        serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
-        inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveHeader, inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
-        $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
-        $('<div></div>').addClass('hr col-md-12').prependTo(inclusiveDiv);
-        inclusiveDiv.appendTo(mainDiv);
+            var projectPrice = utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice);
+            var beforeTotal = utils.accAdd(utils.accAdd(projectPrice, quotation.managePrice), quotation.taxPrice);
+
+            var remainder = quotation.basePrice != 0 ? projectPrice % quotation.basePrice : 0;
+
+            var disprojectPrice = utils.accAdd(utils.accDiv(utils.accMul(utils.accSub(projectPrice, remainder), quotation.discount), 10), remainder);
+            var projectPrice = utils.accAdd(utils.accAdd(disprojectPrice, quotation.managePrice), quotation.taxPrice);
+
+            com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(beforeTotal));
+            com.focusPage('#projectPrice').html(com.checkNull(utils.changeTwoDecimal(projectPrice), 0));
+            com.focusPage('#managePrice').html(quotation.taxDiscount == 1 ? utils.accAdd(quotation.managePrice, quotation.taxPrice) : quotation.managePrice);
+
+        }, null, false);
 
         com.post(api.decoration.queryDecorationMidpack, {
-            "decorationMidpack.decoration.orderId": orederId
+            "decorationMidpack.decoration.orderId": decoration.orderId
         }, function(res) {
 
             var midpack = res.decorationMidpack;
@@ -999,20 +1124,25 @@ var decorationUtils = {
             com.focusPage('#materialPaidup').html(com.checkNull(midpack.materialPaidup, 0));
             com.focusPage('#servicePrice').html(com.checkNull(midpack.servicePrice, 0));
             com.focusPage('#servicePaidup').html(com.checkNull(midpack.servicePaidup, 0));
+
+            if (midpack.materialPrice == null) {
+                com.focusPage('#materialPercent').html(0);
+            } else {
+                var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(midpack.materialPaidup, 0), midpack.materialPrice)), 100);
+                com.focusPage('#materialPercent').html(com.checkNull(materialPercent > 100 ? 100 : materialPercent, 0) + "%");
+            }
+
+            if (midpack.servicePrice == null) {
+                com.focusPage('#servicePercent').html(0);
+            } else {
+                var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(midpack.servicePaidup, 0), midpack.servicePrice)), 100);
+                com.focusPage('#servicePercent').html(com.checkNull(servicePercent > 100 ? 100 : servicePercent, 0) + "%");
+            }
         });
     },
-    initDecorationInclusive: function(orederId) {
+    initDecorationInclusive: function(decoration, wizard) {
 
-        var mainDiv = com.focusPage('#preparePayment').parent();
-        com.focusPage('#preparePayment').remove();
-
-        var paymentDiv = $("<div></div>").addClass('row');
-        var paymentHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("预付款项信息")));
-        var paymentBody = $("<div></div>").addClass('widget-body');
-        var paymentTable = $("<div></div>").addClass('clearfix').css({
-            "margin-top": "15px",
-            "margin-bottom": "15px"
-        });
+        var mainDiv = com.focusPage('#preparePayment').html("");
 
         var inclusiveDiv = $("<div></div>").addClass('row');
         var inclusiveHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("全包-款项信息")));
@@ -1022,22 +1152,29 @@ var decorationUtils = {
             "margin-bottom": "15px"
         });
 
-        var serviceMoneyBody = $("<div></div>").addClass('widget-body');
+        var serviceBody = $("<div></div>").addClass('widget-body');
 
-        paymentBody.append($("<div></div>").addClass('widget-body-inner').append(paymentTable.append(this.createDivForHolonomy("col-md-3", "合同预付款", "balanceAdvance", true)).append(this.createDivForHolonomy("col-md-3", "工程预付款", "projectAdvance", true)).append(this.createDivForHolonomy("col-md-3", "主材预付款", "materialAdvance", true)).append(this.createDivForHolonomy("col-md-3", "正林预付款", "zaterialAdvance", false))));
-        paymentDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(paymentHeader, paymentBody)));
-        $('<div></div>').addClass('hr col-md-12').appendTo(paymentDiv);
-        paymentDiv.prependTo(mainDiv);
-
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "合同金额", "contractPrice", true), this.createDivForHolonomy("col-md-2", "工程总额", "projectPrice", true), this.createDivForHolonomy("col-md-2", "工程增项", "cdiff", true), this.createDivForHolonomy("col-md-2", "主材增项", "mdiff", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", false), this.createDivForHolonomy("col-md-2", "实收主材额", "materialPaidup", true))));
-        serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
-        inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveHeader, inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForPayment("col-md-2", "合同金额", "contractPrice", true), this.createDivForPayment("col-md-2", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-2", "工程增项", "cdiff", true), this.createDivForPayment("col-md-2", "主材增项", "mdiff", true), this.createDivForPayment("col-md-2", "管理费", "managePrice", false), this.createDivForPayment("col-md-2", "实收主材额", "materialPaidup", true))));
+        serviceBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
+        inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveHeader, inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
         $('<div></div>').addClass('hr col-md-12').prependTo(inclusiveDiv);
         inclusiveDiv.appendTo(mainDiv);
 
+        var taxPrice = 0;
+        var taxDiscount = 0;
+
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": decoration.orderId,
+        }, function(res) {
+
+            taxPrice = res.quotation.taxPrice;
+            taxDiscount = res.quotation.taxDiscount;
+
+        }, null, false);
+
         com.post(api.decoration.queryDecorationInclusive, {
-            "decorationInclusive.decoration.orderId": orederId
+            "decorationInclusive.decoration.orderId": decoration.orderId
         }, function(res) {
 
             var inclusive = res.decorationInclusive;
@@ -1049,8 +1186,75 @@ var decorationUtils = {
             com.focusPage('#projectPrice').html(com.checkNull(inclusive.projectPrice, 0));
             com.focusPage('#cdiff').html(com.checkNull(inclusive.cdiff, 0));
             com.focusPage('#mdiff').html(com.checkNull(inclusive.mdiff, 0));
-            com.focusPage('#managePrice').html(com.checkNull(inclusive.managePrice, 0));
+            com.focusPage('#managePrice').html(taxDiscount == 1 ? utils.accAdd(inclusive.managePrice, taxPrice) : com.checkNull(inclusive.managePrice, 0));
             com.focusPage('#materialPaidup').html(com.checkNull(inclusive.materialPaidup, 0));
+        });
+    },
+    initDecorationHolonomy: function(decoration, wizard) {
+
+        var mainDiv = com.focusPage('#preparePayment').html("");
+
+        var holonomyDiv = $("<div></div>").appendTo(mainDiv);
+        var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').attr('id', 'name').html(decoration.typeness[decoration.orderTypeness])));
+        var holonomyBody = $("<div></div>").addClass('widget-body');
+        var holonomyTable = $("<div></div>").addClass('clearfix').css({
+            "margin-top": "15px",
+            "margin-bottom": "15px"
+        });
+
+        holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable.append(this.createDivForPayment("col-md-4", "折前总价", "quotationPrice", true), this.createDivForPayment("col-md-4", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-4", "管理费", "managePrice", false), this.createDivForPayment("col-md-4", "主材总额", "materialPrice", true), this.createDivForPayment("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForPayment("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForPayment("col-md-4", "服务费", "servicePrice", true), this.createDivForPayment("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForPayment("col-md-4", "服务费百分比", "servicePercent", false))));
+        holonomyDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(holonomyHeader, holonomyBody)))
+
+        var taxPrice = 0;
+        var taxDiscount = 0;
+
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            "quotation.orderId": decoration.orderId,
+        }, function(res) {
+
+            taxPrice = res.quotation.taxPrice;
+            taxDiscount = res.quotation.taxDiscount;
+            var manageDiscount = res.quotation.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.accDiv(res.quotation.discount, 10) : 1;
+
+            if (taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
+                taxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
+            } else if (taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
+                taxPrice == taxPrice;
+            }
+
+        }, null, false);
+
+        com.post(api.decoration.queryDecorationHolonomy, {
+            "decorationHolonomy.decoration.orderId": decoration.orderId
+        }, function(res) {
+
+            res = res.decorationHolonomy;
+            com.focusPage('#projectPrice').html(com.checkNull(utils.changeTwoDecimal(utils.accAdd(utils.accAdd(res.projectPrice, res.managePrice), taxPrice))), 0);
+            com.focusPage('#managePrice').html(taxDiscount == 1 ? utils.accAdd(res.managePrice, taxPrice) : com.checkNull(res.managePrice, 0));
+            com.focusPage('#materialPrice').html(com.checkNull(res.materialPrice), 0);
+            com.focusPage('#servicePrice').html(com.checkNull(res.servicePrice), 0);
+            com.focusPage('#materialPaidup').html(com.checkNull(res.materialPaidup), 0);
+            com.focusPage('#servicePaidup').html(com.checkNull(res.servicePaidup), 0);
+
+            if (res.managePrice == null) {
+                com.focusPage('#quotationPrice').html(0);
+            } else {
+                com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(res.projectBase));
+            }
+
+            if (res.materialPrice == null) {
+                com.focusPage('#materialPercent').html(0);
+            } else {
+                var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(res.materialPaidup, 0), res.materialPrice)), 100);
+                com.focusPage('#materialPercent').html(com.checkNull(materialPercent > 100 ? 100 : materialPercent, 0) + "%");
+            }
+
+            if (res.servicePrice == null) {
+                com.focusPage('#servicePercent').html(0);
+            } else {
+                var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(res.servicePaidup, 0), res.servicePrice)), 100);
+                com.focusPage('#servicePercent').html(com.checkNull(servicePercent > 100 ? 100 : servicePercent, 0) + "%");
+            }
         });
     },
     initDecorationBelong: function(orderId) {
@@ -1343,158 +1547,6 @@ var decorationUtils = {
         }, null, false);
 
     },
-    initDecorationHolonomy: function(orederId) {
-
-        var mainDiv = com.focusPage('#preparePayment').parent();
-        com.focusPage('#preparePayment').remove();
-
-        var paymentDiv = $("<div></div>").addClass('row');
-        var paymentHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("预付款项信息")));
-        var paymentBody = $("<div></div>").addClass('widget-body');
-        var paymentTable = $("<div></div>").addClass('clearfix').css({
-            "margin-top": "15px",
-            "margin-bottom": "15px"
-        });
-
-        var holonomyDiv = $("<div></div>").addClass('row');
-        var holonomyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("半价/满减款项信息")));
-        var holonomyBody = $("<div></div>").addClass('widget-body');
-        var holonomyTable = $("<div></div>").addClass('clearfix').css({
-            "margin-top": "15px",
-            "margin-bottom": "15px"
-        });
-
-        var serviceMoneyHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html("服务款项信息")));
-        var serviceMoneyBody = $("<div></div>").addClass('widget-body');
-
-        paymentBody.append($("<div></div>").addClass('widget-body-inner').append(paymentTable.append(this.createDivForHolonomy("col-md-3", "合同预付款", "balanceAdvance", true)).append(this.createDivForHolonomy("col-md-3", "工程预付款", "projectAdvance", true)).append(this.createDivForHolonomy("col-md-3", "主材预付款", "materialAdvance", true)).append(this.createDivForHolonomy("col-md-3", "正林预付款", "zaterialAdvance", false))));
-        paymentDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(paymentHeader, paymentBody)));
-        $('<div></div>').addClass('hr col-md-12').appendTo(paymentDiv);
-        paymentDiv.prependTo(mainDiv);
-
-        holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable.append(this.createDivForHolonomy("col-md-4", "折前总价", "quotationPrice", true), this.createDivForHolonomy("col-md-4", "工程总额", "projectPrice", true), this.createDivForHolonomy("col-md-4", "管理费", "managePrice", false), this.createDivForHolonomy("col-md-4", "主材总额", "materialPrice", true), this.createDivForHolonomy("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForHolonomy("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForHolonomy("col-md-4", "服务费", "servicePrice", true), this.createDivForHolonomy("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForHolonomy("col-md-4", "服务费百分比", "servicePercent", false))));
-        serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
-        holonomyDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(holonomyHeader, holonomyBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyHeader, serviceMoneyBody)));
-        $('<div></div>').addClass('hr col-md-12').appendTo(holonomyDiv);
-        $('<div></div>').addClass('hr col-md-12').prependTo(holonomyDiv);
-        holonomyDiv.appendTo(mainDiv);
-
-        var taxPrice = 0;
-
-        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-            "quotation.orderId": orederId,
-        }, function(res) {
-
-            taxPrice = res.quotation.taxPrice;
-            var manageDiscount = res.quotation.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.accDiv(res.quotation.discount, 10) : 1;
-
-            if (res.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
-                taxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
-            } else if (res.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
-                taxPrice == taxPrice;
-            }
-
-        }, null, false);
-
-        com.post(api.decoration.queryDecorationHolonomy, {
-            "decorationHolonomy.decoration.orderId": orederId
-        }, function(res) {
-
-            res = res.decorationHolonomy;
-            com.focusPage('#projectPrice').html(com.checkNull(utils.changeTwoDecimal(utils.accAdd(utils.accAdd(res.projectPrice, res.managePrice), taxPrice))), 0);
-            com.focusPage('#managePrice').html(com.checkNull(res.managePrice), 0);
-            com.focusPage('#materialPrice').html(com.checkNull(res.materialPrice), 0);
-            com.focusPage('#servicePrice').html(com.checkNull(res.servicePrice), 0);
-            com.focusPage('#materialPaidup').html(com.checkNull(res.materialPaidup), 0);
-            com.focusPage('#servicePaidup').html(com.checkNull(res.servicePaidup), 0);
-
-            if (res.managePrice == null) {
-                com.focusPage('#quotationPrice').html(0);
-            } else {
-                com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(res.projectBase));
-            }
-
-            if (res.materialPrice == null) {
-                com.focusPage('#materialPercent').html(0);
-            } else {
-                var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(res.materialPaidup, 0), res.materialPrice)), 100);
-                com.focusPage('#materialPercent').html(com.checkNull(materialPercent > 100 ? 100 : materialPercent, 0) + "%");
-            }
-
-            if (res.servicePrice == null) {
-                com.focusPage('#servicePercent').html(0);
-            } else {
-                var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(res.servicePaidup, 0), res.servicePrice)), 100);
-                com.focusPage('#servicePercent').html(com.checkNull(servicePercent > 100 ? 100 : servicePercent, 0) + "%");
-            }
-
-        });
-
-        com.post(api.payment.queryServicePaymentByOrderId, {
-            "servicePayment.decoration.orderId": orederId
-        }, function(res) {
-
-            drawList(res.servicePayments);
-        });
-
-        function drawList(data) {
-
-            var $tableWrap = com.focusPage('#hoServiceMoney');
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            $.each(data, function(i, v) {
-
-                var serviceReceipt = v.serviceReceipt;
-
-                var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.type == 0 ? "收款" : "退款"));
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-                var propertyArr = [["预付款金额:", v.advanceMoney, "grey"], ["服务费:", v.serviceMoney, "grey"], ["收款时间:", v.createTime, "grey"], ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已收款" : "已确认"), "red"]];
-
-                $.each(propertyArr, function(index, value) {
-
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
-                });
-
-                var styleArr = [];
-
-                serviceReceipt.cash != null && serviceReceipt.cash != "0" ? styleArr.push(["现金:", serviceReceipt.cash, "grey"]) : true;
-                serviceReceipt.bank != null && serviceReceipt.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
-
-                    var info = bank + ", ";
-                    var _s = bankInfo.split('#');
-                    for ( var i = 1; i < _s.length - 1; i++) {
-                        var _i = _s[i].split('|');
-                        info += decorationUtils.bankInfo[_i[0]] + " " + _i[1] + ", ";
-                    }
-
-                    return info;
-                })(serviceReceipt.bank, serviceReceipt.bankInfo), "grey"]) : true;
-                serviceReceipt.checkv != null && serviceReceipt.checkv != "0" ? styleArr.push(["转账:", serviceReceipt.checkv, "grey"]) : true;
-                serviceReceipt.installment != null && serviceReceipt.installment != "0" ? styleArr.push(["分期:", serviceReceipt.installment, "grey"]) : true;
-                serviceReceipt.accounts != null && serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", serviceReceipt.accounts, "grey"]) : true;
-                serviceReceipt.advance != null && serviceReceipt.advance != "0" ? styleArr.push(["预付款:", serviceReceipt.advance, "grey"]) : true;
-                serviceReceipt.coupon != null && serviceReceipt.coupon != "0" ? styleArr.push(["优惠券:", serviceReceipt.coupon + serviceReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
-
-                $.each(styleArr, function(index, value) {
-
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulStyle);
-                });
-
-                $liLine.append($h4).append($ulProperty).append($ulStyle);
-                $liLine.appendTo($ul);
-            });
-
-            $ul.appendTo($tableWrap);
-        }
-    },
     initAccount: function(orderId, accountFlg) {
 
         var $metaData = com.focusPage('#accountPayment').html('');
@@ -1626,8 +1678,6 @@ var decorationUtils = {
 
         var $users = com.focusPage("#usersInfo").html('');
 
-        var $usersDiv = $('<div></div>').addClass("tab-pane in active").appendTo($users);
-
         var decorationUsers = null;
 
         setTimeout(function() {
@@ -1655,6 +1705,7 @@ var decorationUtils = {
                     return;
 
             }, null, false);
+
         }
 
         function createComLine(decorationUsers) {
@@ -1662,51 +1713,107 @@ var decorationUtils = {
             if (decorationUsers && decorationUsers.length) {
                 $.each(decorationUsers, function(i, v) {
 
-                    // 方形头像并列显示
-                    var userBase = v.user;
-
-                    var $div = $('<div"></div>').addClass("profile-picture col-sm-2 text-center").attr("wd", "worker");
-
-                    var $span = $('<div></div>').addClass("workerImg").appendTo($div);
-                    var $img = $('<img />').attr("alt", userBase.currentName + "s Photo").appendTo($span)
-
-                    var $divSpace = $('<div></div>').addClass("space-4").appendTo($div);
-                    var $div2 = $('<div></div>').addClass("width-80 label label-info label-xlg").appendTo($div);
-                    var $div3 = $('<div></div>').appendTo($div2);
-                    var $a = $('<a href="#"></a>').appendTo($div3);
-                    var $btnDel = $('<i></i>').addClass("icon-remove red").appendTo($a);
-                    var $span2 = $('<span></span>').addClass('white').html(" " + userBase.currentName + " " + userBase.duty.name).appendTo($a);
-
-                    $btnDel.bindClick(function() {
-
-                        deleteDecorationUser(v.duid, $div);
-                    });
-
-                    if (userBase.userPhoto != null && userBase.userPhoto != "") {
-                        com.showImg($img, userBase.userPhoto, 150, 150, '');
-                    }
-
-                    $div.appendTo($usersDiv);
-
+                    decorationUtils.addDecorationUser(decorationDetail, $users, v);
                 });
             } else {
-                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($usersDiv);
+                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($users);
                 var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
                 $mesg.append($('<span></span>').text('无可用数据提供'));
             }
         }
 
-        function deleteDecorationUser(duid, $div) {
-
-            com.post(api.decoration.deleteDecorationUser, {
-                "decorationUser.duid": duid
-            }, function() {
-
-                com.showAlert(com.info, "操作成功");
-                $div.remove();
-            }, null, false);
-        }
     },
+
+    // 显示头像
+    addDecorationUser: function(decorationDetail, e, i) {
+
+        var userBase = i.user;
+
+        var $li = $('<li></li>').attr("id", "du_" + i.duid).appendTo(e);
+
+        var $img = $('<img></img>');
+        var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').css({
+            'width': "180px",
+            'height': "180px"
+        }).append($img).appendTo($li);
+
+        if (userBase.userPhoto != "" && userBase.userPhoto != null && userBase.userPhoto != undefined) {
+            com.showImg($img, userBase.userPhoto, 180, 180, userBase.currentName);
+        }
+        var $tags = $('<div></div>').addClass('tags').appendTo($li);
+        var $isShowHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $isShowInfo = $('<span></span>').addClass('label label-info arrowed').text(constant.decoration().decorationUser.isShow.keys[i.isShow]).appendTo($isShowHolder);
+        var $isPayHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $isPayInfo = $('<span></span>').addClass('label label-danger arrowed').text(constant.decoration().decorationUser.isPay.keys[i.isPay]).appendTo($isPayHolder);
+        var $isNameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $isNameInfo = $('<span></span>').addClass('label label-info arrowed').text(userBase.currentName + " " + userBase.duty.name).appendTo($isNameHolder);
+        var $isContentHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $isContentInfo = $('<span></span>').addClass('label label-danger arrowed').attr("id", "duCon_" + i.duid).text(i.content ? i.content : "待说明").appendTo($isContentHolder);
+
+        var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
+        var $toolLabel = $('<label></label>').appendTo($tools);
+        var $btnCon = $('<a></a>').addClass("icon-pencil").appendTo($tools);
+        var $btnIss = $('<a></a>').addClass("icon-eye-open").appendTo($tools);
+        var $btnIsp = $('<a></a>').addClass("icon-money").appendTo($tools);
+        var $btnDel = $('<a></a>').addClass("icon-remove").appendTo($tools);
+
+        $btnCon.click(function() {
+
+            com.focusPage("#duUser").val(userBase.currentName + "-" + userBase.duty.name).attr("readonly", "readonly");
+            com.focusPage("#duContent").val($isContentInfo.text());
+            decorationDetail.decorationUser.duid = i.duid;
+            decorationDetail.decorationUser.status = 1;
+            decorationDetail.decorationUserModal.modal("show");
+
+        });
+
+        $btnIss.click(function() {
+
+            com.showConfirm("确定要修改显示信息吗?", function() {
+
+                com.post(api.decoration.updateDecorationUser, {
+                    "decorationUser.duid": i.duid,
+                    "decorationUser.isShow": i.isShow == constant.decoration().decorationUser.ISSHOW_HIDE_INT ? constant.decoration().decorationUser.ISSHOW_SHOW_INT : constant.decoration().decorationUser.ISSHOW_HIDE_INT
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    $isShowInfo.text(constant.decoration().decorationUser.isShow.keys[res.decorationUser.isShow])
+                });
+            })
+        });
+
+        $btnIsp.click(function() {
+
+            com.showConfirm("确定要修改薪资信息吗?", function() {
+
+                com.post(api.decoration.updateDecorationUser, {
+                    "decorationUser.duid": i.duid,
+                    "decorationUser.isPay": i.isPay == constant.decoration().decorationUser.ISSPAY_UNPAID_INT ? constant.decoration().decorationUser.ISSPAY_PAID_INT : constant.decoration().decorationUser.ISSPAY_UNPAID_INT
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    $isPayInfo.text(constant.decoration().decorationUser.isPay.keys[res.decorationUser.isPay])
+                });
+            })
+        });
+
+        $btnDel.click(function() {
+
+            com.showConfirm("确定要删除装修人员信息吗?", function() {
+
+                com.post(api.decoration.deleteDecorationUser, {
+                    "decorationUser.duid": i.duid
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    com.focusPage("#du_" + res.decorationUser.duid).remove();
+                });
+            })
+
+        });
+
+    },
+
     initAddreduce: function(orderId, type) {
 
         var $resList = com.focusPage('#resLists').html('');
@@ -1882,7 +1989,7 @@ var decorationUtils = {
             }
         });
     },
-    createDivForHolonomy: function(inclass, string, id, isleft) {
+    createDivForPayment: function(inclass, string, id, isleft) {
 
         return $("<div></div>").addClass(inclass).css(isleft ? {
             "border-left": "solid 1px #e3e3e3",
@@ -1976,7 +2083,7 @@ var decorationUtils = {
         com.focusPage("#_thingCut strong").html(thing);
         com.focusPage("#_detail strong").html(utils.accAdd(coupon, thing));
     },
-    initQuotationPrint: function() {
+    initQuotationPrint: function(wizard) {
 
         var quotationId = quotationUtils.quotationDetail.quotation.qid;
         var status = quotationUtils.quotationDetail.quotation.status;
@@ -2112,14 +2219,14 @@ var decorationUtils = {
 
             var printConf = {
                 "quotationId": quotationId,
-                "layout": $('input[name="layout"]:checked').val(),
+                "layout": com.focusPage('input[name="layout"]:checked', '#printQuotationModal').val(),
                 "type": 0,
                 "itemtype": [],
-                "calType": $('input[name="calType"]:checked').val()
+                "calType": com.focusPage('input[name="calType"]:checked', '#printQuotationModal').val()
             };
 
-            var $types = com.focusPage('input[name="type"]:checked', '#types');
-            var $itemtypes = com.focusPage('input[name="itemtype"]:checked', '#itemtypes');
+            var $types = com.focusPage('input[name="type"]:checked', '#printQuotationModal #types');
+            var $itemtypes = com.focusPage('input[name="itemtype"]:checked', '#printQuotationModal #itemtypes');
 
             $.each($types, function(i, v) {
 
@@ -2136,8 +2243,33 @@ var decorationUtils = {
                 "printConf": printConf
             };
 
+            var $show = wizard.opt == null ? [] : wizard.opt.btn == null ? [] : wizard.opt.btn;
+
+            status = $show.includes("quotationIsPrint") ? true : false
+
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
     },
+    initPresignPrint: function() {
 
+        $("#prinPresignBtn").click(function() {
+
+            var printConf = {
+                "type": 0
+            };
+
+            var types = com.focusPage('input[name="type"]:checked', '#printPresignModal #types');
+
+            $.each(types, function(i, v) {
+
+                printConf["type"] = parseInt(printConf["type"]) + parseInt($(v).attr('value'));
+            });
+
+            params.quotation.protation = {
+                "printConf": printConf
+            };
+
+            com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
+        });
+    }
 }

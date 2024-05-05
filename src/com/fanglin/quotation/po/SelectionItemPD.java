@@ -2,6 +2,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.SoodsPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.SelectionItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "selectionItem", catalog = "quotation")
@@ -61,6 +64,8 @@ public class SelectionItemPD implements Serializable {
 
 	private SoodsPO soods;
 
+	private short accountStatus;// 对账状态
+
 	private short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
 
 	private int initNum;// 工程量
@@ -83,6 +88,8 @@ public class SelectionItemPD implements Serializable {
 
 	private Timestamp balanceTime;// 结算时间
 
+	private Timestamp accountTime;// 对账时间
+
 	private UserPO creater;
 
 	private UserPO traner;// 配送人
@@ -97,6 +104,8 @@ public class SelectionItemPD implements Serializable {
 
 	private UserPO finish;// 完结人
 
+	private UserPO accounter;// 对账人
+
 	private int refnum;// 退数量
 
 	private String comment;// 注释
@@ -107,8 +116,15 @@ public class SelectionItemPD implements Serializable {
 		super();
 	}
 
-	public SelectionItemPD(SelectionPO selection, GoodsPO goods, DecorationPO decoration, UserPO traner, UserPO checker, UserPO confirmer, UserPO balancer, UserPO finish, UserPO supplier, SoodsPO soods) {
+	public SelectionItemPD(long siid) {
 		super();
+		this.siid = siid;
+	}
+
+	public SelectionItemPD(SelectionPO selection, GoodsPO goods, DecorationPO decoration, UserPO traner, UserPO checker, UserPO confirmer, UserPO balancer, UserPO finish, UserPO supplier, UserPO accounter, SoodsPO soods) {
+
+		super();
+
 		this.selection = selection;
 		this.goods = goods;
 		this.decoration = decoration;
@@ -118,6 +134,7 @@ public class SelectionItemPD implements Serializable {
 		this.balancer = balancer;
 		this.finish = finish;
 		this.supplier = supplier;
+		this.accounter = accounter;
 		this.soods = soods;
 	}
 
@@ -227,6 +244,15 @@ public class SelectionItemPD implements Serializable {
 		this.soods = soods;
 	}
 
+	@Column(name = "accountStatus")
+	public short getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(short accountStatus) {
+		this.accountStatus = accountStatus;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -326,6 +352,15 @@ public class SelectionItemPD implements Serializable {
 		this.balanceTime = balanceTime;
 	}
 
+	@Column(name = "accountTime")
+	public Timestamp getAccountTime() {
+		return accountTime;
+	}
+
+	public void setAccountTime(Timestamp accountTime) {
+		this.accountTime = accountTime;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -396,6 +431,16 @@ public class SelectionItemPD implements Serializable {
 		this.balancer = balancer;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "auid", referencedColumnName = "uid")
+	public UserPO getAccounter() {
+		return accounter;
+	}
+
+	public void setAccounter(UserPO accounter) {
+		this.accounter = accounter;
+	}
+
 	@Column(name = "refnum")
 	public int getRefnum() {
 		return refnum;
@@ -430,6 +475,30 @@ public class SelectionItemPD implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public SelectionItemVO ptv(SelectionItemVO selectionItemVO) {
+
+		BeanUtil.copyProperties(this, selectionItemVO, Arrays.asList("selection", "goods", "decoration", "creater", "traner", "checker", "confirmer", "finish", "reviewer", "balancer", "supplier", "accounter", "soods"));
+
+		if (selectionItemVO.getGoods() != null) BeanUtil.copyProperties(getGoods(), selectionItemVO.getGoods(), Arrays.asList("accessoriesType"));
+
+		if (selectionItemVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), selectionItemVO.getCreater(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getTraner() != null) BeanUtil.copyProperties(getTraner(), selectionItemVO.getTraner(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getChecker() != null) BeanUtil.copyProperties(getChecker(), selectionItemVO.getChecker(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getConfirmer() != null) BeanUtil.copyProperties(getConfirmer(), selectionItemVO.getConfirmer(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getFinish() != null) BeanUtil.copyProperties(getFinish(), selectionItemVO.getFinish(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getReviewer() != null) BeanUtil.copyProperties(getReviewer(), selectionItemVO.getReviewer(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getBalancer() != null) BeanUtil.copyProperties(getBalancer(), selectionItemVO.getBalancer(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getSupplier() != null) BeanUtil.copyProperties(getSupplier(), selectionItemVO.getSupplier(), Arrays.asList("dept", "duty"));
+		if (selectionItemVO.getAccounter() != null) BeanUtil.copyProperties(getAccounter(), selectionItemVO.getAccounter(), Arrays.asList("dept", "duty"));
+
+		if (selectionItemVO.getSoods() != null) BeanUtil.copyProperties(getSoods(), selectionItemVO.getSoods(), Arrays.asList("goods", "quotationItem"));
+
+		if (selectionItemVO.getDecoration() != null) getDecoration().ptvcascade(selectionItemVO.getDecoration());
+		if (selectionItemVO.getSelection() != null) getSelection().ptvcascade(selectionItemVO.getSelection());
+
+		return selectionItemVO;
 	}
 
 }

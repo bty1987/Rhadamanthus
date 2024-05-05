@@ -29,7 +29,7 @@ import com.fanglin.utils.SystemConfig;
 @Controller
 public class RecruitmentOperationAction extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 4635203905270459739L;
 
 	@Autowired
 	private RecruitmentOperationService recruitmentOperationService;

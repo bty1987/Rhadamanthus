@@ -11,14 +11,12 @@
 
 package com.fanglin.information.action;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -42,7 +40,7 @@ public class EventsAction extends BaseListAction {
 	private EventsVO event;
 
 	@Action(value = "queryEvent", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryEvent() throws HibernateException, ParseException, FLException {
+	public String queryEvent() throws FLException {
 
 		events = eventsService.queryEvents(event, queryUserId());
 
@@ -50,7 +48,7 @@ public class EventsAction extends BaseListAction {
 	}
 
 	@Action(value = "addEvent", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addEvents() throws ParseException, FLException {
+	public String addEvents() throws FLException {
 
 		eventsService.addEvents(event, queryUserId());
 

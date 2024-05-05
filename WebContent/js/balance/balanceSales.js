@@ -20,10 +20,10 @@ jQuery(function($) {
             updateName: com.focusPage("#updata"),
         },
 
-        status: {},
+        status: {}
     };
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", null);
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
 
     var seacher = new Searcher();
 
@@ -60,27 +60,31 @@ jQuery(function($) {
         fieId: "income",
         name: "收入",
         prop: "income",
-        clazz: "blue"
+        clazz: "blue",
     }, {
         fieId: "cost",
         name: "成本",
         prop: "cost",
-        clazz: "blue"
+        clazz: "blue",
     }, {
         fieId: "payment",
         name: "应付",
         prop: "payment",
-        clazz: "blue"
+        clazz: "blue",
     }, {
         fieId: "profit",
         name: "利润",
         prop: "profit",
-        clazz: "blue"
+        clazz: "blue",
     }, {
         field: "creater",
         name: "创建人",
         prop: "creater.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
+        }
     }, {
         field: "createTime",
         name: "创建时间",
@@ -90,7 +94,11 @@ jQuery(function($) {
         field: "balancer",
         name: "结算人",
         prop: "balancer.userName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.balancer.userId);
+        }
     }, {
         field: "balanceTime",
         name: "结算时间",
@@ -104,6 +112,36 @@ jQuery(function($) {
     }];
 
     var linebtus = [{
+        name: "汇总",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            com.post(api.balance.amountBalanceSales, {
+                "balanceSales.bsid": v.bsid
+            }, function() {
+
+                com.showAlert(com.info, "汇总成功");
+                seacher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status != constant.balance().balanceSales.STATUS_UNLOCK_INT);
+        }
+    }, {
+        name: "同步金蝶",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            kingdee(v);
+        },
+        show: function(v) {
+
+            return (v.status == constant.balance().balanceSales.STATUS_ENABLE_CHECK_INT);
+        }
+    }, {
         name: "明细",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -120,7 +158,7 @@ jQuery(function($) {
         handle: function(v) {
 
             balanceSales.bsid = v.bsid;
-            balanceSales.items.name.val(v.name);
+            balanceSales.items.updateName.val(v.name);
             balanceSales.modals.renewal.modal("show");
 
             return false;
@@ -240,7 +278,7 @@ jQuery(function($) {
 
             return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
         }
-    },];
+    }];
 
     seacher.line("name", lineprops, linebtus).render();
 
@@ -288,4 +326,109 @@ jQuery(function($) {
         balanceSales.modals.renewal.modal("hide");
     }
 
+    function kingdee(v) {
+
+        var balanceSales = {
+            bsid: 0,
+            creater: {
+                userId: null
+            },
+            balanceTime: null,
+            grade: null,
+            brand: {
+                kino: null,
+                supplier: {
+                    oldUserId: null
+                }
+            },
+            name: null,
+            payment: 0,
+            income: 0,
+            paymentOrg: null,
+            items: []
+        };
+
+        com.post(api.balance.queryBalanceSalesByBsid, {
+            "balanceSales.bsid": v.bsid
+        }, function(res) {
+
+            balanceSales.bsid = res.balanceSales.bsid;
+            balanceSales.creater.userId = res.balanceSales.creater.userId;
+            balanceSales.balanceTime = res.balanceSales.balanceTime;
+            balanceSales.grade = res.balanceSales.grade;
+            balanceSales.brand.kino = res.balanceSales.brand.kino;
+            balanceSales.brand.supplier.oldUserId = res.balanceSales.brand.supplier != null ? res.balanceSales.brand.supplier.oldUserId : "";
+            balanceSales.name = res.balanceSales.name;
+            balanceSales.payment = res.balanceSales.payment;
+            balanceSales.income = res.balanceSales.income;
+            balanceSales.paymentOrg = params.company.srganization.no;
+        }, null, false);
+
+        com.post(api.balance.pageBalanceSalesBalance, {
+            "paging.noPage": 1,
+            "balanceSales.bsid": v.bsid
+        }, function(res) {
+
+            $.each(res.paging.data, function(i, v) {
+
+                var oneType = v.salesBalance.onetype;
+                var Type = v.salesBalance.type;
+                var salesRevenue = null;
+                var salesAmount = null;
+                var accountsPayable = null;
+                var venderMaling = Math.round(v.salesBalance.sales.venderMaling);
+                var allowance = Math.round(v.salesBalance.allowance);
+
+                if (oneType == 0) {
+
+                    if (Type == 3) {
+
+                        venderMaling = 0;
+                        allowance = 0;
+                        salesRevenue = v.salesBalance.sales.depositpay;
+                        salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
+                        accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
+                    } else {
+
+                        salesRevenue = utils.accAdd(v.salesBalance.sales.depositpay, v.salesBalance.sales.fullpay);
+                        salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
+                        accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
+                    }
+                }
+
+                if (oneType == 1) {
+
+                    venderMaling = 0;
+                    salesRevenue = v.salesBalance.total;
+                    salesAmount = utils.accAdd(v.salesBalance.total, allowance);
+                    accountsPayable = v.salesBalance.pbalance;
+                    venderMaling = (-venderMaling);
+                }
+
+                if (oneType == 2 || oneType == 3) {
+
+                    salesRevenue = v.salesBalance.total;
+                    salesAmount = utils.accAdd(utils.accSub(v.salesBalance.total, venderMaling), allowance);
+                    accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
+                    venderMaling = (-venderMaling);
+                }
+
+                var salesRev = utils.changeThrDecimal(salesRevenue);
+                var serMoney = utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable));
+
+                var item = {
+                    salesRevenue: salesRev,
+                    serviceMoney: serMoney,
+                    orderId: v.salesBalance.sales.orderId,
+                    no: v.salesBalance.sales.no,
+                    coupon: v.salesBalance.coupon,
+                    address: v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber
+                };
+                balanceSales.items.push(item);
+            });
+
+        }, null, false);
+
+        kingdeeUtils.balance(balanceSales);
+    }
 });

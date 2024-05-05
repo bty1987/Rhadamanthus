@@ -35,6 +35,9 @@ public class WMCodeUtil {
 			name = "fanglin";
 		}
 
+		name = String.format("%s(测试版)", name);
+		time = String.format("%s(测试版)", time);
+
 		int width = 500;
 		int height = 500;
 
@@ -53,7 +56,7 @@ public class WMCodeUtil {
 		g.drawString(name, 0, 0);
 		g.drawString(time, 250, 0);
 
-		g.drawString(SystemConfig.getString("backname", "fanglin"), 220, 120);
+		g.drawString(time = String.format("%s(测试版)", SystemConfig.getString("backname", "fanglin")), 220, 120);
 
 		g.drawString(name, 100, 250);
 		g.drawString(time, 350, 250);

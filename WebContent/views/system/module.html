@@ -5,11 +5,14 @@
 			<h3 class="grey lighter  position-relative">
 				<i class="icon-leaf green"></i>
 				<span>模块</span>
-				<button class="btn blue pull-right btn-sm" id="addModule">添加</button>
 			</h3>
 			<div class="hr hr8 hr-double hr-dotted"></div>
 
-			<div id="moduleTable" class="row"></div>
+			<div class="col-xs-12">
+				<div id="condList" class="fl_search clearfix"></div><!---c查询条件有就写没有 也写上 在js 里面不传参就行--->
+				<div id="resultList" class="clearfix tab-pane action"></div><!-- c查询结果-->
+				<div id="pagenation" class="fl-page-wrap clearfix"></div><!--分页-->
+			</div>
 		</div>
 		<div class="col-xs-5"></div>
 	</div>

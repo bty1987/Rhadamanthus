@@ -3,7 +3,7 @@ jQuery(function($) {
 		htmlName: "service",
 		type: params['urlLoadParams'].paytype,
 		paytypes: [],
-		paymentStatusArray: constant.payment.materialPayment.status.keys,
+		paymentStatusArray: constant.payment().servicePayment.status.keys,
 		payment: null,
 
 		items: {
@@ -111,7 +111,7 @@ jQuery(function($) {
 		com.closeTip();
 	});
 
-	servicePayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+	servicePayment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
 	com.focusPage("#collectModal :checkbox", "#servicePayment").on("change", function(){
 
@@ -171,7 +171,7 @@ jQuery(function($) {
 			if (servicePayment.pageConfig.pageBtn.contains("selectall")) $input.appendTo($label);
 
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').html('服务款').appendTo($label);
-			if (!(["common", "pos"].contains(servicePayment.type))) $span.html(v.type == constant.payment.servicePayment.TYPE_COLLECT_INT ? '收款' : '退款');
+			if (!(["common", "pos"].contains(servicePayment.type))) $span.html(v.type == constant.payment().servicePayment.TYPE_COLLECT_INT ? '收款' : '退款');
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -184,13 +184,21 @@ jQuery(function($) {
 
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-primary').html("打印");
 			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
+			var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
 
 			var propertyArr = paymentUtils.getPropertyArr(servicePayment, v, v.decoration, servicePayment.paymentStatusArray);
 
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
 				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+				if (value[3]) {
+					$b.click(function() {
+						value[3]($b);
+					});
+				}
+
 				$liProperty.appendTo($ulProperty);
 			});
 
@@ -199,14 +207,15 @@ jQuery(function($) {
 
 			if(servicePayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
 
-			if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
-			if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
-			if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
+			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
+			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
 
 			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
 			if (servicePayment.pageConfig.pageBtn.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
-			if (v.status != constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == constant.payment.materialPayment.STATUS_COLLECT_INT && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+			if (v.status != constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if (v.status == constant.payment().materialPayment.STATUS_COLLECT_INT && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+			if (v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && servicePayment.pageConfig.pageBtn.contains("toKingdee")) $divBtnWrap.append($btnKingdee);
 
 			//服务费收款
 			$btnService.click(function(){
@@ -261,8 +270,8 @@ jQuery(function($) {
 				var options = {
 					"paytran.orderId": v.decoration.orderId,
 					"paytran.pid": v.spid,
-					"paytran.type": constant.payment.receipt.PAYMENTTYPE_SERVICE_INT,
-					"paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+					"paytran.type": constant.payment().receipt.PAYMENTTYPE_SERVICE_INT,
+					"paytran.atttype": constant.payment().paytran.ATTTYPE_DECORATION_INT,
 					"paytran.no": com.typeahead(bankDiv),
 					"paytran.sn": servicePayment.posValues[bankVal].value, // 收据类型中pos的value值
 					"paytran.money": v.serviceMoney,
@@ -295,6 +304,12 @@ jQuery(function($) {
 						com.showAlert(com.info, "发送成功");
 					});
 				});
+			});
+
+			// 同步金蝶
+			$btnKingdee.click(function() {
+
+				kingdeeUtils.payment(v, servicePayment.htmlName);
 			});
 
 			return $liLine;

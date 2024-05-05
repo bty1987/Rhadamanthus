@@ -20,6 +20,8 @@ import com.fanglin.utils.Paging;
 
 public interface ApprovalDao extends Dao<ApprovalPO> {
 
+	public List<ApprovalPO> pageApproval(Paging paging, List<Filter> filters, int company);
+
 	public List<ApprovalPO> pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company);
 
 	public List<ApprovalPO> pageApprovalForSend(Paging paging, List<Filter> filters, String userId, int company);

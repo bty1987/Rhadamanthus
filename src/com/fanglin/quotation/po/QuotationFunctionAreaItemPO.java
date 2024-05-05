@@ -15,6 +15,7 @@ import java.io.Serializable;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.po.QuotationVersionPO;
 
 public class QuotationFunctionAreaItemPO implements Serializable {
 
@@ -48,7 +49,11 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 
 	private String workType;
 
+	private int addPrice;
+
 	private int unitPrice;
+
+	private int subPrice;
 
 	private String formula;
 
@@ -118,12 +123,28 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.workType = workType;
 	}
 
+	public int getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(int addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public int getUnitPrice() {
 		return unitPrice;
 	}
 
 	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public int getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(int subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public String getFormula() {
@@ -209,6 +230,8 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public void ptp(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO) {
 		this.setItemName(quotetionFunctionAreaItemPO.getName());
 		this.setUnitPrice(quotetionFunctionAreaItemPO.getUnitPrice());
+		this.setAddPrice(quotetionFunctionAreaItemPO.getAddPrice());
+		this.setSubPrice(quotetionFunctionAreaItemPO.getSubPrice());
 		this.setIndex(quotetionFunctionAreaItemPO.getIndex());
 		this.setInitNum(quotetionFunctionAreaItemPO.getNum());
 		this.setFormula(quotetionFunctionAreaItemPO.getFormula());
@@ -219,6 +242,72 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.setWorkType(quotetionFunctionAreaItemPO.getWorkType());
 		this.setDiscount(quotetionFunctionAreaItemPO.getDiscount());
 		this.setContent(quotetionFunctionAreaItemPO.getContent());
+	}
+
+	public QuotationFunctionAreaItemPO toTraffic(QuotationVersionPO version, QuotationFunctionAreaPO functionArea) {
+
+		setItemName("车运费");
+		setMeasurementUnit("");
+		setWorkType("其他");
+
+		setUnitPrice(version.getTrafficRate());
+		setAddPrice(0);
+		setSubPrice(0);
+		setDiscount(version.getTrafficDiscount());
+		setFormula("0");
+		setNum(0);
+
+		setSubtype(QuotationFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		setType(QuotationFunctionAreaItemPO.TYPE_TRAFFIC_INT);
+
+		setQuotationFunctionArea(functionArea);
+		setContent("");
+
+		return this;
+	}
+
+	public QuotationFunctionAreaItemPO toManage(QuotationVersionPO version, QuotationFunctionAreaPO functionArea) {
+
+		setItemName("管理费");
+		setMeasurementUnit("");
+		setWorkType("其他");
+
+		setUnitPrice(version.getManageRate());
+		setAddPrice(0);
+		setSubPrice(0);
+		setDiscount(version.getManageDiscount());
+		setFormula("0");
+		setNum(0);
+
+		setSubtype(QuotationFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		setType(QuotationFunctionAreaItemPO.TYPE_MANAGE_INT);
+
+		setQuotationFunctionArea(functionArea);
+		setContent("");
+
+		return this;
+	}
+
+	public QuotationFunctionAreaItemPO toTax(QuotationVersionPO version, QuotationFunctionAreaPO functionArea) {
+
+		setItemName("税金");
+		setMeasurementUnit("");
+		setWorkType("其他");
+
+		setUnitPrice(version.getTaxRate());
+		setAddPrice(0);
+		setSubPrice(0);
+		setDiscount(version.getTaxDiscount());
+		setFormula("0");
+		setNum(0);
+
+		setSubtype(QuotationFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		setType(QuotationFunctionAreaItemPO.TYPE_TAX_INT);
+
+		setQuotationFunctionArea(functionArea);
+		setContent("");
+
+		return this;
 	}
 
 	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId, Short index) {

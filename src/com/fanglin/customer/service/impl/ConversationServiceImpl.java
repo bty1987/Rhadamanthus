@@ -166,6 +166,10 @@ public class ConversationServiceImpl implements ConversationService {
 	@Transactional(rollbackFor = Exception.class)
 	public void responseConversation(ConversationVO conversationVO, String userId) throws FLException {
 
+		if (conversationVO.getCreater() != null && conversationVO.getCreater().getUserId() != null) {
+			userId = conversationVO.getCreater().getUserId();
+		}
+
 		UserPO creater = userdDao.queryUserByUserId(userId);
 
 		String orderId = conversationVO.getOrderId();

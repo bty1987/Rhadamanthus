@@ -15,13 +15,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.utils.Paging;
@@ -34,10 +35,12 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters) {
+	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters) throws FLException {
+
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
 
 		queryFilterExcute(query, filters);
+
 		query.asc("createTime");
 
 		return query.list();
@@ -50,12 +53,14 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters) {
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters) throws FLException {
 
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(new Paging(), DecorationPaymentPO.class);
 
 		queryFilterExcute(query, filters);
+
 		query.asc("createTime");
+
 		query.notPaging();
 
 		return query.list();
@@ -149,59 +154,41 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		return ((BigInteger) query.uniqueResult()).intValue();
 	}
 
-	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query, List<Filter> filters) throws FLException {
 
-		if (filters != null) {
-			query.alias("decoration", "order");
-			query.alias("order.house", "house");
-			query.alias("house.village", "village");
-			query.alias("order.designer", "designer");
+		if (filters == null) return;
 
-			for (Filter filter : filters) {
-				if (StringUtils.isNotEmpty(filter.getData())) {
-					if ("orderId".equals(filter.getField())) {
-						query.add(query.getCriterion("order.orderId", filter.getData(), filter.getOp()));
-					} else if ("designer".equals(filter.getField())) {
-						query.add(query.getCriterion("designer.userId", filter.getData(), filter.getOp()));
-					} else if ("village".equals(filter.getField())) {
-						query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
-					} else if ("houseNumber".equals(filter.getField())) {
-						query.add(query.getCriterion("house.houseNumber", filter.getData(), filter.getOp()));
-					} else if ("collectUser".equals(filter.getField())) {
-						query.alias("decorationReceipt", "decorationReceipt");
-						query.alias("decorationReceipt.collecter", "collecter");
-						query.add(query.getCriterion("collecter.currentName", filter.getData(), filter.getOp()));
-					} else if ("collectTime".equals(filter.getField())) {
+		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
 
-						query.alias("decorationReceipt", "decorationReceipt");
+		for (Filter filter : filters) {
 
-						if ("between".equals(filter.getOp())) {
-							query.timeranges("decorationReceipt.collectTime", "decorationReceipt.collectTime", filter.getData());
-						} else {
-							query.add(query.getCriterion("decorationReceipt.collectTime", filter.getData(), filter.getOp()));
-						}
-					} else if ("confirmTime".equals(filter.getField())) {
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-						query.alias("decorationReceipt", "decorationReceipt");
-
-						query.timeranges("decorationReceipt.confirmTime", "decorationReceipt.confirmTime", filter.getData());
-
-					} else if ("paymentStatus".equals(filter.getField())) {
-						query.add(query.getCriterion("paymentStatus", Short.valueOf(filter.getData()), filter.getOp()));
-					} else if ("createTime".equals(filter.getField())) {
-						if ("between".equals(filter.getOp())) {
-							query.timeranges("createTime", "createTime", filter.getData());
-						} else {
-							query.add(query.getCriterion("createTime", filter.getData(), filter.getOp()));
-						}
-					} else if ("company".equals(filter.getField())) {
-						query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
-					} else if ("oneType".equals(filter.getField())) {
-						query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-					} else {
-						query.add(query.getCriterion(filter.getField(), filter.getData().split(","), filter.getOp()));
-					}
-				}
+			if ("collectUser".equals(field)) {
+				query.alias("decorationReceipt", "decorationReceipt");
+				query.alias("decorationReceipt.collecter", "collecter");
+				query.add(query.getCriterion("collecter.currentName", data, op));
+			} else if ("paymentStatus".equals(field)) {
+				query.add(query.getCriterion("paymentStatus", Short.valueOf(data), op));
+			} else if ("oneType".equals(field)) {
+				query.add(query.getCriterion("oneType", Short.valueOf(data), op));
+			} else if ("collectTime".equals(field) && "between".equals(op)) {
+				query.alias("decorationReceipt", "decorationReceipt");
+				query.timeranges("decorationReceipt.collectTime", "decorationReceipt.collectTime", data);
+			} else if ("collectTime".equals(field) && "eq".equals(op)) {
+				query.alias("decorationReceipt", "decorationReceipt");
+				query.add(query.getCriterion("decorationReceipt.collectTime", data, op));
+			} else if ("confirmTime".equals(field)) {
+				query.alias("decorationReceipt", "decorationReceipt");
+				query.timeranges("decorationReceipt.confirmTime", "decorationReceipt.confirmTime", data);
+			} else if ("createTime".equals(field) && "between".equals(op)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("createTime".equals(field) && "eq".equals(op)) {
+				query.add(query.getCriterion("createTime", data, op));
+			} else if ("company".equals(field)) {
+				query.add(query.getCriterion("company", Integer.valueOf(data), op));
 			}
 		}
 	}

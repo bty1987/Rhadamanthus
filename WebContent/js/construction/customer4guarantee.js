@@ -161,8 +161,8 @@ jQuery(function ($) {
     function removeRow(id) {
 
         com.showConfirm("确认删除吗?", function () {
-                com.post(api.construction.deleteCustomerServiceGuarantee, {"csgIds[0]": id}, successCallback);
 
+            com.post(api.construction.deleteCustomerServiceGuarantee, {"csgIds[0]": id}, successCallback);
         });
 
     }

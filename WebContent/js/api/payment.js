@@ -48,8 +48,10 @@ $.extend(api.index, {
     },
     walletresIndex: {
         url: "/views/payment/walletres.html"
+    },
+    payment2printIndex: {
+        url: "/views/payment/payment2print.html"
     }
-
 });
 
 $.extend(api, {
@@ -188,6 +190,9 @@ $.extend(api, {
             tranargs: {
                 args: ["decorationPayment.cash", "decorationPayment.bank", "decorationPayment.checkv", "decorationPayment.advance", "decorationPayment.coupon"]
             }
+        },
+        deleteDecorationPayment: {
+            url: "deleteDecorationPayment.do"
         },
         collectDecorationPayment: {
             url: "collectDecorationPayment.do",
@@ -914,7 +919,30 @@ $.extend(api, {
         },
         addKingdeeRecord: {
             url: "addKingdeeRecord.do"
+        },
+
+        pageStatement: {
+            url: "pageStatement.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["price", "fee", "rate"]
+            }]
         }
 
+    }
+});
+
+$.extend(tools, {
+    advance: {
+        info: function(content, orderId) {
+
+            com.post(api.payment.queryAdvancePaymentByOrderId, {
+                "advancePayment.decoration.orderId": orderId
+            }, function(res) {
+
+                com.showTip(content, "合同预付款:" + res.balanceAdvance + "<br\>主材预付款:" + res.materialAdvance, "bottom");
+            });
+        }
     }
 });

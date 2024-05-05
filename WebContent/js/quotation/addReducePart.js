@@ -22,7 +22,6 @@
         isCountManage: com.focusPage("#isCountManage"),
         isCountManageDiscount: com.focusPage("#isCountManageDiscount"),
         $isCountManageLabel: com.focusPage('#isCountManageLabel'),
-        disSwitch: com.focusPage("#disSwitch"),
         isCountTax: com.focusPage("#isCountTax"),
 
         basicParams: {
@@ -154,11 +153,15 @@
 
             // 标准报价项弹出层
             var extraParams = {
-                "quotationItem.version.no": addReduceDetail.versionid
+                "quotationItem.version.no": addReduceDetail.versionid,
+                "quotationPrice.updateTime": com.currentTime()
             };
+            if (addReduceDetail.decoration.type != constant.decoration().decoration.TYPE_INCLUSIVE_INT && addReduceDetail.decoration.contractTime != null) {
+                extraParams["quotationPrice.updateTime"] = addReduceDetail.decoration.contractTime;
+            }
             var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'quotation-worktype'];
             var normalItemSeacher = new Searcher();
-            normalItemSeacher.init(_condArrn, "condListn", api.quotation.pageQuotationItemByVersionId, function(data) {
+            normalItemSeacher.init(_condArrn, "condListn", api.quotation.pageQuotationItemForPrice, function(data) {
 
                 var $tableWrap = com.focusPage('#resultListn').empty();
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -258,17 +261,9 @@
 
                 updateAddReduceBtn: com.focusPage('#updateAddReduceBtn').on('click', function(event) {
 
-                    var option = {
-                        "addReduce.arId": addReduceDetail.basicParams["addReduce.arId"],
-                        "addReduce.undisPrice": addReduceDetail.basicParams["addReduce.undisPrice"],
-                        "addReduce.disPrice": addReduceDetail.basicParams["addReduce.disPrice"],
-                        "addReduce.uncalPrice": addReduceDetail.basicParams["addReduce.uncalPrice"],
-                        "addReduce.calPrice": addReduceDetail.basicParams["addReduce.calPrice"],
-                        "addReduce.consPrice": addReduceDetail.basicParams["addReduce.consPrice"],
-                        "addReduce.manageDiscount": addReduceDetail.basicParams["addReduce.manageDiscount"],
-                    };
+                    var option = $.extend({}, addReduceDetail.basicParams);
 
-                    com.post(api.addReduce.updateAddReduce, option, function() {
+                    com.post(api.addReduce.updateAddReduceForAdvance, option, function() {
 
                         com.showAlert(com.info, '提交成功');
                     }, null, false);
@@ -631,7 +626,8 @@
                     "content": com.focusPage("#quotationItemDes").val(),// 工艺说明
                     "subtype": com.focusPage("#quotationType").val(),
                     "type": constant.quotation().addReduceItem.TYPE_CUSTOM_QUOTATION_INT, // 类型(隐藏属性)
-                    "discount": constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT
+                    "discount": constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT,
+                    "itemtype": constant.quotation().addReduceItem.ITEMTYPE_NORM_INT
                 };
 
                 /*
@@ -643,6 +639,7 @@
                     "addReduceItem.itemName": addRow.itemName,// 项目名;
                     "addReduceItem.type": addRow.type,// 增减项类型 , 0表示标准报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 ;
                     "addReduceItem.subtype": addRow.subtype,// 1工程,2主材,3套餐,4家具,5电器,6灯具,7软装
+                    "addReduceItem.itemtype": addRow.itemtype,// 项目类型 , 0: 标准 , 1: 成本
                     "addReduceItem.measurementUnit": addRow.measurementUnit,// 单位 ;
                     "addReduceItem.workType": addRow.workType,// 工种 ;
                     "addReduceItem.addPrice": addRow.unitPrice,// 单价 ;
@@ -697,6 +694,8 @@
 
                 var options = $.extend({}, addReduceDetail.basicParams);
 
+                options["addReduce.manageDiscount"] = addReduceDetail.isCountManageDiscount.prop("checked") ? 1 : 0;
+
                 com.post(api.addReduce.updateAddReduceForAdvance, options, function() {
 
                 }, null, false);
@@ -748,6 +747,9 @@
                 if (!addReduceDetail.isCountTax.prop("checked")) {
                     options["addReduce.taxRate"] = 0;
                     options["addReduce.taxPrice"] = 0;
+                    options["addReduce.taxDiscount"] = constant.quotation().addreduce.TAX_NODISCOUNT_INT;
+                } else {
+                    options["addReduce.taxDiscount"] = constant.quotation().addreduce.TAX_MANAGETAXDISCOUNT_INT;
                 }
 
                 com.post(api.addReduce.updateAddReduceForAdvance, options, function() {
@@ -848,17 +850,24 @@
                 var discount = parseInt($this.attr('data-discount'));
 
                 if (type == constant.quotation().addReduceItem.TYPE_COMMON_QUOTATION_INT) { // 项目类型为0
-                    discount = addReduceDetail.disSwitch.prop("checked") ? discount : constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
+                    discount = addReduceDetail.artype == constant.quotation().addreduce.TYPE_REDUCE_INT ? discount : constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
                 } else if (type == constant.quotation().addReduceItem.TYPE_ADD_ITEM_INT || type == constant.quotation().addReduceItem.TYPE_EXTENSION_ITEM_INT) { // 项目类型为4, 5
                     discount = constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
                 }
 
                 if (addReduceDetail.ordertype == constant.decoration().decoration.TYPE_HOLONOMY_INT) { // 装修单类型为满减
-                    discount = addReduceDetail.disSwitch.prop("checked") ? constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT : constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
+                    discount = addReduceDetail.artype == constant.quotation().addreduce.TYPE_REDUCE_INT ? constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT : constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
                 }
 
-                if (itemType == constant.quotation().addReduceItem.TYPE_EXTENSION_ITEM_INT) { // 成本类型不打折
+                var $itemtype = 0;
+
+                // 成本类型不打折
+                if ((itemType == constant.data().quotationItem.TYPE_COST_INT && type == constant.quotation().addReduceItem.TYPE_COMMON_QUOTATION_INT) || (itemType == constant.quotation().quotationFunctionAreaItem.TYPE_COST_INT && type == constant.quotation().addReduceItem.TYPE_QUOTATION_ITEM_INT) || $this.attr("data-itemType") == constant.quotation().addReduceItem.ITEMTYPE_COST_INT) {
                     discount = constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
+                    $itemtype = constant.quotation().addReduceItem.ITEMTYPE_COST_INT;
+
+                } else {
+                    $itemtype = constant.quotation().addReduceItem.ITEMTYPE_NORM_INT;
                 }
 
                 var _quotval = {
@@ -879,6 +888,7 @@
                     "ariId": "", // 增减项中报价项的id
                     "quoteItemId": $this.val(), // id(隐藏属性)
                     "discount": discount, // 项目折扣标识
+                    "itemtype": $itemtype
                 };
 
                 var $item = painter.createQuote(_index + i + 1, _quotval).appendTo($arwrap.find('.fl-quo-list'));
@@ -927,6 +937,7 @@
                     "addReduceItem.itemName": that.$nowLine.find('.name .cell-wrap').text(),// 项目名;
                     "addReduceItem.type": _type,// 增减项类型 , 0表示标准报价项 , 1表示系统定义 , 2表示自定义 , 3表示报价中项目 ;
                     "addReduceItem.subtype": that.$nowLine.find('.subtypedict').attr('data-subtype'),
+                    "addReduceItem.itemtype": that.$nowLine.attr('data-itemtype'),// 项目类型 , 0: 标准 , 1: 成本
                     "addReduceItem.measurementUnit": that.$nowLine.find('.unit .cell-wrap').text(),// 单位 ;
                     "addReduceItem.workType": that.$nowLine.find('.worktype .cell-wrap').text(),// 工种 ;
                     "addReduceItem.addPrice": that.$nowLine.attr('data-addPrice'), // 增补价
@@ -1027,31 +1038,31 @@
             });
 
             var _check = $quote.find(".checkcal").prop("checked");
-            var _discount = parseInt($quote.attr("data-discount"));
+            var _discount = $quote.find(".discounted").prop("checked");
+            var discount = null;
 
-            if (!_check && _discount == constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT) {
-                _discount = constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
-            } else if (!_check && _discount == constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT) {
-                _discount = constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT;
-            } else if (_check && _discount == constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT) {
-                _discount = constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT;
-            } else if (_check && _discount == constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT) {
-                _discount = constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT;
+            if (!_check && !_discount) {
+                discount = constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT;
+            } else if (!_check && _discount) {
+                discount = constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT;
+            } else if (_check && !_discount) {
+                discount = constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT;
+            } else if (_check && _discount) {
+                discount = constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT;
             }
+
+            $quote.attr("data-discount", discount);
 
             arCalculator.calculateFees();
 
             var args = {
                 "addReduceItem.ariId": _ariid,
-                "addReduceItem.discount": _discount,
+                "addReduceItem.discount": discount,
             }
 
             var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
 
-            com.post(api.addReduce.updateAddReduceItemForAdvance, _params, function(res) {
-
-                $quote.attr("data-discount", _discount)
-            }, null, false);
+            com.post(api.addReduce.updateAddReduceItemForAdvance, _params);
         },
         // 删除报价项
         deleteQuote: function($quote) {
@@ -1110,6 +1121,7 @@
                 "class": "ace ace-checkbox-2",
                 "data-discount": v.discount,
                 "data-quotationType": v.type,
+                "data-itemType": v.itemtype,
                 "data-quotationSubType": (v.category && v.category.id) ? v.category.id : v.subtype,
                 "quotationFunctionAreaType": com.focusPage('#quotationFunctionAreaId').find('option:selected').attr("other"),
             }).val(v[id]);
@@ -1170,12 +1182,15 @@
 
             var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
             var typeDict = {
-                "0": "标准",
-                "1": "系统",
-                "2": "自定义",
-                "3": "报价",
-                "4": "增项",
-                "5": "扩展"
+                "0": "标",
+                "1": "系",
+                "2": "自",
+                "3": "报",
+                "4": "增",
+                "5": "扩"
+            };
+            var itemtypeDict = {
+                "1": "成"
             };
 
             var _discount = null;
@@ -1205,11 +1220,17 @@
             var _class = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(qv.discount) != -1 ? "blue" : "green";
             var _classd = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT].indexOf(qv.discount) != -1 ? "blue" : "green";
 
+            var $badgeInfo = "<span class='badge badge-info'>" + typeDict[qv.type] + "</span>";
+
+            if (qv.itemtype == constant.quotation().addReduceItem.ITEMTYPE_COST_INT) {
+                $badgeInfo += "<span class='badge badge-danger'>" + itemtypeDict[qv.itemtype] + "</span>";
+            }
+
             var _lineSet = [ // 
             ["line", linenum, ['quotationFunctionAreaType', qv.quotationFunctionAreaType]], // 索引
             ["num subtypedict", qv.num, ['data-subtype', qv.subtype]], // 工程预算量
             ["name " + _class, qv.itemName], // 名称
-            ["type typedict " + _classd, typeDict[qv.type], ['data-type', qv.type]], // 类型
+            ["type typedict " + _classd, $badgeInfo, ['data-type', qv.type]], // 类型
             ["worktype", qv.workType], // 工种
             ["type quotationFunctionArea", qv.quotationFunctionAreaName ? qv.quotationFunctionAreaName : "---", ["data-quotationFunctionAreaId", qv.quotationFunctionAreaId]],// 功能区
             ["unit", qv.measurementUnit], // 单位
@@ -1218,12 +1239,13 @@
             ["price totalprice-discount", _sum, ["style", "white-space:nowrap"]], // 总价
             ];
 
-            var $checkCell, $checkCellWrap, $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo;
+            var $checkCell, $checkCellWrap, $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo, $discountCell, $discountCellWrap, $checkDiscount, $lblDiscount;
 
             $.each(_lineSet, function(i, v) {
 
                 var $cell = $('<div></div>').addClass('cell ' + v[0]);
                 var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+
                 if (v[2]) {
                     $cell.attr(v[2][0], v[2][1]);
                 }
@@ -1237,6 +1259,14 @@
             $lbl = $("<span></span>").addClass("lbl");
 
             $checkCellWrap.append($check).append($lbl).appendTo($checkCell);
+
+            $discountCell = $('<div></div>').addClass('cell btns');
+            $discountCellWrap = $('<div></div>').addClass('cell-wrap');
+
+            $checkDiscount = $("<input></input>").attr("type", "checkbox").addClass("ace discounted");
+            $lblDiscount = $("<span></span>").addClass("lbl");
+
+            $discountCellWrap.append($checkDiscount).append($lblDiscount).appendTo($discountCell);
 
             $btnCell = $('<div></div>').addClass('cell btns');
             $btnCellWrap = $('<div></div>').addClass('cell-wrap');
@@ -1263,10 +1293,12 @@
 
             $btnCellWrap.append($input).append($btnDel).append($btnInfo).appendTo($btnCell);
 
-            $item.append($checkCell).append($btnCell);
+            $item.append($discountCell).append($checkCell).append($btnCell);
 
             if ([constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(qv.discount) != -1)
                 $check.attr("checked", "checked");
+            if ([constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT].indexOf(qv.discount) != -1)
+                $checkDiscount.attr("checked", "checked");
 
             // 各种绑定事件
             $item.click(function() {// 编辑数量
@@ -1278,6 +1310,14 @@
 
                 if (!$item.attr("data-ariid"))
                     return false;
+                quote.checkQuote($item);
+            });
+
+            $checkDiscount.click(function() {
+
+                if (!$item.attr("data-ariid") || addReduceDetail.status != constant.quotation().addreduce.STATUS_UNSUBMIT_INT)
+                    return false;
+
                 quote.checkQuote($item);
             });
 
@@ -1309,7 +1349,8 @@
                 "data-subPrice": qv.subPrice,
                 "data-discount": qv.discount,
                 "data-quotationItemId": qv.quotationItemId,
-                "data-taxPrice": _taxPrice
+                "data-taxPrice": _taxPrice,
+                "data-itemtype": qv.itemtype
             }
 
             $item.attr(itemInfo);
@@ -1381,9 +1422,6 @@
                 com.focusPage('#addNewItemBtn').removeClass('hide');
                 com.focusPage('.unitprice .cell-wrap').text('增补价');
 
-                com.focusPage('#disSwitchDiv').removeClass('hide');
-                com.focusPage('#disSwitch').prop("checked", false);
-
             } else if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_REDUCE_INT) {
 
                 com.focusPage('#sumLabType').text('减项');
@@ -1392,8 +1430,6 @@
                 com.focusPage('#addSystemDefineItemBtn').removeClass('hide');
                 com.focusPage('#addItemBtn').removeClass('hide');
 
-                com.focusPage('#disSwitchDiv').addClass('hide');
-                com.focusPage('#disSwitch').prop("checked", true);
             }
 
             // 根据装修单号获取默认报价
@@ -1415,11 +1451,13 @@
 
                 com.focusPage('#taxRate').text(quotation.taxRate);
                 com.focusPage('#taxPrice').text(addReduceDetail.taxPrice);
+                com.focusPage('#version').text(quotation.version.name);
 
                 addReduceDetail.quoManagePrice = quotation.managePrice;
                 addReduceDetail.quoManageRate = res.quotation.manageRate;
                 addReduceDetail.manageRate = res.quotation.manageRate;
                 addReduceDetail.taxRate = quotation.taxRate;
+                addReduceDetail.versionid = quotation.version.no;
                 addReduceDetail.basicParams["addReduce.manageRate"] = res.quotation.manageRate;
                 addReduceDetail.basicParams["addReduce.taxRate"] = quotation.taxRate;
 
@@ -1431,11 +1469,9 @@
 
                 com.focusPage('#orderId').text(res.decoration.orderId)
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
-                com.focusPage('#version').text(res.decoration.version.name);
 
                 addReduceDetail.ordertype = res.decoration.type;
                 addReduceDetail.factPrice = res.decoration.factPrice;
-                addReduceDetail.versionid = res.decoration.version.no;
 
                 addReduceDetail.decoration = res.decoration;
             }, null, false);
@@ -1452,31 +1488,30 @@
                 com.focusPage("#discountBtn").removeClass("disabled");
             }
 
-            if (addReduceDetail.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT) {
-
-                var isCountManageRule = {};
-                com.post(api.ds.quotation, {}, function(res) {
-
-                    isCountManageRule = res.isCountManageRule.split("company", "value");
-                }, null, false);
-
-                var company = addReduceDetail.decoration.company;
-
-                if (isCountManageRule[company] != undefined && isCountManageRule[company] != null) {
-                    isCountManageRule[company] ? addReduceDetail.isCountManage.prop("checked", true) : addReduceDetail.isCountManage.prop("checked", false);
-                    isCountManageRule[company] ? addReduceDetail.isCountTax.prop("checked", true) : addReduceDetail.isCountTax.prop("checked", false);
-                }
-
-            } else if (addReduceDetail.managePrice != 0 && addReduceDetail.manageRate != 0) {
-                addReduceDetail.isCountManage.attr("checked", "checked");
+            if (addReduceDetail.managePrice != 0 && addReduceDetail.manageRate != 0) {
+                addReduceDetail.isCountManage.prop("checked", true);
+            } else {
+                addReduceDetail.isCountManage.prop("checked", false);
             }
 
-            if (addReduceDetail.taxPrice != 0 && addReduceDetail.taxRate != 0) {
-                addReduceDetail.isCountTax.attr("checked", "checked");
+            if (addReduceDetail.manageDiscount != constant.quotation().addreduce.MANAGEDISCOUNT_NODISCOUNT_INT) {
+                addReduceDetail.isCountManageDiscount.prop("checked", true);
+            } else {
+                addReduceDetail.isCountManageDiscount.prop("checked", false);
             }
 
-            if (addReduceDetail.manageDiscount == constant.quotation().addreduce.MANAGEDISCOUNT_DISCOUNT_INT) {
-                addReduceDetail.isCountManageDiscount.attr("checked", "checked");
+            if (addReduceDetail.taxDiscount != constant.quotation().addreduce.TAX_NODISCOUNT_INT) {
+                addReduceDetail.isCountTax.prop("checked", true);
+            } else if (addReduceDetail.taxPrice != 0 && addReduceDetail.taxRate != 0) {
+                addReduceDetail.isCountTax.prop("checked", true);
+            } else {
+                addReduceDetail.isCountTax.prop("checked", false);
+            }
+
+            if (addReduceDetail.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT && addReduceDetail.addReduceItems.length == 0) {
+
+                addReduceDetail.isCountManage.prop("checked", true);
+                addReduceDetail.isCountTax.prop("checked", true);
             }
 
             arCalculator.calculateFees();

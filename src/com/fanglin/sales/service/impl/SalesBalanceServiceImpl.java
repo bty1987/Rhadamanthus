@@ -29,8 +29,8 @@ import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesBalanceService;
-import com.fanglin.sales.vo.RefundsVO;
 import com.fanglin.sales.vo.SalesBalanceVO;
+import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -66,29 +66,22 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
 
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
+			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
-			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
+
 			BeanUtil.copyProperties(salesBalancePO.getSalesman(), salesBalanceVO.getSalesman(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesBalancePO.getDept(), salesBalanceVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 			BeanUtil.copyProperties(salesBalancePO.getRegion(), salesBalanceVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse(), salesBalanceVO.getSales().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getHouse().getVillage(), salesBalanceVO.getSales().getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getCustomer(), salesBalanceVO.getSales().getCustomer());
-			BeanUtil.copyProperties(salesBalancePO.getSales().getFinisher(), salesBalanceVO.getSales().getFinisher(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("creater"));
+
+			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("sales", "creater"));
 			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyPropertie(salesBalancePO.getChecker(), salesBalanceVO.getChecker(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyPropertie(salesBalancePO.getVoster(), salesBalanceVO.getVoster(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
 
-			if (salesBalancePO.getSales().getSupplier() != null) {
-				BeanUtil.copyPropertie(salesBalancePO.getSales().getSupplier(), salesBalanceVO.getSales().getSupplier(), Arrays.asList("dept", "duty"));
-			}
+			salesBalancePO.getSales().ptv(salesBalanceVO.getSales());
 
 			salesBalanceVOs.add(salesBalanceVO);
 		}
@@ -227,7 +220,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT) {
+		if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT && salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 
 			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT);
 
@@ -532,7 +525,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 			salesBalanceDao.update(salesBalancePO);
 
-			if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT) {
+			if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT && salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 
 				salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
 				salesDao.update(salesPO);
@@ -572,7 +565,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 			salesBalanceDao.update(salesBalancePO);
 
-			if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT) {
+			if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT && salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 
 				salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_SETTLEMENT_SHORT);
 				salesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));

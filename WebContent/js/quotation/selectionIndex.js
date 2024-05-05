@@ -26,7 +26,6 @@
         handle: function(v) {
 
             params.quotation.orderId = v.decoration.orderId;
-            params.quotation.quotation = v;
 
             params.historyPage = api.index.selectionIndex.url;
 
@@ -52,6 +51,10 @@
         name: "装修单号",
         prop: "decoration.orderId",
         clazz: "blue",
+        click: function(btn, v) {
+
+            tools.decoration.info(btn, v.decoration.orderId);
+        },
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("decorationOrderId");
@@ -64,6 +67,10 @@
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("decorationHouseVillageName");
+        },
+        click: function(btn, v) {
+
+            tools.village.info(btn, v.decoration.house.village.no);
         }
     }, {
         field: "houseNumber",
@@ -73,6 +80,10 @@
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+        },
+        click: function(btn, v) {
+
+            tools.house.info(btn, v.decoration.house.hid);
         }
     }, {
         field: "name",
@@ -82,6 +93,10 @@
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("decorationCustomerName");
+        },
+        click: function(btn, v) {
+
+            tools.customer.info(btn, v.decoration.customer.cid);
         }
     }, {
         field: "currentName",
@@ -91,6 +106,10 @@
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+        },
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.decoration.designer.userId);
         }
     }, {
         field: "currentName",
@@ -100,6 +119,10 @@
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+        },
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.decoration.salesman.userId);
         }
     }, {
         field: "buildArea",
@@ -148,6 +171,10 @@
         show: function(v) {
 
             return selection.pageConfig.propertyArr.contains("createrCurrentName");
+        },
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
         }
     }, {
         field: "total",

@@ -8,19 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.material.vo.NoodsVO;
+import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormpackItemPO;
 import com.fanglin.data.quotation.dao.NormpackItemDao;
 import com.fanglin.data.quotation.service.NormpackItemService;
 import com.fanglin.data.quotation.vo.NormpackItemVO;
 import com.fanglin.utils.BeanUtil;
 
-
 @Service("normpackItemService")
 @Transactional(readOnly = true)
-public class NormpackItemServiceImpl implements NormpackItemService{
-	
+public class NormpackItemServiceImpl implements NormpackItemService {
+
 	@Autowired
 	private NormpackItemDao normpackItemDao;
 
@@ -29,30 +28,32 @@ public class NormpackItemServiceImpl implements NormpackItemService{
 
 		List<NormpackItemPO> normpackItemPOs = normpackItemDao.queryNormpackItem(normpackItemVO.getNpid());
 		List<NormpackItemVO> normpackItemVOs = new ArrayList<NormpackItemVO>();
-				
+
 		for (NormpackItemPO normpackItemPO : normpackItemPOs) {
-			
-			NormpackItemVO normpackItem = new NormpackItemVO(new GoodsVO());
-			
-			BeanUtil.copyPropertie(normpackItemPO, normpackItem, Arrays.asList("goods"));
-			BeanUtil.copyPropertie(normpackItemPO.getGoods(), normpackItem.getGoods(), Arrays.asList("accessoriesType"));
-			
+
+			NormpackItemVO normpackItem = new NormpackItemVO(new NoodsVO());
+
+			BeanUtil.copyPropertie(normpackItemPO, normpackItem, Arrays.asList("noods"));
+			BeanUtil.copyPropertie(normpackItemPO.getNoods(), normpackItem.getNoods());
+
 			normpackItemVOs.add(normpackItem);
 		}
-		
+
 		return normpackItemVOs;
-	
+
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addNormpackItem(NormpackItemVO normpackItemVO) {
-		
-		NormpackItemPO normpackItemPO = new NormpackItemPO(new GoodsPO());
-		
-		BeanUtil.copyPropertie(normpackItemVO, normpackItemPO, Arrays.asList("goods"));
-		BeanUtil.copyProperties(normpackItemVO.getGoods(), normpackItemPO.getGoods(), Arrays.asList("accessoriesType"));
-		
+
+		NormpackItemPO normpackItemPO = new NormpackItemPO();
+
+		BeanUtil.copyPropertie(normpackItemVO, normpackItemPO, Arrays.asList("noods"));
+		BeanUtil.copyProperties(normpackItemVO.getNoods(), normpackItemPO.getNoods());
+
+		normpackItemPO.setNoods(new NoodsPO(normpackItemVO.getNoods().getNid()));
+
 		normpackItemDao.save(normpackItemPO);
 
 		return 0;
@@ -63,11 +64,11 @@ public class NormpackItemServiceImpl implements NormpackItemService{
 	public int deleteNormpackItem(NormpackItemVO normpackItemVO) {
 
 		NormpackItemPO normpackItemPO = normpackItemDao.get(normpackItemVO.getNpiid());
-		
-		if(normpackItemPO != null){
-			
+
+		if (normpackItemPO != null) {
+
 			normpackItemDao.delete(normpackItemPO);
-		}		
+		}
 		return 0;
 	}
 }

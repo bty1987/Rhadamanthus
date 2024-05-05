@@ -9,8 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.material.dao.NoodsDao;
+import com.fanglin.data.material.vo.NoodsVO;
+import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormpackItemPO;
 import com.fanglin.data.quotation.dao.impl.NormpackItemDaoImpl;
 import com.fanglin.quotation.dao.NormoodItemDao;
@@ -35,6 +36,9 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Autowired
 	private NormpackItemDaoImpl normpackItemDaoImpl;
 
+	@Autowired
+	private NoodsDao noodsDao;
+
 	@Override
 	public List<NormoodItemVO> queryNormoodItem(NormoodItemVO normoodItem) {
 
@@ -43,10 +47,10 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 
 		for (NormoodItemPO normoodItemPO : normoodItemPOs) {
 
-			normoodItem = new NormoodItemVO(new GoodsVO());
+			normoodItem = new NormoodItemVO(new NoodsVO());
 
-			BeanUtil.copyProperties(normoodItemPO, normoodItem, Arrays.asList("goods"));
-			BeanUtil.copyPropertie(normoodItemPO.getGoods(), normoodItem.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(normoodItemPO, normoodItem, Arrays.asList("noods"));
+			BeanUtil.copyPropertie(normoodItemPO.getNoods(), normoodItem.getNoods());
 
 			normoodItemVOs.add(normoodItem);
 		}
@@ -58,46 +62,89 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public List<NormoodItemVO> addNormoodItem(QuotationVO quotationVO, List<NormoodItemVO> normoodItemVOs) throws FLException {
 
-		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
+		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
 
 		List<NormpackItemPO> normpackItems = new ArrayList<NormpackItemPO>();
 
 		for (NormoodItemVO normoodItemVO : normoodItemVOs) {
 
-			List<NormpackItemPO> normpackItemPOs = normpackItemDaoImpl.queryNormpackItem(normoodItemVO.getSid());
+			if (normoodItemVO.getSid() != null) {
 
-			normpackItems.addAll(normpackItemPOs);
+				List<NormpackItemPO> normpackItemPOs = normpackItemDaoImpl.queryNormpackItem(normoodItemVO.getSid());
+
+				normpackItems.addAll(normpackItemPOs);
+
+			} else {
+
+				normpackItems = null;
+
+				normoodItemVOs = new ArrayList<NormoodItemVO>();
+
+				NormoodItemPO normoodItemPO = new NormoodItemPO();
+
+				normoodItemPO.setQid(quotationPO.getQid());
+
+				normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);
+				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+
+				normoodItemPO.setNormunit(normoodItemVO.getNormunit());
+				normoodItemPO.setNormnum(normoodItemVO.getNormnum());
+				normoodItemPO.setStoreunit(normoodItemVO.getStoreunit());
+				normoodItemPO.setStorenum(normoodItemVO.getStorenum());
+
+				NoodsPO noodsPO = noodsDao.get(normoodItemVO.getNoods().getNid());
+
+				normoodItemPO.setNoods(noodsPO);
+
+				normoodItemDao.save(normoodItemPO);
+
+				normoodItemVO = new NormoodItemVO(new NoodsVO());
+
+				BeanUtil.copyProperties(normoodItemPO, normoodItemVO, Arrays.asList("noods"));
+				BeanUtil.copyPropertie(normoodItemPO.getNoods(), normoodItemVO.getNoods());
+
+				normoodItemVOs.add(normoodItemVO);
+			}
 		}
 
-		normoodItemVOs = new ArrayList<NormoodItemVO>();
+		if (normpackItems != null) {
+			normoodItemVOs = new ArrayList<NormoodItemVO>();
 
-		for (NormpackItemPO normpackItemPO : normpackItems) {
+			for (NormpackItemPO normpackItemPO : normpackItems) {
 
-			NormoodItemPO normoodItemPO = new NormoodItemPO();
+				NormoodItemPO normoodItemPO = new NormoodItemPO();
 
-			normoodItemPO.setQid(quotationPO.getQid());
-			normoodItemPO.setSid(quotationPO.getQid());
+				normoodItemPO.setQid(quotationPO.getQid());
+				normoodItemPO.setSid(quotationPO.getQid());
 
-			normoodItemPO.setType(NormoodItemPO.TYPE_OFFER_INT);
-			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_PACK_INT);
-			normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+				normoodItemPO.setType(NormoodItemPO.TYPE_OFFER_INT);
+				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_PACK_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 
-			normoodItemPO.setGoods(new GoodsPO(normpackItemPO.getGoods().getGid()));
+				if (normpackItemPO.getNoods() != null) {
+					normoodItemPO.setNoods(new NoodsPO(normpackItemPO.getNoods().getNid()));
+				}
 
-			normoodItemPO.setNormunit(normpackItemPO.getNormunit());
-			normoodItemPO.setNormnum(normpackItemPO.getNormnum());
-			normoodItemPO.setStoreunit(normpackItemPO.getStoreunit());
-			normoodItemPO.setStorenum(normpackItemPO.getStorenum());
-			normoodItemPO.setGoods(normpackItemPO.getGoods());
+				normoodItemPO.setNormunit(normpackItemPO.getNormunit());
+				normoodItemPO.setNormnum(normpackItemPO.getNormnum());
+				normoodItemPO.setStoreunit(normpackItemPO.getStoreunit());
+				normoodItemPO.setStorenum(normpackItemPO.getStorenum());
+				normoodItemPO.setNoods(normpackItemPO.getNoods());
 
-			normoodItemDao.save(normoodItemPO);
+				normoodItemDao.save(normoodItemPO);
 
-			NormoodItemVO normoodItemVO = new NormoodItemVO(new GoodsVO());
+				NormoodItemVO normoodItemVO = new NormoodItemVO(new NoodsVO());
 
-			BeanUtil.copyProperties(normoodItemPO, normoodItemVO, Arrays.asList("goods"));
-			BeanUtil.copyPropertie(normoodItemPO.getGoods(), normoodItemVO.getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodItemPO, normoodItemVO, Arrays.asList("noods"));
+				BeanUtil.copyPropertie(normoodItemPO.getNoods(), normoodItemVO.getNoods());
 
-			normoodItemVOs.add(normoodItemVO);
+				normoodItemVOs.add(normoodItemVO);
+			}
 		}
 
 		return normoodItemVOs;
@@ -116,21 +163,6 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 		normoodItemDao.delete(normoodItemPO);
 
 		return 0;
-	}
-
-	private QuotationPO checkQuotationForStatusByEnabled(long qid) throws FLException {
-
-		QuotationPO quotationPO = quotationDao.get(qid);
-
-		if (quotationPO == null) {
-			throw new FLException(200003, "报价不存在");
-		}
-
-		if (quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
-			throw new FLException(200030, "报价状态不可操作");
-		}
-
-		return quotationPO;
 	}
 
 }

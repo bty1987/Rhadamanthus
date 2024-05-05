@@ -53,8 +53,7 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 
 			ActivityItemVO activityItemVO = new ActivityItemVO();
 
-			if (activityItemPO.getAsid() == 0)
-				continue;
+			if (activityItemPO.getAsid() == 0) continue;
 
 			BeanUtil.copyProperties(activityItemPO, activityItemVO);
 
@@ -62,6 +61,17 @@ public class ActivityItemServiceImpl implements ActivityItemService {
 		}
 
 		return activityItemVOs;
+	}
+
+	@Override
+	public ActivityItemVO queryActivityItemByAiid(ActivityItemVO activityItemVO) {
+
+		ActivityItemPO activityItemPO = activityItemDao.get(activityItemVO.getAiid());
+
+		BeanUtil.copyProperties(activityItemPO, activityItemVO);
+
+		return activityItemVO;
+
 	}
 
 	@Override

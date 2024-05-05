@@ -41,13 +41,30 @@ $(function() {
 
             com.showImg(img, v.picture, 75, 75, '', null, 0);
 
-            var propertyArr = [["装修单号:", v.orderId, "blue"], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ];
+            var propertyArr = [
+                ["装修单号:", v.orderId, "blue", function(btn) {
+
+                    tools.decoration.info(btn, v.orderId);
+                }],
+                ["创建时间: ", v.createTime, "green"],
+                ["电话:", v.phone, "grey"],
+                ["类型:", constant.customer().feedback.status.keys[v.type], "red"],
+                ["公司:", v.company, "grey"],
+                ["说明: ", v.content, "grey"]
+            ];
 
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b style="float: right"></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                var $b = $('<b style="float: right"></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 

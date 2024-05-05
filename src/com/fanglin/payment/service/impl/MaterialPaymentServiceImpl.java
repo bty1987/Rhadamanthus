@@ -402,7 +402,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
 
-		if (materialPaymentPO != null && (materialPaymentPO.getPaymentStatus() == 1 || materialPaymentPO.getPaymentStatus() == 2)) {
+		if (materialPaymentPO != null && (materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT || materialPaymentPO.getPaymentStatus() == MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT)) {
 			oldDateTime = materialReceiptPO.getCollectTime();
 
 			materialReceiptPO.setCollectTime(dateTime);

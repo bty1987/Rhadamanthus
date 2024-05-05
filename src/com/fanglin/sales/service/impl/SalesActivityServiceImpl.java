@@ -37,7 +37,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 	private SalesActivityDao salesActivityDao;
 
 	@Override
-	public void pageSalesActivity(Paging paging, List<Filter> filter, String orderId) {
+	public void pageSalesActivity(Paging paging, List<Filter> filter, String orderId) throws FLException {
 
 		List<SalesActivityPO> salesActivityPOs = salesActivityDao.pageSalesActivity(paging, filter, orderId);
 
@@ -51,28 +51,15 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 			SalesPO salesPO = salesActivityPO.getSales();
 
-			salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
-
-			BeanUtil.copyProperties(salesPO, salesActivityVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
-			BeanUtil.copyProperties(salesPO.getInstorer(), salesActivityVO.getSales().getInstorer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getInstorer().getDept(), salesActivityVO.getSales().getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getGuider(), salesActivityVO.getSales().getGuider(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getGuider().getDept(), salesActivityVO.getSales().getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getGuideDept(), salesActivityVO.getSales().getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getHouse(), salesActivityVO.getSales().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesActivityVO.getSales().getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(salesPO.getCustomer(), salesActivityVO.getSales().getCustomer());
-			BeanUtil.copyProperties(salesPO.getSalesman(), salesActivityVO.getSales().getSalesman(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getSalesman().getDept(), salesActivityVO.getSales().getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getDept(), salesActivityVO.getSales().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getRegion(), salesActivityVO.getSales().getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getFinisher(), salesActivityVO.getSales().getFinisher(), Arrays.asList("dept", "duty"));
+			salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
 
 			BeanUtil.copyProperties(activityPO, salesActivityVO.getActivity(), Arrays.asList("creater"));
-			BeanUtil.copyProperties(activityPO.getCreater(), salesActivityVO.getActivity().getCreater(), Arrays.asList("duty", "dept"));
+
+			salesActivityVO.getActivity().getCreater().setBaseInfo(activityPO.getCreater());
+
+			salesPO.ptv(salesActivityVO.getSales());
 
 			salesActivityVOs.add(salesActivityVO);
-
 		}
 
 		paging.setData(salesActivityVOs);
@@ -87,7 +74,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 		for (Iterator<Object> iterator = salesTotal.iterator(); iterator.hasNext();) {
 
-			SalesActivityVO salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
+			SalesActivityVO salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
 
 			Object[] objects = (Object[]) iterator.next();
 

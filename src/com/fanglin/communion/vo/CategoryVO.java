@@ -10,11 +10,15 @@ public class CategoryVO implements java.io.Serializable {
 
 	private String name;
 
+	private Short type;
+
+	private Short isCoupon;
+
+	private Short isCount;
+
 	private String kino;
 
 	private String kiname;
-	
-	private Short type;
 
 	public Long getCid() {
 		return cid;
@@ -40,6 +44,30 @@ public class CategoryVO implements java.io.Serializable {
 		this.name = name;
 	}
 
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getIsCoupon() {
+		return isCoupon;
+	}
+
+	public void setIsCoupon(Short isCoupon) {
+		this.isCoupon = isCoupon;
+	}
+
+	public Short getIsCount() {
+		return isCount;
+	}
+
+	public void setIsCount(Short isCount) {
+		this.isCount = isCount;
+	}
+
 	public String getKino() {
 		return kino;
 	}
@@ -54,14 +82,6 @@ public class CategoryVO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
-	}
-
-	public Short getType() {
-		return type;
-	}
-
-	public void setType(Short type) {
-		this.type = type;
 	}
 
 }

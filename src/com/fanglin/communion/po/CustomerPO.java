@@ -26,6 +26,8 @@ public class CustomerPO implements Serializable {
 
 	public static final short STATUS_AUTH_INT = 1;
 
+	public static final short STATUS_AUTHED_INT = 2;
+
 	private long cid;
 
 	private String no;

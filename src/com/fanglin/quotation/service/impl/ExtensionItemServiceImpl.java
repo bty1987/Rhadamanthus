@@ -90,8 +90,6 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
-			if (extensionItemVO.getQuoteItemId() != null) extensionItemPO.setQiid(extensionItemVO.getQuoteItemId());
-
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		} else {
 
@@ -113,6 +111,9 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
+		extensionPO.setManageRate(extensionVO.getManageRate());
+		extensionPO.setManagePrice(extensionVO.getManagePrice());
+		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);
@@ -148,6 +149,9 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
+		extensionPO.setManageRate(extensionVO.getManageRate());
+		extensionPO.setManagePrice(extensionVO.getManagePrice());
+		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);

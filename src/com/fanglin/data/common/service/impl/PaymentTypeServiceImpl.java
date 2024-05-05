@@ -93,7 +93,13 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 	@Transactional(rollbackFor = Exception.class)
 	public void addPaymentType(PaymentTypeVO paymentType, int company) throws FLException {
 
-		PaymentTypePO paymentTypePO = new PaymentTypePO();
+		PaymentTypePO paymentTypePO = paymentTypeDao.queryPaymentTypeByName(paymentType.getName(), company);
+
+		if (paymentTypePO != null) {
+			throw new FLException(130093, "款项类型已存在");
+		}
+
+		paymentTypePO = new PaymentTypePO();
 
 		BeanUtil.copyProperties(paymentType, paymentTypePO);
 
@@ -131,6 +137,10 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 
 		if (paymentTypePO == null) {
 			throw new FLException(130091, "款项类型不存在");
+		}
+
+		if (paymentType.getStatus() == PaymentTypePO.STATUS_ENABLE_INT && paymentTypeDao.queryPaymentTypeByName(paymentTypePO.getName(), paymentTypePO.getCompany()) != null) {
+			throw new FLException(130093, "款项类型已存在");
 		}
 
 		paymentTypePO.setStatus(paymentType.getStatus());

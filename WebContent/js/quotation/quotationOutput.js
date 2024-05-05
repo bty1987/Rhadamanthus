@@ -48,12 +48,8 @@ function printProjectTable(subtype, showType) {
     contentHtml += '<td width="5%" align="center">合价</td>';
     contentHtml += '<td width="45%" align="center">工艺做法及材料说明</td>';
     contentHtml += '</tr>';
-    contentHtml += '</tbody></table>';
 
     var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
-
-    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
-    contentHtml += '<tbody>';
 
     var offset = quotationUtils.quotationDetail.quotation.decoration.version.offset;
 
@@ -75,6 +71,7 @@ function printProjectTable(subtype, showType) {
 
             if (!showType.showStandardPrice && [0, 4, 5].indexOf(qv.type) != -1) {
                 qv.total = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
+                qv.price = qv.unitPrice;
             }
 
             var no = offset == 0 || [0, 4, 5].indexOf(qv.type) == -1 ? "-" : "QI_" + (Array(5).join('0') + (qv.quotationItemId - offset)).slice(-5);
@@ -85,7 +82,7 @@ function printProjectTable(subtype, showType) {
             contentHtml += '<td width="18%" align="left">' + qv.itemName + "(" + qv.typestr + ")" + '</td>';
             contentHtml += '<td width="5%" align="center">' + qv.measurementUnit + '</td>';
             contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
-            contentHtml += '<td width="5%" align="center">' + qv.unitPrice + '</td>';
+            contentHtml += '<td width="5%" align="center">' + qv.price + '</td>';
             contentHtml += '<td width="5%" align="center"> ' + qv.total + '</td>';
             contentHtml += '<td width="45%" align="left">' + (qv.content ? qv.content : '-') + '</td>';
             contentHtml += '</tr>';
@@ -364,8 +361,7 @@ function printCustomerTable(subtype, orderType) {
 
             if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1) {
 
-                // 装修单类型是整装，不计算功能区显示项
-                if (qv.showItem == true) {
+                if (qv.suptype == 1) {
                     qv.num = 1;
                     qv.measurementUnit = "项";
                     qv.unitPrice = 0;
@@ -486,12 +482,8 @@ function printWorkTable(workType) {
     contentHtml += '<td width="10%" align="center">增加量</td>';
     contentHtml += '<td width="10%" align="center">减少量</td>';
     contentHtml += '</tr>';
-    contentHtml += '</tbody></table>';
 
     var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemWs;
-
-    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
-    contentHtml += '<tbody>';
 
     $.each(quotationFunctionAreas, function(i, v) {
 

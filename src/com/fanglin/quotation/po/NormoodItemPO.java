@@ -12,7 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.po.NoodsPO;
 
 @Entity
 @Table(name = "normooditem", catalog = "quotation")
@@ -22,9 +22,19 @@ public class NormoodItemPO implements Serializable {
 
 	public static final short TYPE_OFFER_INT = 0;
 
+	public static final short TYPE_EXPAND_INT = 1;
+
+	public static final short TYPE_ADDCUT_INT = 2;
+
+	public static final short TYPE_QUOTA_INT = 3;
+
+	public static final short NORMTYPE_MATERIAL_INT = 0;
+
 	public static final short NORMTYPE_PACK_INT = 1;
 
 	public static final short ATTTYPE_COLLECTION_INT = 0;
+
+	public static final short ATTTYPE_SUB_INT = 1;
 
 	private long ngiid;
 
@@ -44,7 +54,7 @@ public class NormoodItemPO implements Serializable {
 
 	private short atttype;
 
-	private GoodsPO goods;
+	private NoodsPO noods;
 
 	private String normunit;
 
@@ -58,9 +68,9 @@ public class NormoodItemPO implements Serializable {
 		super();
 	}
 
-	public NormoodItemPO(GoodsPO goods) {
+	public NormoodItemPO(NoodsPO noods) {
 		super();
-		this.goods = goods;
+		this.noods = noods;
 	}
 
 	@Id
@@ -147,13 +157,13 @@ public class NormoodItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "gid", referencedColumnName = "gid")
-	public GoodsPO getGoods() {
-		return goods;
+	@JoinColumn(name = "nid", referencedColumnName = "nid")
+	public NoodsPO getNoods() {
+		return noods;
 	}
 
-	public void setGoods(GoodsPO goods) {
-		this.goods = goods;
+	public void setNoods(NoodsPO noods) {
+		this.noods = noods;
 	}
 
 	@Column(name = "normunit")

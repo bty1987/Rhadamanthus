@@ -46,8 +46,8 @@ jQuery(function($) {
 
             referMoney: com.focusPage("#referMoney", "#proxyPayment")
         },
-        paymentType: constant.payment.proxyPayment.type.keys,
-        status: constant.payment.proxyPayment.status.keys,
+        paymentType: constant.payment().proxyPayment.type.keys,
+        status: constant.payment().proxyPayment.status.keys,
         currentPpid: 0,
 
         cash: [],
@@ -68,7 +68,8 @@ jQuery(function($) {
 
         htmlName: "proxy",
         typeNo: 7,
-        atttype: 0
+        atttype: 0,
+        isexpires: constant.payment().proxyPayment.isexpire.keys
     };
 
     // 隐藏触发
@@ -95,7 +96,7 @@ jQuery(function($) {
         com.cleanItems(proxyPayment.items);
     });
 
-    proxyPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+    proxyPayment.items.posway.bindData(constant.payment().receiptType.posway.datas, "key", "value");
 
     com.focusPage("#collectModal :checkbox", "#proxyPayment").on("change", function() {
 
@@ -177,28 +178,35 @@ jQuery(function($) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
             $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
-            if (v.type == constant.payment.proxyPayment.TYPE_COLLECT_INT)
+            if (v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT)
                 $btnCollect.text('收款').addClass("btn-info");
-            if (v.type == constant.payment.proxyPayment.TYPE_REFUND_INT)
+            if (v.type == constant.payment().proxyPayment.TYPE_REFUND_INT)
                 $btnCollect.text('退款').addClass("btn-danger");
 
             if (proxyPayment.pageConfig.pageBtn.contains("payway"))
                 paymentUtils.drawHistoryData(proxyPayment, v.proxyReceipt, $liLine, "");
 
-            if (v.type == constant.payment.proxyPayment.TYPE_COLLECT_INT && proxyPayment.pageConfig.pageBtn.contains("collect"))
+            if (v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT && proxyPayment.pageConfig.pageBtn.contains("collect"))
                 $divBtnWrap.append($btnCollect);
 
             // 收款点击显示模态框
             $btnCollect.click(function() {
 
-                if (v.type == constant.payment.proxyPayment.TYPE_COLLECT_INT)
+                if (v.type == constant.payment().proxyPayment.TYPE_COLLECT_INT)
                     paymentUtils.showPos(proxyPayment, {"paytran.pid": v.ppid}, [0, 1]);
 
                 initCollect(v);
@@ -338,7 +346,7 @@ jQuery(function($) {
 
         com.resetTypeahead(proxyPayment.items.bankName, proxyPayment.bankGrade);
 
-        if (type == constant.payment.proxyPayment.TYPE_REFUND_INT) {// 退款
+        if (type == constant.payment().proxyPayment.TYPE_REFUND_INT) {// 退款
 
             com.focusPage("#myModalPayLabel").text("退款信息");
 
@@ -372,10 +380,10 @@ jQuery(function($) {
 
         var payment = proxyPayment.payment;
 
-        if (payment.type == constant.payment.proxyPayment.TYPE_COLLECT_INT && payment.status == constant.payment.proxyPayment.STATUS_INIT_INT) {
+        if (payment.type == constant.payment().proxyPayment.TYPE_COLLECT_INT && payment.status == constant.payment().proxyPayment.STATUS_INIT_INT) {
             url = api.payment.collectProxyPayment;
             options["proxyReceipt.comment"] = comment;
-        } else if (payment.type == constant.payment.proxyPayment.TYPE_REFUND_INT && payment.status == constant.payment.proxyPayment.STATUS_INIT_INT) {
+        } else if (payment.type == constant.payment().proxyPayment.TYPE_REFUND_INT && payment.status == constant.payment().proxyPayment.STATUS_INIT_INT) {
             url = api.payment.refundProxyPayment;
             options["proxyReceipt.comment"] = comment;
             type = 1;

@@ -372,31 +372,20 @@ $.extend(api, {
         },
 
         pageAccessories: {
-            url: "pageAccessories.do"
+            url: "pageAccessories.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["total"]
+            }]
+
         },
         queryAccessoriesByOrderId: {
-            url: "queryAccessoriesByOrderId.do"
-        },
-        queryAccessoriesItemByAid: {
-            url: "queryAccessoriesItemByAid.do",
+            url: "queryAccessoriesByOrderId.do",
             type: "query",
             tranargs: [{
-                result: "accessoriesItems",
-                args: ["selling", "num", "surplus"]
-            }, {
-                result: "accessoriesItems-goods",
-                args: ["purchase", "selling", "pieceNum"]
-            }]
-        },
-        queryAccessoriesItemByAids: {
-            url: "queryAccessoriesItemByAids.do",
-            type: "query",
-            tranargs: [{
-                result: "accessoriesItems",
-                args: ["selling", "num", "surplus"]
-            }, {
-                result: "accessoriesItems-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                result: "accessoriess",
+                args: ["total"]
             }]
         },
         addAccessories: {
@@ -427,6 +416,46 @@ $.extend(api, {
         },
         deliveAccessories: {
             url: "deliveAccessories.do"
+        },
+        queryAccessoriesItemByOrderId: {
+            url: "queryAccessoriesItemByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "accessoriesItems",
+                args: ["selling", "num", "surplus"]
+            }, {
+                result: "accessoriesItems-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
+        },
+        queryAccessoriesItemByAid: {
+            url: "queryAccessoriesItemByAid.do",
+            type: "query",
+            tranargs: [{
+                result: "accessoriesItems",
+                args: ["selling", "num", "surplus"]
+            }, {
+                result: "accessoriesItems-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
+        },
+        queryAccessoriesItemByAids: {
+            url: "queryAccessoriesItemByAids.do",
+            type: "query",
+            tranargs: [{
+                result: "accessoriesItems",
+                args: ["selling", "num", "surplus"]
+            }, {
+                result: "accessoriesItems-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
+        },
+        checkAccessoriesItem: {
+            url: "checkAccessoriesItem.do",
+            type: "update",
+            tranargs: {
+                args: ["accessoriesItem.num"]
+            }
         },
         addAccessoriesItem: {
             url: "addAccessoriesItem.do",
@@ -464,7 +493,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate"]
+                args: ["rate", "total"]
             }]
         },
         pageOccessoriesForSupplier: {
@@ -472,7 +501,15 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["rate"]
+                args: ["rate", "total"]
+            }]
+        },
+        queryOccessoriesByOrderId: {
+            url: "queryOccessoriesByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "occessoriess",
+                args: ["rate", "total"]
             }]
         },
         queryOccessoriesByOid: {
@@ -480,7 +517,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "occessories",
-                args: ["rate"]
+                args: ["rate", "total"]
             }]
         },
         addOccessories: {

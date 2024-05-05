@@ -21,6 +21,8 @@ import com.fanglin.utils.Paging;
 
 public interface ApprovalService {
 
+	public void pageApproval(Paging paging, List<Filter> filters, int company);
+
 	public void pageApprovalForReceive(Paging paging, List<Filter> filters, String userId, int company);
 
 	public void pageApprovalForSend(Paging paging, List<Filter> filters, String userId, int company);
@@ -29,20 +31,20 @@ public interface ApprovalService {
 
 	public ApprovalVO queryApprovalByAId(ApprovalVO approvalVO) throws FLException;
 
+	public int countApprovalForReceive(String userId, int company) throws FLException;
+
+	public int countApprovalForSend(String userId, int company) throws FLException;
+
 	public ApprovalPO approve(ApprovalPO approvalPO) throws FLException;
 
 	public ApprovalPO refuse(ApprovalPO approvalPO) throws FLException;
 
 	public int approve(ApprovalVO approvalVO) throws FLException;
 
-	public int affirm(ApprovalVO approvalVO) throws FLException;
-
-	public int approvalCallback(ApprovalVO approvalVO) throws FLException;
-
 	public int refuse(ApprovalVO approvalVO) throws FLException;
 
-	public int countApprovalForReceive(String userId, int company) throws FLException;
+	public int affirm(ApprovalVO approvalVO) throws FLException;
 
-	public int countApprovalForSend(String userId, int company) throws FLException;
+	public int callback(ApprovalVO approvalVO, String result) throws FLException;
 
 }

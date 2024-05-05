@@ -10,6 +10,8 @@ public class DutyVO implements Serializable {
 
 	private String name;
 
+	private String pinYin;
+
 	private Short status;
 
 	private DepartmentTypeVO departmentType;
@@ -17,8 +19,6 @@ public class DutyVO implements Serializable {
 	private Integer type;
 
 	private Short lead;
-	
-	private String pinYin;
 
 	public DutyVO() {
 		super();
@@ -85,7 +85,5 @@ public class DutyVO implements Serializable {
 	public void setPinYin(String pinYin) {
 		this.pinYin = pinYin;
 	}
-
-	
 
 }

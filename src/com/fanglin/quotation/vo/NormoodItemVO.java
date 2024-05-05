@@ -2,7 +2,7 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.material.vo.NoodsVO;
 
 public class NormoodItemVO implements Serializable {
 
@@ -26,7 +26,7 @@ public class NormoodItemVO implements Serializable {
 
 	private Short atttype;
 
-	private GoodsVO goods;
+	private NoodsVO noods;
 
 	private String normunit;
 
@@ -40,9 +40,9 @@ public class NormoodItemVO implements Serializable {
 		super();
 	}
 
-	public NormoodItemVO(GoodsVO goods) {
+	public NormoodItemVO(NoodsVO noods) {
 		super();
-		this.goods = goods;
+		this.noods = noods;
 	}
 
 	public Long getNgiid() {
@@ -117,12 +117,12 @@ public class NormoodItemVO implements Serializable {
 		this.atttype = atttype;
 	}
 
-	public GoodsVO getGoods() {
-		return goods;
+	public NoodsVO getNoods() {
+		return noods;
 	}
 
-	public void setGoods(GoodsVO goods) {
-		this.goods = goods;
+	public void setNoods(NoodsVO noods) {
+		this.noods = noods;
 	}
 
 	public String getNormunit() {

@@ -21,6 +21,8 @@ public interface ActivityItemService {
 
 	public List<ActivityItemVO> queryActivityItemByAid(ActivityVO activityVO);
 
+	public ActivityItemVO queryActivityItemByAiid(ActivityItemVO activityItemVO);
+
 	public int addActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO) throws FLException;
 
 	public int deleteActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO);

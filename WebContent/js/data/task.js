@@ -20,6 +20,7 @@ $(function() {
             handle: com.focusPage("#handle"),
             plugins: com.focusPage("#plugins"),
             isShow: com.focusPage("#isShow"),
+            comment: com.focusPage("#comment"),
         },
 
         level: ["功能级", "模块级"],
@@ -30,6 +31,7 @@ $(function() {
     };
 
     task.modals.addTaskModal.on("hide.bs.modal", function(a) {
+
         com.cleanItems(task.taskItems);
         com.clearValidator();
     });
@@ -70,7 +72,8 @@ $(function() {
         fieId: "plugins",
         name: "配置",
         prop: function(v) {
-            return v.plugins.replace("A", "时间区间").replace("B", "月份区间").replace("C", "上传附件").replace("D", "参数")
+
+            return v.plugins.replace("A", "时间区间").replace("B", "月份区间").replace("C", "上传附件").replace("D", "参数");
         },
         clazz: "grey"
     }, {
@@ -85,6 +88,11 @@ $(function() {
         prop: "status",
         clazz: "red",
         dataset: task.status
+    }, {
+        field: "comment",
+        name: "说明",
+        prop: "comment",
+        clazz: "grey"
     }, ];
 
     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
@@ -94,6 +102,7 @@ $(function() {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
+
             task.tid = v.tid;
 
             task.items.tid = v.tid;
@@ -103,6 +112,7 @@ $(function() {
             task.items.name.val(v.name);
             task.items.handle.val(v.handle);
             task.items.isShow.val(v.isShow);
+            task.items.comment.val(v.comment);
 
             task.modals.addTaskModal.modal("show");
             return false;
@@ -119,6 +129,7 @@ $(function() {
             return false;
         },
         show: function(v) {
+
             return v.level == 1;
         }
     }, {
@@ -126,6 +137,7 @@ $(function() {
         type: "switch",
         clazz: "status-lbl",
         handle: function(v, check) {
+
             com.post(api.communion.updateTaskForStatus, {
                 "task.tid": v.tid,
                 "task.status": check ? 0 : 1
@@ -133,6 +145,7 @@ $(function() {
             return false;
         },
         init: function(v) {
+
             return !v.status;
         }
     }, {
@@ -140,6 +153,7 @@ $(function() {
         type: "switch",
         clazz: "display-lbl",
         handle: function(v, check) {
+
             com.post(api.communion.updateTaskForIsShow, {
                 "task.tid": v.tid,
                 "task.isShow": check ? 0 : 1
@@ -147,18 +161,19 @@ $(function() {
             return false;
         },
         init: function(v) {
+
             return !v.isShow;
         }
     },
 
-    ]
+    ];
 
     taskSeacher.line("name", lineprops, linebtns).render();
 
     com.focusPage('#addTask', '#pagenation').on("click", function() {
 
         task.tid = null;
-
+        com.cleanItems(task.items);
         task.modals.addTaskModal.modal("show");
     });
 
@@ -175,15 +190,17 @@ $(function() {
             "task.type": task.items.type.val(),
             "task.handle": task.items.handle.val(),
             "task.plugins": task.items.plugins.val(),
-            "task.isShow": task.items.isShow.val()
+            "task.isShow": task.items.isShow.val(),
+            "task.comment": task.items.comment.val()
         };
 
         if (task.tid) {
             url = api.communion.updateTask;
-            options["task.tid"] = task.Items.tid;
+            options["task.tid"] = task.items.tid;
         }
 
         com.post(url, options, function() {
+
             taskSeacher.doSearch();
             task.modals.addTaskModal.modal("hide");
         });

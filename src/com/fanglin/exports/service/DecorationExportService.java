@@ -13,11 +13,12 @@ package com.fanglin.exports.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.exports.vo.DecorationExportVO;
 
 public interface DecorationExportService {
-	
-	public List<DecorationExportVO> queryDecorationForComplete(List<Filter> filters);
+
+	public List<DecorationExportVO> queryDecorationForComplete(List<Filter> filters) throws FLException;
 
 }

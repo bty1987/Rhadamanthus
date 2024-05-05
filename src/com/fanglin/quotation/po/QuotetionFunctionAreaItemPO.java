@@ -36,7 +36,11 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 
 	private String name;
 
+	private int addPrice;
+
 	private int unitPrice;
+
+	private int subPrice;
 
 	private int index;
 
@@ -88,12 +92,28 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		this.name = name;
 	}
 
+	public int getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(int addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public int getUnitPrice() {
 		return unitPrice;
 	}
 
 	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public int getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(int subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public int getIndex() {
@@ -171,6 +191,8 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 	public void ptp(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO) {
 		this.setName(quotationFunctionAreaItemPO.getItemName());
 		this.setUnitPrice(quotationFunctionAreaItemPO.getUnitPrice());
+		this.setAddPrice(quotationFunctionAreaItemPO.getAddPrice());
+		this.setSubPrice(quotationFunctionAreaItemPO.getSubPrice());
 		this.setIndex(quotationFunctionAreaItemPO.getIndex());
 		this.setFormula(quotationFunctionAreaItemPO.getFormula());
 		this.setNum(quotationFunctionAreaItemPO.getNum());

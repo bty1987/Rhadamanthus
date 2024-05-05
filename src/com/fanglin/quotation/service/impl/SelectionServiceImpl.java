@@ -192,8 +192,13 @@ public class SelectionServiceImpl implements SelectionService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		if (decorationVO.getCustomer().getPhone() == null || !decorationVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
-			throw new FLException(130115, "客户电话验证失败");
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(orderId);
+		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
@@ -217,7 +222,7 @@ public class SelectionServiceImpl implements SelectionService {
 
 		System.out.println(String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您点【详情】查看选材明细，并正式给予点【确认】。", orderId), String.format("pages/quotation/selection/selection?orderId=%s", orderId));
+		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认选材信息。", String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 	}
 
 	private SelectionPO saveSelection(Long qid, String userId) throws FLException {

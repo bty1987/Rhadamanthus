@@ -28,6 +28,7 @@ import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
 import com.fanglin.inventory.po.AccessoriesPO;
+import com.fanglin.inventory.service.AccessoriesItemService;
 import com.fanglin.inventory.service.AccessoriesService;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
 import com.fanglin.inventory.vo.AccessoriesVO;
@@ -73,6 +74,9 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
 
+	@Autowired
+	private AccessoriesItemService accessoriesItemService;
+
 	@Override
 	public void pageAccessories(Paging paging, List<Filter> filters, int company) {
 
@@ -97,6 +101,29 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		}
 
 		paging.setData(accessoriesVOs);
+	}
+
+	@Override
+	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO) {
+
+		List<AccessoriesPO> accessoriesPOs = accessoriesDao.queryAccessoriesByOrderId(accessoriesVO.getOrderId());
+		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
+
+		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
+
+			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
+			BeanUtil.copyProperties(accessoriesPO.getHouse(), accessoriesVO.getHouse(), Arrays.asList("village"));
+			BeanUtil.copyPropertie(accessoriesPO.getHouse().getVillage(), accessoriesVO.getHouse().getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
+
+			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
+			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
+			accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
+
+			accessoriesVOs.add(accessoriesVO);
+		}
+
+		return accessoriesVOs;
 	}
 
 	@Override
@@ -137,10 +164,6 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(120024, "工程环节不存在");
 		}
 
-		if (accessoriesVO.getType() == AccessoriesPO.TYPE_COMMON_INT && constructionSchedulePO.getStatus() == ConstructionSchedulePO.STATUS_INIT_INT) {
-			throw new FLException(120025, "工程环节不可操作");
-		}
-
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_COMMON_INT && constructionPO.getAccessory() != ConstructionPO.ACCESSORY_OPEN_SHORT) {
 			throw new FLException(120028, "辅料已禁用");
 		}
@@ -166,12 +189,19 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		}
 
 		accessoriesPO.setType(accessoriesVO.getType());
+		accessoriesPO.setTotal(accessoriesVO.getTotal());
 
 		accessoriesDao.save(accessoriesPO);
 
 		for (AccessoriesItemVO accessoriesItemVO : accessoriesItemVOs) {
 
-			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum()));
+			if (accessoriesItemVO.getSchedule() != null && constructionSchedulePO.getSchedule() != accessoriesItemVO.getSchedule()) continue;
+
+			if (accessoriesItemVO.getNid() != null) {
+				accessoriesItemService.checkAccessoriesItem(accessoriesVO, accessoriesItemVO);
+			}
+
+			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO.getCaid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getNid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum()));
 		}
 
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
@@ -186,18 +216,18 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 			ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(), accessoriesItemVO.getGoods().getGid());
 
-			if (constructionAccessoryPO != null) {
-				if (constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT) {
-					if (Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()) > constructionAccessoryPO.getNumLimit()) {
-						throw new FLException(260059, "辅料总数已达上限");
-					}
+			if (constructionAccessoryPO == null) continue;
+
+			if (constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT) {
+				if (Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()) > constructionAccessoryPO.getNumLimit()) {
+					throw new FLException(260059, "辅料总数已达上限");
 				}
-
-				constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), accessoriesItemVO.getTotal()));
-				constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()));
-
-				constructionAccessoryDao.update(constructionAccessoryPO);
 			}
+
+			constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), accessoriesItemVO.getTotal()));
+			constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()));
+
+			constructionAccessoryDao.update(constructionAccessoryPO);
 		}
 
 		return 0;
@@ -258,7 +288,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
 
-		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItemByAid(accessoriesVO.getAid());
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesVO.getAid());
 
 		long total = 0;
 
@@ -311,7 +341,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
 
-		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItemByAid(accessoriesVO.getAid());
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesVO.getAid());
 
 		long total = 0;
 
@@ -401,29 +431,6 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		accessoriesDao.update(accessoriesPO);
 
 		return 0;
-	}
-
-	@Override
-	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO) {
-
-		List<AccessoriesPO> accessoriesPOs = accessoriesDao.queryAccessoriesByOrderId(accessoriesVO.getOrderId());
-		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
-
-		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
-
-			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
-			BeanUtil.copyProperties(accessoriesPO.getHouse(), accessoriesVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyPropertie(accessoriesPO.getHouse().getVillage(), accessoriesVO.getHouse().getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
-
-			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
-			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
-			accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
-
-			accessoriesVOs.add(accessoriesVO);
-		}
-
-		return accessoriesVOs;
 	}
 
 }

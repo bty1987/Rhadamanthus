@@ -48,6 +48,13 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.ExtensionPO;
+import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.service.NormtionService;
+import com.fanglin.quotation.vo.ExtensionVO;
+import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
@@ -92,8 +99,17 @@ public class DrawLineServiceImpl implements DrawLineService {
 	@Autowired
 	private ConstructionInfoDao constructionInfoDao;
 
+	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
+	private ExtensionDao extensionDao;
+
+	@Autowired
+	private NormtionService normtionService;
+
 	@Override
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) {
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<DrawLinePO> drawLinePOs = drawLineDao.pageDrawLine(paging, filters, company);
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
@@ -167,6 +183,12 @@ public class DrawLineServiceImpl implements DrawLineService {
 			throw new FLException(120013, "已经在队列中,不可重复提交");
 		}
 
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
 		UserPO appler = userDao.queryUserByUserId(userId);
 
 		DrawLinePO drawLinePO = new DrawLinePO();
@@ -204,7 +226,6 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		constructionPO.setStartTime(drawLineVO.getApplayTime());
-
 		constructionPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
 
 		constructionDao.saveOrUpdate(constructionPO);
@@ -222,6 +243,18 @@ public class DrawLineServiceImpl implements DrawLineService {
 			decorationPO.setConpany(CompanyServiceImpl.decode(drawLineVO.getDecoration().getDompany()));
 
 			decorationDao.update(decorationPO);
+		}
+
+		NormtionVO normtionVO = new NormtionVO(orderId, quotationPO.getQid());
+
+		normtionService.makeNormtionForQuotation(normtionVO, null, userId);
+        
+        quotationDao.flush();
+
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(orderId);
+
+		for (ExtensionPO extensionPO : extensionPOs) {
+			normtionService.makeNormtionForExtension(normtionVO, new ExtensionVO(extensionPO.getEid()), null, userId);
 		}
 
 		return 0;

@@ -1,7 +1,7 @@
 jQuery(function ($) {
     receipt = {
-        paymentTypes: constant.payment.receipt.paymentType.keys,
-        receiptTypes: constant.payment.receiptType.receiptType.keys,
+        paymentTypes: constant.payment().receipt.paymentType.keys,
+        receiptTypes: constant.payment().receiptType.receiptType.keys,
         items: {
             executeDates: com.focusPage("#executeDates"),
             executeTimes: com.focusPage("#executeTimes")
@@ -50,7 +50,14 @@ jQuery(function ($) {
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 

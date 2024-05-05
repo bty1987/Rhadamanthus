@@ -114,6 +114,9 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			} else if ("userName".equals(filet)) {
 				query.alias("user", "user");
 				query.add(query.getCriterion("user.userId", data, op));
+			} else if ("checker".equals(filet)) {
+				query.alias("checker", "checker");
+				query.add(query.getCriterion("checker.userId", data, op));
 			} else if ("orderId".equals(filet)) {
 				query.alias("decoration", "decoration");
 				query.add(query.getCriterion("decoration.orderId", data, op));
@@ -131,6 +134,10 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
 			} else if ("count".equals(filet)) {
 				query.add(query.getCriterion("count", Integer.valueOf(data), data.equals("1") ? "eq" : "ge"));
+			} else if ("isCheck".equals(filet)) {
+				query.add(query.getCriterion("isCheck", Short.valueOf(data), op));
+			} else if ("twotype".equals(filet)) {
+				query.add(query.getCriterion("twotype", Short.valueOf(data), op));
 			} else if ("startTime".equals(filet)) {
 				query.add(Restrictions.ge("createTime", Timestamp.valueOf(data)));
 			} else if ("endTime".equals(filet)) {
@@ -141,13 +148,6 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				query.timeranges(WorkerSalaryPO.COLUMN_CREATETIME_STR, data);
 			} else if ("checkTime".equals(filter.getField())) {
 				query.timeranges(WorkerSalaryPO.COLUMN_CHECKTIME_STR, data);
-			} else if ("checker".equals(filet)) {
-				query.alias("checker", "checker");
-				query.add(query.getCriterion("checker.userId", data, op));
-			} else if ("isCheck".equals(filet)) {
-				query.add(query.getCriterion("isCheck", Short.valueOf(data), op));
-			} else if ("twotype".equals(filet)) {
-				query.add(query.getCriterion("twotype", Short.valueOf(data), op));
 			}
 		}
 	}

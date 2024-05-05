@@ -20,6 +20,8 @@ public class NormtionPO implements Serializable {
 
 	private static final long serialVersionUID = 6717294534034384261L;
 
+	public static final short STATUS_INIT_INT = 0;
+
 	private long nid;
 
 	private String orderId;

@@ -63,6 +63,20 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 		return session().createCriteria(ModulePO.class).add(Restrictions.eq("system", system)).list();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<ModulePO> queryModuleByFatherModule(Short system, int mId) {
+
+		Criteria query = session().createCriteria(ModulePO.class);
+
+		if (system != null) {
+			query.add(Restrictions.eq("system", system));
+		}
+
+		query.add(Restrictions.eq("fatherModule.mid", mId));
+
+		return query.list();
+	}
+
 	@Override
 	public int deleteModule(int mId) {
 
@@ -77,6 +91,20 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if ("level".equals(field)) {
+				query.add(query.getCriterion(field, Short.valueOf(data), op));
+			}
+		}
 	}
 
 }

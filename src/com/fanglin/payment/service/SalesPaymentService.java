@@ -11,11 +11,11 @@ import com.fanglin.utils.Paging;
 
 public interface SalesPaymentService {
 
-	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPaymentVO, int company, String companyType);
+	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPaymentVO, int company, String companyType) throws FLException;
 
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 
-	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesPaymentVO salesPaymentVO, List<Filter> filters, int company, String companyType);
+	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesPaymentVO salesPaymentVO, List<Filter> filters, int company, String companyType) throws FLException;
 
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 

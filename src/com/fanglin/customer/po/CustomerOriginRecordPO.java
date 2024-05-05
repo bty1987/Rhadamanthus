@@ -20,6 +20,10 @@ public class CustomerOriginRecordPO implements Serializable {
 
 	private static final long serialVersionUID = 6333097863766164838L;
 
+	public static final short TYPE_UPDATE_INT = 0;
+
+	public static final short TYPE_DEFINE_INT = 1;
+
 	private long crid;
 
 	private long csid;
@@ -91,6 +95,17 @@ public class CustomerOriginRecordPO implements Serializable {
 
 	public void setOperatTime(Timestamp operatTime) {
 		this.operatTime = operatTime;
+	}
+
+	public CustomerOriginRecordPO init(long csid, String comment, Short type, UserPO operater) {
+
+		setCsid(csid);
+		setComment(comment);
+		setType(type);
+		setOperater(operater);
+		setOperatTime(new Timestamp(System.currentTimeMillis()));
+
+		return this;
 	}
 
 }

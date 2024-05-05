@@ -19,35 +19,35 @@ import com.fanglin.decoration.vo.DecorationVO;
 public class DecorationBalanceAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6260977215065713414L;
-	
+
 	@Autowired
 	private DecorationBalanceService decorationBalanceService;
-	
+
 	private DecorationVO decoration;
-	
+
 	private DecorationBalanceVO decorationBalance;
 
-	@Action(value = "pageDecorationBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationBalance() throws FLException {
+	@Action(value = "pageDecorationForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForBalance() throws FLException {
 
-		decorationBalanceService.pageDecorationBalance(getPaging(), getFilters());
+		decorationBalanceService.pageDecorationForBalance(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "queryDecorationBalance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationBalance() throws FLException{
-		
+	@Action(value = "queryDecorationBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationBalance() throws FLException {
+
 		decorationBalance = decorationBalanceService.queryDecorationBalance(decoration);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "makeDecorationBalance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String makeDecorationBalance() throws FLException{
-		
+
+	@Action(value = "makeDecorationBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeDecorationBalance() throws FLException {
+
 		decorationBalanceService.makeDecorationBalance(decorationBalance, queryUserId());
-		
+
 		return SUCCESS;
 	}
 
@@ -66,5 +66,5 @@ public class DecorationBalanceAction extends BaseListAction {
 	public void setDecorationBalance(DecorationBalanceVO decorationBalance) {
 		this.decorationBalance = decorationBalance;
 	}
-	
+
 }

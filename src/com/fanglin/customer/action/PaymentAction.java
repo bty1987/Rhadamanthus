@@ -74,6 +74,8 @@ public class PaymentAction extends BaseListAction {
 
 	private String orderId;
 
+	private Integer atttype;
+
 	private Long realMoney;
 
 	private Integer config;
@@ -179,9 +181,17 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusPaymentPlatform", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusPaymentPlatform() {
 
-		platform = paymentService.queryCusPaymentPlatform(orderId);
+		platform = paymentService.queryCusPaymentPlatform(orderId, atttype);
 
 		return SUCCESS;
+	}
+
+	public List<DecorationPaymentVO> getDecorationPayments() {
+		return decorationPayments;
+	}
+
+	public void setDecorationPayments(List<DecorationPaymentVO> decorationPayments) {
+		this.decorationPayments = decorationPayments;
 	}
 
 	public AdvanceVO getAdvance() {
@@ -192,12 +202,28 @@ public class PaymentAction extends BaseListAction {
 		this.advance = advance;
 	}
 
+	public PaymentVO getPayment() {
+		return payment;
+	}
+
+	public void setPayment(PaymentVO payment) {
+		this.payment = payment;
+	}
+
 	public DecorationPaymentVO getDecorationPayment() {
 		return decorationPayment;
 	}
 
 	public void setDecorationPayment(DecorationPaymentVO decorationPayment) {
 		this.decorationPayment = decorationPayment;
+	}
+
+	public MaterialPaymentVO getMaterialPayment() {
+		return materialPayment;
+	}
+
+	public void setMaterialPayment(MaterialPaymentVO materialPayment) {
+		this.materialPayment = materialPayment;
 	}
 
 	public ServicePaymentVO getServicePayment() {
@@ -216,12 +242,12 @@ public class PaymentAction extends BaseListAction {
 		this.salesPayment = salesPayment;
 	}
 
-	public PaymentVO getPayment() {
-		return payment;
+	public ProxyPaymentVO getProxyPayment() {
+		return proxyPayment;
 	}
 
-	public void setPayment(PaymentVO payment) {
-		this.payment = payment;
+	public void setProxyPayment(ProxyPaymentVO proxyPayment) {
+		this.proxyPayment = proxyPayment;
 	}
 
 	public String getUnionId() {
@@ -232,20 +258,20 @@ public class PaymentAction extends BaseListAction {
 		this.unionId = unionId;
 	}
 
-	public MaterialPaymentVO getMaterialPayment() {
-		return materialPayment;
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public void setMaterialPayment(MaterialPaymentVO materialPayment) {
-		this.materialPayment = materialPayment;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	public List<DecorationPaymentVO> getDecorationPayments() {
-		return decorationPayments;
+	public Integer getAtttype() {
+		return atttype;
 	}
 
-	public void setDecorationPayments(List<DecorationPaymentVO> decorationPayments) {
-		this.decorationPayments = decorationPayments;
+	public void setAtttype(Integer atttype) {
+		this.atttype = atttype;
 	}
 
 	public Long getRealMoney() {
@@ -254,14 +280,6 @@ public class PaymentAction extends BaseListAction {
 
 	public void setRealMoney(Long realMoney) {
 		this.realMoney = realMoney;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
 
 	public Integer getConfig() {
@@ -278,14 +296,6 @@ public class PaymentAction extends BaseListAction {
 
 	public void setPlatform(String platform) {
 		this.platform = platform;
-	}
-
-	public ProxyPaymentVO getProxyPayment() {
-		return proxyPayment;
-	}
-
-	public void setProxyPayment(ProxyPaymentVO proxyPayment) {
-		this.proxyPayment = proxyPayment;
 	}
 
 }

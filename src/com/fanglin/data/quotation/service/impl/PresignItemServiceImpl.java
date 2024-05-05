@@ -2,6 +2,7 @@ package com.fanglin.data.quotation.service.impl;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.PresignItemPO;
+import com.fanglin.data.po.PresignItemPP;
 import com.fanglin.data.quotation.dao.PresignItemDao;
 import com.fanglin.data.quotation.service.PresignItemService;
 import com.fanglin.data.quotation.vo.PresignItemVO;
+import com.fanglin.data.quotation.vo.PresignProduceVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -40,6 +43,26 @@ public class PresignItemServiceImpl implements PresignItemService {
 		}
 
 		paging.setData(presignItemVOs);
+	}
+
+	@Override
+	public void pagePresignItemByPpid(Paging paging, List<Filter> filters, PresignItemVO presignItemVO) {
+
+		List<PresignItemPP> presignItemPPs = presignItemDao.pagePresignItem(paging, filters);
+		List<PresignItemVO> presignItemVOs = new ArrayList<PresignItemVO>();
+
+		for (PresignItemPP presignItemPP : presignItemPPs) {
+
+			presignItemVO = new PresignItemVO(new PresignProduceVO());
+
+			BeanUtil.copyPropertie(presignItemPP, presignItemVO, Arrays.asList("presignProduce"));
+			BeanUtil.copyPropertie(presignItemPP.getPresignProduce(), presignItemVO.getPresignProduce());
+
+			presignItemVOs.add(presignItemVO);
+		}
+
+		paging.setData(presignItemVOs);
+
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.impl.DecorationAccountDaoImpl;
@@ -17,6 +18,7 @@ import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAccountService;
 import com.fanglin.decoration.vo.DecorationAccountVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -45,6 +47,9 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 	@Autowired
 	private DecorationOperateDao decorationOperateDao;
+
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public DecorationAccountVO queryDecorationAccount(DecorationAccountVO decorationAccountVO) {
@@ -122,7 +127,60 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 		decorationPO.setAccountTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationDao.update(decorationPO);
-
 	}
+
+	@Override
+	public void sendDecorationAccount(DecorationAccountVO decorationAccountVO) throws FLException {
+
+		String orderId = decorationAccountVO.getOrderId();
+
+		DecorationAccountPO decorationAccountPO = decorationAccountDao.queryDecorationAccount(orderId);
+
+		if (decorationAccountPO == null) {
+			throw new FLException(140081, "决算信息不存在");
+		}
+
+		System.out.println(String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()));
+
+		decorationService.sendMessage(orderId, "装修单", "请您及时确认决算信息.", String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO) throws FLException {
+
+		String orderId = decorationAccountVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(orderId);
+		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO) == null) {
+			throw new FLException(130115, "装修单未绑定");
+		}
+
+		DecorationAccountPO decorationAccountPO = decorationAccountDao.get(decorationAccountVO.getDaid());
+
+		if (decorationAccountPO == null) {
+			throw new FLException(140081, "决算信息不存在");
+		}
+
+		if (decorationAccountPO.getIsAffirm() == DecorationAccountPO.ISAFFIRM_INIT_INT) {
+
+			decorationAccountPO.setIsAffirm(DecorationAccountPO.ISAFFIRM_CONFIRMED_INT);
+			decorationAccountPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+			decorationAccountDao.update(decorationAccountPO);
+		}
+
+		return 0;
+	};
 
 }

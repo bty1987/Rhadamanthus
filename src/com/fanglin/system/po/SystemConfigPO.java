@@ -3,7 +3,6 @@ package com.fanglin.system.po;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,28 +17,28 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "systemconfig", catalog = "communion")
-public class SystemConfigPO implements Serializable{
+public class SystemConfigPO implements Serializable {
 
 	private static final long serialVersionUID = 761154824655519960L;
-	
+
 	public static final String COLUMN_SCID_STR = "scid";
-	
+
 	public static final String COLUMN_KEY_STR = "key";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	private long scid;
-	
+
 	private String key;
-	
+
 	private String value;
-	
-	private UserPO userPO;
-	
+
+	private UserPO creater;
+
 	private Timestamp createTime;
-	
+
 	private String comment;
-	
+
 	private int company;
 
 	@Id
@@ -53,7 +52,7 @@ public class SystemConfigPO implements Serializable{
 		this.scid = scid;
 	}
 
-	@Column(name="key")
+	@Column(name = "key")
 	public String getKey() {
 		return key;
 	}
@@ -62,7 +61,7 @@ public class SystemConfigPO implements Serializable{
 		this.key = key;
 	}
 
-	@Column(name="value")
+	@Column(name = "value")
 	public String getValue() {
 		return value;
 	}
@@ -73,15 +72,15 @@ public class SystemConfigPO implements Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cuid", referencedColumnName = "uid")
-	public UserPO getUserPO() {
-		return userPO;
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setUserPO(UserPO userPO) {
-		this.userPO = userPO;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -90,7 +89,7 @@ public class SystemConfigPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -98,7 +97,8 @@ public class SystemConfigPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	@Column(name="company")
+
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -106,9 +106,9 @@ public class SystemConfigPO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	public String value(String defaultValue){
+
+	public String value(String defaultValue) {
 		return getValue() == null ? defaultValue : getValue();
 	}
-	
+
 }

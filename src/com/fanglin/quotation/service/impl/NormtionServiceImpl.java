@@ -23,9 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
-import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.material.vo.NoodsVO;
 import com.fanglin.data.po.ConstructionNodePO;
-import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.po.NoodsPO;
 import com.fanglin.data.po.NormoodPO;
 import com.fanglin.data.po.NormricePO;
 import com.fanglin.data.quotation.vo.NormoodVO;
@@ -35,6 +35,8 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.NormriceItemDao;
 import com.fanglin.quotation.dao.NormtionDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
@@ -44,6 +46,8 @@ import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
+import com.fanglin.quotation.po.NormoodItemPO;
+import com.fanglin.quotation.po.NormriceItemPO;
 import com.fanglin.quotation.po.NormtionDO;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemAO;
@@ -92,6 +96,12 @@ public class NormtionServiceImpl implements NormtionService {
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private NormoodItemDao normoodItemDao;
+
+	@Autowired
+	private NormriceItemDao normriceItemDao;
+
 	@Override
 	public void pageNormtion(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
@@ -138,14 +148,14 @@ public class NormtionServiceImpl implements NormtionService {
 
 				QuotationFunctionAreaItemAO item = (QuotationFunctionAreaItemAO) data[0];
 				NormoodPO normoodPO = (NormoodPO) data[1];
-				GoodsPO goodsPO = (GoodsPO) data[2];
+				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO(new NormoodVO(new GoodsVO(), null));
+				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO(new NormoodVO(new NoodsVO(), null));
 
 				BeanUtil.copyProperties(item, quotationFunctionAreaItemVO, Arrays.asList("normood", "normrice"));
 
-				BeanUtil.copyProperties(normoodPO, quotationFunctionAreaItemVO.getNormood(), Arrays.asList("goods", "quotationItem"));
-				BeanUtil.copyProperties(goodsPO, quotationFunctionAreaItemVO.getNormood().getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodPO, quotationFunctionAreaItemVO.getNormood(), Arrays.asList("noods", "quotationItem"));
+				BeanUtil.copyProperties(noodsPO, quotationFunctionAreaItemVO.getNormood().getNoods(), Arrays.asList("quotationItem"));
 
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 
@@ -181,14 +191,14 @@ public class NormtionServiceImpl implements NormtionService {
 
 				ExtensionItemPO extensionItemPO = (ExtensionItemPO) data[0];
 				NormoodPO normoodPO = (NormoodPO) data[1];
-				GoodsPO goodsPO = (GoodsPO) data[2];
+				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				ExtensionItemVO extensionItemVO = new ExtensionItemVO(new NormoodVO(new GoodsVO(), null));
+				ExtensionItemVO extensionItemVO = new ExtensionItemVO(new NormoodVO(new NoodsVO(), null));
 
 				BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
 
-				BeanUtil.copyProperties(normoodPO, extensionItemVO.getNormood(), Arrays.asList("goods", "quotationItem"));
-				BeanUtil.copyProperties(goodsPO, extensionItemVO.getNormood().getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodPO, extensionItemVO.getNormood(), Arrays.asList("noods", "quotationItem"));
+				BeanUtil.copyProperties(noodsPO, extensionItemVO.getNormood().getNoods(), Arrays.asList("quotationItem"));
 
 				extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
 				extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
@@ -225,14 +235,14 @@ public class NormtionServiceImpl implements NormtionService {
 
 				AddReduceItemPO addReduceItemPO = (AddReduceItemPO) data[0];
 				NormoodPO normoodPO = (NormoodPO) data[1];
-				GoodsPO goodsPO = (GoodsPO) data[2];
+				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				AddReduceItemVO addReduceItemVO = new AddReduceItemVO(new NormoodVO(new GoodsVO(), null));
+				AddReduceItemVO addReduceItemVO = new AddReduceItemVO(new NormoodVO(new NoodsVO(), null));
 
 				BeanUtil.copyProperties(addReduceItemPO, addReduceItemVO);
 
-				BeanUtil.copyProperties(normoodPO, addReduceItemVO.getNormood(), Arrays.asList("goods", "quotationItem"));
-				BeanUtil.copyProperties(goodsPO, addReduceItemVO.getNormood().getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodPO, addReduceItemVO.getNormood(), Arrays.asList("noods", "quotationItem"));
+				BeanUtil.copyProperties(noodsPO, addReduceItemVO.getNormood().getNoods(), Arrays.asList("quotationItem"));
 
 				addReduceItemVO.setQuotationFunctionAreaId(addReduceItemPO.getQuotationFunctionArea().getQfaId());
 				addReduceItemVO.setQuotationFunctionAreaName(addReduceItemPO.getQuotationFunctionArea().getFunctionAreaName());
@@ -395,17 +405,17 @@ public class NormtionServiceImpl implements NormtionService {
 				Object[] data = (Object[]) normood;
 
 				NormoodPO normoodPO = (NormoodPO) data[0];
-				GoodsPO goodsPO = (GoodsPO) data[1];
+				NoodsPO noodsPO = (NoodsPO) data[1];
 
 				Integer normnum = (Integer) data[2];
 				Integer storenum = (Integer) data[3];
 
 				Integer initnum = (Integer) data[4];
 
-				NormoodVO normoodVO = new NormoodVO(new GoodsVO(), null);
+				NormoodVO normoodVO = new NormoodVO(new NoodsVO(), null);
 
-				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem", "normnum", "storenum"));
-				BeanUtil.copyProperties(goodsPO, normoodVO.getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("noods", "quotationItem", "normnum", "storenum"));
+				BeanUtil.copyProperties(noodsPO, normoodVO.getNoods());
 
 				normoodVO.setNormnum(Arith.mul(normnum, initnum));
 				normoodVO.setStorenum(Arith.mul(storenum, initnum));
@@ -433,17 +443,17 @@ public class NormtionServiceImpl implements NormtionService {
 				Object[] data = (Object[]) normood;
 
 				NormoodPO normoodPO = (NormoodPO) data[0];
-				GoodsPO goodsPO = (GoodsPO) data[1];
+				NoodsPO noodsPO = (NoodsPO) data[1];
 
 				Integer normnum = (Integer) data[2];
 				Integer storenum = (Integer) data[3];
 
 				Integer num = (Integer) data[4];
 
-				NormoodVO normoodVO = new NormoodVO(new GoodsVO(), null);
+				NormoodVO normoodVO = new NormoodVO(new NoodsVO(), null);
 
-				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem", "normnum", "storenum"));
-				BeanUtil.copyProperties(goodsPO, normoodVO.getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("noods", "quotationItem", "normnum", "storenum"));
+				BeanUtil.copyProperties(noodsPO, normoodVO.getNoods());
 
 				normoodVO.setNormnum(Arith.mul(normnum, num));
 				normoodVO.setStorenum(Arith.mul(storenum, num));
@@ -471,17 +481,17 @@ public class NormtionServiceImpl implements NormtionService {
 				Object[] data = (Object[]) normood;
 
 				NormoodPO normoodPO = (NormoodPO) data[0];
-				GoodsPO goodsPO = (GoodsPO) data[1];
+				NoodsPO noodsPO = (NoodsPO) data[1];
 
 				Integer normnum = (Integer) data[2];
 				Integer storenum = (Integer) data[3];
 
 				Integer num = (Integer) data[4];
 
-				NormoodVO normoodVO = new NormoodVO(new GoodsVO(), null);
+				NormoodVO normoodVO = new NormoodVO(new NoodsVO(), null);
 
-				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem", "normnum", "storenum"));
-				BeanUtil.copyProperties(goodsPO, normoodVO.getGoods(), Arrays.asList("accessoriesType"));
+				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("noods", "quotationItem", "normnum", "storenum"));
+				BeanUtil.copyProperties(noodsPO, normoodVO.getNoods());
 
 				normoodVO.setNormnum(Arith.mul(normnum, num));
 				normoodVO.setStorenum(Arith.mul(storenum, num));
@@ -511,6 +521,8 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[0];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
 				Long amount = (Long) data[2];
+				Integer stuff = (Integer) data[3];
+				Integer num = (Integer) data[4];
 
 				NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), null);
 
@@ -518,6 +530,8 @@ public class NormtionServiceImpl implements NormtionService {
 				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				normriceVO.setAmount(amount);
+				normriceVO.setStuff(stuff);
+				normriceVO.setNum(num);
 
 				normriceVOs.add(normriceVO);
 			}
@@ -544,6 +558,8 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[0];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
 				Long amount = (Long) data[2];
+				Integer stuff = (Integer) data[3];
+				Integer num = (Integer) data[4];
 
 				NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), null);
 
@@ -551,6 +567,8 @@ public class NormtionServiceImpl implements NormtionService {
 				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				normriceVO.setAmount(amount);
+				normriceVO.setStuff(stuff);
+				normriceVO.setNum(num);
 
 				normriceVOs.add(normriceVO);
 			}
@@ -577,6 +595,8 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[0];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[1];
 				Long amount = (Long) data[2];
+				Integer stuff = (Integer) data[3];
+				Integer num = (Integer) data[4];
 
 				NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), null);
 
@@ -584,6 +604,8 @@ public class NormtionServiceImpl implements NormtionService {
 				BeanUtil.copyProperties(constructionNodePO, normriceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 				normriceVO.setAmount(amount);
+				normriceVO.setStuff(stuff);
+				normriceVO.setNum(num);
 
 				normriceVOs.add(normriceVO);
 			}
@@ -604,6 +626,289 @@ public class NormtionServiceImpl implements NormtionService {
 		BeanUtil.copyPropertie(normtionPO, normtionVO, Arrays.asList("creater"));
 
 		return normtionVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int makeNormtionForQuotation(NormtionVO normtionVO, Short schedule, String userId) throws FLException {
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
+
+		if (normtionPO == null) {
+			addNormtion(normtionVO, userId);
+		}
+
+		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
+		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
+
+		List<QuotationFunctionAreaPO> QuotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(normtionVO.getQid());
+
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : QuotationFunctionAreaPOs) {
+
+			List<?> quotationFunctionAreaItemAOs = quotationNormoodDao.queryQuotationFunctionAreaItem(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId());
+
+			for (Object quotationFunctionAreaItemAO : quotationFunctionAreaItemAOs) {
+
+				Object[] data = (Object[]) quotationFunctionAreaItemAO;
+
+				QuotationFunctionAreaItemAO itemPO = (QuotationFunctionAreaItemAO) data[0];
+				NormoodPO normoodPO = (NormoodPO) data[1];
+				NoodsPO noodsPO = (NoodsPO) data[2];
+
+				NormoodItemPO normoodItemPO = new NormoodItemPO();
+
+				normoodItemPO.setQid(normtionVO.getQid());
+				normoodItemPO.setSid(normtionVO.getQid());
+				normoodItemPO.setAreald(itemPO.getQuotationFunctionAreaId());
+				normoodItemPO.setQuoteld(itemPO.getQfaiId());
+				normoodItemPO.setQiid(itemPO.getQuotationItemId());
+
+				normoodItemPO.setType(NormoodItemPO.TYPE_OFFER_INT);
+				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+
+				normoodItemPO.setNormunit(normoodPO.getNormunit());
+				normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+				normoodItemPO.setStoreunit(normoodPO.getStoreunit());
+				normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+				normoodItemPO.setNoods(noodsPO);
+
+				normoodItemDao.save(normoodItemPO);
+			}
+
+			List<?> quotationFunctionAreaItemMOs = quotationNormriceDao.queryQuotationFunctionAreaItem(quotationFunctionAreaPO.getIndex(), quotationFunctionAreaPO.getQfaId(), schedule);
+
+			for (Object quotationFunctionAreaItemMO : quotationFunctionAreaItemMOs) {
+
+				Object[] data = (Object[]) quotationFunctionAreaItemMO;
+
+				QuotationFunctionAreaItemMO item = (QuotationFunctionAreaItemMO) data[0];
+				NormricePO normricePO = (NormricePO) data[1];
+				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+				NormriceItemPO normriceItemPO = new NormriceItemPO();
+
+				normriceItemPO.setQid(normtionVO.getQid());
+				normriceItemPO.setSid(normtionVO.getQid());
+				normriceItemPO.setAreald(item.getQuotationFunctionAreaId());
+				normriceItemPO.setQuoteld(item.getQfaiid());
+				normriceItemPO.setQiid(item.getQuotationItemId());
+
+				normriceItemPO.setType(NormriceItemPO.TYPE_OFFER_INT);
+				normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
+				normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+				normriceItemPO.setNum(item.getNum());
+
+				normriceItemPO.setConstructionNode(constructionNodePO);
+
+				normriceItemPO.setName(constructionNodePO.getName());
+				normriceItemPO.setUnit(normricePO.getUnit());
+				normriceItemPO.setTrannum(normricePO.getTrannum());
+				normriceItemPO.setSalary(normricePO.getSalary());
+
+				normriceItemDao.save(normriceItemPO);
+			}
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int makeNormtionForExtension(NormtionVO normtionVO, ExtensionVO extensionVO, Short schedule, String userId) throws FLException {
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
+
+		if (normtionPO == null) {
+			addNormtion(normtionVO, userId);
+		}
+
+		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
+		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
+
+		List<?> extensionItemAOs = quotationNormoodDao.queryExtensionItem(extensionVO.getEid());
+
+		for (Object extensionItemAO : extensionItemAOs) {
+
+			Object[] data = (Object[]) extensionItemAO;
+
+			ExtensionItemPO itemPO = (ExtensionItemPO) data[0];
+			NormoodPO normoodPO = (NormoodPO) data[1];
+			NoodsPO noodsPO = (NoodsPO) data[2];
+
+			NormoodItemPO normoodItemPO = new NormoodItemPO();
+
+			normoodItemPO.setQid(normtionVO.getQid());
+			normoodItemPO.setSid(itemPO.getEid());
+			normoodItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
+			normoodItemPO.setQuoteld(itemPO.getEiid());
+			normoodItemPO.setQiid(itemPO.getQiid());
+
+			normoodItemPO.setType(NormoodItemPO.TYPE_EXPAND_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+
+			if (Arrays.asList(ExtensionItemPO.TYPE_ADD_DATA_INT, ExtensionItemPO.TYPE_ADD_CUSTOM_INT, ExtensionItemPO.TYPE_ADD_QUOTE_INT).contains(itemPO.getType())) {
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+			} else {
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_SUB_INT);
+			}
+
+			normoodItemPO.setNormunit(normoodPO.getNormunit());
+			normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+			normoodItemPO.setStoreunit(normoodPO.getStoreunit());
+			normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+			normoodItemPO.setNoods(noodsPO);
+
+			normoodItemDao.save(normoodItemPO);
+		}
+
+		List<?> extensionItemMOs = quotationNormriceDao.queryExtensionItem(extensionVO.getEid(), schedule);
+
+		for (Object extensionItemMO : extensionItemMOs) {
+
+			Object[] data = (Object[]) extensionItemMO;
+
+			ExtensionItemPO itemPO = (ExtensionItemPO) data[0];
+			NormricePO normricePO = (NormricePO) data[1];
+			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+			NormriceItemPO normriceItemPO = new NormriceItemPO();
+
+			normriceItemPO.setQid(normtionVO.getQid());
+			normriceItemPO.setSid(itemPO.getEid());
+			normriceItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
+			normriceItemPO.setQuoteld(itemPO.getEiid());
+			normriceItemPO.setQiid(itemPO.getQiid());
+
+			normriceItemPO.setType(NormriceItemPO.TYPE_EXPAND_INT);
+			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
+			normriceItemPO.setNum(itemPO.getNum());
+
+			if (Arrays.asList(ExtensionItemPO.TYPE_ADD_DATA_INT, ExtensionItemPO.TYPE_ADD_CUSTOM_INT, ExtensionItemPO.TYPE_ADD_QUOTE_INT).contains(itemPO.getType())) {
+				normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
+			} else {
+				normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_SUB_INT);
+			}
+
+			normriceItemPO.setConstructionNode(constructionNodePO);
+
+			normriceItemPO.setName(constructionNodePO.getName());
+			normriceItemPO.setUnit(normricePO.getUnit());
+			normriceItemPO.setTrannum(normricePO.getTrannum());
+			normriceItemPO.setSalary(normricePO.getSalary());
+
+			normriceItemDao.save(normriceItemPO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int makeNormtionForAddReduce(NormtionVO normtionVO, AddReduceVO addReduceVO, Short schedule, String userId) throws FLException {
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
+
+		if (normtionPO == null) {
+			addNormtion(normtionVO, userId);
+		}
+
+		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
+		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
+
+		List<?> addReduceItemAOs = quotationNormoodDao.queryAddReduceItem(addReduceVO.getArId());
+
+		for (Object addReduceItemAO : addReduceItemAOs) {
+
+			Object[] data = (Object[]) addReduceItemAO;
+
+			AddReduceItemPO itemPO = (AddReduceItemPO) data[0];
+			NormoodPO normoodPO = (NormoodPO) data[1];
+			NoodsPO noodsPO = (NoodsPO) data[2];
+
+			NormoodItemPO normoodItemPO = new NormoodItemPO();
+
+			normoodItemPO.setQid(normtionVO.getQid());
+			normoodItemPO.setSid(itemPO.getArId());
+			normoodItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
+			normoodItemPO.setQuoteld(itemPO.getAriId());
+			normoodItemPO.setQiid(itemPO.getQiid());
+
+			normoodItemPO.setType(NormoodItemPO.TYPE_ADDCUT_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
+
+			if (Arrays.asList(AddReduceItemPO.TYPE_COMMON_QUOTATION_INT, AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT).contains(itemPO.getType())) {
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+			} else {
+				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_SUB_INT);
+			}
+
+			normoodItemPO.setNormunit(normoodPO.getNormunit());
+			normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+			normoodItemPO.setStoreunit(normoodPO.getStoreunit());
+			normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+			normoodItemPO.setNoods(noodsPO);
+
+			normoodItemDao.save(normoodItemPO);
+		}
+
+		List<?> addReduceItemMOs = quotationNormriceDao.queryAddReduceItem(addReduceVO.getArId(), schedule);
+
+		for (Object addReduceItemMO : addReduceItemMOs) {
+
+			Object[] data = (Object[]) addReduceItemMO;
+
+			AddReduceItemPO itemPO = (AddReduceItemPO) data[0];
+			NormricePO normricePO = (NormricePO) data[1];
+			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
+
+			NormriceItemPO normriceItemPO = new NormriceItemPO();
+
+			normriceItemPO.setQid(normtionVO.getQid());
+			normriceItemPO.setSid(itemPO.getArId());
+			normriceItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
+			normriceItemPO.setQuoteld(itemPO.getAriId());
+			normriceItemPO.setQiid(itemPO.getQiid());
+
+			normriceItemPO.setType(NormriceItemPO.TYPE_ADDCUT_INT);
+			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
+			normriceItemPO.setNum(itemPO.getNum());
+
+			if (Arrays.asList(AddReduceItemPO.TYPE_COMMON_QUOTATION_INT, AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT).contains(itemPO.getType())) {
+				normriceItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+			} else {
+				normriceItemPO.setAtttype(NormoodItemPO.ATTTYPE_SUB_INT);
+			}
+
+			normriceItemPO.setConstructionNode(constructionNodePO);
+
+			normriceItemPO.setName(constructionNodePO.getName());
+			normriceItemPO.setUnit(normricePO.getUnit());
+			normriceItemPO.setTrannum(normricePO.getTrannum());
+			normriceItemPO.setSalary(normricePO.getSalary());
+
+			normriceItemDao.save(normriceItemPO);
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -638,14 +943,34 @@ public class NormtionServiceImpl implements NormtionService {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		NormtionPO normtionPO = new NormtionPO();
+		NormtionPO normtionPO = normtionDao.queryNormtion(normtionVO.getQid());
+
+		if (normtionPO != null) return 0;
+
+		normtionPO = new NormtionPO();
 
 		BeanUtil.copyPropertie(normtionVO, normtionVO, Arrays.asList("creater"));
+
+		normtionPO.setQid(normtionVO.getQid());
+		normtionPO.setOrderId(normtionVO.getOrderId());
 
 		normtionPO.setCreater(userDao.queryUserByUserId(userId));
 		normtionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		normtionDao.save(normtionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateNormtionForStatus(NormtionVO normtionVO) throws FLException {
+
+		NormtionPO normtionPO = normtionDao.get(normtionVO.getNid());
+
+		normtionPO.setStatus(normtionVO.getStatus());
+
+		normtionDao.update(normtionPO);
 
 		return 0;
 	}

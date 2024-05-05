@@ -13,7 +13,7 @@ $(function() {
 
     var constructionParams = {};
     var constructerParams = {};
-    var construcionScheName = constant.decoration.decoration.projectStatus.keys;
+    var construcionScheName = constant.decoration().decoration.projectStatus.keys;
 
     com.focusPage('#oid').text(order.oid);
 

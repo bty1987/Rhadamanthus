@@ -22,6 +22,10 @@ public class BrandVO implements java.io.Serializable {
 
 	private String categoryName;
 
+	private UserBaseVO supplier;
+
+	private Short atttype;
+
 	private String comment;
 
 	private int company;
@@ -29,8 +33,6 @@ public class BrandVO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
-
-	private UserBaseVO supplier;
 
 	public BrandVO() {
 		super();
@@ -81,22 +83,6 @@ public class BrandVO implements java.io.Serializable {
 		this.pinyin = pinyin;
 	}
 
-	public String getKino() {
-		return kino;
-	}
-
-	public void setKino(String kino) {
-		this.kino = kino;
-	}
-
-	public String getKiname() {
-		return kiname;
-	}
-
-	public void setKiname(String kiname) {
-		this.kiname = kiname;
-	}
-
 	public Long getCid() {
 		return cid;
 	}
@@ -121,6 +107,22 @@ public class BrandVO implements java.io.Serializable {
 		this.categoryName = categoryName;
 	}
 
+	public UserBaseVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserBaseVO supplier) {
+		this.supplier = supplier;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
+	}
+
 	public String getComment() {
 		return comment;
 	}
@@ -137,12 +139,20 @@ public class BrandVO implements java.io.Serializable {
 		this.company = company;
 	}
 
-	public UserBaseVO getSupplier() {
-		return supplier;
+	public String getKino() {
+		return kino;
 	}
 
-	public void setSupplier(UserBaseVO supplier) {
-		this.supplier = supplier;
+	public void setKino(String kino) {
+		this.kino = kino;
+	}
+
+	public String getKiname() {
+		return kiname;
+	}
+
+	public void setKiname(String kiname) {
+		this.kiname = kiname;
 	}
 
 }

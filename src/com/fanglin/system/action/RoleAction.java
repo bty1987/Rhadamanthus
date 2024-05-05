@@ -51,7 +51,7 @@ public class RoleAction extends BaseListAction {
 	@Action(value = "queryRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRole() throws FLException {
 
-		roleList = roleService.querylRole(queryCompany());
+		roleList = roleService.queryRole(queryCompany());
 
 		return SUCCESS;
 	}

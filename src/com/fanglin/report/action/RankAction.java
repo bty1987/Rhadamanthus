@@ -40,7 +40,7 @@ public class RankAction extends BaseListAction {
 
 		String userId = queryUserId();
 
-		List<String> decoration = decorationRankService.queryDecorationDesignerForPlaceByUserId(userId, queryCompany());
+		List<String> decoration = decorationRankService.queryDecorationForPlaceByUserId(userId, queryCompany());
 		List<String> material = materialRankService.queryMaterialDesignerRankForPlaceByUserId(userId, queryCompany());
 
 		decorationRank = decoration.get(0);

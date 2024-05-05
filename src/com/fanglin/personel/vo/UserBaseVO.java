@@ -163,4 +163,13 @@ public class UserBaseVO implements Serializable {
 		}
 	}
 
+	public UserBaseVO ptv(UserPO userPO) {
+
+		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+
+		BeanUtil.copyProperties(userPO.getDuty(), getDuty(), Arrays.asList("departmentType"));
+		BeanUtil.copyProperties(userPO.getDept(), getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		return this;
+	}
 }

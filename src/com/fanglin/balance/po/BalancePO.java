@@ -31,11 +31,15 @@ public class BalancePO implements java.io.Serializable {
 
 	public static final short TYPE_WITHDRAW_INT = 2;// 提款
 
+	public static final short ISPAY_PAYED_INT = 1;// 已付
+
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_TYPE_STR = "type";
 
 	public static final String COLUMN_NO_STR = "no";
+
+	public static final String COLUMN_ISPAY_STR = "isPay";
 
 	private long bid;
 
@@ -60,6 +64,8 @@ public class BalancePO implements java.io.Serializable {
 	private short type;
 
 	private short status;
+
+	private short isPay;
 
 	private int company;
 
@@ -183,6 +189,15 @@ public class BalancePO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isPay")
+	public short getIsPay() {
+		return isPay;
+	}
+
+	public void setIsPay(short isPay) {
+		this.isPay = isPay;
 	}
 
 	@Column(name = "company")

@@ -3,8 +3,6 @@ package com.fanglin.system.vo;
 import java.io.Serializable;
 import java.util.Set;
 
-import com.fanglin.system.po.ModulePO;
-
 public class ModuleVO implements Serializable {
 
 	private static final long serialVersionUID = 5406770839477574587L;
@@ -149,21 +147,4 @@ public class ModuleVO implements Serializable {
 		this.access = access;
 	}
 
-	public ModuleVO setFatherModule(ModulePO modulePO) {
-
-		if (modulePO == null) return this;
-
-		setMid(modulePO.getMid());
-		setFatherModule(modulePO.getFatherModule());
-		setName(modulePO.getName());
-		setAlias(modulePO.getAlias());
-		setIcon(modulePO.getIcon());
-		setUrl(modulePO.getUrl());
-		setLevel(modulePO.getLevel());
-		setSystem(modulePO.getSystem());
-		setOrder(modulePO.getOrder());
-		setHelpKey(modulePO.getHelpKey());
-
-		return this;
-	}
 }

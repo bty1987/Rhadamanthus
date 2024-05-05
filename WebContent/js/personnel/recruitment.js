@@ -131,7 +131,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.personel.pageRecruitment);
 
-    searcher.condition(["personel-name", "personel-identity", "personel-phone", "personel-status"]);
+    searcher.condition(["personel-name", "personel-identity", "personel-phone", "personel-recruitment-status"]);
 
     searcher.button([{
         id: "addRecruitment",

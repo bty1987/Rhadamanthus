@@ -16,11 +16,18 @@ jQuery(function($) {
 
         items: {
             inprice: com.focusPage("#inprice", "#purchaseModal"),
+            warehousing: com.focusPage("#warehousing", "#purchaseModal"),
             baprice: com.focusPage("#baprice", "#bapriceModal"),
             num: com.focusPage("#num", "#awardPurchaseModal"),
+            activity: com.focusPage("#activity", "#awardPurchaseModal"),
+            dept: com.focusPage("#dept", "#awardPurchaseModal"),
+            comment: com.focusPage("#comment", "#awardPurchaseModal"),
         },
+
         apid: null,
         asid: null,
+        surplus: null,
+
         status: {},
         storeroom: {},
     };
@@ -42,11 +49,12 @@ jQuery(function($) {
         com.clearValidator();
         com.cleanItems(awardPurchase.items);
     });
+
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.information.pageAwardPurchase);
-
-    searcher.condition(['information-awardPurchase-no', 'information-awardPurchase-name', "information-awardPurchase-createTime", "information-awardPurchase-purchaseTime", "information-awardPurchase-instoreTime", 'information-awardPurchase-type', "information-award-status"]);
+    searcher.history("awardPurchasePageData");
+    searcher.condition(['information-awardPurchase-no', 'information-awardPurchase-name', 'information-awardPurchase-activity', 'information-awardPurchase-dept', "information-awardPurchase-createTime", "information-awardPurchase-purchaseTime", "information-awardPurchase-instoreTime", 'information-awardPurchase-type', "information-award-status"]);
 
     searcher.button([{
         id: "addAwardPurchase",
@@ -74,6 +82,11 @@ jQuery(function($) {
         fieId: "num",
         name: "数量",
         prop: "num",
+        clazz: "blue"
+    }, {
+        fieId: "surplus",
+        name: "剩余数量",
+        prop: "surplus",
         clazz: "blue"
     }, {
         fieId: "status",
@@ -116,7 +129,22 @@ jQuery(function($) {
         name: "仓储时间",
         prop: "balanceTime",
         clazz: "green"
-    }, ];
+    }, {
+        field: "activity",
+        name: "活动名称",
+        prop: "activity",
+        clazz: "grey"
+    }, {
+        field: "dept",
+        name: "部门",
+        prop: "dept",
+        clazz: "grey"
+    }, {
+        field: "comment",
+        name: "备注",
+        prop: "comment",
+        clazz: "grey"
+    }];
 
     var linebtns = [{
         name: "采购",
@@ -142,6 +170,7 @@ jQuery(function($) {
         handle: function(v) {
 
             awardPurchase.apid = v.apid;
+            awardPurchase.surplus = v.surplus;
             warehouse(v);
             return false;
         },
@@ -198,13 +227,13 @@ jQuery(function($) {
         if (com.validate('purchaseModal'))
             return false;
 
-        var url = api.information.instoreAwardPurchase;
         var options = {
             "awardPurchase.apid": awardPurchase.apid,
-            "awardPurchase.inprice": awardPurchase.items.inprice.val()
+            "awardPurchase.inprice": awardPurchase.items.inprice.val(),
+            "awardPurchase.num": awardPurchase.items.warehousing.val()
         };
 
-        com.post(url, options, function(res) {
+        com.post(api.information.instoreAwardPurchase, options, function(res) {
 
             searcher.doSearch();
         });
@@ -217,13 +246,12 @@ jQuery(function($) {
         if (com.validate('bapriceModal'))
             return false;
 
-        var url = api.information.balanceAwardPurchase;
         var options = {
             "awardPurchase.apid": awardPurchase.apid,
             "awardPurchase.baprice": awardPurchase.items.baprice.val()
         };
 
-        com.post(url, options, function(res) {
+        com.post(api.information.balanceAwardPurchase, options, function(res) {
 
             searcher.doSearch();
         });
@@ -233,11 +261,9 @@ jQuery(function($) {
 
     function saveC(apid) {
 
-        var options = {
+        com.post(api.information.cancelAwardPurchase, {
             "awardPurchase.apid": apid,
-        }
-
-        com.post(api.information.cancelAwardPurchase, options, function(res) {
+        }, function(res) {
 
             searcher.doSearch();
         });
@@ -248,21 +274,15 @@ jQuery(function($) {
         if (com.validate('awardPurchaseModal'))
             return false;
 
-        var asid = com.typeahead("awardStock");
-
-        if (!asid) {
-            com.showAlert(com.error, "库存名称不匹配");
-            awardPurchase.modals.awardPurchaseModal.modal("hide");
-            return false;
-        }
-
-        var url = api.information.addAwardPurchase;
         var options = {
-            "awardPurchase.awardStock.asId": asid,
+            "awardPurchase.awardStock.asId": com.typeahead("awardStock"),
             "awardPurchase.num": awardPurchase.items.num.val(),
+            "awardPurchase.activity": awardPurchase.items.activity.val(),
+            "awardPurchase.dept": awardPurchase.items.dept.val(),
+            "awardPurchase.comment": awardPurchase.items.comment.val(),
         };
 
-        com.post(url, options, function(res) {
+        com.post(api.information.addAwardPurchase, options, function(res) {
 
             searcher.doSearch();
         });

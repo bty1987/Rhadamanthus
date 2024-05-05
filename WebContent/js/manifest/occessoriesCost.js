@@ -151,18 +151,21 @@ jQuery(function($) {
             return false;
 
         var url = api.inventory.addOccessoriesCost;
+
         var options = {
             "occessoriesCost.oid": occessories.oid,
             "occessoriesCost.price": com.focusPage('#price', "#addOccessoriesCost").val(),
             "occessoriesCost.cost": com.focusPage('#cost', "#addOccessoriesCost").val(),
             "occessoriesCost.type": com.focusPage('#type', "#addOccessoriesCost").val(),
         };
+        if (com.focusPage("#cost").val() == ''){
+            options["occessoriesCost.cost"] = 0
+        }
 
         if (occessories.ocid) {
             url = api.inventory.updateOccessoriesCost;
             options["occessoriesCost.ocid"] = occessories.ocid;
         }
-
         com.post(url, options, function(res) {
 
             com.showAlert(com.info, "操作成功");

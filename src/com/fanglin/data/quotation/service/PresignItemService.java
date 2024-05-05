@@ -12,6 +12,8 @@ public interface PresignItemService {
 
 	public void pagePresignItem(Paging paging, List<Filter> filters, PresignItemVO presignItemVO, List<Short> types);
 
+	public void pagePresignItemByPpid(Paging paging, List<Filter> filters, PresignItemVO presignItemVO);
+
 	public PresignItemVO queryPresignItemByPiid(PresignItemVO presignItem) throws FLException;
 
 	public int addPresignItem(PresignItemVO presignItem);

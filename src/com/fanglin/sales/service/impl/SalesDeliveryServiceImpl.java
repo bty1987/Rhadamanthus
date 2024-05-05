@@ -24,9 +24,11 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.dao.SalesDeliveryStatusRightDao;
 import com.fanglin.right.po.SalesDeliveryStatusRightPO;
+import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesDeliveryItemDao;
 import com.fanglin.sales.dao.SalesItemDao;
+import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesDeliveryItemPO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
@@ -34,7 +36,6 @@ import com.fanglin.sales.service.SalesDeliveryService;
 import com.fanglin.sales.vo.SalesDeliveryItemVO;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -57,8 +58,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	@Autowired
 	private SalesDeliveryStatusRightDao salesDeliveryStatusRightDao;
 
+	@Autowired
+	private SalesBalanceDao salesBalanceDao;
+
 	@Override
-	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses) {
+	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException {
 
 		filters.add(new Filter("statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
 
@@ -69,7 +73,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	}
 
 	@Override
-	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int queryCompany) {
+	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int queryCompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -82,7 +86,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	}
 
 	@Override
-	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int queryCompany) {
+	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int queryCompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -124,6 +128,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setTraner(traner);
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
 			salesDeliveryItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+
 			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
 
 			if (rights != null && rights.size() != 0) {
@@ -155,10 +160,23 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setChecker(checker);
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
 			salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+
 			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
+			}
+
+			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT);
+
+			if (salesBalancePO != null) {
+				salesBalancePO.setVerifyStatus(SalesBalancePO.DELIVERSTATUS_PART_INT);
+				salesBalanceDao.update(salesBalancePO);
+			}
+
+			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_FINISH_INT) == 0) {
+				salesBalancePO.setVerifyStatus(SalesBalancePO.DELIVERSTATUS_ALL_INT);
+				salesBalanceDao.update(salesBalancePO);
 			}
 
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
@@ -186,10 +204,23 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setConfirmer(confirmer);
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
 			salesDeliveryItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+
 			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CONFIRM_INT, confirmer);
+			}
+
+			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT);
+
+			if (salesBalancePO != null) {
+				salesBalancePO.setConfirmStatus(SalesBalancePO.DELIVERSTATUS_PART_INT);
+				salesBalanceDao.update(salesBalancePO);
+			}
+
+			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_FINISH_INT) == 0) {
+				salesBalancePO.setConfirmStatus(SalesBalancePO.DELIVERSTATUS_ALL_INT);
+				salesBalanceDao.update(salesBalancePO);
 			}
 
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
@@ -217,10 +248,23 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setFinisher(finisher);
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_FINISH_INT);
 			salesDeliveryItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
 			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
+			}
+
+			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT);
+
+			if (salesBalancePO != null) {
+				salesBalancePO.setDeliverStatus(SalesBalancePO.DELIVERSTATUS_PART_INT);
+				salesBalanceDao.update(salesBalancePO);
+			}
+
+			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_FINISH_INT) == 0) {
+				salesBalancePO.setDeliverStatus(SalesBalancePO.DELIVERSTATUS_ALL_INT);
+				salesBalanceDao.update(salesBalancePO);
 			}
 
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
@@ -340,56 +384,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {
 
-			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
 
-			BeanUtil.copyPropertie(salesDeliveryItemPO, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
-			if (salesDeliveryItemPO.getCreater() != null) {
-				BeanUtil.copyProperties(salesDeliveryItemPO.getCreater(), salesDeliveryItemVO.getCreater(), Arrays.asList("dept", "duty"));
-				BeanUtil.copyProperties(salesDeliveryItemPO.getCreater().getDept(), salesDeliveryItemVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			}
-
-			if (salesDeliveryItemPO.getTraner() != null) {
-				BeanUtil.copyProperties(salesDeliveryItemPO.getTraner(), salesDeliveryItemVO.getTraner(), Arrays.asList("dept", "duty"));
-				BeanUtil.copyProperties(salesDeliveryItemPO.getTraner().getDept(), salesDeliveryItemVO.getTraner().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			}
-
-			if (salesDeliveryItemPO.getChecker() != null) {
-				BeanUtil.copyProperties(salesDeliveryItemPO.getChecker(), salesDeliveryItemVO.getChecker(), Arrays.asList("dept", "duty"));
-				BeanUtil.copyProperties(salesDeliveryItemPO.getChecker().getDept(), salesDeliveryItemVO.getChecker().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			}
-
-			if (salesDeliveryItemPO.getConfirmer() != null) {
-				BeanUtil.copyProperties(salesDeliveryItemPO.getConfirmer(), salesDeliveryItemVO.getConfirmer(), Arrays.asList("dept", "duty"));
-				BeanUtil.copyProperties(salesDeliveryItemPO.getConfirmer().getDept(), salesDeliveryItemVO.getConfirmer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			}
-
-			if (salesDeliveryItemPO.getFinisher() != null) {
-				BeanUtil.copyProperties(salesDeliveryItemPO.getFinisher(), salesDeliveryItemVO.getFinisher(), Arrays.asList("dept", "duty"));
-				BeanUtil.copyProperties(salesDeliveryItemPO.getFinisher().getDept(), salesDeliveryItemVO.getFinisher().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			}
-
-			BeanUtil.copyPropertie(salesDeliveryItemPO.getSalesItem(), salesDeliveryItemVO.getSalesItem(), Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyPropertie(salesDeliveryItemPO.getSalesItem().getGoods(), salesDeliveryItemVO.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyPropertie(salesDeliveryItemPO.getSalesItem().getColor(), salesDeliveryItemVO.getSalesItem().getColor());
-			BeanUtil.copyPropertie(salesDeliveryItemPO.getSalesItem().getFormat(), salesDeliveryItemVO.getSalesItem().getFormat());
-
-			BeanUtil.copyPropertie(salesDeliveryItemPO.getSales(), salesDeliveryItemVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getInstorer(), salesDeliveryItemVO.getSales().getInstorer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getGuider(), salesDeliveryItemVO.getSales().getGuider(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getGuideDept(), salesDeliveryItemVO.getSales().getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getHouse(), salesDeliveryItemVO.getSales().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getHouse().getVillage(), salesDeliveryItemVO.getSales().getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getCustomer(), salesDeliveryItemVO.getSales().getCustomer());
-			BeanUtil.copyProperties(salesDeliveryItemPO.getSales().getFinisher(), salesDeliveryItemVO.getSales().getFinisher(), Arrays.asList("dept", "duty"));
-
-			if (salesDeliveryItemPO.getSales().getSupplier() != null) {
-				BeanUtil.copyPropertie(salesDeliveryItemPO.getSales().getSupplier(), salesDeliveryItemVO.getSales().getSupplier(), Arrays.asList("dept", "duty"));
-			}
-
-			salesDeliveryItemVOs.add(salesDeliveryItemVO);
+			salesDeliveryItemVOs.add(salesDeliveryItemPO.ptv(salesDeliveryItemVO));
 		}
 
 		return salesDeliveryItemVOs;
 	}
-
 }

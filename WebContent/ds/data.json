@@ -5,12 +5,10 @@
     {"key":"企业关系客户","value":"企业关系客户"},
     {"key":"领导关系客户","value":"领导关系客户"},
     {"key":"员工关系","value":"员工关系"}
-  ],
-  "customerType": [
+  ], "customerType": [
     {"key":"0","value":"个人"},
     {"key":"1","value":"公司"}
-  ],
-  "houseType" :[
+  ], "houseType": [
     {"key":"0", "value":"住宅"},
     {"key":"1", "value":"半越住宅"},
     {"key":"2", "value":"全越住宅"},
@@ -23,11 +21,10 @@
     {"key":"9", "value":"仓库"},
     {"key":"10", "value":"车库"},
     {"key":"11", "value":"其它"}
-  ],"through":[
-  {"key":"0", "value":"否"},
-  {"key":"1", "value":"是"}
-],
-  "orientation": [
+  ], "through":[
+    {"key":"0", "value":"否"},
+    {"key":"1", "value":"是"}
+  ], "orientation": [
     {"key":"0", "value":"南北"},
     {"key":"1", "value":"东西"},
     {"key":"2", "value":"双阳"},
@@ -39,189 +36,158 @@
     {"key":"8", "value":"西南"},
     {"key":"9", "value":"西北"},
     {"key":"10", "value":"其它"}
-  ],"roomNum": [
-  {"key":"1", "value":"一室"},
-  {"key":"2", "value":"二室"},
-  {"key":"3", "value":"三室"},
-  {"key":"4", "value":"四室"},
-  {"key":"5", "value":"五室"}
-],"waterVapour": [
-  {"key":"0", "value":"两水一气"},
-  {"key":"1", "value":"两水两气"},
-  {"key":"2", "value":"三水两气"}
-],"parlourType": [
-  {"key":"0", "value":"明厅"},
-  {"key":"1", "value":"暗厅"}
-],"heatingType": [
-  {"key":"0", "value":"热网"},
-  {"key":"1", "value":"锅炉房"},
-  {"key":"2", "value":"燃气"}
-],"status":[
-  {"key":"0", "value":"初始"},
-  {"key":"1", "value":"签约"},
-  {"key":"2", "value":"失效"}
-],"labeltype":[
-  {"key" : "0", "value" : "设计师风格"},
-  {"key" : "1", "value" : "擅长面积"},
-  {"key" : "2", "value" : "小区"}
-],"serviceNodeType":[
-  {"key" : "0", "value" : "装修"},
-  {"key" : "1", "value" : "主材"},
-  {"key" : "2", "value" : "工程"}
-],
-  "vscoreRecordtype":[
+  ], "roomNum": [
+    {"key":"1", "value":"一室"},
+    {"key":"2", "value":"二室"},
+    {"key":"3", "value":"三室"},
+    {"key":"4", "value":"四室"},
+    {"key":"5", "value":"五室"}
+  ], "waterVapour": [
+    {"key":"0", "value":"两水一气"},
+    {"key":"1", "value":"两水两气"},
+    {"key":"2", "value":"三水两气"}
+  ], "parlourType": [
+    {"key":"0", "value":"明厅"},
+    {"key":"1", "value":"暗厅"}
+  ], "heatingType": [
+    {"key":"0", "value":"热网"},
+    {"key":"1", "value":"锅炉房"},
+    {"key":"2", "value":"燃气"}
+  ], "status":[
+    {"key":"0", "value":"初始"},
+    {"key":"1", "value":"签约"},
+    {"key":"2", "value":"失效"}
+  ], "labeltype":[
+    {"key" : "0", "value" : "设计师风格"},
+    {"key" : "1", "value" : "擅长面积"},
+    {"key" : "2", "value" : "小区"}
+  ], "serviceNodeType":[
+    {"key" : "0", "value" : "装修"},
+    {"key" : "1", "value" : "主材"},
+    {"key" : "2", "value" : "工程"}
+  ], "vscoreRecordtype":[
     {"key" : "0", "value" : "新增"},
     {"key" : "1", "value" : "提取"}
-  ],
-  "receiptTypeStatus":[
+  ], "receiptTypeStatus":[
     {"key" : "0", "value" : "禁用"},
     {"key" : "1", "value" : "启用"}
-  ],
-  "receiptType":[
+  ], "receiptType":[
     {"key" : "1", "value" : "现金"},
     {"key" : "2", "value" : "刷卡"},
     {"key" : "3", "value" : "银行"},
     {"key" : "4", "value" : "对公账户"},
     {"key" : "5", "value" : "券"}
-  ],
-  "grade":[
+  ], "grade":[
     {"key" : "", "value" : "无"},
     {"key" : "A", "value" : "A"},
     {"key" : "B", "value" : "B"},
     {"key" : "C", "value" : "C"}
-  ],
-  "receiptTypeFund":[
+  ], "receiptTypeFund":[
     {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "资金"}
-  ],
-  "costStatus": [
+  ], "costStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "talkingType":[
+  ], "talkingType":[
     {"key" : "0", "value" : "工程补充条款"},
     {"key" : "1", "value" : "工程追加条款"},
     {"key" : "2", "value" : "未含项目"},
     {"key" : "3", "value" : "工程活动优惠"},
     {"key" : "4", "value" : "主材活动优惠"},
-    {"key" : "5", "value" : "其他"}
-  ],
-  "taskLevel": [
+    {"key" : "5", "value" : "其他"},
+    {"key" : "6", "value" : "主材打印说明"},
+    {"key" : "7", "value" : "决算打印说明"}
+  ], "taskLevel": [
     {"key" : "0", "value" : "功能级"},
     {"key" : "1", "value" : "模块级"}
-  ],
-  "taskIsShow": [
+  ], "taskIsShow": [
     {"key" : "0", "value" : "显示"},
     {"key" : "1", "value" : "不显示"}
-  ],
-  "taskStatus": [
+  ], "taskStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "talkingStatus": [
+  ], "talkingStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "categoryType": [
+  ], "categoryType": [
     {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "统计"}
-  ],
-  "visionType": [
+  ], "visionType": [
     {"key" : "1", "value" : "报价折扣"},
     {"key" : "2", "value" : "报价计算"},
     {"key" : "4", "value" : "生成款项"},
     {"key" : "8", "value" : "决算计算"}
-  ],
-  "taskParamStatus": [
+  ], "taskParamStatus": [
     {"key" : "0", "value" : "有效"},
     {"key" : "1", "value" : "无效"}
-  ],
-  "taskParamType": [
+  ], "taskParamType": [
     {"key" : "0", "value" : "字段"},
     {"key" : "1", "value" : "条件"}
-  ],
-  "ctypes": [
+  ], "ctypes": [
     {"key" : "0", "value" : "底价"},
     {"key" : "1", "value" : "点位"}
-  ],
-  "taskParamIsmain": [
+  ], "taskParamIsmain": [
     {"key" : "0", "value" : "主要"},
     {"key" : "1", "value" : "不主要"}
-  ],
-  "taskParamModule": [
+  ], "taskParamModule": [
     {"module" : "decoration", "name" : "装修"},
     {"module" : "payment", "name" : "款项"},
     {"module" : "sales", "name" : "销售"},
     {"module" : "inventory", "name" : "仓储"},
     {"module" : "construction", "name" : "工程"}
-  ],
-  "taskParamOneType": [
+  ], "taskParamOneType": [
     {"key" : "0", "value" : "文本"},
     {"key" : "1", "value" : "数值"}
-  ],
-  "taskParamStatus": [
+  ], "taskParamStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "Status": [
+  ], "Status": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "status": [
+  ], "status": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "contractStatus": [
+  ], "contractStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "signetStatus": [
+  ], "signetStatus": [
     {"key" : "0", "value" : "初始"},
     {"key" : "1", "value" : "注册"},
     {"key" : "2", "value" : "认证"},
     {"key" : "3", "value" : "确认"},
     {"key" : "4", "value" : "签章"},
     {"key" : "5", "value" : "作废"}
-  ],
-  "paymentType": [
+  ], "paymentType": [
     {"key" : "0", "value" : "预付款"},
     {"key" : "1", "value" : "装修款"},
     {"key" : "2", "value" : "主材款"},
     {"key" : "3", "value" : "销售款"},
     {"key" : "4", "value" : "服务款"}
-  ],
-  "paytype": [
+  ], "paytype": [
     {"key" : "0", "value" : "收款"},
     {"key" : "1", "value" : "出款"}
-  ],
-  "bustype": [
+  ], "bustype": [
     {"key" : "0", "value" : "装修"},
     {"key" : "1", "value" : "主材"}
-  ],
-  "atttype_advance": [
+  ], "atttype_advance": [
     {"key" : "0", "value" : "基础"},
     {"key" : "1", "value" : "其他"}
-  ],
-  "atttype_decoration": [
+  ], "atttype_decoration": [
     {"key" : "0", "value" : "基础"},
     {"key" : "1", "value" : "合同"},
     {"key" : "2", "value" : "增减"},
     {"key" : "3", "value" : "其他"},
     {"key" : "4", "value" : "终止"}
-  ],
-  "atttype_material": [
+  ], "atttype_material": [
     {"key" : "0", "value" : "基础"}
-  ],
-  "atttype_sales": [
+  ], "atttype_sales": [
     {"key" : "0", "value" : "基础"},
     {"key" : "1", "value" : "退款"},
     {"key" : "2", "value" : "其他"}
-  ],
-  "code_material": [
+  ], "code_material": [
     {"key" : "2", "value" : "定金"},
     {"key" : "3", "value" : "补款"}
-  ],
-  "code_sales": [
+  ], "code_sales": [
     {"key" : "-1", "value" : "定金出"},
     {"key" : "-2", "value" : "定金转全款"},
     {"key" : "2", "value" : "定金"},
@@ -231,57 +197,46 @@
     {"key" : "6", "value" : "券退款"},
     {"key" : "7", "value" : "定金退款"},
     {"key" : "8", "value" : "不可退定金"}
-  ],
-  "paymentTypeStatus": [
+  ], "paymentTypeStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "signetType": [
+  ], "signetType": [
     {"key" : "0", "value" : "合同"},
     {"key" : "1", "value" : "款项"},
     {"key" : "2", "value" : "人资"}
-  ],
-  "aoodsAtttype": [
+  ], "aoodsAtttype": [
     {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "外辅"}
-],
-  "surveyTemplateStatus": [
+  ], "surveyTemplateStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "chatingStatus": [
+  ], "chatingStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "chatingType": [
+  ], "chatingType": [
     {"key" : "0", "value" : "文本"},
     {"key" : "2", "value" : "应用"}
-  ],
-  "chatingAtttype": [
+  ], "chatingAtttype": [
     {"key" : "0", "value" : "客户"},
     {"key" : "1", "value" : "装修"},
     {"key" : "2", "value" : "主材"},
     {"key" : "3", "value" : "工程"},
     {"key" : "4", "value" : "款项"},
     {"key" : "5", "value" : "其他"}
-  ],
-  "chartType": [
+  ], "chartType": [
 	{"key" : "1", "value" : "装修"},
 	{"key" : "2", "value" : "销售"},
 	{"key" : "3", "value" : "工程"},
     {"key" : "4", "value" : "款项"}	
-  ],
-  "chartLevel": [
+  ], "chartLevel": [
 	{"key" : "0", "value" : "集团"},
 	{"key" : "1", "value" : "公司"},
 	{"key" : "2", "value" : "大区"},
     {"key" : "3", "value" : "部门"}	
-  ],
-  "custypeStatus": [
+  ], "custypeStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
-  "custypeAtttype": [
+  ], "custypeAtttype": [
     {"key" : "0", "value" : "预付款"},
     {"key" : "1", "value" : "装修款"},
     {"key" : "2", "value" : "主材款"},
@@ -289,21 +244,18 @@
     {"key" : "4", "value" : "服务款"},
     {"key" : "5", "value" : "活动款"},
     {"key" : "6", "value" : "转换款"}
-  ],
-  "custypeDgrade": [
+  ], "custypeDgrade": [
     {"key" : "A", "value" : "A"},
     {"key" : "B", "value" : "B"},
     {"key" : "C", "value" : "C"}
-  ],
-  "custypeSgrade": [
+  ], "custypeSgrade": [
     {"key" : "A", "value" : "A"},
     {"key" : "B", "value" : "B"},
     {"key" : "", "value" : "无"}
-  ],
-  "constantStatus": [
+  ], "constantStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
-  ],
+  ], 
   "errorCode": 0,
-  "errorMsg": null
+  "errorMsg": ""
 }

@@ -78,6 +78,18 @@ public class TaskAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateTask", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateTask() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		taskService.updateTask(task);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateTaskForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateTeakForStatus() throws FLException {
 

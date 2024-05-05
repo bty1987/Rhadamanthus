@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8">
+
+    <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="../../assets/ace/js/jquery.mobile.custom.min.js"></script>
+    <script src="../../assets/ace/js/bootstrap.min.js"></script>
+    <script src="../../assets/ace/js/ace-elements.js"></script>
+    <script src="../../assets/ace/js/ace.js"></script>
+
+    <title>收款明细表</title>
+</head>
+
+<body>
+<div>
+    <div align=center id="receiptList"></div>
+</div>
+
+<script>
+    parent.$.loadScript(['js/payment/payment2print.js'], "../../", window.frameElement, $);
+</script>
+</body>
+</html>

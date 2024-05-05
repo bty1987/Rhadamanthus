@@ -1,0 +1,75 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12" id="fl-statement">
+            <div id="list" style="margin-left:10px"></div>
+            <div class="action-buttons" style="margin-top: 5px">
+                <a class="btn btn-minier pull-left btn-yellow" id="addAssistanceItem">
+                    <i class="icon-download-alt bigger-110 "></i>
+                    创建
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="layerEdit" style="display: none" class="page-content">
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="title">标题</label>
+                <div class="col-xs-9">
+                    <textarea class="col-md-9" maxlength="64" id="title" rows="3" style="margin-left: 0%"></textarea>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="content">说明</label>
+                <div class="col-xs-9">
+                    <textarea class="col-md-9" maxlength="1024" id="content" rows="3" style="margin-left: 0%"></textarea>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
+                    <button type="button" id="confirmBtn" class="btn btn-success">确定</button>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="drawingModal" tabindex="-1">
+    <div class="modal-dialog" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">图片</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row-fluid">
+                            <ul class="ace-thumbnails" id="assistanceDrawing"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                    <a class="form-group" id="assistanceUpload"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/assistanceItem.js']);
+</script>

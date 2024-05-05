@@ -114,6 +114,29 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 	}
 
 	@Override
+	public List<OccessoriesVO> queryOccessoriesByOrderId(OccessoriesVO occessoriesVO) {
+
+		List<OccessoriesPO> occessoriesPOs = occessoriesDao.queryOccessoriesByOrderId(occessoriesVO.getDecoration().getOrderId());
+		List<OccessoriesVO> occessoriesVOs = new ArrayList<OccessoriesVO>();
+
+		for (OccessoriesPO occessoriesPO : occessoriesPOs) {
+
+			occessoriesVO = new OccessoriesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("decoration", "creater", "supervisor", "supplier", "deliver", "receiver", "balancer"));
+
+			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
+			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
+			occessoriesVO.getSupplier().setBaseInfo(occessoriesPO.getSupplier());
+
+			occessoriesPO.getDecoration().ptvcascade(occessoriesVO.getDecoration());
+
+			occessoriesVOs.add(occessoriesVO);
+		}
+
+		return occessoriesVOs;
+	}
+
+	@Override
 	public OccessoriesVO queryOccessoriesByOid(OccessoriesVO occessoriesVO) {
 
 		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
@@ -200,7 +223,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		occessoriesDao.update(occessoriesPO);
 
-		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,已经分配完厂商", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo());
+		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经分配完厂商", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
 
 		UserPO supervisor = occessoriesPO.getSupervisor();
 
@@ -238,7 +261,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			occessoriesItemDao.save(occessoriesItemPO);
 		}
-		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,已经送货", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo());
+		String content = String.format("装修单号:%s,楼盘:%s,外辅单号:%s,厂商名称:%s,已经送货", occessoriesPO.getDecoration().getOrderId(), occessoriesPO.getDecoration().getHouse().getVillage().getName(), occessoriesPO.getNo(), occessoriesPO.getSupplier().getUserName());
 
 		UserPO supervisor = occessoriesPO.getSupervisor();
 

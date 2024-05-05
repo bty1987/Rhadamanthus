@@ -1,68 +1,83 @@
 <div id="workesheetPageContent">
-    <div>
-        <div class="row">
-            <div class="col-xs-12">
-                <div id="condList" class="fl_search clearfix"></div>
-                <div id="resultList" class="clearfix tab-pane active"></div>
-                <div id="pagenation" class="fl-page-wrap clearfix"></div>
-            </div>
+
+    <div class="row">
+        <div class="col-xs-12" id="workContent">
+            <div id="condList4worksheet" class="fl_search clearfix"></div>
+            <div id="resultList4worksheet" class="clearfix tab-pane active"></div>
+            <div id="pagenation4worksheet" class="fl-page-wrap learfix"></div>
         </div>
+    </div>
 
-        <div class="modal fade" id="addWorksheetModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="addModalLabel">添加工单</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal">
+    <div class="modal fade" id="addWorksheetModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="addModalLabel">添加工单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right orange" for="module">模块</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="module" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="module">标题</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="module" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual' />
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right orange" for="content">内容</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="content" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="content">内容</label>
+                            <div class="col-sm-9">
+                                <textarea id="content" class="col-xs-10 col-sm-7 v_required" rows="10" cols="10"></textarea>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">上传图片</label>
+                            <div class="col-sm-9">
 
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                        <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-                    </div>
+                                <a id="infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+                                    <img id="showImg" src="#" alt="150x150" width='150' height='150'>
+                                </a>
+                                <div id="path"></div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="handWorksheetModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="handModalLabel">处理工单</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal">
+    <div class="modal fade" id="handWorksheetModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="handModalLabel">处理工单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right orange" for="result">结果</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="result" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="result">结果</label>
+                            <div class="col-sm-9">
+                                <textarea id="result" maxlength="256" class="col-xs-10 col-sm-7 v_required" rows="3"></textarea>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="handBtn" class="btn btn-primary">确定</button>
-                    </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="handBtn" class="btn btn-primary">确定</button>
                 </div>
             </div>
         </div>

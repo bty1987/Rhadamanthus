@@ -11,10 +11,7 @@
 
 package com.fanglin.information.dao;
 
-import java.text.ParseException;
 import java.util.List;
-
-import org.hibernate.HibernateException;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
@@ -22,10 +19,10 @@ import com.fanglin.information.po.EventsPO;
 
 public interface EventsDao extends Dao<EventsPO> {
 
-	public List<EventsPO> queryEvents(List<Filter> filters) throws ParseException;
+	public List<EventsPO> queryEvents(List<Filter> filters);
 
-	public List<EventsPO> queryEvents(int uid, String beginDate, String endDate) throws HibernateException, ParseException;
+	public List<EventsPO> queryEvents(int uid, Integer beginDate, Integer endDate);
 
-	public int countEvents(int uid, String showDate) throws ParseException;
+	public int countEvents(int uid, Integer integer);
 
 }

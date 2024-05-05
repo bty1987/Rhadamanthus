@@ -1,13 +1,79 @@
 <div>
-
-    <div class="widget-box transparent">
-        <div class="widget-header">
-            <h4>列表</h4>
+    <div id="fl-statement">
+        <div class="page-header">
+            <h1>商品
+                <small><i class="icon-double-angle-right"></i>价格</small>
+            </h1>
         </div>
     </div>
-
-    <div id="showPrice">
-        <div class="clearfix" id="resultListPrice"></div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="presultlist" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div>
+                <a class="btn btn-minier btn-primary pull-left" id="addPrice" style="margin-top: 7px; margin-left: 2px">
+                    <i class="icon-plus bigger-110"></i>
+                    <span>添加</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="priceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">添加价格</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="name">名称</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" id="name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="purchase">控价</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" id="purchase">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="selling">售价</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" id="selling">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="ctype">结算类型</label>
+                            <div class="col-sm-8">
+                                <select type="text" id="ctype" class="col-xs-8 m-wrap"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="cvalue">结算值</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" id="cvalue">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="type">价格类型</label>
+                            <div class="col-sm-8">
+                                <select type="text" id="type" class="col-xs-8 m-wrap"></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="savePrice" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

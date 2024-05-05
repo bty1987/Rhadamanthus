@@ -37,7 +37,7 @@ public interface SalesService {
 
 	public int checkSales(SalesVO salesVO) throws FLException;
 
-	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, int company) throws FLException;
+	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, String userId, int company) throws FLException;
 
 	public int updateSales(SalesVO salesVO) throws FLException;
 
@@ -50,6 +50,8 @@ public interface SalesService {
 	public int updateSalesForBelong(SalesVO salesVO) throws FLException;
 
 	public int updateSalesForAdvance(SalesVO salesVO) throws FLException;
+
+	public int sendSales(SalesVO salesVO) throws FLException;
 
 	public int affirmSales(SalesVO salesVO) throws FLException;
 

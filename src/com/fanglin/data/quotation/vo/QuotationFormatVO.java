@@ -2,11 +2,15 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.MeasurementUnitVO;
+
 public class QuotationFormatVO implements Serializable {
 
 	private static final long serialVersionUID = 2680317275282495512L;
 
 	private Long qfid;
+
+	private Long qcid;
 
 	private QuotationCtemVO quotationCtem;
 
@@ -18,15 +22,18 @@ public class QuotationFormatVO implements Serializable {
 
 	private Integer price;
 
+	private MeasurementUnitVO unit;
+
 	private Short status;
 
 	public QuotationFormatVO() {
 		super();
 	}
 
-	public QuotationFormatVO(QuotationCtemVO quotationCtem) {
+	public QuotationFormatVO(QuotationCtemVO quotationCtem, MeasurementUnitVO unit) {
 		super();
 		this.quotationCtem = quotationCtem;
+		this.unit = unit;
 	}
 
 	public Long getQfid() {
@@ -35,6 +42,14 @@ public class QuotationFormatVO implements Serializable {
 
 	public void setQfid(Long qfid) {
 		this.qfid = qfid;
+	}
+
+	public Long getQcid() {
+		return qcid;
+	}
+
+	public void setQcid(Long qcid) {
+		this.qcid = qcid;
 	}
 
 	public QuotationCtemVO getQuotationCtem() {
@@ -75,6 +90,14 @@ public class QuotationFormatVO implements Serializable {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public MeasurementUnitVO getUnit() {
+		return unit;
+	}
+
+	public void setUnit(MeasurementUnitVO unit) {
+		this.unit = unit;
 	}
 
 	public Short getStatus() {

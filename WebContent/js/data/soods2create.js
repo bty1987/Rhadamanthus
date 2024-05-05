@@ -38,10 +38,23 @@ $(function() {
         com.clearValidator();
         com.cleanItems(soods.uitems);
     });
+
     com.initTypeahead('soodsItemName', api.data.querySoodsByName, "soods.goods.name", {}, "soodes", "sid", function(res) {
 
-        soods.gid = res.goods.gid;
-        return res["goods"]["name"];
+        return res.goods.name;
+    }, function(list, k, v) {
+
+        $.each(list, function(i, e) {
+
+            if (e.sid != k)
+                return true;
+
+            soods.gid = e.goods.gid;
+
+            return false;
+        });
+
+        return v;
     });
 
     var displayFunc = (function() {
@@ -69,7 +82,7 @@ $(function() {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var propertyArr = [["商品品牌: ", v.goods.brand, "blue"], ["商品品类: ", v.goods.category, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ["数量: ", v.num, "blue"],
 
             ];
@@ -161,17 +174,8 @@ $(function() {
             return false;
         }
 
-        var sid = com.typeahead("soodsItemName");
-
-        if (!sid) {
-            com.showPopover(com.focusPage("#soodsItemName"), {
-                errorMsg: "选材项未填"
-            }, "right");
-            return;
-        }
-
         var option = {
-            "soodsItem.sid": sid,
+            "soodsItem.sid": com.typeahead("soodsItemName"),
             "soodsItem.quotationItem.qiid": params.data.quotationItem.qiid,
             "soodsItem.quotationItem.unitPrice": soods.quotationItem.unitPrice,
             "soodsItem.goods.gid": soods.gid,

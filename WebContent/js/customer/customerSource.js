@@ -88,7 +88,7 @@ $(function() {
             comment1: com.focusPage("#comment1", "#customerSource"),
             houseNumber1: com.focusPage("#houseNumber1", "#customerSource"),
             purpose1: com.focusPage("#purpose1", "#customerSource"),
-            price1: com.focusPage("#price1", "#customerSource"),
+            price1: com.focusPage("#price1", "#customerSource")
 
         },
 
@@ -104,7 +104,7 @@ $(function() {
         decorationTypes: [],
         decorationAtttypes: [],
         decorationBusitypeList: {},
-        grade1: ["A", "B", "C", "D"],
+        grade1: ["A", "B", "C", "D"]
     };
 
     customerSource.saveDesignerBtn.bindClick(bindAllInfo);
@@ -161,12 +161,8 @@ $(function() {
         customerSource.items.doorrule.bindData(res.buildruleThr, "key", "value");
     }, null, false);
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
-        customerSource.items.resourceType.bindData(res.status, 'key', 'value');
-
-    }, null, false);
+    customerSource.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    customerSource.items.resourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
 
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
@@ -175,7 +171,7 @@ $(function() {
             customerSource.decorationTypes[v.key] = v.type;
 
             if (v.status == 0) {
-                customerSource.decorationAtttypes.push(value);
+                customerSource.decorationAtttypes.push(v);
             }
         });
 
@@ -306,7 +302,7 @@ $(function() {
             var $backout = $("<a></a>").addClass("btn btn-minier btn-danger").html("撤销");
             var $confirm = $("<a></a>").addClass("btn btn-minier btn-inverse").html("确认");
             var $btnApproval = $("<a></a>").addClass("btn btn-minier btn-success").html("审批");
-            var $belonger = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑归属人");
+            var $belonger = $("<a></a>").addClass("btn btn-minier btn-yellow").html("归属");
             var $btnclaim = $("<a></a>").addClass("btn btn-minier btn-yellow").html("认领");
 
             var propertyArr = getPropertyArr(v);
@@ -315,7 +311,15 @@ $(function() {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+                if (value[3]) {
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -984,25 +988,43 @@ $(function() {
                     propertyArr.push(["客户等级: ", v.grade, "grey"]);
                     break;
                 case "creater":
-                    propertyArr.push(["创建人: ", v.creater.currentName, "grey"]);
+                    propertyArr.push(["创建人: ", v.creater.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, v.creater.userId);
+                    }]);
                     break;
                 case "createTime":
                     propertyArr.push(["创建时间: ", v.createTime, "green"]);
                     break;
                 case "belonger":
-                    propertyArr.push(["归属人: ", v.belonger.currentName, "grey"]);
+                    propertyArr.push(["归属人: ", v.belonger.currentName, "grey", function(btn) {
+
+                        tools.personel.info(btn, v.belonger.userId);
+                    }]);
                     break;
                 case "department":
-                    propertyArr.push(["归属部门: ", v.department.name, "grey"]);
+                    propertyArr.push(["归属部门: ", v.department.name, "grey", function(btn) {
+
+                        tools.department.info(btn, v.department.did);
+                    }]);
                     break;
                 case "region":
-                    propertyArr.push(["归属分区: ", v.region.name, "grey"]);
+                    propertyArr.push(["归属分区: ", v.region.name, "grey", function(btn) {
+
+                        tools.department.info(btn, v.region.did);
+                    }]);
                     break;
                 case "designer":
-                    propertyArr.push(["归属设计师: ", com.checkNull(v.designer.currentName, '无'), "grey"]);
+                    propertyArr.push(["归属设计师: ", com.checkNull(v.designer.currentName, '无'), "grey", function(btn) {
+
+                        tools.personel.info(btn, v.designer.userId);
+                    }]);
                     break;
                 case "salesman":
-                    propertyArr.push(["归属业务员: ", com.checkNull(v.salesman.currentName, '无'), "grey"]);
+                    propertyArr.push(["归属业务员: ", com.checkNull(v.salesman.currentName, '无'), "grey", function(btn) {
+
+                        tools.personel.info(btn, v.salesman.userId);
+                    }]);
                     break;
                 case "decorationBusitype":
                     propertyArr.push(["业务类型: ", com.checkNull(customerSource.decorationBusitypeList[v.decorationBusitype.dbid], '无'), "grey"]);

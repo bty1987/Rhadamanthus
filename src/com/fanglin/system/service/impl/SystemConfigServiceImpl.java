@@ -1,7 +1,6 @@
 ﻿package com.fanglin.system.service.impl;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.SystemConfigService;
@@ -31,7 +31,7 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 	private UserDao userDao;
 
 	@Override
-	public List<SystemConfigVO> pageSystemConfig(Paging paging, List<Filter> filters) throws FLException {
+	public void pageSystemConfig(Paging paging, List<Filter> filters) throws FLException {
 
 		List<SystemConfigPO> systemConfigPOs = systemConfigDao.pageSystemConfig(paging, filters);
 		List<SystemConfigVO> systemConfigVOs = new ArrayList<SystemConfigVO>();
@@ -40,24 +40,51 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 
 		for (SystemConfigPO systemConfigPO : systemConfigPOs) {
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			systemConfigVO = new SystemConfigVO(new UserBaseVO());
 
-			systemConfigVO = new SystemConfigVO();
-
-			BeanUtil.copyProperties(systemConfigPO, systemConfigVO, Arrays.asList("userPO", "createTime", "cuid", "createName"));
-
-			systemConfigVO.setCuid(systemConfigPO.getUserPO().getUid());
-
-			systemConfigVO.setCreateName(systemConfigPO.getUserPO().getUserName());
-
-			systemConfigVO.setCreateTime(dateFormat.format(systemConfigPO.getCreateTime()));
+			BeanUtil.copyProperties(systemConfigPO, systemConfigVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(systemConfigPO.getCreater(), systemConfigVO.getCreater(), Arrays.asList("dept", "duty"));
 
 			systemConfigVOs.add(systemConfigVO);
-
 		}
+
 		paging.setData(systemConfigVOs);
+	}
+
+	@Override
+	public List<SystemConfigVO> querySystemConfigByCid(Integer company) {
+
+		List<SystemConfigPO> systemConfigPOs = systemConfigDao.querySystemConfigByCid(company);
+		List<SystemConfigVO> systemConfigVOs = new ArrayList<SystemConfigVO>();
+
+		SystemConfigVO systemConfigVO;
+
+		for (SystemConfigPO systemConfigPO : systemConfigPOs) {
+
+			systemConfigVO = new SystemConfigVO(new UserBaseVO());
+
+			BeanUtil.copyProperties(systemConfigPO, systemConfigVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(systemConfigPO.getCreater(), systemConfigVO.getCreater(), Arrays.asList("dept", "duty"));
+
+			systemConfigVOs.add(systemConfigVO);
+		}
 
 		return systemConfigVOs;
+	}
+
+	@Override
+	public SystemConfigVO querySystemConfigByKey(SystemConfigVO systemConfigVO, Integer company) {
+
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig(systemConfigVO.getKey(), company);
+
+		if (systemConfigPO == null) return systemConfigVO;
+
+		systemConfigVO.setCreater(new UserBaseVO());
+
+		BeanUtil.copyProperties(systemConfigPO, systemConfigVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(systemConfigPO.getCreater(), systemConfigVO.getCreater(), Arrays.asList("dept", "duty"));
+
+		return systemConfigVO;
 	}
 
 	@Override
@@ -79,35 +106,6 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 	}
 
 	@Override
-	public List<SystemConfigVO> querySystemConfigByCid(Integer company) {
-
-		List<SystemConfigPO> systemConfigPOs = systemConfigDao.querySystemConfigByCid(company);
-		List<SystemConfigVO> systemConfigVOs = new ArrayList<SystemConfigVO>();
-
-		SystemConfigVO systemConfigVO;
-
-		for (SystemConfigPO systemConfigPO : systemConfigPOs) {
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-			systemConfigVO = new SystemConfigVO();
-
-			BeanUtil.copyProperties(systemConfigPO, systemConfigVO, Arrays.asList("userPO", "createTime", "cuid", "createName"));
-
-			systemConfigVO.setCuid(systemConfigPO.getUserPO().getUid());
-
-			systemConfigVO.setCreateName(systemConfigPO.getUserPO().getUserName());
-
-			systemConfigVO.setCreateTime(dateFormat.format(systemConfigPO.getCreateTime()));
-
-			systemConfigVOs.add(systemConfigVO);
-
-		}
-
-		return systemConfigVOs;
-	}
-
-	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addSystemConfig(SystemConfigVO systemConfigVO, String userId) throws FLException {
 
@@ -116,28 +114,18 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 		if (systemConfigPOs != null) {
 			throw new FLException(110000, "系统处理问题");
 		}
+
 		SystemConfigPO systemConfigPO = new SystemConfigPO();
 
 		systemConfigPO.setKey(systemConfigVO.getKey());
-
 		systemConfigPO.setValue(systemConfigVO.getValue());
 
-		systemConfigPO.setUserPO(userDao.queryUserByUserId(userId));
-
 		systemConfigPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-
 		systemConfigPO.setComment(systemConfigVO.getComment());
 
+		systemConfigPO.setCreater((userDao.queryUserByUserId(userId)));
+
 		systemConfigDao.save(systemConfigPO);
-
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deleteSystemConfig(SystemConfigVO systemConfigVO) throws FLException {
-
-		systemConfigDao.deleteById(systemConfigVO);
-
 	}
 
 }

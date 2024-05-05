@@ -2,13 +2,18 @@ package com.fanglin.salary.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.salary.po.WithholdPO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 public class WithholdVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 4578938237466779278L;
 
 	private Long wid;
@@ -16,27 +21,27 @@ public class WithholdVO implements Serializable {
 	private UserBaseVO user;
 
 	private Short type;
-	
+
 	private String orderId;
 
 	private Long ident;
 
 	private Long money;
-	
+
 	private Timestamp createTime;
 
 	private Short status;
-	
+
 	private UserBaseVO operater;
-	
+
 	private Timestamp operateTime;
-	
+
 	private String comment;
 
 	public WithholdVO() {
 		super();
 	}
-	
+
 	public WithholdVO(UserBaseVO user, UserBaseVO operater) {
 		super();
 		this.user = user;
@@ -131,6 +136,18 @@ public class WithholdVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public WithholdVO init(WithholdPO withholdPO, String comment) {
+
+		BeanUtil.copyProperties(withholdPO, this, Arrays.asList("user", "operater"));
+
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		setComment(comment);
+
+		return this;
 	}
 
 }

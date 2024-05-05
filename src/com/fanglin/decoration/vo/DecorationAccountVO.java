@@ -1,6 +1,7 @@
 package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class DecorationAccountVO implements Serializable {
 
@@ -36,11 +37,15 @@ public class DecorationAccountVO implements Serializable {
 
 	private Long coupon;
 
-	private Long internal;
-
 	private Long fulldel;
 
 	private Long cashback;
+
+	private Long internal;
+
+	private Short isAffirm;
+
+	private Timestamp affirmTime;
 
 	private String comment;
 
@@ -173,14 +178,6 @@ public class DecorationAccountVO implements Serializable {
 		this.coupon = coupon;
 	}
 
-	public Long getInternal() {
-		return internal;
-	}
-
-	public void setInternal(Long internal) {
-		this.internal = internal;
-	}
-
 	public Long getFulldel() {
 		return fulldel;
 	}
@@ -195,6 +192,30 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setCashback(Long cashback) {
 		this.cashback = cashback;
+	}
+
+	public Long getInternal() {
+		return internal;
+	}
+
+	public void setInternal(Long internal) {
+		this.internal = internal;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	public String getComment() {

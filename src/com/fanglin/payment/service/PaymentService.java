@@ -18,7 +18,7 @@ import com.fanglin.utils.Paging;
 
 public interface PaymentService {
 
-	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company);
+	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) throws FLException;
 
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
 

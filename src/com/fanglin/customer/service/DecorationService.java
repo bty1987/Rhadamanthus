@@ -5,6 +5,7 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.vo.DecorationVO;
+import com.fanglin.data.common.vo.TalkingVO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationService {
@@ -12,6 +13,8 @@ public interface DecorationService {
 	public void queryCusDecorationUser(Paging paging, List<Filter> filters, DecorationVO decorationVO);
 
 	public Object queryCusDecoration(DecorationVO decorationVO, String unionId);
+
+	public DecorationVO queryDecoration(DecorationVO decorationVO);
 
 	public DecorationVO queryCusDecorationByOrderId(DecorationVO decorationVO);
 
@@ -28,5 +31,7 @@ public interface DecorationService {
 	public int sendMessage(String orderId, String name, String content, String path);
 
 	public int sendMessage(String key, String orderId, String name, String content, String path);
+
+	public List<TalkingVO> queryTalking(DecorationVO decorationVO, TalkingVO talkingVO);
 
 }

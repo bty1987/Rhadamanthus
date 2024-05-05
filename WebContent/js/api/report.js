@@ -28,106 +28,139 @@ $.extend(api.index, {
 $.extend(api, {
     report: {
         pagePutline: {
-            url: "pagePutline.do"
+            url: "pagePutline.do",
         },
         queryRankForPlace: {
             url: "queryRankForPlace.do",
-            demo: true
+            demo: true,
         },
 
-        queryDecorationDesignerRank: {
-            url: "queryDecorationDesignerRank.do"
+        queryDecorationRank: {
+            url: "queryDecorationRank.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ranks",
+                args: ["rank", "sachi", "tachi"]
+            }]
         },
-        queryDecorationDesignerDepartmentRank: {
-            url: "queryDecorationDesignerDepartmentRank.do"
+        queryDecorationDepartmentRank: {
+            url: "queryDecorationDepartmentRank.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ranks",
+                args: ["rank", "sachi", "tachi"]
+            }]
         },
-        queryDecorationDesignerRegionRank: {
-            url: "queryDecorationDesignerRegionRank.do"
+        queryDecorationRegionRank: {
+            url: "queryDecorationRegionRank.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ranks",
+                args: ["rank", "sachi", "tachi"]
+            }]
         },
-        decorationDesignerRank: {
-            url: "decorationDesignerRank.do",
-            demo: true
+        decorationRank: {
+            url: "decorationRank.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ranks",
+                args: ["rank", "sachi", "tachi"]
+            }]
         },
-        decorationDesignerDepartmentRank: {
-            url: "decorationDesignerDepartmentRank.do",
-            demo: true
+        decorationDepartmentRank: {
+            url: "decorationDepartmentRank.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ranks",
+                args: ["rank", "sachi", "tachi"]
+            }]
         },
-        decorationDesignerRegionRank: {
-            url: "decorationDesignerRegionRank.do",
-            demo: true
+        decorationRegionRank: {
+            url: "decorationRegionRank.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "ranks",
+                args: ["rank", "sachi", "tachi"]
+            }]
         },
 
         queryMaterialDesignerRank: {
-            url: "queryMaterialDesignerRank.do"
+            url: "queryMaterialDesignerRank.do",
         },
         queryMaterialDesignerDepartmentRank: {
-            url: "queryMaterialDesignerDepartmentRank.do"
+            url: "queryMaterialDesignerDepartmentRank.do",
         },
         queryMaterialDesignerRegionRank: {
-            url: "queryMaterialDesignerRegionRank.do"
+            url: "queryMaterialDesignerRegionRank.do",
         },
         materialDesignerRank: {
             url: "materialDesignerRank.do",
-            demo: true
+            demo: true,
         },
         materialDesignerDepartmentRank: {
             url: "materialDesignerDepartmentRank.do",
-            demo: true
+            demo: true,
         },
         materialDesignerRegionRank: {
             url: "materialDesignerRegionRank.do",
-            demo: true
+            demo: true,
         },
 
         materialTypeReport: {
             url: "materialTypeReport.do",
-            demo: true
+            demo: true,
         },
         materialBrandReport: {
             url: "materialBrandReport.do",
-            demo: true
+            demo: true,
         },
         materialDepartmentReport: {
             url: "materialDepartmentReport.do",
-            demo: true
+            demo: true,
         },
         designerReport: {
-            url: "designerReport.do"
+            url: "designerReport.do",
         },
         designerDeportmentReport: {
-            url: "designerDeportmentReport.do"
+            url: "designerDeportmentReport.do",
         },
         designerRegionReport: {
-            url: "designerRegionReport.do"
+            url: "designerRegionReport.do",
         },
         countMaterialType: {
             url: "countMaterialType.do",
-            demo: true
+            demo: true,
         },
         countMaterialBrand: {
             url: "countMaterialBrand.do",
-            demo: true
+            demo: true,
         },
         countDesigner: {
             url: "countDesigner.do",
-            demo: true
+            demo: true,
         },
         countDesignerDepartment: {
             url: "countDesignerDepartment.do",
-            demo: true
+            demo: true,
         },
         countDesignerRegion: {
             url: "countDesignerRegion.do",
-            demo: true
+            demo: true,
         },
 
         reportCityCount: {
             url: "reportCityCount.do",
-            demo: true
+            demo: true,
         },
         queryDecoration7Construction: {
             url: "queryDecoration7Construction.do",
-            demo: true
+            demo: true,
         },
         queryDecoration7Achievement: {
             url: "queryDecoration7Achievement.do",
@@ -136,7 +169,7 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["cs0", "cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7"]
-            }]
+            }],
         },
         querySales7Achievement: {
             url: "querySales7Achievement.do",
@@ -145,26 +178,26 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["cs0", "cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7"]
-            }]
+            }],
         },
         queryUser7Achievement: {
             url: "queryUser7Achievement.do",
             type: "query",
-            demo: true
+            demo: true,
         },
         queryConstruction7Achievement: {
-            url: "queryConstruction7Achievement.do"
+            url: "queryConstruction7Achievement.do",
         },
         queryApproval7Achievement: {
-            url: "queryApproval7Achievement.do"
+            url: "queryApproval7Achievement.do",
         },
         updateDecoration7Construction: {
             url: "updateDecoration7Construction.do",
-            demo: true
+            demo: true,
         },
         updateDecoration7Achievement: {
             url: "updateDecoration7Achievement.do",
-            demo: true
+            demo: true,
         },
         rankAddReduce: {
             url: "rankAddReduce.do",
@@ -172,7 +205,7 @@ $.extend(api, {
             tranargs: [{
                 result: "addReduceRankVOs",
                 args: ["total"]
-            }]
+            }],
         },
 
     }

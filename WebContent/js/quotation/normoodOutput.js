@@ -40,7 +40,6 @@ function printNormood() {
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="8%" align="center">序号</td>';
-    contentHtml += '<td width="17%" align="center">商品编号</td>';
     contentHtml += '<td width="25%" align="center">商品名称</td>';
     contentHtml += '<td width="15%" align="center">定额上限</td>';
     contentHtml += '<td width="10%" align="center">定额单位</td>';
@@ -58,8 +57,7 @@ function printNormood() {
 
         contentHtml += '<tr bgcolor="#FFFFFF">';
         contentHtml += '<td width="8%" align="center">' + (index + 1) + '</td>';
-        contentHtml += '<td width="17%" align="center">' + v.goods.no + '</td>';
-        contentHtml += '<td width="25%" align="center">' + v.goods.name + '</td>';
+        contentHtml += '<td width="25%" align="center">' + v.noods.name + '</td>';
         contentHtml += '<td width="15%" align="center">' + v.normnum + '</td>';
         contentHtml += '<td width="10%" align="center">' + v.normunit + '</td>';
         contentHtml += '<td width="15%" align="center">' + v.storenum + '</td>';

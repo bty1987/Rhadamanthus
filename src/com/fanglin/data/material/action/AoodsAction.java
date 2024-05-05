@@ -89,6 +89,14 @@ public class AoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateAoodsForNorm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAoodsForNorm() throws FLException {
+
+		aoodsService.updateAoodsForNorm(aoods);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "copyAoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copyAoods() throws FLException {
 

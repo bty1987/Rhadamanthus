@@ -18,19 +18,19 @@ import com.fanglin.decoration.po.DecorationPO;
 public class AdvancePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3956125205251478439L;
-	
+
 	private int apId;
-	
+
 	private DecorationPO decoration;
-	
+
 	private long balance;
-	
+
 	private long projectBalance;
-	
+
 	private long materialBalance;
-	
+
 	private long zhenglinBalance;
-	
+
 	public AdvancePaymentPO() {
 		super();
 	}
@@ -69,7 +69,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	public void setBalance(long balance) {
 		this.balance = balance;
 	}
-	
+
 	@Column(name = "projectBalance")
 	public long getProjectBalance() {
 		return this.projectBalance;

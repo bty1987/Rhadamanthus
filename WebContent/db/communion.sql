@@ -48,6 +48,7 @@ CREATE TABLE `brand` (
   `no` varchar(10) NOT NULL,
   `name` varchar(30) NOT NULL,
   `pinyin` varchar(216) NOT NULL,
+  `comment` varchar(256) DEFAULT '',
   `company` int(11) NOT NULL,
   `kino` varchar(16) DEFAULT '',
   `kiname` varchar(32) DEFAULT '',
@@ -94,11 +95,14 @@ CREATE TABLE `chart` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(32) NOT NULL COMMENT '编号',
   `name` varchar(32) NOT NULL COMMENT '名称',
+  `type` tinyint(1) DEFAULT '0',
+  `level` tinyint(1) DEFAULT NULL COMMENT '等级',
   `api` varchar(64) NOT NULL COMMENT '接口',
   `method` varchar(32) NOT NULL COMMENT '方法',
   `param` varchar(255) DEFAULT NULL COMMENT '参数',
   `style` varchar(255) DEFAULT NULL COMMENT '样式',
   `clazz` varchar(255) DEFAULT NULL COMMENT '类型',
+  `sort` int(2) DEFAULT '0',
   `comment` varchar(255) DEFAULT NULL COMMENT '说明',
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='图表基础数据表';
@@ -111,8 +115,8 @@ CREATE TABLE `city` (
   `name` varchar(64) NOT NULL,
   `pinyin` varchar(128) NOT NULL,
   `province` varchar(10) NOT NULL DEFAULT '',
-  `x` double NOT NULL DEFAULT '0',
-  `y` double NOT NULL DEFAULT '0',
+  `x` int(10) NOT NULL DEFAULT '0',
+  `y` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cid`),
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`rid`)
@@ -125,8 +129,8 @@ CREATE TABLE `cityproper` (
   `no` varchar(10) NOT NULL,
   `name` varchar(64) NOT NULL,
   `pinyin` varchar(128) NOT NULL,
-  `x` double NOT NULL DEFAULT '0',
-  `y` double NOT NULL DEFAULT '0',
+  `x` int(10) NOT NULL DEFAULT '0',
+  `y` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cpid`),
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`cid`)
@@ -145,9 +149,25 @@ CREATE TABLE `company` (
   `phone` varchar(16) DEFAULT '',
   `doid` int(11) DEFAULT NULL,
   `soid` int(11) DEFAULT NULL,
+  `atttype` tinyint(1) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公司表';
+
+DROP TABLE IF EXISTS `constant`;
+CREATE TABLE `constant` (
+  `cid` int(11) NOT NULL AUTO_INCREMENT COMMENT '常量ID',
+  `name` varchar(32) NOT NULL COMMENT '姓名',
+  `module` varchar(64) DEFAULT NULL COMMENT '模块',
+  `clazz` varchar(64) DEFAULT NULL COMMENT '对象',
+  `type` varchar(64) DEFAULT NULL COMMENT '类型',
+  `field` varchar(64) DEFAULT NULL COMMENT '字段名',
+  `key` varchar(64) DEFAULT NULL COMMENT ' 键',
+  `value` varchar(64) DEFAULT NULL COMMENT '值',
+  `status` tinyint(1) NOT NULL COMMENT '状态',
+  PRIMARY KEY (`cid`),
+  KEY `indexone` (`module`,`clazz`,`type`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='常量表';
 
 DROP TABLE IF EXISTS `constructionnode`;
 CREATE TABLE `constructionnode` (
@@ -201,6 +221,7 @@ CREATE TABLE `customer` (
   `qq` varchar(15) NOT NULL,
   `wechat` varchar(15) NOT NULL,
   `email` varchar(32) NOT NULL,
+  `career` varchar(32) DEFAULT '',
   `address` varchar(128) NOT NULL,
   `relationshipType` varchar(40) NOT NULL,
   `officer` varchar(32) DEFAULT NULL,
@@ -243,6 +264,38 @@ CREATE TABLE `customerphone` (
   KEY `indextwo` (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户电话';
 
+DROP TABLE IF EXISTS `customerrecord`;
+CREATE TABLE `customerrecord` (
+  `crid` int(11) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+  `cid` int(11) DEFAULT NULL COMMENT '客户ID',
+  `cpid` int(11) DEFAULT NULL COMMENT '客户电话ID',
+  `ouid` int(11) DEFAULT NULL COMMENT '操作人',
+  `operateTime` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  `type` tinyint(1) DEFAULT '0' COMMENT '类型 , 0: 电话查询',
+  `comment` varchar(255) DEFAULT '' COMMENT '说明',
+  PRIMARY KEY (`crid`),
+  KEY `indexone` (`cid`),
+  KEY `indextwo` (`operateTime`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户记录';
+
+DROP TABLE IF EXISTS `custype`;
+CREATE TABLE `custype` (
+  `ctid` int(11) NOT NULL AUTO_INCREMENT COMMENT '商户id',
+  `name` varchar(32) NOT NULL COMMENT '名称',
+  `no` varchar(32) NOT NULL COMMENT '商户号',
+  `agent` varchar(32) NOT NULL COMMENT '机构号',
+  `phone` varchar(11) NOT NULL COMMENT '商户手机号',
+  `wxapp` varchar(32) NOT NULL COMMENT '小程序appid',
+  `rtid` int(11) DEFAULT NULL,
+  `platform` tinyint(1) DEFAULT '0',
+  `atttype` tinyint(1) NOT NULL COMMENT '业务类型',
+  `dgrade` varchar(1) DEFAULT NULL COMMENT '装修等级',
+  `sgrade` varchar(1) DEFAULT NULL COMMENT '销售等级',
+  `status` tinyint(1) NOT NULL COMMENT '状态',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`ctid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商户表';
+
 DROP TABLE IF EXISTS `datadrawing`;
 CREATE TABLE `datadrawing` (
   `ddid` int(11) NOT NULL AUTO_INCREMENT,
@@ -251,6 +304,7 @@ CREATE TABLE `datadrawing` (
   `drawingUrl` varchar(256) NOT NULL COMMENT '图片路径',
   `drawingType` tinyint(1) NOT NULL COMMENT '图片类型',
   `type` tinyint(1) NOT NULL COMMENT '类型',
+  `filesize` int(10) DEFAULT '0',
   `cuid` int(11) NOT NULL COMMENT '创建人',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `status` tinyint(1) NOT NULL COMMENT '状态',
@@ -262,6 +316,7 @@ DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
   `did` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(10) NOT NULL COMMENT '部门ID',
+  `code` varchar(32) DEFAULT '',
   `fdid` varchar(10) DEFAULT NULL COMMENT '上级部门ID',
   `muid` int(11) DEFAULT NULL,
   `isdet` tinyint(1) NOT NULL DEFAULT '0',
@@ -274,6 +329,7 @@ CREATE TABLE `department` (
   `company` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `comment` varchar(128) DEFAULT NULL COMMENT '表述',
+  `limits` int(8) DEFAULT '0',
   `kino` varchar(16) DEFAULT '',
   `kiname` varchar(32) DEFAULT '',
   PRIMARY KEY (`did`),
@@ -323,6 +379,7 @@ CREATE TABLE `house` (
   `buildArea` int(8) NOT NULL DEFAULT '0' COMMENT '建筑面积',
   `freeArea` int(8) NOT NULL DEFAULT '0' COMMENT '赠送面积',
   `innerArea` int(8) NOT NULL DEFAULT '0' COMMENT '套内面积',
+  `quoteArea` int(8) NOT NULL DEFAULT '0' COMMENT '报价面积',
   `totalArea` int(8) NOT NULL DEFAULT '0' COMMENT '总面积',
   `maxFloor` smallint(3) DEFAULT '0' COMMENT '最高楼层',
   `through` tinyint(1) DEFAULT '0' COMMENT '是否越层',
@@ -399,6 +456,7 @@ CREATE TABLE `module` (
   `fatherModuleId` int(11) DEFAULT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
   `alias` varchar(32) DEFAULT NULL,
+  `module` varchar(32) DEFAULT '',
   `icon` varchar(20) DEFAULT NULL,
   `url` varchar(256) DEFAULT NULL,
   `level` tinyint(1) NOT NULL,
@@ -441,10 +499,11 @@ CREATE TABLE `paymenttype` (
   `bustype` tinyint(1) NOT NULL,
   `atttype` tinyint(1) NOT NULL,
   `code` tinyint(1) NOT NULL DEFAULT '0',
-  `taxrate` tinyint(1) DEFAULT NULL,
+  `taxrate` int(8) DEFAULT '0',
   `kino` varchar(64) DEFAULT NULL,
   `kiname` varchar(64) DEFAULT NULL,
   `kibalance` varchar(64) DEFAULT NULL,
+  `billType` varchar(16) DEFAULT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`ptid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项类型';
@@ -505,6 +564,7 @@ CREATE TABLE `receipttype` (
   `direction` tinyint(1) NOT NULL COMMENT '余额方向,借 1, 贷 -1',
   `grade` varchar(1) DEFAULT '',
   `type` tinyint(1) NOT NULL,
+  `fund` tinyint(1) NOT NULL DEFAULT '0' COMMENT '资金类型',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   `kino` varchar(16) DEFAULT '' COMMENT '金蝶编号',
@@ -516,6 +576,93 @@ CREATE TABLE `receipttype` (
   PRIMARY KEY (`rtid`),
   KEY `uniqueone` (`no`,`company`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='收据类型表';
+
+DROP TABLE IF EXISTS `receipttypeitem`;
+CREATE TABLE `receipttypeitem` (
+  `rtiid` int(11) NOT NULL AUTO_INCREMENT,
+  `rtid` int(11) NOT NULL,
+  `no` varchar(36) NOT NULL,
+  `name` varchar(16) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `paytype` tinyint(1) NOT NULL,
+  PRIMARY KEY (`rtiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='收据单据表';
+
+DROP TABLE IF EXISTS `recruitment`;
+CREATE TABLE `recruitment` (
+  `rid` int(11) NOT NULL AUTO_INCREMENT COMMENT '招聘ID',
+  `name` varchar(32) NOT NULL COMMENT '姓名',
+  `identity` varchar(21) NOT NULL COMMENT '身份证号',
+  `photoPath` varchar(255) DEFAULT '' COMMENT '头像照片',
+  `identityPathF` varchar(255) DEFAULT '' COMMENT '身份证正面图片',
+  `identityPathB` varchar(255) DEFAULT '' COMMENT '身份证背面图片',
+  `nation` varchar(50) DEFAULT NULL COMMENT '民族',
+  `place` varchar(32) NOT NULL COMMENT '地址',
+  `weight` int(11) DEFAULT NULL COMMENT '体重',
+  `height` int(11) DEFAULT NULL COMMENT '身高',
+  `employWay` tinyint(1) DEFAULT '0' COMMENT '应聘方式',
+  `householdType` tinyint(1) DEFAULT '0' COMMENT '户口类型',
+  `political` tinyint(1) DEFAULT '0' COMMENT '政治面貌',
+  `education` tinyint(1) DEFAULT '0' COMMENT '学历',
+  `phone` varchar(128) NOT NULL COMMENT '电话',
+  `wechat` varchar(15) DEFAULT NULL COMMENT '微信号',
+  `qq` varchar(15) DEFAULT NULL COMMENT 'QQ号',
+  `address` varchar(128) DEFAULT NULL COMMENT '现住址',
+  `nativePlace` varchar(128) DEFAULT NULL COMMENT '籍贯',
+  `hometownPlace` varchar(32) DEFAULT NULL COMMENT '户籍地',
+  `specialty` varchar(32) DEFAULT NULL COMMENT '专业',
+  `emergencyMan` varchar(32) DEFAULT NULL COMMENT '紧急联系人',
+  `emergencyPhone` varchar(15) DEFAULT NULL COMMENT '紧急联系人电话',
+  `isMarried` tinyint(1) DEFAULT '1' COMMENT '婚姻状况',
+  `isBirth` tinyint(1) DEFAULT '1' COMMENT '生育状况',
+  `isHouse` tinyint(1) DEFAULT '1' COMMENT '是否有独立住房',
+  `isCar` tinyint(1) DEFAULT '1' COMMENT '是否有独立车辆',
+  `isHouseLoan` tinyint(1) DEFAULT '1' COMMENT '是否有房贷',
+  `isCarLoan` tinyint(1) DEFAULT '1' COMMENT '是否有车贷',
+  `isCarID` tinyint(1) DEFAULT '1' COMMENT '是否有驾照',
+  `isPassID` tinyint(1) DEFAULT '1' COMMENT '是否有护照',
+  `isHMID` tinyint(1) DEFAULT '1' COMMENT '是否有港澳通行证',
+  `isTWID` tinyint(1) DEFAULT '1' COMMENT '是否有台湾通行证',
+  `isContract` tinyint(1) DEFAULT '1' COMMENT '是否与原单位签订劳动合同',
+  `isSnsurance` tinyint(1) DEFAULT '1' COMMENT '是否已缴纳社会保险',
+  `isFire` tinyint(1) DEFAULT '1' COMMENT '是否已经与其它单位解除了劳动关系',
+  `isCnsurance` tinyint(1) DEFAULT '1' COMMENT '是否缴纳其他商业保险',
+  `isCompete` tinyint(1) DEFAULT '1' COMMENT '现在是否还在竟业限制期内',
+  `isTrain` tinyint(1) DEFAULT '1' COMMENT '公司提供培训机会时，是否同意并签订协议',
+  `isCriminal` tinyint(1) DEFAULT '1' COMMENT '是否曾有前科劣迹、行政/邢事拘留等经历',
+  `isDisease` tinyint(1) DEFAULT '1' COMMENT '是否患有精神系统疾病、传染性疾病、家族遗传病史、既往重病史',
+  `status` tinyint(1) DEFAULT '0' COMMENT '状态',
+  PRIMARY KEY (`rid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='招聘人员';
+
+DROP TABLE IF EXISTS `recruitmenteducation`;
+CREATE TABLE `recruitmenteducation` (
+  `reid` int(11) NOT NULL AUTO_INCREMENT COMMENT '教育ID',
+  `rid` int(11) NOT NULL COMMENT '招聘ID',
+  `beginTime` date DEFAULT NULL COMMENT '开始时间',
+  `endTime` date DEFAULT NULL COMMENT '结束时间',
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `content` varchar(255) DEFAULT NULL COMMENT '培训内容',
+  `organ` varchar(32) NOT NULL COMMENT '学校名称',
+  `specialty` varchar(32) NOT NULL COMMENT '专业',
+  `certificate` varchar(32) DEFAULT NULL COMMENT '取得证书',
+  PRIMARY KEY (`reid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='招聘教育';
+
+DROP TABLE IF EXISTS `recruitmentoperation`;
+CREATE TABLE `recruitmentoperation` (
+  `roid` int(11) NOT NULL AUTO_INCREMENT COMMENT '工作ID',
+  `rid` int(11) NOT NULL COMMENT '招聘ID',
+  `beginTime` date DEFAULT NULL COMMENT '开始时间',
+  `endTime` date DEFAULT NULL COMMENT '结束时间',
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `company` varchar(32) DEFAULT NULL COMMENT '单位名称',
+  `trade` varchar(32) DEFAULT NULL COMMENT '所属行业',
+  `duty` varchar(32) DEFAULT NULL COMMENT '职务',
+  `salary` int(11) NOT NULL COMMENT '薪金',
+  `comment` varchar(255) DEFAULT NULL COMMENT '离职原因',
+  PRIMARY KEY (`roid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='招聘工作';
 
 DROP TABLE IF EXISTS `region`;
 CREATE TABLE `region` (
@@ -536,6 +683,8 @@ CREATE TABLE `role` (
   `name` varchar(8) NOT NULL,
   `pinyin` varchar(64) DEFAULT NULL COMMENT '拼音',
   `level` tinyint(1) NOT NULL DEFAULT '0',
+  `cuid` int(11) NOT NULL,
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(20) DEFAULT NULL,
   `company` int(11) DEFAULT '0',
   PRIMARY KEY (`rid`),
@@ -566,6 +715,9 @@ CREATE TABLE `rolemodule` (
   `rid` int(11) NOT NULL,
   `mid` int(11) NOT NULL,
   `link` tinyint(1) NOT NULL DEFAULT '1',
+  `access` tinyint(1) DEFAULT '0',
+  `cuid` int(11) NOT NULL DEFAULT '0',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`rmid`),
   KEY `indexone` (`rid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色-模块表';
@@ -575,9 +727,21 @@ CREATE TABLE `roleoperation` (
   `roid` int(11) NOT NULL AUTO_INCREMENT,
   `rid` int(11) NOT NULL,
   `oid` int(11) NOT NULL,
+  `cuid` int(11) NOT NULL DEFAULT '0',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`roid`),
   KEY `indexone` (`rid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色操作';
+
+DROP TABLE IF EXISTS `roletask`;
+CREATE TABLE `roletask` (
+  `trrid` int(11) NOT NULL AUTO_INCREMENT,
+  `rid` int(11) NOT NULL,
+  `tid` int(11) NOT NULL,
+  `cuid` int(11) DEFAULT NULL,
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`trrid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务-角色权限表';
 
 DROP TABLE IF EXISTS `servicenode`;
 CREATE TABLE `servicenode` (
@@ -646,6 +810,48 @@ CREATE TABLE `talking` (
   PRIMARY KEY (`tid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='话术表';
 
+DROP TABLE IF EXISTS `task`;
+CREATE TABLE `task` (
+  `tid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `filepath` varchar(128) NOT NULL,
+  `plugins` varchar(16) DEFAULT '' COMMENT 'A: 日期范围, B: 日期, C: 上传附件, D: 参数',
+  `level` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL,
+  `handle` tinyint(1) NOT NULL,
+  `server` int(11) DEFAULT '0',
+  `week` varchar(32) DEFAULT '',
+  `day` varchar(32) DEFAULT '',
+  `hour` varchar(32) DEFAULT '',
+  `status` tinyint(1) NOT NULL,
+  `isShow` tinyint(1) NOT NULL,
+  `keyword` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`tid`),
+  UNIQUE KEY `uniqueone` (`keyword`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务';
+
+DROP TABLE IF EXISTS `taskparam`;
+CREATE TABLE `taskparam` (
+  `tpid` int(11) NOT NULL AUTO_INCREMENT COMMENT '任务字段ID',
+  `tid` int(11) DEFAULT NULL,
+  `name` varchar(32) DEFAULT NULL COMMENT '名称',
+  `module` varchar(32) NOT NULL COMMENT '模块',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型',
+  `oneType` tinyint(1) NOT NULL DEFAULT '0' COMMENT '文本/数值',
+  `unionField` varchar(64) NOT NULL COMMENT '关联',
+  `unionParam` int(11) NOT NULL DEFAULT '0' COMMENT '关联字段',
+  `field` varchar(32) NOT NULL COMMENT '字段',
+  `tableName` varchar(64) NOT NULL COMMENT '表名',
+  `alias` varchar(16) NOT NULL COMMENT '别名',
+  `ismain` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否重要',
+  `handle` varchar(32) DEFAULT NULL COMMENT '处理过程',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+  `sort` tinyint(2) DEFAULT '0' COMMENT '排序',
+  `tablesort` tinyint(2) DEFAULT '0' COMMENT '表排序',
+  `comment` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`tpid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务字段表';
+
 DROP TABLE IF EXISTS `upgrade`;
 CREATE TABLE `upgrade` (
   `ugid` int(11) NOT NULL AUTO_INCREMENT,
@@ -673,16 +879,22 @@ CREATE TABLE `user` (
   `userName` varchar(32) NOT NULL COMMENT '真实姓名',
   `pinyin` varchar(64) NOT NULL COMMENT '真实姓名全拼',
   `currentName` varchar(32) DEFAULT NULL COMMENT '现用名',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:在职,1:离职,2:停薪留职',
   `did` int(11) DEFAULT NULL COMMENT '职位类型',
   `gender` varchar(2) NOT NULL COMMENT '性别',
   `identity` varchar(21) NOT NULL COMMENT '身份证号',
   `phone` varchar(128) NOT NULL COMMENT '手机号',
   `userPhoto` varchar(128) DEFAULT NULL COMMENT '用户图片',
+  `identityPathF` varchar(255) DEFAULT '' COMMENT '身份证正面图片',
+  `identityPathB` varchar(255) DEFAULT '' COMMENT '身份证背面图片',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:在职,1:离职,2:停薪留职',
   `isLogin` tinyint(1) DEFAULT NULL COMMENT '是否允许登陆',
   `extranet` tinyint(1) NOT NULL DEFAULT '0' COMMENT '外网登陆权限',
   `freedom` tinyint(1) NOT NULL DEFAULT '0',
   `isUpdate` tinyint(1) DEFAULT '0',
+  `authStatus` tinyint(1) DEFAULT '0',
+  `authUrl` varchar(255) DEFAULT '',
+  `signNo` varchar(255) DEFAULT '',
+  `token` varchar(255) DEFAULT '',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `uniqueone` (`loginId`),
   UNIQUE KEY `uniquetwo` (`userId`),
@@ -696,6 +908,8 @@ CREATE TABLE `usercompany` (
   `ucid` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `cid` int(11) NOT NULL,
+  `cuid` int(11) DEFAULT '0',
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ucid`),
   KEY `indexone` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户-公司表';
@@ -706,10 +920,19 @@ CREATE TABLE `usercontract` (
   `uid` int(11) NOT NULL COMMENT '员工ID',
   `no` varchar(255) NOT NULL COMMENT '合同编号',
   `name` varchar(50) NOT NULL COMMENT '名称',
-  `signTime` date NOT NULL,
-  `startTime` date NOT NULL COMMENT '签订时间',
-  `endTime` date NOT NULL COMMENT '结束时间',
+  `title` varchar(64) DEFAULT '',
+  `cid` int(11) DEFAULT NULL,
+  `signTime` date DEFAULT NULL,
+  `startTime` date DEFAULT NULL COMMENT '签订时间',
+  `endTime` date DEFAULT NULL COMMENT '结束时间',
+  `download` varchar(255) DEFAULT '',
+  `viewpdf` varchar(255) DEFAULT '',
+  `filesize` int(11) DEFAULT NULL,
+  `cuid` int(11) DEFAULT NULL,
+  `suid` int(11) DEFAULT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `comsignTime` timestamp NULL DEFAULT NULL,
+  `cussignTime` timestamp NULL DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 0:有效,1:无效',
   `comment` varchar(255) DEFAULT NULL COMMENT '说明',
   PRIMARY KEY (`ucId`),
@@ -737,6 +960,7 @@ CREATE TABLE `userexperience` (
   `uid` int(15) NOT NULL,
   `type` varchar(10) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ouid` int(11) NOT NULL DEFAULT '0',
   `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `comment` varchar(128) NOT NULL,
   PRIMARY KEY (`upid`),
@@ -852,6 +1076,18 @@ CREATE TABLE `userrequire` (
   PRIMARY KEY (`urid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='人员需求';
 
+DROP TABLE IF EXISTS `userrole`;
+CREATE TABLE `userrole` (
+  `urid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `uid` int(11) NOT NULL COMMENT '员工ID',
+  `rid` int(11) NOT NULL COMMENT '角色ID',
+  `cuid` int(11) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`urid`),
+  KEY `indexone` (`uid`),
+  KEY `indextwo` (`rid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='人员角色表';
+
 DROP TABLE IF EXISTS `version`;
 CREATE TABLE `version` (
   `vid` int(11) NOT NULL AUTO_INCREMENT COMMENT '版本ID',
@@ -875,8 +1111,8 @@ CREATE TABLE `village` (
   `deliveryTime` date DEFAULT NULL,
   `rule` varchar(64) DEFAULT NULL,
   `content` varchar(128) DEFAULT NULL,
-  `x` double NOT NULL DEFAULT '0',
-  `y` double NOT NULL DEFAULT '0',
+  `x` int(10) NOT NULL DEFAULT '0',
+  `y` int(10) NOT NULL DEFAULT '0',
   `company` int(11) DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `url` varchar(256) DEFAULT NULL COMMENT '楼盘默认图片',

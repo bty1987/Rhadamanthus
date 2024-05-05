@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.exports.service.PaymentExportService;
@@ -44,7 +45,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 	private MaterialPaymentDao materialPaymentDao;
 
 	@Override
-	public List<DecorationPaymentExportVO> queryDecorationPaymentExport(List<Filter> filters) {
+	public List<DecorationPaymentExportVO> queryDecorationPaymentExport(List<Filter> filters) throws FLException {
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(filters);
 		List<DecorationPaymentExportVO> decorationPaymentExportVOs = new ArrayList<DecorationPaymentExportVO>();

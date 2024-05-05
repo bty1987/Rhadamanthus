@@ -63,9 +63,9 @@ $(function() {
 
     };
     var auditRecordPostdata = {};
-    var status = constant.decoration.auditRecord.status.keys;
+    var status = constant.decoration().auditRecord.status.keys;
 
-    auditScalePage.status.bindData(constant.decoration.auditRecord.status.datas, "key", "value");
+    auditScalePage.status.bindData(constant.decoration().auditRecord.status.datas, "key", "value");
 
     var auditScalePostdata = {};
 
@@ -80,13 +80,7 @@ $(function() {
         orderId: "auditRecord.audit.decoration.orderId"
     };
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        $.each(res.perCharge, function(i, v) {
-
-            perCharge[v.key] = v.value;
-        });
-    });
+    perCharge = constant.decoration().audit4record.perCharge.keys;
 
     auditRecordPage.changeAuditRecordModel.on('hide.bs.modal', function(e) {
 

@@ -18,6 +18,10 @@ public class PresignPriceVO implements Serializable {
 
 	private Long price;
 
+	private Integer costPrice;
+
+	private Integer mostPrice;
+
 	private Short status;
 
 	public PresignPriceVO() {
@@ -70,6 +74,22 @@ public class PresignPriceVO implements Serializable {
 
 	public void setPrice(Long price) {
 		this.price = price;
+	}
+
+	public Integer getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Integer costPrice) {
+		this.costPrice = costPrice;
+	}
+
+	public Integer getMostPrice() {
+		return mostPrice;
+	}
+
+	public void setMostPrice(Integer mostPrice) {
+		this.mostPrice = mostPrice;
 	}
 
 	public Short getStatus() {

@@ -95,25 +95,25 @@ $(function() {
 
                         switch (pv) {
                             case "orderId":
-                                propertyArr.push(["装修单号:", v.sales.orderId, "blue"]);
+                                propertyArr.push(["装修单号:", v.sales.orderId, "blue", tools.decoration.info, v.sales.orderId]);
                                 break;
                             case "address":
                                 propertyArr.push(["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"]);
                                 break;
                             case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey"]);
+                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
                                 break;
                             case "dept":
-                                propertyArr.push(["归属部门:", v.dept.name, "grey"]);
+                                propertyArr.push(["归属部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
                                 break;
                             case "region":
-                                propertyArr.push(["归属大区:", v.region.name, "grey"]);
+                                propertyArr.push(["归属大区:", v.region.name, "grey", tools.department.info, v.region.did]);
                                 break;
                             case "instorer":
-                                propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey"]);
+                                propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey", tools.personel.info, v.sales.instorer.userId]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.sales.brand, "grey"]);
+                                propertyArr.push(["品牌:", v.sales.brand, "grey", tools.brand.info, v.sales.bid]);
                                 break;
                             case "depositpay":
                                 propertyArr.push(["定金:", v.sales.depositpay, "blue"]);
@@ -125,7 +125,7 @@ $(function() {
                                 propertyArr.push(["预结算值:", v.balance, "blue"]);
                                 break;
                             case "precreater":
-                                propertyArr.push(["预结算人:", v.creater.currentName, "grey"]);
+                                propertyArr.push(["预结算人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
                                 break;
                             case "pbalance":
                                 propertyArr.push(["结算值:", v.pbalance, "blue"]);
@@ -134,7 +134,7 @@ $(function() {
                                 propertyArr.push(["结算时间:", v.postTime, "green"]);
                                 break;
                             case "poster":
-                                propertyArr.push(["结算人:", v.poster.currentName, "grey"]);
+                                propertyArr.push(["结算人:", v.poster.currentName, "grey", tools.personel.info, v.poster.userId]);
                                 break;
                             case "vbalance":
                                 propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
@@ -159,6 +159,9 @@ $(function() {
                                 break;
                             case "allowance":
                                 styleArr.push(["补贴:", v.allowance, "blue"]);
+                                break;
+                            case "salesBananceCoupon":
+                                styleArr.push(["结算券值:", v.coupon, "blue"]);
                                 break;
                             case "total":
                                 styleArr.push(["总价:", v.total, "blue"]);
@@ -218,10 +221,18 @@ $(function() {
 
                     $.each(propertyArr, function(index, value) {
 
-                        var $liProperty = $('<li></li>');
+                        var $liProperty = $('<li></li>').appendTo($ulProperty);
+
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
+
+                        if (value.length == 5) {
+                            $liProperty.click(function() {
+
+                                value[3]($liProperty, value[4]);
+
+                            }).css("cursor", "pointer");
+                        }
                     });
 
                     $.each(styleArr, function(index, value) {
@@ -439,6 +450,9 @@ $(function() {
 
     function balanceSales() {
 
+        if (com.validate('balanceSalesModal'))
+            return false;
+
         var options = {};
         var balanceSales = {};
         var index = 0;
@@ -459,10 +473,10 @@ $(function() {
             "balanceSales.bsid": bsid
         }, function(res) {
 
-            bsidCount = res.bsidCount;
+            count = res.count;
         }, null, false);
 
-        if (bsidCount + inputs.length > 500) {
+        if (count + inputs.length > 500) {
             com.showAlert(com.warning, "数据量过大");
             return false;
         }
@@ -536,6 +550,7 @@ $(function() {
         options["balanceSales.cost"] = utils.accAdd(cost, balanceSales.cost);
         options["balanceSales.payment"] = utils.accAdd(payment, balanceSales.payment);
         options["balanceSales.profit"] = utils.accAdd(profit, balanceSales.profit);
+
         if (options["balanceSales.payment"] > 1000000) {
             com.showAlert(com.warning, "结算总额过大");
             return false;

@@ -9,13 +9,13 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionInfoService {
 
-	public void pageConstructionInfo(Paging paging, List<Filter> filters, Integer company);
+	public void pageConstructionInfo(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	public ConstructionInfoVO queryConstructionInfo(ConstructionInfoVO constructionInfoVO);
 
 	public ConstructionInfoVO queryConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO);
 
-	public void updateConstructionInfo(ConstructionInfoVO constructionInfoVO);
+	public void updateConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException;
 
 	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) throws FLException;
 

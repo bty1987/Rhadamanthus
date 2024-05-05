@@ -22,6 +22,8 @@ public interface CategoryDao extends Dao<CategoryPO> {
 
 	public List<CategoryPO> pageCategory(Paging paging, List<Filter> filters);
 
+	public List<CategoryPO> queryCategory(Short isCoupon, Short isCount);
+
 	public CategoryPO queryCategoryByCId(long cId);
 
 	public CategoryPO queryCategoryByCategoryId(String categoryId);

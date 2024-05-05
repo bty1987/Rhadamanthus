@@ -10,6 +10,7 @@
 package com.fanglin.communion.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.vo.UserVO;
@@ -28,7 +29,7 @@ public class DepartmentVO implements Serializable {
 
 	private DepartmentVO fatherDept;
 
-	private String createTime;
+	private Timestamp createTime;
 
 	private Short isdet;
 
@@ -105,11 +106,11 @@ public class DepartmentVO implements Serializable {
 		this.fatherDept = fatherDept;
 	}
 
-	public String getCreateTime() {
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 

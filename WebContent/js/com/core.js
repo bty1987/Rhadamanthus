@@ -141,6 +141,22 @@
         }
 
         var opts = $.extend({}, options || {});
+        if (api.validate) {
+
+            var $validate = true;
+
+            $.each(api.validate, function(k, v) {
+
+                if (v.required && !options[k]) {
+                    $validate = false;
+                    return false;
+                }
+            });
+
+            if (!$validate)
+                return false;
+        }
+
         var optAsync = true;
         if (asyncFlag == undefined || asyncFlag == true) {
             optAsync = true;
@@ -190,6 +206,14 @@
                 if (api.tranargs.args.indexOf(k.replace(/\[\d+\]/, '')) != -1) {
                     utils.accExtend(opts, k);
                 }
+            });
+        }
+
+        var loader = null;
+        if (api.loading) {
+            loader = layer.msg(api.loading.content ? api.loading.content : "加载中", {
+                shade: api.loading.shade ? api.loading.shade : 0.2,
+                time: (api.loading.time ? api.loading.time : 5) * 1000,
             });
         }
 
@@ -275,13 +299,23 @@
                         return res;
                     }
                 }
+
+                if (loader) {
+                    layer.close(loader);
+                }
             },
             error: function(msg) {
 
                 console.error(msg);
+
                 com.showAlert(com.error, "功能问题,请稍后再试");
+
                 if (failCallback) {
                     failCallback(msg);
+                }
+
+                if (loader) {
+                    layer.close(loader);
                 }
             }
         });
@@ -313,7 +347,7 @@
         $.ajax({
             url: server + url.url,
             data: data,
-            type: "get",
+            type: "post",
             dataType: "json",
             async: async, // 设为false就是同步请求
             success: function(res) {
@@ -1726,6 +1760,38 @@
             if (complete && typeof complete == 'function')
                 complete(info);
         });
+    },
+    /**
+     * 
+     * @param url
+     * @param name
+     */
+    download: function(url, name) {
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = "blob";
+        xhr.onload = function() {
+
+            if (xhr.status === 200) {
+
+                var blob = xhr.response;
+                var link = document.createElement('a');
+                var body = document.querySelector('body');
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = name;
+                link.style.display = 'none';
+
+                body.appendChild(link);
+                link.click();
+                body.removeChild(link);
+            }
+
+            xhr = null;
+        }
+        xhr.send();
+
     },
     /**
      * 获取对象中属性

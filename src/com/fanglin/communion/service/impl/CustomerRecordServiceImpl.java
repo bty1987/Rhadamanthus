@@ -15,9 +15,11 @@ import com.fanglin.communion.service.CustomerRecordService;
 import com.fanglin.communion.vo.CustomerRecordVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("customerRecordService")
 @Transactional(readOnly = true)
@@ -28,6 +30,28 @@ public class CustomerRecordServiceImpl implements CustomerRecordService {
 
 	@Autowired
 	public UserDao userDao;
+
+	@Override
+	public void pageCustomerRecord(Paging paging, List<Filter> filters, CustomerRecordVO customerRecordVO) {
+
+		List<CustomerRecordVO> customerRecordVOs = new ArrayList<CustomerRecordVO>();
+
+		List<CustomerRecordPO> customerRecordPOs = customerRecordDao.pageCustomerRecord(paging, filters, customerRecordVO.getCid());
+
+		for (CustomerRecordPO customerRecordPO : customerRecordPOs) {
+
+			customerRecordVO = new CustomerRecordVO(new UserBaseVO(new DutyVO()));
+
+			BeanUtil.copyPropertie(customerRecordPO, customerRecordVO, Arrays.asList("operater"));
+			BeanUtil.copyPropertie(customerRecordPO.getOperater(), customerRecordVO.getOperater());
+			BeanUtil.copyPropertie(customerRecordPO.getOperater().getDuty(), customerRecordVO.getOperater().getDuty());
+
+			customerRecordVOs.add(customerRecordVO);
+		}
+
+		paging.setData(customerRecordVOs);
+
+	}
 
 	@Override
 	public List<CustomerRecordVO> queryCustomerRecord(CustomerRecordVO customerRecord) {

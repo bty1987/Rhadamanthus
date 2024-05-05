@@ -23,6 +23,7 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.po.ColorPO;
 import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsPO;
@@ -82,6 +83,9 @@ public class SalesServiceImpl implements SalesService {
 	@Autowired
 	private DecorationDao decorationDao;
 
+	@Autowired
+	private DecorationService decorationService;
+
 	@Override
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs) {
 
@@ -89,25 +93,11 @@ public class SalesServiceImpl implements SalesService {
 
 		for (SalesPO salesPO : salesPOs) {
 
-			SalesVO _salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO());
+			SalesVO salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
-			BeanUtil.copyProperties(salesPO.getSupplier(), _salesVO.getSupplier(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getSalesman().getDept(), _salesVO.getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getDept(), _salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getRegion(), _salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getInstorer(), _salesVO.getInstorer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getInstorer().getDept(), _salesVO.getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getGuider(), _salesVO.getGuider(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getGuider().getDept(), _salesVO.getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesPO.getHouse(), _salesVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), _salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(salesPO.getFinisher(), _salesVO.getFinisher(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
+			salesPO.ptv(salesVO);
 
-			salesVOs.add(_salesVO);
+			salesVOs.add(salesVO);
 		}
 
 		return salesVOs;
@@ -120,12 +110,7 @@ public class SalesServiceImpl implements SalesService {
 
 		if (userPO == null) return;
 
-		Integer id = userPO.getUid();
-
-		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter, company, id);
-		List<SalesVO> salesVOs = pageSales(salesPOs);
-
-		paging.setData(salesVOs);
+		paging.setData(pageSales(salesDao.pageSales(paging, filter, company, userPO.getUid())));
 	}
 
 	@Override
@@ -135,10 +120,7 @@ public class SalesServiceImpl implements SalesService {
 
 		if (userPO == null) return;
 
-		List<SalesPO> salesPOs = salesDao.pageSalesForAdvance(paging, filter, company);
-		List<SalesVO> salesVOs = pageSales(salesPOs);
-
-		paging.setData(salesVOs);
+		paging.setData(pageSales(salesDao.pageSalesForAdvance(paging, filter, company)));
 	}
 
 	@Override
@@ -148,10 +130,7 @@ public class SalesServiceImpl implements SalesService {
 
 		if (userPO == null) return;
 
-		List<SalesPO> salesPOs = salesDao.pageSalesForBalance(paging, filter, company);
-		List<SalesVO> salesVOs = pageSales(salesPOs);
-
-		paging.setData(salesVOs);
+		paging.setData(pageSales(salesDao.pageSalesForBalance(paging, filter, company)));
 	}
 
 	@Override
@@ -161,10 +140,7 @@ public class SalesServiceImpl implements SalesService {
 
 		if (userPO == null) return;
 
-		List<SalesPO> salesPOs = salesDao.pageSalesForDompany(paging, filter, dompany);
-		List<SalesVO> salesVOs = pageSales(salesPOs);
-
-		paging.setData(salesVOs);
+		paging.setData(pageSales(salesDao.pageSalesForDompany(paging, filter, dompany)));
 	}
 
 	@Override
@@ -174,10 +150,7 @@ public class SalesServiceImpl implements SalesService {
 
 		if (userPO == null) return;
 
-		List<SalesPO> salesPOs = salesDao.pageSalesForBalanceByDompany(paging, filter, dompany);
-		List<SalesVO> salesVOs = pageSales(salesPOs);
-
-		paging.setData(salesVOs);
+		paging.setData(pageSales(salesDao.pageSalesForBalanceByDompany(paging, filter, dompany)));
 	}
 
 	@Override
@@ -241,7 +214,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		salesPO.ptv(salesVO);
 
@@ -257,7 +230,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		salesPO.ptv(salesVO);
 
@@ -278,7 +251,7 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, int company) throws FLException {
+	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, String userId, int company) throws FLException {
 
 		int dompany = CompanyServiceImpl.decode(salesVO.getDompanys());
 
@@ -297,6 +270,8 @@ public class SalesServiceImpl implements SalesService {
 		if (decorationPO.getStatus() == DecorationPO.STATUS_WASTE_INT || decorationPO.getStatus() == DecorationPO.STATUS_TERMINATION_INT) {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
+
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO(), new UserPO());
 
@@ -317,6 +292,7 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setSalesman(salesman);
 		salesPO.setDept(salesman.getDept());
 		salesPO.setRegion(salesman.getDept().getFatherDept());
+		salesPO.setCreater(creater);
 		salesPO.setSupplier(brandPO.getSupplier());
 		salesPO.setInstorer(instorer);
 		salesPO.setGuider(guider);
@@ -354,27 +330,32 @@ public class SalesServiceImpl implements SalesService {
 
 		long total = 0l;
 
-		if (salesItemVOs != null && salesItemVOs.size() != 0) {
+		if (salesItemVOs == null) return 0;
 
-			for (SalesItemVO salesItemVO : salesItemVOs) {
+		if (salesItemVOs.size() == 0) return 0;
 
-				salesItemPO = new SalesItemPO(new GoodsPO(salesItemVO.getGoods().getGid()), new ColorPO(salesItemVO.getColor().getCid()), new FormatPO(salesItemVO.getFormat().getFid()));
+		for (SalesItemVO salesItemVO : salesItemVOs) {
 
-				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
+			if (salesItemVO.getGoods() == null || salesItemVO.getGoods().getGid() == null) continue;
+			if (salesItemVO.getColor() == null || salesItemVO.getColor().getCid() == null) continue;
+			if (salesItemVO.getFormat() == null || salesItemVO.getFormat().getFid() == null) continue;
 
-				salesItemPO.setSid(salesPO.getSid());
-				salesItemPO.setInitnum(salesItemVO.getNum());
-				salesItemPO.setPunum(salesItemVO.getNum());
-				salesItemPO.setXgnum(salesItemVO.getNum());
+			salesItemPO = new SalesItemPO(new GoodsPO(salesItemVO.getGoods().getGid()), new ColorPO(salesItemVO.getColor().getCid()), new FormatPO(salesItemVO.getFormat().getFid()));
 
-				salesItemDao.save(salesItemPO);
+			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
 
-				total = Arith.add(total, salesItemVO.getTotal());
-			}
+			salesItemPO.setSid(salesPO.getSid());
+			salesItemPO.setInitnum(salesItemVO.getNum());
+			salesItemPO.setPunum(salesItemVO.getNum());
+			salesItemPO.setXgnum(salesItemVO.getNum());
+
+			salesItemDao.save(salesItemPO);
+
+			total = Arith.add(total, salesItemVO.getTotal());
 		}
 
 		if (total != salesPO.getTotal()) {
-			throw new FLException(260059, "销售单总额不必配");
+			throw new FLException(260059, "销售单总额不匹配");
 		}
 
 		return 0;
@@ -517,6 +498,24 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
+	public int sendSales(SalesVO salesVO) throws FLException {
+
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		String orderId = salesPO.getOrderId();
+
+		System.out.println(String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
+
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 销售单信息确认。", orderId), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
+
+		return 0;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int affirmSales(SalesVO salesVO) throws FLException {
 
@@ -536,8 +535,13 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		if (salesVO.getCustomer().getPhone() == null || !salesVO.getCustomer().getPhone().equals(decorationPO.getCustomer().getPhone())) {
-			throw new FLException(130115, "客户电话验证失败");
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(decorationPO.getOrderId());
+		cusDecorationVO.setUnionId(salesVO.getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		salesPO.setIsAffirm(SalesPO.ISAFFIRM_AFFIRM_INT);

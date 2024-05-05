@@ -30,6 +30,10 @@ public class QuotationItemVO implements Serializable {
 
 	private String name;
 
+	private String alias;
+
+	private Long qvid;
+
 	private QuotationVersionVO version;
 
 	private QuotationTypeVO category;
@@ -52,11 +56,17 @@ public class QuotationItemVO implements Serializable {
 
 	private Integer subPrice;
 
+	private Integer cost;
+
+	private Integer achePrice;
+
 	private Short type;
 
 	private Short status;
 
 	private Short discount;
+
+	private String formula;
 
 	private Integer offset;
 
@@ -105,6 +115,22 @@ public class QuotationItemVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public Long getQvid() {
+		return qvid;
+	}
+
+	public void setQvid(Long qvid) {
+		this.qvid = qvid;
 	}
 
 	public QuotationVersionVO getVersion() {
@@ -195,6 +221,22 @@ public class QuotationItemVO implements Serializable {
 		this.subPrice = subPrice;
 	}
 
+	public Integer getCost() {
+		return cost;
+	}
+
+	public void setCost(Integer cost) {
+		this.cost = cost;
+	}
+
+	public Integer getAchePrice() {
+		return achePrice;
+	}
+
+	public void setAchePrice(Integer achePrice) {
+		this.achePrice = achePrice;
+	}
+
 	public Short getType() {
 		return type;
 	}
@@ -217,6 +259,14 @@ public class QuotationItemVO implements Serializable {
 
 	public void setDiscount(Short discount) {
 		this.discount = discount;
+	}
+
+	public String getFormula() {
+		return formula;
+	}
+
+	public void setFormula(String formula) {
+		this.formula = formula;
 	}
 
 	public Integer getOffset() {

@@ -15,6 +15,8 @@ public class SurveyTemplateVO implements Serializable {
 
 	private Short status;
 
+	private Short isSend;
+
 	private Integer company;
 
 	private List<SurveyTemplateItemVO> items;
@@ -50,6 +52,14 @@ public class SurveyTemplateVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(Short isSend) {
+		this.isSend = isSend;
 	}
 
 	public Integer getCompany() {

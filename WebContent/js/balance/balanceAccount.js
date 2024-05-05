@@ -31,12 +31,14 @@ jQuery(function($) {
     balanceAccountes.btns.withdrawBtn.bindClick(withdraw);
 
     balanceAccountes.modals.addBalanceAccountModal.on("hide.bs.modal", function () {
+
         com.clearValidator();
         com.cleanTypeahead("belonger");
         com.cleanItems(balanceAccountes.addItems);
     });
 
     balanceAccountes.modals.withdrawBalanceAccountModal.on("hide.bs.modal", function () {
+
         com.clearValidator();
         com.cleanItems(balanceAccountes.items);
     });
@@ -48,11 +50,14 @@ jQuery(function($) {
     var displayFunc  = (function() {
 
         var renderList = function(tableId,listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
+
                 $.each(listData,function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -78,8 +83,14 @@ jQuery(function($) {
             $divBtnWrap.append($invalid).append($btnWithdraw).appendTo($h3);
 
             var propertyArr = [
-                ["归属人:", v.belonger.userName, "grey"],
-                ["创建人:", v.creater.currentName, "grey"],
+                ["归属人:", v.belonger.userName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.belonger.userId);
+                }],
+                ["创建人:", v.creater.currentName, "grey", function(btn) {
+
+                    tools.personel.info(btn, v.creater.userId);
+                }],
                 ["创建时间:", v.createTime, "grey"],
                 ["应付额:", v.referMoney, "grey"],
                 ["实付额:", v.realMoney, "grey"],
@@ -89,9 +100,19 @@ jQuery(function($) {
             ];
 
             $.each(propertyArr, function (index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                var $b = $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+
+                if (value[3]) {
+
+                    $b.click(function() {
+
+                        value[3]($b);
+                    });
+                }
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -119,10 +140,12 @@ jQuery(function($) {
 
         return {
             init : function(tableId,listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
             },
             drawLine : function(v) {
+
                 return creatLine(v);
             }
         };

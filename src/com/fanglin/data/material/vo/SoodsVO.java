@@ -10,6 +10,8 @@ public class SoodsVO implements Serializable {
 
 	private Long sid;
 
+	private String name;
+
 	private GoodsVO goods;
 
 	private Long qiid;
@@ -18,13 +20,17 @@ public class SoodsVO implements Serializable {
 
 	private Integer num;
 
+	private Integer selling;
+
+	private Integer cost;
+
+	private Integer balance;
+
 	private String path;
 
 	private Short status;
 
 	private Integer company;
-
-	private Integer selling;
 
 	public SoodsVO() {
 		super();
@@ -42,6 +48,14 @@ public class SoodsVO implements Serializable {
 
 	public void setSid(Long sid) {
 		this.sid = sid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public GoodsVO getGoods() {
@@ -106,6 +120,22 @@ public class SoodsVO implements Serializable {
 
 	public void setSelling(Integer selling) {
 		this.selling = selling;
+	}
+
+	public Integer getCost() {
+		return cost;
+	}
+
+	public void setCost(Integer cost) {
+		this.cost = cost;
+	}
+
+	public Integer getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Integer balance) {
+		this.balance = balance;
 	}
 
 }

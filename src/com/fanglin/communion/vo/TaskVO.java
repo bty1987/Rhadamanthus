@@ -34,6 +34,8 @@ public class TaskVO implements Serializable {
 
 	private Short isShow;
 
+	private String comment;
+
 	public TaskVO() {
 		super();
 	}
@@ -132,6 +134,14 @@ public class TaskVO implements Serializable {
 
 	public void setIsShow(Short isShow) {
 		this.isShow = isShow;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public String getKeyWord() {

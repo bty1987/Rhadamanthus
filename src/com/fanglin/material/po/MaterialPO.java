@@ -3,6 +3,7 @@ package com.fanglin.material.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,9 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.material.vo.MaterialVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "material", catalog = "material")
@@ -195,7 +198,7 @@ public class MaterialPO implements java.io.Serializable {
 	private int company;
 
 	private long activityId;
-	
+
 	private String grade;
 
 	public MaterialPO() {
@@ -457,7 +460,6 @@ public class MaterialPO implements java.io.Serializable {
 	public void setFullPayment(long fullPayment) {
 		this.fullPayment = fullPayment;
 	}
-	
 
 	@Column(name = "fullStatus")
 	public short getFullStatus() {
@@ -557,5 +559,25 @@ public class MaterialPO implements java.io.Serializable {
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
-	
+
+	public MaterialVO ptv(MaterialVO materialVO) {
+
+		BeanUtil.copyProperties(this, materialVO, Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
+
+		if (materialVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), materialVO.getHouse(), Arrays.asList("village"));
+		if (materialVO.getHouse() != null) BeanUtil.copyProperties(getHouse().getVillage(), materialVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+
+		if (materialVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), materialVO.getCustomer());
+
+		if (materialVO.getSalesman() != null) BeanUtil.copyProperties(getSalesman(), materialVO.getSalesman(), Arrays.asList("dept", "duty"));
+		if (materialVO.getMaterialer() != null) BeanUtil.copyProperties(getMaterialer(), materialVO.getMaterialer(), Arrays.asList("dept", "duty"));
+		if (materialVO.getInstorer() != null) BeanUtil.copyProperties(getInstorer(), materialVO.getInstorer(), Arrays.asList("dept", "duty"));
+
+		if (materialVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), materialVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+		if (materialVO.getDepartment() != null) BeanUtil.copyProperties(getDepartment(), materialVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		if (materialVO.getMaterialDepartment() != null) BeanUtil.copyProperties(getMaterialDepartment(), materialVO.getMaterialDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+
+		return materialVO;
+	}
+
 }

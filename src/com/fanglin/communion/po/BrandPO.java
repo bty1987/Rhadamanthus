@@ -29,6 +29,8 @@ public class BrandPO implements java.io.Serializable {
 
 	public static final String COLUMN_CATEGORYNO_STR = "no";
 
+	public static final String COLUMN_STATUS_ATTTYPE = "atttype";
+
 	private long bid;
 
 	private String no;
@@ -39,6 +41,10 @@ public class BrandPO implements java.io.Serializable {
 
 	private CategoryPO category;
 
+	private UserPO supplier;
+
+	private short atttype;
+
 	private String comment;
 
 	private int company;
@@ -46,8 +52,6 @@ public class BrandPO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
-
-	private UserPO supplier;
 
 	public BrandPO() {
 		super();
@@ -106,6 +110,25 @@ public class BrandPO implements java.io.Serializable {
 		this.category = category;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ocuid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -140,16 +163,6 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ocuid", referencedColumnName = "uid")
-	public UserPO getSupplier() {
-		return supplier;
-	}
-
-	public void setSupplier(UserPO supplier) {
-		this.supplier = supplier;
 	}
 
 }

@@ -17,17 +17,17 @@ import com.fanglin.data.quotation.vo.NormpackItemVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class NormpackItemAction extends BaseListAction{
+public class NormpackItemAction extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7609393823523123034L;
 
 	@Autowired
-	private NormpackItemService normpackItemService; 
-	
+	private NormpackItemService normpackItemService;
+
 	private List<NormpackItemVO> normpackItems;
-	
-	private NormpackItemVO normpackItem;	
-	
+
+	private NormpackItemVO normpackItem;
+
 	@Action(value = "queryNormpackItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormpackItem() throws FLException {
 
@@ -35,15 +35,15 @@ public class NormpackItemAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addNormpackItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNormpackItem() throws FLException {
 
 		normpackItemService.addNormpackItem(normpackItem);
 
 		return SUCCESS;
-	}	
-	
+	}
+
 	@Action(value = "deleteNormpackItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormpackItem() throws FLException {
 

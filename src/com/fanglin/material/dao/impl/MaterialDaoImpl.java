@@ -11,11 +11,8 @@
 
 package com.fanglin.material.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +20,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.material.dao.MaterialDao;
 import com.fanglin.material.po.MaterialPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("materialDao")
@@ -48,6 +44,7 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 
 	@Override
 	public List<MaterialPO> pageMaterialByOrderId(Paging paging, List<Filter> filters, String orderId, String userId) {
+
 		PagingQuery<MaterialPO> query = pagingQuery(paging, MaterialPO.class);
 
 		query.alias("salesman", "salesman");
@@ -80,6 +77,7 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 	public List<MaterialPO> pageMaterialPreBalance(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<MaterialPO> query = pagingQuery(paging, MaterialPO.class);
+
 		query.add(query.getCriterion("company", company, "eq"));
 		query.add(query.getCriterion(MaterialPO.COLUMN_STATUS_STR, MaterialPO.STATUS_TYPE_INIT_INT, "eq"));
 		query.add(query.getCriterion(MaterialPO.COLUMN_FULLSTATUS_STR, MaterialPO.FINANCE_STATUS_TYPE_CONFIRM_INT, "eq"));
@@ -87,37 +85,6 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 		queryFilterExcute(query, filters);
 
 		return query.list();
-	}
-
-	@Override
-	public List<MaterialPO> pageMaterialPostBalance(Paging paging, List<Filter> filters, int company) {
-
-		PagingQuery<MaterialPO> query = pagingQuery(paging, MaterialPO.class);
-
-		query.add(query.getCriterion(MaterialPO.COLUMN_BALANCESTATUS_STR, MaterialPO.BALANCE_STATUS_TYPE_PRE_INT, "eq"));
-		query.add(query.getCriterion(MaterialPO.COLUMN_FULLSTATUS_STR, MaterialPO.FINANCE_STATUS_TYPE_CONFIRM_INT, "eq"));
-		query.add(query.getCriterion("company", company, "eq"));
-		queryFilterExcute(query, filters);
-
-		return query.list();
-	}
-
-	@Override
-	public List<MaterialPO> queryMaterial(List<Filter> filters) {
-
-		PagingQuery<MaterialPO> query = pagingQuery(new Paging(), MaterialPO.class);
-
-		query.notPaging();
-
-		queryFilterExcute(query, filters);
-
-		return query.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialPO> queryMaterialByMid(List<Long> mids) {
-		return session().createCriteria(MaterialPO.class).add(Restrictions.in(MaterialPO.COLUMN_MID_STR, mids)).list();
 	}
 
 	@Override
@@ -131,7 +98,21 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 		return (MaterialPO) session().createCriteria(MaterialPO.class).add(Restrictions.eq(MaterialPO.COLUMN_NO_STR, msoNo)).add(Restrictions.ne(MaterialPO.COLUMN_STATUS_STR, MaterialPO.STATUS_TYPE_DELETE_INT)).uniqueResult();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object> queryMaterialActivityByTotal(String orderId) {
+
+		String sql = "select ac.`name`,sum(pm.refermoney) from information.activity ac,material.material mm,payment.materialpayment pm where mm.orderId = :orderId and mm.mid=pm.mid and pm.paymentstatus in (1,2) and ac.aId=mm.activityId group by mm.activityId";
+
+		List<Object> uniqueResult = session().createSQLQuery(sql).setString("orderId", orderId).list();
+
+		return uniqueResult;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
 		for (Filter filter : filters) {
 
 			String field = filter.getField();
@@ -160,43 +141,10 @@ public class MaterialDaoImpl extends DaoImpl<MaterialPO> implements MaterialDao 
 				query.add(query.getCriterion(field, data, op));
 			} else if (MaterialPO.COLUMN_SALESMAN_STR.equals(field)) {
 				query.add(query.getCriterion("salesman.userId", data, op));
-			} else if ("fullStatusRange".equals(field)) {
-				String[] status = data.split(",");
-
-				if (status.length > 0) {
-					Criterion criterion = Restrictions.eq(MaterialPO.COLUMN_FULLSTATUS_STR, Short.valueOf(status[0]));
-					for (int i = 1; i < status.length; i++) {
-						criterion = Restrictions.or(Restrictions.eq(MaterialPO.COLUMN_FULLSTATUS_STR, Short.valueOf(status[i])), criterion);
-					}
-
-					query.add(criterion);
-				}
 			} else if (MaterialPO.COLUMN_FULLCOLLECTTIME_RANGE_STR.equals(field)) {
-
-				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-				query.add(query.getCriterion(MaterialPO.COLUMN_FULLPAYTIME_STR, eTimestamp, "le"));
-				query.add(query.getCriterion(MaterialPO.COLUMN_FULLPAYTIME_STR, sTimestamp, "ge"));
+				query.timeranges(MaterialPO.COLUMN_FULLPAYTIME_STR, data);
 			}
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Object> queryMaterialActivityByTotal(String orderId) {
-
-		String sql = "select ac.`name`,sum(pm.refermoney) from information.activity ac,material.material mm,payment.materialpayment pm where mm.orderId = :orderId and mm.mid=pm.mid and pm.paymentstatus in (1,2) and ac.aId=mm.activityId group by mm.activityId";
-
-		List<Object> uniqueResult = session().createSQLQuery(sql).setString("orderId", orderId).list();
-
-		return uniqueResult;
 	}
 
 }

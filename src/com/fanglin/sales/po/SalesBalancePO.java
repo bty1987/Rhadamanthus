@@ -23,31 +23,21 @@ public class SalesBalancePO implements Serializable {
 
 	private static final long serialVersionUID = -334568283189550919L;
 
-	public static final String COLUMN_ORDERID_STR = "sales.orderId";
-
-	public static final String COLUMN_SALESNO_STR = "sales.no";
-
-	public static final String COLUMN_SALESBRAND_STR = "sales.brand";
-
-	public static final String COLUMN_SALESVILLAGE_STR = "village.no";
-
-	public static final String COLUMN_SALESREGION_STR = "region.name";
-
-	public static final String COLUMN_SALESDEPT_STR = "dept.name";
-
 	public static final String COLUMN_STATUS_STR = "status";
 
-	public static final String COLUMN_TYPE_STR = "type";
+	public static final String COLUMN_DELIVERSTATUS_STR = "deliverStatus";
 
-	public static final String COLUMN_SALESFULLPAYTIME_STR = "sales.fullpayTime";
+	public static final String COLUMN_VERIFYSTATUS_STR = "verifyStatus";
+
+	public static final String COLUMN_CONFIRMSTATUS_STR = "confirmStatus";
+
+	public static final String COLUMN_TYPE_STR = "type";
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	public static final String COLUMN_VENDERTIME_STR = "venderTime";
 
 	public static final String COLUMN_POSTTIME_STR = "postTime";
-	
-	public static final String COLUMN_GRADE_STR = "sales.grade";
 
 	public static final String COLUMN_SALESCOMPANY_STR = "sales.company";
 
@@ -81,11 +71,15 @@ public class SalesBalancePO implements Serializable {
 
 	public static final short CHECKSTATUS_CHECK_INT = 1;
 
+	public static final short DELIVERSTATUS_PART_INT = 1;
+
+	public static final short DELIVERSTATUS_ALL_INT = 2;
+
 	private long sbid;
 
 	private SalesPO sales;
 
-	private RefundsPO refunds;
+	private SalesRefundsPO refunds;
 
 	private UserPO creater;
 
@@ -100,8 +94,8 @@ public class SalesBalancePO implements Serializable {
 	private DepartmentPO region;
 
 	private Timestamp postTime;
-	
-	private UserPO voster;//厂商结算人
+
+	private UserPO voster;// 厂商结算人
 
 	private Timestamp venderTime;
 
@@ -110,6 +104,8 @@ public class SalesBalancePO implements Serializable {
 	private Timestamp checkTime;
 
 	private long allowance;
+
+	private long coupon;
 
 	private long total;
 
@@ -127,8 +123,14 @@ public class SalesBalancePO implements Serializable {
 
 	private short status;
 
+	private short deliverStatus;
+
+	private short confirmStatus;
+
+	private short verifyStatus;
+
 	private short checkStatus;
-	
+
 	private String comment;
 
 	public SalesBalancePO() {
@@ -145,7 +147,7 @@ public class SalesBalancePO implements Serializable {
 		this.region = region;
 	}
 
-	public SalesBalancePO(SalesPO sales, RefundsPO refunds, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region) {
+	public SalesBalancePO(SalesPO sales, SalesRefundsPO refunds, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
@@ -155,8 +157,8 @@ public class SalesBalancePO implements Serializable {
 		this.dept = dept;
 		this.region = region;
 	}
-	
-	public SalesBalancePO(SalesPO sales, RefundsPO refunds, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO voster) {
+
+	public SalesBalancePO(SalesPO sales, SalesRefundsPO refunds, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO voster) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
@@ -191,11 +193,11 @@ public class SalesBalancePO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rid", referencedColumnName = "rid")
-	public RefundsPO getRefunds() {
+	public SalesRefundsPO getRefunds() {
 		return refunds;
 	}
 
-	public void setRefunds(RefundsPO refunds) {
+	public void setRefunds(SalesRefundsPO refunds) {
 		this.refunds = refunds;
 	}
 
@@ -266,7 +268,7 @@ public class SalesBalancePO implements Serializable {
 	public void setPostTime(Timestamp postTime) {
 		this.postTime = postTime;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "vuid", referencedColumnName = "uid")
 	public UserPO getVoster() {
@@ -312,6 +314,15 @@ public class SalesBalancePO implements Serializable {
 
 	public void setAllowance(long allowance) {
 		this.allowance = allowance;
+	}
+
+	@Column(name = "coupon")
+	public long getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(long coupon) {
+		this.coupon = coupon;
 	}
 
 	@Column(name = "total")
@@ -386,6 +397,33 @@ public class SalesBalancePO implements Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "deliverStatus")
+	public short getDeliverStatus() {
+		return deliverStatus;
+	}
+
+	public void setDeliverStatus(short deliverStatus) {
+		this.deliverStatus = deliverStatus;
+	}
+
+	@Column(name = "confirmStatus")
+	public short getConfirmStatus() {
+		return confirmStatus;
+	}
+
+	public void setConfirmStatus(short confirmStatus) {
+		this.confirmStatus = confirmStatus;
+	}
+
+	@Column(name = "verifyStatus")
+	public short getVerifyStatus() {
+		return verifyStatus;
+	}
+
+	public void setVerifyStatus(short verifyStatus) {
+		this.verifyStatus = verifyStatus;
+	}
+
 	@Column(name = "checkStatus")
 	public short getCheckStatus() {
 		return checkStatus;
@@ -403,4 +441,5 @@ public class SalesBalancePO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
 }

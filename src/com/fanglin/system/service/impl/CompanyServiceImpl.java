@@ -95,6 +95,24 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
+	public CompanyVO validateCompany(CompanyVO companyVO) throws FLException {
+
+		CompanyPO companyPO = companyDao.get(decode(companyVO.getCid()));
+
+		if (companyPO == null) {
+			throw new FLException(110020, "系统正在维护");
+		}
+
+		if (companyPO.getStatus() != CompanyPO.STATUS_ENABLE_INT) {
+			throw new FLException(110020, "系统正在维护");
+		}
+
+		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid", "drganization", "srganization"));
+
+		return companyVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int createCompany(CompanyVO companyVO, String securityCode, String verifyCode) throws FLException {
 

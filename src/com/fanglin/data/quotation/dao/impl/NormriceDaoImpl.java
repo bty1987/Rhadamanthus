@@ -36,8 +36,10 @@ public class NormriceDaoImpl extends DaoImpl<NormricePO> implements NormriceDao{
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
+
+		query.alias("quotationItem", "quotationItem");
+		query.alias("constructionNode", "constructionNode");
 
 		for (Filter filter : filters) {
 
@@ -45,14 +47,17 @@ public class NormriceDaoImpl extends DaoImpl<NormricePO> implements NormriceDao{
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("qiid".equals(field)) {
-				query.add(query.getCriterion("qiid", data, op));
-			}
-			
-			if ("versionId".equals(field)) {
-				query.alias("quotationItem","quotationItem");
-				query.alias("quotationItem.quotationVersion","quotationVersion");
-				query.add(query.getCriterion("quotationVersion.no", data, op));
+			if (NormricePO.COLUMN_QIID_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (NormricePO.COLUMN_QUOTATIONITEMNAME_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (NormricePO.COLUMN_QUOTATIONVERSION_STR.equals(field)) {
+				query.alias("quotationItem.quotationVersion", "quotationVersion");
+				query.add(query.getCriterion(field, data, op));
+			} else if (NormricePO.COLUMN_CONSTRUCTIONNODENAME_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			}
 		}
 	}

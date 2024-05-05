@@ -4,16 +4,21 @@ $(function() {
 
         saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
+        updateBtn: com.focusPage("#btnUpdate"),
+        updateCostBtn: com.focusPage("#updateCostBtn"),
 
         modals: {
             quotationItemModal: com.focusPage("#quotationItemModal"),
             selectItemModal: com.focusPage("#selectItemModal"),
+            updateModal: com.focusPage("#updateModal"),
+            updateCostModal: com.focusPage("#updateCostModal"),
         },
 
         items: {
             qiid: com.focusPage("#qiid"),
             no: com.focusPage("#no").prop("placeholder", "格式: (QI_00001)"),
             name: com.focusPage("#name"),
+            alias: com.focusPage("#alias"),
             version: com.focusPage("#version"),
             type: com.focusPage("#type", "#quotationItemModal"),
             quotationType: com.focusPage("#quotationType"),
@@ -26,6 +31,10 @@ $(function() {
             unitPrice: com.focusPage("#unitPrice"),
             addPrice: com.focusPage("#addPrice"),
             subPrice: com.focusPage("#subPrice"),
+            cost: com.focusPage("#cost"),
+            achePrice: com.focusPage("#achePrice"),
+            achePrices: com.focusPage("#achePrices"),
+            formula: com.focusPage("#formula"),
         },
 
         editFlag: false,
@@ -34,6 +43,8 @@ $(function() {
         args: {
             qiid: null,
         },
+
+        qcid: null,
 
         types: [],
 
@@ -50,13 +61,13 @@ $(function() {
         pageType: params.urlLoadParams.type
     };
 
+    quotationItem.updateBtn.on("click", update);
+
     $.extend(com.validator, quotationItem.validator);
 
-    com.post(api.ds.quotation, {}, function(a) {
+    quotationItem.types = constant.data().quotationItem.type.keys;
 
-        quotationItem.items.type.bindData(a.quotationItemType.slice(0, 4), "key", "value");
-        quotationItem.types = a.quotationItemType.split("key", "value");
-    }, null, false);
+    quotationItem.items.type.bindData(constant.data().quotationItem.type.datas.slice(0, 4), "key", "value");
 
     com.post(api.quotation.queryQuotationType, {}, function(a) {
 
@@ -83,6 +94,13 @@ $(function() {
 
         quotationItem.items.version.bindData(a.quotationVersions, "no", "name");
     });
+
+    com.initTypeahead('name', api.quotation.queryQuotationFormat, "quotationFormat.pinyin", {}, "quotationFormats", "qcid", "name", function(i, key, value) {
+
+        quotationItem.qcid = key;
+
+        return value;
+    }, null, false);
 
     quotationItem.items.no.on("blur", function() {
 
@@ -117,6 +135,7 @@ $(function() {
         com.clearValidator();
         com.clearValidator("no", true);
         com.cleanItems(quotationItem.items);
+        quotationItem.qcid = null;
     });
 
     quotationItem.saveBtn.bindClick(saveData);
@@ -148,6 +167,7 @@ $(function() {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $ulAccess = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
@@ -155,6 +175,9 @@ $(function() {
             var $btnSelection = $('<a></a>').addClass('btn btn-minier btn-success').html('选材');
             var $btnNormood = $('<a></a>').addClass('btn btn-minier btn-warning').html('定额材料');
             var $btnNormrice = $('<a></a>').addClass('btn btn-minier btn-inverse').html('定额工费');
+            var $btnPrice = $('<a></a>').addClass('btn btn-minier btn-purple').html('价格');
+            var $btnFormula = $('<a></a>').addClass('btn btn-minier btn-pink').html('公式');
+            var $btnCost = $('<a></a>').addClass('btn btn-minier btn-purple').html('成本');
 
             // 启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
@@ -172,7 +195,35 @@ $(function() {
 
             var no = v.version.offset == 0 ? "-" : "QI_" + (Array(5).join('0') + (v.qiid - v.version.offset)).slice(-5);
 
-            var propertyArr = [["编号: ", no, "grey"], ["业务: ", quotationItem.types[v.type], "red"], ["类型: ", v.category.name, "red"], ["分类: ", v.classification.name, "red"], ["大类: ", v.bigCategory.name, "red"], ["小类: ", v.smallCategory.name, "red"], ["单位: ", v.unit.name, "red"], ["工种: ", v.workType.name, "red"], ["增补价 :", v.addPrice, "blue"], ["单价: ", v.unitPrice, "blue"], ["退减价: ", v.subPrice, "blue"], ["版本: ", v.version.name, "grey"], ["说明: ", v.comment, "grey"], ];
+            var $text = $('<text>' + v.version.name + '</text>').click(function() {
+
+                tools.quotation.version($(this), v.version.no);
+            });
+
+            v.formula = v.formula != null ? v.formula : "";
+
+            var propertyArr = [["编号: ", no, "grey"], ["别名: ", v.alias, "grey"], ["版本: ", $text, "grey"], ["业务: ", quotationItem.types[v.type], "red"], ["类型: ", v.category.name, "red"], ["分类: ", v.classification.name, "red"], ["大类: ", v.bigCategory.name, "red"], ["小类: ", v.smallCategory.name, "red"], ["单位: ", v.unit.name, "red"], ["工种: ", v.workType.name, "red"], ["说明: ", v.comment, "grey"], ];
+            var accessArr = [];
+
+            switch (quotation.pageType) {
+                case "selection":
+
+                    $divBtnWrap.append($btnSelection).append($btnCopySoods).appendTo($h3);
+                    break;
+                case "norm":
+
+                    $divBtnWrap.append($btnNormrice).append($btnNormood).appendTo($h3);
+                    break;
+                case "finance":
+
+                    accessArr = [["增补价 :", v.addPrice, "blue"], ["单价: ", v.unitPrice, "blue"], ["退减价: ", v.subPrice, "blue"], ["成本:", v.cost, "blue"], ["业绩额:", v.achePrice, "blue"]];
+                    $divBtnWrap.append($btnCost).appendTo($h3);
+                    break;
+                default:
+
+                    accessArr = [["增补价 :", v.addPrice, "blue"], ["单价: ", v.unitPrice, "blue"], ["退减价: ", v.subPrice, "blue"], ["业绩额:", v.achePrice, "blue"], ["公式:", paramToFormula(v.formula), "grey"]];
+                    $divBtnWrap.append($btnPrice).append($btnFormula).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+            }
 
             $.each(propertyArr, function(index, value) {
 
@@ -182,21 +233,18 @@ $(function() {
                 $liProperty.appendTo($ulProperty);
             });
 
+            $.each(accessArr, function(index, value) {
+
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulAccess);
+            });
+
             $btnStatus.append($statusSwitch).append($span);
             $btnDiscount.append($discountSwitch).append($dspan);
 
-            switch (quotation.pageType) {
-                case "selection":
-                    $divBtnWrap.append($btnSelection).append($btnCopySoods).appendTo($h3);
-                    break;
-                case "norm":
-                    $divBtnWrap.append($btnNormrice).append($btnNormood).appendTo($h3);
-                    break;
-                default:
-                    $divBtnWrap.append($btnNormrice).append($btnNormood).append($btnSelection).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
-            }
-
-            $liLine.append($h3).append($ulProperty);
+            $liLine.append($h3).append($ulProperty).append($ulAccess);
 
             $btnEdit.click(function() {
 
@@ -224,6 +272,8 @@ $(function() {
 
                 params.data.quotationItem = v;
 
+                params.urlLoadParams.pageType = "query";
+
                 com.popup4page("#normoodPopUp", "/views/data/normood.html", "定额材料");
             });
 
@@ -231,7 +281,34 @@ $(function() {
 
                 params.data.quotationItem = v;
 
+                params.urlLoadParams.pageType = "query";
+
                 com.popup4page("#normricePopUp", "/views/data/normrice.html", "定额工费");
+            });
+
+            $btnPrice.click(function() {
+
+                params.data.quotationItem = v;
+
+                params.urlLoadParams.pageType = "query";
+
+                com.popup4page("#quotationPricePopUp", "/views/quotation/quotationPrice.html", "价格");
+            });
+
+            $btnFormula.click(function() {
+
+                quotationItem.args.qiid = v.qiid;
+
+                quotationItem.items.formula.val(paramToFormula(v.formula));
+
+                quotationItem.modals.updateModal.modal("show");
+            });
+
+            $btnCost.click(function() {
+
+                quotationItem.args.qiid = v.qiid;
+
+                updateCost(v);
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -359,6 +436,7 @@ $(function() {
         quotationItem.items.qiid.val(b.qiid);
         quotationItem.items.no.val(b.no);
         quotationItem.items.name.val(b.name);
+        quotationItem.items.alias.val(b.alias);
 
         quotationItem.items.version.val(b.version.no);
         quotationItem.items.type.val(b.type);
@@ -372,6 +450,7 @@ $(function() {
         quotationItem.items.unitPrice.val(b.unitPrice);
         quotationItem.items.addPrice.val(b.addPrice);
         quotationItem.items.subPrice.val(b.subPrice);
+        quotationItem.items.achePrices.val(b.achePrice);
         quotationItem.items.no.prop("disabled", true);
         quotationItem.items.version.prop("disabled", true);
         quotationItem.items.comment.val(b.comment);
@@ -385,6 +464,12 @@ $(function() {
         var _quotationType = quotationItem.items.quotationType.val() == false;
         var _quotationBigCategory = quotationItem.items.quotationBigCategory.val() == false;
         var _quotationSmallCategory = quotationItem.items.quotationSmallCategory.val() == false;
+
+        if (quotationItem.qcid == null) {
+            com.showAlert(com.warning, "输入名称不匹配");
+            return;
+        }
+
         if (_quotationType || _quotationBigCategory || _quotationSmallCategory) {
             com.showAlert(com.warning, "请选择类型以及大类小类");
             return;
@@ -408,6 +493,7 @@ $(function() {
 
             var url, option = {
                 "quotationItem.name": quotationItem.items.name.val(),
+                "quotationItem.alias": quotationItem.items.alias.val(),
 
                 "quotationItem.version.no": quotationItem.items.version.val(),
 
@@ -419,10 +505,12 @@ $(function() {
                 "quotationItem.smallCategory.id": quotationItem.items.quotationSmallCategory.val(),
                 "quotationItem.unit.id": quotationItem.items.measurementUnit.val(),
                 "quotationItem.workType.id": quotationItem.items.workType.val(),
+                "quotationItem.quotationCtem.qcid": quotationItem.qcid,
 
                 "quotationItem.unitPrice": quotationItem.items.unitPrice.val(),
                 "quotationItem.addPrice": quotationItem.items.addPrice.val(),
                 "quotationItem.subPrice": quotationItem.items.subPrice.val(),
+                "quotationItem.achePrice": quotationItem.items.achePrices.val(),
 
                 "quotationItem.comment": quotationItem.items.comment.val(),
 
@@ -444,7 +532,6 @@ $(function() {
         }
     }
     ;
-
     // 启用禁用功能
     function updateStatus(id, status, failcallBack) {
 
@@ -616,4 +703,99 @@ $(function() {
 
         quotationSeacher.base("quoCondList", "quoPagenation", "quoResultList", api.quotation.pageQuotationItemByVersionId)
     }
+
+    function update() {
+
+        if (com.validate("updateModal"))
+            return false;
+
+        var formula = quotationItem.items.formula.val();
+
+        if (formula.replace(/(\u5468\u957f|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u9762|\u53c2\u6570|\u7a97\u9762|\u53d8\u91cf|\u6881\u957f|\u6881\u9ad8)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+
+            com.showAlert(com.warning, "公式存在无效参数");
+
+            return false;
+        }
+
+        if (evals(formulaToParam(formula))) {
+
+            com.showAlert(com.warning, "公式运算结果失败");
+
+            return false;
+        }
+
+        var options = {
+            "quotationItem.qiid": quotationItem.args.qiid,
+            "quotationItem.formula": formulaToParam(formula)
+        };
+
+        com.post(api.quotation.updateQuotationItemForFormula, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            quotationItemSeacher.doSearch();
+
+            quotationItem.modals.updateModal.modal("hide");
+        });
+
+    }
+
+    function formulaToParam(formula) {
+
+        return formula.replace(/\u5468\u957f/g, "{a}").replace(/\u9762\u79ef/g, "{b}").replace(/\u4e3e\u67b6/g, "{c}").replace(/\u6d1e\u9762/g, "{d}").replace(/\u7a97\u9762/g, "{f}").replace(/\u6881\u957f/g, "{h}").replace(/\u6881\u9ad8/g, "{i}").replace(/\u53c2\u6570/g, "{e}").replace(/\u53d8\u91cf/g, "{g}");
+    }
+
+    function paramToFormula(param) {
+
+        return param.replace(/\{a\}/g, "\u5468\u957f").replace(/\{b\}/g, "\u9762\u79ef").replace(/\{c\}/g, "\u4e3e\u67b6").replace(/\{d\}/g, "\u6d1e\u9762").replace(/\{f\}/g, "\u7a97\u9762").replace(/\{h\}/g, "\u6881\u957f").replace(/\{i\}/g, "\u6881\u9ad8").replace(/\{e\}/g, "\u53c2\u6570").replace(/\{g\}/g, "\u53d8\u91cf");
+    }
+
+    function evals(formula) {
+
+        formula = com.format(formula, {
+            "a": 1,
+            "b": 1,
+            "c": 1,
+            "d": 1,
+            "e": 1,
+            "f": 1,
+            "g": 1,
+            "h": 1,
+            "i": 1,
+        });
+
+        var res = new Function("return function(){return " + formula + "}")()();
+
+        return isNaN(res) || !Number.isFinite(res);
+    }
+
+    function updateCost(c) {
+
+        quotationItem.items.cost.val(c.cost);
+
+        quotationItem.items.achePrice.val(c.achePrice);
+
+        quotationItem.modals.updateCostModal.modal("show");
+
+    }
+
+    quotationItem.updateCostBtn.on("click", function() {
+
+        var option = {
+            "quotationItem.qiid": quotationItem.args.qiid,
+            "quotationItem.cost": quotationItem.items.cost.val(),
+            "quotationItem.achePrice": quotationItem.items.achePrice.val()
+        };
+
+        com.post(api.quotation.updateQuotationItemForCost, option, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            quotationItemSeacher.doSearch();
+
+            quotationItem.modals.updateCostModal.modal("hide");
+        });
+
+    });
 });

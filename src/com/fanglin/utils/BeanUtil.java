@@ -48,17 +48,17 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 
 		if (source == null && target == null) {
 			// System.out.println("target object and source object are null");
-			return null;
+			return target;
 		}
 
 		if (source == null && target != null) {
 			// System.out.println(String.format("source object is null, class of target is %s", target.getClass()));
-			return null;
+			return target;
 		}
 
 		if (source != null && target == null) {
 			// System.out.println(String.format("target object is null, class of source is %s", source.getClass()));
-			return null;
+			return target;
 		}
 
 		if (ignores == null) {

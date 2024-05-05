@@ -74,7 +74,7 @@ public class OperationServiceImpl implements OperationService {
 			OperationVO operationVO = new OperationVO(new ModuleVO());
 
 			BeanUtil.copyProperties(operationPO, operationVO, Arrays.asList("module"));
-			BeanUtil.copyProperties(operationPO.getModule(), operationVO.getModule());
+			BeanUtil.copyProperties(operationPO.getModule(), operationVO.getModule(), Arrays.asList("fatherModule", "operations"));
 
 			operationVOs.add(operationVO);
 		}
@@ -205,9 +205,7 @@ public class OperationServiceImpl implements OperationService {
 
 			List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
-			if (userRolePOs == null || userRolePOs.size() == 0) return operationVOs;
-
-			List<Integer> rids = new ArrayList<Integer>();
+			List<Integer> rids = new ArrayList<Integer>(Arrays.asList(userPO.getRole().getRid()));
 
 			for (UserRolePO userRolePO : userRolePOs) {
 				rids.add(userRolePO.getRole().getRid());
@@ -260,9 +258,7 @@ public class OperationServiceImpl implements OperationService {
 
 		List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 
-		if (userRolePOs == null || userRolePOs.size() == 0) return false;
-
-		List<Integer> rids = new ArrayList<Integer>(userRolePOs.size());
+		List<Integer> rids = new ArrayList<Integer>(Arrays.asList(userPO.getRole().getRid()));
 
 		for (UserRolePO userRolePO : userRolePOs) {
 			rids.add(userRolePO.getRole().getRid());

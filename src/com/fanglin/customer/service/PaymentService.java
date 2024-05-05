@@ -12,6 +12,6 @@ public interface PaymentService {
 
 	public Integer queryCusPaymentConfig(String orderId);
 
-	public String queryCusPaymentPlatform(String orderId);
+	public String queryCusPaymentPlatform(String orderId, Integer atttype);
 
 }

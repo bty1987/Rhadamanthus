@@ -227,6 +227,7 @@ $.extend(api, {
         cancelSalary: {
             url: "cancelSalary.do"
         },
+
         pageWithhold: {
             url: "pageWithhold.do",
             type: "query",
@@ -267,6 +268,33 @@ $.extend(api, {
         deleteSalaryDrawing: {
             url: "deleteSalaryDrawing.do",
             server: "salary"
+        },
+
+        pageDecorationSalary: {
+            url: "pageDecorationSalary.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["money", "rate"]
+            }, {
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, ]
+        },
+
+        pageMaterialSalary: {
+            url: "pageMaterialSalary.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["money", "rate"]
+            }, {
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
         },
     }
 });

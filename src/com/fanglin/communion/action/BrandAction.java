@@ -1,6 +1,5 @@
 package com.fanglin.communion.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -10,7 +9,6 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.common.vo.KeyValueVO;
 import com.fanglin.communion.service.BrandService;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.core.action.BaseListAction;
@@ -30,14 +28,6 @@ public class BrandAction extends BaseListAction {
 	private BrandVO brand;
 
 	private List<BrandVO> brands;
-
-	private List<Long> bIds;
-
-	private String pinyinName;
-
-	private List<KeyValueVO> autoFillKeyValue;
-
-	private List<String> autoFillList;
 
 	@Action(value = "pageBrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBrand() throws FLException {
@@ -82,33 +72,7 @@ public class BrandAction extends BaseListAction {
 	@Action(value = "queryBrandByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBrandByPinyin() throws FLException {
 
-		brands = brandService.queryBrandForPinYinName(pinyinName, queryCompany());
-
-		for (BrandVO brandVO : brands) {
-			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getNo());
-			keyValueVO.setValue(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
-			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(brandVO.getCategoryName());
-			brandVO.setAlias(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
-		}
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryBrandByPinYin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBrandByPinYin() throws FLException {
-
-		brands = brandService.queryBrandForPinYinName(pinyinName, queryCompany());
-
-		for (BrandVO brandVO : brands) {
-			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getNo());
-			keyValueVO.setValue(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
-			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(brandVO.getCategoryName());
-			brandVO.setAlias(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
-		}
+		brands = brandService.queryBrand(brand, queryCompany());
 
 		return SUCCESS;
 	}
@@ -116,16 +80,7 @@ public class BrandAction extends BaseListAction {
 	@Action(value = "queryBrandByPinyinForAll", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBrandByPinyinForAll() throws FLException {
 
-		brands = brandService.queryBrandForPinYinName(pinyinName, null);
-
-		for (BrandVO brandVO : brands) {
-			KeyValueVO keyValueVO = new KeyValueVO();
-			keyValueVO.setKey(brandVO.getNo());
-			keyValueVO.setValue(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
-			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(brandVO.getCategoryName());
-			brandVO.setAlias(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
-		}
+		brands = brandService.queryBrand(brand, null);
 
 		return SUCCESS;
 	}
@@ -161,7 +116,7 @@ public class BrandAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		brandService.deleteBrandByBIds(bIds);
+		brandService.deleteBrand(brands);
 
 		return SUCCESS;
 	}
@@ -180,44 +135,6 @@ public class BrandAction extends BaseListAction {
 
 	public void setBrands(List<BrandVO> brands) {
 		this.brands = brands;
-	}
-
-	public List<Long> getbIds() {
-		return bIds;
-	}
-
-	public void setbIds(List<Long> bIds) {
-		this.bIds = bIds;
-	}
-
-	public List<KeyValueVO> getAutoFillKeyValue() {
-		if (autoFillKeyValue == null) {
-			autoFillKeyValue = new ArrayList<KeyValueVO>();
-		}
-		return autoFillKeyValue;
-	}
-
-	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
-		this.autoFillKeyValue = autoFillKeyValue;
-	}
-
-	public List<String> getAutoFillList() {
-		if (autoFillList == null) {
-			autoFillList = new ArrayList<String>();
-		}
-		return autoFillList;
-	}
-
-	public void setAutoFillList(List<String> autoFillList) {
-		this.autoFillList = autoFillList;
-	}
-
-	public String getPinyinName() {
-		return pinyinName;
-	}
-
-	public void setPinyinName(String pinyinName) {
-		this.pinyinName = pinyinName;
 	}
 
 }

@@ -78,32 +78,32 @@ jQuery(function($) {
 
                 $label.append($input).append($span).appendTo($div);
 
-                if(v.type == constant.payment.paymentFunction.TYPE_API_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_API_INT){
                     $input.attr("type", "radio");
                     $div.appendTo(paymentFunction.items.apiData);
                 }
 
-                if(v.type == constant.payment.paymentFunction.TYPE_CONDITION_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_CONDITION_INT){
                     $div.appendTo(paymentFunction.items.condArrData);
                 }
 
-                if(v.type == constant.payment.paymentFunction.TYPE_FIELD_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_FIELD_INT){
                     $div.appendTo(paymentFunction.items.fieldData);
                 }
 
-                if(v.type == constant.payment.paymentFunction.TYPE_FUNCTION_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_FUNCTION_INT){
                     $div.appendTo(paymentFunction.items.functionData);
                 }
 
-                if(v.type == constant.payment.paymentFunction.TYPE_NODE_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_NODE_INT){
                     $div.appendTo(paymentFunction.items.typeData);
                 }
 
-                if(v.type == constant.payment.paymentFunction.TYPE_STATUS_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_STATUS_INT){
                     $div.appendTo(paymentFunction.items.statusData);
                 }
 
-                if(v.type == constant.payment.paymentFunction.TYPE_PAYTYPE_INT){
+                if(v.type == constant.payment().paymentFunction.TYPE_PAYTYPE_INT){
                     $div.appendTo(paymentFunction.items.payData);
                 }
 

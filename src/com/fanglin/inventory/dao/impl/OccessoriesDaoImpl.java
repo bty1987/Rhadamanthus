@@ -50,6 +50,12 @@ public class OccessoriesDaoImpl extends DaoImpl<OccessoriesPO> implements Occess
 		return query.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<OccessoriesPO> queryOccessoriesByOrderId(String orderId) {
+		return session().createCriteria(OccessoriesPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<OccessoriesPO> query, List<Filter> filters) {
 
 		if (filters == null) return;

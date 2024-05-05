@@ -26,8 +26,7 @@ public class DroupDaoImpl extends DaoImpl<DroupPO> implements DroupDao {
 
 		queryFilterExecute(query, filters);
 
-		query.asc("isHandle");
-		query.asc("updateTime");
+		query.desc("updateTime");
 
 		return query.list();
 	}

@@ -11,6 +11,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationAccountService;
 import com.fanglin.decoration.vo.DecorationAccountVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -21,6 +22,8 @@ public class DecorationAccountAction extends BaseListAction {
 
 	@Autowired
 	private DecorationAccountService decorationAccountService;
+
+	private DecorationVO decoration;
 
 	private DecorationAccountVO decorationAccount;
 
@@ -53,6 +56,30 @@ public class DecorationAccountAction extends BaseListAction {
 		if ("agree".equals(approve)) decorationAccountService.makeDecorationAccount(decorationAccount, queryUserId());
 
 		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendAddReduce() throws FLException {
+
+		decorationAccountService.sendDecorationAccount(decorationAccount);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmAddReduce() throws FLException {
+
+		decorationAccountService.affirmDecorationAccount(decoration, decorationAccount);
+
+		return SUCCESS;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public DecorationAccountVO getDecorationAccount() {

@@ -5,16 +5,19 @@ $(function() {
         modals: {
             updateSelectionItemModal: com.focusPage('#updateSelectionItemModal'),
             refundSelectionItemModal: com.focusPage('#refundSelectionItemModal'),
+            balanceSelectionItemModal: com.focusPage('#balanceSelectionItemModal'),
         },
         btns: {
             updateBtn: com.focusPage('#updateBtn'),
             refundBtn: com.focusPage('#refundBtn'),
+            balanceSalesBtn: com.focusPage('#balanceSalesBtn'),
         },
         items: {
             num: com.focusPage("#num"),
             comment: com.focusPage('#comment'),
             refnum: com.focusPage('#refnum'),
-            utilitynum: com.focusPage('#utilitynum')
+            utilitynum: com.focusPage('#utilitynum'),
+            balanceSales: com.focusPage('#balanceSales')
         },
         title: com.focusPage("#myModalLabel"),
         dcomment: com.focusPage("#dcomment"),
@@ -51,7 +54,7 @@ $(function() {
         selectionItem.postData = "selectionItemForExpertPostData";
     } else if (selectionItem.pageType == "init") {
 
-        selectionItem.status["selectionItem.status"] = constant.quotation().selectionItem.STATUS_INIT_INT;
+        selectionItem.status["selectionItem.status"] = null;
         selectionItem.postData = "selectionItemForInitPostData";
     } else if (selectionItem.pageType == "tran") {
 
@@ -81,13 +84,16 @@ $(function() {
 
         selectionItem.status["selectionItem.status"] = null;
         selectionItem.postData = "selectionItemForMaterialPostData";
+    } else if (selectionItem.pageType == "account") {
+
+        selectionItem.status["selectionItem.status"] = null;
+        selectionItem.postData = "selectionItemForAccountPostData";
     }
 
-    com.post(api.ds.quotation, {}, function(res) {
+    selectionItem.statusList = constant.quotation().selectionItem.status.keys;
+    selectionItem.typeList = constant.quotation().selectionItem.type.keys;
 
-        selectionItem.statusList = res.selectionItemStatus.split("key", "value");
-        selectionItem.typeList = res.selectionItemType.split("key", "value");
-    }, null, false);
+    com.initTypeahead(selectionItem.items.balanceSales, api.balance.queryBalanceSelection, "balanceSelection.name", {}, "balanceSelections", "bsid", "name");
 
     selectionItem.modals.updateSelectionItemModal.on("hide.bs.modal", function() {
 
@@ -101,8 +107,15 @@ $(function() {
         com.cleanItems(selectionItem.items);
     });
 
+    selectionItem.modals.balanceSelectionItemModal.on("hide.bs.modal", function() {
+
+        com.clearValidator();
+        com.cleanItems(selectionItem.items);
+    });
+
     selectionItem.btns.updateBtn.bindClick(updateData);
     selectionItem.btns.refundBtn.bindClick(refundSelectionItem);
+    selectionItem.btns.balanceSalesBtn.bindClick(balanceSalesData);
 
     selectionItem.pageConfig = getConfig(params['urlLoadParams'].type, 8);
 
@@ -134,14 +147,15 @@ $(function() {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnRefnum = $('<a></a>').addClass('btn btn-minier btn-primary').html('退数量');
+            var $btnRefnum = $('<a></a>').addClass('btn btn-minier btn-primary').html('退货');
             var $btnRran = $('<a></a>').addClass('btn btn-minier btn-success').html('配送');
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
             var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
-            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-danger').html('完结');
+            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-primary').html('完结');
             var $btnReview = $('<a></a>').addClass('btn btn-minier btn-pink').html('核对');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-info').html('结算');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-pink').html('删除');
+            var $btnReject = $('<a></a>').addClass('btn btn-minier btn-danger').html('驳回');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
 
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.goods.name);
@@ -152,6 +166,8 @@ $(function() {
                 'type': 'checkbox',
                 'data-status': v.status,
                 'data-num': v.num,
+                'data-refnum': v.refnum,
+                'data-postprice': v.postprice,
                 'id': v.siid,
             }).val(v.siid);
 
@@ -221,6 +237,9 @@ $(function() {
             if (selectionItem.pageConfig.pageBtn.contains("balance"))
                 $divBtnWrap.append($btnBalance);
 
+            if (selectionItem.pageConfig.pageBtn.contains("reject"))
+                $divBtnWrap.append($btnReject);
+
             if (selectionItem.pageConfig.pageBtn.contains("delete"))
                 $divBtnWrap.append($btnDel);
 
@@ -228,13 +247,15 @@ $(function() {
                 $divBtnWrap.append($btnPrint);
 
             v.status == constant.quotation().selectionItem.STATUS_INIT_INT || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCompile.show() : $btnCompile.hide();
+            [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnRefnum.hide() : $btnRefnum.show();
             v.status == constant.quotation().selectionItem.STATUS_INIT_INT ? $btnRran.show() : $btnRran.hide();
             v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCheck.show() : $btnCheck.hide();
             v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? $btnConfirm.show() : $btnConfirm.hide();
             v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? $btnFinish.show() : $btnFinish.hide();
             v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? $btnReview.show() : $btnReview.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnBalance.show() : $btnBalance.hide();
-            v.status != constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnDel.show() : $btnDel.hide();
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnReject.show() : $btnReject.hide();
+            [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnDel.hide() : $btnDel.show();
 
             $divBtnWrap.appendTo($h3);
 
@@ -334,14 +355,37 @@ $(function() {
 
             $btnDel.click(function(e) {
 
-                com.post(api.quotation.cutoffSelectionItem, {
+                if ([constant.quotation().selectionItem.STATUS_INIT_INT, constant.quotation().selectionItem.STATUS_TRAN_INT].indexOf(v.status) != -1) {
+                    com.post(api.quotation.deleteSelectionItem, {
+                        "selection.sid": v.selection.sid,
+                        "selectionItem.siid": v.siid,
+                    }, function(e) {
+
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                } else {
+                    com.post(api.quotation.cutoffSelectionItem, {
+                        "selectionItem.siid": v.siid
+                    }, function(e) {
+
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+
+                }
+            });
+
+            $btnReject.click(function(e) {
+
+                com.post(api.quotation.rejectSelectionItem, {
                     "selectionItem.siid": v.siid
                 }, function(e) {
 
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
-                })
-            })
+                });
+            });
 
             $btnPrint.click(function(e) {
 
@@ -350,7 +394,7 @@ $(function() {
                 }, function(res) {
 
                     params.quotation.supplierPage = selectionItem.pageType == "supplier" ? true : false;
-                    params.quotation.orderId = res.selection.orderId;
+                    params.selection = res.selection;
 
                     com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
                 }, null, false);
@@ -432,6 +476,11 @@ $(function() {
             btns.push($a);
         }
 
+        if (selectionItem.pageConfig.pageBtn.contains("batchCrn")) {
+            var $a = createbtn("batchCrn", "对账", "btn-pink");
+            btns.push($a);
+        }
+
         function createbtn(id, text, color) {
 
             var $a = $('<a></a>').addClass('btn btn-minier pull-left ' + color).attr({
@@ -464,7 +513,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["名称", 'goods.name'], ["品牌", 'goods.brand'], ["品类", 'goods.category'], ["商品编号", 'goods.no'], ["功能区名称", 'areaName'], ["类型", 'type'], ["状态", 'status'], ["报价项单价", 'preprice'], ["结算价", 'postprice'], ["预算金额", 'preprice'], ["数量", 'num'], ["退数量", 'refnum'], ["剩余数量", 'surplus'], ["备注", 'comment'], ["创建时间", 'createTime'], ["配送人", 'traner.currentName'], ["配送时间", 'tranTime'], ["审核人", 'checker.currentName'], ["审核时间", 'checkTime'], ["确认人", 'confirmer.currentName'], ["确认时间", 'confirmTime'], ["完结人", 'finish.currentName'], ["完结时间", 'finishTime'], ["结算人", 'balancer.currentName'], ["结算时间", 'balanceTime'], ["装修单号", 'decoration.orderId'], ["楼盘", 'decoration.house.village.name'], ["地址", 'decoration.house.houseNumber'], ["建筑面积", 'decoration.house.buildArea'], ["设计师", 'decoration.designer.currentName'], ["业务员", 'decoration.salesman.currentName'], ["监理人员姓名", 'decoration.supervisor.currentName'], ["监理人员电话", 'decoration.supervisor.phone'], ["跟单员", 'decoration.escorter.currentName'],
+                column: [["名称", 'goods.name'], ["品牌", 'goods.brand'], ["品类", 'goods.category'], ["商品编号", 'goods.no'], ["功能区名称", 'areaName'], ["类型", 'type'], ["状态", 'status'], ["报价项单价", 'preprice'], ["结算价", 'postprice'], ["预算金额", 'preprice'], ["数量", 'num'], ["退货", 'refnum'], ["剩余数量", 'surplus'], ["备注", 'comment'], ["创建时间", 'createTime'], ["配送人", 'traner.currentName'], ["配送时间", 'tranTime'], ["审核人", 'checker.currentName'], ["审核时间", 'checkTime'], ["确认人", 'confirmer.currentName'], ["确认时间", 'confirmTime'], ["完结人", 'finish.currentName'], ["完结时间", 'finishTime'], ["结算人", 'balancer.currentName'], ["结算时间", 'balanceTime'], ["装修单号", 'decoration.orderId'], ["楼盘", 'decoration.house.village.name'], ["地址", 'decoration.house.houseNumber'], ["建筑面积", 'decoration.house.buildArea'], ["设计师", 'decoration.designer.currentName'], ["业务员", 'decoration.salesman.currentName'], ["监理人员姓名", 'decoration.supervisor.currentName'], ["监理人员电话", 'decoration.supervisor.phone'], ["跟单员", 'decoration.escorter.currentName'],
 
                 ],
 
@@ -508,6 +557,15 @@ $(function() {
     com.focusPage('#batchReview').click(function() {
 
         bulkOperation(api.quotation.reviewSelectionItem, 'review');
+    });
+    com.focusPage('#batchCrn').click(function() {
+
+        if (selectionItem.selectList.length == 0) {
+            com.showAlert(com.warning, "请选择项目");
+            return false;
+        }
+
+        selectionItem.modals.balanceSelectionItemModal.modal('show');
     });
 
     function bulkOperation(url, type) {
@@ -601,17 +659,17 @@ $(function() {
             return false;
 
         if (selectionItem.items.refnum.val() == "" && selectionItem.items.utilitynum.val() == "") {
-            com.showAlert(com.warning, '实用量与退数量需要填写一项');
+            com.showAlert(com.warning, '实用量与退货需要填写一项');
             return false;
         }
 
         if (selectionItem.items.refnum.val() != "" && selectionItem.items.utilitynum.val() != "") {
-            com.showAlert(com.warning, '实用量与退数量只可填写一项');
+            com.showAlert(com.warning, '实用量与退货只可填写一项');
             return false;
         }
 
         if (selectionItem.items.refnum.val() > selectionItem.parameters.num) {
-            com.showAlert(com.warning, '退数量不能大于当前数量');
+            com.showAlert(com.warning, '退货不能大于当前数量');
             return false;
         }
 
@@ -627,6 +685,66 @@ $(function() {
         });
 
         selectionItem.modals.refundSelectionItemModal.modal("hide");
+    }
+
+    function balanceSalesData() {
+
+        if (com.validate('balanceSelectionItemModal'))
+            return false;
+
+        var balanceSelection = null;
+        var bsidCount = null;
+        var options = {};
+        var postTotal = 0;
+        var inputs = com.focusPage('input[name="selectionItem"]:checked', '#resultList');
+        var bsid = com.typeahead(selectionItem.items.balanceSales);
+
+        com.post(api.balance.countBalanceSelectionItem, {
+            "balanceSelection.bsid": bsid
+        }, function(res) {
+
+            bsidCount = res.count;
+        }, null, false);
+
+        if (bsidCount + inputs.length > 500) {
+            com.showAlert(com.warning, "数据量过大");
+            return false;
+        }
+
+        com.post(api.balance.queryBalanceSelectionByBsid, {
+            "balanceSelection.bsid": bsid
+        }, function(res) {
+
+            balanceSelection = res.balanceSelection;
+
+        }, null, false);
+
+        $.each(selectionItem.selectList, function(i, v) {
+
+            var input = $(inputs[i]);
+            var num = input.attr("data-num");
+            var postprice = input.attr("data-postprice");
+            var refnum = input.attr("data-refnum");
+
+            postTotal = utils.accAdd(postTotal, utils.accMul(utils.accSub(num, refnum), postprice));
+
+            options["balanceSelectionItems[" + i + "].selectionItem.siid"] = v;
+        });
+
+        options["balanceSelection.bsid"] = bsid;
+        options["balanceSelection.income"] = 0;
+        options["balanceSelection.cost"] = utils.accAdd(balanceSelection.cost, postTotal);
+        options["balanceSelection.payment"] = utils.accAdd(balanceSelection.payment, postTotal);
+        options["balanceSelection.profit"] = 0;
+
+        com.post(api.balance.submitBalanceSelection, options, function(res) {
+
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+            selectionItem.selectList = [];
+            selectionItem.modals.balanceSelectionItemModal.modal("hide");
+        });
+
     }
 
     function getConfig(page, type) {
@@ -707,19 +825,39 @@ $(function() {
                     propertyArr.push(["装修单号:", v.decoration.orderId, "blue"]);
                     break;
                 case "decorationHouseVillageName":
-                    propertyArr.push(["楼盘:", v.decoration.house.village.name, "grey"]);
+                    var _text = $("<text>楼盘: </text>").click(function() {
+
+                        tools.village.info($(this), v.decoration.house.village.no);
+                    });
+                    propertyArr.push([_text, v.decoration.house.village.name, "grey"]);
                     break;
                 case "decorationHouseHouseNumber":
-                    propertyArr.push(["地址: ", v.decoration.house.houseNumber, "grey"]);
+                    var _text = $("<text>地址: </text>").click(function() {
+
+                        tools.house.info($(this), v.decoration.house.hid);
+                    });
+                    propertyArr.push([_text, v.decoration.house.houseNumber, "grey"]);
                     break;
                 case "decorationCustomerName":
-                    propertyArr.push(["客户名: ", v.decoration.customer.name, "grey"]);
+                    var _text = $("<text>客户名:</text>").click(function() {
+
+                        tools.customer.info($(this), v.decoration.customer.cid);
+                    });
+                    propertyArr.push([_text, v.decoration.customer.name, "grey"]);
                     break;
                 case "decorationDesignerCurrentName":
-                    propertyArr.push(["设计师: ", v.decoration.designer.currentName, "grey"]);
+                    var _text = $("<text>设计师:</text>").click(function() {
+
+                        tools.personel.info($(this), v.decoration.designer.userId);
+                    });
+                    propertyArr.push([_text, v.decoration.designer.currentName, "grey"]);
                     break;
                 case "decorationSalesmanCurrentName":
-                    propertyArr.push(["业务员: ", v.decoration.salesman.currentName, "grey"]);
+                    var _text = $("<text>业务员:</text>").click(function() {
+
+                        tools.personel.info($(this), v.decoration.salesman.userId);
+                    });
+                    propertyArr.push([_text, v.decoration.salesman.currentName, "grey"]);
                     break;
                 case "decorationHouseBuildArea":
                     propertyArr.push(["面积: ", v.decoration.house.buildArea, "blue"]);
@@ -740,7 +878,11 @@ $(function() {
                     propertyArr.push(["监理电话: ", v.decoration.supervisor.phone != null ? v.decoration.supervisor.phone : "无", "grey"]);
                     break;
                 case "decorationEscorterCurrentName":
-                    propertyArr.push(["跟单员: ", v.decoration.escorter.currentName != null ? v.decoration.escorter.currentName : "无", "grey"]);
+                    var _text = $("<text>跟单员:</text>").click(function() {
+
+                        tools.personel.info($(this), v.decoration.escorter.userId);
+                    });
+                    propertyArr.push([_text, v.decoration.escorter.currentName != null ? v.decoration.escorter.currentName : "无", "grey"]);
                     break;
             }
         });
@@ -790,49 +932,77 @@ $(function() {
                     propertyArr.push(["预算量:", v.initNum, "blue"]);
                     break;
                 case "refnum":
-                    propertyArr.push(["退数量:", v.refnum, "blue"]);
+                    propertyArr.push(["退货:", v.refnum, "blue"]);
                     break;
                 case "utility":
                     propertyArr.push(["实用量:", utils.changeThrDecimal(utils.accSub(parseFloat(v.num), parseFloat(v.refnum))), "blue"]);
                     break;
                 case "selectionItemCreaterCurrentName":
-                    propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
+                    var _text = $("<text>创建人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.creater.userId);
+                    });
+                    propertyArr.push([_text, v.creater.currentName, "grey"]);
                     break;
                 case "createTime":
                     propertyArr.push(["拆单时间:", v.createTime, "green"]);
                     break;
                 case "selectionItemTranerCurrentName":
-                    propertyArr.push(["配送人:", v.traner.currentName, "grey"]);
+                    var _text = $("<text>配送人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.traner.userId);
+                    });
+                    propertyArr.push([_text, v.traner.currentName, "grey"]);
                     break;
                 case "tranTime":
                     propertyArr.push(["下单时间:", v.tranTime, "green"]);
                     break;
                 case "selectionItemCheckerCurrentName":
-                    propertyArr.push(["审核人:", v.checker.currentName, "grey"]);
+                    var _text = $("<text>审核人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.checker.userId);
+                    });
+                    propertyArr.push([_text, v.checker.currentName, "grey"]);
                     break;
                 case "checkTime":
                     propertyArr.push(["审核时间:", v.checkTime, "green"]);
                     break;
                 case "selectionItemConfirmerCurrentName":
-                    propertyArr.push(["确认人:", v.confirmer.currentName, "grey"]);
+                    var _text = $("<text>确认人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.confirmer.userId);
+                    });
+                    propertyArr.push([_text, v.confirmer.currentName, "grey"]);
                     break;
                 case "confirmTime":
                     propertyArr.push(["确认时间:", v.confirmTime, "green"]);
                     break;
                 case "selectionItemFinishCurrentName":
-                    propertyArr.push(["完结人:", v.finish.currentName, "grey"]);
+                    var _text = $("<text>完结人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.finish.userId);
+                    });
+                    propertyArr.push([_text, v.finish.currentName, "grey"]);
                     break;
                 case "finishTime":
                     propertyArr.push(["完结时间:", v.finishTime, "green"]);
                     break;
                 case "selectionItemReviewerCurrentName":
-                    propertyArr.push(["核对人:", v.reviewer.currentName, "grey"]);
+                    var _text = $("<text>核对人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.reviewer.userId);
+                    });
+                    propertyArr.push([_text, v.reviewer.currentName, "grey"]);
                     break;
                 case "reviewTime":
                     propertyArr.push(["核对时间:", v.reviewTime, "green"]);
                     break;
                 case "selectionItemBalancerCurrentName":
-                    propertyArr.push(["结算人:", v.balancer.currentName, "grey"]);
+                    var _text = $("<text>结算人:</text>").click(function() {
+
+                        tools.personel.info($(this), v.balancer.userId);
+                    });
+                    propertyArr.push([_text, v.balancer.currentName, "grey"]);
                     break;
                 case "balanceTime":
                     propertyArr.push(["结算时间:", v.balanceTime, "green"]);
@@ -847,10 +1017,18 @@ $(function() {
                     propertyArr.push(["电话:", v.supplier.phone, "grey"]);
                     break;
                 case "selectionItemSelectionSplitterCurrentName":
-                    propertyArr.push(["拆单员:", v.selection.splitter.currentName, "grey"]);
+                    var _text = $("<text>拆单员:</text>").click(function() {
+
+                        tools.personel.info($(this), v.selection.splitter.userId);
+                    });
+                    propertyArr.push([_text, v.selection.splitter.currentName, "grey"]);
                     break;
                 case "selectionItemSelectionTranerCurrentName":
-                    propertyArr.push(["下单员:", v.selection.traner.currentName, "grey"]);
+                    var _text = $("<text>下单员:</text>").click(function() {
+
+                        tools.personel.info($(this), v.selection.traner.userId);
+                    });
+                    propertyArr.push([_text, v.selection.traner.currentName, "grey"]);
                     break;
             }
         });

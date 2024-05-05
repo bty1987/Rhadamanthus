@@ -7,6 +7,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesActivityDao;
 import com.fanglin.sales.po.SalesActivityPO;
@@ -21,18 +22,18 @@ public class SalesActivityDaoImpl extends DaoImpl<SalesActivityPO> implements Sa
 	}
 
 	@Override
-	public List<SalesActivityPO> pageSalesActivity(Paging paging, List<Filter> filter, String orderId) {
+	public List<SalesActivityPO> pageSalesActivity(Paging paging, List<Filter> filter, String orderId) throws FLException {
 
 		PagingQuery<SalesActivityPO> query = pagingQuery(paging, SalesActivityPO.class);
 
-		if(orderId != null){
+		if (orderId != null) {
 			query.alias("sales", "sales").add(query.getCriterion("sales.orderId", orderId, "eq"));
 		}
 
 		queryFilterExcute(query, filter);
 
 		query.desc("sid");
-		
+
 		return query.list();
 	}
 
@@ -45,7 +46,6 @@ public class SalesActivityDaoImpl extends DaoImpl<SalesActivityPO> implements Sa
 		List<Object> uniqueResult = session().createSQLQuery(sql).addScalar("name", StandardBasicTypes.STRING).addScalar("amount", StandardBasicTypes.INTEGER).setString("orderId", orderId).list();
 
 		return uniqueResult;
-
 	}
 
 	@Override
@@ -68,33 +68,23 @@ public class SalesActivityDaoImpl extends DaoImpl<SalesActivityPO> implements Sa
 		return sqlQuery == null ? 0 : Arith.div(sqlQuery.longValue(), 1000000);
 	}
 
-	private void queryFilterExcute(PagingQuery<SalesActivityPO> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<SalesActivityPO> query, List<Filter> filters) throws FLException {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				query.alias("sales", "sales");
+		SalesDaoImpl.queryFilterExcute(query, filters, "sales");
 
-				if (field.equals("sales.brand")) {
-					query.add(query.getCriterion("sales.brand", data, op));
-				} else if (field.equals("sales.category")) {
-					query.add(query.getCriterion("sales.category", data, op));
-				} else if (SalesActivityPO.COLUMN_SALESNO_STR.equals(field)) {
-					query.add(query.getCriterion(SalesActivityPO.COLUMN_SALESNO_STR, data, op));
-				} else if (SalesActivityPO.COLUMN_SALESORDERID_STR.equals(field)) {
-					query.add(query.getCriterion(SalesActivityPO.COLUMN_SALESORDERID_STR, data, op));
-				} else if (SalesActivityPO.COLUMN_SALESCREATETIME_STR.equals(field)) {
-					query.timeranges(SalesActivityPO.COLUMN_SALESCREATETIME_STR, filter.getData());
-				} else {
-					query.alias("activity", "activity");
-					query.add(query.getCriterion(field, data, op));
-				}
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("sales.activity.name".equals(field)) {
+				query.alias("activity", "activity");
+				query.add(query.getCriterion("activity.name", data, op));
 			}
 		}
-
 	}
 
 }

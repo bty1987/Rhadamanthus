@@ -1,0 +1,142 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+
+                            <div class="col-md-12 customer">
+                                <div class="form-group col-sm-6">
+                                    <label for="key1" class="col-sm-3 control-label no-padding-right orange">甲方</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual' value="0">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="agentId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 company">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="companyNo" class="col-sm-3 control-label no-padding-right orange">公司编号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-no" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="companyName" class="col-sm-3 control-label no-padding-right orange">公司名称</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="orderId" class="col-sm-3 control-label no-padding-right orange">装修单号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-orderId" type="text" maxlength="32" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="workStatus" class="col-sm-3 control-label no-padding-right orange">工程状态</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-work-status" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="startTime">签订时间</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-sign-year" type="text" class="col-sm-2 conitem v_number" data-placement="top" />
+                                        <span class="col-sm-1 orange">年</span>
+                                        <input id="con-sign-month" type="text" class="col-sm-2 conitem v_number" data-placement="top" />
+                                        <span class="col-sm-1 orange">月</span>
+                                        <input id="con-sign-day" type="text" class="col-sm-2 conitem v_number" data-placement="top" />
+                                        <span class="col-sm-1 orange">日</span>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <hr>
+
+                            <div class="col-md-12">
+                                <div class="form-group col-sm-6">
+                                    <label class="col-md-3 control-label no-padding-right orange">施工地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-province-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">省</span>
+                                        <input id="con-city-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">市</span>
+                                        <input id="con-proper-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">区</span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="villageName" class="col-sm-3 control-label no-padding-right orange">楼盘</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-village-name" type="text" class="col-sm-4 conitem v_required" data-placement="top" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="housenumber" class="col-sm-3 control-label no-padding-right orange">楼号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-housenumber" type="text" class="col-sm-6 conitem v_required" data-placement="top" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <textarea id="con-markup-one" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="备注一 , 请双击获取内容或手动输入"></textarea>
+                                        </div>
+                                    </div>
+
+                                   <div class="form-group">
+                                        <div class="col-md-12">
+                                            <textarea id="con-markup-two" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="备注二, 请双击获取内容或手动输入"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <textarea id="con-markup-thr" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="其他约定 , 请双击获取内容或手动输入"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/contract/C-001-D-5-0001.js']);
+</script>

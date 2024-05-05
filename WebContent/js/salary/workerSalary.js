@@ -169,7 +169,7 @@ jQuery(function($) {
         field: "schedule",
         name: "施工节点",
         prop: "cnid",
-        dataset: constant.decoration.decoration.projectStatus.keys,
+        dataset: constant.decoration().decoration.projectStatus.keys,
         clazz: "red"
     }, {
         field: "type",
@@ -369,9 +369,9 @@ jQuery(function($) {
         name: "同步金蝶",
         clazz: "btn-warning",
         handle: function(v) {
-            
+
             kingdeeUtils.workerSalary(v);
-            
+
             return false;
         },
         show: function(v) {
@@ -444,7 +444,7 @@ jQuery(function($) {
                 v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
 
                 v.status = salary.salaryStatus[v.status];
-                v.schedule = v.schedule == 0 ? "" : constant.decoration.decoration.projectStatus.keys[v.cnid];
+                v.schedule = v.schedule == 0 ? "" : constant.decoration().decoration.projectStatus.keys[v.cnid];
                 v.type = salary.type[v.type];
                 v.onetype = salary.oneType[v.onetype];
 

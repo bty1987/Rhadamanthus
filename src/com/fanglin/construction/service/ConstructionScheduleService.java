@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionScheduleService {
 
-	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company);
+	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	public List<ConstructionScheduleVO> queryConstructionScheduleByOrderId(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 

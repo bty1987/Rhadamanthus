@@ -1,8 +1,9 @@
-jQuery(function ($) {
+jQuery(function($) {
+
     params.materialUrl = api.material.pageMaterialByUserId;
     var materialOrderPostData = "materialOrderPostData";
     if (params['urlLoadParams'].type == 'advance') {
-        materialOrderPostData="materialOrderPostDataAdvance";
+        materialOrderPostData = "materialOrderPostDataAdvance";
         params.materialUrl = api.material.pageMaterialForAdvance;
     }
     var materialOrder = {
@@ -17,14 +18,16 @@ jQuery(function ($) {
 
     com.focusPage('#fl-statement').statement("主材订单", "订单信息列表");
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -34,28 +37,23 @@ jQuery(function ($) {
                     var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子订单');
                     var $btnSale = $('<a></a>').addClass('btn btn-minier btn-success').html('销售订单');
 
-                    var propertyArr = [
-                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
-                        ["客户名:", v.customer.name, "grey"],
-                        ["设计部:", v.designer.dept.name, "grey"],
-                        ["设计师:", v.designer.currentName, "grey"],
-                        ["监理:", v.supervisor.currentName, "grey"],
-                        ["业务员:", v.salesman.currentName, "grey"],
-                        ["面积:", v.house.buildArea, "blue"]
-                    ];
+                    var propertyArr = [["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"], ["客户名:", v.customer.name, "grey"], ["设计部:", v.designer.dept.name, "grey"], ["设计师:", v.designer.currentName, "grey"], ["监理:", v.supervisor.currentName, "grey"], ["业务员:", v.salesman.currentName, "grey"], ["面积:", v.house.buildArea, "blue"]];
 
-                    $.each(propertyArr, function (index, value) {
+                    $.each(propertyArr, function(index, value) {
+
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
 
-                    $btnSub.click(function () {
+                    $btnSub.click(function() {
+
                         viewMaterialIndex(v);
                     });
 
-                    $btnSale.click(function () {
+                    $btnSale.click(function() {
+
                         viewMaterialSaleOrderIndex(v);
                     });
 
@@ -69,7 +67,8 @@ jQuery(function ($) {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
@@ -78,11 +77,13 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["material-orderId", "material-village", "material-houseNumber", "material-designer", "material-salesman"], "condList", api.decoration.pageDecorationForGeneral, function (data) {
+    searcher.init(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-salesman"], "condList", api.decoration.pageDecorationForGeneral, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", materialOrderPostData);
 
     function viewMaterialIndex(v) {
+
         params.orderId = v.orderId;
         params.customerId = v.customer.cid;
         params.customerName = v.customer.name;
@@ -94,6 +95,7 @@ jQuery(function ($) {
     }
 
     function viewMaterialSaleOrderIndex(v) {
+
         params.orderId = v.orderId;
         params.customerId = v.customer.cid;
         params.customerName = v.customer.name;
@@ -110,4 +112,3 @@ jQuery(function ($) {
     }
 
 });
-

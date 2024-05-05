@@ -11,6 +11,9 @@ $.extend(api.index, {
     villageIndex: {
         url: "/views/data/village.html"
     },
+    village4condition: {
+        url: "/views/data/village4condition.html"
+    },
     paymentScale: {
         url: "/views/data/paymentScale.html"
     },
@@ -22,6 +25,15 @@ $.extend(api.index, {
     },
     userLabel: {
         url: "/views/data/userLabel.html"
+    },
+    customerRecordIndex: {
+        url: "/views/data/customerRecord.html"
+    },
+    assistanceitemIndex: {
+        url: "/views/data/assistanceItem.html"
+    },
+    goods4condition: {
+        url: "/views/data/goods4condition.html"
     },
 });
 
@@ -178,10 +190,6 @@ $.extend(api, {
             url: "registCustomer.do",
             server: "communion"
         },
-        resetCustomer: {
-            url: "resetCustomer.do",
-            server: "communion"
-        },
         authCustomer: {
             url: "authCustomer.do",
             server: "communion"
@@ -286,6 +294,22 @@ $.extend(api, {
             tranargs: {
                 args: ["house.buildArea", "house.freeArea", "house.innerArea", "house.totalArea"]
             }
+        },
+
+        pageConstructionPace: {
+            url: "pageConstructionPace.do"
+        },
+        queryConstructionPace: {
+            url: "queryConstructionPace.do"
+        },
+        addConstructionPace: {
+            url: "addConstructionPace.do"
+        },
+        updateConstructionPace: {
+            url: "updateConstructionPace.do"
+        },
+        updateConstructionPaceForStatus: {
+            url: "updateConstructionPaceForStatus.do"
         },
 
         pageDrawlineGroup: {
@@ -715,7 +739,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["totalimit", "balance"]
+                args: ["totalimit", "balance", "selling"]
             }, {
                 result: "paging-data-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -727,7 +751,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "aoodes",
-                args: ["totalimit", "balance"]
+                args: ["totalimit", "balance", "selling"]
             }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -739,7 +763,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "aoodes",
-                args: ["totalimit", "balance"]
+                args: ["totalimit", "balance", "selling"]
             }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -750,7 +774,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "aoodes",
-                args: ["totalimit", "balance"]
+                args: ["totalimit", "balance", "selling"]
             }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -760,18 +784,21 @@ $.extend(api, {
             url: "addAoods.do",
             type: "update",
             tranargs: {
-                args: ["aoods.totalimit", "aoods.balance"]
+                args: ["aoods.totalimit", "aoods.balance", "aoods.selling"]
             }
         },
         updateAoods: {
             url: "updateAoods.do",
             type: "update",
             tranargs: {
-                args: ["aoods.totalimit", "aoods.balance"]
+                args: ["aoods.totalimit", "aoods.balance", "aoods.selling"]
             }
         },
         updateAoodsForStatus: {
             url: "updateAoodsForStatus.do"
+        },
+        updateAoodsForNorm: {
+            url: "updateAoodsForNorm.do"
         },
         copyAoods: {
             url: "copyAoods.do"
@@ -782,7 +809,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["num", "selling"]
+                args: ["num", "selling", "cost", "balance"]
             }, {
                 result: "paging-data-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -793,6 +820,9 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "soodes",
+                args: ["num", "selling", "cost", "balance"]
+            }, {
+                result: "soodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
             }]
         },
@@ -802,6 +832,9 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "soodes",
+                args: ["num", "selling", "cost", "balance"]
+            }, {
+                result: "soodes-goods",
                 args: ["purchase", "selling", "pieceNum"]
             }]
         },
@@ -809,7 +842,7 @@ $.extend(api, {
             url: "addSoods.do",
             type: "update",
             tranargs: {
-                args: ["soods.num", "soods.selling"]
+                args: ["soods.num", "soods.selling", "soods.cost", "soods.balance"]
             }
         },
 
@@ -817,7 +850,7 @@ $.extend(api, {
             url: "updateSoods.do",
             type: "update",
             tranargs: {
-                args: ["soods.selling"]
+                args: ["soods.selling", "soods.cost", "soods.balance"]
             }
         },
         updateSoodsForStatus: {
@@ -897,6 +930,51 @@ $.extend(api, {
             url: "deleteSoodsItem.do"
         },
 
+        pageNoods: {
+            url: "pageNoods.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["selling", "balance"]
+            }]
+        },
+        queryNoods: {
+            url: "queryNoods.do",
+            type: "query",
+            tranargs: [{
+                result: "noodes",
+                args: ["selling", "balance"]
+            }]
+        },
+        queryNoodsByName: {
+            url: "queryNoodsByName.do",
+            type: "query",
+            tranargs: [{
+                result: "noodes",
+                args: ["selling", "balance"]
+            }]
+        },
+        addNoods: {
+            url: "addNoods.do",
+            type: "update",
+            tranargs: {
+                args: ["noods.selling", "noods.balance"]
+            }
+        },
+        updateNoods: {
+            url: "updateNoods.do",
+            type: "update",
+            tranargs: {
+                args: ["noods.selling", "noods.balance"]
+            }
+        },
+        updateNoodsForStatus: {
+            url: "updateNoodsForStatus.do"
+        },
+        updateNoodsForCalc: {
+            url: "updateNoodsForCalc.do"
+        },
+
         pageAoodsCost: {
             url: "pageAoodsCost.do",
             type: "query",
@@ -918,7 +996,14 @@ $.extend(api, {
         deleteAoodsCost: {
             url: "deleteAoodsCost.do"
         },
-
+        pageHouseLayout: {
+            url: "pageHouseLayout.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["area"]
+            }]
+        },
         queryHouseLayout: {
             url: "queryHouseLayout.do",
             type: "query",
@@ -977,7 +1062,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["trannum", "salary"]
+                args: ["trannum", "salary", "stuff"]
             }, {
                 result: "paging-data-quotationItem",
                 args: ["unitPrice"]
@@ -988,7 +1073,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "normrices",
-                args: ["trannum", "salary"]
+                args: ["trannum", "salary", "stuff"]
             }, {
                 result: "normrices-constructionNode",
                 args: ["precheck", "postcheck", "stacheck", "fincheck"]
@@ -998,7 +1083,7 @@ $.extend(api, {
             url: "addNormrice.do",
             type: "update",
             tranargs: {
-                args: ["normrice.trannum", "normrice.salary"]
+                args: ["normrice.trannum", "normrice.salary", "normrice.stuff"]
             }
         },
         deleteNormrice: {
@@ -1009,7 +1094,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["normnum", "storenum"]
+                args: ["normnum", "storenum", "price"]
             }, {
                 result: "paging-data-quotationItem",
                 args: ["unitPrice"]
@@ -1020,7 +1105,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "normoods",
-                args: ["normnum", "storenum"]
+                args: ["normnum", "storenum", "price"]
             }, {
                 result: "normoods-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -1030,7 +1115,7 @@ $.extend(api, {
             url: "addNormood.do",
             type: "update",
             tranargs: {
-                args: ["normood.normnum", "normood.storenum"]
+                args: ["normood.normnum", "normood.storenum", "normood.price"]
             }
         },
         deleteNormood: {
@@ -1277,14 +1362,14 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "normpackItems",
-                args: ["normnum", "storenum"]
+                args: ["normnum", "storenum", "price"]
             }]
         },
         addNormpackItem: {
             url: "addNormpackItem.do",
             type: "update",
             tranargs: {
-                args: ["normpackItem.normnum", "normpackItem.storenum"]
+                args: ["normpackItem.normnum", "normpackItem.storenum", "normpackItem.price"]
             }
         },
         deleteNormpackItem: {
@@ -1429,14 +1514,41 @@ $.extend(api, {
             url: "deleteFlowItem.do"
 
         },
-
+        pageAssistance: {
+            url: "pageAssistance.do"
+        },
+        queryAssistance: {
+            url: "queryAssistance.do"
+        },
+        queryAssistanceByAid: {
+            url: "queryAssistanceByAid.do"
+        },
+        queryAssistanceByKeyword: {
+            url: "queryAssistanceByKeyword.do"
+        },
+        addAssistance: {
+            url: "addAssistance.do"
+        },
+        updateAssistance: {
+            url: "updateAssistance.do"
+        },
+        updateAssistanceForStatus: {
+            url: "updateAssistanceForStatus.do"
+        },
+        queryAssistanceItem: {
+            url: "queryAssistanceItem.do"
+        },
+        addAssistanceItem: {
+            url: "addAssistanceItem.do"
+        },
+        updateAssistanceItem: {
+            url: "updateAssistanceItem.do"
+        },
         pageConstant: {
-            url: "pageConstant.do",
-            server: "communion"
+            url: "pageConstant.do"
         },
         queryConstant: {
-            url: "queryConstant.do",
-            server: "communion"
+            url: "queryConstant.do"
         },
         addConstant: {
             url: "addConstant.do",
@@ -1454,5 +1566,51 @@ $.extend(api, {
             url: "deleteConstant.do",
             server: "communion"
         },
+        queryDecorationMeasure: {
+            url: "queryDecorationMeasure.do"
+        }
+    }
+});
+
+$.extend(tools, {
+    village: {
+        info: function(content, vid) {
+
+            com.post(api.data.queryVillageByVid, {
+                "village.no": vid
+            }, function(res) {
+
+                var village = res.village;
+
+                com.showTip(content, "城市:" + village.cityProper.city.name + "<br\>城区:" + village.cityProper.name + "<br\>楼盘:" + village.name, "bottom");
+            });
+
+        }
+    },
+    house: {
+        info: function(content, hid) {
+
+            com.post(api.data.queryHouseByHid, {
+                "house.hid": hid
+            }, function(res) {
+
+                var house = res.house;
+
+                com.showTip(content, "楼号:" + house.houseNumber + "<br\>户型:" + house.houseType + "<br\>面积:" + house.buildArea, "bottom");
+            });
+        }
+    },
+    brand: {
+        info: function(content, bid) {
+
+            com.post(api.data.queryBrandByBid, {
+                "brand.bid": bid
+            }, function(res) {
+
+                var brand = res.brand;
+
+                com.showTip(content, "品类:" + brand.categoryName + "<br\>厂商:" + brand.supplier.currentName, "bottom");
+            });
+        }
     }
 });

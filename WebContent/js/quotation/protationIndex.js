@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var protation = {
 
@@ -22,8 +22,8 @@
         },
 
         datasets: {
-            status: {},
-            decorationStatus: {},
+            "quotationLimit": 3,
+            "quotationNum": 0,
         },
 
         orderId: params.quotation.orderId,
@@ -105,6 +105,7 @@
             "decoration.orderId": protation.orderId
         }, function(res) {
 
+            drawquotation(res.decoration);
             drawdecoration(res.decoration);
         }, null, false);
 
@@ -112,9 +113,9 @@
 
     function drawdecoration(decoration) {
 
-        var protationDiv = $('<div></div>').addClass("col-xs-6 col-md-3").attr('id', 'protationDiv_' + pid).prependTo(decorationInfo);
+        var protationDiv = $('<div></div>').addClass("col-xs-6 col-md-3").attr('id', 'protationDiv_' + pid).prependTo(protation.decorationInfo);
         var protationWidget = $('<div></div>').addClass("widget-box").appendTo(protationDiv);
-        var protationWidgetHeader = $('<div></div>').addClass("widget-header header-color-orange").appendTo(protationWidget);
+        var protationWidgetHeader = $('<div></div>').addClass("widget-header header-color-blue").appendTo(protationWidget);
 
         var name = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo(protationWidgetHeader);
 
@@ -129,6 +130,28 @@
         var protationWidgetDivThr = $('<div></div>').appendTo(protationWidgetInfoDiv);
         var protationWidgetLabelThr = $('<label></label>').attr('for', 'form-field').attr('id', 'time_' + pid).text('报价版本: ' + decoration.version.name).appendTo(protationWidgetDivThr);
 
+    }
+
+    function drawquotation(decoration) {
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "protationlimit"
+        }, function(res) {
+
+            if (res.systemConfig.value)
+                protation.datasets.quotationLimit = res.systemConfig.value;
+        }, null, false);
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(protation.decorationInfo);
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box);
+        var name = $('<h4></h4>').attr('id', 'worksheet4content').text("预签单").appendTo($header);
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('可用数量: ' + protation.datasets.quotationLimit)).appendTo($main);
+        $('<div></div>').append($('<label></label>').attr('id', 'quotationNum').attr('for', 'form-field').text('已用数量: ')).appendTo($main);
+        $('<div></div>').append($('<label></label>').attr('id', 'subNum').attr('for', 'form-field').text('剩余数量: ')).appendTo($main);
     }
 
     var searcher = new Searcher();
@@ -313,7 +336,15 @@
             prop: "comment"
         }];
 
-        searcher.card("name", cardprops, cardbtns);
+        searcher.card("name", cardprops, cardbtns).render(function() {
+
+            protation.datasets.quotationNum = com.focusPage("#resultList").find("div.widget-box").length;
+
+            var sub = protation.datasets.quotationLimit - protation.datasets.quotationNum;
+
+            com.focusPage("#quotationNum").text('已用数量: ' + protation.datasets.quotationNum);
+            com.focusPage("#subNum").text('剩余数量: ' + sub);
+        });
     }
 
     if (protation.pageType == "page") {
@@ -351,6 +382,10 @@
             name: "装修单号",
             prop: "decoration.orderId",
             clazz: "blue",
+            click: function(btn, v) {
+
+                tools.decoration.info(btn, v.decoration.orderId);
+            },
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("decorationOrderId");
@@ -363,6 +398,10 @@
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("decorationHouseVillageName");
+            },
+            click: function(btn, v) {
+
+                tools.village.info(btn, v.decoration.house.village.no);
             }
         }, {
             field: "houseNumber",
@@ -372,6 +411,10 @@
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("decorationHouseHouseNumber");
+            },
+            click: function(btn, v) {
+
+                tools.house.info(btn, v.decoration.house.hid);
             }
         }, {
             field: "name",
@@ -381,6 +424,10 @@
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("decorationCustomerName");
+            },
+            click: function(btn, v) {
+
+                tools.customer.info(btn, v.decoration.customer.cid);
             }
         }, {
             field: "currentName",
@@ -390,6 +437,10 @@
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("decorationDesignerCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.decoration.designer.userId);
             }
         }, {
             field: "currentName",
@@ -399,6 +450,10 @@
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("decorationSalesmanCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.decoration.salesman.userId);
             }
         }, {
             field: "buildArea",
@@ -447,6 +502,10 @@
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("createrCurrentName");
+            },
+            click: function(btn, v) {
+
+                tools.personel.info(btn, v.creater.userId);
             }
         }, {
             field: "quotePrice",

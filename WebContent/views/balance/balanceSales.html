@@ -28,7 +28,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="taskName">品牌</label>
 							<div class="col-sm-9">
-								<input type="text" id="brand" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+								<input type="text" id="brand" class="col-xs-10 col-sm-5 v_required v_typeahead" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
 
@@ -93,5 +93,5 @@
 </div>
 <div id="stockRecordPopUp" class="portlet box page-content"></div>
 <script type="text/javascript">
-	$.loadScript(['js/balance/balanceSales.js']);
+	$.loadScript(['js/balance/balanceSales.js', 'js/utils/kingdeeUtils.js']);
 </script>

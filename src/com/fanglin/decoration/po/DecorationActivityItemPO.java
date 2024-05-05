@@ -63,7 +63,11 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
-	public final short ISAFFIRM_CONFIRMED_INT = 1;
+	public static final short ISAFFIRM_INIT_INT = 0;
+
+	public static final short ISAFFIRM_CONFIRMED_INT = 1;
+
+	public static final short ISAFFIRM_CHECKED_INT = 2;
 
 	private long daiId;
 
@@ -83,13 +87,21 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	private int money;
 
-	private int cuid;
+	private UserPO creater;
 
 	private UserPO receiver;
+
+	private UserPO refunder;
 
 	private Timestamp createTime;
 
 	private Timestamp receiveTime;
+
+	private Timestamp refundTime;
+
+	private Timestamp affirmTime;
+
+	private Timestamp checkTime;
 
 	private long asid;
 
@@ -104,6 +116,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private short isAffirm; // 是否确认
 
 	private String content;
+
+	private String comment;
 
 	public DecorationActivityItemPO() {
 		super();
@@ -192,12 +206,14 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 		this.money = money;
 	}
 
-	public int getCuid() {
-		return cuid;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCuid(int cuid) {
-		this.cuid = cuid;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -208,6 +224,16 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setReceiver(UserPO receiver) {
 		this.receiver = receiver;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "rfuid", referencedColumnName = "uid")
+	public UserPO getRefunder() {
+		return refunder;
+	}
+
+	public void setRefunder(UserPO refunder) {
+		this.refunder = refunder;
 	}
 
 	@Column(name = "createTime")
@@ -226,6 +252,33 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setReceiveTime(Timestamp receiveTime) {
 		this.receiveTime = receiveTime;
+	}
+
+	@Column(name = "refundTime")
+	public Timestamp getRefundTime() {
+		return refundTime;
+	}
+
+	public void setRefundTime(Timestamp refundTime) {
+		this.refundTime = refundTime;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	@Column(name = "checkTime")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
 	}
 
 	@Column(name = "stateType")
@@ -289,6 +342,15 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

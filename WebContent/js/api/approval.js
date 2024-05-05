@@ -13,6 +13,10 @@ $.extend(api.index, {
 $.extend(api, {
     approval: {
 
+        pageApproval: {
+            url: "pageApproval.do",
+            demo: true
+        },
         pageApprovalForReceive: {
             url: "pageApprovalForReceive.do",
             demo: true

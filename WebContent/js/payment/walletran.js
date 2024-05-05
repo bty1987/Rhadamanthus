@@ -1,7 +1,7 @@
 $(function () {
     var walletran = {
-        status: constant.payment.walletran.status.keys,
-        types: constant.payment.walletran.type.keys
+        status: constant.payment().walletran.status.keys,
+        types: constant.payment().walletran.type.keys
     };
 
     initRecord();

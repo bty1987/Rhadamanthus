@@ -28,10 +28,7 @@
 
     $.extend(com.validator, functionArea.validator);
 
-    com.post(api.ds.quotation, {}, function(res) {
-
-        functionArea.items.type.bindData(res.functionType, 'key', 'value');
-    });
+    functionArea.items.type.bindData(constant.data().functionArea.type.datas, 'key', 'value');
 
     com.post(api.quotation.queryQuotationVersion, {}, function(res) {
 

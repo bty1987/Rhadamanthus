@@ -43,12 +43,6 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SystemConfigPO> obtainSystemConfig(String key, int company) {
-		return createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR, key)).add(Restrictions.eq(SystemConfigPO.COLUMN_COMPANY_STR, company)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public List<SystemConfigPO> querySystemConfigByCid(Integer company) {
 		return session().createCriteria(SystemConfigPO.class).add(Restrictions.eq("company", company)).list();
 	}
@@ -56,6 +50,12 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 	@Override
 	public SystemConfigPO querySystemConfigById(long scid) {
 		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_SCID_STR, scid)).uniqueResult();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SystemConfigPO> obtainSystemConfig(String key, int company) {
+		return createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_KEY_STR, key)).add(Restrictions.eq(SystemConfigPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

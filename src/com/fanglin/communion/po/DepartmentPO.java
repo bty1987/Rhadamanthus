@@ -12,6 +12,8 @@ package com.fanglin.communion.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +24,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.DepartmentTypeVO;
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "department", catalog = "communion")
@@ -62,7 +68,7 @@ public class DepartmentPO implements Serializable {
 
 	private DepartmentPO fatherDept;
 
-	private String createTime;
+	private Timestamp createTime;
 
 	private short status;
 
@@ -168,11 +174,11 @@ public class DepartmentPO implements Serializable {
 	}
 
 	@Column(name = "createTime")
-	public String getCreateTime() {
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
@@ -256,6 +262,27 @@ public class DepartmentPO implements Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public DepartmentVO ptv() {
+
+		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO());
+
+		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager"));
+
+		if (getType() != null) {
+			BeanUtil.copyProperties(getType(), departmentVO.getType());
+		}
+
+		if (getFatherDept() != null) {
+			BeanUtil.copyProperties(getFatherDept(), departmentVO.getFatherDept(), Arrays.asList("fatherDept", "cityProper", "type", "manager"));
+		}
+
+		if (getManager() != null && getManager().getUid() != 0) {
+			BeanUtil.copyProperties(getManager(), departmentVO.getManager(), Arrays.asList("role", "dept", "duty"));
+		}
+
+		return departmentVO;
 	}
 
 }

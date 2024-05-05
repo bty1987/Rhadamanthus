@@ -6,8 +6,8 @@ jQuery(function($) {
         decorationOrderStatus: {}
     };
 
-    decorationBelong.decorationOrderStatus = constant.decoration.decoration.status.keys;
-    decorationBelong.decorationType = constant.decoration.decoration.typeness.keys;
+    decorationBelong.decorationOrderStatus = constant.decoration().decoration.status.keys;
+    decorationBelong.decorationType = constant.decoration().decoration.typeness.keys;
 
     var displayFunc = (function() {
 

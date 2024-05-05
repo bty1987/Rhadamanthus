@@ -14,7 +14,11 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 
 	private String name;
 
+	private Integer addPrice;
+
 	private Integer unitPrice;
+
+	private Integer subPrice;
 
 	private Integer index;
 
@@ -66,12 +70,28 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 		this.name = name;
 	}
 
+	public Integer getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Integer addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
 	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public Integer getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(Integer subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	public Integer getIndex() {

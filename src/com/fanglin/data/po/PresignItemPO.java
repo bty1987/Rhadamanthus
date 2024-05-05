@@ -24,6 +24,8 @@ public class PresignItemPO implements Serializable {
 
 	public static final short ONETYPE_STANDARD_INT = 1;
 
+	public static final short ONETYPE_MATESUB_INT = 2;
+
 	public static final short TYPE_BASICS_INT = 0;// 功能区
 
 	public static final short TYPE_OPTIONAL_INT = 1;// 可选配
@@ -49,6 +51,12 @@ public class PresignItemPO implements Serializable {
 	private long cost;
 
 	private long price;
+
+	private int addPrice;
+
+	private int subPrice;
+
+	private int achePrice;
 
 	private short areaCale;
 
@@ -125,6 +133,33 @@ public class PresignItemPO implements Serializable {
 
 	public void setPrice(long price) {
 		this.price = price;
+	}
+
+	@Column(name = "addPrice")
+	public int getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(int addPrice) {
+		this.addPrice = addPrice;
+	}
+
+	@Column(name = "subPrice")
+	public int getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(int subPrice) {
+		this.subPrice = subPrice;
+	}
+
+	@Column(name = "achePrice")
+	public int getAchePrice() {
+		return achePrice;
+	}
+
+	public void setAchePrice(int achePrice) {
+		this.achePrice = achePrice;
 	}
 
 	@Column(name = "areaCale")

@@ -17,6 +17,8 @@ jQuery(function($) {
             upperArea: com.focusPage("#upperArea", "#createPresignPriceModal"),
             lowerArea: com.focusPage("#lowerArea", "#createPresignPriceModal"),
             price: com.focusPage("#price", "#createPresignPriceModal"),
+            costPrice: com.focusPage("#costPrice", "#createPresignPriceModal"),
+            mostPrice: com.focusPage("#mostPrice", "#createPresignPriceModal"),
         },
 
         status: {},
@@ -68,6 +70,16 @@ jQuery(function($) {
         name: "价格",
         prop: "price",
         clazz: "blue"
+    }, {
+        fieId: "costPrice",
+        name: "工程成本",
+        prop: "costPrice",
+        clazz: "blue"
+    }, {
+        fieId: "mostPrice",
+        name: "主材成本",
+        prop: "mostPrice",
+        clazz: "blue"
     }];
 
     var linebtns = [{
@@ -81,6 +93,8 @@ jQuery(function($) {
             presignPrice.items.upperArea.val(v.upperArea);
             presignPrice.items.lowerArea.val(v.lowerArea);
             presignPrice.items.price.val(v.price);
+            presignPrice.items.costPrice.val(v.costPrice);
+            presignPrice.items.mostPrice.val(v.mostPrice);
 
             presignPrice.modals.createPresignPriceModal.modal("show");
 
@@ -140,6 +154,8 @@ jQuery(function($) {
             "presignPrice.upperArea": presignPrice.items.upperArea.val(),
             "presignPrice.lowerArea": presignPrice.items.lowerArea.val(),
             "presignPrice.price": presignPrice.items.price.val(),
+            "presignPrice.costPrice": presignPrice.items.costPrice.val(),
+            "presignPrice.mostPrice": presignPrice.items.mostPrice.val(),
         };
 
         if (presignPrice.pspid) {

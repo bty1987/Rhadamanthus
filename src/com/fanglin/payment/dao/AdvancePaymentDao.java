@@ -14,14 +14,15 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface AdvancePaymentDao extends Dao<AdvancePaymentPO> {
-	
-	public List<AdvancePaymentPO> pageAdvancePayment(Paging paging, List<Filter> filters);
-	
+
+	public List<AdvancePaymentPO> pageAdvancePayment(Paging paging, List<Filter> filters) throws FLException;
+
 	public AdvancePaymentPO queryAdvancePaymentByOrderId(String orderId);
-	
+
 }

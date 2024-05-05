@@ -39,8 +39,6 @@ jQuery(function($) {
         current: new Date(),
     };
 
-    console.log(contractEdit.contractArgs);
-
     if (contractEdit.contractArgs.agent == "1") {
         com.focusPage(".agent", "#form").hide();
     }
@@ -58,11 +56,8 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        contractEdit.decorationType = res.typeness.split("key", "value");
-        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
-    });
+    contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
 
     com.post(api.construction.queryConstructionInfoByOrderId, {
         "constructionInfo.orderId": contractEdit.decorationOrderId
@@ -186,7 +181,8 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    };
+    }
+    ;
 
     var displayFunc = (function() {
 
@@ -270,8 +266,6 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            console.log(data);
-
             data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
             data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
             data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
@@ -287,8 +281,6 @@ jQuery(function($) {
             data["sin-customer-name"] = data["con-customer-name"];
             data["sin-customer-phone"] = data["con-customer-phone"];
             data["sin-customer-ident"] = data["con-customer-ident"];
-
-            console.log(data);
 
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,

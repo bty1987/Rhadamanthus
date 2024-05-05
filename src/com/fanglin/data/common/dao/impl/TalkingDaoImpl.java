@@ -34,7 +34,7 @@ public class TalkingDaoImpl extends DaoImpl<TalkingPO> implements TalkingDao {
 	@SuppressWarnings("unchecked")
 	public List<TalkingPO> queryTalking(List<Short> types, int company) {
 
-		String sql = " SELECT * FROM data.talking WHERE company = :company AND type IN (:type)";
+		String sql = " SELECT * FROM data.talking WHERE company = :company AND type IN (:type) AND status = 0";
 
 		Query query = session().createSQLQuery(sql).addEntity(TalkingPO.class).setLong("company", company);
 
@@ -47,20 +47,20 @@ public class TalkingDaoImpl extends DaoImpl<TalkingPO> implements TalkingDao {
 
 	public void queryFilterExcute(List<Filter> filter, PagingQuery<TalkingPO> query) {
 
-		if (filter != null) {
-			for (Filter filters : filter) {
+		if (filter == null) return;
 
-				String op = filters.getOp();
-				String data = filters.getData();
-				String field = filters.getField();
+		for (Filter filters : filter) {
 
-				if (TalkingPO.COLUMN_NAME_STR.equals(field)) {
-					query.add(query.getCriterion(field, data, op));
-				} else if (TalkingPO.COLUMN_TYPE_STR.equals(field)) {
-					query.add(query.getCriterion(field, Short.parseShort(data), op));
-				} else if (TalkingPO.COLUMN_STATUS_STR.equals(field)) {
-					query.add(query.getCriterion(field, Short.parseShort(data), op));
-				}
+			String op = filters.getOp();
+			String data = filters.getData();
+			String field = filters.getField();
+
+			if (TalkingPO.COLUMN_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (TalkingPO.COLUMN_TYPE_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if (TalkingPO.COLUMN_STATUS_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			}
 		}
 	}

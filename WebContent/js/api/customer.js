@@ -228,6 +228,11 @@ $.extend(api, {
         queryCusDecorationForDefault: {
             url: "queryCusDecorationForDefault.do"
         },
+
+        queryCusTalking: {
+            url: "queryCusTalking.do"
+        },
+
         updateCusDecorationForDefault: {
             url: "updateCusDecorationForDefault.do"
         },
@@ -515,5 +520,22 @@ $.extend(api, {
         deleteConversation: {
             url: "deleteConversation.do"
         },
+    }
+});
+
+$.extend(tools, {
+    customer: {
+        info: function(content, cid) {
+
+            com.post(api.data.queryCustomerById, {
+                "customer.cid": cid
+            }, function(res) {
+
+                var customer = res.customer;
+
+                com.showTip(content, "姓名:" + customer.name + "<br\>地址:" + customer.address + "<br\>邮箱:" + customer.email, "bottom");
+            });
+
+        }
     }
 });

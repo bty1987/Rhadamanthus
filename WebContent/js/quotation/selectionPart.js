@@ -3,6 +3,7 @@ var selectionDetail = (function() {
     var selection = {
         basicParams: {},
         nowEditQuote: null,
+        orderId: null,
         datasets: {
             status: {}
         },
@@ -15,7 +16,8 @@ var selectionDetail = (function() {
         },
         modals: {
             quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal'),
-            quotationItemMateria: com.focusPage('#quotationItemMateria')
+            quotationItemMateria: com.focusPage('#quotationItemMateria'),
+            QRcodeModal: com.focusPage('#QRcodeModal')
         },
         items: {
             goodsName: com.focusPage('#goodsName')
@@ -38,7 +40,7 @@ var selectionDetail = (function() {
                 }, function(res) {
 
                     params.quotation.supplierPage = selectionItem.pageType == "supplier" ? true : false;
-                    params.quotation.orderId = res.selection.orderId;
+                    params.selection = res.selection;
 
                     com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
                 }, null, false);
@@ -62,22 +64,14 @@ var selectionDetail = (function() {
 
             com.focusPage('#sendSelectionBtn').on('click', function() {
 
-                com.post(api.quotation.querySelectionByQid, {
-                    'selection.qid': selection.quotation.qid
-                }, function(v) {
+                var options = {
+                    "selection.orderId": selection.orderId,
+                };
 
-                    var options = {
-                        "selection.sid": v.selection.sid,
-                        "selection.orderId": v.selection.orderId,
-                        "selection.affirmTime": v.selection.affirmTime
-                    };
+                com.post(api.quotation.sendSelection, options, function(res) {
 
-                    com.post(api.quotation.sendSelection, options, function(res) {
-
-                        com.showAlert(com.info, "操作成功");
-                    });
-
-                }, null, false);
+                    com.showAlert(com.info, "操作成功");
+                });
 
             });
 
@@ -119,6 +113,21 @@ var selectionDetail = (function() {
 
             });
 
+            QRCodeBtn: com.focusPage('#QRCodeBtn').on('click', function() {
+
+                com.focusPage('#QRcode').html("");
+
+                com.focusPage('#QRcode').qrcode({
+                    render: "canvas",
+                    width: 150,
+                    height: 150,
+                    text: "http://fanglin.vip/wx/selection?orderId=" + selection.orderId
+
+                });
+
+                selection.modals.QRcodeModal.modal('show');
+            });
+
             saveMaterialBtn: com.focusPage('#saveMaterialBtn').on('click', function() {
 
                 selection.modals.quotationItemMateria.modal("show");
@@ -135,7 +144,7 @@ var selectionDetail = (function() {
                             "selectionItem.num": 0,
                             "selectionItem.quoteId": soods.sid,
                             "selectionItem.soods.sid": soods.sid,
-                            "selectionItem.qiid": 0,
+                            "selectionItem.qiid": soods.sid,
                             "selectionItem.type": constant.quotation().selectionItem.TYPE_ALONE_INT,
                             "selectionItem.areaId": 0,
                             "selectionItem.areaName": '未匹配',
@@ -442,10 +451,7 @@ var selectionDetail = (function() {
         init: function() {
 
             // 初始化选材项类型
-            com.post(api.ds.quotation, {}, function(res) {
-
-                selectionItem.type = res.selectionItemType.split("key", "value");
-            }, null, false);
+            selectionItem.type = constant.quotation().selectionItem.type.keys;
         }
     };
 
@@ -607,18 +613,17 @@ var selectionDetail = (function() {
             selection.historyPage = params.historyPage;
 
             var orderId = params.quotation.orderId;
-            var editFlg = params.quotation.editFlg;
 
-            var quotationId = params.quotation.quotation ? params.quotation.quotation.qid : null;
+            selection.orderId = params.quotation.orderId;
+
+            var quotationId = null;
             var selectionItemType = 0;
 
-            editFlg ? quotationId = params.quotation.quotation.qid : com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 'quotation.orderId': orderId
             }, function(res) {
 
                 quotationId = res.quotation.qid;
-
-                selection.quotation = res.quotation;
             }, null, false);
 
             if (!quotationId) {
@@ -662,6 +667,8 @@ var selectionDetail = (function() {
             function loadPage(res) {
 
                 if (res.selection != null) {
+
+                    selection.orderId = res.selection.orderId;
 
                     selection.basicParams['selection.sid'] = res.selection.sid;
                     selection.basicParams['selection.qid'] = res.selection.qid;
@@ -820,7 +827,7 @@ var selectionDetail = (function() {
                     data = {
                         "areaId": rawData.eid,
                         "quoteId": rawData.eiid,
-                        "quotationItemId": rawData.quoteItemId,
+                        "quotationItemId": rawData.qiid,
                         "itemName": rawData.itemName,
                         "type": type,
                         "num": rawData.num,

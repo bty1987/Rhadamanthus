@@ -76,14 +76,16 @@
 				</tr>
 				<tr>
 					<td colspan="3">折前总价</td>
-					<td colspan="3">折前直接费</td>
-					<td colspan="3">管理费</td>
+					<td colspan="2">折前直接费</td>
+					<td colspan="2">管理费</td>
+                    <td colspan="2">税金</td>
 					<td colspan="3">折扣</td>
 				</tr>
 				<tr>
 					<td colspan="3" id="foldFrontTotal"></td>
-					<td colspan="3" id="foldFrontFee"></td>
-					<td colspan="3" id="managePrice"></td>
+					<td colspan="2" id="foldFrontFee"></td>
+					<td colspan="2" id="managePrice"></td>
+                    <td colspan="2" id="taxPrice"></td>
 					<td colspan="3" id="basdiscount"></td>
 				</tr>
 
@@ -148,14 +150,16 @@
 				</tr>
 				<tr>
 					<td colspan="3">决算折前总额（含减项折前价）</td>
-					<td colspan="3">决算直接费</td>
-					<td colspan="3">决算管理费</td>
+					<td colspan="2">决算直接费</td>
+					<td colspan="2">决算管理费</td>
+                    <td colspan="2">决算税金</td>
 					<td colspan="3">决算实花配比</td>
 				</tr>
 				<tr>
 					<td colspan="3" id="direct">0</td>
-					<td colspan="3" id="beforeTotal">0</td>
-					<td colspan="3" id="management">0</td>
+					<td colspan="2" id="beforeTotal">0</td>
+					<td colspan="2" id="management">0</td>
+                    <td colspan="2" id="taxment">0</td>
 					<td colspan="3" id="flowerRatio">0</td>
 				</tr>
 				<tr>
@@ -190,9 +194,8 @@
 
 			</tbody>
 		</table>
-		<table style="width: 100%; border-collapse:collapse;">
+		<table style="width: 100%; border-collapse:collapse;" id = "talk">
 			<tbody>
-
 				<tr>
 					<td colspan="1" style="width: 15%;">开户行省份</td>
 					<td colspan="7"></td>
@@ -219,20 +222,6 @@
                     <td colspan="7" id="companyBankno"><br>
                     </td>
                 </tr>
-
-				<tr>
-					<td colspan="1" rowspan="4" style="height: 80px;">备注</td>
-					<td colspan="7">1.该决算需在工程总验收后，并且主材确认无退货</td>
-				</tr>
-				<tr>
-					<td colspan="7">2.若决算差额低于10元，则以0元进行处理</td>
-				</tr>
-				<tr>
-					<td colspan="7">3.决算差额不含合同预付款及主材预付款金额</td>
-				</tr>
-				<tr>
-					<td colspan="7">4.决算后的地址，不能再办理退款及模式转变</td>
-				</tr>
 			</tbody>
 		</table>
 		<table style="width: 100%; border-collapse:collapse;">

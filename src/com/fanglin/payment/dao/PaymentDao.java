@@ -12,6 +12,7 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.PaymentDO;
 import com.fanglin.payment.po.PaymentPO;
@@ -19,9 +20,9 @@ import com.fanglin.utils.Paging;
 
 public interface PaymentDao extends Dao<PaymentPO> {
 
-	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters);
+	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters) throws FLException;
 
-	public List<PaymentPO> queryPayment(List<Filter> filters);
+	public List<PaymentPO> queryPayment(List<Filter> filters) throws FLException;
 
 	public List<PaymentPO> queryPaymentByOrderId(String orderId);
 

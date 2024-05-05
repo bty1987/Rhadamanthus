@@ -52,7 +52,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	private ServiceRecordDao serviceRecordDao;
 
 	@Override
-	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) {
+	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		if (filters.size() == 0) return;
 

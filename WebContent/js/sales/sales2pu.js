@@ -34,37 +34,37 @@ $(function () {
                     $.each(pageConfig.propertyArr, function (pi, pv) {
                         switch (pv) {
                             case "orderId":
-                                propertyArr.push(["装修单号:", v.orderId, "blue"]);
+                                propertyArr.push(["装修单号:", v.orderId, "blue", tools.decoration.info, v.orderId]);
                                 break;
                             case "address":
                                 propertyArr.push(["楼盘地址:", (v.house.village.name + " " + v.house.houseNumber), "grey"]);
                                 break;
                             case "customer":
-                                propertyArr.push(["客户名:", v.customer.name, "grey"]);
+                                propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
                                 break;
                             case "salesman":
-                                propertyArr.push(["渠道:", v.salesman.currentName, "grey"]);
+                                propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
                                 break;
                             case "dept":
-                                propertyArr.push(["部门:", v.dept.name, "grey"]);
+                                propertyArr.push(["部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
                                 break;
                             case "region":
-                                propertyArr.push(["分区:", v.region.name, "grey"]);
+                                propertyArr.push(["分区:", v.region.name, "grey", tools.department.info, v.region.did]);
                                 break;
                             case "guider":
-                                propertyArr.push(["导购:", v.guider.currentName, "grey"]);
+                                propertyArr.push(["导购:", v.guider.currentName, "grey", tools.personel.info, v.guider.userId]);
                                 break;
                             case "instorer":
-                                propertyArr.push(["驻店:", v.instorer.currentName, "grey"]);
+                                propertyArr.push(["驻店:", v.instorer.currentName, "grey", tools.personel.info, v.instorer.userId]);
                                 break;
                             case "guideDept":
-                                propertyArr.push(["主材部:", v.guideDept.name, "grey"]);
+                                propertyArr.push(["主材部:", v.guideDept.name, "grey", tools.department.info, v.guideDept.did]);
                                 break;
                             case "category":
                                 propertyArr.push(["品类:", v.category, "grey"]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.brand, "grey"]);
+                                propertyArr.push(["品牌:", v.brand, "grey", tools.brand.info, v.bid]);
                                 break;
                             case "createTime":
                                 propertyArr.push(["创建时间:", v.createTime, "green"]);
@@ -127,11 +127,20 @@ $(function () {
 
                     _label.append($input).append(_span).appendTo($label);
 
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>');
+                    $.each(propertyArr, function(index, value) {
+
+                        var $liProperty = $('<li></li>').appendTo($ulProperty);
+
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
+
+                        if (value.length == 5) {
+                            $liProperty.click(function() {
+
+                                value[3]($liProperty, value[4]);
+
+                            }).css("cursor", "pointer");
+                        }
                     });
 
                     $label.appendTo($h3);

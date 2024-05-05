@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
@@ -41,6 +42,8 @@ public class QuotationDO implements Serializable {
 	private Timestamp createTime;
 
 	private UserPO creater;
+
+	private QuotationVersionPO version;
 
 	private long basePrice;
 
@@ -79,6 +82,8 @@ public class QuotationDO implements Serializable {
 	private short status;
 
 	private String content;
+
+	private short index;
 
 	public QuotationDO() {
 		super();
@@ -144,6 +149,16 @@ public class QuotationDO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "qvid", referencedColumnName = "qvId")
+	public QuotationVersionPO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionPO version) {
+		this.version = version;
 	}
 
 	@Column(name = "basePrice")
@@ -315,6 +330,15 @@ public class QuotationDO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "[index]")
+	public short getIndex() {
+		return index;
+	}
+
+	public void setIndex(short index) {
+		this.index = index;
 	}
 
 	public void ptp(String orderId, UserPO userPO, String name, String style) {

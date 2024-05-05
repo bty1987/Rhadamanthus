@@ -71,8 +71,6 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
 
 				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
-				quotationFunctionAreaItemVO.setAddPrice(quotationItemPO.getAddPrice());
-				quotationFunctionAreaItemVO.setSubPrice(quotationItemPO.getSubPrice());
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 			}
 
@@ -253,28 +251,25 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid(), null);
 
+		if (qfaiIds == null) return 0;
+
+		if (qfaiIds.size() == 0) return 0;
+
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
 
 		if (quotationFunctionAreaPO == null) {
 			throw new FLException(200012, "功能区不存在");
 		}
 
-		if (qfaiIds != null && qfaiIds.size() > 1 && selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId()) > 0) {
+		if (selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId(), qfaiIds, SelectionItemPO.TYPE_QUOTATION_SHORT) > 0) {
 			throw new FLException(200037, "存在关联选材项");
 		}
 
-		if (qfaiIds != null && qfaiIds.size() == 1 && selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId(), qfaiIds.get(0)) > 0) {
-			throw new FLException(200037, "存在关联选材项");
-		}
+		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 
-		if (qfaiIds != null && qfaiIds.size() > 0) {
+		String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
-			QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
-
-			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
-
-			quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByQfaiIds(tableName, qfaiIds);
-		}
+		quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByQfaiIds(tableName, qfaiIds);
 
 		quotationDao.update(quotationPO);
 

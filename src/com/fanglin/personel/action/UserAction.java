@@ -230,7 +230,7 @@ public class UserAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		if ("agree".equals(approve)) userService.tranUser(new UserVO(userId), queryUserId());
+		if ("agree".equals(approve)) userService.tranUser(user, queryUserId(), queryRoleId());
 
 		return SUCCESS;
 	}

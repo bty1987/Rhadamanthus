@@ -23,7 +23,11 @@ public class QuotetionFunctionAreaItemPO3 extends QuotetionFunctionAreaItemPO im
 
 	private String name;
 
+	private int addPrice;
+
 	private int unitPrice;
+
+	private int subPrice;
 
 	private int index;
 
@@ -81,6 +85,15 @@ public class QuotetionFunctionAreaItemPO3 extends QuotetionFunctionAreaItemPO im
 		this.name = name;
 	}
 
+	@Column(name = "addPrice")
+	public int getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(int addPrice) {
+		this.addPrice = addPrice;
+	}
+
 	@Column(name = "unitPrice")
 	public int getUnitPrice() {
 		return unitPrice;
@@ -88,6 +101,15 @@ public class QuotetionFunctionAreaItemPO3 extends QuotetionFunctionAreaItemPO im
 
 	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	@Column(name = "subPrice")
+	public int getSubPrice() {
+		return subPrice;
+	}
+
+	public void setSubPrice(int subPrice) {
+		this.subPrice = subPrice;
 	}
 
 	@Column(name = "[index]")

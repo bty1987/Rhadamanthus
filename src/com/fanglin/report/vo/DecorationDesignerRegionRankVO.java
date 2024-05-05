@@ -1,23 +1,33 @@
 package com.fanglin.report.vo;
 
+import com.fanglin.communion.vo.DepartmentVO;
 
 public class DecorationDesignerRegionRankVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 8455800051413554029L;
 
 	private Integer ddrrId;
-	
-	private String designerRegionId;
-	
-	private String designerRegionName;
-	
-	private String createTime;
-	
-	private String endTime;
-	
+
+	private DepartmentVO region;
+
+	private Integer month;
+
 	private Double rank;
-	
+
+	private Integer rank1;
+
+	private Short type;
+
 	private Integer status;
+
+	public DecorationDesignerRegionRankVO() {
+		super();
+	}
+
+	public DecorationDesignerRegionRankVO(DepartmentVO region) {
+		super();
+		this.region = region;
+	}
 
 	public Integer getDdrrId() {
 		return ddrrId;
@@ -27,36 +37,20 @@ public class DecorationDesignerRegionRankVO implements java.io.Serializable {
 		this.ddrrId = ddrrId;
 	}
 
-	public String getDesignerRegionId() {
-		return designerRegionId;
+	public DepartmentVO getRegion() {
+		return region;
 	}
 
-	public void setDesignerRegionId(String designerRegionId) {
-		this.designerRegionId = designerRegionId;
+	public void setRegion(DepartmentVO region) {
+		this.region = region;
 	}
 
-	public String getDesignerRegionName() {
-		return designerRegionName;
+	public Integer getMonth() {
+		return month;
 	}
 
-	public void setDesignerRegionName(String designerRegionName) {
-		this.designerRegionName = designerRegionName;
-	}
-
-	public String getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
+	public void setMonth(Integer month) {
+		this.month = month;
 	}
 
 	public Double getRank() {
@@ -65,6 +59,22 @@ public class DecorationDesignerRegionRankVO implements java.io.Serializable {
 
 	public void setRank(Double rank) {
 		this.rank = rank;
+	}
+
+	public Integer getRank1() {
+		return rank1;
+	}
+
+	public void setRank1(Integer rank1) {
+		this.rank1 = rank1;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Integer getStatus() {

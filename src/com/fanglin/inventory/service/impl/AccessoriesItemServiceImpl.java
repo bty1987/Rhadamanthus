@@ -14,8 +14,12 @@ import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.po.ConstructionAccessoryPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.NoodsPO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
@@ -23,6 +27,11 @@ import com.fanglin.inventory.po.AccessoriesPO;
 import com.fanglin.inventory.service.AccessoriesItemService;
 import com.fanglin.inventory.vo.AccessoriesItemVO;
 import com.fanglin.inventory.vo.AccessoriesVO;
+import com.fanglin.quotation.dao.NormoodItemDao;
+import com.fanglin.quotation.dao.NormtionDao;
+import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.NormtionPO;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
@@ -42,10 +51,25 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
 
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
+	private NormtionDao normtionDao;
+
+	@Autowired
+	private NormoodItemDao normoodItemDao;
+
+	@Autowired
+	private NoodsDao noodsDao;
+
 	@Override
 	public List<AccessoriesItemVO> queryAccessoriesItemByAid(AccessoriesItemVO accessoriesItemVO) {
 
-		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItemByAid(accessoriesItemVO.getAid());
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesItemVO.getAid());
 		List<AccessoriesItemVO> accessoriesItemVOs = new ArrayList<AccessoriesItemVO>();
 
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
@@ -73,7 +97,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	@Override
 	public List<AccessoriesItemVO> queryAccessoriesItemByAids(List<Long> aids) {
 
-		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItemByAids(aids);
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(aids);
 		List<AccessoriesItemVO> accessoriesItemVOs = new ArrayList<AccessoriesItemVO>();
 
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
@@ -90,6 +114,73 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 	}
 
 	@Override
+	public List<AccessoriesItemVO> queryAccessoriesItemByOrderId(AccessoriesVO accessoriesVO) {
+
+		List<?> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesVO.getOrderId());
+		List<AccessoriesItemVO> accessoriesItemVOs = new ArrayList<AccessoriesItemVO>();
+
+		AccessoriesItemVO accessoriesItemVO;
+
+		for (Object item : accessoriesItemPOs) {
+
+			AccessoriesItemPO accessoriesItemPO = (AccessoriesItemPO) item;
+
+			accessoriesItemVO = new AccessoriesItemVO(new GoodsVO());
+
+			BeanUtil.copyProperties(accessoriesItemPO, accessoriesItemVO, Arrays.asList("goods", "color", "format"));
+			BeanUtil.copyProperties(accessoriesItemPO.getGoods(), accessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
+
+			accessoriesItemVOs.add(accessoriesItemVO);
+		}
+
+		return accessoriesItemVOs;
+	}
+
+	@Override
+	public int checkAccessoriesItem(AccessoriesVO accessoriesVO, AccessoriesItemVO accessoriesItemVO) throws FLException {
+
+		String orderId = accessoriesVO.getOrderId();
+		long nid = accessoriesItemVO.getNid();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(quotationPO.getQid());
+
+		if (normtionPO == null) return 0;
+
+		if (normtionPO.getStatus() != NormtionPO.STATUS_INIT_INT) return 0;
+
+		NoodsPO noodsPO = noodsDao.get(nid);
+
+		if (noodsPO == null) {
+			throw new FLException(130118, "定材不存在");
+		}
+
+		if (noodsPO.getCalc() != NoodsPO.CALC_CACL_INT) return 0;
+
+		int normamount = normoodItemDao.amountNormoodItem(quotationPO.getQid(), accessoriesItemVO.getNid());
+		int acceamount = accessoriesItemDao.amountAccessoriesItem(orderId, accessoriesItemVO.getNid());
+
+		normamount = Arith.round(normamount, 0, Arith.ROUND_UP);
+
+		if (Arith.add(acceamount, accessoriesItemVO.getNum()) > normamount) {
+			throw new FLException(260058, "辅料总额已达上限");
+		}
+
+		return Arith.sub(normamount, Arith.add(acceamount, accessoriesItemVO.getNum()));
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addAccessoriesItem(AccessoriesVO accessoriesVO, AccessoriesItemVO accessoriesItemVO) throws FLException {
 
@@ -103,7 +194,17 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
-		AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum());
+		if (accessoriesItemVO.getSchedule() != null && accessoriesPO.getSchedule() != accessoriesItemVO.getSchedule()) throw new FLException(260061, "施工节点不匹配");
+
+		if (accessoriesItemVO.getNid() != null) {
+			checkAccessoriesItem(accessoriesVO, accessoriesItemVO);
+		}
+
+		accessoriesPO.setTotal(Arith.add(accessoriesPO.getTotal(), accessoriesItemVO.getTotal()));
+
+		accessoriesDao.update(accessoriesPO);
+
+		AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO.getCaid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getNid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum());
 
 		accessoriesItemDao.save(accessoriesItemPO);
 
@@ -157,7 +258,6 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
-
 		long totals = Arith.mul(accessoriesItemPO.getSelling(), accessoriesItemPO.getNum());
 		int num = Arith.sub(accessoriesItemVO.getNum(), accessoriesItemPO.getNum());
 		long total = Arith.sub(accessoriesItemVO.getTotal(), totals);
@@ -166,6 +266,10 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		accessoriesItemPO.setSurplus(accessoriesItemVO.getNum());
 
 		accessoriesItemDao.update(accessoriesItemPO);
+
+		accessoriesPO.setTotal(Arith.add(accessoriesPO.getTotal(), total));
+
+		accessoriesDao.update(accessoriesPO);
 
 		if (accessoriesPO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料
 			return 0;
@@ -219,6 +323,10 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		}
 
 		long total = Arith.mul(accessoriesItemPO.getSelling(), accessoriesItemPO.getNum());
+
+		accessoriesPO.setTotal(Arith.sub(accessoriesPO.getTotal(), total));
+
+		accessoriesDao.update(accessoriesPO);
 
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
 

@@ -21,6 +21,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
@@ -50,6 +51,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	private QuotationDao quotationDao;
 
 	@Autowired
+	private ExtensionItemDao extensionItemDao;
+
+	@Autowired
 	private BrandDao brandDao;
 
 	@Autowired
@@ -62,8 +66,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public void pageSelectionItem(Paging paging, List<Filter> filters, Integer company, SelectionItemVO selectionItemVO) throws FLException {
 
 		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItem(paging, filters, selectionItemVO.getStatus(), company);
-
-		List<SelectionItemVO> selectionItemVOs = getSelectionItemVOs(selectionItemPDs);
+		List<SelectionItemVO> selectionItemVOs = ptv(selectionItemPDs);
 
 		paging.setData(selectionItemVOs);
 	}
@@ -74,7 +77,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		UserPO createrPO = userDao.queryUserByUserId(userId);
 
 		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItemForSupplier(paging, filters, createrPO.getUid(), company);
-		List<SelectionItemVO> selectionItemVOs = getSelectionItemVOs(selectionItemPDs);
+		List<SelectionItemVO> selectionItemVOs = ptv(selectionItemPDs);
 
 		paging.setData(selectionItemVOs);
 	}
@@ -83,9 +86,21 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public void pageSelectionItemForEscorter(Paging paging, List<Filter> filters, String userId) throws FLException {
 
 		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItemForEscorter(paging, filters, userId);
-		List<SelectionItemVO> selectionitemVOs = getSelectionItemVOs(selectionItemPDs);
+		List<SelectionItemVO> selectionitemVOs = ptv(selectionItemPDs);
 
 		paging.setData(selectionitemVOs);
+	}
+
+	@Override
+	public void pageSelectionItemForAccount(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
+		if (filters.size() == 0) return;
+
+		List<SelectionItemPD> selectionItemPDs = selectionItemDao.pageSelectionItemForAccount(paging, filters, company);
+		List<SelectionItemVO> selectionItemVOs = ptv(selectionItemPDs);
+
+		paging.setData(selectionItemVOs);
+
 	}
 
 	@Override
@@ -103,8 +118,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		for (SelectionItemPO selectionItemPO : selectionItemPOs) {
 			SelectionItemVO _selectionItemVO = new SelectionItemVO(new GoodsVO());
 
-			BeanUtil.copyProperties(selectionItemPO, _selectionItemVO, Arrays.asList("goods", "creater", "traner", "checker", "confirmer", "balancer", "finish", "reviewer", "soods"));
-			BeanUtil.copyProperties(selectionItemPO.getGoods(), _selectionItemVO.getGoods(), Arrays.asList("accessoriesType"));
+			selectionItemPO.ptv(_selectionItemVO);
 
 			selectionItemVOs.add(_selectionItemVO);
 		}
@@ -131,7 +145,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		List<SelectionItemPD> selectionItemPOs = selectionItemDao.querySelectionItemDBySid(selectionPO.getSid());
 
-		selectionItemVOs = getSelectionItemVOs(selectionItemPOs);
+		selectionItemVOs = ptv(selectionItemPOs);
 
 		return selectionItemVOs;
 	}
@@ -160,6 +174,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200035, "选材单不存在");
 		}
 
+		if (selectionItemVO.getType() == SelectionItemPO.TYPE_QUOTATION_SHORT && extensionItemDao.countExtensionItem(selectionItemVO.getAreaId(), selectionItemVO.getQuoteId()) != 0) {
+			throw new FLException(200037, "存在关联选材项");
+		}
+
 		GoodsPO goodsPO = goodsDao.get(selectionItemVO.getGoods().getGid());
 
 		BrandPO brandPO = brandDao.get(goodsPO.getBid());
@@ -168,7 +186,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		SelectionItemPO _selectionItemPO = selectionItemDao.querySelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
 
-		if (_selectionItemPO == null || _selectionItemPO.getType() == SelectionItemPO.TYPE_ALONE_SHORT) {
+		if (_selectionItemPO == null) {
 
 			SelectionItemPO selectionItemPO = new SelectionItemPO();
 
@@ -190,6 +208,13 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 			_selectionItemPO = selectionItemPO;
 
+		} else if (_selectionItemPO.getType() == SelectionItemPO.TYPE_ALONE_SHORT) {
+
+			_selectionItemPO.setQuoteId(selectionItemVO.getQuoteId());
+			_selectionItemPO.setSgid(selectionItemVO.getSoods().getSid());
+			_selectionItemPO.setQiid(selectionItemVO.getQiid());
+
+			selectionItemDao.update(_selectionItemPO);
 		} else {
 
 			if (_selectionItemPO.getStatus() != SelectionItemPO.STATUS_INIT_SHORT) {
@@ -213,8 +238,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		selectionDao.update(selectionPO);
 
-		BeanUtil.copyProperties(_selectionItemPO, selectionItemVO, Arrays.asList("goods", "creater", "traner", "checker", "confirmer", "finish", "reviewer", "balancer", "soods"));
-		BeanUtil.copyProperties(_selectionItemPO.getGoods(), selectionItemVO.getGoods(), Arrays.asList("accessoriesType"));
+		_selectionItemPO.ptv(selectionItemVO);
 
 		return 0;
 	}
@@ -239,73 +263,6 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionItemPO.setComment(selectionItemVO.getComment());
 
 		selectionItemDao.update(selectionItemPO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int refundSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
-
-		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
-
-		if (selectionItemPO == null) {
-			throw new FLException(200038, "选材项不存在");
-		}
-
-		selectionItemPO.setRefnum(selectionItemVO.getRefnum());
-
-		selectionItemDao.update(selectionItemPO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int deleteSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO) throws FLException {
-
-		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
-
-		if (selectionPO == null) {
-			throw new FLException(200035, "选材单不存在");
-		}
-
-		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
-
-		if (selectionItemPO == null) {
-			throw new FLException(200038, "选材项不存在");
-		}
-
-		if (selectionItemPO.getStatus() != SelectionItemPO.STATUS_INIT_SHORT) {
-			throw new FLException(200039, "选材项状态不可操作");
-		}
-
-		BeanUtil.copyProperties(selectionVO, selectionPO, Arrays.asList("decoration", "creater", "splitter", "traner"));
-
-		selectionDao.update(selectionPO);
-
-		selectionItemDao.deleteById(selectionItemPO.getSiid());
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int cutoffSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
-
-		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
-
-		if (selectionItemPO == null) {
-			throw new FLException(200038, "选材项不存在");
-		}
-
-		if (selectionItemPO.getStatus() == SelectionItemPO.STATUS_BALANCE_SHORT) {
-			throw new FLException(200039, "选材项状态不可操作");
-		}
-
-		updateSelectionTotal(selectionItemPO, selectionItemPO.getNum());
-
-		selectionItemDao.delete(selectionItemPO);
 
 		return 0;
 	}
@@ -493,34 +450,110 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		return 0;
 	}
 
-	private List<SelectionItemVO> getSelectionItemVOs(List<SelectionItemPD> selectionItemPDs) throws FLException {
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refundSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT).contains(selectionItemPO.getStatus())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		selectionItemPO.setRefnum(selectionItemVO.getRefnum());
+
+		selectionItemDao.update(selectionItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (Arrays.asList(SelectionItemPO.STATUS_CHECK_SHORT, SelectionItemPO.STATUS_CONFIRM_SHORT, SelectionItemPO.STATUS_FINISH_SHORT).contains(selectionItemPO.getStatus())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		selectionItemDao.delete(selectionItemPO);
+
+		updateSelectionTotal(selectionItemPO, selectionItemPO.getNum());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int cutoffSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT).contains(selectionItemPO.getStatus())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		selectionItemPO.setStatus(SelectionItemPO.STATUS_DISABLE_SHORT);
+
+		selectionItemDao.update(selectionItemPO);
+
+		updateSelectionTotal(selectionItemPO, selectionItemPO.getNum());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rejectSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT).contains(selectionItemPO.getStatus())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
+
+		selectionItemDao.update(selectionItemPO);
+
+		return 0;
+	}
+
+	private List<SelectionItemVO> ptv(List<SelectionItemPD> selectionItemPDs) throws FLException {
 
 		List<SelectionItemVO> selectionItemVOs = new ArrayList<SelectionItemVO>();
 
 		for (SelectionItemPD selectionItemPD : selectionItemPDs) {
+
 			SelectionItemVO selectionItemVO = new SelectionItemVO(new SelectionVO(), new GoodsVO(), new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new SoodsVO());
 
 			selectionItemVO.getDecoration().setSupervisor(new UserBaseVO());
 			selectionItemVO.getDecoration().setEscorter(new UserBaseVO());
 
-			BeanUtil.copyProperties(selectionItemPD, selectionItemVO, Arrays.asList("selection", "goods", "decoration", "creater", "traner", "checker", "confirmer", "finish", "reviewer", "balancer", "supplier", "soods"));
-
-			BeanUtil.copyProperties(selectionItemPD.getGoods(), selectionItemVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			BeanUtil.copyProperties(selectionItemPD.getCreater(), selectionItemVO.getCreater(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getTraner(), selectionItemVO.getTraner(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getChecker(), selectionItemVO.getChecker(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getConfirmer(), selectionItemVO.getConfirmer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getFinish(), selectionItemVO.getFinish(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getReviewer(), selectionItemVO.getReviewer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getBalancer(), selectionItemVO.getBalancer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getSupplier(), selectionItemVO.getSupplier(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(selectionItemPD.getSoods(), selectionItemVO.getSoods(), Arrays.asList("dept", "duty"));
-
-			selectionItemPD.getDecoration().ptvcascade(selectionItemVO.getDecoration());
-			selectionItemPD.getSelection().ptvcascade(selectionItemVO.getSelection());
-
-			selectionItemVOs.add(selectionItemVO);
+			selectionItemVOs.add(selectionItemPD.ptv(selectionItemVO));
 		}
 
 		return selectionItemVOs;

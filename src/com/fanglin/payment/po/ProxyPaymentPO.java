@@ -34,6 +34,8 @@ public class ProxyPaymentPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	public static final String COLUMN_ISEXPIRE_STR = "isexpire";
+
 	public static final short TYPE_COLLECT_INT = 0;
 
 	public static final short TYPE_REFUND_INT = 1;
@@ -75,6 +77,8 @@ public class ProxyPaymentPO implements Serializable {
 	private short type;
 
 	private short status;
+
+	private short isexpire; // 过期标识
 
 	private int company;
 
@@ -224,6 +228,15 @@ public class ProxyPaymentPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isexpire")
+	public short getIsexpire() {
+		return isexpire;
+	}
+
+	public void setIsexpire(short isexpire) {
+		this.isexpire = isexpire;
 	}
 
 	@Column(name = "company")

@@ -49,7 +49,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
 
@@ -70,10 +70,12 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			}
 
 			materialActivityItemVO.setReceiveUserId(new UserBaseVO());
+
 			BeanUtil.copyProperties(materialActivityItemPO.getReceiveUserId(), materialActivityItemVO.getReceiveUserId(), Arrays.asList("dept", "duty"));
 
 			mterialActivityItemVOs.add(materialActivityItemVO);
 		}
+
 		return mterialActivityItemVOs;
 	}
 
@@ -82,9 +84,9 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 	public int addMaterialActivityItem(List<MaterialActivityItemVO> materialActivityItems) throws FLException {
 
 		for (MaterialActivityItemVO materialActivityItemVO : materialActivityItems) {
-			
+
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(materialActivityItemVO.getOrderId());
-			
+
 			if (decorationPO == null) {
 				throw new FLException(140013, "订单不存在");
 			}
@@ -110,7 +112,6 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 		Object materialObject = JSONObject.toJSON(queryMaterialActivityByTotal);
 
 		return materialObject;
-
 	}
 
 	@Override
@@ -139,8 +140,8 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 		if (materialActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
-		
-		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+
+		if (materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 
@@ -162,10 +163,10 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+		if (materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_RECEIVE_INT);
 		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NUMBER_INT);
 		materialActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
@@ -176,7 +177,7 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 		AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
+
 		if (materialActivityItemPO.getIsStock() == 0) {
 
 			int num = Arith.sub(awardStockPO.getNum(), materialActivityItemPO.getNum());
@@ -189,27 +190,27 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 			awardStockDao.update(awardStockPO);
 		}
-		
+
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, materialActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
 		awardRecordDao.save(awardRecordPO);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deliveMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId, String userName) throws FLException {
-		
+
 		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
 
 		if (materialActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
-		
-		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT){
+
+		if (materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_INIT_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_DELIVERY_INT);
 		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NUMBER_INT);
 		materialActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
@@ -233,10 +234,10 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 
 			awardStockDao.update(awardStockPO);
 		}
-		
+
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, materialActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
 		awardRecordDao.save(awardRecordPO);
-		
+
 		return 0;
 	}
 
@@ -249,42 +250,42 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 		if (materialActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
-		
-		if(materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_RECEIVE_INT){
+
+		if (materialActivityItemPO.getState() != MaterialActivityItemPO.STATUS_RECEIVE_INT) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_WAIT_INT);
 		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
 
 		materialActivityDao.update(materialActivityItemPO);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int refundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId,String userName) throws FLException {
+	public int refundMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO, String userId, String userName) throws FLException {
 
 		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
-		List<Short> status = Arrays.asList(new Short[] {MaterialActivityItemPO.STATUS_RECEIVE_INT, MaterialActivityItemPO.STATUS_DELIVERY_INT, MaterialActivityItemPO.STATUS_WAIT_INT});
-		
+		List<Short> status = Arrays.asList(new Short[] { MaterialActivityItemPO.STATUS_RECEIVE_INT, MaterialActivityItemPO.STATUS_DELIVERY_INT, MaterialActivityItemPO.STATUS_WAIT_INT });
+
 		if (materialActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
-		
-		if(!status.contains(materialActivityItemPO.getState())){
+
+		if (!status.contains(materialActivityItemPO.getState())) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_RETREAT_INT);
 		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NUMBER_INT);
 
 		materialActivityDao.update(materialActivityItemPO);
-		
+
 		AwardStockPO awardStockPO = awardStockDao.get(materialActivityItemPO.getAsid());
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
+
 		if (materialActivityItemPO.getIsStock() == 0) {
 
 			int num = Arith.add(awardStockPO.getNum(), materialActivityItemPO.getNum());
@@ -298,10 +299,10 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 			awardStockDao.update(awardStockPO);
 
 		}
-		
+
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, materialActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_MATERIAL_INT, materialActivityItemPO.getIsStock(), materialActivityItemPO.getMoney(), materialActivityItemPO.getNum(), materialActivityItemVO.getContent());
 		awardRecordDao.save(awardRecordPO);
-		
+
 		return 0;
 	}
 
@@ -310,21 +311,21 @@ public class MaterialActivityServiceImpl implements MaterialActivityService {
 	public int expendMaterialActivityItem(MaterialActivityItemVO materialActivityItemVO) throws FLException {
 
 		MaterialActivityItemPO materialActivityItemPO = materialActivityDao.get(materialActivityItemVO.getMaiid());
-		List<Short> status = Arrays.asList(new Short[] {MaterialActivityItemPO.STATUS_RECEIVE_INT, MaterialActivityItemPO.STATUS_DELIVERY_INT});
-		
+		List<Short> status = Arrays.asList(new Short[] { MaterialActivityItemPO.STATUS_RECEIVE_INT, MaterialActivityItemPO.STATUS_DELIVERY_INT });
+
 		if (materialActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
-		
-		if(!status.contains(materialActivityItemPO.getState())){
+
+		if (!status.contains(materialActivityItemPO.getState())) {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+
 		materialActivityItemPO.setState(MaterialActivityItemPO.STATUS_CONSUME_INT);
 		materialActivityItemPO.setIsStock(MaterialActivityItemPO.STOCK_NC_INT);
 
 		materialActivityDao.update(materialActivityItemPO);
-		
+
 		return 0;
 	}
 

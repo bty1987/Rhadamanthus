@@ -9,12 +9,12 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationHolonomyService {
 
-	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company);
+	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public DecorationHolonomyVO queryDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO);
 
 	public void makeDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException;
-	
+
 	public void updateDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException;
 
 }

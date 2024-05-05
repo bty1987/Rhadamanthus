@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationBalanceService {
 
-	public void pageDecorationBalance(Paging paging, List<Filter> filters);
+	public void pageDecorationForBalance(Paging paging, List<Filter> filters) throws FLException;
 
 	public DecorationBalanceVO queryDecorationBalance(DecorationVO decorationVO);
 

@@ -120,6 +120,7 @@ var Searcher = function() {
             var _rname = condRule['submitConfig']['name'];// 向后台提交提交时的参数名
             var _rop = condRule['submitConfig']['op'];// 提交给后台时的查询条件:等于或者包含
             var _ds = condRule['dataSource'];
+            var _detail = condRule['detail'];
 
             if (_ds) {
                 var _rurl = _ds['url'];// autofill和select标签获取可选值的接口
@@ -187,6 +188,7 @@ var Searcher = function() {
             }
 
             if (_rtype == "autofill") {
+
                 $showItem = $('<input>').attr({
                     "type": "text",
                     // "placeholder": "请输入" + _rlabel,
@@ -294,6 +296,26 @@ var Searcher = function() {
 
                 setOption(data);
             }
+
+            if (_detail) {
+
+                $item.addClass("input-icon input-icon-right");
+
+                $('<i class="icon-filter"></i>').appendTo($item).dblclick(function(res) {
+
+                    params.condition.item = $showItem;
+                    params.condition.rkey = _detail.key;
+                    params.condition.rvalue = _detail.value;
+
+                    com.popup4page("#" + _detail.content, _detail.url, _rlabel, null, function() {
+
+                        delete params.condition.item;
+                        delete params.condition.rkey;
+                        delete params.condition.rvalue;
+                    });
+                });
+            }
+
             return $item;
         }
     };
@@ -336,28 +358,41 @@ var Searcher = function() {
                     var _alone = _rule.submitConfig.alone;
 
                     var _inputValue = $input.val();
-                    var _inputKey = _inputValue != "" ? $input.attr("data-typeahead-key") : $input.removeAttr("data-typeahead-key");
+                    var _inputKey = $input.attr("data-typeahead-key");
                     var _op = $('[name=' + val + ']', basicConf.$searcher).attr('data-op');
 
-                    if (_inputValue) {
+                    if (!_inputValue)
+                        return true;
 
-                        if (_reg && !(_reg.reg).test(_inputValue)) {
-                            com.showTip($input, _reg.msg, "top");
-                            _params = null;
-                            return false;
-                        }
+                    if (_reg && !(_reg.reg).test(_inputValue)) {
 
-                        if (_alone) {
-                            _params[_postName] = _inputValue;
-                        } else {
-                            $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                            _params['filters[' + _count + '].data'] = _inputType == "autofill" ? _inputKey : _inputValue;
-                            _params['filters[' + _count + '].field'] = _postName;
-                            _params['filters[' + _count + '].op'] = _op;
-                            _params['filters[' + _count + '].inputValue'] = _inputValue;
-                            _count += 1;
-                        }
+                        com.showTip($input, _reg.msg, "top");
+
+                        return false;
                     }
+
+                    if (_inputType == "autofill" && !_inputKey) {
+
+                        com.showTip($input, "请选择选项", "top");
+
+                        return false;
+                    }
+
+                    if (_alone) {
+
+                        _params[_postName] = _inputValue;
+
+                        return true;
+                    }
+
+                    $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
+
+                    _params['filters[' + _count + '].data'] = _inputType == "autofill" ? _inputKey : _inputValue;
+                    _params['filters[' + _count + '].field'] = _postName;
+                    _params['filters[' + _count + '].op'] = _op;
+                    _params['filters[' + _count + '].inputValue'] = _inputValue;
+
+                    _count += 1;
                 });
             }
 
@@ -534,7 +569,6 @@ var Searcher = function() {
 
         com.post(basicConf.url, _params, $.proxy(function(result) {
 
-            // params全局变量,给全局变量赋当前查询条件的值
             if (basicConf.historyName)
                 params[basicConf.historyName] = _params;
 
@@ -638,6 +672,7 @@ var Searcher = function() {
 
             paging.getDataByPage(_params);
         } else {
+
             queryData($.extend({}, _params, basicConf.params));
         }
     };
@@ -771,8 +806,11 @@ var Searcher = function() {
                 var $addi = $('<i></i>').addClass('bigger-110 ' + b.icon).appendTo($adda);
                 var $addspan = $('<span ></span>').text(b.name).appendTo($adda);
 
+                if (b.show && typeof b.show == 'function' && !b.show())
+                    return true;
+
                 basicConf.buttons.push($adda);
-            }))
+            }));
 
             return this;
         },
@@ -1185,17 +1223,27 @@ var Searcher = function() {
             return this;
         },
 
-        render: function() {
+        render: function(callback) {
 
             basicConf.buttons && typeof basicConf.buttons == "function" && (basicConf.buttons = buttons());
 
             !basicConf.isPage && paging.init(); // 绑定上一页下一页事件
 
+            if (basicConf.isPage) {
+                basicConf.buttons && $.each(basicConf.buttons, function(i, v) {
+
+                    v.appendTo(basicConf.$pager);
+                });
+            }
+
             searchCond.renderConds(); // 初始化查询条件
 
             setTimeout(function() {
 
-                searchByPresentParams()
+                searchByPresentParams();
+
+                if (callback)
+                    callback();
             }, 500);
 
             return this;

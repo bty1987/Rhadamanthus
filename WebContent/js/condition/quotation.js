@@ -119,9 +119,9 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.quotation,
-            postData: {},
-            listPath: "presignItemType",
+            url: null,
+            postData: null,
+            listPath: constant.data().presignItem.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -228,8 +228,8 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.quotation,
-            listPath: "protationStatus",
+            url: null,
+            listPath: constant.quotation().protation.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -336,11 +336,11 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.quotation,
+            url: null,
             postData: {
                 "timestamp": new Date().getTime()
             },
-            listPath: "quotationStatus",
+            listPath: constant.quotation().quotation.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -447,11 +447,11 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.quotation,
+            url: null,
             postData: {
                 "timestamp": new Date().getTime()
             },
-            listPath: "extensionStatus",
+            listPath: constant.quotation().extension.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -577,6 +577,24 @@ Condition.addupRule("quotation", {
         }
     },
 
+    "selection-item-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: constant.quotation().selectionItem.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "selection-item-status": {
         label: "状态",
         type: "select",
@@ -587,26 +605,10 @@ Condition.addupRule("quotation", {
         },
         dataSource: {
             url: null,
-            postData: null,
-            listPath: [{
-                key: "0",
-                value: "初始"
-            }, {
-                key: "1",
-                value: "配送"
-            }, {
-                key: "2",
-                value: "审核"
-            }, {
-                key: "3",
-                value: "确认"
-            }, {
-                key: "4",
-                value: "完结"
-            }, {
-                key: "5",
-                value: "结算"
-            }, ],
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: constant.quotation().selectionItem.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -693,6 +695,16 @@ Condition.addupRule("quotation", {
         }
     },
 
+    "selection-item-reviewTime": {
+        label: "核对时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "reviewTime",
+            op: "between",
+            validate: null
+        }
+    },
+
     "selection-affirmTime": {
         label: "确认时间",
         type: "dateRangePicker",
@@ -712,11 +724,11 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.quotation,
+            url: null,
             postData: {
                 "timestamp": new Date().getTime()
             },
-            listPath: "addReduceisAffirmDict",
+            listPath: constant.quotation().selection.isAffirm.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -893,11 +905,11 @@ Condition.addupRule("quotation", {
             validate: null
         },
         dataSource: {
-            url: api.ds.quotation,
+            url: null,
             postData: {
                 "timestamp": new Date().getTime()
             },
-            listPath: "addReduceisAffirmDict",
+            listPath: constant.quotation().addreduce.isAffirm.datas,
             keyPath: "key",
             valuePath: "value"
         }

@@ -67,7 +67,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 	private MessageService messageService;
 
 	@Override
-	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) {
+	public void pageConstructionSchedule(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -212,9 +212,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 			constructionPO.setSchedule(constructionNodePO.getSort());
 			constructionPO.setCnid(constructionNodePO.getCnid());
-
-			constructionDao.update(constructionPO);
 		}
+
+		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+		constructionDao.update(constructionPO);
 
 		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s准备进场. %s", constructionNodePO.getName(), constructionNodePO.getStartalk()));
 
@@ -261,6 +262,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionSchedulePO.setEndTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionScheduleDao.update(constructionSchedulePO);
+
+		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+		constructionDao.update(constructionPO);
 
 		if (constructionNodePO.getEndSurvey() != null && constructionNodePO.getEndSurvey().getStatus() == ConstructionNodePO.STATUS_INIT_SHORT) {
 			surveyService.makeSurvey(new SurveyVO(constructionNodePO.getEndSurvey().getStid(), constructionPO.getDecoration().getOrderId()), userId, constructionPO.getDecoration().getCompany());

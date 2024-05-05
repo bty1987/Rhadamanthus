@@ -21,11 +21,15 @@ public class SurveyTemplatePO implements Serializable {
 
 	public static final short STATUS_ENABLE_INT = 0; // 启用
 
+	public static final short ISSEND_AUTOMATIC_INT = 1; // 自动
+
 	private long stid;
 
 	private String name;
 
 	private short status;
+
+	private short isSend;
 
 	private int company;
 
@@ -62,6 +66,15 @@ public class SurveyTemplatePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isSend")
+	public short getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(short isSend) {
+		this.isSend = isSend;
 	}
 
 	@Column(name = "company")

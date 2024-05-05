@@ -6,6 +6,8 @@ jQuery(function($) {
         modal: null,
         categoryItems: {},
         type: {},
+        isCoupon: {},
+        isCount: {},
         editFlg: false,
         repeatFlg: false,
 
@@ -33,11 +35,16 @@ jQuery(function($) {
     category.categoryItems.kino = com.focusPage("#kino");
     category.categoryItems.kiname = com.focusPage("#kiname");
     category.categoryItems.type = com.focusPage("#type");
+    category.categoryItems.isCoupon = com.focusPage("#isCoupon");
+    category.categoryItems.isCount = com.focusPage("#isCount");
 
-    com.post(api.ds.data, {}, function(res) {
-
-        category.categoryItems.type.bindData(res.categoryType, "key", "value");
-    });
+    // com.post(api.ds.data, {}, function(res) {
+    //
+    //     category.categoryItems.type.bindData(res.categoryType, "key", "value");
+    // });
+    category.categoryItems.type.bindData(constant.data.category.type.datas, 'key', 'value')
+    category.categoryItems.isCoupon.bindData(constant.data.category.isCoupon.datas, 'key', 'value');
+    category.categoryItems.isCount.bindData(constant.data.category.isCount.datas, 'key', 'value')
 
     $.extend(com.validator, category.validator);
 
@@ -69,7 +76,7 @@ jQuery(function($) {
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
-            var propertyArr = [["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"], ["类型: ", v.type == 0 ? "标准" : "统计", "red"]];
+            var propertyArr = [["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"], ["类型: ", constant.data().category.type.keys[v.type], "red"], ["券标识: ", constant.data().category.isCoupon.keys[v.isCoupon], "red"], ["统计标识: ", constant.data().category.isCount.keys[v.isCount], "red"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -106,7 +113,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-category-name"], "condList", api.data.pageCategory, function(data) {
+    searcher.init(["data-category-name", "data-category-isCoupon", "data-category-isCount"], "condList", api.data.pageCategory, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "categoryPostData", null, false, null, function() {
@@ -139,6 +146,8 @@ jQuery(function($) {
         category.categoryItems.kino.val(v.kino);
         category.categoryItems.kiname.val(v.kiname);
         category.categoryItems.type.val(v.type);
+        category.categoryItems.isCoupon.val(v.isCoupon);
+        category.categoryItems.isCount.val(v.isCount);
 
         category.modal.modal("show");
     }
@@ -155,7 +164,9 @@ jQuery(function($) {
             'category.name': category.categoryItems.categoryName.val(),
             'category.kino': category.categoryItems.kino.val(),
             'category.kiname': category.categoryItems.kiname.val(),
-            'category.type': category.categoryItems.type.val()
+            'category.type': category.categoryItems.type.val(),
+            'category.isCoupon': category.categoryItems.isCoupon.val(),
+            'category.isCount': category.categoryItems.isCount.val()
         };
 
         if (editFlg) {

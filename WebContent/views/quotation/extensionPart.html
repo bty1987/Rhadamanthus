@@ -54,6 +54,39 @@
                                         <label id="sumLabSumMoney" class="col-md-8 no-padding-left">0</label>
                                     </div>
                                 </div>
+
+                                <div class="col-md-12 hr hr-16"></div>
+
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class=" col-md-5 no-padding-right">管理费比例</label>
+										<label id="manageRate" class=" col-md-6  no-padding-left"></label>
+									</div>
+								</div>
+
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class=" col-md-5 no-padding-right">管理费价格</label>
+										<label id="managePrice" class=" col-md-6  no-padding-left"></label>
+									</div>
+								</div>
+
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class=" col-md-5 no-padding-right">管理费计入</label>
+										<input type="checkbox" id="isCountManage" class="ace"/>
+										<span class="lbl"></span>
+									</div>
+								</div>
+
+								<div class="col-md-12">
+									<div class="form-group">
+										<label class=" col-md-5 no-padding-right">管理费折扣</label>
+										<input type="checkbox" id="isCountManageDiscount" class="ace"/>
+										<span class="lbl"></span>
+									</div>
+								</div>
+
                                 <div class="col-md-12 hr hr-16"></div>
 
                                 <div class="col-md-12 center">
@@ -64,12 +97,12 @@
                                             <i class="icon-pencil"></i>报价项
                                         </button>
                                         
-                                        <button id="addQuotaionItemBtn" class="btn btn-minier btn-default col-md-5 hide" style="padding-left: 2px;" >
+                                        <button id="addQuotaionItemBtn" class="btn btn-minier btn-default col-md-5" style="padding-left: 2px;" >
                                             <i class="icon-pencil"></i>报价中项目
                                         </button>
 
                                         <button id="addNewItemBtn" class="btn btn-minier btn-pink col-md-5" style="padding-left: 2px;" >
-                                            <i class="icon-pencil"></i>新增
+                                            <i class="icon-pencil"></i>自定义
                                         </button>
                                         
                                     </div>
@@ -187,7 +220,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="saveQuoteItemBtn" class="btn btn-primary">保存</button>
                             <button type="button" id="cancelQuoteItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>
@@ -214,7 +246,7 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="confirmItemBtn" class="btn btn-primary">确定</button>
+                            <button type="button" id="confirmItemBtn" class="btn btn-primary">下一步</button>
                             <button type="button" id="cancelItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>
@@ -251,8 +283,8 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right" for="quotationType">类型</label>
-                                    <div class="col-sm-3">
-                                        <select class="form-control v_required" id="quotationType" data-toggle="popover" data-trigger='manual'></select>
+                                    <div class="col-sm-9">
+                                        <select class="col-xs-10 col-sm-5 v_required" id="quotationType" data-toggle="popover" data-trigger='manual'></select>
                                     </div>
                                 </div>
                                 <div class="space-4"></div>
@@ -260,16 +292,16 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
-                                    <div class="col-sm-3">
-                                        <select class="form-control v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
+                                    <div class="col-sm-9">
+                                        <select class="col-xs-10 col-sm-5 v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
                                     </div>
                                 </div>
                                 <div class="space-4"></div>
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
-                                    <div class="col-sm-3">
-                                        <select class="form-control v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
+                                    <div class="col-sm-9">
+                                        <select class="col-xs-10 col-sm-5 v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
                                     </div>
                                 </div>
                                 <div class="space-4"></div>

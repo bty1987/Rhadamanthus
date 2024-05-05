@@ -2,6 +2,7 @@ package com.fanglin.sales.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.SalesDeliveryItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesdeliveryitem", catalog = "sales")
@@ -27,12 +30,6 @@ public class SalesDeliveryItemPO implements Serializable {
 	public static final String COLUMN_SDIID_STR = "sdiid";
 
 	public static final String COLUMN_SALESNO_STR = "sales.no";
-
-	public static final String COLUMN_SALESORDERID_STR = "sales.orderId";
-
-	public static final String COLUMN_SALESBRAND_STR = "sales.brand";
-
-	public static final String COLUMN_SALESCATEGROY_STR = "sales.category";
 
 	public static final String COLUMN_SIID_LONG = "salesItem.siid";
 
@@ -55,7 +52,7 @@ public class SalesDeliveryItemPO implements Serializable {
 	public static final String COLUMN_CHECKTIME_STR = "checkTime";
 
 	public static final String COLUMN_CONFIRMTIME_STR = "confirmTime";
-	
+
 	public static final String COLUMN_FINISHTIME_STR = "finishTime";
 
 	public static final short STATUS_INIT_INT = 0;
@@ -230,7 +227,7 @@ public class SalesDeliveryItemPO implements Serializable {
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tuid", referencedColumnName = "uid")
 	public UserPO getTraner() {
@@ -289,4 +286,32 @@ public class SalesDeliveryItemPO implements Serializable {
 		this.company = company;
 	}
 
+	public SalesDeliveryItemVO ptv(SalesDeliveryItemVO vo) {
+
+		BeanUtil.copyPropertie(this, vo, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
+
+		if (vo.getCreater() != null) BeanUtil.copyProperties(getCreater(), vo.getCreater(), Arrays.asList("dept", "duty"));
+		if (vo.getCreater() != null && vo.getCreater().getDept() != null && getCreater() != null) BeanUtil.copyProperties(getCreater().getDept(), vo.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (vo.getTraner() != null) BeanUtil.copyProperties(getTraner(), vo.getTraner(), Arrays.asList("dept", "duty"));
+		if (vo.getTraner() != null && vo.getTraner().getDept() != null && getTraner() != null) BeanUtil.copyProperties(getTraner().getDept(), vo.getTraner().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (vo.getChecker() != null) BeanUtil.copyProperties(getChecker(), vo.getChecker(), Arrays.asList("dept", "duty"));
+		if (vo.getChecker() != null && vo.getChecker().getDept() != null && getChecker() != null) BeanUtil.copyProperties(getChecker().getDept(), vo.getChecker().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (vo.getConfirmer() != null) BeanUtil.copyProperties(getConfirmer(), vo.getConfirmer(), Arrays.asList("dept", "duty"));
+		if (vo.getConfirmer() != null && vo.getConfirmer().getDept() != null && getConfirmer() != null) BeanUtil.copyProperties(getConfirmer().getDept(), vo.getConfirmer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (vo.getFinisher() != null) BeanUtil.copyProperties(getFinisher(), vo.getFinisher(), Arrays.asList("dept", "duty"));
+		if (vo.getFinisher() != null && vo.getFinisher().getDept() != null && getFinisher() != null) BeanUtil.copyProperties(getFinisher().getDept(), vo.getFinisher().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (vo.getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem(), vo.getSalesItem(), Arrays.asList("goods", "color", "format"));
+		if (vo.getSalesItem() != null && vo.getSalesItem().getGoods() != null && getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem().getGoods(), vo.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
+		if (vo.getSalesItem() != null && vo.getSalesItem().getColor() != null && getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem().getColor(), vo.getSalesItem().getColor());
+		if (vo.getSalesItem() != null && vo.getSalesItem().getFormat() != null && getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem().getFormat(), vo.getSalesItem().getFormat());
+
+		if (vo.getSales() != null) getSales().ptv(vo.getSales());
+
+		return vo;
+	}
 }

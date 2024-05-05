@@ -51,6 +51,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	private String name;
 
+	private String alias;
+
 	private String pinyin;
 
 	private String barcode;
@@ -118,6 +120,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "alias")
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	@Column(name = "pinyin")

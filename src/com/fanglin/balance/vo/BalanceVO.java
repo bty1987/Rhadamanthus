@@ -37,6 +37,8 @@ public class BalanceVO implements Serializable {
 
 	private Short status;
 
+	private Short isPay;
+
 	private Integer company;
 
 	public BalanceVO() {
@@ -146,6 +148,14 @@ public class BalanceVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIsPay() {
+		return isPay;
+	}
+
+	public void setIsPay(Short isPay) {
+		this.isPay = isPay;
 	}
 
 	public Integer getCompany() {

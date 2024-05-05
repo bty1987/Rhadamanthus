@@ -27,9 +27,11 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
+import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -39,6 +41,10 @@ import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.po.CustomerOriginPO;
+import com.fanglin.data.common.dao.DecorationMeasureDao;
+import com.fanglin.data.common.dao.PaymentTypeDao;
+import com.fanglin.data.po.DecorationMeasureItemPO;
+import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.decoration.dao.AuditDao;
@@ -62,6 +68,7 @@ import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
 import com.fanglin.payment.po.AdvancePaymentDO;
+import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
@@ -71,14 +78,6 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.quotation.dao.ExtensionDao;
-import com.fanglin.quotation.dao.ExtensionItemDao;
-import com.fanglin.quotation.dao.QuotationDao;
-import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
-import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
-import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
-import com.fanglin.quotation.po.QuotationFunctionAreaPO;
-import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.right.dao.DecorationDesignDepartmentRightDao;
 import com.fanglin.right.dao.DecorationSalesmanDepartmentRightDao;
 import com.fanglin.right.dao.DecorationStatusRightDao;
@@ -118,16 +117,10 @@ public class DecorationServiceImpl implements DecorationService {
 	private AdvancePaymentService advancePaymentService;
 
 	@Autowired
+	private DepartmentDao departmentDao;
+
+	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private QuotationDao quotationDao;
-
-	@Autowired
-	private QuotationFunctionAreaDao quotationFunctionAreaDao;
-
-	@Autowired
-	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 
 	@Autowired
 	private DecorationBelongDao decorationBelongDao;
@@ -178,16 +171,16 @@ public class DecorationServiceImpl implements DecorationService {
 	private CustomerDao customerDao;
 
 	@Autowired
-	private ExtensionItemDao extensionItemDao;
-
-	@Autowired
-	private ExtensionDao extensionDao;
-
-	@Autowired
 	private DecorationAdditionService decorationAdditionService;
 
+	@Autowired
+	private DecorationMeasureDao decorationMeasureDao;
+
+	@Autowired
+	private PaymentTypeDao paymentTypeDao;
+
 	@Override
-	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses) {
+	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses, Short companyType) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -199,9 +192,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (userPO == null) return;
 
-		filters.add(new Filter("statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
+		Integer company = (companyType == null || companyType == 0) ? null : authentication.getCompany();
 
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters);
+		filters.add(new Filter("decoration.statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -222,7 +217,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForGeneral(Paging paging, List<Filter> filters, Authentication authentication) {
+	public void pageDecorationForGeneral(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -251,7 +246,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication) {
+	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -313,13 +308,13 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForCompany(Paging paging, List<Filter> filters, int company, List<Short> statuses) {
+	public void pageDecorationForCompany(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException {
 
 		if (filters.size() == 0) return;
 
 		if (statuses == null || statuses.size() == 0) return;
 
-		filters.add(new Filter("statuses", statuses, "in"));
+		filters.add(new Filter("decoration.statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -341,7 +336,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company) {
+	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		if (filters.size() == 0) return;
 
@@ -365,7 +360,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone, int company) {
+	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone, int company) throws FLException {
 
 		if (filters.size() == 0 && customerPhone == null) {
 			return;
@@ -373,7 +368,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone, CustomerPhonePO.STATUS_ENABLE_INT, company);
 
-		filters.add(new Filter("customercid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
+		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -395,7 +390,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication) {
+	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
 
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
@@ -404,7 +399,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (userPO == null) return;
 
-		filters.add(new Filter("designerId", userPO.getUserId(), "eq"));
+		filters.add(new Filter("decoration.designer.userId", userPO.getUserId(), "eq"));
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesign(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -426,7 +421,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForSalesman(Paging paging, List<Filter> filters, Authentication authentication) {
+	public void pageDecorationForDesignerDept(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
 
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
@@ -434,115 +429,24 @@ public class DecorationServiceImpl implements DecorationService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		if (userPO == null) return;
-
-		filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
-
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesman(paging, filters, company);
-		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-
-		for (DecorationPO decorationPO : decorationPOs) {
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationPO.ptvcascade(decorationVO);
-
-			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
-
-			decorationVOs.add(decorationVO);
-		}
-
-		paging.setData(decorationVOs);
-	}
-
-	@Override
-	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication) {
 
 		if (filters.size() == 0) return;
 
-		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(userPO.getDept().getDid());
 
-		if (userPO == null) return;
+		List<Integer> deptIds = Arrays.asList(userPO.getDept().getDid());
 
-		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
-
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, null, statuses, authentication.getCompany());
-		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-
-		for (DecorationPO decorationPO : decorationPOs) {
-			DecorationVO decorationVO = new DecorationVO();
-
-			decorationPO.ptvcascade(decorationVO);
-
-			addition(decorationPO.getAddition(), decorationVO);
-
-			decorationVOs.add(decorationVO);
+		for (DepartmentPO departmentPO : departmentPOs) {
+			deptIds.add(departmentPO.getDid());
 		}
 
-		paging.setData(decorationVOs);
-	}
-
-	@Override
-	public void pageDecorationForQuoter(Paging paging, List<Filter> filters, Authentication authentication) {
-
-		String userId = authentication.getUserId();
-		int company = authentication.getCompany();
-
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
-		if (userPO == null) return;
-
-		filters.add(new Filter("quoterId", userPO.getUserId(), "eq"));
-
-		List<Integer> designDepartmentIds = null;
-		List<Short> statuses = null;
-
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesignerManager(paging, filters, deptIds, null, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
 			DecorationVO decorationVO = new DecorationVO();
 
-			decorationPO.ptvcascade(decorationVO);
-
-			if (decorationPO.getOrderTotalPrice() != 0) {
-				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-			} else {
-				decorationVO.setOrderTotalPrice(0L);
-			}
-
-			decorationVO.setDiscount(decorationPO.getDiscount());
-
-			addition(decorationPO.getAddition(), decorationVO);
-
-			decorationVOs.add(decorationVO);
-		}
-
-		paging.setData(decorationVOs);
-	}
-
-	@Override
-	public void pageDecorationForEscorter(Paging paging, List<Filter> filters, Authentication authentication) {
-
-		String userId = authentication.getUserId();
-		int company = authentication.getCompany();
-
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
-		if (userPO == null) return;
-
-		filters.add(new Filter("escorterId", userPO.getUserId(), "eq"));
-
-		List<Integer> designDepartmentIds = null;
-		List<Short> statuses = null;
-
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
-		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
-
-		for (DecorationPO decorationPO : decorationPOs) {
-			DecorationVO decorationVO = new DecorationVO();
-
+			decorationVO.setSupervisor(new UserBaseVO());
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
@@ -558,7 +462,7 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForDesignerManager(Paging paging, List<Filter> filters, Authentication authentication) {
+	public void pageDecorationForDesignerManager(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 
@@ -621,7 +525,78 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
-	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication) {
+	public void pageDecorationForSalesman(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
+
+		filters.add(new Filter("decoration.salesman.userId", userPO.getUserId(), "eq"));
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesman(paging, filters, company);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationPO.ptvcascade(decorationVO);
+
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			decorationVO.setDiscount(decorationPO.getDiscount());
+
+			addition(decorationPO.getAddition(), decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
+
+	@Override
+	public void pageDecorationForSalesmanDept(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
+		String userId = authentication.getUserId();
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
+
+		if (filters.size() == 0) return;
+
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(userPO.getDept().getDid());
+
+		List<Integer> deptIds = Arrays.asList(userPO.getDept().getDid());
+
+		for (DepartmentPO departmentPO : departmentPOs) {
+			deptIds.add(departmentPO.getDid());
+		}
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesmanManager(paging, filters, deptIds, null);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationVO.setSupervisor(new UserBaseVO());
+			decorationPO.ptvcascade(decorationVO);
+
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+
+			decorationVO.setDiscount(decorationPO.getDiscount());
+
+			addition(decorationPO.getAddition(), decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
+
+	@Override
+	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
 		if (filters.size() == 0) return;
 
 		String userId = authentication.getUserId();
@@ -686,11 +661,112 @@ public class DecorationServiceImpl implements DecorationService {
 	}
 
 	@Override
+	public void pageDecorationForQuoter(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
+
+		filters.add(new Filter("decoration.quoter.userId", userPO.getUserId(), "eq"));
+
+		List<Integer> designDepartmentIds = null;
+		List<Short> statuses = null;
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationPO.ptvcascade(decorationVO);
+
+			if (decorationPO.getOrderTotalPrice() != 0) {
+				decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			} else {
+				decorationVO.setOrderTotalPrice(0L);
+			}
+
+			decorationVO.setDiscount(decorationPO.getDiscount());
+
+			addition(decorationPO.getAddition(), decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
+
+	@Override
+	public void pageDecorationForEscorter(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
+
+		filters.add(new Filter("decoration.escorter.userId", userPO.getUserId(), "eq"));
+
+		List<Integer> designDepartmentIds = null;
+		List<Short> statuses = null;
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationPO.ptvcascade(decorationVO);
+
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+
+			decorationVO.setDiscount(decorationPO.getDiscount());
+
+			addition(decorationPO.getAddition(), decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
+
+	@Override
+	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
+		if (filters.size() == 0) return;
+
+		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
+
+		if (userPO == null) return;
+
+		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, null, statuses, authentication.getCompany());
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationPO.ptvcascade(decorationVO);
+
+			addition(decorationPO.getAddition(), decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
+
+	@Override
 	public List<DecorationVO> queryDecorationByCustomerId(DecorationVO decorationVO, Authentication authentication) {
 
 		CustomerVO customerVO = decorationVO.getCustomer();
 
-		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(customerVO.getCid(), customerVO.getNo(), authentication.getCompany());
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(customerVO.getCid(), customerVO.getNo(), Arrays.asList(authentication.getCompany()));
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -758,7 +834,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		int company = authentication.getCompany();
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, company);
+		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, Arrays.asList(company));
 
 		if (decorationPO == null) return new DecorationVO();
 
@@ -965,7 +1041,41 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setEscorter(escorter);
 		}
 
+		HousePO housePO = decorationPO.getHouse();
+
+		if (decorationVO.getHouse() != null && decorationVO.getHouse().getBuildArea() != null) {
+			housePO.setBuildArea(decorationVO.getHouse().getBuildArea());
+			houseDao.update(housePO);
+		}
+
+		if (decorationVO.getHouse() != null && decorationVO.getHouse().getInnerArea() != null) {
+			housePO.setInnerArea(decorationVO.getHouse().getInnerArea());
+			houseDao.update(housePO);
+		}
+
 		decorationDao.update(decorationPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void changeDecorationForCustomer(DecorationVO decorationVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		// 判断装修单是否存在
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		CustomerPO customerPO = customerDao.get(decorationVO.getCustomer().getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		decorationPO.setCustomer(customerPO);
+		decorationDao.update(decorationPO);
+
 	}
 
 	@Override
@@ -1082,29 +1192,26 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setVersion(new QuotationVersionPO(versionId));
 
-		List<QuotationPO> quotationPOs = quotationDao.queryQuotationByOrderId(orderId);
-
-		for (QuotationPO quotationPO : quotationPOs) {
-			List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationPO.getQid());
-
-			for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
-
-				String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
-				quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(tableName, quotationFunctionAreaPO.getQfaId());
-
-				quotationFunctionAreaDao.delete(quotationFunctionAreaPO);
-			}
-
-			quotationDao.delete(quotationPO);
-		}
-
-		extensionItemDao.deleteExtensionItem(orderId);
-
-		extensionDao.deleteExtension(orderId);
-
 		decorationDao.update(decorationPO);
 
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,报价版本修改,原报价版本:%s,修改报价版本为:%s", orderId, oldVersionId, versionId)));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void changeDecorationForPayScale(DecorationVO decorationVO, String userId) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
+
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s, 销售配比忽略验证.", decorationVO.getOrderId())));
+
+		decorationDao.update(decorationPO);
 	}
 
 	@Override
@@ -1127,6 +1234,20 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.update(decorationPO);
 
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status)));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException {
+
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decoration != null) {
+
+			decoration.setRepairStatus(decorationVO.getRepairStatus());
+			decorationDao.update(decoration);
+		}
+
 	}
 
 	@Override
@@ -1203,126 +1324,104 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		UserPO operater = userDao.queryUserByUserId(userId);
+		if (!Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT).contains(decorationPO.getStatus())) {
+			throw new FLException(140025, "订单非签约,不能终止合同");
+		}
 
 		for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
 			backup = Arith.add(backup, decorationPaymentVO.getReferMoney());
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
+
+			if (decorationPaymentVO.getReferMoney() == 0) {
+				continue;
+			}
+
+			DecorationReceiptPO decorationReceiptPO = new DecorationReceiptPO();
+
+			decorationReceiptPO.setCollecter(operater);
+			decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationReceiptPO.setAdvanceType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
+			decorationReceiptPO.setAdvance(decorationPaymentVO.getReferMoney());
+			decorationReceiptPO.setComment(decorationPaymentVO.getPaymentType());
+
+			decorationReceiptDao.save(decorationReceiptPO);
+
+			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
+
+			PaymentTypePO paymentTypePO = paymentTypeDao.queryPaymentTypeByName(decorationPaymentVO.getPaymentType(), company);
+
+			decorationPaymentPO.setCreater(operater);
+			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationPaymentPO.setPtid(paymentTypePO.getPtid());
+			decorationPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
+			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
+			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			decorationPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
+			decorationPaymentPO.setDecoration(decorationPO);
+			decorationPaymentPO.setCompany(company);
+
+			decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
+
+			decorationPaymentDao.save(decorationPaymentPO);
+		}
+
 		if (DecorationPO.STATUS_PROSIGN_INT == decorationPO.getStatus()) {
 
-			if (backup > decorationPO.getPrecontractPrice()) {
-				throw new FLException(150025, "款项金额不正确");
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
+
+			long amount = advancePaymentPO.getBalance();
+
+			if (backup > amount) {
+				throw new FLException(150010, "预付款余额不足");
 			}
 
-			if (backup != 0) {
+			PaymentVO paymentVO = new PaymentVO();
 
-				DecorationReceiptPO decorationReceiptPO = new DecorationReceiptPO();
+			paymentVO.setOrderId(decorationPO.getOrderId());
+			paymentVO.setCustomer(new CustomerVO(decorationPO.getCustomer().getCid()));
+			paymentVO.setCollectUser(new UserBaseVO(userId));
+			paymentVO.setTransfer(backup);
+			paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_INT);
+			paymentVO.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+			paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_INT);
+			paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
+			paymentVO.setUniqueid("D" + String.valueOf(new Date().getTime()));
 
-				decorationReceiptPO.setCollecter(operater);
-				decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationReceiptPO.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-				decorationReceiptPO.setAdvanceType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
-				decorationReceiptPO.setAdvance(backup);
+			advancePaymentService.updateAdvancePayment(paymentVO, company);
+		}
 
-				decorationReceiptDao.save(decorationReceiptPO);
-
-				for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
-
-					if (decorationPaymentVO.getReferMoney() == 0) {
-						continue;
-					}
-
-					DecorationPaymentPO backupPaymentPO = new DecorationPaymentPO();
-
-					backupPaymentPO.setCreater(operater);
-					backupPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					backupPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
-					backupPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
-					backupPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-					backupPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-					backupPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
-					backupPaymentPO.setDecoration(decorationPO);
-					backupPaymentPO.setDecorationReceipt(decorationReceiptPO);
-					backupPaymentPO.setCompany(company);
-
-					decorationPaymentDao.save(backupPaymentPO);
-				}
-
-				PaymentVO paymentVO = new PaymentVO();
-
-				paymentVO.setOrderId(decorationPO.getOrderId());
-				paymentVO.setCustomer(new CustomerVO(decorationPO.getCustomer().getCid()));
-				paymentVO.setCollectUser(new UserBaseVO(userId));
-				paymentVO.setTransfer(backup);
-				paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_INT);
-				paymentVO.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-				paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_INT);
-				paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
-				paymentVO.setUniqueid("D" + String.valueOf(new Date().getTime()));
-
-				advancePaymentService.updateAdvancePayment(paymentVO, company);
-			}
-
-		} else if (decorationPO.getStatus() == DecorationPO.STATUS_SIGNED_INT) {
+		if (Arrays.asList(DecorationPO.STATUS_SIGNED_INT).contains(decorationPO.getStatus())) {
 
 			Short[] status = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
 			long amount = decorationPaymentDao.amountDecorationPayment(orderId, status, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
-			long refund = Arith.sub(amount, backup);
 
-			if (refund > amount) {
+			if (backup > amount) {
 				throw new FLException(150025, "款项金额不正确");
 			}
 
-			if (backup != 0) {
+			long refund = Arith.sub(amount, backup);
 
-				DecorationReceiptPO decorationReceiptPO = new DecorationReceiptPO();
+			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
 
-				decorationReceiptPO.setCollecter(operater);
-				decorationReceiptPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationReceiptPO.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+			PaymentTypePO paymentTypePO = paymentTypeDao.queryPaymentTypeByName(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR, company);
 
-				decorationReceiptDao.save(decorationReceiptPO);
+			decorationPaymentPO.setCreater(operater);
+			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationPaymentPO.setPtid(paymentTypePO.getPtid());
+			decorationPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR);
+			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			decorationPaymentPO.setReferMoney(refund);
+			decorationPaymentPO.setDecoration(decorationPO);
+			decorationPaymentPO.setCompany(company);
 
-				for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
-
-					if (decorationPaymentVO.getReferMoney() == 0) {
-						continue;
-					}
-
-					DecorationPaymentPO backupPaymentPO = new DecorationPaymentPO();
-
-					backupPaymentPO.setCreater(operater);
-					backupPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-					backupPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
-					backupPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
-					backupPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-					backupPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-					backupPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
-					backupPaymentPO.setDecoration(decorationPO);
-					backupPaymentPO.setDecorationReceipt(decorationReceiptPO);
-					backupPaymentPO.setCompany(company);
-
-					decorationPaymentDao.save(backupPaymentPO);
-				}
-			}
-
-			DecorationPaymentPO refundPaymentPO = new DecorationPaymentPO();
-
-			refundPaymentPO.setCreater(operater);
-			refundPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			refundPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR);
-			refundPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-			refundPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-			refundPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-			refundPaymentPO.setReferMoney(refund);
-			refundPaymentPO.setDecoration(decorationPO);
-			refundPaymentPO.setCompany(company);
-
-			decorationPaymentDao.save(refundPaymentPO);
-
-		} else if (DecorationPO.STATUS_SIGNED_INT != decorationPO.getStatus()) {
-			throw new FLException(140025, "订单非签约,不能终止合同");
+			decorationPaymentDao.save(decorationPaymentPO);
 		}
 
 		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
@@ -1338,7 +1437,6 @@ public class DecorationServiceImpl implements DecorationService {
 		for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
 			decorationOperateDao.save(new DecorationOperatePO().terminal(orderId, operater).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_BUSINESS_INT, decorationBelongPO.getRate()));
 		}
-
 	}
 
 	@Override
@@ -1389,19 +1487,53 @@ public class DecorationServiceImpl implements DecorationService {
 		customerOriginDao.update(customerOriginPO);
 	}
 
-	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationForPayScale(DecorationVO decorationVO) throws FLException {
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, company);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
-		if (decorationPO != null) {
-			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
 		}
 
-		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(cid, null, company);
+		decorationAdditionService.updateDecorationForPayScale(decorationPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationForSaleScale(DecorationVO decorationVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+	}
+
+	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
+
+		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));
+
+		List<DecorationMeasureItemPO> measures = decorationMeasureDao.queryDecorationMeasure(company);
+
+		for (DecorationMeasureItemPO measure : measures) {
+			companys.add(measure.getCompany());
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, companys);
+
+		if (decorationPO != null) {
+			throw new FLException(140063, String.format("装修单存在, 设计师:%s", decorationPO.getDesigner().getCurrentName()));
+		}
+
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(cid, null, companys);
 
 		if (decorationPOs.size() > 0) {
 			decorationPO = decorationPOs.get(0);
-			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
+			throw new FLException(140063, String.format("装修单存在, 设计师:%s", decorationPO.getDesigner().getCurrentName()));
 		}
 	}
 
@@ -1417,53 +1549,4 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException {
-
-		DecorationPO decoration = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
-
-		if (decoration != null) {
-
-			decoration.setRepairStatus(decorationVO.getRepairStatus());
-			decorationDao.update(decoration);
-		}
-
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void changeDecorationForCustomer(DecorationVO decorationVO) throws FLException {
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
-
-		// 判断装修单是否存在
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
-		}
-
-		CustomerPO customerPO = customerDao.get(decorationVO.getCustomer().getCid());
-
-		if (customerPO == null) {
-			throw new FLException(130002, "客户不存在");
-		}
-
-		decorationPO.setCustomer(customerPO);
-		decorationDao.update(decorationPO);
-
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void changeDecorationForPayScale(DecorationVO decorationVO) throws FLException {
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
-		}
-
-		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
-
-	}
 }

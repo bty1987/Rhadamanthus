@@ -11,4 +11,6 @@ public interface WorksheetDao extends Dao<WorksheetPO> {
 
 	public List<WorksheetPO> pageWorksheet(Paging paging, List<Filter> filters, int company);
 
+	public List<WorksheetPO> queryWorksheet(String userId);
+
 }

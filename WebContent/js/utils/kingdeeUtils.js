@@ -48,34 +48,65 @@ var kingdeeUtils = {
         kingdeeUtils.payableBill(params.salary, params.approveTime, supplier, payOrg, params.decoration.orderId, supervisor, workerNo, constructionNodeKino, params.twotype, conpanySorgNo, companyNo, grade);
     },
 
-    decorationPayment: function (decorationPayment) {
+    balance: function (balanceSales) {
+
+        var balanceBillItems = [];
+        var decorationInfos = [];
+
+        var items = balanceSales.items;
+
+        if (items.length == 0) {
+            com.showAlert(com.warning, "无同步数据.");
+            return false;
+        }
+
+        $.each(items, function (i, v) {
+
+            //代收金额/服务费金额/客户/销售单号/代收服务费/优惠券/代收券
+            balanceBillItems.push(kingdeeUtils.balanceBillItem(v.salesRevenue, v.serviceMoney, v.orderId, v.no, v.coupon));
+
+            decorationInfos.push({"orderId": v.orderId, "address": v.address});
+        });
+
+        // 单据编号/创建人/业务日期/币别/类型/核算类别/款项组织/结算组织/品牌/供应商/结算单号/代收服务费合计/代收合计
+        var billNo =  Date.now() + balanceSales.bsid;
+        var creator = balanceSales.creater.userId;
+        var date = balanceSales.balanceTime;
+        var salesGrade = balanceSales.grade;
+        var brand = balanceSales.brand.kino;
+        var supplier = balanceSales.brand.supplier.oldUserId;
+        var balanceNo = balanceSales.name;
+        var payment = balanceSales.payment;
+        var income = balanceSales.income;
+        var paymentOrg = balanceSales.paymentOrg;
+
+        kingdeeUtils.balanceBill(balanceBillItems, decorationInfos, billNo, creator, date, "0003", salesGrade, paymentOrg, paymentOrg, brand, supplier, balanceNo, payment, income);
+    },
+
+    payment: function (payment, htmlName) {
         var companyDorgNo = ""; // 装修公司装修编号
         var companySorgNo = ""; // 装修公司销售编号
 
         var paymentType = null;
 
         var receivableTotal = 0;  // 应收单总额
-        var bankTransitionTotal = 0;  // 银行转款单总额
         var fundBankMoney = 0;  // 资金类型的银行金额
 
         var collectBillItems = [];  // 收款单单据体
         var refundBillItems = [];  // 收款退款单据体
         var materialTransferBillItems = [];  // 转款单单据体
         var receivableBillItems = [];  // 应收单单据体
-        var bankTransitionBillItems = [];  // 银行过渡单单据体
 
-        var decoration = decorationPayment.decoration;
         var sign = "-";  // 正负数
+        var receipt = ["sales", "service"].contains(htmlName) ? payment[htmlName + "Receipt"] : payment;
 
-        var cash = decorationPayment.cash;
-        var cashInfo = decorationPayment.cashInfo;
-        var bank = decorationPayment.bank;
-        var bankInfo = decorationPayment.bankInfo;
-        var checkv = decorationPayment.checkv;
-        var checkvInfo = decorationPayment.checkvBank;
-        var advance = decorationPayment.advance;
-        var coupon = decorationPayment.coupon;
-        var couponInfo = decorationPayment.couponInfo;
+        var cash = receipt.cash;
+        var cashInfo = receipt.cashInfo;
+        var bank = receipt.bank;
+        var bankInfo = receipt.bankInfo;
+        var checkv = receipt.checkv;
+        var checkvInfo = receipt.checkvBank;
+        var advance = receipt.advance;
 
         com.post(api.system.queryCompanyByCid, {"company.cid": params.company.cid}, function(res) {
             companyDorgNo = res.company.drganization.no;
@@ -87,12 +118,35 @@ var kingdeeUtils = {
         var currenRefundReceiptType = "SKTKDLX01_SYS";
         var currenPurposes = "SFKYT01_SYS";
 
-        com.post(api.data.queryPaymentTypeByPtid, {"paymentType.ptid": decorationPayment.ptid}, function(ptdata) {
+        var url = api.data.queryPaymentTypeByName;
+        var option;
+        var receiptNo; // 单据编号
+
+        switch (htmlName) {
+            case "payment":
+                option = {"paymentType.name": constant.payment().advancePayment.paymentType.keys[payment.paymentType]};
+                receiptNo =  Date.now() + payment.arId;
+                break;
+            case "":
+                option = {"paymentType.name": payment.paymentType};
+                receiptNo =  Date.now() + payment.drId;
+                break;
+            case "service":
+                var name = "服务费";
+                if (payment.type == 1) name = "服务费退款";
+                option = {"paymentType.name": name};
+                receiptNo =  Date.now() + payment.serviceReceipt.srId;
+                break;
+        }
+
+        com.post(url, option, function(ptdata) {
             paymentType = ptdata.paymentType;
         }, null, false);
 
         var bustype = paymentType.bustype; // 款项业务类型(装修/主材)
         var paytype = paymentType.paytype; // 款项类型(收/退款)
+
+        if (htmlName == "payment") payment.type == 0 ? paytype = 1 : paytype = 0;
 
         if (paytype == 0) sign = ""; // 收款
 
@@ -116,73 +170,114 @@ var kingdeeUtils = {
                     collectBillItems.push(cashCollect);
                 } else if (paytype == 1) { // 退款
                     receivableTotal = utils.accSub(receivableTotal, cash);
-                    var cashRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, cash, "", decorationPayment.comment);
+                    var cashRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, cash, "", payment.comment);
                     refundBillItems.push(cashRefund);
                 }
             }, null, false);
         }
 
         if (bank > 0) {
-            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, decorationPayment, paymentType, receivableTotal, bankTransitionTotal, fundBankMoney, collectBillItems, bankTransitionBillItems, refundBillItems);
+            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, payment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, payment.decoration.customer.cid);
 
             receivableTotal = bankDatas[0];
-            bankTransitionTotal = bankDatas[1];
-            fundBankMoney = bankDatas[2];
+            fundBankMoney = bankDatas[1];
         }
 
         if (checkv > 0) {
-            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, decorationPayment, paymentType, receivableTotal, bankTransitionTotal, fundBankMoney, collectBillItems, bankTransitionBillItems, refundBillItems);
+            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, payment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, payment.decoration.customer.cid);
+
             receivableTotal = checkvDatas[0];
-            bankTransitionTotal = checkvDatas[1];
-            fundBankMoney = checkvDatas[2];
+            fundBankMoney = checkvDatas[1];
         }
 
-        if (advance > 0) {
-            if (bustype == 0){ // 装修
-                receivableTotal = utils.accAdd(receivableTotal, sign + advance);
+        if (advance > 0 && bustype == 0) { // 装修
+            receivableTotal = utils.accAdd(receivableTotal, sign + advance);
 
-                // 实收金额/品牌/供应商/销售单号/款项类型
-                materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(sign + advance, "", "", "", paymentType.kino))
-            } else if (bustype == 1) { // 主材
-
-                var advanceType = "转回主材预付款";
-
-                if (paytype == 0) advanceType = "主材预付款"; // 收款
-
-                com.post(api.data.queryPaymentTypeByName, {"paymentType.name": advanceType}, function (ptRes) {
-                    var paymentType = ptRes.paymentType;
-
-                    bankTransitionTotal = utils.accAdd(bankTransitionTotal, advance);
-                    bankTransitionBillItems.push(kingdeeUtils.bankTransitionBillItem(advance, paymentType.kino));
-                }, null, false);
-
-            }
-        }
-
-        if (bustype == 1 && coupon > 0) {
-
-            if (couponInfo.indexOf("#") != -1) {
-                var _s = couponInfo.split('#');
-
-                for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
-                    var _i = _s[i].split(':');
-
-                    bankTransitionTotal = utils.accAdd(bankTransitionTotal, _i[1]);
-                    bankTransitionBillItems.push(kingdeeUtils.bankTransitionBillItem(_i[1], _i[0]))
-                }
-            }
-        }
-
-        if (bustype == 1){ // 主材转款单
             // 实收金额/品牌/供应商/销售单号/款项类型
-            materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(decorationPayment.referMoney, "", "", "", paymentType.kino))
+            materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(sign + advance, "", "", "", paymentType.kino))
         }
 
         // 拼接各单据头
-        kingdeeUtils.joinReceipt(collectBillItems, refundBillItems, materialTransferBillItems, bankTransitionBillItems, receivableBillItems, fundBankMoney, bankTransitionTotal, receivableTotal, currenCollectReceiptType, currenRefundReceiptType, orgno, decorationPayment, paymentType);
+        kingdeeUtils.joinReceipt(collectBillItems, refundBillItems, materialTransferBillItems, null, receivableBillItems, fundBankMoney, 0, receivableTotal, currenCollectReceiptType, currenRefundReceiptType, orgno, payment, paymentType, receiptNo, htmlName);
     },
 
-    bankAndCheckv: function (isBank, info, paytype, currenPurposes, decorationPayment, paymentType, receivableTotal, bankTransitionTotal, fundBankMoney, collectBillItems, bankTransitionBillItems, refundBillItems) {
+    salesPayment: function (payment, htmlName) {
+        var companyDorgNo = ""; // 装修公司装修编号
+        var companySorgNo = ""; // 装修公司销售编号
+
+        var paymentType = null;
+
+        var fundBankMoney = 0;  // 资金类型的银行金额
+
+        var collectBillItems = [];  // 收款单单据体
+        var refundBillItems = [];  // 收款退款单据体
+
+        var sign = "-";  // 正负数
+        var receipt = payment.salesReceipt;
+
+        var cash = receipt.cash;
+        var cashInfo = receipt.cashInfo;
+        var bank = receipt.bank;
+        var bankInfo = receipt.bankInfo;
+        var checkv = receipt.checkv;
+        var checkvInfo = receipt.checkvBank;
+        var advance = receipt.advance;
+        var coupon = receipt.coupon;
+        var couponInfo = receipt.couponInfo;
+
+        com.post(api.system.queryCompanyByCid, {"company.cid": params.company.cid}, function(res) {
+            companyDorgNo = res.company.drganization.no;
+            companySorgNo = res.company.srganization.no;
+        }, null, false);
+
+        var orgno = companySorgNo; // 组织编号
+        var currenCollectReceiptType = "SKDLX02_SYS";
+        var currenRefundReceiptType = "SKTKDLX02_SYS";
+        var currenPurposes = "1004";
+
+        var url = api.data.queryPaymentTypeByName;
+        var option = {"paymentType.name": constant.payment().materialPayment.paymentType.keys[payment.type]};
+        var receiptNo =  Date.now() + payment.salesReceipt.srId; // 单据编号
+
+        com.post(url, option, function(ptdata) {
+            paymentType = ptdata.paymentType;
+        }, null, false);
+
+        var paytype = paymentType.paytype; // 款项类型(收/退款)
+
+        if (paytype == 0) sign = ""; // 收款
+
+        if (cash > 0) {
+            com.post(api.data.queryReceiptTypeByNo, {"receiptType.no": cashInfo}, function(rpData) {
+                var receiptType = rpData.receiptType;
+
+                if (paytype == 0) { // 收款
+                    sign = "";
+
+                    var cashCollect = kingdeeUtils.collectBillItem(currenPurposes, receiptType.kibalance, cash, "", "", "");
+                    collectBillItems.push(cashCollect);
+                } else if (paytype == 1) { // 退款
+                    var cashRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, cash, "", payment.comment);
+                    refundBillItems.push(cashRefund);
+                }
+            }, null, false);
+        }
+
+        if (bank > 0) {
+            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, payment, paymentType, 0, fundBankMoney, collectBillItems, refundBillItems, payment.sales.customer.cid);
+            fundBankMoney = bankDatas[1];
+        }
+
+        if (checkv > 0) {
+            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, payment, paymentType, 0, fundBankMoney, collectBillItems, refundBillItems, payment.sales.customer.cid);
+            fundBankMoney = checkvDatas[1];
+        }
+
+        // 拼接各单据头
+        kingdeeUtils.joinReceipt(collectBillItems, refundBillItems, null, null, null, fundBankMoney, 0, 0, currenCollectReceiptType, currenRefundReceiptType, orgno, payment, paymentType, receiptNo, htmlName);
+    },
+
+    bankAndCheckv: function (isBank, info, paytype, currenPurposes, decorationPayment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, cid) {
         if (info.indexOf("#") != -1) {
             var _s = info.split('#');
 
@@ -206,34 +301,77 @@ var kingdeeUtils = {
                             }, null, false);
                         }
 
-                        if (receiptType.fund == 1) { // 资金
-                            receivableTotal = utils.accAdd(receivableTotal, _i[1]);
-                            var bankCollect = kingdeeUtils.collectBillItem(currenPurposes, receiptType.kibalance, _i[1], receiptType.bankno, _i[2], comment);
-                            collectBillItems.push(bankCollect);
-                        } else if (receiptType.fund == 0 && bustype == 1) { // 非资金 & 主材
-                            bankTransitionTotal = utils.accAdd(bankTransitionTotal, _i[1]);
-                            var bankTransition = kingdeeUtils.bankTransitionBillItem(_i[1], paymentType.kino);
-                            bankTransitionBillItems.push(bankTransition);
-                        }
+                        if (receiptType.fund == 0) return; // 非资金
+
+                        receivableTotal = utils.accAdd(receivableTotal, _i[1]);
+                        var bankCollect = kingdeeUtils.collectBillItem(currenPurposes, receiptType.kibalance, _i[1], receiptType.bankno, _i[2], comment);
+                        collectBillItems.push(bankCollect);
 
                     } else if (paytype == 1) { // 退款
-                        if (receiptType.fund == 1) { // 资金
-                            fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
-                            receivableTotal = utils.accSub(receivableTotal, _i[1]);
+                        if (receiptType.fund == 0) return; // 非资金
 
-                            var bankRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, _i[1], receiptType.bankno, decorationPayment.comment);
-                            refundBillItems.push(bankRefund);
-                        } else if (receiptType.fund == 0 && paymentType.bustype == 1) { // 非资金 & 主材
-                            bankTransitionTotal = utils.accAdd(bankTransitionTotal, _i[1]);
-                            var bankTransition = kingdeeUtils.bankTransitionBillItem(_i[1], paymentType.kino);
-                            bankTransitionBillItems.push(bankTransition);
-                        }
+                        fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
+                        receivableTotal = utils.accSub(receivableTotal, _i[1]);
+
+                        var customerAccountName;
+                        var customerAccountBank;
+                        var customerAccountBankNo;
+                        com.post(api.data.queryCustomerById, {"customer.cid": cid}, function (res) {
+                            customerAccountName =  res.customer.companyName;
+                            customerAccountBank =  res.customer.companyBank;
+                            customerAccountBankNo =  res.customer.companyBankno;
+                        }, null, false);
+
+                        var bankRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, _i[1], receiptType.bankno, decorationPayment.comment, customerAccountName, customerAccountBank, customerAccountBankNo);
+                        refundBillItems.push(bankRefund);
                     }
                 }, null, false);
             }
 
-            return [receivableTotal, bankTransitionTotal, fundBankMoney];
+            return [receivableTotal, fundBankMoney];
         }
+    },
+
+    SP2MTBillItems: function (salesPayment, materialTransferTotal, materialTransferBillItems) {
+        var kino;
+        var supplier;
+        var depOut;
+        var depTurn;
+        var currentDataKino;
+
+        var depositpay = salesPayment.sales.depositpay;
+        var bid = salesPayment.sales.bid;
+        var no = salesPayment.sales.no;
+
+        com.post(api.data.queryBrandByBid, {"brand.bid": bid}, function (brandData) {
+            kino = brandData.brand.kino;
+            supplier = brandData.brand.supplier.oldUserId;
+        }, null, false);
+
+        com.post(api.data.queryPaymentTypeByName, {"paymentType.name": "定金出"}, function (resPayType) {
+            depOut = resPayType.paymentType.kino
+        }, null, false);
+
+        com.post(api.data.queryPaymentTypeByName, {"paymentType.name": "定金转全款"}, function (payTypeRes) {
+            depTurn = payTypeRes.paymentType.kino
+        }, null, false);
+
+        if ([3, 5].contains(salesPayment.type) && salesPayment.sales.depositpayStatus > 0) {
+            // 实收金额/品牌/供应商/销售单号/款项类型
+            materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(-depositpay, kino, supplier, no, depOut));
+            materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(depositpay, kino, supplier, no, depTurn));
+        }
+
+        var option = {"paymentType.name": constant.payment().materialPayment.paymentType.keys[salesPayment.type]};
+
+        com.post(api.data.queryPaymentTypeByName, option, function(ptdata) {
+            currentDataKino = ptdata.paymentType.kino;
+        }, null, false);
+
+        materialTransferTotal = utils.accAdd([materialTransferTotal, salesPayment.referMoney]);
+        materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(salesPayment.referMoney, kino, supplier, no, currentDataKino));
+
+        return [materialTransferTotal, materialTransferBillItems]
     },
 
     payableBill: function (money, date, supplier, payOry, orderId, supervisor, workerNo, constructionNodeKino, twotype, conpanySorgNo, companyNo, grade) {
@@ -315,14 +453,17 @@ var kingdeeUtils = {
         kingdeeUtils.kingdeePost(options);
     },
 
-    collectRefundBillItem: function (settletype, purpose, refundMoney, bankNo, comment) {
-        // 结算方式/原收款用途/应退金额/我方银行账号/备注
+    collectRefundBillItem: function (settletype, purpose, refundMoney, bankNo, comment, customerAccountName, customerAccountBank, customerAccountBankNo) {
+        // 结算方式/原收款用途/应退金额/我方银行账号/备注/对方账户名称/对方开户行/对方银行账号
         var paramItem = {
             "FSETTLETYPEID": settletype,
             "FPURPOSEID": purpose,
             "FREFUNDAMOUNTFOR": refundMoney,
             "FACCOUNTID": bankNo,
-            "FNOTE": comment
+            "FNOTE": comment,
+            "FOPPOSITECCOUNTNAME": customerAccountName,
+            "FOPPOSITEBANKNAME": customerAccountBank,
+            "FOPPOSITEBANKACCOUNT": customerAccountBankNo
         };
 
         return paramItem;
@@ -473,42 +614,85 @@ var kingdeeUtils = {
         });
     },
 
-    joinReceipt: function(collectBillItems, refundBillItems, materialTransferBillItems, bankTransitionBillItems, receivableBillItems, fundBankMoney, bankTransitionTotal, receivableTotal, currenCollectReceiptType, currenRefundReceiptType, orgno, decorationPayment, paymentType) {
+    balanceBill: function (items, decorationInfos, billNo, creator, date, type, salesGrade, paymentOrg, balanceOrg, brand, supplier, balanceNo, collectionServiceAmount, collectionAmount) {
+        var data = JSON.stringify(items);
+        var decorationInfoDatas = JSON.stringify(decorationInfos);
 
-        var receiptNo =  Date.now() + decorationPayment.drId; // 单据编号
-        var decoration = decorationPayment.decoration;
+        // 单据编号/创建人/业务日期/币别/类型/核算类别/款项组织/结算组织/品牌/供应商/结算单号/代收服务费合计/代收合计
+        var options = {
+            "api": "kingdee.kingdee.balanceBill",
+            "FBillNo": billNo,
+            "F_SFKD_ywcjr": creator,
+            "F_SFKD_Date": date,
+            "F_SFKD_Cur": "PRE001",
+            "F_SFKD_Assistant": type,
+            "F_SFKD_ABC": salesGrade,
+            "F_SFKD_OrgId": paymentOrg,
+            "F_SFKD_OrgId1": balanceOrg,
+            "F_SFKD_Brand": brand,
+            "F_SFKD_Supplier": supplier,
+            "F_SFKD_SaleBillNo": balanceNo,
+            "F_SFKD_Amount1": collectionServiceAmount,
+            "F_SFKD_dshj": collectionAmount,
+            "FEntity": data,
+            "decorationInfos": decorationInfoDatas,
+            "redis": 0
+        };
+
+        kingdeeUtils.kingdeePost(options);
+    },
+
+    balanceBillItem: function (collectionMoney, serviceMoney, orderId, salesNo, coupon) {
+        // 代收金额/服务费金额/客户/装修单号/销售单号/优惠券
+        var paramItem = {
+            "F_SFKD_JieSuanAmount": collectionMoney,
+            "F_SFKD_ShiShouAmount": serviceMoney,
+            "F_ora_Base": orderId,
+            "F_SFKD_Text": salesNo,
+            "F_SFKD_yhq": coupon
+        };
+
+        return paramItem;
+    },
+
+    joinReceipt: function(collectBillItems, refundBillItems, materialTransferBillItems, bankTransitionBillItems, receivableBillItems, fundBankMoney, bankTransitionTotal, receivableTotal, currenCollectReceiptType, currenRefundReceiptType, orgno, payment, paymentType, receiptNo, htmlName) {
+
+        var decoration = payment.decoration;
+        if (htmlName == "sales") decoration = payment.sales;
+
+        var receipt = ["sales", "service"].contains(htmlName) ? payment[htmlName + "Receipt"] : payment;
 
         if (collectBillItems.length > 0) {
-            kingdeeUtils.collectBill(collectBillItems, decorationPayment.collectTime, currenCollectReceiptType, "BD_Customer", decoration.orderId, "BD_Customer", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, decorationPayment.comment)
+            kingdeeUtils.collectBill(collectBillItems, receipt.collectTime, currenCollectReceiptType, "BD_Customer", decoration.orderId, "BD_Customer", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, receipt.comment)
         }
 
         if (refundBillItems.length > 0) {
-            kingdeeUtils.collectRefundBill(refundBillItems, decorationPayment.collectTime, currenRefundReceiptType, orgno, "BD_Customer", "BD_Customer", decoration.orderId, decoration.orderId, orgno, decoration.grade, paymentType.kino);
+            kingdeeUtils.collectRefundBill(refundBillItems, receipt.collectTime, currenRefundReceiptType, orgno, "BD_Customer", "BD_Customer", decoration.orderId, decoration.orderId, orgno, decoration.grade, paymentType.kino);
         }
 
         if (materialTransferBillItems.length > 0) {
-            var materialRealMoney = decorationPayment.advance;
+            var materialRealMoney = receipt.advance;
 
-            if (paymentType.paytype == 1) materialRealMoney = -decorationPayment.advance; // 退款
+            if (paymentType.paytype == 1) materialRealMoney = -receipt.advance; // 退款
 
-            if (paymentType.bustype == 1) materialRealMoney = decorationPayment.referMoney;
+            if (paymentType.bustype == 1) materialRealMoney = payment.referMoney;
 
-            kingdeeUtils.materialTransferBill(materialTransferBillItems, receiptNo, decorationPayment.collectTime, "BD_Customer", "BD_Customer", decoration.grade, orgno, orgno, decoration.orderId, materialRealMoney);
+            kingdeeUtils.materialTransferBill(materialTransferBillItems, receiptNo, receipt.collectTime, "BD_Customer", "BD_Customer", decoration.grade, orgno, orgno, decoration.orderId, materialRealMoney);
         }
 
-        if (bankTransitionBillItems.length > 0) {
-            kingdeeUtils.bankTransitionBill(bankTransitionBillItems, receiptNo, decorationPayment.collectTime, "BD_Customer", "BD_Customer", orgno, orgno, decoration.grade, decoration.orderId, bankTransitionTotal);
+        if (bankTransitionBillItems != null && bankTransitionBillItems.length > 0) {
+            kingdeeUtils.bankTransitionBill(bankTransitionBillItems, receiptNo, receipt.collectTime, "BD_Customer", "BD_Customer", orgno, orgno, decoration.grade, decoration.orderId, bankTransitionTotal);
         }
 
         // 应收单
-        if (paymentType.bustype == 0 && utils.accAdd(utils.accAdd(decorationPayment.cash, fundBankMoney), decorationPayment.advance) > 0){
+        if (paymentType.bustype == 0 && utils.accAdd(utils.accAdd(receipt.cash, fundBankMoney), receipt.advance) > 0){
 
             var noTaxMoney = utils.accDiv(receivableTotal, (utils.accAdd(1, utils.accDiv(paymentType.taxrate, 100)))); // 不含税金额
             var taxMoney = utils.accSub(receivableTotal, noTaxMoney);
 
             receivableBillItems.push(kingdeeUtils.receivableBillItem(paymentType.kibalance, noTaxMoney, taxMoney));
 
-            kingdeeUtils.receivableBill(receivableBillItems, decorationPayment.collectTime, "YSD02_SYS", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, "项目地址:"+decoration.house.village.name+' '+decoration.house.houseNumber);
+            kingdeeUtils.receivableBill(receivableBillItems, receipt.collectTime, "YSD02_SYS", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, "项目地址:"+decoration.house.village.name+' '+decoration.house.houseNumber);
         }
     }
 };

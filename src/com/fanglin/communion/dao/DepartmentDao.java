@@ -17,14 +17,14 @@ import com.fanglin.utils.Paging;
 
 public interface DepartmentDao extends Dao<DepartmentPO> {
 
-	public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters, int company);
+	public List<DepartmentPO> pageDepartment(Paging paging, List<Filter> filters, Integer type, int company);
 
-	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer company, int type);
+	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer type, Integer company);
 
-	public List<DepartmentPO> queryDepartment(int type, Integer company);
+	public List<DepartmentPO> queryDepartment(Integer type, Integer company);
+
+	public List<DepartmentPO> queryDepartment(Integer did);
 
 	public DepartmentPO queryDepartmentByNo(String no);
-
-	public List<DepartmentPO> queryDepartmentBytype(int type, Integer company);
 
 }

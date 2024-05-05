@@ -94,6 +94,14 @@ public class ModuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryModuleByFatherModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryModuleByFatherModule() throws FLException {
+
+		modules = moduleService.queryModuleByFatherModule(module);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "checkModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkModule() throws FLException {
 

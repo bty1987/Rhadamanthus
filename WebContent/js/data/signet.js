@@ -45,8 +45,6 @@ jQuery(function($) {
         "company.atttype": 1
     }, function(res) {
 
-        console.log(res);
-
         signet.items.company.bindData(res.companys, "cid", "name");
     })
 
@@ -422,7 +420,6 @@ jQuery(function($) {
     function addSignet(v) {
 
         signet.items.no.prop('disabled', false);
-        signet.items.type.prop('disabled', false);
         signet.items.path.prop('disabled', false);
     }
 
@@ -431,7 +428,6 @@ jQuery(function($) {
         signet.items.no.val(v.no).prop("disabled", false);
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
-        signet.items.type.val(v.type).prop("disabled", false);
         signet.items.path.val(v.path).prop("disabled", false);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }
@@ -441,7 +437,6 @@ jQuery(function($) {
         signet.items.no.val(v.no).prop("disabled", true);
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
-        signet.items.type.val(v.type).prop("disabled", true);
         signet.items.path.val(v.path).prop("disabled", true);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }

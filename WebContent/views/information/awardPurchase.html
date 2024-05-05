@@ -19,18 +19,41 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-md-3 control-label no-padding-right" for="awardStock">库存</label>
+                            <label class="col-md-3 control-label no-padding-right orange" for="awardStock">库存</label>
                             <div class="col-sm-8">
-                                <input type="text" class="col-xs-8 m-wrap" maxlength="11" id="awardStock" >
+                                <input type="text" class="col-xs-8 m-wrap v_required v_typeahead" id="awardStock" >
                                 <span class="required"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="num" class="col-md-3 control-label no-padding-right">数量</label>
+                            <label for="num" class="col-md-3 control-label no-padding-right orange">数量</label>
                             <div class="col-sm-8">
-                                <input type="text" class="col-xs-8 m-wrap v_number v_positiveInteger" maxlength="11" id="num" >
+                                <input type="text" class="col-xs-8 m-wrap v_required v_number" id="num" >
                                 <span class="required"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="activity" class="col-md-3 control-label no-padding-right">活动名</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap" maxlength="32" id="activity" >
+                                <span class="required"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dept" class="col-md-3 control-label no-padding-right">部门</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap" maxlength="32" id="dept" >
+                                <span class="required"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment" class="col-md-3 control-label no-padding-right">备注</label>
+                            <div class="col-sm-8">
+                                <textarea class="col-xs-8 m-wrap" id="comment" maxlength="64" rows="3" cols="3"></textarea>
                             </div>
                         </div>
 
@@ -58,6 +81,13 @@
                             <label class="col-md-3 control-label no-padding-right" for="inprice">入库价</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_float_3" maxlength="11" id="inprice" value="0">
+                                <span class="required"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="warehousing" class="col-md-3 control-label no-padding-right">入库数量</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_number v_positiveInteger" maxlength="11" id="warehousing" >
                                 <span class="required"></span>
                             </div>
                         </div>

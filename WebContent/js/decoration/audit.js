@@ -5,8 +5,8 @@ jQuery(function($) {
         type: {}
     };
 
-    audit.decorationStatus = constant.decoration.decoration.status.keys;
-    audit.type = constant.decoration.decoration.typeness.keys;
+    audit.decorationStatus = constant.decoration().decoration.status.keys;
+    audit.type = constant.decoration().decoration.typeness.keys;
 
     var displayFunc = (function() {
 

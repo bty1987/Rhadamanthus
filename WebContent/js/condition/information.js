@@ -111,10 +111,11 @@ Condition.addupRule("information", {
         },
         dataSource: {// 从后台取数据的各种配置
             url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
+            query: "brand.pinyin",
             postData: {},// 获取数据时的请求参数
-            listPath: "autoFillKeyValue",// 响应list的json路径
-            keyPath: "value",// 用来向后台提交的字段的json路径
-            valuePath: "value"// 用来在页面显示的字段的json路径
+            listPath: "brands",// 响应list的json路径
+            keyPath: "name",// 用来向后台提交的字段的json路径
+            valuePath: "name"// 用来在页面显示的字段的json路径
         }
     },
     "v-payment-creater-name": {
@@ -467,9 +468,9 @@ Condition.addupRule("information", {
             postData: {
                 "user.status": ""
             },
-            listPath: "userBases",
-            keyPath: "userId",
-            valuePath: "currentName"
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "worksheet-handler": {
@@ -485,9 +486,9 @@ Condition.addupRule("information", {
             postData: {
                 "user.status": ""
             },
-            listPath: "userBases",
-            keyPath: "userId",
-            valuePath: "currentName"
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "award-status": {
@@ -547,6 +548,24 @@ Condition.addupRule("information", {
         type: "text",
         submitConfig: {
             name: "awardStock.no",
+            op: "eq",
+            validate: null
+        }
+    },
+    "awardPurchase-activity": {
+        label: "活动名称",
+        type: "text",
+        submitConfig: {
+            name: "activity",
+            op: "eq",
+            validate: null
+        }
+    },
+    "awardPurchase-dept": {
+        label: "部门名称",
+        type: "text",
+        submitConfig: {
+            name: "dept",
             op: "eq",
             validate: null
         }

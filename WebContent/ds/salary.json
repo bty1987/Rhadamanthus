@@ -73,6 +73,13 @@
   "withholdStatus" :[
     {"key":"0", "value":"初始"}
   ],
+  "stage" :[
+    {"key":"0", "value":"全部"},
+    {"key":"1", "value":"首提"},
+    {"key":"2", "value":"中提"},
+    {"key":"3", "value":"尾提"}
+
+  ],
 "errorCode": 0,
   "errorMsg": null
 }

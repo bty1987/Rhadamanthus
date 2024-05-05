@@ -30,9 +30,17 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private UserBaseVO receiver;
 
+	private UserBaseVO refunder;
+
 	private Timestamp createTime;
 
 	private Timestamp receiveTime;
+
+	private Timestamp refundTime;
+
+	private Timestamp affirmTime;
+
+	private Timestamp checkTime;
 
 	private Long asid;
 
@@ -47,6 +55,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 	private Short isAffirm; // 是否确认
 
 	private String content;
+
+	private String comment;
 
 	public DecorationActivityItemVO() {
 		super();
@@ -124,14 +134,6 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.money = money;
 	}
 
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
 	public UserBaseVO getReceiver() {
 		return receiver;
 	}
@@ -140,7 +142,15 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.receiver = receiver;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public UserBaseVO getRefunder() {
+		return refunder;
+	}
+
+	public void setRefunder(UserBaseVO refunder) {
+		this.refunder = refunder;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -149,13 +159,40 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getReceiveTime() {
 		return receiveTime;
 	}
 
 	public void setReceiveTime(Timestamp receiveTime) {
 		this.receiveTime = receiveTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getRefundTime() {
+		return refundTime;
+	}
+
+	public void setRefundTime(Timestamp refundTime) {
+		this.refundTime = refundTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
 	}
 
 	public Long getAsid() {
@@ -204,6 +241,22 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setIsAffirm(Short isAffirm) {
 		this.isAffirm = isAffirm;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

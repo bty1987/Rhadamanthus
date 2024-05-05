@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -52,7 +53,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 	private DecorationBelongDao decorationBelongDao;
 
 	@Override
-	public List<DecorationExportVO> queryDecorationForComplete(List<Filter> filters) {
+	public List<DecorationExportVO> queryDecorationForComplete(List<Filter> filters) throws FLException {
 
 		List<DecorationPO> decorationPOs = decorationDao.queryDecoration(filters);
 

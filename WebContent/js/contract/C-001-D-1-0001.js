@@ -134,8 +134,6 @@ jQuery(function($) {
 
         contractEdit.$input = content;
 
-        console.log(content);
-
         com.post(api.data.queryTalking, options, function(res) {
 
             displayFunc.init("talkingList", res.talkings);
@@ -221,11 +219,7 @@ jQuery(function($) {
             data[content.attr("id")] = content.val();
         });
 
-        console.log(data);
-
         data = $.extend({}, data, contractEdit.cover);
-
-        console.log(data);
 
         data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
         data["con-design-rmoney-cn"] = utils.getCNMoney(parseFloat(data["con-design-rmoney"]));
@@ -252,8 +246,6 @@ jQuery(function($) {
             data["sin-company-name"] = data["con-company-name"];
             data["sin-company-phone"] = data["con-company-phone"];
         }
-
-        console.log(data);
 
         com.showConfirm("请仔细认真检查合同填写内容", function() {
 

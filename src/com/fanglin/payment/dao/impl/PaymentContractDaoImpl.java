@@ -24,8 +24,8 @@ public class PaymentContractDaoImpl extends DaoImpl<PaymentContractPO> implement
 	}
 
 	@Override
-	public List<PaymentContractPO> pagePaymentContract(Paging paging,List<Filter> filters) {
-	
+	public List<PaymentContractPO> pagePaymentContract(Paging paging, List<Filter> filters) {
+
 		PagingQuery<PaymentContractPO> query = pagingQuery(paging, PaymentContractPO.class);
 
 		queryFilterExcute(query, filters);
@@ -33,30 +33,29 @@ public class PaymentContractDaoImpl extends DaoImpl<PaymentContractPO> implement
 		return query.list();
 	}
 
-	private void queryFilterExcute(PagingQuery<PaymentContractPO> query,List<Filter> filters) {
-		
-		if (filters != null) {
-			
-			query.alias("creater", "creater");
-			
-			for(Filter filter: filters){
-				
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				
-				if ("orderId".equals(filter.getField())) {
-					query.add(query.getCriterion("orderId", (filter.getData()), filter.getOp()));
-				}else if("paymentType".equals(field)){
-					query.add(query.getCriterion("paymentType", Short.valueOf(data), op));
-				} else if("createTime".equals(field)){
-					query.timeranges(field, field, data);
-				}  else if("creater".equals(field)){
-					query.add(Restrictions.eq("creater.userId", data));
-				}	
+	private void queryFilterExcute(PagingQuery<PaymentContractPO> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		query.alias("creater", "creater");
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("orderId".equals(filter.getField())) {
+				query.add(query.getCriterion("orderId", (filter.getData()), filter.getOp()));
+			} else if ("paymentType".equals(field)) {
+				query.add(query.getCriterion("paymentType", Short.valueOf(data), op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges(field, field, data);
+			} else if ("creater".equals(field)) {
+				query.add(Restrictions.eq("creater.userId", data));
 			}
 		}
-		
+
 	}
 
 }

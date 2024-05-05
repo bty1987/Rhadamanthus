@@ -76,7 +76,9 @@ $.extend(api.index, {
     constructionAccessoryIndex: {
         url: "/views/construction/accessory.html"
     },
-
+    constructionPlan2print: {
+        url: "/views/construction/constructionPlan2print.html"
+    },
 });
 
 $.extend(api, {
@@ -122,6 +124,18 @@ $.extend(api, {
             url: "pageConstructionForSupervision.do",
             demo: true
         },
+        pageConstructionForQualiter: {
+            url: "pageConstructionForQualiter.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["orderTotalPrice"]
+            }, {
+                result: "paging-data-house",
+                args: ["buildArea"]
+            }]
+        },
         pageConstructionForAcceptance: {
             url: "pageConstructionForAcceptance.do",
             demo: true,
@@ -163,6 +177,9 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data-construction",
                 args: ["salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+            }, {
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice"]
             }, {
                 result: "paging-data-decoration-house",
                 args: ["buildArea"]
@@ -364,6 +381,9 @@ $.extend(api, {
             demo: true,
             type: "query",
             tranargs: [{
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice"]
+            }, {
                 result: "paging-data-decoration-house",
                 args: ["buildArea"]
             }]
@@ -422,6 +442,23 @@ $.extend(api, {
                 args: ["constructionAccessory.numLimit"]
             }
         },
-
+        queryConstructionPlanByOrderId: {
+            url: "queryConstructionPlanByOrderId.do"
+        },
+        addConstructionPlan: {
+            url: "addConstructionPlan.do"
+        },
+        deleteConstructionPlan: {
+            url: "deleteConstructionPlan.do"
+        },
+        queryQualiter: {
+            url: "queryQualiter.do"
+        },
+        addQualiter: {
+            url: "addQualiter.do"
+        },
+        deleteQualiter: {
+            url: "deleteQualiter.do"
+        },
     }
 });

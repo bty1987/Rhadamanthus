@@ -1,141 +1,214 @@
 $(function() {
 
     var normood = {
-        qiid: params.data.quotationItem.qiid,
+
         items: {
-            goodsName: com.focusPage('#goodsName', "#addNormoodModal"),
+            quotationItem: com.focusPage('#quotationItem', "#addNormoodModal"),
             normunit: com.focusPage('#normunit', "#addNormoodModal"),
             normnum: com.focusPage('#normnum', "#addNormoodModal"),
             storeunit: com.focusPage('#storeunit', "#addNormoodModal"),
-            storenum: com.focusPage('#storenum', "#addNormoodModal")
+            storenum: com.focusPage('#storenum', "#addNormoodModal"),
+            noodsName: com.focusPage('#noodsName', "#addNormoodModal"),
+            price: com.focusPage('#price', "#addNormoodModal")
         },
         modals: {
             addNormoodModal: com.focusPage('#addNormoodModal')
         },
         btns: {
-            addNormoodBtn: com.focusPage('#addNormoodBtn'),
-            normoodBackBtn: com.focusPage('#normoodBackBtn'),
-            addNormoodItemBtn: com.focusPage('#addNormoodItemBtn')
+            addNormoodItemBtn: com.focusPage('#addNormoodItemBtn').on("click", saveData)
         },
+
+        qiid: params.data.quotationItem != null ? params.data.quotationItem.qiid : "",
+
+        status: constant.data().normood.status.keys,
+
+        pageType: params.urlLoadParams.pageType
     };
 
-    normood.btns.addNormoodItemBtn.bindClick(saveData);
-
-    normood.btns.normoodBackBtn.click(function() {
-        com.closePopup();
-    });
-
     normood.modals.addNormoodModal.on("hide.bs.modal", function(e) {
+
         com.clearValidator();
-        com.cleanTypeahead("goodsName");
+        com.cleanTypeahead("noodsName");
         com.cleanItems(normood.items);
     });
 
-    com.initTypeahead('goodsName', api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", null);
+    com.initTypeahead(normood.items.noodsName, api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
 
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
         normood.items.normunit.bindData(res.measurementUnits, "name", "name");
-    });
-
-    com.post(api.common.queryMeasurementUnit, {}, function(res) {
         normood.items.storeunit.bindData(res.measurementUnits, "name", "name");
     });
 
-    var displayFunc = (function() {
+    var searcher = new Searcher();
 
-        var renderList = function(tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    var normprops = [{
+        fieId: "name",
+        name: "名称",
+        prop: "name",
+        clazz: "grey"
+    }, {
+        fieId: "noods",
+        name: "定材",
+        prop: "noods.name",
+        clazz: "grey"
+    }, {
+        fieId: "normunit",
+        name: "定额单位",
+        prop: "normunit",
+        clazz: "grey"
+    }, {
+        fieId: "quotationUnit",
+        name: "报价单位",
+        prop: "quotationItem.unit.name",
+        clazz: "grey"
+    }, {
+        fieId: "normnum",
+        name: "定额数量",
+        prop: "normnum",
+        clazz: "blue"
+    }, {
+        fieId: "storeunit",
+        name: "库房单位",
+        prop: "storeunit",
+        clazz: "grey"
+    }, {
+        fieId: "storenum",
+        name: "库房数量",
+        prop: "storenum",
+        clazz: "blue"
+    }, {
+        fieId: "price",
+        name: "价格",
+        prop: "price",
+        clazz: "blue"
+    }, {
+        fieId: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: normood.status
+    }];
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-                    var $liLine = creatLine(v);
+    var quoteprops = [{
+        fieId: "name",
+        name: "报价项",
+        prop: "quotationItem.name",
+        clazz: "grey"
+    }, {
+        fieId: "category",
+        name: "类型",
+        prop: "quotationItem.category.name",
+        clazz: "red"
+    }, {
+        fieId: "classification",
+        name: "分类",
+        prop: "quotationItem.classification.name",
+        clazz: "red"
+    }, {
+        fieId: "bigCategory",
+        name: "大类",
+        prop: "quotationItem.bigCategory.name",
+        clazz: "red"
+    }, {
+        fieId: "smallCategory",
+        name: "小类",
+        prop: "quotationItem.smallCategory.name",
+        clazz: "red"
+    }, {
+        fieId: "unit",
+        name: "单位",
+        prop: "unit",
+        clazz: "red"
+    }, {
+        fieId: "workType",
+        name: "工种",
+        prop: "quotationItem.workType.name",
+        clazz: "grey"
+    }, {
+        fieId: "comment",
+        name: "说明",
+        prop: "quotationItem.comment",
+        clazz: "grey"
+    }];
 
-                    $liLine.appendTo($ul);
-                });
+    var linebtns = [{
+        name: "删除",
+        clazz: "btn-warning",
+        handle: function(v) {
 
-                $ul.appendTo($tableWrap);
-            }
-        };
+            com.showConfirm("确认删除吗?", function(result) {
 
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.goods.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-
-            var propertyArr = [["编号:", v.goods.no, "blue"], ["品牌: ", v.goods.brand, "gray"], ["品类: ", v.goods.category, "gray"], ["商品单位: ", v.goods.measurementUnit, "gray"], ["报价单位: ", v.quotationItem.measurementUnit, "gray"], ["定额单位: ", v.normunit, "gray"], ["定额数量: ", v.normnum, "blue"], ["库房单位: ", v.storeunit, "gray"], ["库房数量: ", v.storenum, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"]];
-
-            $.each(propertyArr, function(index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDel.click(function() {
                 com.post(api.data.deleteNormood, {
                     "normood.ngid": v.ngid
                 }, function(e) {
+
                     com.showAlert(com.info, "操作成功");
-                    $liLine.remove();
+
+                    searcher.doSearch();
                 });
             });
+        }
+    }];
 
-            return $liLine;
-        };
+    if (normood.pageType == "query") {
 
-        return {
-            init: function() {
-                com.post(api.data.queryNormoodByQiid, {
-                    "normood.quotationItem.qiid": normood.qiid
-                }, function(res) {
-                    com.focusPage('#normoodResultList').html(null);
-                    renderList('normoodResultList', res.normoods);
-                });
-            },
-            drawLine: function(v) {
-                return creatLine(v);
-            }
-        };
-    })();
+        searcher.base("normoodCondList", "normoodPagenation", "normoodResultList", api.data.queryNormoodByQiid);
+        searcher.result("normoods").isPage(true);
 
-    displayFunc.init();
+        searcher.param({
+            "normood.quotationItem.qiid": normood.qiid
+        });
 
-    normood.btns.addNormoodBtn.click(function(e) {
+        searcher.button(function() {
+
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'add').css("margin", "0px 3px");
+            var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+            var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+            return [$adda];
+        });
+
+        searcher.line("name", normprops, linebtns).render();
+    } else {
+
+        searcher.history("normoodPostData");
+        searcher.base("normoodCondList", "normoodPagenation", "normoodResultList", api.data.pageNormood);
+        searcher.condition(["data-normood-quotationItem", "data-normood-quotation-version", "data-normood-name", "data-normood-no", "data-normood-status"]);
+
+        searcher.line("name", normprops.concat({
+            type: "newline"
+        }).concat(quoteprops), linebtns).render();
+    }
+
+    com.focusPage("#add").click(function() {
+
         normood.modals.addNormoodModal.modal("show");
     });
 
     function saveData() {
-        if (com.validate('addNormoodModal')) { return false; }
 
-        var gid = com.typeahead("goodsName");
-
-        if (!gid) {
-            com.showAlert(com.error, "数据绑定失败");
-            normood.modals.addNormoodModal.modal("hide");
+        if (com.validate('addNormoodModal')) {
             return false;
         }
 
         var option = {
-            "normood.goods.gid": gid,
+            "normood.goods.gid": null,
+            "normood.noods.nid": com.typeahead(normood.items.noodsName),
             "normood.normunit": normood.items.normunit.val(),
             "normood.normnum": normood.items.normnum.val(),
             "normood.storeunit": normood.items.storeunit.val(),
             "normood.storenum": normood.items.storenum.val(),
-            "normood.quotationItem.qiid": normood.qiid
+            "normood.quotationItem.qiid": normood.qiid,
+            "normood.name": normood.items.noodsName.val(),
+            "normood.price": normood.items.price.val()
         };
 
         com.post(api.data.addNormood, option, function(e) {
-            displayFunc.init();
+
             com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
 
             normood.modals.addNormoodModal.modal("hide");
         });

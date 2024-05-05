@@ -21,9 +21,9 @@ public interface BrandService {
 
 	public void pageBrand(Paging paging, List<Filter> filters, int company);
 
-	public List<BrandVO> queryBrand(int company);
+	public List<BrandVO> queryBrand(Integer company);
 
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName, Integer company);
+	public List<BrandVO> queryBrand(BrandVO brandVO, Integer company);
 
 	public BrandVO queryBrandByBid(BrandVO brandVO);
 
@@ -35,6 +35,6 @@ public interface BrandService {
 
 	public int updateBrand(BrandVO brandVO);
 
-	public int deleteBrandByBIds(List<Long> bIds);
+	public int deleteBrand(List<BrandVO> brandVOs);
 
 }

@@ -38,6 +38,12 @@ public class NormtionVO implements Serializable {
 		super();
 	}
 
+	public NormtionVO(String orderId, Long qid) {
+		super();
+		this.orderId = orderId;
+		this.qid = qid;
+	}
+
 	public NormtionVO(DecorationVO decoration, UserBaseVO creater) {
 		super();
 		this.decoration = decoration;

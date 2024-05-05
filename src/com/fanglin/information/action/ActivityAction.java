@@ -61,6 +61,14 @@ public class ActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryActivityItemByAiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryActivityItemByAiid() {
+
+		activityItem = activityItemService.queryActivityItemByAiid(activityItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addActivity() throws FLException {
 

@@ -11,8 +11,7 @@
                                 <div class="step-content row-fluid position-relative" id="step-container"></div>
                                 <hr/>
                                 <div class="row-fluid wizard-actions" id="btnDisplay">
-                                    <button class="btn btn-warning" type="button" id="btnSaveBasedecorationInfo"
-                                            data-loading-text="保存中...">
+                                    <button class="btn btn-warning" type="button" id="btnSaveBasedecorationInfo" data-loading-text="保存中...">
                                         <i class="icon-ok bigger-110"></i>
                                         <span>保存</span>
                                     </button>
@@ -20,11 +19,11 @@
                                         <i class="icon-mail-forward "></i>
                                         <span>返回</span>
                                     </button>
-                                    <button class="btn btn-prev">
+                                    <button class="btn btn-prev pull-left" style="margin-right: 3px;">
                                         <i class="icon-arrow-left"></i>
                                         <span>上一步</span>
                                     </button>
-                                    <button class="btn btn-success btn-next" data-last="完成">下一步
+                                    <button class="btn btn-success btn-next pull-left">下一步
                                         <i class="icon-arrow-right icon-on-right"></i>
                                     </button>
                                 </div>
@@ -50,8 +49,7 @@
                     <form class="form-horizontal">
                         <div class="space-4"></div>
                         <div class="form-group" id="forOrderType">
-                            <label class="col-sm-2 control-label no-padding-right "
-                                   for="decorationDiscount">订单类型</label>
+                            <label class="col-sm-2 control-label no-padding-right " for="decorationDiscount">装修单类型</label>
                             <div class="col-sm-8 no-padding-right">
                                 <div id="detailOrderType" class="col-xs-10 col-sm-8" style="padding-top: 5px;"></div>
                             </div>
@@ -65,7 +63,7 @@
                         </div>
 
                         <div class="form-group hide" id="forDiscount">
-                            <label class="col-sm-2 control-label no-padding-right" for="decorationDiscount">订单折扣</label>
+                            <label class="col-sm-2 control-label no-padding-right" for="decorationDiscount">折扣</label>
                             <div class="col-md-8">
                                 <select class="form-control v_required col-md-6" id="decorationDiscount" data-toggle="popover" data-trigger='manual' style="width: 50%;"></select>
                             </div>
@@ -79,21 +77,46 @@
                         </div>
 
                         <div class="form-group">
-                        <div class="hide" id="forMaterialPrice">
-                        <label for="materialPrice" class="col-sm-2 control-label no-padding-right">主材额</label>
-                        <div class="col-sm-8  col-xs-2">
-                            <input type="text" class="col-sm-10 col-xs-10 v_number v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="materialPrice">
-                        </div>
-                        </div>
+                            <div class="hide" id="forMaterialPrice">
+                                <label for="materialPrice" class="col-sm-2 control-label no-padding-right">主材额</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="col-md-6 v_number v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="materialPrice">
+                                </div>
+                            </div>
                         </div>
                         <div class="space-4"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveGenerateDecorationPaymentBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelGenerateDecorationPaymentBtn" class="btn btn-default"
-                            data-dismiss="modal">取消
-                    </button>
+                    <button type="button" id="cancelGenerateDecorationPaymentBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 生成服务费 -->
+    <div class="modal fade" id="createServicetModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">生成服务费</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="collectMoney">收款金额</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="collectMoney" class="col-xs-10 col-sm-6 v_required v_float_3" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="saveGenerateCreateServicetBtn" class="btn btn-primary">确定</button>
                 </div>
             </div>
         </div>
@@ -136,7 +159,7 @@
                             <label class="col-sm-3 control-label no-padding-right orange" for="referMoney">金额</label>
                             <div class="col-sm-9">
                                 <input type="text" id="autoId" class="hide"/>
-                                <input type="text" id="referMoney" class="col-xs-10 col-sm-5 v_required v_float_3"
+                                <input type="text" id="referMoney" class="col-xs-10 col-sm-6 v_required v_float_3"
                                        data-toggle="popover" data-trigger='manual' maxlength='6' readonly/>
                             </div>
                         </div>
@@ -165,7 +188,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="otherPaymentType">款项类型</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='otherPaymentType'
+                                <select class='col-xs-10 col-sm-6 v_required' id='otherPaymentType'
                                         data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
@@ -174,7 +197,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="otherPayment">金额</label>
                             <div class="col-sm-9">
-                                <input type="text" id="otherPayment" class="col-xs-10 col-sm-5 v_required v_float_3"
+                                <input type="text" id="otherPayment" class="col-xs-10 col-sm-6 v_required v_float_3"
                                        data-toggle="popover" data-trigger='manual' maxlength='6'/>
                             </div>
                         </div>
@@ -402,7 +425,7 @@
                         <div class="form-group">
                             <label for="no" class="col-sm-3 control-label no-padding-right orange">楼盘名称</label>
                             <div class="col-md-9">
-                                <input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required"
+                                <input type="text" class="col-xs-10 col-sm-6 v_typeahead v_required"
                                        data-toggle="popover" data-placement="bottom" data-trigger="manual" id="no"
                                        placeholder="请输入楼盘名称">
                             </div>
@@ -448,7 +471,7 @@
                         <div class="form-group">
                             <label for="no" class="col-sm-3 control-label no-padding-right orange">施工节点</label>
                             <div class="col-md-9">
-                                <select id="quotationCNSelect" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                <select id="quotationCNSelect" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -459,6 +482,62 @@
                     <button type="button" id="printNormriceSBtn" class="btn btn-primary">监理打印</button>
                     <button type="button" id="printNormriceWBtn" class="btn btn-primary">工人打印</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="printPresignModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="printPresignDialog">预签</h4>
+                </div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group" id="types">
+
+                            <label for="no" class="col-sm-3 control-label no-padding-right orange">内容</label>
+                            <div class="col-md-9">
+                                <label class="inline">
+                                    <input type="checkbox" class="ace" value="1" name="type">
+                                    <span class="lbl">管理</span>
+                                </label>
+
+                                <label class="inline">
+                                    <input type="checkbox" class="ace" value="2" name="type" checked>
+                                    <span class="lbl">赋能</span>
+                                </label>
+
+                                <label class="inline">
+                                    <input type="checkbox" class="ace" value="4" name="type" checked>
+                                    <span class="lbl">标配外</span>
+                                </label>
+
+                                <label class="inline">
+                                    <input type="checkbox" class="ace" value="8" name="type" checked>
+                                    <span class="lbl">个性</span>
+                                </label>
+
+                                <label class="inline">
+                                    <input type="checkbox" class="ace" value="16" name="type" checked>
+                                    <span class="lbl">减项</span>
+                                </label>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="prinPresignBtn" class="btn btn-primary">打印</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>
@@ -670,7 +749,7 @@
                         <div class="form-group">
                             <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='activityInfo' data-toggle="popover"
+                                <select class='col-xs-10 col-sm-6 v_required' id='activityInfo' data-toggle="popover"
                                         data-trigger='manual'></select>
                             </div>
                         </div>
@@ -702,7 +781,7 @@
                         <div class="form-group">
                             <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
                             <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-5 v_required' id='activity' data-toggle="popover" data-trigger='manual'></select>
+                                <select class='col-xs-10 col-sm-6 v_required' id='activity' data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
 
@@ -715,9 +794,9 @@
                             <div class="col-sm-12">
                                 <label for="things" class="col-sm-3 control-label">物品</label>
                                 <div class="col-sm-9" style="padding-left: 6px;" id="thingsInputs">
-                                    <input type="text" id="thingsType" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择物品"/>
+                                    <input type="text" id="thingsType" class="col-xs-10 col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择物品"/>
                                     <input type="text" id="thingsVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入物品数量" style="margin: 0 10px">
-                                     <select class='col-xs-10 col-sm-5 v_required' id='receiveType' data-trigger="manual" style="margin: 2px 0;"></select>
+                                     <select class='col-xs-10 col-sm-6 v_required' id='receiveType' data-trigger="manual" style="margin: 2px 0;"></select>
                                     <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                                 </div>
                             </div>
@@ -731,9 +810,9 @@
                             <div class="col-sm-12">
                                 <label for="coupons" class="col-sm-3 control-label">券</label>
                                 <div class="col-sm-9" style="padding-left: 6px;" id="couponsInputs">
-                                    <input type="text" id="couponsType" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵"/>
+                                    <input type="text" id="couponsType" class="col-xs-10 col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵"/>
                                     <input type="text" id="couponsVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入劵数量" style="margin: 0 10px">
-                                     <select class='col-xs-10 col-sm-5 v_required' id='receiveTypes' data-trigger="manual" style="margin: 2px 0;"></select>
+                                     <select class='col-xs-10 col-sm-6 v_required' id='receiveTypes' data-trigger="manual" style="margin: 2px 0;"></select>
                                     <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                                 </div>
                             </div>
@@ -747,9 +826,9 @@
                             <div class="col-sm-12">
                                 <label for="papers" class="col-sm-3 control-label">红包</label>
                                 <div class="col-sm-9" style="padding-left: 6px;" id="papersInputs">
-                                    <input type="text" id="papersType" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵"/>
+                                    <input type="text" id="papersType" class="col-xs-10 col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵"/>
                                     <input type="text" id="papersVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入劵数量" style="margin: 0 10px">
-                                     <select class='col-xs-10 col-sm-5 v_required' id='receiveTypess' data-trigger="manual" style="margin: 2px 0;"></select>
+                                     <select class='col-xs-10 col-sm-6 v_required' id='receiveTypess' data-trigger="manual" style="margin: 2px 0;"></select>
                                     <button type="button" id="papersAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                                 </div>
                             </div>
@@ -786,13 +865,21 @@
                         <div class="form-group">
                             <label for="userSel" class="col-sm-3 control-label no-padding-right orange">人员</label>
                             <div class="col-md-9">
-                                <input type="text" class="col-md-4 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userSel" placeholder="人员">
+                                <input type="text" class="col-xs-10 col-md-6 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="duUser" placeholder="人员">
                             </div>
                         </div>
 
                         <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label for="userSel" class="col-sm-3 control-label no-padding-right">备注</label>
+                            <div class="col-sm-9">
+                                <textarea class="col-xs-10 col-sm-6" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50" id="duContent"></textarea>
+                            </div>
+                        </div>
                     </form>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" id="saveUserBtn" class="btn btn-primary">保存</button>
                     <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -800,7 +887,27 @@
             </div>
         </div>
     </div>
-    
+
+    <div class="modal fade" id="QRcodeModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">二维码</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="qrcode" id="QRcode" style="border: 0px;">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script type="text/javascript">

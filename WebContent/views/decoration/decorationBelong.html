@@ -67,14 +67,13 @@
 							<div class="col-md-12 center">
 								<div class="col-md-12 ">
 									<div class="ui-pg-div">
-										<button id="addNewUserBtn" class="btn btn-minier btn-pink">
-											<i class="icon-pencil"></i>添加
+										<button id="appendUserBtn" class="btn btn-minier btn-pink">
+											<i class="icon-pencil"></i>
+                                            <span>添加</span>
 										</button>
-										<button id="saveBelongInfoBtn" class="btn btn-minier btn-primary">
-											<i class="icon-save"></i>提交申请
-										</button>
-										<button id="detailBckBtn" class="btn btn-minier btn-info">
-											<i class="icon-mail-forward"></i>返回
+										<button id="applyApprovalBtn" class="btn btn-minier btn-primary">
+											<i class="icon-save"></i>
+                                            <span>提交申请</span>
 										</button>
 									</div>
 								</div>
@@ -91,22 +90,19 @@
 				<div>
 					<p>分配归属信息时,所有分配人的分配比率的和必须是1,否则无法保存。</p>
 					<p>分配归属信息时,必须有一个默认归属用户,否则无法保存。</p>
-					<p>当订单的归属信息通过审批时,您的修改才会真的起作用,并以消息的方式通知相关人员。</p>
+					<p>当装修单的归属信息通过审批时,您的修改才会真的起作用,并以消息的方式通知相关人员。</p>
 				</div>
 			</div>
-			<div class="hr hr-24"></div>
-			<div class="" id="addOrReduceItemDiv1">
-				<div class="widget-container-span ui-sortable"> 
-					<div class="widget-box transparent">
-						<div class="widget-header">
-							<h3>
-								<strong>归属信息</strong>
-							</h3>
-						</div>
-						<div class="widget-body">
-							<div class="widget-body-inner" id='belongInfoDiv' style="display: block;">
-								<ul id="belongResultList" class="item-list fl-table-list ui-sortable"></ul>
-							</div>
+			<div class="widget-container-span ui-sortable"> 
+				<div class="widget-box transparent">
+					<div class="widget-header">
+						<h3>
+							<strong>归属信息</strong>
+						</h3>
+					</div>
+					<div class="widget-body">
+						<div class="widget-body-inner">
+							<ul id="belongResultList" class="item-list fl-table-list ui-sortable"></ul>
 						</div>
 					</div>
 				</div>
@@ -132,7 +128,7 @@
 					</div>
 					<div class="space-4"></div>
 					
-					<div class="form-group">
+					<div class="form-group" id="approveGroup">
 						<label for="approveManSel" class="col-sm-3 control-label no-padding-right">审批人</label>
 						<div class="col-sm-9">
 							<div id="approveManSel" class="col-xs-10 col-sm-6 ">
@@ -140,12 +136,40 @@
 						</div>
 					</div>
 					<div class="space-4"></div>
+                    
+                    <div class="form-group">
+                        <label for="dingApprove" class="col-sm-3 control-label no-padding-right">钉钉同步</label>
+                        <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="dingApprove">
+                            <span class="lbl status-lbl"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wechatApprove" class="col-sm-3 control-label no-padding-right">企业微信同步</label>
+                        <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="wechatApprove" disabled="disabled">
+                            <span class="lbl status-lbl"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="larkApprove" class="col-sm-3 control-label no-padding-right">飞书同步</label>
+                        <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="larkApprove" disabled="disabled">
+                            <span class="lbl status-lbl"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fenxApprove" class="col-sm-3 control-label no-padding-right">纷享同步</label>
+                        <div class="col-sm-9"><input class="ace ace-switch ace-switch-5" type="checkbox" id="fenxApprove" disabled="disabled">
+                            <span class="lbl status-lbl"></span>
+                        </div>
+                    </div>
 					
 				</form>
      			</div>
 			<div class="modal-footer">
-				<button type="button" id="cApproveSaveBtn" class="btn btn-primary">修改申请</button>
-	        	<button type="button" id="cApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				<button type="button" id="submitApproveBtn" class="btn btn-primary">修改申请</button>
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 	      	</div>
    		</div>
  		</div>
@@ -178,8 +202,8 @@
                    </form>
                </div>
                <div class="modal-footer">
-                   <button type="button" id="updateBtn" class="btn btn-primary">修改</button>
-                   <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                   <button type="button" id="updateBelongBtn" class="btn btn-primary">修改</button>
+                   <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                </div>
            </div>
        </div>

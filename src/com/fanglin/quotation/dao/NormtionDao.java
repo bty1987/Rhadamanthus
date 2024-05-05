@@ -13,4 +13,5 @@ public interface NormtionDao extends Dao<NormtionPO> {
 	public List<NormtionDO> pageNormtion(Paging paging, List<Filter> filters, Integer company);
 
 	public NormtionPO queryNormtion(long qid);
+
 }

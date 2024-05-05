@@ -548,5 +548,21 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
+    "droup-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.customer,
+            postData: {},
+            listPath: "droupType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
 });

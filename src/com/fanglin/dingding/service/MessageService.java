@@ -41,13 +41,16 @@ public class MessageService {
 
 	public short sendMessage(String receiveId, String senderName, String contents, Long aimid, int company) throws FLException {
 
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
-
 		SystemConfigPO deliverValue = systemConfigDao.querySystemConfig("messageAgentId", company);
-
 		SystemConfigPO jumpValue = systemConfigDao.querySystemConfig("messageUrl", company);
 
-		if (accessToken == null || deliverValue == null || jumpValue == null) {
+		if (deliverValue == null || jumpValue == null) {
+			return -1;
+		}
+
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+
+		if (accessToken == null) {
 			return -1;
 		}
 

@@ -27,27 +27,37 @@ public class SalesActivityItemVO implements Serializable {
 
 	private Integer money;
 
-	private Short state;
-
-	private Short isAffirm;
-
-	private Short isStock;
-
-	private Short type;
-
-	private String content;
+	private Integer integral;
 
 	private UserBaseVO creater;
 
-	private Timestamp createTime;
-
 	private UserBaseVO operater;
+
+	private UserBaseVO refunder;
+
+	private Timestamp createTime;
 
 	private Timestamp operateTime;
 
-	private Integer integral;
+	private Timestamp refundTime;
 
-	public SalesActivityItemVO(){
+	private Timestamp affirmTime;
+
+	private Timestamp checkTime;
+
+	private Short type;
+
+	private Short state;
+
+	private Short isStock;
+
+	private Short isAffirm;
+
+	private String content;
+
+	private String comment;
+
+	public SalesActivityItemVO() {
 		super();
 	}
 
@@ -98,7 +108,7 @@ public class SalesActivityItemVO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public Integer getNum() {
 		return num;
 	}
@@ -113,6 +123,91 @@ public class SalesActivityItemVO implements Serializable {
 
 	public void setMoney(Integer money) {
 		this.money = money;
+	}
+
+	public Integer getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(Integer integral) {
+		this.integral = integral;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
+	public UserBaseVO getOperater() {
+		return operater;
+	}
+
+	public void setOperater(UserBaseVO operater) {
+		this.operater = operater;
+	}
+
+	public UserBaseVO getRefunder() {
+		return refunder;
+	}
+
+	public void setRefunder(UserBaseVO refunder) {
+		this.refunder = refunder;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getOperateTime() {
+		return operateTime;
+	}
+
+	public void setOperateTime(Timestamp operateTime) {
+		this.operateTime = operateTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getRefundTime() {
+		return refundTime;
+	}
+
+	public void setRefundTime(Timestamp refundTime) {
+		this.refundTime = refundTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getState() {
@@ -131,12 +226,12 @@ public class SalesActivityItemVO implements Serializable {
 		this.isStock = isStock;
 	}
 
-	public Short getType() {
-		return type;
+	public Short getIsAffirm() {
+		return isAffirm;
 	}
 
-	public void setType(Short type) {
-		this.type = type;
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	public String getContent() {
@@ -147,54 +242,12 @@ public class SalesActivityItemVO implements Serializable {
 		this.content = content;
 	}
 
-	public UserBaseVO getCreater() {
-		return creater;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setCreater(UserBaseVO creater) {
-		this.creater = creater;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
-
-	public UserBaseVO getOperater() {
-		return operater;
-	}
-
-	public void setOperater(UserBaseVO operater) {
-		this.operater = operater;
-	}
-
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getOperateTime() {
-		return operateTime;
-	}
-
-	public void setOperateTime(Timestamp operateTime) {
-		this.operateTime = operateTime;
-	}
-
-	public Integer getIntegral() {
-		return integral;
-	}
-
-	public void setIntegral(Integer integral) {
-		this.integral = integral;
-	}
-
-	public Short getIsAffirm() {
-		return isAffirm;
-	}
-
-	public void setIsAffirm(Short isAffirm) {
-		this.isAffirm = isAffirm;
-	}
-	
 }

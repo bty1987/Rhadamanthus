@@ -6,7 +6,7 @@ jQuery(function($) {
         tableList:[],
         args:null,
 
-        paymentTypeData: parent.constant.payment.activityPayment.paymentType.keys,
+        paymentTypeData: parent.constant.payment().activityPayment.paymentType.keys,
         advanceTypeData: {"0":"-"},
 
         commonInfo: {},

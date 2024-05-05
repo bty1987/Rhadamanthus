@@ -30,6 +30,8 @@ public class PresignProducePO implements Serializable {
 
 	private int manageRate;
 
+	private String manageFormula;
+
 	private long costPrice;
 
 	private int profitRate;
@@ -196,5 +198,14 @@ public class PresignProducePO implements Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "manageFormula")
+	public String getManageFormula() {
+		return manageFormula;
+	}
+
+	public void setManageFormula(String manageFormula) {
+		this.manageFormula = manageFormula;
 	}
 }

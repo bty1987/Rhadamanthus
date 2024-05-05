@@ -100,26 +100,26 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> amountQuotationNormrice(short index, long functionAreaId) {
 
-		String sql = String.format("select m.*, n.*, sum(m.salary) as amount from quotation.quotationfunctionareaitem%d i, data.normrice m, data.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid group by n.cnid", index);
+		String sql = String.format("select m.*, n.*, m.salary as amount, m.stuff as stuff, i.num as num from quotation.quotationfunctionareaitem%d i, data.normrice m, data.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid", index);
 
-		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("functionAreaId", functionAreaId).list();
+		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).addScalar("stuff", StandardBasicTypes.INTEGER).addScalar("num", StandardBasicTypes.INTEGER).setLong("functionAreaId", functionAreaId).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> amountExtensionNormrice(long eid) {
 
-		String sql = "select m.*, n.*, sum(m.salary) as amount from quotation.extensionitem i, data.normrice m, data.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid group by n.cnid";
+		String sql = "select m.*, n.*, if(i.type in (0, 1, 5), m.salary, -m.salary) as amount, if(i.type in (0, 1, 5), m.stuff, -m.stuff) as stuff, if(i.type in (0, 1, 5), i.num, -i.num) as num from quotation.extensionitem i, data.normrice m, data.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid";
 
-		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("eid", eid).list();
+		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).addScalar("stuff", StandardBasicTypes.INTEGER).addScalar("num", StandardBasicTypes.INTEGER).setLong("eid", eid).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<T> amountAddReduceNormrice(long arid) {
 
-		String sql = "select m.*, n.*, sum(m.salary) as amount from quotation.addreduceitem i, data.normrice m, data.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid group by n.cnid";
+		String sql = "select m.*, n.*, if(i.type in (0, 1, 2), m.salary, -m.salary) as amount, if(i.type in (0, 1, 2), m.stuff, -m.stuff) as stuff, if(i.type in (0, 1, 2), i.num, -i.num) as num from quotation.addreduceitem i, data.normrice m, data.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid";
 
-		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("arid", arid).list();
+		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).addScalar("stuff", StandardBasicTypes.INTEGER).addScalar("num", StandardBasicTypes.INTEGER).setLong("arid", arid).list();
 	}
 }

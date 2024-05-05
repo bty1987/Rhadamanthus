@@ -4,23 +4,27 @@ import java.io.Serializable;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class DecorationUserVO implements Serializable{
+public class DecorationUserVO implements Serializable {
 
 	private static final long serialVersionUID = 7968648685999434039L;
-	
+
 	private Long duid;
-	
+
 	private String orderId;
-	
+
 	private UserBaseVO user;
-	
+
+	private Short isShow;
+
+	private Short isPay;
+
 	private String content;
-	
-	public DecorationUserVO(){
+
+	public DecorationUserVO() {
 		super();
 	}
-	
-	public DecorationUserVO(UserBaseVO user){
+
+	public DecorationUserVO(UserBaseVO user) {
 		super();
 		this.user = user;
 	}
@@ -49,6 +53,22 @@ public class DecorationUserVO implements Serializable{
 		this.user = user;
 	}
 
+	public Short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(Short isShow) {
+		this.isShow = isShow;
+	}
+
+	public Short getIsPay() {
+		return isPay;
+	}
+
+	public void setIsPay(Short isPay) {
+		this.isPay = isPay;
+	}
+
 	public String getContent() {
 		return content;
 	}
@@ -56,5 +76,5 @@ public class DecorationUserVO implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 }

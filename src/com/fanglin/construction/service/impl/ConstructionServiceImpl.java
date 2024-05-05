@@ -11,6 +11,7 @@
 
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -21,9 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.dao.QualiterDao;
 import com.fanglin.construction.po.ConstructionPO;
+import com.fanglin.construction.po.QualiterPO;
 import com.fanglin.construction.service.ConstructionService;
 import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.construction.vo.QualiterVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -50,14 +54,17 @@ public class ConstructionServiceImpl implements ConstructionService {
 	@Autowired
 	private UserDao userDao;
 
+	@Autowired
+	private QualiterDao qualiterDao;
+
 	@Override
-	public void pageConstruction(Paging paging, List<Filter> filters, Integer company) {
+	public void pageConstruction(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (ConstructionPO constructionPO : constructionPOs) {
-			decorationVOs.add(decorationPOToVO(constructionPO.getDecoration()));
+			decorationVOs.add(ptv(constructionPO.getDecoration()));
 		}
 
 		paging.setData(decorationVOs);
@@ -76,27 +83,27 @@ public class ConstructionServiceImpl implements ConstructionService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (ConstructionPO constructionSchedulePO : constructionSchedulePOs) {
-			decorationVOs.add(decorationPOToVO(constructionSchedulePO.getDecoration()));
+			decorationVOs.add(ptv(constructionSchedulePO.getDecoration()));
 		}
 
 		paging.setData(decorationVOs);
 	}
 
 	@Override
-	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company) {
+	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (ConstructionPO constructionPO : constructionPOs) {
-			decorationVOs.add(decorationPOToVO(constructionPO.getDecoration()));
+			decorationVOs.add(ptv(constructionPO.getDecoration()));
 		}
 
 		paging.setData(decorationVOs);
 	}
 
 	@Override
-	public void pageConstructionForBase(Paging paging, List<Filter> filters, Integer company) {
+	public void pageConstructionForBase(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<ConstructionVO> constructionVOs = new ArrayList<ConstructionVO>();
@@ -108,7 +115,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
-			BeanUtil.copyProperties(decorationPOToVO(constructionPO.getDecoration()), constructionVO.getDecoration());
+			BeanUtil.copyProperties(ptv(constructionPO.getDecoration()), constructionVO.getDecoration());
 			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
 
@@ -116,7 +123,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 		}
 
 		paging.setData(constructionVOs);
-
 	}
 
 	@Override
@@ -163,7 +169,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateConstructionByOrderId(ConstructionVO constructionVO) throws FLException {
+	public void updateConstructionByOrderId(ConstructionVO constructionVO, List<QualiterVO> qualiters) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionVO.getOrderId());
 
@@ -190,6 +196,25 @@ public class ConstructionServiceImpl implements ConstructionService {
 		decorationPO.setSupervisor(supervisor);
 
 		decorationDao.update(decorationPO);
+
+		if (qualiters == null || qualiters.size() == 0) return;
+
+		for (QualiterVO qualiter : qualiters) {
+
+			UserPO userPO = userDao.queryUserByUserId(qualiter.getUser().getUserId());
+
+			if (userPO == null) continue;
+
+			QualiterPO qualiterPO = new QualiterPO();
+
+			qualiterPO.setDecoration(decorationPO);
+			qualiterPO.setCid(constructionPO.getCid());
+			qualiterPO.setUser(userPO);
+			qualiterPO.setSchedule(qualiter.getSchedule());
+			qualiterPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+
+			qualiterDao.save(qualiterPO);
+		}
 	}
 
 	@Override
@@ -250,7 +275,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		return 0;
 	}
 
-	private DecorationVO decorationPOToVO(DecorationPO decorationPO) {
+	private DecorationVO ptv(DecorationPO decorationPO) {
 
 		DecorationVO decorationVO = new DecorationVO();
 

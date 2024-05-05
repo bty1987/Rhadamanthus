@@ -8,6 +8,7 @@ jQuery(function($) {
         type: {},
         typeness: {},
         decoration: {},
+        decorationUser: {},
         customer: {},
         village: {},
         versionId: "",
@@ -118,6 +119,7 @@ jQuery(function($) {
     decorationDetail.paymentItems.otherPayment = com.focusPage("#otherPayment");
     decorationDetail.paymentItems.changeReason = com.focusPage('#changeReason');
     decorationDetail.paymentItems.materialPrice = com.focusPage('#materialPrice');
+    decorationDetail.paymentItems.collectMoney = com.focusPage("#collectMoney");
 
     decorationDetail.customerItems.customerName = com.focusPage("#customerName", "#customerChangeModal");
     decorationDetail.customerItems.identity = com.focusPage("#identity", "#customerChangeModal");
@@ -211,10 +213,6 @@ jQuery(function($) {
         decorationDetail.houseItems.floorrule.bindData(res.buildrule, "key", "value");
         decorationDetail.houseItems.doorrule.bindData(res.buildrule, "key", "value");
     }, null, false);
-
-    decorationDetail.printQuotationModal = com.focusPage("#printQuotationModal");
-    decorationDetail.printQuotationCNModal = com.focusPage("#printQuotationCNModal");
-    decorationDetail.decorationUserModal = com.focusPage("#decorationUserModal");
 
     // 申请活动
     decorationDetail.activity.activity = com.focusPage("#activity").on("change", function() {
@@ -317,10 +315,15 @@ jQuery(function($) {
     decorationDetail.activitys = com.focusPage("#activitys");
     decorationDetail.activityItems = com.focusPage("#activityItems");
     decorationDetail.activityPriceInfo = com.focusPage("#activityPriceInfo");
-    decorationDetail.salesActivityItems = com.focusPage("#salesActivityItems")
+    decorationDetail.salesActivityItems = com.focusPage("#salesActivityItems");
 
+    decorationDetail.printPresignModal = com.focusPage("#printPresignModal");
     decorationDetail.printQuotationModal = com.focusPage("#printQuotationModal");
+    decorationDetail.printQuotationCNModal = com.focusPage("#printQuotationCNModal");
     decorationDetail.quotationTotalPriceModal = com.focusPage("#quotationTotalPriceModal");
+    decorationDetail.createServicetModal = com.focusPage("#createServicetModal");
+
+    decorationDetail.QRcodeModal = com.focusPage("#QRcodeModal");
 
     decorationDetail.joinDecorationActivityModal = com.focusPage("#joinDecorationActivityModal");
     decorationDetail.applyDecorationActivityItemModal = com.focusPage("#applyDecorationActivityItemModal");
@@ -330,6 +333,8 @@ jQuery(function($) {
     decorationDetail.otherPaymentModal = com.focusPage("#otherPaymentModal");
     decorationDetail.customerChangeModal = com.focusPage("#customerChangeModal");
     decorationDetail.villageChangeModal = com.focusPage("#villageChangeModal");
+
+    decorationDetail.decorationUserModal = com.focusPage("#decorationUserModal");
 
     // 参加活动
     decorationDetail.joinDecorationActivityModal.on('hide.bs.modal', function(e) {
@@ -436,20 +441,12 @@ jQuery(function($) {
         "user.status": 0,
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
-    com.initTypeahead('userSel', api.personel.queryUserByPinyin, "pinyinName", {
+    com.initTypeahead('duUser', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": "0",
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
 
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
-
-    if (decorationDetail.orderType == 0) {
-        decorationUtils.initDecorationMidpack(decorationDetail.orderId);
-    } else if (decorationDetail.orderType == 1) {
-        decorationUtils.initDecorationInclusive(decorationDetail.orderId);
-    } else if (decorationDetail.orderType == 2) {
-        decorationUtils.initDecorationHolonomy(decorationDetail.orderId);
-    }
 
     com.focusPage('#customerInfosBtn').on("click", function() {
 
@@ -458,9 +455,9 @@ jQuery(function($) {
         }, function(res) {
 
             decorationDetail.customer = res.customer;
-            com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ :' + decorationDetail.customer.qq + '<br /> 微信 :' + decorationDetail.customer.wechat + '<br />  电话 : <span id = customerInfosPhone>' + decorationDetail.customer.phone + '</span> <br />  客户类型 :' + decorationDetail.customer.relationshipType + '<br />');
+            com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ :' + decorationDetail.customer.qq + '<br /> 微信 :' + decorationDetail.customer.wechat + '<br />  电话 : <span id = customerInfosPhone>客户电话</span> <br />  客户类型 :' + decorationDetail.customer.relationshipType + '<br />');
 
-            $('#customerInfosPhone').on("click", function() {
+            $('#customerInfosPhone').one("click", function() {
 
                 var phoneInfo = $(this);
                 com.post(api.data.queryCustomerForPhone, {
@@ -683,6 +680,29 @@ jQuery(function($) {
 
     });
 
+    decorationDetail.items.decorationDiscount.change(function() {
+
+        if (decorationDetail.orderType != 0)
+            return false;
+
+        var id = $(this).val();
+        var decorationMaching = decorationMachingTypes[id];
+
+        if (!decorationMaching) {
+            com.focusPage("#forMaterialPrice").addClass('hide');
+            return false;
+        }
+
+        decorationDetail.paymentItems.materialPrice.val(0);
+
+        if (decorationMaching.material == 0) {
+            com.focusPage("#forMaterialPrice").removeClass('hide');
+        } else {
+            com.focusPage("#forMaterialPrice").addClass('hide');
+        }
+
+    });
+
     decorationDetail.modal = com.focusPage("#customerChangeModal").on('hide.bs.modal', function(e) {
 
         com.clearValidator();
@@ -730,7 +750,7 @@ jQuery(function($) {
 
         com.clearValidator();
 
-        if (decorationDetail.orderType == 2) { // 半价/满减/捡捡
+        if ([0, 2].indexOf(decorationDetail.orderType) != -1) { // 半包/半价/满减/捡捡
             com.post(api.data.queryDecorationMatching, {
                 "typeness[0]": decorationDetail.orderTypeness
             }, function(res) {
@@ -746,7 +766,7 @@ jQuery(function($) {
                     machingType.push(v);
                 });
 
-                decorationDetail.items.decorationDiscount.bindData(machingType, "dmid", "name", false);
+                decorationDetail.items.decorationDiscount.bindData(machingType, "dmid", "name", "请选择");
             });
         }
 
@@ -757,8 +777,8 @@ jQuery(function($) {
         if (decorationDetail.orderType == 2) {
             com.focusPage('#forDiscount').removeClass('hide');
         } else if (decorationDetail.orderType == 0) {
-            com.focusPage("#forMaterialPrice").removeClass('hide');
-            decorationDetail.paymentItems.materialPrice.val(0);
+            com.focusPage('#forDiscount').removeClass('hide');
+            com.focusPage("#forMaterialPrice").addClass('hide');
         }
 
         com.post(api.data.queryPaymentScale, {}, function(res) {
@@ -798,6 +818,13 @@ jQuery(function($) {
         });
 
         decorationDetail.quotationTotalPriceModal.modal("show");
+    });
+
+    // 点击生成服务款按钮
+    com.focusPage("#btnCreateService").on('click', function(res) {
+
+        decorationDetail.paymentItems.collectMoney.val(0);
+        decorationDetail.createServicetModal.modal("show");
     });
 
     queryPaymentType({
@@ -1026,6 +1053,13 @@ jQuery(function($) {
             });
 
         } else {
+
+            var id = decorationDetail.items.decorationDiscount.val();
+            var decorationMaching = decorationMachingTypes[id];
+
+            options["decorationMidpack.materialRate"] = decorationMaching.material;
+            options["decorationMidpack.serviceRate"] = decorationMaching.service;
+
             com.post(api.decoration.makeDecorationMidpack, options, function(res) {
 
                 com.showAlert(com.info, "保存成功");
@@ -1034,6 +1068,28 @@ jQuery(function($) {
         }
 
         decorationDetail.quotationTotalPriceModal.modal("hide");
+    });
+
+    // 生成服务款
+    com.focusPage("#saveGenerateCreateServicetBtn").bindClick(function(res) {
+
+        com.clearValidator();
+
+        if (com.validate("createServicetModal")) {
+            return false;
+        }
+
+        var options = {
+            "servicePayment.decoration.orderId": decorationDetail.orderId,
+            "servicePayment.referMoney": decorationDetail.paymentItems.collectMoney.val()
+        };
+
+        com.post(api.payment.makeServicePayment, options, function(res) {
+
+            com.showAlert(com.info, "创建成功");
+            searcher.doSearch();
+        });
+        decorationDetail.createServicetModal.modal("hide");
     });
 
     com.focusPage('#btnBack').on("click", function() {
@@ -1053,13 +1109,16 @@ jQuery(function($) {
 
     com.focusPage("#btnPrintPresignInfo").on('click', function(res) {
 
-        com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
+        decorationDetail.printPresignModal.modal("show");
     });
 
     com.focusPage("#btnDecorationUser").on('click', function(res) {
 
         com.clearValidator();
-        com.cleanTypeahead('userSel');
+        com.cleanTypeahead('duUser');
+        com.cleanTypeahead('duContent');
+        com.focusPage("#duUser").removeAttr('readonly');
+        decorationDetail.decorationUser.status = 0;
         decorationDetail.decorationUserModal.modal("show");
     });
 
@@ -1069,7 +1128,7 @@ jQuery(function($) {
             "selection.orderId": decorationDetail.orderId
         }, function(res) {
 
-            params.quotation.orderId = res.selection.orderId;
+            params.selection = res.selection;
 
             com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
         }, null, false);
@@ -1077,36 +1136,16 @@ jQuery(function($) {
 
     initWizard(decorationDetail);
 
-    // 发送按钮
-    com.focusPage("#btnNotice").on("click", "#btnNotice", function() {
+    // 装修合同方案二维码按钮
+    com.focusPage("#confirmDesignQRCode").on("click", function() {
 
-        var $inputs = com.focusPage('input[name="daiIds"]:checked');
+        showQRCode(1);
+    });
 
-        if ($inputs.length == 0) {
-            com.showAlert(com.info, "无选中奖品");
-            return false;
-        }
+    // 放线方案确认二维码按钮
+    com.focusPage("#confirmPrictureQRCode").on("click", function() {
 
-        var daiids = "";
-
-        $.each($inputs, function(i, v) {
-
-            daiids += $(v).val() + ",";
-        });
-
-        var options = {
-            "decorationActivityItem.orderId": decorationDetail.orderId,
-            "decorationActivityItem.content": daiids,
-        };
-
-        com.showConfirm("是否发送查看通知", function() {
-
-            com.post(api.decoration.sendDecorationActivityItem, options, function(res) {
-
-                com.showAlert(com.info, "操作成功");
-            });
-        });
-
+        showQRCode(2);
     });
 
     decorationUtils.initBaseInfo(decorationDetail.orderId, api.decoration.queryDecorationForCommonByOrderId, function(decoration) {
@@ -1313,6 +1352,8 @@ jQuery(function($) {
                     "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
                     "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
                     "decoration.busitype": decorationDetail.items.busitype.val(),
+                    "decoration.house.buildArea": decorationDetail.items.houseArea.val(),
+                    "decoration.house.innerArea": decorationDetail.items.innerArea.val(),
                     "decoration.quoter.userId": com.typeahead("quoterId"),
                     "decoration.escorter.userId": com.typeahead("escorterId"),
                 };
@@ -1341,7 +1382,7 @@ jQuery(function($) {
             "isDesign": false
         };
 
-        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
+        switchNode(params.decoration.viewNode[0]);
 
         com.focusPage('#fuelux-wizard').ace_wizard({
             "status": true
@@ -1353,108 +1394,12 @@ jQuery(function($) {
 
             var node = params.decoration.viewNode[curstep];
 
-            switch (node.type) {
-
-                case "quotation":
-                    quotationUtils.loadQuotationDetail();
-                    decorationUtils.initQuotationPrint();
-                    break;
-                case "select":
-                    quotationUtils.loadQuotationDetail();
-                    quotationUtils.initSelectionDetail();
-                    break;
-                case "presign":// 预签信息
-                    decorationUtils.initPresignDetail(decorationDetail.orderId);
-                    break;
-                case "picture":
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
-                    break;
-                case "material":
-                    decorationUtils.initMaterial(decorationDetail);
-                    break;
-                case "activity":
-                    if (!$.isEmptyObject(node.wizard))
-                        $.extend(true, wizard, node.wizard);
-                    params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;// 全局变量活动
-                    params.decoration.activity = decorationDetail.activity;
-                    decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.orderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
-                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems, decorationDetail.orderId, wizard["uiBtnMethod"], salesActivityItem);
-                    break;
-                case "belong":
-                    decorationUtils.initDecorationBelong(decorationDetail.orderId);
-                    break;
-                case "payment":
-                    if (!$.isEmptyObject(node.wizard))
-                        $.extend(true, wizard, node.wizard);
-                    decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
-                    break;
-                case "addreduce":
-                    decorationUtils.initAddreduce(decorationDetail.orderId, decorationDetail.orderType);
-                    break;
-                case "account":
-                    decorationUtils.initAccount(decorationDetail.orderId, decorationDetail.accountFlg);
-                    break;
-                case "service":
-                    decorationUtils.initService(decorationDetail, decorationDetail.orderId);
-                    break;
-                case "users":
-                    decorationUtils.initUsers(decorationDetail, decorationDetail.orderId);
-                    break;
-            }
+            switchNode(node, wizard);
         }).on('stepclick', function(e, info) {
 
             var node = params.decoration.viewNode[info.step - 1];
 
-            switch (node.type) {
-
-                case "quotation":
-                    quotationUtils.loadQuotationDetail();
-                    decorationUtils.initQuotationPrint();
-                    break;
-                case "select":
-                    quotationUtils.loadQuotationDetail();
-                    quotationUtils.initSelectionDetail();
-                    break;
-                case "presign":// 预签信息
-                    quotationUtils.initPresignDetail(decorationDetail.orderId);
-                    break;
-                case "picture":
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
-                    break;
-                case "material":
-                    decorationUtils.initMaterial(decorationDetail);
-                    break;
-                case "activity":
-                    if (!$.isEmptyObject(node.wizard))
-                        $.extend(true, wizard, node.wizard);
-                    params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;
-                    params.decoration.activity = decorationDetail.activity;
-                    decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.orderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
-                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems, decorationDetail.orderId, wizard["uiBtnMethod"], salesActivityItem);
-                    break;
-                case "belong":
-                    decorationUtils.initDecorationBelong(decorationDetail.orderId);
-                    break;
-                case "payment":
-                    if (!$.isEmptyObject(node.wizard))
-                        $.extend(true, wizard, node.wizard);
-                    decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
-                    break;
-                case "addreduce":
-                    decorationUtils.initAddreduce(decorationDetail.orderId, decorationDetail.orderType);
-                    break;
-                case "account":
-                    decorationUtils.initAccount(decorationDetail.orderId, decorationDetail.accountFlg);
-                    break;
-                case "service":
-                    decorationUtils.initService(decorationDetail, decorationDetail.orderId);
-                    break;
-                case "users":
-                    decorationUtils.initUsers(decorationDetail, decorationDetail.orderId);
-                    break;
-            }
+            switchNode(node, wizard);
         }).on('previous', function(e, info) {
 
             ![3, 7].includes(decorationDetail.orderStatus) && info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
@@ -1462,6 +1407,95 @@ jQuery(function($) {
 
             com.switchPage(params.historyPage);
         });
+    }
+
+    function switchNode(node, wizard) {
+
+        switch (node.type) {
+
+            case "quotation":
+                quotationUtils.loadQuotationDetail();
+                decorationUtils.initQuotationPrint(node);
+                break;
+            case "select":
+                quotationUtils.loadQuotationDetail();
+                quotationUtils.initSelectionDetail();
+                break;
+            case "presign":// 预签信息
+                quotationUtils.initPresignDetail(decorationDetail.orderId);
+                decorationUtils.initPresignPrint();
+                break;
+            case "picture":
+                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
+                break;
+            case "material":
+                decorationUtils.initMaterial(decorationDetail);
+                break;
+            case "activity":
+
+                if (!$.isEmptyObject(node.wizard))
+                    $.extend(true, wizard, node.wizard);
+
+                params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;// 全局变量活动
+                params.decoration.activity = decorationDetail.activity;
+
+                decorationUtils.decorationActivityInfo(decorationDetail.orderId, decorationDetail.activitys, wizard);
+                decorationUtils.decorationActivityItemInfo(decorationDetail.orderId, decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationActivity, wizard);
+                decorationUtils.salesActivityItemInfo(decorationDetail.orderId, decorationDetail.salesActivityItems, salesActivityItem, wizard);
+
+                break;
+            case "belong":
+                decorationUtils.initDecorationBelong(decorationDetail.orderId);
+                break;
+            case "payment":
+
+                if (!$.isEmptyObject(node.wizard))
+                    $.extend(true, wizard, node.wizard);
+
+                if (decorationDetail.orderType == 0) {
+                    decorationUtils.initDecorationMidpack(decorationDetail, wizard);
+                    decorationUtils.initServicePayment(decorationDetail, wizard);
+                } else if (decorationDetail.orderType == 1) {
+                    decorationUtils.initDecorationInclusive(decorationDetail, wizard);
+                } else if (decorationDetail.orderType == 2) {
+                    decorationUtils.initDecorationHolonomy(decorationDetail, wizard);
+                    decorationUtils.initServicePayment(decorationDetail, wizard);
+                }
+
+                decorationUtils.initAdvancePayment(decorationDetail.orderId, wizard);
+
+                decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
+
+                break;
+            case "addreduce":
+                decorationUtils.initAddreduce(decorationDetail.orderId, decorationDetail.orderType);
+                break;
+            case "account":
+                decorationUtils.initAccount(decorationDetail.orderId, decorationDetail.accountFlg);
+                break;
+            case "service":
+                decorationUtils.initService(decorationDetail, decorationDetail.orderId);
+                break;
+            case "users":
+                decorationUtils.initUsers(decorationDetail, decorationDetail.orderId);
+                break;
+        }
+    }
+
+    function showQRCode(type) {
+
+        com.focusPage('#QRcode').html("");
+
+        com.focusPage('#QRcode').qrcode({
+            render: "canvas",
+            width: 150,
+            height: 150,
+            text: " http://fanglin.vip/wx/drawLine?orderId=" + decorationDetail.orderId + "&type=" + type
+
+        });
+
+        decorationDetail.QRcodeModal.modal('show');
+
     }
 
     function activityBtnMethod(uiPgDiv, decorationActivity) {
@@ -1560,28 +1594,35 @@ jQuery(function($) {
         var $liLine = $('<li></li>').addClass('item-blue clearfix');
 
         var $h3 = $('<h3></h3>').addClass('oid');
-        var $small = $('<small></small>').addClass('blue').html(v.phone).appendTo($h3);
+
+        var $small = $('<small></small>').addClass('blue').appendTo($h3);
         var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-        var $btnStauts = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
+        var $btnStauts = $('<input />').attr("type", "checkbox").prop("disabled", true).addClass('ace ace-switch ace-switch-5').attr("checked", v.status == 0 ? true : false);
         var $btnSpan = $('<span></span>').addClass("lbl status-lbl");
 
         $divBtnWrap.append($btnStauts).append($btnSpan).appendTo($h3);
 
         $liLine.append($h3).append($ulProperty);
+        if (v.cpid == null) {
+            $small.html(v.phone);
+        } else {
+            $small.html("客户电话");
+            $small.one('click', function() {
 
-        $small.click(function() {
+                var phoneInfo = $(this);
+                com.post(api.data.queryCustomerForPhone, {
+                    "customerPhone.cid": v.cid,
+                    "customerPhone.cpid": v.cpid
+                }, function(res) {
 
-            var phoneInfo = $(this);
-            com.post(api.data.queryCustomerForPhone, {
-                "customerPhone.cid": v.cid,
-                "customerPhone.cpid": v.cpid
-            }, function(res) {
+                    phoneInfo.html(res.customer.phone);
+                });
 
-                phoneInfo.html(res.customer.phone);
+                $btnStauts.prop("disabled", false);
             });
-        });
+        }
 
         $btnStauts.click(function() {
 
@@ -1783,19 +1824,33 @@ jQuery(function($) {
 
     function saveDecorationUser() {
 
-        if (com.validate('form')) {
+        if (decorationDetail.decorationUser.status == 0 && com.validate('form')) {
             return false;
         }
 
+        var url, decorationUser = decorationDetail.decorationUser;
+
         var options = {
-            'decorationUser.user.userId': com.typeahead("userSel"),
             'decorationUser.orderId': decorationDetail.orderId,
+            'decorationUser.content': com.focusPage("#duContent").val(),
         };
 
-        com.post(api.decoration.addDecorationUser, options, function(res) {
+        if (decorationUser.status == 0) {
+            url = api.decoration.addDecorationUser;
+            options["decorationUser.user.userId"] = com.typeahead("duUser");
+        } else {
+            url = api.decoration.updateDecorationUser;
+            options["decorationUser.duid"] = decorationUser.duid;
+        }
 
-            com.showAlert(com.info, "添加成功");
-            decorationUtils.initUsers(decorationDetail, decorationDetail.orderId);
+        com.post(url, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            if (decorationUser.status == 0) {
+                decorationUtils.addDecorationUser(decorationDetail, com.focusPage("#usersInfo"), res.decorationUser);
+            } else {
+                com.focusPage('#duCon_' + decorationUser.duid).text(res.decorationUser.content ? res.decorationUser.content : "待说明");
+            }
         }, null, false);
 
         decorationDetail.decorationUserModal.modal("hide");

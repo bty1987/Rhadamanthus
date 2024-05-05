@@ -8,12 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.po.MeasurementUnitPO;
-import com.fanglin.communion.po.QuotationBigCategoryPO;
-import com.fanglin.communion.po.QuotationClassificationPO;
-import com.fanglin.communion.po.QuotationSmallCategoryPO;
-import com.fanglin.communion.po.QuotationTypePO;
-import com.fanglin.communion.po.WorkTypePO;
 import com.fanglin.communion.vo.MeasurementUnitVO;
 import com.fanglin.communion.vo.QuotationBigCategoryVO;
 import com.fanglin.communion.vo.QuotationClassificationVO;
@@ -80,13 +74,7 @@ public class QuotationCtemServiceImpl implements QuotationCtemService {
 		BeanUtil.copyProperties(quotationCtemVO, quotationCtemPO, Arrays.asList("category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
 
 		quotationCtemPO.setStatus(QuotationCtemPO.STATUS_ENABLE_INT);
-		quotationCtemPO.setPinyin(PinYin4Util.getPinyin(quotationCtemVO.getName()).get(0));
-		quotationCtemPO.setQuotationType(new QuotationTypePO(quotationCtemVO.getCategory().getId()));
-		quotationCtemPO.setQuotationClassification(new QuotationClassificationPO(quotationCtemVO.getClassification().getId()));
-		quotationCtemPO.setQuotationBigCategory(new QuotationBigCategoryPO(quotationCtemVO.getBigCategory().getId()));
-		quotationCtemPO.setQuotationSmallCategory(new QuotationSmallCategoryPO(quotationCtemVO.getSmallCategory().getId()));
-		quotationCtemPO.setMeasurementUnit(new MeasurementUnitPO(quotationCtemVO.getUnit().getId()));
-		quotationCtemPO.setWorkType(new WorkTypePO(quotationCtemVO.getWorkType().getId()));
+		quotationCtemPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationCtemVO.getName()).get(0));
 
 		quotationCtemDao.save(quotationCtemPO);
 
@@ -101,13 +89,7 @@ public class QuotationCtemServiceImpl implements QuotationCtemService {
 
 		BeanUtil.copyProperties(quotationCtemVO, quotationCtemPO, Arrays.asList("category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
 
-		quotationCtemPO.setPinyin(PinYin4Util.getPinyin(quotationCtemVO.getName()).get(0));
-		quotationCtemPO.setQuotationType(new QuotationTypePO(quotationCtemVO.getCategory().getId()));
-		quotationCtemPO.setQuotationClassification(new QuotationClassificationPO(quotationCtemVO.getClassification().getId()));
-		quotationCtemPO.setQuotationBigCategory(new QuotationBigCategoryPO(quotationCtemVO.getBigCategory().getId()));
-		quotationCtemPO.setQuotationSmallCategory(new QuotationSmallCategoryPO(quotationCtemVO.getSmallCategory().getId()));
-		quotationCtemPO.setMeasurementUnit(new MeasurementUnitPO(quotationCtemVO.getUnit().getId()));
-		quotationCtemPO.setWorkType(new WorkTypePO(quotationCtemVO.getWorkType().getId()));
+		quotationCtemPO.setPinyin(PinYin4Util.getPinYinHeadChar(quotationCtemVO.getName()).get(0));
 
 		quotationCtemDao.update(quotationCtemPO);
 

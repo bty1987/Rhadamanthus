@@ -14,7 +14,7 @@ function printHeader(headStr) {
     return headHtml;
 }
 
-function printProjectTable() {
+function printProjectTable(type) {
 
     var contentHtml = '';
     var _quoteArea = protation.protation.quoteArea;
@@ -26,6 +26,7 @@ function printProjectTable() {
     var _preferPrice = protation.protation.preferPrice;
     var _subdPrice = protation.protation.subdPrice;
     var _submPrice = protation.protation.submPrice;
+    var _subcPrice = protation.protation.subcPrice;
 
     contentHtml += '<table style="font-size: 12px" width="100%" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr>';
@@ -67,18 +68,18 @@ function printProjectTable() {
     contentHtml += '<tr>';
     contentHtml += '<td width="5%" align="center">折后管理费</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
-    contentHtml += '<td width="5%" align="center">' + _managePrice + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 1) == 1 ? _managePrice : '') + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(_quotePrice, _managePrice), _preferPrice), utils.accAdd(_subdPrice, _submPrice))) + '</td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(_quotePrice, _managePrice), _preferPrice), utils.accAdd(utils.accAdd(_subdPrice, _submPrice), _subcPrice))) + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
 }
 
-function addtionTable() {
+function addtionTable(type) {
 
     var index = 0;
     var contentHtml = '';
@@ -101,7 +102,7 @@ function addtionTable() {
             contentHtml += '<tr>';
             contentHtml += '<td width="5%" align="center">' + qv.name + '</td>';
             contentHtml += '<td colspan="2" width="5%" align="center">' + qv.num + '</td>';
-            contentHtml += '<td width="5%" align="center">' + price + '</td>';
+            contentHtml += '<td width="5%" align="center">' + ((type & 2) == 2 ? price : '') + '</td>';
             contentHtml += '</tr>';
         }
 
@@ -111,13 +112,13 @@ function addtionTable() {
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)) + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 2) == 2 ? utils.changeThrDecimal(utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)) : '') + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
 }
 
-function optionalTable() {
+function optionalTable(type) {
 
     var index = 0;
     var contentHtml = '';
@@ -142,7 +143,7 @@ function optionalTable() {
             contentHtml += '<td width="5%" align="center">' + qv.name + '</td>';
             contentHtml += '<td width="5%" align="center">' + qv.basicNum + '</td>';
             contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
-            contentHtml += '<td width="5%" align="center">' + price + '</td>';
+            contentHtml += '<td width="5%" align="center">' + ((type & 4) == 4 ? price : '') + '</td>';
             contentHtml += '</tr>';
         }
 
@@ -152,13 +153,13 @@ function optionalTable() {
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + protation.protation.basicPrice + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 4) == 4 ? protation.protation.basicPrice : '') + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
 }
 
-function customTable() {
+function customTable(type) {
 
     var contentHtml = '';
 
@@ -173,23 +174,23 @@ function customTable() {
     contentHtml += '<tr>';
     contentHtml += '<td width="5%" align="center">基础增项</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
-    contentHtml += '<td width="5%" align="center">' + protation.protation.adddPrice + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 8) == 8 ? protation.protation.adddPrice : '') + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
     contentHtml += '<td width="5%" align="center">主材增项</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
-    contentHtml += '<td width="5%" align="center">' + protation.protation.addmPrice + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 8) == 8 ? protation.protation.addmPrice : '') + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(protation.protation.adddPrice, protation.protation.addmPrice)) + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 8) == 8 ? utils.changeThrDecimal(utils.accAdd(protation.protation.adddPrice, protation.protation.addmPrice)) : '') + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
 }
 
-function subtractTable() {
+function subtractTable(type) {
 
     var index = 0;
     var contentHtml = '';
@@ -208,11 +209,11 @@ function subtractTable() {
 
         price = qv.areaCale == constant.data().presignItem.AREACALE_NUMBER_INT ? utils.changeThrDecimal(utils.accMul(qv.price, qv.num)) : utils.changeThrDecimal(utils.accMul(utils.accMul(qv.price, qv.num), protation.protation.quoteArea));
 
-        if (qv.type == constant.quotation().protationItem.TYPE_CUTWORK_INT || qv.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT) {
+        if (qv.type == constant.quotation().protationItem.TYPE_CUTWORK_INT || qv.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT || qv.type == constant.quotation().protationItem.TYPE_CUTCURRENT_INT) {
             contentHtml += '<tr>';
             contentHtml += '<td width="5%" align="center">' + qv.name + '</td>';
             contentHtml += '<td colspan="2" width="5%" align="center">' + utils.accSub(0, qv.num) + '</td>';
-            contentHtml += '<td width="5%" align="center">' + price + '</td>';
+            contentHtml += '<td width="5%" align="center">' + ((type & 16) == 16 ? price : '') + '</td>';
             contentHtml += '</tr>';
         }
 
@@ -222,7 +223,7 @@ function subtractTable() {
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accAdd(protation.protation.subdPrice, protation.protation.submPrice)) + '</td>';
+    contentHtml += '<td width="5%" align="center">' + ((type & 16) == 16 ? utils.changeThrDecimal(utils.accAdd(utils.accAdd(protation.protation.subdPrice, protation.protation.submPrice), protation.protation.subcPrice)) : '') + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
     contentHtml += '<td width="5%" style="font-size: 15px;font-weight: bold;" align="center">预签计价合计</td>';
@@ -276,20 +277,20 @@ jQuery(function($) {
         presignProduce = res.presignProduce;
     }, null, false);
 
-    generatePrintPage(params.company.drganization.name);
+    generatePrintPage(params.company.drganization.name, params.quotation.protation.printConf.type);
 
 });
 
-function generatePrintPage(company) {
+function generatePrintPage(company, type) {
 
     var html = "";
 
     html += printHeader(company + "家装项目预签单");
-    html += printProjectTable();
-    html += addtionTable();
-    html += optionalTable();
-    html += customTable();
-    html += subtractTable();
+    html += printProjectTable(type);
+    html += addtionTable(type);
+    html += optionalTable(type);
+    html += customTable(type);
+    html += subtractTable(type);
 
     $("#protationLits").html(html);
 }
