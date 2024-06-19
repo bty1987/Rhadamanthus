@@ -156,10 +156,15 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 		BeanUtil.copyProperties(quotationItemVO, quotationItemPO, Arrays.asList("quotationType", "quotationClassification", "quotationBigCategory", "quotationSmallCategory", "measurementUnit", "workType", "quotationVersion", "quotationCtem"));
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationItemVO.getVersion().getNo());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotationItemVO.getVersion().getNo());
+
+		if (quotationVersionPO == null) {
+			throw new FLException(200022, "报价版本不存在");
+		}
+
+		quotationItemPO.setQuotationVersion(quotationVersionPO);
 
 		quotationItemPO.setQvid(quotationVersionPO.getQvId());
-		quotationItemPO.setQuotationVersion(new QuotationVersionPO(quotationItemVO.getVersion().getNo()));
 		quotationItemPO.setQuotationType(new QuotationTypePO(quotationItemVO.getCategory().getId()));
 		quotationItemPO.setQuotationClassification(new QuotationClassificationPO(quotationItemVO.getClassification().getId()));
 		quotationItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(quotationItemVO.getBigCategory().getId()));

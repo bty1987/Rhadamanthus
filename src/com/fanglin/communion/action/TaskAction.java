@@ -51,9 +51,9 @@ public class TaskAction extends BaseListAction {
 	}
 
 	@Action(value = "queryTaskByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryTaskByRid() {
+	public String queryTaskByRid() throws FLException {
 
-		tasks = taskService.queryTaskByRid(role);
+		tasks = taskService.queryTaskByRid(role, queryCompany());
 
 		return SUCCESS;
 	}
@@ -61,7 +61,7 @@ public class TaskAction extends BaseListAction {
 	@Action(value = "queryTaskForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryTaskForSelf() throws FLException {
 
-		tasks = taskService.queryTaskForSelf(queryUserId());
+		tasks = taskService.queryTaskForSelf(queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -121,7 +121,7 @@ public class TaskAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		taskService.updateRoleTask(role, task, queryUserId());
+		taskService.updateRoleTask(role, task, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -133,7 +133,7 @@ public class TaskAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		taskService.deleteRoleTask(role, task);
+		taskService.deleteRoleTask(role, task, queryCompany());
 
 		return SUCCESS;
 	}

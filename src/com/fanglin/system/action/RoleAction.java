@@ -23,6 +23,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.RoleService;
+import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.SystemConfig;
 
@@ -38,12 +39,22 @@ public class RoleAction extends BaseListAction {
 
 	private RoleVO role;
 
+	private ModuleVO module;
+
 	private List<RoleVO> roleList;
 
 	@Action(value = "pageRole", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageRole() throws FLException {
 
 		roleService.pageRole(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageRoleByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageRoleByMid() throws FLException {
+
+		roleService.pageRoleByMid(getPaging(), getFilters(), module, queryCompany());
 
 		return SUCCESS;
 	}
@@ -103,7 +114,7 @@ public class RoleAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		roleService.deleteRoleByRid(role, queryRoleId());
+		roleService.deleteRoleByRid(role, queryRoleId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -122,6 +133,14 @@ public class RoleAction extends BaseListAction {
 
 	public void setRoleList(List<RoleVO> roleList) {
 		this.roleList = roleList;
+	}
+
+	public ModuleVO getModule() {
+		return module;
+	}
+
+	public void setModule(ModuleVO module) {
+		this.module = module;
 	}
 
 }

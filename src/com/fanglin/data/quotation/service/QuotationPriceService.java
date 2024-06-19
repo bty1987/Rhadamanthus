@@ -1,6 +1,5 @@
 package com.fanglin.data.quotation.service;
 
-import java.text.ParseException;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
@@ -12,10 +11,10 @@ public interface QuotationPriceService {
 
 	public void pageQuotationPrice(Paging paging, List<Filter> filters, QuotationPriceVO quotationPriceVO);
 
-	public int addQuotationPrice(QuotationPriceVO quotationPriceVO);
+	public int addQuotationPrice(QuotationPriceVO quotationPriceVO) throws FLException;
 
-	public int updateQuotationPrice(QuotationPriceVO quotationPriceVO) throws FLException, ParseException;
+	public int updateQuotationPrice(QuotationPriceVO quotationPriceVO) throws FLException;
 
-	public int deleteQuotationPrice(QuotationPriceVO quotationPriceVO);
+	public int deleteQuotationPrice(QuotationPriceVO quotationPriceVO) throws FLException;
 
 }

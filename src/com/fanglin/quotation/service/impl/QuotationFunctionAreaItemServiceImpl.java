@@ -131,7 +131,8 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 			quotationFunctionAreaItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(quotationFunctionAreaItemVO.getQuotationFunctionAreaId()));
 
-			if (quotationFunctionAreaItemVO.getType() == QuotationFunctionAreaItemPO.TYPE_COMMON_INT || quotationFunctionAreaItemVO.getType() == QuotationFunctionAreaItemPO.TYPE_COST_INT || quotationFunctionAreaItemVO.getType() == QuotationFunctionAreaItemPO.TYPE_IGNORE_INT) {
+			if (Arrays.asList(QuotationFunctionAreaItemPO.TYPE_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_COST_INT, QuotationFunctionAreaItemPO.TYPE_IGNORE_INT, QuotationFunctionAreaItemPO.TYPE_UNACHE_INT).contains(quotationFunctionAreaItemVO.getType())) {
+
 				quotationFunctionAreaItemPO.setQuotationItem(new QuotationItemPO(quotationFunctionAreaItemVO.getQuotationItemId()));
 				quotationFunctionAreaItemPO.setContent(null);
 			} else {

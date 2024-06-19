@@ -65,7 +65,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModuleForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleForLogin() throws FLException {
 
-		modules = moduleService.queryModuleByUserId(module, new UserVO(queryUserId()));
+		modules = moduleService.queryModuleByUserId(module, new UserVO(queryUserId()), queryCompany());
 
 		return SUCCESS;
 	}
@@ -73,7 +73,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModuleForLink", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleForLink() throws FLException {
 
-		modules = moduleService.queryModuleForLinkByRid(module, new RoleVO(queryRoleId()));
+		modules = moduleService.queryModuleForLinkByRid(module, new RoleVO(queryRoleId()), queryCompany());
 
 		return SUCCESS;
 	}
@@ -81,7 +81,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModuleByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleByUserId() throws FLException {
 
-		modules = moduleService.queryModuleByUserId(module, user);
+		modules = moduleService.queryModuleByUserId(module, user, queryCompany());
 
 		return SUCCESS;
 	}
@@ -89,7 +89,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModuleByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleByRid() throws FLException {
 
-		modules = moduleService.queryModuleByRid(module, role);
+		modules = moduleService.queryModuleByRid(module, role, queryCompany());
 
 		return SUCCESS;
 	}
@@ -105,7 +105,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "checkModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkModule() throws FLException {
 
-		moduleService.checkModule(module, queryUserId());
+		moduleService.checkModule(module, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -129,7 +129,7 @@ public class ModuleAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		moduleService.updateRoleModuleByRid(module, role, modules, queryRoleId(), queryUserId());
+		moduleService.updateRoleModuleByRid(module, role, modules, queryRoleId(), queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -141,7 +141,7 @@ public class ModuleAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		moduleService.deleteModule(module);
+		moduleService.deleteModule(module, queryCompany());
 
 		return SUCCESS;
 	}

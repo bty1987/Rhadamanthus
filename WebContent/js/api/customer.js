@@ -486,6 +486,17 @@ $.extend(api, {
                 args: ["cppoint.dpoint", "cppoint.spoint"]
             }
         },
+
+        pageCustomerDeptRule: {
+            url: "pageCustomerDeptRule.do"
+        },
+        queryCustomerDeptRule: {
+            url: "queryCustomerDeptRule.do"
+        },
+        deleteCustomerDeptRule: {
+            url: "deleteCustomerDeptRule.do"
+        },
+
         queryFeedbackDrawing: {
             url: "queryFeedbackDrawing.do"
         },

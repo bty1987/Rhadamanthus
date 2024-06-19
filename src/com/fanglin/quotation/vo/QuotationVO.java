@@ -36,6 +36,8 @@ public class QuotationVO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp updateTime;
+
 	private UserBaseVO creater;
 
 	private QuotationVersionVO version;
@@ -75,6 +77,8 @@ public class QuotationVO implements Serializable {
 	private Short defaults;
 
 	private Short status;
+
+	private Short keeprice;
 
 	private String content;
 
@@ -146,6 +150,15 @@ public class QuotationVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public UserBaseVO getCreater() {
@@ -306,6 +319,14 @@ public class QuotationVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getKeeprice() {
+		return keeprice;
+	}
+
+	public void setKeeprice(Short keeprice) {
+		this.keeprice = keeprice;
 	}
 
 	public String getContent() {

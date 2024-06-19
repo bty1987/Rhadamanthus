@@ -76,9 +76,7 @@ var ExtensionDetail = (function() {
                 "quotationItem.version.no": extensionDetail.versionId,
                 "quotationPrice.updateTime": com.currentTime()
             };
-            if (extensionDetail.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT && extensionDetail.decoration.precontractTime != null) {
-                extraParams["quotationPrice.updateTime"] = extensionDetail.decoration.precontractTime;
-            }
+
             var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
             var normalItemSeacher = new Searcher();
             normalItemSeacher.init(_condArrn, "condListn", api.quotation.pageQuotationItemForPrice, function(data) {

@@ -111,13 +111,13 @@ jQuery(function($) {
 	});
 
 	com.focusPage("#hsNo").on("blur", function(){
-		com.post(api.building.queryHouseSourceByNo, {"houseSource.no" : building.items.hsNo.val()}, function(res){
-			if(res.houseSource.status != 3){
+		com.post(api.building.queryBuildingHouseByNo, {"buildingHouse.no" : building.items.hsNo.val()}, function(res){
+			if(res.buildingHouse.status != 3){
 				building.dataFlag = true;
 				com.showTip(com.focusPage("#hsNo"), "房源已签约或失效", "right");
 			}else{
 				building.dataFlag = false;
-				building.hsid = res.houseSource.hsid;
+				building.hsid = res.buildingHouse.hsid;
 			}
 		}, function(data){
 			building.dataFlag = true;
@@ -126,13 +126,13 @@ jQuery(function($) {
 	});
 
 	com.focusPage("#csNo").on("blur", function(){
-		com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : building.items.csNo.val()}, function(res){
-			if(res.customerSource.status != 0){
+		com.post(api.building.queryBuildingCustomerByNo, {"buildingCustomer.no" : building.items.csNo.val()}, function(res){
+			if(res.buildingCustomer.status != 0){
 				building.dataFlag = true;
 				com.showTip(com.focusPage("#csNo"), "客源已签约或失效", "right");
 			}else{
 				building.dataFlag = false;
-				building.csid = res.customerSource.csid;
+				building.csid = res.buildingCustomer.csid;
 			}
 		}, function(data){
 			building.dataFlag = true;
@@ -185,11 +185,11 @@ jQuery(function($) {
 			var $btnEnd= $('<a></a>').addClass('btn btn-minier btn-inverse').html("合同终止");
 
 			var propertyArr = [
-				["楼盘地址:", v.houseSource.house.village.name + " " + v.houseSource.house.houseNumber , "grey"],
-				["房源所属人:", v.houseSource.customer.name, "grey"],
-				["客源姓名:", v.customerSource.customer.name, "grey"],
-				["房源代理人:", v.houseSourceAgent.name, "grey"],
-				["客源代理人:", v.customerSourceAgent.name, "grey"],
+				["楼盘地址:", v.buildingHouse.house.village.name + " " + v.buildingHouse.house.houseNumber , "grey"],
+				["房源所属人:", v.buildingHouse.customer.name, "grey"],
+				["客源姓名:", v.buildingCustomer.customer.name, "grey"],
+				["房源代理人:", v.buildingHouseAgent.name, "grey"],
+				["客源代理人:", v.buildingCustomerAgent.name, "grey"],
 				["签约时间:", v.signingTime, "green"],
 				["成交价格:", v.tradePrice, "blue"],
 				["首付款:", v.downpayment, "blue"],
@@ -311,10 +311,10 @@ jQuery(function($) {
 		}
 
 		var options = {
-			'building.houseSource.hsid': building.hsid,
-			'building.customerSource.csid': building.csid,
-			'building.houseSourceAgent.cid': com.typeahead("hsAUser"),
-			'building.customerSourceAgent.cid': com.typeahead("csAUser"),
+			'building.buildingHouse.hsid': building.hsid,
+			'building.buildingCustomer.csid': building.csid,
+			'building.buildingHouseAgent.cid': com.typeahead("hsAUser"),
+			'building.buildingCustomerAgent.cid': com.typeahead("csAUser"),
 			'building.signingTime': building.items.signingTime.val(),
 			'building.tradePrice': building.items.tradePrice.val(),
 			'building.downpayment': building.items.downpayment.val(),

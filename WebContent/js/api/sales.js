@@ -261,6 +261,14 @@ $.extend(api, {
         deleteOales: {
             url: "deleteOales.do"
         },
+        amountOales: {
+            url: "amountOales.do",
+            type: "query",
+            tranargs: [{
+                result: "",
+                args: ["amount"]
+            }]
+        },
         abateOales: {
             url: "abateOales.do"
         },

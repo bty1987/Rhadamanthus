@@ -195,7 +195,14 @@ jQuery(function($) {
 
             return (brand.pageType == "comment");
         }
-    }, ];
+    }, {
+        name: "厂商",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            supplier(v);
+        },
+    },];
 
     searcher.line(function(v) {
 
@@ -272,7 +279,13 @@ jQuery(function($) {
             brand.modals.deliveryModal.modal("hide");
         });
     }
+    function supplier(v) {
 
+        params.data.brand = v;
+
+        com.popup4page("#supplierPayPopUp", "/views/data/brandSupplier.html", "厂商");
+
+    }
     function saveData() {
 
         if (com.validate('brandModal'))

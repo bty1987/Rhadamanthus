@@ -86,6 +86,32 @@ public class ConversationServiceImpl implements ConversationService {
 	}
 
 	@Override
+	public void pageConversationForContent(Paging paging, ConversationVO conversation) {
+
+		Long cid = conversation.getCid();
+		String content = conversation.getContent();
+		String orderId = conversation.getOrderId();
+
+		List<ConversationPO> conversationPOs = conversationDao.pageConversation(paging, orderId, cid, content);
+		List<ConversationVO> conversationVOs = new ArrayList<ConversationVO>();
+
+		for (ConversationPO conversationPO : conversationPOs) {
+
+			ConversationVO conversationVO = new ConversationVO(new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			BeanUtil.copyProperties(conversationPO, conversationVO, Arrays.asList("creater"));
+			if (conversationPO.getCreater() != null) {
+				BeanUtil.copyProperties(conversationPO.getCreater(), conversationVO.getCreater(), Arrays.asList("dept", "role", "duty"));
+				BeanUtil.copyProperties(conversationPO.getCreater().getDept(), conversationVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+				BeanUtil.copyProperties(conversationPO.getCreater().getDuty(), conversationVO.getCreater().getDuty(), Arrays.asList("departmentType"));
+			}
+
+			conversationVOs.add(conversationVO);
+		}
+
+		paging.setData(conversationVOs);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void requestConversation(ConversationVO conversationVO, String userId) throws FLException {
 

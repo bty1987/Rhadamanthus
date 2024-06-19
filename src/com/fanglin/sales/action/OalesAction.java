@@ -30,6 +30,8 @@ public class OalesAction extends BaseListAction {
 
 	private List<Short> statuses;
 
+	private Long amount;
+
 	@Action(value = "pageOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageOales() throws FLException {
 
@@ -42,6 +44,14 @@ public class OalesAction extends BaseListAction {
 	public String queryOalesByOrderId() throws FLException {
 
 		oaleses = oalesService.queryOalesByOrderId(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountOales() throws FLException {
+
+		amount = oalesService.amountOales(oales);
 
 		return SUCCESS;
 	}
@@ -150,4 +160,11 @@ public class OalesAction extends BaseListAction {
 		this.statuses = statuses;
 	}
 
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
 }

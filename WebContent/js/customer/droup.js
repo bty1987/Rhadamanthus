@@ -15,6 +15,7 @@ jQuery(function($) {
 
         items: {
             itemlist: com.focusPage("#itemlist", "#droupModal"),
+            searchers: com.focusPage("#searchers", "#droupModal"),
             orderId: com.focusPage("#orderId", "#bindModal"),
             name: com.focusPage("#name", "#bindModal"),
             chatId: com.focusPage("#chatId", "#bindModal"),
@@ -23,25 +24,32 @@ jQuery(function($) {
             enter: com.focusPage("#enter"),
             path: com.focusPage("#path")
         },
-
+        searType: 0,
+        content: null,
+        searTime: null,
         did: null,
         orderId: null,
         status: {},
         isHandle: {},
         contype: {},
         count: 1,
-        or: 0 // 0:数据可继续加载 1:数据已加载完 跳出
+        or: 0, // 0:数据可继续加载 1:数据已加载完 跳出
     };
-
+    var options = {}
+    var url = api.customer.pageConversation
     // 关闭对话时,重置page页数和数据是否可加载
     droup.modals.droupModal.on('hide.bs.modal', function(e) {
 
         droup.count = 1;
         droup.or = 0;
+        droup.content = null;
+        droup.searTime = null;
         com.cleanItems(droup.items);
         com.focusPage("#itemlist").html("");
+        com.focusPage("#searchers").html("");
         com.clearValidator();
         com.closeTip();
+        options = {};
     });
 
     droup.modals.addModal.on('hide.bs.modal', function(e) {
@@ -109,20 +117,22 @@ jQuery(function($) {
 
             var twelveDiv = $('<div class="text" style="width: 100%"></div>').html(v.content).appendTo(nineDiv);
             var thirteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
-            var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(thirteenDiv);
+            // var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(thirteenDiv);
         } else if (v.type == constant.customer().droup.TYPE_PICTURE_INT) {
-
-            var photo = $('<img class="text" style="width: 250px; height: 150px"/>').appendTo(nineDiv);
+            var photo = $('<img class="text" style="width: 250px; height: 150px"/>');
+            var photoA = $('<a></a>').attr("name", "drawing").append(photo).appendTo(nineDiv);
+            com.popup4photos($('[name = "drawing"]'));
             var or = v.path.indexOf("group");
-
             if (or == 0) {
                 com.showImg(photo, v.path, 250, 150, '', null, 0);
+
             } else if (or == -1) {
                 com.showImg(photo, v.path, 0, 0, '250x150', null, 1);
             }
 
             var eighteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
-            var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
+
+            // var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
 
         } else if (v.type == constant.customer().droup.TYPE_VOICE_INT) {
 
@@ -130,13 +140,13 @@ jQuery(function($) {
             var radioDiv = $('<audio width="100%" controls></audio>').appendTo(nineDiv);
             var sourceDiv = $('<source src="' + config.media + v.path + '" type="audio/mpeg">').appendTo(radioDiv);
             var eighteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
-            var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
+            // var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
         } else if (v.type == 4) {
             var textDiv = $('<div class="text"></div>').html(v.content).appendTo(nineDiv);
             var radioDiv = $('<video width="80%" controls></video>').appendTo(nineDiv);
             var sourceDiv = $('<source src="' + config.media + v.path + '" type="video/mp4">').appendTo(radioDiv);
             var eighteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
-            var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
+            // var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
         }
 
         return sevenDiv;
@@ -146,13 +156,23 @@ jQuery(function($) {
 
         droup.modals.droupModal.modal("show");
 
-        com.post(api.customer.pageConversation, {
-            "paging.page": droup.count,
-            "paging.rows": 10,
-            "filters[0].field": "orderId",
-            "filters[0].data": v.decoration.orderId,
-            "filters[0].op": "eq"
-        }, function(res) {
+        options["paging.page"] = droup.count
+        options["paging.rows"] = 10
+        options["filters[0].field"] = "orderId"
+        options["filters[0].data"] = droup.orderId
+        options["filters[0].op"] = "eq"
+        var count = $('<div style="text-align:center; margin-top: 8px"></div>').appendTo(droup.items.searchers);
+        var aCount = $('<label></label>').html("内容:").appendTo(count);
+        var iCount = $('<input id="countText" type="text" style="width: 150px; margin-left: 5px">').appendTo(aCount);
+        var aTime = $('<label style="margin-left: 8px"></label>').html("发送时间:").appendTo(count);
+        var iTime = $('<input type="text" id="timeSear" style="width: 150px; margin-left: 5px">').appendTo(aTime);
+        var searButton = $('<button class="btn btn-xs btn-info btn-search" id="countSear" style="margin-left: 16px">查询</button>').appendTo(count);
+        var resetButton = $('<button class="btn btn-xs btn-danger btn-clean" id="resetButton" style="margin-left: 4px">重置</button>').appendTo(count);
+        com.datetime(com.focusPage("#timeSear"), "data", true);
+        com.focusPage("#countText").val(droup.content);
+        com.focusPage("#timeSear").val(droup.searTime);
+
+        com.post(url, options, function(res) {
 
             if (res.paging.data.length < 10) {
                 droup.or = 1;
@@ -164,6 +184,21 @@ jQuery(function($) {
             $.each(res.paging.data, function(i, v) {
 
                 sixDiv.prepend(line(v));
+                com.popup4photos($('[name = "drawing"]'));
+                // if (droup.searType == 1){
+                // com.focusPage("#upclick").click(function (){
+                //
+                // com.focusPage("#itemlist").empty();
+                // com.focusPage("#searchers").empty();
+                // options = {}
+                // options["conversation.cid"] = v.cid
+                // options["conversation.content"] = v.content
+                // options["conversation.orderId"] = droup.orderId
+                // url = api.customer.pageConversationForContent
+                // show(v)
+                // })
+                // }
+
                 $("a[name='remove']").click(function() {
 
                     var _sevenDiv = $(this).parents(".dialogdiv");
@@ -179,39 +214,38 @@ jQuery(function($) {
                     _sevenDiv.remove();
                 });
             });
+            // var box = $('<div></div>').appendTo(oneDiv);
+            // var buttonOne = $('<button class="btn btn-minier btn-yellow" type="button" id="saveOne" style="width: 50px; height: 30px">客户</button>').appendTo(box);
+            // var buttonTwo = $('<button class="btn btn-minier btn-purple" type="button" id="saveTwo" style="margin-left: 10px; width: 50px; height: 30px">装修</button>').appendTo(box);
+            // var buttonThree = $('<button class="btn btn-minier btn-grey" type="button" id="saveThree" style="margin-left: 10px; width: 50px; height: 30px">主材</button>').appendTo(box);
+            // var buttonFour = $('<button class="btn btn-minier btn-pink" type="button" id="saveFour" style="margin-left: 10px; width: 50px; height: 30px">工程</button>').appendTo(box);
+            // var buttonFive = $('<button class="btn btn-minier btn-danger" type="button" id="saveFive" style="margin-left: 10px; width: 50px; height: 30px">款项</button>').appendTo(box);
+            // var buttonSix = $('<button class="btn btn-minier btn-inverse" type="button" id="saveSix" style="margin-left: 10px; width: 50px; height: 30px">其他</button>').appendTo(box);
 
-            var box = $('<div></div>').appendTo(oneDiv);
-            var buttonOne = $('<button class="btn btn-minier btn-yellow" type="button" id="saveOne" style="width: 50px; height: 30px">客户</button>').appendTo(box);
-            var buttonTwo = $('<button class="btn btn-minier btn-purple" type="button" id="saveTwo" style="margin-left: 10px; width: 50px; height: 30px">装修</button>').appendTo(box);
-            var buttonThree = $('<button class="btn btn-minier btn-grey" type="button" id="saveThree" style="margin-left: 10px; width: 50px; height: 30px">主材</button>').appendTo(box);
-            var buttonFour = $('<button class="btn btn-minier btn-pink" type="button" id="saveFour" style="margin-left: 10px; width: 50px; height: 30px">工程</button>').appendTo(box);
-            var buttonFive = $('<button class="btn btn-minier btn-danger" type="button" id="saveFive" style="margin-left: 10px; width: 50px; height: 30px">款项</button>').appendTo(box);
-            var buttonSix = $('<button class="btn btn-minier btn-inverse" type="button" id="saveSix" style="margin-left: 10px; width: 50px; height: 30px">其他</button>').appendTo(box);
-
-            com.focusPage("#saveOne").click(function() {
-
-                com.focusPage(".customer").toggle();
-            });
-            com.focusPage("#saveTwo").click(function() {
-
-                com.focusPage(".decoration").toggle();
-            });
-            com.focusPage("#saveThree").click(function() {
-
-                com.focusPage(".material").toggle();
-            });
-            com.focusPage("#saveFour").click(function() {
-
-                com.focusPage(".project").toggle();
-            });
-            com.focusPage("#saveFive").click(function() {
-
-                com.focusPage(".payment").toggle();
-            });
-            com.focusPage("#saveSix").click(function() {
-
-                com.focusPage(".rests").toggle();
-            });
+            // com.focusPage("#saveOne").click(function() {
+            //
+            // com.focusPage(".customer").toggle();
+            // });
+            // com.focusPage("#saveTwo").click(function() {
+            //
+            // com.focusPage(".decoration").toggle();
+            // });
+            // com.focusPage("#saveThree").click(function() {
+            //
+            // com.focusPage(".material").toggle();
+            // });
+            // com.focusPage("#saveFour").click(function() {
+            //
+            // com.focusPage(".project").toggle();
+            // });
+            // com.focusPage("#saveFive").click(function() {
+            //
+            // com.focusPage(".payment").toggle();
+            // });
+            // com.focusPage("#saveSix").click(function() {
+            //
+            // com.focusPage(".rests").toggle();
+            // });
             // var form = $('<form></form>').appendTo(oneDiv);
             // var fourteen = $('<div class="form-actions"></div>').appendTo(form);
             var fifteen = $('<div class="input-group"  style="margin-top: 10px"></div>').appendTo(oneDiv);
@@ -219,6 +253,8 @@ jQuery(function($) {
             var sp = $('<span class="input-group-btn"></span>').appendTo(fifteen);
             var btn = $('<button class="btn btn-sm btn-info no-radius" type="button" id="sendBtn">发送</button>').appendTo(sp);
             var a = $('<a style="margin-left: 2px" id = "droupUpload"></a>').appendTo(sp);
+            input.hide();
+            sp.hide();
             com.focusPage("#sendBtn").click(function() {
 
                 if (com.focusPage("#enter").val() == '')
@@ -268,16 +304,13 @@ jQuery(function($) {
             $($('#scrollDiv')[0]).scroll(function() {
 
                 if (this.scrollTop <= 0) {
+
                     if (droup.or == 1)
                         return false;
+
                     droup.count += 1;
-                    com.post(api.customer.pageConversation, {
-                        "paging.page": droup.count,
-                        "paging.rows": 10,
-                        "filters[0].field": "orderId",
-                        "filters[0].data": v.decoration.orderId,
-                        "filters[0].op": "eq"
-                    }, function(res) {
+                    options["paging.page"] = droup.count
+                    com.post(url, options, function(res) {
 
                         if (droup.count <= res.paging.totalPage) {
                             $.each(res.paging.data, function(i, v) {
@@ -305,7 +338,39 @@ jQuery(function($) {
                     });
                 }
             });
+
         });
+
+        com.focusPage("#countSear").click(function() {
+
+            var i = 1
+            droup.content = com.focusPage("#countText").val();
+            droup.searTime = com.focusPage("#timeSear").val();
+
+            if (com.focusPage("#countText").val() != "") {
+                options["filters[" + i + "].field"] = "content"
+                options["filters[" + i + "].data"] = droup.content
+                options["filters[" + i + "].op"] = "cn"
+                i += 1
+            }
+            if (com.focusPage("#timeSear").val() != "") {
+                options["filters[" + i + "].field"] = "searTime"
+                options["filters[" + i + "].data"] = droup.searTime
+                options["filters[" + i + "].op"] = "cn"
+                options["filters[" + i + "].inputValue"] = droup.searTime
+            }
+            com.focusPage("#itemlist").empty();
+            com.focusPage("#searchers").empty();
+            droup.count = 1
+            show(v)
+        });
+        com.focusPage("#resetButton").click(function() {
+
+            com.focusPage("#countText").val("");
+            com.focusPage("#timeSear").val("");
+            droup.or = 0
+            options = {}
+        })
     }
 
     var searcher = new Searcher();

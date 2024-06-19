@@ -19,6 +19,8 @@ $(function() {
             quotetionNo: com.focusPage("#quotetionNo"),
             quotation: com.focusPage('#quotation'),
             replicaOrderId: com.focusPage('#replicaOrderId'),
+            quotationTime: com.focusPage('#quotationTime').switchBtn(),
+            quotationPrice: com.focusPage('#quotationPrice').switchBtn(),
 
             replicaQuotetionNo: com.focusPage("#replicaQuotetionNo"),
             cloneOrderId: com.focusPage("#cloneOrderId"),
@@ -59,12 +61,7 @@ $(function() {
 
     com.post(api.quotation.queryQuotationVersion, {}, function(res) {
 
-        $.each(res.quotationVersions, function(i, val) {
-
-            quotetion.version[val.no] = val.name;
-        });
-
-        quotetion.items.quotationVersion.bindData(res.quotationVersions, 'no', 'name');
+        quotetion.items.quotationVersion.bindData(res.quotationVersions, 'qvId', 'name');
     }, null, false);
 
     quotetion.items.replicaType.bindData(quotetion.replicaType, 'key', 'value');
@@ -139,8 +136,9 @@ $(function() {
         var url = api.quotation.addQuotetion;
         var options = {
             "quotetion.name": quotetion.items.name.val(),
-            "quotetion.version": quotetion.items.quotationVersion.val(),
+            "quotetion.version.qvId": quotetion.items.quotationVersion.val(),
             "quotetion.content": quotetion.items.content.val(),
+            "quotetion.keeprice": 0,
         }
 
         if (quotetion.quotetion && !quotetion.cuotetion) {
@@ -170,11 +168,25 @@ $(function() {
             return false;
         }
 
-        var options = {};
+        var options = {}, keeprice = null;
+
+        var quotationTime = quotetion.items.quotationTime.prop("checked");
+        var quotationPrice = quotetion.items.quotationPrice.prop("checked");
+
+        if (!quotationTime && !quotationPrice) {
+            keeprice = 0;
+        } else if (quotationTime && !quotationPrice) {
+            keeprice = 1;
+        } else if (!quotationTime && quotationPrice) {
+            keeprice = 2;
+        } else if (quotationTime && quotationPrice) {
+            keeprice = 3;
+        }
 
         if (quotetion.items.replicaType.val() == 0) {
             options = {
                 "quotetion.no": quotetion.items.quotetionNo.val(),
+                "quotetion.keeprice": keeprice
             };
             com.post(api.quotation.cloneQuotetion, options, function(res) {
 
@@ -187,6 +199,7 @@ $(function() {
         } else {
             options = {
                 "quotetion.qid": quotetion.items.quotation.val(),
+                "quotetion.keeprice": keeprice
             };
             com.post(api.quotation.replicaQuotetion, options, function(res) {
 
@@ -234,7 +247,7 @@ $(function() {
 
             quotetion.items.qid.val(v.qid);
             quotetion.items.name.val(v.name);
-            quotetion.items.quotationVersion.val(v.version);
+            quotetion.items.quotationVersion.val(v.version.qvId);
             quotetion.items.content.val(v.content);
 
             quotetion.modals.updateQuotetionModal.modal("show");
@@ -292,7 +305,7 @@ $(function() {
         name: "报价版本",
         prop: function(v) {
 
-            return quotetion.version[v.version];
+            return v.version.name;
         },
         show: function(v) {
 
@@ -308,11 +321,19 @@ $(function() {
         }
     }, {
         field: "createTime",
-        name: "时间",
+        name: "创建时间",
         prop: "createTime",
         show: function(v) {
 
             return quotetion.pageConfig.propertyArr.contains("createTime");
+        }
+    }, {
+        field: "updateTime",
+        name: "保价时间",
+        prop: "updateTime",
+        show: function(v) {
+
+            return quotetion.pageConfig.propertyArr.contains("updateTime");
         }
     }, {
         field: "totalPrice",

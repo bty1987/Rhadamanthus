@@ -12,6 +12,8 @@ package com.fanglin.communion.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.vo.UserVO;
 
@@ -106,6 +108,7 @@ public class DepartmentVO implements Serializable {
 		this.fatherDept = fatherDept;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}

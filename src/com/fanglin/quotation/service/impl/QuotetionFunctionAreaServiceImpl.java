@@ -2,7 +2,6 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,6 @@ import com.fanglin.quotation.vo.QuotetionVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
 
 @Service("quotetionFunctionAreaService")
 @Transactional(readOnly = true)
@@ -136,7 +134,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			quotetionFunctionAreaDao.saveOrUpdate(quotetionFunctionAreaPO);
 
-			List<QuotationPricePO> quotationPricePOs = quotationPriceDao.queryQuotationPrice(functionAreaPO.getFaid(), DateUtil.getDateToTimestamp(new Date()));
+			List<QuotationPricePO> quotationPricePOs = quotationPriceDao.queryQuotationPrice(functionAreaPO.getFaid(), quotetionPO.getUpdateTime());
 
 			List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
 

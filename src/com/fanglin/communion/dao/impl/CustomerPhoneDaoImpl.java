@@ -80,7 +80,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		sql.append("select cp.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where cp.phone =:phone and cp.defaults = 1");
+		sql.append("where cp.phone =:phone and cp.defaults = 1 and cp.status = 0");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append(" and c.company =:company ");
@@ -94,7 +94,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 			query.setInteger("company", company);
 		}
 
-		return (CustomerPhonePO) query.uniqueResult();
+		return (CustomerPhonePO) query.setMaxResults(1).uniqueResult();
 	}
 
 	@Override

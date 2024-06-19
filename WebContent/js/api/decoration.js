@@ -228,6 +228,13 @@ $.extend(api, {
                 args: ["decorationMidpack.materialRate", "decorationMidpack.materialOrigin", "decorationMidpack.materialPrice", "decorationMidpack.serviceRate", "decorationMidpack.servicePrice"]
             }
         },
+        updateDecorationMidpack: {
+            url: "updateDecorationMidpack.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationMidpack.materialPrice"]
+            }
+        },
 
         pageDecoration: {
             url: "pageDecoration.do",
@@ -463,7 +470,7 @@ $.extend(api, {
             url: "changeDecorationForAdvance.do",
             type: "update",
             tranargs: {
-                args: ["decoration.notSalesmanRate", "decoration.house.buildArea", "decoration.house.innerArea"]
+                args: ["decoration.house.buildArea", "decoration.house.innerArea"]
             }
         },
         changeDecorationForCustomer: {
@@ -502,6 +509,13 @@ $.extend(api, {
         },
         subDecorationForQuotationTime: {
             url: "subDecorationForQuotationTime.do"
+        },
+        updateDecorationForAdvance: {
+            url: "updateDecorationForAdvance.do",
+            type: "update",
+            tranargs: {
+                args: ["decoration.notSalesmanRate"]
+            }
         },
         updateDecorationForPayScale: {
             url: "updateDecorationForPayScale.do"

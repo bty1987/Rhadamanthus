@@ -498,19 +498,25 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
-		String redirect = "";
-
 		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
-			redirect = customerPO.getAuthurl();
-		} else {
-			JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), customerPO.getPhone(), customerPO.getIdentity());
-
-			redirect = Signature.decode(info.getString("url"));
-
-			customerPO.setToken(info.getString("transactionNo"));
-
-			customerDao.update(customerPO);
+			return customerPO.getAuthurl();
 		}
+
+		String authno = customerPO.getIdentity();
+		Short type = 0;
+
+		if (customerVO.getPassport() != null) {
+			authno = customerPO.getPassport();
+			type = 1;
+		}
+
+		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), customerPO.getPhone(), authno, type);
+
+		String redirect = Signature.decode(info.getString("url"));
+
+		customerPO.setToken(info.getString("transactionNo"));
+
+		customerDao.update(customerPO);
 
 		return redirect;
 	}

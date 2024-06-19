@@ -274,7 +274,7 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulfanglin);
 
-                var $materialBrands = com.focusPage("[name='" + v.brand + "']");
+                var $materialBrands = com.focusPage("[name='" + v.brand + "_m']");
 
                 if (![2, 7].contains(v.paymentType) && v.paymentStatus == 2) {
                     var $totalMaterial = [4, 5, 6].contains(v.paymentType) ? -v.referMoney : v.referMoney;
@@ -302,7 +302,7 @@ var decorationUtils = {
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
 
                 } else {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand + "_m");
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -404,7 +404,7 @@ var decorationUtils = {
 
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulsales);
 
-                var $salesBrands = com.focusPage("[name='" + v.sales.brand + "']");
+                var $salesBrands = com.focusPage("[name='" + v.sales.brand + "_s']");
 
                 if (![2, 7].contains(v.type) && v.status == 2) {
                     var $totalSales = [4, 5, 6].contains(v.type) ? -v.referMoney : v.referMoney;
@@ -432,7 +432,7 @@ var decorationUtils = {
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
                 } else {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand);
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand + "_s");
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
@@ -1088,57 +1088,87 @@ var decorationUtils = {
             "margin-bottom": "15px"
         });
 
-        midpackBody.append($("<div></div>").addClass('widget-body-inner').append(midpackTable.append(this.createDivForPayment("col-md-4", "折前总价", "quotationPrice", true), this.createDivForPayment("col-md-4", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-4", "管理费", "managePrice", false), this.createDivForPayment("col-md-4", "主材总额", "materialPrice", true), this.createDivForPayment("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForPayment("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForPayment("col-md-4", "服务费", "servicePrice", true), this.createDivForPayment("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForPayment("col-md-4", "服务费百分比", "servicePercent", false))));
+        midpackBody.append($("<div></div>").addClass('widget-body-inner').append(midpackTable.append(this.createDivForPayment("col-md-4", "折前总价", "quotationPrice", true), this.createDivForPayment("col-md-4", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-4", "管理费", "managePrice", false), this.createDivForPayment("col-md-4", "主材总额", "materialPrice", true), this.createDivForPayment("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForPayment("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForPayment("col-md-4", "服务费", "servicePrice", true), this.createDivForPayment("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForPayment("col-md-4", "服务费百分比", "servicePercent", false), this.createDivForPayment("col-md-4", "外销总额", "amountOales", true), this.createDivForPayment("col-md-4", "主材总比例", "oalesPercent", false))));
         midpackDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(midpackHeader, midpackBody)))
+
+        var quotation = {};
+        var midpack = {};
+        var oales = {
+            "amount": 0
+        }
 
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": decoration.orderId,
         }, function(res) {
 
-            var quotation = res.quotation;
-
-            var projectPrice = utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice);
-            var beforeTotal = utils.accAdd(utils.accAdd(projectPrice, quotation.managePrice), quotation.taxPrice);
-
-            var remainder = quotation.basePrice != 0 ? projectPrice % quotation.basePrice : 0;
-
-            var disprojectPrice = utils.accAdd(utils.accDiv(utils.accMul(utils.accSub(projectPrice, remainder), quotation.discount), 10), remainder);
-            var projectPrice = utils.accAdd(utils.accAdd(disprojectPrice, quotation.managePrice), quotation.taxPrice);
-
-            com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(beforeTotal));
-            com.focusPage('#projectPrice').html(com.checkNull(utils.changeTwoDecimal(projectPrice), 0));
-            com.focusPage('#managePrice').html(quotation.taxDiscount == 1 ? utils.accAdd(quotation.managePrice, quotation.taxPrice) : quotation.managePrice);
-
+            if (res.quotation)
+                quotation = res.quotation;
         }, null, false);
+
+        if (!quotation.qid)
+            return false;
 
         com.post(api.decoration.queryDecorationMidpack, {
             "decorationMidpack.decoration.orderId": decoration.orderId
         }, function(res) {
 
-            var midpack = res.decorationMidpack;
+            if (res.decorationMidpack)
+                midpack = res.decorationMidpack;
+        }, null, false);
 
-            if (!midpack)
-                return false;
+        com.post(api.sales.amountOales, {
+            "oales.decoration.orderId": decoration.orderId
+        }, function(res) {
 
-            com.focusPage('#materialPrice').html(com.checkNull(midpack.materialPrice, 0));
-            com.focusPage('#materialPaidup').html(com.checkNull(midpack.materialPaidup, 0));
-            com.focusPage('#servicePrice').html(com.checkNull(midpack.servicePrice, 0));
-            com.focusPage('#servicePaidup').html(com.checkNull(midpack.servicePaidup, 0));
+            if (res.amount)
+                oales.amount = res.amount;
+        }, null, false);
 
-            if (midpack.materialPrice == null) {
-                com.focusPage('#materialPercent').html(0);
-            } else {
-                var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(midpack.materialPaidup, 0), midpack.materialPrice)), 100);
-                com.focusPage('#materialPercent').html(com.checkNull(materialPercent > 100 ? 100 : materialPercent, 0) + "%");
-            }
+        var managePrice = quotation.managePrice * (quotation.manageDiscount == 1 ? quotation.discount / 10 : 1);
+        var taxPrice = quotation.taxPrice;
 
-            if (midpack.servicePrice == null) {
-                com.focusPage('#servicePercent').html(0);
-            } else {
-                var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(midpack.servicePaidup, 0), midpack.servicePrice)), 100);
-                com.focusPage('#servicePercent').html(com.checkNull(servicePercent > 100 ? 100 : servicePercent, 0) + "%");
-            }
-        });
+        if (quotation.taxDiscount == 1) {
+            taxPrice = quotation.taxPrice * (quotation.manageDiscount == 1 ? quotation.discount / 10 : 1);
+        }
+
+        var mantaxPrice = (quotation.taxDiscount == 1 ? utils.accAdd(managePrice, taxPrice) : managePrice);
+
+        var beforeTotal = quotation.disPrice + quotation.undisPrice + quotation.trafficPrice + quotation.managePrice + quotation.taxPrice;
+        var projectPrice = quotation.disPrice * quotation.discount / 10 + quotation.undisPrice + quotation.trafficPrice + managePrice + taxPrice;
+
+        projectPrice = quotation.disPrice + quotation.undisPrice + quotation.trafficPrice;
+
+        com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(com.checkNull(beforeTotal, 0)));
+        com.focusPage('#projectPrice').html(utils.changeTwoDecimal(com.checkNull(projectPrice, 0)));
+        com.focusPage('#managePrice').html(utils.changeTwoDecimal(com.checkNull(quotation.taxDiscount == 1 ? utils.accAdd(quotation.managePrice, quotation.taxPrice) : quotation.managePrice, 0)));
+
+        com.focusPage('#materialPrice').html(com.checkNull(midpack.materialPrice, 0));// 主材总额
+        com.focusPage('#materialPaidup').html(com.checkNull(midpack.materialPaidup, 0));// 实收主材额
+        com.focusPage('#servicePrice').html(com.checkNull(midpack.servicePrice, 0));
+        com.focusPage('#servicePaidup').html(com.checkNull(midpack.servicePaidup, 0));
+
+        com.focusPage('#amountOales').html(com.checkNull(oales.amount, 0));
+
+        if (midpack.materialPrice == null || midpack.materialPrice == 0) {
+            com.focusPage('#materialPercent').html(0);
+        } else {
+            var materialPercent = utils.accMul(utils.changeThrDecimal(com.checkNull(midpack.materialPaidup / midpack.materialPrice, 0)), 100);
+            com.focusPage('#materialPercent').html((materialPercent > 100 ? 100 : materialPercent) + "%");
+        }
+
+        if (midpack.servicePrice == null || midpack.servicePrice == 0) {
+            com.focusPage('#servicePercent').html(0);
+        } else {
+            var servicePercent = utils.accMul(utils.changeThrDecimal(com.checkNull(midpack.servicePaidup / midpack.servicePrice, 0)), 100);
+            com.focusPage('#servicePercent').html((servicePercent > 100 ? 100 : servicePercent) + "%");
+        }
+
+        if (midpack.materialPrice == null || midpack.materialPrice == 0) {
+            com.focusPage('#oalesPercent').html(0);
+        } else {
+            var oalesPercent = utils.accMul(utils.changeThrDecimal(com.checkNull((midpack.materialPaidup + oales.amount) / midpack.materialPrice, 0)), 100);
+            com.focusPage('#oalesPercent').html((oalesPercent > 100 ? 100 : oalesPercent) + "%");
+        }
     },
     initDecorationInclusive: function(decoration, wizard) {
 
@@ -1161,34 +1191,48 @@ var decorationUtils = {
         $('<div></div>').addClass('hr col-md-12').prependTo(inclusiveDiv);
         inclusiveDiv.appendTo(mainDiv);
 
-        var taxPrice = 0;
-        var taxDiscount = 0;
+        var quotation = {};
+        var inclusive = {};
 
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": decoration.orderId,
         }, function(res) {
 
-            taxPrice = res.quotation.taxPrice;
-            taxDiscount = res.quotation.taxDiscount;
-
+            if (res.quotation)
+                quotation = res.quotation;
         }, null, false);
+
+        if (!quotation.qid)
+            return false;
 
         com.post(api.decoration.queryDecorationInclusive, {
             "decorationInclusive.decoration.orderId": decoration.orderId
         }, function(res) {
 
-            var inclusive = res.decorationInclusive;
+            if (res.decorationInclusive)
+                inclusive = res.decorationInclusive;
+        }, null, false);
 
-            if (!inclusive)
-                return false;
+        var managePrice = quotation.managePrice * (quotation.manageDiscount == 1 ? quotation.discount / 10 : 1);
+        var taxPrice = quotation.taxPrice;
 
-            com.focusPage('#contractPrice').html(com.checkNull(inclusive.contractPrice, 0));
-            com.focusPage('#projectPrice').html(com.checkNull(inclusive.projectPrice, 0));
-            com.focusPage('#cdiff').html(com.checkNull(inclusive.cdiff, 0));
-            com.focusPage('#mdiff').html(com.checkNull(inclusive.mdiff, 0));
-            com.focusPage('#managePrice').html(taxDiscount == 1 ? utils.accAdd(inclusive.managePrice, taxPrice) : com.checkNull(inclusive.managePrice, 0));
-            com.focusPage('#materialPaidup').html(com.checkNull(inclusive.materialPaidup, 0));
-        });
+        if (quotation.taxDiscount == 1) {
+            taxPrice = quotation.taxPrice * (quotation.manageDiscount == 1 ? quotation.discount / 10 : 1);
+        }
+
+        var mantaxPrice = (quotation.taxDiscount == 1 ? utils.accAdd(managePrice, taxPrice) : managePrice);
+
+        var beforeTotal = quotation.disPrice + quotation.undisPrice + quotation.trafficPrice + quotation.managePrice + quotation.taxPrice;
+        var projectPrice = quotation.disPrice * quotation.discount / 10 + quotation.undisPrice + quotation.trafficPrice + managePrice + taxPrice;
+
+        com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(com.checkNull(beforeTotal, 0)));
+        com.focusPage('#projectPrice').html(utils.changeTwoDecimal(com.checkNull(projectPrice, 0)));
+        com.focusPage('#managePrice').html(utils.changeTwoDecimal(com.checkNull(quotation.managePrice, 0)));
+
+        com.focusPage('#contractPrice').html(utils.changeTwoDecimal(com.checkNull(inclusive.contractPrice, 0)));
+        com.focusPage('#cdiff').html(utils.changeTwoDecimal(com.checkNull(inclusive.cdiff, 0)));
+        com.focusPage('#mdiff').html(utils.changeTwoDecimal(com.checkNull(inclusive.mdiff, 0)));
+        com.focusPage('#materialPaidup').html(utils.changeTwoDecimal(com.checkNull(inclusive.materialPaidup, 0)));
     },
     initDecorationHolonomy: function(decoration, wizard) {
 
@@ -1202,60 +1246,89 @@ var decorationUtils = {
             "margin-bottom": "15px"
         });
 
-        holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable.append(this.createDivForPayment("col-md-4", "折前总价", "quotationPrice", true), this.createDivForPayment("col-md-4", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-4", "管理费", "managePrice", false), this.createDivForPayment("col-md-4", "主材总额", "materialPrice", true), this.createDivForPayment("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForPayment("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForPayment("col-md-4", "服务费", "servicePrice", true), this.createDivForPayment("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForPayment("col-md-4", "服务费百分比", "servicePercent", false))));
+        holonomyBody.append($("<div></div>").addClass('widget-body-inner').append(holonomyTable.append(this.createDivForPayment("col-md-4", "折前总价", "quotationPrice", true), this.createDivForPayment("col-md-4", "工程总额", "projectPrice", true), this.createDivForPayment("col-md-4", "管理费", "managePrice", false), this.createDivForPayment("col-md-4", "主材总额", "materialPrice", true), this.createDivForPayment("col-md-4", "实收主材额", "materialPaidup", true), this.createDivForPayment("col-md-4", "主材额百分比", "materialPercent", false), this.createDivForPayment("col-md-4", "服务费", "servicePrice", true), this.createDivForPayment("col-md-4", "实收服务费", "servicePaidup", true), this.createDivForPayment("col-md-4", "服务费百分比", "servicePercent", false), this.createDivForPayment("col-md-4", "外销总额", "amountOales", true), this.createDivForPayment("col-md-4", "主材总比例", "oalesPercent", false))));
         holonomyDiv.append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(holonomyHeader, holonomyBody)))
 
-        var taxPrice = 0;
-        var taxDiscount = 0;
+        var quotation = {};
+        var holonomy = {};
+        var oales = {
+            "amount": 0
+        }
 
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": decoration.orderId,
         }, function(res) {
 
-            taxPrice = res.quotation.taxPrice;
-            taxDiscount = res.quotation.taxDiscount;
-            var manageDiscount = res.quotation.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.accDiv(res.quotation.discount, 10) : 1;
-
-            if (taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
-                taxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
-            } else if (taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
-                taxPrice == taxPrice;
-            }
-
+            if (res.quotation)
+                quotation = res.quotation;
         }, null, false);
+
+        if (!quotation.qid)
+            return false;
 
         com.post(api.decoration.queryDecorationHolonomy, {
             "decorationHolonomy.decoration.orderId": decoration.orderId
         }, function(res) {
 
-            res = res.decorationHolonomy;
-            com.focusPage('#projectPrice').html(com.checkNull(utils.changeTwoDecimal(utils.accAdd(utils.accAdd(res.projectPrice, res.managePrice), taxPrice))), 0);
-            com.focusPage('#managePrice').html(taxDiscount == 1 ? utils.accAdd(res.managePrice, taxPrice) : com.checkNull(res.managePrice, 0));
-            com.focusPage('#materialPrice').html(com.checkNull(res.materialPrice), 0);
-            com.focusPage('#servicePrice').html(com.checkNull(res.servicePrice), 0);
-            com.focusPage('#materialPaidup').html(com.checkNull(res.materialPaidup), 0);
-            com.focusPage('#servicePaidup').html(com.checkNull(res.servicePaidup), 0);
+            if (res.decorationHolonomy)
+                holonomy = res.decorationHolonomy;
+        }, null, false);
 
-            if (res.managePrice == null) {
-                com.focusPage('#quotationPrice').html(0);
-            } else {
-                com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(res.projectBase));
-            }
+        com.post(api.sales.amountOales, {
+            "oales.decoration.orderId": decoration.orderId
+        }, function(res) {
 
-            if (res.materialPrice == null) {
-                com.focusPage('#materialPercent').html(0);
-            } else {
-                var materialPercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(res.materialPaidup, 0), res.materialPrice)), 100);
-                com.focusPage('#materialPercent').html(com.checkNull(materialPercent > 100 ? 100 : materialPercent, 0) + "%");
-            }
+            if (res.amount)
+                oales.amount = res.amount;
+        }, null, false);
 
-            if (res.servicePrice == null) {
-                com.focusPage('#servicePercent').html(0);
-            } else {
-                var servicePercent = utils.accMul(utils.changeThrDecimal(utils.accDiv(com.checkNull(res.servicePaidup, 0), res.servicePrice)), 100);
-                com.focusPage('#servicePercent').html(com.checkNull(servicePercent > 100 ? 100 : servicePercent, 0) + "%");
-            }
-        });
+        var managePrice = quotation.managePrice * (quotation.manageDiscount == 1 ? quotation.discount / 10 : 1);
+        var taxPrice = quotation.taxPrice;
+
+        if (quotation.taxDiscount == 1) {
+            taxPrice = quotation.taxPrice * (quotation.manageDiscount == 1 ? quotation.discount / 10 : 1);
+        }
+
+        var mantaxPrice = (quotation.taxDiscount == 1 ? utils.accAdd(managePrice, taxPrice) : managePrice);
+        var basePrice = (quotation.basePrice && quotation.basePrice != 0) ? quotation.basePrice : holonomy.discountBase;
+
+        var basePrice = quotation.undisPrice + quotation.disPrice + quotation.trafficPrice;
+        var beforeTotal = quotation.disPrice + quotation.undisPrice + quotation.trafficPrice + quotation.managePrice + quotation.taxPrice;
+        var projectPrice = (basePrice - (basePrice % basePrice)) * (quotation.discount / 10) + (basePrice % basePrice) + managePrice + taxPrice;
+
+        projectPrice = quotation.disPrice + quotation.undisPrice + quotation.trafficPrice;
+
+        com.focusPage('#quotationPrice').html(utils.changeTwoDecimal(com.checkNull(beforeTotal, 0)));
+        com.focusPage('#projectPrice').html(utils.changeTwoDecimal(com.checkNull(projectPrice, 0)));
+        com.focusPage('#managePrice').html(utils.changeTwoDecimal(com.checkNull(quotation.taxDiscount == 1 ? utils.accAdd(quotation.managePrice, quotation.taxPrice) : quotation.managePrice, 0)));
+
+        com.focusPage('#materialPrice').html(utils.changeTwoDecimal(com.checkNull(holonomy.materialPrice, 0)));
+        com.focusPage('#servicePrice').html(utils.changeTwoDecimal(com.checkNull(holonomy.servicePrice, 0)));
+        com.focusPage('#materialPaidup').html(utils.changeTwoDecimal(com.checkNull(holonomy.materialPaidup, 0)));
+        com.focusPage('#servicePaidup').html(utils.changeTwoDecimal(com.checkNull(holonomy.servicePaidup, 0)));
+
+        com.focusPage('#amountOales').html(com.checkNull(oales.amount, 0));
+
+        if (holonomy.materialPrice == null || holonomy.materialPrice == 0) {
+            com.focusPage('#materialPercent').html(0);
+        } else {
+            var materialPercent = utils.accMul(utils.changeThrDecimal(com.checkNull(holonomy.materialPaidup / holonomy.materialPrice, 0)), 100);
+            com.focusPage('#materialPercent').html((materialPercent > 100 ? 100 : materialPercent) + "%");
+        }
+
+        if (holonomy.servicePrice == null || holonomy.servicePrice == 0) {
+            com.focusPage('#servicePercent').html(0);
+        } else {
+            var servicePercent = utils.accMul(utils.changeThrDecimal(com.checkNull(holonomy.servicePaidup / holonomy.servicePrice, 0)), 100);
+            com.focusPage('#servicePercent').html((servicePercent > 100 ? 100 : servicePercent) + "%");
+        }
+
+        if (holonomy.materialPrice == null || holonomy.materialPrice == 0) {
+            com.focusPage('#oalesPercent').html(0);
+        } else {
+            var oalesPercent = utils.accMul(utils.changeThrDecimal(com.checkNull((holonomy.materialPaidup + oales.amount) / holonomy.materialPrice, 0)), 100);
+            com.focusPage('#oalesPercent').html((oalesPercent > 100 ? 100 : oalesPercent) + "%");
+        }
     },
     initDecorationBelong: function(orderId) {
 
@@ -1609,7 +1682,7 @@ var decorationUtils = {
                 com.focusPage('#projectPrice_account').html(com.checkNull(res.projectPrice, 0));
                 com.focusPage('#materialPrice_account').html(com.checkNull(res.materialPrice, 0));
                 com.focusPage('#serviceRate').html(utils.changeTwoDecimal(com.checkNull(res.serviceRate * 100, 0)) + "%");
-                com.focusPage('#servicePrice_account').html(com.checkNull(res.servicePrice), 0);
+                com.focusPage('#servicePrice_account').html(com.checkNull(res.servicePrice, 0));
             }
 
         });

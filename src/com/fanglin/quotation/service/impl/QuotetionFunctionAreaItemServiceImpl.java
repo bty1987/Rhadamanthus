@@ -61,7 +61,8 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 
 			BeanUtil.copyProperties(quotetionFunctionAreaItemVO, quotetionFunctionAreaItemPO);
 
-			if (quotetionFunctionAreaItemVO.getType() == 0 || quotetionFunctionAreaItemVO.getType() == 4) {
+			if (Arrays.asList(QuotetionFunctionAreaItemPO.TYPE_COMMON_INT, QuotetionFunctionAreaItemPO.TYPE_IGNORE_INT, QuotetionFunctionAreaItemPO.TYPE_COST_INT, QuotetionFunctionAreaItemPO.TYPE_UNACHE_INT).contains(quotetionFunctionAreaItemVO.getType())) {
+
 				quotetionFunctionAreaItemPO.setQiid(quotetionFunctionAreaItemVO.getQiid());
 				quotetionFunctionAreaItemPO.setContent(null);
 			} else {

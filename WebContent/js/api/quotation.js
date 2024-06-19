@@ -381,6 +381,9 @@ $.extend(api, {
         updateFunctionAreaItem: {
             url: "updateFunctionAreaItem.do"
         },
+        updateFunctionAreaItemForSort: {
+            url: "updateFunctionAreaItemForSort.do"
+        },
         pageSystemDefineItem: {
             url: "pageSystemDefineItem.do",
             demo: true,
@@ -747,6 +750,9 @@ $.extend(api, {
             tranargs: {
                 args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.taxPrice", "quotation.taxRate"]
             }
+        },
+        updateQuotationForPrice: {
+            url: "updateQuotationForPrice.do",
         },
         deleteQuotationById: {
             url: "deleteQuotationById.do"

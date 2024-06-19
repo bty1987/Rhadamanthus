@@ -35,6 +35,8 @@ public class RoleModulePO implements java.io.Serializable {
 
 	private Timestamp createTime;
 
+	private int company;
+
 	public RoleModulePO() {
 		super();
 	}
@@ -114,6 +116,15 @@ public class RoleModulePO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

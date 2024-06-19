@@ -147,16 +147,16 @@ $(function() {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnRefnum = $('<a></a>').addClass('btn btn-minier btn-primary').html('退货');
-            var $btnRran = $('<a></a>').addClass('btn btn-minier btn-success').html('配送');
-            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
-            var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
-            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-primary').html('完结');
+            var $btnRefnum = $('<a></a>').addClass('btn btn-minier btn-yellow').html('退货');
+            var $btnRran = $('<a></a>').addClass('btn btn-minier btn-purple').html('配送');
+            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-purple').html('审核');
+            var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-purple').html('确认');
+            var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-purple').html('完结');
             var $btnReview = $('<a></a>').addClass('btn btn-minier btn-pink').html('核对');
-            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-info').html('结算');
-            var $btnReject = $('<a></a>').addClass('btn btn-minier btn-danger').html('驳回');
+            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-pink').html('结算');
+            var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('驳回');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
+            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-success').html('打印');
 
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.goods.name);
             var $label = $('<label></label>');
@@ -255,7 +255,7 @@ $(function() {
             v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? $btnReview.show() : $btnReview.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnBalance.show() : $btnBalance.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnReject.show() : $btnReject.hide();
-            [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnDel.hide() : $btnDel.show();
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnDel.hide() : $btnDel.show();
 
             $divBtnWrap.appendTo($h3);
 
@@ -355,25 +355,14 @@ $(function() {
 
             $btnDel.click(function(e) {
 
-                if ([constant.quotation().selectionItem.STATUS_INIT_INT, constant.quotation().selectionItem.STATUS_TRAN_INT].indexOf(v.status) != -1) {
-                    com.post(api.quotation.deleteSelectionItem, {
-                        "selection.sid": v.selection.sid,
-                        "selectionItem.siid": v.siid,
-                    }, function(e) {
+                com.post(api.quotation.deleteSelectionItem, {
+                    "selection.sid": v.selection.sid,
+                    "selectionItem.siid": v.siid,
+                }, function(e) {
 
-                        searcher.doSearch();
-                        com.showAlert(com.info, "操作成功");
-                    });
-                } else {
-                    com.post(api.quotation.cutoffSelectionItem, {
-                        "selectionItem.siid": v.siid
-                    }, function(e) {
-
-                        searcher.doSearch();
-                        com.showAlert(com.info, "操作成功");
-                    });
-
-                }
+                    searcher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             $btnReject.click(function(e) {

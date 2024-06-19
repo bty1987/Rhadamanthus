@@ -64,7 +64,7 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ModulePO> queryModuleByFatherModule(Short system, int mId) {
+	public List<ModulePO> queryModuleByFatherModule(Short system, Integer mid) {
 
 		Criteria query = session().createCriteria(ModulePO.class);
 
@@ -72,7 +72,7 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 			query.add(Restrictions.eq("system", system));
 		}
 
-		query.add(Restrictions.eq("fatherModule.mid", mId));
+		query.add(Restrictions.eq("fatherModule.mid", mid));
 
 		return query.list();
 	}

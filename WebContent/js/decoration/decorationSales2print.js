@@ -17,7 +17,6 @@ $(function() {
     var orderType = constant.decoration().decoration.typeness.keys;
     var decorationHolonomy = {};
     var materialBalance;
-    var brandName = [];
 
     var trList = $("#reslist");
 
@@ -114,12 +113,9 @@ $(function() {
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
                 }
-                ;
 
                 if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1))
                     ;
-
-                var $salesBrands = com.focusPage("[name='" + v.sales.brand + "']");
 
                 if (![2, 7].indexOf(v.type) != -1 && v.status == 2) {
                     var $totalSales = [4, 5, 6].indexOf(v.type) != -1 ? -v.referMoney : v.referMoney;
@@ -129,19 +125,16 @@ $(function() {
                 if (v.type == 2) {
                     $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney);
                 }
+                
+                var ele = $("#tr5_refer" + v.sales.bid + "");
 
-                if (brandName.indexOf(v.sales.brand) != -1) {
+                if (ele.length != 0) {
 
-                    var $salesBrand = com.focusPage($salesBrands[0]);
-                    var $brandTotal = com.focusPage($salesBrand.find("[name='total']")[0]);
-
-                    var _value = parseFloat($brandTotal.attr('value'));
+                    var _value = parseFloat(ele.attr("value"));
                     var _refer = [2, 3, 8].indexOf(v.type) != -1 ? v.referMoney : -v.referMoney;
 
-                    var arrGet = $.inArray(v.sales.brand, brandName) + 1;
-
-                    $("#tr5_refer" + arrGet + "").attr("value", _value);
-                    $("#tr5_refer" + arrGet + "").text(_value);
+                    ele.attr("value", _value + _refer);
+                    ele.text(_value + _refer);
 
                     $total = utils.changeThrDecimal($total + _refer);
                 } else {
@@ -153,8 +146,8 @@ $(function() {
                     var td14 = $('<td style="border: 1px solid;"></td>').text(index).appendTo(tr5);
                     var td15 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.category).appendTo(tr5);
                     var td16 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.brand).appendTo(tr5);
-                    var td17 = $('<td id="tr5_refer' + index + '" style="border: 1px solid;"></td>').attr("value", _refer).text(_refer).appendTo(tr5);
-                    brandName.push(v.sales.brand);
+                    var td17 = $('<td id="tr5_refer' + v.sales.bid + '" style="border: 1px solid;"></td>').attr("value", _refer).text(_refer).appendTo(tr5);
+                    
                     $total = utils.changeThrDecimal($total + _refer);
                 }
 

@@ -11,6 +11,8 @@ public interface ConversationService {
 
 	public void pageConversation(Paging paging, List<Filter> filters);
 
+	public void pageConversationForContent(Paging paging, ConversationVO conversation);
+
 	public void requestConversation(ConversationVO conversation, String userId) throws FLException;
 
 	public void responseConversation(ConversationVO conversation, String userId) throws FLException;

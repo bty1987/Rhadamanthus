@@ -1,0 +1,52 @@
+<div>
+    <div id="fl-statement">
+        <div class="page-header">
+            <h1>品牌
+                <small><i class="icon-double-angle-right"></i>厂商</small>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row" style="margin-left:10px;margin-right:10px">
+                <div id="list"></div>
+                <div>
+                    <div>
+                        <a class="btn btn-minier btn-primary pull-left" id="addBrandSupplier"
+                           style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="brandSupplierModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">添加厂商</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="supplier">厂商</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="supplier">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBrandSupplier" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/brandSupplier.js']);
+</script>

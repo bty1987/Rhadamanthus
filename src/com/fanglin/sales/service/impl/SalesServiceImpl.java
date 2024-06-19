@@ -279,6 +279,7 @@ public class SalesServiceImpl implements SalesService {
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
 		BrandPO brandPO = brandDao.get(salesVO.getBid());
+		UserPO supplier = userDao.queryUserByUserId(salesVO.getSupplier().getUserId());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
@@ -293,7 +294,7 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setDept(salesman.getDept());
 		salesPO.setRegion(salesman.getDept().getFatherDept());
 		salesPO.setCreater(creater);
-		salesPO.setSupplier(brandPO.getSupplier());
+		salesPO.setSupplier(supplier);
 		salesPO.setInstorer(instorer);
 		salesPO.setGuider(guider);
 		salesPO.setGuideDept(guider.getDept());

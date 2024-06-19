@@ -83,7 +83,6 @@ jQuery(function($) {
 
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
         com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
-        com.focusPage("#con-contract-total", "#form").val(decoration.orderTotalPrice);
 
         contractEdit.cover["sin-company-phone"] = customer.companyPhone;
 
@@ -121,7 +120,6 @@ jQuery(function($) {
 
         data = $.extend({}, data, contractEdit.cover);
 
-        data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
         data["con-material-total-cn"] = utils.getCNMoney(parseFloat(data["con-material-total"]));
 
         if (contractEdit.contractArgs.company == "1") {

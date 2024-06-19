@@ -12,36 +12,36 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("buildingRecordDao")
-public class BuildingRecordDaoImpl extends DaoImpl<BuildingRecordPO> implements BuildingRecordDao{
+public class BuildingRecordDaoImpl extends DaoImpl<BuildingRecordPO> implements BuildingRecordDao {
 
-	public BuildingRecordDaoImpl(){
+	public BuildingRecordDaoImpl() {
 		super(BuildingRecordPO.class);
 	}
-	
+
 	@Override
 	public List<BuildingRecordPO> queryBuildingRecord(List<Filter> filters) {
-		
+
 		PagingQuery<BuildingRecordPO> query = pagingQuery(new Paging(), BuildingRecordPO.class);
-		
-		if(filters != null){
+
+		if (filters != null) {
 			for (Filter filter : filters) {
 				String field = filter.getField();
 				String data = filter.getData();
-				
-				if(field.equals("hsid")){
-					query.alias("houseSource", "houseSource").add(Restrictions.eq(BuildingRecordPO.COLUMN_HSID_STR, Long.valueOf(data)));
-				}else if(field.equals("csid")){
+
+				if (field.equals("hsid")) {
+					query.alias("buildingHouse", "buildingHouse").add(Restrictions.eq(BuildingRecordPO.COLUMN_HSID_STR, Long.valueOf(data)));
+				} else if (field.equals("csid")) {
 					query.alias("customerSource", "customerSource").add(Restrictions.eq(BuildingRecordPO.COLUMN_CSID_STR, Long.valueOf(data)));
-				}else if(field.equals("type")){
+				} else if (field.equals("type")) {
 					query.add(Restrictions.eq(BuildingRecordPO.COLUMN_TYPE_STR, Long.valueOf(data)));
 				}
 			}
 		}
-		
+
 		query.notPaging();
-		
+
 		return query.list();
-		
+
 	}
 
 }

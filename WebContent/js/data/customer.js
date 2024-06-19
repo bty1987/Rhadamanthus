@@ -17,6 +17,7 @@ jQuery(function($) {
             identity: com.focusPage("#identity", "#customerModal"),
             officer: com.focusPage("#officer", "#customerModal"),
             passport: com.focusPage("#passport", "#customerModal"),
+            passhkm: com.focusPage("#passhkm", "#customerModal"),
             gender: com.focusPage("#gender", "#customerModal"),
             phone: com.focusPage("#phone", "#customerModal"),
             qq: com.focusPage("#qq", "#customerModal"),
@@ -117,6 +118,11 @@ jQuery(function($) {
         field: "passport",
         name: "护照",
         prop: "passport",
+        clazz: "grey"
+    }, {
+        field: "passhkm",
+        name: "港澳通行证",
+        prop: "passhkm",
         clazz: "grey"
     }, {
         field: "relationshipType",
@@ -265,6 +271,7 @@ jQuery(function($) {
             customer.items.identity.val(v.identity);
             customer.items.officer.val(v.officer);
             customer.items.passport.val(v.passport);
+            customer.items.passhkm.val(v.passhkm);
             customer.items.qq.val(v.qq);
             customer.items.wechat.val(v.wechat);
             customer.items.email.val(v.email);
@@ -320,6 +327,7 @@ jQuery(function($) {
             "customer.identity": customer.items.identity.val(),
             "customer.officer": customer.items.officer.val(),
             "customer.passport": customer.items.passport.val(),
+            "customer.passhkm": customer.items.passhkm.val(),
             "customer.qq": customer.items.qq.val(),
             "customer.wechat": customer.items.wechat.val(),
             "customer.email": customer.items.email.val(),

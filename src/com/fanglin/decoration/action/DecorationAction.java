@@ -313,6 +313,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateDecorationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationForAdvance() throws FLException {
+
+		decorationService.updateDecorationForAdvance(decoration, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateDecorationForPayScale", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateDecorationForPayScale() throws FLException {
 

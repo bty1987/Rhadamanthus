@@ -21,10 +21,12 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
@@ -52,6 +54,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private ExtensionItemDao extensionItemDao;
+
+	@Autowired
+	private AddReduceDao addReduceDao;
 
 	@Autowired
 	private BrandDao brandDao;
@@ -255,6 +260,16 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		if (selectionItemPO.getStatus() > SelectionItemPO.STATUS_CHECK_SHORT) {
 			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		AddReducePO addReducePO = null;
+
+		if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+			addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+		}
+
+		if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+			throw new FLException(140035, "增减项状态不可操作");
 		}
 
 		updateSelectionTotal(selectionItemPO, selectionItemVO.getNum());
@@ -487,7 +502,11 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200038, "选材项不存在");
 		}
 
-		if (Arrays.asList(SelectionItemPO.STATUS_CHECK_SHORT, SelectionItemPO.STATUS_CONFIRM_SHORT, SelectionItemPO.STATUS_FINISH_SHORT).contains(selectionItemPO.getStatus())) {
+		if (Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT).contains(selectionItemPO.getStatus())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_INIT_INT) {
 			throw new FLException(200039, "选材项状态不可操作");
 		}
 

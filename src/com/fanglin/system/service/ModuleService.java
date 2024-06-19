@@ -26,20 +26,20 @@ public interface ModuleService {
 
 	public List<ModuleVO> queryModule(ModuleVO moduleVO);
 
-	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
+	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO, Integer company) throws FLException;
 
-	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
+	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO, Integer company) throws FLException;
 
-	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException;
+	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO, Integer company) throws FLException;
 
 	public List<ModuleVO> queryModuleByFatherModule(ModuleVO moduleVO) throws FLException;
 
-	public ModuleVO checkModule(ModuleVO moduleVO, String userId) throws FLException;
+	public ModuleVO checkModule(ModuleVO moduleVO, String userId, Integer company) throws FLException;
 
 	public int addModule(ModuleVO moduleVO) throws FLException;
 
-	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId) throws FLException;
+	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId, Integer company) throws FLException;
 
-	public int deleteModule(ModuleVO moduleVO) throws FLException;
+	public int deleteModule(ModuleVO moduleVO, Integer company) throws FLException;
 
 }

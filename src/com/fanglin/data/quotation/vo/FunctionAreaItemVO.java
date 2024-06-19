@@ -22,8 +22,10 @@ public class FunctionAreaItemVO implements Serializable {
 	private FunctionAreaVO functionArea;
 
 	private QuotationItemVO quotationItem;
-	
+
 	private String formula;
+
+	private Integer sort;
 
 	public Long getFaiid() {
 		return faiid;
@@ -48,13 +50,21 @@ public class FunctionAreaItemVO implements Serializable {
 	public void setQuotationItem(QuotationItemVO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
-	
+
 	public String getFormula() {
 		return formula;
 	}
-	
+
 	public void setFormula(String formula) {
 		this.formula = formula;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
 	}
 
 }

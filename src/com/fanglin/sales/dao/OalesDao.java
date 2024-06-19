@@ -14,4 +14,6 @@ public interface OalesDao extends Dao<OalesPO> {
 
 	public List<OalesPO> queryOalesByOrderId(String orderId);
 
+	public Long amountOales(String orderId);
+
 }

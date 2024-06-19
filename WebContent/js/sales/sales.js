@@ -64,7 +64,10 @@ $(function() {
             submitSalesActivityBtn: com.focusPage("#submitSalesActivityBtn")
         // 保存修改活动
         },
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
 
+            com.clearValidator();
+        }),
         type: {
             depositPayment: 2, // 定金交款
             repositPayment: 8, // 不退交款
@@ -161,7 +164,8 @@ $(function() {
                     var $finish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完结');
                     var $send = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
                     var $terminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
-                    
+                    var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
+
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
 
@@ -357,6 +361,9 @@ $(function() {
                                 if ([0, 5].indexOf(v.status) != -1 && [1, 2].indexOf(v.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
                                     $btnDiv.append($btnDelivery);
                                 }
+                                break;
+                            case "picture":
+                                $btnDiv.append($picture);
                                 break;
                         }
                     });
@@ -588,6 +595,10 @@ $(function() {
                                 salesSearcher.doSearch();
                             });
                         });
+                    });
+                    $picture.click(function() {
+                        managedrawing(v);
+                        initUploadBtn(v);
                     });
                 });
 
@@ -1440,5 +1451,75 @@ $(function() {
 
         sales.modals.repositPaymentModal.modal('hide');
 
+    }
+    function managedrawing(v) {
+
+        com.focusPage('#salesDrawing').html("");
+
+        com.post(api.sales.querySalesPicture, {
+            "salesPicture.siid": v.sid
+        }, function(data) {
+
+            var salesPictures = data.salesPictures;
+            if (salesPictures && salesPictures.length) {
+                $.each(salesPictures, function(i, value) {
+
+                    if (value.status == constant.sales().salesPicture.STATUS_YES_SHORT) {
+                        appendGalleryElement("salesDrawing", value);
+                    }
+
+                });
+                com.popup4photos(com.focusPage("#salesDrawing"));
+            }
+        }, null, false);
+
+        sales.drawingModal.modal("show");
+    }
+    function appendGalleryElement(galleryId, value) {
+
+        var gallery = com.focusPage("#" + galleryId);
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.spid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.path, 150, 150, value.name, null, 0);
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
+            com.post(api.sales.deleteSalesPicture, {
+                "salesPicture.spid": value.spid
+            }, function(res) {
+
+                com.focusPage("#gallery_li" + value.spid).remove();
+            });
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+
+    }
+    function initUploadBtn(v) {
+
+        com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 5, function(data) {
+
+            var options = {};
+            options["salesPicture.sid"] = v.sid;
+            options["salesPicture.siid"] = v.sid;
+            options["salesPicture.name"] = data.strutsUploadsFileName;
+            options["salesPicture.path"] = data.resUrl;
+            options["salesPicture.type"] = 1;
+            options["salesPicture.filesize"] = data.filesize;
+            com.post(api.sales.addSalesPicture, options, function(res) {
+
+                var salesPicture = res.salesPicture;
+
+                appendGalleryElement("salesDrawing", salesPicture);
+
+                com.popup4photos("#salesDrawing");
+
+            });
+
+            salesSearcher.doSearch();
+        });
     }
 });

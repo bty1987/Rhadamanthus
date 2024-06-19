@@ -38,9 +38,14 @@ public class BalanceSelectionItemDaoImpl extends DaoImpl<BalanceSelectionItemPO>
 	}
 
 	@Override
+	public BalanceSelectionItemPO queryBalanceSelectionItemBySiid(long siid) {
+		return (BalanceSelectionItemPO) session().createCriteria(BalanceSelectionItemPO.class).add(Restrictions.eq("siid", siid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public int countBalanceSelectionItem(long bsid) {
 		String sql = "select count(*) from balance.balanceselectionitem where bsid = :bsid";
-		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("bsid", bsid).uniqueResult();
+		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("bsid", bsid).uniqueResult();
 		return num.intValue();
 	}
 

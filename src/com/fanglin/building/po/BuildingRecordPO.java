@@ -15,44 +15,44 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "buildingrecord", catalog = "building")
-public class BuildingRecordPO implements java.io.Serializable{
+public class BuildingRecordPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8309508914055593961L;
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
-	public static final String COLUMN_CSID_STR = "customerSource.csid";
-	
-	public static final String COLUMN_HSID_STR = "houseSource.hsid";
-	
+
+	public static final String COLUMN_CSID_STR = "buildingCustomer.csid";
+
+	public static final String COLUMN_HSID_STR = "buildingHouse.hsid";
+
 	public static final short COLUMN_TYPE_SHORT_THR = 3;
-	
+
 	public static final short COLUMN_PATTERN_SHORT_FOUR = 4;
-	
+
 	private long brid;
-	
-	private HouseSourcePO houseSource;
-	
-	private CustomerSourcePO customerSource;
-	
+
+	private BuildingHousePO buildingHouse;
+
+	private BuildingCustomerPO buildingCustomer;
+
 	private String comment;
-	
+
 	private short type;
-	
+
 	private short pattern;
-	
+
 	private UserPO operater;
-	
+
 	private Timestamp operatTime;
-	
+
 	public BuildingRecordPO() {
 		super();
 	}
-	
-	public BuildingRecordPO(HouseSourcePO houseSource, CustomerSourcePO customerSource, UserPO operater) {
+
+	public BuildingRecordPO(BuildingHousePO buildingHouse, BuildingCustomerPO buildingCustomer, UserPO operater) {
 		super();
-		this.houseSource = houseSource;
-		this.customerSource = customerSource;
+		this.buildingHouse = buildingHouse;
+		this.buildingCustomer = buildingCustomer;
 		this.operater = operater;
 	}
 
@@ -69,22 +69,22 @@ public class BuildingRecordPO implements java.io.Serializable{
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hsid", referencedColumnName = "hsid")
-	public HouseSourcePO getHouseSource() {
-		return houseSource;
+	public BuildingHousePO getBuildingHouse() {
+		return buildingHouse;
 	}
 
-	public void setHouseSource(HouseSourcePO houseSource) {
-		this.houseSource = houseSource;
+	public void setBuildingHouse(BuildingHousePO buildingHouse) {
+		this.buildingHouse = buildingHouse;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "csid", referencedColumnName = "csid")
-	public CustomerSourcePO getCustomerSource() {
-		return customerSource;
+	public BuildingCustomerPO getBuildingCustomer() {
+		return buildingCustomer;
 	}
 
-	public void setCustomerSource(CustomerSourcePO customerSource) {
-		this.customerSource = customerSource;
+	public void setBuildingCustomer(BuildingCustomerPO buildingCustomer) {
+		this.buildingCustomer = buildingCustomer;
 	}
 
 	@Column(name = "comment")

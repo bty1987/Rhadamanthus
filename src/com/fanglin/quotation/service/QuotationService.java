@@ -23,11 +23,11 @@ public interface QuotationService {
 
 	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
-	public QuotationVO queryQuotationByQid(long qId);
+	public QuotationVO queryQuotationByQid(QuotationVO quotationVO) throws FLException;
 
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO) throws FLException;
 
-	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO);
+	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO) throws FLException;
 
 	public Map<String, List<String>> queryQuotationForConfig(int company);
 
@@ -38,6 +38,8 @@ public interface QuotationService {
 	public int changeQuotationForDefault(QuotationVO quotationVO) throws FLException;
 
 	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException;
+
+	public int updateQuotationForPrice(QuotationVO quotationVO) throws FLException;
 
 	public int updateQuotationForStatus(QuotationVO quotationVO, String userId) throws FLException;
 

@@ -25,9 +25,9 @@ public class BuildingPO implements Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
-	public static final String COLUMN_HSID_STR = "houseSource.hsid";
+	public static final String COLUMN_HSID_STR = "buildingHouse.hsid";
 
-	public static final String COLUMN_CSID_STR = "customerSource.csid";
+	public static final String COLUMN_CSID_STR = "buildingCustomer.csid";
 
 	public static final short STATUS_SIGN_SHORT = 0;
 
@@ -37,13 +37,13 @@ public class BuildingPO implements Serializable {
 
 	private String no;
 
-	private HouseSourcePO houseSource;
+	private BuildingHousePO buildingHouse;
 
-	private CustomerSourcePO customerSource;
+	private BuildingCustomerPO buildingCustomer;
 
-	private CustomerPO houseSourceAgent;
+	private CustomerPO buildingHouseAgent;
 
-	private CustomerPO customerSourceAgent;
+	private CustomerPO buildingCustomerAgent;
 
 	private UserPO creater;
 
@@ -69,12 +69,12 @@ public class BuildingPO implements Serializable {
 		super();
 	}
 
-	public BuildingPO(HouseSourcePO houseSource, CustomerSourcePO customerSource, CustomerPO houseSourceAgent, CustomerPO customerSourceAgent, UserPO creater, BuildingNodePO buildingNode) {
+	public BuildingPO(BuildingHousePO buildingHouse, BuildingCustomerPO buildingCustomer, CustomerPO buildingHouseAgent, CustomerPO buildingCustomerAgent, UserPO creater, BuildingNodePO buildingNode) {
 		super();
-		this.houseSource = houseSource;
-		this.customerSource = customerSource;
-		this.houseSourceAgent = houseSourceAgent;
-		this.customerSourceAgent = customerSourceAgent;
+		this.buildingHouse = buildingHouse;
+		this.buildingCustomer = buildingCustomer;
+		this.buildingHouseAgent = buildingHouseAgent;
+		this.buildingCustomerAgent = buildingCustomerAgent;
 		this.creater = creater;
 		this.buildingNode = buildingNode;
 	}
@@ -101,42 +101,42 @@ public class BuildingPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hsid", referencedColumnName = "hsid")
-	public HouseSourcePO getHouseSource() {
-		return houseSource;
+	public BuildingHousePO getBuildingHouse() {
+		return buildingHouse;
 	}
 
-	public void setHouseSource(HouseSourcePO houseSource) {
-		this.houseSource = houseSource;
+	public void setBuildingHouse(BuildingHousePO buildingHouse) {
+		this.buildingHouse = buildingHouse;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "csid", referencedColumnName = "csid")
-	public CustomerSourcePO getCustomerSource() {
-		return customerSource;
+	public BuildingCustomerPO getBuildingCustomer() {
+		return buildingCustomer;
 	}
 
-	public void setCustomerSource(CustomerSourcePO customerSource) {
-		this.customerSource = customerSource;
+	public void setBuildingCustomer(BuildingCustomerPO buildingCustomer) {
+		this.buildingCustomer = buildingCustomer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "hacid", referencedColumnName = "cid")
-	public CustomerPO getHouseSourceAgent() {
-		return houseSourceAgent;
+	public CustomerPO getBuildingHouseAgent() {
+		return buildingHouseAgent;
 	}
 
-	public void setHouseSourceAgent(CustomerPO houseSourceAgent) {
-		this.houseSourceAgent = houseSourceAgent;
+	public void setBuildingHouseAgent(CustomerPO buildingHouseAgent) {
+		this.buildingHouseAgent = buildingHouseAgent;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cacid", referencedColumnName = "cid")
-	public CustomerPO getCustomerSourceAgent() {
-		return customerSourceAgent;
+	public CustomerPO getBuildingCustomerAgent() {
+		return buildingCustomerAgent;
 	}
 
-	public void setCustomerSourceAgent(CustomerPO customerSourceAgent) {
-		this.customerSourceAgent = customerSourceAgent;
+	public void setBuildingCustomerAgent(CustomerPO buildingCustomerAgent) {
+		this.buildingCustomerAgent = buildingCustomerAgent;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

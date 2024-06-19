@@ -24,6 +24,8 @@ public class ConversationPO implements Serializable {
 
 	public static final String COLUMN_CHATID_STR = "chatId";
 
+	public static final String COLUMN_CONTENT_STR = "content";
+
 	public static final short ATTTYPE_REQU_INT = 0;
 
 	public static final short ATTTYPE_RESP_INT = 1;

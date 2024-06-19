@@ -238,4 +238,30 @@ Condition.addupRule("system", {
             valuePath: "value",// 元素的value值
         }
     },
+    "module-role-no": {
+        label: "角色编号",
+        type: "text",
+        submitConfig: {
+            name: "roleNo",// 字段
+            op: "eq",// 查询方式
+            validate: null
+        }
+    },
+    "module-role-name": {
+        label: "角色名称",
+        type: "autofill",
+        submitConfig: {
+            name: "roleId",// 字段
+            op: "eq",// 查询方式
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryRoleByName,// 请求接口
+            postData: {},// 获取数据时的请求参数
+            listPath: "roleList",// 返回值
+            keyPath: "rid",// 元素的key值
+            valuePath: "name",// 元素的value值
+            query: "role.name"// 请求参数
+        }
+    },
 });

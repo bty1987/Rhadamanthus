@@ -26,10 +26,10 @@ jQuery(function($) {
         currenFlag: params.building.flag,
         currentPage: params.building.page,
 
-        buildingRecordHsno: params.houseSource.no,
-        buildingRecordCsno: params.customerSource.no,
-        buildingRecordHsid: params.building.houseSource.hsid,
-        buildingRecordCsid: params.building.customerSource.csid,
+        buildingRecordHsno: params.buildingHouse.no,
+        buildingRecordCsno: params.buildingCustomer.no,
+        buildingRecordHsid: params.building.buildingHouse.hsid,
+        buildingRecordCsid: params.building.buildingCustomer.csid,
     };
 
     buildingRecord.btns.saveBtn.on("click", saveData);
@@ -79,7 +79,7 @@ jQuery(function($) {
             var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var noVal;
-            buildingRecord.currenFlag == true ? noVal = v.houseSource.no : noVal = v.customerSource.no;
+            buildingRecord.currenFlag == true ? noVal = v.buildingHouse.no : noVal = v.buildingCustomer.no;
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(noVal));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             // var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
@@ -88,10 +88,10 @@ jQuery(function($) {
 
             var v_name;
             var h_number;
-            v.houseSource.house.village.name == null ? v_name = "" : v_name = v.houseSource.house.village.name;
-            v.houseSource.house.houseNumber == null ? h_number = "" : h_number = v.houseSource.house.houseNumber;
+            v.buildingHouse.house.village.name == null ? v_name = "" : v_name = v.buildingHouse.house.village.name;
+            v.buildingHouse.house.houseNumber == null ? h_number = "" : h_number = v.buildingHouse.house.houseNumber;
 
-            var propertyArr = [["记录类型:", buildingRecord.recordType[v.type], "red"], ["楼盘名:", v_name + " " + h_number, "grey"], ["客户名:", v.customerSource.customer.name, "grey"], ["联系方式:", buildingRecord.pattern[v.pattern], "grey"], ["记录时间:", v.operatTime, "green"], ["记录信息:", v.comment, "grey"], ["操作人:", v.operater.userName, "grey"]];
+            var propertyArr = [["记录类型:", buildingRecord.recordType[v.type], "red"], ["楼盘名:", v_name + " " + h_number, "grey"], ["客户名:", v.buildingCustomer.customer.name, "grey"], ["联系方式:", buildingRecord.pattern[v.pattern], "grey"], ["记录时间:", v.operatTime, "green"], ["记录信息:", v.comment, "grey"], ["操作人:", v.operater.userName, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -170,11 +170,11 @@ jQuery(function($) {
     function saveData() {
 
         if (buildingRecord.items.hsNo.val() != "") {
-            com.post(api.building.queryHouseSourceByNo, {
-                "houseSource.no": buildingRecord.items.hsNo.val()
+            com.post(api.building.queryBuildingHouseByNo, {
+                "buildingHouse.no": buildingRecord.items.hsNo.val()
             }, function(res) {
 
-                buildingRecord.hsid = res.houseSource.hsid;
+                buildingRecord.hsid = res.buildingHouse.hsid;
                 buildingRecord.dataFlag = false;
             }, function(data) {
 
@@ -184,11 +184,11 @@ jQuery(function($) {
         }
 
         if (buildingRecord.items.csNo.val() != "") {
-            com.post(api.building.queryCustomerSourceByNo, {
-                "customerSource.no": buildingRecord.items.csNo.val()
+            com.post(api.building.queryBuildingCustomerByNo, {
+                "buildingCustomer.no": buildingRecord.items.csNo.val()
             }, function(res) {
 
-                buildingRecord.csid = res.customerSource.csid;
+                buildingRecord.csid = res.buildingCustomer.csid;
                 buildingRecord.dataFlag = false;
             }, function(data) {
 
@@ -202,8 +202,8 @@ jQuery(function($) {
         }
 
         var options = {
-            "buildingRecord.houseSource.hsid": buildingRecord.hsid,
-            "buildingRecord.customerSource.csid": buildingRecord.csid,
+            "buildingRecord.buildingHouse.hsid": buildingRecord.hsid,
+            "buildingRecord.buildingCustomer.csid": buildingRecord.csid,
             "buildingRecord.comment": buildingRecord.items.comment.val(),
             "buildingRecord.type": buildingRecord.items.brType.val(),
             "buildingRecord.pattern": buildingRecord.items.pattern.val()

@@ -116,6 +116,14 @@ public class OalesServiceImpl implements OalesService {
 	}
 
 	@Override
+	public long amountOales(OalesVO oales) throws FLException {
+
+		Long amount = oalesDao.amountOales(oales.getDecoration().getOrderId());
+
+		return amount;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addOales(OalesVO oalesVO, String userId, int company) throws FLException {
 

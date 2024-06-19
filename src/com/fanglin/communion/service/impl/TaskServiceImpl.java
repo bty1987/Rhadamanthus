@@ -80,9 +80,9 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskVO> queryTaskByRid(RoleVO roleVO) {
+	public List<TaskVO> queryTaskByRid(RoleVO roleVO, Integer company) {
 
-		List<RoleTaskPO> roleTaskPOs = roleTaskDao.queryRoleTask(roleVO.getRid());
+		List<RoleTaskPO> roleTaskPOs = roleTaskDao.queryRoleTask(roleVO.getRid(), company);
 		List<TaskVO> taskVOs = new ArrayList<TaskVO>();
 
 		for (RoleTaskPO roleTaskPO : roleTaskPOs) {
@@ -98,7 +98,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskVO> queryTaskForSelf(String userId) throws FLException {
+	public List<TaskVO> queryTaskForSelf(String userId, Integer company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -116,7 +116,7 @@ public class TaskServiceImpl implements TaskService {
 			rids.add(userRolePO.getRole().getRid());
 		}
 
-		List<RoleTaskPO> roleTaskPOs = roleTaskDao.queryRoleTask(rids);
+		List<RoleTaskPO> roleTaskPOs = roleTaskDao.queryRoleTask(rids, company);
 
 		TaskVO taskVO;
 
@@ -200,7 +200,7 @@ public class TaskServiceImpl implements TaskService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateRoleTask(RoleVO roleVO, TaskVO taskVO, String userId) throws FLException {
+	public int updateRoleTask(RoleVO roleVO, TaskVO taskVO, String userId, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -218,17 +218,17 @@ public class TaskServiceImpl implements TaskService {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		RoleTaskPO roleTaskPO = roleTaskDao.queryRoleTask(roleVO.getRid(), taskVO.getTid());
+		RoleTaskPO roleTaskPO = roleTaskDao.queryRoleTask(roleVO.getRid(), taskVO.getTid(), company);
 
-		if (roleTaskPO == null) roleTaskDao.save(new RoleTaskPO(rolePO.getRid(), new TaskPO(taskVO.getTid()), operator));
+		if (roleTaskPO == null) roleTaskDao.save(new RoleTaskPO(rolePO.getRid(), new TaskPO(taskVO.getTid()), operator, company));
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteRoleTask(RoleVO roleVO, TaskVO taskVO) {
+	public int deleteRoleTask(RoleVO roleVO, TaskVO taskVO, Integer company) throws FLException {
 
-		RoleTaskPO roleTaskPO = roleTaskDao.queryRoleTask(roleVO.getRid(), taskVO.getTid());
+		RoleTaskPO roleTaskPO = roleTaskDao.queryRoleTask(roleVO.getRid(), taskVO.getTid(), company);
 
 		if (roleTaskPO != null) roleTaskDao.delete(roleTaskPO);
 

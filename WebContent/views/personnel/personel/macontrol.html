@@ -1,0 +1,53 @@
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12" id="fl-statement">
+            <div id="list"></div>
+            <div class="action-buttons" style="margin-top: 5px">
+                <a class="btn btn-minier pull-left btn-success" id="addMacontrolBtn"><i class="icon-shopping-cart "></i>创建</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="layerAdd" style="display: none" class="page-content">
+    <div class="row">
+        <form class="form-horizontal">
+        
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label orange" for="name">名称</label>
+                <div class="col-xs-9">
+                    <input type="text" id="mcname" class="v_required "/>
+                </div>
+            </div>
+            <div class="space5"></div>
+        
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label orange" for="IP">IP</label>
+                <div class="col-xs-9">
+                    <input type="text" id="mcip" class="v_required "/>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label orange" for="MAC">MAC</label>
+                <div class="col-xs-9">
+                    <input type="text" id="mcmac" class="v_required"/>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <div class="form-group col-xs-10 col-sm-7" style="text-align: right">
+                    <button type="button" id="saveMacontrolBtn" class="btn btn-success">确定</button>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/personnel/macontrol.js']);
+</script>

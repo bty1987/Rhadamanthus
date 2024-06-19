@@ -101,12 +101,12 @@ $(function() {
             netReceipts = utils.changeThrDecimal(data.fullpay);
             var tr8 = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 13px;"></tr>').appendTo(table);
 
-            var td24 = $('<td style="border: 1px solid;"></td>').text("商品名称").appendTo(tr8);
+            var td24 = $('<td colspan="3" style="border: 1px solid;"></td>').text("商品名称").appendTo(tr8);
             var td25 = $('<td style="border: 1px solid;"></td>').text("规格").appendTo(tr8);
             var td26 = $('<td style="border: 1px solid;"></td>').text("数量").appendTo(tr8);
             var td27 = $('<td style="border: 1px solid;"></td>').text("单价").appendTo(tr8);
             var td28 = $('<td style="border: 1px solid;"></td>').text("总价").appendTo(tr8);
-            var td29 = $('<td colspan="3" style="border: 1px solid;"></td>').text("商品备注").appendTo(tr8);
+            var td29 = $('<td style="border: 1px solid;"></td>').text("商品备注").appendTo(tr8);
             var propertyArr = [];
             $.each(items, function(i, v) {
 
@@ -131,7 +131,7 @@ $(function() {
                 var tr = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>').appendTo(table);
                 $.each(value, function(j, k) {
 
-                    if (j == 5) {
+                    if (j == 0) {
                         $('<td colspan="3" style="border: 1px solid;"></td>').html(k).appendTo(tr);
                     } else {
                         $('<td style="border: 1px solid;"></td>').html(k).appendTo(tr);

@@ -673,8 +673,6 @@ public class SalesPO implements Serializable {
 		if (salesVO.getSupplier() != null) BeanUtil.copyProperties(getSupplier(), salesVO.getSupplier(), Arrays.asList("dept", "duty"));
 		if (salesVO.getFinisher() != null) BeanUtil.copyProperties(getFinisher(), salesVO.getFinisher(), Arrays.asList("dept", "duty"));
 
-		if (salesVO.getSupplier() != null) BeanUtil.copyPropertie(getSupplier(), salesVO.getSupplier(), Arrays.asList("dept", "duty"));
-
 		if (salesVO.getSalesman() != null && salesVO.getSalesman().getDept() != null) BeanUtil.copyProperties(getSalesman().getDept(), salesVO.getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		if (salesVO.getGuider() != null && salesVO.getGuider().getDept() != null) BeanUtil.copyProperties(getGuider().getDept(), salesVO.getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		if (salesVO.getInstorer() != null && salesVO.getInstorer().getDept() != null) BeanUtil.copyProperties(getInstorer().getDept(), salesVO.getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));

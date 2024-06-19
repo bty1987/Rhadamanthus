@@ -69,7 +69,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Override
 	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO) {
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotationVersionVO.getNo());
 
 		BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
 
@@ -125,7 +125,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO) throws FLException {
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotationVersionVO.getNo());
 
 		if (quotationVersionPO == null) {
 			throw new FLException(200022, "报价版本不存在");
@@ -140,7 +140,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationVersionForDefault(QuotationVersionVO quotationVersionVO, int company) throws FLException {
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotationVersionVO.getNo());
 
 		if (quotationVersionPO == null) {
 			throw new FLException(200022, "报价版本不存在");
@@ -161,7 +161,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationVersionForStatus(QuotationVersionVO quotationVersionVO) throws FLException {
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.get(quotationVersionVO.getNo());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(quotationVersionVO.getNo());
 
 		if (quotationVersionPO == null) {
 			throw new FLException(200022, "报价版本不存在");

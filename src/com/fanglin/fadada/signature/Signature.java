@@ -24,23 +24,35 @@ import Decoder.BASE64Decoder;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fadada.sdk.client.FddClientBase;
-import com.fadada.sdk.client.FddClientExtra;
-import com.fadada.sdk.client.authForfadada.ApplyCert;
-import com.fadada.sdk.client.authForfadada.AuthBeforeSign;
-import com.fadada.sdk.client.authForfadada.FindCertInfo;
-import com.fadada.sdk.client.authForfadada.GetCompanyVerifyUrl;
-import com.fadada.sdk.client.authForfadada.GetFileForUUID;
-import com.fadada.sdk.client.authForfadada.GetPersonVerifyUrl;
-import com.fadada.sdk.client.authForfadada.model.AgentInfoINO;
-import com.fadada.sdk.client.authForfadada.model.BankInfoINO;
-import com.fadada.sdk.client.authForfadada.model.CompanyInfoINO;
-import com.fadada.sdk.client.authForfadada.model.LegalInfoINO;
-import com.fadada.sdk.client.request.ExtsignReq;
+import com.fadada.sdk.base.client.FddBaseClient;
+import com.fadada.sdk.base.model.req.AddSignatureParams;
+import com.fadada.sdk.base.model.req.BeforeAuthSignParams;
+import com.fadada.sdk.base.model.req.ContractFillingParams;
+import com.fadada.sdk.base.model.req.DownloadPdfParams;
+import com.fadada.sdk.base.model.req.ExtSignAutoParams;
+import com.fadada.sdk.base.model.req.ExtSignParams;
+import com.fadada.sdk.base.model.req.GenerateContractParams;
+import com.fadada.sdk.base.model.req.RegisterAccountParams;
+import com.fadada.sdk.base.model.req.UploadDocsParams;
+import com.fadada.sdk.base.model.req.UploadTemplateParams;
+import com.fadada.sdk.base.model.req.ViewPdfURLParams;
+import com.fadada.sdk.extra.client.FddExtraClient;
+import com.fadada.sdk.extra.model.req.DefaultSignatureParams;
+import com.fadada.sdk.extra.model.req.QuerySignatureParams;
+import com.fadada.sdk.extra.model.req.RemoveSignatureParams;
+import com.fadada.sdk.verify.client.FddVerifyClient;
+import com.fadada.sdk.verify.model.req.ApplyCertParams;
+import com.fadada.sdk.verify.model.req.CompanyVerifyUrlParams;
+import com.fadada.sdk.verify.model.req.CompanyVerifyUrlParams.BankInfo;
+import com.fadada.sdk.verify.model.req.CompanyVerifyUrlParams.CompanyInfo;
+import com.fadada.sdk.verify.model.req.CompanyVerifyUrlParams.LegalInfo;
+import com.fadada.sdk.verify.model.req.FileForUUIDParams;
+import com.fadada.sdk.verify.model.req.FindCompanyCertParams;
+import com.fadada.sdk.verify.model.req.FindPersonCertParams;
+import com.fadada.sdk.verify.model.req.PersonVerifyUrlParams;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.fadada.bean.Contract;
-import com.fanglin.fadada.service.ExtendService;
 import com.fanglin.fadada.tools.FddEncryptTool;
 import com.fanglin.fadada.vo.SignatureVO;
 import com.fanglin.utils.SystemConfig;
@@ -82,11 +94,13 @@ public class Signature {
 
 	public static List<SignatureVO> query(SignatureVO signatureVO) throws FLException {
 
-		String customerId = signatureVO.getCustomerId();
+		FddExtraClient client = new FddExtraClient(APPID, APPSECRET, VERSION, HOST);
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		QuerySignatureParams params = new QuerySignatureParams();
 
-		String result = ExtendService.invokequerySignature(base, customerId);
+		params.setCustomerId(signatureVO.getCustomerId());
+
+		String result = client.invokeQuerySignature(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -108,7 +122,7 @@ public class Signature {
 
 			signatureVO = new SignatureVO().jtv(signature);
 
-			signatureVO.setCustomerId(customerId);
+			signatureVO.setCustomerId(signatureVO.getCustomerId());
 
 			signatures.add(signatureVO);
 		}
@@ -118,24 +132,32 @@ public class Signature {
 
 	public static SignatureVO add(SignatureVO signatureVO) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String customerId = signatureVO.getCustomerId();
-		String path = signatureVO.getPath();
+		AddSignatureParams params = new AddSignatureParams();
+
+		params.setCustomerId(signatureVO.getCustomerId()); // 客户编号
 
 		String image = null;
 
 		try {
-			image = FddEncryptTool.ImageToBase64(path);
+
+			image = FddEncryptTool.ImageToBase64(signatureVO.getPath());
+
+			// 下面章图片base64、签章图片、图片公网地址三选一
+
+			// params.setSignatureImgBase64(FddEncryptTool.ImageToBase64(signatureVO.getPath())); // 签章图片base64
+			// params.setFile(new File(signatureVO.getPath())); // 签章图片
+			params.setImgUrl(signatureVO.getPath()); // 签章图片公网地址
 		} catch (Exception e) {
 
-			System.out.println(path);
+			System.out.println(signatureVO.getPath());
 			System.out.println(e.getMessage());
 
 			throw new FLException(130074, "图片获取失败");
 		}
 
-		String result = ExtendService.invokeaddSignature(base, customerId, image);
+		String result = client.invokeAddSignature(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -157,9 +179,14 @@ public class Signature {
 
 	public static void defaults(SignatureVO signatureVO) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddExtraClient client = new FddExtraClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = ExtendService.invokedefaultSignature(base, signatureVO.getCustomerId(), signatureVO.getSignatureId());
+		DefaultSignatureParams params = new DefaultSignatureParams();
+
+		params.setCustomerId(signatureVO.getCustomerId());
+		params.setSignatureId(signatureVO.getSignatureId());
+
+		String result = client.invokeDefaultSignature(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -175,9 +202,14 @@ public class Signature {
 
 	public static void delete(SignatureVO signatureVO) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddExtraClient client = new FddExtraClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = ExtendService.invokedeleteSignature(base, signatureVO.getCustomerId(), signatureVO.getSignatureId());
+		RemoveSignatureParams params = new RemoveSignatureParams();
+
+		params.setCustomerId(signatureVO.getCustomerId());
+		params.setSignatureId(signatureVO.getSignatureId());
+
+		String result = client.invokeRemoveSignature(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -193,9 +225,14 @@ public class Signature {
 
 	public static void register(SignetPO signetPO) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeregisterAccount(signetPO.getNo(), "2"); // 注册类型 , 1: 个人 , 2: 公司
+		RegisterAccountParams params = new RegisterAccountParams();
+
+		params.setAccountType("2"); // 账号类型 , 1: 个人 , 2: 企业
+		params.setOpenId(signetPO.getNo()); // 平台方自定义唯一标识
+
+		String result = client.invokeRegisterAccount(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -205,7 +242,7 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		signetPO.setSignno(response.getString("data"));
@@ -213,29 +250,38 @@ public class Signature {
 
 	public static String authenticate(SignetPO signetPO) throws FLException {
 
-		GetCompanyVerifyUrl comverify = new GetCompanyVerifyUrl(APPID, APPSECRET, VERSION, HOST);
+		FddVerifyClient client = new FddVerifyClient(APPID, APPSECRET, VERSION, HOST);
 
-		String verifyed_way = "0"; // 认证套餐类型 , 0: 对公打款+纸质审核
-		String m_verified_way = "0";// 实名认证套餐类型 , 0: 三要素 , 1: 四要素
-		String page_modify = "1"; // 认证内容是否可修改 , 1: 允许
-		String company_principal_type = "1";// 1.法人，2代理人
-		String result_type = "1"; // 认证跳转方式 , 1: 直接跳转 , 2: 确认后跳转
-		String cert_flag = "1"; // 自动申请证书 , 0: 不申请 , 1: 自动申请
+		CompanyVerifyUrlParams params = new CompanyVerifyUrlParams();
 
-		String signno = signetPO.getSignno();
+		params.setCustomerId(signetPO.getSignno());
+		params.setPageModify("1"); // 1允许 2不允许 默认为1
 
-		CompanyInfoINO companyInfo = new CompanyInfoINO();
-		companyInfo.setCompany_name(signetPO.getName());
-		companyInfo.setCredit_no("");
-		companyInfo.setCredit_image_path("");
+		params.setVerifiedWay("0"); // 实名认证套餐类型： 0：标准方案（对公打款+纸质审核+法人身份+法人授权）；1：对公打款；2：纸质审核；3：法人身份（授权）认证
+		params.setMVerifiedWay("0"); // 管理员认证套餐类型： 0：三要素标准方案； 1：三要素补充方案； 2：四要素标准方案； 3：四要素补充方案； 4：纯三要素方案； 5：纯四要素方案；
 
-		BankInfoINO bankInfo = new BankInfoINO();
+		params.setCertFlag("1"); // 自动申请证书 , 0: 不申请 , 1: 自动申请
+		params.setReturnUrl(RETURN_URL_STR);
+		params.setNotifyUrl(NOTIFY_URL_STR);
 
-		LegalInfoINO legalInfo = new LegalInfoINO();
+		CompanyInfo companyInfo = new CompanyInfo();
 
-		AgentInfoINO agentInfo = new AgentInfoINO();
+		companyInfo.setCompanyName(signetPO.getName());
+		companyInfo.setCreditNo("");
+		companyInfo.setCreditImagePath("");
 
-		String result = comverify.invokeCompanyVerifyUrl(companyInfo, bankInfo, legalInfo, agentInfo, signno, verifyed_way, m_verified_way, page_modify, company_principal_type, RETURN_URL_STR, NOTIFY_URL_STR, result_type, cert_flag, null, null, null, null, null);
+		params.setCompanyInfo(companyInfo);
+		params.setCompanyPrincipalType("1");
+
+		LegalInfo legalInfo = new LegalInfo();
+
+		params.setLegalInfo(legalInfo);
+
+		BankInfo bankInfo = new BankInfo();
+
+		params.setBankInfo(bankInfo);
+
+		String result = client.invokeCompanyVerifyUrl(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -245,7 +291,7 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130059, String.format("公司认证失败,%s", response.getString("msg")));
+			throw new FLException(130059, response.getString("msg"));
 		}
 
 		JSONObject data = response.getJSONObject("data");
@@ -260,9 +306,13 @@ public class Signature {
 
 	public static void company(SignetPO signetPO) throws FLException {
 
-		FindCertInfo personCertInfo = new FindCertInfo(APPID, APPSECRET, VERSION, HOST);
+		FddVerifyClient client = new FddVerifyClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = personCertInfo.invokeFindPersonCert(signetPO.getToken(), "2");
+		FindCompanyCertParams params = new FindCompanyCertParams();
+
+		params.setVerifiedSerialNo(signetPO.getToken());// 此处填获取企业实名认证地址返回的交易号
+
+		String result = client.invokeFindCompanyCert(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -272,7 +322,7 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130059, String.format("公司认证失败,%s", response.getString("msg")));
+			throw new FLException(130059, response.getString("msg"));
 		}
 
 		JSONObject data = response.getJSONObject("data");
@@ -286,22 +336,32 @@ public class Signature {
 
 	public static String beforeauto(SignetPO signetPO) throws FLException {
 
-		AuthBeforeSign authBeforeSign = new AuthBeforeSign(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String transactionId = String.format(signetPO.getToken());
-		String contractId = String.format("%s%s", signetPO.getNo(), signetPO.getSid());
-		String customerId = signetPO.getSignno();
+		BeforeAuthSignParams params = new BeforeAuthSignParams();
 
-		String authType = "1";
+		params.setAuthType("1");// 1:授权自动签（目前只能填1）
 
-		return authBeforeSign.invokeAuthBeforeSign(transactionId, authType, contractId, customerId, RETURN_URL_STR, NOTIFY_URL_STR);
+		params.setTransactionId(signetPO.getToken()); // 平台自定义唯一交易号
+		params.setContractId(String.format("%s%s", signetPO.getNo(), signetPO.getSid())); // 指该份线上授权委托书的合同编号，自定义即可
+		params.setCustomerId(signetPO.getSignno()); // 传入注册返回的个人或企业客户编号
+
+		params.setReturnUrl(RETURN_URL_STR);// 同步通知签署结果地址
+		params.setNotifyUrl(NOTIFY_URL_STR);// 异步通知签署结果地址
+
+		return client.invokeBeforeAuthSign(params);
 	}
 
 	public static String register(String no) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeregisterAccount(no, "1"); // 注册类型 , 1: 个人 , 2: 公司
+		RegisterAccountParams params = new RegisterAccountParams();
+
+		params.setAccountType("1"); // 注册类型 , 1: 个人 , 2: 公司
+		params.setOpenId(no); // 平台方自定义唯一标识
+
+		String result = client.invokeRegisterAccount(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -311,24 +371,44 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		return response.getString("data");
 	}
 
-	public static JSONObject authenticate(String signno, String name, String phone, String identity) throws FLException {
+	public static JSONObject authenticate(String signno, String name, String phone, String identity, short type) throws FLException {
 
-		GetPersonVerifyUrl personverify = new GetPersonVerifyUrl(APPID, APPSECRET, VERSION, HOST);
+		FddVerifyClient client = new FddVerifyClient(APPID, APPSECRET, VERSION, HOST);
 
-		String verifyed_way = "0"; // 认证套餐类型 , 0: 三要素标准方案
-		String page_modify = "1"; // 认证内容是否可修改 , 1: 允许
-		String customer_ident_type = "0"; // 证件类型 , 0: 身份证 , 1: 其他
-		String ident_front_path = "";
-		String result_type = "1"; // 认证跳转方式 , 1: 直接跳转 , 2: 确认后跳转
-		String cert_flag = "1"; // 自动申请证书 , 0: 不申请 , 1: 自动申请
+		PersonVerifyUrlParams params = new PersonVerifyUrlParams();
 
-		String result = personverify.invokePersonVerifyUrl(signno, verifyed_way, page_modify, NOTIFY_URL_STR, RETURN_URL_STR, name, customer_ident_type, identity, phone, ident_front_path, result_type, cert_flag, null, null, null, null, null);
+		params.setCustomerId(signno); // 客户编号
+		params.setVerifiedWay("0"); // 实名认证套餐类型 , 0: 三要素标准方案
+		params.setPageModify("1"); // 是否允许用户页面修改, 1: 允许 , 2: 不允许
+
+		params.setNotifyUrl(NOTIFY_URL_STR); // 异步回调地址
+		params.setReturnUrl(RETURN_URL_STR); // 同步通知url
+		params.setResultType("1"); // 认证跳转方式 , 1: 直接跳转 , 2: 确认后跳转
+		params.setCertFlag("1"); // 自动申请证书 , 0: 不申请 , 1: 自动申请
+		params.setCertType("0"); // 证件类型 , 0: 身份证 , 1: 护照 , B: 港澳 , C: 台湾
+
+		params.setCustomerName(name); // 姓名
+		params.setMobile(phone); // 手机号码
+		params.setCustomerIdentType("0"); // 证件类型
+		params.setCustomerIdentNo(identity); // 证件号码
+
+		if (type == 0) {
+			params.setCustomerIdentType("0");
+			params.setCertType("0");
+		}
+
+		if (type == 1) {
+			params.setCustomerIdentType("1");
+			params.setCertType("1");
+		}
+
+		String result = client.invokePersonVerifyUrl(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -338,7 +418,7 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		JSONObject data = response.getJSONObject("data");
@@ -348,9 +428,13 @@ public class Signature {
 
 	public static JSONObject person(String token) throws FLException {
 
-		FindCertInfo personCertInfo = new FindCertInfo(APPID, APPSECRET, VERSION, HOST);
+		FddVerifyClient client = new FddVerifyClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = personCertInfo.invokeFindPersonCert(token, "1");
+		FindPersonCertParams params = new FindPersonCertParams();
+
+		params.setVerifiedSerialNo(token); // 此处填获取个人实名认证地址返回的交易号
+
+		String result = client.invokeFindPersonCert(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -360,7 +444,7 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		JSONObject data = response.getJSONObject("data");
@@ -376,9 +460,14 @@ public class Signature {
 
 	public static void certificate(String no, String token) throws FLException {
 
-		ApplyCert applyCert = new ApplyCert(APPID, APPSECRET, VERSION, HOST);
+		FddVerifyClient client = new FddVerifyClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = applyCert.invokeApplyCert(no, token);
+		ApplyCertParams params = new ApplyCertParams();
+
+		params.setCustomerId(no); // 客户编号
+		params.setVerifiedSerialNo(token); // 填写获取实名认证地址返回的交易号ransactionNo
+
+		String result = client.invokeApplyCert(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -388,16 +477,26 @@ public class Signature {
 
 		if (response.getInteger("code") != 1) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 	}
 
 	public static void signature(String signno, String path) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
 		try {
-			String result = base.invokeaddSignature(signno, FddEncryptTool.ImageToBase64(path));
+
+			AddSignatureParams params = new AddSignatureParams();
+
+			params.setCustomerId(signno); // 客户编号
+
+			// 下面章图片base64、签章图片、图片公网地址三选一
+			params.setImgUrl(path); // 签章图片公网地址
+			// params.setFile(new File(path));
+			// params.setSignatureImgBase64(FddEncryptTool.ImageToBase64(path));
+
+			String result = client.invokeAddSignature(params);
 
 			JSONObject response = JSONObject.parseObject(result);
 
@@ -407,7 +506,7 @@ public class Signature {
 
 			if (response.getInteger("code") != 1) {
 				System.out.println(result);
-				throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+				throw new FLException(130027, response.getString("msg"));
 			}
 		} catch (Exception e) {
 
@@ -428,13 +527,25 @@ public class Signature {
 
 	public static void template(String templateId, File file, String url) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
 		if (file != null && !file.exists()) {
 			throw new FLException(-3, "文件上传失败");
 		}
 
-		String result = base.invokeUploadTemplate(templateId, file, url);
+		UploadTemplateParams params = new UploadTemplateParams();
+
+		params.setTemplateId(templateId); // 平台自定义唯一模板编号
+
+		if (file != null) {
+			params.setFile(file);
+		}
+
+		if (url != null) {
+			params.setDocUrl(url); // 文档地址
+		}
+
+		String result = client.invokeUploadTemplate(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -448,16 +559,26 @@ public class Signature {
 		}
 	}
 
-	public static void generate(Contract contract, JSONObject params, JSONArray tables) throws FLException {
+	public static void generate(Contract contract, JSONObject json, JSONArray tables) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String font_size = "";
-		String font_type = "4";
-		String paramter = params.toJSONString();
-		String dynamic_tables = tables == null ? "" : tables.toJSONString();
+		GenerateContractParams params = new GenerateContractParams();
 
-		String result = base.invokeGenerateContract(contract.templateCode(), contract.contentCode(), "", font_size, font_type, paramter, dynamic_tables);
+		params.setTemplateId(contract.templateCode()); // 模板编号
+		params.setContractId(contract.contentCode()); // 合同编号
+
+		// 以下是非必填参数
+		params.setDocTitle(""); // 文档标题
+		params.setFontSize("4"); // 字体大小
+		params.setFontType(""); // 字体类型
+		params.setParameterMap(json.toJSONString()); // 填充内容,json字符串
+		params.setDynamicTables(tables == null ? "" : tables.toJSONString()); // 动态表格
+
+		// 在版本号设置为 2.1 时，实现了对填充内容和动态表单进行3DES加密
+		// baseClient.setVersion("2.1");
+
+		String result = client.invokeGenerateContract(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -467,7 +588,7 @@ public class Signature {
 
 		if (!"1000".equals(response.getString("code"))) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		contract.download(response.getString("download_url"));
@@ -476,9 +597,17 @@ public class Signature {
 
 	public static void upload(Contract contract, String path) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeUploadDocs(contract.contentCode(), "", null, path, ".pdf");
+		UploadDocsParams params = new UploadDocsParams();
+
+		params.setContractId(contract.contentCode());
+		params.setDocTitle("");
+		params.setFile(null);
+		params.setDocUrl(path);
+		params.setDocType(".pdf");
+
+		String result = client.invokeUploadDocs(params);
 
 		System.out.println(result);
 
@@ -490,7 +619,7 @@ public class Signature {
 
 		if (!"1000".equals(response.getString("code"))) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		contract.download(download(contract));
@@ -507,22 +636,26 @@ public class Signature {
 
 	public static void autosign(String signno, String keyword, Contract contract, String signatureId, String keywordStrategy) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient base = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		ExtsignReq req = new ExtsignReq();
+		ExtSignAutoParams params = new ExtSignAutoParams();
 
-		req.setCustomer_id(signno);
-		req.setContract_id(contract.contentCode());
-		req.setTransaction_id(String.format("%s%s", signno, contract.contentCode()));
+		params.setCustomerId(signno);
+		params.setContractId(contract.contentCode());
+		params.setTransactionId(String.format("%s%s", signno, contract.contentCode()));
 
-		req.setDoc_title(contract.title()); // 文档标题
-		req.setSign_keyword(keyword);
+		params.setDocTitle(contract.title()); // 文档标题
+		params.setSignKeyword(keyword);
 
-		req.setClient_role("1"); // 客户角色 , 接入平台
-		req.setPosition_type("0");
-		req.setKeyword_strategy(keywordStrategy); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
+		params.setClientRole("1"); // 客户角色 , 接入平台
+		params.setPositionType("0");
+		params.setKeywordStrategy(keywordStrategy); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
 
-		String result = (signatureId == null || "".equals(signatureId)) ? base.invokeExtSignAuto(req) : base.invokeExtSignAuto(req, signatureId);
+		if (signatureId != null && !"".equals(signatureId)) {
+			params.setSignatureId(signatureId);
+		}
+
+		String result = base.invokeExtSignAuto(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -532,26 +665,31 @@ public class Signature {
 
 		if (!"1000".equals(response.getString("code"))) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 	}
 
 	public static void autosign(String signno, Contract contract, String signatureId, double x, double y) throws FLException {
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		ExtsignReq req = new ExtsignReq();
+		FddBaseClient base = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		req.setCustomer_id(signno);
-		req.setContract_id(contract.contentCode());
-		req.setTransaction_id(String.format("%s%s", signno, contract.contentCode()));
+		ExtSignAutoParams params = new ExtSignAutoParams();
 
-		req.setDoc_title(contract.title()); // 文档标题
+		params.setCustomerId(signno);
+		params.setContractId(contract.contentCode());
+		params.setTransactionId(String.format("%s%s", signno, contract.contentCode()));
 
-		req.setClient_role("1"); // 客户角色 , 接入平台
-		req.setPosition_type("1");
-		req.setSignature_positions(String.format("[{\"pagenum\":\"0\",\"x\":\"%.0f\",\"y\":\"%.0f\"}]", x, y));
+		params.setDocTitle(contract.title()); // 文档标题
 
-		String result = (signatureId == null || "".equals(signatureId)) ? base.invokeExtSignAuto(req) : base.invokeExtSignAuto(req, signatureId);
+		params.setClientRole("1"); // 客户角色 , 接入平台
+		params.setPositionType("1");
+		params.setSignaturePositions(String.format("[{\"pagenum\":\"0\",\"x\":\"%.0f\",\"y\":\"%.0f\"}]", x, y));
+
+		if (signatureId != null && !"".equals(signatureId)) {
+			params.setSignatureId(signatureId);
+		}
+
+		String result = base.invokeExtSignAuto(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -561,45 +699,58 @@ public class Signature {
 
 		if (!"1000".equals(response.getString("code"))) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 	}
 
 	public static String extsign(String signno, Contract contract) {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		ExtsignReq req = new ExtsignReq();
+		ExtSignParams params = new ExtSignParams();
 
-		req.setCustomer_id(signno);
-		req.setContract_id(contract.contentCode());
-		req.setTransaction_id(String.format("%s%s", signno, contract.contentCode()));
+		params.setCustomerId(signno);
+		params.setContractId(contract.contentCode());
+		params.setTransactionId(String.format("%s%s", signno, contract.contentCode()));
+		params.setMobileSignType("2"); // 签章类型 , 0: 全部 , 1: 标准 , 2: 手写
 
-		req.setDoc_title(contract.title()); // 文档标题
-		req.setReturn_url(RETURN_URL_STR);
+		params.setDocTitle(contract.title()); // 文档标题
+		params.setReturnUrl(RETURN_URL_STR);
 
-		return base.invokeExtSign(req);
+		return client.invokeExtSign(params);
 	}
 
 	public static String view(Contract contract) {
 
-		FddClientExtra extra = new FddClientExtra(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		return extra.invokeViewPdfURL(contract.contentCode());
+		ViewPdfURLParams params = new ViewPdfURLParams();
+
+		params.setContractId(contract.contentCode());
+
+		return client.invokeViewPdfURL(params);
 	}
 
 	public static String download(Contract contract) {
 
-		FddClientExtra extra = new FddClientExtra(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		return extra.invokeDownloadPdf(contract.contentCode());
+		DownloadPdfParams params = new DownloadPdfParams();
+
+		params.setContractId(contract.contentCode());
+
+		return client.invokeDownloadPdf(params);
 	}
 
 	public static void filing(Contract contract) throws FLException {
 
-		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+		FddBaseClient client = new FddBaseClient(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeContractFilling(contract.contentCode());
+		ContractFillingParams params = new ContractFillingParams();
+
+		params.setContractId(contract.contentCode());
+
+		String result = client.invokeContractFilling(params);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -609,15 +760,22 @@ public class Signature {
 
 		if ("1000".equals(response.getInteger("code"))) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130027, response.getString("msg"));
 		}
 
 		contract.status(Contract.STATUS_FILING_INT);
 	}
 
 	public static String getFile(String uuid) {
-		GetFileForUUID getFileForUUID = new GetFileForUUID(APPID, APPSECRET, VERSION, HOST);
-		return getFileForUUID.invokeFileForUUID(uuid, "pdf");
+
+		FddVerifyClient client = new FddVerifyClient(APPID, APPSECRET, VERSION, HOST);
+
+		FileForUUIDParams params = new FileForUUIDParams();
+
+		params.setUuid(uuid);// 此处传个人实名认证接口查询中返回的认证图片id，或查询企业认证信息中返回的企业认证申请表id
+		params.setDocType("1");// 0：图片（默认图片）1：pdf (仅支持企业申请表模板)
+
+		return client.invokeFileForUUID(params);
 	}
 
 	@SuppressWarnings("unused")

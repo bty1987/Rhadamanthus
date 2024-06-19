@@ -22,6 +22,8 @@ public interface UserDao extends Dao<UserPO> {
 
 	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid);
 
+	public List<UserPO> pageUserByMid(Paging paging, List<Filter> filters, Integer mid, Integer company);
+
 	public UserPO queryUserByLoginId(String loginId);
 
 	public UserPO queryUserByUserId(String userId);

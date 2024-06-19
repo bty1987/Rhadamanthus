@@ -83,6 +83,9 @@
 						<button class="btn btn-minier btn-danger col-md-4" id="calculateTotalBtn">
 							<i class="icon-calculator"></i>计算总价
 						</button>
+						<button class="btn btn-minier btn-purple col-md-4" id="priceBtn" style="margin-left: 2px;">
+							<i class="icon-pencil"></i>更新价格
+						</button>
 					</div>
 				</div>
 				<div class="col-md-12 space-8"></div>
@@ -341,24 +344,24 @@
 
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="quotationType">类型</label>
-								<div class="col-sm-3">
-									<select class="form-control v_required" id="quotationType" data-toggle="popover" data-trigger='manual'></select>
+								<div class="col-sm-9">
+									<select class="col-xs-10 col-sm-5 v_required" id="quotationType" data-toggle="popover" data-trigger='manual'></select>
 								</div>
 							</div>
 							<div class="space-4"></div>
 
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
-								<div class="col-sm-3">
-									<select class="form-control v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
+								<div class="col-sm-9">
+									<select class="col-xs-10 col-sm-5 v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
 								</div>
 							</div>
 							<div class="space-4"></div>
 
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
-								<div class="col-sm-3">
-									<select class="form-control v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
+								<div class="col-sm-9">
+									<select class="col-xs-10 col-sm-5 v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
 								</div>
 							</div>
 							<div class="space-4"></div>
@@ -589,6 +592,37 @@
 						<button type="button" id="cApproveCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						<button type="button" id="cApproveSaveBtn" class="btn btn-primary">修改申请</button>
 					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="updatePriceModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title" id="updatePriceDialog">更新价格</h4>
+					</div>
+
+					<div class="modal-body">
+						<div class="container">
+							<div class="text-center">
+								<div class=" col-md-12">
+									<button class="btn btn-xs btn-primary" id="keepPriceTime" style="padding: 3px 50px;">按保价时间更新价格</button>
+								</div>
+								<div class=" col-md-12">
+									<button class="btn btn-xs btn-info" id="currentTime" style="padding: 3px 50px; margin-top: 15px;">按当前时间更新价格</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+
 				</div>
 			</div>
 		</div>

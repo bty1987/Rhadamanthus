@@ -9,9 +9,9 @@ public interface QuotetionService {
 
 	public List<QuotetionVO> queryQuotetion(String userId);
 
-	public QuotetionVO queryQuotetionByQid(QuotetionVO quotetionVO);
+	public QuotetionVO queryQuotetionByQid(QuotetionVO quotetionVO) throws FLException;
 
-	public QuotetionVO queryQuotetionByNo(QuotetionVO quotetionVO);
+	public QuotetionVO queryQuotetionByNo(QuotetionVO quotetionVO) throws FLException;
 
 	public int addQuotetion(QuotetionVO quotetionVO, String userId, int company) throws FLException;
 

@@ -2,14 +2,21 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.QuotationVersionPO;
+import com.fanglin.quotation.vo.QuotetionVO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.UUIDUtil;
 
@@ -19,17 +26,27 @@ public class QuotetionPO implements Serializable {
 
 	private static final long serialVersionUID = -7574124519130135638L;
 
+	public static final short KEEPRICE_LATEST_INT = 0;// 最新
+
+	public static final short KEEPRICE_TIMEKEEP_INT = 1;// 保时
+
+	public static final short KEEPRICE_PRICEKEEP_INT = 2;// 保价
+
+	public static final short KEEPRICE_ALLKEEP_INT = 3;// 保时/保价
+
 	private long qid;
 
 	private String no;
 
 	private String name;
 
-	private String version;
+	private QuotationVersionPO version;
 
 	private long cuid;
 
 	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	private int discount;
 
@@ -103,12 +120,13 @@ public class QuotetionPO implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "version")
-	public String getVersion() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "qvid", referencedColumnName = "qvId")
+	public QuotationVersionPO getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(QuotationVersionPO version) {
 		this.version = version;
 	}
 
@@ -128,6 +146,15 @@ public class QuotetionPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "updateTime")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	@Column(name = "undisPrice")
@@ -283,18 +310,33 @@ public class QuotetionPO implements Serializable {
 		this.unachePrice = unachePrice;
 	}
 
-	public void ptp(String name, String version, long cuid) {
+	public void ptp(QuotationVersionPO version, String name, long cuid, Timestamp updateTime) {
+
+		this.setVersion(version);
 
 		this.setName(name);
-		this.setVersion(version);
 		this.setNo(UUIDUtil.getUuid().substring(0, 15));
-		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		this.setCuid(cuid);
+
+		this.setBasePrice(0);
 		this.setDiscount(10000);
 		this.setTotalPrice(0);
-		this.setContent("");
-		this.setBasePrice(0);
 
+		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		this.setUpdateTime(updateTime);
+
+		this.setContent("");
+
+	}
+
+	public QuotetionVO ptv(QuotetionVO quotetionVO) {
+
+		BeanUtil.copyProperties(this, quotetionVO, Arrays.asList("version"));
+
+		if (quotetionVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), quotetionVO.getVersion());
+
+		return quotetionVO;
 	}
 
 }

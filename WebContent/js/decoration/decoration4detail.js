@@ -286,11 +286,6 @@ jQuery(function($) {
         com.cleanItems(decorationDetail.decorationActivityItems);
     });
 
-    com.focusPage("#notSalesmanRateComment").unbind().click(function() {
-
-        com.showTip($(this), "支持提点(0-1)比例以及提成(大于1)金额");
-    });
-
     decorationDetail.activity.activity = com.focusPage("#activity");
     decorationDetail.activity.things = com.focusPage("#things");
     decorationDetail.activity.coupons = com.focusPage("#coupons");
@@ -717,6 +712,18 @@ jQuery(function($) {
         refreshCustomerInformation(decorationDetail.customer.cid, 1);
 
         decorationDetail.customerChangeModal.modal("show");
+    });
+
+    com.focusPage('#typeChangeBtn').on("click", function() {
+
+        com.clearValidator();
+        updateBaseDecorationInfo(com.focusPage("#typeChangeBtn"), "typeness");
+    });
+
+    com.focusPage('#notSalesmanRateChangeBtn').on("click", function() {
+
+        com.clearValidator();
+        updateBaseDecorationInfo(com.focusPage("#notSalesmanRateChangeBtn"), "notSalesmanRate");
     });
 
     com.focusPage("#cSaveBtn").on("click", function() {
@@ -1233,6 +1240,8 @@ jQuery(function($) {
 
         if ([0, 1, 4].indexOf(decoration.status) == -1) {
             decorationDetail.items.orderType.prop("disabled", true);
+            com.focusPage("#typeChangeBtn").hide();
+
         }
 
         if ([2, 3, 4, 6, 7].indexOf(decoration.status) == -1) {
@@ -1328,43 +1337,28 @@ jQuery(function($) {
         }
 
         var btn = com.focusPage("#btnSaveBasedecorationInfo");
-        var prompt;
+
         btn.button('loading');
 
         com.showConfirm("确定要保存基本信息吗?", function() {
 
-            if (decorationDetail.items.notSalesmanRate.val() > 0 && decorationDetail.items.notSalesmanRate.val() < 1) {
-                prompt = "确认非业务人员提点方式";
-            } else {
-                prompt = "确认非业务人员提成方式";
-            }
+            var options = {
+                "decoration.orderId": decorationDetail.orderId,
+                "decoration.houseType": decorationDetail.items.houseType.val(),
+                "decoration.houseClass": decorationDetail.items.houseClass.val(),
+                "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
+                "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
+                "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
+                "decoration.busitype": decorationDetail.items.busitype.val(),
+                "decoration.house.buildArea": decorationDetail.items.houseArea.val(),
+                "decoration.house.innerArea": decorationDetail.items.innerArea.val(),
+                "decoration.quoter.userId": com.typeahead("quoterId"),
+                "decoration.escorter.userId": com.typeahead("escorterId"),
+            };
 
-            com.showConfirm(prompt, function() {
+            com.post(api.decoration.changeDecorationForAdvance, options, function() {
 
-                var options = {
-                    "decoration.orderId": decorationDetail.orderId,
-                    "decoration.type": decorationDetail.type[decorationDetail.items.orderType.val()],
-                    "decoration.typeness": decorationDetail.items.orderType.val(),
-                    "decoration.houseType": decorationDetail.items.houseType.val(),
-                    "decoration.houseClass": decorationDetail.items.houseClass.val(),
-                    "decoration.notSalesmanRate": decorationDetail.items.notSalesmanRate.val(),
-                    "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
-                    "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
-                    "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
-                    "decoration.busitype": decorationDetail.items.busitype.val(),
-                    "decoration.house.buildArea": decorationDetail.items.houseArea.val(),
-                    "decoration.house.innerArea": decorationDetail.items.innerArea.val(),
-                    "decoration.quoter.userId": com.typeahead("quoterId"),
-                    "decoration.escorter.userId": com.typeahead("escorterId"),
-                };
-
-                com.post(api.decoration.changeDecorationForAdvance, options, function() {
-
-                    com.showAlert(com.info, "操作成功");
-                    btn.button('reset');
-                });
-            }, function() {
-
+                com.showAlert(com.info, "操作成功");
                 btn.button('reset');
             });
 
@@ -1372,6 +1366,51 @@ jQuery(function($) {
 
             btn.button('reset');
         });
+    }
+
+    function updateBaseDecorationInfo(btn, type) {
+
+        if (com.validate("step0")) {
+            return;
+        }
+
+        var prompt;
+
+        var options = {
+            "decoration.orderId": decorationDetail.orderId
+        };
+
+        if (type == "typeness") {
+            prompt = "确认更新订单类型";
+
+            options["decoration.type"] = decorationDetail.type[decorationDetail.items.orderType.val()];
+            options["decoration.typeness"] = decorationDetail.items.orderType.val();
+        }
+
+        if (type == "notSalesmanRate") {
+
+            options["decoration.notSalesmanRate"] = decorationDetail.items.notSalesmanRate.val();
+
+            if (decorationDetail.items.notSalesmanRate.val() > 0 && decorationDetail.items.notSalesmanRate.val() < 1) {
+                prompt = "确认非业务人员提点方式";
+
+            } else {
+                prompt = "确认非业务人员提成方式";
+            }
+        }
+
+        com.showConfirm(prompt, function() {
+
+            com.post(api.decoration.updateDecorationForAdvance, options, function() {
+
+                com.showAlert(com.info, "操作成功");
+                btn.button('reset');
+            });
+        }, function() {
+
+            btn.button('reset');
+        });
+
     }
 
     function initWizard(decorationDetail) {

@@ -62,12 +62,20 @@ public class FunctionAreaItemAction extends BaseListAction {
 
 	@Action(value = "updateFunctionAreaItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateFunctionAreaItem() throws FLException {
-		
+
 		functionAreaItemService.updateFunctionAreaItem(functionAreaItem);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "updateFunctionAreaItemForSort", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateFunctionAreaItemForSort() throws FLException {
+
+		functionAreaItemService.updateFunctionAreaItemForSort(functionAreaItems);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteFunctionAreaItemByIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteFunctionAreaItemByIds() {
 

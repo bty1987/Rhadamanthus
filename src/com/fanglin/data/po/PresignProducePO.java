@@ -1,12 +1,17 @@
 package com.fanglin.data.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.data.quotation.vo.PresignProduceVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "presignproduce", catalog = "quotation")
@@ -17,6 +22,8 @@ public class PresignProducePO implements Serializable {
 	public static final short STATUS_INIT_INT = 0;
 
 	private long ppid;
+
+	private QuotationVersionPO version;
 
 	private String name;
 
@@ -63,6 +70,16 @@ public class PresignProducePO implements Serializable {
 
 	public void setPpid(long ppid) {
 		this.ppid = ppid;
+	}
+
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "qvid", referencedColumnName = "qvId")
+	public QuotationVersionPO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionPO version) {
+		this.version = version;
 	}
 
 	@Column(name = "name")
@@ -207,5 +224,14 @@ public class PresignProducePO implements Serializable {
 
 	public void setManageFormula(String manageFormula) {
 		this.manageFormula = manageFormula;
+	}
+
+	public PresignProduceVO ptv(PresignProduceVO presignProduceVO) {
+
+		BeanUtil.copyPropertie(this, presignProduceVO, Arrays.asList("version"));
+
+		if (presignProduceVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), presignProduceVO.getVersion());
+
+		return presignProduceVO;
 	}
 }

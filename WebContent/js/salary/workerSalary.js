@@ -429,7 +429,7 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "decoration.orderId"], ['楼盘地址', "decoration.house"], ["等级", "decoration.grade"], ['监理编号', 'decoration.supervisorId'], ['监理', 'decoration.supervisor'], ["工费Id", "wsid"], ["工人姓名", "user.userName"], ["工人工号", "user.userId"], ["工种", "user.duty.name"], ["创建人", "creater.userName"], ["创建时间", "createTime"], ["审批人", 'approver.userName'], ["审批时间", "approveTime"], ["质检时间", "checkTime"], ['操作金额', 'money'], ['工费', 'salary'], ['质保金', 'deposit'], ['施工节点', 'schedule'], ['工种', 'user.duty.name'], ['类型', 'type'], ['一类', 'onetype'], ['二类', 'twotype'], ['计数', 'count'], ['备注', 'comment'], ['状态', "status"]],
+                column: [["装修单号", "decoration.orderId"], ['楼盘地址', "decoration.address"], ['总面积', "decoration.house.totalArea"], ["等级", "decoration.grade"], ['监理编号', 'decoration.supervisorId'], ['监理', 'decoration.supervisor'], ["工费Id", "wsid"], ["工人姓名", "user.userName"], ["工人工号", "user.userId"], ["工种", "user.duty.name"], ["创建人", "creater.userName"], ["创建时间", "createTime"], ["审批人", 'approver.userName'], ["审批时间", "approveTime"], ["质检时间", "checkTime"], ['操作金额', 'money'], ['工费', 'salary'], ['质保金', 'deposit'], ['施工节点', 'schedule'], ['工种', 'user.duty.name'], ['类型', 'type'], ['一类', 'onetype'], ['二类', 'twotype'], ['计数', 'count'], ['备注', 'comment'], ['状态', "status"]],
                 list: res.paging.data
 
             }, function(v) {
@@ -441,7 +441,7 @@ jQuery(function($) {
                 v.decoration.supervisor = (v.decoration.supervisor == null ? "" : v.decoration.supervisor.userName);
                 v.decoration.orderId = (v.decoration.orderId == null ? "" : v.decoration.orderId);
 
-                v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
+                v.decoration.address = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
 
                 v.status = salary.salaryStatus[v.status];
                 v.schedule = v.schedule == 0 ? "" : constant.decoration().decoration.projectStatus.keys[v.cnid];

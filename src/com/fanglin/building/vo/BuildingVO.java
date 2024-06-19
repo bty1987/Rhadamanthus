@@ -16,13 +16,13 @@ public class BuildingVO implements Serializable {
 
 	private String no;
 
-	private HouseSourceVO houseSource;
+	private BuildingHouseVO buildingHouse;
 
-	private CustomerSourceVO customerSource;
+	private BuildingCustomerVO buildingCustomer;
 
-	private CustomerVO houseSourceAgent;
+	private CustomerVO buildingHouseAgent;
 
-	private CustomerVO customerSourceAgent;
+	private CustomerVO buildingCustomerAgent;
 
 	private UserBaseVO creater;
 
@@ -48,12 +48,14 @@ public class BuildingVO implements Serializable {
 		super();
 	}
 
-	public BuildingVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, CustomerVO houseSourceAgent, CustomerVO customerSourceAgent, UserBaseVO creater, BuildingNodeVO buildingNode) {
+	public BuildingVO(BuildingHouseVO buildingHouse, BuildingCustomerVO buildingCustomer, CustomerVO buildingHouseAgent, CustomerVO buildingCustomerAgent, UserBaseVO creater, BuildingNodeVO buildingNode) {
+
 		super();
-		this.houseSource = houseSource;
-		this.customerSource = customerSource;
-		this.houseSourceAgent = houseSourceAgent;
-		this.customerSourceAgent = customerSourceAgent;
+
+		this.buildingHouse = buildingHouse;
+		this.buildingCustomer = buildingCustomer;
+		this.buildingHouseAgent = buildingHouseAgent;
+		this.buildingCustomerAgent = buildingCustomerAgent;
 		this.creater = creater;
 		this.buildingNode = buildingNode;
 	}
@@ -74,36 +76,36 @@ public class BuildingVO implements Serializable {
 		this.no = no;
 	}
 
-	public HouseSourceVO getHouseSource() {
-		return houseSource;
+	public BuildingHouseVO getBuildingHouse() {
+		return buildingHouse;
 	}
 
-	public void setHouseSource(HouseSourceVO houseSource) {
-		this.houseSource = houseSource;
+	public void setBuildingHouse(BuildingHouseVO buildingHouse) {
+		this.buildingHouse = buildingHouse;
 	}
 
-	public CustomerSourceVO getCustomerSource() {
-		return customerSource;
+	public BuildingCustomerVO getBuildingCustomer() {
+		return buildingCustomer;
 	}
 
-	public void setCustomerSource(CustomerSourceVO customerSource) {
-		this.customerSource = customerSource;
+	public void setBuildingCustomer(BuildingCustomerVO buildingCustomer) {
+		this.buildingCustomer = buildingCustomer;
 	}
 
-	public CustomerVO getHouseSourceAgent() {
-		return houseSourceAgent;
+	public CustomerVO getBuildingHouseAgent() {
+		return buildingHouseAgent;
 	}
 
-	public void setHouseSourceAgent(CustomerVO houseSourceAgent) {
-		this.houseSourceAgent = houseSourceAgent;
+	public void setBuildingHouseAgent(CustomerVO buildingHouseAgent) {
+		this.buildingHouseAgent = buildingHouseAgent;
 	}
 
-	public CustomerVO getCustomerSourceAgent() {
-		return customerSourceAgent;
+	public CustomerVO getBuildingCustomerAgent() {
+		return buildingCustomerAgent;
 	}
 
-	public void setCustomerSourceAgent(CustomerVO customerSourceAgent) {
-		this.customerSourceAgent = customerSourceAgent;
+	public void setBuildingCustomerAgent(CustomerVO buildingCustomerAgent) {
+		this.buildingCustomerAgent = buildingCustomerAgent;
 	}
 
 	public UserBaseVO getCreater() {
