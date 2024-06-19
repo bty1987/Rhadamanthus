@@ -1,18 +1,18 @@
-<div id="customerSource">
+<div id="buildingCustomer">
 	<div class="row">
 		<div class="col-xs-12">
 			<div id="CondList" class="fl_search clearfix"></div>
-			<div id="ResultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-			<div id="Pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+			<div id="ResultList" class="clearfix tab-pane active"></div> <!--鏌ヨ缁撴灉-->
+			<div id="Pagenation" class="fl-page-wrap clearfix"></div> <!--鍒嗛〉-->
 		</div>
 	</div>
 
-	<div class="modal fade" id="customerSourceModal" tabindex="-1">
+	<div class="modal fade" id="buildingCustomerModal" tabindex="-1">
 		<div class="modal-dialog" style="width:60%">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="myModalLabel">客源</h4>
+					<h4 class="modal-title" id="myModalLabel">瀹㈡簮</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -20,21 +20,21 @@
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label for="csType" class="col-sm-3 control-label no-padding-right">客源类型</label>
+										<label for="csType" class="col-sm-3 control-label no-padding-right">瀹㈡簮绫诲瀷</label>
 										<div class="col-sm-9">
 											<select class='col-xs-10 col-sm-6' id='csType' data-toggle="popover" data-trigger='manual'></select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right orange" for="customerName">客户姓名</label>
+										<label class="col-sm-3 control-label no-padding-right orange" for="customerName">瀹㈡埛濮撳悕</label>
 										<div class="col-sm-9">
 											<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+										<label class="col-sm-3 control-label no-padding-right" for="gender">鎬у埆</label>
 										<div class="col-sm-9">
 											<input type="checkbox" class="ace ace-switch ace-switch-5" id="gender"/>
 											<span class="lbl gender"></span>
@@ -42,21 +42,21 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
+										<label class="col-sm-3 control-label no-padding-right orange" for="phone">鑱旂郴鏂瑰紡</label>
 										<div class="col-sm-9">
 											<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="cardType">证件类型</label>
+										<label class="col-sm-3 control-label no-padding-right" for="cardType">璇佷欢绫诲瀷</label>
 										<div class="col-sm-9">
 											<select class="col-xs-10 col-sm-6 v_required" id="cardType"></select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="cardNum">证件号</label>
+										<label class="col-sm-3 control-label no-padding-right" for="cardNum">璇佷欢鍙�/label>
 										<div class="col-sm-9">
 											<input type="text" id="cardNum" maxlength="18" class="col-xs-10 col-sm-6 v_card" data-toggle="popover" data-trigger='manual'/>
 										</div>
@@ -70,21 +70,21 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+										<label class="col-sm-3 control-label no-padding-right" for="wechat">寰俊</label>
 										<div class="col-sm-9">
 											<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+										<label class="col-sm-3 control-label no-padding-right" for="email">閭</label>
 										<div class="col-sm-9">
 											<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+										<label class="col-sm-3 control-label no-padding-right" for="address">閫氳鍦板潃</label>
 										<div class="col-sm-9">
 											<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
 										</div>
@@ -93,28 +93,28 @@
 
 								<div class="col-sm-6">
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+										<label class="col-sm-3 control-label no-padding-right" for="relationshipType">瀹㈡埛绫诲瀷</label>
 										<div class="col-sm-9">
 											<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="purpose" class="col-sm-3 control-label no-padding-right">目的</label>
+										<label for="purpose" class="col-sm-3 control-label no-padding-right">鐩殑</label>
 										<div class="col-sm-9">
 											<input type="text" class="col-xs-10 col-sm-6 v_name" data-toggle="popover" data-trigger='manual' maxlength="256" id="purpose">
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="intention" class="col-sm-3 control-label no-padding-right">意向</label>
+										<label for="intention" class="col-sm-3 control-label no-padding-right">鎰忓悜</label>
 										<div class="col-sm-9">
 											<input type="text" class="col-xs-10 col-sm-6 v_name" data-toggle="popover" data-trigger='manual' maxlength="256" id="intention">
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right ">需求价格</label>
+										<label class="col-sm-3 control-label no-padding-right ">闇�眰浠锋牸</label>
 										<div class="col-sm-9">
 											<input type="text" class="v_required v_float" style="width:60px" data-toggle="popover" data-trigger='manual' id="priceLow" />
 											<span> - </span>
@@ -123,7 +123,7 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right ">需求面积</label>
+										<label class="col-sm-3 control-label no-padding-right ">闇�眰闈㈢Н</label>
 										<div class="col-sm-9">
 											<input type="text" class="v_required v_float" style="width:60px" data-toggle="popover" data-trigger='manual' id="areaLow" />
 											<span> - </span>
@@ -132,35 +132,35 @@
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right ">需求户型</label>
+										<label class="col-sm-3 control-label no-padding-right ">闇�眰鎴峰瀷</label>
 										<div class="col-sm-9">
-											<input type="text"class="v_required v_float" style="width:60px"  data-toggle="popover" data-trigger='manual' id="familyType" />  室
+											<input type="text"class="v_required v_float" style="width:60px"  data-toggle="popover" data-trigger='manual' id="familyType" />  瀹�
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="orientation" class="col-sm-3 control-label no-padding-right">朝向</label>
+										<label for="orientation" class="col-sm-3 control-label no-padding-right">鏈濆悜</label>
 										<div class="col-sm-9">
 											<select class='col-xs-10 col-sm-6' id='orientation' data-toggle="popover" data-trigger='manual' ></select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="conditions">意向备注</label>
+										<label class="col-sm-3 control-label no-padding-right" for="conditions">鎰忓悜澶囨敞</label>
 										<div class="col-sm-9">
-											<input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' maxlength="256" id="conditions" placeholder="如:三楼,不把山" />
+											<input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' maxlength="256" id="conditions" placeholder="濡�涓夋ゼ,涓嶆妸灞� />
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="grade" class="col-sm-3 control-label no-padding-right">客户等级</label>
+										<label for="grade" class="col-sm-3 control-label no-padding-right">瀹㈡埛绛夌骇</label>
 										<div class="col-sm-9">
 											<select class='col-xs-10 col-sm-6' id='grade' data-toggle="popover" data-trigger='manual' ></select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="comment" class="col-sm-3 control-label no-padding-right">备注</label>
+										<label for="comment" class="col-sm-3 control-label no-padding-right">澶囨敞</label>
 										<div class="col-sm-9">
 											<textarea class="col-xs-10 col-sm-6 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50" id="comment"></textarea>
 										</div>
@@ -171,8 +171,8 @@
 					</form>
 				</div>
 				<div class="modal-footer" style="text-align: center">
-					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+					<button type="button" id="saveBtn" class="btn btn-primary">淇濆瓨</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" >閲嶇疆</button>
 				</div>
 			</div>
 		</div>
@@ -183,7 +183,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="myModalLabelTwo">房产单</h4>
+					<h4 class="modal-title" id="myModalLabelTwo">鎴夸骇鍗�/h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -191,35 +191,35 @@
 							<div class="col-md-12">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right orange" for="hsNo">房源编号</label>
+										<label class="col-sm-4 control-label no-padding-right orange" for="hsNo">鎴挎簮缂栧彿</label>
 										<div class="col-sm-8">
 											<input type="text" id="hsNo" maxlength="15" class="v_required" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right orange" for="csNo">客源编号</label>
+										<label class="col-sm-4 control-label no-padding-right orange" for="csNo">瀹㈡簮缂栧彿</label>
 										<div class="col-sm-8">
 											<input type="text" id="csNo" maxlength="15" class="v_required" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="hsAUser" class="col-sm-4 control-label no-padding-right">房源代理人</label>
+										<label for="hsAUser" class="col-sm-4 control-label no-padding-right">鎴挎簮浠ｇ悊浜�/label>
 										<div class="col-md-8">
-											<input type="text" class="" id="hsAUser" data-placeholder="房源代理人" data-toggle="popover" />
+											<input type="text" class="" id="hsAUser" data-placeholder="鎴挎簮浠ｇ悊浜� data-toggle="popover" />
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="csAUser" class="col-sm-4 control-label no-padding-right">客源代理人</label>
+										<label for="csAUser" class="col-sm-4 control-label no-padding-right">瀹㈡簮浠ｇ悊浜�/label>
 										<div class="col-md-8">
-											<input type="text" class="" id="csAUser" data-placeholder="客源代理人" data-toggle="popover" />
+											<input type="text" class="" id="csAUser" data-placeholder="瀹㈡簮浠ｇ悊浜� data-toggle="popover" />
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right" for="signingTime">签约时间</label>
+										<label class="col-sm-4 control-label no-padding-right" for="signingTime">绛剧害鏃堕棿</label>
 										<div class="col-sm-8">
 											<div class="input-group no-padding">
 												<input class="form-control date-picker-date v_required" id="signingTime" type="text" data-date-format="yyyy-mm-dd">
@@ -230,21 +230,21 @@
 
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right" for="tradePrice">成交价格</label>
+										<label class="col-sm-4 control-label no-padding-right" for="tradePrice">鎴愪氦浠锋牸</label>
 										<div class="col-sm-8">
 											<input type="text" id="tradePrice" maxlength="18" class="v_required v_float_3" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right" for="downpayment">首付款</label>
+										<label class="col-sm-4 control-label no-padding-right" for="downpayment">棣栦粯娆�/label>
 										<div class="col-sm-8">
 											<input type="text" id="downpayment" maxlength="18" class="v_float_3" data-toggle="popover" data-trigger='manual'/>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label class="col-sm-4 control-label no-padding-right" for="loanPrice">贷款金额</label>
+										<label class="col-sm-4 control-label no-padding-right" for="loanPrice">璐锋閲戦</label>
 										<div class="col-sm-8">
 											<input type="text" id="loanPrice" maxlength="18" class="v_float_3" data-toggle="popover" data-trigger='manual'/>
 										</div>
@@ -252,14 +252,14 @@
 
 
 									<div class="form-group">
-										<label for="payType" class="col-sm-4 control-label no-padding-right">支付方式</label>
+										<label for="payType" class="col-sm-4 control-label no-padding-right">鏀粯鏂瑰紡</label>
 										<div class="col-sm-8">
 											<select class='' id='payType' data-toggle="popover"></select>
 										</div>
 									</div>
 
 									<div class="form-group">
-										<label for="balanceStatus" class="col-sm-4 control-label no-padding-right">结算状态</label>
+										<label for="balanceStatus" class="col-sm-4 control-label no-padding-right">缁撶畻鐘舵�</label>
 										<div class="col-sm-8">
 											<select class='' id='balanceStatus' data-toggle="popover"></select>
 										</div>
@@ -270,7 +270,7 @@
 					</form>
 				</div>
 				<div class="modal-footer" style="text-align: center">
-					<button type="button" id="bsaveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="bsaveBtn" class="btn btn-primary">淇濆瓨</button>
 				</div>
 			</div>
 		</div>

@@ -17,8 +17,8 @@ $.extend(api.index, {
     houseSourceQuery: {
         url: "/views/building/houseSourceQuery.html"
     },
-    customerSource: {
-        url: "/views/building/customerSource.html"
+    buildingCustomer: {
+        url: "/views/building/buildingCustomer.html"
     },
     houseSourceDetail: {
         url: "/views/building/houseSourceDetail.html"
