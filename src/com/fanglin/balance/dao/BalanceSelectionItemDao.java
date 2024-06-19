@@ -11,8 +11,10 @@ public interface BalanceSelectionItemDao extends Dao<BalanceSelectionItemPO> {
 
 	public List<BalanceSelectionItemPO> pageBalanceSelectionItem(Paging paging, List<Filter> filters, long bsid);
 
-	public int countBalanceSelectionItem(long bsid);
-
 	public List<BalanceSelectionItemPO> queryBalanceSelectionItem(long bsid);
+
+	public BalanceSelectionItemPO queryBalanceSelectionItemBySiid(long siid);
+
+	public int countBalanceSelectionItem(long bsid);
 
 }

@@ -1,0 +1,580 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="timeline-items">
+            <div class="timeline-item clearfix">
+                <div class="widget-box transparent" style="margin:0px;border-left:0px ">
+                    <div class="widget-header widget-header-small" style="background-color: white">
+                        <h5 class="smaller" style="font-size: 15px; ">个人基本信息</h5>
+                        <span class="widget-toolbar " style="float:initial ;position: initial">
+                             <a href="#" data-action="collapse">
+                                 <i class="icon-chevron-up"></i>
+                             </a>
+                        </span>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-body-inner"  style="display: block; background-color: white !important;">
+                            <div class="widget-main" >
+                                <form class="form-horizontal">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">姓名</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="userNameCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">现用名</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="currentNameCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">身高</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="3" id="heightCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">体重</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="3" id="weightCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">民族</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="50" id="nationCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">政治面貌</label>
+                                        <div class="col-sm-8">
+                                            <span id="politicalSelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">性别</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="genderCheck"></span>
+                                        </div>
+                                    </div >
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">年龄</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="2" id="ageCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">出生日期</label>
+                                        <div class="col-sm-8">
+                                            <span id="birthdayCheck" type="text"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">身份证号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="21" id="identityCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">手机号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="phoneCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">现住地址</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="128" id="addressCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">户籍地</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="128" id="hometownPlaceCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">紧急联系人</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="emergencyManCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">户籍地址</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="128" id="hometownAddressCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right orange">紧急联系人电话</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="emergencyPhoneCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">户籍类型</label>
+                                        <div class="col-sm-8">
+                                            <span id="householdSelCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">工作年限</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="2" id="jobYearsCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">qq</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="qqCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">微信</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="weChatCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+									<div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">email</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="emailCheck"></span>
+                                        </div>
+                                    </div>                                    
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">方林亲属</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="fanglinerCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">直系亲属</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="clanerCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">应届生</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isPresentGraduateCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">直系亲属公司</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="clanerComCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">毕业时间</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group col-sm-7 col-xs-10 no-padding">
+                                                <span id="graduateTimeCheck" type="text"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">毕业学校</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="schoolCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">学历</label>
+                                        <div class="col-sm-8">
+                                            <span id="educationSelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">专业</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength='32' id="specialtyCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">婚姻状况</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isMarriedCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">生育状况</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isBirthCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">驾照</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isCarIDCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">护照</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isPassIDCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">港澳通行证</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isHMIDCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">台湾通行证</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isTWIDCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">房贷</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isHouseLoanCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6" >
+                                        <label class="col-sm-4 control-label no-padding-right">车贷</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isCarLoanCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">配偶</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="loverCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">爱好</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="50" id="hobbyCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">备注</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="50" id="commentCheck"></span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item clearfix">
+                <div class="widget-box transparent" style="margin:0px ;border-left:0px ">
+                    <div class="widget-header widget-header-small" style="background-color: white !important">
+                        <h5 class="smaller" Style="font-size: 15px; ">入职基本信息</h5>
+                        <span class="widget-toolbar " style="float:initial ;position: initial">
+                             <a href="#" data-action="collapse">
+                                 <i class="icon-chevron-up"></i>
+                             </a>
+                        </span>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-body-inner" style="display: block; background-color: white !important;">
+                            <div class="widget-main">
+                                <form class="form-horizontal">
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">工号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="15" id="userIdCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">原始工号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="15" id="oldUserIdCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">用户名</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="loginIdCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">公司</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="companyCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">部门类型</label>
+                                        <div class="col-sm-8">
+                                            <span id="deptTypeSelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">部门</label>
+                                        <div class="col-sm-8">
+                                            <span id="deptSelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">职位</label>
+                                        <div class="col-sm-8">
+                                            <span id="dutySelCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">职级</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="levelCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">级别</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="rankCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">状态</label>
+                                        <div class="col-sm-8">
+                                            <span id="statusSelCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">岗位类型</label>
+                                        <div class="col-sm-8">
+                                            <span id="formSelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">招聘渠道</label>
+                                        <div class="col-sm-8">
+                                            <span id="employWaySelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">录用类型</label>
+                                        <div class="col-sm-8">
+                                            <span id="employTypeSelCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">推荐人</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="recommendManCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">招聘时间</label>
+                                        <div class="col-sm-8">
+                                            <span id="employTime" type="text"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">入职时间</label>
+                                        <div class="col-sm-8">
+                                            <span id="entryTimeCheck" type="text"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">入司时间</label>
+                                        <div class="col-sm-8">
+                                            <span id="firstTime" type="text"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6 clear-both">
+                                        <label class="col-sm-4 control-label no-padding-right">转正时间</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group col-sm-7 col-xs-10 no-padding">
+                                                <span id="employTimeCheck" type="text"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">签订劳动合同</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkboxCheck" id="isContractCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">是否上保险</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="isInsuranceCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">保险类型</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="insuranceTypeCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">服务年限</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="2" id="serviceYearsCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">试用期限</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="5" id="preformNumCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">试用工资</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="7" id="palaryCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">合同起始日期</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="signTimeCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">首次合同日期</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="fignTimeCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">合同结束日期</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="eignTimeCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">保险起始时间</label>
+                                        <div class="col-sm-8">
+                                             <span type="checkbox" id="insuranceTimeCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">续签合同次数</label>
+                                        <div class="col-sm-8">
+                                            <span type="checkbox" id="signNumCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">养老编号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="pensionNumCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">医疗编号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="medicalNumCheck"></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right">公积金号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="publicNumCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">工资</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" id="salaryCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">开户行</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="10" id="bankCheck"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-sm-6">
+                                        <label class="col-sm-4 control-label no-padding-right orange">银行卡号</label>
+                                        <div class="col-sm-8">
+                                            <span type="text" maxlength="32" id="bankCardNumCheck"></span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/personnel/user4view.js']);
+</script>

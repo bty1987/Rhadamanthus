@@ -96,6 +96,8 @@ public interface DecorationService {
 
 	public void tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException;
 
+	public void updateDecorationForAdvance(DecorationVO decorationVO, String userId) throws FLException;
+
 	public void updateDecorationForPayScale(DecorationVO decorationVO) throws FLException;
 
 	public void updateDecorationForSaleScale(DecorationVO decorationVO) throws FLException;

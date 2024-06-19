@@ -8,8 +8,11 @@ jQuery(function($) {
             download: com.focusPage("#download"),
             viewpdf: com.focusPage("#viewpdf"),
             signet: com.focusPage("#signet"),
-
+            identity: com.focusPage("#identity", "#customerModal"),
+            passport: com.focusPage("#passport", "#customerModal"),
+            passhkm: com.focusPage("#passhkm", "#customerModal"),
             qrcode: null,
+            qrcodeCustomer: com.focusPage("#qrcodeCustomer"),
         },
         btns: {
             saveBtn: com.focusPage('#saveBtn'),
@@ -20,16 +23,23 @@ jQuery(function($) {
             reset: com.focusPage("#reset"),
             signBtn: com.focusPage("#signBtn", "#decorationContractModal"),
             backBtn: com.focusPage("#backBtn"),
+            identityBtn: com.focusPage("#identityBtn", "#customerModal"),
+            passportBtn: com.focusPage("#passportBtn", "#customerModal"),
+            passhkmBtn: com.focusPage("#passhkmBtn", "#customerModal"),
         },
         modals: {
             qrcodeModal: null,
-            decorationContractModal: com.focusPage("#decorationContractModal")
+            decorationContractModal: com.focusPage("#decorationContractModal"),
+            customerModal: com.focusPage("#customerModal"),
         },
 
         decorationInfo: com.focusPage("#decorationInfo"),
         customerInfo: com.focusPage("#customerInfo"),
 
         dcid: null,
+        identity: null,
+        passport: null,
+        passhkm: null,
 
         authFlag: false,
 
@@ -60,6 +70,9 @@ jQuery(function($) {
         var decoration = res.decoration;
         customerItems(decoration);
         decorationContract.authFlag = [1, 2].indexOf(decoration.customer.status) != -1;
+        decorationContract.identity = decoration.customer.identity;
+        decorationContract.passport = decoration.customer.passport;
+        decorationContract.passhkm = decoration.customer.passhkm;
     });
 
     decorationContract.status = constant.decoration().decorationContract.status.keys;
@@ -299,7 +312,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
+            showQRCode(decorationContract.items.qrcode, "http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
         },
         show: function(v) {
 
@@ -310,7 +323,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=2");
+            showQRCode(decorationContract.items.qrcode, "http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=2");
         },
         show: function(v) {
 
@@ -367,7 +380,7 @@ jQuery(function($) {
         clazz: "btn-info",
         handle: function(v) {
 
-            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
+            showQRCode(decorationContract.items.qrcode, "http://www.fanglinserver.com/platform/" + "/views/contract/redirect1.html?dcid=" + v.dcid + "&type=1");
         },
         show: function() {
 
@@ -413,12 +426,71 @@ jQuery(function($) {
     // 认证按钮
     decorationContract.btns.authentication.on("click", function() {
 
+        decorationContract.items.qrcodeCustomer.html("");
+
+        decorationContract.items.identity.val(decorationContract.identity == "" || decorationContract.identity == null ? "暂无" : decorationContract.identity);
+        decorationContract.items.passport.val(decorationContract.passport == "" || decorationContract.passport == null ? "暂无" : decorationContract.passport);
+        decorationContract.items.passhkm.val(decorationContract.passhkm == "" || decorationContract.passhkm == null ? "暂无" : decorationContract.passhkm);
+
+        decorationContract.modals.customerModal.modal("show");
+    });
+
+    // 认证-身份证二维码
+    decorationContract.btns.identityBtn.on("click", function() {
+
+        decorationContract.items.qrcodeCustomer.html("");
+
+        if (decorationContract.identity == "" || decorationContract.identity == null) {
+            com.showAlert(com.warning, "无身份证号信息");
+            return false;
+        }
+
         com.post(api.data.authCustomer, {
-            "customer.cid": params.decoration.cid
+            "customer.cid": params.decoration.cid,
+            "customer.identity": decorationContract.identity
         }, function(res) {
 
-            // com.popup4frame("认证", res.redirect);
-            showQRCode(res.redirect);
+            showQRCode(decorationContract.items.qrcodeCustomer, res.redirect);
+            com.showAlert(com.info, "二维码已生成");
+        });
+    });
+
+    // 认证-护照二维码
+    decorationContract.btns.passportBtn.on("click", function() {
+
+        decorationContract.items.qrcodeCustomer.html("");
+
+        if (decorationContract.passport == "" || decorationContract.passport == null) {
+            com.showAlert(com.warning, "无护照号信息");
+            return false;
+        }
+
+        com.post(api.data.authCustomer, {
+            "customer.cid": params.decoration.cid,
+            "customer.passport": decorationContract.passport
+        }, function(res) {
+
+            showQRCode(decorationContract.items.qrcodeCustomer, res.redirect);
+            com.showAlert(com.info, "二维码已生成");
+        });
+    });
+    // 认证-港澳通行证二维码
+    decorationContract.btns.passhkmBtn.on("click", function() {
+
+        decorationContract.items.qrcodeCustomer.html("");
+
+        if (decorationContract.passhkm == "" || decorationContract.passhkm == null) {
+            com.showAlert(com.warning, "无港澳通行证号信息");
+            return false;
+        }
+
+        com.post(api.data.authCustomer, {
+            "customer.cid": params.decoration.cid,
+            "customer.passhkm": decorationContract.passhkm
+        }, function(res) {
+
+            showQRCode(decorationContract.items.qrcodeCustomer, res.redirect);
+            com.showAlert(com.info, "二维码已生成");
         });
     });
 
@@ -476,16 +548,18 @@ jQuery(function($) {
         });
     }
 
-    function showQRCode(url) {
+    function showQRCode(qrcode, url) {
 
-        decorationContract.items.qrcode.html("").qrcode({
+        qrcode.html("").qrcode({
             render: "canvas",
             width: 150,
             height: 150,
             text: url
         });
+        if (qrcode == decorationContract.items.qrcode) {
 
-        decorationContract.modals.qrcodeModal.modal('show');
+            decorationContract.modals.qrcodeModal.modal('show');
+        }
     }
 
     // 公司签按钮

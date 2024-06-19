@@ -20,6 +20,8 @@ public class CustomerVO implements Serializable {
 
 	private String passport;
 
+	private String passhkm;
+
 	private String qq;
 
 	private String wechat;
@@ -123,6 +125,14 @@ public class CustomerVO implements Serializable {
 
 	public void setPassport(String passport) {
 		this.passport = passport;
+	}
+
+	public String getPasshkm() {
+		return passhkm;
+	}
+
+	public void setPasshkm(String passhkm) {
+		this.passhkm = passhkm;
 	}
 
 	public String getQq() {

@@ -101,7 +101,7 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO) throws FLException {
+	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO, Integer company) throws FLException {
 
 		UserPO userPO = userDao.get(userVO.getUserId());
 
@@ -125,7 +125,7 @@ public class OperationServiceImpl implements OperationService {
 			}
 		} else {
 
-			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid());
+			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(userPO.getRole().getRid(), company);
 
 			for (RoleOperationPO roleOperationPO : roleOperationPOs) {
 				OperationVO _operationVO = new OperationVO();
@@ -140,7 +140,7 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<OperationVO> queryOperationByRid(OperationVO operationVO, RoleVO roleVO) throws FLException {
+	public List<OperationVO> queryOperationByRid(OperationVO operationVO, RoleVO roleVO, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -164,7 +164,7 @@ public class OperationServiceImpl implements OperationService {
 			}
 		} else {
 
-			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid());
+			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperationByRid(rolePO.getRid(), company);
 
 			for (RoleOperationPO roleOperationPO : roleOperationPOs) {
 				OperationVO _operationVO = new OperationVO();
@@ -179,7 +179,7 @@ public class OperationServiceImpl implements OperationService {
 	}
 
 	@Override
-	public List<OperationVO> queryOperationForSelf(String userId) throws FLException {
+	public List<OperationVO> queryOperationForSelf(String userId, Integer company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -211,7 +211,7 @@ public class OperationServiceImpl implements OperationService {
 				rids.add(userRolePO.getRole().getRid());
 			}
 
-			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperation(rids);
+			List<RoleOperationPO> roleOperationPOs = roleOperationDao.queryRoleOperation(rids, company);
 
 			OperationVO operationVO;
 
@@ -304,7 +304,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateRoleOperation(RoleVO roleVO, OperationVO operationVO, String userId) throws FLException {
+	public int updateRoleOperation(RoleVO roleVO, OperationVO operationVO, String userId, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -322,16 +322,16 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(roleVO.getRid(), operationVO.getOid());
+		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(roleVO.getRid(), operationVO.getOid(), company);
 
-		if (roleOperationPO == null) roleOperationDao.save(new RoleOperationPO(new OperationPO(operationVO.getOid()), rolePO.getRid(), operator));
+		if (roleOperationPO == null) roleOperationDao.save(new RoleOperationPO(new OperationPO(operationVO.getOid()), rolePO.getRid(), operator, company));
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateRoleOperationByRid(List<Integer> oids, RoleVO roleVO, String userId) throws FLException {
+	public int updateRoleOperationByRid(List<Integer> oids, RoleVO roleVO, String userId, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -339,7 +339,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid());
+		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid(), company);
 
 		UserPO operator = userDao.queryUserByUserId(userId);
 
@@ -354,7 +354,7 @@ public class OperationServiceImpl implements OperationService {
 		if (oids == null || oids.size() == 0) return 0;
 
 		for (Integer oid : oids) {
-			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), rolePO.getRid(), operator));
+			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), rolePO.getRid(), operator, company));
 		}
 
 		return 0;
@@ -362,7 +362,7 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateRoleOperationByUserId(List<Integer> oids, UserVO userVO, String userId) throws FLException {
+	public int updateRoleOperationByUserId(List<Integer> oids, UserVO userVO, String userId, Integer company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
@@ -370,7 +370,7 @@ public class OperationServiceImpl implements OperationService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		roleOperationDao.deleteRoleOperationByRid(userPO.getRole().getRid());
+		roleOperationDao.deleteRoleOperationByRid(userPO.getRole().getRid(), company);
 
 		if (oids == null || oids.size() == 0) return 0;
 
@@ -385,7 +385,7 @@ public class OperationServiceImpl implements OperationService {
 		}
 
 		for (Integer oid : oids) {
-			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), userPO.getRole().getRid(), operator));
+			roleOperationDao.save(new RoleOperationPO(new OperationPO(oid), userPO.getRole().getRid(), operator, company));
 		}
 
 		return 0;
@@ -393,11 +393,11 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteOperation(OperationVO operationVO) throws FLException {
+	public int deleteOperation(OperationVO operationVO, Integer company) throws FLException {
 
 		int oid = operationVO.getOid();
 
-		if (roleOperationDao.countRoleOperationByOid(oid) > 0) {
+		if (roleOperationDao.countRoleOperationByOid(oid, company) > 0) {
 			throw new FLException(230013, "操作已经被引用,不能被删除");
 		}
 
@@ -408,9 +408,9 @@ public class OperationServiceImpl implements OperationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteRoleOperation(RoleVO roleVO, OperationVO operationVO) {
+	public int deleteRoleOperation(RoleVO roleVO, OperationVO operationVO, Integer company) {
 
-		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(roleVO.getRid(), operationVO.getOid());
+		RoleOperationPO roleOperationPO = roleOperationDao.queryRoleOperation(roleVO.getRid(), operationVO.getOid(), company);
 
 		if (roleOperationPO != null) roleOperationDao.delete(roleOperationPO);
 

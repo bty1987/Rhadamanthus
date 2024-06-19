@@ -1,0 +1,204 @@
+<div id="createBuildingCustomer">
+	<div id="fl-statement"></div>
+
+	<form class="form-horizontal">
+		<div class="row" id="createCustomerRow">
+			<div class="col-md-12">
+				<div class="form-group">
+					<label for="csType" class="col-sm-3 control-label no-padding-right">客源类型</label>
+					<div class="col-sm-9">
+						<select class='col-xs-10 col-sm-4' id='csType' data-toggle="popover"></select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right orange" for="customerId">客户姓名</label>
+					<div class="col-sm-9">
+						<input class="col-xs-10 col-sm-4 v_required" id="customerId" data-placeholder="请输入客户" data-toggle="popover" />
+						<button type="button" id="createCustomer" class="btn btn-xs btn-info" style="margin-left: 2px">创建客户</button>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="purpose" class="col-sm-3 control-label no-padding-right orange">目的</label>
+					<div class="col-sm-9">
+						<input type="text" class="col-xs-10 col-sm-4 v_required" data-toggle="popover" maxlength="256" id="purpose">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" for="intention">意向</label>
+					<div class="col-sm-6">
+						<input type="text" class="col-xs-10 col-sm-4 v_required" data-toggle="popover" maxlength="256" id="intention">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right orange">需求总价</label>
+					<div class="col-sm-9">
+						<input type="text" class="v_required v_float_3" style="width:100px" data-toggle="popover" id="priceLow" />
+						-
+						<input type="text" class="v_required v_float_3" style="width:100px" data-toggle="popover" id="priceHigh" />
+						<span style="margin-left: 10px; color: red; font-size: 10px;">* 添加需求价格区间</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right orange">需求面积</label>
+					<div class="col-sm-9">
+						<input type="text" class="v_required v_float" style="width:100px" data-toggle="popover" id="areaLow" />
+						<span> - </span>
+						<input type="text" class="v_required v_float" style="width:100px" data-toggle="popover" id="areaHigh" />
+						<span style="margin-left: 10px; color: red; font-size: 10px;">* 添加需求面积区间</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right orange">需求户型</label>
+					<div class="col-sm-9">
+						<input type="text"class="v_required v_number" maxlength="2" style="width:100px"  data-toggle="popover" id="familyType" />  室
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="orientation" class="col-sm-3 control-label no-padding-right">朝向</label>
+					<div class="col-sm-9">
+						<select class='col-xs-10 col-sm-4' id='orientation' data-toggle="popover"></select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" for="conditions">意向备注</label>
+					<div class="col-sm-6">
+						<input type="text" class="col-xs-10 col-sm-4" data-toggle="popover" maxlength="256" id="conditions" placeholder="如:三楼,不把山" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="grade" class="col-sm-3 control-label no-padding-right">客户等级</label>
+					<div class="col-sm-9">
+						<select class='col-xs-10 col-sm-4' id='grade' data-toggle="popover"></select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="comment" class="col-sm-3 control-label no-padding-right">备注</label>
+					<div class="col-sm-9">
+						<textarea class="col-xs-10 col-sm-4" rows="3" data-toggle="popover" maxlength="50" id="comment"></textarea>
+					</div>
+				</div>
+
+				<!--</div>-->
+			</div>
+		</div>
+		<div class="modal-footer" style="text-align: center">
+			<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+			<button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+		</div>
+	</form>
+
+	<div class="modal fade" id="customerModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="customerDialog">客户</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="customerName">姓名</label>
+							<div class="col-sm-9">
+								<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+							<div class="col-sm-9">
+								<input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
+                                <span class="lbl gender"></span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
+							<div class="col-sm-9">
+								<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="cardType">证件类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6 v_required" id="cardType"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="cardNum">证件号</label>
+							<div class="col-sm-9">
+								<input type="text" id="cardNum" maxlength="18" class="col-xs-10 col-sm-6 v_card" data-toggle="popover" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+							<div class="col-sm-9">
+								<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+							<div class="col-sm-9">
+								<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+							<div class="col-sm-9">
+								<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+							<div class="col-sm-9">
+								<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="createCustomerSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+					<button type="button" id="createCustomerCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/building/buildingCustomer2create.js']);
+</script>

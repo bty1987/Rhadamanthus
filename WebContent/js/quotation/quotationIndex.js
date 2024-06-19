@@ -4,18 +4,29 @@
 
         decorationInfo: com.focusPage("#decorationInfo"),
         quotationList: com.focusPage("#quotationList"),
-        quotationModal: com.focusPage('#quotationModal'),
-        replicaQuotationModal: com.focusPage('#replicaQuotationModal'),
 
         items: {
             qid: com.focusPage("#qid"),
-            replicaOrderId: com.focusPage('#replicaOrderId'),
-            replicaType: com.focusPage("#replicaType"),
-            name: com.focusPage("#name"),
-            quotations: com.focusPage('#quotations'),
-            style: com.focusPage("#style"),
-            content: com.focusPage("#content"),
-            quotetionNo: com.focusPage("#quotetionNo"),
+
+            name: com.focusPage("#name", "#quotationModal"),
+            style: com.focusPage("#style", "#quotationModal"),
+            content: com.focusPage("#content", "#quotationModal"),
+            quotationTimeCopy: com.focusPage('#quotationTime', "#quotationModal").switchBtn(),
+            quotationPriceCopy: com.focusPage('#quotationPrice', "#quotationModal").switchBtn(),
+
+            keepriceGroup: com.focusPage('#keepriceGroup', "#quotationModal"),
+
+            replicaType: com.focusPage("#replicaType", "#replicaQuotationModal"),
+            quotetionNo: com.focusPage("#quotetionNo", "#replicaQuotationModal"),
+            replicaOrderId: com.focusPage('#replicaOrderId', "#replicaQuotationModal"),
+            quotations: com.focusPage('#quotations', "#replicaQuotationModal"),
+            quotationTime: com.focusPage('#quotationTime', "#replicaQuotationModal").switchBtn(),
+            quotationPrice: com.focusPage('#quotationPrice', "#replicaQuotationModal").switchBtn(),
+        },
+
+        modals: {
+            quotationModal: com.focusPage("#quotationModal"),
+            replicaQuotationModal: com.focusPage("#replicaQuotationModal"),
         },
 
         orderId: params.quotation.orderId,
@@ -32,6 +43,7 @@
             "key": "1",
             "value": "装修单号"
         }, ],
+
         pageConfig: null,
 
         datasets: {
@@ -60,11 +72,16 @@
 
     com.focusPage('#createQuotation').on('click', function() {
 
+        quotation.items.keepriceGroup.hide();
+
         quotation.editFlg = 0;
+
         com.clearValidator();
         com.cleanItems(quotation.items);
+
         quotation.items.style.get(0).selectedIndex = 0;
-        quotation.quotationModal.modal("show");
+
+        quotation.modals.quotationModal.modal("show");
     });
 
     com.focusPage('#replicaQuotation').on('click', function() {
@@ -73,20 +90,23 @@
         com.cleanItems(quotation.items);
         quotation.items.replicaType.on("change", function(e) {
 
-            $this = $(this);
+            var $this = $(this);
+
             if ($this.val() == 0) {
                 com.focusPage("#Bquoteno").removeClass("hide");
                 com.focusPage("#bOrderId").addClass("hide");
-
             } else {
                 com.focusPage("#Bquoteno").addClass("hide");
                 com.focusPage("#bOrderId").removeClass("hide");
             }
+
             quotation.items.replicaOrderId.val("");
             quotation.items.quotetionNo.val("");
+
             quotation.items.quotations.bindData([], 'qid', 'name');
         }).trigger("change");
-        quotation.replicaQuotationModal.modal("show");
+
+        quotation.modals.replicaQuotationModal.modal("show");
     });
 
     com.focusPage('#saveBtn').bindClick(function() {
@@ -106,7 +126,7 @@
             com.post(api.quotation.addQuotation, options, function(res) {
 
                 searcher.doSearch();
-                quotation.quotationModal.modal("hide");
+                quotation.modals.quotationModal.modal("hide");
             }, null, false);
 
         } else if (quotation.editFlg == 1) {
@@ -133,10 +153,25 @@
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
-                quotation.quotationModal.modal("hide");
+                quotation.modals.quotationModal.modal("hide");
             }, null, false);
 
         } else {
+
+            var keeprice = null;
+
+            var quotationTime = quotation.items.quotationTimeCopy.prop("checked");
+            var quotationPrice = quotation.items.quotationPriceCopy.prop("checked");
+
+            if (!quotationTime && !quotationPrice) {
+                keeprice = 0;
+            } else if (quotationTime && !quotationPrice) {
+                keeprice = 1;
+            } else if (!quotationTime && quotationPrice) {
+                keeprice = 2;
+            } else if (quotationTime && quotationPrice) {
+                keeprice = 3;
+            }
 
             var options = {
                 "quotation.qid": quotation.items.qid.val(),
@@ -144,12 +179,13 @@
                 "quotation.name": quotation.items.name.val(),
                 "quotation.style": quotation.items.style.val(),
                 "quotation.content": quotation.items.content.val(),
+                "quotation.keeprice": keeprice
             };
 
             com.post(api.quotation.copyQuotation, options, function(res) {
 
                 searcher.doSearch();
-                quotation.quotationModal.modal("hide");
+                quotation.modals.quotationModal.modal("hide");
             }, null, false);
         }
     });
@@ -159,26 +195,41 @@
         if (com.validate("replicaQuotationModal"))
             return;
 
-        var options = {};
+        var options = {}, keeprice = null;
+
+        var quotationTime = quotation.items.quotationTime.prop("checked");
+        var quotationPrice = quotation.items.quotationPrice.prop("checked");
+
+        if (!quotationTime && !quotationPrice) {
+            keeprice = 0;
+        } else if (quotationTime && !quotationPrice) {
+            keeprice = 1;
+        } else if (!quotationTime && quotationPrice) {
+            keeprice = 2;
+        } else if (quotationTime && quotationPrice) {
+            keeprice = 3;
+        }
 
         if (quotation.items.replicaType.val() == 0) {
 
             options = {
                 "no": quotation.items.quotetionNo.val(),
                 "quotation.orderId": quotation.orderId,
+                "quotation.keeprice": keeprice
             };
 
             com.post(api.quotation.cloneQuotation, options, function(res) {
 
                 searcher.doSearch();
 
-                quotation.replicaQuotationModal.modal("hide");
+                quotation.modals.replicaQuotationModal.modal("hide");
             }, null, false);
         } else {
 
             options = {
                 "quotation.qid": quotation.items.quotations.val(),
                 "quotation.orderId": quotation.orderId,
+                "quotation.keeprice": keeprice
             };
 
             com.post(api.quotation.replicaQuotation, options, function(res) {
@@ -186,7 +237,7 @@
                 quotation.defaultsQid = res.quotation.qid;
 
                 searcher.doSearch();
-                quotation.replicaQuotationModal.modal("hide");
+                quotation.modals.replicaQuotationModal.modal("hide");
             }, null, false);
         }
 
@@ -252,6 +303,8 @@
         clazz: "btn-yellow",
         handle: function(v) {
 
+            quotation.items.keepriceGroup.show();
+
             quotation.editFlg = 2;
 
             com.clearValidator();
@@ -263,7 +316,7 @@
                 "quotation.qid": v.qid
             }, function(res) {
 
-                quotation.quotationModal.modal("show");
+                quotation.modals.quotationModal.modal("show");
             });
         }
     };
@@ -272,6 +325,8 @@
         name: "修改",
         clazz: "btn-blue",
         handle: function(v) {
+
+            quotation.items.keepriceGroup.hide();
 
             quotation.editFlg = 1;
 
@@ -286,7 +341,7 @@
                 quotation.items.style.val(res.quotation.style);
                 quotation.items.content.val(res.quotation.content);
 
-                quotation.quotationModal.modal("show");
+                quotation.modals.quotationModal.modal("show");
             });
         }
     };
@@ -652,6 +707,15 @@
             show: function(v) {
 
                 return quotation.pageConfig.propertyArr.contains("createTime");
+            }
+        }, {
+            field: "updateTime",
+            name: "保价时间",
+            prop: "updateTime",
+            clazz: "green",
+            show: function(v) {
+
+                return quotation.pageConfig.propertyArr.contains("updateTime");
             }
         }, {
             field: "creater.currentName",

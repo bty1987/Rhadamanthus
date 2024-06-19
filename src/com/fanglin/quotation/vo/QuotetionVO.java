@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
+
 public class QuotetionVO implements Serializable {
 
 	private static final long serialVersionUID = -8617663702337964395L;
@@ -15,11 +17,13 @@ public class QuotetionVO implements Serializable {
 
 	private String name;
 
-	private String version;
+	private QuotationVersionVO version;
 
 	private Long cuid;
 
 	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	private Integer discount;
 
@@ -53,7 +57,20 @@ public class QuotetionVO implements Serializable {
 
 	private Long unachePrice;
 
+	private Short keeprice;
+
 	private String content;
+
+	public QuotetionVO() {
+		super();
+	}
+
+	public QuotetionVO(QuotationVersionVO version) {
+
+		super();
+
+		this.version = version;
+	}
 
 	public Long getQid() {
 		return qid;
@@ -79,11 +96,11 @@ public class QuotetionVO implements Serializable {
 		this.name = name;
 	}
 
-	public String getVersion() {
+	public QuotationVersionVO getVersion() {
 		return version;
 	}
 
-	public void setVersion(String version) {
+	public void setVersion(QuotationVersionVO version) {
 		this.version = version;
 	}
 
@@ -102,6 +119,15 @@ public class QuotetionVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public Long getUndisPrice() {
@@ -238,6 +264,14 @@ public class QuotetionVO implements Serializable {
 
 	public void setUnachePrice(Long unachePrice) {
 		this.unachePrice = unachePrice;
+	}
+
+	public Short getKeeprice() {
+		return keeprice;
+	}
+
+	public void setKeeprice(Short keeprice) {
+		this.keeprice = keeprice;
 	}
 
 }

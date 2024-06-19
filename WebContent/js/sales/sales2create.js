@@ -34,16 +34,17 @@ jQuery(function() {
             comment: com.focusPage('#comment'), // 备注
             maling: com.focusPage('#maling'), // 抹零
             totals: com.focusPage('#totals'), // 总额
-            bComment: com.focusPage('#bComment')
-        // 品牌备注
+            bComment: com.focusPage('#bComment'), // 品牌备注
+            supplier: com.focusPage('#supplier'), // 厂商
+
         },
         items: {
             left: com.focusPage('#left')
         },
         btns: {
-            submit: com.focusPage('#submit'),// 提交
-            refresh: com.focusPage('#refresh')
-        // 重置
+            submit: com.focusPage('#submit'), // 提交
+            refresh: com.focusPage('#refresh'), // 重置
+
         },
         model: {
             packageModel: com.focusPage('#itemModel')
@@ -54,7 +55,8 @@ jQuery(function() {
         salesman: null,
         house: null,
         dompany: null,
-        bid: null
+        bid: null,
+        suppliers: [],
     };
 
     com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function(list, k, v) {
@@ -92,8 +94,12 @@ jQuery(function() {
         $.each(list, function(index, val) {
 
             if (val['no'] == k) {
+
                 sales.brand = val;
-                sales.rightitems.bComment.val(val.comment)
+
+                sales.rightitems.bComment.val(val.comment);
+
+                supplier(val);
             }
         });
         return v
@@ -163,7 +169,6 @@ jQuery(function() {
             'data-cvalue': price.cvalue,
             'data-priceType': price.type,
             'data-price': $selling
-        // 折让价
         });
 
         var $h4 = $('<h4></h4>').html(goods + ' ' + goodsNo).attr('addGid', sales.goods.gid);
@@ -269,6 +274,7 @@ jQuery(function() {
 
         if (com.validate('searchInfo', 'bottom'))
             return false;
+
         if (checkBrand() == false)
             return false;
 
@@ -289,7 +295,8 @@ jQuery(function() {
             "sales.total": sales.rightitems.totals.val(),
             "sales.house.hid": sales.house.hid,
             "sales.dompanys": sales.dompany,
-            "sales.otherStatus": com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0
+            "sales.otherStatus": com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0,
+            "sales.supplier.userId": sales.rightitems.supplier.val()
         };
 
         var $lis = com.focusPage('.list-group-item');
@@ -327,7 +334,6 @@ jQuery(function() {
 
             return false;
         }
-
         com.post(api.sales.addSales, options, function() {
 
             com.showAlert(com.info, "添加成功");
@@ -459,6 +465,28 @@ jQuery(function() {
         });
     }
 
+    function supplier(v) {
+
+        com.post(api.communion.queryBrandSupplier, {
+            "brandSupplier.brand.bid": v.bid
+
+        }, function(res) {
+
+            var suppliers = res.brandSuppliers;
+
+            if (suppliers.length == 0) {
+                return false;
+            }
+
+            $.each(suppliers, function(i, v) {
+
+                sales.suppliers[i] = v.supplier
+            });
+        }, null, false);
+
+        sales.rightitems.supplier.bindData(sales.suppliers, "userId", "currentName");
+    }
+
     com.focusPage('.select').dblclick(function(res) {
 
         com.popup4page("#layerPopUp", api.index.goods4condition.url, "商品", null, function() {
@@ -471,4 +499,5 @@ jQuery(function() {
             fillLeftItem(params.data.goods);
         });
     });
+
 });

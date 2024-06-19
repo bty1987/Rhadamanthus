@@ -13,6 +13,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,6 +27,8 @@ import javax.persistence.Table;
 
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.QuotationVO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -42,6 +45,14 @@ public class QuotationPO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0;
 
+	public static final short KEEPRICE_LATEST_INT = 0;
+
+	public static final short KEEPRICE_TIMEKEEP_INT = 1;
+
+	public static final short KEEPRICE_PRICEKEEP_INT = 2;
+
+	public static final short KEEPRICE_ALLKEEP_INT = 3;
+
 	private long qid;
 
 	private String orderId;
@@ -51,6 +62,8 @@ public class QuotationPO implements Serializable {
 	private String style;
 
 	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	private UserPO creater;
 
@@ -149,6 +162,15 @@ public class QuotationPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "updateTime")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -351,10 +373,11 @@ public class QuotationPO implements Serializable {
 		this.index = index;
 	}
 
-	public void ptp(String orderId, UserPO userPO, String name, String style) {
+	public void ptp(String orderId, UserPO userPO, String name, String style, Timestamp updateTime) {
 
 		this.setOrderId(orderId);
 		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		this.setUpdateTime(updateTime);
 		this.setCreater(userPO);
 		this.setName(name);
 		this.setStyle(style);
@@ -362,5 +385,15 @@ public class QuotationPO implements Serializable {
 		this.setTotalPrice(0L);
 
 		this.setContent("");
+	}
+
+	public QuotationVO ptv(QuotationVO quotationVO) {
+
+		BeanUtil.copyProperties(this, quotationVO, Arrays.asList("creater", "version"));
+
+		if (quotationVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), quotationVO.getVersion());
+		if (quotationVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), quotationVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+		return quotationVO;
 	}
 }

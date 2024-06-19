@@ -30,6 +30,7 @@ import com.fanglin.personel.vo.UserEducationVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserOperationVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
@@ -74,6 +75,8 @@ public class UserAction extends BaseListAction {
 
 	private String imgbase;
 
+	private ModuleVO module;
+
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException {
 
@@ -86,6 +89,14 @@ public class UserAction extends BaseListAction {
 	public String pageUserInfo() throws FLException {
 
 		userService.pageUserInfo(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pageUserByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageUserByMid() throws FLException {
+
+		userService.pageUserByMid(getPaging(), getFilters(), module, queryCompany());
 
 		return SUCCESS;
 	}
@@ -488,6 +499,14 @@ public class UserAction extends BaseListAction {
 
 	public void setImgbase(String imgbase) {
 		this.imgbase = imgbase;
+	}
+
+	public ModuleVO getModule() {
+		return module;
+	}
+
+	public void setModule(ModuleVO module) {
+		this.module = module;
 	}
 
 }

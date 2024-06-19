@@ -83,6 +83,16 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
+	public List<UserPO> pageUserByMid(Paging paging, List<Filter> filters, Integer mid, Integer company) {
+
+		String sql = queryFilterExcute(mid, company, filters);
+
+		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
+
+		return query.list("*", "select * ", sql, "");
+	}
+
+	@Override
 	public UserPO queryUserByLoginId(String loginId) {
 		return (UserPO) createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("loginId", loginId), Restrictions.eq("userId", loginId))).uniqueResult();
 	}
@@ -194,4 +204,36 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		}
 	}
 
+	private String queryFilterExcute(Integer mid, Integer company, List<Filter> filters) {
+
+		StringBuffer select = new StringBuffer("SELECT u.*");
+		StringBuffer from = new StringBuffer(" FROM communion.user u");
+		StringBuffer where = new StringBuffer();
+
+		from.append(" LEFT JOIN communion.role r ON u.roleId = r.rid");
+		from.append(" LEFT JOIN communion.rolemodule rm ON r.rid = rm.rid");
+
+		where.append(String.format(" WHERE rm.mid = '%s'", mid));
+		where.append(String.format(" AND u.company = '%s'", company));
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+
+			if ("userId".equals(field)) {
+				where.append(String.format(" AND u.userId like '%%%s%%'", data));
+			} else if ("userName".equals(field)) {
+				where.append(String.format(" AND u.userName like '%%%s%%'", data));
+			} else if ("phone".equals(field)) {
+				where.append(String.format(" AND u.phone like '%%%s%%'", data));
+			} else if ("roleId".equals(field)) {
+				where.append(String.format(" AND roleId like '%%%s%%'", data));
+			} else if ("identity".equals(field)) {
+				where.append(String.format(" AND identity like '%%%s%%'", data));
+			}
+		}
+
+		return String.format(" FROM ( %s %s %s GROUP BY u.uid, r.rid) m", select.toString(), from.toString(), where.toString());
+	}
 }

@@ -450,7 +450,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		decorationDao.update(decorationPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("统计装修活动项,装修单:%s", orderId)));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("统计装修活动项,装修单:%s", orderId)));
 
 		return 0;
 	}

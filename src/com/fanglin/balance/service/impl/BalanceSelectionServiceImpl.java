@@ -251,6 +251,8 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			SelectionItemPD selectionItemPD = balanceSelectionItemPO.getSelectionItem();
 
+			if (selectionItemPD == null) continue;
+
 			selectionItemPD.setAccounter(null);
 			selectionItemPD.setAccountTime(null);
 			selectionItemPD.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_INIT_INT);
@@ -405,9 +407,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 			throw new FLException(350028, "结算选材不可操作");
 		}
 
-		Integer balanceSelectionItemCount = balanceSelectionItemDao.countBalanceSelectionItem(balanceSelection.getBsid());
-
-		if (balanceSelectionItemCount > 0) {
+		if (balanceSelectionItemDao.countBalanceSelectionItem(balanceSelection.getBsid()) > 0) {
 			throw new FLException(350029, "结算选材明细存在");
 		}
 

@@ -1,0 +1,379 @@
+<div id="createHouseSource">
+	<div id="fl-statement"></div>
+	<form class="form-horizontal">
+		<div class="row" id="createHouseRow">
+			<div class="col-md-12">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="hsType" class="col-sm-2 control-label no-padding-right">房源类型</label>
+						<div class="col-sm-10">
+							<select class='col-xs-10 col-sm-7' id='hsType' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="customerId" class="col-sm-2 control-label no-padding-right orange">客户姓名</label>
+						<div class="col-sm-10">
+							<input type="text" class="col-xs-10 col-sm-7 v_required" id="customerId" data-placeholder="请输入客户" data-toggle="popover" />
+							<button type="button" id="createCustomer" class="btn btn-xs btn-info" style="margin-left: 2px">创建客户</button>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="no" class="col-sm-2 control-label no-padding-right orange">楼盘名</label>
+						<div class="col-sm-10">
+							<input type="text" class="col-xs-10 col-sm-7 v_required" id="villageId" data-placeholder="请输入楼盘名" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group" id="nhouseNumber">
+						<label for="built" class="col-sm-2 control-label no-padding-right orange">楼牌号</label>
+						<div class="col-sm-10">
+							<input type="text" class="v_required" maxlength="7" style="width: 6.5%;" id="built">
+							<select id="builtrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+							<input type="text" class="v_required" maxlength="3" style="width: 6.5%;" id="unit">
+							<select id="unitrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+							<input type="text" class="v_required" maxlength="3" style="width: 6.5%;" id="floor">
+							<select id="floorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+							<input type="text" class="v_required" maxlength="3" style="width: 6.5%;" id="door" data-placement="bottom">
+							<select id="doorrule" style="padding: 0px;font-size: 1px; width: 7%!important; height: 25px; vertical-align: bottom"></select>
+							<div class="col-md-12" style="padding: 0px;" >
+								<span id="rule" class="red"></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="type">房产类型</label>
+						<div class="col-sm-10">
+							<select class="col-xs-10 col-sm-7 v_required" id="type" data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group" id = "nhousetype">
+						<label class="col-sm-2 control-label no-padding-right">户型</label>
+						<div class="col-sm-10">
+							<input type="text" class="v_required v_number" style="width:9%" maxlength="2" data-toggle="popover"  id="houseTypeOne" /> 室
+							<input type="text" class="v_required v_number" style="width:9%" maxlength="2" data-toggle="popover"  id="houseTypeTwo" /> 厅
+							<input type="text" class="v_required v_number" style="width:9%" maxlength="2" data-toggle="popover"  id="houseTypeThr" /> 厨
+							<input type="text" class="v_required v_number" style="width:9%" maxlength="2" data-toggle="popover"  id="houseTypeFour" /> 卫
+						</div>
+					</div>
+
+					<div class="form-group" id = "ohousetype" style = "display: none">
+						<label class="col-sm-2 control-label no-padding-right orange" for="oldhousetype">户型</label>
+						<div class="col-sm-10">
+							<input type="text" id="oldhousetype" maxlength="3" class="col-xs-10 col-sm-7" readonly="readonly"/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right orange" for="maxFloor">最高楼层</label>
+						<div class="col-sm-10">
+							<input type="text" id="maxFloor" maxlength="2" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right orange" for="buildArea">建筑面积</label>
+						<div class="col-sm-2">
+							<input type="text" id="buildArea" maxlength="8" class="col-xs-10 col-sm-9 v_required v_float" data-toggle="popover" />
+							<span style = "margin-left: 2px; line-height: 34px">平</span>
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="rentType">交租方式</label>
+						<div class="col-sm-2">
+							<select class='col-xs-10 col-sm-12' id='rentType' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="orientation" class="col-sm-2 control-label no-padding-right">房屋朝向</label>
+						<div class="col-sm-2">
+							<select class='col-xs-10 col-sm-12' id='orientation' data-toggle="popover" ></select>
+						</div>
+						<label for="through" class="col-sm-2 control-label no-padding-right">是否越层</label>
+						<div class="col-sm-2">
+							<select class='col-xs-10 col-sm-12' id='through' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="parlourType" class="col-sm-2 control-label no-padding-right">客厅类型</label>
+						<div class="col-sm-2">
+							<select class='col-xs-10 col-sm-12' id='parlourType' data-toggle="popover" ></select>
+						</div>
+						<label for="heatingType" class="col-sm-2 control-label no-padding-right">供暖类型</label>
+						<div class="col-sm-2">
+							<select class='col-xs-10 col-sm-12' id='heatingType' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="elevator">电梯</label>
+						<div class="col-sm-2">
+							<select class="col-xs-10 col-sm-12 v_required" id="elevator"></select>
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="onlyHousing">唯一住房</label>
+						<div class="col-sm-2">
+							<select class="col-xs-10 col-sm-12 v_required" id="onlyHousing"></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="waterVapour" class="col-sm-2 control-label no-padding-right">水气设施</label>
+						<div class="col-sm-10">
+							<select class='col-xs-10 col-sm-7' id='waterVapour' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="indoores">室内设施</label>
+						<div class="col-sm-10">
+							<input type="text" id="indoores"  class="col-xs-10 col-sm-7" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="feature">三不</label>
+						<div class="col-sm-10">
+							<input type="text" id="feature"  class="col-xs-10 col-sm-7" data-toggle="popover" />
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="sourceType" class="col-sm-2 control-label no-padding-right">信息来源</label>
+						<div class="col-sm-10">
+							<select class='col-xs-10 col-sm-7' id='sourceType' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="followId" class="col-sm-2 control-label no-padding-right orange">跟进人</label>
+						<div class="col-sm-10">
+							<input type="text" class="col-xs-10 col-sm-7 v_required" id="followId" data-placeholder="请输入跟进人" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="keyerId" class="col-sm-2 control-label no-padding-right orange">收钥匙人</label>
+						<div class="col-sm-10">
+							<input type="text" class="col-xs-10 col-sm-7 v_required" id="keyerId" data-placeholder="请输入收钥匙人" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="deedNum">契证编号</label>
+						<div class="col-sm-10">
+							<input type="text" id="deedNum" maxlength="15" class="col-xs-10 col-sm-7" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="deedValue">契证原值</label>
+						<div class="col-sm-2">
+							<input type="text" id="deedValue" maxlength="15" class="col-xs-10 col-sm-9 v_float_3" data-toggle="popover" />
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="propertyFee">物业费</label>
+						<div class="col-sm-2">
+							<input type="text" id="propertyFee"  class="col-xs-10 col-sm-10 v_float_3" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-left orange" for="totalPrice">总价</label>
+						<div class="col-sm-2">
+							<input type="text" id="totalPrice" maxlength="32" class="col-xs-10 col-sm-9 v_required v_float_3" data-toggle="popover" />
+						</div>
+
+						<label class="col-sm-2 control-label no-padding-right" for="unitPrice">单价</label>
+						<div class="col-sm-2">
+							<input type="text" id="unitPrice" maxlength="32" class="col-xs-10 col-sm-10 v_required" readonly="readonly" data-toggle="popover" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="decorateDegree" class="col-sm-2 control-label no-padding-right">装修程度</label>
+						<div class="col-sm-10">
+							<select class='col-xs-10 col-sm-7' id='decorateDegree' data-toggle="popover" ></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="decorateTime">装修时间</label>
+						<div class="col-sm-10">
+							<div class="input-group col-sm-7 col-xs-10 no-padding">
+								<input class="form-control date-picker-date" id="decorateTime" type="text" data-date-format="yyyy-mm-dd">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="documentsDate">下证日期</label>
+						<div class="col-sm-10">
+							<div class="input-group col-sm-7 col-xs-10 no-padding">
+								<input class="form-control date-picker-date" id="documentsDate" type="text" data-date-format="yyyy-mm-dd">
+							</div>
+						</div>
+					</div>
+
+					<!-- 之后修改这个样式  不能是input -->
+					<div class="form-group">
+						<label for="discussType" class="col-sm-2 control-label no-padding-right">商议类型</label>
+						<div class="col-sm-2">
+							<select class='col-xs-10 col-sm-12' id='discussType' data-toggle="popover" ></select>
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="history">房屋历史</label>
+						<div class="col-sm-2">
+							<select class="col-xs-10 col-sm-12 v_required" id="history"></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="beingLoan">有无贷款</label>
+						<div class="col-sm-2">
+							<select class="col-xs-10 col-sm-12 v_required" id="beingLoan"></select>
+						</div>
+						<label class="col-sm-2 control-label no-padding-right" for="allowLoan">允许贷款</label>
+						<div class="col-sm-2">
+							<select class="col-xs-10 col-sm-12 v_required" id="allowLoan"></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="checkingTime">看房时间</label>
+						<div class="col-sm-6">
+							<input class="form-control date-picker-date" id="checkingTime" type="text" data-date-format="yyyy-mm-dd">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="housingGrade">房源等级</label>
+						<div class="col-sm-10">
+							<select class="col-xs-10 col-sm-7 v_required" id="housingGrade"></select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label no-padding-right" for="comment">备注</label>
+						<div class="col-sm-10">
+							<textarea id="comment" maxlength="128" class="col-xs-10 col-sm-7" rows="3"></textarea>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		<div class="modal-footer" style="text-align: center">
+			<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+			<button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+		</div>
+	</form>
+</div>
+
+<div class="modal fade" id="customerModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="customerDialog">客户</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right orange" for="customerName">姓名</label>
+						<div class="col-sm-9">
+							<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl gender"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
+						<div class="col-sm-9">
+							<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_required v_phones2" data-toggle="popover" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="cardType">证件类型</label>
+						<div class="col-sm-9">
+							<select class="col-xs-10 col-sm-6 v_required" id="cardType"></select>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="cardNum">证件号</label>
+						<div class="col-sm-9">
+							<input type="text" id="cardNum" maxlength="18" class="col-xs-10 col-sm-6 v_card" data-toggle="popover" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+						<div class="col-sm-9">
+							<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+						<div class="col-sm-9">
+							<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+						<div class="col-sm-9">
+							<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+						<div class="col-sm-9">
+							<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+						<div class="col-sm-9">
+							<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="createCustomerSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+				<button type="button" id="createCustomerCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/building/buildingHouse4create.js', 'js/utils/houseUtils.js']);
+</script>

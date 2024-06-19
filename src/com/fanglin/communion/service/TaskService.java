@@ -14,9 +14,9 @@ public interface TaskService {
 
 	public List<TaskVO> queryTask(TaskVO taskVO);
 
-	public List<TaskVO> queryTaskByRid(RoleVO roleVO);
+	public List<TaskVO> queryTaskByRid(RoleVO roleVO, Integer company) throws FLException;
 
-	public List<TaskVO> queryTaskForSelf(String userId) throws FLException;
+	public List<TaskVO> queryTaskForSelf(String userId, Integer company) throws FLException;
 
 	public int addTask(TaskVO taskVO) throws FLException;
 
@@ -26,8 +26,8 @@ public interface TaskService {
 
 	public int updateTaskForIsShow(TaskVO taskVO) throws FLException;
 
-	public int updateRoleTask(RoleVO roleVO, TaskVO taskVO, String userId) throws FLException;
+	public int updateRoleTask(RoleVO roleVO, TaskVO taskVO, String userId, Integer company) throws FLException;
 
-	public int deleteRoleTask(RoleVO roleVO, TaskVO taskVO);
+	public int deleteRoleTask(RoleVO roleVO, TaskVO taskVO, Integer company) throws FLException;
 
 }

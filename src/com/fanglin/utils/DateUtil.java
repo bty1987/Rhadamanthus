@@ -190,6 +190,14 @@ public class DateUtil {
 		return cal.getTime();
 	}
 
+	public static int diffDay(Timestamp start, Timestamp end) {
+
+		if (start == null) return 0;
+		if (end == null) return 0;
+		
+		else return (int) ((end.getTime() - start.getTime()) / 24L / 60L / 60L / 1000L);
+	}
+
 	/**
 	 * 获得指定时间月的第一天
 	 * 
@@ -223,6 +231,7 @@ public class DateUtil {
 
 		Date endDate = new Date();
 		Date startDate = new Date();
+		
 		List<Date> res = new ArrayList<Date>();
 		if (kind.equals("天")) {
 			String temStr = getDateToDateString(reportDate, "yyyy-MM-dd");

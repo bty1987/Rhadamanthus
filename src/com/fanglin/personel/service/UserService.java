@@ -20,6 +20,7 @@ import com.fanglin.personel.vo.UserEducationVO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserOperationVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.utils.Paging;
 
 public interface UserService {
@@ -27,6 +28,8 @@ public interface UserService {
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException;
 
 	public void pageUserInfo(Paging paging, List<Filter> filters, Integer company) throws FLException;
+
+	public void pageUserByMid(Paging paging, List<Filter> filters, ModuleVO moduleVO, Integer company) throws FLException;
 
 	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException;
 

@@ -67,11 +67,11 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		return (ConstructionPO) session().createCriteria(ConstructionPO.class).add(Restrictions.eq(ConstructionPO.COLUMN_CID_STR, cid)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException{
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 		queryFilterExcute(query, filters, "");
 	}
 
-	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException{
+	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
 
 		if (filters == null) return;
 
@@ -99,9 +99,6 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 
 			if ("construction.schedule".equals(field)) {
 				query.add(query.getCriterion("schedule", Short.parseShort(data), op));
-			} else if ("construction.supervisor".equals(field)) {
-				query.alias("supervisor", "supervisor");
-				query.add(query.getCriterion("supervisor.userId", data, op));
 			} else if ("construction.status".equals(field)) {
 				query.add(query.getCriterion("status", Short.parseShort(data), op));
 			}

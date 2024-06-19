@@ -13,6 +13,8 @@ public interface OalesService {
 
 	public List<OalesVO> queryOalesByOrderId(OalesVO oalesVO);
 
+	public long amountOales(OalesVO oales) throws FLException;
+
 	public void addOales(OalesVO oalesVO, String userId, int company) throws FLException;
 
 	public void updateOales(OalesVO oalesVO) throws FLException;

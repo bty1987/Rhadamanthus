@@ -34,8 +34,7 @@ public class DecorationMidpackAction extends BaseListAction {
 	private DecorationMidpackService decorationMidpackService;
 
 	private DecorationMidpackVO decorationMidpack;
-	
-	
+
 	@Action(value = "queryDecorationMidpack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationMidpack() throws FLException {
 
@@ -48,6 +47,14 @@ public class DecorationMidpackAction extends BaseListAction {
 	public String makeDecorationMidpack() throws FLException {
 
 		decorationMidpackService.makeDecorationMidpack(decorationMidpack, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateDecorationMidpack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationMidpack() throws FLException {
+
+		decorationMidpackService.updateDecorationMidpack(decorationMidpack, queryUserId());
 
 		return SUCCESS;
 	}

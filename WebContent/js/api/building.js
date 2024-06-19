@@ -30,66 +30,66 @@ $.extend(api.index, {
 
 $.extend(api, {
     building: {
-        pageHouseSource: {
-            url: "pageHouseSource.do"
+        pageBuildingHouse: {
+            url: "pageBuildingHouse.do"
         },
-        pageHouseSourceForFollower: {
-            url: "pageHouseSourceForFollower.do"
+        pageBuildingHouseForFollower: {
+            url: "pageBuildingHouseForFollower.do"
         },
-        pageHouseSourceForAdvance: {
-            url: "pageHouseSourceForAdvance.do"
+        pageBuildingHouseForAdvance: {
+            url: "pageBuildingHouseForAdvance.do"
         },
-        queryHouseSourceByHsid: {
-            url: "queryHouseSourceByHsid.do"
+        queryBuildingHouseByHsid: {
+            url: "queryBuildingHouseByHsid.do"
         },
-        queryHouseSourceByNo: {
-            url: "queryHouseSourceByNo.do"
+        queryBuildingHouseByNo: {
+            url: "queryBuildingHouseByNo.do"
         },
-        checkHouseSource: {
-            url: "checkHouseSource.do"
+        checkBuildingHouse: {
+            url: "checkBuildingHouse.do"
         },
-        addHouseSource: {
-            url: "addHouseSource.do"
+        addBuildingHouse: {
+            url: "addBuildingHouse.do"
         },
-        takeHouseSource: {
-            url: "takeHouseSource.do"
+        takeBuildingHouse: {
+            url: "takeBuildingHouse.do"
         },
-        updateHouseSource: {
-            url: "updateHouseSource.do"
+        updateBuildingHouse: {
+            url: "updateBuildingHouse.do"
         },
-        updateHouseSourceForBelong: {
-            url: "updateHouseSourceForBelong.do"
+        updateBuildingHouseForBelong: {
+            url: "updateBuildingHouseForBelong.do"
         },
-        updateHouseSourceForKeyer: {
-            url: "updateHouseSourceForKeyer.do"
+        updateBuildingHouseForKeyer: {
+            url: "updateBuildingHouseForKeyer.do"
         },
-        updateHouseSourceForStatus: {
-            url: "updateHouseSourceForStatus.do"
+        updateBuildingHouseForStatus: {
+            url: "updateBuildingHouseForStatus.do"
         },
-        updateHouseSourceForPath: {
-            url: "updateHouseSourceForPath.do"
+        updateBuildingHouseForPath: {
+            url: "updateBuildingHouseForPath.do"
         },
 
-        pageCustomerSource: {
-            url: "pageCustomerSource.do"
+        pageBuildingCustomer: {
+            url: "pageBuildingCustomer.do"
         },
-        queryCustomerSourceByCsid: {
-            url: "queryCustomerSourceByCsid.do"
+        queryBuildingCustomerByCsid: {
+            url: "queryBuildingCustomerByCsid.do"
         },
-        queryCustomerSourceByNo: {
-            url: "queryCustomerSourceByNo.do"
+        queryBuildingCustomerByNo: {
+            url: "queryBuildingCustomerByNo.do"
         },
-        checkCustomerSource: {
-            url: "checkCustomerSource.do"
+        checkBuildingCustomer: {
+            url: "checkBuildingCustomer.do"
         },
-        addCustomerSource: {
-            url: "addCustomerSource.do"
+        addBuildingCustomer: {
+            url: "addBuildingCustomer.do"
         },
-        updateCustomerSource: {
-            url: "updateCustomerSource.do"
+        updateBuildingCustomer: {
+            url: "updateBuildingCustomer.do"
         },
-        updateCustomerSourceForStatus: {
-            url: "updateCustomerSourceForStatus.do"
+        updateBuildingCustomerForStatus: {
+            url: "updateBuildingCustomerForStatus.do"
         },
 
         pageBuilding: {

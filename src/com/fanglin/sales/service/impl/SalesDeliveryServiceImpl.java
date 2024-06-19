@@ -167,6 +167,10 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
 			}
 
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
+
+			salesDeliveryItemDao.flush();
+
 			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT);
 
 			if (salesBalancePO != null) {
@@ -174,12 +178,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 				salesBalanceDao.update(salesBalancePO);
 			}
 
-			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_FINISH_INT) == 0) {
+			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_CHECK_INT) == 0) {
 				salesBalancePO.setVerifyStatus(SalesBalancePO.DELIVERSTATUS_ALL_INT);
 				salesBalanceDao.update(salesBalancePO);
 			}
 
-			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
 	}
 
@@ -211,6 +214,10 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CONFIRM_INT, confirmer);
 			}
 
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
+
+			salesDeliveryItemDao.flush();
+
 			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT);
 
 			if (salesBalancePO != null) {
@@ -218,12 +225,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 				salesBalanceDao.update(salesBalancePO);
 			}
 
-			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_FINISH_INT) == 0) {
+			if (salesBalancePO != null && salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), SalesDeliveryItemPO.STATUS_CONFIRM_INT) == 0) {
 				salesBalancePO.setConfirmStatus(SalesBalancePO.DELIVERSTATUS_ALL_INT);
 				salesBalanceDao.update(salesBalancePO);
 			}
 
-			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
 	}
 
@@ -255,6 +261,10 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
 			}
 
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
+
+			salesDeliveryItemDao.flush();
+
 			SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT);
 
 			if (salesBalancePO != null) {
@@ -266,8 +276,6 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 				salesBalancePO.setDeliverStatus(SalesBalancePO.DELIVERSTATUS_ALL_INT);
 				salesBalanceDao.update(salesBalancePO);
 			}
-
-			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
 	}
 

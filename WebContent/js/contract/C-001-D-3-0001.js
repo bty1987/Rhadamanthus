@@ -89,21 +89,41 @@ jQuery(function($) {
         return false;
     }
 
-    com.post(api.decoration.queryDecorationHolonomy, {
-        "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId
-    }, function(res) {
+    if (contractEdit.decoration.type == constant.decoration().decoration.TYPE_MIDPACK_INT) {
+        com.post(api.decoration.queryDecorationMidpack, {
+            "decorationMidpack.decoration.orderId": contractEdit.decorationOrderId
+        }, function(res) {
 
-        var holonomy = res.decorationHolonomy;
+            var midpack = res.decorationMidpack;
 
-        if (holonomy)
-            holonomy.materialPrice = 0;
-        if (!holonomy.servicePrice)
-            holonomy.servicePrice = 0;
+            if (midpack)
+                midpack.materialPrice = 0;
+            if (!midpack.servicePrice)
+                midpack.servicePrice = 0;
 
-        com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);
+            com.focusPage("#con-service-total", "#form").val(midpack.servicePrice);
 
-        contractEdit.holonomy = holonomy;
-    });
+            contractEdit.midpack = midpack;
+        });
+    }
+
+    if (contractEdit.decoration.type == constant.decoration().decoration.TYPE_HOLONOMY_INT) {
+        com.post(api.decoration.queryDecorationHolonomy, {
+            "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId
+        }, function(res) {
+
+            var holonomy = res.decorationHolonomy;
+
+            if (holonomy)
+                holonomy.materialPrice = 0;
+            if (!holonomy.servicePrice)
+                holonomy.servicePrice = 0;
+
+            com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);
+
+            contractEdit.holonomy = holonomy;
+        });
+    }
 
     com.focusPage("#preservation").unbind("click").on('click', function() {
 

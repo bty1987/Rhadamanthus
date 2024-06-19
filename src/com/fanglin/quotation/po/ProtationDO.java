@@ -2,6 +2,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.vo.ProtationVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "protation", catalog = "quotation")
@@ -45,6 +50,8 @@ public class ProtationDO implements Serializable {
 	private Timestamp createTime;
 
 	private UserPO creater;
+
+	private QuotationVersionPO version;
 
 	private long quotePrice;
 
@@ -169,6 +176,16 @@ public class ProtationDO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "qvid", referencedColumnName = "qvId")
+	public QuotationVersionPO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionPO version) {
+		this.version = version;
 	}
 
 	@Column(name = "quotePrice")
@@ -430,5 +447,19 @@ public class ProtationDO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public ProtationVO ptv(ProtationVO protationVO) {
+
+		BeanUtil.copyPropertie(this, protationVO, Arrays.asList("decoration", "creater", "version"));
+
+		if (protationVO.getDecoration() != null) {
+			getDecoration().ptvcascade(protationVO.getDecoration());
+			protationVO.getDecoration().setSupervisor(new UserBaseVO());
+		}
+		if (protationVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), protationVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+		if (protationVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), protationVO.getVersion());
+
+		return protationVO;
 	}
 }

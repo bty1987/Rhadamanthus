@@ -105,13 +105,15 @@ $(function() {
 
         searcher.button(function() {
 
-            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'add').css({
+            var $btnGroup = $("<div></div>").addClass("btn-group");
+
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary').attr('id', 'add').css({
                 'margin-left': '4px'
-            });
+            }).appendTo($btnGroup);
             var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
             var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-            var $exportGroup = $("<div></div>").addClass("btn-group pull-left");
+            var $exportGroup = $("<div></div>").addClass("btn-group");
             var $addaExport = $('<a></a>').addClass('btn btn-minier btn-success dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
                 'margin-left': '4px'
             }).appendTo($exportGroup);
@@ -125,7 +127,7 @@ $(function() {
             var $exportFormat = $("<li></li>").append($("<a></a>").attr("id", "exportFormat").text("导出规格")).appendTo($addExportUl);
             var $exportPrice = $("<li></li>").append($("<a></a>").attr("id", "exportPrice").text("导出价格")).appendTo($addExportUl);
 
-            var $importGroup = $("<div></div>").addClass("btn-group pull-left");
+            var $importGroup = $("<div></div>").addClass("btn-group");
             var $addaImport = $('<a></a>').addClass('btn btn-minier btn-warning dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
                 'margin-left': '4px'
             }).appendTo($importGroup);
@@ -139,13 +141,19 @@ $(function() {
             var $importFormat = $("<li></li>").append($("<a></a>").attr("id", "importFor").text("导入规格")).appendTo($addImportUl);
             var $importPrice = $("<li></li>").append($("<a></a>").attr("id", "importPri").text("导入价格")).appendTo($addImportUl);
 
-            var $deletePrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('id', 'deletePri').css({
+            var $updateGroup = $("<div></div>").addClass("btn-group");
+            var $addaUpdate = $('<a></a>').addClass('btn btn-minier btn-danger dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
                 'margin-left': '4px'
-            });
-            var $deletePricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($deletePrice);
-            var $deletePricespan = $('<span></span>').text('删除价格').appendTo($deletePrice);
+            }).appendTo($updateGroup);
+            $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaUpdate);
+            $('<span></span>').text('更新').appendTo($addaUpdate);
+            $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaUpdate);
 
-            return [$exportGroup, $importGroup, $deletePrice, $adda];
+            var $addUpdateUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($updateGroup);
+            var $deleteGoods = $("<li></li>").append($("<a></a>").attr("id", "deletePriceBtn").text("删除商品价格")).appendTo($addUpdateUl);
+            var $statusGoods = $("<li></li>").append($("<a></a>").attr("id", "statusGoodsBtn").text("更新商品状态")).appendTo($addUpdateUl);
+
+            return [$btnGroup, $exportGroup, $importGroup, $updateGroup, ];
         })
 
     } else {
@@ -321,8 +329,6 @@ $(function() {
         }
     }];
 
-    console.log(goods.pageType)
-
     searcher.line("name", lineprops, linebtns);
 
     searcher.render();
@@ -367,9 +373,9 @@ $(function() {
         });
     });
 
-    com.focusPage('#deletePri', '#gPagenation').on("click", function() {
+    com.focusPage('#deletePriceBtn', '#gPagenation').on("click", function() {
 
-        goods.keyword = "delete_price";
+        goods.keyword = "update_delete_price";
 
         var form = com.focusPage("#deletePriceForm");
 
@@ -380,6 +386,21 @@ $(function() {
         goods.btns.exportBtn.addClass("hide");
 
         com.popup4model("#deletePrice", "删除价格");
+    });
+
+    com.focusPage('#statusGoodsBtn', '#gPagenation').on("click", function() {
+
+        goods.keyword = "update_status_goods";
+
+        var form = com.focusPage("#statusGoodsForm");
+
+        com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+        com.focusPage("#fileUpload").removeClass("hide");
+
+        goods.btns.importBtn.removeClass("hide");
+        goods.btns.exportBtn.addClass("hide");
+
+        com.popup4model("#statusGoods", "更新商品价格");
     });
 
     com.focusPage('#exportGood', '#gPagenation').on("click", function() {
@@ -618,7 +639,7 @@ $(function() {
         }
 
         var filtersName = ['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'];
-        
+
         var args = "";
 
         $.each(filtersName, function(i, v) {

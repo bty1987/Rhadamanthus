@@ -79,6 +79,9 @@ $.extend(api, {
         queryUserByLoginId: {
             url: "queryUserByLoginId.do"
         },
+        pageUserByMid: {
+            url: "pageUserByMid.do"
+        },
         queryUserByUserId: {
             url: "queryUserByUserId.do",
             demo: true

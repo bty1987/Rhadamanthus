@@ -275,12 +275,15 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 			if (balanceSalesBalancePO == null) continue;
 
+			balanceSalesBalanceDao.deleteById(balanceSalesBalanceVO.getBsbid());
+
 			SalesBalancePO salesBalancePO = balanceSalesBalancePO.getSalesBalance();
+
+			if (salesBalancePO == null) continue;
 
 			salesBalancePO.setCheckStatus(SalesBalancePO.CHECKSTATUS_INIT_INT);
 
 			salesBalanceDao.update(salesBalancePO);
-			balanceSalesBalanceDao.deleteById(balanceSalesBalanceVO.getBsbid());
 		}
 
 		balanceSalesBalanceDao.flush();

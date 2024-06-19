@@ -1,5 +1,6 @@
 package com.fanglin.sales.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -46,6 +47,19 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 
 	private void queryFilterExcute(PagingQuery<OalesPO> query, List<Filter> filters) throws FLException {
 		queryFilterExecute(query, filters, "");
+	}
+
+	@Override
+	public Long amountOales(String orderId) {
+		String sql = "SELECT SUM(o.total) FROM sales.oales o where o.orderId = :orderId";
+
+		BigDecimal sum = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+
+		if (sum == null) {
+			sum = BigDecimal.ZERO;
+		}
+
+		return sum.longValue();
 	}
 
 	public static void queryFilterExecute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
@@ -95,4 +109,5 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 			}
 		}
 	}
+
 }

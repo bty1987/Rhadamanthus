@@ -14,6 +14,7 @@ $(function() {
         items: {
             pid: com.focusPage("#pid", "#protationModal"),
             name: com.focusPage("#name", "#protationModal"),
+            version: com.focusPage("#version", "#protationModal"),
             produce: com.focusPage("#produce", "#protationModal"),
             comment: com.focusPage("#comment", "#protationModal"),
             quoteArea: com.focusPage("#quoteArea", "#protationModal"),
@@ -32,9 +33,20 @@ $(function() {
 
     };
 
+    protation.modals.protationModal.on('hide.bs.modal', function() {
+
+        com.clearValidator();
+        com.cleanItems(protation.items);
+    });
+
     com.post(api.quotation.queryPresignProduce, {}, function(res) {
 
         protation.items.produce.bindData(res.presignProduces, "ppid", "name");
+    });
+
+    com.post(api.quotation.queryQuotationVersion, {}, function(res) {
+
+        protation.items.version.bindData(res.quotationVersions, "qvId", "name", "无");
     });
 
     com.focusPage('#btnBack').on('click', function() {
@@ -46,6 +58,9 @@ $(function() {
 
         protation.protation = null;
 
+        com.focusPage("#versionGroup", "#protationModal").hide();
+
+        protation.items.produce.removeAttr("disabled");
         protation.items.quoteArea.removeAttr("disabled");
         protation.items.preferPrice.removeAttr("disabled");
 
@@ -83,6 +98,7 @@ $(function() {
                 "protation.orderId": protation.orderId,
                 "protation.pid": protation.protation.pid,
                 "protation.name": protation.items.name.val(),
+                "protation.version.qvId": protation.items.version.val(),
                 "protation.comment": protation.items.comment.val(),
             };
 
@@ -165,8 +181,19 @@ $(function() {
 
             com.clearValidator();
 
+            com.focusPage("#versionGroup", "#protationModal").show();
+
+            protation.items.produce.attr("disabled", "disabled");
             protation.items.quoteArea.attr("disabled", "disabled");
             protation.items.preferPrice.attr("disabled", "disabled");
+
+            if (protation.pageType == null) {
+                protation.items.version.attr("disabled", "disabled");
+            }
+
+            if (protation.pageType == "page") {
+                protation.items.version.removeAttr("disabled");
+            }
 
             com.post(api.quotation.queryProtationByPid, {
                 "protation.pid": v.pid
@@ -175,8 +202,13 @@ $(function() {
                 protation.items.pid.val(res.protation.pid);
                 protation.items.name.val(res.protation.name);
                 protation.items.comment.val(res.protation.comment);
+                protation.items.produce.val(res.protation.ppid);
                 protation.items.quoteArea.val(res.protation.quoteArea);
                 protation.items.preferPrice.val(res.protation.preferPrice);
+
+                if (res.protation.version && res.protation.version.qvId) {
+                    protation.items.version.val(res.protation.version.qvId);
+                }
 
                 protation.protation = res.protation;
 
@@ -322,6 +354,17 @@ $(function() {
             field: "name",
             name: "名称",
             prop: "name"
+        }, {
+            fieId: "version.name",
+            name: "版本",
+            prop: function(v) {
+
+                return v.version.qvId ? v.version.name : "无";
+            }
+        }, {
+            field: "product",
+            name: "产品",
+            prop: "product"
         }, {
             field: "createTime",
             name: "时间",
@@ -485,6 +528,14 @@ $(function() {
 
                 return protation.pageConfig.propertyArr.contains("name");
             }
+        }, {
+            fieId: "version.name",
+            name: "版本",
+            prop: function(v) {
+
+                return v.version.qvId ? v.version.name : "无";
+            },
+            clazz: "grey",
         }, {
             field: "createTime",
             name: "创建时间",

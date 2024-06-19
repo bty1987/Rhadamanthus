@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.dao.ServiceRecordDao;
+import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -50,6 +52,9 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 
 	@Autowired
 	private DecorationActivityDao decorationActivityDao;
+
+	@Autowired
+	private ServiceRecordDao serviceRecordDao;
 
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
@@ -152,6 +157,26 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), quotationPO.getCostPrice(), decorationMidpackVO.getPsId(), userId);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationMidpack(DecorationMidpackVO decorationMidpackV0, String userId) throws FLException {
+
+		String orderId = decorationMidpackV0.getDecoration().getOrderId();
+		long materialPrice = decorationMidpackV0.getMaterialPrice();
+
+		DecorationMidpackPO decorationMidpackPO = decorationMidpackDao.queryDecorationMidpack(orderId);
+
+		if (decorationMidpackPO == null) {
+			throw new FLException(140064, "半包信息不存在");
+		}
+
+		decorationMidpackPO.setMaterialPrice(materialPrice);
+
+		decorationMidpackDao.update(decorationMidpackPO);
+
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("更新半包信息,装修单:%s,主材配额:%.3f", orderId, Arith.div(materialPrice, 1000.0))));
 	}
 
 }

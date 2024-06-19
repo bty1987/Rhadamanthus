@@ -31,18 +31,20 @@ public class RoleOperationPO implements java.io.Serializable {
 
 	private Timestamp createTime;
 
+	private int company;
+
 	public RoleOperationPO() {
 		super();
 	}
 
-	public RoleOperationPO(OperationPO operation, int rid, UserPO creater) {
+	public RoleOperationPO(OperationPO operation, int rid, UserPO creater, int company) {
 
 		super();
 
 		this.operation = operation;
 		this.rid = rid;
-
 		this.creater = creater;
+		this.company = company;
 	}
 
 	@Id
@@ -91,6 +93,15 @@ public class RoleOperationPO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

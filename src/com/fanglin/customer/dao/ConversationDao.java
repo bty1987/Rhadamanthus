@@ -11,4 +11,6 @@ public interface ConversationDao extends Dao<ConversationPO> {
 
 	public List<ConversationPO> pageConversation(Paging paging, List<Filter> filters);
 
+	public List<ConversationPO> pageConversation(Paging paging, String orderId, long cid, String content);
+
 }

@@ -1,0 +1,392 @@
+<!--人事-员工-->
+<div id="decorationOrderPageContent">
+	<div class="row">
+	   <div class="col-md-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+	</div>
+	
+</div>
+
+<div id="qrcodeModal"></div> <!-- 二维码 -->
+
+<div id="importModal"></div> <!-- 导入 -->
+
+<div id="userExpModal"></div> <!-- 工作经历 -->
+
+<div id="ddModal"></div> <!-- 钉钉部门 -->
+
+<div id="simpleAddUserModal"></div> <!-- 简单添加 -->
+
+<div id="layerPopUp" class="portlet box page-content"></div> <!-- 弹窗 -->
+
+<div class="modal fade" id="pictureModal" tabindex="-1">
+	<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addItemDialog">上传图片</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+						<div class="block clearfix form-group">
+							<label class="col-md-3 control-label no-padding-right " for="picture">头像</label>
+							<div class="col-md-5 block no-padding-right">
+								<div class="col-md-12 row-fluid">
+									<ul class="ace-thumbnails">
+										<li>
+											<a id="userPhoto" class="col-md-12" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+												<img id="showImg" src="#" alt="150x150" width='150' height='150' >
+											</a>
+
+											<div class="tools tools-top">
+												<a id="removePicture" href="#"><i class="icon-remove red"></i></a>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div id="pictureUpload"></div>
+									<input type="text" class="hidden" id="picture"/>
+								</div>
+							</div>
+						</div>
+                    </div>
+
+                    <div class="form-group">
+						<div class="block clearfix form-group">
+							<label class="col-md-3 control-label no-padding-right " for="picture">身份证正面图片</label>
+							<div class="col-md-5 block no-padding-right">
+								<div class="col-md-12 row-fluid">
+									<ul class="ace-thumbnails">
+										<li>
+											<a id="identityPathF" class="col-md-12" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+												<img id="showImg1" src="#" alt="150x150" width='150' height='150' >
+											</a>
+
+											<div class="tools tools-top">
+												<a id="removePicture1" href="#"><i class="icon-remove red"></i></a>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div id="pictureUpload1"></div>
+									<input type="text" class="hidden" id="picture1"/>
+								</div>
+							</div>
+						</div>
+                    </div>
+
+                    
+                    <div class="form-group">
+						<div class="block clearfix form-group">
+							<label class="col-md-3 control-label no-padding-right " for="picture">身份证背面图片</label>
+							<div class="col-md-5 block no-padding-right">
+								<div class="col-md-12 row-fluid">
+									<ul class="ace-thumbnails">
+										<li>
+											<a id="identityPathB" class="col-md-12" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+												<img id="showImg2" src="#" alt="150x150" width='150' height='150' >
+											</a>
+
+											<div class="tools tools-top">
+												<a id="removePicture2" href="#"><i class="icon-remove red"></i></a>
+											</div>
+
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div id="pictureUpload2"></div>
+									<input type="text" class="hidden" id="picture2"/>
+								</div>
+							</div>
+						</div>
+                    </div>
+
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="saveBtns" class="btn btn-primary">保存</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="transferModal" tabindex="-1">
+	<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addItemDialog">人员调职</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="company">公司</label>
+                        <div class="col-sm-9">
+                            <input type="text"  id="company" class="col-sm-7 col-xs-10 v_required v_typeahead" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label no-padding-right orange" for="deptType">部门类型</label>
+	                    <div class="col-sm-9">
+	                        <select class="col-sm-7 col-xs-10 v_required" id="deptType" data-toggle="popover" data-trigger='manual'></select>
+	                    </div>
+	                </div>
+	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label no-padding-right orange" for="dept">部门</label>
+	                    <div class="col-sm-9">
+	                        <select class="col-sm-7 col-xs-10 v_required" id="dept" data-toggle="popover" data-trigger='manual'></select>
+	                    </div>
+	                </div>
+	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label no-padding-right orange" for="duty">职位</label>
+	                    <div class="col-sm-9">
+	                        <select class="col-sm-7 col-xs-10 v_required" id="duty" data-toggle="popover" data-trigger='manual'></select>
+	                    </div>
+	                </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="roleSel">角色</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="roleTran" class="col-sm-7 col-xs-10 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+	
+	            </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="save" class="btn btn-primary">保存</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userAdvanceModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">员工信息配置</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="isLogin">用户名登陆</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="isLogin" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+							<span class="lbl isOrNot"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="qcode">扫码登陆</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="qcode" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+							<span class="lbl isOrNot"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="ips">IP控制</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="ips" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+							<span class="lbl isOrNot"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="macs">MAC控制</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="macs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+							<span class="lbl isOrNot"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="webs">WEB访问</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="webs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+							<span class="lbl isOrNot"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="pcs">PC访问</label>
+						<div class="col-sm-9">
+							<input type="checkbox" id="pcs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+							<span class="lbl isOrNot"></span>
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="advanceSaveBtn" class="btn btn-primary">提交</button>
+				<button type="button" id="advanceCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="moduleModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">权限配置</h4>
+			</div>
+			<div class="modal-body">
+
+			</div>
+
+			<div class="modal-footer ">
+				<button type="button" name="saveBtn" class="btn btn-primary">保存</button>
+				<button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="userRoleModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">角色权限配置</h4>
+			</div>
+
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="userrole">现有角色权限</label>
+						<div class="col-sm-9">
+							<div class="tags" style="border: 0" id="userrole"></div>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="role">角色</label>
+						<div class="col-sm-9" id="roleInputs">
+							<input type="text" id="role" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择角色" />
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="role">已选角色</label>
+						<div class="col-sm-6">
+							<ul id="roles" class="item-list list-inline"></ul>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer ">
+				<button type="button" id="saveRoleBtn" class="btn btn-primary">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="userCompanyModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">公司权限配置</h4>
+			</div>
+
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="usercompany">现有公司权限</label>
+						<div class="col-sm-9">
+							<div class="tags" style="border: 0" id="usercompany"></div>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group" >
+						<label class="col-sm-3 control-label no-padding-right" >公司</label>
+						<div id="companydiv" class="tags" style="border: 0">
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer ">
+				<button type="button" id="saveCompanyBtn" class="btn btn-primary">保存</button>
+				<button type="button" name="cancelCompanyBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="taskModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">任务权限配置</h4>
+			</div>
+
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="taskpermissions">现有任务权限</label>
+						<div class="col-sm-9">
+							<div class="tags" style="border: 0" id="taskpermissions"></div>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group" >
+						<label class="col-sm-3 control-label no-padding-right" >任务</label>
+						<div id="taskdiv" class="tags" style="border: 0">
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer ">
+				<button type="button" name="saveTaskBtn" class="btn btn-primary">保存</button>
+				<button type="button" name="cancelTaskBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/utils/userUtils.js', 'js/personnel/user.js']);
+</script>

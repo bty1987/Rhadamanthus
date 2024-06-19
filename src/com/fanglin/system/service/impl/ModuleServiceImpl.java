@@ -96,7 +96,7 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException {
+	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -120,7 +120,7 @@ public class ModuleServiceImpl implements ModuleService {
 			return moduleVOs;
 		} else {
 
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getSystem());
+			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getSystem(), company);
 
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
@@ -133,7 +133,7 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException {
+	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -141,7 +141,7 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModuleForLink(rolePO.getRid(), moduleVO.getSystem());
+		List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModuleForLink(rolePO.getRid(), moduleVO.getSystem(), company);
 
 		Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
@@ -153,7 +153,7 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException {
+	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO, Integer company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
@@ -185,7 +185,7 @@ public class ModuleServiceImpl implements ModuleService {
 				rids.add(userRolePO.getRole().getRid());
 			}
 
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getSystem());
+			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getSystem(), company);
 
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
@@ -217,7 +217,7 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public ModuleVO checkModule(ModuleVO moduleVO, String userId) throws FLException {
+	public ModuleVO checkModule(ModuleVO moduleVO, String userId, Integer company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -250,7 +250,7 @@ public class ModuleServiceImpl implements ModuleService {
 				rids.add(userRolePO.getRole().getRid());
 			}
 
-			RoleModulePO roleModulePO = roleModuleDao.queryRoleModule(rids, modulePO.getMid());
+			RoleModulePO roleModulePO = roleModuleDao.queryRoleModule(rids, modulePO.getMid(), company);
 
 			if (roleModulePO == null) {
 				throw new FLException(-1, "无操作权限");
@@ -292,7 +292,7 @@ public class ModuleServiceImpl implements ModuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid, String userId) throws FLException {
+	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid, String userId, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
 
@@ -306,7 +306,7 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
+		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem(), company);
 
 		if (roleCO.getRid() == rolePO.getRid()) throw new FLException(-1, "无操作权限");
 
@@ -332,11 +332,11 @@ public class ModuleServiceImpl implements ModuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteModule(ModuleVO moduleVO) throws FLException {
+	public int deleteModule(ModuleVO moduleVO, Integer company) throws FLException {
 
 		int mid = moduleVO.getMid();
 
-		if (roleModuleDao.countRoleModuleByMid(mid) > 0) {
+		if (roleModuleDao.countRoleModuleByMid(mid, company) > 0) {
 			throw new FLException(230012, "模块已经被引用,不能被删除");
 		}
 

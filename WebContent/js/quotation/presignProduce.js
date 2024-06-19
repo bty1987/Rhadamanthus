@@ -13,6 +13,7 @@ jQuery(function($) {
         },
 
         items: {
+            version: com.focusPage("#version", "#createPresignProduceModal"),
             name: com.focusPage("#name", "#createPresignProduceModal"),
             quotePrice: com.focusPage("#quotePrice", "#createPresignProduceModal"),
             discount: com.focusPage("#discount", "#createPresignProduceModal"),
@@ -38,6 +39,11 @@ jQuery(function($) {
         com.cleanItems(presignProduce.items);
     });
 
+    com.post(api.quotation.queryQuotationVersion, {}, function(res) {
+
+        presignProduce.items.version.bindData(res.quotationVersions, "qvId", "name", "无");
+    });
+
     var seacher = new Searcher();
 
     seacher.base("condList", "pagenation", "resultList", api.quotation.pagePresignProduce);
@@ -58,6 +64,15 @@ jQuery(function($) {
         name: "名称",
         prop: "name",
         clazz: "grey"
+    }, {
+        fieId: "version.name",
+        name: "版本",
+        prop: "version.name",
+        clazz: "grey",
+        show: function(v) {
+
+            return !!(v.version.qvId);
+        }
     }, {
         fieId: "quotePrice",
         name: "起报价",
@@ -133,6 +148,10 @@ jQuery(function($) {
             presignProduce.items.costRate.val(v.costRate);
             presignProduce.items.mostRate.val(v.mostRate);
             presignProduce.items.manageFormula.val(v.manageFormula ? paramToFormula(v.manageFormula) : "");
+
+            if (v.version && v.version.qvId) {
+                presignProduce.items.version.val(v.version.qvId);
+            }
 
             presignProduce.modals.createPresignProduceModal.modal("show");
 
@@ -235,6 +254,10 @@ jQuery(function($) {
             "presignProduce.mostRate": presignProduce.items.mostRate.val(),
             "presignProduce.manageFormula": formulaToParam(manageFormula),
         };
+
+        if (presignProduce.items.version.val()) {
+            options["presignProduce.version.qvId"] = presignProduce.items.version.val();
+        }
 
         if (presignProduce.ppid) {
             url = api.quotation.updatePresignProduce;

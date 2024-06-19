@@ -16,4 +16,6 @@ public interface QuotationPriceDao extends Dao<QuotationPricePO> {
 
 	public List<QuotationPricePO> queryQuotationPrice(long faid, Timestamp updateTime);
 
+	public QuotationPricePO queryQuotationPriceLast(long qiid, Timestamp updateTime);
+
 }

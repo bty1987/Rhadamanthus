@@ -7,11 +7,11 @@ import com.fanglin.core.dao.Dao;
 
 public interface RoleTaskDao extends Dao<RoleTaskPO> {
 
-	public List<RoleTaskPO> queryRoleTask(int rid);
+	public List<RoleTaskPO> queryRoleTask(int rid, Integer company);
 
-	public List<RoleTaskPO> queryRoleTask(List<Integer> rids);
+	public List<RoleTaskPO> queryRoleTask(List<Integer> rids, Integer company);
 
-	public RoleTaskPO queryRoleTask(int rid, Long tid);
+	public RoleTaskPO queryRoleTask(int rid, Long tid, Integer company);
 
-	public void deleteRoleTask(int rid);
+	public void deleteRoleTask(int rid, Integer company);
 }

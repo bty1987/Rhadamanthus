@@ -191,7 +191,7 @@
 
             // 初始化功能区添加弹层 通过版本号查询出来的功能区
             com.post(api.quotation.queryFunctionAreaByVersionId, {
-                "functionArea.version.no": that.basicParams["quotetion.version"]
+                "functionArea.version.no": that.basicParams["quotetion.version.no"]
             }, function(data) {
 
                 data.functionAreas.length && $.each(data.functionAreas, function(i, v) {
@@ -207,8 +207,8 @@
 
             // 初始化报价项选择弹层
             var extraParams = {
-                "quotationItem.version.no": quo.basicParams["quotetion.version"],
-                "quotationPrice.updateTime": com.currentTime()
+                "quotationItem.version.no": quo.basicParams["quotetion.version.no"],
+                "quotationPrice.updateTime": quo.basicParams["quotetion.updateTime"] != null ? quo.basicParams["quotetion.updateTime"] : com.currentTime()
             };
             var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
 
@@ -2365,7 +2365,7 @@
                 quo.basicParams = {
                     "quotetion.qid": data.quotetion.qid, // 报价Id
                     "quotetion.discount": data.quotetion.discount, // 报价折扣
-                    "quotetion.version": data.quotetion.version, // 报价版本
+                    "quotetion.version.no": data.quotetion.version.no, // 报价版本
                     "quotetion.totalPrice": data.quotetion.totalPrice, // 报价总额
                     "quotetion.manageRate": data.quotetion.manageRate, // 管理费比例
                     "quotetion.managePrice": data.quotetion.managePrice, // 管理费
@@ -2374,10 +2374,11 @@
                     "quotetion.costPrice": data.quotetion.costPrice, // 基数
                     "quotetion.taxPrice": data.quotetion.taxPrice, // 税金
                     "quotetion.taxRate": data.quotetion.taxRate, // 税金比例
+                    "quotetion.updateTime": data.quotetion.updateTime
                 };
 
                 // 报价版本存入
-                quo.version = data.quotetion.version;
+                quo.version = data.quotetion.version.no;
 
                 // 左上角显示的折扣
                 com.focusPage('#quotetionName').text(data.quotetion.name);

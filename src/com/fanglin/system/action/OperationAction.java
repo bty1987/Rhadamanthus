@@ -67,7 +67,7 @@ public class OperationAction extends BaseListAction {
 	@Action(value = "queryOperationForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String queryOperationForLogin() throws FLException {
 
-		operations = operationService.queryOperationByUserId(operation, new UserVO(queryUserId()));
+		operations = operationService.queryOperationByUserId(operation, new UserVO(queryUserId()), queryCompany());
 
 		return SUCCESS;
 	}
@@ -75,7 +75,7 @@ public class OperationAction extends BaseListAction {
 	@Action(value = "queryOperationByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String queryOperationByUserId() throws FLException {
 
-		operations = operationService.queryOperationByUserId(operation, user);
+		operations = operationService.queryOperationByUserId(operation, user, queryCompany());
 
 		return SUCCESS;
 	}
@@ -83,7 +83,7 @@ public class OperationAction extends BaseListAction {
 	@Action(value = "queryOperationByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String queryOperationByRid() throws FLException {
 
-		operations = operationService.queryOperationByRid(operation, role);
+		operations = operationService.queryOperationByRid(operation, role, queryCompany());
 
 		return SUCCESS;
 	}
@@ -91,7 +91,7 @@ public class OperationAction extends BaseListAction {
 	@Action(value = "queryOperationForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String queryOperationForSelf() throws FLException {
 
-		operations = operationService.queryOperationForSelf(queryUserId());
+		operations = operationService.queryOperationForSelf(queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -127,7 +127,7 @@ public class OperationAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		operationService.updateRoleOperation(role, operation, queryUserId());
+		operationService.updateRoleOperation(role, operation, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -139,7 +139,7 @@ public class OperationAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		operationService.updateRoleOperationByRid(oids, role, queryUserId());
+		operationService.updateRoleOperationByRid(oids, role, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -151,7 +151,7 @@ public class OperationAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		operationService.updateRoleOperationByUserId(oids, user, queryUserId());
+		operationService.updateRoleOperationByUserId(oids, user, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -163,7 +163,7 @@ public class OperationAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		operationService.deleteOperation(operation);
+		operationService.deleteOperation(operation, queryCompany());
 
 		return SUCCESS;
 	}
@@ -175,7 +175,7 @@ public class OperationAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		operationService.deleteRoleOperation(role, operation);
+		operationService.deleteRoleOperation(role, operation, queryCompany());
 
 		return SUCCESS;
 	}

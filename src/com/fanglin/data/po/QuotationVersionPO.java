@@ -75,6 +75,11 @@ public class QuotationVersionPO implements Serializable {
 		this.no = no;
 	}
 
+	public QuotationVersionPO(long qvId) {
+		this.qvId = qvId;
+	}
+
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "qvId")
 	public long getQvId() {
@@ -85,7 +90,6 @@ public class QuotationVersionPO implements Serializable {
 		this.qvId = qvId;
 	}
 
-	@Id
 	@Column(name = "no")
 	public String getNo() {
 		return no;

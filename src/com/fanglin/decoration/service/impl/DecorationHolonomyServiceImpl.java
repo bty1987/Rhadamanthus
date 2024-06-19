@@ -210,7 +210,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 
 		decorationHolonomyDao.update(decorationHolonomyPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("更新满减信息,装修单:%s,主材配额:%.3f", orderId, Arith.div(materialPrice, 1000.0))));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("更新满减信息,装修单:%s,主材配额:%.3f", orderId, Arith.div(materialPrice, 1000.0))));
 	}
 
 }

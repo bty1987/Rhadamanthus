@@ -8,6 +8,8 @@ public class PresignProduceVO implements Serializable {
 
 	private Long ppid;
 
+	private QuotationVersionVO version;
+
 	private String name;
 
 	private Long quotePrice;
@@ -44,12 +46,25 @@ public class PresignProduceVO implements Serializable {
 		super();
 	}
 
+	public PresignProduceVO(QuotationVersionVO version) {
+		super();
+		this.version = version;
+	}
+
 	public Long getPpid() {
 		return ppid;
 	}
 
 	public void setPpid(Long ppid) {
 		this.ppid = ppid;
+	}
+
+	public QuotationVersionVO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionVO version) {
+		this.version = version;
 	}
 
 	public String getName() {

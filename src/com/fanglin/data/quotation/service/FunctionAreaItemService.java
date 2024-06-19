@@ -13,7 +13,9 @@ public interface FunctionAreaItemService {
 	public int addFunctionAreaItem(FunctionAreaVO functionAreaVO, List<FunctionAreaItemVO> functionAreaItems) throws FLException;
 
 	public void updateFunctionAreaItem(FunctionAreaItemVO functionAreaItemVO) throws FLException;
-	
+
+	public int updateFunctionAreaItemForSort(List<FunctionAreaItemVO> functionAreaItems) throws FLException;
+
 	public int deleteFunctionAreaItemByIds(List<Long> autoIds);
 
 }

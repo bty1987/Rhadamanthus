@@ -12,11 +12,13 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.PresignItemPO;
 import com.fanglin.data.po.PresignProducePO;
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.PresignItemDao;
 import com.fanglin.data.quotation.dao.PresignProduceDao;
 import com.fanglin.data.quotation.service.PresignProduceService;
 import com.fanglin.data.quotation.vo.PresignItemVO;
 import com.fanglin.data.quotation.vo.PresignProduceVO;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
@@ -41,15 +43,8 @@ public class PresignProduceServiceImpl implements PresignProduceService {
 		List<PresignProducePO> presignProducePOs = presignProduceDao.pagePresignProduce(paging, filters, company);
 		List<PresignProduceVO> presignProduceVOs = new ArrayList<PresignProduceVO>();
 
-		PresignProduceVO presignProduceVO;
-
 		for (PresignProducePO presignProducePO : presignProducePOs) {
-
-			presignProduceVO = new PresignProduceVO();
-
-			BeanUtil.copyPropertie(presignProducePO, presignProduceVO);
-
-			presignProduceVOs.add(presignProduceVO);
+			presignProduceVOs.add(presignProducePO.ptv(new PresignProduceVO(new QuotationVersionVO())));
 		}
 
 		paging.setData(presignProduceVOs);
@@ -62,12 +57,7 @@ public class PresignProduceServiceImpl implements PresignProduceService {
 		List<PresignProducePO> presignProducePOs = presignProduceDao.queryPresignProduce(company);
 
 		for (PresignProducePO presignProducePO : presignProducePOs) {
-
-			presignProduceVO = new PresignProduceVO();
-
-			BeanUtil.copyPropertie(presignProducePO, presignProduceVO);
-
-			presignProduceVOs.add(presignProduceVO);
+			presignProduceVOs.add(presignProducePO.ptv(new PresignProduceVO(new QuotationVersionVO())));
 		}
 
 		return presignProduceVOs;
@@ -78,7 +68,11 @@ public class PresignProduceServiceImpl implements PresignProduceService {
 
 		PresignProducePO presignProducePO = presignProduceDao.get(presignProduceVO.getPpid());
 
-		BeanUtil.copyProperties(presignProducePO, presignProduceVO, Arrays.asList("creater"));
+		if (presignProducePO == null) return presignProduceVO;
+
+		presignProduceVO.setVersion(new QuotationVersionVO());
+
+		presignProducePO.ptv(presignProduceVO);
 
 		return presignProduceVO;
 	}
@@ -97,7 +91,11 @@ public class PresignProduceServiceImpl implements PresignProduceService {
 
 		presignProducePO.setCompany(company);
 
-		BeanUtil.copyProperties(presignProduceVO, presignProducePO);
+		BeanUtil.copyProperties(presignProduceVO, presignProducePO, Arrays.asList("version"));
+
+		if (presignProduceVO.getVersion() != null && presignProduceVO.getVersion().getQvId() != null) {
+			presignProducePO.setVersion(new QuotationVersionPO(presignProduceVO.getVersion().getQvId()));
+		}
 
 		presignProduceDao.save(presignProducePO);
 
@@ -118,7 +116,11 @@ public class PresignProduceServiceImpl implements PresignProduceService {
 			throw new FLException(130081, "预签产品不可操作");
 		}
 
-		BeanUtil.copyProperties(presignProduceVO, presignProducePO);
+		BeanUtil.copyProperties(presignProduceVO, presignProducePO, Arrays.asList("version"));
+
+		if (presignProduceVO.getVersion() != null && presignProduceVO.getVersion().getQvId() != null) {
+			presignProducePO.setVersion(new QuotationVersionPO(presignProduceVO.getVersion().getQvId()));
+		}
 
 		presignProduceDao.update(presignProducePO);
 	}
@@ -146,29 +148,28 @@ public class PresignProduceServiceImpl implements PresignProduceService {
 
 		PresignProducePO presignProducePO = presignProduceDao.get(presignProduceVO.getPpid());
 
-		List<PresignItemPO> presignItemPOs = presignItemDao.queryPresignItem(presignProduceVO.getPpid());
-
 		if (presignProducePO == null) {
 			throw new FLException(130080, "预签产品不存在");
 		}
 
-		PresignProducePO newPresignProduce = new PresignProducePO();
+		PresignProducePO presignProduce = new PresignProducePO();
 
-		BeanUtil.copyProperties(presignProducePO, newPresignProduce, Arrays.asList("ppid"));
+		BeanUtil.copyProperties(presignProducePO, presignProduce, Arrays.asList("ppid", "version"));
 
-		presignProduceDao.save(newPresignProduce);
+		presignProduceDao.save(presignProduce);
+
+		List<PresignItemPO> presignItemPOs = presignItemDao.queryPresignItem(presignProducePO.getPpid());
 
 		for (PresignItemPO presignItemPO : presignItemPOs) {
 
 			PresignItemPO presignItem = new PresignItemPO();
 
-			presignItem.setPpid(newPresignProduce.getPpid());
+			presignItem.setPpid(presignProduce.getPpid());
 
 			BeanUtil.copyPropertie(presignItemPO, presignItem, Arrays.asList("ppid", "piid"));
 
 			presignItemDao.save(presignItem);
 		}
-
 	}
 
 }

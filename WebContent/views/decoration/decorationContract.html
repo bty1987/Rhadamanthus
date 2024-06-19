@@ -55,6 +55,61 @@
     <div class="" id="contracts"></div>
 </div>
 
+<div class="modal fade" id="customerModal" tabindex="-1">
+    <div class="modal-dialog"  >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="customerDialog">客户信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
+                            <div class="col-md-12">
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
+                                <div class="col-sm-9">
+                                    <input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6" disabled data-toggle="popover" data-trigger='manual'/>
+                                    <button id="identityBtn" class="btn btn-xs btn-info" type="button" style="margin: 2px 5px;">身份证认证</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
+                                <div class="col-sm-9">
+                                    <input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6" disabled data-toggle="popover" data-trigger='manual'/>
+                                    <button id="passportBtn" class="btn btn-xs btn-info" type="button" style="margin: 2px 5px;">护照认证</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="passhkm">港澳通行证</label>
+                                <div class="col-sm-9">
+                                    <input type="text" maxlength="21" id="passhkm" class="col-xs-10 col-sm-6" disabled data-toggle="popover" data-trigger='manual'/>
+                                    <button id="passhkmBtn" class="btn btn-xs btn-info" type="button" style="margin: 2px 5px;">港澳通行证认证</button>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 center" id="qrcodeCustomer"></div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div id="decorationContractPopUp" class="portlet box page-content"></div>
 <div id="decorationContractAuthentication" class="portlet box page-content"></div>
 

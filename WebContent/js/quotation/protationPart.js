@@ -722,7 +722,8 @@ var protationPart = (function() {
 
             com.focusPage('#saveFunctionAreaBtn').click(function() {
 
-                quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
+                var preferPrice = quo.basicParams["protation.preferPrice"];
+                var discount = quo.basicParams["protation.discount"];
 
                 var subd = quo.basicParams["protation.subdPrice"];
                 var subm = quo.basicParams["protation.submPrice"];
@@ -730,8 +731,13 @@ var protationPart = (function() {
                 quo.basicParams["protation.preferPrice"] = com.focusPage('#preferPrices').val();
                 quo.basicParams["protation.discount"] = utils.accMul(utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm)), com.focusPage('#preferPrices').val()), utils.accSub(quo.basicParams["protation.quotePrice"], utils.accAdd(subd, subm)))), 10);
 
-                if (!quo.calculateQuoFees())
+                if (!quo.calculateQuoFees()){
+
+                    quo.basicParams["protation.preferPrice"] = preferPrice;
+                    quo.basicParams["protation.discount"] = discount;
+
                     return false;
+                }
 
                 com.post(api.quotation.updateProtationForAdvance, quo.basicParams, function(res) {
 

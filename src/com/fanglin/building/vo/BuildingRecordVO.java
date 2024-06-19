@@ -9,37 +9,37 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class BuildingRecordVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4632028111958414235L;
-	
+
 	private Long brid;
-	
-	private HouseSourceVO houseSource;
-	
-	private CustomerSourceVO customerSource;
-	
+
+	private BuildingHouseVO buildingHouse;
+
+	private BuildingCustomerVO buildingCustomer;
+
 	private String comment;
-	
+
 	private Short type;
-	
+
 	private Short pattern;
-	
+
 	private UserBaseVO operater;
-	
+
 	private Timestamp operatTime;
-	
+
 	public BuildingRecordVO() {
 		super();
 	}
-	
-	public BuildingRecordVO(HouseSourceVO houseSource, UserBaseVO operater) {
+
+	public BuildingRecordVO(BuildingHouseVO buildingHouse, UserBaseVO operater) {
 		super();
-		this.houseSource = houseSource;
+		this.buildingHouse = buildingHouse;
 		this.operater = operater;
 	}
-	
-	public BuildingRecordVO(HouseSourceVO houseSource, CustomerSourceVO customerSource, UserBaseVO operater) {
+
+	public BuildingRecordVO(BuildingHouseVO buildingHouse, BuildingCustomerVO buildingCustomer, UserBaseVO operater) {
 		super();
-		this.houseSource = houseSource;
-		this.customerSource = customerSource;
+		this.buildingHouse = buildingHouse;
+		this.buildingCustomer = buildingCustomer;
 		this.operater = operater;
 	}
 
@@ -51,20 +51,20 @@ public class BuildingRecordVO implements java.io.Serializable {
 		this.brid = brid;
 	}
 
-	public HouseSourceVO getHouseSource() {
-		return houseSource;
+	public BuildingHouseVO getBuildingHouse() {
+		return buildingHouse;
 	}
 
-	public void setHouseSource(HouseSourceVO houseSource) {
-		this.houseSource = houseSource;
+	public void setBuildingHouse(BuildingHouseVO buildingHouse) {
+		this.buildingHouse = buildingHouse;
 	}
 
-	public CustomerSourceVO getCustomerSource() {
-		return customerSource;
+	public BuildingCustomerVO getBuildingCustomer() {
+		return buildingCustomer;
 	}
 
-	public void setCustomerSource(CustomerSourceVO customerSource) {
-		this.customerSource = customerSource;
+	public void setBuildingCustomer(BuildingCustomerVO buildingCustomer) {
+		this.buildingCustomer = buildingCustomer;
 	}
 
 	public String getComment() {
@@ -108,5 +108,4 @@ public class BuildingRecordVO implements java.io.Serializable {
 		this.operatTime = operatTime;
 	}
 
-	
 }

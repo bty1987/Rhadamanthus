@@ -145,7 +145,7 @@ jQuery(function($) {
 
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
-    });
+    }, null, false);
 
     com.post(api.construction.queryConstructionInfoByOrderId, {
         "constructionInfo.orderId": contractEdit.decorationOrderId
@@ -174,6 +174,8 @@ jQuery(function($) {
 
         quotationUtils.quotationDetail.protation = res.protation;
         contractEdit.totalPrice = res.protation.totalPrice;
+
+        com.focusPage("#con-innerarea", "#form").val(res.protation.quoteArea);
     }, null, false);
 
     com.post(api.decoration.queryDecorationActivityByOrderId, {

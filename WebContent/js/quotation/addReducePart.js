@@ -94,13 +94,21 @@
                 discountModal: com.focusPage('#discountModal').on("show.bs.modal", function(a) {
 
                     var factDiscount = utils.changeThrDecimal(utils.accMul(utils.accDiv(utils.accSub(addReduceDetail.factPrice, addReduceDetail.quoManagePrice), utils.accSub(addReduceDetail.decoration.quotationPrice, addReduceDetail.quoManagePrice)), 10));
+                    var realDiscount = utils.changeThrDecimal(addReduceDetail.quotation.realDiscount * 10);
 
                     com.focusPage("#signPrice").val(addReduceDetail.decoration.quotationPrice);
                     com.focusPage("#factPrice").val(addReduceDetail.factPrice);
                     com.focusPage("#managePrices").val(addReduceDetail.quoManagePrice);
-                    com.focusPage("#factDiscount").val(factDiscount);
+                    com.focusPage("#factDiscount").val(realDiscount);
                     com.focusPage("#originDiscount").val(addReduceDetail.discount);
-                    com.focusPage("#currentDiscount").val("");
+
+                    if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_ADD_INT) {
+                        com.focusPage("#currentDiscount").val(0);
+                    }
+
+                    if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_REDUCE_INT) {
+                        com.focusPage("#currentDiscount").val(realDiscount);
+                    }
                 }),
             };
 
@@ -156,7 +164,7 @@
                 "quotationItem.version.no": addReduceDetail.versionid,
                 "quotationPrice.updateTime": com.currentTime()
             };
-            if (addReduceDetail.decoration.type != constant.decoration().decoration.TYPE_INCLUSIVE_INT && addReduceDetail.decoration.contractTime != null) {
+            if (addReduceDetail.decoration.contractTime != null) {
                 extraParams["quotationPrice.updateTime"] = addReduceDetail.decoration.contractTime;
             }
             var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'quotation-worktype'];
@@ -1461,19 +1469,26 @@
                 addReduceDetail.basicParams["addReduce.manageRate"] = res.quotation.manageRate;
                 addReduceDetail.basicParams["addReduce.taxRate"] = quotation.taxRate;
 
+                addReduceDetail.quotation = res.quotation;
             }, null, false);
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": addReduceDetail.orderid
             }, function(res) {
 
-                com.focusPage('#orderId').text(res.decoration.orderId)
-                com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
+                var decoration = res.decoration;
 
-                addReduceDetail.ordertype = res.decoration.type;
-                addReduceDetail.factPrice = res.decoration.factPrice;
+                com.focusPage('#orderId').text(decoration.orderId)
+                com.focusPage('#address').text(decoration.house.village.name + " " + decoration.house.houseNumber);
 
-                addReduceDetail.decoration = res.decoration;
+                addReduceDetail.ordertype = decoration.type;
+                addReduceDetail.factPrice = decoration.factPrice;
+
+                addReduceDetail.decoration = decoration;
+
+                var quotation = addReduceDetail.quotation;
+
+                addReduceDetail.quotation.realDiscount = utils.changeThrDecimal(decoration.factPrice / (quotation.undisPrice + quotation.disPrice + quotation.trafficPrice + quotation.managePrice + quotation.taxPrice));
             }, null, false);
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));

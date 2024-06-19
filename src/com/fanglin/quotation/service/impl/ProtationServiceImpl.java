@@ -26,10 +26,12 @@ import com.fanglin.data.po.PresignCostPO;
 import com.fanglin.data.po.PresignItemPO;
 import com.fanglin.data.po.PresignPricePO;
 import com.fanglin.data.po.PresignProducePO;
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.PresignCostDao;
 import com.fanglin.data.quotation.dao.PresignItemDao;
 import com.fanglin.data.quotation.dao.PresignPriceDao;
 import com.fanglin.data.quotation.dao.PresignProduceDao;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -94,18 +96,7 @@ public class ProtationServiceImpl implements ProtationService {
 		List<ProtationVO> protationVOs = new ArrayList<ProtationVO>();
 
 		for (ProtationDO protationDO : protationDOs) {
-
-			ProtationVO protationVO = new ProtationVO(new DecorationVO(), new UserBaseVO());
-
-			protationVO.getDecoration().setSupervisor(new UserBaseVO());
-
-			BeanUtil.copyPropertie(protationDO, protationVO, Arrays.asList("decoration", "creater"));
-
-			BeanUtil.copyProperties(protationDO.getCreater(), protationVO.getCreater(), Arrays.asList("duty", "dept", "role"));
-
-			protationDO.getDecoration().ptvcascade(protationVO.getDecoration());
-
-			protationVOs.add(protationVO);
+			protationVOs.add(protationDO.ptv(new ProtationVO(new DecorationVO(), new UserBaseVO(), new QuotationVersionVO())));
 		}
 		paging.setData(protationVOs);
 
@@ -118,12 +109,7 @@ public class ProtationServiceImpl implements ProtationService {
 		List<ProtationVO> protationVOs = new ArrayList<ProtationVO>();
 
 		for (ProtationPO protationPO : protationPOs) {
-
-			protationVO = new ProtationVO();
-
-			BeanUtil.copyProperties(protationPO, protationVO, Arrays.asList("creater"));
-
-			protationVOs.add(protationVO);
+			protationVOs.add(protationPO.ptv(new ProtationVO(null, new UserBaseVO(), new QuotationVersionVO())));
 		}
 
 		return protationVOs;
@@ -134,7 +120,13 @@ public class ProtationServiceImpl implements ProtationService {
 
 		ProtationPO protationPO = protationDao.queryProtationForDefaultByOrderId(protationVO.getOrderId());
 
-		BeanUtil.copyProperties(protationPO, protationVO, Arrays.asList("creater"));
+		if (protationPO == null) return protationVO;
+
+		protationVO.setCreater(new UserBaseVO());
+
+		protationVO.setVersion(new QuotationVersionVO());
+
+		protationPO.ptv(protationVO);
 
 		return protationVO;
 	}
@@ -144,7 +136,13 @@ public class ProtationServiceImpl implements ProtationService {
 
 		ProtationPO protationPO = protationDao.get(protationVO.getPid());
 
-		BeanUtil.copyProperties(protationPO, protationVO, Arrays.asList("creater"));
+		if (protationPO == null) return protationVO;
+
+		protationVO.setCreater(new UserBaseVO());
+
+		protationVO.setVersion(new QuotationVersionVO());
+
+		protationPO.ptv(protationVO);
 
 		return protationVO;
 	}
@@ -166,7 +164,7 @@ public class ProtationServiceImpl implements ProtationService {
 
 		ProtationPO protationPO = new ProtationPO();
 
-		BeanUtil.copyProperties(protationVO, protationPO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(protationVO, protationPO, Arrays.asList("creater", "version"));
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
@@ -193,6 +191,10 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setCostRate(presignProducePO.getCostRate());
 		protationPO.setMostRate(presignProducePO.getMostRate());
 		protationPO.setManageRate(presignProducePO.getManageRate());
+
+		if (presignProducePO.getVersion() != null) {
+			protationPO.setVersion(presignProducePO.getVersion());
+		}
 
 		PresignPricePO presignPricePO = presignPriceDao.queryPresignPricePrice(ppid, protationVO.getQuoteArea());
 
@@ -284,7 +286,7 @@ public class ProtationServiceImpl implements ProtationService {
 
 		}
 
-		BeanUtil.copyPropertie(protationPO, protationVO, Arrays.asList("creater"));
+		BeanUtil.copyPropertie(protationPO, protationVO, Arrays.asList("creater", "version"));
 
 		return 0;
 	}
@@ -299,10 +301,12 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200046, "预签不存在");
 		}
 
-		checkProtationForDefaultByOrderId(protationPO.getOrderId());
-
 		protationPO.setName(protationVO.getName());
 		protationPO.setComment(protationVO.getComment());
+
+		if (protationVO.getVersion() != null && protationVO.getVersion().getQvId() != null) {
+			protationPO.setVersion(new QuotationVersionPO(protationVO.getVersion().getQvId()));
+		}
 
 		protationDao.update(protationPO);
 

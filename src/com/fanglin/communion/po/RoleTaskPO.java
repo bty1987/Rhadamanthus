@@ -32,17 +32,20 @@ public class RoleTaskPO implements Serializable {
 
 	private Timestamp createTime;
 
+	private int company;
+
 	public RoleTaskPO() {
 		super();
 	}
 
-	public RoleTaskPO(int rid, TaskPO task, UserPO creater) {
+	public RoleTaskPO(int rid, TaskPO task, UserPO creater, int company) {
 
 		super();
 
 		this.rid = rid;
 		this.task = task;
 		this.creater = creater;
+		this.company = company;
 	}
 
 	@Id
@@ -92,6 +95,15 @@ public class RoleTaskPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

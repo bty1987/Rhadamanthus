@@ -20,17 +20,17 @@ public class FunctionAreaItemDaoImpl extends DaoImpl<FunctionAreaItemPO> impleme
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<FunctionAreaItemPO> queryFunctionAreaItemByFunctionAreaId(long faid) {
-		return (List<FunctionAreaItemPO>) session().createCriteria(FunctionAreaItemPO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.eq("functionArea.faid", faid)).add(Restrictions.eq("quotationItem.status", QuotationItemPO.STATUS_ENABLE_INT)).addOrder(Order.asc("quotationItem.no")).list();
+	public List<FunctionAreaItemPO> queryFunctionAreaItem(long faid) {
+		return (List<FunctionAreaItemPO>) session().createCriteria(FunctionAreaItemPO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.eq("functionArea.faid", faid)).add(Restrictions.eq("quotationItem.status", QuotationItemPO.STATUS_ENABLE_INT)).addOrder(Order.asc("sort")).list();
 	}
 
 	@Override
-	public FunctionAreaItemPO queryFunctionAreaItemByIdAFunctionAreaId(long faid, long qiid) {
+	public FunctionAreaItemPO queryFunctionAreaItem(long faid, long qiid) {
 		return (FunctionAreaItemPO) session().createCriteria(FunctionAreaItemPO.class).add(Restrictions.eq("quotationItem.qiid", qiid)).add(Restrictions.eq("functionArea.faid", faid)).uniqueResult();
 	}
 
 	@Override
-	public int deleteFunctionAreaItemByFunctionAreaId(long functionAreaId) {
+	public int deleteFunctionAreaItem(long functionAreaId) {
 
 		StringBuffer sql = new StringBuffer();
 		sql.append("delete from quotation.functionAreaQuoteItem where functionAreaId=:functionAreaId");

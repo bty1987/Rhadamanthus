@@ -977,8 +977,6 @@ public class DecorationServiceImpl implements DecorationService {
 	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException {
 
 		String orderId = decorationVO.getOrderId();
-		Short type = decorationVO.getType();
-		Short typeness = decorationVO.getTypeness();
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -990,11 +988,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(140004, "装修单状态不可操作");
-		}
-
-		if (decorationVO.getNotSalesmanRate() != null) {
-			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
-			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,非业务提点修改: %d", orderId, decorationVO.getNotSalesmanRate())));
 		}
 
 		if (decorationVO.getGrade() != null) {
@@ -1011,14 +1004,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (decorationVO.getBusitype() != null) {
 			decorationPO.setBusitype(decorationVO.getBusitype());
-		}
-
-		if (type != null) {
-			decorationPO.setType(type);
-		}
-
-		if (typeness != null) {
-			decorationPO.setTypeness(typeness);
 		}
 
 		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(orderId);
@@ -1104,7 +1089,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s房产修改,原房产:%s,修改房产为:%s.", orderId, oldHouse, newHouse)));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s房产修改,原房产:%s,修改房产为:%s.", orderId, oldHouse, newHouse)));
 	}
 
 	@Override
@@ -1130,7 +1115,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.changeDecorationForOrderId(newOrderId, oldOrderId);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("订单编号修改,原订单编号:%s,修改编号为:%s.", oldOrderId, newOrderId)));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, oldOrderId, String.format("订单编号修改,原订单编号:%s,修改编号为:%s.", oldOrderId, newOrderId)));
 	}
 
 	@Override
@@ -1165,7 +1150,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString())));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s,类型为:%s,录入时间修改,原录入时间:%s,修改录入时间为:%s.", orderId, timeType == 1 ? "录入时间" : "签单时间", oldTime != null ? oldTime.toString() : "空", dateTime.toString())));
 	}
 
 	@Override
@@ -1188,13 +1173,19 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(versionId);
+
+		if (quotationVersionPO == null) {
+			throw new FLException(200022, "报价版本不存在");
+		}
+
 		oldVersionId = decorationPO.getVersion().getNo();
 
-		decorationPO.setVersion(new QuotationVersionPO(versionId));
+		decorationPO.setVersion(quotationVersionPO);
 
 		decorationDao.update(decorationPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s,报价版本修改,原报价版本:%s,修改报价版本为:%s", orderId, oldVersionId, versionId)));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s,报价版本修改,原报价版本:%s,修改报价版本为:%s", orderId, oldVersionId, versionId)));
 	}
 
 	@Override
@@ -1209,7 +1200,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s, 销售配比忽略验证.", decorationVO.getOrderId())));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, decorationVO.getOrderId(), String.format("装修单:%s, 销售配比忽略验证.", decorationVO.getOrderId())));
 
 		decorationDao.update(decorationPO);
 	}
@@ -1233,7 +1224,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status)));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s状态修改,原状态:%s,修改状态为:%s.", orderId, oldStatus, status)));
 	}
 
 	@Override
@@ -1267,7 +1258,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.update(decorationPO);
 
-		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("装修单:%s状态修改,原类型:%s,修改类型为:%s.", orderId, String.valueOf(oldType), String.valueOf(decorationVO.getType()))));
+		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单:%s状态修改,原类型:%s,修改类型为:%s.", orderId, String.valueOf(oldType), String.valueOf(decorationVO.getType()))));
 	}
 
 	@Override
@@ -1485,6 +1476,42 @@ public class DecorationServiceImpl implements DecorationService {
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
 
 		customerOriginDao.update(customerOriginPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateDecorationForAdvance(DecorationVO decorationVO, String userId) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+		Short type = decorationVO.getType();
+		Short typeness = decorationVO.getTypeness();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_SIGNED_INT }); // 咨询,
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (!status.contains(decorationPO.getStatus())) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		if (decorationVO.getNotSalesmanRate() != null) {
+			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单: %s, 原非提: %s, 现非提: %s.", orderId, decorationPO.getNotSalesmanRate(), decorationVO.getNotSalesmanRate())));
+
+			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
+		}
+
+		if (type != null && typeness != null) {
+			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单: %s, 原业务: %s, 现业务: %s.", orderId, decorationPO.getTypeness(), decorationVO.getTypeness())));
+
+			decorationPO.setType(type);
+			decorationPO.setTypeness(typeness);
+		}
+
+		decorationDao.update(decorationPO);
 	}
 
 	@Override

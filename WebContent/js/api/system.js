@@ -40,6 +40,12 @@ $.extend(api.index, {
     },
     license: {
         url: "/license.html"
+    },
+    roleModule: {
+        url: "/views/system/module4role.html"
+    },
+    userModule: {
+        url: "/views/system/module4user.html"
     }
 });
 
@@ -137,6 +143,10 @@ $.extend(api, {
             url: "pageRole.do",
             demo: true
         },
+        pageRoleByMid: {
+            url: "pageRoleByMid.do",
+            demo: true
+        },
         queryRole: {
             url: "queryRole.do",
             demo: true
@@ -177,10 +187,6 @@ $.extend(api, {
         },
         queryModuleByUserId: {
             url: "queryModuleByUserId.do",
-            demo: true
-        },
-        queryModuleByRid: {
-            url: "queryModuleByRid.do",
             demo: true
         },
         queryModuleByRid: {

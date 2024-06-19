@@ -188,6 +188,15 @@ $.extend(api, {
         addCustomerRecord: {
             url: "addCustomerRecord.do"
         },
+        queryBrandSupplier: {
+            url: "queryBrandSupplier.do"
+        },
+        addBrandSupplier: {
+            url: "addBrandSupplier.do"
+        },
+        deleteBrandSupplier: {
+            url: "deleteBrandSupplier.do"
+        },
 
     }
 });

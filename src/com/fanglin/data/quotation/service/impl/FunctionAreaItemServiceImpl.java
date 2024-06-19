@@ -42,7 +42,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 
 		long functionAreaId = functionAreaItemVO.getFunctionArea().getFaid();
 
-		List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
+		List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItem(functionAreaId);
 		List<FunctionAreaItemVO> functionAreaItemVOs = new ArrayList<FunctionAreaItemVO>();
 
 		for (FunctionAreaItemPO functionAreaItemPO : functionAreaItemPOs) {
@@ -63,6 +63,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 			functionAreaItemVO.setFaiid(functionAreaItemPO.getFaiid());
 			functionAreaItemVO.setFormula(functionAreaItemPO.getFormula());
 			functionAreaItemVO.setFunctionArea(functionAreaVO);
+			functionAreaItemVO.setSort(functionAreaItemPO.getSort());
 
 			functionAreaItemVO.setQuotationItem(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));
 
@@ -88,7 +89,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 
 			long qiid = functionAreaItemVO.getQuotationItem().getQiid();
 
-			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.queryFunctionAreaItemByIdAFunctionAreaId(faid, qiid);
+			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.queryFunctionAreaItem(faid, qiid);
 
 			if (functionAreaItemPO != null) continue;
 
@@ -96,6 +97,7 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 
 			functionAreaItemPO.setFunctionArea(functionAreaPO);
 			functionAreaItemPO.setQuotationItem(new QuotationItemPO(functionAreaItemVO.getQuotationItem().getQiid()));
+			functionAreaItemPO.setSort(functionAreaItemVO.getSort());
 
 			functionAreaItemDao.save(functionAreaItemPO);
 		}
@@ -116,6 +118,24 @@ public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
 		functionAreaItemPO.setFormula(functionAreaItemVO.getFormula());
 
 		functionAreaItemDao.update(functionAreaItemPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateFunctionAreaItemForSort(List<FunctionAreaItemVO> functionAreaItems) throws FLException {
+
+		for (FunctionAreaItemVO functionAreaItemVO : functionAreaItems) {
+
+			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.get(functionAreaItemVO.getFaiid());
+
+			if (functionAreaItemPO == null) continue;
+
+			functionAreaItemPO.setSort(functionAreaItemVO.getSort());
+
+			functionAreaItemDao.update(functionAreaItemPO);
+		}
+
+		return 0;
 	}
 
 	@Override

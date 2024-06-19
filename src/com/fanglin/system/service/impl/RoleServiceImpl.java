@@ -23,8 +23,10 @@ import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.dao.RoleModuleDao;
 import com.fanglin.system.dao.RoleOperationDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.RoleModuleRO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.service.RoleService;
+import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -73,6 +75,26 @@ public class RoleServiceImpl implements RoleService {
 			roleVO = new RoleVO();
 
 			BeanUtil.copyProperties(rolePO, roleVO, Arrays.asList("creater"));
+
+			roleVOs.add(roleVO);
+		}
+
+		paging.setData(roleVOs);
+	}
+
+	@Override
+	public void pageRoleByMid(Paging paging, List<Filter> filters, ModuleVO moduleVO, Integer company) {
+
+		List<RoleModuleRO> roleModuleDOs = roleModuleDao.pageRoleByMid(paging, filters, moduleVO.getMid(), company);
+		List<RoleVO> roleVOs = new ArrayList<RoleVO>();
+
+		RoleVO roleVO;
+
+		for (RoleModuleRO roleModuleRO : roleModuleDOs) {
+
+			roleVO = new RoleVO();
+
+			BeanUtil.copyProperties(roleModuleRO.getRole(), roleVO, Arrays.asList("creater"));
 
 			roleVOs.add(roleVO);
 		}
@@ -192,7 +214,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteRoleByRid(RoleVO roleVO, int qid) throws FLException {
+	public int deleteRoleByRid(RoleVO roleVO, int qid, Integer company) throws FLException {
 
 		int rid = roleVO.getRid();
 
@@ -218,8 +240,8 @@ public class RoleServiceImpl implements RoleService {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid());
-		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid());
+		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), company);
+		roleOperationDao.deleteRoleOperationByRid(rolePO.getRid(), company);
 
 		roleDao.delete(rolePO);
 

@@ -27,6 +27,7 @@ import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
+import com.fanglin.data.quotation.dao.QuotationVersionDao;
 import com.fanglin.data.quotation.service.FunctionAreaService;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
@@ -48,6 +49,9 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 	@Autowired
 	private FunctionAreaItemDao functionAreaItemDao;
+
+	@Autowired
+	private QuotationVersionDao quotationVersionDao;
 
 	@Autowired
 	private CountingService countingService;
@@ -129,6 +133,12 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 			throw new FLException(200020, "功能区对应版本和编号已存在");
 		}
 
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionByVersionId(functionAreaVO.getVersion().getNo());
+
+		if (quotationVersionPO == null) {
+			throw new FLException(200022, "报价版本不存在");
+		}
+
 		functionAreaPO = new FunctionAreaPO();
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_FUNCTION_AREA_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
@@ -139,7 +149,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
 
-		functionAreaPO.setQuotationVersion(new QuotationVersionPO(functionAreaVO.getVersion().getNo()));
+		functionAreaPO.setQuotationVersion(quotationVersionPO);
 
 		functionAreaDao.saveOrUpdate(functionAreaPO);
 
@@ -157,7 +167,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		}
 
 		if (!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())) { // 功能区的类型改变时
-			functionAreaItemDao.deleteFunctionAreaItemByFunctionAreaId(functionAreaPO.getFaid());
+			functionAreaItemDao.deleteFunctionAreaItem(functionAreaPO.getFaid());
 		}
 
 		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));

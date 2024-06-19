@@ -173,7 +173,7 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 
 			awardStockDao.update(awardStockPO);
 
-			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardPurchasePO.getInprice(), awardPurchaseVO.getNum(), null);
+			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardPurchaseVO.getInprice(), awardPurchaseVO.getNum(), null);
 
 			awardRecordDao.save(awardRecordPO);
 		}

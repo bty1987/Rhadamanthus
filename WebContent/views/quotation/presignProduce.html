@@ -18,12 +18,20 @@
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="name">名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="version">版本</label>
+                            <div class="col-sm-9">
+                                <select id="version" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
 
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="quotePrice">起报价</label>
@@ -56,7 +64,7 @@
 						<div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="comment">说明</label>
                             <div class="col-sm-9">
-                                <ul class="list-unstyled spaced col-xs-10 col-sm-10">
+                                <ul class="list-unstyled col-xs-10 col-sm-10">
                                     <li class="text-warning orange">
                                         <span>支持参数包括: 起报价 , 优惠额 , 功能区 , 个性 , 减项 , 赋能</span>
                                     </li>

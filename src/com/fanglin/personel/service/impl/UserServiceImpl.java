@@ -69,6 +69,7 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.RolePO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -176,6 +177,19 @@ public class UserServiceImpl implements UserService {
 		}
 
 		paging.setData(userInfoVOs);
+	}
+
+	@Override
+	public void pageUserByMid(Paging paging, List<Filter> filters, ModuleVO moduleVO, Integer company) throws FLException {
+
+		List<UserPO> userPOs = userDao.pageUserByMid(paging, filters, moduleVO.getMid(), company);
+		List<UserVO> userVOs = new ArrayList<UserVO>();
+
+		for (UserPO userPO : userPOs) {
+			userVOs.add(convertBean(userPO));
+		}
+
+		paging.setData(userVOs);
 	}
 
 	@Override
@@ -1183,15 +1197,17 @@ public class UserServiceImpl implements UserService {
 
 		if (userPO.getAuthUrl() != null && !"".equals(userPO.getAuthUrl())) {
 			redirect = userPO.getAuthUrl();
-		} else {
-			JSONObject info = Signature.authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity());
-
-			redirect = Signature.decode(info.getString("url"));
-
-			userPO.setToken(info.getString("transactionNo"));
-
-			userDao.update(userPO);
 		}
+
+		Short type = 0;
+
+		JSONObject info = Signature.authenticate(userPO.getSignNo(), userPO.getUserName(), userPO.getPhone(), userPO.getIdentity(), type);
+
+		redirect = Signature.decode(info.getString("url"));
+
+		userPO.setToken(info.getString("transactionNo"));
+
+		userDao.update(userPO);
 
 		return redirect;
 	}

@@ -33,8 +33,10 @@ public class FunctionAreaItemPO implements Serializable {
 	private FunctionAreaPO functionArea;
 
 	private QuotationItemPO quotationItem;
-	
+
 	private String formula;
+
+	private int sort;
 
 	@Id
 	@GeneratedValue
@@ -66,13 +68,21 @@ public class FunctionAreaItemPO implements Serializable {
 	public FunctionAreaPO getFunctionArea() {
 		return functionArea;
 	}
-	
+
 	public String getFormula() {
 		return formula;
 	}
-	
+
 	public void setFormula(String formula) {
 		this.formula = formula;
 	}
-	
+
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
 }

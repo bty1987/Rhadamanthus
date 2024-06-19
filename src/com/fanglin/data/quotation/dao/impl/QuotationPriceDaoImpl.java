@@ -3,6 +3,7 @@ package com.fanglin.data.quotation.dao.impl;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -52,9 +53,16 @@ public class QuotationPriceDaoImpl extends DaoImpl<QuotationPricePO> implements 
 	@SuppressWarnings("unchecked")
 	public List<QuotationPricePO> queryQuotationPrice(long faid, Timestamp updateTime) {
 
-		String sql = "select {qprice.*} from (select price.* from quotation.functionareaquoteitem faqi, quotation.quotationitem qi, quotation.quotationprice price where faqi.functionAreaId = :faid and faqi.quoteItemId = qi.qiid and qi.status = 0 and faqi.quoteItemId = price.qiid and price.updateTime <= :updateTime and price.status = 0 ORDER BY price.updateTime desc) AS qprice GROUP BY qprice.qiid";
+		String sql = "select {qprice.*} from (select price.*, faqi.sort from quotation.functionareaquoteitem faqi, quotation.quotationitem qi, quotation.quotationprice price where faqi.functionAreaId = :faid and faqi.quoteItemId = qi.qiid and qi.status = 0 and faqi.quoteItemId = price.qiid and price.updateTime <= :updateTime and price.status = 0 ORDER BY price.updateTime desc) AS qprice GROUP BY qprice.qiid ORDER BY qprice.sort";
 
 		return session().createSQLQuery(sql).addEntity("qprice", QuotationPricePO.class).setLong("faid", faid).setTimestamp("updateTime", updateTime).list();
+	}
+
+	@Override
+	public QuotationPricePO queryQuotationPriceLast(long qiid, Timestamp updateTime) {
+
+		return (QuotationPricePO) session().createCriteria(QuotationPricePO.class).add(Restrictions.eq("quotationItem.qiid", qiid)).add(Restrictions.eq("status", QuotationPricePO.STATUS_ENABLE_INT)).add(Restrictions.le("updateTime", updateTime)).addOrder(Order.desc("updateTime")).setMaxResults(1).uniqueResult();
+
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

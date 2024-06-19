@@ -188,7 +188,25 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		this.content = content;
 	}
 
+	public void ptp(String name, String measurementUnit, String workType, int unitPrice, int addPrice, int subPrice, String formula, int num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content, short subtype) {
+
+		setName(name);
+		setMeasurementUnit(measurementUnit);
+		setWorkType(workType);
+		setUnitPrice(unitPrice);
+		setAddPrice(addPrice);
+		setSubPrice(subPrice);
+		setFormula(formula);
+		setNum(num);
+		setType(type);
+		setSubtype(subtype);
+		setDiscount(discount);
+		setQfaid(quotetionFunctionArea.getQfaId());
+		setContent(content);
+	}
+
 	public void ptp(QuotationFunctionAreaItemPO quotationFunctionAreaItemPO) {
+
 		this.setName(quotationFunctionAreaItemPO.getItemName());
 		this.setUnitPrice(quotationFunctionAreaItemPO.getUnitPrice());
 		this.setAddPrice(quotationFunctionAreaItemPO.getAddPrice());

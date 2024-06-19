@@ -85,63 +85,20 @@ jQuery(function() {
 
             if (val.gid == k) {
 
-                sales.goods = val;
-                sales.leftitems.goodsNo.val(val.no);
-                sales.leftitems.category.val(val.category);
-                sales.leftitems.brand.val(val.brand);
-                sales.leftitems.measurementUnit.val(val.measurementUnit);
-
-                // 赋值售价信息
-                com.post(api.data.queryPriceByGid, {
-                    "price.gid": k
-                }, function(res) {
-
-                    if (res.prices.length != 0) {
-
-                        $.each(res.prices, function(key, value) {
-
-                            value.name = value.selling + " " + value.name;
-                        });
-
-                        sales.leftitems.purchase.bindData(res.prices, "pid", "name", false, null, "selling");
-
-                        var price = res.prices[0];
-                        sales.leftitems.discount.val(1);
-                        sales.leftitems.disPrice.val(price.selling);
-                        sales.leftitems.postDis.val(1);
-                        sales.leftitems.selling.val(price.selling);
-                        sales.leftitems.num.val(1);
-                        sales.leftitems.total.val(price.selling);
-                    } else {
-                        com.showAlert(com.warning, "该商品暂无价格信息,请录入");
-                    }
-                });
-                // 赋值颜色信息
-                com.post(api.data.queryColorForEnableByGid, {
-                    "color.gid": k
-                }, function(res) {
-
-                    if (res.colors.length != 0) {
-                        sales.leftitems.color.bindData(res.colors, "cid", "name");
-                    } else {
-                        com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
-                    }
-                });
-                // 赋值规格信息
-                com.post(api.data.queryFormatForEnableByGid, {
-                    "format.gid": k
-                }, function(res) {
-
-                    if (res.formats.length != 0) {
-                        sales.leftitems.format.bindData(res.formats, "fid", "info");
-                    } else {
-                        com.showAlert(com.warning, "该商品暂无规格信息,请录入");
-                    }
-                });
+                fillLeftItem(val);
             }
         });
         return v;
     });
+
+    if (params.data.goods) {
+
+        com.updateTypeahead('goods', params.data.goods.gid, params.data.goods.name);
+
+        fillLeftItem(params.data.goods);
+
+        params.data.goods = null;
+    }
 
     com.focusPage('#itemModel').on('hidden.bs.modal', function(e) {
 
@@ -472,4 +429,77 @@ jQuery(function() {
 
         sales.rightitems.totals.val(_total);
     }
+
+    function fillLeftItem(val) {
+
+        if (!val)
+            return false;
+
+        sales.goods = val;
+        sales.leftitems.goodsNo.val(val.no);
+        sales.leftitems.category.val(val.category);
+        sales.leftitems.brand.val(val.brand);
+        sales.leftitems.measurementUnit.val(val.measurementUnit);
+
+        // 赋值售价信息
+        com.post(api.data.queryPriceByGid, {
+            "price.gid": val.gid
+        }, function(res) {
+
+            if (res.prices.length != 0) {
+
+                $.each(res.prices, function(key, value) {
+
+                    value.name = value.selling + " " + value.name;
+                });
+
+                sales.leftitems.purchase.bindData(res.prices, "pid", "name", false, null, "selling");
+
+                var price = res.prices[0];
+                sales.leftitems.discount.val(1);
+                sales.leftitems.disPrice.val(price.selling);
+                sales.leftitems.postDis.val(1);
+                sales.leftitems.selling.val(price.selling);
+                sales.leftitems.num.val(1);
+                sales.leftitems.total.val(price.selling);
+            } else {
+                com.showAlert(com.warning, "该商品暂无价格信息,请录入");
+            }
+        });
+        // 赋值颜色信息
+        com.post(api.data.queryColorForEnableByGid, {
+            "color.gid": val.gid
+        }, function(res) {
+
+            if (res.colors.length != 0) {
+                sales.leftitems.color.bindData(res.colors, "cid", "name");
+            } else {
+                com.showAlert(com.warning, "该商品暂无颜色信息,请录入");
+            }
+        });
+        // 赋值规格信息
+        com.post(api.data.queryFormatForEnableByGid, {
+            "format.gid": val.gid
+        }, function(res) {
+
+            if (res.formats.length != 0) {
+                sales.leftitems.format.bindData(res.formats, "fid", "info");
+            } else {
+                com.showAlert(com.warning, "该商品暂无规格信息,请录入");
+            }
+        });
+    }
+
+    com.focusPage('.select').dblclick(function(res) {
+
+        com.closePopup();
+
+        com.popup4page("#layerPopUp", api.index.goods4condition.url, "商品", null, function() {
+
+            if (!params.data.goods)
+                return false;
+
+            com.popup4page("#layerPopUp", "views/sales/sales2add.html", "添项");
+        });
+    });
 });

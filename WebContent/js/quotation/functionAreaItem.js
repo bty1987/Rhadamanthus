@@ -30,7 +30,8 @@
             saveBtn: com.focusPage("#saveSelectItemBtn")
         },
         history: [],
-        postParam: {}
+        postParam: {},
+        length: 0
     };
 
     functionAreaItem.btns.btnUpdate.on("click", update);
@@ -75,12 +76,14 @@
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             $tableWrap.empty();
 
+            quotationItem.length = data.functionAreaItems.length;
+
             if (!data.functionAreaItems || data.functionAreaItems.length == 0)
                 return false;
 
             $.each(data.functionAreaItems, function(i, v) {
 
-                var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                var $liLine = $('<li></li>').addClass('item-blue clearfix').attr('data-index', i + 1);
                 var $h3 = $('<h3></h3>').addClass('oid');
 
                 var $label = $('<label></label>');
@@ -96,11 +99,23 @@
 
                 var $btnUpdate = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-yellow btn-minier').html('更新'))
 
-                $divBtnWrap.append($btnUpdate).appendTo($h3);
+                var $up = $('<a></a>').attr({
+                    "href": "javascript:void(0)"
+                }).css({
+                    "font-size": "15px"
+                }).append('<i class="bigger-125 icon-arrow-up green"></i>');
+
+                var $down = $('<a></a>').attr({
+                    "href": "javascript:void(0)"
+                }).css({
+                    "font-size": "15px"
+                }).append('<i class="bigger-125 icon-arrow-down red"></i>');
+
+                $divBtnWrap.append($btnUpdate).append($up).append($down).appendTo($h3);
 
                 v.formula = v.formula != null ? v.formula : ""
 
-                var propertyArr = [["编号: ", v.quotationItem.no, "grey"], ["分类: ", v.quotationItem.classification.name, "red"], ["大类: ", v.quotationItem.bigCategory.name, "red"], ["小类: ", v.quotationItem.smallCategory.name, "red"], ["单位: ", v.quotationItem.unit.name, "red"], ["工种: ", v.quotationItem.workType.name, "red"], ["单价: ", v.quotationItem.unitPrice, "blue"], ["公式: ", paramToFormula(v.formula), "blue"]];
+                var propertyArr = [["编号: ", v.quotationItem.no, "grey"], ["分类: ", v.quotationItem.classification.name, "red"], ["大类: ", v.quotationItem.bigCategory.name, "red"], ["小类: ", v.quotationItem.smallCategory.name, "red"], ["单位: ", v.quotationItem.unit.name, "red"], ["工种: ", v.quotationItem.workType.name, "red"], ["单价: ", v.quotationItem.unitPrice, "blue"], ["公式: ", paramToFormula(v.formula), "blue"], ["排序: ", v.sort, "blue"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -117,6 +132,16 @@
                     functionAreaItem.items.formula.val(paramToFormula(v.formula));
 
                     functionAreaItem.modals.updateModal.modal("show");
+                });
+
+                $up.click(function() {
+
+                    moveAreaItem($liLine, $liLine.prev(), "up");
+                });
+
+                $down.click(function() {
+
+                    moveAreaItem($liLine, $liLine.next(), "down");
                 });
 
                 $label.append($input).append($span).appendTo($h3);
@@ -266,6 +291,8 @@
         $.each($historys, function(i, e) {
 
             _params["functionAreaItems[" + i + "].quotationItem.qiid"] = $(this).val();
+
+            _params["functionAreaItems[" + i + "].sort"] = quotationItem.length + (i + 1);
         });
 
         com.post(api.quotation.addFunctionAreaItem, _params, function(res) {
@@ -310,6 +337,33 @@
             initFunctionAreaItemList();
 
             functionAreaItem.modals.updateModal.modal("hide");
+        });
+
+    }
+
+    function moveAreaItem(quote, movequote, direction) {
+
+        if (direction == "up" && (quote.prev().length == 0 || !movequote.find('input[type="checkbox"]').val())) {
+            return false;
+
+        }
+
+        if (direction == "down" && (quote.next().length == 0 || !movequote.find('input[type="checkbox"]').val())) {
+            return false;
+        }
+
+        var nowItem = quote.attr('data-index');
+        var upItem = movequote.attr('data-index');
+
+        var params = {};
+        params["functionAreaItems[" + 0 + "].faiid"] = quote.find('input[type="checkbox"]').val();
+        params["functionAreaItems[" + 0 + "].sort"] = upItem;
+        params["functionAreaItems[" + 1 + "].faiid"] = movequote.find('input[type="checkbox"]').val();
+        params["functionAreaItems[" + 1 + "].sort"] = nowItem;
+
+        com.post(api.quotation.updateFunctionAreaItemForSort, params, function(res) {
+
+            initFunctionAreaItemList();
         });
 
     }

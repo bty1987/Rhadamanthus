@@ -31,6 +31,8 @@ public class ServiceRecordPO implements java.io.Serializable {
 	
 	private Long srId;
 	
+	private String orderId; 
+	
 	private Short type;
 	
 	private String operateUserId;
@@ -60,6 +62,15 @@ public class ServiceRecordPO implements java.io.Serializable {
 
 	public void setSrId(Long srId){
 		this.srId = srId;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@Column(name = "type")
@@ -98,8 +109,9 @@ public class ServiceRecordPO implements java.io.Serializable {
 		this.info = info;
 	}
 	
-	public ServiceRecordPO init(short type, String userId, String info){
+	public ServiceRecordPO init(short type, String userId, String orderId, String info){
 		
+		setOrderId(orderId);
 		setType(type);
 		setOperateUserId(userId);
 		setInfo(info);

@@ -39,6 +39,11 @@ var QuotationDetail = (function() {
                     that.quoModals.$calculateTotalModal.find('.machingInfos').hide();
                     that.quoModals.$calculateTotalModal.modal("show");
                 }),
+                // 更新价格
+                $btnPrice: com.focusPage('#priceBtn').click(function() {
+
+                    that.quoModals.$updatePriceModal.modal("show");
+                }),
 
                 $btnMachingMore: com.focusPage('#machingMoreBtn').on('click', function() {
 
@@ -133,6 +138,8 @@ var QuotationDetail = (function() {
                 $domainDiscountModal: com.focusPage("#discountModal"),
                 // 计算总价
                 $calculateTotalModal: com.focusPage('#calculateTotalFeeModal'),
+                // 更新价格
+                $updatePriceModal: com.focusPage('#updatePriceModal'),
                 // 添加默认报价项
                 $quoteModal: com.focusPage("#quotationItemModal").on("show.bs.modal", function(a) {
 
@@ -185,7 +192,7 @@ var QuotationDetail = (function() {
             // 初始化报价项选择弹层
             var extraParams = {
                 "quotationItem.version.no": quo.versionId,
-                "quotationPrice.updateTime": com.currentTime()
+                "quotationPrice.updateTime": quo.basicParams["quotation.updateTime"] != null ? quo.basicParams["quotation.updateTime"] : com.currentTime()
             };
 
             if (quo.decorationType == constant.decoration().decoration.TYPE_INCLUSIVE_INT && quo.precontractTime != null) {
@@ -979,6 +986,20 @@ var QuotationDetail = (function() {
             });
         },
 
+        quotationItemPriceEdit: function() {
+
+            com.focusPage("#keepPriceTime").on('click', function() {
+
+                painter.updateQuotePrice(quo.basicParams["quotation.updateTime"]);
+
+            });
+
+            com.focusPage("#currentTime").on('click', function() {
+
+                painter.updateQuotePrice(com.currentTime());
+
+            });
+        },
         // 保存报价修改
         saveDiscountEdit: function() {
 
@@ -1299,6 +1320,7 @@ var QuotationDetail = (function() {
             this.saveDomainEdit();
             this.paramsDomainEdit();
             this.calculateTotal();
+            this.quotationItemPriceEdit();
             this.saveDiscountEdit();
             this.saveDomainTemplete();
             this.saveQuotesToDomain();
@@ -2642,6 +2664,24 @@ var QuotationDetail = (function() {
             $item.attr("data-qfaId", v.qfaId).append($dwrap).append($dsum);// 存入功能区ID
 
             return $item;
+        },
+
+        updateQuotePrice: function(updateTime) {
+
+            quo.quoModals.$updatePriceModal.modal("hide");
+
+            com.showConfirm("更新价格需要重新进到页面编辑, 是否进行当前操作", function(result) {
+
+                com.post(api.quotation.updateQuotationForPrice, {
+                    "quotation.qid": quo.quotationid,
+                    "quotation.updateTime": updateTime
+                }, function(res) {
+
+                    com.switchPage(api.index.quotationIndex.url);
+
+                });
+
+            });
         }
     }
 
@@ -2690,6 +2730,7 @@ var QuotationDetail = (function() {
                     "quotation.trafficPrice": quotation.trafficPrice, // 车运费
                     "quotation.taxPrice": quotation.taxPrice, // 税金
                     "quotation.taxRate": quotation.taxRate, // 税金比例
+                    "quotation.updateTime": quotation.updateTime
                 };
 
                 com.focusPage('#quotationName').text(quotation.quotationName); // 左上角显示报价名称

@@ -46,6 +46,8 @@ public class CustomerPO implements Serializable {
 
 	private String passport;
 
+	private String passhkm;
+
 	private String qq;
 
 	private String wechat;
@@ -182,6 +184,15 @@ public class CustomerPO implements Serializable {
 
 	public void setPassport(String passport) {
 		this.passport = passport;
+	}
+
+	@Column(name = "passhkm")
+	public String getPasshkm() {
+		return passhkm;
+	}
+
+	public void setPasshkm(String passhkm) {
+		this.passhkm = passhkm;
 	}
 
 	@Column(name = "phone")
