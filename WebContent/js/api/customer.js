@@ -27,7 +27,7 @@
         url: "/views/customer/crowdUser.html"
     },
     customerOriginRecord: {
-        url: "/views/customer/customerSourceRecord.html"
+        url: "/views/customer/customerOriginRecord.html"
     },
 });
 

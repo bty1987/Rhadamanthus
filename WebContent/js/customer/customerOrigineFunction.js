@@ -1,19 +1,19 @@
 jQuery(function($) {
 
-    var customerSourceFunction = {
+    var customerOrigineFunction = {
         modal: {
-            apiModal : com.focusPage("#apiModal", "#customerSource")
+            apiModal : com.focusPage("#apiModal", "#customerOrigine")
         },
         btn: {
-            apiBtn: com.focusPage("#apiBtn", "#customerSource")
+            apiBtn: com.focusPage("#apiBtn", "#customerOrigine")
         },
         items: {
-            apiData: com.focusPage("#apiData", "#customerSource"),
-            condArrData: com.focusPage("#condArrData", "#customerSource"),
-            fieldData: com.focusPage("#fieldData", "#customerSource"),
-            functionData: com.focusPage("#functionData", "#customerSource"),
-            typeData: com.focusPage("#typeData", "#customerSource"),
-            statusData: com.focusPage("#statusData", "#customerSource")
+            apiData: com.focusPage("#apiData", "#customerOrigine"),
+            condArrData: com.focusPage("#condArrData", "#customerOrigine"),
+            fieldData: com.focusPage("#fieldData", "#customerOrigine"),
+            functionData: com.focusPage("#functionData", "#customerOrigine"),
+            typeData: com.focusPage("#typeData", "#customerOrigine"),
+            statusData: com.focusPage("#statusData", "#customerOrigine")
         },
         
         name: {},
@@ -45,24 +45,24 @@ jQuery(function($) {
     //显示所有api进行配置
     function apiConfig(value) {
 
-        customerSourceFunction.name = value.key;
-        customerSourceFunction.group = value.group;
-        customerSourceFunction.cfids = [];
+        customerOrigineFunction.name = value.key;
+        customerOrigineFunction.group = value.group;
+        customerOrigineFunction.cfids = [];
 
-        com.post(api.right.queryCustomerOriginFunctionRight, {"customerOriginFunctionRight.name" : customerSourceFunction.name}, function (res) {
+        com.post(api.right.queryCustomerOriginFunctionRight, {"customerOriginFunctionRight.name" : customerOrigineFunction.name}, function (res) {
             $.each(res.customerOriginFunctionRights, function (i, va) {
-                customerSourceFunction.cfids.push(va.customerOriginFunction.cfid);
+                customerOrigineFunction.cfids.push(va.customerOriginFunction.cfid);
             });
         }, null, false);
         
         com.post(api.customer.queryCustomerOriginFunction, {"customerOriginFunction.type": ""}, function (res) {
 
-            customerSourceFunction.items.apiData.empty();
-            customerSourceFunction.items.condArrData.empty();
-            customerSourceFunction.items.fieldData.empty();
-            customerSourceFunction.items.functionData.empty();
-            customerSourceFunction.items.typeData.empty();
-            customerSourceFunction.items.statusData.empty();
+            customerOrigineFunction.items.apiData.empty();
+            customerOrigineFunction.items.condArrData.empty();
+            customerOrigineFunction.items.fieldData.empty();
+            customerOrigineFunction.items.functionData.empty();
+            customerOrigineFunction.items.typeData.empty();
+            customerOrigineFunction.items.statusData.empty();
             var customerOriginFunctionArr = res.customerOriginFunctions;
 
             $.each(customerOriginFunctionArr.sort(function (x, y) { return x['sort'] - y['sort']}), function (i, v) {
@@ -76,44 +76,44 @@ jQuery(function($) {
 
                 if(v.type == 1){
                     $input.attr("type", "radio");
-                    $div.appendTo(customerSourceFunction.items.apiData);
+                    $div.appendTo(customerOrigineFunction.items.apiData);
                 }
 
                 if(v.type == 2){
-                    $div.appendTo(customerSourceFunction.items.condArrData);
+                    $div.appendTo(customerOrigineFunction.items.condArrData);
                 }
 
                 if(v.type == 3){
-                    $div.appendTo(customerSourceFunction.items.fieldData);
+                    $div.appendTo(customerOrigineFunction.items.fieldData);
                 }
 
                 if(v.type == 4){
-                    $div.appendTo(customerSourceFunction.items.functionData);
+                    $div.appendTo(customerOrigineFunction.items.functionData);
                 }
 
-                if(customerSourceFunction.cfids.indexOf(v.cfid)!= -1){
+                if(customerOrigineFunction.cfids.indexOf(v.cfid)!= -1){
                     $input.attr("checked",true);
                 }
             });
         });
 
-        customerSourceFunction.modal.apiModal.modal("show");
+        customerOrigineFunction.modal.apiModal.modal("show");
     }
 
     //配置完成确定按钮
-    customerSourceFunction.btn.apiBtn.click(function () {
+    customerOrigineFunction.btn.apiBtn.click(function () {
         var $inputs = com.focusPage('input[name="cfids"]:checked');
 
         var options = {};
 
         $.each($inputs,function (i, v) {
-            options["customerOriginFunctionRight.name"] = customerSourceFunction.name;
+            options["customerOriginFunctionRight.name"] = customerOrigineFunction.name;
             options["cfids[" + i + "]"] = $(v).val();
 
         });
         com.post(api.right.updateCustomerOriginFunctionRight, options, function (res) {
             com.showAlert(com.info, "配置成功");
-            customerSourceFunction.modal.apiModal.modal("hide");
+            customerOrigineFunction.modal.apiModal.modal("hide");
         })
     });
 

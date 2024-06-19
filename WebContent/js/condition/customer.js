@@ -172,7 +172,7 @@ Condition.addupRule("customer", {
         }
     },
 
-    "customerSource-phone": {
+    "customerOrigine-phone": {
         label: "客源电话",
         type: "text",
         submitConfig: {
@@ -184,7 +184,7 @@ Condition.addupRule("customer", {
             }
         }
     },
-    "customerSource-village": {
+    "customerOrigine-village": {
         label: "楼盘",
         type: "autofill",
         submitConfig: {
@@ -200,7 +200,7 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
-    "customerSource-createTime": {
+    "customerOrigine-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -209,7 +209,7 @@ Condition.addupRule("customer", {
             validate: null
         }
     },
-    "customerSource-designer": {
+    "customerOrigine-designer": {
         label: "归属设计师",
         type: "autofill",
         submitConfig: {
@@ -228,7 +228,7 @@ Condition.addupRule("customer", {
             valuePath: "currentName"
         }
     },
-    "customerSource-salesman": {
+    "customerOrigine-salesman": {
         label: "归属业务员",
         type: "autofill",
         submitConfig: {
@@ -247,7 +247,7 @@ Condition.addupRule("customer", {
             valuePath: "currentName"
         }
     },
-    "customerSource-status": {
+    "customerOrigine-status": {
         label: "状态",
         type: "select",
         submitConfig: {

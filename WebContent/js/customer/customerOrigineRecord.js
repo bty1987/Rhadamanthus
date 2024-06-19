@@ -1,13 +1,13 @@
 $(function() {
 
-    var createCustomerSource = {
+    var customerOrigineRecord = {
         record: com.focusPage("#record"),
         items: {
             comments: com.focusPage("#comments")
         }
     };
 
-    createCustomerSource.record.bindClick(record);
+    customerOrigineRecord.record.bindClick(record);
 
     initRecord();
 
@@ -69,12 +69,12 @@ $(function() {
 
         var options = {
             'customerOriginRecord.csid': params.customer.csid,
-            'customerOriginRecord.comment': createCustomerSource.items.comments.val()
+            'customerOriginRecord.comment': customerOrigineRecord.items.comments.val()
         };
 
         com.post(api.customer.addCustomerOriginRecord, options, function(res) {
 
-            com.cleanItems(createCustomerSource.items);
+            com.cleanItems(customerOrigineRecord.items);
             initRecord();
             com.showAlert(com.info, "记录创建成功");
         });
