@@ -41,6 +41,8 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 
 			if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			}

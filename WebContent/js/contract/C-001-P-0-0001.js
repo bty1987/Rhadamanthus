@@ -32,8 +32,12 @@ jQuery(function($) {
         com.focusPage(".undispatch", "#form").hide();
     }
 
-    if (contractEdit.contractArgs.type != "1") {
+    if (contractEdit.contractArgs.type != "1" && contractEdit.contractArgs.type != "2") {
         com.focusPage(".dispatch", "#form").hide();
+    }
+
+    if (contractEdit.contractArgs.type == "2") {
+        com.focusPage(".insure", "#form").hide();
     }
 
     com.datetime(com.focusPage("#cov-sign-data"));
@@ -95,6 +99,8 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
+            console.log(data);
+
             data["cov-sign-year"] = com.focusPage("#cov-sign-data").val().substr(0, 4);
             data["cov-sign-month"] = com.focusPage("#cov-sign-data").val().substr(5, 2);
             data["cov-sign-day"] = com.focusPage("#cov-sign-data").val().substr(8, 2);
@@ -137,9 +143,20 @@ jQuery(function($) {
                 delete data["con-end-year2"];
                 delete data["con-end-month2"];
                 delete data["con-end-day2"];
-                delete data["con-company-addr"];
                 delete data["con-company-name"];
             }
+
+            if (contractEdit.contractArgs.type != "1" && contractEdit.contractArgs.type != "2") {
+                delete data["con-company-addr"];
+            }
+
+            if (contractEdit.contractArgs.type == "2") {
+                delete data["con-work-year"];
+                delete data["con-work-month"];
+                delete data["con-work-day"];
+                delete data["con-user-householdType"];
+            }
+            console.log(data);
 
             var options = {
                 "userContract.uid": contractEdit.uid,

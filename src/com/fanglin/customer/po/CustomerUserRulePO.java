@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.customer.vo.CustomerUserRuleVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "customerUserRule", catalog = "customer")
@@ -37,6 +40,8 @@ public class CustomerUserRulePO implements Serializable {
 	public static final short STATUS_ENABLE_INT = 0; // 启用
 
 	public static final short STATUS_DISABLE_INT = 1; // 禁用
+
+	public static final short STATUS_INVALID_INT = 2; // 失效
 
 	private long curid;
 
@@ -250,4 +255,13 @@ public class CustomerUserRulePO implements Serializable {
 		this.company = company;
 	}
 
+	public CustomerUserRuleVO ptv(CustomerUserRuleVO customerUserRuleVO) {
+
+		BeanUtil.copyProperties(this, customerUserRuleVO, Arrays.asList("user", "creater"));
+
+		if (customerUserRuleVO.getUser() != null) customerUserRuleVO.getUser().ptv(getUser());
+		if (customerUserRuleVO.getCreater() != null) customerUserRuleVO.getCreater().ptv(getCreater());
+
+		return customerUserRuleVO;
+	}
 }

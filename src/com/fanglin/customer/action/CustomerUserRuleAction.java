@@ -36,6 +36,14 @@ public class CustomerUserRuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCustomerUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerUserRule() throws FLException {
+
+		customerUserRule = customerUserRuleService.queryCustomerUserRule(customerUserRule);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addCustomerUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerUserRule() throws FLException {
 
@@ -56,6 +64,14 @@ public class CustomerUserRuleAction extends BaseListAction {
 	public String updateCustomerUserRuleForStatus() throws FLException {
 
 		customerUserRuleService.updateCustomerUserRuleForStatus(customerUserRule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "disableCustomerUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String disableCustomerUserRule() throws FLException {
+
+		customerUserRuleService.disableCustomerUserRule(queryCompany());
 
 		return SUCCESS;
 	}

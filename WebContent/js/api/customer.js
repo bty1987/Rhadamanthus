@@ -487,14 +487,88 @@ $.extend(api, {
             }
         },
 
+        pageCustomerChance: {
+            url: "pageCustomerChance.do"
+        },
+        issueCustomerChance: {
+            url: "issueCustomerChance.do"
+        },
+        disableCustomerChance: {
+            url: "disableCustomerChance.do"
+        },
+        sendCustomerChance: {
+            url: "sendCustomerChance.do"
+        },
+        confirmCustomerChange: {
+            url: "confirmCustomerChange.do"
+        },
+
         pageCustomerDeptRule: {
             url: "pageCustomerDeptRule.do"
         },
         queryCustomerDeptRule: {
             url: "queryCustomerDeptRule.do"
         },
+        addcustomerDeptRule: {
+            url: "addcustomerDeptRule.do"
+        },
         deleteCustomerDeptRule: {
             url: "deleteCustomerDeptRule.do"
+        },
+
+        pageCustomerSource: {
+            url: "pageCustomerSource.do"
+        },
+        addCustomerSource: {
+            url: "addCustomerSource.do"
+        },
+        updateCustomerSourceForStatus: {
+            url: "updateCustomerSourceForStatus.do"
+        },
+
+        pageCustomerUserRule: {
+            url: "pageCustomerUserRule.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+            }]
+        },
+        queryCustomerUserRule: {
+            url: "queryCustomerUserRule.do",
+            type: "query",
+            tranargs: [{
+                result: "customerUserRule",
+                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+            }]
+        },
+        addCustomerUserRule: {
+            url: "addCustomerUserRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"],
+                query: [{
+                    result: "customerUserRule",
+                    args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+                }]
+            }
+        },
+        updateCustomerUserRule: {
+            url: "updateCustomerUserRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+            }
+        },
+        updateCustomerUserRuleForStatus: {
+            url: "updateCustomerUserRuleForStatus.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+            }
+        },
+        disableCustomerUserRule: {
+            url: "disableCustomerUserRule.do"
         },
 
         queryFeedbackDrawing: {

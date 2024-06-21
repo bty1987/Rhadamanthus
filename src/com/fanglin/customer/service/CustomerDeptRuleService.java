@@ -11,7 +11,9 @@ public interface CustomerDeptRuleService {
 
 	public void pageCustomerDeptRule(Paging paging, List<Filter> filters) throws FLException;
 
-	public List<CustomerDeptRuleVO> queryCustomerDeptRule(CustomerDeptRuleVO customerDeptRule) throws FLException;
+	public CustomerDeptRuleVO queryCustomerDeptRule(CustomerDeptRuleVO customerDeptRule) throws FLException;
+
+	public void addCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO, String userId) throws FLException;
 
 	public void deleteCustomerDeptRule(CustomerDeptRuleVO customerDeptRule) throws FLException;
 

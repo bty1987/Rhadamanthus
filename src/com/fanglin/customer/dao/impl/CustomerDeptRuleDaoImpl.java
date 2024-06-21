@@ -11,7 +11,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerDeptRuleDao;
 import com.fanglin.customer.po.CustomerDeptRulePO;
-import com.fanglin.customer.vo.CustomerDeptRuleVO;
 import com.fanglin.utils.Paging;
 
 @Repository("customerDeptRuleDao")
@@ -28,18 +27,23 @@ public class CustomerDeptRuleDaoImpl extends DaoImpl<CustomerDeptRulePO> impleme
 
 		queryFilterExecute(query, filters);
 
-		query.desc("cdrid");
-
 		return query.list();
 	}
 
 	@Override
+	public CustomerDeptRulePO queryCustomerDeptRule(Integer did) {
+		return (CustomerDeptRulePO) session().createCriteria(CustomerDeptRulePO.class).createAlias("department", "department").add(Restrictions.eq("department.did", did)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerDeptRulePO> queryCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO) {
+	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did, Short type) {
 
-		Criteria criteria = session().createCriteria(CustomerDeptRulePO.class).add(Restrictions.eq("did", customerDeptRuleVO.getDid()));
+		Criteria criteria = session().createCriteria(CustomerDeptRulePO.class).add(Restrictions.eq("did", did));
 
-		criteria.add(Restrictions.eq("type", customerDeptRuleVO.getType()));
+		if (type != null) {
+			criteria.add(Restrictions.eq("type", type));
+		}
 
 		return criteria.list();
 	}
@@ -52,9 +56,14 @@ public class CustomerDeptRuleDaoImpl extends DaoImpl<CustomerDeptRulePO> impleme
 
 			String field = filter.getField();
 			String data = filter.getData();
+			String op = filter.getOp();
 
-			if ("createTime".equals(field)) {
-				query.timeranges("createTime", data);
+			if ("name".equals(field)) {
+				query.add(query.getCriterion(CustomerDeptRulePO.COLUMN_NAME_STR, data, op));
+			} else if ("cusType".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
+			} else if ("cusAtttype".equals(field)) {
+				query.add(query.getCriterion("atttype", Short.valueOf(data), op));
 			}
 		}
 	}

@@ -11,12 +11,12 @@ public interface CustomerChanceService {
 
 	public void pageCustomerChance(Paging paging, List<Filter> filters, String userId);
 
-	public void issueCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
-
 	public void disableCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
 
 	public void sendCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
 
 	public void confirmCustomerChange(CustomerChanceVO customerChance, String securityCode, String verifyCode) throws FLException;
+
+	public void issueCustomerChance(CustomerChanceVO customerChangeVO, String userId) throws FLException;
 
 }

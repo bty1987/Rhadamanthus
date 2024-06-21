@@ -39,7 +39,15 @@ public class CustomerDeptRuleAction extends BaseListAction {
 	@Action(value = "queryCustomerDeptRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerDeptRule() throws FLException {
 
-		customerDeptRules = customerDeptRuleService.queryCustomerDeptRule(customerDeptRule);
+		customerDeptRule = customerDeptRuleService.queryCustomerDeptRule(customerDeptRule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addCustomerDeptRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomerDeptRule() throws FLException {
+
+		customerDeptRuleService.addCustomerDeptRule(customerDeptRule, queryUserId());
 
 		return SUCCESS;
 	}

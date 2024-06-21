@@ -21,7 +21,7 @@ public interface DepartmentDao extends Dao<DepartmentPO> {
 
 	public List<DepartmentPO> pageDepartmentByName(Paging paging, String name, Integer type, Integer company);
 
-	public List<DepartmentPO> queryDepartment(Integer type, Integer company);
+	public List<DepartmentPO> queryDepartment(Integer type, Integer fdid, Integer company);
 
 	public List<DepartmentPO> queryDepartment(Integer did);
 
