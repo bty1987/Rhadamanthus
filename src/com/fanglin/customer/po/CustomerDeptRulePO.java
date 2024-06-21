@@ -2,6 +2,7 @@ package com.fanglin.customer.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.customer.vo.CustomerDeptRuleVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "customerdeptrule", catalog = "customer")
@@ -20,15 +25,23 @@ public class CustomerDeptRulePO implements Serializable {
 
 	private static final long serialVersionUID = -8946288827140055077L;
 
+	public static final String COLUMN_NAME_STR = "name";
+
+	public static final short TYPE_DEPT_INT = 2;
+
+	public static final short TYPE_RULE_INT = 1;
+
 	private long cdrid;
 
-	private long did;
+	private String name;
+
+	private DepartmentPO department;
 
 	private short type;
 
 	private short atttype;
 
-	private long busitype;
+	private DecorationBusitypePO busitype;
 
 	private UserPO creater;
 
@@ -51,13 +64,23 @@ public class CustomerDeptRulePO implements Serializable {
 		this.cdrid = cdrid;
 	}
 
-	@Column(name = "did")
-	public long getDid() {
-		return did;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "did", referencedColumnName = "did")
+	public DepartmentPO getDepartment() {
+		return department;
 	}
 
-	public void setDid(long did) {
-		this.did = did;
+	public void setDepartment(DepartmentPO department) {
+		this.department = department;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = "type")
@@ -78,12 +101,13 @@ public class CustomerDeptRulePO implements Serializable {
 		this.atttype = atttype;
 	}
 
-	@Column(name = "busitype")
-	public long getBusitype() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "dbid", referencedColumnName = "dbid")
+	public DecorationBusitypePO getBusitype() {
 		return busitype;
 	}
 
-	public void setBusitype(long busitype) {
+	public void setBusitype(DecorationBusitypePO busitype) {
 		this.busitype = busitype;
 	}
 
@@ -115,4 +139,14 @@ public class CustomerDeptRulePO implements Serializable {
 		this.company = company;
 	}
 
+	public CustomerDeptRuleVO ptv(CustomerDeptRuleVO customerDeptRuleVO) {
+
+		BeanUtil.copyProperties(this, customerDeptRuleVO, Arrays.asList("creater", "department", "busitype"));
+
+		if (customerDeptRuleVO.getCreater() != null) customerDeptRuleVO.getCreater().setBaseInfo(getCreater());
+		if (customerDeptRuleVO.getDepartment() != null) BeanUtil.copyProperties(getDepartment(), customerDeptRuleVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		if (customerDeptRuleVO.getBusitype() != null) BeanUtil.copyProperties(getBusitype(), customerDeptRuleVO.getBusitype());
+
+		return customerDeptRuleVO;
+	}
 }

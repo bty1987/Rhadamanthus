@@ -43,21 +43,7 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 			CustomerUserRuleVO customerUserRuleVO = new CustomerUserRuleVO(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())));
 
-			BeanUtil.copyProperties(customerUserRulePO, customerUserRuleVO, Arrays.asList("user", "creater"));
-
-			UserPO user = customerUserRulePO.getUser();
-			BeanUtil.copyProperties(user, customerUserRuleVO.getUser(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(user.getDuty(), customerUserRuleVO.getUser().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(user.getDept(), customerUserRuleVO.getUser().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyPropertie(user.getDept().getFatherDept(), customerUserRuleVO.getUser().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
-
-			UserPO creater = customerUserRulePO.getCreater();
-			BeanUtil.copyProperties(creater, customerUserRuleVO.getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(creater.getDuty(), customerUserRuleVO.getCreater().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(creater.getDept(), customerUserRuleVO.getCreater().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyPropertie(creater.getDept().getFatherDept(), customerUserRuleVO.getCreater().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
-
-			customerUserRuleServiceVOs.add(customerUserRuleVO);
+			customerUserRuleServiceVOs.add(customerUserRulePO.ptv(customerUserRuleVO));
 		}
 
 		paging.setData(customerUserRuleServiceVOs);
@@ -65,21 +51,31 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	}
 
 	@Override
+	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule) {
+
+		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(customerUserRule.getUser().getUid());
+		CustomerUserRuleVO customerUserRuleVO = new CustomerUserRuleVO(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())));
+
+		return customerUserRulePO.ptv(customerUserRuleVO);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company) {
 
-		CustomerUserRulePO customerUserRulePO = new CustomerUserRulePO(new UserPO(customerUserRule.getUser().getUid()), new UserPO());
+		CustomerUserRulePO customerUserRulePO = new CustomerUserRulePO(new UserPO(), new UserPO());
 
 		BeanUtil.copyProperties(customerUserRule, customerUserRulePO, Arrays.asList("user", "creater"));
 
+		UserPO user = userDao.queryUserByUserId(customerUserRule.getUser().getUserId());
 		UserPO creater = userDao.queryUserByUserId(userId);
 
+		customerUserRulePO.setUser(user);
 		customerUserRulePO.setCreater(creater);
 		customerUserRulePO.setStatus(CustomerUserRulePO.STATUS_ENABLE_INT);
 		customerUserRulePO.setCompany(company);
 
 		customerUserRuleDao.save(customerUserRulePO);
-
 	}
 
 	@Override
@@ -89,10 +85,6 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRule.getCurid());
 
 		BeanUtil.copyProperties(customerUserRule, customerUserRulePO, Arrays.asList("user", "creater"));
-
-		UserPO user = userDao.get(customerUserRule.getUser().getUid());
-
-		customerUserRulePO.setUser(user);
 
 		customerUserRuleDao.update(customerUserRulePO);
 
@@ -107,6 +99,13 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		customerUserRulePO.setStatus(customerUserRule.getStatus());
 
 		customerUserRuleDao.update(customerUserRulePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void disableCustomerUserRule(int company) {
+
+		customerUserRuleDao.disableCustomerUserRule(company);
 
 	}
 

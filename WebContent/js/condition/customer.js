@@ -171,6 +171,88 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
+    "customerDeptRule-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "customerDeptRule-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "cusType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.customer().customerDeptRule.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerDeptRule-atttype": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "cusAtttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.customer().customerDeptRule.atttype.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerChance-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "customerChance-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerChance.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerChance-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerChance.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
     "customerOrigine-phone": {
         label: "客源电话",
@@ -279,6 +361,65 @@ Condition.addupRule("customer", {
             }, {
                 "key": "6",
                 "value": "拒绝"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-phone": {
+        label: "电话",
+        type: "text",
+        submitConfig: {
+            name: "phone",
+            op: "eq",
+            validate: {
+                "reg": /^[0-9]*$/,
+                "msg": "电话格式不正确"
+            }
+        }
+    },
+    "customerSource-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "village",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerSource-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "失效"
             }],
             keyPath: "key",
             valuePath: "value"
@@ -564,5 +705,71 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
+    "customerUserRule-user": {
+        label: "人员",
+        type: "autofill",
+        submitConfig: {
+            name: "user",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":"0" },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerUserRule-creater": {
+        label: "创建人",
+        type: "autofill",
+        submitConfig: {
+            name: "creater",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":"0" },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerUserRule-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerUserRule-finishTime": {
+        label: "结束时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerUserRule-status" : {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.customer().customerUserRule.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
 
 });

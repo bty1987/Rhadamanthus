@@ -82,24 +82,25 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartment(DepartmentVO departmentVO, Integer company) throws FLException {
 
-		List<DepartmentPO> departmentPOs;
+		Integer dtid = null;
+		Integer fdid = null;
 
 		if (departmentVO != null && departmentVO.getType() != null) {
 
+			dtid = departmentVO.getType().getDtid();
+
 			String name = departmentVO.getType().getName();
-			Integer dtid = departmentVO.getType().getDtid();
 
 			if (name != null && !name.equals("")) {
-				departmentPOs = departmentDao.queryDepartment(departmentTypeDao.queryDepartmentTypeByName(name).getDtid(), company);
-			} else if (dtid != null) {
-				departmentPOs = departmentDao.queryDepartment(dtid, company);
-			} else {
-				departmentPOs = departmentDao.queryDepartment(null, company);
+				dtid = departmentTypeDao.queryDepartmentTypeByName(departmentVO.getType().getName()).getDtid();
 			}
-		} else {
-			departmentPOs = departmentDao.queryDepartment(null, company);
 		}
 
+		if (departmentVO != null && departmentVO.getFatherDept() != null) {
+			fdid = departmentVO.getFatherDept().getDid();
+		}
+
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(dtid, fdid, company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {
@@ -112,7 +113,18 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByDtid(DepartmentVO departmentVO, int company) {
 
-		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(departmentVO.getType().getDtid(), company);
+		Integer dtid = null;
+		Integer fdid = null;
+
+		if (departmentVO != null && departmentVO.getType() != null) {
+			dtid = departmentVO.getType().getDtid();
+		}
+
+		if (departmentVO != null && departmentVO.getFatherDept() != null) {
+			fdid = departmentVO.getFatherDept().getDid();
+		}
+
+		List<DepartmentPO> departmentPOs = departmentDao.queryDepartment(dtid, fdid, company);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {

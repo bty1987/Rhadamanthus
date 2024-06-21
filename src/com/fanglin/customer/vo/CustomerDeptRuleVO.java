@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class CustomerDeptRuleVO implements Serializable {
@@ -13,13 +15,15 @@ public class CustomerDeptRuleVO implements Serializable {
 
 	private Long cdrid;
 
-	private Long did;
+	private DepartmentVO department;
+
+	private String name;
 
 	private Short type;
 
 	private Short atttype;
 
-	private Long busitype;
+	private DecorationBusitypeVO busitype;
 
 	private UserBaseVO creater;
 
@@ -32,9 +36,11 @@ public class CustomerDeptRuleVO implements Serializable {
 		super();
 	}
 
-	public CustomerDeptRuleVO(UserBaseVO creater) {
+	public CustomerDeptRuleVO(UserBaseVO creater, DepartmentVO department, DecorationBusitypeVO busitype) {
 		super();
 		this.creater = creater;
+		this.department = department;
+		this.busitype = busitype;
 	}
 
 	public Long getCdrid() {
@@ -45,12 +51,20 @@ public class CustomerDeptRuleVO implements Serializable {
 		this.cdrid = cdrid;
 	}
 
-	public Long getDid() {
-		return did;
+	public String getName() {
+		return name;
 	}
 
-	public void setDid(Long did) {
-		this.did = did;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public DepartmentVO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentVO department) {
+		this.department = department;
 	}
 
 	public Short getType() {
@@ -69,14 +83,6 @@ public class CustomerDeptRuleVO implements Serializable {
 		this.atttype = atttype;
 	}
 
-	public Long getBusitype() {
-		return busitype;
-	}
-
-	public void setBusitype(Long busitype) {
-		this.busitype = busitype;
-	}
-
 	public UserBaseVO getCreater() {
 		return creater;
 	}
@@ -92,6 +98,14 @@ public class CustomerDeptRuleVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public DecorationBusitypeVO getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(DecorationBusitypeVO busitype) {
+		this.busitype = busitype;
 	}
 
 	public Integer getCompany() {

@@ -68,7 +68,7 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DepartmentPO> queryDepartment(Integer type, Integer company) {
+	public List<DepartmentPO> queryDepartment(Integer type, Integer fdid, Integer company) {
 
 		Criteria criteria = session().createCriteria(DepartmentPO.class);
 
@@ -76,6 +76,10 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
 		if (type != null) {
 			criteria.createAlias("type", "type").add(Restrictions.eq("type.dtid", type));
+		}
+
+		if (fdid != null) {
+			criteria.createAlias("fatherDept", "fatherDept").add(Restrictions.eq("fatherDept.did", fdid));
 		}
 
 		if (company != null) {

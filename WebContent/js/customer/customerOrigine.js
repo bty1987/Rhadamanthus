@@ -1015,13 +1015,13 @@ $(function() {
                     }]);
                     break;
                 case "designer":
-                    propertyArr.push(["归属设计师: ", com.checkNull(v.designer.currentName, '无'), "grey", function(btn) {
+                    propertyArr.push(["归属设计: ", com.checkNull(v.designer.currentName, '无'), "grey", function(btn) {
 
                         tools.personel.info(btn, v.designer.userId);
                     }]);
                     break;
                 case "salesman":
-                    propertyArr.push(["归属业务员: ", com.checkNull(v.salesman.currentName, '无'), "grey", function(btn) {
+                    propertyArr.push(["归属业务: ", com.checkNull(v.salesman.currentName, '无'), "grey", function(btn) {
 
                         tools.personel.info(btn, v.salesman.userId);
                     }]);

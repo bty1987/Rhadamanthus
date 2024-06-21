@@ -3,6 +3,8 @@ package com.fanglin.customer.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -96,6 +98,7 @@ public class CustomerChanceVO implements Serializable {
 		this.issuer = issuer;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -104,6 +107,7 @@ public class CustomerChanceVO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getIssueTime() {
 		return issueTime;
 	}
@@ -112,6 +116,7 @@ public class CustomerChanceVO implements Serializable {
 		this.issueTime = issueTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}

@@ -11,10 +11,14 @@ public interface CustomerUserRuleService {
 
 	public void pageCustomerUserRule(Paging paging, List<Filter> filters, int company);
 
+	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule);
+
 	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company);
 
 	public void updateCustomerUserRule(CustomerUserRuleVO customerUserRule) throws FLException;
 
 	public void updateCustomerUserRuleForStatus(CustomerUserRuleVO customerUserRule) throws FLException;
+
+	public void disableCustomerUserRule(int company);
 
 }
