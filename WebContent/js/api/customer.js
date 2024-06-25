@@ -502,6 +502,9 @@ $.extend(api, {
         confirmCustomerChange: {
             url: "confirmCustomerChange.do"
         },
+        changeCustomerChance: {
+            url: "changeCustomerChance.do"
+        },
 
         pageCustomerDeptRule: {
             url: "pageCustomerDeptRule.do"
@@ -509,8 +512,8 @@ $.extend(api, {
         queryCustomerDeptRule: {
             url: "queryCustomerDeptRule.do"
         },
-        addcustomerDeptRule: {
-            url: "addcustomerDeptRule.do"
+        addCustomerDeptRule: {
+            url: "addCustomerDeptRule.do"
         },
         deleteCustomerDeptRule: {
             url: "deleteCustomerDeptRule.do"
@@ -519,11 +522,17 @@ $.extend(api, {
         pageCustomerSource: {
             url: "pageCustomerSource.do"
         },
+        queryCustomerSource: {
+            url: "queryCustomerSource.do"
+        },
         addCustomerSource: {
             url: "addCustomerSource.do"
         },
         updateCustomerSourceForStatus: {
             url: "updateCustomerSourceForStatus.do"
+        },
+        issueCustomerSource: {
+            url: "issueCustomerSource.do"
         },
 
         pageCustomerUserRule: {

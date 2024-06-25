@@ -157,49 +157,6 @@
     {"key" : "3", "value" : "确认"},
     {"key" : "4", "value" : "签章"},
     {"key" : "5", "value" : "作废"}
-  ], "paymentType": [
-    {"key" : "0", "value" : "预付款"},
-    {"key" : "1", "value" : "装修款"},
-    {"key" : "2", "value" : "主材款"},
-    {"key" : "3", "value" : "销售款"},
-    {"key" : "4", "value" : "服务款"}
-  ], "paytype": [
-    {"key" : "0", "value" : "收款"},
-    {"key" : "1", "value" : "出款"}
-  ], "bustype": [
-    {"key" : "0", "value" : "装修"},
-    {"key" : "1", "value" : "主材"}
-  ], "atttype_advance": [
-    {"key" : "0", "value" : "基础"},
-    {"key" : "1", "value" : "其他"}
-  ], "atttype_decoration": [
-    {"key" : "0", "value" : "基础"},
-    {"key" : "1", "value" : "合同"},
-    {"key" : "2", "value" : "增减"},
-    {"key" : "3", "value" : "其他"},
-    {"key" : "4", "value" : "终止"}
-  ], "atttype_material": [
-    {"key" : "0", "value" : "基础"}
-  ], "atttype_sales": [
-    {"key" : "0", "value" : "基础"},
-    {"key" : "1", "value" : "退款"},
-    {"key" : "2", "value" : "其他"}
-  ], "code_material": [
-    {"key" : "2", "value" : "定金"},
-    {"key" : "3", "value" : "补款"}
-  ], "code_sales": [
-    {"key" : "-1", "value" : "定金出"},
-    {"key" : "-2", "value" : "定金转全款"},
-    {"key" : "2", "value" : "定金"},
-    {"key" : "3", "value" : "补款"},
-    {"key" : "4", "value" : "退款"},
-    {"key" : "5", "value" : "补款退款"},
-    {"key" : "6", "value" : "券退款"},
-    {"key" : "7", "value" : "定金退款"},
-    {"key" : "8", "value" : "不可退定金"}
-  ], "paymentTypeStatus": [
-    {"key" : "0", "value" : "启用"},
-    {"key" : "1", "value" : "禁用"}
   ], "signetType": [
     {"key" : "0", "value" : "合同"},
     {"key" : "1", "value" : "款项"},
@@ -233,25 +190,6 @@
 	{"key" : "1", "value" : "公司"},
 	{"key" : "2", "value" : "大区"},
     {"key" : "3", "value" : "部门"}	
-  ], "custypeStatus": [
-    {"key" : "0", "value" : "启用"},
-    {"key" : "1", "value" : "禁用"}
-  ], "custypeAtttype": [
-    {"key" : "0", "value" : "预付款"},
-    {"key" : "1", "value" : "装修款"},
-    {"key" : "2", "value" : "主材款"},
-    {"key" : "3", "value" : "销售款"},
-    {"key" : "4", "value" : "服务款"},
-    {"key" : "5", "value" : "活动款"},
-    {"key" : "6", "value" : "转换款"}
-  ], "custypeDgrade": [
-    {"key" : "A", "value" : "A"},
-    {"key" : "B", "value" : "B"},
-    {"key" : "C", "value" : "C"}
-  ], "custypeSgrade": [
-    {"key" : "A", "value" : "A"},
-    {"key" : "B", "value" : "B"},
-    {"key" : "", "value" : "无"}
   ], "constantStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}

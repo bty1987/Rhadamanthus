@@ -39,8 +39,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.customer.dao.CustomerOriginDao;
-import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.data.common.dao.DecorationMeasureDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.DecorationMeasureItemPO;
@@ -157,9 +155,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
-
-	@Autowired
-	private CustomerOriginDao customerOriginDao;
 
 	@Autowired
 	private AdvancePaymentDao advancePaymentDao;
@@ -1453,29 +1448,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void tranDecorationFromCustomerOrigin(DecorationVO decorationVO, long csid, int company) throws FLException {
+	public void tranDecoration(DecorationVO decorationVO, int company) throws FLException {
 
-		CustomerOriginPO customerOriginPO = customerOriginDao.get(csid);
+		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid(), company);
 
-		// 判断客源信息是否存在
-		if (customerOriginPO == null) {
-			throw new FLException(330001, "客源不存在");
-		}
-
-		UserPO operater = customerOriginPO.getCreater();
-
-		if (operater == null) {
-			throw new FLException(190005, "人员不存在");
-		}
-
-		checkOverDecoration(customerOriginPO.getCustomer().getCid(), customerOriginPO.getHouse().getHid(), company);
-
-		makeDecoration(decorationVO, null, operater.getUserId(), company);
-
-		customerOriginPO.setOrderId(decorationVO.getOrderId());
-		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
-
-		customerOriginDao.update(customerOriginPO);
+		makeDecoration(decorationVO, null, decorationVO.getCreater().getUserId(), company);
 	}
 
 	@Override

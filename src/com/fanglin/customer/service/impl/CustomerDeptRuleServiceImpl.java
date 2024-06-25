@@ -61,11 +61,15 @@ public class CustomerDeptRuleServiceImpl implements CustomerDeptRuleService {
 	}
 
 	@Override
-	public CustomerDeptRuleVO queryCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO) {
+	public CustomerDeptRuleVO queryCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO) throws FLException {
 
 		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerDeptRuleVO.getDepartment().getDid());
 
 		customerDeptRuleVO.setCreater(new UserBaseVO());
+
+		if (customerDeptRulePO == null) {
+			throw new FLException(330081, "无匹配规则");
+		}
 
 		return customerDeptRulePO.ptv(customerDeptRuleVO);
 	}

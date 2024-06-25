@@ -20,27 +20,22 @@ jQuery(function($) {
             kino: com.focusPage("#kino"),
             kiname: com.focusPage("#kiname"),
             kibalance: com.focusPage("#kibalance"),
-            billType: com.focusPage("#billType")
+            billType: com.focusPage("#billType"),
+
+            saveInfo: com.focusPage("#saveInfo"),
         },
         taxrate: [3, 6, 9],
+
         atttype_advance: {},
         atttype_decoration: {},
         atttype_material: {},
         atttype_sales: {},
+        atttype_service: {},
+
         code_material: {},
         code_sales: {},
-        types: {},
-        paytypes: {},
-        bustypes: {},
-        atttypes_advance: {},
-        atttypes_decoration: {},
-        atttypes_material: {},
-        atttypes_sales: {},
-        codes_material: {},
-        codes_sales: {},
-        status: {},
+
         ptid: null,
-        editFlg: true,
 
         pageType: params.urlLoadParams.type,
     };
@@ -54,67 +49,37 @@ jQuery(function($) {
 
     paymentType.items.taxrate.bindData(paymentType.taxrate, "", "", true);
 
-    com.post(api.ds.data, {}, function(res) {
+    $.each(constant.data.paymentType.atttype.datas, function(i, v) {
 
-        paymentType.atttype_advance = res.atttype_advance;
-        paymentType.atttype_decoration = res.atttype_decoration;
-        paymentType.atttype_material = res.atttype_material;
-        paymentType.atttype_sales = res.atttype_sales;
-        paymentType.code_material = res.code_material;
-        paymentType.code_sales = res.code_sales;
+        var type = v.key.split('-')[0];
+        var atttype = v.key.split('-')[1];
 
-        $.each(res.paymentType, function(i, v) {
+        if (type == "0")
+            paymentType.atttype_advance[atttype] = v.value;
+        if (type == "1")
+            paymentType.atttype_decoration[atttype] = v.value;
+        if (type == "2")
+            paymentType.atttype_material[atttype] = v.value;
+        if (type == "3")
+            paymentType.atttype_sales[atttype] = v.value;
+        if (type == "4")
+            paymentType.atttype_service[atttype] = v.value;
+    });
 
-            paymentType.types[v.key] = v.value;
-        });
-        $.each(res.paytype, function(i, v) {
+    $.each(constant.data.paymentType.code.datas, function(i, v) {
 
-            paymentType.paytypes[v.key] = v.value;
-        });
-        $.each(res.bustype, function(i, v) {
+        var type = v.key.split('+')[0];
+        var code = v.key.split('+')[1];
 
-            paymentType.bustypes[v.key] = v.value;
-        });
-        $.each(res.atttype_advance, function(i, v) {
-
-            paymentType.atttypes_advance[v.key] = v.value;
-        });
-        $.each(res.atttype_decoration, function(i, v) {
-
-            paymentType.atttypes_decoration[v.key] = v.value;
-        });
-        $.each(res.atttype_material, function(i, v) {
-
-            paymentType.atttypes_material[v.key] = v.value;
-        });
-        $.each(res.atttype_sales, function(i, v) {
-
-            paymentType.atttypes_sales[v.key] = v.value;
-        });
-        $.each(res.paymentTypeStatus, function(i, v) {
-
-            paymentType.status[v.key] = v.value;
-        });
-        $.each(res.code_material, function(i, v) {
-
-            paymentType.codes_material[v.key] = v.value;
-        });
-        $.each(res.code_sales, function(i, v) {
-
-            paymentType.codes_sales[v.key] = v.value;
-        });
-
-        paymentType.items.type.bindData(res.paymentType, "key", "value");
-        paymentType.items.paytype.bindData(res.paytype, "key", "value");
-        paymentType.items.bustype.bindData(res.bustype, "key", "value");
-        paymentType.items.atttype.bindData(res.atttype_advance, "key", "value");
+        if (type == "2")
+            paymentType.code_material[code] = v.value;
+        if (type == "3")
+            paymentType.code_sales[code] = v.value;
     });
 
     paymentType.items.type.on("change", function() {
 
-        var typeVal = paymentType.items.type.val();
-
-        switch (typeVal) {
+        switch (paymentType.items.type.val()) {
             case "0":
                 paymentType.items.atttype.bindData(paymentType.atttype_advance, "key", "value");
                 paymentType.items.code.bindData({}, "", "");
@@ -151,42 +116,26 @@ jQuery(function($) {
         fieId: "type",
         name: "类型",
         prop: "type",
-        dataset: paymentType.types,
+        dataset: constant.data.paymentType.type.keys,
         clazz: "red"
     }, {
         fieId: "paytype",
         name: "付款类型",
         prop: "paytype",
-        dataset: paymentType.paytypes,
+        dataset: constant.data.paymentType.paytype.keys,
         clazz: "red"
     }, {
         fieId: "bustype",
         name: "业务类型",
         prop: "bustype",
-        dataset: paymentType.bustypes,
+        dataset: constant.data.paymentType.bustype.keys,
         clazz: "grey"
     }, {
         fieId: "atttype",
         name: "属性类型",
         prop: function(v) {
 
-            switch (v.type) {
-                case 0:
-                    return paymentType.atttypes_advance[v.atttype];
-                    break;
-                case 1:
-                    return paymentType.atttypes_decoration[v.atttype];
-                    break;
-                case 2:
-                    return paymentType.atttypes_material[v.atttype];
-                    break;
-                case 3:
-                    return paymentType.atttypes_sales[v.atttype];
-                    break;
-                case 4:
-                    return "";
-                    break;
-            }
+            return constant.data.paymentType.atttype.keys[v.type + "-" + v.atttype];
         },
         clazz: "red"
     }, {
@@ -204,17 +153,7 @@ jQuery(function($) {
         name: "索引",
         prop: function(v) {
 
-            switch (v.type) {
-                case 2:
-                    return paymentType.codes_material[v.code];
-                    break;
-                case 3:
-                    return paymentType.codes_sales[v.code];
-                    break;
-                default:
-                    return "";
-                    break;
-            }
+            return constant.data.paymentType.code.keys[v.type + "-" + v.code];
         },
         clazz: "blue"
     }, {
@@ -250,7 +189,7 @@ jQuery(function($) {
         fieId: "status",
         name: "状态",
         prop: "status",
-        dataset: paymentType.status,
+        dataset: constant.data.paymentType.status.keys,
         clazz: "red"
     }];
     var linebtns = [{
@@ -266,8 +205,9 @@ jQuery(function($) {
             paymentType.items.kiname.val(v.kiname);
             paymentType.items.kibalance.val(v.kibalance);
             paymentType.items.billType.val(v.billType == "无" ? "" : v.billType);
-            com.focusPage("#saveInfo").css("display", "none");
-            paymentType.editFlg = false;
+
+            paymentType.items.saveInfo.css("display", "none");
+
             paymentType.modals.paymentTypeModal.modal("show");
 
             return false;
@@ -295,9 +235,8 @@ jQuery(function($) {
 
             return !v.status;
         }
-    }
+    }];
 
-    ];
     if (paymentType.pageType == "common") {
         searcher.button([{
             id: "add",
@@ -311,8 +250,10 @@ jQuery(function($) {
 
     com.focusPage("#add").click(function() {
 
-        paymentType.editFlg = true;
-        com.focusPage("#saveInfo").css("display", "block");
+        paymentType.ptid = null;
+
+        paymentType.items.saveInfo.css("display", "block");
+
         paymentType.modals.paymentTypeModal.modal("show");
     });
 
@@ -321,7 +262,7 @@ jQuery(function($) {
         if (com.validate('paymentTypeModal'))
             return false;
 
-        var url;
+        var url = api.data.updatePaymentType;
         var options = {
             "paymentType.payScale": paymentType.items.payScale.val(),
             "paymentType.saleScale": paymentType.items.saleScale.val(),
@@ -332,7 +273,10 @@ jQuery(function($) {
             "paymentType.billType": paymentType.items.billType.val().replace(/\s+/g, "")
         };
 
-        if (paymentType.editFlg) {
+        if (paymentType.ptid) {
+            url = api.data.updatePaymentType;
+            options["paymentType.ptid"] = paymentType.ptid;
+        } else {
             url = api.data.addPaymentType;
             options["paymentType.name"] = paymentType.items.name.val();
             options["paymentType.type"] = paymentType.items.type.val();
@@ -340,17 +284,14 @@ jQuery(function($) {
             options["paymentType.bustype"] = paymentType.items.bustype.val();
             options["paymentType.atttype"] = paymentType.items.atttype.val();
             options["paymentType.code"] = paymentType.items.code.val();
-        } else {
-            url = api.data.updatePaymentType;
-            options["paymentType.ptid"] = paymentType.ptid;
         }
 
         com.post(url, options, function(res) {
 
             searcher.doSearch();
-        });
 
-        paymentType.modals.paymentTypeModal.modal("hide");
+            paymentType.modals.paymentTypeModal.modal("hide");
+        });
     }
 
 });

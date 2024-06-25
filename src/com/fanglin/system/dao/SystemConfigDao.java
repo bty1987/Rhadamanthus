@@ -12,14 +12,16 @@ public interface SystemConfigDao extends Dao<SystemConfigPO> {
 
 	public List<SystemConfigPO> pageSystemConfig(Paging paging, List<Filter> filters) throws FLException;
 
-	public SystemConfigPO querySystemConfig(String key);
-
-	public SystemConfigPO querySystemConfig(String key, int company);
-
 	public List<SystemConfigPO> querySystemConfigByCid(Integer company);
+
+	public List<SystemConfigPO> querySystemConfigByGroup(String group, Integer company);
+
+	public List<SystemConfigPO> obtainSystemConfig(String key, int company);
 
 	public SystemConfigPO querySystemConfigById(long scid);
 
-	public List<SystemConfigPO> obtainSystemConfig(String key, int company);
+	public SystemConfigPO querySystemConfig(String key);
+
+	public SystemConfigPO querySystemConfig(String key, int company);
 
 }

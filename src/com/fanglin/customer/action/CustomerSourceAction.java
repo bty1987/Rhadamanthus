@@ -10,7 +10,10 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.CustomerSourceService;
+import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.FormatUtil;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -24,10 +27,22 @@ public class CustomerSourceAction extends BaseListAction {
 
 	private CustomerSourceVO customerSource;
 
+	private CustomerChanceVO customerChance;
+
+	private String company;
+
 	@Action(value = "pageCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerSource() throws FLException {
 
 		customerSourceService.pageCustomerSource(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerSource() throws FLException {
+
+		customerSource = customerSourceService.queryCustomerSource(customerSource);
 
 		return SUCCESS;
 	}
@@ -48,6 +63,14 @@ public class CustomerSourceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "issueCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String issueCustomerSource() throws FLException {
+
+		customerSourceService.issueCustomerSource(customerSource, customerChance, queryUserId(), company != null ? CompanyServiceImpl.decode(company) : queryCompany());
+
+		return SUCCESS;
+	}
+
 	public CustomerSourceVO getCustomerSource() {
 		return customerSource;
 	}
@@ -56,4 +79,23 @@ public class CustomerSourceAction extends BaseListAction {
 		this.customerSource = customerSource;
 	}
 
+	public CustomerChanceVO getCustomerChance() {
+		return customerChance;
+	}
+
+	public void setCustomerChance(CustomerChanceVO customerChance) {
+		this.customerChance = customerChance;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(FormatUtil.decodeCompany("DmxbFnC3r1YgOMUmcVyOLQ=="));
+	}
 }

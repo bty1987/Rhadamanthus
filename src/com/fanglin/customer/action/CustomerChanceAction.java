@@ -11,6 +11,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -23,6 +24,8 @@ public class CustomerChanceAction extends BaseListAction {
 	private CustomerChanceService customerChanceService;
 
 	private CustomerChanceVO customerChance;
+
+	private DecorationVO decoration;
 
 	private String securityCode;
 
@@ -68,12 +71,28 @@ public class CustomerChanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "changeCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeCustomerChance() throws FLException {
+
+		customerChanceService.changeCustomerChance(decoration, customerChance, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	public CustomerChanceVO getCustomerChance() {
 		return customerChance;
 	}
 
 	public void setCustomerChance(CustomerChanceVO customerChance) {
 		this.customerChance = customerChance;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public String getSecurityCode() {

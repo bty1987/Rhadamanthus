@@ -12,10 +12,12 @@ public interface CustomerSourceService {
 
 	public void pageCustomerSource(Paging paging, List<Filter> filters);
 
-	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId);
+	public CustomerSourceVO queryCustomerSource(CustomerSourceVO customerSourceVO) throws FLException;
+
+	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) throws FLException;
 
 	public void updateCustomerSourceForStatus(CustomerSourceVO customerSourceVO) throws FLException;
 
-	public void issueCustomerChance(CustomerSourceVO customerSourceVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
+	public void issueCustomerSource(CustomerSourceVO customerSourceVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
 
 }

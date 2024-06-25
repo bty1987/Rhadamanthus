@@ -21,7 +21,33 @@ $(function() {
         },
 
         currentCurid: null,
-        status: constant.customer().customerUserRule.status.keys
+        status: constant.customer().customerUserRule.status.keys,
+        weightInfo: [{
+            "key": "签单转化",
+            "value": 0.5
+        }, {
+            "key": "主基比例",
+            "value": 0.3
+        }, {
+            "key": "签单额",
+            "value": 0.2
+        }, {
+            "key": "设计费",
+            "value": 0.2
+        }],
+        customerSourceInfo: [{
+            "key": "保底资源数(月)",
+            "value": 600
+        }, {
+            "key": "个人资源数(月)",
+            "value": 2
+        }, {
+            "key": "轮询资源数",
+            "value": 100
+        }, {
+            "key": "人员数",
+            "value": 120
+        }]
     };
 
     customerUserRule.modals.addCustomerUserRuleModal.on("hide.bs.modal", function(a) {
@@ -37,11 +63,15 @@ $(function() {
         "user.status": 0
     }, 'autoFillKeyValue', 'key', 'value', null);
 
+    // queryInfo();
+    drawInfo("customerSourceInfo", "资源", "header-color-orange", customerUserRule.customerSourceInfo);
+    drawInfo("weightInfo", "权重", "header-color-green", customerUserRule.weightInfo);
+
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerUserRule);
 
-    searcher.condition(["customer-customerUserRule-user", "customer-customerUserRule-creater", "customer-customerUserRule-createTime", "customer-customerUserRule-finishTime", "customer-customerUserRule-status"]);
+    searcher.condition(["customer-customerUserRule-createTime", "customer-customerUserRule-finishTime", "customer-customerUserRule-user", "customer-customerUserRule-creater", "customer-customerUserRule-status"]);
 
     searcher.button([{
         id: "addCustomerUserRule",
@@ -163,12 +193,17 @@ $(function() {
 
             customerUserRule.modals.addCustomerUserRuleModal.modal("show");
             return false;
+        },
+        show: function(v) {
+
+            return v.status != 2;
         }
     }, {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",
         handle: function(v, check) {
+
             if (v.status == 2) {
                 com.showAlert(com.warning, "状态不可操作.");
                 return false;
@@ -186,6 +221,10 @@ $(function() {
         init: function(v) {
 
             return !v.status;
+        },
+        show: function(v) {
+
+            return v.status != 2;
         }
     }];
 
@@ -239,6 +278,35 @@ $(function() {
 
             searcher.doSearch();
             customerUserRule.modals.addCustomerUserRuleModal.modal("hide");
+        });
+    }
+
+    function queryInfo() {
+
+        com.post(api.system.querySystemConfigByGroup, {
+            "systemConfig.group": ""
+        }, function(res) {
+
+        }, null, false)
+    }
+
+    function drawInfo(id, name, style, infos) {
+
+        com.focusPage("#" + id).remove();
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").attr("id", id).prependTo(com.focusPage("#infolist"));
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header " + style).appendTo($box);
+
+        var name = $('<h4></h4>').attr('id', 'h4name_').text(name).appendTo($header);
+
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
+
+        $.each(infos, function(i, v) {
+
+            $('<div></div>').append($('<label></label>').attr('for', 'form-field').text(v.key + ": " + v.value)).appendTo($info);
         });
     }
 

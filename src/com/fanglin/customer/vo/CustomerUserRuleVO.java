@@ -21,11 +21,11 @@ public class CustomerUserRuleVO implements Serializable {
 
 	private Integer contractNum;
 
-	private Integer contractPrice;
+	private Long contractPrice;
 
-	private Integer materialPrice;
+	private Long materialPrice;
 
-	private Integer designPrice;
+	private Long designPrice;
 
 	private Integer score;
 
@@ -97,27 +97,27 @@ public class CustomerUserRuleVO implements Serializable {
 		this.contractNum = contractNum;
 	}
 
-	public Integer getContractPrice() {
+	public Long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(Integer contractPrice) {
+	public void setContractPrice(Long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 
-	public Integer getMaterialPrice() {
+	public Long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(Integer materialPrice) {
+	public void setMaterialPrice(Long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 
-	public Integer getDesignPrice() {
+	public Long getDesignPrice() {
 		return designPrice;
 	}
 
-	public void setDesignPrice(Integer designPrice) {
+	public void setDesignPrice(Long designPrice) {
 		this.designPrice = designPrice;
 	}
 

@@ -11,7 +11,9 @@ public interface SystemConfigService {
 
 	public void pageSystemConfig(Paging paging, List<Filter> filters) throws FLException;
 
-	public List<SystemConfigVO> querySystemConfigByCid(Integer company);
+	public List<SystemConfigVO> querySystemConfigByCid(SystemConfigVO systemConfigVO);
+
+	public List<SystemConfigVO> querySystemConfigByGroup(SystemConfigVO systemConfigVO, Integer company);
 
 	public SystemConfigVO querySystemConfigByKey(SystemConfigVO systemConfigVO, Integer company);
 

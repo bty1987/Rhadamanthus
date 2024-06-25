@@ -29,6 +29,8 @@ public class SystemConfigPO implements Serializable {
 
 	private long scid;
 
+	private String group;
+
 	private String key;
 
 	private String value;
@@ -50,6 +52,15 @@ public class SystemConfigPO implements Serializable {
 
 	public void setScid(long scid) {
 		this.scid = scid;
+	}
+
+	@Column(name = "group")
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	@Column(name = "key")

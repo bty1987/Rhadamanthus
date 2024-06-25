@@ -52,12 +52,29 @@ public class SystemConfigServiceImpl implements SystemConfigService {
 	}
 
 	@Override
-	public List<SystemConfigVO> querySystemConfigByCid(Integer company) {
+	public List<SystemConfigVO> querySystemConfigByCid(SystemConfigVO systemConfigVO) {
 
-		List<SystemConfigPO> systemConfigPOs = systemConfigDao.querySystemConfigByCid(company);
+		List<SystemConfigPO> systemConfigPOs = systemConfigDao.querySystemConfigByCid(systemConfigVO.getCompany());
 		List<SystemConfigVO> systemConfigVOs = new ArrayList<SystemConfigVO>();
 
-		SystemConfigVO systemConfigVO;
+		for (SystemConfigPO systemConfigPO : systemConfigPOs) {
+
+			systemConfigVO = new SystemConfigVO(new UserBaseVO());
+
+			BeanUtil.copyProperties(systemConfigPO, systemConfigVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(systemConfigPO.getCreater(), systemConfigVO.getCreater(), Arrays.asList("dept", "duty"));
+
+			systemConfigVOs.add(systemConfigVO);
+		}
+
+		return systemConfigVOs;
+	}
+
+	@Override
+	public List<SystemConfigVO> querySystemConfigByGroup(SystemConfigVO systemConfigVO, Integer company) {
+
+		List<SystemConfigPO> systemConfigPOs = systemConfigDao.querySystemConfigByGroup(systemConfigVO.getGroup(), company);
+		List<SystemConfigVO> systemConfigVOs = new ArrayList<SystemConfigVO>();
 
 		for (SystemConfigPO systemConfigPO : systemConfigPOs) {
 

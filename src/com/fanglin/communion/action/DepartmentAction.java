@@ -22,6 +22,7 @@ import com.fanglin.communion.service.DepartmentService;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
@@ -37,7 +38,8 @@ public class DepartmentAction extends BaseListAction {
 	private DepartmentVO dept;
 
 	private List<DepartmentVO> deptList;
-	
+
+	private String company;
 
 	@Action(value = "pageDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDepartment() throws FLException {
@@ -50,7 +52,7 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "queryDepartment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartment() throws FLException {
 
-		deptList = departmentService.queryDepartment(dept, queryCompany());
+		deptList = departmentService.queryDepartment(dept, company != null ? CompanyServiceImpl.decode(company) : queryCompany());
 
 		return SUCCESS;
 	}
@@ -58,7 +60,7 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "queryDepartmentByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByDtid() throws FLException {
 
-		deptList = departmentService.queryDepartmentByDtid(dept, queryCompany());
+		deptList = departmentService.queryDepartmentByDtid(dept, company != null ? CompanyServiceImpl.decode(company) : queryCompany());
 
 		return SUCCESS;
 	}
@@ -81,9 +83,9 @@ public class DepartmentAction extends BaseListAction {
 
 	@Action(value = "queryDepartmentByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByName() throws FLException {
-		
-		deptList = departmentService.queryDepartmentByName(dept, queryCompany());
-		
+
+		deptList = departmentService.queryDepartmentByName(dept, company != null ? CompanyServiceImpl.decode(company) : queryCompany());
+
 		return SUCCESS;
 	}
 
@@ -137,6 +139,14 @@ public class DepartmentAction extends BaseListAction {
 
 	public void setDeptList(List<DepartmentVO> deptList) {
 		this.deptList = deptList;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

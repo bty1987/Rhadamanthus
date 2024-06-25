@@ -30,23 +30,23 @@ import com.fanglin.utils.WMCodeUtil;
 public class WMCodeAction extends BaseAction {
 
 	private static final long serialVersionUID = 8870921012656189842L;
-	
+
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	private String watermark;
 
-	@Action(value = "wmCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+	@Action(value = "wmCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String wmCode() throws Exception {
-		
+
 		try {
 			watermark = WMCodeUtil.createImage(queryUserName(), DateUtil.current("yyyyMMdd"));
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "wmCode", "common");
 		}
-		
+
 		return SUCCESS;
 	}
 
@@ -57,6 +57,5 @@ public class WMCodeAction extends BaseAction {
 	public void setWatermark(String watermark) {
 		this.watermark = watermark;
 	}
-	
-	
+
 }

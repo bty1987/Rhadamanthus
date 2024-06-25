@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +17,9 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "customersource", catalog = "customer")
@@ -31,6 +34,8 @@ public class CustomerSourcePO implements Serializable {
 	public static final String COLUMN_SALESMAN_STR = "salesman.uid";
 
 	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_TRAN_INT = 2; // 转换
 
 	private long csid;
 
@@ -323,4 +328,22 @@ public class CustomerSourcePO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	public CustomerSourceVO ptv(CustomerSourceVO customerSourceVO) {
+
+		BeanUtil.copyProperties(this, customerSourceVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
+
+		if (customerSourceVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), customerSourceVO.getHouse(), Arrays.asList("village"));
+		if (customerSourceVO.getVillage() != null) BeanUtil.copyProperties(getVillage(), customerSourceVO.getVillage(), Arrays.asList("cityProper"));
+		if (customerSourceVO.getVillage() != null && customerSourceVO.getVillage().getCityProper() != null && getVillage() != null) BeanUtil.copyProperties(getVillage().getCityProper(), customerSourceVO.getVillage().getCityProper(), Arrays.asList("city"));
+
+		if (customerSourceVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerSourceVO.getCustomer());
+
+		if (customerSourceVO.getCreater() != null) customerSourceVO.getCreater().setBaseInfo(getCreater());
+		if (customerSourceVO.getCreater() != null && customerSourceVO.getCreater().getDept() != null) BeanUtil.copyProperties(getCreater().getDept(), customerSourceVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (customerSourceVO.getDesigner() != null) customerSourceVO.getDesigner().setBaseInfo(getDesigner());
+		if (customerSourceVO.getSalesman() != null) customerSourceVO.getSalesman().setBaseInfo(getSalesman());
+
+		return customerSourceVO;
+	}
 }

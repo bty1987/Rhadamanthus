@@ -31,7 +31,7 @@ public class LogUtils {
 		return map;
 	}
 
-	public static void logging(Logger logger, Exception e, String actionName, String userId) {
+	public static void logging(Logger logger, Exception e, String actionName, String userId, String ip) {
 		if (SystemConfig.DEBUG_TRUE_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))) {
 
 			SimpleDateFormat currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -39,6 +39,7 @@ public class LogUtils {
 			System.out.println();
 			System.out.println(String.format("Exception Action: %s", actionName));
 			System.out.println(String.format("Exception User: %s", userId));
+			System.out.println(String.format("Exception IP: %s", ip));
 			System.out.println(String.format("Exception Time: %s", currentTime.format(new java.util.Date())));
 			System.out.println(String.format("Exception Message: %s", e.getMessage()));
 
@@ -48,8 +49,7 @@ public class LogUtils {
 
 				String className = element.getClassName();
 
-				if (!className.contains("com.fanglin"))
-					continue;
+				if (!className.contains("com.fanglin")) continue;
 
 				String file = element.getFileName();
 				int line = element.getLineNumber();
@@ -60,28 +60,48 @@ public class LogUtils {
 
 			System.out.println();
 
-			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
+			logger.error(String.format("%s|%s|%s|%s|%s|%s", "AI", "E", actionName, e.getMessage(), ip));
 		} else if (SystemConfig.DEBUG_ERROR_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))) {
 			e.printStackTrace();
 		} else {
-			logger.error(String.format("%s|%s|%s|%s", "AI", "E", actionName, e.getMessage()));
+			logger.error(String.format("%s|%s|%s|%s|%s|%s", "AI", "E", actionName, e.getMessage(), ip));
 		}
 	}
 
+	public static void logging(Logger logger, Exception e, String actionName, String userId) {
+		logging(logger, e, actionName, userId, "");
+	}
+
 	public static void logging(Logger logger, String server, String errormsg, String api) {
-		logger.error(String.format("%s|%s|%s|%s %s", "AI", "I", api, server, errormsg));
+		logger.error(String.format("%s|%s|%s|%s %s|%s", "AI", "I", api, server, errormsg));
+	}
+
+	public static void logging(Logger logger, String server, String errormsg, String api, String ip) {
+		logger.error(String.format("%s|%s|%s|%s %s|%s", "AI", "I", api, server, errormsg, ip));
 	}
 
 	public static void logging(Logger logger, String api, int errorcode, String errormsg) {
-		logger.error(String.format("%s|%s|%s|%d-%s", "AI", "E", api, errorcode, errormsg));
+		logger.error(String.format("%s|%s|%s|%d-%s|%s", "AI", "E", api, errorcode, errormsg));
+	}
+
+	public static void logging(Logger logger, String api, int errorcode, String errormsg, String ip) {
+		logger.error(String.format("%s|%s|%s|%d-%s|%s", "AI", "E", api, errorcode, errormsg, ip));
 	}
 
 	public static void logging(Logger logger, String userId, String actionName, int company) {
-		logger.error(String.format("%s|%s|%s|%s|%d", "AI", "I", actionName, userId, company));
+		logger.error(String.format("%s|%s|%s|%s|%d|%s", "AI", "I", actionName, userId, company));
+	}
+
+	public static void logging(Logger logger, String userId, String actionName, int company, String ip) {
+		logger.error(String.format("%s|%s|%s|%s|%d|%s", "AI", "I", actionName, userId, company, ip));
 	}
 
 	public static void logging(Logger logger, String actionName, Long runTime) {
-		logger.error(String.format("%s|%s|%s|%s", "OT", "I", actionName, runTime.toString()));
+		logger.error(String.format("%s|%s|%s|%s|%s", "OT", "I", actionName, runTime.toString()));
+	}
+
+	public static void logging(Logger logger, String actionName, Long runTime, String ip) {
+		logger.error(String.format("%s|%s|%s|%s|%s", "OT", "I", actionName, runTime.toString(), ip));
 	}
 
 }

@@ -1217,9 +1217,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "paymentTypeStatus",
+            listPath: constant.data().paymentType.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

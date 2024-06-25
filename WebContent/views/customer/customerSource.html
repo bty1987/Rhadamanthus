@@ -1,4 +1,9 @@
 <div id="customerSource">
+
+    <div class="row" id="infolist"></div>
+    
+    <hr>
+    
     <div class="row">
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div><!---c查询条件有就写没有 也写上 在js 里面不传参就行--->
@@ -7,7 +12,7 @@
         </div>
     </div>
 
-    <!--创建客源-->
+    <!--创建资源-->
     <div class="modal fade" id="createsource" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -21,14 +26,14 @@
                     <form class="form-horizontal" id="from1">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">姓名</label>
+                            <label class="col-sm-3 control-label no-padding-right orange">姓名</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6 v_required" maxlength="32" id="name" style="margin-right: 35px;">
                             </div>
                         </div>
 
                         <div class="form-group" >
-                            <label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="gender">性别</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
                                 <span class="lbl gender"></span>
@@ -36,15 +41,15 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">电话</label>
+                            <label class="col-sm-3 control-label no-padding-right orange">电话</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6 v_phone v_required" id="phone">
                             </div>
                         </div>
 
-                        <div class="form-group hide">
+                        <div class="form-group">
                             <label for="purpose" class="col-sm-3 control-label no-padding-right">目的</label>
-                            <div class="col-sm-7">
+                            <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" maxlength="32" id="purpose" />
                             </div>
                         </div>
@@ -56,10 +61,10 @@
                             </div>
                         </div>
 
-                        <div class="form-group hide">
+                        <div class="form-group">
                             <label for="price" class="col-sm-3 control-label no-padding-right">需求价格</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="col-sm-3 control-label no-padding-right" maxlength="12" id="price"/>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" maxlength="12" id="price"/>
                             </div>
                         </div>
 
@@ -77,12 +82,20 @@
                             </div>
                         </div>
 
-                        <div class="form-group hide">
-                            <label for="houseNumber" class="col-sm-4 control-label no-padding-right">楼牌号</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="col-xs-10 col-sm-7 v_required" id="houseNumber" maxlength="30">
-                                <div class="col-md-12" style="padding: 0px;" >
-                                    <span id="rule1" class="red"></span>
+                        <div class="form-group">
+                            <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" class="v_required" style="width: 10%;" id="built">
+                                <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="unit">
+                                <select id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor">
+                                <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="door">
+                                <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;">
+                                    <span id="rule" class="red"></span>
                                 </div>
                             </div>
                         </div>
@@ -90,8 +103,7 @@
                         <div class="form-group" id="buildAreaGroup1">
                             <label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
                             <div class="col-sm-9">
-                                <input type="text" id="buildArea" maxlength="7"
-                                       class="col-xs-6 col-sm-6 v_float_3 v_required"/>
+                                <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
                                 <span style="margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
@@ -99,8 +111,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="freeArea">赠送面积</label>
                             <div class="col-sm-9">
-                                <input type="text" id="freeArea" maxlength="7"
-                                       class="col-xs-6 col-sm-6 v_float_3 v_required"/>
+                                <input type="text" id="freeArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
                                 <span style="margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
@@ -108,8 +119,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="totalArea">总面积</label>
                             <div class="col-sm-9">
-                                <input type="text" id="totalArea" maxlength="7"
-                                       class="col-xs-6 col-sm-6 v_float_3 v_required"/>
+                                <input type="text" id="totalArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
                                 <span style="margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
@@ -117,8 +127,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="innerArea">套内面积</label>
                             <div class="col-sm-9">
-                                <input type="text" id="innerArea" maxlength="7"
-                                       class="col-xs-6 col-sm-6 v_float_3 v_required"/>
+                                <input type="text" id="innerArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
                                 <span style="margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
@@ -134,7 +143,52 @@
                 </div>
                 <div class="modal-footer" style="text-align: center">
                     <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" >重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="issueCustomerChanceModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="issueCustomer">分配</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                             <label class="col-sm-3 control-label no-padding-right orange" for="company">公司</label>
+                             <div class="col-sm-9">
+                                  <select class="col-xs-10 col-sm-6 v_required" id="company"></select>
+                             </div>
+                        </div>
+
+                        <div class="form-group region">
+                            <label class="col-sm-3 control-label no-padding-right orange">分区</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-6 v_required" id="region"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group department">
+                            <label for="department" class="col-sm-3 control-label no-padding-right orange">部门</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-6 v_required" id="department"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group belonger">
+                            <label class="col-sm-3 control-label no-padding-right orange">归属人</label>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="belonger">
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="issueBtn" class="btn btn-primary pull-right">确定</button>
                 </div>
             </div>
         </div>
@@ -143,5 +197,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/customer/customerSource.js']);
+    $.loadScript(['js/customer/customerSource.js', 'js/utils/houseUtils.js']);
 </script>

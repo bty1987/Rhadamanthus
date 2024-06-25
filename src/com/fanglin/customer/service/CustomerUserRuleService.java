@@ -13,7 +13,7 @@ public interface CustomerUserRuleService {
 
 	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule);
 
-	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company);
+	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company) throws FLException;
 
 	public void updateCustomerUserRule(CustomerUserRuleVO customerUserRule) throws FLException;
 
