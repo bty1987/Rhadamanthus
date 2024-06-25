@@ -31,54 +31,54 @@ import com.fanglin.utils.LogUtils;
 @Namespace("/")
 @Controller
 public class DoginAction extends BaseListAction {
-	
+
 	private static final long serialVersionUID = 6488703220739762932L;
-	
+
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private  AuthService authDDService ;
-	
+	private AuthService authDDService;
+
 	@Autowired
-    private UserService userDDService;
-	
+	private UserService userDDService;
+
 	private String url;
-	
+
 	private String configInfo;
-	
+
 	private String code;
-	
+
 	private User user;
-	
+
 	private String company;
-	
-	@Action(value = "requestDDConfig", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String requestDDConfig() throws FLException{
-		
+
+	@Action(value = "requestDDConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String requestDDConfig() throws FLException {
+
 		try {
 			configInfo = authDDService.getConfig(url, null, company);
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "requestDDConfig", "common");
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDDUserInfo", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String queryDDUserInfo() throws FLException{
-		
+
+	@Action(value = "queryDDUserInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDDUserInfo() throws FLException {
+
 		try {
 			user = userDDService.getUserInfo(code, company);
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "queryDDUserInfo", "common");
 		}
-		
+
 		return SUCCESS;
 	}
 

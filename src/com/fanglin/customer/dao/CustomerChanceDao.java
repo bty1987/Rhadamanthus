@@ -11,4 +11,6 @@ public interface CustomerChanceDao extends Dao<CustomerChancePO> {
 
 	public List<CustomerChancePO> pageCustomerChance(Paging paging, List<Filter> filters);
 
+	public List<CustomerChancePO> queryCustomerChance(long csid);
+
 }

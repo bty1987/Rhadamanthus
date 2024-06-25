@@ -33,54 +33,54 @@ import com.fanglin.utils.SystemConfig;
 @Namespace("/")
 @Controller
 public class VerifyCodeAction extends BaseAction {
-	
+
 	private static final long serialVersionUID = 6903462944786262299L;
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	private ByteArrayInputStream imageStream; // 图片流
-	
+
 	private String securityCode;
-	
+
 	@Action(value = "queryVode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryVode() throws Exception{
-		
+	public String queryVode() throws Exception {
+
 		try {
 			String tmp = SecurityCodeHelper.getSecurityCode();
 			String key = SystemConfig.getString("encryptKey");
 			String iv = SystemConfig.getString("encryptIv");
-			
+
 			securityCode = AESHelper.encrypt(tmp, key, iv);
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "queryVode", "common");
 		}
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value = "verifyCode", results = { @Result(name = "success", type = "stream",  params={"ignoreHierarchy", "false", "contentType", "image/jpeg", "inputName", "imageStream", "bufferSize", "2048"}) })
-	public String verifyCode() throws FLException{
-		
+	@Action(value = "verifyCode", results = { @Result(name = "success", type = "stream", params = { "ignoreHierarchy", "false", "contentType", "image/jpeg", "inputName", "imageStream", "bufferSize", "2048" }) })
+	public String verifyCode() throws FLException {
+
 		try {
 			imageStream = SecurityImageHelper.getImageAsInputStream(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "verifyCode", "common");
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	public ByteArrayInputStream getImageStream(){
+
+	public ByteArrayInputStream getImageStream() {
 		return imageStream;
 	}
 
-	public void setImageStream(ByteArrayInputStream imageStream){
+	public void setImageStream(ByteArrayInputStream imageStream) {
 		this.imageStream = imageStream;
 	}
 
@@ -91,5 +91,5 @@ public class VerifyCodeAction extends BaseAction {
 	public void setSecurityCode(String securityCode) {
 		this.securityCode = securityCode;
 	}
-	
+
 }

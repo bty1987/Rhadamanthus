@@ -29,6 +29,8 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 
 		queryFilterExcute(query, filters);
 
+		query.desc("chance");
+
 		return query.list();
 	}
 
@@ -54,7 +56,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int pollingCustomerUserRule(int company) {
 
-		String sql = "update customer.customeruserrule set surplus = surplus + chance, polling = polling + 1 where company = :company and status = 0";
+		String sql = "update customer.customeruserrule set surplus = surplus + chance, polling = polling + 1000 where company = :company and status = 0";
 		session().createSQLQuery(sql).setInteger("company", company).executeUpdate();
 
 		return 0;

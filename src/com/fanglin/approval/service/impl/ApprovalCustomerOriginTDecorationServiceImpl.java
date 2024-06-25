@@ -209,6 +209,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, decorationVO, Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
 
+		decorationVO.setCreater(new UserBaseVO(customerOriginPO.getCreater().getUserId()));
 		decorationVO.setHouse(new HouseVO(customerOriginPO.getHouse().getHid()));
 		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
 		decorationVO.setDesigner(new UserBaseVO(customerOriginPO.getDesigner().getUserId()));
@@ -217,7 +218,12 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		decorationVO.setNotSalesmanRate(0);
 		decorationVO.setBusitype(approvalCustomerOriginTDecorationPO.getDecorationBusitype().getDbid());
 
-		decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getSender().getCompany());
+		decorationService.tranDecoration(decorationVO, approvalPO.getSender().getCompany());
+
+		customerOriginPO.setOrderId(decorationVO.getOrderId());
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
+
+		customerOriginDao.update(customerOriginPO);
 
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();

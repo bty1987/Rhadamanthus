@@ -53,11 +53,11 @@ public class CustomerUserRulePO implements Serializable {
 
 	private int contractNum;
 
-	private int contractPrice;
+	private long contractPrice;
 
-	private int materialPrice;
+	private long materialPrice;
 
-	private int designPrice;
+	private long designPrice;
 
 	private int score;
 
@@ -138,29 +138,29 @@ public class CustomerUserRulePO implements Serializable {
 	}
 
 	@Column(name = "contractPrice")
-	public int getContractPrice() {
+	public long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(int contractPrice) {
+	public void setContractPrice(long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 
 	@Column(name = "materialPrice")
-	public int getMaterialPrice() {
+	public long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(int materialPrice) {
+	public void setMaterialPrice(long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 
 	@Column(name = "designPrice")
-	public int getDesignPrice() {
+	public long getDesignPrice() {
 		return designPrice;
 	}
 
-	public void setDesignPrice(int designPrice) {
+	public void setDesignPrice(long designPrice) {
 		this.designPrice = designPrice;
 	}
 

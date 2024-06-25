@@ -13,6 +13,8 @@ public class SystemConfigVO implements Serializable {
 
 	private Long scid;
 
+	private String group;
+
 	private String key;
 
 	private String value;
@@ -40,6 +42,14 @@ public class SystemConfigVO implements Serializable {
 
 	public void setScid(Long scid) {
 		this.scid = scid;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	public String getKey() {

@@ -1,4 +1,4 @@
-Condition.addupRule("customer", {
+﻿Condition.addupRule("customer", {
 
     "no": {
         label: "客户编号",
@@ -414,13 +414,7 @@ Condition.addupRule("customer", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                "key": "0",
-                "value": "初始"
-            }, {
-                "key": "1",
-                "value": "失效"
-            }],
+            listPath: constant.customer().customerSource.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

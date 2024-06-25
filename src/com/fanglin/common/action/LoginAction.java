@@ -131,7 +131,7 @@ public class LoginAction extends BaseListAction {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
 
-			LogUtils.logging(logger, e, "doLogin", "common");
+			LogUtils.logging(logger, e, "doLogin", "common", ip);
 		}
 
 		return SUCCESS;

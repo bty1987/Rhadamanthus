@@ -40,7 +40,19 @@ public class SystemConfigAction extends BaseListAction {
 	@Action(value = "querySystemConfigByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySystemConfigByCid() throws FLException {
 
-		systemConfigs = systemConfigService.querySystemConfigByCid(queryCompany());
+		if (systemConfig == null) systemConfig = new SystemConfigVO();
+
+		systemConfig.setCompany(queryCompany());
+
+		systemConfigs = systemConfigService.querySystemConfigByCid(systemConfig);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySystemConfigByGroup", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySystemConfigByGroup() throws FLException {
+
+		systemConfigs = systemConfigService.querySystemConfigByGroup(systemConfig, queryCompany());
 
 		return SUCCESS;
 	}

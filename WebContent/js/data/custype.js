@@ -22,32 +22,16 @@ $(function() {
         },
 
         currentCtid: null,
-        status: {},
+        status: constant.data().custype.status.keys,
         atttype: constant.payment().receipt.paymentType.keys,
-        dgrade: {},
-        sgrade: {},
+        dgrade: constant.data().custype.dgrade.keys,
+        sgrade: constant.data().custype.sgrade.keys,
         platforms: constant.data().custype.platform.keys
     };
 
-    com.post(api.ds.data, {}, function(res) {
-
-        $.each(res.custypeStatus, function(i, v) {
-
-            custype.status[v.key] = v.value;
-        });
-        $.each(res.custypeDgrade, function(i, v) {
-
-            custype.dgrade[v.key] = v.value;
-        });
-        $.each(res.custypeSgrade, function(i, v) {
-
-            custype.sgrade[v.key] = v.value;
-        });
-
-        custype.items.atttype.bindData(constant.payment().receipt.paymentType.datas, "key", "value");
-        custype.items.dgrade.bindData(res.custypeDgrade, "key", "value");
-        custype.items.sgrade.bindData(res.custypeSgrade, "key", "value");
-    }, null, false);
+    custype.items.atttype.bindData(constant.payment().receipt.paymentType.datas, "key", "value");
+    custype.items.dgrade.bindData(constant.data().custype.dgrade.datas, "key", "value");
+    custype.items.sgrade.bindData(constant.data().custype.sgrade.datas, "key", "value");
 
     custype.modals.addCustypeModal.on("hide.bs.modal", function(a) {
 

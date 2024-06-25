@@ -2,6 +2,7 @@ package com.fanglin.customer.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "customerChance", catalog = "customer")
@@ -33,6 +36,14 @@ public class CustomerChancePO implements Serializable {
 	public static final short STATUS_COMPLETE_INT = 4; // 完成
 
 	public static final short STATUS_LNVALID_INT = 5; // 失效
+
+	public static final short ATTTYPE_AUTO_INT = 0;
+
+	public static final short ATTTYPE_USER_INT = 1;
+
+	public static final short ATTTYPE_DEPT_INT = 2;
+
+	public static final short ATTTYPE_REGION_INT = 3;
 
 	private long ccid;
 
@@ -223,4 +234,21 @@ public class CustomerChancePO implements Serializable {
 		this.comment = comment;
 	}
 
+	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {
+
+		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("source", "busitype", "creater", "issuer", "belonger", "department", "region"));
+
+		if (customerChanceVO.getSource() != null) getSource().ptv(customerChanceVO.getSource());
+
+		if (customerChanceVO.getBusitype() != null) BeanUtil.copyProperties(getBusitype(), customerChanceVO.getBusitype());
+
+		if (customerChanceVO.getCreater() != null) customerChanceVO.getCreater().setBaseInfo(getCreater());
+		if (customerChanceVO.getIssuer() != null) customerChanceVO.getIssuer().setBaseInfo(getIssuer());
+		if (customerChanceVO.getBelonger() != null) customerChanceVO.getBelonger().setBaseInfo(getBelonger());
+
+		if (customerChanceVO.getDepartment() != null && getDepartment() != null) customerChanceVO.setDepartment(getDepartment().ptv());
+		if (customerChanceVO.getRegion() != null && getRegion() != null) customerChanceVO.setRegion(getRegion().ptv());
+
+		return customerChanceVO;
+	}
 }

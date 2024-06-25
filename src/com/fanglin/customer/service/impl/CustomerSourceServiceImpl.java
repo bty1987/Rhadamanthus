@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.DepartmentDao;
-import com.fanglin.communion.dao.VillageDao;
+import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
-import com.fanglin.communion.po.VillagePO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -65,7 +67,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private UserDao userDao;
 
 	@Autowired
-	private VillageDao villageDao;
+	private CustomerDao customerDao;
+
+	@Autowired
+	private HouseDao houseDao;
 
 	@Autowired
 	private DepartmentDao departmentDao;
@@ -80,17 +85,53 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		List<CustomerSourceVO> customerSourceVOs = new ArrayList<CustomerSourceVO>();
 
 		for (CustomerSourcePO customerSourcePO : customerSourcePOs) {
-			customerSourceVOs.add(customerSourcePOToVO(customerSourcePO));
+
+			CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+
+			customerSourceVOs.add(customerSourcePO.ptv(customerSourceVO));
 		}
 
 		paging.setData(customerSourceVOs);
 	}
 
 	@Override
+	public CustomerSourceVO queryCustomerSource(CustomerSourceVO customerSource) throws FLException {
+
+		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSource.getCsid());
+
+		if (customerSourcePO == null) {
+			throw new FLException(330071, "客户资源不存在");
+		}
+
+		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+
+		return customerSourcePO.ptv(customerSourceVO);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) {
+	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) throws FLException {
 
 		CustomerSourcePO customerSourcePO = new CustomerSourcePO();
+
+		CustomerPO customerPO = customerDao.get(customerSourceVO.getCustomer().getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		HousePO housePO = houseDao.get(customerSourceVO.getHouse().getHid());
+
+		if (housePO == null) {
+			throw new FLException(130017, "房产不存在");
+		}
+
+		customerSourcePO.setCustomer(customerPO);
+		customerSourcePO.setPhone(customerSourceVO.getPhone());
+
+		customerSourcePO.setHouse(housePO);
+		customerSourcePO.setVillage(housePO.getVillage());
+		customerSourcePO.setHouseNumber(housePO.getHouseNumber());
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
@@ -100,20 +141,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_INIT_INT);
 
-		if (customerSourceVO.getDesigner() != null && customerSourceVO.getDesigner().getUserId() != null) {
-			customerSourcePO.setDesigner(userDao.queryUserByUserId(customerSourceVO.getDesigner().getUserId()));
-		}
-
-		if (customerSourceVO.getSalesman() != null && customerSourceVO.getSalesman().getUserId() != null) {
-			customerSourcePO.setSalesman(userDao.queryUserByUserId(customerSourceVO.getSalesman().getUserId()));
-		}
-
-		VillagePO villagePO = villageDao.get(customerSourceVO.getVillage().getNo());
-
-		customerSourcePO.setVillage(villagePO);
-
 		customerSourceDao.save(customerSourcePO);
-
 	}
 
 	@Override
@@ -133,7 +161,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void issueCustomerChance(CustomerSourceVO customerSourceVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
+	public void issueCustomerSource(CustomerSourceVO customerSourceVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
 
 		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSourceVO.getCsid());
 
@@ -141,18 +169,18 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			throw new FLException(330071, "客户资源不存在");
 		}
 
-		short atttype = 1; // 默认处理方式为手动配置设计师
+		short atttype = CustomerChancePO.ATTTYPE_USER_INT;
 
 		DecorationBusitypePO busitype = null;
 
 		UserPO issuer = userDao.queryUserByUserId(userId);
 
-		CustomerChancePO customerChancePO = new CustomerChancePO(new CustomerSourcePO(), new DecorationBusitypePO(), new UserPO(), new UserPO(), new UserPO(), new DepartmentPO(), new DepartmentPO());
+		CustomerChancePO customerChancePO = new CustomerChancePO();
 
 		customerChancePO.setSource(customerSourcePO);
 		customerChancePO.setIssuer(issuer);
 		customerChancePO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));
-		customerChancePO.setStatus((short) 0);
+		customerChancePO.setStatus(CustomerChancePO.STATUS_INIT_INT);
 
 		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerSourcePO.getCreater().getDept().getDid());
 
@@ -170,7 +198,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			atttype = customerDeptRulePO.getAtttype();
 		}
 
-		if (atttype == 0) {
+		if (atttype == CustomerChancePO.ATTTYPE_AUTO_INT) {
 
 			if (customerUserRuleDao.countCustomerUserRule(company) == 0) {
 				customerUserRuleDao.pollingCustomerUserRule(company);
@@ -182,7 +210,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				throw new FLException(330081, "无匹配规则");
 			}
 
-			customerUserRulePO.setSurplus(customerUserRulePO.getSurplus() - 1);
+			customerUserRulePO.setSurplus(customerUserRulePO.getSurplus() - 1000);
 
 			customerUserRuleDao.update(customerUserRulePO);
 
@@ -192,7 +220,11 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
 
-			customerChancePO.setStatus((short) 1);
+			if (belonger.getDept().getFatherDept() == null) {
+				customerChancePO.setRegion(belonger.getDept());
+			}
+
+			customerChancePO.setStatus(CustomerChancePO.STATUS_DISTRIBUTION_INT);
 			customerChancePO.setBusitype(busitype);
 
 			customerChanceDao.save(customerChancePO);
@@ -200,77 +232,61 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			return;
 		}
 
-		if (customerChanceVO.getRegion() != null && atttype == 3) {
+		if (customerChanceVO.getRegion() != null && atttype == CustomerChancePO.ATTTYPE_REGION_INT) {
 
 			DepartmentPO region = departmentDao.get(customerChanceVO.getRegion().getDid());
 
-			if (region != null) {
-				customerChancePO.setRegion(region);
-
-				customerChanceDao.save(customerChancePO);
-
-				return;
+			if (region == null) {
+				throw new FLException(310001, "部门不存在");
 			}
+
+			customerChancePO.setRegion(region);
+
+			customerChanceDao.save(customerChancePO);
+
+			return;
 		}
 
-		if (customerChanceVO.getDepartment() != null && atttype == 2) {
+		if (customerChanceVO.getDepartment() != null && atttype == CustomerChancePO.ATTTYPE_DEPT_INT) {
 
 			DepartmentPO dept = departmentDao.get(customerChanceVO.getDepartment().getDid());
 
-			if (dept != null) {
-				customerChancePO.setDepartment(dept);
-				customerChancePO.setRegion(dept.getFatherDept());
-
-				customerChanceDao.save(customerChancePO);
-
-				return;
+			if (dept == null) {
+				throw new FLException(310001, "部门不存在");
 			}
-		}
 
-		if (customerChanceVO.getBelonger() != null && atttype == 1) {
+			customerChancePO.setDepartment(dept);
+			customerChancePO.setRegion(dept.getFatherDept());
 
-			UserPO belonger = userDao.get(customerChanceVO.getBelonger().getUid());
-
-			if (belonger != null) {
-				customerChancePO.setBelonger(belonger);
-				customerChancePO.setDepartment(belonger.getDept());
-				customerChancePO.setRegion(belonger.getDept().getFatherDept());
-
-				customerChanceDao.save(customerChancePO);
-
-				return;
+			if (dept.getFatherDept() == null) {
+				customerChancePO.setRegion(dept);
 			}
-		}
-	}
 
-	public CustomerSourceVO customerSourcePOToVO(CustomerSourcePO customerSourcePO) {
+			customerChanceDao.save(customerChancePO);
 
-		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
-
-		BeanUtil.copyProperties(customerSourcePO, customerSourceVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
-
-		if (customerSourcePO.getVillage() != null) {
-			BeanUtil.copyProperties(customerSourcePO.getVillage(), customerSourceVO.getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(customerSourcePO.getVillage().getCityProper(), customerSourceVO.getVillage().getCityProper(), Arrays.asList("city"));
+			return;
 		}
 
-		BeanUtil.copyProperties(customerSourcePO.getCreater(), customerSourceVO.getCreater(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(customerSourcePO.getCustomer(), customerSourceVO.getCustomer());
-		BeanUtil.copyProperties(customerSourcePO.getHouse(), customerSourceVO.getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(customerSourcePO.getDesigner(), customerSourceVO.getDesigner(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(customerSourcePO.getSalesman(), customerSourceVO.getSalesman(), Arrays.asList("dept", "duty"));
+		if (customerChanceVO.getBelonger() != null && atttype == CustomerChancePO.ATTTYPE_USER_INT) {
 
-		if (customerSourcePO.getDesigner() != null) {
-			BeanUtil.copyProperties(customerSourcePO.getDesigner().getDept(), customerSourceVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyProperties(customerSourcePO.getDesigner().getDept().getFatherDept(), customerSourceVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+			UserPO belonger = userDao.queryUserByUserId(customerChanceVO.getBelonger().getUserId());
+
+			if (belonger == null) {
+				throw new FLException(190005, "人员不存在");
+			}
+
+			customerChancePO.setBelonger(belonger);
+			customerChancePO.setDepartment(belonger.getDept());
+			customerChancePO.setRegion(belonger.getDept().getFatherDept());
+
+			if (belonger.getDept().getFatherDept() == null) {
+				customerChancePO.setRegion(belonger.getDept());
+			}
+
+			customerChanceDao.save(customerChancePO);
+
+			return;
 		}
-
-		if (customerSourcePO.getSalesman() != null) {
-			BeanUtil.copyProperties(customerSourcePO.getSalesman().getDept(), customerSourceVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyProperties(customerSourcePO.getSalesman().getDept().getFatherDept(), customerSourceVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
-		}
-
-		return customerSourceVO;
 	}
 
 }

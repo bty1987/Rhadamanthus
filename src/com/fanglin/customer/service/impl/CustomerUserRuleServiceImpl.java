@@ -47,7 +47,6 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		}
 
 		paging.setData(customerUserRuleServiceVOs);
-
 	}
 
 	@Override
@@ -61,13 +60,20 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company) {
+	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company) throws FLException {
 
-		CustomerUserRulePO customerUserRulePO = new CustomerUserRulePO(new UserPO(), new UserPO());
+		UserPO user = userDao.queryUserByUserId(customerUserRule.getUser().getUserId());
+
+		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(user.getUid());
+
+		if (customerUserRulePO != null) {
+			throw new FLException(330080, "规则已存在");
+		}
+
+		customerUserRulePO = new CustomerUserRulePO(new UserPO(), new UserPO());
 
 		BeanUtil.copyProperties(customerUserRule, customerUserRulePO, Arrays.asList("user", "creater"));
 
-		UserPO user = userDao.queryUserByUserId(customerUserRule.getUser().getUserId());
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		customerUserRulePO.setUser(user);
@@ -84,10 +90,13 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRule.getCurid());
 
+		if (customerUserRulePO == null) {
+			throw new FLException(330081, "无匹配规则");
+		}
+
 		BeanUtil.copyProperties(customerUserRule, customerUserRulePO, Arrays.asList("user", "creater"));
 
 		customerUserRuleDao.update(customerUserRulePO);
-
 	}
 
 	@Override
@@ -95,6 +104,10 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	public void updateCustomerUserRuleForStatus(CustomerUserRuleVO customerUserRule) throws FLException {
 
 		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRule.getCurid());
+
+		if (customerUserRulePO == null) {
+			throw new FLException(330081, "无匹配规则");
+		}
 
 		customerUserRulePO.setStatus(customerUserRule.getStatus());
 
@@ -106,7 +119,6 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	public void disableCustomerUserRule(int company) {
 
 		customerUserRuleDao.disableCustomerUserRule(company);
-
 	}
 
 }

@@ -331,6 +331,9 @@ $.extend(api, {
         querySystemConfigByCid: {
             url: "querySystemConfigByCid.do"
         },
+        querySystemConfigByGroup: {
+            url: "querySystemConfigByGroup.do"
+        },
         querySystemConfigByKey: {
             url: "querySystemConfigByKey.do"
         },

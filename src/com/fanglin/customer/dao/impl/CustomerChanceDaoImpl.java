@@ -29,6 +29,12 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 		return query.list();
 	}
 
+	@Override
+	public List<CustomerChancePO> queryCustomerChance(long csid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

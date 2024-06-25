@@ -24,6 +24,7 @@ import com.fanglin.system.vo.OperationVO;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.IPUtil;
 import com.fanglin.utils.LogUtils;
 import com.fanglin.utils.SystemConfig;
 import com.opensymphony.xwork2.Action;
@@ -55,6 +56,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 		String userId = "base";
 		String actionName = invocation.getProxy().getActionName();
+		String ip = IPUtil.getIpAddr(request);
 
 		ValueStack stack = invocation.getStack();
 
@@ -115,7 +117,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 				String decryptString = AESHelper.decrypt($authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
 				if (decryptString == null || "".equals(decryptString)) {
-					LogUtils.logging(logger, actionName, 0, "aseerror");
+					LogUtils.logging(logger, actionName, 0, "aseerror", ip);
 					throw new FLException(110005, "登陆超时");
 				}
 
@@ -126,7 +128,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 					userId = authentication.getUserId();
 
-					LogUtils.logging(logger, authentication.getUserId(), actionName, authentication.getCompany());
+					LogUtils.logging(logger, authentication.getUserId(), actionName, authentication.getCompany(), ip);
 
 					if (authentication.getUpdateTime() == -1) {
 						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
@@ -153,7 +155,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 					Long runTime = endTime.getTime() - startTime.getTime();
 
 					if (runTime > 5000) {
-						LogUtils.logging(logger, actionName, runTime);
+						LogUtils.logging(logger, actionName, runTime, ip);
 					}
 				}
 			}
@@ -167,7 +169,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 			stack.setValue("errorCode", "110000");
 			stack.setValue("errorMsg", "操作失败,请稍后重试");
 
-			LogUtils.logging(logger, e, actionName, userId);
+			LogUtils.logging(logger, e, actionName, userId, ip);
 		}
 
 		return Action.SUCCESS;
