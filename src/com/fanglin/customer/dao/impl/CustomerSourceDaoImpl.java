@@ -2,6 +2,7 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,11 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 		query.desc("csid");
 
 		return query.list();
+	}
+
+	@Override
+	public CustomerSourcePO queryCustomerSource(String phone) {
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -35,7 +35,15 @@ public class CustomerSourcePO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0; // 初始
 
-	public static final short STATUS_TRAN_INT = 2; // 转换
+	public static final short STATUS_DISABLE_INT = 1; // 失效
+
+	public static final short STATUS_APPROVE_ONE_INT = 2; // 审批
+
+	public static final short STATUS_CONFIRM_INT = 3; // 确认
+
+	public static final short STATUS_APPROVE_TWO_INT = 4; // 审批
+
+	public static final short STATUS_TRAN_INT = 5; // 转换
 
 	private long csid;
 

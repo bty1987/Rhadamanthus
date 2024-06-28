@@ -4,12 +4,14 @@ $(function() {
 
         btns: {
             saveBtn: com.focusPage("#saveBtn", "#customerSource"),
-            issueBtn: com.focusPage("#issueBtn", "#issueCustomerChanceModal")
+            issueBtn: com.focusPage("#issueBtn", "#issueCustomerChanceModal"),
+            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#commitFirstApprove")
         },
 
         modals: {
             createSourceModal: com.focusPage("#createsource"),
             issueCustomerChanceModal: com.focusPage("#issueCustomerChanceModal"),
+            commitFirstApprove: com.focusPage("#commitFirstApprove")
         },
 
         items: {
@@ -40,13 +42,15 @@ $(function() {
             company: com.focusPage("#company", "#issueCustomerChanceModal"),
             region: com.focusPage("#region", "#issueCustomerChanceModal"),
             department: com.focusPage("#department", "#issueCustomerChanceModal"),
-            belonger: com.focusPage("#belonger", "#issueCustomerChanceModal")
+            belonger: com.focusPage("#belonger", "#issueCustomerChanceModal"),
+
+            firstApproveComment: com.focusPage("#firstApproveComment", "#commitFirstApprove")
         },
 
         source: null,
         rule: null,
         grade: ["A", "B", "C", "D"],
-
+        currentCustomerSource: {},
         customerDeptRule: {
             "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
         }
@@ -54,6 +58,7 @@ $(function() {
 
     customerSource.btns.saveBtn.bindClick(saveDate);
     customerSource.btns.issueBtn.bindClick(issueDate);
+    customerSource.btns.firstApprovalBtn.bindClick(firstApproval);
 
     com.post(api.ds.building, {}, function(res) {
 
@@ -272,6 +277,19 @@ $(function() {
     }];
 
     var linebtns = [{
+        name: "审批",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            customerSource.currentCustomerSource = v;
+
+            approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
+
+            customerSource.modals.commitFirstApprove.modal("show");
+
+            return false;
+        }
+    }, {
         name: "分配",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -484,6 +502,40 @@ $(function() {
         }, null, false);
 
         return cid;
+    }
+
+    // 提交初审
+    function firstApproval() {
+
+        if (com.validate("commitFirstApprove")) {
+            return false;
+        }
+
+        var approver = com.focusPage("#firstApproveMan").find('input:checked').attr('userid');
+
+        if (approver == null || approver == "") {
+            com.showAlert(com.error, "请选择审批人");
+            return false;
+        }
+
+        com.showConfirm("是否确认提交审批", function() {
+
+            var option = {
+                "approval.receiver.userId": approver,
+                "approval.comment": customerSource.items.firstApproveComment.val(),
+                "approvalCustomerSource.csid": customerSource.currentCustomerSource.csid
+            };
+
+            com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                com.clearValidator();
+                searcher.doSearch();
+
+                customerSource.modals.commitFirstApprove.modal("hide");
+            });
+        });
     }
 
 });

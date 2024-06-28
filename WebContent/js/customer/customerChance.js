@@ -4,6 +4,8 @@ jQuery(function($) {
         modals: {
             issueModal: com.focusPage("#issueModal"),
             changeModal: com.focusPage("#changeModal"),
+            approveModal: com.focusPage("#approveModal"),
+            commitFirstApprove: com.focusPage("#commitFirstApprove")
         },
         items: {
             region: com.focusPage("#region"),
@@ -16,17 +18,37 @@ jQuery(function($) {
             orderType: com.focusPage("#orderType", "#changeModal"),
             resourceType: com.focusPage("#resourceType", "#changeModal"),
 
+            villageNoDesigerApprove: com.focusPage("#villageNoDesigerApprove", "#approveModal"),
+            houseNumberApprove: com.focusPage("#houseNumberApprove", "#approveModal"),
+            nameApprove: com.focusPage("#nameApprove", "#approveModal"),
+            phoneApprove: com.focusPage("#phoneApprove", "#approveModal"),
+            busitypeApprove: com.focusPage("#busitypeApprove", "#approveModal"),
+            houseTypeApprove: com.focusPage("#houseTypeApprove", "#approveModal"),
+            houseClassApprove: com.focusPage("#houseClassApprove", "#approveModal"),
+            orderTypeApprove: com.focusPage("#orderTypeApprove", "#approveModal"),
+            resourceTypeApprove: com.focusPage("#resourceTypeApprove", "#approveModal"),
+            approveMan: com.focusPage("#approveMan", "#approveModal"),
+            approveComment: com.focusPage("#approveComment", "#approveModal"),
+
+            firstApproveComment: com.focusPage("#firstApproveComment", "#commitFirstApprove"),
+
             infolist: com.focusPage("#infolist"),
         },
         btns: {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
+            approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
+            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#commitFirstApprove").on("click", firstApproval)
         },
 
         atttypes: [],
 
         decoration: {
             "types": {}
+        },
+
+        source: {
+            "csid": null
         },
 
         ccid: null
@@ -36,6 +58,10 @@ jQuery(function($) {
     customerChance.items.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
     customerChance.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerChance.items.resourceType.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
+
+    customerChance.items.houseTypeApprove.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
+    customerChance.items.houseClassApprove.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    customerChance.items.resourceTypeApprove.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
 
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
@@ -49,6 +75,7 @@ jQuery(function($) {
         });
 
         customerChance.items.orderType.bindData(customerChance.atttypes, 'key', 'name');
+        customerChance.items.orderTypeApprove.bindData(customerChance.atttypes, 'key', 'name');
     });
 
     function drawInfo() {
@@ -198,6 +225,43 @@ jQuery(function($) {
 
             customerChance.modals.changeModal.modal("show");
         },
+    }, {
+        name: "审批",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            approvalUtils.initqueryApprovalUser('approveMan', 21);
+
+            customerChance.ccid = v.ccid;
+
+            customerChance.currentCustomerChance = v;
+            customerChance.items.villageNoDesigerApprove.prop("disabled", true);
+            customerChance.items.houseNumberApprove.attr("disabled", "disabled");
+            customerChance.items.nameApprove.attr("disabled", "disabled");
+            customerChance.items.phoneApprove.attr("disabled", "disabled");
+            com.cleanTypeahead('approveComment');
+
+            v.busitype != null ? customerChance.items.busitypeApprove.val(v.busitype.dbid) : "";
+            com.updateTypeahead('villageNoDesigerApprove', v.source.village.no, v.source.village.name + "-" + v.source.village.cityProper.name);
+            customerChance.items.houseNumberApprove.val(v.source.houseNumber);
+            customerChance.items.nameApprove.val(v.source.name);
+            customerChance.items.phoneApprove.val(v.source.phone);
+
+            customerChance.modals.approveModal.modal("show");
+        },
+    }, {
+        name: "初审",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            customerChance.source.csid = v.source.csid;
+
+            approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
+
+            customerChance.modals.commitFirstApprove.modal("show");
+
+            return false;
+        }
     }];
 
     searcher.line("source.name", lineprops, linebtns).render();
@@ -231,6 +295,7 @@ jQuery(function($) {
             }
         });
 
+        customerChance.items.busitypeApprove.bindData($arr, 'dbid', 'name');
         customerChance.items.busitype.bindData($arr, "dbid", "name", true);
     });
 
@@ -323,6 +388,82 @@ jQuery(function($) {
             searcher.doSearch();
 
             com.showAlert(com.info, "转换成功!");
+        });
+    }
+
+    // 提交审批
+    function approval() {
+
+        if (com.validate("approveModal")) {
+            return false;
+        }
+
+        // 审批创建装修单
+        var approver = com.focusPage("#approveMan").find('input:checked').attr('userid');
+
+        if (approver == null || approver == "") {
+            com.showAlert(com.error, "请选择审批人");
+            return false;
+        }
+
+        com.showConfirm("是否确认提交审批", function() {
+
+            var option = {
+                "approval.receiver.userId": approver,
+                "approval.comment": customerChance.items.approveComment.val(),
+
+                "approvalCustomerChance.chance.ccid": customerChance.ccid,
+                "approvalCustomerChance.type": customerChance.decoration.types[customerChance.items.orderTypeApprove.val()],
+                "approvalCustomerChance.typeness": customerChance.items.orderTypeApprove.val(),
+                "approvalCustomerChance.busitype.dbid": customerChance.items.busitypeApprove.val(),
+                "approvalCustomerChance.houseType": customerChance.items.houseTypeApprove.val(),
+                "approvalCustomerChance.houseClass": customerChance.items.houseClassApprove.val(),
+                "approvalCustomerChance.resourceType": customerChance.items.resourceTypeApprove.val()
+            };
+
+            com.post(api.approval.submitApprovalForCustomerChance, option, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                com.clearValidator();
+                searcher.doSearch();
+
+                customerChance.modals.approveModal.modal("hide");
+            });
+        });
+    }
+
+    // 提交初审
+    function firstApproval() {
+
+        if (com.validate("commitFirstApprove")) {
+            return false;
+        }
+
+        var approver = com.focusPage("#firstApproveMan").find('input:checked').attr('userid');
+
+        if (approver == null || approver == "") {
+            com.showAlert(com.error, "请选择审批人");
+            return false;
+        }
+
+        com.showConfirm("是否确认提交审批", function() {
+
+            var option = {
+                "approval.receiver.userId": approver,
+                "approval.comment": customerChance.items.firstApproveComment.val(),
+                "approvalCustomerSource.csid": customerChance.source.csid
+            };
+
+            com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                com.clearValidator();
+                searcher.doSearch();
+
+                customerChance.modals.commitFirstApprove.modal("hide");
+            });
         });
     }
 

@@ -27,15 +27,15 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0; // 初始
 
-	public static final short STATUS_DISTRIBUTION_INT = 1; // 分配
+	public static final short STATUS_DISABLE_INT = 1; // 失效
 
-	public static final short STATUS_CONFIRM_INT = 2; // 确认
+	public static final short STATUS_ISSUE_INT = 2; // 分配
 
-	public static final short STATUS_APPROVE_INT = 3; // 审批
+	public static final short STATUS_CONFIRM_INT = 3; // 确认
 
 	public static final short STATUS_COMPLETE_INT = 4; // 完成
 
-	public static final short STATUS_LNVALID_INT = 5; // 失效
+	public static final short STATUS_REFUSE_INT = 6;
 
 	public static final short ATTTYPE_AUTO_INT = 0;
 

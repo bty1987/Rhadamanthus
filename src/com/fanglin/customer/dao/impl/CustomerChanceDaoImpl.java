@@ -2,6 +2,7 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -30,9 +31,14 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<CustomerChancePO> queryCustomerChance(long csid) {
-		// TODO Auto-generated method stub
-		return null;
+		return session().createCriteria(CustomerChancePO.class).createAlias("source", "source").add(Restrictions.eq("source.csid", csid)).list();
+	}
+
+	@Override
+	public CustomerChancePO queryCustomerChance(long csid, int company) {
+		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).createAlias("source", "source").add(Restrictions.eq("source.csid", csid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -34,6 +34,7 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -69,7 +70,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		for (CustomerChancePO customerChancePO : customerChancePOs) {
 
-			CustomerChanceVO customerChanceVO = new CustomerChanceVO(new CustomerSourceVO(new VillageVO(), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+			CustomerChanceVO customerChanceVO = new CustomerChanceVO(new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 
 			customerChanceVOs.add(customerChancePO.ptv(customerChanceVO));
 		}
@@ -113,7 +114,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
-		customerChancePO.setStatus(CustomerChancePO.STATUS_LNVALID_INT);
+		customerChancePO.setStatus(CustomerChancePO.STATUS_DISABLE_INT);
 
 		customerChanceDao.update(customerChancePO);
 	}
@@ -128,7 +129,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_DISTRIBUTION_INT) {
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_ISSUE_INT) {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
@@ -158,7 +159,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_DISTRIBUTION_INT) {
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_ISSUE_INT) {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
@@ -207,6 +208,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (belonger != null) {
 			customerChancePO.setBelonger(belonger);
+			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
 		}
 
 		customerChanceDao.update(customerChancePO);

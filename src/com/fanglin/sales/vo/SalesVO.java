@@ -20,6 +20,8 @@ public class SalesVO implements Serializable {
 
 	private String orderId;
 
+	private String phone;
+
 	private UserBaseVO supplier;
 
 	private HouseVO house;
@@ -153,6 +155,14 @@ public class SalesVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public UserBaseVO getSupplier() {

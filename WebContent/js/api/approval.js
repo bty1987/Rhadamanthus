@@ -172,6 +172,14 @@ $.extend(api, {
             url: "submitApprovalForCustomerOrigin.do"
         },
 
+        submitApprovalForCustomerChance: {
+            url: "submitApprovalForCustomerChance.do"
+        },
+
+        submitApprovalForCustomerSource: {
+            url: "submitApprovalForCustomerSource.do"
+        },
+
         submitApprovalForDecorationTerminal: {
             url: "submitApprovalForDecorationTerminal.do",
             type: "update",

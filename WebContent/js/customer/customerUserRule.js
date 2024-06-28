@@ -63,7 +63,7 @@ $(function() {
         "user.status": 0
     }, 'autoFillKeyValue', 'key', 'value', null);
 
-    // queryInfo();
+    //queryInfo();
     drawInfo("customerSourceInfo", "资源", "header-color-orange", customerUserRule.customerSourceInfo);
     drawInfo("weightInfo", "权重", "header-color-green", customerUserRule.weightInfo);
 
@@ -199,6 +199,17 @@ $(function() {
             return v.status != 2;
         }
     }, {
+        name: "项目",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            params["customerUserRule.curid"] = v.curid;
+
+            com.popup4page("#layerPopUp", api.index.customerUserRuleItem.url, "人员规则项目");
+
+            return false;
+        }
+    }, {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",
@@ -282,10 +293,7 @@ $(function() {
     }
 
     function queryInfo() {
-
-        com.post(api.system.querySystemConfigByGroup, {
-            "systemConfig.group": ""
-        }, function(res) {
+        com.post(api.system.querySystemConfigByGroup, {"systemConfig.group": ""}, function(res) {
 
         }, null, false)
     }

@@ -11,4 +11,6 @@ public interface CustomerSourceDao extends Dao<CustomerSourcePO> {
 
 	public List<CustomerSourcePO> pageCustomerSource(Paging paging, List<Filter> filters);
 
+	public CustomerSourcePO queryCustomerSource(String phone);
+
 }

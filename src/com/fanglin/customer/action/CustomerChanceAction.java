@@ -1,5 +1,7 @@
 package com.fanglin.customer.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -23,6 +25,8 @@ public class CustomerChanceAction extends BaseListAction {
 	@Autowired
 	private CustomerChanceService customerChanceService;
 
+	private List<CustomerChanceVO> customerChances;
+
 	private CustomerChanceVO customerChance;
 
 	private DecorationVO decoration;
@@ -35,6 +39,14 @@ public class CustomerChanceAction extends BaseListAction {
 	public String pageCustomerChance() throws FLException {
 
 		customerChanceService.pageCustomerChance(getPaging(), getFilters(), queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerChance() throws FLException {
+
+		customerChances = customerChanceService.queryCustomerChance(customerChance);
 
 		return SUCCESS;
 	}
@@ -77,6 +89,14 @@ public class CustomerChanceAction extends BaseListAction {
 		customerChanceService.changeCustomerChance(decoration, customerChance, queryUserId(), queryCompany());
 
 		return SUCCESS;
+	}
+
+	public List<CustomerChanceVO> getCustomerChances() {
+		return customerChances;
+	}
+
+	public void setCustomerChances(List<CustomerChanceVO> customerChances) {
+		this.customerChances = customerChances;
 	}
 
 	public CustomerChanceVO getCustomerChance() {

@@ -176,6 +176,9 @@ $(function() {
                             case "address":
                                 propertyArr.push(["楼盘地址:", (v.house.village.name + " " + v.house.houseNumber), "grey"]);
                                 break;
+                            case "phone":
+                                propertyArr.push(["电话:", (v.phone), "grey"]);
+                                break;
                             case "customer":
                                 propertyArr.push(["客户名:", v.customer.name, "grey", tools.customer.info, v.customer.cid]);
                                 break;

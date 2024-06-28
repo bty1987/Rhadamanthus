@@ -18,6 +18,8 @@ jQuery(function($) {
             comment: com.focusPage("#comment", "#brandModal"),
             category: com.focusPage("#category", "#brandModal"),
             atttype: com.focusPage("#atttype", "#brandModal"),
+            agentName: com.focusPage("#agentName", "#brandModal"),
+            agentPhone: com.focusPage("#agentPhone", "#brandModal"),
             supplier: com.focusPage("#supplier", "#brandModal"),
             kino: com.focusPage("#kino", "#brandModal"),
             kiname: com.focusPage("#kiname", "#brandModal"),
@@ -49,7 +51,7 @@ jQuery(function($) {
     });
 
     brand.modals.deliveryModal.on('show.bs.modal', function(e) {
-
+        com.cleanItems(brand.items);
         com.clearValidator();
     });
 
@@ -121,6 +123,16 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.data().brand.atttype.keys,
     }, {
+        fieId: "agentName",
+        name: "代理",
+        prop: "agentName",
+        clazz: "grey"
+    }, {
+        fieId: "agentPhone",
+        name: "电话",
+        prop: "agentPhone",
+        clazz: "grey"
+    }, {
         field: "comment",
         name: "说明",
         prop: "comment",
@@ -150,6 +162,8 @@ jQuery(function($) {
             brand.items.kino.val(v.kino);
             brand.items.kiname.val(v.kiname);
             brand.items.atttype.val(v.atttype);
+            brand.items.agentName.val(v.agentName);
+            brand.items.agentPhone.val(v.agentPhone);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
 
@@ -185,6 +199,8 @@ jQuery(function($) {
             brand.items.category.val(v.cid);
             brand.items.kino.val(v.kino);
             brand.items.kiname.val(v.kiname);
+            brand.items.agentName.val(v.agentName);
+            brand.items.agentPhone.val(v.agentPhone);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
             com.focusPage(".default").hide();
@@ -299,7 +315,9 @@ jQuery(function($) {
             'brand.supplier.userId': com.typeahead("supplier"),
             'brand.kino': brand.items.kino.val(),
             'brand.kiname': brand.items.kiname.val(),
-            'brand.atttype': brand.items.atttype.val()
+            'brand.atttype': brand.items.atttype.val(),
+            'brand.agentName': brand.items.agentName.val(),
+            'brand.agentPhone': brand.items.agentPhone.val()
         };
 
         if (brand.brand) {
