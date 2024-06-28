@@ -58,23 +58,30 @@ $(function() {
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
         var caption = $('<caption style="line-height: 65px;font-size:23px; font-weight:bolder">商品销售单</caption>').appendTo(table);
 
+        var tr28 = $('<tr style="height: 70px;"></tr>').appendTo(table);
+        var td55 = $('<td rowspan="3"></td>').appendTo(tr28);
+        var img = $('<img/>').appendTo(td55);
+        com.showImg(img, data.supplier.userPhoto, 150, 150, '');
         var tr1 = $('<tr style="height: 25px;text-align: right; font-size: 13px;"></tr>').appendTo(table);
-        var td1 = $('<td colspan="7"></td>').text("销售单号: ").appendTo(tr1);
+        var td1 = $('<td colspan="6"></td>').text("销售单号: ").appendTo(tr1);
         var td2 = $('<td style="border-bottom: 1px solid #3F3F3F; text-align: center;" ></td>').text(data.no).appendTo(tr1);
         var tr2 = $('<tr style="height: 25px;text-align: right; font-size: 13px;"></tr>').appendTo(table);
-        var td3 = $('<td  colspan="7"></td>').text("开单日期: ").appendTo(tr2);
+        var td3 = $('<td  colspan="6"></td>').text("开单日期: ").appendTo(tr2);
         var td4 = $('<td style="border-bottom: 1px solid #3F3F3F" ></td>').text("").appendTo(tr2);
+
         var tr26 = $('<tr style="height: 25px;"></tr>').appendTo(table);
 
         var tr3 = $('<tr style="height: 30px; text-align: center; font-size: 13px;"></tr>').appendTo(table);
         var td9 = $('<td></td>').text("供货方:").appendTo(tr3);
-        var td10 = $('<td colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr3);
+        var td10 = $('<td colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.supplier.currentName).appendTo(tr3);
         var td11 = $('<td></td>').text("装修单号: ").appendTo(tr3);
         var td12 = $('<td colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.orderId).appendTo(tr3);
 
         var tr4 = $('<tr style="height: 30px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
-        var td5 = $('<td></td>').text("确认时间: ").appendTo(tr4);
-        var td6 = $('<td colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.affirmTime).appendTo(tr4);
+        var td5 = $('<td></td>').text("客户确认时间: ").appendTo(tr4);
+        var td6 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.affirmTime).appendTo(tr4);
+        var td56 = $('<td></td>').text("客户电话: ").appendTo(tr4);
+        var td57 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.phone).appendTo(tr4);
 
         var td13 = $('<td></td>').text("品牌: ").appendTo(tr4);
         var td14 = $('<td  colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.brand).appendTo(tr4);
@@ -83,10 +90,7 @@ $(function() {
         var td15 = $('<td></td>').text("楼盘地址: ").appendTo(tr5);
         var td16 = $('<td colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.house.village.name + " " + data.house.houseNumber).appendTo(tr5);
         var td17 = $('<td></td>').text("供货方授权代表: ").appendTo(tr5);
-        var td18 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr5);
-        var td19 = $('<td></td>').text("电话: ").appendTo(tr5);
-        var td20 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr5);
-        var tr8 = $('<tr style="height: 30px;"></tr>').appendTo(table);
+        var tr27 = $('<tr style="height: 30px;"></tr>').appendTo(table);
 
         var tr6 = $('<tr style="height: 20px; text-align: center; font-size: 13px;"></tr>').appendTo(table);
         var td21 = $('<td colspan="8" ></td>').text("为了购货方的合法权益得到有效保障,请详细阅读本单据购货方须知,并确认单据内各项购物内容。").appendTo(tr6);
@@ -139,7 +143,7 @@ $(function() {
                 });
             });
         }
-        
+
         var tr9 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
         var td30 = $('<td style="border: 1px solid;"></td>').text(moneryName).appendTo(tr9);
         var td36 = $('<td style="border: 1px solid;"></td>').text("大写:").appendTo(tr9);
@@ -186,14 +190,18 @@ $(function() {
         com.post(api.data.queryBrandByBid, option, function(v) {
 
             var td49 = $('<td colspan="7" style="border: 1px solid;"></td>').text(v.brand.comment).appendTo(tr23);
+            var td18 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentName).appendTo(tr5);
+            var td19 = $('<td></td>').text("电话: ").appendTo(tr5);
+            var td20 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentPhone).appendTo(tr5);
 
         });
+        console.log(data)
         var tr25 = $('<tr style="height: 25px;"></tr>').appendTo(table);
         var tr24 = $('<tr style="height: 40px;text-align: center; font-size: 15px;"></tr>').appendTo(table);
-        var td49 = $('<td ></td>').text("购货方签字: 姓名").appendTo(tr24);
-        var td50 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr24);
-        var td51 = $('<td ></td>').text("电话:").appendTo(tr24);
-        var td52 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr24);
+        var td49 = $('<td ></td>').text("品牌开单人:").appendTo(tr24);
+        var td50 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.instorer.currentName).appendTo(tr24);
+        var td51 = $('<td ></td>').text("品牌开单人电话:").appendTo(tr24);
+        var td52 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.instorer.phone).appendTo(tr24);
         var td53 = $('<td ></td>').text("供货方授权代表签字:").appendTo(tr24);
         var td54 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr24);
 

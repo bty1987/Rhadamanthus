@@ -161,10 +161,10 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateDecorationMidpack(DecorationMidpackVO decorationMidpackV0, String userId) throws FLException {
+	public void updateDecorationMidpack(DecorationMidpackVO decorationMidpackVO, String userId) throws FLException {
 
-		String orderId = decorationMidpackV0.getDecoration().getOrderId();
-		long materialPrice = decorationMidpackV0.getMaterialPrice();
+		String orderId = decorationMidpackVO.getDecoration().getOrderId();
+		long materialPrice = decorationMidpackVO.getMaterialPrice();
 
 		DecorationMidpackPO decorationMidpackPO = decorationMidpackDao.queryDecorationMidpack(orderId);
 

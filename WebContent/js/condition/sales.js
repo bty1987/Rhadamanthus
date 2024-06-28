@@ -242,6 +242,31 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
+    "affirmTime": {
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sales.affirmTime.range",
+            op: "between",
+            validate: null
+        }
+    },
+    "isAffirm": {
+        label: "确认状态",
+        type: "select",
+        submitConfig: {
+            name: "sales.isAffirm",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().sales.isAffirm.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "dompany1": {
         label: "公司",
         type: "select",

@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.po.VillagePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -70,6 +72,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private CustomerDao customerDao;
 
 	@Autowired
+	private VillageDao villageDao;
+
+	@Autowired
 	private HouseDao houseDao;
 
 	@Autowired
@@ -112,26 +117,46 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	@Transactional(rollbackFor = Exception.class)
 	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) throws FLException {
 
-		CustomerSourcePO customerSourcePO = new CustomerSourcePO();
+		CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSource(customerSourceVO.getPhone());
 
-		CustomerPO customerPO = customerDao.get(customerSourceVO.getCustomer().getCid());
-
-		if (customerPO == null) {
-			throw new FLException(130002, "客户不存在");
+		if (customerSourcePO != null && DateUtil.diffDay(customerSourcePO.getCreateTime(), DateUtil.getDateToTimestamp(new Date())) < 1) {
+			throw new FLException(330073, "客户资源保护中");
 		}
 
-		HousePO housePO = houseDao.get(customerSourceVO.getHouse().getHid());
+		customerSourcePO = new CustomerSourcePO();
 
-		if (housePO == null) {
-			throw new FLException(130017, "房产不存在");
+		CustomerPO customerPO = null;
+
+		if (customerSourceVO.getCustomer() != null) {
+			customerPO = customerDao.get(customerSourceVO.getCustomer().getCid());
 		}
 
-		customerSourcePO.setCustomer(customerPO);
-		customerSourcePO.setPhone(customerSourceVO.getPhone());
+		if (customerPO != null) {
+			customerSourcePO.setCustomer(customerPO);
+			customerSourcePO.setPhone(customerSourceVO.getPhone());
+		}
 
-		customerSourcePO.setHouse(housePO);
-		customerSourcePO.setVillage(housePO.getVillage());
-		customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+		VillagePO villagePO = null;
+
+		if (customerSourceVO.getVillage() != null) {
+			villagePO = villageDao.get(customerSourceVO.getVillage().getVid());
+		}
+
+		if (villagePO != null) {
+			customerSourcePO.setVillage(villagePO);
+		}
+
+		HousePO housePO = null;
+
+		if (customerSourceVO.getHouse() != null) {
+			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
+		}
+
+		if (housePO != null) {
+			customerSourcePO.setHouse(housePO);
+			customerSourcePO.setVillage(housePO.getVillage());
+			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+		}
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
@@ -140,6 +165,58 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerSourcePO.setCreater(userPO);
 		customerSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_INIT_INT);
+
+		customerSourceDao.save(customerSourcePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCustomerSource(CustomerSourceVO customerSourceVO) throws FLException {
+
+		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSourceVO.getCsid());
+
+		if (customerSourcePO == null) {
+			throw new FLException(330071, "客户资源不存在");
+		}
+
+		if (!Arrays.asList(CustomerSourcePO.STATUS_INIT_INT, CustomerSourcePO.STATUS_APPROVE_ONE_INT).contains(customerSourcePO.getStatus())) {
+			throw new FLException(330074, "客户资源不可操作");
+		}
+
+		CustomerPO customerPO = null;
+
+		if (customerSourceVO.getCustomer() != null) {
+			customerPO = customerDao.get(customerSourceVO.getCustomer().getCid());
+		}
+
+		if (customerPO != null) {
+			customerSourcePO.setCustomer(customerPO);
+			customerSourcePO.setPhone(customerSourceVO.getPhone());
+		}
+
+		VillagePO villagePO = null;
+
+		if (customerSourceVO.getVillage() != null) {
+			villagePO = villageDao.get(customerSourceVO.getVillage().getVid());
+		}
+
+		if (villagePO != null) {
+			customerSourcePO.setVillage(villagePO);
+		}
+
+		HousePO housePO = null;
+
+		if (customerSourceVO.getHouse() != null) {
+			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
+		}
+
+		if (housePO != null) {
+			customerSourcePO.setHouse(housePO);
+			customerSourcePO.setVillage(housePO.getVillage());
+			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+		}
+
+		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
 		customerSourceDao.save(customerSourcePO);
 	}
@@ -198,13 +275,19 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			atttype = customerDeptRulePO.getAtttype();
 		}
 
+		int area = customerSourcePO.getInnerArea();
+
 		if (atttype == CustomerChancePO.ATTTYPE_AUTO_INT) {
 
-			if (customerUserRuleDao.countCustomerUserRule(company) == 0) {
+			if (customerUserRuleDao.existCustomerUserRule(company, area) == 0) {
+				throw new FLException(330081, "无匹配规则");
+			}
+
+			if (customerUserRuleDao.countCustomerUserRule(company, area) == 0) {
 				customerUserRuleDao.pollingCustomerUserRule(company);
 			}
 
-			CustomerUserRulePO customerUserRulePO = customerUserRuleDao.pullCustomerUserRule(company);
+			CustomerUserRulePO customerUserRulePO = customerUserRuleDao.pullCustomerUserRule(company, area);
 
 			if (customerUserRulePO == null) {
 				throw new FLException(330081, "无匹配规则");
@@ -216,6 +299,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			UserPO belonger = customerUserRulePO.getUser();
 
+			if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany()) != null) {
+				throw new FLException(330076, "客户机会已存在");
+			}
+
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
@@ -224,7 +311,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				customerChancePO.setRegion(belonger.getDept());
 			}
 
-			customerChancePO.setStatus(CustomerChancePO.STATUS_DISTRIBUTION_INT);
+			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
 			customerChancePO.setBusitype(busitype);
 
 			customerChanceDao.save(customerChancePO);
@@ -273,6 +360,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			if (belonger == null) {
 				throw new FLException(190005, "人员不存在");
+			}
+
+			if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), belonger.getCompany()) != null) {
+				throw new FLException(330076, "客户机会已存在");
 			}
 
 			customerChancePO.setBelonger(belonger);

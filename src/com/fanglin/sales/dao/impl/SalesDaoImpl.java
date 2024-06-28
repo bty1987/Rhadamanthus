@@ -246,6 +246,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
 			} else if ("sales.fullpayStatus".equals(field)) {
 				query.add(query.getCriterion(String.format("%sfullpayStatus", prefix), Short.valueOf(data), op));
+			} else if ("sales.isAffirm".equals(field)) {
+				query.add(query.getCriterion(String.format("%sisAffirm", prefix), Short.valueOf(data), op));
 			} else if ("sales.instorer.userId".equals(field)) {
 				query.add(query.getCriterion("instorer.userId", data, op));
 			} else if ("sales.salesman.userId".equals(field)) {
@@ -258,6 +260,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.add(query.getCriterion("region.name", data, op));
 			} else if ("sales.fullpayTime.range".equals(field)) {
 				query.timeranges(String.format("%sfullpayTime", prefix), filter.getData());
+			} else if ("sales.affirmTime.range".equals(field)) {
+				query.timeranges(String.format("%saffirmTime", prefix), filter.getData());
 			} else if ("sales.createTime.range".equals(field)) {
 				query.timeranges("createTime", filter.getData());
 			} else if ("sales.dompany".equals(field)) {

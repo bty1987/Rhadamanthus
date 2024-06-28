@@ -45,6 +45,10 @@ public class BrandPO implements java.io.Serializable {
 
 	private short atttype;
 
+	private String agentName;
+
+	private String agentPhone;
+
 	private String comment;
 
 	private int company;
@@ -127,6 +131,24 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setAtttype(short atttype) {
 		this.atttype = atttype;
+	}
+
+	@Column(name = "agentName")
+	public String getAgentName() {
+		return agentName;
+	}
+
+	public void setAgentName(String agentName) {
+		this.agentName = agentName;
+	}
+
+	@Column(name = "agentPhone")
+	public String getAgentPhone() {
+		return agentPhone;
+	}
+
+	public void setAgentPhone(String agentPhone) {
+		this.agentPhone = agentPhone;
 	}
 
 	@Column(name = "comment")

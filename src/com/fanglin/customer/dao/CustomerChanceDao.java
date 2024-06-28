@@ -13,4 +13,6 @@ public interface CustomerChanceDao extends Dao<CustomerChancePO> {
 
 	public List<CustomerChancePO> queryCustomerChance(long csid);
 
+	public CustomerChancePO queryCustomerChance(long csid, int company);
+
 }

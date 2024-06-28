@@ -29,6 +29,9 @@
     customerOriginRecord: {
         url: "/views/customer/customerOriginRecord.html"
     },
+    customerUserRuleItem: {
+        url: "/views/customer/customerUserRuleItem.html"
+    }
 });
 
 $.extend(api, {
@@ -578,6 +581,29 @@ $.extend(api, {
         },
         disableCustomerUserRule: {
             url: "disableCustomerUserRule.do"
+        },
+
+        queryCustomerUserRuleItem: {
+            url: "queryCustomerUserRuleItem.do",
+            type: "query",
+            tranargs: [{
+                result: "customerUserRuleItems",
+                args: ["uppval", "lowval"]
+            }]
+        },
+        addCustomerUserRuleItem: {
+            url: "addCustomerUserRuleItem.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRuleItem.uppval", "customerUserRuleItem.lowval"],
+                query: [{
+                    result: "customerUserRuleItem",
+                    args: ["uppval", "lowval"]
+                }]
+            }
+        },
+        deleteCustomerUserRuleItem: {
+            url: "deleteCustomerUserRuleItem.do"
         },
 
         queryFeedbackDrawing: {

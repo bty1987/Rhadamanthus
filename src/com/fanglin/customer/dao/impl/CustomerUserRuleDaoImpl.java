@@ -3,6 +3,7 @@ package com.fanglin.customer.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -45,18 +46,48 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	}
 
 	@Override
+	public CustomerUserRulePO pullCustomerUserRule(int company, int area) {
+
+		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval order by cur.surplus desc limit 1";
+
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRulePO.class);
+
+		query.setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area);
+
+		return (CustomerUserRulePO) query.uniqueResult();
+	}
+
+	@Override
+	public int existCustomerUserRule(int company, int area) {
+
+		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0 ,1) and curi.uppval < :uppval and curi.lowval >= :lowval";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
 	public int countCustomerUserRule(int company) {
 
 		String sql = "select count(*) from customer.customeruserrule where surplus >= 1000 and company = :company and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).uniqueResult();
 
-		return count.intValue();
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int countCustomerUserRule(int company, int area) {
+
+		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
 	}
 
 	@Override
 	public int pollingCustomerUserRule(int company) {
 
-		String sql = "update customer.customeruserrule set surplus = surplus + chance, polling = polling + 1000 where company = :company and status = 0";
+		String sql = "update customer.customeruserrule set surplus = surplus + chance, polling = polling + 1000 where company = :company and status in (0, 1)";
 		session().createSQLQuery(sql).setInteger("company", company).executeUpdate();
 
 		return 0;
