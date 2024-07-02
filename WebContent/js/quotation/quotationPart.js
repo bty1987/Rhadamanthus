@@ -1027,10 +1027,11 @@ var QuotationDetail = (function() {
                 }
 
                 var baseDiscount = matching.attr("data-baseDiscount");
+                var discountType = matching.attr("data-discountType");
 
                 quo.quoModals.$domainDiscountModal.modal("hide");
 
-                if (!disableFlag && parseFloat(dis) < baseDiscount) {
+                if (!disableFlag && parseFloat(dis) < baseDiscount && discountType == constant.data().decorationMatching.DISCOUNTTYPE_LOW_INT) {
 
                     approvalUtils.initqueryApprovalUser("approveManSel", 4);
 
@@ -1286,25 +1287,20 @@ var QuotationDetail = (function() {
                         "data-trafficDiscount": v.trafficDiscount,
                         "data-manageDiscount": v.manageDiscount,
                         "data-taxDiscount": v.taxDiscount,
+                        "data-discountType": v.discountType
                     };
-
-                    var _discount = v.discount;
-
-                    if (v.type != constant.decoration().decoration.TYPE_HOLONOMY_INT) {
-                        _discount = "自定义折扣"
-                    }
 
                     var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
                     var lableInput = $('<label></label>').append($('<input type="radio" name="basePrice" class="ace"></input>').attr(params)).append('<sapn class="lbl"></sapn>');
                     var lbl1 = $('<label>' + v.name + '</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
-                    var lbl2 = $('<label> 折扣数: ' + _discount + '</label>').addClass('quotation-base-price-lbl');
+                    var lbl2 = $('<label> 折扣(' + constant.data().decorationMatching.discountType.keys[v.discountType] + "): " + v.discount + '</label>').addClass('quotation-base-price-lbl');
                     var lbl3 = $('<label> 基数: ' + v.base + '</label>').addClass('quotation-base-price-lbl').addClass('hide');
 
                     radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(com.focusPage("#showBaseVersion"));
 
                     lableInput.click(function(e) {
 
-                        if (v.type != constant.decoration().decoration.TYPE_HOLONOMY_INT) {
+                        if (v.discountType != constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
                             com.focusPage("#discount").val(10).removeAttr("disabled");
                         } else {
                             com.focusPage("#discount").prop("disabled", "disabled").val(v.discount);

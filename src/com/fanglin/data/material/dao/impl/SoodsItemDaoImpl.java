@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.SoodsItemDao;
+import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.SoodsItemPO;
+import com.fanglin.data.po.SoodsPO;
 import com.fanglin.utils.Paging;
 
 @Repository("soodsItemDao")
@@ -36,8 +38,10 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
-		query.alias("quotationItem", "quotationItem");
-		query.add(query.getCriterion("quotationItem.qiid", qiid, "eq"));
+		query.getCriterion("quotationItem.qiid", qiid, "eq");
+
+		query.alias("quotationItem", "quotationItem").add(Restrictions.eq("quotationItem.status", QuotationItemPO.STATUS_ENABLE_INT));
+		query.alias("soods", "soods").add(Restrictions.eq("soods.status", SoodsPO.STATUS_VALID_INT));
 
 		if (status != null) {
 			query.add(Restrictions.eq("status", status));
@@ -53,8 +57,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
-		query.alias("soods", "soods");
-		query.add(query.getCriterion("soods.sid", sid, "eq"));
+		query.alias("soods", "soods").add(Restrictions.eq("soods.sid", sid));
 
 		if (status != null) {
 			query.add(Restrictions.eq("status", status));

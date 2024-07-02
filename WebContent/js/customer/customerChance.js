@@ -34,6 +34,20 @@ jQuery(function($) {
 
             infolist: com.focusPage("#infolist"),
         },
+
+        approveItems: {
+            villageName: com.focusPage("#villageName", "#commitFirstApprove"),
+            built: com.focusPage("#built", "#commitFirstApprove"),
+            unit: com.focusPage("#unit", "#commitFirstApprove"),
+            floor: com.focusPage("#floor", "#commitFirstApprove"),
+            door: com.focusPage("#door", "#commitFirstApprove"),
+            builtrule: com.focusPage("#builtrule", "#commitFirstApprove"),
+            unitrule: com.focusPage("#unitrule", "#commitFirstApprove"),
+            floorrule: com.focusPage("#floorrule", "#commitFirstApprove"),
+            doorrule: com.focusPage("#doorrule", "#commitFirstApprove"),
+            rule: com.focusPage("#rule", "#commitFirstApprove"),
+        },
+
         btns: {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
@@ -51,9 +65,36 @@ jQuery(function($) {
             "csid": null
         },
 
-        ccid: null
+        ccid: null,
+
+        depage: params['urlLoadParams'].depage,
 
     };
+
+    com.post(api.ds.building, {}, function(res) {
+
+        customerChance.approveItems.builtrule.bindData(res.buildruleOne, "key", "value");
+        customerChance.approveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
+        customerChance.approveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
+        customerChance.approveItems.doorrule.bindData(res.buildruleThr, "key", "value");
+    });
+
+    function drawInit(e) {
+
+        com.initTypeahead(e.villageName, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
+
+            com.post(api.data.queryVillageByVid, {
+                "village.no": k
+            }, function(res) {
+
+                e.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+            }, null, false);
+
+            return v;
+        });
+    }
+
+    drawInit(customerChance.approveItems);
 
     customerChance.items.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
     customerChance.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
@@ -102,7 +143,21 @@ jQuery(function($) {
 
     searcher.condition(["customer-customerChance-createTime", "customer-customerChance-type", "customer-customerChance-status"]);
 
-    searcher.history("customerChancePostData");
+    searcher.history(customerChance.depage + "customerChancePostData");
+
+    var extraParams = {
+        "customerChance.belonger.uid": null
+    };
+
+    if (customerChance.depage == 'user') {
+        extraParams["customerChance.belonger.userId"] = params.userInfo.user.userId;
+    } else if (customerChance.depage == "dept") {
+        extraParams["customerChance.belonger.dept.no"] = params.userInfo.user.dept.no;
+    } else if (customerChance.depage == "region") {
+        extraParams["customerChance.belonger.dept.fatherDept.no"] = params.userInfo.user.dept.fatherDept.no;
+    }
+
+    searcher.param(extraParams);
 
     var lineprops = [{
         field: "source",
@@ -189,7 +244,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerChance.STATUS_INIT_INT;
+            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2;
         },
     }, {
         name: "失效",
@@ -200,7 +255,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerChance.STATUS_INIT_INT;
+            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2 || v.status == 3;
         },
     }, {
         name: "推送",
@@ -216,6 +271,10 @@ jQuery(function($) {
 
             confirm(v.ccid);
         },
+        show: function(v) {
+
+            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2;
+        },
     }, {
         name: "转换",
         clazz: "btn-danger",
@@ -224,6 +283,31 @@ jQuery(function($) {
             customerChance.ccid = v.ccid;
 
             customerChance.modals.changeModal.modal("show");
+        },
+        show: function(v) {
+
+            return v.status == 3;
+        },
+    }, {
+        name: "初审",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            com.cleanTypeahead("villageName");
+            com.cleanTypeahead("firstApproveComment");
+            com.cleanItems(customerChance.approveItems);
+
+            customerChance.source.csid = v.source.csid;
+
+            approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
+
+            customerChance.modals.commitFirstApprove.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+
+            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2;
         },
     }, {
         name: "审批",
@@ -249,20 +333,12 @@ jQuery(function($) {
 
             customerChance.modals.approveModal.modal("show");
         },
-    }, {
-        name: "初审",
-        clazz: "btn-pink",
-        handle: function(v) {
+        show: function(v) {
 
-            customerChance.source.csid = v.source.csid;
+            return v.status == 3;
+        },
 
-            approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
-
-            customerChance.modals.commitFirstApprove.modal("show");
-
-            return false;
-        }
-    }];
+    }, ];
 
     searcher.line("source.name", lineprops, linebtns).render();
 
@@ -447,12 +523,15 @@ jQuery(function($) {
             return false;
         }
 
+        var hid = checkHouse(customerChance.approveItems);
+
         com.showConfirm("是否确认提交审批", function() {
 
             var option = {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerChance.items.firstApproveComment.val(),
-                "approvalCustomerSource.csid": customerChance.source.csid
+                "approvalCustomerSource.csid": customerChance.source.csid,
+                "approvalCustomerSource.hid": hid
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {
@@ -464,7 +543,49 @@ jQuery(function($) {
 
                 customerChance.modals.commitFirstApprove.modal("hide");
             });
+
         });
+    }
+
+    // 检查获取楼盘
+    function checkHouse(items) {
+
+        var hid = "";
+        var rulenum = [items.built.val().trim().toUpperCase(), items.builtrule.val(), items.unit.val().trim().toUpperCase(), items.unitrule.val(), items.floor.val().trim().toUpperCase(), items.floorrule.val(), items.door.val().trim().toUpperCase(), items.doorrule.val()];
+
+        var houseNumber = houseUtils.creatHouseNumber(rulenum);
+
+        var houseOption = {
+            "house.village.no": com.typeahead(items.villageName),
+            "house.houseNumber": houseNumber,
+            "house.built": items.built.val(),
+            "house.unit": items.unit.val(),
+            "house.floor": items.floor.val(),
+            "house.door": items.door.val()
+        };
+
+        if (items.buildArea) {
+            houseOption["house.buildArea"] = items.buildArea.val();
+        }
+
+        if (items.freeArea) {
+            houseOption["house.freeArea"] = items.freeArea.val();
+        }
+
+        if (items.totalArea) {
+            houseOption["house.totalArea"] = items.totalArea.val();
+        }
+
+        if (items.buildArea) {
+            houseOption["house.innerArea"] = items.innerArea.val();
+        }
+
+        com.post(api.data.existHouse, houseOption, function(res) {
+
+            hid = res.house.hid;
+        }, null, false);
+
+        return hid;
     }
 
 });

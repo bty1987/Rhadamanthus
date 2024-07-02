@@ -47,13 +47,28 @@ $(function() {
             firstApproveComment: com.focusPage("#firstApproveComment", "#commitFirstApprove")
         },
 
+        approveItems: {
+            villageName: com.focusPage("#villageName1", "#commitFirstApprove"),
+            built: com.focusPage("#built1", "#commitFirstApprove"),
+            unit: com.focusPage("#unit1", "#commitFirstApprove"),
+            floor: com.focusPage("#floor1", "#commitFirstApprove"),
+            door: com.focusPage("#door1", "#commitFirstApprove"),
+            builtrule: com.focusPage("#builtrule1", "#commitFirstApprove"),
+            unitrule: com.focusPage("#unitrule1", "#commitFirstApprove"),
+            floorrule: com.focusPage("#floorrule1", "#commitFirstApprove"),
+            doorrule: com.focusPage("#doorrule1", "#commitFirstApprove"),
+            rule: com.focusPage("#rule1", "#commitFirstApprove"),
+        },
+
         source: null,
         rule: null,
         grade: ["A", "B", "C", "D"],
         currentCustomerSource: {},
         customerDeptRule: {
             "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
-        }
+        },
+
+        depage: params['urlLoadParams'].depage,
     };
 
     customerSource.btns.saveBtn.bindClick(saveDate);
@@ -66,19 +81,29 @@ $(function() {
         customerSource.items.unitrule.bindData(res.buildruleTwo, "key", "value");
         customerSource.items.floorrule.bindData(res.buildruleTwo, "key", "value");
         customerSource.items.doorrule.bindData(res.buildruleThr, "key", "value");
+        customerSource.approveItems.builtrule.bindData(res.buildruleOne, "key", "value");
+        customerSource.approveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
+        customerSource.approveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
+        customerSource.approveItems.doorrule.bindData(res.buildruleThr, "key", "value");
     });
 
-    com.initTypeahead('villageName', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
+    function drawInit(e) {
 
-        com.post(api.data.queryVillageByVid, {
-            "village.no": k
-        }, function(res) {
+        com.initTypeahead(e.villageName, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
-            customerSource.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
-        }, null, false);
+            com.post(api.data.queryVillageByVid, {
+                "village.no": k
+            }, function(res) {
 
-        return v;
-    });
+                e.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+            }, null, false);
+
+            return v;
+        });
+    }
+
+    drawInit(customerSource.items);
+    drawInit(customerSource.approveItems);
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -153,7 +178,21 @@ $(function() {
         icon: "icon-plus"
     }]);
 
-    searcher.history("customerSourceData");
+    searcher.history(customerSource.depage + "customerSourceData");
+
+    var extraParams = {
+        "customerSource.creater.uid": null
+    };
+
+    if (customerSource.depage == 'user') {
+        extraParams["customerSource.creater.userId"] = params.userInfo.user.userId;
+    } else if (customerSource.depage == "dept") {
+        extraParams["customerSource.creater.dept.no"] = params.userInfo.user.dept.no;
+    } else if (customerSource.depage == "region") {
+        extraParams["customerSource.creater.dept.fatherDept.no"] = params.userInfo.user.dept.fatherDept.no;
+    }
+
+    searcher.param(extraParams);
 
     var lineprops = [{
         field: "name",
@@ -277,7 +316,33 @@ $(function() {
     }];
 
     var linebtns = [{
-        name: "审批",
+        name: "更新",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            customerSource.source = v;
+
+            customerSource.items.villageName.val(v.village.name);
+            customerSource.items.gender.prop('checked', com.genderType[v.gender]);
+            customerSource.items.comment.val(v.comment);
+            customerSource.items.price.val(v.price);
+            customerSource.items.intention.val(v.intention);
+            customerSource.items.phone.val(v.phone);
+            customerSource.items.name.val(v.name);
+            customerSource.items.buildArea.val(v.buildArea);
+
+            com.focusPage(".rule").show();
+            com.focusPage(".villageName").show();
+            customerSource.modals.createSourceModal.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+
+            return v.status == 0 || v.status == 2;
+        }
+    }, {
+        name: "初审",
         clazz: "btn-success",
         handle: function(v) {
 
@@ -285,9 +350,15 @@ $(function() {
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
+            deleteDate();
+
             customerSource.modals.commitFirstApprove.modal("show");
 
             return false;
+        },
+        show: function(v) {
+
+            return v.status == constant.customer().customerSource.STATUS_INIT_INT;
         }
     }, {
         name: "分配",
@@ -345,6 +416,10 @@ $(function() {
 
             return false;
         },
+        show: function(v) {
+
+            return v.status == constant.customer().customerSource.STATUS_INIT_INT || v.status == 2 || v.status == 3 || v.status == 4;
+        }
 
     }, {
         name: "失效",
@@ -364,7 +439,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerSource.STATUS_INIT_INT);
+            return v.status == constant.customer().customerSource.STATUS_INIT_INT || v.status == 2 || v.status == 3 || v.status == 4;
         }
     }];
 
@@ -372,6 +447,9 @@ $(function() {
 
     com.focusPage('#createCustomerSource').on("click", function() {
 
+        deleteDate();
+        com.focusPage(".rule").hide();
+        com.focusPage(".villageName").hide();
         customerSource.modals.createSourceModal.modal("show");
     });
 
@@ -380,36 +458,53 @@ $(function() {
         if (com.validate("customerSource"))
             return false;
 
-        var hid = checkHouse();
         var cid = checkCustomer();
+        var built = customerSource.items.built.val();
+        var unit = customerSource.items.unit.val();
+        var floor = customerSource.items.floor.val();
+        var door = customerSource.items.door.val();
 
         var options = {
             "customerSource.name": customerSource.items.name.val(),
             "customerSource.gender": com.genderType[customerSource.items.gender.prop("checked")],
             "customerSource.phone": customerSource.items.phone.val(),
-            "customerSource.purpose": customerSource.items.purpose.val(),
             "customerSource.intention": customerSource.items.intention.val(),
             "customerSource.price": customerSource.items.price.val(),
-            "customerSource.grade": customerSource.items.grade.val(),
             "customerSource.comment": customerSource.items.comment.val(),
-            "customerSource.village.no": com.typeahead("villageName"),
-            "customerSource.houseNumber": customerSource.items.houseNumber.val(),
             "customerSource.buildArea": customerSource.items.buildArea.val(),
-            "customerSource.freeArea": customerSource.items.freeArea.val(),
-            "customerSource.totalArea": customerSource.items.totalArea.val(),
-            "customerSource.innerArea": customerSource.items.innerArea.val(),
+            "customerSource.freeArea": 0,
+            "customerSource.totalArea": 0,
+            "customerSource.innerArea": 0,
 
-            "customerSource.house.hid": hid,
             "customerSource.customer.cid": cid,
         };
 
-        com.post(api.customer.addCustomerSource, options, function(res) {
+        if (built && unit && floor && door) {
 
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-            deleteDate();
-            customerSource.modals.createSourceModal.modal("hide");
-        });
+            var hid = checkHouse(customerSource.items);
+
+            options["customerSource.csid"] = customerSource.source.csid;
+            options["customerSource.house.hid"] = hid;
+
+            com.post(api.customer.updateCustomerSource, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+                deleteDate();
+                customerSource.modals.createSourceModal.modal("hide");
+            });
+        }
+
+        if (!built && !unit && !floor && !door) {
+            com.post(api.customer.addCustomerSource, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+                deleteDate();
+                customerSource.modals.createSourceModal.modal("hide");
+            });
+        }
+
     }
 
     function issueDate() {
@@ -450,28 +545,41 @@ $(function() {
         com.cleanTypeahead("belonger");
 
         com.cleanItems(customerSource.items);
+        com.cleanItems(customerSource.approveItems);
     }
 
     // 检查获取楼盘
-    function checkHouse() {
+    function checkHouse(items) {
 
         var hid = "";
-        var rulenum = [customerSource.items.built.val().trim().toUpperCase(), customerSource.items.builtrule.val(), customerSource.items.unit.val().trim().toUpperCase(), customerSource.items.unitrule.val(), customerSource.items.floor.val().trim().toUpperCase(), customerSource.items.floorrule.val(), customerSource.items.door.val().trim().toUpperCase(), customerSource.items.doorrule.val()];
+        var rulenum = [items.built.val().trim().toUpperCase(), items.builtrule.val(), items.unit.val().trim().toUpperCase(), items.unitrule.val(), items.floor.val().trim().toUpperCase(), items.floorrule.val(), items.door.val().trim().toUpperCase(), items.doorrule.val()];
 
         var houseNumber = houseUtils.creatHouseNumber(rulenum);
 
         var houseOption = {
-            "house.village.no": com.typeahead("villageName"),
+            "house.village.no": com.typeahead(items.villageName),
             "house.houseNumber": houseNumber,
-            "house.built": customerSource.items.built.val(),
-            "house.unit": customerSource.items.unit.val(),
-            "house.floor": customerSource.items.floor.val(),
-            "house.door": customerSource.items.door.val(),
-            "house.buildArea": customerSource.items.buildArea.val(),
-            "house.freeArea": customerSource.items.freeArea.val(),
-            "house.totalArea": customerSource.items.totalArea.val(),
-            "house.innerArea": customerSource.items.innerArea.val(),
+            "house.built": items.built.val(),
+            "house.unit": items.unit.val(),
+            "house.floor": items.floor.val(),
+            "house.door": items.door.val()
         };
+
+        if (items.buildArea) {
+            houseOption["house.buildArea"] = items.buildArea.val();
+        }
+
+        if (items.freeArea) {
+            houseOption["house.freeArea"] = items.freeArea.val();
+        }
+
+        if (items.totalArea) {
+            houseOption["house.totalArea"] = items.totalArea.val();
+        }
+
+        if (items.buildArea) {
+            houseOption["house.innerArea"] = items.innerArea.val();
+        }
 
         com.post(api.data.existHouse, houseOption, function(res) {
 
@@ -518,12 +626,15 @@ $(function() {
             return false;
         }
 
+        var hid = checkHouse(customerSource.approveItems);
+
         com.showConfirm("是否确认提交审批", function() {
 
             var option = {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerSource.items.firstApproveComment.val(),
-                "approvalCustomerSource.csid": customerSource.currentCustomerSource.csid
+                "approvalCustomerSource.csid": customerSource.currentCustomerSource.csid,
+                "approvalCustomerSource.hid": hid
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {

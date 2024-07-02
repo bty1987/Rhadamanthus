@@ -18,11 +18,7 @@ import com.fanglin.decoration.po.DecorationBelongPO;
 
 public interface DecorationBelongDao extends Dao<DecorationBelongPO> {
 
-	public List<DecorationBelongPO> queryDecorationBelongByOrderIdAType(String orderId, Short belongType);
-
-	public List<DecorationBelongPO> queryDecorationBelongForCurrentByOrderIdAType(String orderId, Short belongType);
-
-	public List<DecorationBelongPO> queryDecorationBelongByOrderId(String orderId);
+	public List<DecorationBelongPO> queryDecorationBelong(String orderId, Short belongType, Short status);
 
 	public List<DecorationBelongPO> queryDecorationBelongByOrderIds(List<String> orderIds);
 

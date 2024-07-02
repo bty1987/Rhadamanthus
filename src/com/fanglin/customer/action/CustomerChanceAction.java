@@ -38,7 +38,7 @@ public class CustomerChanceAction extends BaseListAction {
 	@Action(value = "pageCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerChance() throws FLException {
 
-		customerChanceService.pageCustomerChance(getPaging(), getFilters(), queryUserId());
+		customerChanceService.pageCustomerChance(getPaging(), getFilters(), customerChance, queryUserId());
 
 		return SUCCESS;
 	}

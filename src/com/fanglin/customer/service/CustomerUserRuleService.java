@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerUserRuleService {
 
-	public void pageCustomerUserRule(Paging paging, List<Filter> filters, int company);
+	public void pageCustomerUserRule(Paging paging, List<Filter> filters, CustomerUserRuleVO customerUserRule, int company);
 
 	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule);
 

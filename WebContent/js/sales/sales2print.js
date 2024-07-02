@@ -55,13 +55,15 @@ $(function() {
         var netReceipts = utils.changeThrDecimal(data.depositpay);
 
         var div = $('<div align="center" class="col-xs-12"></div>');
+
+        var img = $('<img/>').css("position", "absolute").css("top", "50px").css("left", "50px").appendTo(div);
+        com.showImg(img, data.supplier.userPhoto, 200, 200, '');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
         var caption = $('<caption style="line-height: 65px;font-size:23px; font-weight:bolder">商品销售单</caption>').appendTo(table);
 
         var tr28 = $('<tr style="height: 70px;"></tr>').appendTo(table);
         var td55 = $('<td rowspan="3"></td>').appendTo(tr28);
-        var img = $('<img/>').appendTo(td55);
-        com.showImg(img, data.supplier.userPhoto, 150, 150, '');
+
         var tr1 = $('<tr style="height: 25px;text-align: right; font-size: 13px;"></tr>').appendTo(table);
         var td1 = $('<td colspan="6"></td>').text("销售单号: ").appendTo(tr1);
         var td2 = $('<td style="border-bottom: 1px solid #3F3F3F; text-align: center;" ></td>').text(data.no).appendTo(tr1);
@@ -79,9 +81,9 @@ $(function() {
 
         var tr4 = $('<tr style="height: 30px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
         var td5 = $('<td></td>').text("客户确认时间: ").appendTo(tr4);
-        var td6 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.affirmTime).appendTo(tr4);
+        var td6 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.affirmTime == null ? "" : data.affirmTime).appendTo(tr4);
         var td56 = $('<td></td>').text("客户电话: ").appendTo(tr4);
-        var td57 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.phone).appendTo(tr4);
+        var td57 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(data.phone == null ? "" : data.phone).appendTo(tr4);
 
         var td13 = $('<td></td>').text("品牌: ").appendTo(tr4);
         var td14 = $('<td  colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.brand).appendTo(tr4);
@@ -189,21 +191,19 @@ $(function() {
         };
         com.post(api.data.queryBrandByBid, option, function(v) {
 
-            var td49 = $('<td colspan="7" style="border: 1px solid;"></td>').text(v.brand.comment).appendTo(tr23);
-            var td18 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentName).appendTo(tr5);
+            var td49 = $('<td colspan="7" style="border: 1px solid;"></td>').text(v.brand.comment == null ? "" : v.brand.comment).appendTo(tr23);
+            var td18 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentName == null ? "" : v.brand.agentName).appendTo(tr5);
             var td19 = $('<td></td>').text("电话: ").appendTo(tr5);
-            var td20 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentPhone).appendTo(tr5);
+            var td20 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentPhone == null ? "" : v.brand.agentPhone).appendTo(tr5);
 
         });
-        console.log(data)
+
         var tr25 = $('<tr style="height: 25px;"></tr>').appendTo(table);
         var tr24 = $('<tr style="height: 40px;text-align: center; font-size: 15px;"></tr>').appendTo(table);
         var td49 = $('<td ></td>').text("品牌开单人:").appendTo(tr24);
-        var td50 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.instorer.currentName).appendTo(tr24);
+        var td50 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.instorer.currentName == null ? "" : data.instorer.currentName).appendTo(tr24);
         var td51 = $('<td ></td>').text("品牌开单人电话:").appendTo(tr24);
-        var td52 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.instorer.phone).appendTo(tr24);
-        var td53 = $('<td ></td>').text("供货方授权代表签字:").appendTo(tr24);
-        var td54 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text("").appendTo(tr24);
+        var td52 = $('<td colspan="2" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.instorer.phone == null ? "" : data.instorer.phone).appendTo(tr24);
 
         return div;
     }

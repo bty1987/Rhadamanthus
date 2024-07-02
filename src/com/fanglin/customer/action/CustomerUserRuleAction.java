@@ -31,7 +31,7 @@ public class CustomerUserRuleAction extends BaseListAction {
 	@Action(value = "pageCustomerUserRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerUserRule() throws FLException {
 
-		customerUserRuleService.pageCustomerUserRule(getPaging(), getFilters(), queryCompany());
+		customerUserRuleService.pageCustomerUserRule(getPaging(), getFilters(), customerUserRule, queryCompany());
 
 		return SUCCESS;
 	}

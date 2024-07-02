@@ -745,7 +745,13 @@ $(function() {
 
         $.extend(accountBasic, config);
 
-        config.type == 0 ? decorationDetail.items.calDiscountPrice.removeAttr("readonly").val(com.checkNull(accountBasic.dd, 0)) : decorationDetail.items.calDiscountPrice.attr("readonly", "readonly").val(accountBasic.discount);
+        decorationDetail.items.calDiscountPrice.val(com.checkNull(config.discount, 0));
+
+        if (config.discountType == constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
+            decorationDetail.items.calDiscountPrice.attr("readonly", "readonly");
+        } else {
+            decorationDetail.items.calDiscountPrice.removeAttr("readonly");
+        }
 
         return false;
     });

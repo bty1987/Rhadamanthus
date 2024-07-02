@@ -25,7 +25,7 @@ public class DecorationBelongVO implements Serializable {
 
 	private String orderId;
 
-	private short type;
+	private Short type;
 
 	private UserBaseVO belonger;
 
@@ -43,6 +43,18 @@ public class DecorationBelongVO implements Serializable {
 
 	private Short defaultFlag;
 
+	public DecorationBelongVO() {
+		super();
+	}
+
+	public DecorationBelongVO(UserBaseVO belonger, DepartmentVO department, DepartmentVO region, UserBaseVO operater) {
+		super();
+		this.belonger = belonger;
+		this.department = department;
+		this.region = region;
+		this.operater = operater;
+	}
+
 	public Long getDbid() {
 		return dbid;
 	}
@@ -59,11 +71,11 @@ public class DecorationBelongVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public short getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(short type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 

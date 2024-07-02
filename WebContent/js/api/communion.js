@@ -85,6 +85,24 @@ $.extend(api, {
             url: "deleteDataDrawing.do",
             server: "communion"
         },
+        queryBrandSupplier: {
+            url: "queryBrandSupplier.do"
+        },
+        addBrandSupplier: {
+            url: "addBrandSupplier.do"
+        },
+        deleteBrandSupplier: {
+            url: "deleteBrandSupplier.do"
+        },
+        queryBrandInstorer: {
+            url: "queryBrandInstorer.do"
+        },
+        addBrandInstorer: {
+            url: "addBrandInstorer.do"
+        },
+        deleteBrandInstorer: {
+            url: "deleteBrandInstorer.do"
+        },
 
         pageServiceNode: {
             url: "pageServiceNode.do"
@@ -188,15 +206,7 @@ $.extend(api, {
         addCustomerRecord: {
             url: "addCustomerRecord.do"
         },
-        queryBrandSupplier: {
-            url: "queryBrandSupplier.do"
-        },
-        addBrandSupplier: {
-            url: "addBrandSupplier.do"
-        },
-        deleteBrandSupplier: {
-            url: "deleteBrandSupplier.do"
-        },
+
 
     }
 });

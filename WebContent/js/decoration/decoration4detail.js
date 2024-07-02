@@ -1484,7 +1484,7 @@ jQuery(function($) {
 
                 break;
             case "belong":
-                decorationUtils.initDecorationBelong(decorationDetail.orderId);
+                decorationUtils.initDecorationBelong(decorationDetail.orderId, 0);
                 break;
             case "payment":
 

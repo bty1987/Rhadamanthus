@@ -60,6 +60,27 @@ $.extend(api, {
             server: "communion"
         },
 
+        pageInstorer: {
+            url: "pageInstorer.do",
+            demo: true
+        },
+        addInstorer: {
+            url: "addInstorer.do",
+            server: "communion"
+        },
+        updateInstorer: {
+            url: "updateInstorer.do",
+            server: "communion"
+        },
+        updateInstorerForLogin: {
+            url: "updateInstorerForLogin.do",
+            server: "communion"
+        },
+        updateInstorerForPassword: {
+            url: "updateInstorerForPassword.do",
+            server: "communion"
+        },
+
         querySupplierUserRightBySId: {
             url: "querySupplierUserRightBySId.do",
             demo: true

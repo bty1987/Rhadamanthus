@@ -1,0 +1,64 @@
+<div>
+    <div id="fl-statement">
+        <div class="page-header">
+            <h1>品牌
+                <small><i class="icon-double-angle-right"></i>驻店</small>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row" style="margin-left:10px;margin-right:10px">
+                <div id="list"></div>
+                <div>
+                    <div>
+                        <a class="btn btn-minier btn-primary pull-left" id="addBrandInstorer"
+                           style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="brandInstorerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">添加驻店</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="instorer">驻店</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_typeahead v_required" id="instorer">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="agentName" class="col-md-3 control-label no-padding-right">代理</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap" id="agentName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="agentPhone">电话</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="agentPhone" class="col-xs-7 v_phone"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBrandInstorer" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/brandInstorer.js']);
+</script>

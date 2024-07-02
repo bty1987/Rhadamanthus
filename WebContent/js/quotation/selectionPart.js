@@ -348,6 +348,10 @@ var selectionDetail = (function() {
 
             var soodsSeacher = new Searcher();
 
+            soodsSeacher.param({
+                "soodsItem.status": 0
+            });
+
             soodsSeacher.init(["data-soods-name"], "condList", api.data.pageSoodsItemByQiid, function(data) {
 
                 displayFunc.init("resultList", data);

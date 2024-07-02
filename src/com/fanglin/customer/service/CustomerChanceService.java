@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerChanceService {
 
-	public void pageCustomerChance(Paging paging, List<Filter> filters, String userId);
+	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId);
 
 	public List<CustomerChanceVO> queryCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 

@@ -1330,18 +1330,31 @@ var decorationUtils = {
             com.focusPage('#oalesPercent').html((oalesPercent > 100 ? 100 : oalesPercent) + "%");
         }
     },
-    initDecorationBelong: function(orderId) {
+    initDecorationBelong: function(orderId, status) {
 
-        var $design = com.focusPage("#belongDesignInfo").html('');
-        var $salesman = com.focusPage("#belongSalesmanInfo").html('');
+        var $design, $salesman, $designul, $salesmanul;
 
-        var $designul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($design);
-        var $salesmanul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesman);
+        if (status == 0) {
+            $design = com.focusPage("#belongDesignInfo").html('');
+            $salesman = com.focusPage("#belongSalesmanInfo").html('');
+
+            $designul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($design);
+            $salesmanul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesman);
+
+        } else {
+            $design = com.focusPage("#loseBelongDesignInfo").html('');
+            $salesman = com.focusPage("#loseBelongSalesmanInfo").html('');
+
+            $designul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($design);
+            $salesmanul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesman);
+
+        }
 
         var decorationBelongs = null;
 
-        com.post(api.decoration.queryDecorationBelongByOrderId, {
-            "decorationBelong.orderId": orderId
+        com.post(api.decoration.queryDecorationBelong, {
+            "decorationBelong.orderId": orderId,
+            "decorationBelong.status": status
         }, function(res) {
 
             decorationBelongs = res.decorationBelongs;
