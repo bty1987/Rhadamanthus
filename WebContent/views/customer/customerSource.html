@@ -47,7 +47,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label for="purpose" class="col-sm-3 control-label no-padding-right">目的</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6" maxlength="32" id="purpose" />
@@ -68,21 +68,21 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-sm-3 control-label no-padding-right">客户等级</label>
                             <div class="col-sm-9">
                                 <select type="text" class="col-xs-6 m-wrap v_required" id="grade"></select>
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group villageName">
                             <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
                             <div class="col-sm-9">
                                 <input type="text" class=" m-wrap col-xs-6" id="villageName">
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group rule">
                             <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
                             <div class="col-sm-9">
                                 <input type="text" maxlength="7" class="v_required" style="width: 10%;" id="built">
@@ -100,15 +100,15 @@
                             </div>
                         </div>
 
-                        <div class="form-group" id="buildAreaGroup1">
-                            <label class="col-sm-3 control-label no-padding-right" for="buildArea">建筑面积</label>
+                        <div class="form-group" id="buildAreaGroup">
+                            <label class="col-sm-3 control-label no-padding-right" for="buildArea">面积</label>
                             <div class="col-sm-9">
                                 <input type="text" id="buildArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
                                 <span style="margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-sm-3 control-label no-padding-right" for="freeArea">赠送面积</label>
                             <div class="col-sm-9">
                                 <input type="text" id="freeArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
@@ -116,7 +116,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-sm-3 control-label no-padding-right" for="totalArea">总面积</label>
                             <div class="col-sm-9">
                                 <input type="text" id="totalArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
@@ -124,7 +124,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <label class="col-sm-3 control-label no-padding-right" for="innerArea">套内面积</label>
                             <div class="col-sm-9">
                                 <input type="text" id="innerArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
@@ -210,6 +210,31 @@
                             <label for="firstApproveMan" class="col-sm-3 control-label no-padding-right">审批人</label>
                             <div class="col-sm-9">
                                 <div id="firstApproveMan" class="col-xs-6 m-wrap"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="villageName1">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" class="v_required" style="width: 10%;" id="built1">
+                                <select id="builtrule1" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="unit1">
+                                <select id="unitrule1" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor1">
+                                <select id="floorrule1" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="door1">
+                                <select id="doorrule1" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;">
+                                    <span id="rule1" class="red"></span>
+                                </div>
                             </div>
                         </div>
 

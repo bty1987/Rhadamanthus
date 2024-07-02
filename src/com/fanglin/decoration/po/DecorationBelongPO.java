@@ -13,6 +13,7 @@ package com.fanglin.decoration.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,7 +26,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.decoration.vo.DecorationBelongVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -69,6 +72,21 @@ public class DecorationBelongPO implements Serializable {
 	private short status;
 
 	private short defaultFlag;
+
+	public DecorationBelongPO() {
+		super();
+	}
+
+	public DecorationBelongPO(String orderId, UserPO belonger, DepartmentPO department, DepartmentPO region, UserPO operater) {
+
+		super();
+
+		this.orderId = orderId;
+		this.belonger = belonger;
+		this.department = department;
+		this.region = region;
+		this.operater = operater;
+	}
 
 	@Id
 	@GeneratedValue
@@ -173,13 +191,13 @@ public class DecorationBelongPO implements Serializable {
 	}
 
 	public DecorationBelongPO designer(String orderId, UserPO designer, UserPO operater) {
-		
+
 		setOrderId(orderId);
 
 		setBelonger(designer);
 		setDepartment(designer.getDept());
 		setRegion(designer.getDept().getFatherDept());
-		
+
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setOperater(operater);
 
@@ -190,24 +208,36 @@ public class DecorationBelongPO implements Serializable {
 
 		return this;
 	}
-	
-	public DecorationBelongPO salesman(String orderId, UserPO salesman, UserPO operater){
-		
+
+	public DecorationBelongPO salesman(String orderId, UserPO salesman, UserPO operater) {
+
 		setOrderId(orderId);
-		
+
 		setBelonger(salesman);
 		setDepartment(salesman.getDept());
 		setRegion(salesman.getDept().getFatherDept());
-		
+
 		setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		setOperater(operater);
-		
+
 		setRate(1000);
 		setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
 		setType(DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
-		
+
 		return this;
 	}
 
+	public DecorationBelongVO ptv(DecorationBelongVO decorationBelongVO) {
+
+		BeanUtil.copy(this, decorationBelongVO, Arrays.asList("belonger", "department", "region", "operater"));
+
+		if (decorationBelongVO.getBelonger() != null) decorationBelongVO.getBelonger().setBaseInfo(getBelonger());
+		if (decorationBelongVO.getDepartment() != null) decorationBelongVO.setDepartment(getDepartment().ptv());
+		if (decorationBelongVO.getRegion() != null) decorationBelongVO.setRegion(getRegion().ptv());
+
+		if (decorationBelongVO.getOperater() != null) decorationBelongVO.getOperater().setBaseInfo(getOperater());
+
+		return decorationBelongVO;
+	}
 }

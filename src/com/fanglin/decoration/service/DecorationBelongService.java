@@ -16,13 +16,7 @@ import java.util.List;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 
 public interface DecorationBelongService {
-	
-	public List<DecorationBelongVO> queryDecorationBelongForCurrentByOrderIdAType(String orderId, Short belongType);
 
-	public List<DecorationBelongVO> queryDecorationBelongForChangeByOrderIdAType(String orderId, Short belongType);
+	public List<DecorationBelongVO> queryDecorationBelong(DecorationBelongVO decorationBelongVO);
 
-	public List<DecorationBelongVO> queryDecorationBelongByOrderIdAType(String orderId, Short belongType);
-	
-	public List<DecorationBelongVO> queryDecorationBelongByOrderId(DecorationBelongVO decorationBelongVO);
-	
 }

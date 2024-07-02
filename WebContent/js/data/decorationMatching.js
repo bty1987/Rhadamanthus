@@ -91,6 +91,12 @@ jQuery(function($) {
         prop: "discount",
         clazz: "blue",
     }, {
+        field: "discountType",
+        name: "折扣类型",
+        prop: "discountType",
+        clazz: "red",
+        dataset: constant.data().decorationMatching.discountType.keys
+    }, {
         field: "material",
         name: "主材配比",
         prop: "material",
@@ -187,6 +193,8 @@ jQuery(function($) {
         decorationMatching.items.manageTaxDiscount.prop("checked", v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT);
         decorationMatching.items.totalTaxDiscount.prop("checked", v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT);
 
+        com.focusPage('input[name="discountType"][value="' + v.discountType + '"]', '#decorationMatchingModal').prop("checked", true);
+
         decorationMatching.items.dmid = v.dmid;
         decorationMatching.items.name.val(v.name);
         decorationMatching.items.typeness.val(v.typeness);
@@ -247,6 +255,7 @@ jQuery(function($) {
             "decorationMatching.typeness": decorationMatching.items.typeness.val(),
             "decorationMatching.base": decorationMatching.items.base.val(),
             "decorationMatching.discount": decorationMatching.items.discount.val(),
+            "decorationMatching.discountType": com.focusPage('input[name="discountType"]:checked', '#decorationMatchingModal').val(),
             "decorationMatching.material": decorationMatching.items.material.val(),
             "decorationMatching.service": decorationMatching.items.service.val(),
             "decorationMatching.vision": decorationMatching.number,

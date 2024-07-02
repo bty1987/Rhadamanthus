@@ -537,43 +537,8 @@ $.extend(api, {
             url: "exportDecorationByContractTime.do"
         },
 
-        queryDecorationBelongForDesignAChangeByOrderId: {
-            url: "queryDecorationBelongForDesignAChangeByOrderId.do",
-            demo: true,
-            type: "query",
-            tranargs: [{
-                result: "decorationBelongs",
-                args: ["rate"]
-            }]
-        },
-        queryDecorationBelongForDesignByOrderId: {
-            url: "queryDecorationBelongForDesignByOrderId.do",
-            type: "query",
-            tranargs: [{
-                result: "decorationBelongs",
-                args: ["rate"]
-            }]
-        },
-        queryDecorationBelongForBusinessnAChangeByOrderId: {
-            url: "queryDecorationBelongForBusinessnAChangeByOrderId.do",
-            demo: true,
-            type: "query",
-            tranargs: [{
-                result: "decorationBelongs",
-                args: ["rate"]
-            }]
-        },
-        queryDecorationBelongForBusinessnByOrderId: {
-            url: "queryDecorationBelongForBusinessnByOrderId.do",
-            type: "query",
-            tranargs: [{
-                result: "decorationBelongs",
-                args: ["rate"]
-            }]
-        },
-        queryDecorationBelongByOrderId: {
-            url: "queryDecorationBelongByOrderId.do",
-            demo: true,
+        queryDecorationBelong: {
+            url: "queryDecorationBelong.do",
             type: "query",
             tranargs: [{
                 result: "decorationBelongs",

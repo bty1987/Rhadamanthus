@@ -126,7 +126,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(140014, "订单归属类型错误");
 		}
 
-		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelongByOrderIdAType(orderId, belongType);
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
 
 		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
 			UserPO belongUserPO = decorationBelongPO.getBelonger();
@@ -229,7 +229,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			throw new FLException(140013, "订单不存在");
 		}
 
-		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelongByOrderIdAType(orderId, belongType);
+		List<DecorationBelongPO> decorationBelongPOs = decorationBelongDao.queryDecorationBelong(orderId, belongType, DecorationBelongPO.STATUS_INVALID_INT);
 
 		for (DecorationBelongPO decorationBelongPO : decorationBelongPOs) {
 			decorationBelongPO.setStatus(DecorationBelongPO.STATUS_EFFCTIVE_INT);

@@ -84,16 +84,28 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private SystemConfigDao systemConfigDao;
 
 	@Override
-	public void pageCustomerSource(Paging paging, List<Filter> filters) {
+	public void pageCustomerSource(Paging paging, List<Filter> filters, CustomerSourceVO customerSource) {
+
+		if (customerSource.getCreater() != null && customerSource.getCreater().getUserId() != null) {
+			filters.add(new Filter("user.userId", customerSource.getCreater().getUserId(), "eq"));
+		}
+
+		if (customerSource.getCreater() != null && customerSource.getCreater().getDept() != null && customerSource.getCreater().getDept().getFatherDept() != null && customerSource.getCreater().getDept().getFatherDept().getNo() != null) {
+			filters.add(new Filter("user.dept.fatherDept", customerSource.getCreater().getDept().getFatherDept().getNo(), "eq"));
+		}
+
+		if (customerSource.getCreater() != null && customerSource.getCreater().getDept() != null && customerSource.getCreater().getDept().getNo() != null) {
+			filters.add(new Filter("user.dept", customerSource.getCreater().getDept().getNo(), "eq"));
+		}
 
 		List<CustomerSourcePO> customerSourcePOs = customerSourceDao.pageCustomerSource(paging, filters);
 		List<CustomerSourceVO> customerSourceVOs = new ArrayList<CustomerSourceVO>();
 
 		for (CustomerSourcePO customerSourcePO : customerSourcePOs) {
 
-			CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+			customerSource = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
-			customerSourceVOs.add(customerSourcePO.ptv(customerSourceVO));
+			customerSourceVOs.add(customerSourcePO.ptv(customerSource));
 		}
 
 		paging.setData(customerSourceVOs);
@@ -244,6 +256,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerSourcePO == null) {
 			throw new FLException(330071, "客户资源不存在");
+		}
+
+		if (Arrays.asList(CustomerSourcePO.STATUS_DISABLE_INT, CustomerSourcePO.STATUS_TRAN_INT).contains(customerSourcePO.getStatus())) {
+			throw new FLException(330074, "客户资源不可操作");
 		}
 
 		short atttype = CustomerChancePO.ATTTYPE_USER_INT;

@@ -15,8 +15,10 @@ jQuery(function($) {
     decorationBelong.orderId = params.decoration.orderId;
 
     com.focusPage('#btnBack').on("click", function() {
+
         com.switchPage(api.index.decorationBelongIndex.url);
     });
 
-    decorationUtils.initDecorationBelong(decorationBelong.orderId);
+    decorationUtils.initDecorationBelong(decorationBelong.orderId, 0);
+    decorationUtils.initDecorationBelong(decorationBelong.orderId, 1);
 });

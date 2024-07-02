@@ -1413,14 +1413,14 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
 		decorationDao.update(decorationPO);
 
-		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
-		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+		List<DecorationBelongPO> designers = decorationBelongDao.queryDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_INVALID_INT);
+		List<DecorationBelongPO> salesmans = decorationBelongDao.queryDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT, DecorationBelongPO.STATUS_INVALID_INT);
 
-		for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+		for (DecorationBelongPO decorationBelongPO : designers) {
 			decorationOperateDao.save(new DecorationOperatePO().terminal(orderId, operater).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_DESIGN_INT, decorationBelongPO.getRate()));
 		}
 
-		for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+		for (DecorationBelongPO decorationBelongPO : salesmans) {
 			decorationOperateDao.save(new DecorationOperatePO().terminal(orderId, operater).belong(decorationBelongPO.getBelonger().getUid(), decorationBelongPO.getBelonger().getDept().getDid(), decorationBelongPO.getBelonger().getDept().getFatherDept().getDid(), DecorationOperatePO.ATTTYPE_BUSINESS_INT, decorationBelongPO.getRate()));
 		}
 	}

@@ -343,10 +343,11 @@ jQuery(function($) {
         com.focusPage("#approveModal").modal("show");
     }
 
-    var url = decorationBelong.type == 0 ? api.decoration.queryDecorationBelongForDesignAChangeByOrderId : api.decoration.queryDecorationBelongForBusinessnAChangeByOrderId;
+    com.post(api.decoration.queryDecorationBelong, {
+        "decorationBelong.orderId": decorationBelong.orderId,
+        "decorationBelong.type": decorationBelong.type,
+        "decorationBelong.status": 0
 
-    com.post(url, {
-        "decorationBelong.orderId": decorationBelong.orderId
     }, function(res) {
 
         var $resultList = com.focusPage('#belongResultList').html('');

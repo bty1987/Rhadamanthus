@@ -35,8 +35,6 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short STATUS_COMPLETE_INT = 4; // 完成
 
-	public static final short STATUS_REFUSE_INT = 6;
-
 	public static final short ATTTYPE_AUTO_INT = 0;
 
 	public static final short ATTTYPE_USER_INT = 1;

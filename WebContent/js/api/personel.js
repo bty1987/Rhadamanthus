@@ -281,6 +281,21 @@ $.extend(api, {
             server: "communion"
         },
 
+        pageInstorer: {
+            url: "pageInstorer.do"
+        },
+        queryInstorerByPinyin: {
+            url: "queryInstorerByPinyin.do"
+        },
+        addInstorer: {
+            url: "addInstorer.do",
+            server: "communion"
+        },
+        updateInstorer: {
+            url: "updateInstorer.do",
+            server: "communion"
+        },
+
         queryMacontrol: {
             url: "queryMacontrol.do"
         },

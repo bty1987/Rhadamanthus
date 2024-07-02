@@ -49,6 +49,21 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">折扣类型</label>
+                        <div class="col-sm-9">
+                            <input type="radio" name="discountType" value="0" class="ace" />
+                            <span class="lbl"></span>
+                            <label>固定</label>
+                            <input type="radio" name="discountType" value="1" class="ace" />
+                            <span class="lbl"></span>
+                            <label>可改</label>
+                            <input type="radio" name="discountType" value="2" class="ace" />
+                            <span class="lbl"></span>
+                            <label>最低</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="material">主材配比</label>
                         <div class="col-sm-9">
                             <input type="text" id="material" maxlength="12" class="col-xs-10 col-sm-7 v_required v_float_3" data-toggle="popover" data-trigger='manual' />
@@ -107,12 +122,13 @@
                             <label>总额税金</label>
                         </div>
                     </div>
+
                     <div class="space-4"></div>
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="comment">说明</label>
                         <div class="col-sm-9">
-                            <input type="text" id="comment" maxlength="12" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual' />
+                            <textarea id="comment" maxlength="12" class="col-xs-10 col-sm-7" rows="3"></textarea>
                         </div>
                     </div>
 

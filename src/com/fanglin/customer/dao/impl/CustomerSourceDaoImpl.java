@@ -46,6 +46,14 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 			String data = filter.getData();
 			String op = filter.getOp();
 
+			if (field.contains("user")) {
+				query.alias("creater", "creater");
+			}
+
+			if (field.contains("dept")) {
+				query.alias("creater.dept", "dept");
+			}
+
 			if ("phone".equals(field)) {
 				query.add(query.getCriterion("phone", data, op));
 			} else if ("creater".equals(field)) {
@@ -61,6 +69,13 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 				query.add(query.getCriterion("village.no", String.valueOf(data), op));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
+			} else if ("user.userId".equals(field)) {
+				query.add(query.getCriterion("creater.userId", data, op));
+			} else if ("user.dept".equals(field)) {
+				query.add(query.getCriterion("dept.no", data, op));
+			} else if ("user.dept.fatherDept".equals(field)) {
+				query.alias("dept.fatherDept", "fatherDept");
+				query.add(query.getCriterion("fatherDept.no", data, op));
 			}
 		}
 

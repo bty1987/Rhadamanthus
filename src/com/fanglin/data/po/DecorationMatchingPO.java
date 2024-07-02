@@ -34,6 +34,8 @@ public class DecorationMatchingPO implements Serializable {
 
 	private int discount;
 
+	private short discountType;
+
 	private int material;
 
 	private int service;
@@ -115,6 +117,15 @@ public class DecorationMatchingPO implements Serializable {
 
 	public void setDiscount(int discount) {
 		this.discount = discount;
+	}
+
+	@Column(name = "discountType")
+	public short getDiscountType() {
+		return discountType;
+	}
+
+	public void setDiscountType(short discountType) {
+		this.discountType = discountType;
 	}
 
 	@Column(name = "material")

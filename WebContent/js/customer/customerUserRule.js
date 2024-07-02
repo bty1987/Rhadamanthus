@@ -47,7 +47,8 @@ $(function() {
         }, {
             "key": "人员数",
             "value": 120
-        }]
+        }],
+        depage: params['urlLoadParams'].depage
     };
 
     customerUserRule.modals.addCustomerUserRuleModal.on("hide.bs.modal", function(a) {
@@ -63,7 +64,7 @@ $(function() {
         "user.status": 0
     }, 'autoFillKeyValue', 'key', 'value', null);
 
-    //queryInfo();
+    // queryInfo();
     drawInfo("customerSourceInfo", "资源", "header-color-orange", customerUserRule.customerSourceInfo);
     drawInfo("weightInfo", "权重", "header-color-green", customerUserRule.weightInfo);
 
@@ -73,24 +74,48 @@ $(function() {
 
     searcher.condition(["customer-customerUserRule-createTime", "customer-customerUserRule-finishTime", "customer-customerUserRule-user", "customer-customerUserRule-creater", "customer-customerUserRule-status"]);
 
+    var extraParams = {
+        "customerUserRule.user.userId": params.userInfo.user.userId
+    };
+
+    if (customerUserRule.depage == "dept") {
+        extraParams["customerUserRule.user.dept.no"] = params.userInfo.user.dept.no;
+    } else if (customerUserRule.depage == "fatherDept") {
+        extraParams["customerUserRule.user.dept.fatherDept.no"] = params.userInfo.user.dept.fatherDept.no;
+    }
+
+    searcher.param(extraParams);
+
     searcher.button([{
         id: "addCustomerUserRule",
         name: "添加",
         clazz: "btn-success",
-        icon: "icon-plus"
+        icon: "icon-plus",
+        show: function() {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         id: "import",
         name: "批量导入",
         clazz: "btn-info",
-        icon: "icon-upload"
+        icon: "icon-upload",
+        show: function() {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         id: "update",
         name: "失效",
         clazz: "btn-danger",
-        icon: "icon-ban-circle"
+        icon: "icon-ban-circle",
+        show: function() {
+
+            return customerUserRule.depage == null;
+        }
     }]);
 
-    searcher.history("addCustomerUserRulePostData");
+    searcher.history(customerUserRule.depage + "customerUserRulePostData");
 
     var lineprops = [{
         fieId: "period",
@@ -196,7 +221,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 2;
+            return v.status != 2 && customerUserRule.depage == null;
         }
     }, {
         name: "项目",
@@ -208,6 +233,10 @@ $(function() {
             com.popup4page("#layerPopUp", api.index.customerUserRuleItem.url, "人员规则项目");
 
             return false;
+        },
+        show: function(v) {
+
+            return v.status != 2 && customerUserRule.depage == null;
         }
     }, {
         name: "状态",
@@ -293,7 +322,10 @@ $(function() {
     }
 
     function queryInfo() {
-        com.post(api.system.querySystemConfigByGroup, {"systemConfig.group": ""}, function(res) {
+
+        com.post(api.system.querySystemConfigByGroup, {
+            "systemConfig.group": ""
+        }, function(res) {
 
         }, null, false)
     }

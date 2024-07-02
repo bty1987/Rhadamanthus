@@ -112,8 +112,15 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("user".equals(field)) {
+			if (field.contains("user")) {
 				query.alias("user", "user");
+			}
+
+			if (field.contains("dept")) {
+				query.alias("user.dept", "dept");
+			}
+
+			if ("user".equals(field)) {
 				query.add(query.getCriterion(CustomerUserRulePO.COLUMN_USER_STR, data, op));
 			} else if ("creater".equals(field)) {
 				query.alias("creater", "creater");
@@ -126,6 +133,11 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 				query.add(query.getCriterion(CustomerUserRulePO.COLUMN_STATUS_STR, Short.valueOf(data), op));
 			} else if ("company".equals(field)) {
 				query.add(query.getCriterion(CustomerUserRulePO.COLUMN_COMPANY_STR, Integer.valueOf(data), op));
+			} else if ("user.dept".equals(field)) {
+				query.add(query.getCriterion("dept.no", data, op));
+			} else if ("user.dept.fatherDept".equals(field)) {
+				query.alias("dept.fatherDept", "fatherDept");
+				query.add(query.getCriterion("fatherDept.no", data, op));
 			}
 		}
 	}

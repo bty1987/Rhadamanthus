@@ -18,6 +18,8 @@ public class DecorationMatchingVO implements Serializable {
 
 	private Integer discount;
 
+	private Short discountType;
+
 	private Integer material;
 
 	private Integer service;
@@ -91,6 +93,14 @@ public class DecorationMatchingVO implements Serializable {
 
 	public void setDiscount(Integer discount) {
 		this.discount = discount;
+	}
+
+	public Short getDiscountType() {
+		return discountType;
+	}
+
+	public void setDiscountType(Short discountType) {
+		this.discountType = discountType;
 	}
 
 	public Integer getMaterial() {

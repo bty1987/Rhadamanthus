@@ -51,12 +51,24 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 			String data = filter.getData();
 			String op = filter.getOp();
 
+			if (field.contains("dept")) {
+				query.alias("department", "department");
+			}
+
 			if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
 			} else if ("type".equals(field)) {
 				query.add(query.getCriterion("type", Short.valueOf(data), op));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("user.userId".equals(field)) {
+				query.alias("belonger", "belonger");
+				query.add(query.getCriterion("belonger.userId", data, op));
+			} else if ("user.dept".equals(field)) {
+				query.add(query.getCriterion("department.no", data, op));
+			} else if ("user.dept.fatherDept".equals(field)) {
+				query.alias("department.fatherDept", "fatherDept");
+				query.add(query.getCriterion("fatherDept.no", data, op));
 			}
 		}
 	}

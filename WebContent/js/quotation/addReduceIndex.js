@@ -119,7 +119,7 @@
 
     var submitbtn = {
         name: "提交",
-        clazz: "btn-pink",
+        clazz: "btn-info",
         handle: function(v) {
 
             submit(v);
@@ -133,7 +133,7 @@
 
     var cancelbtn = {
         name: "撤销",
-        clazz: "btn-blue",
+        clazz: "btn-danger",
         handle: function(v) {
 
             cancel(v);
@@ -146,7 +146,7 @@
 
     var allocationbtn = {
         name: "下拨",
-        clazz: "btn-success",
+        clazz: "btn-danger",
         handle: function(v) {
 
             unpay(v.arId, 1);
@@ -159,7 +159,7 @@
 
     var specialbtn = {
         name: "特批",
-        clazz: "btn-info",
+        clazz: "btn-danger",
         handle: function(v) {
 
             unpay(v.arId, 2);
@@ -172,7 +172,7 @@
 
     var norefundbtn = {
         name: "不退",
-        clazz: "btn-success",
+        clazz: "btn-danger",
         handle: function(v) {
 
             unpay(v.arId, 3);

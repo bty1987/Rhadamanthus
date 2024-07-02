@@ -218,7 +218,14 @@ jQuery(function($) {
 
             supplier(v);
         },
-    },];
+    }, {
+        name: "驻店",
+        clazz: "btn-primary",
+        handle: function(v) {
+
+            instorer(v);
+        },
+    }];
 
     searcher.line(function(v) {
 
@@ -299,7 +306,14 @@ jQuery(function($) {
 
         params.data.brand = v;
 
-        com.popup4page("#supplierPayPopUp", "/views/data/brandSupplier.html", "厂商");
+        com.popup4page("#supplierPopUp", "/views/data/brandSupplier.html", "厂商");
+
+    }
+    function instorer(v) {
+
+        params.data.brand = v;
+
+        com.popup4page("#instorerPopUp", "/views/data/brandInstorer.html", "厂商");
 
     }
     function saveData() {

@@ -34,7 +34,15 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	private UserDao userDao;
 
 	@Override
-	public void pageCustomerUserRule(Paging paging, List<Filter> filters, int company) {
+	public void pageCustomerUserRule(Paging paging, List<Filter> filters, CustomerUserRuleVO customerUserRule, int company) {
+
+		if (customerUserRule.getUser() != null && customerUserRule.getUser().getDept() != null && customerUserRule.getUser().getDept().getFatherDept() != null && customerUserRule.getUser().getDept().getFatherDept().getNo() != null) {
+			filters.add(new Filter("user.dept.fatherDept", customerUserRule.getUser().getDept().getFatherDept().getNo(), "eq"));
+		}
+
+		if (customerUserRule.getUser() != null && customerUserRule.getUser().getDept() != null && customerUserRule.getUser().getDept().getNo() != null) {
+			filters.add(new Filter("user.dept", customerUserRule.getUser().getDept().getNo(), "eq"));
+		}
 
 		List<CustomerUserRulePO> customerUserRuleServicePOs = customerUserRuleDao.pageCustomerUserRule(paging, filters, company);
 		List<CustomerUserRuleVO> customerUserRuleServiceVOs = new ArrayList<CustomerUserRuleVO>();

@@ -34,7 +34,7 @@ public class CustomerSourceAction extends BaseListAction {
 	@Action(value = "pageCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerSource() throws FLException {
 
-		customerSourceService.pageCustomerSource(getPaging(), getFilters());
+		customerSourceService.pageCustomerSource(getPaging(), getFilters(), customerSource);
 
 		return SUCCESS;
 	}

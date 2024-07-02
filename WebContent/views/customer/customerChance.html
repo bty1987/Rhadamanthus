@@ -245,6 +245,31 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="villageName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" class="v_required" style="width: 10%;" id="built">
+                                <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="unit">
+                                <select id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor">
+                                <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="door">
+                                <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;">
+                                    <span id="rule" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group" id="firstApproveCommentGroup">
                             <label class="col-sm-3 control-label no-padding-right">审批备注</label>
                             <div class="col-sm-9">
@@ -264,5 +289,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/customer/customerChance.js', 'js/utils/approvalUtils.js']);
+    $.loadScript(['js/customer/customerChance.js', 'js/utils/houseUtils.js', 'js/utils/approvalUtils.js']);
 </script>

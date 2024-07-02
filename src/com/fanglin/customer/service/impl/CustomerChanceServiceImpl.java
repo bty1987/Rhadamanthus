@@ -63,14 +63,26 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	private MessageService messageService;
 
 	@Override
-	public void pageCustomerChance(Paging paging, List<Filter> filters, String userId) {
+	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId) {
+
+		if (customerChanceVO.getBelonger() != null && customerChanceVO.getBelonger().getUserId() != null) {
+			filters.add(new Filter("user.userId", customerChanceVO.getBelonger().getUserId(), "eq"));
+		}
+
+		if (customerChanceVO.getBelonger() != null && customerChanceVO.getBelonger().getDept() != null && customerChanceVO.getBelonger().getDept().getFatherDept() != null && customerChanceVO.getBelonger().getDept().getFatherDept().getNo() != null) {
+			filters.add(new Filter("user.dept.fatherDept", customerChanceVO.getBelonger().getDept().getFatherDept().getNo(), "eq"));
+		}
+
+		if (customerChanceVO.getBelonger() != null && customerChanceVO.getBelonger().getDept() != null && customerChanceVO.getBelonger().getDept().getNo() != null) {
+			filters.add(new Filter("user.dept", customerChanceVO.getBelonger().getDept().getNo(), "eq"));
+		}
 
 		List<CustomerChancePO> customerChancePOs = customerChanceDao.pageCustomerChance(paging, filters);
 		List<CustomerChanceVO> customerChanceVOs = new ArrayList<CustomerChanceVO>();
 
 		for (CustomerChancePO customerChancePO : customerChancePOs) {
 
-			CustomerChanceVO customerChanceVO = new CustomerChanceVO(new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+			customerChanceVO = new CustomerChanceVO(new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 
 			customerChanceVOs.add(customerChancePO.ptv(customerChanceVO));
 		}
@@ -110,7 +122,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT) {
+		if (customerChancePO.getStatus() == CustomerChancePO.STATUS_COMPLETE_INT) {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
@@ -185,6 +197,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT || customerChancePO.getStatus() != CustomerChancePO.STATUS_ISSUE_INT) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
 		UserPO issuer = userDao.queryUserByOldUserId(userId);
 
 		customerChancePO.setIssuer(issuer);
@@ -192,23 +208,48 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChancePO.setBusitype(new DecorationBusitypePO(customerChanceVO.getBusitype().getDbid()));
 
-		DepartmentPO region = departmentDao.get(customerChanceVO.getRegion().getDid());
+		DepartmentPO region = null;
+
+		if (customerChanceVO.getRegion() != null) {
+			region = departmentDao.get(customerChanceVO.getRegion().getDid());
+		}
 
 		if (region != null) {
 			customerChancePO.setRegion(region);
 		}
 
-		DepartmentPO dept = departmentDao.get(customerChanceVO.getDepartment().getDid());
+		DepartmentPO dept = null;
+
+		if (customerChanceVO.getDepartment() != null) {
+			dept = departmentDao.get(customerChanceVO.getDepartment().getDid());
+		}
 
 		if (dept != null) {
+			customerChancePO.setRegion(dept.getFatherDept());
 			customerChancePO.setDepartment(dept);
 		}
 
-		UserPO belonger = userDao.queryUserByUserId(customerChanceVO.getBelonger().getUserId());
+		if (dept != null && dept.getFatherDept() == null) {
+			customerChancePO.setRegion(dept);
+		}
+
+		UserPO belonger = null;
+
+		if (customerChanceVO.getBelonger() != null) {
+			belonger = userDao.queryUserByUserId(customerChanceVO.getBelonger().getUserId());
+		}
 
 		if (belonger != null) {
+
+			customerChancePO.setRegion(belonger.getDept().getFatherDept());
+			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setBelonger(belonger);
+
 			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
+		}
+
+		if (belonger.getDept().getFatherDept() == null) {
+			customerChancePO.setRegion(belonger.getDept());
 		}
 
 		customerChanceDao.update(customerChancePO);
@@ -224,10 +265,18 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_CONFIRM_INT) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
 
 		if (customerSourcePO == null) {
 			throw new FLException(330071, "客户资源不存在");
+		}
+
+		if (customerSourcePO.getStatus() != CustomerSourcePO.STATUS_CONFIRM_INT) {
+			throw new FLException(330074, "客户资源不可操作");
 		}
 
 		if (customerSourcePO.getCustomer() == null) {

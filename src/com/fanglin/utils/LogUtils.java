@@ -73,7 +73,7 @@ public class LogUtils {
 	}
 
 	public static void logging(Logger logger, String server, String errormsg, String api) {
-		logger.error(String.format("%s|%s|%s|%s %s|%s", "AI", "I", api, server, errormsg));
+		logger.error(String.format("%s|%s|%s|%s %s", "AI", "I", api, server, errormsg));
 	}
 
 	public static void logging(Logger logger, String server, String errormsg, String api, String ip) {
@@ -81,7 +81,7 @@ public class LogUtils {
 	}
 
 	public static void logging(Logger logger, String api, int errorcode, String errormsg) {
-		logger.error(String.format("%s|%s|%s|%d-%s|%s", "AI", "E", api, errorcode, errormsg));
+		logger.error(String.format("%s|%s|%s|%d-%s", "AI", "E", api, errorcode, errormsg));
 	}
 
 	public static void logging(Logger logger, String api, int errorcode, String errormsg, String ip) {
@@ -89,7 +89,7 @@ public class LogUtils {
 	}
 
 	public static void logging(Logger logger, String userId, String actionName, int company) {
-		logger.error(String.format("%s|%s|%s|%s|%d|%s", "AI", "I", actionName, userId, company));
+		logger.error(String.format("%s|%s|%s|%s|%d", "AI", "I", actionName, userId, company));
 	}
 
 	public static void logging(Logger logger, String userId, String actionName, int company, String ip) {
@@ -97,7 +97,7 @@ public class LogUtils {
 	}
 
 	public static void logging(Logger logger, String actionName, Long runTime) {
-		logger.error(String.format("%s|%s|%s|%s|%s", "OT", "I", actionName, runTime.toString()));
+		logger.error(String.format("%s|%s|%s|%s", "OT", "I", actionName, runTime.toString()));
 	}
 
 	public static void logging(Logger logger, String actionName, Long runTime, String ip) {

@@ -78,6 +78,8 @@ public class UserPO implements Serializable {
 
 	public static final short TYPE_AVENGER_INT = 3;
 
+	public static final short TYPE_INSTORER_INT = 4;
+
 	public static final short AUTH_STATUS_INIT_INT = 0;
 
 	public static final short AUTH_STATUS_AUTH_INT = 1;

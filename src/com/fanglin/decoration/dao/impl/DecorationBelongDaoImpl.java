@@ -13,6 +13,7 @@ package com.fanglin.decoration.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.po.DecorationBelongPO;
 
-@Repository("DecorationBelongDao")
+@Repository("decorationBelongDao")
 public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongPO> implements DecorationBelongDao {
 
 	public DecorationBelongDaoImpl() {
@@ -30,20 +31,19 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongPO> impleme
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationBelongPO> queryDecorationBelongByOrderIdAType(String orderId, Short belongType) {
-		return createCriteria(DecorationBelongPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("type", belongType)).add(Restrictions.eq("status", DecorationBelongPO.STATUS_INVALID_INT)).list();
-	}
+	public List<DecorationBelongPO> queryDecorationBelong(String orderId, Short type, Short status) {
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationBelongPO> queryDecorationBelongForCurrentByOrderIdAType(String orderId, Short belongType) {
-		return createCriteria(DecorationBelongPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("type", belongType)).add(Restrictions.eq("status", DecorationBelongPO.STATUS_INVALID_INT)).list();
-	}
+		Criteria query = createCriteria(DecorationBelongPO.class).add(Restrictions.eq("orderId", orderId));
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationBelongPO> queryDecorationBelongByOrderId(String orderId) {
-		return createCriteria(DecorationBelongPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("status", DecorationBelongPO.STATUS_INVALID_INT)).list();
+		if (type != null) {
+			query.add(Restrictions.eq("type", type));
+		}
+
+		if (status != null) {
+			query.add(Restrictions.eq("status", status));
+		}
+
+		return query.list();
 	}
 
 	@Override
@@ -60,14 +60,14 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongPO> impleme
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateDecorationBelongStatusByOrderId(String orderId, Short status) {
-		
+
 		String sql = "update decoration.decorationbelong set status=:status where orderId=:orderId";
 		session().createSQLQuery(sql).setString("orderId", orderId).setShort("status", status).executeUpdate();
-		
+
 		return 0;
 	}
 }

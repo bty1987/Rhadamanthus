@@ -531,6 +531,9 @@ $.extend(api, {
         addCustomerSource: {
             url: "addCustomerSource.do"
         },
+        updateCustomerSource: {
+            url: "updateCustomerSource.do"
+        },
         updateCustomerSourceForStatus: {
             url: "updateCustomerSourceForStatus.do"
         },
