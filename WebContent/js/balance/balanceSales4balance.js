@@ -20,7 +20,28 @@ jQuery(function($) {
 
     seacher.history("balanceSalesPostData");
 
+    seacher.button([{
+        id: "checkAll",
+        name: "全选",
+        clazz: "btn-pink",
+        icon: "icon-plus"
+    }, {
+        id: "payedBalance",
+        name: "付款",
+        clazz: "btn-yellow",
+        icon: "icon-check"
+    }]);
+
     var lineprops = [{
+        field: "balance.bid",
+        type: "checkbox",
+        name: "balanceId",
+        prop: "balance.bid",
+        show: function(v) {
+
+            return (v.balance.isPay == constant.balance().balance.ISPAY_NOTPAY_INT && v.balance.bid != 0);
+        }
+    }, {
         fieId: "balance.belonger.userName",
         name: "归属人",
         prop: "balance.belonger.userName",
@@ -150,7 +171,7 @@ jQuery(function($) {
         handle: function(v) {
 
             com.post(api.balance.payedBalance, {
-                "balance.bid": v.balance.bid
+                "balances[0].bid": v.balance.bid
             }, function() {
 
                 com.showAlert(com.info, "操作成功");
@@ -189,5 +210,45 @@ jQuery(function($) {
     }];
 
     seacher.line("balance.no", lineprops, linebtus).render();
+
+    com.focusPage('#payedBalance').on("click", function() {
+
+        var $inputs = com.focusPage('input[type="checkbox"]:checked');
+
+        if (!$inputs.length) {
+            com.showAlert(com.warning, "请选择需要进行付款的结算单");
+            return false;
+        }
+
+        var option = {};
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            if ($input.attr('balance.bid') != 0) {
+
+                option["balances[" + i + "].bid"] = $input.attr('balance.bid');
+            }
+
+        });
+
+        com.post(api.balance.payedBalance, option, function() {
+
+            com.showAlert(com.info, "操作成功");
+            seacher.doSearch();
+        });
+    });
+
+    com.focusPage('#checkAll').on("click", function() {
+
+        if (com.focusPage('input[type="checkbox"]').prop('checked')) {
+            com.focusPage('input[type="checkbox"]').removeAttr('checked');
+            com.focusPage('input[type="checkbox"]').prop('checked', false);
+        } else {
+            com.focusPage('input[type="checkbox"]').attr('checked', true);
+            com.focusPage('input[type="checkbox"]').prop('checked', true);
+        }
+    });
 
 });

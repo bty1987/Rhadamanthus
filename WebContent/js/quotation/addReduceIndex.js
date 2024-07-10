@@ -555,6 +555,14 @@
                         dataset: constant.quotation().addreduce.atttype.keys
                     });
                     break;
+                case "constructionNode":
+                    lineprops.push({
+                        field: "constructionNode.name",
+                        name: "施工节点 ",
+                        prop: "constructionNode.name",
+                        clazz: "grey"
+                    });
+                    break;
                 case "undisPrice":
                     lineprops.push({
                         field: "undisPrice",

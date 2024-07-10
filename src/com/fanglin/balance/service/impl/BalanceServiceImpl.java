@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.balance.dao.BalanceAccountDao;
 import com.fanglin.balance.dao.ApportDetailDao;
+import com.fanglin.balance.dao.BalanceAccountDao;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceDetailDao;
-import com.fanglin.balance.po.BalanceAccountPO;
 import com.fanglin.balance.po.ApportDetailPO;
+import com.fanglin.balance.po.BalanceAccountPO;
 import com.fanglin.balance.po.BalanceDetailPO;
 import com.fanglin.balance.po.BalancePO;
 import com.fanglin.balance.service.BalanceService;
@@ -248,20 +248,22 @@ public class BalanceServiceImpl implements BalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int payedBalance(BalanceVO balanceVO) throws FLException {
+	public int payedBalance(List<BalanceVO> balanceVOs) throws FLException {
 
-		BalancePO balancePO = balanceDao.get(balanceVO.getBid());
+		BalancePO balancePO;
 
-		if (balancePO == null) {
-			throw new FLException(350006, "结算单不存在");
+		for (BalanceVO balanceVO : balanceVOs) {
+
+			balancePO = balanceDao.get(balanceVO.getBid());
+
+			if (balancePO == null) continue;
+
+			balancePO.setIsPay(BalancePO.ISPAY_PAYED_INT);
+
+			balanceDao.update(balancePO);
 		}
-
-		balancePO.setIsPay(BalancePO.ISPAY_PAYED_INT);
-
-		balanceDao.update(balancePO);
 
 		return 0;
 	}
-
 
 }

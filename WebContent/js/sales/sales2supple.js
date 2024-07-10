@@ -28,6 +28,8 @@ jQuery(function() {
             submit: com.focusPage('#submit')
         },
 
+        sales: null,
+
         sid: params.sales.sales.sid,
         bid: params.sales.sales.bid,
         cid: null,
@@ -166,6 +168,7 @@ jQuery(function() {
                 "sales.instorer.userId": com.typeahead("instorer"),
                 "sales.salesman.userId": com.typeahead("salesmanName"),
                 "sales.bid": sales.bid,
+                "sales.supplier.userId": sales.sales.supplier.userId,
                 "sales.coupon": sales.items.SupplementCoupon.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementCoupon.val())) : 0,
                 "sales.comment": sales.items.comment.val(),
                 "sales.maling": sales.items.SupplementMaling.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementMaling.val())) : 0,
@@ -264,6 +267,8 @@ jQuery(function() {
     com.post(api.sales.querySalesBySid, {
         "sales.sid": sales.sid
     }, function(res) {
+
+        sales.sales = res.sales;
 
         sales.otherStatus = res.sales.otherStatus;
         sales.items.SupplementOrderId.val(res.sales.orderId);

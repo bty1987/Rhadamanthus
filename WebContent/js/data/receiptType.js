@@ -29,27 +29,20 @@ $(function($) {
         },
         editFlg: false,
         cleanItemsitems: {},
-        typeArray: ["现金", "刷卡", "银行", "对公账户", "券"],
-        funds: {},
+        types: constant.data().receiptType.type.keys,
+        funds: constant.data().receiptType.fund.keys,
         currentRtid: null,
         currentNo: null,
-        paymentTypes: {},
-        paytypes: {},
+        paymentTypes: constant.data().paymentType.type.keys,
+        paytypes: constant.data().paymentType.paytype.keys,
 
-        pageType: params.urlLoadParams.type,
+        pageType: params.urlLoadParams.type
     };
 
-    com.post(api.ds.data, {}, function(res) {
-
-        receiptType.items.grade.bindData(res.grade, "key", "value");
-        receiptType.items.fund.bindData(res.receiptTypeFund, "key", "value");
-        receiptType.receiptTypeItems.itemtype.bindData(res.paymentType, "key", "value");
-        receiptType.receiptTypeItems.paytype.bindData(res.paytype, "key", "value");
-
-        receiptType.funds = res.receiptTypeFund.split('key', 'value');
-        receiptType.paymentTypes = res.paymentType.split('key', 'value');
-        receiptType.paytypes = res.paytype.split('key', 'value');
-    }, null, false);
+    receiptType.items.grade.bindData(constant.data().receiptType.grade.datas, "key", "value");
+    receiptType.items.fund.bindData(constant.data().receiptType.fund.datas, "key", "value");
+    receiptType.receiptTypeItems.itemtype.bindData(constant.data().paymentType.type.datas, "key", "value");
+    receiptType.receiptTypeItems.paytype.bindData(constant.data().paymentType.paytype.datas, "key", "value");
 
     receiptType.modal.receiptTypeModal.on('hide.bs.modal', function(e) {
 
@@ -105,24 +98,7 @@ $(function($) {
                 $divBtnWrap.append($btnAdd).appendTo($h3);
             }
 
-            switch (v.type) {
-                case 1:
-                    v.type = "现金";
-                    break;
-                case 2:
-                    v.type = "刷卡";
-                    break;
-                case 3:
-                    v.type = "银行";
-                    break;
-                case 4:
-                    v.type = "对公账户";
-                    break;
-                case 5:
-                    v.type = "券";
-                    break;
-            }
-            var propertyArr = [["键值:", v.no, "grey"], ["类型:", v.type, "red"], ["资金类型:", receiptType.funds[v.fund], "red"], ["状态:", v.status == 1 ? "启用" : "禁用", "red"], ["等级:", com.checkNull(v.grade, "无"), "red"], ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"], ["结算方式:", com.checkNull(v.kibalance, "无"), "grey"], ["银行账号:", com.checkNull(v.bankno, "无"), "blue"], ["辅核项:", com.checkNull(v.assistant, "无"), "grey"], ["POS值:", com.checkNull(v.value, "无"), "grey"]];
+            var propertyArr = [["键值:", v.no, "grey"], ["类型:", receiptType.types[v.type], "red"], ["资金类型:", receiptType.funds[v.fund], "red"], ["状态:", v.status == 1 ? "启用" : "禁用", "red"], ["等级:", com.checkNull(v.grade, "无"), "red"], ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"], ["结算方式:", com.checkNull(v.kibalance, "无"), "grey"], ["银行账号:", com.checkNull(v.bankno, "无"), "blue"], ["辅核项:", com.checkNull(v.assistant, "无"), "grey"], ["POS值:", com.checkNull(v.value, "无"), "grey"]];
 
             if (v.receiptTypeItems != null && v.receiptTypeItems.length > 0) {
                 $.each(v.receiptTypeItems, function(i, v) {
@@ -166,7 +142,7 @@ $(function($) {
 
                 receiptType.items.rtId.val(v.rtId);
                 receiptType.items.name.val(v.name);
-                receiptType.items.type.val(utils.accAdd($.inArray(v.type, receiptType.typeArray), 1));
+                receiptType.items.type.val(v.type);
                 receiptType.items.fund.val(v.fund);
                 receiptType.items.grade.val(v.grade);
                 receiptType.items.kino.val(v.kino);

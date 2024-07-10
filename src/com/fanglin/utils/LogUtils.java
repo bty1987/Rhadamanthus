@@ -60,11 +60,11 @@ public class LogUtils {
 
 			System.out.println();
 
-			logger.error(String.format("%s|%s|%s|%s|%s|%s", "AI", "E", actionName, e.getMessage(), ip));
+			logger.error(String.format("%s|%s|%s|%s|%s", "AI", "E", actionName, e.getMessage(), ip));
 		} else if (SystemConfig.DEBUG_ERROR_STR.equals(SystemConfig.getString("debug", SystemConfig.DEBUG_FALSE_STR))) {
 			e.printStackTrace();
 		} else {
-			logger.error(String.format("%s|%s|%s|%s|%s|%s", "AI", "E", actionName, e.getMessage(), ip));
+			logger.error(String.format("%s|%s|%s|%s|%s", "AI", "E", actionName, e.getMessage(), ip));
 		}
 	}
 

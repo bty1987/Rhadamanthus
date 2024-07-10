@@ -36,7 +36,6 @@ jQuery(function() {
             totals: com.focusPage('#totals'), // 总额
             bComment: com.focusPage('#bComment'), // 品牌备注
             supplier: com.focusPage('#supplier'), // 厂商
-            phone: com.focusPage('#phone'),
 
         },
         items: {
@@ -298,7 +297,6 @@ jQuery(function() {
             "sales.dompanys": sales.dompany,
             "sales.otherStatus": com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0,
             "sales.supplier.userId": sales.rightitems.supplier.val(),
-            "sales.phone": sales.rightitems.phone.val()
         };
 
         var $lis = com.focusPage('.list-group-item');

@@ -138,8 +138,6 @@ public class SalesPO implements Serializable {
 
 	private String orderId;
 
-	private String phone;
-
 	private UserPO supplier;
 
 	private HousePO house;
@@ -271,15 +269,6 @@ public class SalesPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-	}
-
-	@Column(name = "phone")
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -224,7 +224,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 			addReduceVO = new AddReduceVO();
 
-			BeanUtil.copyPropertie(addReducePO, addReduceVO, Arrays.asList("creater"));
+			BeanUtil.copyPropertie(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
 
 			List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 			List<?> addReduceItemAOs = quotationNormoodDao.queryAddReduceItem(addReducePO.getArId());
@@ -355,7 +355,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 			addReduceVO = new AddReduceVO();
 
-			BeanUtil.copyPropertie(addReducePO, addReduceVO, Arrays.asList("creater"));
+			BeanUtil.copyPropertie(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
 
 			List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 			List<?> addReduceItemAOs = quotationNormriceDao.queryAddReduceItem(addReducePO.getArId(), schedule);

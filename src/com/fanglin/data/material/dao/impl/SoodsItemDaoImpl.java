@@ -38,7 +38,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
-		query.getCriterion("quotationItem.qiid", qiid, "eq");
+		query.add(Restrictions.eq("quotationItem.qiid", qiid));
 
 		query.alias("quotationItem", "quotationItem").add(Restrictions.eq("quotationItem.status", QuotationItemPO.STATUS_ENABLE_INT));
 		query.alias("soods", "soods").add(Restrictions.eq("soods.status", SoodsPO.STATUS_VALID_INT));

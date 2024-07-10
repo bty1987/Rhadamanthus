@@ -22,6 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
@@ -66,6 +67,8 @@ public class AddReduceDO implements Serializable {
 	private long dpId;
 
 	private DecorationPO decoration;
+
+	private ConstructionNodePO constructionNode;
 
 	private short type;
 
@@ -135,6 +138,16 @@ public class AddReduceDO implements Serializable {
 
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getConstructionNode() {
+		return constructionNode;
+	}
+
+	public void setConstructionNode(ConstructionNodePO constructionNode) {
+		this.constructionNode = constructionNode;
 	}
 
 	@Column(name = "type")
