@@ -85,7 +85,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 			BeanUtil.copyPropertie(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyPropertie(balanceSalesPO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
@@ -108,7 +108,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSalesBO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyPropertie(balanceSalesBO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 
 			BeanUtil.copyPropertie(balanceSalesBO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyPropertie(balanceSalesBO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("duty", "dept"));
@@ -134,7 +134,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("supplier"));
 
 			balanceSalesVOs.add(balanceSalesVO);
@@ -150,7 +150,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		balanceSalesVO = new BalanceSalesVO(new BrandVO(new UserBaseVO()), new UserBaseVO());
 
-		BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
+		BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 		BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("supplier"));
 		BeanUtil.copyPropertie(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("dept", "duty"));
 
@@ -168,7 +168,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		BalanceSalesPO balanceSalesPO = new BalanceSalesPO(brand);
 
-		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "creater", "balancer"));
+		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "balance", "creater", "balancer"));
 
 		balanceSalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceSalesPO.setCreater(userPO);

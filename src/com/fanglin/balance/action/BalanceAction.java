@@ -75,7 +75,7 @@ public class BalanceAction extends BaseListAction {
 	@Action(value = "payedBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String payedBalance() throws FLException {
 
-		balanceService.payedBalance(balance);
+		balanceService.payedBalance(balances);
 
 		return SUCCESS;
 	}

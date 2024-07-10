@@ -23,6 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -97,6 +100,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Autowired
 	private DecorationService decorationService;
 
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
+
 	@Override
 	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, List<Short> statuses, Integer company) throws FLException {
 
@@ -131,13 +137,15 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		for (AddReduceDO addReduceDO : addReduceDOs) {
 
-			addReduceVO = new AddReduceVO(new DecorationVO(), new UserBaseVO());
+			addReduceVO = new AddReduceVO(new DecorationVO(), new UserBaseVO(), new ConstructionNodeVO());
 
 			addReduceVO.getDecoration().setSupervisor(new UserBaseVO());
 
-			BeanUtil.copyPropertie(addReduceDO, addReduceVO, Arrays.asList("decoration", "creater"));
+			BeanUtil.copyPropertie(addReduceDO, addReduceVO, Arrays.asList("decoration", "creater", "constructionNode"));
 
 			BeanUtil.copyProperties(addReduceDO.getCreater(), addReduceVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			BeanUtil.copyProperties(addReduceDO.getConstructionNode(), addReduceVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
 
 			addReduceDO.getDecoration().ptvcascade(addReduceVO.getDecoration());
 
@@ -187,7 +195,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200060, "增减单不存在");
 		}
 
-		BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
 
 		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 
@@ -241,9 +249,12 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
-		BeanUtil.copyProperties(addReduceVO, addReducePO, Arrays.asList("arId", "creater"));
+		ConstructionNodePO constructionNodePO = constructionNodeDao.get(decorationPO.getProjectStatus());
+
+		BeanUtil.copyProperties(addReduceVO, addReducePO, Arrays.asList("arId", "creater", "constructionNode"));
 
 		addReducePO.setSchedule(decorationPO.getStatus());
+		addReducePO.setConstructionNode(constructionNodePO);
 
 		addReducePO.setCreater(userDao.queryUserByUserId(userId));
 		addReducePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -653,7 +664,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 			AddReduceVO addReduceVO = new AddReduceVO();
 
-			BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));
 
 			addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 

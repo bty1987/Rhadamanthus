@@ -18,7 +18,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.AddReduceDao;
@@ -141,14 +140,10 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 				query.timeranges("affirmTime", "affirmTime", data);
 			} else if ("sendTime".equals(field)) {
 				query.timeranges("sendTime", "sendTime", data);
+			} else if ("constructionNodeId".equals(field)) {
+				query.add(query.getCriterion("constructionNode.cnid", Long.valueOf(data), op));
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-
-		System.out.println(JSONArray.toJSON("1,2,3".split(",")));
-
 	}
 
 }

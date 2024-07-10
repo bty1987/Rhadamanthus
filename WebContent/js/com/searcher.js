@@ -851,6 +851,9 @@ var Searcher = function() {
                             return true;
                         }
 
+                        if (value.show && typeof value.show == 'function' && !value.show(v))
+                            return true;
+
                         if (value.type == "checkbox") {
 
                             var props = {
@@ -860,7 +863,7 @@ var Searcher = function() {
                                 "class": "ace ace-checkbox-2 searcher-checkbox",
                             }
 
-                            props[value.field] = v[value.prop];
+                            props[value.field] = getElement(v, value.prop.split('.'));
 
                             var $label = $('<label></label>').prependTo($h3);
                             var $input = $('<input>').attr(props).val(v[value.prop]).appendTo($label);
@@ -894,9 +897,6 @@ var Searcher = function() {
 
                             return true;
                         }
-
-                        if (value.show && typeof value.show == 'function' && !value.show(v))
-                            return true;
 
                         var $liProperty = $('<li></li>').appendTo($ulProperty);
 

@@ -104,8 +104,13 @@ var Validator = function() {
             type: "v_officer",
             regex: /^\s*$|^[\u4e00-\u9fa5]{3}\d{8}[\u4e00-\u9fa5]$/,
             errorMsg: "请输入正确的军官证号."
+        },
+        passhkm: {
+            type: "v_passhkm",
+            regex: /^\s*$|^[HMhm]\d{8}$/,
+            errorMsg: "请输入正确的港澳通行证号."
         }
-    }
+    };
 
     return {
         init: function() {
@@ -116,5 +121,5 @@ var Validator = function() {
 
             return dtd.promise();
         }
-    }
-}
+    };
+};

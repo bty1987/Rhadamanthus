@@ -67,7 +67,7 @@ $(function() {
 
     quotationItem.types = constant.data().quotationItem.type.keys;
 
-    quotationItem.items.type.bindData(constant.data().quotationItem.type.datas.slice(0, 4), "key", "value");
+    quotationItem.items.type.bindData(constant.data().quotationItem.type.datas.slice(0, 5), "key", "value");
 
     com.post(api.quotation.queryQuotationType, {}, function(a) {
 
@@ -612,10 +612,6 @@ $(function() {
 
     function initQuotationItemList(versionId) {
 
-        var extraParams = {
-            "quotationItem.version.no": versionId
-        };
-
         var quoDisplayFunc = (function() {
 
             var renderList = function(tableId, listData) {
@@ -692,16 +688,20 @@ $(function() {
             };
         })();
 
-        var condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
+        var condArr = ['data-quotation-version', 'data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
 
         var quotationSeacher = new Searcher();
 
-        quotationSeacher.init(condArr, "quoCondList", api.quotation.pageQuotationItemByVersionId, function(data) {
+        var extraParams = {
+            "quotationItem.version.no": versionId
+        };
+
+        quotationSeacher.init(condArr, "quoCondList", api.quotation.pageQuotationItem, function(data) {
 
             quoDisplayFunc.init('quoResultList', data);
         }, "quoPagenation", "quotationFuncAreaPostData", extraParams);
 
-        quotationSeacher.base("quoCondList", "quoPagenation", "quoResultList", api.quotation.pageQuotationItemByVersionId)
+        quotationSeacher.base("quoCondList", "quoPagenation", "quoResultList", api.quotation.pageQuotationItem)
     }
 
     function update() {

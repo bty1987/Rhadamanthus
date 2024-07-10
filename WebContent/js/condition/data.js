@@ -117,9 +117,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.data,
+            url: null,
             postData: {},
-            listPath: "receiptType",
+            listPath: constant.data().receiptType.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -133,9 +133,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.data,
+            url: null,
             postData: {},
-            listPath: "receiptTypeStatus",
+            listPath: constant.data().receiptType.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -149,9 +149,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {// 从后台取数据的各种配置
-            url: api.ds.data,
+            url: null,
             postData: {},
-            listPath: "receiptTypeFund",
+            listPath: constant.data().receiptType.fund.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1185,9 +1185,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "paymentType",
+            listPath: constant.data().paymentType.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1201,9 +1201,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "paytype",
+            listPath: constant.data().paymentType.paytype.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1242,9 +1242,9 @@ Condition.addupRule("data", {
             validate: null
         },
         dataSource: {
-            url: api.ds.data,
+            url: null,
             postData: null,
-            listPath: "custypeStatus",
+            listPath: constant.data().custype.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

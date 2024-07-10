@@ -322,7 +322,7 @@ public class ModuleServiceImpl implements ModuleService {
 
 		for (ModuleVO module : modules) {
 
-			RoleModulePO userModulePO = new RoleModulePO(new ModulePO(module.getMid()), rolePO.getRid(), module.getLink(), module.getAccess(), operator);
+			RoleModulePO userModulePO = new RoleModulePO(new ModulePO(module.getMid()), rolePO.getRid(), module.getLink(), module.getAccess(), operator, company);
 
 			roleModuleDao.save(userModulePO);
 		}

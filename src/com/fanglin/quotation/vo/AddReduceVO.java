@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -31,6 +32,8 @@ public class AddReduceVO implements Serializable {
 	private DecorationVO decoration;
 
 	private Long dpId;
+
+	private ConstructionNodeVO constructionNode;
 
 	private Short type;
 
@@ -88,10 +91,11 @@ public class AddReduceVO implements Serializable {
 		super();
 	}
 
-	public AddReduceVO(DecorationVO decoration, UserBaseVO creater) {
+	public AddReduceVO(DecorationVO decoration, UserBaseVO creater, ConstructionNodeVO constructionNode) {
 		super();
 		this.decoration = decoration;
 		this.creater = creater;
+		this.constructionNode = constructionNode;
 	}
 
 	public Long getArId() {
@@ -124,6 +128,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setDpId(Long dpId) {
 		this.dpId = dpId;
+	}
+
+	public ConstructionNodeVO getConstructionNode() {
+		return constructionNode;
+	}
+
+	public void setConstructionNode(ConstructionNodeVO constructionNode) {
+		this.constructionNode = constructionNode;
 	}
 
 	public Short getType() {

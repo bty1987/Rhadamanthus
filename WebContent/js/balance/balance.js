@@ -17,7 +17,8 @@ jQuery(function($) {
         },
 
         isType: {},
-        isStatus: {}
+        isStatus: {},
+        selectList: []
     };
 
     balance.btns.addConfirmBtn.bindClick(addBalance);
@@ -56,17 +57,24 @@ jQuery(function($) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-            var $btnIsPayBalance = $("<a></a>").addClass("btn btn-minier btn-inverse").html("付款");
             var $btnBalance = $("<a></a>").addClass("btn btn-minier btn-yellow").html("结算");
             var $btnPayBalance = $("<a></a>").addClass("btn btn-minier btn-danger").html("出纳");
             var $btnBalanceDetail = $("<a></a>").addClass("btn btn-minier btn-success").html("结算明细");
             var $btnApportDetail = $("<a></a>").addClass("btn btn-minier btn-warning").html("分摊明细");
             var $btnBalanceSales = $("<a></a>").addClass("btn btn-minier btn-inverse").html("结算销售");
             var $btnBalanceCutpay = $("<a></a>").addClass("btn btn-minier btn-info").html("结算扣款");
+
+            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.no);
+            var $label = $('<label></label>');
+            var $input = $('<input></input>').attr({
+                'class': 'ace ace-checkbox-2',
+                'name': 'balance',
+                'type': 'checkbox',
+                'id': v.bid,
+            }).val(v.bid);
 
             var propertyArr = [];
 
@@ -81,7 +89,6 @@ jQuery(function($) {
             propertyArr.push(["创建时间: ", v.createTime, "green"]);
             propertyArr.push(["金额: ", v.amount, "blue"]);
             propertyArr.push(["扣款总额: ", v.cutpay, "blue"]);
-            // propertyArr.push(["余额: ", v.surplus, "blue"]);
             propertyArr.push(["类型: ", constant.balance().balance.type.keys[v.type], "red"]);
             propertyArr.push(["状态: ", constant.balance().balance.status.keys[v.status], "red"]);
             propertyArr.push(["付款标识: ", constant.balance().balance.isPay.keys[v.isPay], "red"]);
@@ -103,18 +110,25 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($btnIsPayBalance).append($btnBalance).append($btnBalanceDetail).append($btnBalanceCutpay).append($btnApportDetail);
-            $h3.append($title).append($btnDiv);
+            $input.click(function() {
 
-            $btnIsPayBalance.click(function() {
+                var $that = $(this);
+                var bid = $that.attr("id");
 
-                com.post(api.balance.payedBalance, {"balance.bid": v.bid}, function() {
+                var checked = $that.prop("checked");
 
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
+                if (checked)
+                    !balance.selectList.contains(bid) && balance.selectList.push(bid);
+                else
+                    balance.selectList.contains(bid) && balance.selectList.splice(balance.selectList.indexOf(bid), 1);
             });
+
+            if (balance.selectList.contains(String(v.bid)))
+                $input.prop('checked', true).attr("checked", true);
+
+            $liLine.append($h3).append($ulProperty);
+            $btnDiv.append($btnBalance).append($btnBalanceDetail).append($btnBalanceCutpay).append($btnApportDetail);
+            $h3.append($label.append($input).append($span)).append($btnDiv);
 
             $btnBalance.click(function() {
 
@@ -193,11 +207,34 @@ jQuery(function($) {
         displayFunc.init('resultList', data);
     }, "pagenation", "balancePostData", null, false, null, function() {
 
-        // var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
-        // var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        // var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'checks').css("margin", "0px 3px");
+        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        var $checkspan = $('<span></span>').text('付款').appendTo($checka);
 
-        // return [$adda];
+        $checka.click(function() {
+
+            var options = {};
+
+            if (balance.selectList.length == 0) {
+                com.showAlert(com.warning, "请选择需要进行付款的结算单");
+                return false;
+            }
+
+            $.each(balance.selectList, function(i, v) {
+
+                options["balances[" + i + "].bid"] = v;
+            });
+
+            com.post(api.balance.payedBalance, options, function() {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+                balance.selectList = [];
+            });
+        });
+
+        return [$checka];
+
     }, 'resultList');
 
     com.focusPage("#addBalance").click(function() {

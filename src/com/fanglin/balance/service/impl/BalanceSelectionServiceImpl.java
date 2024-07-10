@@ -81,7 +81,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 			BeanUtil.copyProperties(balanceSelectionPO.getCreater(), balanceSelectionVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyProperties(balanceSelectionPO.getBalancer(), balanceSelectionVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyPropertie(balanceSelectionPO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("category", "supplier"));
@@ -104,7 +104,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSelectionBO, balanceSelectionVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyPropertie(balanceSelectionBO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 			BeanUtil.copyProperties(balanceSelectionBO.getCreater(), balanceSelectionVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyProperties(balanceSelectionBO.getBalancer(), balanceSelectionVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyPropertie(balanceSelectionBO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("category", "supplier"));
@@ -129,7 +129,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "creater", "balancer"));
+			BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 			BeanUtil.copyPropertie(balanceSelectionPO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("supplier"));
 
 			balanceSelectionVOs.add(balanceSelectionVO);
@@ -145,7 +145,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new UserBaseVO());
 
-		BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "creater", "balancer"));
+		BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
 		BeanUtil.copyPropertie(balanceSelectionPO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("supplier"));
 		BeanUtil.copyPropertie(balanceSelectionPO.getCreater(), balanceSelectionVO.getCreater(), Arrays.asList("dept", "duty"));
 
@@ -160,7 +160,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		BalanceSelectionPO balanceSelectionPO = new BalanceSelectionPO(brand);
 
-		BeanUtil.copyPropertie(balanceSelectionVO, balanceSelectionPO, Arrays.asList("brand", "creater", "balancer"));
+		BeanUtil.copyPropertie(balanceSelectionVO, balanceSelectionPO, Arrays.asList("brand", "balance", "creater", "balancer"));
 
 		balanceSelectionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 

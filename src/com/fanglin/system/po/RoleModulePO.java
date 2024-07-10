@@ -41,7 +41,7 @@ public class RoleModulePO implements java.io.Serializable {
 		super();
 	}
 
-	public RoleModulePO(ModulePO module, int rid, short link, short access, UserPO creater) {
+	public RoleModulePO(ModulePO module, int rid, short link, short access, UserPO creater, int company) {
 
 		super();
 
@@ -51,6 +51,8 @@ public class RoleModulePO implements java.io.Serializable {
 		this.access = access;
 
 		this.creater = creater;
+
+		this.company = company;
 	}
 
 	@Id

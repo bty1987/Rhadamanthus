@@ -125,6 +125,7 @@ jQuery(function($) {
     decorationDetail.customerItems.identity = com.focusPage("#identity", "#customerChangeModal");
     decorationDetail.customerItems.officer = com.focusPage("#officer", "#customerChangeModal");
     decorationDetail.customerItems.passport = com.focusPage("#passport", "#customerChangeModal");
+    decorationDetail.customerItems.passhkm = com.focusPage("#passhkm", "#customerChangeModal");
     decorationDetail.customerItems.gender = com.focusPage("#gender").switchBtn("gender", "#customerChangeModal");
     decorationDetail.customerItems.qq = com.focusPage("#qq", "#customerChangeModal");
     decorationDetail.customerItems.wechat = com.focusPage("#wechat", "#customerChangeModal");
@@ -1268,6 +1269,7 @@ jQuery(function($) {
             decorationDetail.customerItems.identity.val(res.identity);
             decorationDetail.customerItems.officer.val(res.officer);
             decorationDetail.customerItems.passport.val(res.passport);
+            decorationDetail.customerItems.passhkm.val(res.passhkm);
             decorationDetail.customerItems.qq.val(res.qq);
             decorationDetail.customerItems.wechat.val(res.wechat);
             decorationDetail.customerItems.email.val(res.email);
@@ -1298,6 +1300,7 @@ jQuery(function($) {
                 decorationDetail.customerItems.identity.attr("readonly", "readonly");
                 decorationDetail.customerItems.officer.attr("readonly", "readonly");
                 decorationDetail.customerItems.passport.attr("readonly", "readonly");
+                decorationDetail.customerItems.passhkm.attr("readonly", "readonly");
                 decorationDetail.customerItems.qq.attr("readonly", "readonly");
                 decorationDetail.customerItems.wechat.attr("readonly", "readonly");
                 decorationDetail.customerItems.email.attr("readonly", "readonly");
@@ -1311,6 +1314,7 @@ jQuery(function($) {
                 decorationDetail.customerItems.identity.removeAttr('readonly');
                 decorationDetail.customerItems.officer.removeAttr('readonly');
                 decorationDetail.customerItems.passport.removeAttr('readonly');
+                decorationDetail.customerItems.passhkm.removeAttr('readonly');
                 decorationDetail.customerItems.qq.removeAttr('readonly');
                 decorationDetail.customerItems.wechat.removeAttr('readonly');
                 decorationDetail.customerItems.email.removeAttr('readonly');
@@ -1320,6 +1324,7 @@ jQuery(function($) {
                 decorationDetail.customerItems.type.removeAttr('disabled');
             }
             ;
+
         });
 
         com.post(api.data.queryCustomerPhoneByCid, {
@@ -1785,6 +1790,7 @@ jQuery(function($) {
             "customer.identity": decorationDetail.customerItems.identity.val(),
             "customer.officer": decorationDetail.customerItems.officer.val(),
             "customer.passport": decorationDetail.customerItems.passport.val(),
+            "customer.passhkm": decorationDetail.customerItems.passhkm.val(),
             "customer.qq": decorationDetail.customerItems.qq.val(),
             "customer.wechat": decorationDetail.customerItems.wechat.val(),
             "customer.email": decorationDetail.customerItems.email.val(),

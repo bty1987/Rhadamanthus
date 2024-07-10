@@ -940,5 +940,21 @@ Condition.addupRule("quotation", {
             op: "eq",
             validate: null
         }
-    }
+    },
+    "addreduce-constructionNode": {
+        label: "施工节点",
+        type: "select",
+        submitConfig: {
+            name: "constructionNodeId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryConstructionNode,
+            postData: {},
+            listPath: "constructionNodes",
+            keyPath: "cnid",
+            valuePath: "name"
+        }
+    },
 });
