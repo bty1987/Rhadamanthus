@@ -1148,7 +1148,11 @@ var QuotationDetail = (function() {
                         _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.' + param] = e.val();
                     });
                 });
-
+                
+                if(!_param["quotation.updateTime"]){
+                	_param["quotation.updateTime"] = com.currentTime();
+                }
+                
                 com.post(api.quotation.addQuotationFunctionAreaByFunctionAreaIds, _param, function(data) {
 
                     data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v) {

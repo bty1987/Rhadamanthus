@@ -51,6 +51,7 @@ jQuery(function($) {
     });
 
     brand.modals.deliveryModal.on('show.bs.modal', function(e) {
+
         com.cleanItems(brand.items);
         com.clearValidator();
     });
@@ -88,7 +89,7 @@ jQuery(function($) {
     searcher.condition(conditions);
     searcher.history("brandPostData");
 
-    if (brand.pageType == "default") {
+    if (brand.pageType == "default" || brand.pageType == "finance") {
         searcher.button([{
             id: "addBrand",
             name: "添加",
@@ -105,12 +106,20 @@ jQuery(function($) {
         fieId: "kino",
         name: "金蝶编号",
         prop: "kino",
-        clazz: "grey"
+        clazz: "grey",
+        show: function(v) {
+
+            return brand.pageType == "finance";
+        }
     }, {
         field: "kiname",
         name: "金蝶名称",
         prop: "kiname",
-        clazz: "grey"
+        clazz: "grey",
+        show: function(v) {
+
+            return brand.pageType == "finance";
+        }
     }, {
         field: "supplier",
         name: "厂商",
@@ -147,7 +156,7 @@ jQuery(function($) {
         },
         show: function() {
 
-            return (brand.pageType == "default");
+            return (brand.pageType == "default" || brand.pageType == "finance");
         }
     }, {
         name: "编辑",
@@ -157,15 +166,19 @@ jQuery(function($) {
             brand.brand = v;
 
             brand.items.name.val(v.name);
-            brand.items.comment.val(v.comment);
             brand.items.category.val(v.cid);
             brand.items.kino.val(v.kino);
             brand.items.kiname.val(v.kiname);
             brand.items.atttype.val(v.atttype);
             brand.items.agentName.val(v.agentName);
             brand.items.agentPhone.val(v.agentPhone);
+            brand.items.comment.val(v.comment);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
+            
+            if (brand.pageType == "finance") {
+                com.focusPage(".finance", "#brandModal").removeClass("hide");
+            }
 
             brand.modals.brandModal.modal("show");
 
@@ -173,7 +186,7 @@ jQuery(function($) {
         },
         show: function() {
 
-            return (brand.pageType == "default");
+            return (brand.pageType == "default" || brand.pageType == "finance");
         }
     }, {
         name: "结算",
@@ -186,7 +199,7 @@ jQuery(function($) {
         },
         show: function() {
 
-            return (brand.pageType == "default");
+            return (brand.pageType == "default" || brand.pageType == "finance");
         }
     }, {
         name: "编辑",
@@ -195,15 +208,17 @@ jQuery(function($) {
 
             brand.brand = v;
             brand.items.name.val(v.name);
-            brand.items.comment.val(v.comment);
             brand.items.category.val(v.cid);
             brand.items.kino.val(v.kino);
             brand.items.kiname.val(v.kiname);
             brand.items.agentName.val(v.agentName);
             brand.items.agentPhone.val(v.agentPhone);
+            brand.items.comment.val(v.comment);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
+            
             com.focusPage(".default").hide();
+            
             brand.modals.brandModal.modal("show");
             return false;
         },
@@ -235,6 +250,11 @@ jQuery(function($) {
     com.focusPage('#addBrand', '#pagenation').on("click", function() {
 
         brand.bid = null;
+
+        if (brand.pageType == "finance") {
+            com.focusPage(".finance", "#brandModal").removeClass("hide");
+        }
+
         brand.modals.brandModal.modal("show");
     });
 

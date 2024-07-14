@@ -950,6 +950,10 @@
 
                     _param['functionAreaIds[' + i + ']'] = $(v).val();
                 });
+                
+                if(!_param["quotetion.updateTime"]){
+                	_param["quotetion.updateTime"] = com.currentTime();
+                }
 
                 com.post(api.quotation.addQuotetionFuctionArea, _param, function(data) {
 

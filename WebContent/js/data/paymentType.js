@@ -26,14 +26,14 @@ jQuery(function($) {
         },
         taxrate: [3, 6, 9],
 
-        atttype_advance: {},
-        atttype_decoration: {},
-        atttype_material: {},
-        atttype_sales: {},
-        atttype_service: {},
+        atttype_advance: [],
+        atttype_decoration: [],
+        atttype_material: [],
+        atttype_sales: [],
+        atttype_service: [],
 
-        code_material: {},
-        code_sales: {},
+        code_material: [],
+        code_sales: [],
 
         ptid: null,
 
@@ -47,6 +47,10 @@ jQuery(function($) {
         com.cleanItems(paymentType.items);
     });
 
+    paymentType.items.type.bindData(constant.data.paymentType.type.datas, "key", "value");
+    paymentType.items.paytype.bindData(constant.data.paymentType.paytype.datas, "key", "value");
+    paymentType.items.bustype.bindData(constant.data.paymentType.bustype.datas, "key", "value");
+    
     paymentType.items.taxrate.bindData(paymentType.taxrate, "", "", true);
 
     $.each(constant.data.paymentType.atttype.datas, function(i, v) {
@@ -55,15 +59,17 @@ jQuery(function($) {
         var atttype = v.key.split('-')[1];
 
         if (type == "0")
-            paymentType.atttype_advance[atttype] = v.value;
+            paymentType.atttype_advance.push({"key": atttype, "value": v.value});
         if (type == "1")
-            paymentType.atttype_decoration[atttype] = v.value;
+            paymentType.atttype_decoration.push({"key": atttype, "value": v.value});
         if (type == "2")
-            paymentType.atttype_material[atttype] = v.value;
+            paymentType.atttype_material.push({"key": atttype, "value": v.value});
         if (type == "3")
-            paymentType.atttype_sales[atttype] = v.value;
+            paymentType.atttype_sales.push({"key": atttype, "value": v.value});
         if (type == "4")
-            paymentType.atttype_service[atttype] = v.value;
+            paymentType.atttype_service.push({"key": atttype, "value": v.value});
+        
+        paymentType.items.atttype.bindData(paymentType.atttype_advance, "key", "value");
     });
 
     $.each(constant.data.paymentType.code.datas, function(i, v) {
@@ -72,9 +78,9 @@ jQuery(function($) {
         var code = v.key.split('+')[1];
 
         if (type == "2")
-            paymentType.code_material[code] = v.value;
+            paymentType.code_material.push({"key": code, "value": v.value});
         if (type == "3")
-            paymentType.code_sales[code] = v.value;
+            paymentType.code_sales.push({"key": code, "value": v.value});
     });
 
     paymentType.items.type.on("change", function() {
