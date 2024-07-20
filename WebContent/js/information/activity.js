@@ -88,7 +88,7 @@ $(function() {
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function() {
-
+                var payType = v.payType;
                 activity.editFlg = false;
 
                 activity.items.aid = v.aid;
@@ -99,7 +99,24 @@ $(function() {
                 activity.items.multiple.val(v.multiple).attr("disabled", "disabled");
                 activity.items.endTime.val(v.endTime.substring(0, 10));
                 activity.items.content.val(v.content);
-
+                if (payType > 32){
+                    com.focusPage("#check6").attr('checked', true);
+                    payType = payType - 32;
+                }else if (payType > 16){
+                    com.focusPage("#check5").attr('checked', true);
+                    payType = payType - 16;
+                }else if (payType > 8){
+                    com.focusPage("#check4").attr('checked', true);
+                    payType = payType - 8;
+                }else if (payType > 4){
+                    com.focusPage("#check3").attr('checked', true);
+                    payType = payType - 4;
+                }else if (payType > 2){
+                    com.focusPage("#check2").attr('checked', true);
+                    payType = payType - 2;
+                }else if (payType == 1){
+                    com.focusPage("#check1").attr('checked', true);
+                }
                 activity.modals.activityModal.modal("show");
 
             });
@@ -183,11 +200,27 @@ $(function() {
         if (com.validate('activityModal')) {
             return false;
         }
+        var payType = null;
+
+        if($("#check1").is(":checked")){
+            payType = com.focusPage("#check1").val();
+        }else if ($("#check2").is(":checked")){
+            payType = payType + com.focusPage("#check2").val();
+        }else if ($("#check3").is(":checked")){
+            payType = payType + com.focusPage("#check3").val();
+        }else if ($("#check4").is(":checked")){
+            payType = payType + com.focusPage("#check4").val();
+        }else if ($("#check5").is(":checked")){
+            payType = payType + com.focusPage("#check5").val();
+        }else if ($("#check6").is(":checked")){
+            payType = payType + com.focusPage("#check6").val();
+        }
 
         if (activity.items.startTime.val() > activity.items.endTime.val()) {
             com.showAlert(com.warning, "开始时间不能大于结束时间");
             return false;
         }
+
         var url;
         var options = {
             "activity.name": activity.items.activityName.val(),
@@ -195,7 +228,8 @@ $(function() {
             "activity.endTime": String(activity.items.endTime.val()).substring(0, 10) + " 23:59:59",
             "activity.type": activity.items.types.val(),
             "activity.multiple": activity.items.multiple.val(),
-            "activity.content": activity.items.content.val()
+            "activity.content": activity.items.content.val(),
+            "activity.payType": payType
         };
 
         activity.editFlg ? url = api.information.addActivity : url = api.information.updateActivity, options["activity.aid"] = activity.items.aid;

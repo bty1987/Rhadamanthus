@@ -20,6 +20,8 @@ public class ActivityVO implements java.io.Serializable {
 
 	private Short type;
 
+	private Short paytype;
+
 	private Short defaults;
 
 	private Integer multiple;
@@ -31,9 +33,9 @@ public class ActivityVO implements java.io.Serializable {
 	private Timestamp endTime;
 
 	private String content;
-	
+
 	private int company;
-	
+
 	public int getCompany() {
 		return company;
 	}
@@ -81,6 +83,14 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getPaytype() {
+		return paytype;
+	}
+
+	public void setPaytype(Short paytype) {
+		this.paytype = paytype;
 	}
 
 	public Short getStatus() {
@@ -141,9 +151,5 @@ public class ActivityVO implements java.io.Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-
-
-	
-	
 
 }

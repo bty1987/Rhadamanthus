@@ -17,26 +17,26 @@ import com.fanglin.decoration.po.DecorationPO;
 
 @Entity
 @Table(name = "ConstructIoninfo", catalog = "construction")
-public class ConstructionInfoDO implements Serializable{
+public class ConstructionInfoDO implements Serializable {
 
 	private static final long serialVersionUID = 3632587128968159874L;
 
 	public static final String COLUMN_KEYTIME_STR = "keyTime";
 
 	public static final String COLUMN_DRAWLINETIME_STR = "drawlineTime";
-	
+
 	public static final String COLUMN_FINISHTIME_STR = "finishTime";
-	
+
 	public static final String COLUMN_DESIGNTIME_STR = "designTime";
-	
+
 	public static final String COLUMN_SDESIGNTIME_STR = "decoration.sdesignTime";
-	
+
 	public static final String COLUMN_EDESIGNTIME_STR = "decoration.edesignTime";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final short COLUMN_ALREADY_SHORT = 0;
-	
+
 	public static final short COLUMN_STAY_SHORT = 1;
 
 	private long ciid;
@@ -44,7 +44,7 @@ public class ConstructionInfoDO implements Serializable{
 	private long cid;
 
 	private DecorationPO decoration;
-	
+
 	private int timeLimit;
 
 	private short ishovel;
@@ -52,13 +52,13 @@ public class ConstructionInfoDO implements Serializable{
 	private short iskey;
 
 	private short isCeremony;
-	
+
 	private Timestamp finishTime;
-	
+
 	private Timestamp keyTime;
-	
+
 	private Timestamp drawlineTime;
-	
+
 	private Timestamp designTime;
 
 	private String comment;
@@ -66,7 +66,7 @@ public class ConstructionInfoDO implements Serializable{
 	public ConstructionInfoDO() {
 		super();
 	}
-	
+
 	public ConstructionInfoDO(DecorationPO decoration) {
 		super();
 		this.decoration = decoration;
@@ -94,7 +94,7 @@ public class ConstructionInfoDO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId", referencedColumnName="orderId")
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
 	public DecorationPO getDecoration() {
 		return decoration;
 	}
@@ -166,7 +166,7 @@ public class ConstructionInfoDO implements Serializable{
 	public void setKeyTime(Timestamp keyTime) {
 		this.keyTime = keyTime;
 	}
-	
+
 	@Column(name = "drawlineTime")
 	public Timestamp getDrawlineTime() {
 		return drawlineTime;

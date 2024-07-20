@@ -39,9 +39,13 @@ public class CustomerUserRulePO implements Serializable {
 
 	public static final short STATUS_ENABLE_INT = 0; // 启用
 
-	public static final short STATUS_DISABLE_INT = 1; // 禁用
+	public static final short STATUS_USER_INVALID_INT = 1; // 个人失效
 
-	public static final short STATUS_INVALID_INT = 2; // 失效
+	public static final short STATUS_DEPT_INVALID_INT = 2; // 部分失效
+
+	public static final short STATUS_REGION_INVALID_INT = 3; // 分区失效
+
+	public static final short STATUS_DISABLE_INT = 4; // 禁用
 
 	private long curid;
 

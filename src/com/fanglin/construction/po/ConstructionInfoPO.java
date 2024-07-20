@@ -21,9 +21,9 @@ public class ConstructionInfoPO implements Serializable {
 	public static final String COLUMN_CID_STR = "cid";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final short COLUMN_ALREADY_SHORT = 0;
-	
+
 	public static final short COLUMN_STAY_SHORT = 1;
 
 	private long ciid;
@@ -31,7 +31,7 @@ public class ConstructionInfoPO implements Serializable {
 	private long cid;
 
 	private String orderId;
-	
+
 	private int timeLimit;
 
 	private short ishovel;
@@ -39,24 +39,25 @@ public class ConstructionInfoPO implements Serializable {
 	private short iskey;
 
 	private short isCeremony;
-	
+
 	private Timestamp finishTime;
-	
+
 	private Timestamp keyTime;
-	
+
 	private Timestamp drawlineTime;
-	
+
 	private Timestamp designTime;
 
 	private String comment;
-	
 
 	public ConstructionInfoPO() {
 		super();
 	}
 
 	public ConstructionInfoPO(long cid, short ishovel, short iskey, short isCeremony, String comment, String orderId) {
+
 		super();
+
 		this.cid = cid;
 		this.ishovel = ishovel;
 		this.iskey = iskey;
@@ -148,7 +149,7 @@ public class ConstructionInfoPO implements Serializable {
 	public void setKeyTime(Timestamp keyTime) {
 		this.keyTime = keyTime;
 	}
-	
+
 	@Column(name = "drawlineTime")
 	public Timestamp getDrawlineTime() {
 		return drawlineTime;
@@ -157,7 +158,7 @@ public class ConstructionInfoPO implements Serializable {
 	public void setDrawlineTime(Timestamp drawlineTime) {
 		this.drawlineTime = drawlineTime;
 	}
-	
+
 	@Column(name = "designTime")
 	public Timestamp getDesignTime() {
 		return designTime;

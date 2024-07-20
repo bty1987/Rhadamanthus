@@ -38,7 +38,7 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 
 	@Override
 	public CustomerChancePO queryCustomerChance(long csid, int company) {
-		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).createAlias("source", "source").add(Restrictions.eq("source.csid", csid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
+		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).createAlias("source", "source").add(Restrictions.eq("source.csid", csid)).add(Restrictions.eq("company", company)).add(Restrictions.ne("status", CustomerChancePO.STATUS_DISABLE_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

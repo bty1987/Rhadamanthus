@@ -60,7 +60,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int existCustomerUserRule(int company, int area) {
 
-		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status in (0 ,1) and curi.uppval < :uppval and curi.lowval >= :lowval";
+		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status != 4 and curi.uppval < :uppval and curi.lowval >= :lowval";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
@@ -87,7 +87,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int pollingCustomerUserRule(int company) {
 
-		String sql = "update customer.customeruserrule set surplus = surplus + chance, polling = polling + 1000 where company = :company and status in (0, 1)";
+		String sql = "update customer.customeruserrule set surplus = surplus + chance, polling = polling + 1000 where company = :company and status != 4";
 		session().createSQLQuery(sql).setInteger("company", company).executeUpdate();
 
 		return 0;
@@ -96,7 +96,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int disableCustomerUserRule(int company) {
 
-		String sql = "update customer.customeruserrule set status = 2, finishtime = CURRENT_TIMESTAMP where company = :company";
+		String sql = "update customer.customeruserrule set status = 4, finishtime = CURRENT_TIMESTAMP where company = :company";
 		session().createSQLQuery(sql).setInteger("company", company).executeUpdate();
 
 		return 0;

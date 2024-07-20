@@ -32,6 +32,8 @@ public class CompanyVO implements Serializable {
 
 	private Short status;
 
+	private Short block;
+
 	public CompanyVO() {
 		super();
 	}
@@ -149,6 +151,14 @@ public class CompanyVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getBlock() {
+		return block;
+	}
+
+	public void setBlock(Short block) {
+		this.block = block;
 	}
 
 }

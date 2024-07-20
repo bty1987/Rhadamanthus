@@ -52,6 +52,14 @@
                                         <label id="managePrice" class=" col-md-4  no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
+                                        <label class=" col-md-6  no-padding-right">管理优惠:</label>
+                                        <label id="manageProfit" class=" col-md-4  no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group" id="advanceProfitShow">
+                                        <label class=" col-md-6  no-padding-right">特殊优惠:</label>
+                                        <label id="advanceProfit" class=" col-md-4  no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group">
                                         <label class=" col-md-6  no-padding-right">面积:</label>
                                         <label id="quoteArea" class=" col-md-4  no-padding-left">0.00</label>
                                     </div>
@@ -149,10 +157,26 @@
                                 <div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="preferPrices">优惠价</label>
 									<div class="col-sm-9">
-										<input type="text" id="preferPrices" class="col-xs-10 col-sm-5 v_preferPrice"  maxlength='15'/>
+										<input type="text" id="preferPrices" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15'/>
 									</div>
 								</div>
 								<div class="space-4"></div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="preferManage">管理优惠</label>
+									<div class="col-sm-9">
+										<input type="text" id="preferManage" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+								<div id="preferAdvanceShow">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="preferAdvance">特殊优惠</label>
+										<div class="col-sm-9">
+											<input type="text" id="preferAdvance" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15'/>
+										</div>
+									</div>
+									<div class="space-4"></div>
+								</div>
                             </form>
                         </div>
 

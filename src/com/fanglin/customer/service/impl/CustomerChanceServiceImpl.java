@@ -154,7 +154,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmCustomerChange(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException {
+	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException {
 
 		try {
 
@@ -175,16 +175,26 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
+		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
+
+		if (customerSourcePO.getStatus() != CustomerSourcePO.STATUS_APPROVE_ONE_INT) {
+			throw new FLException(330074, "客户资源不可操作");
+		}
+
 		customerChancePO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 		customerChancePO.setStatus(CustomerChancePO.STATUS_CONFIRM_INT);
 
 		customerChanceDao.update(customerChancePO);
 
+		customerSourcePO.setStatus(CustomerSourcePO.STATUS_CONFIRM_INT);
+
+		customerSourceDao.update(customerSourcePO);
+
 		String content = String.format("客源确认,客户名:%s,楼盘:%s,电话:%s", customerChancePO.getSource().getName(), customerChancePO.getSource().getHouse().getVillage().getName(), customerChancePO.getSource().getPhone());
 
-		UserPO designer = customerChancePO.getSource().getDesigner();
+		UserPO creater = customerChancePO.getSource().getCreater();
 
-		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
+		messageService.sendMessage(creater.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, creater.getCompany());
 	}
 
 	@Override
@@ -197,7 +207,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT || customerChancePO.getStatus() != CustomerChancePO.STATUS_ISSUE_INT) {
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_INIT_INT && customerChancePO.getStatus() != CustomerChancePO.STATUS_ISSUE_INT) {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
@@ -307,5 +317,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerSourcePO.setSalesman(customerSourcePO.getCreater());
 
 		customerSourceDao.update(customerSourcePO);
+
+		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
+
+		customerChanceDao.update(customerChancePO);
 	}
 }

@@ -1,5 +1,4 @@
-﻿
-jQuery(function($) {
+﻿jQuery(function($) {
 
     var constructionPlan = {
 
@@ -10,9 +9,9 @@ jQuery(function($) {
         },
 
         btns: {
-            createConstructionPlanBtn:com.focusPage("#constructionPlanBtn"),
+            createConstructionPlanBtn: com.focusPage("#constructionPlanBtn"),
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-            printBtn:com.focusPage("#printBtn")
+            printBtn: com.focusPage("#printBtn")
         },
 
         items: {
@@ -28,7 +27,7 @@ jQuery(function($) {
 
     com.post(api.data.queryConstructionPace, {}, function(res) {
 
-        constructionPlan.items.name.bindData(res.constructionPaces, "name", "name");
+        constructionPlan.items.name.bindData(res.constructionPaces, "cpid", "name");
     });
 
     var searcher = new Searcher();
@@ -85,14 +84,14 @@ jQuery(function($) {
         }
     }];
 
-    searcher.line("name", lineprops, linebtus).render();
+    searcher.line("pace.name", lineprops, linebtus).render();
 
     constructionPlan.btns.createConstructionPlanBtn.on("click", function() {
 
         constructionPlan.modals.constructionPlanModal.modal("show");
     });
 
-    com.focusPage('#printBtn').on("click", function () {
+    com.focusPage('#printBtn').on("click", function() {
 
         params.construction = constructionPlan.construction;
 
@@ -105,11 +104,11 @@ jQuery(function($) {
             return false;
 
         var options = {
+            "constructionPlan.pace.cpid": constructionPlan.items.name.val(),
             "constructionPlan.orderId": constructionPlan.construction.decoration.orderId,
-            "constructionPlan.name": constructionPlan.items.name.val(),
             "constructionPlan.startTime": constructionPlan.items.startTime.val(),
             "constructionPlan.endTime": constructionPlan.items.endTime.val(),
-            "constructionPlan.comment": constructionPlan.items.comment.val()
+            "constructionPlan.comment": constructionPlan.items.comment.val(),
         };
 
         com.post(api.construction.addConstructionPlan, options, function() {

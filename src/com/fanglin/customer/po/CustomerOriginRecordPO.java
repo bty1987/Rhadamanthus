@@ -28,13 +28,13 @@ public class CustomerOriginRecordPO implements Serializable {
 
 	private long csid;
 
-	private String comment;
-
 	private short type;
 
 	private UserPO operater;
 
 	private Timestamp operatTime;
+
+	private String comment;
 
 	public CustomerOriginRecordPO() {
 		super();
@@ -100,10 +100,12 @@ public class CustomerOriginRecordPO implements Serializable {
 	public CustomerOriginRecordPO init(long csid, String comment, Short type, UserPO operater) {
 
 		setCsid(csid);
-		setComment(comment);
 		setType(type);
 		setOperater(operater);
+
 		setOperatTime(new Timestamp(System.currentTimeMillis()));
+
+		setComment(comment);
 
 		return this;
 	}

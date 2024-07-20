@@ -16,7 +16,9 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class ConstructionPlanVO implements Serializable{
+import com.fanglin.data.common.vo.ConstructionPaceVO;
+
+public class ConstructionPlanVO implements Serializable {
 
 	private static final long serialVersionUID = 4826596660979940757L;
 
@@ -28,6 +30,8 @@ public class ConstructionPlanVO implements Serializable{
 
 	private String name;
 
+	private ConstructionPaceVO pace;
+
 	private Timestamp createTime;
 
 	private Timestamp startTime;
@@ -38,6 +42,13 @@ public class ConstructionPlanVO implements Serializable{
 
 	public ConstructionPlanVO() {
 		super();
+	}
+
+	public ConstructionPlanVO(ConstructionPaceVO pace) {
+
+		super();
+
+		this.pace = pace;
 	}
 
 	public long getCpid() {
@@ -70,6 +81,14 @@ public class ConstructionPlanVO implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public ConstructionPaceVO getPace() {
+		return pace;
+	}
+
+	public void setPace(ConstructionPaceVO pace) {
+		this.pace = pace;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

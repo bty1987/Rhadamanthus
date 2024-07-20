@@ -55,6 +55,8 @@ public class ActivityPO implements java.io.Serializable {
 
 	private short type;
 
+	private short paytype;
+
 	private short defaults;
 
 	private int multiple;
@@ -106,6 +108,15 @@ public class ActivityPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "paytype")
+	public short getPaytype() {
+		return paytype;
+	}
+
+	public void setPaytype(short paytype) {
+		this.paytype = paytype;
 	}
 
 	@Column(name = "status")

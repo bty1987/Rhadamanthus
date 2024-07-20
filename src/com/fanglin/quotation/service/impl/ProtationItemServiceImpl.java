@@ -74,11 +74,11 @@ public class ProtationItemServiceImpl implements ProtationItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public ProtationItemVO updateProtationItem(ProtationVO protationVO, ProtationItemVO protationItemVO) throws FLException {
 
-		ProtationPO protationPO = checkProtationForStatusByEnabled(protationVO.getPid());
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
 
-		DecorationPO decorationPO = checkProtationForDefaultByOrderId(protationPO.getOrderId());
+		DecorationPO decorationPO = checkDecoration(protationPO.getOrderId());
 
-		ProtationServiceImpl.convertProtationVOToPOForAdvance(protationVO, protationPO);
+		protationPO.convert(protationVO);
 
 		Long piid = protationItemVO.getPiid();
 
@@ -124,11 +124,11 @@ public class ProtationItemServiceImpl implements ProtationItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteProtationItem(ProtationVO protationVO, ProtationItemVO protationItemVO) throws FLException {
 
-		ProtationPO protationPO = checkProtationForStatusByEnabled(protationVO.getPid());
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
 
-		DecorationPO decorationPO = checkProtationForDefaultByOrderId(protationPO.getOrderId());
+		DecorationPO decorationPO = checkDecoration(protationPO.getOrderId());
 
-		ProtationServiceImpl.convertProtationVOToPOForAdvance(protationVO, protationPO);
+		protationPO.convert(protationVO);
 
 		ProtationItemPO protationItemPO = protationItemDao.get(protationItemVO.getPiid());
 
@@ -150,7 +150,7 @@ public class ProtationItemServiceImpl implements ProtationItemService {
 		return 0;
 	}
 
-	public DecorationPO checkProtationForDefaultByOrderId(String orderId) throws FLException {
+	public DecorationPO checkDecoration(String orderId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -167,7 +167,7 @@ public class ProtationItemServiceImpl implements ProtationItemService {
 		return decorationPO;
 	}
 
-	public ProtationPO checkProtationForStatusByEnabled(long pid) throws FLException {
+	public ProtationPO checkProtation(long pid) throws FLException {
 
 		ProtationPO protationPO = protationDao.get(pid);
 

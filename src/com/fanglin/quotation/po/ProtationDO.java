@@ -109,6 +109,10 @@ public class ProtationDO implements Serializable {
 
 	private int manageRate;
 
+	private long manageProfit;
+
+	private long advanceProfit;
+
 	private String comment;
 
 	@Id
@@ -438,6 +442,24 @@ public class ProtationDO implements Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "manageProfit")
+	public long getManageProfit() {
+		return manageProfit;
+	}
+
+	public void setManageProfit(long manageProfit) {
+		this.manageProfit = manageProfit;
+	}
+
+	@Column(name = "advanceProfit")
+	public long getAdvanceProfit() {
+		return advanceProfit;
+	}
+
+	public void setAdvanceProfit(long advanceProfit) {
+		this.advanceProfit = advanceProfit;
 	}
 
 	@Column(name = "comment")

@@ -68,6 +68,8 @@ public class CompanyPO implements Serializable {
 
 	private short status;
 
+	private short block;
+
 	public CompanyPO() {
 		super();
 	}
@@ -202,6 +204,15 @@ public class CompanyPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "block")
+	public short getBlock() {
+		return block;
+	}
+
+	public void setBlock(short block) {
+		this.block = block;
 	}
 
 }

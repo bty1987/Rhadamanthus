@@ -3,12 +3,14 @@ $(function() {
     var protation = {
 
         protation: null,
+        presignProduce: null,
 
         protationList: com.focusPage("#protationList"),
         decorationInfo: com.focusPage("#decorationInfo"),
 
         modals: {
             protationModal: com.focusPage('#protationModal'),
+            protationPreferModal: com.focusPage('#protationPreferModal'),
         },
 
         items: {
@@ -20,6 +22,9 @@ $(function() {
             quoteArea: com.focusPage("#quoteArea", "#protationModal"),
             preferPrice: com.focusPage("#preferPrice", "#protationModal"),
             decorationInfo: com.focusPage("#decorationInfo"),
+            preferPrices: com.focusPage("#preferPrices", "#protationPreferModal"),
+            preferManage: com.focusPage("#preferManage", "#protationPreferModal"),
+            preferAdvance: com.focusPage("#preferAdvance", "#protationPreferModal"),
         },
 
         datasets: {
@@ -68,6 +73,56 @@ $(function() {
         com.cleanItems(protation.items);
 
         protation.modals.protationModal.modal("show");
+    });
+
+    com.focusPage('#savePreferBtn').bindClick(function() {
+
+        if (com.validate("protationPreferModal"))
+            return false;
+
+        var _protation = protation.protation;
+        var preferPrice = protation.items.preferPrices.val();
+        var preferManage = protation.items.preferManage.val();
+        var preferAdvance = protation.items.preferAdvance.val();
+        var discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_protation.quotePrice, preferPrice), _protation.quotePrice));
+
+        discout = discout < 0 ? 0 : discout > 1 ? 1 : discout;
+
+        if (utils.accMul(discout, 10) < protation.presignProduce.discount) {
+
+            com.showAlert(com.warning, "优惠金额不合理");
+
+            return false;
+        }
+
+        if (_protation.managePrice < preferManage) {
+
+            com.showAlert(com.warning, "管理优惠不能大于管理费");
+
+            return false;
+        }
+
+        var total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(_protation.quotePrice, _protation.managePrice), preferPrice), preferManage), preferAdvance);
+        total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(_protation.basicPrice, utils.accAdd(_protation.adddPrice, utils.accSub(_protation.addmPrice, utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice)))), utils.accAdd(_protation.accmPrice, _protation.accdPrice))));
+
+        var options = {
+            "protation.pid": protation.protation.pid,
+            "protation.preferPrice": preferPrice,
+            "protation.manageProfit": preferManage,
+            "protation.advanceProfit": preferAdvance,
+            "protation.totalCost": _protation.totalCost,
+            "protation.totalProfit": _protation.totalProfit,
+            "protation.totalPrice": total,
+        };
+
+        com.post(api.quotation.updateProtationForAdvance, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            protation.modals.protationPreferModal.modal("hide");
+
+            searcher.doSearch();
+        });
     });
 
     com.focusPage('#saveBtn').bindClick(function() {
@@ -171,6 +226,29 @@ $(function() {
     }
 
     var searcher = new Searcher();
+
+    var btnPrefer = {
+        name: "优惠",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            com.post(api.quotation.queryPresignProduceByPpid, {
+                "presignProduce.ppid": v.ppid
+            }, function(res) {
+
+                protation.presignProduce = res.presignProduce;
+            });
+
+            protation.protation = v;
+
+            protation.items.preferPrices.val(v.preferPrice);
+            protation.items.preferManage.val(v.manageProfit);
+            protation.items.preferAdvance.val(v.advanceProfit);
+
+            protation.modals.protationPreferModal.modal("show");
+
+        }
+    };
 
     var btnUpdate = {
         name: "修改",
@@ -397,6 +475,9 @@ $(function() {
         com.focusPage("#protationIndexPageContent").removeClass("page-content");
 
         var cardbtns = [];
+
+        if (protation.pageConfig.pageBtn.contains("prefer"))
+            cardbtns.push(btnPrefer);
 
         if (protation.pageConfig.pageBtn.contains("update"))
             cardbtns.push(btnUpdate);

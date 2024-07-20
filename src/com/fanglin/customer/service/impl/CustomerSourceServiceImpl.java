@@ -262,6 +262,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
+		if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company) != null) {
+			throw new FLException(330076, "客户机会已存在");
+		}
+
 		short atttype = CustomerChancePO.ATTTYPE_USER_INT;
 
 		DecorationBusitypePO busitype = null;

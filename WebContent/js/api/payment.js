@@ -56,6 +56,29 @@ $.extend(api.index, {
 
 $.extend(api, {
     payment: {
+        pagePaymentActivity: {
+            url: "pagePaymentActivity.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["realMoney", "multiple"]
+            }]
+        },
+        amountPaymentActivity: {
+            url: "amountPaymentActivity.do",
+            type: "query",
+            tranargs: {
+                result: "",
+                args: ["amount"]
+            }
+        },
+        updatePaymentActivity: {
+            url: "updatePaymentActivity.do"
+        },
+        deletePaymentActivity: {
+            url: "deletePaymentActivity.do"
+        },
         pageAdvancePayment: {
             url: "pageAdvancePayment.do",
             demo: true,

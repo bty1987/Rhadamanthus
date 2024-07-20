@@ -300,6 +300,16 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
+			AddReducePO addReducePO = null;
+
+			if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+				addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+			}
+
+			if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+				throw new FLException(140035, "增减项状态不可操作");
+			}
+
 			if (selectionItemVO.getNum() == null) {
 				selectionItemVO.setNum(selectionItemPO.getNum());
 			}

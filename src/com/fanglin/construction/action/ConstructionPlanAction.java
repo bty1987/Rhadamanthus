@@ -24,6 +24,7 @@ import com.fanglin.construction.service.ConstructionPlanService;
 import com.fanglin.construction.vo.ConstructionPlanVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.vo.ConstructionPaceVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -39,6 +40,8 @@ public class ConstructionPlanAction extends BaseListAction{
 
 	private List<ConstructionPlanVO> constructionPlans;
 
+	private ConstructionPaceVO constructionPace;
+
 	@Action(value = "queryConstructionPlanByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionPlanByOrderId() throws FLException {
 
@@ -50,7 +53,7 @@ public class ConstructionPlanAction extends BaseListAction{
 	@Action(value = "addConstructionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionPlan() throws FLException {
 
-		constructionPlanService.addConstructionPlan(constructionPlan);
+		constructionPlanService.addConstructionPlan(constructionPlan, constructionPace);
 
 		return SUCCESS;
 	}
@@ -77,6 +80,14 @@ public class ConstructionPlanAction extends BaseListAction{
 
 	public void setConstructionPlans(List<ConstructionPlanVO> constructionPlans) {
 		this.constructionPlans = constructionPlans;
+	}
+
+	public ConstructionPaceVO getConstructionPace() {
+		return constructionPace;
+	}
+
+	public void setConstructionPace(ConstructionPaceVO constructionPace) {
+		this.constructionPace = constructionPace;
 	}
 
 }

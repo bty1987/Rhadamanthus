@@ -648,6 +648,9 @@
                             case "balanceTime":
                                 propertyArr.push(["内决时间:", v.balanceTime, "green"]);
                                 break;
+                            case "terminalTime":
+                                propertyArr.push(["终止时间:", v.terminalTime, "green"]);
+                                break;
                             case "sdesignTime":
                                 propertyArr.push(["确认合同方案时间:", v.sdesignTime, "green"]);
                                 propertyArr.push(["确认放线方案时间:", v.edesignTime, "green"]);
@@ -915,11 +918,15 @@
                             case "line":// 放线
                                 $divBtnWrap.append(btnLine);
                                 break;
-                            case "contract":// 合同
-                                $divBtnWrap.append(btnContract);
+                            case "contract":// 合同 (0, 1, 2, 3, 4, 7, 8)
+                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnContract);
+                                }
                                 break;
-                            case "contractc":// 合同(设计)
-                                $divBtnWrap.append(btnContractc);
+                            case "contractc":// 合同(设计) (0, 1, 2, 3, 4, 7, 8)
+                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnContractc);
+                                }
                                 break;
                             case "scal":// 扣款
                                 $divBtnWrap.append(btnScal);

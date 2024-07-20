@@ -24,6 +24,7 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCustomerOriginService;
 import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
+import com.fanglin.approval.service.ApprovalCustomerSourceService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
 import com.fanglin.approval.service.ApprovalDecorationHolonomyService;
@@ -102,6 +103,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalDecorationTerminalService approvalDecorationTerminalService;
+
+	@Autowired
+	private ApprovalCustomerSourceService approvalCustomerSourceService;
 
 	@Autowired
 	private UserDao userDao;
@@ -260,6 +264,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT:
 				approvalDecorationTerminalService.approveForDecorationTerminal(approvalPO);
 				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT:
+				approvalCustomerSourceService.approveForCustomerSource(approvalPO);
+				break;
 			default:
 				break;
 		}
@@ -300,7 +307,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
 				approvalCustomerOriginService.refuseForCustomerOrigin(approvalPO);
 				break;
-
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT:
+				approvalCustomerSourceService.refuseForCustomerSource(approvalPO);
+				break;
 			default:
 				break;
 		}

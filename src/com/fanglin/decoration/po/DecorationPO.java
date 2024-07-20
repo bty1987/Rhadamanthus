@@ -164,6 +164,8 @@ public class DecorationPO implements Serializable {
 
 	private Timestamp precontractTime;
 
+	private Timestamp terminalTime;
+
 	private short status;
 
 	private short designStatus;
@@ -352,6 +354,14 @@ public class DecorationPO implements Serializable {
 
 	public void setPrecontractTime(Timestamp precontractTime) {
 		this.precontractTime = precontractTime;
+	}
+
+	public Timestamp getTerminalTime() {
+		return terminalTime;
+	}
+
+	public void setTerminalTime(Timestamp terminalTime) {
+		this.terminalTime = terminalTime;
 	}
 
 	public Short getStatus() {

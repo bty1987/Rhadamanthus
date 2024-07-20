@@ -72,6 +72,20 @@ public class ProtationPO implements Serializable {
 
 	private int profitRate;
 
+	private long preferPrice;
+
+	private long manageProfit;
+
+	private long advanceProfit;
+
+	private int manageRate;
+
+	private String manageFormula;
+
+	private long managePrice;
+
+	private int discount;
+
 	private long basicPrice;
 
 	private long comdPrice;
@@ -88,35 +102,25 @@ public class ProtationPO implements Serializable {
 
 	private long subcPrice;
 
-	private long preferPrice;
+	private long accdPrice;
 
-	private String manageFormula;
+	private long accmPrice;
 
-	private long managePrice;
+	private int costRate;
+
+	private int mostRate;
+
+	private long mostPrice;
+
+	private long totalCost;
+
+	private long totalProfit;
 
 	private long totalPrice;
 
 	private short status;
 
 	private short defaults;
-
-	private long mostPrice;
-
-	private int costRate;
-
-	private int mostRate;
-
-	private long totalCost;
-
-	private long totalProfit;
-
-	private long accdPrice;
-
-	private long accmPrice;
-
-	private int discount;
-
-	private int manageRate;
 
 	private String comment;
 
@@ -448,6 +452,24 @@ public class ProtationPO implements Serializable {
 		this.manageRate = manageRate;
 	}
 
+	@Column(name = "manageProfit")
+	public long getManageProfit() {
+		return manageProfit;
+	}
+
+	public void setManageProfit(long manageProfit) {
+		this.manageProfit = manageProfit;
+	}
+
+	@Column(name = "advanceProfit")
+	public long getAdvanceProfit() {
+		return advanceProfit;
+	}
+
+	public void setAdvanceProfit(long advanceProfit) {
+		this.advanceProfit = advanceProfit;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -465,6 +487,28 @@ public class ProtationPO implements Serializable {
 		if (protationVO.getVersion() != null) BeanUtil.copyProperties(getVersion(), protationVO.getVersion());
 
 		return protationVO;
+	}
+
+	public void convert(ProtationVO protationVO) {
+
+		if (protationVO.getBasicPrice() != null) setBasicPrice(protationVO.getBasicPrice());
+		if (protationVO.getComdPrice() != null) setComdPrice(protationVO.getComdPrice());
+		if (protationVO.getCommPrice() != null) setCommPrice(protationVO.getCommPrice());
+		if (protationVO.getAdddPrice() != null) setAdddPrice(protationVO.getAdddPrice());
+		if (protationVO.getAddmPrice() != null) setAddmPrice(protationVO.getAddmPrice());
+		if (protationVO.getSubdPrice() != null) setSubdPrice(protationVO.getSubdPrice());
+		if (protationVO.getSubmPrice() != null) setSubmPrice(protationVO.getSubmPrice());
+		if (protationVO.getSubcPrice() != null) setSubcPrice(protationVO.getSubcPrice());
+		if (protationVO.getAccdPrice() != null) setAccdPrice(protationVO.getAccdPrice());
+		if (protationVO.getAccmPrice() != null) setAccmPrice(protationVO.getAccmPrice());
+
+		if (protationVO.getTotalPrice() != null) setTotalPrice(protationVO.getTotalPrice());
+		if (protationVO.getTotalCost() != null) setTotalCost(protationVO.getTotalCost());
+		if (protationVO.getManagePrice() != null) setManagePrice(protationVO.getManagePrice());
+		if (protationVO.getDiscount() != null) setDiscount(protationVO.getDiscount());
+		if (protationVO.getPreferPrice() != null) setPreferPrice(protationVO.getPreferPrice());
+		if (protationVO.getManageProfit() != null) setManageProfit(protationVO.getManageProfit());
+		if (protationVO.getAdvanceProfit() != null) setAdvanceProfit(protationVO.getAdvanceProfit());
 	}
 
 }

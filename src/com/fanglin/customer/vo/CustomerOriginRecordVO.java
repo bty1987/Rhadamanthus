@@ -15,13 +15,13 @@ public class CustomerOriginRecordVO implements Serializable {
 
 	private Long csid;
 
-	private String comment;
-
 	private Short type;
 
 	private UserBaseVO operater;
 
 	private Timestamp operatTime;
+
+	private String comment;
 
 	public CustomerOriginRecordVO() {
 		super();
@@ -48,14 +48,6 @@ public class CustomerOriginRecordVO implements Serializable {
 		this.csid = csid;
 	}
 
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
 	public Short getType() {
 		return type;
 	}
@@ -79,6 +71,14 @@ public class CustomerOriginRecordVO implements Serializable {
 
 	public void setOperatTime(Timestamp operatTime) {
 		this.operatTime = operatTime;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }
