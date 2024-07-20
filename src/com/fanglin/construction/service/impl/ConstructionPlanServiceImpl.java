@@ -62,9 +62,9 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO, ConstructionPaceVO constructionPace) throws FLException {
+	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
 
-		ConstructionPacePO constructionPacePO = constructionPaceDao.get(constructionPace.getCpid());
+		ConstructionPacePO constructionPacePO = constructionPaceDao.get(constructionPlanVO.getPace().getCpid());
 
 		if (constructionPacePO == null) {
 			throw new FLException(130123, "工程计划不存在");

@@ -46,6 +46,8 @@ jQuery(function($) {
             floorrule: com.focusPage("#floorrule", "#commitFirstApprove"),
             doorrule: com.focusPage("#doorrule", "#commitFirstApprove"),
             rule: com.focusPage("#rule", "#commitFirstApprove"),
+            busitype: com.focusPage("#busitype", "#commitFirstApprove"),
+            rate: com.focusPage("#rate", "#commitFirstApprove"),
         },
 
         btns: {
@@ -297,6 +299,7 @@ jQuery(function($) {
             com.cleanTypeahead("firstApproveComment");
             com.cleanItems(customerChance.approveItems);
 
+            customerChance.ccid = v.ccid;
             customerChance.source.csid = v.source.csid;
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
@@ -373,6 +376,7 @@ jQuery(function($) {
 
         customerChance.items.busitypeApprove.bindData($arr, 'dbid', 'name');
         customerChance.items.busitype.bindData($arr, "dbid", "name", true);
+        customerChance.approveItems.busitype.bindData($arr, 'dbid', 'name');
     });
 
     function issue() {
@@ -535,7 +539,10 @@ jQuery(function($) {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerChance.items.firstApproveComment.val(),
                 "approvalCustomerSource.csid": customerChance.source.csid,
-                "approvalCustomerSource.hid": hid
+                "approvalCustomerSource.csid": customerChance.ccid,
+                "approvalCustomerSource.hid": hid,
+                "approvalCustomerSource.dbid": customerSource.approveItems.busitype.val(),
+                "approvalCustomerSource.rate": customerSource.approveItems.rate.val(),
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {

@@ -305,7 +305,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationVO.setDesigner(new UserBaseVO(customerChancePO.getBelonger().getUserId()));
 		decorationVO.setSalesman(new UserBaseVO(customerSourcePO.getCreater().getUserId()));
 		decorationVO.setGrade("C");
-		decorationVO.setNotSalesmanRate(0);
+		decorationVO.setNotSalesmanRate(customerChancePO.getRate());
 		decorationVO.setBusitype(customerChancePO.getBusitype().getDbid());
 
 		decorationService.tranDecoration(decorationVO, company);

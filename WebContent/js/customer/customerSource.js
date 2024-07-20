@@ -58,6 +58,8 @@ $(function() {
             floorrule: com.focusPage("#floorrule1", "#commitFirstApprove"),
             doorrule: com.focusPage("#doorrule1", "#commitFirstApprove"),
             rule: com.focusPage("#rule1", "#commitFirstApprove"),
+            busitype: com.focusPage("#busitype", "#commitFirstApprove"),
+            rate: com.focusPage("#rate", "#commitFirstApprove"),
         },
 
         source: null,
@@ -634,7 +636,9 @@ $(function() {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerSource.items.firstApproveComment.val(),
                 "approvalCustomerSource.csid": customerSource.currentCustomerSource.csid,
-                "approvalCustomerSource.hid": hid
+                "approvalCustomerSource.hid": hid,
+                "approvalCustomerSource.dbid": customerSource.approveItems.busitype.val(),
+                "approvalCustomerSource.rate": customerSource.approveItems.rate.val(),
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {

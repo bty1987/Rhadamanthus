@@ -35,9 +35,13 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.vo.CustomerSourceVO;
+import com.fanglin.data.common.dao.DecorationBusitypeDao;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -59,6 +63,9 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 	private ApprovalCustomerSourceDao approvalCustomerSourceDao;
 
 	@Autowired
+	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
 	private CustomerSourceDao customerSourceDao;
 
 	@Autowired
@@ -66,6 +73,9 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DecorationBusitypeDao decorationBusitypeDao;
 
 	@Autowired
 	private DecorationServiceImpl decorationService;
@@ -139,6 +149,12 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(130017, "房产不存在");
 		}
 
+		DecorationBusitypePO busitype = decorationBusitypeDao.get(approvalCustomerSourceVO.getDbid());
+
+		if (busitype == null) {
+			throw new FLException(130061, "业务类型不存在");
+		}
+
 		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
@@ -201,6 +217,13 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
 
 		customerSourceDao.update(customerSourcePO);
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(approvalCustomerSourcePO.getCcid());
+
+		if (customerChancePO != null) {
+			customerChancePO.setRate(approvalCustomerSourcePO.getRate());
+			customerChancePO.setBusitype(new DecorationBusitypePO(approvalCustomerSourcePO.getDbid()));
+		}
 
 		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 
