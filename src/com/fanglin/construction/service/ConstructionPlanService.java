@@ -15,13 +15,12 @@ import java.util.List;
 
 import com.fanglin.construction.vo.ConstructionPlanVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.data.common.vo.ConstructionPaceVO;
 
 public interface ConstructionPlanService {
 
 	public List<ConstructionPlanVO> queryConstructionPlanByOrderId(ConstructionPlanVO constructionPlanVO) throws FLException;
 
-	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO, ConstructionPaceVO constructionPace) throws FLException;
+	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
 
 	public void deleteConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
 }

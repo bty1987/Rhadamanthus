@@ -27,7 +27,7 @@
         url: "/views/customer/crowdUser.html"
     },
     customerOriginRecord: {
-        url: "/views/customer/customerOriginRecord.html"
+        url: "/views/customer/customerOrigineRecord.html"
     },
     customerUserRuleItem: {
         url: "/views/customer/customerUserRuleItem.html"
@@ -267,6 +267,12 @@ $.extend(api, {
         },
         issueCustomerSource: {
             url: "issueCustomerSource.do"
+        },
+        pageCustomerSourceRecord:{
+            url:"pageCustomerSourceRecord.do"
+        },
+        queryCustomerSourceRecord:{
+            url:"queryCustomerSourceRecord.do"
         },
         
         pageCustomerChance: {

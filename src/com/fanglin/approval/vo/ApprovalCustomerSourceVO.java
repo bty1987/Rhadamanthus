@@ -14,9 +14,15 @@ public class ApprovalCustomerSourceVO implements Serializable {
 
 	private Long csid;
 
+	private Long ccid;
+
 	private Long hid;
 
 	private CustomerSourceVO source;
+
+	private Long dbid;
+
+	private Integer rate;
 
 	public Long getAcsid() {
 		return acsid;
@@ -42,6 +48,14 @@ public class ApprovalCustomerSourceVO implements Serializable {
 		this.csid = csid;
 	}
 
+	public Long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(Long ccid) {
+		this.ccid = ccid;
+	}
+
 	public Long getHid() {
 		return hid;
 	}
@@ -56,6 +70,22 @@ public class ApprovalCustomerSourceVO implements Serializable {
 
 	public void setSource(CustomerSourceVO source) {
 		this.source = source;
+	}
+
+	public Long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(Long dbid) {
+		this.dbid = dbid;
+	}
+
+	public Integer getRate() {
+		return rate;
+	}
+
+	public void setRate(Integer rate) {
+		this.rate = rate;
 	}
 
 }

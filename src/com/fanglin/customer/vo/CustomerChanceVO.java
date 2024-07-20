@@ -19,6 +19,12 @@ public class CustomerChanceVO implements Serializable {
 
 	private DecorationBusitypeVO busitype;
 
+	private UserBaseVO belonger;
+
+	private DepartmentVO department;
+
+	private DepartmentVO region;
+
 	private UserBaseVO creater;
 
 	private UserBaseVO issuer;
@@ -29,13 +35,7 @@ public class CustomerChanceVO implements Serializable {
 
 	private Timestamp confirmTime;
 
-	private UserBaseVO belonger;
-
-	private DepartmentVO department;
-
-	private DepartmentVO region;
-
-	private Integer company;
+	private Integer rate;
 
 	private Short type;
 
@@ -43,12 +43,16 @@ public class CustomerChanceVO implements Serializable {
 
 	private String comment;
 
+	private Integer company;
+
 	public CustomerChanceVO() {
 		super();
 	}
 
 	public CustomerChanceVO(CustomerSourceVO source, DecorationBusitypeVO busitype, UserBaseVO creater, UserBaseVO issuer, UserBaseVO belonger, DepartmentVO department, DepartmentVO region) {
+
 		super();
+
 		this.source = source;
 		this.busitype = busitype;
 		this.creater = creater;
@@ -80,6 +84,30 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setBusitype(DecorationBusitypeVO busitype) {
 		this.busitype = busitype;
+	}
+
+	public UserBaseVO getBelonger() {
+		return belonger;
+	}
+
+	public void setBelonger(UserBaseVO belonger) {
+		this.belonger = belonger;
+	}
+
+	public DepartmentVO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentVO department) {
+		this.department = department;
+	}
+
+	public DepartmentVO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentVO region) {
+		this.region = region;
 	}
 
 	public UserBaseVO getCreater() {
@@ -125,36 +153,12 @@ public class CustomerChanceVO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
-	public UserBaseVO getBelonger() {
-		return belonger;
+	public Integer getRate() {
+		return rate;
 	}
 
-	public void setBelonger(UserBaseVO belonger) {
-		this.belonger = belonger;
-	}
-
-	public DepartmentVO getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(DepartmentVO department) {
-		this.department = department;
-	}
-
-	public DepartmentVO getRegion() {
-		return region;
-	}
-
-	public void setRegion(DepartmentVO region) {
-		this.region = region;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
+	public void setRate(Integer rate) {
+		this.rate = rate;
 	}
 
 	public Short getType() {
@@ -179,6 +183,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

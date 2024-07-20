@@ -49,6 +49,12 @@ public class CustomerChancePO implements Serializable {
 
 	private DecorationBusitypePO busitype;
 
+	private UserPO belonger;
+
+	private DepartmentPO department;
+
+	private DepartmentPO region;
+
 	private UserPO creater;
 
 	private UserPO issuer;
@@ -59,13 +65,7 @@ public class CustomerChancePO implements Serializable {
 
 	private Timestamp confirmTime;
 
-	private UserPO belonger;
-
-	private DepartmentPO department;
-
-	private DepartmentPO region;
-
-	private int company;
+	private int rate;
 
 	private short type;
 
@@ -73,12 +73,16 @@ public class CustomerChancePO implements Serializable {
 
 	private String comment;
 
+	private int company;
+
 	public CustomerChancePO() {
 		super();
 	}
 
 	public CustomerChancePO(CustomerSourcePO source, DecorationBusitypePO busitype, UserPO creater, UserPO issuer, UserPO belonger, DepartmentPO department, DepartmentPO region) {
+
 		super();
+
 		this.source = source;
 		this.busitype = busitype;
 		this.creater = creater;
@@ -196,13 +200,13 @@ public class CustomerChancePO implements Serializable {
 		this.region = region;
 	}
 
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
+	@Column(name = "rate")
+	public int getRate() {
+		return rate;
 	}
 
-	public void setCompany(int company) {
-		this.company = company;
+	public void setRate(int rate) {
+		this.rate = rate;
 	}
 
 	@Column(name = "type")
@@ -230,6 +234,15 @@ public class CustomerChancePO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {

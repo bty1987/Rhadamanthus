@@ -22,7 +22,13 @@ public class ApprovalCustomerSourcePO implements Serializable {
 
 	private long csid;
 
+	private long ccid;
+
 	private long hid;
+
+	private long dbid;
+
+	private int rate;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -53,6 +59,15 @@ public class ApprovalCustomerSourcePO implements Serializable {
 		this.csid = csid;
 	}
 
+	@Column(name = "ccid")
+	public long getCcid() {
+		return ccid;
+	}
+
+	public void setCcid(long ccid) {
+		this.ccid = ccid;
+	}
+
 	@Column(name = "hid")
 	public long getHid() {
 		return hid;
@@ -60,6 +75,24 @@ public class ApprovalCustomerSourcePO implements Serializable {
 
 	public void setHid(long hid) {
 		this.hid = hid;
+	}
+
+	@Column(name = "dbid")
+	public long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(long dbid) {
+		this.dbid = dbid;
+	}
+
+	@Column(name = "rate")
+	public int getRate() {
+		return rate;
+	}
+
+	public void setRate(int rate) {
+		this.rate = rate;
 	}
 
 }
