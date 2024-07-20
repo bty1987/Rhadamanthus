@@ -139,7 +139,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(130017, "房产不存在");
 		}
 
-		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), customerSourcePO.getHouse().getHid(), company);
+		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
@@ -148,7 +148,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		String content = String.format("客源初审,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -159,10 +159,6 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 		approvalCustomerSourcePO.setAid(approvalPO.getAid());
 
 		approvalCustomerSourceDao.save(approvalCustomerSourcePO);
-
-		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
-
-		customerSourceDao.update(customerSourcePO);
 
 		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 
@@ -187,7 +183,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(330001, "客源不存在");
 		}
 
-		if (CustomerSourcePO.STATUS_APPROVE_ONE_INT != customerSourcePO.getStatus()) {
+		if (CustomerSourcePO.STATUS_INIT_INT != customerSourcePO.getStatus()) {
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
@@ -201,6 +197,8 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		customerSourcePO.setVillage(villagePO);
 		customerSourcePO.setHouse(housePO);
+
+		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
 
 		customerSourceDao.update(customerSourcePO);
 

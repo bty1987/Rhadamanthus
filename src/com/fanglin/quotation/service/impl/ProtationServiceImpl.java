@@ -160,7 +160,7 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
-		DecorationPO decorationPO = checkProtationForDefaultByOrderId(orderId);
+		DecorationPO decorationPO = checkDecoration(orderId);
 
 		ProtationPO protationPO = new ProtationPO();
 
@@ -301,8 +301,13 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200046, "预签不存在");
 		}
 
-		protationPO.setName(protationVO.getName());
-		protationPO.setComment(protationVO.getComment());
+		if (protationVO.getName() != null) {
+			protationPO.setName(protationVO.getName());
+		}
+
+		if (protationVO.getComment() != null) {
+			protationPO.setComment(protationVO.getComment());
+		}
 
 		if (protationVO.getVersion() != null && protationVO.getVersion().getQvId() != null) {
 			protationPO.setVersion(new QuotationVersionPO(protationVO.getVersion().getQvId()));
@@ -323,12 +328,12 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200046, "预签不存在");
 		}
 
-		DecorationPO decorationPO = checkProtationForDefaultByOrderId(protationPO.getOrderId());
+		DecorationPO decorationPO = checkDecoration(protationPO.getOrderId());
 
 		protationPO.setTotalCost(protationVO.getTotalCost());
 		protationPO.setTotalProfit(protationVO.getTotalProfit());
 
-		convertProtationVOToPOForAdvance(protationVO, protationPO);
+		protationPO.convert(protationVO);
 
 		if (protationPO.getDefaults() == ProtationPO.DEFAULT_DEFAULT_INT) {
 			decorationPO.setPrecontractPrice(protationPO.getTotalPrice());
@@ -350,7 +355,7 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200046, "预签不存在");
 		}
 
-		checkProtationForDefaultByOrderId(protationPO.getOrderId());
+		checkDecoration(protationPO.getOrderId());
 
 		protationPO.setStatus(protationVO.getStatus());
 
@@ -363,13 +368,13 @@ public class ProtationServiceImpl implements ProtationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int changeProtationForDefault(ProtationVO protationVO) throws FLException {
 
-		ProtationPO protationPO = checkProtationForStatusByEnabled(protationVO.getPid());
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
 
 		if (protationPO == null) {
 			throw new FLException(200046, "预签不存在");
 		}
 
-		DecorationPO decorationPO = checkProtationForDefaultByOrderId(protationVO.getOrderId());
+		DecorationPO decorationPO = checkDecoration(protationVO.getOrderId());
 
 		if (protationPO.getDefaults() == ProtationPO.DEFAULT_COMMON_INT) {
 
@@ -391,13 +396,13 @@ public class ProtationServiceImpl implements ProtationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteProtation(ProtationVO protationVO) throws FLException {
 
-		ProtationPO protationPO = checkProtationForStatusByEnabled(protationVO.getPid());
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
 
 		if (protationPO == null) {
 			throw new FLException(200046, "预签不存在");
 		}
 
-		checkProtationForDefaultByOrderId(protationPO.getOrderId());
+		checkDecoration(protationPO.getOrderId());
 
 		protationDao.delete(protationPO);
 
@@ -440,26 +445,7 @@ public class ProtationServiceImpl implements ProtationService {
 		return 0;
 	}
 
-	public static void convertProtationVOToPOForAdvance(ProtationVO protationVO, ProtationPO protationPO) {
-
-		protationPO.setBasicPrice(protationVO.getBasicPrice());
-		protationPO.setComdPrice(protationVO.getComdPrice());
-		protationPO.setCommPrice(protationVO.getCommPrice());
-		protationPO.setAdddPrice(protationVO.getAdddPrice());
-		protationPO.setAddmPrice(protationVO.getAddmPrice());
-		protationPO.setSubdPrice(protationVO.getSubdPrice());
-		protationPO.setSubmPrice(protationVO.getSubmPrice());
-		protationPO.setSubcPrice(protationVO.getSubcPrice());
-		protationPO.setAccdPrice(protationVO.getAccdPrice());
-		protationPO.setAccmPrice(protationVO.getAccmPrice());
-		protationPO.setTotalPrice(protationVO.getTotalPrice());
-		protationPO.setTotalCost(protationVO.getTotalCost());
-		protationPO.setManagePrice(protationVO.getManagePrice());
-		protationPO.setDiscount(protationVO.getDiscount());
-		protationPO.setPreferPrice(protationVO.getPreferPrice());
-	}
-
-	public DecorationPO checkProtationForDefaultByOrderId(String orderId) throws FLException {
+	public DecorationPO checkDecoration(String orderId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -476,7 +462,7 @@ public class ProtationServiceImpl implements ProtationService {
 		return decorationPO;
 	}
 
-	public ProtationPO checkProtationForStatusByEnabled(long pid) throws FLException {
+	public ProtationPO checkProtation(long pid) throws FLException {
 
 		ProtationPO protationPO = protationDao.get(pid);
 

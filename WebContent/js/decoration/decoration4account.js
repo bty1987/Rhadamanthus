@@ -964,7 +964,7 @@ $(function() {
 
         var contartval = 0, _ = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, taxment = 0, materialAccount = 0, _managePrice = 0, _taxPrice = 0;
 
-        var flag = accountBasic.cal && accountBasic.type == 2 ? 1 : 0;
+        var flag = accountBasic.cal ? 1 : 0;
 
         beforeTotal = accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
 

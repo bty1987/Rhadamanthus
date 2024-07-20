@@ -138,13 +138,159 @@ $.extend(api, {
         addCustomerOriginRecord: {
             url: "addCustomerOriginRecord.do"
         },
-        // 删除会员
-        deleteEmember: {
-            url: "deleteEmember.do"
-        },
 
         queryCustomerOriginFunction: {
             url: "queryCustomerOriginFunction.do"
+        },
+        
+        pageCustomerDeptRule: {
+            url: "pageCustomerDeptRule.do"
+        },
+        queryCustomerDeptRule: {
+            url: "queryCustomerDeptRule.do"
+        },
+        addCustomerDeptRule: {
+            url: "addCustomerDeptRule.do"
+        },
+        deleteCustomerDeptRule: {
+            url: "deleteCustomerDeptRule.do"
+        },
+
+        pageCustomerUserRule: {
+            url: "pageCustomerUserRule.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+            }]
+        },
+        queryCustomerUserRule: {
+            url: "queryCustomerUserRule.do",
+            type: "query",
+            tranargs: [{
+                result: "customerUserRule",
+                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+            }]
+        },
+        addCustomerUserRule: {
+            url: "addCustomerUserRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"],
+                query: [{
+                    result: "customerUserRule",
+                    args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+                }]
+            }
+        },
+        updateCustomerUserRule: {
+            url: "updateCustomerUserRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+            }
+        },
+        updateCustomerUserRuleForStatus: {
+            url: "updateCustomerUserRuleForStatus.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+            }
+        },
+        disableCustomerUserRule: {
+            url: "disableCustomerUserRule.do"
+        },
+
+        queryCustomerUserRuleItem: {
+            url: "queryCustomerUserRuleItem.do",
+            type: "query",
+            tranargs: [{
+                result: "customerUserRuleItems",
+                args: ["uppval", "lowval"]
+            }]
+        },
+        addCustomerUserRuleItem: {
+            url: "addCustomerUserRuleItem.do",
+            type: "update",
+            tranargs: {
+                args: ["customerUserRuleItem.uppval", "customerUserRuleItem.lowval"],
+                query: [{
+                    result: "customerUserRuleItem",
+                    args: ["uppval", "lowval"]
+                }]
+            }
+        },
+        deleteCustomerUserRuleItem: {
+            url: "deleteCustomerUserRuleItem.do"
+        },
+        
+        pageCustomerSource: {
+            url: "pageCustomerSource.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
+        queryCustomerSource: {
+            url: "queryCustomerSource.do",
+            type: "query",
+            tranargs: [{
+                result: "customerSource",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
+        addCustomerSource: {
+            url: "addCustomerSource.do",
+            type: "update",
+            tranargs: {
+                args: ["customerSource.buildArea", "customerSource.freeArea", "customerSource.totalArea", "customerSource.innerArea"],
+                query: [{
+                    result: "customerSource",
+                    args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+                }]
+            }
+        },
+        updateCustomerSource: {
+            url: "updateCustomerSource.do",
+            type: "update",
+            tranargs: {
+                args: ["customerSource.buildArea", "customerSource.freeArea", "customerSource.totalArea", "customerSource.innerArea"],
+                query: [{
+                    result: "customerSource",
+                    args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+                }]
+            }
+        },
+        updateCustomerSourceForStatus: {
+            url: "updateCustomerSourceForStatus.do"
+        },
+        issueCustomerSource: {
+            url: "issueCustomerSource.do"
+        },
+        
+        pageCustomerChance: {
+            url: "pageCustomerChance.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-source",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
+        issueCustomerChance: {
+            url: "issueCustomerChance.do"
+        },
+        disableCustomerChance: {
+            url: "disableCustomerChance.do"
+        },
+        sendCustomerChance: {
+            url: "sendCustomerChance.do"
+        },
+        confirmCustomerChance: {
+            url: "confirmCustomerChance.do"
+        },
+        changeCustomerChance: {
+            url: "changeCustomerChance.do"
         },
 
         pageVustomerByUnionId: {
@@ -270,6 +416,9 @@ $.extend(api, {
         },
         addEmember: {
             url: "addEmember.do"
+        },
+        deleteEmember: {
+            url: "deleteEmember.do"
         },
 
         pageFeedback: {
@@ -488,125 +637,6 @@ $.extend(api, {
             tranargs: {
                 args: ["cppoint.dpoint", "cppoint.spoint"]
             }
-        },
-
-        pageCustomerChance: {
-            url: "pageCustomerChance.do"
-        },
-        issueCustomerChance: {
-            url: "issueCustomerChance.do"
-        },
-        disableCustomerChance: {
-            url: "disableCustomerChance.do"
-        },
-        sendCustomerChance: {
-            url: "sendCustomerChance.do"
-        },
-        confirmCustomerChange: {
-            url: "confirmCustomerChange.do"
-        },
-        changeCustomerChance: {
-            url: "changeCustomerChance.do"
-        },
-
-        pageCustomerDeptRule: {
-            url: "pageCustomerDeptRule.do"
-        },
-        queryCustomerDeptRule: {
-            url: "queryCustomerDeptRule.do"
-        },
-        addCustomerDeptRule: {
-            url: "addCustomerDeptRule.do"
-        },
-        deleteCustomerDeptRule: {
-            url: "deleteCustomerDeptRule.do"
-        },
-
-        pageCustomerSource: {
-            url: "pageCustomerSource.do"
-        },
-        queryCustomerSource: {
-            url: "queryCustomerSource.do"
-        },
-        addCustomerSource: {
-            url: "addCustomerSource.do"
-        },
-        updateCustomerSource: {
-            url: "updateCustomerSource.do"
-        },
-        updateCustomerSourceForStatus: {
-            url: "updateCustomerSourceForStatus.do"
-        },
-        issueCustomerSource: {
-            url: "issueCustomerSource.do"
-        },
-
-        pageCustomerUserRule: {
-            url: "pageCustomerUserRule.do",
-            type: "query",
-            tranargs: [{
-                result: "paging-data",
-                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
-            }]
-        },
-        queryCustomerUserRule: {
-            url: "queryCustomerUserRule.do",
-            type: "query",
-            tranargs: [{
-                result: "customerUserRule",
-                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
-            }]
-        },
-        addCustomerUserRule: {
-            url: "addCustomerUserRule.do",
-            type: "update",
-            tranargs: {
-                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"],
-                query: [{
-                    result: "customerUserRule",
-                    args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
-                }]
-            }
-        },
-        updateCustomerUserRule: {
-            url: "updateCustomerUserRule.do",
-            type: "update",
-            tranargs: {
-                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
-            }
-        },
-        updateCustomerUserRuleForStatus: {
-            url: "updateCustomerUserRuleForStatus.do",
-            type: "update",
-            tranargs: {
-                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
-            }
-        },
-        disableCustomerUserRule: {
-            url: "disableCustomerUserRule.do"
-        },
-
-        queryCustomerUserRuleItem: {
-            url: "queryCustomerUserRuleItem.do",
-            type: "query",
-            tranargs: [{
-                result: "customerUserRuleItems",
-                args: ["uppval", "lowval"]
-            }]
-        },
-        addCustomerUserRuleItem: {
-            url: "addCustomerUserRuleItem.do",
-            type: "update",
-            tranargs: {
-                args: ["customerUserRuleItem.uppval", "customerUserRuleItem.lowval"],
-                query: [{
-                    result: "customerUserRuleItem",
-                    args: ["uppval", "lowval"]
-                }]
-            }
-        },
-        deleteCustomerUserRuleItem: {
-            url: "deleteCustomerUserRuleItem.do"
         },
 
         queryFeedbackDrawing: {

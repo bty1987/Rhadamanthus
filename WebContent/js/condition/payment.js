@@ -328,5 +328,21 @@ Condition.addupRule("payment", {
             op: "between",
             validate: null
         }
+    },
+    "paymentActivity-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment().receipt.paymentType.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 });

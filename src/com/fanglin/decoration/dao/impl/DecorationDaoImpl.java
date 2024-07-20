@@ -422,6 +422,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.timeranges(String.format("%sedesignTime", prefix), String.format("%sedesignTime", prefix), data);
 			} else if ("decoration.balanceTime.range".equals(field)) {
 				query.timeranges(String.format("%sbalanceTime", prefix), String.format("%sbalanceTime", prefix), data);
+			} else if ("decoration.terminalTime.range".equals(field)) {
+				query.timeranges(String.format("%sterminalTime", prefix), String.format("%sterminalTime", prefix), data);
 			}
 		}
 	}

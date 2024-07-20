@@ -436,14 +436,16 @@ jQuery(function($) {
 
         var options = {
             "customerChance.ccid": ccid,
+            "verifyCode": "999999",
+            "securityCode": "DwRF4Epz3/Qv9Qoxq+9g0w=="
         };
 
         com.showConfirm("确认机会信息", function() {
 
-            com.post(api.customer.confirmCustomerChange, options, function(res) {
+            com.post(api.customer.confirmCustomerChance, options, function(res) {
 
                 searcher.doSearch();
-                com.showAlert(com.info, "确认成功!");
+                com.showAlert(com.info, "确认成功");
             });
         });
     }
@@ -463,7 +465,9 @@ jQuery(function($) {
 
             searcher.doSearch();
 
-            com.showAlert(com.info, "转换成功!");
+            com.showAlert(com.info, "转换成功");
+            
+            customerChance.modals.changeModal.modal("hide");
         });
     }
 

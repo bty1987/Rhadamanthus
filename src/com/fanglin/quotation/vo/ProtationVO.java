@@ -52,6 +52,20 @@ public class ProtationVO implements Serializable {
 
 	private Integer profitRate;
 
+	private Long preferPrice;
+
+	private Long manageProfit;
+
+	private Long advanceProfit;
+
+	private Integer manageRate;
+
+	private String manageFormula;
+
+	private Long managePrice;
+
+	private Integer discount;
+
 	private Long basicPrice;
 
 	private Long comdPrice;
@@ -68,35 +82,25 @@ public class ProtationVO implements Serializable {
 
 	private Long subcPrice;
 
-	private Long preferPrice;
+	private Long accdPrice;
 
-	private String manageFormula;
+	private Long accmPrice;
 
-	private Long managePrice;
+	private Integer costRate;
+
+	private Integer mostRate;
+
+	private Long mostPrice;
+
+	private Long totalCost;
+
+	private Long totalProfit;
 
 	private Long totalPrice;
 
 	private Short status;
 
 	private Short defaults;
-
-	private Long mostPrice;
-
-	private Integer costRate;
-
-	private Integer mostRate;
-
-	private Long totalCost;
-
-	private Long totalProfit;
-
-	private Long accdPrice;
-
-	private Long accmPrice;
-
-	private Integer discount;
-
-	private Integer manageRate;
 
 	private String comment;
 
@@ -407,6 +411,22 @@ public class ProtationVO implements Serializable {
 
 	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public Long getManageProfit() {
+		return manageProfit;
+	}
+
+	public void setManageProfit(Long manageProfit) {
+		this.manageProfit = manageProfit;
+	}
+
+	public Long getAdvanceProfit() {
+		return advanceProfit;
+	}
+
+	public void setAdvanceProfit(Long advanceProfit) {
+		this.advanceProfit = advanceProfit;
 	}
 
 	public String getComment() {

@@ -195,6 +195,7 @@ public class CompanyServiceImpl implements CompanyService {
 		companyPO.setCorporation(companyVO.getCorporation());
 		companyPO.setPhone(companyVO.getPhone());
 		companyPO.setAtttype(companyVO.getAtttype());
+		companyPO.setBlock(companyVO.getBlock());
 
 		if (companyVO.getDrganization() != null) {
 			companyPO.setDrganization(new OrganizationPO(companyVO.getDrganization().getOid()));

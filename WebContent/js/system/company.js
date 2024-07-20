@@ -17,6 +17,7 @@
             corporation: com.focusPage("#corporation"),
             phone: com.focusPage("#phone"),
             atttype: com.focusPage("#atttype"),
+            block: com.focusPage("#block"),
 
             drganization: com.focusPage("#drganization"),
             srganization: com.focusPage("#srganization"),
@@ -40,6 +41,8 @@
             }
         },
     };
+
+    company.items.block.bindData(constant.system().company.block.datas, "key", "value");
 
     com.post(api.ds.system, {}, function(res) {
 
@@ -83,7 +86,7 @@
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
             var $btnOrganization = $('<a></a>').addClass('btn btn-minier btn-success').html('组织');
 
-            var propertyArr = [["编号: ", v.no, "grey"], ["code: ", v.code, "gery"], ["全名: ", v.fullname, "grey"], ["短名: ", v.shortname, "gery"], ["地址: ", v.address, "grey"], ["法人: ", v.corporation, "grey"], ["电话: ", v.phone, "grey"], ["装修组织: ", com.checkNull(v.drganization.name, "无"), "grey"], ["销售组织: ", com.checkNull(v.srganization.name, "无"), "grey"], ["业务类型: ", company.atttype[v.atttype], "red"]];
+            var propertyArr = [["编号: ", v.no, "grey"], ["code: ", v.code, "gery"], ["全名: ", v.fullname, "grey"], ["短名: ", v.shortname, "gery"], ["地址: ", v.address, "grey"], ["法人: ", v.corporation, "grey"], ["电话: ", v.phone, "grey"], ["装修组织: ", com.checkNull(v.drganization.name, "无"), "grey"], ["销售组织: ", com.checkNull(v.srganization.name, "无"), "grey"], ["业务类型: ", company.atttype[v.atttype], "red"], ["板块: ", constant.system().company.block.keys[v.block], "red"]];
             $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>').appendTo($ulProperty);
@@ -175,6 +178,7 @@
         company.items.corporation.val(row.corporation);
         company.items.phone.val(row.phone);
         company.items.atttype.val(row.atttype);
+        company.items.block.val(row.block);
 
         company.items.no.prop("disabled", true);
 
@@ -207,6 +211,7 @@
             "company.corporation": company.items.corporation.val(),
             "company.phone": company.items.phone.val(),
             "company.atttype": company.items.atttype.val(),
+            "company.block": company.items.block.val(),
         };
 
         if (company.company) {
@@ -239,6 +244,7 @@
             "company.corporation": company.company.corporation,
             "company.phone": company.company.phone,
             "company.atttype": company.company.atttype,
+            "company.block": company.company.block,
 
             "company.drganization.oid": com.typeahead(company.items.drganization),
             "company.srganization.oid": com.typeahead(company.items.srganization)

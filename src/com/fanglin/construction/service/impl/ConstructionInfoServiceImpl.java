@@ -60,7 +60,7 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 
 			constructionInfoVO.getDecoration().setSupervisor(new UserBaseVO());
 
-			BeanUtil.copyProperties(constructionInfoDO, constructionInfoVO, Arrays.asList("decoration"));
+			BeanUtil.copyProperties(constructionInfoDO, constructionInfoVO, Arrays.asList("decoration", "constructionPace"));
 
 			constructionInfoDO.getDecoration().ptvcascade(constructionInfoVO.getDecoration());
 
@@ -151,7 +151,7 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 			}
 
 			if (day <= 10 && day > 0) {
-				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(drawlineTime, -(int)day), "yyyyMMdd")));
+				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(drawlineTime, -(int) day), "yyyyMMdd")));
 				eventsDao.save(eventsPO);
 			}
 
@@ -175,7 +175,7 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 			}
 
 			if (day <= 10 && day > 0) {
-				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(keyTime, -(int)day), "yyyyMMdd")));
+				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(keyTime, -(int) day), "yyyyMMdd")));
 				eventsDao.save(eventsPO);
 			}
 
@@ -199,7 +199,7 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 			}
 
 			if (day <= 5 && day > 0) {
-				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(designTime, -(int)day), "yyyyMMdd")));
+				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(designTime, -(int) day), "yyyyMMdd")));
 				eventsDao.save(eventsPO);
 			}
 

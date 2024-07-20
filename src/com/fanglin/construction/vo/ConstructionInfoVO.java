@@ -14,9 +14,9 @@ public class ConstructionInfoVO implements Serializable {
 	private Long ciid;
 
 	private String orderId;
-	
+
 	private DecorationVO decoration;
-	
+
 	private Integer timeLimit;
 
 	private Long cid;
@@ -26,26 +26,28 @@ public class ConstructionInfoVO implements Serializable {
 	private Short iskey;
 
 	private Short isCeremony;
-	
+
 	private Timestamp finishTime;
-	
+
 	private Timestamp keyTime;
-	
+
 	private Timestamp drawlineTime;
-	
+
 	private Timestamp designTime;
 
 	private String comment;
-	
+
 	public ConstructionInfoVO() {
 		super();
 	}
-	
+
 	public ConstructionInfoVO(DecorationVO decoration) {
+
 		super();
+
 		this.decoration = decoration;
 	}
-	
+
 	public Long getCiid() {
 		return ciid;
 	}
@@ -61,7 +63,7 @@ public class ConstructionInfoVO implements Serializable {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
 	public DecorationVO getDecoration() {
 		return decoration;
 	}
@@ -109,7 +111,7 @@ public class ConstructionInfoVO implements Serializable {
 	public void setIsCeremony(Short isCeremony) {
 		this.isCeremony = isCeremony;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -136,7 +138,7 @@ public class ConstructionInfoVO implements Serializable {
 	public void setDrawlineTime(Timestamp drawlineTime) {
 		this.drawlineTime = drawlineTime;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDesignTime() {
 		return designTime;

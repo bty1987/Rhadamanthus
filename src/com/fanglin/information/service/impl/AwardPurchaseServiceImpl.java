@@ -162,7 +162,7 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 
 			awardPurchasePO.setInstorer(instorer);
 			awardPurchasePO.setInstoreTime(DateUtil.getDateToTimestamp(new Date()));
-			awardPurchasePO.setStatus(AwardPurchasePO.STATUS_CLOSE_INT);
+			awardPurchasePO.setStatus(AwardPurchasePO.STATUS_FINISH_INT);
 		}
 
 		awardPurchasePO.setSurplus(Arith.sub(awardPurchasePO.getSurplus(), awardPurchaseVO.getNum()));

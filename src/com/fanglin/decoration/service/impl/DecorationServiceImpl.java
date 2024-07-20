@@ -1411,6 +1411,7 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);
+		decorationPO.setTerminalTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationDao.update(decorationPO);
 
 		List<DecorationBelongPO> designers = decorationBelongDao.queryDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_INVALID_INT);

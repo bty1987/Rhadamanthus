@@ -36,6 +36,8 @@ public class AwardPurchasePO implements java.io.Serializable {
 
 	public static final short STATUS_DISABLE_INT = 4; // 失效
 
+	public static final short STATUS_FINISH_INT = 5; // 完成
+
 	private long apid;
 
 	private long fapid;

@@ -329,7 +329,7 @@ $(function() {
             customerSource.items.intention.val(v.intention);
             customerSource.items.phone.val(v.phone);
             customerSource.items.name.val(v.name);
-            customerSource.items.buildArea.val(v.buildArea);
+            customerSource.items.buildArea.val(v.innerArea);
 
             com.focusPage(".rule").show();
             com.focusPage(".villageName").show();
@@ -472,9 +472,9 @@ $(function() {
             "customerSource.price": customerSource.items.price.val(),
             "customerSource.comment": customerSource.items.comment.val(),
             "customerSource.buildArea": customerSource.items.buildArea.val(),
+            "customerSource.innerArea": customerSource.items.buildArea.val(),
             "customerSource.freeArea": 0,
             "customerSource.totalArea": 0,
-            "customerSource.innerArea": 0,
 
             "customerSource.customer.cid": cid,
         };

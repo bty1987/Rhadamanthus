@@ -19,10 +19,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.ConstructionPacePO;
 
 @Entity
-@Table(name="constructionplan", catalog = "construction")
-public class ConstructionPlanPO implements Serializable{
+@Table(name = "constructionplan", catalog = "construction")
+public class ConstructionPlanPO implements Serializable {
 
 	private static final long serialVersionUID = -420481503968375195L;
 
@@ -35,6 +36,8 @@ public class ConstructionPlanPO implements Serializable{
 	private String orderId;
 
 	private String name;
+
+	private ConstructionPacePO pace;
 
 	private Timestamp createTime;
 
@@ -49,7 +52,7 @@ public class ConstructionPlanPO implements Serializable{
 	}
 
 	@Id
-	@Column(name="cpid")
+	@Column(name = "cpid")
 	public long getCpid() {
 		return cpid;
 	}
@@ -83,6 +86,15 @@ public class ConstructionPlanPO implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "pace")
+	public ConstructionPacePO getPace() {
+		return pace;
+	}
+
+	public void setPace(ConstructionPacePO pace) {
+		this.pace = pace;
 	}
 
 	@Column(name = "createTime")
@@ -120,5 +132,5 @@ public class ConstructionPlanPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

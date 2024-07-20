@@ -204,7 +204,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		ConstructionNodePO projectStatus = constructionNodeDao.get(decorationPO.getProjectStatus());
 
-		if (projectStatus != null && projectStatus.getSort() < constructionNodePO.getSort()) {
+		if (projectStatus != null && projectStatus.getSort() < constructionNodePO.getSort() && projectStatus.getSort() != DecorationPO.PROJECTSTATUS_FINISH_INT) {
 
 			decorationPO.setProjectStatus(constructionSchedulePO.getCnid());
 
@@ -215,6 +215,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		}
 
 		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
 		constructionDao.update(constructionPO);
 
 		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s准备进场. %s", constructionNodePO.getName(), constructionNodePO.getStartalk()));

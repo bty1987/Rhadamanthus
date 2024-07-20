@@ -117,7 +117,19 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			throw new FLException(330081, "无匹配规则");
 		}
 
-		customerUserRulePO.setStatus(customerUserRule.getStatus());
+		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_DISABLE_INT) {
+			throw new FLException(330081, "无匹配规则");
+		}
+
+		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_ENABLE_INT && customerUserRule.getStatus() < customerUserRulePO.getStatus()) {
+			throw new FLException(330081, "无匹配规则");
+		}
+
+		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_ENABLE_INT) {
+			customerUserRulePO.setStatus(customerUserRule.getStatus());
+		} else {
+			customerUserRulePO.setStatus(CustomerUserRulePO.STATUS_ENABLE_INT);
+		}
 
 		customerUserRuleDao.update(customerUserRulePO);
 	}

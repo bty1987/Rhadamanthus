@@ -495,6 +495,15 @@ Condition.addupRule("decoration", {
             validate: null
         }
     },
+    "terminalTime": {
+        label: "终止时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "decoration.terminalTime.range",
+            op: "cn",
+            validate: null
+        }
+    },
     "balanceStatus": {
         label: "内决状态",
         type: "select",

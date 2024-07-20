@@ -221,7 +221,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 2 && customerUserRule.depage == null;
+            return v.status != 4 && customerUserRule.depage == null;
         }
     }, {
         name: "项目",
@@ -236,7 +236,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 2 && customerUserRule.depage == null;
+            return v.status != 4 && customerUserRule.depage == null;
         }
     }, {
         name: "状态",
@@ -244,14 +244,16 @@ $(function() {
         clazz: "status-lbl",
         handle: function(v, check) {
 
-            if (v.status == 2) {
+            if (v.status == 4) {
                 com.showAlert(com.warning, "状态不可操作.");
                 return false;
             }
 
+            var status = customerUserRule.depage == "dept" ? 2 : customerUserRule.depage == "fatherDept" ? 3 : 1;
+
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
-                "customerUserRule.status": check ? 0 : 1
+                "customerUserRule.status": status
             }, function(res) {
 
                 searcher.doSearch();
@@ -264,7 +266,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 2;
+            return v.status != 4;
         }
     }];
 

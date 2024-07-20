@@ -1,0 +1,69 @@
+package com.fanglin.payment.dao.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.payment.dao.PaymentActivityDao;
+import com.fanglin.payment.po.PaymentActivityPO;
+import com.fanglin.utils.Paging;
+
+@Repository("paymentActivityDao")
+public class PaymentActivityDaoImpl extends DaoImpl<PaymentActivityPO> implements PaymentActivityDao {
+
+	public PaymentActivityDaoImpl() {
+		super(PaymentActivityPO.class);
+	}
+
+	@Override
+	public List<PaymentActivityPO> pagePaymentActivity(Paging paging, List<Filter> filters) {
+
+		PagingQuery<PaymentActivityPO> query = pagingQuery(paging, PaymentActivityPO.class);
+
+		queryFilterExcute(query, filters);
+
+		return query.list();
+	}
+
+	@Override
+	public int amountPaymentActivity(String orderId, Short type) {
+
+		String sql = "select sum(realMoney) from payment.paymentActivity where orderId = :orderId and type = :type";
+		String amount = String.valueOf(session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).uniqueResult());
+
+		return amount == null ? 0 : Integer.parseInt(amount);
+	}
+
+	@Override
+	public void updatePaymentActivity(long aid, String comment) {
+
+		String sql = "update payment.paymentActivity set comment = :comment where aid = :aid";
+		session().createSQLQuery(sql).setString("comment", comment).setLong("aid", aid).executeUpdate();
+
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (PaymentActivityPO.COLUMN_ORDERID_STR.equals(field)) {
+				query.add(query.getCriterion(PaymentActivityPO.COLUMN_ORDERID_STR, data, op));
+			} else if (PaymentActivityPO.COLUMN_TYPE_STR.equals(field)) {
+				query.add(query.getCriterion(PaymentActivityPO.COLUMN_TYPE_STR, Short.valueOf(data), op));
+			} else if (PaymentActivityPO.COLUMN_ACTIVITY_STR.equals(field)) {
+				query.alias("activity", "activity");
+				query.add(query.getCriterion(PaymentActivityPO.COLUMN_ACTIVITY_STR, Integer.valueOf(data), op));
+			} else if (PaymentActivityPO.COLUMN_CREATETIME_STR.equals(field)) {
+				query.timeranges(PaymentActivityPO.COLUMN_CREATETIME_STR, PaymentActivityPO.COLUMN_CREATETIME_STR, data);
+			}
+		}
+	}
+}
