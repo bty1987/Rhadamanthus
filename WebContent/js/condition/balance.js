@@ -264,7 +264,7 @@ Condition.addupRule("balance", {
         }
     },
     "balanceSelse-balance-status": {
-        label: "状态",
+        label: "结算状态",
         type: "select",
         submitConfig: {
             name: "balanceStatus",
@@ -281,6 +281,22 @@ Condition.addupRule("balance", {
                 key: "1",
                 value: "完结"
             }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceSelse-balanceSelse-status": {
+        label: "结算销售状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.balance().balanceSales.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

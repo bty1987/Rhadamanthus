@@ -152,6 +152,20 @@ $(function() {
 
     customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
 
+    com.post(api.data.queryDecorationBusitype, {}, function(res) {
+
+        var $arr = [];
+
+        $.each(res.decorationBusitypes, function(intex, value) {
+
+            if (value.status == 0) {
+                $arr.push(value);
+            }
+        });
+
+        customerSource.approveItems.busitype.bindData($arr, 'dbid', 'name');
+    });
+
     function drawInfo() {
 
         var $widget = $('<div></div>').addClass("widget-container-span col-xs-6 col-md-3").prependTo(com.focusPage("#infolist"));
@@ -170,7 +184,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerSource);
+    searcher.base("csCondList", "csPagenation", "csResultList", api.customer.pageCustomerSource);
     searcher.condition(["customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-createTime", "customer-customerSource-status"]);
 
     searcher.button([{
@@ -423,6 +437,35 @@ $(function() {
             return v.status == constant.customer().customerSource.STATUS_INIT_INT || v.status == 2 || v.status == 3 || v.status == 4;
         }
 
+    }, {
+        name: "记录",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            params.customer.customerSource = v;
+            com.popup4page("#stockRecordPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        }
+    }, {
+        name: "机会",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            params.customer.customerSource = v;
+            
+            params['urlLoadParams'].depage = "source";
+            
+            com.popup4page("#stockRecordPopUp", "/views/customer/customerChance.html?depage=source", "机会", "", function() {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        }
     }, {
         name: "失效",
         clazz: "btn-danger",

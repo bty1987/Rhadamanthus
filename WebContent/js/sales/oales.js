@@ -551,7 +551,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != constant.sales().oales.STATUS_INVALID_INI && oales.pageType == "material");
+            return (v.status != constant.sales().oales.STATUS_INVALID_INI && (oales.pageType == "material" || oales.pageType == "finance"));
         }
     }, {
         name: "图片",

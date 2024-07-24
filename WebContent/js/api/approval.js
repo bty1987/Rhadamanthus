@@ -177,7 +177,11 @@ $.extend(api, {
         },
 
         submitApprovalForCustomerSource: {
-            url: "submitApprovalForCustomerSource.do"
+            url: "submitApprovalForCustomerSource.do",
+            type: "update",
+            tranargs: {
+                args: ["approvalCustomerSource.rate"]
+            }
         },
 
         submitApprovalForDecorationTerminal: {

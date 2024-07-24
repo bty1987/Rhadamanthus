@@ -26,6 +26,7 @@ import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.communion.service.BrandService;
 import com.fanglin.communion.vo.BrandVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -201,6 +202,7 @@ public class BrandServiceImpl implements BrandService {
 
 		brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		brandPO.setAtttype(brandVO.getAtttype());
+		brandPO.setStatus(BrandPO.STATUS_ENABLE_INT);
 		brandPO.setCompany(company);
 
 		brandDao.save(brandPO);
@@ -210,21 +212,50 @@ public class BrandServiceImpl implements BrandService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateBrand(BrandVO brandVO) {
+	public int updateBrand(BrandVO brandVO) throws FLException {
 
 		BrandPO brandPO = brandDao.get(brandVO.getBid());
 
-		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
+		if (brandPO == null) {
+			throw new FLException(130077, "品牌不存在");
+		}
 
 		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category", "supplier", "company"));
 
-		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
-		brandPO.setSupplier(supplier);
-		brandPO.setAtttype(brandVO.getAtttype());
+		UserPO supplier = null;
+
+		if (brandVO.getSupplier() != null) {
+			supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
+		}
+
+		if (supplier != null) {
+			brandPO.setSupplier(supplier);
+		}
+
+		if (brandVO.getCid() != null) {
+			brandPO.setCategory(new CategoryPO(brandVO.getCid()));
+		}
 
 		if (brandVO.getName() != null && brandVO.getName() != "") {
 			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		}
+
+		brandDao.update(brandPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateBrandForStatus(BrandVO brandVO) throws FLException {
+
+		BrandPO brandPO = brandDao.get(brandVO.getBid());
+
+		if (brandPO == null) {
+			throw new FLException(130077, "品牌不存在");
+		}
+
+		brandPO.setStatus(brandVO.getStatus());
 
 		brandDao.update(brandPO);
 

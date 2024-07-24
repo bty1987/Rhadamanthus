@@ -34,15 +34,7 @@ public class ActivityVO implements java.io.Serializable {
 
 	private String content;
 
-	private int company;
-
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
-	}
+	private Integer company;
 
 	public ActivityVO() {
 		super();
@@ -150,6 +142,14 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

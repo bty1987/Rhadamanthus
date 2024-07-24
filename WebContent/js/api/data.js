@@ -122,6 +122,10 @@ $.extend(api, {
             url: "updateBrand.do",
             server: "communion"
         },
+        updateBrandForStatus: {
+            url: "updateBrandForStatus.do",
+            server: "communion"
+        },
         deleteBrandByBids: {
             url: "deleteBrandByBids.do",
             server: "communion"

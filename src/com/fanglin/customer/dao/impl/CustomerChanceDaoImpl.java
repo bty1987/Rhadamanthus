@@ -55,6 +55,10 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				query.alias("department", "department");
 			}
 
+			if (field.contains("source")) {
+				query.alias("source", "source");
+			}
+
 			if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
 			} else if ("type".equals(field)) {
@@ -69,6 +73,15 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 			} else if ("user.dept.fatherDept".equals(field)) {
 				query.alias("department.fatherDept", "fatherDept");
 				query.add(query.getCriterion("fatherDept.no", data, op));
+			} else if ("source.csid".equals(field)) {
+				query.add(query.getCriterion("source.csid", Long.valueOf(data), op));
+			} else if ("source.phone".equals(field)) {
+				query.add(query.getCriterion("source.phone", data, op));
+			} else if ("source.village".equals(field)) {
+				query.alias("source.village", "village");
+				query.add(query.getCriterion("village.no", String.valueOf(data), op));
+			} else if ("source.createTime".equals(field)) {
+				query.timeranges("source.createTime", data);
 			}
 		}
 	}

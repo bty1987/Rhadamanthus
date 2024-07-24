@@ -20,8 +20,10 @@ import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
@@ -51,6 +53,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	private CustomerSourceDao customerSourceDao;
 
 	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
@@ -75,6 +80,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (customerChanceVO.getBelonger() != null && customerChanceVO.getBelonger().getDept() != null && customerChanceVO.getBelonger().getDept().getNo() != null) {
 			filters.add(new Filter("user.dept", customerChanceVO.getBelonger().getDept().getNo(), "eq"));
+		}
+
+		if (customerChanceVO.getSource() != null && customerChanceVO.getSource().getCsid() != null) {
+			filters.add(new Filter("source.csid", String.valueOf(customerChanceVO.getSource().getCsid()), "eq"));
 		}
 
 		List<CustomerChancePO> customerChancePOs = customerChanceDao.pageCustomerChance(paging, filters);
@@ -263,6 +272,14 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		}
 
 		customerChanceDao.update(customerChancePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+
+		if (belonger != null) messageService.sendMessage(belonger.getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
+
+		if (dept != null && dept.getManager() != null) messageService.sendMessage(dept.getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, dept.getManager().getCompany());
+		if (region != null && region.getManager() != null) messageService.sendMessage(region.getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, region.getManager().getCompany());
+
 	}
 
 	@Override
@@ -297,6 +314,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130017, "房产不存在");
 		}
 
+		UserPO operater = userDao.queryUserByOldUserId(userId);
+
 		BeanUtil.copyPropertie(customerSourcePO, decorationVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
 		decorationVO.setCreater(new UserBaseVO(userId));
@@ -321,5 +340,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
 
 		customerChanceDao.update(customerChancePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("客户资源转装修单,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
 	}
 }

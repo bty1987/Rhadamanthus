@@ -36,14 +36,6 @@ public class PaymentActivityDaoImpl extends DaoImpl<PaymentActivityPO> implement
 		return amount == null ? 0 : Integer.parseInt(amount);
 	}
 
-	@Override
-	public void updatePaymentActivity(long aid, String comment) {
-
-		String sql = "update payment.paymentActivity set comment = :comment where aid = :aid";
-		session().createSQLQuery(sql).setString("comment", comment).setLong("aid", aid).executeUpdate();
-
-	}
-
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

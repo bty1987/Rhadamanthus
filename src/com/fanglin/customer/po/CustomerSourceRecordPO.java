@@ -20,9 +20,9 @@ public class CustomerSourceRecordPO implements Serializable {
 
 	private static final long serialVersionUID = 1442679154183461057L;
 
-	public static final short TYPE_UPDATE_INT = 0;
+	public static final short TYPE_COMMON_INT = 0;
 
-	public static final short TYPE_DEFINE_INT = 1;
+	public static final short TYPE_SPECIAL_INT = 1;
 
 	private long csrid;
 
@@ -107,9 +107,10 @@ public class CustomerSourceRecordPO implements Serializable {
 		this.comment = comment;
 	}
 
-	public CustomerSourceRecordPO init(long csid, String comment, Short type, UserPO operater) {
+	public CustomerSourceRecordPO init(long csid, long ccid, String comment, Short type, UserPO operater) {
 
 		setCsid(csid);
+		setCcid(ccid);
 		setType(type);
 		setOperater(operater);
 
@@ -119,5 +120,4 @@ public class CustomerSourceRecordPO implements Serializable {
 
 		return this;
 	}
-
 }

@@ -91,7 +91,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 		ActivityPO activityPO = new ActivityPO();
 
-		BeanUtil.copyProperties(activityVO, activityPO);
+		BeanUtil.copyProperties(activityVO, activityPO, Arrays.asList("creater"));
 
 		activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		activityPO.setCreater(creater);
@@ -114,6 +114,8 @@ public class ActivityServiceImpl implements ActivityService {
 		activityPO.setName(activityVO.getName());
 		activityPO.setEndTime(activityVO.getEndTime());
 		activityPO.setContent(activityVO.getContent());
+
+		if (activityVO.getPaytype() != null) activityPO.setPaytype(activityVO.getPaytype());
 
 		activityDao.update(activityPO);
 	}
@@ -150,9 +152,9 @@ public class ActivityServiceImpl implements ActivityService {
 		if (activityPO.getStatus() == ActivityPO.STATUS_UNVALID_INT) {// ==无有效的
 			throw new FLException(160012, "活动当前状态不能修改");
 		}
-		
-		activityDao.resetActivityForDefault(activityPO.getType(),activityPO.getCompany());
-		
+
+		activityDao.resetActivityForDefault(activityPO.getType(), activityPO.getCompany());
+
 		activityPO.setDefaults(ActivityPO.DEFAULTS_DEFAULT_INT); // 更新为0(默认)
 
 		activityDao.update(activityPO);

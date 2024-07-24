@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.information.dao.ActivityDao;
+import com.fanglin.information.po.ActivityPO;
 import com.fanglin.information.vo.ActivityVO;
 import com.fanglin.payment.dao.PaymentActivityDao;
 import com.fanglin.payment.po.PaymentActivityPO;
@@ -23,6 +25,9 @@ public class PaymentActivityServiceImpl implements PaymentActivityService {
 
 	@Autowired
 	private PaymentActivityDao paymentActivityDao;
+
+	@Autowired
+	private ActivityDao activityDao;
 
 	@Override
 	public void pagePaymentActivity(Paging paging, List<Filter> filters) {
@@ -39,7 +44,6 @@ public class PaymentActivityServiceImpl implements PaymentActivityService {
 		}
 
 		paging.setData(paymentActivityVOs);
-
 	}
 
 	@Override
@@ -51,13 +55,42 @@ public class PaymentActivityServiceImpl implements PaymentActivityService {
 	}
 
 	@Override
+	public int checkPaymentActivityForDecoration(PaymentActivityVO paymentActivityVO) throws FLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int checkPaymentActivityForSales(PaymentActivityVO paymentActivityVO) throws FLException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updatePaymentActivity(PaymentActivityVO paymentActivity) {
+	public void updatePaymentActivity(PaymentActivityVO paymentActivityVO) throws FLException {
 
-		long aid = paymentActivity.getActivity().getAid();
+		PaymentActivityPO paymentActivityPO = paymentActivityDao.get(paymentActivityVO.getPaid());
 
-		paymentActivityDao.updatePaymentActivity(aid, paymentActivity.getComment());
+		if (paymentActivityPO == null) {
+			throw new FLException(150081, "款项活动不存在");
+		}
 
+		ActivityPO activityPO = activityDao.get(paymentActivityVO.getActivity().getAid());
+
+		if (activityPO == null) {
+			throw new FLException(160011, "活动信息不存在");
+		}
+
+		// TODO check amount for decoration activity item
+		// TODO check amount for sales activity item
+
+		paymentActivityPO.setActivity(activityPO);
+		paymentActivityPO.setMultiple(activityPO.getMultiple());
+
+		paymentActivityPO.setComment(paymentActivityVO.getComment());
+
+		paymentActivityDao.update(paymentActivityPO);
 	}
 
 	@Override
@@ -67,10 +100,9 @@ public class PaymentActivityServiceImpl implements PaymentActivityService {
 		PaymentActivityPO paymentActivityPO = paymentActivityDao.get(paymentActivity.getPaid());
 
 		if (paymentActivityPO == null) {
-			throw new FLException(00000, "款项活动不存在");
+			throw new FLException(150081, "款项活动不存在");
 		}
 
 		paymentActivityDao.delete(paymentActivityPO);
-
 	}
 }

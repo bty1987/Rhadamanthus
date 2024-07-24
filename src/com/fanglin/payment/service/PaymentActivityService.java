@@ -13,7 +13,11 @@ public interface PaymentActivityService {
 
 	public int amountPaymentActivity(PaymentActivityVO paymentActivity);
 
-	public void updatePaymentActivity(PaymentActivityVO paymentActivity);
+	public int checkPaymentActivityForDecoration(PaymentActivityVO paymentActivityVO) throws FLException;
+
+	public int checkPaymentActivityForSales(PaymentActivityVO paymentActivityVO) throws FLException;
+
+	public void updatePaymentActivity(PaymentActivityVO paymentActivity) throws FLException;
 
 	public void deletePaymentActivity(PaymentActivityVO paymentActivity) throws FLException;
 

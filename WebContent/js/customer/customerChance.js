@@ -5,7 +5,8 @@ jQuery(function($) {
             issueModal: com.focusPage("#issueModal"),
             changeModal: com.focusPage("#changeModal"),
             approveModal: com.focusPage("#approveModal"),
-            commitFirstApprove: com.focusPage("#commitFirstApprove")
+            firstApprove: com.focusPage("#firstApprove"),
+            QRcodeModal: com.focusPage("#QRcodeModal")
         },
         items: {
             region: com.focusPage("#region"),
@@ -30,31 +31,31 @@ jQuery(function($) {
             approveMan: com.focusPage("#approveMan", "#approveModal"),
             approveComment: com.focusPage("#approveComment", "#approveModal"),
 
-            firstApproveComment: com.focusPage("#firstApproveComment", "#commitFirstApprove"),
+            firstApproveComment: com.focusPage("#firstApproveComment", "#firstApprove"),
 
             infolist: com.focusPage("#infolist"),
         },
 
         approveItems: {
-            villageName: com.focusPage("#villageName", "#commitFirstApprove"),
-            built: com.focusPage("#built", "#commitFirstApprove"),
-            unit: com.focusPage("#unit", "#commitFirstApprove"),
-            floor: com.focusPage("#floor", "#commitFirstApprove"),
-            door: com.focusPage("#door", "#commitFirstApprove"),
-            builtrule: com.focusPage("#builtrule", "#commitFirstApprove"),
-            unitrule: com.focusPage("#unitrule", "#commitFirstApprove"),
-            floorrule: com.focusPage("#floorrule", "#commitFirstApprove"),
-            doorrule: com.focusPage("#doorrule", "#commitFirstApprove"),
-            rule: com.focusPage("#rule", "#commitFirstApprove"),
-            busitype: com.focusPage("#busitype", "#commitFirstApprove"),
-            rate: com.focusPage("#rate", "#commitFirstApprove"),
+            villageName: com.focusPage("#villageName", "#firstApprove"),
+            built: com.focusPage("#built", "#firstApprove"),
+            unit: com.focusPage("#unit", "#firstApprove"),
+            floor: com.focusPage("#floor", "#firstApprove"),
+            door: com.focusPage("#door", "#firstApprove"),
+            builtrule: com.focusPage("#builtrule", "#firstApprove"),
+            unitrule: com.focusPage("#unitrule", "#firstApprove"),
+            floorrule: com.focusPage("#floorrule", "#firstApprove"),
+            doorrule: com.focusPage("#doorrule", "#firstApprove"),
+            rule: com.focusPage("#rule", "#firstApprove"),
+            busitype: com.focusPage("#busitype", "#firstApprove"),
+            rate: com.focusPage("#rate", "#firstApprove"),
         },
 
         btns: {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
-            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#commitFirstApprove").on("click", firstApproval)
+            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApprove").on("click", firstApproval)
         },
 
         atttypes: [],
@@ -65,6 +66,14 @@ jQuery(function($) {
 
         source: {
             "csid": null
+        },
+
+        userRule: {
+            "curid": null,
+            "score": 0,
+            "chance": 0,
+            "polling": 0,
+            "status": 0,
         },
 
         ccid: null,
@@ -81,22 +90,17 @@ jQuery(function($) {
         customerChance.approveItems.doorrule.bindData(res.buildruleThr, "key", "value");
     });
 
-    function drawInit(e) {
+    com.initTypeahead(customerChance.approveItems.villageName, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
-        com.initTypeahead(e.villageName, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
+        com.post(api.data.queryVillageByVid, {
+            "village.no": k
+        }, function(res) {
 
-            com.post(api.data.queryVillageByVid, {
-                "village.no": k
-            }, function(res) {
+            customerChance.approveItems.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+        }, null, false);
 
-                e.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
-            }, null, false);
-
-            return v;
-        });
-    }
-
-    drawInit(customerChance.approveItems);
+        return v;
+    });
 
     customerChance.items.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
     customerChance.items.houseClass.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
@@ -121,6 +125,15 @@ jQuery(function($) {
         customerChance.items.orderTypeApprove.bindData(customerChance.atttypes, 'key', 'name');
     });
 
+    com.post(api.customer.queryCustomerUserRule, {
+        "customerUserRule.user.uid": params.userInfo.user.uid,
+    }, function(res) {
+
+        if (res.customerUserRule)
+            customerChance.userRule = res.customerUserRule;
+
+    }, null, false);
+
     function drawInfo() {
 
         var $widget = $('<div></div>').addClass("widget-container-span col-xs-6 col-md-3").prependTo(customerChance.items.infolist);
@@ -132,18 +145,47 @@ jQuery(function($) {
         var $main = $('<div></div>').addClass("widget-main").appendTo($body);
         var $info = $('<div></div>').css("padding", "5px").appendTo($main);
 
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('得分: ' + "0.5")).appendTo($info);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('机会数: ' + "0.3")).appendTo($info);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('轮询数: ' + "0.2")).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('得分: ' + customerChance.userRule.score)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('机会数: ' + customerChance.userRule.chance)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('轮询数: ' + customerChance.userRule.polling)).appendTo($info);
+
+        var $enable = $('<a></a>').addClass('btn btn-app btn-success').click(function() {
+
+            com.showConfirm("是否启用人员规则", function() {
+
+                updateUserRule($disable, $enable);
+            });
+        });
+        var $enableI = $('<i></i>').addClass('icon-ok-circle bigger-230');
+        var $enableS = $('<span></span>').html("上线分配");
+
+        $enable.append($enableI).append($enableS).appendTo(customerChance.items.infolist);
+
+        var $disable = $('<a></a>').addClass('btn btn-app btn-warning').click(function() {
+
+            com.showConfirm("是否禁用人员规则", function() {
+
+                updateUserRule($enable, $disable);
+            });
+        });
+        $('<i></i>').addClass('icon-ban-circle bigger-230');
+
+        var $disableI = $('<i></i>').addClass('icon-ban-circle bigger-230');
+        var $disableS = $('<span></span>').html("下线分配");
+
+        $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
+
+        customerChance.userRule.status == 0 ? $enable.hide() : $disable.hide();
     }
 
-    drawInfo();
+    if (customerChance.depage != "source")
+        drawInfo();
 
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerChance);
 
-    searcher.condition(["customer-customerChance-createTime", "customer-customerChance-type", "customer-customerChance-status"]);
+    searcher.condition(["customer-chance-createTime", "customer-chance-type", "customer-chance-status", "customer-chance-source-phone", "customer-chance-source-village", "customer-chance-source-createTime"]);
 
     searcher.history(customerChance.depage + "customerChancePostData");
 
@@ -157,6 +199,8 @@ jQuery(function($) {
         extraParams["customerChance.belonger.dept.no"] = params.userInfo.user.dept.no;
     } else if (customerChance.depage == "region") {
         extraParams["customerChance.belonger.dept.fatherDept.no"] = params.userInfo.user.dept.fatherDept.no;
+    } else if (customerChance.depage == "source") {
+        extraParams["customerChance.source.csid"] = params.customer.customerSource.csid;
     }
 
     searcher.param(extraParams);
@@ -246,7 +290,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
         },
     }, {
         name: "失效",
@@ -257,14 +301,14 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2 || v.status == 3;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2 || v.status == 3) && customerChance.depage != "source";
         },
     }, {
         name: "推送",
         clazz: "btn-warning",
         handle: function(v) {
 
-            send(v.ccid);
+            send(v);
         },
     }, {
         name: "确认",
@@ -275,7 +319,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
         },
     }, {
         name: "转换",
@@ -288,7 +332,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 3;
+            return v.status == 3 && customerChance.depage != "source";
         },
     }, {
         name: "初审",
@@ -304,13 +348,13 @@ jQuery(function($) {
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
-            customerChance.modals.commitFirstApprove.modal("show");
+            customerChance.modals.firstApprove.modal("show");
 
             return false;
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
         },
     }, {
         name: "审批",
@@ -338,8 +382,27 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 3;
+            return v.status == 3 && customerChance.depage != "source";
         },
+
+    }, {
+        name: "记录",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            params.customer.customerSource = v.source;
+
+            com.popup4page("#stockRecordPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(res) {
+
+            return customerChance.depage != "source";
+        }
 
     }, ];
 
@@ -419,21 +482,19 @@ jQuery(function($) {
 
     }
 
-    function send(ccid) {
+    function send(v) {
 
-        var options = {
-            "customerChance.ccid": ccid,
-        };
+        com.focusPage('#QRcode').html("");
 
-        com.showConfirm("确认推送信息", function() {
+        com.focusPage('#QRcode').qrcode({
+            render: "canvas",
+            width: 150,
+            height: 150,
+            text: 'http://fanglin.vip/wx/customerchance?csid=' + v.source.csid + '&ccid=' + v.ccid
 
-            com.post(api.customer.sendCustomerChance, options, function(res) {
-
-                searcher.doSearch();
-                com.showAlert(com.info, "推送成功");
-            });
         });
 
+        customerChance.modals.QRcodeModal.modal('show');
     }
 
     function confirm(ccid) {
@@ -470,7 +531,7 @@ jQuery(function($) {
             searcher.doSearch();
 
             com.showAlert(com.info, "转换成功");
-            
+
             customerChance.modals.changeModal.modal("hide");
         });
     }
@@ -520,7 +581,7 @@ jQuery(function($) {
     // 提交初审
     function firstApproval() {
 
-        if (com.validate("commitFirstApprove")) {
+        if (com.validate("firstApprove")) {
             return false;
         }
 
@@ -539,10 +600,10 @@ jQuery(function($) {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerChance.items.firstApproveComment.val(),
                 "approvalCustomerSource.csid": customerChance.source.csid,
-                "approvalCustomerSource.csid": customerChance.ccid,
+                "approvalCustomerSource.ccid": customerChance.ccid,
                 "approvalCustomerSource.hid": hid,
-                "approvalCustomerSource.dbid": customerSource.approveItems.busitype.val(),
-                "approvalCustomerSource.rate": customerSource.approveItems.rate.val(),
+                "approvalCustomerSource.dbid": customerChance.approveItems.busitype.val(),
+                "approvalCustomerSource.rate": customerChance.approveItems.rate.val(),
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {
@@ -552,7 +613,7 @@ jQuery(function($) {
                 com.clearValidator();
                 searcher.doSearch();
 
-                customerChance.modals.commitFirstApprove.modal("hide");
+                customerChance.modals.firstApprove.modal("hide");
             });
 
         });
@@ -597,6 +658,27 @@ jQuery(function($) {
         }, null, false);
 
         return hid;
+    }
+
+    // 启用禁用个人规则
+    function updateUserRule(btn1, btn2) {
+
+        if (customerChance.userRule.curid == null) {
+            com.showAlert(com.error, "无人员规则信息");
+            return false;
+        }
+
+        com.post(api.customer.updateCustomerUserRuleForStatus, {
+            "customerUserRule.curid": customerChance.userRule.curid,
+            "customerUserRule.status": 1,
+        }, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            btn2.hide();
+            btn1.show();
+            return false;
+        });
     }
 
 });
