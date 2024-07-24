@@ -14,6 +14,7 @@ package com.fanglin.communion.service;
 import java.util.List;
 
 import com.fanglin.communion.vo.BrandVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -33,7 +34,9 @@ public interface BrandService {
 
 	public int addBrand(BrandVO brandVO, int company);
 
-	public int updateBrand(BrandVO brandVO);
+	public int updateBrand(BrandVO brandVO) throws FLException;
+
+	public int updateBrandForStatus(BrandVO brandVO) throws FLException;
 
 	public int deleteBrand(List<BrandVO> brandVOs);
 

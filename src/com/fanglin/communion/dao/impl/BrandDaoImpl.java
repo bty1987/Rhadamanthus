@@ -59,19 +59,15 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 			query.add(Restrictions.eq("atttype", atttype));
 		}
 
+		query.add(Restrictions.eq("status", BrandPO.STATUS_ENABLE_INT));
+
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<BrandPO> queryBrandByCid(long cid) {
-		return session().createCriteria(BrandPO.class).createAlias("category", "category").add(Restrictions.eq("category.cid", cid)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<BrandPO> queryBrandByBids(List<Long> bids) {
-		return session().createCriteria(BrandPO.class).add(Restrictions.in("bid", bids)).list();
+		return session().createCriteria(BrandPO.class).createAlias("category", "category").add(Restrictions.eq("category.cid", cid)).add(Restrictions.eq("status", BrandPO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override

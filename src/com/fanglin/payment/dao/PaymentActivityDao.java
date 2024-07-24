@@ -13,5 +13,4 @@ public interface PaymentActivityDao extends Dao<PaymentActivityPO> {
 
 	public int amountPaymentActivity(String orderId, Short type);
 
-	public void updatePaymentActivity(long aid, String comment);
 }

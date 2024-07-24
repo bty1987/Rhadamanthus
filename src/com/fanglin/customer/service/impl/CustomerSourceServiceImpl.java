@@ -29,15 +29,19 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerDeptRuleDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerDeptRulePO;
 import com.fanglin.customer.po.CustomerSourcePO;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -64,6 +68,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Autowired
 	private CustomerUserRuleDao customerUserRuleDao;
+
+	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Autowired
 	private UserDao userDao;
@@ -179,6 +189,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_INIT_INT);
 
 		customerSourceDao.save(customerSourcePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
 	}
 
 	@Override
@@ -206,6 +218,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerSourcePO.setPhone(customerSourceVO.getPhone());
 		}
 
+		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
+		String houseNumber = customerSourcePO.getHouseNumber();
+		String phone = customerSourcePO.getPhone();
+
 		VillagePO villagePO = null;
 
 		if (customerSourceVO.getVillage() != null) {
@@ -231,6 +247,27 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
 		customerSourceDao.save(customerSourcePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+	}
+
+	@Override
+	public void updateCustomerSourceForAdvance(CustomerSourceVO customerSourceVO) throws FLException {
+
+		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSourceVO.getCsid());
+
+		if (customerSourcePO == null) {
+			throw new FLException(330071, "客户资源不存在");
+		}
+
+		int innerArea = customerSourcePO.getInnerArea();
+
+		customerSourcePO.setBuildArea(customerSourceVO.getBuildArea());
+		customerSourcePO.setInnerArea(customerSourceVO.getInnerArea());
+
+		customerSourceDao.update(customerSourcePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原面积:%s,新面积:%s", innerArea, customerSourcePO.getInnerArea()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
 	}
 
 	@Override
@@ -241,6 +278,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerSourcePO == null) {
 			throw new FLException(330071, "客户资源不存在");
+		}
+
+		if (Arrays.asList(CustomerSourcePO.STATUS_TRAN_INT).contains(customerSourcePO.getStatus())) {
+			throw new FLException(330074, "客户资源不可操作");
 		}
 
 		customerSourcePO.setStatus(customerSourceVO.getStatus());
@@ -336,6 +377,13 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceDao.save(customerChancePO);
 
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), customerUserRulePO.getChance(), customerUserRulePO.getSurplus(), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+
+			messageService.sendMessage(customerChancePO.getBelonger().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
+
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+
 			return;
 		}
 
@@ -350,6 +398,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setRegion(region);
 
 			customerChanceDao.save(customerChancePO);
+
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动分区分配,分区:%s(%s)", customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			return;
 		}
@@ -370,6 +422,11 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChanceDao.save(customerChancePO);
+
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动部门分配,部门:%s(%s),分区:%s(%s)", customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			return;
 		}
@@ -396,8 +453,14 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceDao.save(customerChancePO);
 
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动人员分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+
+			messageService.sendMessage(customerChancePO.getBelonger().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
+
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+
 			return;
 		}
 	}
-
 }

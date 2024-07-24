@@ -142,6 +142,12 @@ jQuery(function($) {
         prop: "agentPhone",
         clazz: "grey"
     }, {
+        fieId: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: constant.data().common.status.keys,
+    }, {
         field: "comment",
         name: "说明",
         prop: "comment",
@@ -240,6 +246,26 @@ jQuery(function($) {
 
             instorer(v);
         },
+    }, {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, check) {
+
+            com.post(api.data.updateBrandForStatus, {
+                "brand.bid": v.bid,
+                "brand.status": check ? 0 : 1
+            });
+
+            return false;
+        },
+        init: function(v) {
+
+            return !v.status;
+        },
+        show : function(v){
+            return brand.pageType == "finance";
+        }
     }];
 
     searcher.line(function(v) {

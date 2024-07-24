@@ -58,9 +58,14 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 	}
 
 	@Override
-	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule) {
+	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule) throws FLException {
 
 		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(customerUserRule.getUser().getUid());
+
+		if (customerUserRulePO == null) {
+			throw new FLException(330081, "无匹配规则");
+		}
+
 		CustomerUserRuleVO customerUserRuleVO = new CustomerUserRuleVO(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())));
 
 		return customerUserRulePO.ptv(customerUserRuleVO);

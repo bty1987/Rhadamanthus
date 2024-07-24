@@ -109,6 +109,18 @@ public class BrandAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateBrandForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateBrandForStatus() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		brandService.updateBrandForStatus(brand);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteBrandByBIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteBrandByBIds() throws FLException {
 

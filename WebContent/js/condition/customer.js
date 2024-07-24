@@ -212,7 +212,44 @@
             valuePath: "value"
         }
     },
-    "customerChance-createTime": {
+    "chance-source-phone": {
+        label: "电话",
+        type: "text",
+        submitConfig: {
+            name: "source.phone",
+            op: "eq",
+            validate: {
+                "reg": /^[0-9]*$/,
+                "msg": "电话格式不正确"
+            }
+        }
+    },
+    "chance-source-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "source.village",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "chance-source-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "source.createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "chance-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -221,7 +258,7 @@
             validate: null
         }
     },
-    "customerChance-type": {
+    "chance-type": {
         label: "类型",
         type: "select",
         submitConfig: {
@@ -237,7 +274,7 @@
             valuePath: "value"
         }
     },
-    "customerChance-status": {
+    "chance-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -709,7 +746,9 @@
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"0" },
+            postData: {
+                "user.status": "0"
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -725,7 +764,9 @@
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"0" },
+            postData: {
+                "user.status": "0"
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -749,7 +790,7 @@
             validate: null
         }
     },
-    "customerUserRule-status" : {
+    "customerUserRule-status": {
         label: "状态",
         type: "select",
         submitConfig: {

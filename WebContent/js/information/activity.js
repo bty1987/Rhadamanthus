@@ -17,6 +17,8 @@ $(function() {
             content: com.focusPage("#content")
         },
 
+        activity: null,
+
         types: {},
 
         editFlg: true,
@@ -28,6 +30,8 @@ $(function() {
     activity.items.types.bindData(constant.information().activity.type.datas, "key", "value");
 
     activity.modals.activityModal.on("hide.bs.modal", function() {
+
+        $('input[type=checkbox][name=activityPaytype]').prop('checked', false);
 
         com.clearValidator();
         com.cleanItems(activity.items);
@@ -42,16 +46,15 @@ $(function() {
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+            if (!listData || listData.length == 0)
+                return false;
 
-                    var $liLine = creatLine(v);
+            $.each(listData, function(i, v) {
 
-                    $liLine.appendTo($ul);
-                });
+                creatLine(v).appendTo($ul);
+            });
 
-                $ul.appendTo($tableWrap);
-            }
+            $ul.appendTo($tableWrap);
         };
 
         var creatLine = function(v) {
@@ -88,8 +91,12 @@ $(function() {
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function() {
-                var payType = v.payType;
+
+                var payType = v.paytype;
+
                 activity.editFlg = false;
+
+                activity.activity = v;
 
                 activity.items.aid = v.aid;
                 activity.items.status = v.status;
@@ -99,26 +106,27 @@ $(function() {
                 activity.items.multiple.val(v.multiple).attr("disabled", "disabled");
                 activity.items.endTime.val(v.endTime.substring(0, 10));
                 activity.items.content.val(v.content);
-                if (payType > 32){
-                    com.focusPage("#check6").attr('checked', true);
-                    payType = payType - 32;
-                }else if (payType > 16){
-                    com.focusPage("#check5").attr('checked', true);
-                    payType = payType - 16;
-                }else if (payType > 8){
-                    com.focusPage("#check4").attr('checked', true);
-                    payType = payType - 8;
-                }else if (payType > 4){
-                    com.focusPage("#check3").attr('checked', true);
-                    payType = payType - 4;
-                }else if (payType > 2){
-                    com.focusPage("#check2").attr('checked', true);
-                    payType = payType - 2;
-                }else if (payType == 1){
-                    com.focusPage("#check1").attr('checked', true);
-                }
-                activity.modals.activityModal.modal("show");
 
+                if ((payType & 32) == 32) {
+                    com.focusPage("#check6").prop('checked', true);
+                }
+                if ((payType & 16) == 16) {
+                    com.focusPage("#check5").prop('checked', true);
+                }
+                if ((payType & 8) == 8) {
+                    com.focusPage("#check4").prop('checked', true);
+                }
+                if ((payType & 4) == 4) {
+                    com.focusPage("#check3").prop('checked', true);
+                }
+                if ((payType & 2) == 2) {
+                    com.focusPage("#check2").prop('checked', true);
+                }
+                if ((payType & 1) == 1) {
+                    com.focusPage("#check1").prop('checked', true);
+                }
+
+                activity.modals.activityModal.modal("show");
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -135,7 +143,7 @@ $(function() {
                 }, function(res) {
 
                     com.showAlert(com.info, "操作成功");
-                    activitySeacher.doSearch();
+                    searcher.doSearch();
                 });
             });
 
@@ -171,11 +179,11 @@ $(function() {
         };
     })();
 
-    var activitySeacher = new Searcher();
-    activitySeacher.init(['information-activity-name', 'information-activity-type', 'information-activity-status'], "condList", api.information.pageActivity, function(list) {
+    var searcher = new Searcher();
+    searcher.init(['information-activity-name', 'information-activity-type', 'information-activity-status'], "condList", api.information.pageActivity, function(list) {
 
         displayFunc.init('resultList', list);
-    }, "pagenation", "activitySeacherPostData", null, false, null, function() {
+    }, "pagenation", "activitySearcherPostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addActivity').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -186,7 +194,7 @@ $(function() {
 
     com.focusPage("#addActivity").click(function() {
 
-        activity.editFlg = true;
+        activity.activity = null;
 
         activity.items.activityName.removeAttr("disabled", "disabled");
         activity.items.startTime.removeAttr("disabled", "disabled");
@@ -200,20 +208,25 @@ $(function() {
         if (com.validate('activityModal')) {
             return false;
         }
-        var payType = null;
+        var payType = 0;
 
-        if($("#check1").is(":checked")){
-            payType = com.focusPage("#check1").val();
-        }else if ($("#check2").is(":checked")){
-            payType = payType + com.focusPage("#check2").val();
-        }else if ($("#check3").is(":checked")){
-            payType = payType + com.focusPage("#check3").val();
-        }else if ($("#check4").is(":checked")){
-            payType = payType + com.focusPage("#check4").val();
-        }else if ($("#check5").is(":checked")){
-            payType = payType + com.focusPage("#check5").val();
-        }else if ($("#check6").is(":checked")){
-            payType = payType + com.focusPage("#check6").val();
+        if ($("#check1").is(":checked")) {
+            payType = payType + parseInt(com.focusPage("#check1").val());
+        }
+        if ($("#check2").is(":checked")) {
+            payType = payType + parseInt(com.focusPage("#check2").val());
+        }
+        if ($("#check3").is(":checked")) {
+            payType = payType + parseInt(com.focusPage("#check3").val());
+        }
+        if ($("#check4").is(":checked")) {
+            payType = payType + parseInt(com.focusPage("#check4").val());
+        }
+        if ($("#check5").is(":checked")) {
+            payType = payType + parseInt(com.focusPage("#check5").val());
+        }
+        if ($("#check6").is(":checked")) {
+            payType = payType + parseInt(com.focusPage("#check6").val());
         }
 
         if (activity.items.startTime.val() > activity.items.endTime.val()) {
@@ -221,7 +234,7 @@ $(function() {
             return false;
         }
 
-        var url;
+        var url = api.information.addActivity;
         var options = {
             "activity.name": activity.items.activityName.val(),
             "activity.startTime": activity.items.startTime.val(),
@@ -229,16 +242,20 @@ $(function() {
             "activity.type": activity.items.types.val(),
             "activity.multiple": activity.items.multiple.val(),
             "activity.content": activity.items.content.val(),
-            "activity.payType": payType
+            "activity.paytype": payType
         };
 
-        activity.editFlg ? url = api.information.addActivity : url = api.information.updateActivity, options["activity.aid"] = activity.items.aid;
+        if (activity.activity) {
+            url = api.information.updateActivity;
+            options["activity.aid"] = activity.activity.aid
+        }
 
         com.post(url, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
-            activitySeacher.doSearch();
+            searcher.doSearch();
         });
+        
         activity.modals.activityModal.modal("hide")
     }
 
@@ -251,7 +268,7 @@ $(function() {
 
             newstatus == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
 
-            activitySeacher.doSearch();
+            searcher.doSearch();
         })
     }
 });

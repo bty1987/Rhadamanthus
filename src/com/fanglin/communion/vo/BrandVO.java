@@ -38,6 +38,8 @@ public class BrandVO implements java.io.Serializable {
 
 	private String kiname;
 
+	private Short status;
+
 	public BrandVO() {
 		super();
 	}
@@ -173,6 +175,14 @@ public class BrandVO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

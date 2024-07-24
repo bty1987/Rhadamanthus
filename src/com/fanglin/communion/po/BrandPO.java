@@ -31,6 +31,8 @@ public class BrandPO implements java.io.Serializable {
 
 	public static final String COLUMN_STATUS_ATTTYPE = "atttype";
 
+	public static final short STATUS_ENABLE_INT = 0;
+
 	private long bid;
 
 	private String no;
@@ -56,6 +58,8 @@ public class BrandPO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+
+	private short status;
 
 	public BrandPO() {
 		super();
@@ -185,6 +189,15 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 }

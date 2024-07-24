@@ -55,6 +55,7 @@ $(function() {
             addMatch: com.focusPage("#addMatch", "#decorationAccountContent"),
             addUncalPrice: com.focusPage("#addUncalPrice", "#decorationAccountContent"),
             addDone: com.focusPage("#addDone", "#decorationAccountContent"),
+            addOwing: com.focusPage("#addOwing", "#decorationAccountContent"),
             addTaxPrice: com.focusPage("#addTaxPrice", "#decorationAccountContent"),
             addTotal: com.focusPage("#addTotal", "#decorationAccountContent"),
             minusFoldFrontTotal: com.focusPage("#minusFoldFrontTotal", "#decorationAccountContent"),
@@ -62,6 +63,7 @@ $(function() {
             minusMatch: com.focusPage("#minusMatch", "#decorationAccountContent"),
             minusUncalPrice: com.focusPage("#minusUncalPrice", "#decorationAccountContent"),
             minusDone: com.focusPage("#minusDone", "#decorationAccountContent"),
+            minusOwing: com.focusPage("#minusOwing", "#decorationAccountContent"),
             minusTaxPrice: com.focusPage("#reduceTaxPrice", "#decorationAccountContent"),
             minusTotal: com.focusPage("#reduceTotal", "#decorationAccountContent"),
             asDifference: com.focusPage("#asDifference", "#decorationAccountContent"),
@@ -158,6 +160,8 @@ $(function() {
         addCalPrice: 0,
         addUncalPrice: 0,
         addTotalPrice: 0,
+        addDone: 0,
+        addOwing: 0,
         addDisPrice: 0,
         addUndisPrice: 0,
         addPredisTaxPrice: 0,
@@ -169,6 +173,8 @@ $(function() {
         reduceCalPrice: 0,
         reduceUncalPrice: 0,
         reduceTotalPrice: 0,
+        reduceDone: 0,
+        reduceOwing: 0,
         reduceDisPrice: 0,
         reduceUndisPrice: 0,
         reducePredisTaxPrice: 0,
@@ -181,6 +187,8 @@ $(function() {
         addConstructionCalPrice: 0,
         addConstructionUncalPrice: 0,
         addConstructionTotalPrice: 0,
+        addConstructionDone: 0,
+        addConstructionOwing: 0,
         addConstructionDisPrice: 0,
         addConstructionUndisPrice: 0,
         addConstructionPredisTaxPrice: 0,
@@ -192,6 +200,8 @@ $(function() {
         reduceConstructionCalPrice: 0,
         reduceConstructionUncalPrice: 0,
         reduceConstructionTotalPrice: 0,
+        reduceConstructionDone: 0,
+        reduceConstructionOwing: 0,
         reduceConstructionDisPrice: 0,
         reduceConstructionUndisPrice: 0,
         reduceConstructionPredisTaxPrice: 0,
@@ -204,6 +214,8 @@ $(function() {
         addMaterialCalPrice: 0,
         addMaterialUncalPrice: 0,
         addMaterialTotalPrice: 0,
+        addMaterialDone: 0,
+        addMaterialOwing: 0,
         addMaterialDisPrice: 0,
         addMaterialUndisPrice: 0,
         addMaterialPredisTaxPrice: 0,
@@ -215,6 +227,8 @@ $(function() {
         reduceMaterialCalPrice: 0,
         reduceMaterialUncalPrice: 0,
         reduceMaterialTotalPrice: 0,
+        reduceMaterialDone: 0,
+        reduceMaterialOwing: 0,
         reduceMaterialDisPrice: 0,
         reduceMaterialUndisPrice: 0,
         reduceMaterialPredisTaxPrice: 0,
@@ -511,26 +525,31 @@ $(function() {
 
     }, null, false);
 
-    com.post(api.decoration.queryDecorationHolonomy, {
-        "decorationHolonomy.decoration.orderId": decorationDetail.orderId
-    }, function(res) {
+    if (decoration.type == 2) {
+        com.post(api.decoration.queryDecorationHolonomy, {
+            "decorationHolonomy.decoration.orderId": decorationDetail.orderId
+        }, function(res) {
 
-        var decorationHolonomy = res.decorationHolonomy;
+            var decorationHolonomy = res.decorationHolonomy;
 
-        accountBasic.servicePrice = decorationHolonomy.servicePrice;
-        accountBasic.materialRatio = decorationHolonomy.materialPrice;
-        accountBasic.servicePaidup = decorationHolonomy.servicePaidup;
-        accountBasic.taxDiscount = decorationHolonomy.taxDiscount;
+            if (!decorationHolonomy || !decorationHolonomy.dhid)
+                return false;
 
-        accountBasic.servicePrice = com.checkNull(Math.round(accountBasic.servicePrice), 0);
-        accountBasic.materialRatio = com.checkNull(Math.round(accountBasic.materialRatio), 0);
-        accountBasic.servicePaidup = com.checkNull(Math.round(accountBasic.servicePaidup), 0);
+            accountBasic.servicePrice = decorationHolonomy.servicePrice;
+            accountBasic.materialRatio = decorationHolonomy.materialPrice;
+            accountBasic.servicePaidup = decorationHolonomy.servicePaidup;
+            accountBasic.taxDiscount = decorationHolonomy.taxDiscount;
 
-        decorationDetail.contractItems.servicePrice.html(accountBasic.servicePrice);
-        decorationDetail.materialItems.materialRatio.html(accountBasic.materialRatio);
-        decorationDetail.contractItems.servicePaidup.html(accountBasic.servicePaidup);
+            accountBasic.servicePrice = com.checkNull(Math.round(accountBasic.servicePrice), 0);
+            accountBasic.materialRatio = com.checkNull(Math.round(accountBasic.materialRatio), 0);
+            accountBasic.servicePaidup = com.checkNull(Math.round(accountBasic.servicePaidup), 0);
 
-    }, null, false);
+            decorationDetail.contractItems.servicePrice.html(accountBasic.servicePrice);
+            decorationDetail.materialItems.materialRatio.html(accountBasic.materialRatio);
+            decorationDetail.contractItems.servicePaidup.html(accountBasic.servicePaidup);
+
+        }, null, false);
+    }
 
     com.post(api.addReduce.queryAddReduceByOrderId, {
         "addReduce.orderId": decorationDetail.orderId
@@ -561,6 +580,8 @@ $(function() {
                 accountBasic.addUndisPrice = utils.accAdd(accountBasic.addUndisPrice, v.undisPrice);
                 accountBasic.addPredisTaxPrice = utils.accAdd(accountBasic.addPredisTaxPrice, v.taxPrice);
                 accountBasic.addTaxPrice = utils.accAdd(accountBasic.addTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
+                accountBasic.addDone = utils.accAdd(accountBasic.addDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                accountBasic.addOwing = utils.accAdd(accountBasic.addOwing, v.status == 0 || v.status == 1 ? v.total : 0);
 
                 accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.addDisPrice * (accountBasic.dd / 10) + accountBasic.addUndisPrice + Math.round(accountBasic.addManagePrice) - Math.round(accountBasic.addTotalPrice));
 
@@ -575,6 +596,8 @@ $(function() {
                     accountBasic.addConstructionUndisPrice = utils.accAdd(accountBasic.addConstructionUndisPrice, v.undisPrice);
                     accountBasic.addConstructionPredisTaxPrice = utils.accAdd(accountBasic.addConstructionPredisTaxPrice, v.taxPrice);
                     accountBasic.addConstructionTaxPrice = utils.accAdd(accountBasic.addConstructionTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
+                    accountBasic.addConstructionOwing = utils.accAdd(accountBasic.addConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                    accountBasic.addConstructionDone = utils.accAdd(accountBasic.addConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
 
                     accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.addConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.addConstructionUndisPrice + Math.round(accountBasic.addConstructionManagePrice) - Math.round(accountBasic.addConstructionTotalPrice));
 
@@ -589,6 +612,8 @@ $(function() {
                     accountBasic.addMaterialUndisPrice = utils.accAdd(accountBasic.addMaterialUndisPrice, v.undisPrice);
                     accountBasic.addMaterialPredisTaxPrice = utils.accAdd(accountBasic.addMaterialPredisTaxPrice, v.taxPrice);
                     accountBasic.addMaterialTaxPrice = utils.accAdd(accountBasic.addMaterialTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
+                    accountBasic.addMaterialDone = utils.accAdd(accountBasic.addMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                    accountBasic.addMaterialOwing = utils.accAdd(accountBasic.addMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
 
                     accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.addMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.addMaterialUndisPrice + Math.round(accountBasic.addMaterialManagePrice) - Math.round(accountBasic.addMaterialTotalPrice));
 
@@ -606,6 +631,8 @@ $(function() {
                 accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
                 accountBasic.reducePredisTaxPrice = utils.accAdd(accountBasic.reducePredisTaxPrice, v.taxPrice);
                 accountBasic.reduceTaxPrice = utils.accAdd(accountBasic.reduceTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
+                accountBasic.reduceDone = utils.accAdd(accountBasic.reduceDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                accountBasic.reduceOwing = utils.accAdd(accountBasic.reduceOwing, v.status == 0 || v.status == 1 ? v.total : 0);
 
                 accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice));
 
@@ -620,6 +647,8 @@ $(function() {
                     accountBasic.reduceConstructionUndisPrice = utils.accAdd(accountBasic.reduceConstructionUndisPrice, v.undisPrice);
                     accountBasic.reduceConstructionPredisTaxPrice = utils.accAdd(accountBasic.reduceConstructionPredisTaxPrice, v.taxPrice);
                     accountBasic.reduceConstructionTaxPrice = utils.accAdd(accountBasic.reduceConstructionTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
+                    accountBasic.reduceConstructionDone = utils.accAdd(accountBasic.reduceConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                    accountBasic.reduceConstructionOwing = utils.accAdd(accountBasic.reduceConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
 
                     accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.reduceConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.reduceConstructionUndisPrice + Math.round(accountBasic.reduceConstructionManagePrice) - Math.round(accountBasic.reduceConstructionTotalPrice));
 
@@ -634,6 +663,8 @@ $(function() {
                     accountBasic.reduceMaterialUndisPrice = utils.accAdd(accountBasic.reduceMaterialUndisPrice, v.undisPrice);
                     accountBasic.reduceMaterialPredisTaxPrice = utils.accAdd(accountBasic.reduceMaterialPredisTaxPrice, v.taxPrice);
                     accountBasic.reduceMaterialTaxPrice = utils.accAdd(accountBasic.reduceMaterialTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
+                    accountBasic.reduceMaterialDone = utils.accAdd(accountBasic.reduceMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                    accountBasic.reduceMaterialOwing = utils.accAdd(accountBasic.reduceMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
 
                     accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.reduceMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.reduceMaterialUndisPrice + Math.round(accountBasic.reduceMaterialManagePrice) - Math.round(accountBasic.reduceMaterialTotalPrice));
 
@@ -878,7 +909,8 @@ $(function() {
             decorationDetail.addReduceItems.addManagePrice.html(Math.round(accountBasic.addManagePrice));
             decorationDetail.addReduceItems.addMatch.html(Math.round(accountBasic.addCalPrice));
             decorationDetail.addReduceItems.addUncalPrice.html(Math.round(accountBasic.addUncalPrice));
-            decorationDetail.addReduceItems.addDone.html(Math.round(accountBasic.addTotalPrice));
+            decorationDetail.addReduceItems.addDone.html(Math.round(accountBasic.addDone));
+            decorationDetail.addReduceItems.addOwing.html(Math.round(accountBasic.addOwing));
             decorationDetail.addReduceItems.addTaxPrice.html(Math.round(accountBasic.addTaxPrice));
             decorationDetail.addReduceItems.addTotal.html(Math.round(accountBasic.addTotalPrice));
 
@@ -886,7 +918,8 @@ $(function() {
             decorationDetail.addReduceItems.minusManagePrice.html(Math.round(accountBasic.reduceManagePrice));
             decorationDetail.addReduceItems.minusMatch.html(Math.round(accountBasic.reduceCalPrice));
             decorationDetail.addReduceItems.minusUncalPrice.html(Math.round(accountBasic.reduceUncalPrice));
-            decorationDetail.addReduceItems.minusDone.html(Math.round(accountBasic.reduceTotalPrice));
+            decorationDetail.addReduceItems.minusDone.html(Math.round(accountBasic.reduceDone));
+            decorationDetail.addReduceItems.minusOwing.html(Math.round(accountBasic.reduceOwing));
             decorationDetail.addReduceItems.minusTaxPrice.html(Math.round(accountBasic.reduceTaxPrice));
             decorationDetail.addReduceItems.minusTotal.html(Math.round(accountBasic.reduceTotalPrice));
 
@@ -896,7 +929,8 @@ $(function() {
             decorationDetail.addReduceItems.addManagePrice.html(Math.round(accountBasic.addConstructionManagePrice));
             decorationDetail.addReduceItems.addMatch.html(Math.round(accountBasic.addConstructionCalPrice));
             decorationDetail.addReduceItems.addUncalPrice.html(Math.round(accountBasic.addConstructionUncalPrice));
-            decorationDetail.addReduceItems.addDone.html(Math.round(accountBasic.addConstructionTotalPrice));
+            decorationDetail.addReduceItems.addDone.html(Math.round(accountBasic.addConstructionDone));
+            decorationDetail.addReduceItems.addOwing.html(Math.round(accountBasic.addConstructionOwing));
             decorationDetail.addReduceItems.addTaxPrice.html(Math.round(accountBasic.addConstructionTaxPrice));
             decorationDetail.addReduceItems.addTotal.html(Math.round(accountBasic.addConstructionTotalPrice));
 
@@ -904,7 +938,8 @@ $(function() {
             decorationDetail.addReduceItems.minusManagePrice.html(Math.round(accountBasic.reduceConstructionManagePrice));
             decorationDetail.addReduceItems.minusMatch.html(Math.round(accountBasic.reduceConstructionCalPrice));
             decorationDetail.addReduceItems.minusUncalPrice.html(Math.round(accountBasic.reduceConstructionUncalPrice));
-            decorationDetail.addReduceItems.minusDone.html(Math.round(accountBasic.reduceConstructionTotalPrice));
+            decorationDetail.addReduceItems.minusDone.html(Math.round(accountBasic.reduceConstructionDone));
+            decorationDetail.addReduceItems.minusOwing.html(Math.round(accountBasic.reduceConstructionOwing));
             decorationDetail.addReduceItems.minusTaxPrice.html(Math.round(accountBasic.reduceConstructionTaxPrice));
             decorationDetail.addReduceItems.minusTotal.html(Math.round(accountBasic.reduceConstructionTotalPrice));
 
@@ -914,7 +949,8 @@ $(function() {
             decorationDetail.addReduceItems.addManagePrice.html(Math.round(accountBasic.addMaterialManagePrice));
             decorationDetail.addReduceItems.addMatch.html(Math.round(accountBasic.addMaterialCalPrice));
             decorationDetail.addReduceItems.addUncalPrice.html(Math.round(accountBasic.addMaterialUncalPrice));
-            decorationDetail.addReduceItems.addDone.html(Math.round(accountBasic.addMaterialTotalPrice));
+            decorationDetail.addReduceItems.addDone.html(Math.round(accountBasic.addMaterialDone));
+            decorationDetail.addReduceItems.addOwing.html(Math.round(accountBasic.addMaterialOwing));
             decorationDetail.addReduceItems.addTaxPrice.html(Math.round(accountBasic.addMaterialTaxPrice));
             decorationDetail.addReduceItems.addTotal.html(Math.round(accountBasic.addMaterialTotalPrice));
 
@@ -922,7 +958,8 @@ $(function() {
             decorationDetail.addReduceItems.minusManagePrice.html(Math.round(accountBasic.reduceMaterialManagePrice));
             decorationDetail.addReduceItems.minusMatch.html(Math.round(accountBasic.reduceMaterialCalPrice));
             decorationDetail.addReduceItems.minusUncalPrice.html(Math.round(accountBasic.reduceMaterialUncalPrice));
-            decorationDetail.addReduceItems.minusDone.html(Math.round(accountBasic.reduceMaterialTotalPrice));
+            decorationDetail.addReduceItems.minusDone.html(Math.round(accountBasic.reduceMaterialDone));
+            decorationDetail.addReduceItems.minusOwing.html(Math.round(accountBasic.reduceMaterialOwing));
             decorationDetail.addReduceItems.minusTaxPrice.html(Math.round(accountBasic.reduceMaterialTaxPrice));
             decorationDetail.addReduceItems.minusTotal.html(Math.round(accountBasic.reduceMaterialTotalPrice));
 

@@ -63,6 +63,14 @@ public class CustomerSourceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateCustomerSourceForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerSourceForAdvance() throws FLException {
+
+		customerSourceService.updateCustomerSourceForAdvance(customerSource);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateCustomerSourceForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateCustomerSourceForStatus() throws FLException {
 
