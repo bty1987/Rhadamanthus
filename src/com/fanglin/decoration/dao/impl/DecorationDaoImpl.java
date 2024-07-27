@@ -138,6 +138,49 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
+	public List<DecorationPO> pageDecorationForDesignDept(Paging paging, List<Filter> filters, List<Integer> dids, int company) throws FLException {
+
+		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
+
+		if (dids != null && dids.size() > 0) {
+			query.alias("designDept", "designDept");
+			query.add(Restrictions.in("designDept.did", dids));
+		}
+
+		queryFilterExcute(query, filters);
+
+		query.desc("doid");
+
+		return query.list();
+	}
+
+	@Override
+	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> dids, List<Short> statuses, int company) throws FLException {
+
+		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
+
+		if (dids != null && dids.size() > 0) {
+			query.alias("designer", "designer");
+			query.alias("designer.dept", "designerDept");
+			query.add(Restrictions.in("designerDept.did", dids));
+		}
+
+		if (statuses != null && statuses.size() > 0) {
+			query.add(Restrictions.in("status", statuses));
+		}
+
+		queryFilterExcute(query, filters);
+
+		query.desc("doid");
+
+		return query.list();
+	}
+
+	@Override
 	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
@@ -152,20 +195,13 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForDesignerManager(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company) throws FLException {
+	public List<DecorationPO> pageDecorationForSalesDept(Paging paging, List<Filter> filters, List<Integer> dids) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
-		query.add(query.getCriterion("company", company, "eq"));
-
-		if (designDepartmentIds != null && designDepartmentIds.size() > 0) {
-			query.alias("designer", "designer");
-			query.alias("designer.dept", "designerDept");
-			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
-		}
-
-		if (statuses != null && statuses.size() > 0) {
-			query.add(Restrictions.in("status", statuses));
+		if (dids != null && dids.size() > 0) {
+			query.alias("salesDept", "salesDept");
+			query.add(Restrictions.in("salesDept.did", dids));
 		}
 
 		queryFilterExcute(query, filters);

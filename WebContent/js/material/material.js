@@ -32,7 +32,7 @@ jQuery(function($) {
         materialSaleOrderStatusData: {
             "0": "初始",
             "2": "退货",
-            "3": "预结算",
+            "3": "预结",
             "4": "结算"
         },
         materialSaleOrderPaymentStatusData: {

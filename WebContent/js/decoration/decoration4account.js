@@ -19,6 +19,7 @@ $(function() {
         },
         basicsItems: {
             name: com.focusPage("#quotationName", "#decorationAccountContent"),
+            foldFrontTotalPrice: com.focusPage("#foldFrontTotalPrice", "#decorationAccountContent"),
             foldFrontTotal: com.focusPage("#foldFrontTotal", "#decorationAccountContent"),
             foldFrontFee: com.focusPage("#foldFrontFee", "#decorationAccountContent"),
             managePrice: com.focusPage("#managePrice", "#decorationAccountContent"),
@@ -40,6 +41,8 @@ $(function() {
             coupon: com.focusPage("#coupon", "#decorationAccountContent"),
             servicePrice: com.focusPage("#servicePrice", "#decorationAccountContent"),
             servicePaidup: com.focusPage("#servicePaidup", "#decorationAccountContent"),
+            signFactDone: com.focusPage("#signFactDone", "#decorationAccountContent"),
+            signFactOwing: com.focusPage("#signFactOwing", "#decorationAccountContent"),
             signFactPrice: com.focusPage("#signFactPrice", "#decorationAccountContent"),
             mm: com.focusPage("#mm", "#decorationAccountContent")
         },
@@ -48,6 +51,10 @@ $(function() {
             materialTotal: com.focusPage("#materialTotal", "#decorationAccountContent"),
             materialCoupon: com.focusPage("#materialCoupon", "#decorationAccountContent"),
             materialFactPrice: com.focusPage("#materialFactPrice", "#decorationAccountContent")
+        },
+        oalesItems: {
+            oalesTotal: com.focusPage("#oalesTotal", "#decorationAccountContent"),
+            oalesMaterialTotal: com.focusPage("#oalesMaterialTotal", "#decorationAccountContent"),
         },
         addReduceItems: {
             addFoldFrontTotal: com.focusPage("#addFoldFrontTotal", "#decorationAccountContent"),
@@ -82,10 +89,11 @@ $(function() {
             materialAccount: com.focusPage("#materialAccount", "#decorationAccountContent"),
             accountForehead: com.focusPage("#accountForehead", "#decorationAccountContent"),
             accountServicePrice: com.focusPage("#accountServicePrice", "#decorationAccountContent"),
-            balanceSum: com.focusPage("#balanceSum", "#decorationAccountContent"),
+            flowerOalesRatio: com.focusPage("#flowerOalesRatio", "#decorationAccountContent"),
             difference: com.focusPage("#difference", "#decorationAccountContent"),
             superRatio: com.focusPage("#superRatio", "#decorationAccountContent"),
-            taxPrice: com.focusPage("#taxPriceA", "#decorationAccountContent")
+            taxPrice: com.focusPage("#taxPriceA", "#decorationAccountContent"),
+            balanceSum: com.focusPage("#balanceSum", "#decorationAccountContent"),
         },
         items: {
             discountName: com.focusPage("#discountName", "#decorationAccountContent"),
@@ -125,6 +133,7 @@ $(function() {
     };
 
     var decoration;
+    var quotation;
 
     decorationDetail.orderId = params.decoration.orderId;
 
@@ -144,6 +153,8 @@ $(function() {
         taxPrice: 0,
         materialRatio: 0,
         servicePaidup: 0,
+        signFactDone: 0,
+        signFactOwing: 0,
         quoManageRate: 0,
 
         managePredisPrice: 0,
@@ -153,6 +164,9 @@ $(function() {
         couponCut: 0,
         factPrice: 0,
         servicePrice: 0,
+
+        oalesTotal: 0,
+        oalesMaterialTotal: 0,
 
         addPredisPrice: 0,
         addPredisManagePrice: 0,
@@ -378,7 +392,7 @@ $(function() {
         "quotation.orderId": decorationDetail.orderId,
     }, function(res) {
 
-        var quotation = res.quotation;
+        quotation = res.quotation;
 
         accountBasic.undisPrice = quotation.undisPrice;
         accountBasic.disPrice = quotation.disPrice;
@@ -397,6 +411,7 @@ $(function() {
             decorationDetail.basicsItems.name.html("报价(" + quotation.version.name + ")");
         }
 
+        decorationDetail.basicsItems.foldFrontTotalPrice.html(accountBasic.taxPrice);
         decorationDetail.basicsItems.foldFrontTotal.html(accountBasic.foldFrontTotal);
         decorationDetail.basicsItems.foldFrontFee.html(accountBasic.foldFrontFee);
 
@@ -525,6 +540,37 @@ $(function() {
 
     }, null, false);
 
+    if (decoration.type == 0) {
+        com.post(api.decoration.queryDecorationMidpack, {
+            "decorationMidpack.decoration.orderId": decorationDetail.orderId
+        }, function(res) {
+
+            var midpack = res.decorationMidpack;
+
+            if (!midpack || !midpack.dmid)
+                return false;
+
+            accountBasic.servicePrice = midpack.servicePrice;
+            accountBasic.servicePaidup = midpack.servicePaidup;
+
+            accountBasic.servicePrice = com.checkNull(Math.round(accountBasic.servicePrice), 0);
+            accountBasic.servicePaidup = com.checkNull(Math.round(accountBasic.servicePaidup), 0);
+
+            decorationDetail.contractItems.servicePrice.html(accountBasic.servicePrice);
+            decorationDetail.materialItems.materialRatio.html(0);
+            decorationDetail.contractItems.servicePaidup.html(accountBasic.servicePaidup);
+
+        }, null, false);
+    }
+
+    if (decoration.type == 1) {
+
+        decorationDetail.contractItems.servicePrice.html(0);
+        decorationDetail.materialItems.materialRatio.html(0);
+        decorationDetail.contractItems.servicePaidup.html(0);
+
+    }
+
     if (decoration.type == 2) {
         com.post(api.decoration.queryDecorationHolonomy, {
             "decorationHolonomy.decoration.orderId": decorationDetail.orderId
@@ -550,6 +596,44 @@ $(function() {
 
         }, null, false);
     }
+
+    com.post(api.payment.queryDecorationPaymentByOrderId, {
+        "decorationPayment.decoration.orderId": decorationDetail.orderId,
+        "decorationPayment.oneType": 0,
+    }, function(res) {
+
+        var decorationPayments = res.decorationPayments;
+
+        $.each(decorationPayments, function(i, v) {
+
+            if (v.twoType == 1 && v.paymentStatus == 0) {
+                accountBasic.signFactOwing = utils.accAdd(accountBasic.signFactOwing, v.referMoney);
+            } else if (v.twoType == 1 && v.paymentStatus != 0) {
+                accountBasic.signFactDone = utils.accAdd(accountBasic.signFactDone, v.referMoney);
+            }
+
+        });
+
+    }, null, false);
+
+    decorationDetail.contractItems.signFactDone.html(accountBasic.signFactDone);
+    decorationDetail.contractItems.signFactOwing.html(accountBasic.signFactOwing);
+
+    com.post(api.sales.queryOalesByOrderId, {
+        "oales.decoration.orderId": decorationDetail.orderId
+    }, function(res) {
+
+        oaleses = res.oaleses;
+
+        $.each(oaleses, function(i, v) {
+
+            accountBasic.oalesTotal = utils.accAdd(accountBasic.oalesTotal, v.total);
+        });
+
+    }, null, false);
+
+    decorationDetail.oalesItems.oalesTotal.html(accountBasic.oalesTotal);
+    decorationDetail.oalesItems.oalesMaterialTotal.html(utils.accAdd(accountBasic.oalesTotal, accountBasic.materialTotal));
 
     com.post(api.addReduce.queryAddReduceByOrderId, {
         "addReduce.orderId": decorationDetail.orderId
@@ -776,7 +860,13 @@ $(function() {
 
         $.extend(accountBasic, config);
 
-        decorationDetail.items.calDiscountPrice.val(com.checkNull(config.discount, 0));
+        if (config.typeness == decoration.typeness) {
+            decorationDetail.items.calDiscountPrice.val(quotation.discount);
+            accountBasic.discount = quotation.discount;
+        } else {
+            decorationDetail.items.calDiscountPrice.val(com.checkNull(config.discount, 0));
+            accountBasic.discount = config.discount;
+        }
 
         if (config.discountType == constant.data().decorationMatching.DISCOUNTTYPE_ONLY_INT) {
             decorationDetail.items.calDiscountPrice.attr("readonly", "readonly");
@@ -1040,6 +1130,7 @@ $(function() {
         accountBasic.management = Math.round(management);
         accountBasic.taxment = Math.round(taxment);
         accountBasic.flowerRatio = utils.changeThrDecimal(accountBasic.materialTotal / accountBasic.direct);
+        accountBasic.flowerOalesRatio = utils.changeThrDecimal(utils.accDiv(utils.accAdd(accountBasic.oalesTotal, accountBasic.materialTotal), accountBasic.direct));
 
         accountBasic.materialAccount = Math.round(materialAccount);
 

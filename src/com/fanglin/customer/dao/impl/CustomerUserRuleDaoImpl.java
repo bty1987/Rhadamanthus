@@ -37,7 +37,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 
 	@Override
 	public CustomerUserRulePO queryCustomerUserRule(Integer uid) {
-		return (CustomerUserRulePO) session().createCriteria(CustomerUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.uid", uid)).add(Restrictions.eq("status", CustomerUserRulePO.STATUS_ENABLE_INT)).setMaxResults(1).uniqueResult();
+		return (CustomerUserRulePO) session().createCriteria(CustomerUserRulePO.class).createAlias("user", "user").add(Restrictions.eq("user.uid", uid)).add(Restrictions.ne("status", CustomerUserRulePO.STATUS_DISABLE_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

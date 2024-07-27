@@ -60,6 +60,14 @@ public class OalesPayAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateOalesPayForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateOalesPayForAdvance() throws FLException {
+
+		oalesPayService.updateOalesPayForAdvance(oalesPay);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteOalesPay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteOalesPay() throws FLException {
 

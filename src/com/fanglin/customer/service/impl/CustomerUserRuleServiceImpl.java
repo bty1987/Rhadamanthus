@@ -123,11 +123,11 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		}
 
 		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_DISABLE_INT) {
-			throw new FLException(330081, "无匹配规则");
+			throw new FLException(330082, "规则不可操作");
 		}
 
-		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_ENABLE_INT && customerUserRule.getStatus() < customerUserRulePO.getStatus()) {
-			throw new FLException(330081, "无匹配规则");
+		if (customerUserRulePO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT && customerUserRule.getStatus() < customerUserRulePO.getStatus()) {
+			throw new FLException(330082, "规则不可操作");
 		}
 
 		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_ENABLE_INT) {

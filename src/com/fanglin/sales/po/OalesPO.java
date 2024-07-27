@@ -2,6 +2,7 @@ package com.fanglin.sales.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,8 @@ import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.OalesVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "oales", catalog = "sales")
@@ -400,6 +403,24 @@ public class OalesPO implements Serializable {
 
 	public void setThreshold(int threshold) {
 		this.threshold = threshold;
+	}
+
+	public OalesVO ptv(OalesVO oalesVO) {
+
+		BeanUtil.copyProperties(this, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
+
+		if (oalesVO.getDecoration() != null) getDecoration().ptvcascade(oalesVO.getDecoration());
+
+		if (oalesVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "duty"));
+		if (oalesVO.getSupplier() != null) BeanUtil.copyProperties(getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "duty"));
+		if (oalesVO.getServicer() != null) BeanUtil.copyProperties(getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "duty"));
+		if (oalesVO.getChanner() != null) BeanUtil.copyProperties(getChanner(), oalesVO.getChanner(), Arrays.asList("dept", "duty"));
+		if (oalesVO.getDept() != null) BeanUtil.copyProperties(getDept(), oalesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (oalesVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+		if (oalesVO.getChecker() != null) BeanUtil.copyProperties(getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "duty"));
+		if (oalesVO.getMaterialer() != null) BeanUtil.copyProperties(getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
+
+		return oalesVO;
 	}
 
 }

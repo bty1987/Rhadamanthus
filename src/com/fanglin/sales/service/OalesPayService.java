@@ -17,6 +17,8 @@ public interface OalesPayService {
 
 	public int updateOalesPay(OalesPayVO oalesPayVO) throws FLException;
 
+	public int updateOalesPayForAdvance(OalesPayVO oalesPay) throws FLException;
+
 	public int deleteOalesPay(OalesPayVO oalesPayVO) throws FLException;
 
 }

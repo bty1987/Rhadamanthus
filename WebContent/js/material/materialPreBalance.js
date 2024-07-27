@@ -131,7 +131,7 @@ jQuery(function($) {
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'prebalances').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('预结算').appendTo($adda);
+    	var $addspan = $('<span></span>').text('预结').appendTo($adda);
     	$adda.click(function(){
     		preBalance();
     	});
@@ -144,7 +144,7 @@ jQuery(function($) {
 
     	return [$adda, $passa];
 	});
-	//点预结算
+	//点预结
 	function preBalance(){
 		//复选框选中的对象
         var $inputs = com.focusPage('input[name="msoIds"]:checked');
@@ -164,7 +164,7 @@ jQuery(function($) {
                 $(v).attr("packageFlag") == 1 && (_packageFlag = 1);
             });
 
-            var message = "<p>确定需要提交当前子订单的预结算处理吗?</p>";
+            var message = "<p>确定需要提交当前子订单的预结处理吗?</p>";
 
             if(_packageFlag == "1"){
                 message += "<p class='text-warning bigger-110 orange'><i class='icon-warning-sign'></i>当前存在套餐,是否已经设置完成计算点位?</p>";
@@ -184,7 +184,7 @@ jQuery(function($) {
                 });
             });
         } else {
-            com.showAlert(com.warning, "请选择要进行预结算的订单");
+            com.showAlert(com.warning, "请选择要进行预结的订单");
         }
 	}
 	//点完结  后台将订单状态更改为完结

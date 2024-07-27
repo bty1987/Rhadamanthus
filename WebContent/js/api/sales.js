@@ -327,6 +327,9 @@ $.extend(api, {
                 args: ["oalesPay.money"]
             }
         },
+        updateOalesPayForAdvance: {
+            url: "updateOalesPayForAdvance.do"
+        },
         deleteOalesPay: {
             url: "deleteOalesPay.do"
         },

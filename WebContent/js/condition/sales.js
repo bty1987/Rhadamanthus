@@ -831,6 +831,15 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
+    "oales-checkTime": {
+        label: "复核时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "oales.checkTime",
+            op: "cn",
+            validata: null
+        }
+    },
     "oales-status": {
         label: "状态",
         type: "select",

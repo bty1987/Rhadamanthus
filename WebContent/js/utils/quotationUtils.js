@@ -1192,7 +1192,7 @@ var quotationUtils = {
 
         var serviceMoneyBody = $("<div></div>").addClass('widget-body');
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append($('<div></div>').addClass('col-md-1'), this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false), $('<div></div>').addClass('col-md-1'))));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
         serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
         inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
@@ -1208,9 +1208,17 @@ var quotationUtils = {
             com.focusPage('#quotePrice').html(com.checkNull(protation.quotePrice, 0));
             com.focusPage('#preferPrice').html(com.checkNull(protation.preferPrice, 0));
             com.focusPage('#managePrice').html(com.checkNull(protation.managePrice, 0));
+            com.focusPage('#manageProfit').html(com.checkNull(protation.manageProfit, 0));
             com.focusPage('#quoteArea').html(com.checkNull(protation.quoteArea, 0));
             com.focusPage('#totalPrice').html(com.checkNull(protation.totalPrice, 0));
             com.focusPage('#product').html(protation.product);
+
+            if(protation.advanceProfit != 0){
+                com.focusPage('#advanceProfit').html(com.checkNull(protation.advanceProfit, 0));
+            }else{
+                com.focusPage('#advanceProfit').hide();
+            }
+
         }, null, false);
 
         params.quotation.protationId = protation.pid;

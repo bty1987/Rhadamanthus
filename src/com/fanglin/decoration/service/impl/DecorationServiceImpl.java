@@ -435,7 +435,7 @@ public class DecorationServiceImpl implements DecorationService {
 			deptIds.add(departmentPO.getDid());
 		}
 
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesignerManager(paging, filters, deptIds, null, company);
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForDesignDept(paging, filters, deptIds, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -569,7 +569,7 @@ public class DecorationServiceImpl implements DecorationService {
 			deptIds.add(departmentPO.getDid());
 		}
 
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesmanManager(paging, filters, deptIds, null);
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesDept(paging, filters, deptIds);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -917,7 +917,9 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		decorationPO.setDesigner(designer);
+		decorationPO.setDesignDept(designer.getDept());
 		decorationPO.setSalesman(salesman);
+		decorationPO.setSalesDept(salesman.getDept());
 
 		decorationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));

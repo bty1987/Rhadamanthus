@@ -61,7 +61,7 @@ jQuery(function($) {
 							["售价:", v.price, "blue"],
 							["数量:", v.num, "blue"],
 							["总价:", v.total, "blue"],
-							//["预结算值:", v.prePoint, "grey"],
+							//["预结值:", v.prePoint, "grey"],
 							//["结算值:", v.postPoint, "grey"],
 							["说明:", v.comment, "grey"],
 						];
@@ -74,7 +74,7 @@ jQuery(function($) {
 
 						propertyArr = [
 							["总价:", v.total, "blue"],
-							//["预结算值:", v.prePoint, "grey"],
+							//["预结值:", v.prePoint, "grey"],
 							//["结算值:", v.postPoint, "grey"],
 						];
 					}else{

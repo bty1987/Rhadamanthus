@@ -220,7 +220,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
-		UserPO issuer = userDao.queryUserByOldUserId(userId);
+		UserPO issuer = userDao.queryUserByUserId(userId);
 
 		customerChancePO.setIssuer(issuer);
 		customerChancePO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));
@@ -260,9 +260,14 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (belonger != null) {
 
+			if (customerChanceDao.queryCustomerChance(customerChancePO.getSource().getCsid(), belonger.getCompany()) != null) {
+				throw new FLException(330076, "客户机会已存在");
+			}
+
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setBelonger(belonger);
+			customerChancePO.setCompany(belonger.getCompany());
 
 			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
 		}
@@ -273,7 +278,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("手动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
 		if (belonger != null) messageService.sendMessage(belonger.getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
 

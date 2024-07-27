@@ -35,7 +35,7 @@ $(function () {
 
                     var $btnSwitch = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
                     var $btnWipeZero = $('<a></a>').addClass('btn btn-minier btn-warning').html('抹零');
-                    var $btnPre = $('<a></a>').addClass('btn btn-minier btn-success').html('预结算');
+                    var $btnPre = $('<a></a>').addClass('btn btn-minier btn-success').html('预结');
 
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function (pi, pv) {
@@ -170,7 +170,7 @@ $(function () {
                             flag = false;
                         }
                         com.focusPage('#viewPopUp').attr({'data-sid': v.sid, 'data-dompany': flag});
-                        com.popup4page("#viewPopUp", "views/sales/salesBalance4detail.html", "预结算销售单号" + v.no, "", function () {
+                        com.popup4page("#viewPopUp", "views/sales/salesBalance4detail.html", "预结销售单号" + v.no, "", function () {
                             salesPreBalance.doSearch();
                         });
                     });
@@ -194,9 +194,9 @@ $(function () {
                         var _option = {};
                         _option["sid[0]"] = v.sid;
 
-                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
+                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结吗?', function (index, layero) {
                             com.post(api.sales.preSalesBalance, _option, function (res) {
-                                com.showAlert(com.info, "预结算成功");
+                                com.showAlert(com.info, "预结成功");
                                 salesPreBalance.doSearch();
                             });
 
@@ -230,7 +230,7 @@ $(function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('批量预结算').appendTo($adda);
+        var $addspan = $('<span></span>').text('批量预结').appendTo($adda);
 
         var $addaEnd = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addiEnd = $('<i></i>').addClass('icon-ok bigger-110').appendTo($addaEnd);
@@ -247,7 +247,7 @@ $(function () {
 
             if (!$inputs.length) {
 
-                com.showAlert(com.warning, "请选择需要进行预结算的销售单");
+                com.showAlert(com.warning, "请选择需要进行预结的销售单");
 
                 return;
 
@@ -261,7 +261,7 @@ $(function () {
 
             });
 
-            com.showConfirm('确定要将选中的销售单进行预结算吗?', function (index, layero) {
+            com.showConfirm('确定要将选中的销售单进行预结吗?', function (index, layero) {
                 com.post(api.sales.preSalesBalance, _option, function (res) {
 
                     com.showAlert(com.info, "操作成功");

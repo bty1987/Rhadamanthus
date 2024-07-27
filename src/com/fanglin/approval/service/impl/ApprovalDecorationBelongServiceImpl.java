@@ -268,8 +268,10 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			if (DecorationBelongPO.DEFAULTFLAG_TRUE_INT.equals(approvalDecorationBelongItemPO.getDefaultFlag())) {
 				if (DecorationBelongPO.BELONGTYPE_DESIGN_INT == belongType) {
 					decorationPO.setDesigner(userPO);
+					decorationPO.setDesignDept(userPO.getDept());
 				} else if (DecorationBelongPO.BELONGTYPE_SALESMAN_INT == belongType) {
 					decorationPO.setSalesman(userPO);
+					decorationPO.setSalesDept(userPO.getDept());
 				}
 			}
 

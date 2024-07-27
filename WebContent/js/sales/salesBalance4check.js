@@ -122,10 +122,10 @@ $(function() {
                                 propertyArr.push(["补款:", v.sales.fullpay, "blue"]);
                                 break;
                             case "prevalue":
-                                propertyArr.push(["预结算值:", v.balance, "blue"]);
+                                propertyArr.push(["预结值:", v.balance, "blue"]);
                                 break;
                             case "precreater":
-                                propertyArr.push(["预结算人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
+                                propertyArr.push(["预结人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);
                                 break;
                             case "pbalance":
                                 propertyArr.push(["结算值:", v.pbalance, "blue"]);
@@ -137,7 +137,7 @@ $(function() {
                                 propertyArr.push(["结算人:", v.poster.currentName, "grey", tools.personel.info, v.poster.userId]);
                                 break;
                             case "vbalance":
-                                propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
+                                propertyArr.push(["厂结值:", v.vbalance, "blue"]);
                                 break;
                             case "grade":
                                 propertyArr.push(["等级:", v.sales.grade, "red"]);
@@ -167,10 +167,10 @@ $(function() {
                                 styleArr.push(["总价:", v.total, "blue"]);
                                 break;
                             case "preCreateTime":
-                                styleArr.push(["预结算时间:", v.createTime, "green"]);
+                                styleArr.push(["预结时间:", v.createTime, "green"]);
                                 break;
                             case "venderTime":
-                                styleArr.push(["厂商结算时间:", v.venderTime, "green"]);
+                                styleArr.push(["厂结时间:", v.venderTime, "green"]);
                                 break;
                             case "oneType":
                                 styleArr.push(["一类:", constant.sales().salesBalance.onetype.keys[v.onetype], "red"]);

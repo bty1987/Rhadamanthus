@@ -83,7 +83,7 @@ jQuery(function($) {
 
     var url = api.sales.pageOales;
 
-    var conditions = ['sales-oales-no', 'sales-oales-orderId', 'sales-oales-category', 'sales-oales-brand', 'sales-oales-createTime', 'sales-oales-confirmTime', 'sales-oales-status'];
+    var conditions = ['sales-oales-no', 'sales-oales-orderId', 'sales-oales-category', 'sales-oales-brand', 'sales-oales-createTime', 'sales-oales-confirmTime', 'sales-oales-checkTime', 'sales-oales-status'];
     var options = {};
     var history = "oalsePostData";
 
@@ -203,6 +203,16 @@ jQuery(function($) {
             tools.personel.info(btn, v.channer.userId);
         }
     }, {
+        field: "cdept",
+        name: "渠道部门",
+        prop: "dept.name",
+        clazz: "grey"
+    }, {
+        field: "cfatherDept",
+        name: "渠道分区",
+        prop: "region.name",
+        clazz: "grey"
+    }, {
         field: "materialer",
         name: "主材员",
         prop: "materialer.currentName",
@@ -223,19 +233,6 @@ jQuery(function($) {
         click: function(btn, v) {
 
             tools.customer.info(btn, v.decoration.customer.cid);
-        },
-        show: function(v) {
-
-            return (oales.pageType == "material");
-        }
-    }, {
-        field: "channer",
-        name: "渠道",
-        prop: "channer.currentName",
-        clazz: "grey",
-        click: function(btn, v) {
-
-            tools.personel.info(btn, v.channer.userId);
         },
         show: function(v) {
 
