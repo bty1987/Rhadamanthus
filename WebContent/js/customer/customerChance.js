@@ -159,7 +159,8 @@ jQuery(function($) {
         var $enableI = $('<i></i>').addClass('icon-ok-circle bigger-230');
         var $enableS = $('<span></span>').html("上线分配");
 
-        $enable.append($enableI).append($enableS).appendTo(customerChance.items.infolist);
+        if (customerChance.depage == 'user')
+            $enable.append($enableI).append($enableS).appendTo(customerChance.items.infolist);
 
         var $disable = $('<a></a>').addClass('btn btn-app btn-warning').click(function() {
 
@@ -173,7 +174,8 @@ jQuery(function($) {
         var $disableI = $('<i></i>').addClass('icon-ban-circle bigger-230');
         var $disableS = $('<span></span>').html("下线分配");
 
-        $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
+        if (customerChance.depage == 'user')
+            $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
 
         customerChance.userRule.status == 0 ? $enable.hide() : $disable.hide();
     }

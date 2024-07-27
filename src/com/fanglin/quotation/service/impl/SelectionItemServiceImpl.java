@@ -489,6 +489,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200039, "选材项状态不可操作");
 		}
 
+		if (Arrays.asList(SelectionItemPO.TYPE_EXTENSIONMINUS_SHORT, SelectionItemPO.TYPE_MINUSITEM_SHORT).contains(selectionItemPO.getType())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
 		selectionItemPO.setRefnum(selectionItemVO.getRefnum());
 
 		selectionItemDao.update(selectionItemPO);

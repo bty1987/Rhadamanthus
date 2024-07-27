@@ -4,7 +4,7 @@ var materialSubOrderPostData = {};
 $(function(){
 
     var materialOrderPostBalance = {
-        //厂商结算值点击保存
+        //厂结值点击保存
         vsaveBtn: com.focusPage("#vsaveBtn").on("click", updateMaterialSubOrderBalanceForVBalance),
         //结算值点击保存
         saveBtn: com.focusPage("#saveBtn").on("click", updateMaterialSubOrderBalanceForBalance),
@@ -58,8 +58,8 @@ $(function(){
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.material.no   ));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnSupBalance = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂商结算值');
-            var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-success').html('厂商结算');
+            var $btnSupBalance = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂结值');
+            var $btnSupPost = $('<a></a>').addClass('btn btn-minier btn-success').html('厂结');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
             var $btnPost = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
             //var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
@@ -77,18 +77,18 @@ $(function(){
                 ["券值：",v.material.coupon,"blue"],
                 ["券信息：",v.material.couponInfo ? v.material.couponInfo : '---',"grey"],
                 ["主材驻店:", v.instorer.currentName ?  v.instorer.currentName : '---' , "grey"],
-                ["预结算值：",v.balance,"blue"],
-                ["预结算时间 :", v.balanceTime , "green"],
-                ["预结算人:", v.creater.currentName , "grey"],
-                ["厂商结算:", v.vbalance , "blue"],
-                ["厂商结算时间:", v.vbalanceTime , "green"],
+                ["预结值：",v.balance,"blue"],
+                ["预结时间 :", v.balanceTime , "green"],
+                ["预结人:", v.creater.currentName , "grey"],
+                ["厂结值:", v.vbalance , "blue"],
+                ["厂结时间:", v.vbalanceTime , "green"],
                 ["结算值：",v.post,"blue"],
                 ["结算时间：",v.postTime ? v.postTime : '---',"green"],
                 ["结算人  :", v.poster.currentName ? v.poster.currentName : '---' , "grey"],
                 ["抹零：",v.material.maling,"blue"],
                 ["厂商抹零：",v.material.venderMaling,"blue"],
-                ["状态:", v.status == 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---' , "red"],
-                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货' , "red"],
+                ["状态:", v.status == 0 ? '预结': v.status== 1 ? '厂结' : v.status== 2 ? '结算' : '---' , "red"],
+                ["类型:", v.type == 0 ? '购货' : v.type == 1 ? '预结退货' : '结算退货' , "red"],
 
             ];
 
@@ -102,14 +102,14 @@ $(function(){
             $divBtnWrap.append($btnSupBalance).append($btnSupPost).append($btnBalance).append($btnPost).append($btnSub).append($btnCharge).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
-            //点击厂商结算值
+            //点击厂结值
             $btnSupBalance.click(function(){
                 if(v.status==0){
                     materialOrderPostBalance.total = v.total;
                     materialOrderPostBalance.msobId = v.mbid;
                     materialOrderPostBalance.smodal.modal("show");
                 }else{
-                    com.showAlert(com.warning,"非预结算状态下不允许进行厂商结算");
+                    com.showAlert(com.warning,"非预结状态下不允许进行厂结");
                 }
 
             });
@@ -121,18 +121,18 @@ $(function(){
                     materialOrderPostBalance.msobId = v.mbid;
                     materialOrderPostBalance.modal.modal("show");
                 }else{
-                    com.showAlert(com.warning,"非厂商结算状态下不允许进行结算");
+                    com.showAlert(com.warning,"非厂结状态下不允许进行结算");
                 }
 
             });
-            //厂商结算
+            //厂结
             $btnSupPost.click(function(){
                 if(v.status==0 && v.vbalance!=0){
                     vpostMaterialSubOrderBalance(v.mbid);
                 }else if(v.status==0 && v.vbalance==0){
-                    com.showAlert(com.warning,"厂商结算值未填写，请检查");
+                    com.showAlert(com.warning,"厂结值未填写，请检查");
                 }else if(v.status!=0){
-                    com.showAlert(com.warning,"非预结算状态下不允许进行厂商结算");
+                    com.showAlert(com.warning,"非预结状态下不允许进行厂结");
                 }
 
             });
@@ -143,7 +143,7 @@ $(function(){
                 }else if(v.status==1 && v.post==0){
                     com.showAlert(com.warning,"结算值未填写，请检查");
                 }else if(v.status!=1){
-                    com.showAlert(com.warning,"非厂商结算状态下不允许进行结算");
+                    com.showAlert(com.warning,"非厂结状态下不允许进行结算");
                 }
 
             });
@@ -194,7 +194,7 @@ $(function(){
             }
         };
     })();
-   //侯骅峰4.7增加品牌，预结算时间，厂商结算时间，结算时间，楼盘地址查询字段(?添加业务员)
+   //侯骅峰4.7增加品牌，预结时间，厂结时间，结算时间，楼盘地址查询字段(?添加业务员)
     var _condArr = ['material-orderId','material-no','material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type' ,'material-fullpayTime', 'material-prebalanceTime','material-vbalanceTime','material-postBalanceTime'];
 
     var searcher = new Searcher();
@@ -214,14 +214,14 @@ $(function(){
  
         return [$exportAnchor];
     });
-    //厂商结算值 点保存//
+    //厂结值 点保存//
     function updateMaterialSubOrderBalanceForVBalance(){
         if (!com.validate('smodal')) {
 
             var _params = {
                 //ID用于后台获得该订单实体
                 "materialBalance.mbid": materialOrderPostBalance.msobId,
-                //用于后台修改厂商结算值
+                //用于后台修改厂结值
                 "materialBalance.vbalance": com.focusPage('#vbalance').val()
             };
             //调用后台方法
@@ -253,7 +253,7 @@ $(function(){
             });
         }
     }
-    //厂商结算
+    //厂结
     function  vpostMaterialSubOrderBalance(id){
 
         var _params = {
@@ -313,11 +313,11 @@ $(function(){
 					["券值","material.coupon"],
 					["券信息","material.couponInfo"],
 					["主材驻店", "instorer.currentName"],
-					["预结算值","balance"],
-					["预结算时间 ","balanceTime"],
+					["预结值","balance"],
+					["预结时间 ","balanceTime"],
 					["创建人", "creater.currentName"],
-					["厂商结算","vbalance"],
-					["厂商结算时间","vbalanceTime"],
+					["厂结","vbalance"],
+					["厂结时间","vbalanceTime"],
 					["结算值","post"],
 					["结算时间","postTime"],
 					["结算人","poster.currentName"],
@@ -328,8 +328,8 @@ $(function(){
                 ],
                 list: res.paging.data,
             }, function(v){
-				v.status = v.status== 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---';
-				v.type = v.type == 0 ? '购货' : v.type == 1 ? '预结算退货' : '结算退货';
+				v.status = v.status== 0 ? '预结': v.status== 1 ? '厂结' : v.status== 2 ? '结算' : '---';
+				v.type = v.type == 0 ? '购货' : v.type == 1 ? '预结退货' : '结算退货';
 			});
         });
     }

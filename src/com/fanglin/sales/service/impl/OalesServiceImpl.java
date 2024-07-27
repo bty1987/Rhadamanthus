@@ -69,20 +69,7 @@ public class OalesServiceImpl implements OalesService {
 
 			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
-
-			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPO.getChanner(), oalesVO.getChanner(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPO.getDept(), oalesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(oalesPO.getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(oalesPO.getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPO.getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
-
-			oalesPO.getDecoration().ptvcascade(oalesVO.getDecoration());
-
-			oalesVOs.add(oalesVO);
+			oalesVOs.add(oalesPO.ptv(oalesVO));
 		}
 
 		paging.setData(oalesVOs);
@@ -96,20 +83,9 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			oalesVO = new OalesVO(null, new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
-
-			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(oalesPO.getChanner(), oalesVO.getChanner(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(oalesPO.getDept(), oalesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(oalesPO.getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(oalesPO.getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(oalesPO.getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
-
-			oalesVOs.add(oalesVO);
+			oalesVOs.add(oalesPO.ptv(oalesVO));
 		}
 
 		return oalesVOs;

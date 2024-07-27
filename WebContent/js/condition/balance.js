@@ -286,7 +286,7 @@ Condition.addupRule("balance", {
         }
     },
     "balanceSelse-balanceSelse-status": {
-        label: "结算销售状态",
+        label: "结销状态",
         type: "select",
         submitConfig: {
             name: "status",

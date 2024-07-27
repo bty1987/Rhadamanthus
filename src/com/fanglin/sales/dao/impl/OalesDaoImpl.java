@@ -85,23 +85,25 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 			String op = filter.getOp();
 
 			if (field.contains("dept")) {
-				query.alias("dept", "dept");
+				query.alias(String.format("%sdept", prefix), "dept");
 			} else if (field.contains("region")) {
-				query.alias("region", "region");
+				query.alias(String.format("%sregion", prefix), "region");
 			}
 
 			if ("oales.no".equals(field)) {
 				query.add(query.getCriterion(String.format("%sno", prefix), data, op));
-			} else if ("oales.createTime".equals(field)) {
-				query.timeranges("createTime", data);
 			} else if ("oales.status".equals(field)) {
 				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
 			} else if ("oales.brand.bid".equals(field)) {
 				query.add(query.getCriterion(String.format("%sbid", prefix), Long.valueOf(data), op));
 			} else if ("oales.category".equals(field)) {
 				query.add(query.getCriterion(String.format("%scategory", prefix), data, op));
+			} else if ("oales.createTime".equals(field)) {
+				query.timeranges(String.format("%screateTime", prefix), String.format("%screateTime", prefix), data);
 			} else if ("oales.confirmTime".equals(field)) {
-				query.timeranges("confirmTime", data);
+				query.timeranges(String.format("%sconfirmTime", prefix), String.format("%sconfirmTime", prefix), data);
+			} else if ("oales.checkTime".equals(field)) {
+				query.timeranges(String.format("%scheckTime", prefix), String.format("%scheckTime", prefix), data);
 			} else if ("oales.region.no".equals(field)) {
 				query.add(query.getCriterion("region.no", data, op));
 			} else if ("oales.dept.no".equals(field)) {

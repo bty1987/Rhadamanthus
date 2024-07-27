@@ -323,13 +323,13 @@ $(function() {
                     $btnVbalanceValue.click(function(e) {
 
                         if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
-                            com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
+                            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
                             return false;
                         }
 
                         salesBalance.items.vbalanceValue.find('input[name="total"]').val(v.total);
 
-                        com.popup4model("#vbalanceValue", "厂商结算值", function() {
+                        com.popup4model("#vbalanceValue", "厂结值", function() {
 
                             salesBalance.sales = v;
                         }, function() {
@@ -342,22 +342,22 @@ $(function() {
                     $btnVbalance.click(function(e) {
 
                         if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
-                            com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
+                            com.showAlert(com.warning, "非预结状态下不允许进行厂结");
                             return false;
                         }
 
                         if (v.vbalance == 0) {
-                            com.showAlert(com.warning, "厂商结算值未填写 , 请检查");
+                            com.showAlert(com.warning, "厂结值未填写 , 请检查");
                             return false;
                         }
 
-                        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂商结算吗?', function(index, layero) {
+                        com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂结吗?', function(index, layero) {
 
                             com.post(api.sales.vpostSalesBalance, {
                                 "salesBalances[0].sbid": v.sbid
                             }, function(res) {
 
-                                com.showAlert(com.info, "厂商结算成功");
+                                com.showAlert(com.info, "厂结成功");
                                 salesBalanceSearcher.doSearch();
                             });
 
@@ -370,7 +370,7 @@ $(function() {
                     $btnBalanceValue.click(function(e) {
 
                         if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
-                            com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
+                            com.showAlert(com.warning, "非厂结状态下不允许进行结算");
                             return false;
                         }
 
@@ -390,7 +390,7 @@ $(function() {
                     $btnBalance.click(function(e) {
 
                         if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
-                            com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
+                            com.showAlert(com.warning, "非厂结状态下不允许进行结算");
                             return false;
                         }
 
@@ -433,7 +433,7 @@ $(function() {
                             "salesBalance.sbid": v.sbid
                         }, function(res) {
 
-                            com.showAlert(com.info, "更新为预结算成功");
+                            com.showAlert(com.info, "更新为预结成功");
                             salesBalanceSearcher.doSearch();
                         });
                     });
@@ -469,7 +469,7 @@ $(function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'batchVendor').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-check bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('批量厂商结算').appendTo($adda);
+        var $addspan = $('<span></span>').text('批量厂结').appendTo($adda);
 
         var $addaEnd = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'batchSettlement').css("margin", "0px 3px");
         var $addiEnd = $('<i></i>').addClass('icon-check bigger-110').appendTo($addaEnd);
@@ -595,7 +595,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值:", 'sales.coupon'], ["券信息:", 'sales.couponInfo'], ["驻店:", 'sales.instorer.currentName'], ["预结算值:", 'balance'], ["预结算时间:", 'createTime'], ["预结算人:", 'creater.currentName'], ["厂商结算:", 'vbalance'], ["厂商结算人:", 'voster.currentName'], ["厂商结算时间:", 'venderTime'], ["结算值:", 'pbalance'], ["结算时间:", 'postTime'], ["结算人:", 'poster.currentName'], ["抹零:", 'sales.maling'], ["厂商抹零:", 'sales.venderMaling'], ["状态:", 'status'], ["类型:", 'type'], ["等级:", 'sales.grade'], ],
+                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值:", 'sales.coupon'], ["券信息:", 'sales.couponInfo'], ["驻店:", 'sales.instorer.currentName'], ["预结值:", 'balance'], ["预结时间:", 'createTime'], ["预结人:", 'creater.currentName'], ["厂结:", 'vbalance'], ["厂结人:", 'voster.currentName'], ["厂结时间:", 'venderTime'], ["结算值:", 'pbalance'], ["结算时间:", 'postTime'], ["结算人:", 'poster.currentName'], ["抹零:", 'sales.maling'], ["厂商抹零:", 'sales.venderMaling'], ["状态:", 'status'], ["类型:", 'type'], ["等级:", 'sales.grade'], ],
                 list: res.paging.data
 
             }, function(v) {
@@ -603,8 +603,8 @@ $(function() {
                 v.venderTime = v.venderTime == null ? '' : v.venderTime;
                 v.postTime = v.postTime == null ? '' : v.postTime;
                 v.poster.currentName = v.poster.currentName == null ? '' : v.poster.currentName;
-                v.status = v.status == constant.sales().salesBalance.STATUS_PREBALANCE_INT ? '预结算' : v.status == constant.sales().salesBalance.STATUS_VENDORBALANCE_INT ? "厂商结算" : "结算";
-                v.type = v.type == constant.sales().salesBalance.TYPE_INIT_INT ? "购货" : v.type == constant.sales().salesBalance.TYPE_PREBALANCEREFUNDS_INT ? "预结算退货" : "结算退货";
+                v.status = v.status == constant.sales().salesBalance.STATUS_PREBALANCE_INT ? '预结' : v.status == constant.sales().salesBalance.STATUS_VENDORBALANCE_INT ? "厂结" : "结算";
+                v.type = v.type == constant.sales().salesBalance.TYPE_INIT_INT ? "购货" : v.type == constant.sales().salesBalance.TYPE_PREBALANCEREFUNDS_INT ? "预结退货" : "结算退货";
                 v.voster.currentName = v.voster.currentName == null ? '' : v.voster.currentName;
 
                 v.sales.coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
@@ -615,7 +615,7 @@ $(function() {
         });
     }
 
-    // 批量厂商结算
+    // 批量厂结
     function vpostBalance() {
 
         var options = checkedInput(true);
@@ -625,7 +625,7 @@ $(function() {
 
         com.post(api.sales.vpostSalesBalance, options, function(res) {
 
-            com.showAlert(com.info, "厂商结算成功");
+            com.showAlert(com.info, "厂结成功");
             salesBalanceSearcher.doSearch();
         });
     }
@@ -670,13 +670,13 @@ $(function() {
             var sbid = input.attr("data-sbid");
 
             if (flag && status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
-                com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
+                com.showAlert(com.warning, "非预结状态下不允许进行厂结");
                 return false;
             } else if (flag && vbalance == 0) {
-                com.showAlert(com.warning, "厂商结算值未填写 , 请检查");
+                com.showAlert(com.warning, "厂结值未填写 , 请检查");
                 return false;
             } else if (!flag && status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
-                com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
+                com.showAlert(com.warning, "非厂结状态下不允许进行结算");
                 return false;
             } else if (!flag && pbalance == 0) {
                 com.showAlert(com.warning, "结算值未填写 , 请检查");

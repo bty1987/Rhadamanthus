@@ -25,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -115,6 +116,10 @@ public class DecorationPO implements Serializable {
 	private UserPO escorter;
 
 	private UserPO contracter;
+
+	private DepartmentPO designDept;
+
+	private DepartmentPO salesDept;
 
 	private short type;
 
@@ -298,6 +303,26 @@ public class DecorationPO implements Serializable {
 
 	public void setContracter(UserPO contracter) {
 		this.contracter = contracter;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "ddid", referencedColumnName = "did")
+	public DepartmentPO getDesignDept() {
+		return designDept;
+	}
+
+	public void setDesignDept(DepartmentPO designDept) {
+		this.designDept = designDept;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "sdid", referencedColumnName = "did")
+	public DepartmentPO getSalesDept() {
+		return salesDept;
+	}
+
+	public void setSalesDept(DepartmentPO salesDept) {
+		this.salesDept = salesDept;
 	}
 
 	public Timestamp getMeasureTime() {

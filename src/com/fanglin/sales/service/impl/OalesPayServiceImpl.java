@@ -47,17 +47,9 @@ public class OalesPayServiceImpl implements OalesPayService {
 			OalesPayVO oalesPayVO = new OalesPayVO(new UserBaseVO(), new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()));
 
 			BeanUtil.copyProperties(oalesPayOO, oalesPayVO, Arrays.asList("oales", "creater"));
-
 			BeanUtil.copyProperties(oalesPayOO.getCreater(), oalesPayVO.getCreater(), Arrays.asList("dept", "duty"));
 
-			BeanUtil.copyProperties(oalesPayOO.getOales(), oalesPayVO.getOales(), Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
-
-			BeanUtil.copyProperties(oalesPayOO.getOales().getCreater(), oalesPayVO.getOales().getCreater(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPayOO.getOales().getSupplier(), oalesPayVO.getOales().getSupplier(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPayOO.getOales().getServicer(), oalesPayVO.getOales().getServicer(), Arrays.asList("dept", "duty"));
-			// BeanUtil.copyProperties(oalesPayOO.getOales().getChecker(), oalesPayVO.getOales().getChecker(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(oalesPayOO.getOales().getMaterialer(), oalesPayVO.getOales().getMaterialer(), Arrays.asList("dept", "duty"));
-			oalesPayOO.getOales().getDecoration().ptvcascade(oalesPayVO.getOales().getDecoration());
+			oalesPayOO.getOales().ptv(oalesPayVO.getOales());
 
 			oalesPayVOs.add(oalesPayVO);
 		}
@@ -77,7 +69,6 @@ public class OalesPayServiceImpl implements OalesPayService {
 			oalesPayVO = new OalesPayVO(new UserBaseVO(), new OalesVO());
 
 			BeanUtil.copyProperties(oalesPayPO, oalesPayVO, Arrays.asList("creater"));
-
 			BeanUtil.copyProperties(oalesPayPO.getCreater(), oalesPayVO.getCreater(), Arrays.asList("dept", "duty"));
 
 			oalesPayVOs.add(oalesPayVO);
@@ -109,6 +100,23 @@ public class OalesPayServiceImpl implements OalesPayService {
 	public int updateOalesPay(OalesPayVO oalesPayVO) throws FLException {
 
 		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
+
+		BeanUtil.copyProperties(oalesPayVO, oalesPayPO, Arrays.asList("creater"));
+
+		oalesPayDao.update(oalesPayPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateOalesPayForAdvance(OalesPayVO oalesPayVO) throws FLException {
+
+		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
+
+		if (oalesPayPO == null) {
+			throw new FLException(000000, "销售付款不存在");
+		}
 
 		BeanUtil.copyProperties(oalesPayVO, oalesPayPO, Arrays.asList("creater"));
 

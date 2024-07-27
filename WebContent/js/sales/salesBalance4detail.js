@@ -57,9 +57,9 @@ $(function(){
 
                 _option["sid[0]"] = v.sid;
 
-                com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
+                com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结吗?', function (index, layero) {
                     com.post(api.sales.preSalesBalance, _option, function (res) {
-                        com.showAlert(com.info, "预结算成功");
+                        com.showAlert(com.info, "预结成功");
                     });
                 });
             });

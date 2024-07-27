@@ -307,7 +307,7 @@ jQuery(function($) {
 			["money price", v.price == null ? "-" : v.price],//售价
 			["num", v.num == null ? "-" : v.num],//数量
 			["money total", v.total],//总价
-			["money", v.prePoint],//预结算值
+			["money", v.prePoint],//预结值
 			["seat", v.comment ? v.comment : "--"],//备注
 			["package", ''],//占位
 		];

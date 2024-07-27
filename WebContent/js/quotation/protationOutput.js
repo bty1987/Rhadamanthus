@@ -22,6 +22,8 @@ function printProjectTable(type) {
     var _manageRate = protation.protation.manageRate;
     var _accdPrice = protation.protation.accdPrice;
     var _accmPrice = protation.protation.accmPrice;
+    var _manageProfit = protation.protation.manageProfit;
+    var _advanceProfit = protation.protation.advanceProfit;
     var _managePrice = protation.protation.managePrice;
     var _preferPrice = protation.protation.preferPrice;
     var _subdPrice = protation.protation.subdPrice;
@@ -66,14 +68,26 @@ function printProjectTable(type) {
     contentHtml += '<td width="5%" align="center">' + _manageRate + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
-    contentHtml += '<td width="5%" align="center">折后管理费</td>';
+    contentHtml += '<td width="5%" align="center">管理费</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
     contentHtml += '<td width="5%" align="center">' + ((type & 1) == 1 ? _managePrice : '') + '</td>';
     contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">管理优惠</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + _manageProfit + '</td>';
+    contentHtml += '</tr>';
+    if(_advanceProfit != 0){
+        contentHtml += '<tr>';
+        contentHtml += '<td width="5%" align="center">特殊优惠</td>';
+        contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+        contentHtml += '<td width="5%" align="center">' + _advanceProfit + '</td>';
+        contentHtml += '</tr>';
+    }
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(_quotePrice, _managePrice), _preferPrice), utils.accAdd(utils.accAdd(_subdPrice, _submPrice), _subcPrice))) + '</td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(_quotePrice, _managePrice), _preferPrice),_manageProfit),_advanceProfit), utils.accAdd(utils.accAdd(_subdPrice, _submPrice), _subcPrice))) + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;

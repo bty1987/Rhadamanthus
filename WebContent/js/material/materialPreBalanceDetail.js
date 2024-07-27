@@ -162,7 +162,7 @@ jQuery(function($) {
 
 		options["mids[0]"] = materialOrderPreBalancePostData["materialOrderPreBalance.msoId"];
 
-        com.showConfirm("确定需要提交当前子订单的预结算处理吗?", function () {
+        com.showConfirm("确定需要提交当前子订单的预结处理吗?", function () {
             com.post(api.material.preBalanceMaterial, options, function (result) {
                 com.focusPage("#materialOrderPreBalancePageContent").load(api.index.materialPreBalanceIndex.url);
             }, function (result) {

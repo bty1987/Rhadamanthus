@@ -2,6 +2,7 @@ package com.fanglin.sales.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.OalesPayVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "oalespay", catalog = "sales")
@@ -139,5 +142,16 @@ public class OalesPayOO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public OalesPayVO ptv(OalesPayVO oalesPayVO) {
+
+		BeanUtil.copyProperties(this, oalesPayVO, Arrays.asList("oales", "creater"));
+
+		if (oalesPayVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), oalesPayVO.getCreater(), Arrays.asList("dept", "duty"));
+
+		if (oalesPayVO.getOales() != null) getOales().ptv(oalesPayVO.getOales());
+
+		return oalesPayVO;
 	}
 }
