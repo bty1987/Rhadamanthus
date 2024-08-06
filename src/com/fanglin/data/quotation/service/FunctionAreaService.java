@@ -30,6 +30,8 @@ public interface FunctionAreaService {
 
 	public int updateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException;
 
+	public int updateFunctionAreaForStatus(FunctionAreaVO functionAreaVO) throws FLException;
+
 	public int deleteFunctionArea(FunctionAreaVO functionAreaVO);
 
 }

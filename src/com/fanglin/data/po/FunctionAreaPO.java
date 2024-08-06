@@ -41,6 +41,8 @@ public class FunctionAreaPO implements Serializable {
 
 	public static final short TYPE_UNACHE_INT = 5;
 
+	public static final short STATUS_ENABLE_INT = 0;
+
 	private long faid;
 
 	private String no;
@@ -56,6 +58,8 @@ public class FunctionAreaPO implements Serializable {
 	private short type;
 
 	private long total;
+
+	private short status;
 
 	public FunctionAreaPO() {
 		super();
@@ -134,6 +138,15 @@ public class FunctionAreaPO implements Serializable {
 
 	public void setTotal(long total) {
 		this.total = total;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 }

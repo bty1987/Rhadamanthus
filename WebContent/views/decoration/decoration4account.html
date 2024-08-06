@@ -119,7 +119,7 @@
                                                 <div class="widget-body">
                                                     <div class="widget-body-inner">
                                                         <div class="clearfix" style="margin-top: 15px; margin-bottom: 15px;">
-                                                            <div class="col-md-2" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
                                                                 <h5 class="bigger-110 center">报价总额</h5>
                                                                 <h2 class="oid bigger center">
                                                                     <b class="blue" id="foldFrontTotalPrice"></b>
@@ -352,8 +352,9 @@
                                         <div class="widget-container-span col-md-12">
                                             <div class="widget-box transparent">
                                                 <div class="widget-header tabbable">
-                                                    <ul class="nav nav-tabs" id="myTab">
-                                                        <li class="dropdown">
+                                                    <div class="nav nav-tabs" id="myTab">
+                                                        <div class="dropdown">
+                                                            <button id="addReduceIndexBtn" class="btn btn-xs btn-info pull-right">明细</button>
                                                             <a data-toggle="dropdown" class="dropdown-toggle" style="border-style: none; box-shadow: none; color: #478fca; background-color: #fff; padding: 0;" href="#">
                                                                  <h4>
                                                                      <strong>增减 &nbsp;</strong>
@@ -365,8 +366,8 @@
                                                                 <li><a data-toggle="tab" href="#" id="addConstructionItemsBtn">工程</a></li>
                                                                 <li><a data-toggle="tab" href="#" id="addMaterialItemsBtn">主材</a></li>
                                                             </ul>
-                                                        </li>
-                                                    </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="widget-body tab-content">
                                                     <div class="widget-body-inner tab-pane active">
@@ -597,6 +598,30 @@
                                                                     <b class="blue" id="balanceSum">0</b>
                                                                 </h2>
                                                             </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">决算折前总额（全）</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="directC">0</b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <h5 class="bigger-110 center"></h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center"></h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue"></b>
+                                                                </h2>
+                                                            </div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                                <h5 class="bigger-110 center">应补款</h5>
+                                                                <h2 class="oid bigger center">
+                                                                    <b class="blue" id="fullPayment">0</b>
+                                                                </h2>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -760,6 +785,8 @@
         </div>
     </div>
 </div>
+
+<div id="layerPopUp"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/utils/decorationUtils.js','js/utils/quotationUtils.js','js/utils/materialUtils.js','js/decoration/decoration4account.js']);

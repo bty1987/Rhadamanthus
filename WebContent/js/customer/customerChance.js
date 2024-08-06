@@ -213,6 +213,15 @@ jQuery(function($) {
         prop: "source.name",
         clazz: "grey"
     }, {
+        field: "phone",
+        name: "客户电话",
+        prop: "source.phone",
+        clazz: "grey",
+        show: function(v) {
+
+            return (v.isRead == constant.customer().customerChance.ISREAD_READ_INT);
+        }
+    }, {
         field: "busitype",
         name: "业务类型",
         prop: "busitype.name",
@@ -270,6 +279,17 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.customer().customerChance.status.keys,
     }, {
+        field: "isRead",
+        name: "已读标识",
+        prop: "isRead",
+        clazz: "red",
+        dataset: constant.customer().customerChance.isRead.keys,
+    }, {
+        field: "readTime",
+        name: "已读时间",
+        prop: "readTime",
+        clazz: "green"
+    }, {
         field: "comment",
         name: "备注",
         prop: "comment",
@@ -277,6 +297,25 @@ jQuery(function($) {
     }];
 
     var linebtns = [{
+        name: "已读",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            com.post(api.customer.readCustomerChance, {
+                "customerChance.ccid": v.ccid
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return v.isRead == constant.customer().customerChance.ISREAD_UNREAD_INT;
+        }
+    }, {
         name: "分配",
         clazz: "btn-yellow",
         handle: function(v) {

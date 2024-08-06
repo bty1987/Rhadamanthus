@@ -196,6 +196,9 @@ $.extend(api, {
                 args: ["functionArea.total"]
             }
         },
+        updateFunctionAreaForStatus: {
+            url: "updateFunctionAreaForStatus.do"
+        },
         deleteFunctionArea: {
             url: "deleteFunctionArea.do"
         },
@@ -1643,7 +1646,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
             }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
@@ -1658,7 +1661,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
             }]
         },
         queryAddReduceByOrderId: {
@@ -1667,7 +1670,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduces",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
             }, {
                 result: "addReduces-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1679,7 +1682,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduces",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
             }, {
                 result: "addReduces-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1691,7 +1694,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduce",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
             }, {
                 result: "addReduce-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1703,7 +1706,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduce",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
             }, {
                 result: "addReduce-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1721,7 +1724,7 @@ $.extend(api, {
             url: "updateAddReduce.do",
             type: "update",
             tranargs: {
-                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"],
+                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.discount", "addReduce.accountDiscount", "addReduce.taxRate", "addReduce.taxPrice"],
             }
         },
         updateAddReduceForAdvance: {
@@ -1729,7 +1732,14 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"],
+                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.discount", "addReduce.accountDiscount", "addReduce.taxRate", "addReduce.taxPrice"],
+            }
+        },
+        updateAddReduceForAccount: {
+            url: "updateAddReduceForAccount.do",
+            type: "update",
+            tranargs: {
+                args: ["addReduce.accountDiscount"],
             }
         },
         submitAddReduce: {

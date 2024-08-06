@@ -55,6 +55,8 @@ public class AddReduceVO implements Serializable {
 
 	private Short taxDiscount;
 
+	private Integer accountDiscount;
+
 	private Long undisPrice;
 
 	private Long disPrice;
@@ -216,6 +218,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setTaxDiscount(Short taxDiscount) {
 		this.taxDiscount = taxDiscount;
+	}
+
+	public Integer getAccountDiscount() {
+		return accountDiscount;
+	}
+
+	public void setAccountDiscount(Integer accountDiscount) {
+		this.accountDiscount = accountDiscount;
 	}
 
 	public Long getUndisPrice() {

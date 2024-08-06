@@ -13,15 +13,18 @@
             addReduceType: com.focusPage("#addReduceType"),
             atttype: com.focusPage("#addReduceAtttype"),
             paytype: com.focusPage("#paytype"),
+            accountDiscount: com.focusPage("#accountDiscount"),
         },
 
         modals: {
             addReduceModal: com.focusPage("#addReduceModal"),
+            addReduceAccountModal: com.focusPage("#addReduceAccountModal")
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-            payBtn: com.focusPage("#payBtn").on("click", unpay)
+            payBtn: com.focusPage("#payBtn").on("click", unpay),
+            saveAccountBtn: com.focusPage("#saveAccountBtn").on("click", saveAccount)
         },
 
         editFlag: false,
@@ -231,6 +234,17 @@
             };
 
             com.post(api.quotation.makeNormtionForAddReduce, params);
+        }
+    };
+
+    var btnAccount = {
+        name: "决算",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            addReduce.arid = v.arId;
+
+            addReduce.modals.addReduceAccountModal.modal("show");
         }
     };
 
@@ -714,6 +728,122 @@
         searcher.line("decoration.orderId", lineprops, linebtns);
     }
 
+    if (addReduce.pageType == "account") {
+
+        var linebtns = [btnAccount];
+
+        com.focusPage("#pagenation").hide();
+
+        searcher.init("", "condList", api.addReduce.queryAddReduceByOrderId, function(data) {
+
+        }, null, "addReducePostData", {
+            "addReduce.orderId": addReduce.orderId
+        }, true, "addReduces");
+
+        var lineprops = [{
+            field: "type",
+            name: "类别",
+            prop: "type",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.type.keys
+        }, {
+            field: "atttype",
+            name: "类型",
+            prop: "atttype",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.atttype.keys
+        }, {
+            field: "undisPrice",
+            name: "非打折总额",
+            prop: "undisPrice",
+            clazz: "blue"
+        }, {
+            field: "disPrice",
+            name: "打折总额",
+            prop: "disPrice",
+            clazz: "blue"
+        }, {
+            field: "managePrice",
+            name: "管理费",
+            prop: function(v) {
+
+                return v.manageDiscount == constant.quotation().addreduce.MANAGEDISCOUNT_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(v.managePrice, utils.accDiv(v.discount, 10))) : v.managePrice;
+            },
+            clazz: "blue"
+        }, {
+            field: "taxPrice",
+            name: "税金",
+            prop: function(v) {
+
+                return v.manageDiscount == constant.quotation().addreduce.MANAGEDISCOUNT_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(v.taxPrice, utils.accDiv(v.discount, 10))) : v.taxPrice;
+            },
+            clazz: "blue"
+        }, {
+            field: "taxRate",
+            name: "税金比例",
+            prop: "taxRate",
+            clazz: "blue"
+        }, {
+            field: "accountDiscount",
+            name: "决算折扣",
+            prop: "accountDiscount",
+            clazz: "blue"
+        }, {
+            field: "consPrice",
+            name: "工程总额",
+            prop: "consPrice",
+            clazz: "blue"
+        }, {
+            field: "houseNumber",
+            name: "总价",
+            prop: "total",
+            clazz: "blue"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: "status",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.status.keys
+        }, {
+            field: "paytype",
+            name: "付款类型",
+            prop: "paytype",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.paytype.keys
+        }, {
+            field: "isAffirm",
+            name: "是否确认",
+            prop: "isAffirm",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.isAffirm.keys
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "confirmTime",
+            name: "款项确认时间",
+            prop: "confirmTime",
+            clazz: "green",
+            dataset: addReduce.confirmTime
+        }, {
+            field: "affirmTime",
+            name: "客户确认时间",
+            prop: "affirmTime",
+            clazz: "green",
+            dataset: addReduce.affirmTime
+        }, {
+            field: "sendTime",
+            name: "推送时间",
+            prop: "sendTime",
+            clazz: "green",
+            dataset: addReduce.sendTime
+        }];
+
+        searcher.line("content", lineprops, linebtns);
+    }
+
     searcher.render();
 
     // 查看按钮方法
@@ -989,6 +1119,26 @@
         }, null, false);
 
         return pageConfig;
+    }
+
+    function saveAccount() {
+
+        if (com.validate("addReduceAccountModal"))
+            return false;
+
+        var options = {
+            "addReduce.arId": addReduce.arid,
+            "addReduce.orderId": addReduce.orderId,
+            "addReduce.accountDiscount": addReduce.items.accountDiscount.val(),
+        };
+
+        com.post(api.addReduce.updateAddReduceForAccount, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+
+            addReduce.modals.addReduceAccountModal.modal("hide");
+        });
     }
 
 });

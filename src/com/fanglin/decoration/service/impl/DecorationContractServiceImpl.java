@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
@@ -245,11 +246,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONObject params = JSONObject.parseObject(data);
 
-		JSONArray tables = new JSONArray();
-
-		if (table != null) {
-			tables.add(JSONObject.parseObject(table));
-		}
+		JSONArray tables = JSON.parseArray(table);
 
 		Signature.generate(decorationContractPO, params, tables);
 

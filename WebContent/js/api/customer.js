@@ -265,6 +265,12 @@ $.extend(api, {
         updateCustomerSourceForStatus: {
             url: "updateCustomerSourceForStatus.do"
         },
+        updateCustomerSourceForCustomer: {
+            url: "updateCustomerSourceForCustomer.do"
+        },
+        updateCustomerSourceForHouse: {
+            url: "updateCustomerSourceForHouse.do"
+        },
         issueCustomerSource: {
             url: "issueCustomerSource.do"
         },
@@ -297,6 +303,9 @@ $.extend(api, {
         },
         changeCustomerChance: {
             url: "changeCustomerChance.do"
+        },
+        readCustomerChance: {
+            url: "readCustomerChance.do"
         },
 
         pageVustomerByUnionId: {
@@ -691,8 +700,9 @@ $.extend(tools, {
             }, function(res) {
 
                 var customer = res.customer;
+                var type = constant.customer().customer.customerType.keys[customer.type];
 
-                com.showTip(content, "姓名:" + customer.name + "<br\>地址:" + customer.address + "<br\>邮箱:" + customer.email, "bottom");
+                com.showTip(content, "姓名:" + customer.name + "<br\>地址:" + customer.address + "<br\>邮箱:" + customer.email+ "<br\>客户类型:" + type, "bottom");
             });
 
         }

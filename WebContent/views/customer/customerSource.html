@@ -78,20 +78,20 @@
                         <div class="form-group villageName">
                             <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
                             <div class="col-sm-9">
-                                <input type="text" class="m-wrap col-xs-6 v_typeahead" id="villageName">
+                                <input type="text" class="m-wrap col-xs-6" id="villageName">
                             </div>
                         </div>
 
                         <div class="form-group rule">
-                            <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
+                            <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
                             <div class="col-sm-9">
-                                <input type="text" maxlength="7" class="v_required" style="width: 10%;" id="built">
+                                <input type="text" maxlength="7" style="width: 10%;" id="built">
                                 <select id="builtrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="unit">
+                                <input type="text" maxlength="3" style="float: none; width: 10%;" id="unit">
                                 <select id="unitrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="floor">
+                                <input type="text" maxlength="3" style="float: none; width: 10%;" id="floor">
                                 <select id="floorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;" id="door">
+                                <input type="text" maxlength="3" style="float: none; width: 10%;" id="door">
                                 <select id="doorrule" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
                                 <span id="errMsg"></span>
                                 <div class="col-md-12" style="padding: 0px;">
@@ -207,9 +207,9 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
+                            <label class="col-sm-3 control-label no-padding-right orange">楼盘名</label>
                             <div class="col-sm-9">
-                                <input type="text" class=" m-wrap col-xs-6" id="villageName1">
+                                <input type="text" class=" m-wrap col-xs-6 v_required" id="villageName1">
                             </div>
                         </div>
 
@@ -232,7 +232,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="busitype" class="col-sm-3 control-label no-padding-right orange" >业务类型</label>
+                            <label for="busitype" class="col-sm-3 control-label no-padding-right orange">业务类型</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="busitype"></select>
                             </div>
@@ -264,6 +264,52 @@
                 <div class="modal-footer" style="text-align: center">
                     <button type="button" id="firstApprovalBtn" class="btn btn-primary" data-loading-text="提交中...">提交</button>
                     <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--房产更新-->
+    <div class="modal fade" id="updateForHouse" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="updateForHouseInfo">房产更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="villageName2">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" style="width: 10%;" id="built2">
+                                <select id="builtrule2" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" style="float: none; width: 10%;" id="unit2">
+                                <select id="unitrule2" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" style="float: none; width: 10%;" id="floor2">
+                                <select id="floorrule2" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" style="float: none; width: 10%;" id="door2">
+                                <select id="doorrule2" style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;">
+                                    <span id="rule2" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="updateHouseBtn" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>

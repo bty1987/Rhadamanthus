@@ -79,6 +79,14 @@ public class FunctionAreaAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateFunctionAreaForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateFunctionAreaForStatus() throws FLException {
+
+		functionAreaService.updateFunctionAreaForStatus(functionArea);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteFunctionArea() {
 

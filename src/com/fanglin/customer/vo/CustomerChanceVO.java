@@ -35,11 +35,15 @@ public class CustomerChanceVO implements Serializable {
 
 	private Timestamp confirmTime;
 
+	private Timestamp readTime;
+
 	private Integer rate;
 
 	private Short type;
 
 	private Short status;
+
+	private Short isRead;
 
 	private String comment;
 
@@ -153,6 +157,15 @@ public class CustomerChanceVO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getReadTime() {
+		return readTime;
+	}
+
+	public void setReadTime(Timestamp readTime) {
+		this.readTime = readTime;
+	}
+
 	public Integer getRate() {
 		return rate;
 	}
@@ -175,6 +188,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIsRead() {
+		return isRead;
+	}
+
+	public void setIsRead(Short isRead) {
+		this.isRead = isRead;
 	}
 
 	public String getComment() {

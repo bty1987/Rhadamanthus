@@ -94,6 +94,8 @@ $(function() {
             superRatio: com.focusPage("#superRatio", "#decorationAccountContent"),
             taxPrice: com.focusPage("#taxPriceA", "#decorationAccountContent"),
             balanceSum: com.focusPage("#balanceSum", "#decorationAccountContent"),
+            directC: com.focusPage("#directC", "#decorationAccountContent"),
+            fullPayment: com.focusPage("#fullPayment", "#decorationAccountContent"),
         },
         items: {
             discountName: com.focusPage("#discountName", "#decorationAccountContent"),
@@ -124,7 +126,8 @@ $(function() {
             noticeQRCodeBtn: com.focusPage("#noticeQRCodeBtn", "#decorationAccountContent"),
             addReduceItemsBtn: com.focusPage("#addReduceItemsBtn", "#decorationAccountContent"),
             addConstructionItemsBtn: com.focusPage("#addConstructionItemsBtn", "#decorationAccountContent"),
-            addMaterialItemsBtn: com.focusPage("#addMaterialItemsBtn", "#decorationAccountContent")
+            addMaterialItemsBtn: com.focusPage("#addMaterialItemsBtn", "#decorationAccountContent"),
+            addReduceIndexBtn: com.focusPage("#addReduceIndexBtn", "#decorationAccountContent"),
 
         },
         modal: {
@@ -262,6 +265,9 @@ $(function() {
         material: 0,
         service: 0,
         discount: 0,
+
+        addFoldFrontTotal: 0,
+        minusFoldFrontTotal: 0,
 
         cal: false,
 
@@ -506,6 +512,9 @@ $(function() {
             }
         }
 
+        accountBasic.addFoldFrontTotal = $addFoldFrontTotal;
+        accountBasic.minusFoldFrontTotal = $minusFoldFrontTotal;
+
         decorationDetail.extensionItems.addFoldFrontTotal.html(com.checkNull($addFoldFrontTotal, 0));
         decorationDetail.extensionItems.addManagePrice.html(com.checkNull($addManagePrice, 0));
         decorationDetail.extensionItems.addTotal.html(com.checkNull($addTotal, 0));
@@ -635,131 +644,7 @@ $(function() {
     decorationDetail.oalesItems.oalesTotal.html(accountBasic.oalesTotal);
     decorationDetail.oalesItems.oalesMaterialTotal.html(utils.accAdd(accountBasic.oalesTotal, accountBasic.materialTotal));
 
-    com.post(api.addReduce.queryAddReduceByOrderId, {
-        "addReduce.orderId": decorationDetail.orderId
-    }, function(res) {
-
-        var addReduces = res.addReduces;
-
-        $.each(addReduces, function(i, v) {
-
-            if ([0].indexOf(v.paytype) == -1) // 付款类型验证
-                return true;
-
-            if ([2, 3].indexOf(v.status) == -1) // 状态验证
-                return true;
-
-            if ([3].indexOf(v.schedule) == -1) // 工程状态验证
-                return true;
-
-            if (v.type == 0) { // 增项
-
-                accountBasic.addPredisPrice = utils.accAdd(accountBasic.addPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                accountBasic.addPredisManagePrice = utils.accAdd(accountBasic.addPredisManagePrice, v.managePrice);
-                accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 增项管理费
-                accountBasic.addCalPrice = utils.accAdd(accountBasic.addCalPrice, v.calPrice);
-                accountBasic.addUncalPrice = utils.accAdd(accountBasic.addUncalPrice, v.uncalPrice);
-                accountBasic.addTotalPrice = utils.accAdd(accountBasic.addTotalPrice, v.total);
-                accountBasic.addDisPrice = utils.accAdd(accountBasic.addDisPrice, v.disPrice);
-                accountBasic.addUndisPrice = utils.accAdd(accountBasic.addUndisPrice, v.undisPrice);
-                accountBasic.addPredisTaxPrice = utils.accAdd(accountBasic.addPredisTaxPrice, v.taxPrice);
-                accountBasic.addTaxPrice = utils.accAdd(accountBasic.addTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
-                accountBasic.addDone = utils.accAdd(accountBasic.addDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                accountBasic.addOwing = utils.accAdd(accountBasic.addOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-
-                accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.addDisPrice * (accountBasic.dd / 10) + accountBasic.addUndisPrice + Math.round(accountBasic.addManagePrice) - Math.round(accountBasic.addTotalPrice));
-
-                if (v.atttype == 0) {
-                    accountBasic.addConstructionPredisPrice = utils.accAdd(accountBasic.addConstructionPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                    accountBasic.addConstructionPredisManagePrice = utils.accAdd(accountBasic.addConstructionPredisManagePrice, v.managePrice);
-                    accountBasic.addConstructionManagePrice = utils.accAdd(accountBasic.addConstructionManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 增项管理费
-                    accountBasic.addConstructionCalPrice = utils.accAdd(accountBasic.addConstructionCalPrice, v.calPrice);
-                    accountBasic.addConstructionUncalPrice = utils.accAdd(accountBasic.addConstructionUncalPrice, v.uncalPrice);
-                    accountBasic.addConstructionTotalPrice = utils.accAdd(accountBasic.addConstructionTotalPrice, v.total);
-                    accountBasic.addConstructionDisPrice = utils.accAdd(accountBasic.addConstructionDisPrice, v.disPrice);
-                    accountBasic.addConstructionUndisPrice = utils.accAdd(accountBasic.addConstructionUndisPrice, v.undisPrice);
-                    accountBasic.addConstructionPredisTaxPrice = utils.accAdd(accountBasic.addConstructionPredisTaxPrice, v.taxPrice);
-                    accountBasic.addConstructionTaxPrice = utils.accAdd(accountBasic.addConstructionTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
-                    accountBasic.addConstructionOwing = utils.accAdd(accountBasic.addConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-                    accountBasic.addConstructionDone = utils.accAdd(accountBasic.addConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
-
-                    accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.addConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.addConstructionUndisPrice + Math.round(accountBasic.addConstructionManagePrice) - Math.round(accountBasic.addConstructionTotalPrice));
-
-                } else if (v.atttype == 1) {
-                    accountBasic.addMaterialPredisPrice = utils.accAdd(accountBasic.addMaterialPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                    accountBasic.addMaterialPredisManagePrice = utils.accAdd(accountBasic.addMaterialPredisManagePrice, v.managePrice);
-                    accountBasic.addMaterialManagePrice = utils.accAdd(accountBasic.addMaterialManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 增项管理费
-                    accountBasic.addMaterialCalPrice = utils.accAdd(accountBasic.addMaterialCalPrice, v.calPrice);
-                    accountBasic.addMaterialUncalPrice = utils.accAdd(accountBasic.addMaterialUncalPrice, v.uncalPrice);
-                    accountBasic.addMaterialTotalPrice = utils.accAdd(accountBasic.addMaterialTotalPrice, v.total);
-                    accountBasic.addMaterialDisPrice = utils.accAdd(accountBasic.addMaterialDisPrice, v.disPrice);
-                    accountBasic.addMaterialUndisPrice = utils.accAdd(accountBasic.addMaterialUndisPrice, v.undisPrice);
-                    accountBasic.addMaterialPredisTaxPrice = utils.accAdd(accountBasic.addMaterialPredisTaxPrice, v.taxPrice);
-                    accountBasic.addMaterialTaxPrice = utils.accAdd(accountBasic.addMaterialTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 增项税金
-                    accountBasic.addMaterialDone = utils.accAdd(accountBasic.addMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                    accountBasic.addMaterialOwing = utils.accAdd(accountBasic.addMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-
-                    accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.addMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.addMaterialUndisPrice + Math.round(accountBasic.addMaterialManagePrice) - Math.round(accountBasic.addMaterialTotalPrice));
-
-                }
-
-            } else if (v.type == 1) { // 减项
-
-                accountBasic.reducePredisPrice = utils.accAdd(accountBasic.reducePredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                accountBasic.reducePredisManagePrice = utils.accAdd(accountBasic.reducePredisManagePrice, v.managePrice);
-                accountBasic.reduceManagePrice = utils.accAdd(accountBasic.reduceManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 减项管理费
-                accountBasic.reduceCalPrice = utils.accAdd(accountBasic.reduceCalPrice, v.calPrice);
-                accountBasic.reduceUncalPrice = utils.accAdd(accountBasic.reduceUncalPrice, v.uncalPrice);
-                accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, v.total);
-                accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
-                accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
-                accountBasic.reducePredisTaxPrice = utils.accAdd(accountBasic.reducePredisTaxPrice, v.taxPrice);
-                accountBasic.reduceTaxPrice = utils.accAdd(accountBasic.reduceTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
-                accountBasic.reduceDone = utils.accAdd(accountBasic.reduceDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                accountBasic.reduceOwing = utils.accAdd(accountBasic.reduceOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-
-                accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice));
-
-                if (v.atttype == 0) {
-                    accountBasic.reduceConstructionPredisPrice = utils.accAdd(accountBasic.reduceConstructionPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                    accountBasic.reduceConstructionPredisManagePrice = utils.accAdd(accountBasic.reduceConstructionPredisManagePrice, v.managePrice);
-                    accountBasic.reduceConstructionManagePrice = utils.accAdd(accountBasic.reduceConstructionManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 减项管理费
-                    accountBasic.reduceConstructionCalPrice = utils.accAdd(accountBasic.reduceConstructionCalPrice, v.calPrice);
-                    accountBasic.reduceConstructionUncalPrice = utils.accAdd(accountBasic.reduceConstructionUncalPrice, v.uncalPrice);
-                    accountBasic.reduceConstructionTotalPrice = utils.accAdd(accountBasic.reduceConstructionTotalPrice, v.total);
-                    accountBasic.reduceConstructionDisPrice = utils.accAdd(accountBasic.reduceConstructionDisPrice, v.disPrice);
-                    accountBasic.reduceConstructionUndisPrice = utils.accAdd(accountBasic.reduceConstructionUndisPrice, v.undisPrice);
-                    accountBasic.reduceConstructionPredisTaxPrice = utils.accAdd(accountBasic.reduceConstructionPredisTaxPrice, v.taxPrice);
-                    accountBasic.reduceConstructionTaxPrice = utils.accAdd(accountBasic.reduceConstructionTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
-                    accountBasic.reduceConstructionDone = utils.accAdd(accountBasic.reduceConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                    accountBasic.reduceConstructionOwing = utils.accAdd(accountBasic.reduceConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-
-                    accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.reduceConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.reduceConstructionUndisPrice + Math.round(accountBasic.reduceConstructionManagePrice) - Math.round(accountBasic.reduceConstructionTotalPrice));
-
-                } else if (v.atttype == 1) {
-                    accountBasic.reduceMaterialPredisPrice = utils.accAdd(accountBasic.reduceMaterialPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
-                    accountBasic.reduceMaterialPredisManagePrice = utils.accAdd(accountBasic.reduceMaterialPredisManagePrice, v.managePrice);
-                    accountBasic.reduceMaterialManagePrice = utils.accAdd(accountBasic.reduceMaterialManagePrice, v.manageDiscount == 1 ? utils.accMul(v.managePrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.managePrice);// 减项管理费
-                    accountBasic.reduceMaterialCalPrice = utils.accAdd(accountBasic.reduceMaterialCalPrice, v.calPrice);
-                    accountBasic.reduceMaterialUncalPrice = utils.accAdd(accountBasic.reduceMaterialUncalPrice, v.uncalPrice);
-                    accountBasic.reduceMaterialTotalPrice = utils.accAdd(accountBasic.reduceMaterialTotalPrice, v.total);
-                    accountBasic.reduceMaterialDisPrice = utils.accAdd(accountBasic.reduceMaterialDisPrice, v.disPrice);
-                    accountBasic.reduceMaterialUndisPrice = utils.accAdd(accountBasic.reduceMaterialUndisPrice, v.undisPrice);
-                    accountBasic.reduceMaterialPredisTaxPrice = utils.accAdd(accountBasic.reduceMaterialPredisTaxPrice, v.taxPrice);
-                    accountBasic.reduceMaterialTaxPrice = utils.accAdd(accountBasic.reduceMaterialTaxPrice, v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, v.discount == 0 ? utils.accDiv(accountBasic.discount, 10) : utils.accDiv(v.discount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0);// 减项税金
-                    accountBasic.reduceMaterialDone = utils.accAdd(accountBasic.reduceMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
-                    accountBasic.reduceMaterialOwing = utils.accAdd(accountBasic.reduceMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
-
-                    accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.reduceMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.reduceMaterialUndisPrice + Math.round(accountBasic.reduceMaterialManagePrice) - Math.round(accountBasic.reduceMaterialTotalPrice));
-
-                }
-            }
-
-        });
-
-        addReduceItems(1);
-
-    }, null, false);
+    queryAddReduce();
 
     decorationDetail.orderType = constant.decoration().decoration.typeness.keys;
 
@@ -992,6 +877,161 @@ $(function() {
         addReduceItems(3);
     });
 
+    decorationDetail.btns.addReduceIndexBtn.click(function() {
+
+        params.urlLoadParams.type = "account";
+
+        com.popup4page("#layerPopUp", "/views/quotation/addReduceIndex.html?pageType=account", "明细", null, function() {
+
+            queryAddReduce();
+        });
+    });
+
+    function queryAddReduce() {
+
+        accountBasic.addPredisPrice = 0, accountBasic.addPredisManagePrice = 0, accountBasic.addManagePrice = 0, accountBasic.addCalPrice = 0, accountBasic.addUncalPrice = 0, accountBasic.addTotalPrice = 0, accountBasic.addDone = 0, accountBasic.addOwing = 0, accountBasic.addDisPrice = 0, accountBasic.addUndisPrice = 0, accountBasic.addPredisTaxPrice = 0, accountBasic.addTaxPrice = 0,
+
+        accountBasic.reducePredisPrice = 0, accountBasic.reducePredisManagePrice = 0, accountBasic.reduceManagePrice = 0, accountBasic.reduceCalPrice = 0, accountBasic.reduceUncalPrice = 0, accountBasic.reduceTotalPrice = 0, accountBasic.reduceDone = 0, accountBasic.reduceOwing = 0, accountBasic.reduceDisPrice = 0, accountBasic.reduceUndisPrice = 0, accountBasic.reducePredisTaxPrice = 0, accountBasic.reduceTaxPrice = 0, accountBasic.asDifference = 0,
+
+        accountBasic.addConstructionPredisPrice = 0, accountBasic.addConstructionPredisManagePrice = 0, accountBasic.addConstructionManagePrice = 0, accountBasic.addConstructionCalPrice = 0, accountBasic.addConstructionUncalPrice = 0, accountBasic.addConstructionTotalPrice = 0, accountBasic.addConstructionDone = 0, accountBasic.addConstructionOwing = 0, accountBasic.addConstructionDisPrice = 0, accountBasic.addConstructionUndisPrice = 0, accountBasic.addConstructionPredisTaxPrice = 0, accountBasic.addConstructionTaxPrice = 0,
+
+        accountBasic.reduceConstructionPredisPrice = 0, accountBasic.reduceConstructionPredisManagePrice = 0, accountBasic.reduceConstructionManagePrice = 0, accountBasic.reduceConstructionCalPrice = 0, accountBasic.reduceConstructionUncalPrice = 0, accountBasic.reduceConstructionTotalPrice = 0, accountBasic.reduceConstructionDone = 0, accountBasic.reduceConstructionOwing = 0, accountBasic.reduceConstructionDisPrice = 0, accountBasic.reduceConstructionUndisPrice = 0, accountBasic.reduceConstructionPredisTaxPrice = 0, accountBasic.reduceConstructionTaxPrice = 0, accountBasic.constructionAsDifference = 0,
+
+        accountBasic.addMaterialPredisPrice = 0, accountBasic.addMaterialPredisManagePrice = 0, accountBasic.addMaterialManagePrice = 0, accountBasic.addMaterialCalPrice = 0, accountBasic.addMaterialUncalPrice = 0, accountBasic.addMaterialTotalPrice = 0, accountBasic.addMaterialDone = 0, accountBasic.addMaterialOwing = 0, accountBasic.addMaterialDisPrice = 0, accountBasic.addMaterialUndisPrice = 0, accountBasic.addMaterialPredisTaxPrice = 0, accountBasic.addMaterialTaxPrice = 0,
+
+        accountBasic.reduceMaterialPredisPrice = 0, accountBasic.reduceMaterialPredisManagePrice = 0, accountBasic.reduceMaterialManagePrice = 0, accountBasic.reduceMaterialCalPrice = 0, accountBasic.reduceMaterialUncalPrice = 0, accountBasic.reduceMaterialTotalPrice = 0, accountBasic.reduceMaterialDone = 0, accountBasic.reduceMaterialOwing = 0, accountBasic.reduceMaterialDisPrice = 0, accountBasic.reduceMaterialUndisPrice = 0, accountBasic.reduceMaterialPredisTaxPrice = 0, accountBasic.reduceMaterialTaxPrice = 0, accountBasic.materialAsDifference = 0,
+
+        com.post(api.addReduce.queryAddReduceByOrderId, {
+            "addReduce.orderId": decorationDetail.orderId
+        }, function(res) {
+
+            var addReduces = res.addReduces;
+
+            $.each(addReduces, function(i, v) {
+
+                if ([0].indexOf(v.paytype) == -1) // 付款类型验证
+                    return true;
+
+                if ([2, 3].indexOf(v.status) == -1) // 状态验证
+                    return true;
+
+                if ([3].indexOf(v.schedule) == -1) // 工程状态验证
+                    return true;
+
+                var managePrice = v.manageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(v.accountDiscount, 10)) : v.managePrice;
+                var taxPrice = v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, utils.accDiv(v.accountDiscount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0;
+                var totalPrice = utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.calPrice, utils.accDiv(v.accountDiscount, 10)), v.uncalPrice), managePrice), taxPrice);
+
+                if (v.type == 0) { // 增项
+
+                    accountBasic.addPredisPrice = utils.accAdd(accountBasic.addPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                    accountBasic.addPredisManagePrice = utils.accAdd(accountBasic.addPredisManagePrice, v.managePrice);
+                    accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, managePrice);// 增项管理费
+                    accountBasic.addCalPrice = utils.accAdd(accountBasic.addCalPrice, v.calPrice);
+                    accountBasic.addUncalPrice = utils.accAdd(accountBasic.addUncalPrice, v.uncalPrice);
+                    accountBasic.addTotalPrice = utils.accAdd(accountBasic.addTotalPrice, totalPrice);
+                    accountBasic.addDisPrice = utils.accAdd(accountBasic.addDisPrice, v.disPrice);
+                    accountBasic.addUndisPrice = utils.accAdd(accountBasic.addUndisPrice, v.undisPrice);
+                    accountBasic.addPredisTaxPrice = utils.accAdd(accountBasic.addPredisTaxPrice, v.taxPrice);
+                    accountBasic.addTaxPrice = utils.accAdd(accountBasic.addTaxPrice, taxPrice);// 增项税金
+                    accountBasic.addDone = utils.accAdd(accountBasic.addDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                    accountBasic.addOwing = utils.accAdd(accountBasic.addOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+
+                    accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.addDisPrice * (accountBasic.dd / 10) + accountBasic.addUndisPrice + Math.round(accountBasic.addManagePrice) - Math.round(accountBasic.addTotalPrice));
+
+                    if (v.atttype == 0) {
+                        accountBasic.addConstructionPredisPrice = utils.accAdd(accountBasic.addConstructionPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                        accountBasic.addConstructionPredisManagePrice = utils.accAdd(accountBasic.addConstructionPredisManagePrice, v.managePrice);
+                        accountBasic.addConstructionManagePrice = utils.accAdd(accountBasic.addConstructionManagePrice, managePrice);// 增项管理费
+                        accountBasic.addConstructionCalPrice = utils.accAdd(accountBasic.addConstructionCalPrice, v.calPrice);
+                        accountBasic.addConstructionUncalPrice = utils.accAdd(accountBasic.addConstructionUncalPrice, v.uncalPrice);
+                        accountBasic.addConstructionTotalPrice = utils.accAdd(accountBasic.addConstructionTotalPrice, totalPrice);
+                        accountBasic.addConstructionDisPrice = utils.accAdd(accountBasic.addConstructionDisPrice, v.disPrice);
+                        accountBasic.addConstructionUndisPrice = utils.accAdd(accountBasic.addConstructionUndisPrice, v.undisPrice);
+                        accountBasic.addConstructionPredisTaxPrice = utils.accAdd(accountBasic.addConstructionPredisTaxPrice, v.taxPrice);
+                        accountBasic.addConstructionTaxPrice = utils.accAdd(accountBasic.addConstructionTaxPrice, taxPrice);// 增项税金
+                        accountBasic.addConstructionOwing = utils.accAdd(accountBasic.addConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+                        accountBasic.addConstructionDone = utils.accAdd(accountBasic.addConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
+
+                        accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.addConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.addConstructionUndisPrice + Math.round(accountBasic.addConstructionManagePrice) - Math.round(accountBasic.addConstructionTotalPrice));
+
+                    } else if (v.atttype == 1) {
+                        accountBasic.addMaterialPredisPrice = utils.accAdd(accountBasic.addMaterialPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                        accountBasic.addMaterialPredisManagePrice = utils.accAdd(accountBasic.addMaterialPredisManagePrice, v.managePrice);
+                        accountBasic.addMaterialManagePrice = utils.accAdd(accountBasic.addMaterialManagePrice, managePrice);// 增项管理费
+                        accountBasic.addMaterialCalPrice = utils.accAdd(accountBasic.addMaterialCalPrice, v.calPrice);
+                        accountBasic.addMaterialUncalPrice = utils.accAdd(accountBasic.addMaterialUncalPrice, v.uncalPrice);
+                        accountBasic.addMaterialTotalPrice = utils.accAdd(accountBasic.addMaterialTotalPrice, totalPrice);
+                        accountBasic.addMaterialDisPrice = utils.accAdd(accountBasic.addMaterialDisPrice, v.disPrice);
+                        accountBasic.addMaterialUndisPrice = utils.accAdd(accountBasic.addMaterialUndisPrice, v.undisPrice);
+                        accountBasic.addMaterialPredisTaxPrice = utils.accAdd(accountBasic.addMaterialPredisTaxPrice, v.taxPrice);
+                        accountBasic.addMaterialTaxPrice = utils.accAdd(accountBasic.addMaterialTaxPrice, taxPrice);// 增项税金
+                        accountBasic.addMaterialDone = utils.accAdd(accountBasic.addMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                        accountBasic.addMaterialOwing = utils.accAdd(accountBasic.addMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+
+                        accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.addMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.addMaterialUndisPrice + Math.round(accountBasic.addMaterialManagePrice) - Math.round(accountBasic.addMaterialTotalPrice));
+
+                    }
+
+                } else if (v.type == 1) { // 减项
+
+                    accountBasic.reducePredisPrice = utils.accAdd(accountBasic.reducePredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                    accountBasic.reducePredisManagePrice = utils.accAdd(accountBasic.reducePredisManagePrice, v.managePrice);
+                    accountBasic.reduceManagePrice = utils.accAdd(accountBasic.reduceManagePrice, managePrice);// 减项管理费
+                    accountBasic.reduceCalPrice = utils.accAdd(accountBasic.reduceCalPrice, v.calPrice);
+                    accountBasic.reduceUncalPrice = utils.accAdd(accountBasic.reduceUncalPrice, v.uncalPrice);
+                    accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, totalPrice);
+                    accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
+                    accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
+                    accountBasic.reducePredisTaxPrice = utils.accAdd(accountBasic.reducePredisTaxPrice, v.taxPrice);
+                    accountBasic.reduceTaxPrice = utils.accAdd(accountBasic.reduceTaxPrice, taxPrice);// 减项税金
+                    accountBasic.reduceDone = utils.accAdd(accountBasic.reduceDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                    accountBasic.reduceOwing = utils.accAdd(accountBasic.reduceOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+
+                    accountBasic.asDifference = utils.accAdd(accountBasic.asDifference, accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice));
+
+                    if (v.atttype == 0) {
+                        accountBasic.reduceConstructionPredisPrice = utils.accAdd(accountBasic.reduceConstructionPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                        accountBasic.reduceConstructionPredisManagePrice = utils.accAdd(accountBasic.reduceConstructionPredisManagePrice, v.managePrice);
+                        accountBasic.reduceConstructionManagePrice = utils.accAdd(accountBasic.reduceConstructionManagePrice, managePrice);// 减项管理费
+                        accountBasic.reduceConstructionCalPrice = utils.accAdd(accountBasic.reduceConstructionCalPrice, v.calPrice);
+                        accountBasic.reduceConstructionUncalPrice = utils.accAdd(accountBasic.reduceConstructionUncalPrice, v.uncalPrice);
+                        accountBasic.reduceConstructionTotalPrice = utils.accAdd(accountBasic.reduceConstructionTotalPrice, totalPrice);
+                        accountBasic.reduceConstructionDisPrice = utils.accAdd(accountBasic.reduceConstructionDisPrice, v.disPrice);
+                        accountBasic.reduceConstructionUndisPrice = utils.accAdd(accountBasic.reduceConstructionUndisPrice, v.undisPrice);
+                        accountBasic.reduceConstructionPredisTaxPrice = utils.accAdd(accountBasic.reduceConstructionPredisTaxPrice, v.taxPrice);
+                        accountBasic.reduceConstructionTaxPrice = utils.accAdd(accountBasic.reduceConstructionTaxPrice, taxPrice);// 减项税金
+                        accountBasic.reduceConstructionDone = utils.accAdd(accountBasic.reduceConstructionDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                        accountBasic.reduceConstructionOwing = utils.accAdd(accountBasic.reduceConstructionOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+
+                        accountBasic.constructionAsDifference = utils.accAdd(accountBasic.constructionAsDifference, accountBasic.reduceConstructionDisPrice * (accountBasic.dd / 10) + accountBasic.reduceConstructionUndisPrice + Math.round(accountBasic.reduceConstructionManagePrice) - Math.round(accountBasic.reduceConstructionTotalPrice));
+
+                    } else if (v.atttype == 1) {
+                        accountBasic.reduceMaterialPredisPrice = utils.accAdd(accountBasic.reduceMaterialPredisPrice, utils.accAdd(v.undisPrice, utils.accAdd(v.disPrice, utils.accAdd(v.managePrice, v.taxPrice))));
+                        accountBasic.reduceMaterialPredisManagePrice = utils.accAdd(accountBasic.reduceMaterialPredisManagePrice, v.managePrice);
+                        accountBasic.reduceMaterialManagePrice = utils.accAdd(accountBasic.reduceMaterialManagePrice, managePrice);// 减项管理费
+                        accountBasic.reduceMaterialCalPrice = utils.accAdd(accountBasic.reduceMaterialCalPrice, v.calPrice);
+                        accountBasic.reduceMaterialUncalPrice = utils.accAdd(accountBasic.reduceMaterialUncalPrice, v.uncalPrice);
+                        accountBasic.reduceMaterialTotalPrice = utils.accAdd(accountBasic.reduceMaterialTotalPrice, totalPrice);
+                        accountBasic.reduceMaterialDisPrice = utils.accAdd(accountBasic.reduceMaterialDisPrice, v.disPrice);
+                        accountBasic.reduceMaterialUndisPrice = utils.accAdd(accountBasic.reduceMaterialUndisPrice, v.undisPrice);
+                        accountBasic.reduceMaterialPredisTaxPrice = utils.accAdd(accountBasic.reduceMaterialPredisTaxPrice, v.taxPrice);
+                        accountBasic.reduceMaterialTaxPrice = utils.accAdd(accountBasic.reduceMaterialTaxPrice, taxPrice);// 减项税金
+                        accountBasic.reduceMaterialDone = utils.accAdd(accountBasic.reduceMaterialDone, v.status == 2 || v.status == 3 ? v.total : 0);
+                        accountBasic.reduceMaterialOwing = utils.accAdd(accountBasic.reduceMaterialOwing, v.status == 0 || v.status == 1 ? v.total : 0);
+
+                        accountBasic.materialAsDifference = utils.accAdd(accountBasic.materialAsDifference, accountBasic.reduceMaterialDisPrice * (accountBasic.dd / 10) + accountBasic.reduceMaterialUndisPrice + Math.round(accountBasic.reduceMaterialManagePrice) - Math.round(accountBasic.reduceMaterialTotalPrice));
+
+                    }
+                }
+
+            });
+
+            addReduceItems(1);
+
+        }, null, false);
+    }
+
     function addReduceItems(type) {
 
         if (type == 1) {
@@ -1081,9 +1121,9 @@ $(function() {
         //
         // 决算服务费(非配比) = (折前直接费 + 管理费) * 主材配比 * 服务费比例
         //
-        // 差额(算配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 增项实收 + 减项实收 + 增项非配比总额 - 优惠券 - 满送 - 返现
+        // 差额(算配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 增项实收 + 减项实收 + 增项非配比总额 - 优惠 - 满送 - 返现
         //
-        // 差额(非配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 优惠券 - 满送 - 返现
+        // 差额(非配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 优惠 - 满送 - 返现
         //
         // 金额差 = 实收额 - 决算主材额
         //
@@ -1131,6 +1171,8 @@ $(function() {
         accountBasic.taxment = Math.round(taxment);
         accountBasic.flowerRatio = utils.changeThrDecimal(accountBasic.materialTotal / accountBasic.direct);
         accountBasic.flowerOalesRatio = utils.changeThrDecimal(utils.accDiv(utils.accAdd(accountBasic.oalesTotal, accountBasic.materialTotal), accountBasic.direct));
+        accountBasic.directC = Math.round(accountBasic.foldFrontTotal + accountBasic.addFoldFrontTotal - accountBasic.minusFoldFrontTotal + accountBasic.addPredisPrice - accountBasic.reducePredisPrice);
+        accountBasic.fullPayment = Math.round(accountBasic.signFactOwing + accountBasic.addOwing - accountBasic.reduceOwing);
 
         accountBasic.materialAccount = Math.round(materialAccount);
 
@@ -1156,9 +1198,13 @@ $(function() {
         decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
 
         decorationDetail.accountItems.flowerRatio.html(accountBasic.flowerRatio);
+        decorationDetail.accountItems.flowerOalesRatio.html(accountBasic.flowerOalesRatio);
         decorationDetail.accountItems.difference.html(accountBasic.difference);
         decorationDetail.accountItems.superRatio.html(accountBasic.superRatio);
         decorationDetail.accountItems.taxPrice.html(Math.round(taxment));
+
+        decorationDetail.accountItems.directC.html(accountBasic.directC);
+        decorationDetail.accountItems.fullPayment.html(accountBasic.fullPayment);
     }
 
 });

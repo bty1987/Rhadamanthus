@@ -43,6 +43,8 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short ATTTYPE_REGION_INT = 3;
 
+	public static final short ISREAD_READ_INT = 1;// 已读
+
 	private long ccid;
 
 	private CustomerSourcePO source;
@@ -65,11 +67,15 @@ public class CustomerChancePO implements Serializable {
 
 	private Timestamp confirmTime;
 
+	private Timestamp readTime;
+
 	private int rate;
 
 	private short type;
 
 	private short status;
+
+	private short isRead;
 
 	private String comment;
 
@@ -170,6 +176,15 @@ public class CustomerChancePO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
+	@Column(name = "readTime")
+	public Timestamp getReadTime() {
+		return readTime;
+	}
+
+	public void setReadTime(Timestamp readTime) {
+		this.readTime = readTime;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
 	public UserPO getBelonger() {
@@ -225,6 +240,15 @@ public class CustomerChancePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isRead")
+	public short getIsRead() {
+		return isRead;
+	}
+
+	public void setIsRead(short isRead) {
+		this.isRead = isRead;
 	}
 
 	@Column(name = "comment")

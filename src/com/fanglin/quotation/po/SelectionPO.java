@@ -56,6 +56,8 @@ public class SelectionPO implements Serializable {
 
 	private Timestamp affirmTime;// 确认时间
 
+	private Timestamp sendTime;// 推送时间
+
 	private UserPO creater;
 
 	private UserPO splitter;
@@ -198,6 +200,15 @@ public class SelectionPO implements Serializable {
 
 	public void setAffirmTime(Timestamp affirmTime) {
 		this.affirmTime = affirmTime;
+	}
+
+	@Column(name = "sendTime")
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

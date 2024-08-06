@@ -43,7 +43,7 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<FunctionAreaPO> queryFunctionArea(String versionId) {
-		return createCriteria(FunctionAreaPO.class).add(Restrictions.eq("quotationVersion.no", versionId)).addOrder(Order.asc("functionAreaOrder")).list();
+		return createCriteria(FunctionAreaPO.class).add(Restrictions.eq("quotationVersion.no", versionId)).add(Restrictions.eq("status", FunctionAreaPO.STATUS_ENABLE_INT)).addOrder(Order.asc("functionAreaOrder")).list();
 	}
 
 	@Override

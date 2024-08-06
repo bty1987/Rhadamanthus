@@ -41,6 +41,8 @@ public interface AddReduceService {
 
 	public int updateAddReduceForAdvance(AddReduceVO addReduceVO) throws FLException;
 
+	public int updateAddReduceForAccount(AddReduceVO addReduceVO) throws FLException;
+
 	public int submitAddReduce(AddReduceVO addReduceVO, List<AddReduceVO> addReduceVOs, String userId) throws FLException;
 
 	public int cancelAddReduce(AddReduceVO addReduceVO) throws FLException;

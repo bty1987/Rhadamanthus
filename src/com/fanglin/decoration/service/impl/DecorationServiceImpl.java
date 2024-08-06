@@ -1358,41 +1358,23 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPaymentDao.save(decorationPaymentPO);
 		}
 
-		if (DecorationPO.STATUS_PROSIGN_INT == decorationPO.getStatus()) {
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
 
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
+		long advancePaymentAmount = advancePaymentPO == null ? 0 : advancePaymentPO.getBalance();
 
-			long amount = advancePaymentPO.getBalance();
+		Short[] status = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
 
-			if (backup > amount) {
-				throw new FLException(150010, "预付款余额不足");
-			}
+		long decorationPaymentAmount = decorationPaymentDao.amountDecorationPayment(orderId, status, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
 
-			PaymentVO paymentVO = new PaymentVO();
+		long amount = Arith.add(advancePaymentAmount, decorationPaymentAmount);
 
-			paymentVO.setOrderId(decorationPO.getOrderId());
-			paymentVO.setCustomer(new CustomerVO(decorationPO.getCustomer().getCid()));
-			paymentVO.setCollectUser(new UserBaseVO(userId));
-			paymentVO.setTransfer(backup);
-			paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_INT);
-			paymentVO.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-			paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_INT);
-			paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
-			paymentVO.setUniqueid("D" + String.valueOf(new Date().getTime()));
-
-			advancePaymentService.updateAdvancePayment(paymentVO, company);
+		if (backup > amount) {
+			throw new FLException(150025, "款项金额不正确");
 		}
 
-		if (Arrays.asList(DecorationPO.STATUS_SIGNED_INT).contains(decorationPO.getStatus())) {
+		if (decorationPaymentAmount > 0) {
 
-			Short[] status = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
-			long amount = decorationPaymentDao.amountDecorationPayment(orderId, status, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
-
-			if (backup > amount) {
-				throw new FLException(150025, "款项金额不正确");
-			}
-
-			long refund = Arith.sub(amount, backup);
+			long refund = Arith.sub(decorationPaymentAmount, backup);
 
 			DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
 
@@ -1405,11 +1387,30 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
 			decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
 			decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-			decorationPaymentPO.setReferMoney(refund);
+			decorationPaymentPO.setReferMoney(refund < 0 ? 0 : refund);
 			decorationPaymentPO.setDecoration(decorationPO);
 			decorationPaymentPO.setCompany(company);
 
 			decorationPaymentDao.save(decorationPaymentPO);
+		}
+
+		if (decorationPaymentAmount < backup) {
+
+			long refund = Arith.sub(backup, decorationPaymentAmount);
+
+			PaymentVO paymentVO = new PaymentVO();
+
+			paymentVO.setOrderId(decorationPO.getOrderId());
+			paymentVO.setCustomer(new CustomerVO(decorationPO.getCustomer().getCid()));
+			paymentVO.setCollectUser(new UserBaseVO(userId));
+			paymentVO.setTransfer(refund);
+			paymentVO.setStatus(PaymentPO.PAYMENT_STATUS_PAID_INT);
+			paymentVO.setComment(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+			paymentVO.setType(PaymentPO.PAYMENT_TYPE_PAYMENT_INT);
+			paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
+			paymentVO.setUniqueid("D" + String.valueOf(new Date().getTime()));
+
+			advancePaymentService.updateAdvancePayment(paymentVO, company);
 		}
 
 		decorationPO.setStatus(DecorationPO.STATUS_TERMINATION_INT);

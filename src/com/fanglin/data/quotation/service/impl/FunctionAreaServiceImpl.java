@@ -150,6 +150,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
 
 		functionAreaPO.setQuotationVersion(quotationVersionPO);
+		functionAreaPO.setStatus(FunctionAreaPO.STATUS_ENABLE_INT);
 
 		functionAreaDao.saveOrUpdate(functionAreaPO);
 
@@ -169,6 +170,25 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		if (!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())) { // 功能区的类型改变时
 			functionAreaItemDao.deleteFunctionAreaItem(functionAreaPO.getFaid());
 		}
+
+		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
+
+		functionAreaDao.saveOrUpdate(functionAreaPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateFunctionAreaForStatus(FunctionAreaVO functionAreaVO) throws FLException {
+
+		FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaVO.getFaid());
+
+		if (functionAreaPO == null) {
+			throw new FLException(200012, "功能区不存在");
+		}
+
+		functionAreaPO.setStatus(functionAreaVO.getStatus());
 
 		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
 

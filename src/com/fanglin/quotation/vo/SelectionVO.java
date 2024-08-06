@@ -42,6 +42,8 @@ public class SelectionVO implements Serializable {
 
 	private Timestamp affirmTime;// 确认时间
 
+	private Timestamp sendTime;// 推送时间
+
 	private UserBaseVO creater;
 
 	private UserBaseVO splitter;
@@ -180,6 +182,15 @@ public class SelectionVO implements Serializable {
 
 	public void setAffirmTime(Timestamp affirmTime) {
 		this.affirmTime = affirmTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	public UserBaseVO getCreater() {

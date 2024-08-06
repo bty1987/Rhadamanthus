@@ -216,13 +216,22 @@ public class SelectionServiceImpl implements SelectionService {
 	}
 
 	@Override
-	public void sendSelection(SelectionVO selectionVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public int sendSelection(SelectionVO selectionVO) throws FLException {
+		
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
 
-		String orderId = selectionVO.getOrderId();
+		String orderId = selectionPO.getOrderId();
 
 		System.out.println(String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 
 		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认选材信息。", String.format("pages/quotation/selection/selection?orderId=%s", orderId));
+
+		selectionPO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
+
+		selectionDao.update(selectionPO);
+
+		return 0;
 	}
 
 	private SelectionPO saveSelection(Long qid, String userId) throws FLException {

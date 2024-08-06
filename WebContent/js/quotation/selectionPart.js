@@ -64,13 +64,20 @@ var selectionDetail = (function() {
 
             com.focusPage('#sendSelectionBtn').on('click', function() {
 
-                var options = {
-                    "selection.orderId": selection.orderId,
-                };
+                com.showConfirm('是否要执行推送操作', function(a) {
 
-                com.post(api.quotation.sendSelection, options, function(res) {
+                    var options = {
+                        "selection.sid": selection.basicParams['selection.sid'],
+                    };
 
-                    com.showAlert(com.info, "操作成功");
+                    com.post(api.quotation.sendSelection, options, function(res) {
+
+                        com.showAlert(com.info, "操作成功");
+
+                        if(selection.basicParams['selection.sendTime'] != null && selection.basicParams['selection.affirmTime'] != null){
+                            com.focusPage('#isAffirm').text('已变更');
+                        }
+                    });
                 });
 
             });
@@ -161,6 +168,8 @@ var selectionDetail = (function() {
                             painter.createSelectionItem(res.selectionItem);
 
                             com.showAlert(com.info, "操作成功");
+
+                            selectionItem.initSelectionItem();
                         }, null, false);
 
                         selection.modals.quotationItemMateria.modal("hide");
@@ -365,6 +374,19 @@ var selectionDetail = (function() {
 
     var selectionItem = {
         type: [],
+        initSelectionItem: function() {
+            com.post(api.quotation.querySelectionItem, {
+                'selection.sid': selection.basicParams['selection.sid']
+            }, function(res) {
+                if (res.selectionItems && res.selectionItems.length) {
+                    com.focusPage('#sendSelectionBtn').removeClass("disabled");
+                    com.focusPage('#QRCodeBtn').removeClass("disabled");
+                }else{
+                    com.focusPage('#sendSelectionBtn').addClass("disabled");
+                    com.focusPage('#QRCodeBtn').addClass("disabled");
+                }
+            });
+        },
         addSelectionItem: function(soods) {
 
             var selling = soods.selling;
@@ -410,6 +432,7 @@ var selectionDetail = (function() {
                 painter.createSelectionItem(res.selectionItem);
                 painter.updateHeight(selection.nowEditQuote.next());
                 com.showAlert(com.info, "操作成功");
+                selectionItem.initSelectionItem();
             }, function(res) {
 
                 com.showAlert(com.error, res.errorMsg);
@@ -419,7 +442,7 @@ var selectionDetail = (function() {
             }, false);
             selection.modals.quotationItemSoodsModal.modal("hide");
         },
-        deleteSelectionItem: function($selectionItemLi, selectionItem) {
+        deleteSelectionItem: function($selectionItemLi, selectionitem) {
 
             var price = $selectionItemLi.attr('data-price');
             var $functionArea = $selectionItemLi.parents('.widget-box');
@@ -429,7 +452,7 @@ var selectionDetail = (function() {
             selection.calculateAllDomainTotal();
 
             var option = {
-                "selectionItem.siid": selectionItem.siid,
+                "selectionItem.siid": selectionitem.siid,
                 "selection.sid": selection.basicParams['selection.sid'],
                 "selection.total": selection.basicParams['selection.total'],
                 "selection.quotationTotal": selection.basicParams['selection.quotationTotal'],
@@ -444,6 +467,7 @@ var selectionDetail = (function() {
                 $selectionItemLi.attr("data-price", 0).empty();
                 $selectionItemLi.parent("div.alone").remove();
                 com.showAlert(com.info, "操作成功");
+                selectionItem.initSelectionItem();
             }, function(res) {
 
                 com.showAlert(com.error, res.errorMsg);
@@ -456,6 +480,8 @@ var selectionDetail = (function() {
 
             // 初始化选材项类型
             selectionItem.type = constant.quotation().selectionItem.type.keys;
+
+            selectionItem.initSelectionItem();
         }
     };
 
@@ -651,7 +677,18 @@ var selectionDetail = (function() {
                 'selection.qid': quotationId
             }, function(queryRes) {
 
+                var res = queryRes.selection;
+
+                if(res.affirmTime < res.sendTime && res.affirmTime != null && res.sendTime != null){
+                    com.focusPage('#isAffirm').text('已变更');
+                }else{
+                    com.focusPage('#isAffirm').text(constant.quotation().selection.isAffirm.keys[res.isAffirm]);
+                }
+
+                com.focusPage('#affirmTime').text(queryRes.selection.affirmTime);
+
                 if (queryRes.selection == null) {
+
                     com.showConfirm("是否创建选材单", function() {
 
                         com.post(api.quotation.addSelection, {
@@ -683,6 +720,8 @@ var selectionDetail = (function() {
                     selection.basicParams['selection.extensionReduceTotal'] = res.selection.extensionReduceTotal;
                     selection.basicParams['selection.addReduceAddTotal'] = res.selection.addReduceAddTotal;
                     selection.basicParams['selection.addReduceMinusTotal'] = res.selection.addReduceMinusTotal;
+                    selection.basicParams['selection.affirmTime'] = res.selection.affirmTime;
+                    selection.basicParams['selection.sendTime'] = res.selection.sendTime;
 
                     selectionItem.init();
 

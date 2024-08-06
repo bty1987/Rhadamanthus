@@ -20,7 +20,7 @@ jQuery(function($) {
         decoration: null,
 
         cover: {},
-        table: {},
+        table: [],
 
         modal: {
             talkingModal: com.focusPage('#talkingModal')
@@ -229,12 +229,33 @@ jQuery(function($) {
 
     quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.orderType, false, params.showType);
 
-    contractEdit.table = {
+    var decorationActivityItems = [];
+
+    com.post(api.decoration.queryDecorationActivityItem, {
+        "decoration.orderId": contractEdit.decorationOrderId
+    }, function(res) {
+
+        decorationActivityItems = res.decorationActivityItems;
+    }, null, false);
+
+    var table1 = {
         "insertWay": 1,
         "keyword": "家装项目列表",
         "pageBegin": 1,
         "headers": ["序号", "项目名称", "类型", "单位", "数量", "工艺做法及材料说明"],
         "colWidthPercent": [1, 3, 3, 1, 1, 5],
+        "headersAlignment": 1,
+        "cellHorizontalAlignment": 0,
+        "cellVerticalAlignment": 5,
+        "datas": []
+    };
+
+    var table2 = {
+        "insertWay": 1,
+        "keyword": "活动礼品项目列表",
+        "pageBegin": 1,
+        "headers": ["序号", "名称", "数量"],
+        "colWidthPercent": [1, 3, 1],
         "headersAlignment": 1,
         "cellHorizontalAlignment": 0,
         "cellVerticalAlignment": 5,
@@ -248,9 +269,7 @@ jQuery(function($) {
         var functionArea = i.split('-')[1];
         var subtype = [-2];
 
-        var _index = 0;
-
-        contractEdit.table.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", "", ""]);
+        table1.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", "", ""]);
 
         $.each(v, function(j, qv) {
 
@@ -259,14 +278,28 @@ jQuery(function($) {
                 qv.num = 1;
                 qv.measurementUnit = "项";
 
-                contractEdit.table.datas.push([(_index + 1), qv.itemName, qv.typestr, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"]);
+                table1.datas.push([(j + 1), qv.itemName, qv.typestr, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"]);
             }
-
-            _index++;
         });
 
         index++;
     });
+    
+    index = 0;
+    
+    if (decorationActivityItems && decorationActivityItems.length) {
+
+        $.each(decorationActivityItems, function(i, v) {
+            
+            if(v.type != 1) return true;
+            if([0,2,4,6].indexOf(v.state) == -1) return true;
+
+            table2.datas.push([(index++ + 1), v.activityItemName, v.num]);
+        });
+    }
+
+    contractEdit.table.push(table1);
+    contractEdit.table.push(table2);
 
     com.focusPage('#talkingList').click(function() {
 
@@ -303,8 +336,7 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    }
-    ;
+    };
 
     var displayFunc = (function() {
 
@@ -434,6 +466,7 @@ jQuery(function($) {
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
 
+                mask.remove();
                 com.closePopup();
             }, function(res) {
 

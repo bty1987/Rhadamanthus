@@ -301,6 +301,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330077, "客户机会不可操作");
 		}
 
+		if (customerChancePO.getBusitype() == null) {
+			throw new FLException(130061, "业务类型不存在");
+		}
+
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
 
 		if (customerSourcePO == null) {
@@ -347,5 +351,21 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceDao.update(customerChancePO);
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("客户资源转装修单,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void readCustomerChance(CustomerChanceVO customerChanceVO) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		customerChancePO.setIsRead(CustomerChancePO.ISREAD_READ_INT);
+		customerChancePO.setReadTime(DateUtil.getDateToTimestamp(new Date()));
+
+		customerChanceDao.update(customerChancePO);
 	}
 }

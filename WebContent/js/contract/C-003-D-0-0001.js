@@ -20,7 +20,7 @@ jQuery(function($) {
         decoration: null,
 
         cover: {},
-        table: {},
+        table: [],
 
         modal: {
             talkingModal: com.focusPage('#talkingModal')
@@ -229,7 +229,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    contractEdit.table = {
+    var table1 = {
         "insertWay": 1,
         "keyword": "家装项目列表",
         "pageBegin": 1,
@@ -249,10 +249,11 @@ jQuery(function($) {
 
         if (subtype.indexOf(-2) != -1 || subtype.indexOf(v.subtype) != -1) {
 
-            contractEdit.table.datas.push([(i + 1), v.name])
+            table1.datas.push([(i + 1), v.name])
         }
-
     });
+    
+    contractEdit.table.push(table1);
 
     com.focusPage('#talkingList').click(function() {
 

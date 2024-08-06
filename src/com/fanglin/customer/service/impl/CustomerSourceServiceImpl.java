@@ -291,6 +291,78 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateCustomerSourceForCustomer(CustomerSourceVO customerSourceVO) throws FLException {
+
+		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSourceVO.getCsid());
+
+		if (customerSourcePO == null) {
+			throw new FLException(330071, "客户资源不存在");
+		}
+
+		if (!Arrays.asList(CustomerSourcePO.STATUS_INIT_INT, CustomerSourcePO.STATUS_APPROVE_ONE_INT).contains(customerSourcePO.getStatus())) {
+			throw new FLException(330074, "客户资源不可操作");
+		}
+
+		CustomerPO customerPO = null;
+
+		if (customerSourceVO.getCustomer() != null) {
+			customerPO = customerDao.get(customerSourceVO.getCustomer().getCid());
+		}
+
+		if (customerPO != null) {
+			customerSourcePO.setCustomer(customerPO);
+			customerSourcePO.setPhone(customerSourceVO.getPhone());
+		}
+
+		customerSourceDao.save(customerSourcePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateCustomerSourceForHouse(CustomerSourceVO customerSourceVO) throws FLException {
+
+		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSourceVO.getCsid());
+
+		if (customerSourcePO == null) {
+			throw new FLException(330071, "客户资源不存在");
+		}
+
+		if (!Arrays.asList(CustomerSourcePO.STATUS_INIT_INT, CustomerSourcePO.STATUS_APPROVE_ONE_INT).contains(customerSourcePO.getStatus())) {
+			throw new FLException(330074, "客户资源不可操作");
+		}
+
+		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
+		String houseNumber = customerSourcePO.getHouseNumber();
+
+		VillagePO villagePO = null;
+
+		if (customerSourceVO.getVillage() != null) {
+			villagePO = villageDao.get(customerSourceVO.getVillage().getVid());
+		}
+
+		if (villagePO != null) {
+			customerSourcePO.setVillage(villagePO);
+		}
+
+		HousePO housePO = null;
+
+		if (customerSourceVO.getHouse() != null) {
+			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
+		}
+
+		if (housePO != null) {
+			customerSourcePO.setHouse(housePO);
+			customerSourcePO.setVillage(housePO.getVillage());
+			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+		}
+
+		customerSourceDao.save(customerSourcePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,新楼盘:%s,新楼号%s", villageName, houseNumber, customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void issueCustomerSource(CustomerSourceVO customerSourceVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
 
 		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerSourceVO.getCsid());
@@ -449,6 +521,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_USER_INT);
+			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());

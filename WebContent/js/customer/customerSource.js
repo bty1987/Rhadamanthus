@@ -5,13 +5,15 @@ $(function() {
         btns: {
             saveBtn: com.focusPage("#saveBtn", "#customerSource"),
             issueBtn: com.focusPage("#issueBtn", "#issueCustomerChanceModal"),
-            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#commitFirstApprove")
+            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#commitFirstApprove"),
+            updateHouseBtn: com.focusPage("#updateHouseBtn", "#updateForHouse")
         },
 
         modals: {
             createSourceModal: com.focusPage("#createsource"),
             issueCustomerChanceModal: com.focusPage("#issueCustomerChanceModal"),
-            commitFirstApprove: com.focusPage("#commitFirstApprove")
+            commitFirstApprove: com.focusPage("#commitFirstApprove"),
+            updateForHouse: com.focusPage("#updateForHouse")
         },
 
         items: {
@@ -62,8 +64,22 @@ $(function() {
             rate: com.focusPage("#rate", "#commitFirstApprove"),
         },
 
+        updateHouseItems: {
+            villageName: com.focusPage("#villageName2", "#updateForHouse"),
+            built: com.focusPage("#built2", "#updateForHouse"),
+            unit: com.focusPage("#unit2", "#updateForHouse"),
+            floor: com.focusPage("#floor2", "#updateForHouse"),
+            door: com.focusPage("#door2", "#updateForHouse"),
+            builtrule: com.focusPage("#builtrule2", "#updateForHouse"),
+            unitrule: com.focusPage("#unitrule2", "#updateForHouse"),
+            floorrule: com.focusPage("#floorrule2", "#updateForHouse"),
+            doorrule: com.focusPage("#doorrule2", "#updateForHouse"),
+            rule: com.focusPage("#rule2", "#updateForHouse")
+        },
+
         source: null,
         rule: null,
+        type: null,
         grade: ["A", "B", "C", "D"],
         currentCustomerSource: {},
         customerDeptRule: {
@@ -76,18 +92,18 @@ $(function() {
     customerSource.btns.saveBtn.bindClick(saveDate);
     customerSource.btns.issueBtn.bindClick(issueDate);
     customerSource.btns.firstApprovalBtn.bindClick(firstApproval);
+    customerSource.btns.updateHouseBtn.bindClick(updateHouse);
 
-    com.post(api.ds.building, {}, function(res) {
+    function bindData(e) {
 
-        customerSource.items.builtrule.bindData(res.buildruleOne, "key", "value");
-        customerSource.items.unitrule.bindData(res.buildruleTwo, "key", "value");
-        customerSource.items.floorrule.bindData(res.buildruleTwo, "key", "value");
-        customerSource.items.doorrule.bindData(res.buildruleThr, "key", "value");
-        customerSource.approveItems.builtrule.bindData(res.buildruleOne, "key", "value");
-        customerSource.approveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
-        customerSource.approveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
-        customerSource.approveItems.doorrule.bindData(res.buildruleThr, "key", "value");
-    });
+        com.post(api.ds.building, {}, function(res) {
+
+            e.builtrule.bindData(res.buildruleOne, "key", "value");
+            e.unitrule.bindData(res.buildruleTwo, "key", "value");
+            e.floorrule.bindData(res.buildruleTwo, "key", "value");
+            e.doorrule.bindData(res.buildruleThr, "key", "value");
+        });
+    }
 
     function drawInit(e) {
 
@@ -104,8 +120,12 @@ $(function() {
         });
     }
 
+    bindData(customerSource.items);
+    bindData(customerSource.approveItems);
+    bindData(customerSource.updateHouseItems);
     drawInit(customerSource.items);
     drawInit(customerSource.approveItems);
+    drawInit(customerSource.updateHouseItems);
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -332,10 +352,22 @@ $(function() {
     }];
 
     var linebtns = [{
+        name: "房产",
+        clazz: "btn-blue",
+        handle: function(v) {
+
+            customerSource.source = v;
+
+            customerSource.modals.updateForHouse.modal("show");
+
+            return false;
+        }
+    }, {
         name: "更新",
         clazz: "btn-info",
         handle: function(v) {
 
+            customerSource.type = "update";
             customerSource.source = v;
 
             customerSource.items.villageName.val(v.village.name);
@@ -347,8 +379,6 @@ $(function() {
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
 
-            com.focusPage(".rule").show();
-            com.focusPage(".villageName").show();
             customerSource.modals.createSourceModal.modal("show");
 
             return false;
@@ -492,9 +522,8 @@ $(function() {
 
     com.focusPage('#createCustomerSource').on("click", function() {
 
+        customerSource.type = "create";
         deleteDate();
-        com.focusPage(".rule").hide();
-        com.focusPage(".villageName").hide();
         customerSource.modals.createSourceModal.modal("show");
     });
 
@@ -508,6 +537,7 @@ $(function() {
         var unit = customerSource.items.unit.val();
         var floor = customerSource.items.floor.val();
         var door = customerSource.items.door.val();
+        var villageName = customerSource.items.villageName.val();
 
         var options = {
             "customerSource.name": customerSource.items.name.val(),
@@ -524,12 +554,23 @@ $(function() {
             "customerSource.customer.cid": cid,
         };
 
-        if (built && unit && floor && door) {
+        if (villageName) {
 
-            var hid = checkHouse(customerSource.items);
+            if (built || unit || floor || door) {
+
+                var hid = checkHouse(customerSource.items);
+
+                options["customerSource.house.hid"] = hid;
+
+            } else {
+
+                options["customerSource.village.no"] = com.typeahead(customerSource.items.villageName);
+            }
+        }
+
+        if (customerSource.type == "update") {
 
             options["customerSource.csid"] = customerSource.source.csid;
-            options["customerSource.house.hid"] = hid;
 
             com.post(api.customer.updateCustomerSource, options, function(res) {
 
@@ -540,7 +581,8 @@ $(function() {
             });
         }
 
-        if (!built && !unit && !floor && !door) {
+        if (customerSource.type == "create") {
+
             com.post(api.customer.addCustomerSource, options, function(res) {
 
                 com.showAlert(com.info, "操作成功");
@@ -591,6 +633,7 @@ $(function() {
 
         com.cleanItems(customerSource.items);
         com.cleanItems(customerSource.approveItems);
+        com.cleanItems(customerSource.updateHouseItems);
     }
 
     // 检查获取楼盘
@@ -696,4 +739,47 @@ $(function() {
         });
     }
 
+    // 房产编辑
+    function updateHouse() {
+
+        if (com.validate("updateForHouse")) {
+            return false;
+        }
+
+        var built = customerSource.updateHouseItems.built.val();
+        var unit = customerSource.updateHouseItems.unit.val();
+        var floor = customerSource.updateHouseItems.floor.val();
+        var door = customerSource.updateHouseItems.door.val();
+        var villageName = customerSource.updateHouseItems.villageName.val();
+
+        var options = {
+            "customerSource.csid": customerSource.source.csid
+        };
+
+        if (villageName) {
+
+            if (built || unit || floor || door) {
+
+                var hid = checkHouse(customerSource.updateHouseItems);
+
+                options["customerSource.house.hid"] = hid;
+
+            } else {
+
+                options["customerSource.village.no"] = com.typeahead(customerSource.updateHouseItems.villageName);
+            }
+        } else {
+
+            com.showAlert(com.warning, "请输入楼盘名");
+            return false;
+        }
+
+        com.post(api.customer.updateCustomerSourceForHouse, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            deleteDate();
+            customerSource.modals.updateForHouse.modal("hide");
+        });
+    }
 });
