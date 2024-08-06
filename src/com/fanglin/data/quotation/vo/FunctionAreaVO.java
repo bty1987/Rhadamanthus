@@ -33,6 +33,8 @@ public class FunctionAreaVO implements Serializable {
 
 	private Long total;
 
+	private Short status;
+
 	public FunctionAreaVO() {
 		super();
 	}
@@ -104,6 +106,14 @@ public class FunctionAreaVO implements Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

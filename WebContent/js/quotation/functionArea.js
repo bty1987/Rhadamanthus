@@ -80,7 +80,13 @@
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
             var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-warning').html('分配报价项');
 
-            var propertyArr = [["编号: ", v.no, "grey"], ["报价版本: ", v.version.no, "grey"], ["类型: ", v.functionAreaType, "red"], ["总价: ", v.total, "blue"], ["排序: ", v.functionAreaOrder, "blue"], ];
+            var $btnStatus = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
+            var $span = $('<span></span>').addClass('lbl status-lbl');
+
+            var propertyArr = [["编号: ", v.no, "grey"], ["报价版本: ", v.version.no, "grey"], ["类型: ", v.functionAreaType, "red"], ["总价: ", v.total, "blue"], ["排序: ", v.functionAreaOrder, "blue"], ["状态: ", constant.data().functionArea.status.keys[v.status], "red"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -90,7 +96,9 @@
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).append($btnAssign).appendTo($h3);
+            $btnStatus.append($statusSwitch).append($span);
+
+            $divBtnWrap.append($btnEdit).append($btnAssign).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -112,6 +120,18 @@
             $btnDel.click(function() {
 
                 removeFunctionArea(v.faid);
+            });
+
+            !v.status && $statusSwitch.prop("checked", true);
+            $statusSwitch.switchBtn("status-lbl").on("click", function() {
+
+                $statusSwitch.prop("checked") ? (updateFunctionAreaStatus(v.faid, 0, function() {
+
+                    $statusSwitch.removeAttr("checked");
+                })) : (updateFunctionAreaStatus(v.faid, 1, function() {
+
+                    $statusSwitch.prop("checked");
+                }));
             });
 
             return $liLine;
@@ -226,6 +246,19 @@
 
                 searcher.doSearch();
             });
+        });
+    }
+
+    function updateFunctionAreaStatus(faid, status, failcallBack) {
+
+        com.post(api.quotation.updateFunctionAreaForStatus, {
+            "functionArea.faid": faid,
+            "functionArea.status": status
+        },function(){
+
+        	com.showAlert(com.info, "操作成功");
+
+        	searcher.doSearch();
         });
     }
 

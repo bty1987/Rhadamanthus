@@ -20,7 +20,7 @@ jQuery(function($) {
         decoration: null,
 
         cover: {},
-        table: {},
+        table: [],
 
         modal: {
             talkingModal: com.focusPage('#talkingModal')
@@ -239,7 +239,7 @@ jQuery(function($) {
 
     quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.orderType, false, params.showType);
 
-    contractEdit.table = {
+    var table1 = {
         "insertWay": 1,
         "keyword": "家装项目列表",
         "pageBegin": 1,
@@ -260,7 +260,7 @@ jQuery(function($) {
 
         var _index = 0;
 
-        contractEdit.table.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", ""])
+        table1.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", ""])
 
         $.each(v, function(j, qv) {
 
@@ -269,7 +269,7 @@ jQuery(function($) {
                 qv.num = 1;
                 qv.measurementUnit = "项";
 
-                contractEdit.table.datas.push([(_index + 1), qv.itemName, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"])
+                table1.datas.push([(_index + 1), qv.itemName, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"])
             }
 
             _index++;
@@ -277,6 +277,8 @@ jQuery(function($) {
 
         index++
     });
+    
+    contractEdit.table.push(table1);
 
     com.focusPage('#talkingList').click(function() {
 
@@ -445,6 +447,7 @@ jQuery(function($) {
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
 
+                mask.remove();
                 com.closePopup();
             }, function(res) {
 

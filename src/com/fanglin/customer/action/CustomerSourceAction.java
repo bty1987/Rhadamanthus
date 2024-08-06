@@ -79,6 +79,22 @@ public class CustomerSourceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateCustomerSourceForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerSourceForCustomer() throws FLException {
+
+		customerSourceService.updateCustomerSourceForCustomer(customerSource);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateCustomerSourceForHouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerSourceForHouse() throws FLException {
+
+		customerSourceService.updateCustomerSourceForHouse(customerSource);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "issueCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String issueCustomerSource() throws FLException {
 

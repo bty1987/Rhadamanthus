@@ -22,6 +22,10 @@ public interface CustomerSourceService {
 
 	public void updateCustomerSourceForStatus(CustomerSourceVO customerSourceVO) throws FLException;
 
+	public void updateCustomerSourceForCustomer(CustomerSourceVO customerSourceVO) throws FLException;
+
+	public void updateCustomerSourceForHouse(CustomerSourceVO customerSourceVO) throws FLException;
+
 	public void issueCustomerSource(CustomerSourceVO customerSourceVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
 
 }

@@ -118,7 +118,7 @@ public class OalesPayServiceImpl implements OalesPayService {
 			throw new FLException(000000, "销售付款不存在");
 		}
 
-		BeanUtil.copyProperties(oalesPayVO, oalesPayPO, Arrays.asList("creater"));
+		oalesPayPO.setCreateTime(oalesPayVO.getCreateTime());
 
 		oalesPayDao.update(oalesPayPO);
 

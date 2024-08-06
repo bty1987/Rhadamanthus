@@ -104,6 +104,8 @@ public class AddReducePO implements Serializable {
 
 	private short taxDiscount;
 
+	private int accountDiscount;
+
 	private long undisPrice;
 
 	private long disPrice;
@@ -260,6 +262,15 @@ public class AddReducePO implements Serializable {
 
 	public void setTaxDiscount(short taxDiscount) {
 		this.taxDiscount = taxDiscount;
+	}
+
+	@Column(name = "accountDiscount")
+	public int getAccountDiscount() {
+		return accountDiscount;
+	}
+
+	public void setAccountDiscount(int accountDiscount) {
+		this.accountDiscount = accountDiscount;
 	}
 
 	@Column(name = "undisPrice")

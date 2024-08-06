@@ -20,7 +20,7 @@ jQuery(function($) {
         decoration: null,
 
         cover: {},
-        table: {},
+        table: [],
 
         modal: {
             talkingModal: com.focusPage('#talkingModal')
@@ -214,8 +214,8 @@ jQuery(function($) {
 
         presignProduce = res.presignProduce;
     }, null, false);
-
-    contractEdit.table = {
+    
+    var table1 = {
         "insertWay": 1,
         "keyword": "家装项目预签列表",
         "pageBegin": 1,
@@ -300,7 +300,13 @@ jQuery(function($) {
     protationItems[0].items.push(["标配产品", 1, protation.protation.quotePrice]);
     protationItems[0].items.push(["优惠金额", '', protation.protation.preferPrice]);
     protationItems[0].items.push(["管理费收取比例", 1, protation.protation.manageRate]);
-    protationItems[0].items.push(["折后管理费", 1, protation.protation.managePrice]);
+    protationItems[0].items.push(["管理费", 1, protation.protation.managePrice]);
+    protationItems[0].items.push(["管理优惠", 1, protation.protation.manageProfit]);
+
+    if (protation.protation.advanceProfit && protation.protation.advanceProfit != 0) {
+        protationItems[0].items.push(["特批优惠", 1, protation.protation.advanceProfit]);
+    }
+
     protationItems[3].items.push(["基础增项", 1, protation.protation.adddPrice]);
     protationItems[3].items.push(["主材增项", 1, protation.protation.addmPrice]);
     protationItems[0].item.push(["标配产品", 1]);
@@ -345,48 +351,85 @@ jQuery(function($) {
 
         if (v == 3) {
 
-            contractEdit.table.headers.push('', '', '');
-            contractEdit.table.colWidthPercent.push(3, 3, 3);
-            contractEdit.table.datas.push([presignProduce.name, '', '']);
-            contractEdit.table.datas.push(["项目", "计价面积", "金额"]);
-            contractEdit.table.datas.push([protation.protation.name, protation.protation.quoteArea, utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))]);
+            table1.headers.push('', '', '');
+            table1.colWidthPercent.push(3, 3, 3);
+            table1.datas.push([presignProduce.name, '', '']);
+            table1.datas.push(["项目", "计价面积", "金额"]);
+            table1.datas.push([protation.protation.name, protation.protation.quoteArea, utils.changeThrDecimal(utils.accAdd(utils.accMul(protation.protation.quotePrice, utils.accAdd(1, protation.protation.manageRate)), utils.accAdd(protation.protation.accdPrice, protation.protation.accmPrice)))]);
 
             $.each(protationItems, function(i, q) {
 
-                contractEdit.table.datas.push([q.name, '', '']);
-                contractEdit.table.datas.push(["项目", "数量", "金额"]);
+                table1.datas.push([q.name, '', '']);
+                table1.datas.push(["项目", "数量", "金额"]);
                 $.each(q.items, function(j, qi) {
 
-                    contractEdit.table.datas.push(qi);
+                    table1.datas.push(qi);
                 });
                 $.each(q.totals, function(k, qt) {
 
-                    contractEdit.table.datas.push(qt);
+                    table1.datas.push(qt);
                 });
 
             });
 
-            contractEdit.table.datas.push(["预签计价合计", '', protation.protation.totalPrice]);
+            table1.datas.push(["预签计价合计", '', protation.protation.totalPrice]);
         } else {
 
-            contractEdit.table.headers.push('', '');
-            contractEdit.table.colWidthPercent.push(3, 3);
-            contractEdit.table.datas.push([presignProduce.name, '']);
-            contractEdit.table.datas.push(["项目", "计价面积"]);
-            contractEdit.table.datas.push([protation.protation.name, protation.protation.quoteArea]);
+            table1.headers.push('', '');
+            table1.colWidthPercent.push(3, 3);
+            table1.datas.push([presignProduce.name, '']);
+            table1.datas.push(["项目", "计价面积"]);
+            table1.datas.push([protation.protation.name, protation.protation.quoteArea]);
 
             $.each(protationItems, function(i, q) {
 
-                contractEdit.table.datas.push([q.name, '']);
-                contractEdit.table.datas.push(["项目", "数量"]);
+                table1.datas.push([q.name, '']);
+                table1.datas.push(["项目", "数量"]);
                 $.each(q.item, function(j, qi) {
 
-                    contractEdit.table.datas.push(qi);
+                    table1.datas.push(qi);
                 });
             });
         }
-
     }
+    
+    contractEdit.table.push(table1);
+    
+    var table2 = {
+        "insertWay": 1,
+        "keyword": "活动礼品项目列表",
+        "pageBegin": 1,
+        "headers": ["序号", "名称", "数量"],
+        "colWidthPercent": [1, 3, 1],
+        "headersAlignment": 1,
+        "cellHorizontalAlignment": 0,
+        "cellVerticalAlignment": 5,
+        "datas": []
+    };
+    
+    var decorationActivityItems = [];
+
+    com.post(api.decoration.queryDecorationActivityItem, {
+        "decoration.orderId": contractEdit.decorationOrderId
+    }, function(res) {
+
+        decorationActivityItems = res.decorationActivityItems;
+    }, null, false);
+    
+    var index = 0;
+    
+    if (decorationActivityItems && decorationActivityItems.length) {
+
+        $.each(decorationActivityItems, function(i, v) {
+            
+            if(v.type != 1) return true;
+            if([0,2,4,6].indexOf(v.state) == -1) return true;
+            
+            table2.datas.push([(index++ + 1), v.activityItemName, v.num]);
+        });
+    }
+    
+    contractEdit.table.push(table2);
 
     function talkingData(content, types) {
 

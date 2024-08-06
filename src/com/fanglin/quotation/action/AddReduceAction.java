@@ -105,6 +105,14 @@ public class AddReduceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateAddReduceForAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAddReduceForAccount() throws FLException {
+
+		addReduceService.updateAddReduceForAccount(addReduce);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "submitAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitAddReduce() throws FLException {
 

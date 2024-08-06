@@ -96,6 +96,8 @@ public class AddReduceDO implements Serializable {
 
 	private short taxDiscount;
 
+	private int accountDiscount;
+
 	private long consPrice;
 
 	private long total;
@@ -346,6 +348,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setTaxDiscount(short taxDiscount) {
 		this.taxDiscount = taxDiscount;
+	}
+
+	@Column(name = "accountDiscount")
+	public int getAccountDiscount() {
+		return accountDiscount;
+	}
+
+	public void setAccountDiscount(int accountDiscount) {
+		this.accountDiscount = accountDiscount;
 	}
 
 	@Column(name = "confirmTime")

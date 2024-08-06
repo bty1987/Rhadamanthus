@@ -234,7 +234,7 @@
         });
 
         if (backup > order.paymentValue) {
-            com.showAlert(com.error, "违约金额与已付款金额不匹配");
+            com.showAlert(com.error, "退款额大于付款额");
             return false;
         }
 
@@ -350,7 +350,7 @@
         }, function(res) {
 
             if (utils.accSub(com.focusPage("#customerInfoDialog").attr("totalPrice"), res.quotation.totalPrice) > 100) {
-                com.showConfirm("合同金额与报价金额相差大于100，确认签单?", function() {
+                com.showConfirm("合同金额与报价金额相差大于100, 确认签单?", function() {
 
                     com.post(api.decoration.signDecorationContract, options, function(res) {
 
@@ -1151,6 +1151,8 @@
             params.quotation.decorationType = type;
             params.quotation.decorationTypeness = typeness;
             params.quotation.atttype = atttype;
+            
+            params.urlLoadParams.type = null;
 
             params.historyPage = api.index.decorationIndex.url;
 
@@ -1417,7 +1419,7 @@
                     options["decoration.dompany"] = order.signItems.conpany.val();
 
                     if (utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100) {
-                        com.showConfirm("合同金额与报价金额相差大于100，确认签单?", function() {
+                        com.showConfirm("合同金额与报价金额相差大于100, 确认签单?", function() {
 
                             com.post(api.decoration.signDecorationContract, options, function(res) {
 
@@ -1452,11 +1454,26 @@
             params.decoration.orderId = orderId;
             params.decoration.rowId = rowId;
 
+            var backup = 0;
+
+            com.post(api.payment.queryAdvancePaymentByOrderId, {
+                "advancePayment.decoration.orderId": orderId
+            }, function(res) {
+
+                var advancePayment = "";
+                var balanceAdvance = res.balanceAdvance;
+
+                advancePayment += "合同: " + balanceAdvance + "<br/>";
+
+                backup = utils.accAdd(backup, balanceAdvance);
+
+                com.focusPage("#advancePayment").html(advancePayment);
+            }, null, false);
+
             com.post(api.payment.queryDecorationPaymentForContractByOrderId, {
                 "decorationPayment.decoration.orderId": orderId
             }, function(res) {
 
-                var backup = 0;
                 var decorationPaymentInfo = "";
                 var decorationPayments = res.decorationPayments;
 
@@ -1481,10 +1498,11 @@
                 com.focusPage("#precontractPrice").val(precontractPrice);
                 com.focusPage("#decorationPaymentInfo").html(decorationPaymentInfo);
                 com.focusPage("#backup").val(0);
-                order.paymentValue = status == 2 ? precontractPrice : backup;
+                order.paymentValue = backup;
 
                 order.refundContractModal.modal("show");
-            });
+            }, null, false);
+
         }
 
         // 重签合同

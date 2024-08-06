@@ -242,9 +242,14 @@
         }
     }, {
         field: "isAffirm",
-        name: "客户确认",
-        prop: "isAffirm",
-        dataset: constant.quotation().selection.isAffirm.keys,
+        name: "确认状态",
+        prop: function(v){
+            if(v.affirmTime < v.sendTime && v.affirmTime != null && v.sendTime != null){
+                return '已变更';
+            }else{
+                return constant.quotation().selection.isAffirm.keys[v.isAffirm];
+            }
+        },
         clazz: "red",
         show: function(v) {
 

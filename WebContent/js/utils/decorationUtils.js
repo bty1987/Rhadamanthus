@@ -2301,6 +2301,27 @@ var decorationUtils = {
             com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, !!status);
         });
 
+        $("#quotationType").click(function() {
+
+            var layout = com.focusPage('input[name="layout"]:checked', '#printQuotationModal');
+            com.focusPage('input[name="type"]:checked', '#printQuotationModal #types').prop("checked", false);
+            com.focusPage('input[name="itemtype"]:checked', '#printQuotationModal #itemtypes').prop("checked", false);
+
+            if(layout.val() == 1){
+                com.focusPage('input[value="1"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="2"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="1"]', '#printQuotationModal #itemtypes').prop("checked", true);
+            }else if(layout.val() == 2 || layout.val() == 3){
+                com.focusPage('input[value="1"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="2"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="8"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="16"]', '#printQuotationModal #types').prop("checked", true);
+                com.focusPage('input[value="0"]', '#printQuotationModal #itemtypes').prop("checked", true);
+                com.focusPage('input[value="1"]', '#printQuotationModal #itemtypes').prop("checked", true);
+            }
+
+        });
+
         $("#printingBtn").click(function() {
 
             var printConf = {

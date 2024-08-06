@@ -531,6 +531,8 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 
+		checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
+
 		quotationPO.setStatus(QuotationPO.STATUS_INIT_INT);
 
 		quotationDao.update(quotationPO);

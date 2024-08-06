@@ -26,6 +26,6 @@ public interface SelectionService {
 
 	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO) throws FLException;
 
-	public void sendSelection(SelectionVO selectionVO) throws FLException;
+	public int sendSelection(SelectionVO selectionVO) throws FLException;
 
 }

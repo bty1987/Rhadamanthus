@@ -270,6 +270,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setUncalPrice(0);
 		addReducePO.setCalPrice(0);
 		addReducePO.setConsPrice(0);
+		addReducePO.setAccountDiscount(addReducePO.getDiscount());
 
 		addReduceDao.save(addReducePO);
 
@@ -314,6 +315,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		addReducePO.setDiscount(addReduceVO.getDiscount());
+		addReducePO.setAccountDiscount(addReduceVO.getDiscount());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		addReducePO.setManageRate(addReduceVO.getManageRate());
 		addReducePO.setManageDiscount(addReduceVO.getManageDiscount());
@@ -326,6 +328,33 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
 		addReducePO.setConsPrice(addReduceVO.getConsPrice());
 		addReducePO.setTotal(addReduceVO.getTotal());
+
+		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateAddReduceForAccount(AddReduceVO addReduceVO) throws FLException {
+
+		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
+
+		if (addReducePO == null) {
+			throw new FLException(200060, "增减单不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReducePO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		addReducePO.setAccountDiscount(addReduceVO.getAccountDiscount());
 
 		addReduceDao.update(addReducePO);
 

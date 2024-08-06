@@ -45,7 +45,7 @@ jQuery(function ($) {
             "paging.rows": 10
         };
         searcher.base("condList", "pagenation", "resultList", url);
-        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime', ]);
+        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime']);
         searcher.history("oalsePayPostData");
         searcher.button([{
             id: "exportOalesPay",
@@ -363,11 +363,14 @@ jQuery(function ($) {
         }), function (res) {
 
             $.exceler({
-                column: [['品类', 'oales.category'], ['品牌', 'oales.brand'], ['供应商', 'oales.supplier.currentName'], ['装修单号', 'oales.decoration.orderId'], ['楼盘', 'oales.decoration.house.village.name'], ['地址', 'oales.decoration.house.houseNumber'], ['外销单号', 'oales.no'], ['状态', 'oales.status'], ['主材员', 'oales.materialer.currentName'], ['主材员ID', 'oales.materialer.userId'], ['设计师', 'oales.decoration.designer.currentName'], ['设计师ID', 'oales.decoration.designer.userId'], ['部门', 'oales.dept.name'], ['分区', 'oales.region.name'], ['渠道', 'oales.channer.currentName'], ['渠道ID', 'oales.channer.userId'], ['服务管家', 'oales.servicer.currentName'], ['服务管家ID', 'oales.servicer.userId'], ['创建人', 'creater.currentName'], ['创建时间', 'createTime'], ['付款时间', 'payTime '], ['总额', 'oales.total'], ['成本', 'oales.cost'], ['系数', 'oales.threshold'], ['利润', 'oales.profit'], ['奖励', 'oales.award']],
+                column: [['名称', 'name'], ['金额', 'money'], ['类型', 'type'],['品类', 'oales.category'], ['品牌', 'oales.brand'], ['供应商', 'oales.supplier.currentName'], ['装修单号', 'oales.decoration.orderId'], ['楼盘', 'oales.decoration.house.village.name'], ['地址', 'oales.decoration.house.houseNumber'], ['外销单号', 'oales.no'], ['状态', 'oales.status'], ['主材员', 'oales.materialer.currentName'], ['主材员ID', 'oales.materialer.userId'], ['设计师', 'oales.decoration.designer.currentName'], ['设计师ID', 'oales.decoration.designer.userId'], ['部门', 'oales.dept.name'], ['分区', 'oales.region.name'], ['渠道', 'oales.channer.currentName'], ['渠道ID', 'oales.channer.userId'], ['服务管家', 'oales.servicer.currentName'], ['服务管家ID', 'oales.servicer.userId'], ['创建人', 'creater.currentName'], ['创建时间', 'createTime'], ['付款时间', 'payTime'], ['复核时间', 'oales.checkTime'], ['确认时间', 'oales.confirmTime'], ['总额', 'oales.total'], ['类型', 'oales.atttype'], ['奖励类型', 'oales.awardType'], ['成本', 'oales.cost'], ['系数', 'oales.threshold'], ['利润', 'oales.profit'], ['奖励', 'oales.award'], ['备注', 'comment']],
                 list: res.paging.data,
             }, function (v) {
 
                 v.oales.status = constant.sales().oales.status.keys[v.oales.status];
+                v.oales.atttype = constant.sales().oales.atttype.keys[v.oales.atttype];
+                v.oales.awardType = constant.sales().oales.awardType.keys[v.oales.awardType];
+                v.type = constant.sales().oalespay.type.keys[v.type];
             });
         });
 
@@ -433,7 +436,7 @@ jQuery(function ($) {
         var options = {
             "oalesPay.opid": oalesPay.opid,
             "oalesPay.createTime": oalesPay.items.createTime.val()
-        };
+        }
 
         com.post(url, options, function (res) {
 

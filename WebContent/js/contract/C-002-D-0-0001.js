@@ -306,6 +306,7 @@ jQuery(function($) {
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
 
+                mask.remove();
                 com.closePopup();
             }, function(res) {
 

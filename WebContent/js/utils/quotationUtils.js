@@ -1192,7 +1192,7 @@ var quotationUtils = {
 
         var serviceMoneyBody = $("<div></div>").addClass('widget-body');
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true),this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
         serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
         inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
@@ -1205,18 +1205,22 @@ var quotationUtils = {
 
             protation = res.protation;
 
+            var discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(protation.quotePrice, protation.preferPrice), protation.advanceProfit), protation.quotePrice));
+
+            discout = discout < 0 ? 0 : discout > 1 ? 1 : discout;
+
             com.focusPage('#quotePrice').html(com.checkNull(protation.quotePrice, 0));
             com.focusPage('#preferPrice').html(com.checkNull(protation.preferPrice, 0));
+            com.focusPage('#discount').html(com.checkNull(discout, 0));
             com.focusPage('#managePrice').html(com.checkNull(protation.managePrice, 0));
             com.focusPage('#manageProfit').html(com.checkNull(protation.manageProfit, 0));
+            com.focusPage('#advanceProfit').html(com.checkNull(protation.advanceProfit, 0));
             com.focusPage('#quoteArea').html(com.checkNull(protation.quoteArea, 0));
             com.focusPage('#totalPrice').html(com.checkNull(protation.totalPrice, 0));
             com.focusPage('#product').html(protation.product);
 
-            if(protation.advanceProfit != 0){
-                com.focusPage('#advanceProfit').html(com.checkNull(protation.advanceProfit, 0));
-            }else{
-                com.focusPage('#advanceProfit').hide();
+            if(protation.advanceProfit == 0){
+                com.focusPage('#advanceProfitShow').hide();
             }
 
         }, null, false);
@@ -1401,7 +1405,7 @@ var quotationUtils = {
     },
     createDivForHolonomy: function(inclass, string, id, isleft) {
 
-        return $("<div></div>").addClass(inclass).css(isleft ? {
+        return $("<div></div>").addClass(inclass).attr('id', id + 'Show').css(isleft ? {
             "border-left": "solid 1px #e3e3e3",
         } : {
             "border-left": "solid 1px #e3e3e3",
