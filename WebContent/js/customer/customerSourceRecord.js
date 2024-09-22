@@ -11,7 +11,8 @@ $(function() {
     searcher.condition();
 
     searcher.param({
-        "customerSourceRecord.csid": customerSourceRecord.csid
+        "customerSourceRecord.csid": customerSourceRecord.csid,
+        "customerSourceRecord.type": 0
     });
 
     searcher.history("customerSourceRecordData");

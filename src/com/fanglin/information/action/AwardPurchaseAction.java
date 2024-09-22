@@ -36,6 +36,14 @@ public class AwardPurchaseAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryAwardPurchaseByFapid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAwardPurchaseByFapid() throws FLException {
+
+		awardPurchases = awardPurchaseService.queryAwardPurchaseByFapid(awardPurchase);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addAwardPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAwardPurchase() throws FLException {
 

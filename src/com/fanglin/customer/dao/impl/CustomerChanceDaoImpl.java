@@ -9,6 +9,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
 
 @Repository("customerChanceDao")
@@ -19,9 +20,11 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	}
 
 	@Override
-	public List<CustomerChancePO> pageCustomerChance(Paging paging, List<Filter> filters) {
+	public List<CustomerChancePO> pageCustomerChance(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<CustomerChancePO> query = pagingQuery(paging, CustomerChancePO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -55,8 +58,36 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				query.alias("department", "department");
 			}
 
+			if (field.contains("house")) {
+				query.alias("house", "house");
+			}
+
+			if (field.contains("village")) {
+				query.alias("house.village", "village");
+			}
+
+			if (field.contains("customer")) {
+				query.alias("customer", "customer");
+			}
+
 			if (field.contains("source")) {
 				query.alias("source", "source");
+
+				if (field.contains("creater")) {
+					query.alias("source.creater", "designer");
+				}
+
+				if (field.contains("dept")) {
+					query.alias("designer.dept", "designerDept");
+				}
+			}
+
+			if (field.contains("belonger")) {
+				query.alias("belonger", "salesman");
+
+				if (field.contains("dept")) {
+					query.alias("salesman.dept", "salesmanDept");
+				}
 			}
 
 			if ("createTime".equals(field)) {
@@ -75,13 +106,25 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				query.add(query.getCriterion("fatherDept.no", data, op));
 			} else if ("source.csid".equals(field)) {
 				query.add(query.getCriterion("source.csid", Long.valueOf(data), op));
-			} else if ("source.phone".equals(field)) {
-				query.add(query.getCriterion("source.phone", data, op));
-			} else if ("source.village".equals(field)) {
-				query.alias("source.village", "village");
-				query.add(query.getCriterion("village.no", String.valueOf(data), op));
-			} else if ("source.createTime".equals(field)) {
-				query.timeranges("source.createTime", data);
+			} else if ("source.name".equals(field)) {
+				query.add(query.getCriterion("source.name", data, op));
+			} else if ("source.buildArea".equals(field)) {
+				int dataF = Integer.parseInt(data);
+				query.add(query.getCriterion("source.buildArea", Arith.mul(dataF, 1000000), op));
+			} else if ("source.creater".equals(field)) {
+				query.add(query.getCriterion("designer.userId", data, op));
+			} else if ("source.creater.dept".equals(field)) {
+				query.add(query.getCriterion("designerDept.no", data, op));
+			} else if ("belonger".equals(field)) {
+				query.add(query.getCriterion("salesman.userId", data, op));
+			} else if ("belonger.dept".equals(field)) {
+				query.add(query.getCriterion("salesmanDept.no", data, op));
+			} else if ("customer.phone".equals(field)) {
+				query.add(query.getCriterion("customer.phone", data, op));
+			} else if ("house.village.no".equals(field)) {
+				query.add(query.getCriterion("village.no", data, op));
+			} else if ("house.houseNumber".equals(field)) {
+				query.add(query.getCriterion("house.houseNumber", data, op));
 			}
 		}
 	}

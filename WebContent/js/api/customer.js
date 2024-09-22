@@ -142,12 +142,15 @@ $.extend(api, {
         queryCustomerOriginFunction: {
             url: "queryCustomerOriginFunction.do"
         },
-        
+
         pageCustomerDeptRule: {
             url: "pageCustomerDeptRule.do"
         },
-        queryCustomerDeptRule: {
-            url: "queryCustomerDeptRule.do"
+        queryCustomerDeptRuleByDid: {
+            url: "queryCustomerDeptRuleByDid.do"
+        },
+        queryCustomerDeptRuleByDbid: {
+            url: "queryCustomerDeptRuleByDbid.do"
         },
         addCustomerDeptRule: {
             url: "addCustomerDeptRule.do"
@@ -161,7 +164,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "predisPrice", "score", "rank", "chance", "surplus", "polling"]
             }]
         },
         queryCustomerUserRule: {
@@ -169,17 +172,17 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "customerUserRule",
-                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+                args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "predisPrice", "score", "rank", "chance", "surplus", "polling"]
             }]
         },
         addCustomerUserRule: {
             url: "addCustomerUserRule.do",
             type: "update",
             tranargs: {
-                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"],
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.predisPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"],
                 query: [{
                     result: "customerUserRule",
-                    args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "score", "rank", "chance", "surplus", "polling"]
+                    args: ["measureNum", "contractNum", "contractPrice", "materialPrice", "designPrice", "predisPrice", "score", "rank", "chance", "surplus", "polling"]
                 }]
             }
         },
@@ -187,14 +190,14 @@ $.extend(api, {
             url: "updateCustomerUserRule.do",
             type: "update",
             tranargs: {
-                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.predisPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
             }
         },
         updateCustomerUserRuleForStatus: {
             url: "updateCustomerUserRuleForStatus.do",
             type: "update",
             tranargs: {
-                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
+                args: ["customerUserRule.measureNum", "customerUserRule.contractNum", "customerUserRule.contractPrice", "customerUserRule.materialPrice", "customerUserRule.designPrice", "customerUserRule.predisPrice", "customerUserRule.score", "customerUserRule.rank", "customerUserRule.chance", "customerUserRule.surplus", "customerUserRule.polling"]
             }
         },
         disableCustomerUserRule: {
@@ -223,7 +226,7 @@ $.extend(api, {
         deleteCustomerUserRuleItem: {
             url: "deleteCustomerUserRuleItem.do"
         },
-        
+
         pageCustomerSource: {
             url: "pageCustomerSource.do",
             type: "query",
@@ -274,18 +277,26 @@ $.extend(api, {
         issueCustomerSource: {
             url: "issueCustomerSource.do"
         },
-        pageCustomerSourceRecord:{
-            url:"pageCustomerSourceRecord.do"
+        pageCustomerSourceRecord: {
+            url: "pageCustomerSourceRecord.do"
         },
-        queryCustomerSourceRecord:{
-            url:"queryCustomerSourceRecord.do"
+        queryCustomerSourceRecord: {
+            url: "queryCustomerSourceRecord.do"
         },
-        
+
         pageCustomerChance: {
             url: "pageCustomerChance.do",
             type: "query",
             tranargs: [{
                 result: "paging-data-source",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
+        queryCustomerChanceByCcid: {
+            url: "queryCustomerChanceByCcid.do",
+            type: "query",
+            tranargs: [{
+                result: "source",
                 args: ["buildArea", "freeArea", "totalArea", "innerArea"]
             }]
         },
@@ -702,7 +713,7 @@ $.extend(tools, {
                 var customer = res.customer;
                 var type = constant.customer().customer.customerType.keys[customer.type];
 
-                com.showTip(content, "姓名:" + customer.name + "<br\>地址:" + customer.address + "<br\>邮箱:" + customer.email+ "<br\>客户类型:" + type, "bottom");
+                com.showTip(content, "姓名:" + customer.name + "<br\>地址:" + customer.address + "<br\>邮箱:" + customer.email + "<br\>客户类型:" + type, "bottom");
             });
 
         }

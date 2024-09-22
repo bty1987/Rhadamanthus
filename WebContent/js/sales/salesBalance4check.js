@@ -20,9 +20,9 @@ $(function() {
         btns: {
             balanceSalesBtn: com.focusPage("#balanceSalesBtn", "#balanceSalesModal"),
         },
+        salesBalanceItem: []
 
     };
-
     var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
 
     salesBalance.btns.balanceSalesBtn.click(balanceSales);
@@ -65,6 +65,7 @@ $(function() {
 
     var displayFunc = (function() {
 
+        $('input[type=checkbox][name=salesBalanceItem]').prop('checked', false);
         var renderList = function(tableId, listData) {
 
             var $tableWrap = com.focusPage('#' + tableId);
@@ -200,9 +201,9 @@ $(function() {
                     });
                     var _label = $('<label></label>');
                     var $input = $('<input>').attr({
+                        'class': 'ace ace-checkbox-2',
                         "type": "checkbox",
-                        "name": "sbids",
-                        "class": "",
+                        "name": "salesBalanceItem",
                         "data-sbid": v.sbid,
                         "data-status": v.status,
                         "data-vbalance": v.vbalance,
@@ -215,7 +216,21 @@ $(function() {
                         "data-total": v.total,
                         "data-allowance": v.allowance,
                         "data-venderMaling": v.sales.venderMaling
-                    }).addClass('ace ace-checkbox-2');
+                    }).val(v.sbid)
+
+                    $input.click(function() {
+                        var $that = $(this);
+                        var sbid = $that.attr("data-sbid");
+                        var checked = $that.prop("checked");
+                        if (checked)
+                            !salesBalance.salesBalanceItem.contains(sbid) && salesBalance.salesBalanceItem.push(sbid);
+                        else
+                            salesBalance.salesBalanceItem.contains(sbid) && salesBalance.salesBalanceItem.splice(salesBalance.salesBalanceItem.indexOf(sbid), 1);
+                    });
+
+                    if (salesBalance.salesBalanceItem.contains(String(v.sbid)))
+                        $input.prop('checked', true).attr("checked", true);
+
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.sales.no);
                     _label.append($input).append(_span).appendTo($label);
 
@@ -446,6 +461,19 @@ $(function() {
             com.focusPage('input[type="checkbox"]').attr('checked', true);
             com.focusPage('input[type="checkbox"]').prop('checked', true);
         }
+
+        $.each(com.focusPage('input[type="checkbox"]'), function(i, e) {
+
+            var $that = $(e);
+            var sbid = $that.attr("data-sbid");
+
+            var checked = $that.prop("checked");
+
+            if (checked)
+                !salesBalance.salesBalanceItem.contains(sbid) && salesBalance.salesBalanceItem.push(sbid);
+            else
+                salesBalance.salesBalanceItem.contains(sbid) && salesBalance.salesBalanceItem.splice(salesBalance.salesBalanceItem.indexOf(sbid), 1);
+        });
     }
 
     function balanceSales() {
@@ -455,14 +483,8 @@ $(function() {
 
         var options = {};
         var balanceSales = {};
-        var index = 0;
 
-        var income = 0;
-        var cost = 0;
-        var payment = 0;
-        var profit = 0;
-
-        var inputs = com.focusPage('input[name="sbids"]:checked', '#resultList');
+        var inputs = com.focusPage('input[name="salesBalanceItem"]:checked', '#resultList');
         var bsid = com.typeahead("balanceSales");
 
         if (!inputs.length) {
@@ -488,77 +510,20 @@ $(function() {
             balanceSales = res.balanceSales;
         }, null, false);
 
-        var brand = balanceSales.brand;
+        for ( var i = 0; i < salesBalance.salesBalanceItem.length; i++) {
 
-        for ( var i = 0; i < inputs.length; i++) {
+            options["balanceSalesBalances[" + i + "].salesBalance.sbid"] = salesBalance.salesBalanceItem[i];
 
-            var input = $(inputs[i]);
-            var status = input.attr("data-status");
-            var bid = input.attr('data-bid');
-            var sbid = input.attr('data-sbid');
-            var pbalance = input.attr('data-pbalance');
-            var oneType = input.attr('data-onetype');
-            var type = input.attr('data-type');
-            var venderMaling = Math.round(input.attr('data-venderMaling'));
-            var depositpay = input.attr('data-depositpay');
-            var fullpay = input.attr('data-fullpay');
-            var total = input.attr('data-total');
-            var _income = 0;
-            var _payment = 0;
-
-            if (oneType == constant.sales().salesBalance.ONETYPE_INIT_INT) {
-                if (type == 3) {
-                    venderMaling = 0;
-                    _income = depositpay;
-                    _payment = utils.accSub(pbalance, venderMaling);
-                } else {
-                    _income = utils.accAdd(depositpay, fullpay);
-                    _payment = utils.accSub(pbalance, venderMaling);
-                }
-            }
-            if (oneType == constant.sales().salesBalance.ONETYPE_REFUND_INT) {
-                _income = total;
-                _payment = pbalance;
-            }
-            if (oneType == constant.sales().salesBalance.ONETYPE_ALLBACK_INT || oneType == constant.sales().salesBalance.ONETYPE_DBACKORDER_INT) {
-                _income = total;
-                _payment = utils.accAdd(pbalance, venderMaling);
-            }
-
-            var _profit = utils.accSub(_income, _payment);
-
-            income = utils.accAdd(income, _income);
-            cost = utils.accAdd(cost, pbalance);
-            payment = utils.accAdd(payment, _payment);
-            profit = utils.accAdd(profit, _profit);
-
-            if (status != constant.sales().salesBalance.STATUS_BALANCE_INT) {
-                com.showAlert(com.warning, "请选择结算状态的结算单");
-                return false;
-            }
-
-            options["balanceSalesBalances[" + index + "].salesBalance.sbid"] = sbid;
-            index += 1;
         }
-
         if (!options)
             return false;
 
         options["balanceSales.bsid"] = bsid;
 
-        options["balanceSales.income"] = utils.accAdd(income, balanceSales.income);
-        options["balanceSales.cost"] = utils.accAdd(cost, balanceSales.cost);
-        options["balanceSales.payment"] = utils.accAdd(payment, balanceSales.payment);
-        options["balanceSales.profit"] = utils.accAdd(profit, balanceSales.profit);
-
-        if (options["balanceSales.payment"] > 1000000) {
-            com.showAlert(com.warning, "结算总额过大");
-            return false;
-        }
-
         com.post(api.balance.submitBalanceSales, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
+            salesBalance.salesBalanceItem = [];
             searcher.doSearch();
         });
     }

@@ -13,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
@@ -29,7 +31,7 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short STATUS_DISABLE_INT = 1; // 失效
 
-	public static final short STATUS_ISSUE_INT = 2; // 分配
+	public static final short STATUS_APPROVE_INT = 2; // 审批
 
 	public static final short STATUS_CONFIRM_INT = 3; // 确认
 
@@ -46,6 +48,12 @@ public class CustomerChancePO implements Serializable {
 	public static final short ISREAD_READ_INT = 1;// 已读
 
 	private long ccid;
+
+	private String orderId;
+
+	private CustomerPO customer;
+
+	private HousePO house;
 
 	private CustomerSourcePO source;
 
@@ -85,10 +93,12 @@ public class CustomerChancePO implements Serializable {
 		super();
 	}
 
-	public CustomerChancePO(CustomerSourcePO source, DecorationBusitypePO busitype, UserPO creater, UserPO issuer, UserPO belonger, DepartmentPO department, DepartmentPO region) {
+	public CustomerChancePO(CustomerPO customer, HousePO house, CustomerSourcePO source, DecorationBusitypePO busitype, UserPO creater, UserPO issuer, UserPO belonger, DepartmentPO department, DepartmentPO region) {
 
 		super();
 
+		this.customer = customer;
+		this.house = house;
 		this.source = source;
 		this.busitype = busitype;
 		this.creater = creater;
@@ -107,6 +117,35 @@ public class CustomerChancePO implements Serializable {
 
 	public void setCcid(long ccid) {
 		this.ccid = ccid;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "cid", referencedColumnName = "cid")
+	public CustomerPO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerPO customer) {
+		this.customer = customer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "hid", referencedColumnName = "hid")
+	public HousePO getHouse() {
+		return house;
+	}
+
+	public void setHouse(HousePO house) {
+		this.house = house;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -271,7 +310,13 @@ public class CustomerChancePO implements Serializable {
 
 	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {
 
-		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("source", "busitype", "creater", "issuer", "belonger", "department", "region"));
+		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("customer", "house", "source", "busitype", "creater", "issuer", "belonger", "department", "region"));
+
+		if (customerChanceVO.getHouse() != null && getHouse() != null) BeanUtil.copyProperties(getHouse(), customerChanceVO.getHouse(), Arrays.asList("village"));
+		if (customerChanceVO.getHouse().getVillage() != null && getHouse() != null && getHouse().getVillage() != null) BeanUtil.copyProperties(getHouse().getVillage(), customerChanceVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		if (customerChanceVO.getHouse().getVillage() != null && customerChanceVO.getHouse().getVillage().getCityProper() != null && getHouse() != null && getHouse().getVillage() != null) BeanUtil.copyProperties(getHouse().getVillage().getCityProper(), customerChanceVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+
+		if (customerChanceVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerChanceVO.getCustomer());
 
 		if (customerChanceVO.getSource() != null) getSource().ptv(customerChanceVO.getSource());
 

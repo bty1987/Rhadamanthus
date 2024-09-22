@@ -1,21 +1,28 @@
 package com.fanglin.data.common.vo;
 
 public class PaymentScaleItemVO {
-		
+
 	private Long psiid;
-		
-	private	Long psid;
-	
-	private	Long ptid;
-		
+
+	private Long psid;
+
+	private Long ptid;
+
 	private String name;
-		
+
 	private Integer scale;
-	
+
 	private Short sort;
 
+	private PaymentScaleVO paymentScale;
+
 	public PaymentScaleItemVO() {
-			super();
+		super();
+	}
+
+	public PaymentScaleItemVO(PaymentScaleVO paymentScale) {
+		super();
+		this.paymentScale = paymentScale;
 	}
 
 	public Long getPsiid() {
@@ -64,6 +71,14 @@ public class PaymentScaleItemVO {
 
 	public void setSort(Short sort) {
 		this.sort = sort;
+	}
+
+	public PaymentScaleVO getPaymentScale() {
+		return paymentScale;
+	}
+
+	public void setPaymentScale(PaymentScaleVO paymentScale) {
+		this.paymentScale = paymentScale;
 	}
 
 }

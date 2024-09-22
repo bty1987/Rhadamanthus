@@ -40,6 +40,20 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 	}
 
 	@Override
+	public List<OalesPO> pageOalesForAccount(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		PagingQuery<OalesPO> query = pagingQuery(paging, OalesPO.class);
+
+		query.add(query.getCriterion(OalesPO.COLUMN_COMPANY_STR, company, "eq"));
+		query.add(query.getCriterion("status", OalesPO.STATUS_CHECK_INT, "eq"));
+		query.add(query.getCriterion("accountStatus", OalesPO.ACCOUNT_STATUS_INIT_INT, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<OalesPO> queryOalesByOrderId(String orderId) {
 		return session().createCriteria(OalesPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();

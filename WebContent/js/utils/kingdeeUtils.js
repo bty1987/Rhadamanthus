@@ -114,9 +114,9 @@ var kingdeeUtils = {
         }, null, false);
 
         var orgno = companyDorgNo;  // 组织编号
-        var currenCollectReceiptType = "SKDLX01_SYS";
-        var currenRefundReceiptType = "SKTKDLX01_SYS";
-        var currenPurposes = "SFKYT01_SYS";
+        var currenCollectReceiptType = "SKDLX01_SYS"; // 销售收款单
+        var currenRefundReceiptType = "SKTKDLX01_SYS"; // 销售业务退款单
+        var currenPurposes = "SFKYT01_SYS"; // 销售收款
 
         var url = api.data.queryPaymentTypeByName;
         var option;
@@ -126,6 +126,10 @@ var kingdeeUtils = {
             case "payment":
                 option = {"paymentType.name": constant.payment().advancePayment.paymentType.keys[payment.paymentType]};
                 receiptNo =  Date.now() + payment.arId;
+
+                currenCollectReceiptType = "SKDLX02_SYS"; // 其他业务收款单
+                currenRefundReceiptType = "SKTKDLX02_SYS"; // 其他业务退款单
+                currenPurposes = "1008"; // 装修收款
                 break;
             case "":
                 option = {"paymentType.name": payment.paymentType};
@@ -153,9 +157,10 @@ var kingdeeUtils = {
         // 主材类型
         if (bustype == 1) {
             orgno = companySorgNo;
-            currenCollectReceiptType = "SKDLX02_SYS";
-            currenRefundReceiptType = "SKTKDLX02_SYS";
-            currenPurposes = "1004";
+            currenCollectReceiptType = "SKDLX02_SYS"; // 其他业务收款单
+            currenRefundReceiptType = "SKTKDLX02_SYS"; // 其他业务退款单
+
+            currenPurposes = htmlName == "payment" ? "1003" : "1004"; // 1003: 代收主材预付款 1004: 代收主材款
         }
 
         if (cash > 0) {
@@ -303,7 +308,9 @@ var kingdeeUtils = {
 
                         if (receiptType.fund == 0) return; // 非资金
 
+                        fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
                         receivableTotal = utils.accAdd(receivableTotal, _i[1]);
+
                         var bankCollect = kingdeeUtils.collectBillItem(currenPurposes, receiptType.kibalance, _i[1], receiptType.bankno, _i[2], comment);
                         collectBillItems.push(bankCollect);
 
@@ -316,6 +323,7 @@ var kingdeeUtils = {
                         var customerAccountName;
                         var customerAccountBank;
                         var customerAccountBankNo;
+                        
                         com.post(api.data.queryCustomerById, {"customer.cid": cid}, function (res) {
                             customerAccountName =  res.customer.companyName;
                             customerAccountBank =  res.customer.companyBank;
@@ -422,7 +430,7 @@ var kingdeeUtils = {
             "FRECTOTALAMOUNTFOR": money,
             "FACCOUNTID": bankNo,
             "FSETTLENO": settleno,
-            "FCOMMENT": comment
+            "FCOMMENT": comment.replace(/\n/g, " ")
         };
 
         return paramItem;
@@ -445,7 +453,7 @@ var kingdeeUtils = {
             "FSETTLEORGID": settleOrg,
             "F_SFKD_Hslb": grade,
             "F_SFKD_Base": paymentType,
-            "FREMARK": comment,
+            "FREMARK": comment.replace(/\n/g, " "),
             "FRECEIVEBILLENTRY": data,
             "redis": 0
         };
@@ -460,7 +468,7 @@ var kingdeeUtils = {
             "FPURPOSEID": purpose,
             "FREFUNDAMOUNTFOR": refundMoney,
             "FACCOUNTID": bankNo,
-            "FNOTE": comment,
+            "FNOTE": comment.replace(/\n/g, " "),
             "FOPPOSITECCOUNTNAME": customerAccountName,
             "FOPPOSITEBANKNAME": customerAccountBank,
             "FOPPOSITEBANKACCOUNT": customerAccountBankNo
@@ -585,7 +593,7 @@ var kingdeeUtils = {
             "FPAYORGID": collectOrg,
             "F_ORA_BASE1": grade,
             "F_SFKD_Base2": paymentType,
-            "FAR_Remark": comment,
+            "FAR_Remark": comment.replace(/\n/g, " "),
             "FENTITYDETAIL": data,
             "redis": 0
         };

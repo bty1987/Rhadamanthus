@@ -23,6 +23,8 @@ public class OalesPayOO implements Serializable {
 
 	private static final long serialVersionUID = 7639485438882576821L;
 
+	public static final String COLUMN_COMPANY_STR = "company";
+
 	public static final short TYPE_CASH_INT = 0;// 现金
 
 	public static final short TYPE_BANK_INT = 1;// 银行
@@ -48,6 +50,8 @@ public class OalesPayOO implements Serializable {
 	private Timestamp payTime;
 
 	private String comment;
+
+	private int company;
 
 	public OalesPayOO() {
 		super();
@@ -142,6 +146,15 @@ public class OalesPayOO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	public OalesPayVO ptv(OalesPayVO oalesPayVO) {

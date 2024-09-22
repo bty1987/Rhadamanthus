@@ -31,15 +31,23 @@ public class CustomerDeptRuleAction extends BaseListAction {
 	@Action(value = "pageCustomerDeptRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerDeptRule() throws FLException {
 
-		customerDeptRuleService.pageCustomerDeptRule(getPaging(), getFilters());
+		customerDeptRuleService.pageCustomerDeptRule(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "queryCustomerDeptRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerDeptRule() throws FLException {
+	@Action(value = "queryCustomerDeptRuleByDid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerDeptRuleByDid() throws FLException {
 
-		customerDeptRule = customerDeptRuleService.queryCustomerDeptRule(customerDeptRule);
+		customerDeptRules = customerDeptRuleService.queryCustomerDeptRuleByDid(customerDeptRule);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryCustomerDeptRuleByDbid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerDeptRuleByDbid() throws FLException {
+
+		customerDeptRule = customerDeptRuleService.queryCustomerDeptRuleByDbid(customerDeptRule);
 
 		return SUCCESS;
 	}
@@ -47,7 +55,7 @@ public class CustomerDeptRuleAction extends BaseListAction {
 	@Action(value = "addCustomerDeptRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerDeptRule() throws FLException {
 
-		customerDeptRuleService.addCustomerDeptRule(customerDeptRule, queryUserId());
+		customerDeptRuleService.addCustomerDeptRule(customerDeptRule, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

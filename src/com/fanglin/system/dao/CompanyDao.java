@@ -11,7 +11,7 @@ public interface CompanyDao extends Dao<CompanyPO> {
 
 	public List<CompanyPO> pageCompany(Paging paging, List<Filter> filters);
 
-	public List<CompanyPO> queryCompany(Short atttype);
+	public List<CompanyPO> queryCompany(Short atttype, String code);
 
 	public CompanyPO queryCompanyByName(String name);
 

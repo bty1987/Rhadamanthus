@@ -11,6 +11,8 @@ public interface OalesService {
 
 	public void pageOales(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException;
 
+	public void pageOalesForAccount(Paging paging, List<Filter> filters, int queryCompany) throws FLException;
+
 	public List<OalesVO> queryOalesByOrderId(OalesVO oalesVO);
 
 	public long amountOales(OalesVO oales) throws FLException;

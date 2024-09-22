@@ -14,7 +14,7 @@ public interface BalanceSalesDao extends Dao<BalanceSalesPO> {
 
 	public List<BalanceSalesPO> queryBalanceSales(String name, int company);
 
-	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, int company);
+	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, Short status, int company);
 
 	public Object[] amountBalanceSales(long bsid);
 }

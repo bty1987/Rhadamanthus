@@ -416,12 +416,21 @@ jQuery(function($) {
                 var salesRev = utils.changeThrDecimal(salesRevenue);
                 var serMoney = utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable));
 
+                var types = [constant.sales().salesBalance.TYPE_PREBALANCEREFUNDS_INT, constant.sales().salesBalance.TYPE_BALANCEREFUNDS_INT];
+                var coupon = null;
+
+                if (types.indexOf(v.salesBalance.type) != -1) {
+                    coupon = -v.salesBalance.coupon;
+                } else {
+                    coupon = v.salesBalance.coupon;
+                }
+
                 var item = {
                     salesRevenue: salesRev,
                     serviceMoney: serMoney,
                     orderId: v.salesBalance.sales.orderId,
                     no: v.salesBalance.sales.no,
-                    coupon: v.salesBalance.coupon,
+                    coupon: coupon,
                     address: v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber
                 };
                 balanceSales.items.push(item);

@@ -129,10 +129,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.queryServicePaymentForNotInitBySrId(serviceReceiptVO.getSrId());
 
 		for (ServicePaymentPO servicePaymentPO : servicePaymentPOs) {
-			ServicePaymentVO _servicePaymentVO = new ServicePaymentVO();
-			BeanUtil.copyProperties(servicePaymentPO, _servicePaymentVO, Arrays.asList("decoration", "creater", "collecter", "confirmer", "serviceReceipt"));
-
-			servicePaymentVOs.add(_servicePaymentVO);
+			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
 		}
 
 		return servicePaymentVOs;

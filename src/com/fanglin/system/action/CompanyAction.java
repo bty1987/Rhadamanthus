@@ -40,6 +40,8 @@ public class CompanyAction extends BaseListAction {
 	@Action(value = "queryCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCompanys() throws FLException {
 
+		if (company == null) company = new CompanyVO();
+
 		companys = companyService.queryCompany(company);
 
 		return SUCCESS;

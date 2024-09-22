@@ -273,7 +273,7 @@ jQuery(function ($) {
     showPaymentScale();
 
     function showPaymentScale() {
-        com.post(api.data.queryPaymentScale, {}, function (v) {
+        com.post(api.data.queryPaymentScale, {"paymentScale.company": params.company.cid}, function (v) {
             displayFunc.init("paymentScale", ["款型名称","说明"], v.paymentScales,  "paymentScale");
         }, null, false);
     }

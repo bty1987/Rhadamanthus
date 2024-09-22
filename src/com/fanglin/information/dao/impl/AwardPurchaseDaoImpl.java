@@ -32,6 +32,12 @@ public class AwardPurchaseDaoImpl extends DaoImpl<AwardPurchasePO> implements Aw
 		return query.list();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<AwardPurchasePO> queryAwardPurchaseByFapid(Long fapid) {
+		return session().createCriteria(AwardPurchasePO.class).add(Restrictions.eq("fapid", fapid)).list();
+	}
+
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

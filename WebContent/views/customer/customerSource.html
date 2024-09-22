@@ -1,4 +1,4 @@
-<div id="customerSource">
+﻿<div id="customerSource">
 
     <div class="row" id="infolist"></div>
 
@@ -43,7 +43,9 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange">电话</label>
                             <div class="col-sm-9">
-                                <input type="text" class="m-wrap col-xs-6 v_phone v_required" id="phone">
+                                <input type="text" class="m-wrap col-xs-2 v_required" id="phone" maxlength="3">
+                                <span class="m-wrap col-xs-2" style="text-aline: center;">****</span>
+                                <input type="text" class="m-wrap col-xs-2 v_required" id="phone1" maxlength="4">
                             </div>
                         </div>
 
@@ -157,7 +159,14 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <div class="form-group">
+                        <div class="form-group busitype">
+                            <label for="busitype" class="col-sm-3 control-label no-padding-right orange">业务类型</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-6 v_required" id="busitype"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group company">
                              <label class="col-sm-3 control-label no-padding-right orange" for="company">公司</label>
                              <div class="col-sm-9">
                                   <select class="col-xs-10 col-sm-6 v_required" id="company"></select>
@@ -230,18 +239,25 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="busitype" class="col-sm-3 control-label no-padding-right orange">业务类型</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="busitype"></select>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="rate" value="0"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange">电话</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_phone v_required" id="phone" maxlength="11">
                             </div>
                         </div>
 

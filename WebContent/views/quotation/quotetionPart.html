@@ -29,10 +29,6 @@
 										<label class=" col-md-4 no-padding-right">报价版本</label>
 										<label id="version" class="col-md-8 no-padding-left">-</label>
 									</div>
-									<div class="form-group">
-										<label class=" col-md-4 no-padding-right">服务款项</label>
-										<label id="servePayment" class="col-md-8 no-padding-left">0.00</label>
-									</div>
 								</div>
                                 <div class="col-md-12 hr hr-14"></div>
                                 <div id="functionAreaSumList"></div>
@@ -406,19 +402,21 @@
                             <h4 class="modal-title">总价计算</h4>
                         </div>
                         <div class="modal-body" >
-                            <div class="row">
-    							<div class="col-md-12" style="margin-bottom: 10px">
-    								<label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
-    								<div class="col-md-9">
-    									<input type="text" id="calculateDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
-										<div class="action-buttons">
-		                                    <a id="calculateBtns" class="btn btn-primary btn-xs" style="margin-left: 10px;">计算</a>
-                                            <a id="machingMoreBtn" class="btn btn-success btn-xs">更多</a>
-                                 	   </div>
-    								</div>
+                            <div class="row" style="margin-bottom: 10px;">
+								<div class="col-md-12">
+									<label class="col-xs-10 col-md-1 control-label no-padding-right" for="calDiscount">折扣</label>
+									<input type="text" id="calculateDiscount" class="col-xs-10 col-md-2 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+
+									<div class="action-buttons">
+										<a id="calculateBtns" class="btn btn-primary btn-xs" style="margin-left: 10px;">计算</a>
+										<a id="machingMoreBtn" class="btn btn-success btn-xs">更多</a>
+									</div>
     							</div>
-    
+   							</div>
+    						<div class="row">
     							<div class="col-md-12 machingInfos" style="margin-bottom: 10px"></div>
+   							</div>
+   							<div class="row">
     							<div class="col-md-12 fl-quo-cal"></div>
                             </div>
                         </div>

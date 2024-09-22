@@ -25,7 +25,9 @@ import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCustomerSourceService;
 import com.fanglin.approval.vo.ApprovalCustomerSourceVO;
 import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -67,6 +69,9 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 	@Autowired
 	private CustomerSourceDao customerSourceDao;
+
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Autowired
 	private HouseDao houseDao;
@@ -126,21 +131,29 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 		CustomerSourcePO customerSourcePO = customerSourceDao.get(csid);
 
 		if (customerSourcePO == null) {
-			throw new FLException(330001, "客源不存在");
+			throw new FLException(330071, "客户资源不存在");
 		}
 
-		if (customerSourcePO.getStatus() != CustomerSourcePO.STATUS_INIT_INT) {
-			throw new FLException(330074, "客户资源不可操作");
+		CustomerChancePO customerChancePO = customerChanceDao.get(approvalCustomerSourceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
 		}
 
-		if (customerSourcePO.getCustomer() == null) {
-			throw new FLException(130002, "客户不存在");
+		if (customerChancePO.getStatus() == CustomerChancePO.STATUS_DISABLE_INT || customerChancePO.getStatus() == CustomerChancePO.STATUS_COMPLETE_INT) {
+			throw new FLException(330077, "客户机会不可操作");
 		}
 
 		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT, String.valueOf(csid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
+		}
+
+		CustomerPO customerPO = customerDao.get(approvalCustomerSourceVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
 		}
 
 		HousePO housePO = houseDao.get(approvalCustomerSourceVO.getHid());
@@ -155,7 +168,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(130061, "业务类型不存在");
 		}
 
-		decorationService.checkOverDecoration(customerSourcePO.getCustomer().getCid(), housePO.getHid(), company);
+		decorationService.checkOverDecoration(customerPO.getCid(), housePO.getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
@@ -167,6 +180,10 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
+
+		customerChancePO.setStatus(CustomerChancePO.STATUS_INIT_INT);
+
+		customerChanceDao.update(customerChancePO);
 
 		ApprovalCustomerSourcePO approvalCustomerSourcePO = new ApprovalCustomerSourcePO();
 
@@ -196,11 +213,19 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 		CustomerSourcePO customerSourcePO = customerSourceDao.get(approvalCustomerSourcePO.getCsid());
 
 		if (customerSourcePO == null) {
-			throw new FLException(330001, "客源不存在");
+			throw new FLException(330071, "客户资源不存在");
 		}
 
-		if (CustomerSourcePO.STATUS_INIT_INT != customerSourcePO.getStatus()) {
-			throw new FLException(330074, "客户资源不可操作");
+		CustomerChancePO customerChancePO = customerChanceDao.get(approvalCustomerSourcePO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		CustomerPO customerPO = customerDao.get(approvalCustomerSourcePO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
 		}
 
 		HousePO housePO = houseDao.get(approvalCustomerSourcePO.getHid());
@@ -211,19 +236,18 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		VillagePO villagePO = housePO.getVillage();
 
-		customerSourcePO.setVillage(villagePO);
-		customerSourcePO.setHouse(housePO);
-
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_APPROVE_ONE_INT);
 
 		customerSourceDao.update(customerSourcePO);
 
-		CustomerChancePO customerChancePO = customerChanceDao.get(approvalCustomerSourcePO.getCcid());
+		customerChancePO.setCustomer(customerPO);
+		customerChancePO.setHouse(housePO);
+		customerChancePO.setRate(approvalCustomerSourcePO.getRate());
+		customerChancePO.setBusitype(new DecorationBusitypePO(approvalCustomerSourcePO.getDbid()));
 
-		if (customerChancePO != null) {
-			customerChancePO.setRate(approvalCustomerSourcePO.getRate());
-			customerChancePO.setBusitype(new DecorationBusitypePO(approvalCustomerSourcePO.getDbid()));
-		}
+		customerChancePO.setStatus(CustomerChancePO.STATUS_APPROVE_INT);
+
+		customerChanceDao.update(customerChancePO);
 
 		String content = String.format("客源初审通过,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 

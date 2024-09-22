@@ -204,16 +204,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentForNotInitByDrId(decorationReceiptVO.getDrId());
 
 		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
-			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO(new DecorationVO());
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO, Arrays.asList("decoration", "creater", "collecter", "confirmer"));
-			decorationPaymentPO.getDecoration().ptvcascade(_decorationPaymentVO.getDecoration());
-			DecorationReceiptPO decorationReceipt = decorationPaymentPO.getDecorationReceipt();
-			if (decorationReceipt != null) {
-				_decorationPaymentVO.setCollecter(new UserBaseVO());
-				BeanUtil.copyProperties(decorationReceipt.getCollecter(), _decorationPaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
-			}
-
-			decorationPaymentVOs.add(_decorationPaymentVO);
+			DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
+			decorationPaymentVOs.add(decorationPaymentVO);
 		}
 
 		return decorationPaymentVOs;
@@ -253,7 +245,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		List<String> status = Arrays.asList(DecorationPaymentPO.PAYMENTTYPE_ADD_STR, DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR, DecorationPaymentPO.PAYMENTTYPE_ADVANCE_STR, DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR, DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
+		List<String> paymentTypes = Arrays.asList(DecorationPaymentPO.PAYMENTTYPE_ADD_STR, DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR, DecorationPaymentPO.PAYMENTTYPE_ADVANCE_STR, DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR, DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
 
 		PaymentTypePO paymentTypePO = paymentTypeDao.get(decorationPaymentVO.getPtid());
 
@@ -261,7 +253,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			throw new FLException(130091, "款项类型不存在");
 		}
 
-		if (status.contains(paymentTypePO.getName())) {
+		if (paymentTypes.contains(paymentTypePO.getName())) {
 			throw new FLException(150034, "款项类型不可用");
 		}
 

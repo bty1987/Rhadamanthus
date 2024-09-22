@@ -43,6 +43,8 @@ public class OalesVO implements Serializable {
 
 	private UserBaseVO channer;
 
+	private UserBaseVO accounter;
+
 	private DepartmentVO dept;
 
 	private DepartmentVO region;
@@ -57,6 +59,8 @@ public class OalesVO implements Serializable {
 
 	private Short status;
 
+	private Short accountStatus;
+
 	private String comment;
 
 	private Integer company;
@@ -69,6 +73,8 @@ public class OalesVO implements Serializable {
 
 	private Timestamp finishTime;
 
+	private Timestamp accountTime;
+
 	private UserBaseVO materialer;
 
 	private Integer cost;
@@ -79,7 +85,7 @@ public class OalesVO implements Serializable {
 		super();
 	}
 
-	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO channer, DepartmentVO dept, DepartmentVO region, UserBaseVO servicer, UserBaseVO checker, UserBaseVO materialer) {
+	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO channer, UserBaseVO accounter, DepartmentVO dept, DepartmentVO region, UserBaseVO servicer, UserBaseVO checker, UserBaseVO materialer) {
 
 		super();
 
@@ -87,6 +93,7 @@ public class OalesVO implements Serializable {
 		this.creater = creater;
 		this.supplier = supplier;
 		this.channer = channer;
+		this.accounter = accounter;
 		this.dept = dept;
 		this.region = region;
 		this.servicer = servicer;
@@ -127,6 +134,15 @@ public class OalesVO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAccountTime() {
+		return accountTime;
+	}
+
+	public void setAccountTime(Timestamp accountTime) {
+		this.accountTime = accountTime;
 	}
 
 	public Long getOid() {
@@ -249,6 +265,14 @@ public class OalesVO implements Serializable {
 		this.channer = channer;
 	}
 
+	public UserBaseVO getAccounter() {
+		return accounter;
+	}
+
+	public void setAccounter(UserBaseVO accounter) {
+		this.accounter = accounter;
+	}
+
 	public DepartmentVO getDept() {
 		return dept;
 	}
@@ -304,6 +328,14 @@ public class OalesVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(Short accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 
 	public Integer getCompany() {

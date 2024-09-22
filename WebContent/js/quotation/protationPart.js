@@ -165,7 +165,7 @@ var protationPart = (function() {
 
             });
 
-            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.advanceProfit"]), quo.basicParams["protation.quotePrice"]));
+            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.quotePrice"]));
 
             _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
 
@@ -1342,7 +1342,7 @@ var protationPart = (function() {
             quo.basicParams["protation.mostCost"] = mostCost;
             quo.basicParams["protation.houseCost"] = cost;
 
-            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(utils.accSub(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.advanceProfit"]), quo.basicParams["protation.quotePrice"]));
+            var _discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(quo.basicParams["protation.quotePrice"], quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.quotePrice"]));
 
             _discout = _discout < 0 ? 0 : _discout > 1 ? 1 : _discout;
 

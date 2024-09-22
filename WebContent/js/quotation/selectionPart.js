@@ -366,7 +366,8 @@ var selectionDetail = (function() {
                 displayFunc.init("resultList", data);
             }, "pagenation", "selectionItemSoodsPostData", {
                 "soodsItem.quotationItem.qiid": quotationItemId,
-                "soodsItem.status": constant.data().goods.STATUS_ENABLE_INT
+                "soodsItem.status": constant.data().soodsItem.STATUS_ENABLE_INT,
+                "soodsItem.goods.status": constant.data().goods.STATUS_ENABLE_INT
             }, false, null, null);
 
         },

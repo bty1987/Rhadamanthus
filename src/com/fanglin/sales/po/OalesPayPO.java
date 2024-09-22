@@ -50,6 +50,8 @@ public class OalesPayPO implements Serializable {
 
 	private String comment;
 
+	private int company;
+
 	public OalesPayPO() {
 		super();
 	}
@@ -140,5 +142,14 @@ public class OalesPayPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 }

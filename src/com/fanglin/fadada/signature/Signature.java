@@ -570,7 +570,7 @@ public class Signature {
 
 		// 以下是非必填参数
 		params.setDocTitle(""); // 文档标题
-		params.setFontSize("4"); // 字体大小
+		params.setFontSize("12"); // 字体大小
 		params.setFontType(""); // 字体类型
 		params.setParameterMap(json.toJSONString()); // 填充内容,json字符串
 		params.setDynamicTables(tables == null ? "" : tables.toJSONString()); // 动态表格
@@ -712,7 +712,7 @@ public class Signature {
 		params.setCustomerId(signno);
 		params.setContractId(contract.contentCode());
 		params.setTransactionId(String.format("%s%s", signno, contract.contentCode()));
-		params.setMobileSignType("2"); // 签章类型 , 0: 全部 , 1: 标准 , 2: 手写
+		params.setMobileSignType("1"); // 签章类型 , 0: 全部 , 1: 标准 , 2: 手写
 
 		params.setDocTitle(contract.title()); // 文档标题
 		params.setReturnUrl(RETURN_URL_STR);

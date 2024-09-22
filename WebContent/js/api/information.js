@@ -434,6 +434,14 @@ $.extend(api, {
                 args: ["inprice", "baprice", "num", "surplus"]
             }]
         },
+        queryAwardPurchaseByFapid: {
+            url: "queryAwardPurchaseByFapid.do",
+            type: "query",
+            tranargs: [{
+                result: "awardPurchases",
+                args: ["inprice", "baprice", "num", "surplus"]
+            }]
+        },
         addAwardPurchase: {
             url: "addAwardPurchase.do",
             type: "update",

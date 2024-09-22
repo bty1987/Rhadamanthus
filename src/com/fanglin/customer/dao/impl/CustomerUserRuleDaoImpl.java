@@ -48,7 +48,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public CustomerUserRulePO pullCustomerUserRule(int company, int area) {
 
-		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval order by cur.surplus desc limit 1";
+		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' order by cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRulePO.class);
 

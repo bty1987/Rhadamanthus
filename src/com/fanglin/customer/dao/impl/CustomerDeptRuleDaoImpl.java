@@ -21,9 +21,11 @@ public class CustomerDeptRuleDaoImpl extends DaoImpl<CustomerDeptRulePO> impleme
 	}
 
 	@Override
-	public List<CustomerDeptRulePO> pageCustomerDeptRule(Paging paging, List<Filter> filters) throws FLException {
+	public List<CustomerDeptRulePO> pageCustomerDeptRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<CustomerDeptRulePO> query = pagingQuery(paging, CustomerDeptRulePO.class);
+
+		query.add(Restrictions.eq(CustomerDeptRulePO.COLUMN_COMPANY_STR, company));
 
 		queryFilterExecute(query, filters);
 
@@ -31,18 +33,39 @@ public class CustomerDeptRuleDaoImpl extends DaoImpl<CustomerDeptRulePO> impleme
 	}
 
 	@Override
-	public CustomerDeptRulePO queryCustomerDeptRule(Integer did) {
-		return (CustomerDeptRulePO) session().createCriteria(CustomerDeptRulePO.class).createAlias("department", "department").add(Restrictions.eq("department.did", did)).setMaxResults(1).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did) {
+		return session().createCriteria(CustomerDeptRulePO.class).createAlias("department", "department").add(Restrictions.eq("department.did", did)).list();
+	}
+
+	@Override
+	public CustomerDeptRulePO queryCustomerDeptRule(Integer did, Long dbid) {
+
+		Criteria criteria = session().createCriteria(CustomerDeptRulePO.class);
+
+		if (did != null) {
+			criteria.createAlias("department", "department").add(Restrictions.eq("department.did", did));
+		}
+
+		if (dbid != null) {
+			criteria.createAlias("busitype", "busitype").add(Restrictions.eq("busitype.dbid", dbid));
+		}
+
+		return (CustomerDeptRulePO) criteria.setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did, Short type) {
+	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did, Short type, Long dbid) {
 
 		Criteria criteria = session().createCriteria(CustomerDeptRulePO.class).add(Restrictions.eq("did", did));
 
 		if (type != null) {
 			criteria.add(Restrictions.eq("type", type));
+		}
+
+		if (dbid != null) {
+			criteria.createAlias("busitype", "busitype").add(Restrictions.eq("busitype.dbid", dbid));
 		}
 
 		return criteria.list();

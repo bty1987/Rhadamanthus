@@ -27,6 +27,8 @@ public class CustomerUserRuleVO implements Serializable {
 
 	private Long designPrice;
 
+	private Long predisPrice;
+
 	private Integer score;
 
 	private Integer rank;
@@ -40,6 +42,8 @@ public class CustomerUserRuleVO implements Serializable {
 	private UserBaseVO creater;
 
 	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	private Timestamp finishTime;
 
@@ -121,6 +125,14 @@ public class CustomerUserRuleVO implements Serializable {
 		this.designPrice = designPrice;
 	}
 
+	public Long getPredisPrice() {
+		return predisPrice;
+	}
+
+	public void setPredisPrice(Long predisPrice) {
+		this.predisPrice = predisPrice;
+	}
+
 	public Integer getScore() {
 		return score;
 	}
@@ -176,6 +188,15 @@ public class CustomerUserRuleVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

@@ -318,7 +318,6 @@ public class ModuleServiceImpl implements ModuleService {
 
 		if (modules == null) return 0;
 		if (modules.size() == 0) return 0;
-		if (modules.size() >= 60 && !operator.getRole().getNo().equals(RolePO.SUPER_NO_STR)) throw new FLException(-1, "无操作权限");
 
 		for (ModuleVO module : modules) {
 

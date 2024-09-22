@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.data.common.service.PaymentScaleItemService;
 import com.fanglin.data.common.vo.PaymentScaleItemVO;
+import com.fanglin.data.common.vo.PaymentScaleVO;
 
 @Controller
 @ParentPackage("base")
@@ -23,14 +24,32 @@ public class PaymentScaleItemAction extends BaseListAction {
 	@Autowired
 	private PaymentScaleItemService paymentScaleItemService;
 
+	private List<PaymentScaleItemVO> paymentScaleItems;
+
 	private PaymentScaleItemVO paymentScaleItem;
 
-	private List<PaymentScaleItemVO> paymentScaleItems;
+	private PaymentScaleVO paymentScale;
 
 	@Action(value = "queryPaymentScaleItemByPsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPaymentScaleItemByPsid() {
 
 		paymentScaleItems = paymentScaleItemService.queryPaymentScaleItemByPsid(paymentScaleItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "fetchPaymentScaleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String fetchPaymentScaleItem() {
+
+		paymentScaleItems = paymentScaleItemService.fetchPaymentScaleItem(paymentScale, paymentScaleItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryPaymentScaleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPaymentScaleItem() {
+
+		paymentScaleItem = paymentScaleItemService.queryPaymentScaleItem(paymentScale, paymentScaleItem);
 
 		return SUCCESS;
 	}
@@ -65,6 +84,14 @@ public class PaymentScaleItemAction extends BaseListAction {
 
 	public void setPaymentScaleItems(List<PaymentScaleItemVO> paymentScaleItems) {
 		this.paymentScaleItems = paymentScaleItems;
+	}
+
+	public PaymentScaleVO getPaymentScale() {
+		return paymentScale;
+	}
+
+	public void setPaymentScale(PaymentScaleVO paymentScale) {
+		this.paymentScale = paymentScale;
 	}
 
 }

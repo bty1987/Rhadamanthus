@@ -37,14 +37,14 @@ public class OalesPayServiceImpl implements OalesPayService {
 	private UserDao userDao;
 
 	@Override
-	public void pageOalesPay(Paging paging, List<Filter> filters) throws FLException {
+	public void pageOalesPay(Paging paging, List<Filter> filters, int company) throws FLException {
 
-		List<OalesPayOO> oalesPayOOs = oalesPayDao.pageOalesPay(paging, filters);
+		List<OalesPayOO> oalesPayOOs = oalesPayDao.pageOalesPay(paging, filters, company);
 		List<OalesPayVO> oalesPayVOs = new ArrayList<OalesPayVO>();
 
 		for (OalesPayOO oalesPayOO : oalesPayOOs) {
 
-			OalesPayVO oalesPayVO = new OalesPayVO(new UserBaseVO(), new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()));
+			OalesPayVO oalesPayVO = new OalesPayVO(new UserBaseVO(), new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()));
 
 			BeanUtil.copyProperties(oalesPayOO, oalesPayVO, Arrays.asList("oales", "creater"));
 			BeanUtil.copyProperties(oalesPayOO.getCreater(), oalesPayVO.getCreater(), Arrays.asList("dept", "duty"));
@@ -79,7 +79,7 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addOalesPay(OalesPayVO oalesPayVO, String userId) throws FLException {
+	public int addOalesPay(OalesPayVO oalesPayVO, String userId, int company) throws FLException {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
@@ -88,6 +88,7 @@ public class OalesPayServiceImpl implements OalesPayService {
 		BeanUtil.copyProperties(oalesPayVO, oalesPayPO, Arrays.asList("creater"));
 
 		oalesPayPO.setCreater(creater);
+		oalesPayPO.setCompany(company);
 		oalesPayPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesPayDao.save(oalesPayPO);

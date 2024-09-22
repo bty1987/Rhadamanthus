@@ -6,7 +6,7 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.data.po.PaymentScalePO;
 
 public interface PaymentScaleDao extends Dao<PaymentScalePO> {
-	
-	public List<PaymentScalePO> queryPaymentScaleByCid(int cid);
+
+	public List<PaymentScalePO> queryPaymentScaleByCid(int company, Short typeness, Short atttype);
 
 }

@@ -58,9 +58,8 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<PaymentPO> queryPaymentByReceiptId(long arId) {
-		return session().createCriteria(PaymentPO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).list();
+	public PaymentDO queryPaymentByReceiptId(long arId) {
+		return (PaymentDO) session().createCriteria(PaymentDO.class).createAlias("advanceReceipt", "advanceReceipt").add(Restrictions.eq("advanceReceipt.arId", arId)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

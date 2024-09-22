@@ -13,8 +13,10 @@
             content: com.focusPage("#content", "#quotationModal"),
             quotationTimeCopy: com.focusPage('#quotationTime', "#quotationModal").switchBtn(),
             quotationPriceCopy: com.focusPage('#quotationPrice', "#quotationModal").switchBtn(),
+            createOredrId: com.focusPage('#createOredrId', "#quotationModal"),
 
             keepriceGroup: com.focusPage('#keepriceGroup', "#quotationModal"),
+            createOredrIdGroup: com.focusPage('#createOredrIdGroup', "#quotationModal"),
 
             replicaType: com.focusPage("#replicaType", "#replicaQuotationModal"),
             quotetionNo: com.focusPage("#quotetionNo", "#replicaQuotationModal"),
@@ -22,6 +24,9 @@
             quotations: com.focusPage('#quotations', "#replicaQuotationModal"),
             quotationTime: com.focusPage('#quotationTime', "#replicaQuotationModal").switchBtn(),
             quotationPrice: com.focusPage('#quotationPrice', "#replicaQuotationModal").switchBtn(),
+            replicaOredrId: com.focusPage('#replicaOredrId', "#replicaQuotationModal"),
+
+            replicaOredrIdGroup: com.focusPage('#replicaOredrIdGroup', "#replicaQuotationModal"),
         },
 
         modals: {
@@ -73,6 +78,7 @@
     com.focusPage('#createQuotation').on('click', function() {
 
         quotation.items.keepriceGroup.hide();
+        quotation.items.createOredrIdGroup.hide();
 
         quotation.editFlg = 0;
 
@@ -85,6 +91,8 @@
     });
 
     com.focusPage('#replicaQuotation').on('click', function() {
+
+        quotation.items.replicaOredrIdGroup.hide();
 
         com.clearValidator();
         com.cleanItems(quotation.items);
@@ -122,6 +130,10 @@
                 "quotation.style": quotation.items.style.val(),
                 "quotation.content": quotation.items.content.val(),
             };
+
+            if(quotation.items.createOredrIdGroup.css("display") != "none"){
+                options["quotation.orderId"] = quotation.items.createOredrId.val();
+            }
 
             com.post(api.quotation.addQuotation, options, function(res) {
 
@@ -218,6 +230,10 @@
                 "quotation.keeprice": keeprice
             };
 
+            if(quotation.items.replicaOredrIdGroup.css("display") != "none"){
+                options["quotation.orderId"] = quotation.items.replicaOredrId.val();
+            }
+
             com.post(api.quotation.cloneQuotation, options, function(res) {
 
                 searcher.doSearch();
@@ -231,6 +247,10 @@
                 "quotation.orderId": quotation.orderId,
                 "quotation.keeprice": keeprice
             };
+
+            if(quotation.items.replicaOredrIdGroup.css("display") != "none"){
+                options["quotation.orderId"] = quotation.items.replicaOredrId.val();
+            }
 
             com.post(api.quotation.replicaQuotation, options, function(res) {
 
@@ -304,6 +324,7 @@
         handle: function(v) {
 
             quotation.items.keepriceGroup.show();
+            quotation.items.createOredrIdGroup.hide();
 
             quotation.editFlg = 2;
 
@@ -327,6 +348,7 @@
         handle: function(v) {
 
             quotation.items.keepriceGroup.hide();
+            quotation.items.createOredrIdGroup.hide();
 
             quotation.editFlg = 1;
 
@@ -567,11 +589,27 @@
         if (quotation.pageConfig.pageBtn.contains("delete"))
             cardbtns.push(btnDelete);
 
+        if (quotation.pageConfig.pageBtn.contains("btnCopy"))
+            cardbtns.push(btnCopy);
+
         com.focusPage("#quotationIndexPageContent").removeClass("page-content");
 
         searcher.base("condList", "pagenation", "resultList", quotation.pageConfig.apiPage);
         searcher.condition(quotation.pageConfig.condArr);
         searcher.history("quotationPostData");
+
+        searcher.button(function() {
+
+            var $createA = $('<a></a>').addClass('btn btn-minier btn-default pull-left').attr('name', 'create').css("margin", "0px 3px");
+            var $createI = $('<i></i>').addClass('icon-plus-sign bigger-110').appendTo($createA);
+            var $createSpan = $('<span></span>').text('创建').appendTo($createA);
+            
+            var $replicaA = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'replica').css("margin", "0px 3px");
+            var $replicaI = $('<i></i>').addClass('icon-hdd bigger-110').appendTo($replicaA);
+            var $replicaSpan = $('<span></span>').text('拷贝').appendTo($replicaA);
+
+            return [$createA, $replicaA];
+        });
 
         var cardprops = [{
             field: "decoration.orderId",
@@ -869,5 +907,47 @@
 
         return pageConfig;
     }
+
+    com.focusPage('a[name="create"]', '#pagenation').click(function() {
+
+        quotation.items.keepriceGroup.hide();
+        quotation.items.createOredrIdGroup.show();
+
+        quotation.editFlg = 0;
+
+        com.clearValidator();
+        com.cleanItems(quotation.items);
+
+        quotation.items.style.get(0).selectedIndex = 0;
+
+        quotation.modals.quotationModal.modal("show");
+    });
+
+    com.focusPage('a[name="replica"]', '#pagenation').click(function() {
+
+        quotation.items.replicaOredrIdGroup.show();
+
+        com.clearValidator();
+        com.cleanItems(quotation.items);
+        quotation.items.replicaType.on("change", function(e) {
+
+            var $this = $(this);
+
+            if ($this.val() == 0) {
+                com.focusPage("#Bquoteno").removeClass("hide");
+                com.focusPage("#bOrderId").addClass("hide");
+            } else {
+                com.focusPage("#Bquoteno").addClass("hide");
+                com.focusPage("#bOrderId").removeClass("hide");
+            }
+
+            quotation.items.replicaOrderId.val("");
+            quotation.items.quotetionNo.val("");
+
+            quotation.items.quotations.bindData([], 'qid', 'name');
+        }).trigger("change");
+
+        quotation.modals.replicaQuotationModal.modal("show");
+    });
 
 });

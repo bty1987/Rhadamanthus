@@ -98,8 +98,8 @@ jQuery(function() {
                 sales.brand = val;
 
                 sales.rightitems.bComment.val(val.comment);
+                supplier(val)
 
-                supplier(val);
             }
         });
         return v
@@ -473,7 +473,6 @@ jQuery(function() {
         }, function(res) {
 
             var suppliers = res.brandSuppliers;
-
             if (suppliers.length == 0) {
                 return false;
             }
@@ -483,7 +482,12 @@ jQuery(function() {
                 sales.suppliers[i] = v.supplier
             });
         }, null, false);
+        com.post(api.data.queryBrandByBid, {"brand.bid": v.bid}, function (res){
+            if (res.brand.supplier != null || res.brand.supplier != ""){
+                $('<option selected="selected"></option>').attr("value" , res.brand.supplier.userId).html(res.brand.supplier.currentName).appendTo(com.focusPage("#supplier"));
 
+            }
+        })
         sales.rightitems.supplier.bindData(sales.suppliers, "userId", "currentName");
     }
 

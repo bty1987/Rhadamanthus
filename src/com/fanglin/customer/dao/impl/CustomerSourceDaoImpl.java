@@ -20,9 +20,11 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 	}
 
 	@Override
-	public List<CustomerSourcePO> pageCustomerSource(Paging paging, List<Filter> filters) {
+	public List<CustomerSourcePO> pageCustomerSource(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<CustomerSourcePO> query = pagingQuery(paging, CustomerSourcePO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 

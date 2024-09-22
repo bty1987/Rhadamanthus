@@ -16,6 +16,8 @@ public class ApprovalCustomerSourceVO implements Serializable {
 
 	private Long ccid;
 
+	private Long cid;
+
 	private Long hid;
 
 	private CustomerSourceVO source;
@@ -54,6 +56,14 @@ public class ApprovalCustomerSourceVO implements Serializable {
 
 	public void setCcid(Long ccid) {
 		this.ccid = ccid;
+	}
+
+	public Long getCid() {
+		return cid;
+	}
+
+	public void setCid(Long cid) {
+		this.cid = cid;
 	}
 
 	public Long getHid() {

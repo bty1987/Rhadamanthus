@@ -511,7 +511,7 @@ public class UserServiceImpl implements UserService {
 				UserContractPO usercontract = new UserContractPO();
 
 				String currentDate = DateUtil.current("yyMMdd").toString();
-				int count1 = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
+				int count1 = countingService.queryCountingByTypeDate(CountingPO.TYPE_CONTRACT_USER_INT, currentDate, company);
 				String no = companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count1), "0000");
 
 				BeanUtil.copyPropertie(userContractVO, usercontract);

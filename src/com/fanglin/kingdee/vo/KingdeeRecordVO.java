@@ -8,17 +8,19 @@ import org.apache.struts2.json.annotations.JSON;
 public class KingdeeRecordVO implements Serializable {
 
 	private static final long serialVersionUID = 7465368938250693960L;
-	
+
 	private Long krid;
-	
+
 	private String orderId;
-	
+
 	private Long rtid;
-	
+
+	private Short atttype;
+
 	private String type;
-	
+
 	private String message;
-	
+
 	private Timestamp createTime;
 
 	public KingdeeRecordVO() {
@@ -49,6 +51,14 @@ public class KingdeeRecordVO implements Serializable {
 		this.rtid = rtid;
 	}
 
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -73,5 +83,5 @@ public class KingdeeRecordVO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 }

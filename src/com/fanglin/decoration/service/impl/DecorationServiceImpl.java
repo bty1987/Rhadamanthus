@@ -1534,14 +1534,14 @@ public class DecorationServiceImpl implements DecorationService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, companys);
 
 		if (decorationPO != null) {
-			throw new FLException(140063, String.format("装修单存在, 设计师:%s", decorationPO.getDesigner().getCurrentName()));
+			throw new FLException(140063, String.format("装修单(%s)存在, 设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
 		}
 
 		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(cid, null, companys);
 
 		if (decorationPOs.size() > 0) {
 			decorationPO = decorationPOs.get(0);
-			throw new FLException(140063, String.format("装修单存在, 设计师:%s", decorationPO.getDesigner().getCurrentName()));
+			throw new FLException(140063, String.format("装修单(%s)存在, 设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
 		}
 	}
 

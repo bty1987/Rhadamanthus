@@ -17,7 +17,10 @@ $(function() {
             contractNum: com.focusPage("#contractNum", "#customerUserRule"),
             contractPrice: com.focusPage("#contractPrice", "#customerUserRule"),
             materialPrice: com.focusPage("#materialPrice", "#customerUserRule"),
-            designPrice: com.focusPage("#designPrice", "#customerUserRule")
+            designPrice: com.focusPage("#designPrice", "#customerUserRule"),
+            predisPrice: com.focusPage("#predisPrice", "#customerUserRule"),
+            chance: com.focusPage("#chance", "#customerUserRule"),
+            surplus: com.focusPage("#surplus", "#customerUserRule"),
         },
 
         currentCurid: null,
@@ -35,7 +38,7 @@ $(function() {
             "key": "设计费",
             "value": 0.2
         }],
-        customerSourceInfo: [{
+        customerUserRuleInfo: [{
             "key": "保底资源数(月)",
             "value": 600
         }, {
@@ -65,7 +68,7 @@ $(function() {
     }, 'autoFillKeyValue', 'key', 'value', null);
 
     // queryInfo();
-    drawInfo("customerSourceInfo", "资源", "header-color-orange", customerUserRule.customerSourceInfo);
+    drawInfo("customerUserRuleInfo", "资源", "header-color-orange", customerUserRule.customerUserRuleInfo);
     drawInfo("weightInfo", "权重", "header-color-green", customerUserRule.weightInfo);
 
     var searcher = new Searcher();
@@ -118,70 +121,146 @@ $(function() {
     searcher.history(customerUserRule.depage + "customerUserRulePostData");
 
     var lineprops = [{
-        fieId: "period",
-        name: "周期",
-        prop: "period",
+        fieId: "userId",
+        name: "编号",
+        prop: "user.userId",
+        clazz: "grey"
+    }, {
+        fieId: "deptname",
+        name: "部门",
+        prop: "user.dept.name",
+        clazz: "grey"
+    }, {
+        fieId: "regionname",
+        name: "分区",
+        prop: "user.dept.fatherDept.name",
         clazz: "grey"
     }, {
         fieId: "measureNum",
         name: "量尺数",
         prop: "measureNum",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "contractNum",
         name: "签单数",
         prop: "contractNum",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "contractPrice",
         name: "签单额",
         prop: "contractPrice",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "materialPrice",
         name: "主材额",
         prop: "materialPrice",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "designPrice",
         name: "设计费",
         prop: "designPrice",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
+    }, {
+        fieId: "predisPrice",
+        name: "折前额",
+        prop: "predisPrice",
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "score",
         name: "得分",
         prop: "score",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "rank",
         name: "排名",
         prop: "rank",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "chance",
         name: "机会数",
         prop: "chance",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "surplus",
         name: "剩余数",
         prop: "surplus",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "polling",
         name: "轮询数",
         prop: "polling",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "creater",
         name: "创建人",
         prop: "creater.currentName",
-        clazz: "grey"
+        clazz: "grey",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "createTime",
         name: "创建时间",
         prop: "createTime",
-        clazz: "green"
+        clazz: "green",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
+    }, {
+        fieId: "updateTime",
+        name: "更新时间",
+        prop: "updateTime",
+        clazz: "green",
+        show: function(v) {
+
+            return customerUserRule.depage == null;
+        }
     }, {
         fieId: "finishTime",
         name: "结束时间",
@@ -189,14 +268,14 @@ $(function() {
         clazz: "green",
         show: function(v) {
 
-            return v.finishTime = com.checkNull(v.finishTime, "无");
+            return customerUserRule.depage == null;
         }
     }, {
         fieId: "status",
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: customerUserRule.status
+        dataset: constant.customer().customerUserRule.status.keys
     }];
 
     var linebtns = [{
@@ -213,6 +292,9 @@ $(function() {
             customerUserRule.items.contractPrice.val(v.contractPrice);
             customerUserRule.items.materialPrice.val(v.materialPrice);
             customerUserRule.items.designPrice.val(v.designPrice);
+            customerUserRule.items.predisPrice.val(v.predisPrice);
+            customerUserRule.items.chance.val(v.chance);
+            customerUserRule.items.surplus.val(v.surplus);
 
             customerUserRule.items.user.attr("disabled", "disabled");
 
@@ -237,6 +319,60 @@ $(function() {
         show: function(v) {
 
             return v.status != 4 && customerUserRule.depage == null;
+        }
+    }, {
+        name: "开始接单",
+        clazz: "btn-success",
+        handle: function(v, check) {
+
+            if (v.status == 4) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
+
+            var status = customerUserRule.depage == "dept" ? 2 : customerUserRule.depage == "fatherDept" ? 3 : 1;
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": status
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        init: function(v) {
+
+            return !v.status;
+        },
+        show: function(v) {
+
+            return v.status == 1 || v.status == 2 || v.status == 3;
+        }
+    }, {
+        name: "停止接单",
+        clazz: "btn-danger",
+        handle: function(v, check) {
+
+            if (v.status == 4) {
+                com.showAlert(com.warning, "状态不可操作.");
+                return false;
+            }
+
+            var status = customerUserRule.depage == "dept" ? 2 : customerUserRule.depage == "fatherDept" ? 3 : 1;
+
+            com.post(api.customer.updateCustomerUserRuleForStatus, {
+                "customerUserRule.curid": v.curid,
+                "customerUserRule.status": status
+            }, function(res) {
+
+                searcher.doSearch();
+                return false;
+            });
+        },
+        show: function(v) {
+
+            return v.status == 0;
         }
     }, {
         name: "状态",
@@ -266,7 +402,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 4;
+            return false;
         }
     }];
 
@@ -308,7 +444,10 @@ $(function() {
             "customerUserRule.contractNum": customerUserRule.items.contractNum.val(),
             "customerUserRule.contractPrice": customerUserRule.items.contractPrice.val(),
             "customerUserRule.materialPrice": customerUserRule.items.materialPrice.val(),
-            "customerUserRule.designPrice": customerUserRule.items.designPrice.val()
+            "customerUserRule.designPrice": customerUserRule.items.designPrice.val(),
+            "customerUserRule.predisPrice": customerUserRule.items.predisPrice.val(),
+            "customerUserRule.chance": customerUserRule.items.chance.val(),
+            "customerUserRule.surplus": customerUserRule.items.surplus.val(),
         };
 
         if (customerUserRule.currentCurid != null) {

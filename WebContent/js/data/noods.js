@@ -27,6 +27,11 @@ $(function() {
         name: "添加",
         clazz: "btn-yellow",
         icon: "icon-plus"
+    }, {
+        id: "exNoods",
+        name: "导出",
+        clazz: "btn-warning",
+        icon: "icon-download-alt"
     }]);
 
     var linebtns = [{
@@ -121,6 +126,29 @@ $(function() {
 
         com.clearValidator();
         com.cleanItems(noods.items);
+    });
+
+    com.focusPage('#exNoods').on("click", function() {
+
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (com.focusPage('span[name="totalRecords"]').text() > 2000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
+
+        com.post(api.data.pageNoods, $.extend({}, params.noodsPostData, {
+            "paging.noPage": 1
+        }), function(res) {
+
+            $.exceler({
+                column: [['ID', 'nid'], ['名称', 'name']],
+                list: res.paging.data,
+            });
+        });
     });
 
     function saveData() {

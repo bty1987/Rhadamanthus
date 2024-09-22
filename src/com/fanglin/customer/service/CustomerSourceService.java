@@ -10,11 +10,11 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerSourceService {
 
-	public void pageCustomerSource(Paging paging, List<Filter> filters, CustomerSourceVO customerSourceVO);
+	public void pageCustomerSource(Paging paging, List<Filter> filters, CustomerSourceVO customerSourceVO, int company);
 
 	public CustomerSourceVO queryCustomerSource(CustomerSourceVO customerSourceVO) throws FLException;
 
-	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) throws FLException;
+	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId, int company) throws FLException;
 
 	public void updateCustomerSource(CustomerSourceVO customerSourceVO) throws FLException;
 

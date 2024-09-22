@@ -56,7 +56,7 @@ public class CompanyServiceImpl implements CompanyService {
 	@Override
 	public List<CompanyVO> queryCompany(CompanyVO companyVO) throws FLException {
 
-		List<CompanyPO> companyPOs = companyDao.queryCompany(companyVO == null ? null : companyVO.getAtttype());
+		List<CompanyPO> companyPOs = companyDao.queryCompany(companyVO.getAtttype(), companyVO.getCode());
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
 
 		for (CompanyPO companyPO : companyPOs) {

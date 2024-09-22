@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -14,6 +16,10 @@ public class CustomerChanceVO implements Serializable {
 	private static final long serialVersionUID = -5223498257185764813L;
 
 	private Long ccid;
+
+	private CustomerVO customer;
+
+	private HouseVO house;
 
 	private CustomerSourceVO source;
 
@@ -53,10 +59,12 @@ public class CustomerChanceVO implements Serializable {
 		super();
 	}
 
-	public CustomerChanceVO(CustomerSourceVO source, DecorationBusitypeVO busitype, UserBaseVO creater, UserBaseVO issuer, UserBaseVO belonger, DepartmentVO department, DepartmentVO region) {
+	public CustomerChanceVO(CustomerVO customer, HouseVO house, CustomerSourceVO source, DecorationBusitypeVO busitype, UserBaseVO creater, UserBaseVO issuer, UserBaseVO belonger, DepartmentVO department, DepartmentVO region) {
 
 		super();
 
+		this.customer = customer;
+		this.house = house;
 		this.source = source;
 		this.busitype = busitype;
 		this.creater = creater;
@@ -72,6 +80,22 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setCcid(Long ccid) {
 		this.ccid = ccid;
+	}
+
+	public CustomerVO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerVO customer) {
+		this.customer = customer;
+	}
+
+	public HouseVO getHouse() {
+		return house;
+	}
+
+	public void setHouse(HouseVO house) {
+		this.house = house;
 	}
 
 	public CustomerSourceVO getSource() {

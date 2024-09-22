@@ -153,6 +153,20 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
+	public PaymentVO queryPaymentByArid(PaymentVO paymentVO) throws FLException {
+
+		PaymentDO paymentDO = paymentDao.queryPaymentByReceiptId(paymentVO.getArId());
+
+		if (paymentDO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		paymentDO.dtv(paymentVO);
+
+		return paymentVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> ptids) throws FLException {
 

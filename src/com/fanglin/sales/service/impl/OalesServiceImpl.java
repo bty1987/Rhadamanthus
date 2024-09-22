@@ -67,7 +67,24 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
+			oalesVOs.add(oalesPO.ptv(oalesVO));
+		}
+
+		paging.setData(oalesVOs);
+	}
+
+	@Override
+	public void pageOalesForAccount(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		List<OalesPO> oalesPOs = oalesDao.pageOalesForAccount(paging, filters, company);
+
+		List<OalesVO> oalesVOs = new ArrayList<OalesVO>();
+
+		for (OalesPO oalesPO : oalesPOs) {
+
+			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			oalesVOs.add(oalesPO.ptv(oalesVO));
 		}
@@ -83,7 +100,7 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			oalesVO = new OalesVO(null, new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			oalesVO = new OalesVO(null, new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			oalesVOs.add(oalesPO.ptv(oalesVO));
 		}

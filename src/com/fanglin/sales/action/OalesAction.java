@@ -40,6 +40,14 @@ public class OalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageOalesForAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageOalesForAccount() throws FLException {
+
+		oalesService.pageOalesForAccount(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryOalesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryOalesByOrderId() throws FLException {
 

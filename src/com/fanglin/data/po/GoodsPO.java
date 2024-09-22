@@ -45,6 +45,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	public static final short TYPE_SUIT_INT = 1;
 
+	public static final short BRAND_STATUS_INT = 0;
+
 	private long gid;
 
 	private String no;

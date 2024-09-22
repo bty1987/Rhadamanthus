@@ -25,12 +25,23 @@ public class PaymentScalePO implements Serializable {
 
 	private String name;
 
+	private short typeness;
+
+	private long dbid;
+
+	private short atttype;
+
 	private short status;
 
 	private String comment;
 
 	public PaymentScalePO() {
 		super();
+	}
+
+	public PaymentScalePO(long psid) {
+		super();
+		this.psid = psid;
 	}
 
 	@Id
@@ -60,6 +71,33 @@ public class PaymentScalePO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "typeness")
+	public short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
+	}
+
+	@Column(name = "dbid")
+	public long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(long dbid) {
+		this.dbid = dbid;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "status")

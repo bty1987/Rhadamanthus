@@ -351,7 +351,7 @@ $(function() {
         };
     })();
 
-    var _condArr = ['data-quotation-item-name', 'data-quotation-item-type', 'data-quotation-item-classification', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-quotation-version'];
+    var _condArr = ['data-quotation-item-name', 'data-quotation-item-type', 'data-quotation-item-classification', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-quotation-item-busi', 'data-quotation-version'];
     var quotationItemSeacher = new Searcher();
     quotationItemSeacher.init(_condArr, "condList", api.quotation.pageQuotationItem, function(data) {
 
@@ -373,7 +373,12 @@ $(function() {
         var $expi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($expa);
         var $expspan = $('<span></span>').text('导出').appendTo($expa);
 
-        return [$adda, $impa, $expa];
+        if (!quotation.pageType)
+            return [$adda, $impa, $expa];
+
+        if (quotation.pageType == "finance")
+            return [$adda, $impa, $expa];
+
     });
 
     // 添加按钮
@@ -418,7 +423,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['编号', 'no'], ['名称', 'name'], ['版本', 'version.name'], ['类型', 'category.name'], ['分类', 'classification.name'], ['大类', 'bigCategory.name'], ['小类', 'smallCategory.name'], ['单位', 'unit.name'], ['工种', 'workType.name'], ['增补价', 'addPrice'], ['单价', 'unitPrice'], ['退减价', 'subPrice'], ['是否打折', 'discount'], ['启用/禁用', 'status'], ['说明', 'comment'], ],
+                column: [['ID', 'qiid'], ['编号', 'no'], ['名称', 'name'], ['版本', 'version.name'], ['类型', 'category.name'], ['分类', 'classification.name'], ['大类', 'bigCategory.name'], ['小类', 'smallCategory.name'], ['单位', 'unit.name'], ['工种', 'workType.name'], ['增补价', 'addPrice'], ['单价', 'unitPrice'], ['退减价', 'subPrice'], ['是否打折', 'discount'], ['启用/禁用', 'status'], ['说明', 'comment'], ],
                 list: res.paging.data,
             }, function(v) {
 

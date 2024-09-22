@@ -40,6 +40,12 @@ $.extend(api.index, {
     },
     balanceSelectionIndex: {
         url: "/views/balance/balanceSelection.html"
+    },
+    balanceOalesIndex: {
+        url: "/views/balance/balanceOales.html"
+    },
+    balanceOalesItemIndex: {
+        url: "/views/balance/balanceOalesItem.html"
     }
 });
 
@@ -497,6 +503,110 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data-selectionItem",
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
+            }]
+        },
+
+        pageBalanceOales: {
+            url: "pageBalanceOales.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["profit"]
+            }]
+        },
+        pageBalanceOalesForBalance: {
+            url: "pageBalanceOalesForBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["profit"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
+        queryBalanceOales: {
+            url: "queryBalanceOales.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceOaleses",
+                args: ["profit"]
+            }]
+        },
+        queryBalanceOalesByBoid: {
+            url: "queryBalanceOalesByBoid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceOales",
+                args: ["profit"]
+            }]
+        },
+        createBalanceOales: {
+            url: "createBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        submitBalanceOales: {
+            url: "submitBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        unbindBalanceOales: {
+            url: "unbindBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        lockBalanceOales: {
+            url: "lockBalanceOales.do",
+            demo: true
+        },
+        unlockBalanceOales: {
+            url: "unlockBalanceOales.do",
+            demo: true
+        },
+        updateBalanceOales: {
+            url: "updateBalanceOales.do",
+            demo: true
+        },
+        balanceBalanceOales: {
+            url: "balanceBalanceOales.do",
+        },
+        deleteBalanceOales: {
+            url: "deleteBalanceOales.do"
+        },
+        amountBalanceOales: {
+            url: "amountBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        pageBalanceOalesItem: {
+            url: "pageBalanceOalesItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-oales",
+                args: ["total", "award", "profit", "cost", "threshold"]
+            }]
+        },
+        queryBalanceOalesItem: {
+            url: "queryBalanceOalesItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-oales",
+                args: ["total", "award", "profit", "cost", "threshold"]
             }]
         },
 

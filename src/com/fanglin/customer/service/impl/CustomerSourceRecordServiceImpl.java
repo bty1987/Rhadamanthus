@@ -29,15 +29,19 @@ public class CustomerSourceRecordServiceImpl implements CustomerSourceRecordServ
 	@Override
 	public void pageCustomerSourceRecord(Paging paging, List<Filter> filters, CustomerSourceRecordVO customerSourceRecord) {
 
+		if (customerSourceRecord != null && customerSourceRecord.getType() != null) {
+			filters.add(new Filter("type", String.valueOf(customerSourceRecord.getType()), "eq"));
+		}
+
 		List<CustomerSourceRecordPO> customerSourceRecordPOs = customerSourceRecordDao.pageCustomerSourceRecord(paging, filters, customerSourceRecord.getCsid());
 		List<CustomerSourceRecordVO> customerSourceRecordVOs = new ArrayList<CustomerSourceRecordVO>();
 
-		for(CustomerSourceRecordPO customerSourceRecordPO : customerSourceRecordPOs){
+		for (CustomerSourceRecordPO customerSourceRecordPO : customerSourceRecordPOs) {
 
 			CustomerSourceRecordVO customerSourceRecordVO = new CustomerSourceRecordVO(new UserBaseVO(new DutyVO(), new DepartmentVO()));
 
-			BeanUtil.copyPropertie(customerSourceRecordPO,customerSourceRecordVO, Arrays.asList("operater"));
-			BeanUtil.copyPropertie(customerSourceRecordPO.getOperater(),customerSourceRecordVO.getOperater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+			BeanUtil.copyPropertie(customerSourceRecordPO, customerSourceRecordVO, Arrays.asList("operater"));
+			BeanUtil.copyPropertie(customerSourceRecordPO.getOperater(), customerSourceRecordVO.getOperater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 
 			customerSourceRecordVOs.add(customerSourceRecordVO);
 		}
@@ -51,12 +55,12 @@ public class CustomerSourceRecordServiceImpl implements CustomerSourceRecordServ
 		List<CustomerSourceRecordPO> customerSourceRecordPOs = customerSourceRecordDao.queryCustomerSourceRecord(customerSourceRecord.getCsid());
 		List<CustomerSourceRecordVO> customerSourceRecordVOs = new ArrayList<CustomerSourceRecordVO>();
 
-		for(CustomerSourceRecordPO customerSourceRecordPO : customerSourceRecordPOs){
+		for (CustomerSourceRecordPO customerSourceRecordPO : customerSourceRecordPOs) {
 
 			CustomerSourceRecordVO customerSourceRecordVO = new CustomerSourceRecordVO(new UserBaseVO(new DutyVO(), new DepartmentVO()));
 
-			BeanUtil.copyPropertie(customerSourceRecordPO,customerSourceRecordVO, Arrays.asList("operater"));
-			BeanUtil.copyPropertie(customerSourceRecordPO.getOperater(),customerSourceRecordVO.getOperater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+			BeanUtil.copyPropertie(customerSourceRecordPO, customerSourceRecordVO, Arrays.asList("operater"));
+			BeanUtil.copyPropertie(customerSourceRecordPO.getOperater(), customerSourceRecordVO.getOperater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 
 			customerSourceRecordVOs.add(customerSourceRecordVO);
 		}

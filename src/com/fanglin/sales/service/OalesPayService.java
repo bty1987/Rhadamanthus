@@ -9,11 +9,11 @@ import com.fanglin.utils.Paging;
 
 public interface OalesPayService {
 
-	public void pageOalesPay(Paging paging, List<Filter> filters) throws FLException;
+	public void pageOalesPay(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<OalesPayVO> queryOalesPay(OalesPayVO oalesPayVO);
 
-	public int addOalesPay(OalesPayVO oalesPayVO, String userId) throws FLException;
+	public int addOalesPay(OalesPayVO oalesPayVO, String userId, int company) throws FLException;
 
 	public int updateOalesPay(OalesPayVO oalesPayVO) throws FLException;
 

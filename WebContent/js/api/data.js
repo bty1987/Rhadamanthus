@@ -130,6 +130,21 @@ $.extend(api, {
             url: "deleteBrandByBids.do",
             server: "communion"
         },
+        pageBrandPool: {
+            url: "pageBrandPool.do"
+        },
+        queryBrandPoolByName: {
+            url: "queryBrandPoolByName.do"
+        },
+        updateBrandPoolForStatus: {
+            url: "updateBrandPoolForStatus.do"
+        },
+        addBrandPool: {
+            url: "addBrandPool.do"
+        },
+        updateBrandPool: {
+            url: "updateBrandPool.do"
+        },
 
         pageCategory: {
             url: "pageCategory.do",
@@ -435,6 +450,22 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paymentScaleItems",
+                args: ["scale"]
+            }]
+        },
+        fetchPaymentScaleItem: {
+            url: "fetchPaymentScaleItem.do",
+            type: "query",
+            tranargs: [{
+                result: "paymentScaleItems",
+                args: ["scale"]
+            }]
+        },
+        queryPaymentScaleItem: {
+            url: "queryPaymentScaleItem.do",
+            type: "query",
+            tranargs: [{
+                result: "paymentScaleItem",
                 args: ["scale"]
             }]
         },
@@ -1593,7 +1624,24 @@ $.extend(api, {
         },
         queryDecorationMeasure: {
             url: "queryDecorationMeasure.do"
+        },
+
+        pageBankAccount: {
+            url: "pageBankAccount.do"
+        },
+        queryBankAccount: {
+            url: "queryBankAccount.do"
+        },
+        addBankAccount: {
+            url: "addBankAccount.do"
+        },
+        updateBankAccount: {
+            url: "updateBankAccount.do"
+        },
+        updateBankAccountForStatus: {
+            url: "updateBankAccountForStatus.do"
         }
+
     }
 });
 

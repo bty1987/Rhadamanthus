@@ -48,6 +48,7 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.payment.po.MaterialReceiptPO;
+import com.fanglin.payment.po.PaymentDO;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
@@ -165,28 +166,26 @@ public class FinanceServiceImpl implements FinanceService {
 
 		AccountVO accountVO = new AccountVO(word, abstracts, currentTime, currentPeriod, advanceReceiptPO.getCollectTime());
 
-		List<PaymentPO> paymentPOs = paymentDao.queryPaymentByReceiptId(advanceReceiptPO.getArId());
+		PaymentDO paymentDO = paymentDao.queryPaymentByReceiptId(advanceReceiptPO.getArId());
 
-		for (PaymentPO paymentPO : paymentPOs) {
-			AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
+		AssistantPO assistantPO = new AssistantPO(orderId, orderAddr);
 
-			String sid = null;
-			Short paymentType = paymentPO.getPaymentType();
+		String sid = null;
+		Short paymentType = paymentDO.getPaymentType();
 
-			if (PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT == paymentType) {
-				sid = SystemConfig.getString("balanceSubject");
-			} else if (PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT == paymentType) {
-				sid = SystemConfig.getString("projectBalanceSubject");
-			} else if (PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT == paymentType) {
-				sid = SystemConfig.getString("materialBalanceSubject");
-			} else if (PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_INT == paymentType) {
-				sid = SystemConfig.getString("zaterialBalanceSubject");
-			}
-
-			accountVO.setSaId(subAccountId++);
-
-			convertPaymentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, sid, paymentPO.getRecharge());
+		if (PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT == paymentType) {
+			sid = SystemConfig.getString("balanceSubject");
+		} else if (PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT == paymentType) {
+			sid = SystemConfig.getString("projectBalanceSubject");
+		} else if (PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT == paymentType) {
+			sid = SystemConfig.getString("materialBalanceSubject");
+		} else if (PaymentPO.PAYMENT_PAYMENTTYPE_ZATERIAL_INT == paymentType) {
+			sid = SystemConfig.getString("zaterialBalanceSubject");
 		}
+
+		accountVO.setSaId(subAccountId++);
+
+		convertPaymentToAccount(subjectPOs, subjectBalances, voucherPO, accountVO, assistantPO, relat, sid, paymentDO.getRecharge());
 
 		if (cash != 0) {
 			accountVO.setSaId(subAccountId++);

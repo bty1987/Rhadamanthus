@@ -789,7 +789,10 @@ jQuery(function($) {
             com.focusPage("#forMaterialPrice").addClass('hide');
         }
 
-        com.post(api.data.queryPaymentScale, {}, function(res) {
+        com.post(api.data.queryPaymentScale, {
+            "paymentScale.psid": 0,
+            "paymentScale.atttype": 1
+        }, function(res) {
 
             com.focusPage("#paymentScale").empty();
 
@@ -839,6 +842,7 @@ jQuery(function($) {
         "paymentType.type": 1,
         "paymentType.atttype": 0
     });
+
     queryPaymentType({
         "paymentType.type": 1,
         "paymentType.atttype": 3
@@ -846,9 +850,77 @@ jQuery(function($) {
 
     com.focusPage("#btnOtherPayment").on('click', function(res) {
 
-        decorationDetail.paymentItems.otherPaymentType.bindData(decorationDetail.paymentTypes, "ptid", "name");
+        decorationDetail.paymentItems.otherPaymentType.bindData(decorationDetail.paymentTypes, "ptid", "name", "请选择");
 
         decorationDetail.otherPaymentModal.modal("show");
+    });
+
+    decorationDetail.paymentItems.otherPaymentType.on("change", function(res) {
+
+        var paymentScaleItem;
+
+        decorationDetail.paymentItems.otherPayment.attr("readonly", "readonly");
+        decorationDetail.paymentItems.otherPayment.val("");
+
+        com.post(api.data.queryPaymentScaleItem, {
+            "paymentScaleItem.ptid": decorationDetail.paymentItems.otherPaymentType.val(),
+            "paymentScale.typeness": params.decoration.decoration.typeness,
+            "paymentScale.atttype": 0,
+            "paymentScale.dbid": params.decoration.decoration.busitype,
+        }, function(res) {
+
+            paymentScaleItem = res.paymentScaleItem;
+
+            if (!paymentScaleItem || !paymentScaleItem.psiid) {
+                decorationDetail.paymentItems.otherPayment.removeAttr("readonly");
+                return false;
+            }
+
+        }, null, false);
+
+        if (decorationDetail.orderType == 0) {
+
+            com.post(api.decoration.queryDecorationMidpack, {
+                "decorationMidpack.decoration.orderId": decorationDetail.orderId
+            }, function(res) {
+
+                var decorationMidpack = res.decorationMidpack;
+
+                if (!paymentScaleItem || !paymentScaleItem.scale)
+                    return false;
+
+                if (!decorationMidpack || !decorationMidpack.dmid) {
+                    decorationDetail.paymentItems.otherPayment.removeAttr("readonly");
+                    return false;
+                }
+
+                decorationDetail.paymentItems.otherPayment.val(utils.accMul(decorationMidpack.materialPrice, utils.accDiv(paymentScaleItem.scale, 100)));
+
+            }, null, false);
+
+        } else if (decorationDetail.orderType == 1) {
+            decorationDetail.paymentItems.otherPayment.removeAttr("readonly");
+        } else if (decorationDetail.orderType == 2) {
+
+            com.post(api.decoration.queryDecorationHolonomy, {
+                "decorationHolonomy.decoration.orderId": decorationDetail.orderId
+            }, function(res) {
+
+                var decorationHolonomy = res.decorationHolonomy;
+
+                if (!paymentScaleItem || !paymentScaleItem.scale)
+                    return false;
+
+                if (!decorationHolonomy || !decorationHolonomy.dhid) {
+                    decorationDetail.paymentItems.otherPayment.removeAttr("readonly");
+                    return false;
+                }
+
+                decorationDetail.paymentItems.otherPayment.val(utils.accMul(decorationHolonomy.materialPrice, utils.accDiv(paymentScaleItem.scale, 100)));
+
+            }, null, false);
+        }
+
     });
 
     com.focusPage("#serviceSaveBtn").on('click', function(res) {
