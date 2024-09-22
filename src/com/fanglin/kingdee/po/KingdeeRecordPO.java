@@ -25,6 +25,8 @@ public class KingdeeRecordPO implements Serializable {
 
 	private long rtid;
 
+	private short atttype;
+
 	private String type;
 
 	private String message;
@@ -62,6 +64,15 @@ public class KingdeeRecordPO implements Serializable {
 
 	public void setRtid(long rtid) {
 		this.rtid = rtid;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "type")

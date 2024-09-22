@@ -3,11 +3,13 @@ jQuery(function($) {
     var oales = {
 
         btns: {
-            saveBtn: com.focusPage("#saveBtn").on("click", saveData)
+            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+            balanceOalesBtn: com.focusPage("#balanceOalesBtn").on("click", balanceOalesData)
         },
 
         modals: {
-            oalesModal: com.focusPage("#oalesModal")
+            oalesModal: com.focusPage("#oalesModal"),
+            accountModal: com.focusPage("#accountModal"),
         },
 
         items: {
@@ -24,6 +26,7 @@ jQuery(function($) {
             award: com.focusPage('#award', "#oalesModal"),
             profit: com.focusPage('#profit', "#oalesModal"),
             awardType: com.focusPage('#awardType', "#oalesModal"),
+            balanceOales: com.focusPage('#balanceOales', "#accountModal"),
         },
 
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
@@ -65,6 +68,11 @@ jQuery(function($) {
         return v;
     });
 
+    com.initTypeahead(oales.items.balanceOales, api.balance.queryBalanceOales, "balanceOales.name", {}, "balanceOaleses", "boid", function(v) {
+
+        return v["name"] + " " + v["grade"]
+    });
+
     oales.items.atttype.bindData(constant.sales().oales.atttype.datas, "key", "value");
     oales.items.awardType.bindData(constant.sales().oales.awardType.datas, "key", "value");
 
@@ -102,6 +110,9 @@ jQuery(function($) {
             "statuses[1]": 4
         });
         history = "oalesFinancePostDate";
+    } else if (oales.pageType == "account") {
+        url = api.sales.pageOalesForAccount
+        history = "oalesAccountPostDate";
     }
 
     var searcher = new Searcher();
@@ -139,6 +150,19 @@ jQuery(function($) {
             id: "batchCheck",
             name: "批量复核",
             clazz: "btn-inverse",
+            icon: "icon-plus"
+        }]);
+    }
+    if (oales.pageType == "account") {
+        searcher.button([{
+            id: "checkAll",
+            name: "全选",
+            clazz: "btn-pink",
+            icon: "icon-plus"
+        }, {
+            id: "accountOales",
+            name: "对账",
+            clazz: "btn-danger",
             icon: "icon-plus"
         }]);
     }
@@ -379,7 +403,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.sales().oales.STATUS_INIT_INT;
+            return (v.status == constant.sales().oales.STATUS_INIT_INT && oales.pageType != "account");
         }
     }, {
         name: "编辑",
@@ -455,7 +479,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.sales().oales.STATUS_INIT_INT;
+            return (v.status == constant.sales().oales.STATUS_INIT_INT && oales.pageType != "account");
         }
     }, {
         name: "删除",
@@ -466,7 +490,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == constant.sales().oales.STATUS_INIT_INT;
+            return (v.status == constant.sales().oales.STATUS_INIT_INT && oales.pageType != "account");
         }
     }, {
         name: "撤销",
@@ -557,6 +581,10 @@ jQuery(function($) {
 
             managedrawing(v);
             initUploadBtn(v);
+        },
+        show: function(v) {
+
+            return oales.pageType != "account";
         }
     }, ];
 
@@ -587,6 +615,7 @@ jQuery(function($) {
             com.showAlert(com.warning, "请选择需要进行复核的外销单");
             return false;
         }
+        var options = {};
         for ( var i = 0; i < index.length; i++) {
 
             var input = $(index[i]);
@@ -600,6 +629,42 @@ jQuery(function($) {
             searcher.doSearch();
         });
     });
+
+    com.focusPage('#accountOales').on("click", function() {
+
+        oales.modals.accountModal.modal("show");
+    });
+
+    function balanceOalesData() {
+
+        if (com.validate('accountModal'))
+            return false;
+
+        var oids = new Array();
+        var index = com.focusPage('input[type="checkbox"]:checked');
+        if (!index.length) {
+            com.showAlert(com.warning, "请选择需要进行对账的外销单");
+            return false;
+        }
+        var boid = com.typeahead(oales.items.balanceOales);
+        var options = {};
+        for ( var i = 0; i < index.length; i++) {
+
+            var input = $(index[i]);
+            var oids = input.val();
+
+            options["balanceOalesItems[" + i + "].oales.oid"] = oids;
+        }
+        options["balanceOales.boid"] = boid
+        com.post(api.balance.submitBalanceOales, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            oales.modals.accountModal.modal("hide");
+            com.cleanTypeahead("balanceOales");
+            searcher.doSearch();
+
+        });
+    }
 
     com.focusPage('#exportOales', '#pagenation').on("click", function() {
 
@@ -670,6 +735,7 @@ jQuery(function($) {
         com.post(url, options, function(res) {
 
             searcher.doSearch();
+            oales.modals.oalesModal.modal("hide");
 
             com.showAlert(com.info, "操作成功");
 

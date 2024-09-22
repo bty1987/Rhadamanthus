@@ -132,6 +132,8 @@ public class SalesPO implements Serializable {
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
+	public static final short BRAND_STATUS_INT = 0;
+
 	private long sid;
 
 	private String no;

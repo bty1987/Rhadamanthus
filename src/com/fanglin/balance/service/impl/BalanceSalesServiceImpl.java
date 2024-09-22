@@ -97,12 +97,10 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	}
 
 	@Override
-	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, int company) {
+	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, BalanceSalesVO balanceSalesVO, int company) {
 
-		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSalesForBalance(paging, filters, company);
+		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSalesForBalance(paging, filters, balanceSalesVO.getStatus(), company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
-
-		BalanceSalesVO balanceSalesVO;
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
 
@@ -275,8 +273,6 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 			if (balanceSalesBalancePO == null) continue;
 
-			balanceSalesBalanceDao.deleteById(balanceSalesBalanceVO.getBsbid());
-
 			SalesBalancePO salesBalancePO = balanceSalesBalancePO.getSalesBalance();
 
 			if (salesBalancePO == null) continue;
@@ -284,6 +280,8 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 			salesBalancePO.setCheckStatus(SalesBalancePO.CHECKSTATUS_INIT_INT);
 
 			salesBalanceDao.update(salesBalancePO);
+
+			balanceSalesBalanceDao.delete(balanceSalesBalancePO);
 		}
 
 		balanceSalesBalanceDao.flush();
@@ -353,7 +351,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, balanceSalesPO.getCompany());
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, balanceSalesPO.getCompany());
 
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 

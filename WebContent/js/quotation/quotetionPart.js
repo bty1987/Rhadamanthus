@@ -8,6 +8,8 @@
         versionId: null, // 报价版本
         basicParams: null,
         notSalesmanRate: null,
+        decoration: null,
+        paymentType: null,
 
         modals: {},
         btns: {},
@@ -40,6 +42,7 @@
         quoteCalculation: {},
         machingType: {},
         typeness: {},
+        scales: {},
 
         initBtns: function() {
 
@@ -569,6 +572,7 @@
             divItem1.append(createCalItem("主材", 'small border-left-right alert-danger'));
             divItem1.append(createCalItem("", 'normal border-left-right alert-danger'));
             divItem1.append(createCalItem("综合", 'normal border-left-right alert-warning'));
+            divItem1.append(createCalItem("", 'normal border-left-right alert-warning'));
             divItem1.append(createCalItem("", 'normal border-left alert-warning'));
 
             divItem1.appendTo(table);
@@ -588,6 +592,7 @@
             divItem2.append(createCalItem("配比", 'small'));
             divItem2.append(createCalItem("主材额", 'normal'));
             divItem2.append(createCalItem("服务费", 'normal'));
+            divItem2.append(createCalItem("团队服务费", 'normal'));
             divItem2.append(createCalItem("实花总额", ' normal alert-warning'));
 
             divItem2.appendTo(table);
@@ -598,6 +603,8 @@
 
                 if ((v.vision & 1) != constant.data().decorationMatching.VISION_QUOTEDISCOUNT_INT)
                     return true;
+
+                var scale = 0;
 
                 _manageDiscount = v.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? _discount : 1; // 管理费折扣
                 _transDiscount = v.transDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? _discount : 1; // 车运费折扣
@@ -626,7 +633,7 @@
                 }
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
-                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _managefee), _dtaxRate)));
+                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _managefee), _dtaxRate));
                 }
 
                 var _ddtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dmanagefee), _dtaxfee));
@@ -645,9 +652,11 @@
                     var _totalProject = utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee); // 工程总额
                     var _balance = utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee) % v.base; // 余数 = 工程总额%基数
 
+                    var servePayment = utils.changeThrDecimal(utils.accMul(materialPrice, utils.accDiv(quo.scales[v.typeness] ? parseFloat(quo.scales[v.typeness]) : quo.paymentType.rate ? quo.paymentType.rate : 0, 100)));
+
                     // 满减折后总额 //折后工程总额=(工程总额-余数)*折扣 + (余数) + 管理费
                     var _projectPrice = utils.changeTwoDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(_totalProject, _balance), utils.accDiv(v.discount, 10)), _balance), _ddmanagefee), _ddtaxfee));
-                    var $_total = utils.changeTwoDecimal(utils.accAdd(_projectPrice, utils.accAdd(materialPrice, servicePrice)));
+                    var $_total = utils.changeTwoDecimal(utils.accAdd(_projectPrice, utils.accAdd(servePayment, utils.accAdd(materialPrice, servicePrice))));
 
                     var halfPriceDiv = $('<div></div>').addClass('fl-quo-cal-item');
 
@@ -664,6 +673,7 @@
                     halfPriceDiv.append(createCalItem(utils.accMul(v.material, 100) + "%", 'small'));
                     halfPriceDiv.append(createCalItem(materialPrice, 'normal'));
                     halfPriceDiv.append(createCalItem(servicePrice, 'normal'));
+                    halfPriceDiv.append(createCalItem(servePayment, 'normal'));
                     halfPriceDiv.append(createCalItem($_total, 'normal alert-warning'));
 
                     halfPriceDiv.addClass('dmid' + v.dmid).appendTo(table);
@@ -680,8 +690,10 @@
                     var materialPrice = utils.changeTwoDecimal(utils.accMul(_ddtotal, v.material));
                     var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice, v.service));
 
+                    var servePayment = utils.changeThrDecimal(utils.accMul(materialPrice, utils.accDiv(quo.scales[v.typeness] ? parseFloat(quo.scales[v.typeness]) : quo.paymentType.rate ? quo.paymentType.rate : 0, 100)));
+
                     var _projectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _discount), _undisPrice), _ddtransfee), _ddmanagefee), _ddtaxfee));
-                    var $_total = utils.changeTwoDecimal(utils.accAdd(_projectPrice, utils.accAdd(materialPrice, servicePrice)));
+                    var $_total = utils.changeTwoDecimal(utils.accAdd(_projectPrice, utils.accAdd(servePayment, utils.accAdd(materialPrice, servicePrice))));
 
                     var halfPacksDiv = $('<div></div>').addClass('fl-quo-cal-item');
 
@@ -698,6 +710,7 @@
                     halfPacksDiv.append(createCalItem(utils.accMul(v.material, 100) + "%", 'small'));
                     halfPacksDiv.append(createCalItem(materialPrice, 'normal'));
                     halfPacksDiv.append(createCalItem(servicePrice, 'normal'));
+                    halfPacksDiv.append(createCalItem(servePayment, 'normal'));
                     halfPacksDiv.append(createCalItem($_total, 'normal alert-warning'));
 
                     halfPacksDiv.addClass('dmid' + v.dmid).appendTo(table);
@@ -950,9 +963,9 @@
 
                     _param['functionAreaIds[' + i + ']'] = $(v).val();
                 });
-                
-                if(!_param["quotetion.updateTime"]){
-                	_param["quotetion.updateTime"] = com.currentTime();
+
+                if (!_param["quotetion.updateTime"]) {
+                    _param["quotetion.updateTime"] = com.currentTime();
                 }
 
                 com.post(api.quotation.addQuotetionFuctionArea, _param, function(data) {
@@ -1160,6 +1173,8 @@
 
         saveOrderId: function() {
 
+            var materialPrice = null;
+
             com.focusPage('#saveOrderIdBtn').click(function() {
 
                 com.post(api.decoration.queryDecorationForCommonByOrderId, {
@@ -1171,8 +1186,24 @@
                     com.focusPage('#version').text(res.decoration.version.name);
 
                     quo.notSalesmanRate = res.decoration.notSalesmanRate;
+                    quo.decoration = res.decoration;
 
                 }, null, false);
+
+                if (quo.decoration != null) {
+                    com.post(api.data.fetchPaymentScaleItem, {
+                        "paymentScaleItem.ptid": quo.paymentType.ptid,
+                        "paymentScale.atttype": 0,
+                        "paymentScale.dbid": quo.decoration.busitype
+                    }, function(res) {
+
+                        $.each(res.paymentScaleItems, function(i, v) {
+
+                            quo.scales[v.paymentScale.typeness] = v.scale;
+                        });
+
+                    }, null, false);
+                }
 
                 com.focusPage('#orderIdModal').modal('hide');
 
@@ -1303,7 +1334,7 @@
                     "quotetionFunctionAreaItem.index": parseInt(that.$nowLine.find(".line .cell-wrap").text())
                 };
 
-                if (_type == constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT || _type == constant.quotation().quotetionFunctionAreaItem.TYPE_IGNORE_INT || _type == constant.quotation().quotetionFunctionAreaItem.TYPE_COST_INT) {
+                if (_type == constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT || _type == constant.quotation().quotetionFunctionAreaItem.TYPE_IGNORE_INT || _type == constant.quotation().quotetionFunctionAreaItem.TYPE_COST_INT || _type == constant.quotation().quotationFunctionAreaItem.TYPE_UNACHE_INT || _type == constant.quotation().quotationFunctionAreaItem.TYPE_HIDE_INT) {
                     // 报价项Id , 标准类型报价项需要传递 "data-qiid"
                     args["quotetionFunctionAreaItem.qiid"] = that.$nowLine.find('input[name="deleteItems"]').attr('data-qiid');
                 } else if (_type == constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT) {
@@ -2395,6 +2426,29 @@
             }, function(res) {
 
                 com.focusPage('#quotetionVersion').text(res.quotationVersion.name);
+            });
+
+            com.post(api.data.queryPaymentTypeByName, {
+                "paymentType.name": "服务费",
+                "paymentType.type": 1,
+                "paymentType.atttype": 0
+            }, function(res) {
+
+                quo.paymentType = res.paymentType;
+            }, function(res) {
+
+                quo.paymentType = {
+                    "ptid": 0,
+                    "rate": 0
+                }
+            }, false);
+
+            com.post(api.system.querySystemConfigByKey, {
+                "systemConfig.key": "SERVICE_PAYMENT_RATE_INT"
+            }, function(res) {
+
+                if (res.systemConfig.value)
+                    quo.paymentType.rate = parseFloat(res.systemConfig.value);
             });
 
             // 通过报价ID获取报价项中的功能区

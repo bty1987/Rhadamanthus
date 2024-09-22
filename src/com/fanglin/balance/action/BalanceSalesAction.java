@@ -25,11 +25,11 @@ public class BalanceSalesAction extends BaseListAction {
 	@Autowired
 	private BalanceSalesService balanceSalesService;
 
-	private BalanceSalesVO balanceSales;
-
 	private List<BalanceSalesVO> balanceSaleses;
 
 	private List<BalanceSalesBalanceVO> balanceSalesBalances;
+
+	private BalanceSalesVO balanceSales;
 
 	@Action(value = "pageBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalanceSales() throws FLException {
@@ -42,7 +42,7 @@ public class BalanceSalesAction extends BaseListAction {
 	@Action(value = "pageBalanceSalesForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalanceSalesForBalance() throws FLException {
 
-		balanceSalesService.pageBalanceSalesForBalance(getPaging(), getFilters(), queryCompany());
+		balanceSalesService.pageBalanceSalesForBalance(getPaging(), getFilters(), balanceSales, queryCompany());
 
 		return SUCCESS;
 	}

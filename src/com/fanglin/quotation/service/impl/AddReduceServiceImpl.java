@@ -272,6 +272,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setConsPrice(0);
 		addReducePO.setAccountDiscount(addReducePO.getDiscount());
 
+		if(decorationPO.getType() == DecorationPO.TYPE_HOLONOMY_INT){
+			addReducePO.setDiscount(decorationPO.getDiscount());
+		}
+
 		addReduceDao.save(addReducePO);
 
 		addReduceVO.setArId(addReducePO.getArId());

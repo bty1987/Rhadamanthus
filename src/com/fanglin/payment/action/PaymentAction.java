@@ -65,6 +65,14 @@ public class PaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryPaymentByArid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPaymentByArid() throws FLException {
+
+		payment = paymentService.queryPaymentByArid(payment);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "collectPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectPayment() throws FLException {
 

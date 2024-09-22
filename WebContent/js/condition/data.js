@@ -298,6 +298,22 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
+    "quotation-item-busi": {
+        label: "业务",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().quotationItem.type.datas.slice(0, 5),
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "quotation-price-createTime": {
         label: "创建时间",
         type: "select",
@@ -538,6 +554,15 @@ Condition.addupRule("data", {
             }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "brandPool-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
         }
     },
     "category-name": {
@@ -1541,6 +1566,40 @@ Condition.addupRule("data", {
             url: null,
             postData: null,
             listPath: constant.data().constructionPace.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "bankAccount-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "bankAccount-bankNo": {
+        label: "卡号",
+        type: "text",
+        submitConfig: {
+            name: "bankNo",
+            op: "eq",
+            validate: null
+        }
+    },
+    "bankAccount-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().bankAccount.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

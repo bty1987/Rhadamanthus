@@ -1,64 +1,74 @@
-$(function () {
+$(function() {
 
     var goodsStorehouseStock = {
         goods: null,
         submitBtn: com.focusPage("#submitBtn"),
         confirm: com.focusPage("#confirm")
     };
+
     goodsStorehouseStock.confirm.bindClick(saveData);
     goodsStorehouseStock.formStore = com.focusPage('#formStore');
-    com.initTypeahead("name", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
+    com.initTypeahead("name", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
+
         com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
         com.post(api.data.queryColorForEnableByGid, {
             "color.gid": k
-        }, function (res) {
+        }, function(res) {
+
             com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="color"]').bindData(res.colors, 'cid', 'name');
         });
         com.post(api.data.queryFormatForEnableByGid, {
             "format.gid": k
-        }, function (res) {
+        }, function(res) {
+
             com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="format"]').bindData(res.formats, 'fid', 'info');
         });
 
         return v;
     });
 
-    goodsStorehouseStock.submitBtn.click(function () {
+    goodsStorehouseStock.submitBtn.click(function() {
+
         addData()
     });
 
-    com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
+    com.post(api.inventory.queryStorehouseForSelf, {}, function(res) {
+
         var storehousesStatus = [];
 
-        $.each(res.storehouses, function (i, v) {
+        $.each(res.storehouses, function(i, v) {
+
             if (v.status == 0) {
                 storehousesStatus.push(v);
             }
         });
+
         com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="storehouse"]').bindData(storehousesStatus, 'shid', 'name');
+
     }, null, false);
 
-    var displayFunc = (function () {
-        /*表格样式*/
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
-            if (listData && listData.length) {
 
-                var $ulTitle = createTableTitle();
+            if (!listData || listData.length == 0)
+                return false;
 
-                var $ulData = $('<ul></ul>').addClass('flex-table');
+            var $ulTitle = createTableTitle();
 
-                $tableWrap.append($ulTitle).append($ulData);
+            var $ulData = $('<ul></ul>').addClass('flex-table');
 
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
-                });
-            }
+            $tableWrap.append($ulTitle).append($ulData);
+
+            $.each(listData, function(i, v) {
+
+                creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
+            });
         };
 
-        var createTableTitle = function () {
+        var createTableTitle = function() {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -67,7 +77,8 @@ $(function () {
 
             var titleName = '仓库名称,商品编号,商品名称,条形码,品类,品牌,颜色,规格,单位,类型,件数,数量';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -78,29 +89,18 @@ $(function () {
             return $ulTitle;
         };
 
-        var creatLine = function (i, v, lastFlag) {
+        var creatLine = function(i, v, lastFlag) {
 
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
 
             var propertyArr = [
-                //v.storehouse.code,
-                [v.storehouse.name, 'grey'],
-                [v.goods.no, 'blue'],
-                [v.goods.name, 'grey'],
-                [v.goods.barcode, 'blue'],
-                [v.goods.category, 'grey'],
-                [v.goods.brand, 'grey'],
-                [v.color.name, 'grey'],
-                [v.format.info, 'grey'],
-                [v.goods.measurementUnit, 'grey'],
-                [v.goods.type == 0 ? "商品" : "套餐", 'red'],
-                [v.goods.pieceNum, 'blue'],
-                [v.num, 'blue']
-            ];
+            // v.storehouse.code,
+            [v.storehouse.name, 'grey'], [v.goods.no, 'blue'], [v.goods.name, 'grey'], [v.goods.barcode, 'blue'], [v.goods.category, 'grey'], [v.goods.brand, 'grey'], [v.color.name, 'grey'], [v.format.info, 'grey'], [v.goods.measurementUnit, 'grey'], [v.goods.type == 0 ? "商品" : "套餐", 'red'], [v.goods.pieceNum, 'blue'], [v.num, 'blue']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -127,7 +127,7 @@ $(function () {
             $cellOption.appendTo($optionWrap);
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnCP.click(function () {
+            $btnCP.click(function() {
 
                 clearForm('formStore');
 
@@ -137,7 +137,7 @@ $(function () {
                 goodsStorehouseStock.goods = v;
             });
 
-            $btnCL.click(function () {
+            $btnCL.click(function() {
 
                 clearForm('formStore');
 
@@ -147,20 +147,24 @@ $(function () {
                 goodsStorehouseStock.goods = v;
             });
 
-            //拆分按钮点击事件
-            $btnSplit.click(function () {
+            // 拆分按钮点击事件
+            $btnSplit.click(function() {
+
                 params.manifest.goodsStorehouseStock = v;
                 com.focusPage('#splitAndMergePopUp').attr('data-title', $btnSplit.text());
-                com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "拆分", function () {
+                com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "拆分", function() {
+
                     goodsStorehouseSeacher.doSearch();
                 });
             });
 
-            //合并按钮点击事件
-            $btnMerge.click(function () {
+            // 合并按钮点击事件
+            $btnMerge.click(function() {
+
                 params.manifest.goodsStorehouseStock = v;
                 com.focusPage('#splitAndMergePopUp').attr('data-title', $btnMerge.text());
-                com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "合并", function () {
+                com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "合并", function() {
+
                     goodsStorehouseSeacher.doSearch();
                 });
             });
@@ -169,11 +173,13 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (i, v) {
+            drawLine: function(i, v) {
+
                 return creatLine(i, v);
             }
         };
@@ -181,55 +187,62 @@ $(function () {
 
     var goodsStorehouseSeacher = new Searcher();
 
-    goodsStorehouseSeacher.init(["inventory-storehouse-name", 'inventory-goods-name', 'inventory-goods-barcode'], "condList", api.inventory.pageGoodsStorehouseStock, function (data) {
-            displayFunc.init('resultList', data);
-        }, "pagenation", "goodsStorehouseStockPostData", null, false, null, function () {
+    goodsStorehouseSeacher.init(["inventory-storehouse-name", 'inventory-goods-name', 'inventory-goods-status', 'inventory-goods-barcode', 'inventory-storehouse-status'], "condList", api.inventory.pageGoodsStorehouseStock, function(data) {
 
-            var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin-top', '-2px');
-            var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
-            var $impspan = $('<span></span>').text('导出').appendTo($impa);
+        displayFunc.init('resultList', data);
+    }, "pagenation", "goodsStorehouseStockPostData", null, false, null, function() {
 
-            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({
-                'margin-top': '-2px',
-                'margin-left': '4px'
-            });
-            var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-            var $addspan = $('<span></span>').text('添加').appendTo($adda);
-            //导出点击事件
-            $impa.click(function () {
-                pageGoodsStorehouseStockImport();
-            });
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css('margin-top', '-2px');
+        var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
+        var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
-            $adda.click(function () {
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({
+            'margin-top': '-2px',
+            'margin-left': '4px'
+        });
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-                clearForm('formStore2');
-                emptyAdd();
-                com.clearValidator();
-                com.popup4model('#layerAddGoodsStorehouseStock', "添加");
-            });
-            return [$impa, $adda];
+        $impa.click(function() {
 
-        }
-    );
+            pageGoodsStorehouseStockImport();
+        });
+
+        $adda.click(function() {
+
+            clearForm('formStore2');
+            emptyAdd();
+            com.clearValidator();
+            com.popup4model('#layerAddGoodsStorehouseStock', "添加");
+        });
+        return [$impa, $adda];
+
+    });
 
     function clearForm(formId) {
+
         var $form = com.focusPage("#" + formId);
         var error = com.focusPage('.alert-error', $form);
         var success = com.focusPage('.alert-success', $form);
+
         com.focusPage('.control-group').removeClass("success").removeClass("error");
         com.focusPage(".ok").remove();
         com.focusPage(".help-inline").remove();
+
         success.hide();
         error.hide();
+
         com.focusPage("span.checked", $form).removeClass("checked");
         com.focusPage("tr.edit-on").removeClass("edit-on");
+
         $form.removeClass("edit-item");
-        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
+
+        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();// 去掉辅助项
         com.focusPage('input[type="hidden"]', $form).val('');
         document.getElementById(formId).reset();
     }
 
-    //导出
+    // 导出
     function pageGoodsStorehouseStockImport() {
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
@@ -242,22 +255,12 @@ $(function () {
             return false;
         }
 
-        com.post(api.inventory.pageGoodsStorehouseStock, $.extend({}, params.goodsStorehouseStockPostData, {"paging.noPage": 1}), function (res) {
+        com.post(api.inventory.pageGoodsStorehouseStock, $.extend({}, params.goodsStorehouseStockPostData, {
+            "paging.noPage": 1
+        }), function(res) {
+
             $.exceler({
-                column: [
-                    ['仓库名称', 'storehouse.name'],
-                    ['商品编号', 'goods.no'],
-                    ['商品名称', 'goods.name'],
-                    ['条形码', 'goods.barcode'],
-                    ['品类', 'goods.category'],
-                    ['品牌', 'goods.brand'],
-                    ['颜色', 'color.name'],
-                    ['规格', 'format.info'],
-                    ['单位', 'goods.measurementUnit'],
-                    ['套餐', 'goods.type'],
-                    ['件数', 'goods.pieceNum'],
-                    ['数量', 'num']
-                ],
+                column: [['仓库名称', 'storehouse.name'], ['商品编号', 'goods.no'], ['商品名称', 'goods.name'], ['条形码', 'goods.barcode'], ['品类', 'goods.category'], ['品牌', 'goods.brand'], ['颜色', 'color.name'], ['规格', 'format.info'], ['单位', 'goods.measurementUnit'], ['套餐', 'goods.type'], ['件数', 'goods.pieceNum'], ['数量', 'num']],
                 list: res.paging.data
             });
         });
@@ -268,9 +271,11 @@ $(function () {
         if (com.validate('formStore', "right")) {
             return false;
         }
+
         var $layer = com.focusPage('#layerAddStrore');
         var type = com.focusPage('#formStore').attr('_data-type');
         var newNum = $layer.find('input[name="newNum"]').val();
+
         var url;
         var option = {
             "goodsStorehouseStock.goods.gid": goodsStorehouseStock.goods.goods.gid,
@@ -286,7 +291,8 @@ $(function () {
             url = api.inventory.loseGoodsStorehouseStock
         }
 
-        com.post(url, option, function (res) {
+        com.post(url, option, function(res) {
+
             com.clearValidator("#newNum", true);
             com.focusPage('#formStore').removeAttr('_data-type');
             com.closePopup();
@@ -296,9 +302,11 @@ $(function () {
     }
 
     function addData() {
+
         if (com.validate("formStore2", "right")) {
             return false;
         }
+
         var $layer = com.focusPage('#layerAddGoodsStorehouseStock');
         var gid = $layer.find('input[name="name"]').attr('data-gid');
         var cid = $layer.find('select[name="color"] option:selected').val();
@@ -310,14 +318,16 @@ $(function () {
             "goodsStorehouseStock.color.cid": cid,
             "goodsStorehouseStock.format.fid": fid,
             "goodsStorehouseStock.storehouse.shid": shid
-        }, function () {
+        }, function() {
+
             com.showAlert(com.info, "操作成功");
             com.closePopup();
             goodsStorehouseSeacher.doSearch();
-        })
+        });
     }
 
     function emptyAdd() {
+
         com.focusPage("#name").val("");
         com.focusPage("#color").find("option").remove();
         com.focusPage("#format").find("option").remove();

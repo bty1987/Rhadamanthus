@@ -235,6 +235,14 @@ $.extend(api, {
                 args: ["total", "award", "profit", "cost", "threshold"]
             }]
         },
+        pageOalesForAccount: {
+            url: "pageOalesForAccount.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["total", "award", "profit", "cost", "threshold"]
+            }]
+        },
         queryOalesByOrderId: {
             url: "queryOalesByOrderId.do",
             type: "query",
@@ -294,6 +302,7 @@ $.extend(api, {
         finishOales: {
             url: "finishOales.do"
         },
+
         pageOalesPay: {
             url: "pageOalesPay.do",
             type: "query",

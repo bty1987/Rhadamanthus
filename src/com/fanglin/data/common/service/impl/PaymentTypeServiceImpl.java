@@ -77,7 +77,7 @@ public class PaymentTypeServiceImpl implements PaymentTypeService {
 	@Override
 	public PaymentTypeVO queryPaymentTypeByName(PaymentTypeVO paymentType, int company) throws FLException {
 
-		PaymentTypePO paymentTypePO = paymentTypeDao.queryPaymentTypeByName(paymentType.getName(), company);
+		PaymentTypePO paymentTypePO = paymentTypeDao.queryPaymentTypeByName(paymentType.getName(), paymentType.getType(), paymentType.getPaytype(), paymentType.getBustype(), paymentType.getAtttype(), company);
 		PaymentTypeVO paymentTypeVO = new PaymentTypeVO();
 
 		if (paymentTypePO == null) {

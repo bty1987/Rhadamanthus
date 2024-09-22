@@ -31,6 +31,8 @@ public class OalesPayVO implements Serializable {
 
 	private String comment;
 
+	private Integer company;
+
 	public OalesPayVO() {
 
 		super();
@@ -123,6 +125,14 @@ public class OalesPayVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

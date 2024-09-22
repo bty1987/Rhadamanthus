@@ -45,7 +45,7 @@ jQuery(function ($) {
             "paging.rows": 10
         };
         searcher.base("condList", "pagenation", "resultList", url);
-        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime']);
+        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime', 'sales-oales-confirmTime']);
         searcher.history("oalsePayPostData");
         searcher.button([{
             id: "exportOalesPay",

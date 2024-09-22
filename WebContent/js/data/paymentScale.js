@@ -12,6 +12,9 @@ $(function() {
         },
         items: {
             names: com.focusPage("#names"),
+            typeness: com.focusPage("#typeness"),
+            dbid: com.focusPage("#dbid"),
+            atttype: com.focusPage("#atttype"),
             comment: com.focusPage("#comment")
         },
         scaleItems: {
@@ -29,7 +32,11 @@ $(function() {
                 regex: /^[0-9]*[1-9][0-9]*$/,
                 errorMsg: "数量输入内容格式错误"
             }
-        }
+        },
+        atttype_decoration: [],
+        typeness: constant.decoration().decoration.typeness.keys,
+        busitypes: [],
+        atttypes: []
     };
 
     $.extend(com.validator, paymentScale.validator);
@@ -37,6 +44,34 @@ $(function() {
     paymentScale.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
     paymentScale.items.names = com.focusPage("#names");
     paymentScale.items.comment = com.focusPage("#comment");
+
+    $.each(constant.data().paymentType.atttype.datas, function(i, v) {
+
+        var type = v.key.split('-')[0];
+        var atttype = v.key.split('-')[1];
+
+        if (type == "1") {
+            paymentScale.atttype_decoration.push({"key": atttype, "value": v.value});
+            paymentScale.atttypes[atttype] = v.value;
+        }
+    });
+
+    com.post(api.data.queryDecorationBusitype, {}, function(res){
+        var decorationBusitypes = [];
+
+        $.each(res.decorationBusitypes, function(intex, value) {
+            if (value.status == 0) {
+                decorationBusitypes.push({"key": value.dbid, "value": value.name});
+                paymentScale.busitypes[value.dbid] = value.name;
+            }
+        });
+
+        paymentScale.items.dbid.bindData(decorationBusitypes, "key", "value");
+    });
+
+    paymentScale.items.typeness.bindData(constant.decoration().decoration.typeness.datas, "key", "value");
+
+    paymentScale.items.atttype.bindData(paymentScale.atttype_decoration, "key", "value");
 
     paymentScale.modals.itemModal.on('hide.bs.modal', function(e) {
 
@@ -70,11 +105,16 @@ $(function() {
             var $btnshow = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看').appendTo($divBtnWrap);
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success ').html('删除');
             var $btnStatus = $('<div></div>').addClass('pull-right').appendTo($divBtnWrap);
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
             var $span = $('<span></span>').addClass('lbl status-lbl');
-            var propertyArr = [["款项名称:", v.name, "grey"], ["说明:", v.comment, "grey"], ["状态:", v.status == 0 ? "启用" : "禁用", 'red']];
+            var propertyArr = [
+                ["款项名称:", v.name, "grey"],
+                ["类型:", com.checkNull(paymentScale.typeness[v.typeness], "暂无"), "red"],
+                ["业务类型:", com.checkNull(paymentScale.busitypes[v.dbid], "暂无"), "red"],
+                ["属性类型:", com.checkNull(paymentScale.atttypes[v.atttype], "暂无"), "red"],
+                ["说明:", v.comment, "grey"],
+                ["状态:", v.status == 0 ? "启用" : "禁用", 'red']
+            ];
 
             $btnStatus.append($statusSwitch).append($span);
 
@@ -87,6 +127,8 @@ $(function() {
             });
 
             $btnshow.click(function() {
+                
+                queryPaymentType(v);
 
                 showPaymentScaleItem(v);
             });
@@ -97,6 +139,7 @@ $(function() {
             });
 
             v.status == 0 && $statusSwitch.prop("checked", true);
+
             $statusSwitch.prop("checked", v.status == 0 ? true : false).switchBtn("status-lbl").on("click", function() {
 
                 updateStatus(v.psid, $statusSwitch.prop("checked") ? 0 : 1);
@@ -117,7 +160,6 @@ $(function() {
     })();
 
     reloadPaymentScale();
-    queryPaymnetType();
 
     function reloadPaymentScale() {
 
@@ -148,7 +190,7 @@ $(function() {
 
         com.post(api.data.updatePaymentScaleForStatus, {
             "paymentScale.psid": psid,
-            "paymentScale.status": status,
+            "paymentScale.status": status
         }, function() {
 
             reloadPaymentScale();
@@ -245,6 +287,9 @@ $(function() {
         var options = {
             "paymentScale.cid": params.company.cid,
             "paymentScale.name": paymentScale.items.names.val(),
+            "paymentScale.typeness": paymentScale.items.typeness.val(),
+            "paymentScale.dbid": paymentScale.items.dbid.val(),
+            "paymentScale.atttype": paymentScale.items.atttype.val(),
             "paymentScale.comment": paymentScale.items.comment.val()
         };
 
@@ -255,15 +300,15 @@ $(function() {
         });
     }
 
-    function queryPaymnetType() {
+    function queryPaymentType(v) {
 
         var options = {
             "paymentType.type": 1,
             "paymentType.paytype": 0,
             "paymentType.bustype": 0,
-            "paymentType.atttype": 1
+            "paymentType.atttype": v.atttype
         };
-
+        
         com.post(api.data.queryPaymentType, options, function(res) {
 
             paymentScale.scaleItems.paymentType.bindData(res.paymentTypes, "ptid", "name");

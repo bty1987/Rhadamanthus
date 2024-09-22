@@ -8,6 +8,12 @@ public class PaymentScaleVO {
 
 	private String name;
 
+	private Short typeness;
+
+	private Long dbid;
+
+	private Short atttype;
+
 	private Short status;
 
 	private String comment;
@@ -38,6 +44,30 @@ public class PaymentScaleVO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(Short typeness) {
+		this.typeness = typeness;
+	}
+
+	public Long getDbid() {
+		return dbid;
+	}
+
+	public void setDbid(Long dbid) {
+		this.dbid = dbid;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Short getStatus() {

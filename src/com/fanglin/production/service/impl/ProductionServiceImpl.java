@@ -70,7 +70,6 @@ public class ProductionServiceImpl implements ProductionService {
 	@Autowired
 	private ProductionPlanDao productionPlanDao;
 
-
 	@Autowired
 	private TranpackDao tranpackDao;
 
@@ -78,13 +77,13 @@ public class ProductionServiceImpl implements ProductionService {
 	public void pageProduction(Paging paging, List<Filter> filters, int company) {
 
 		if (filters.size() == 0) return;
-		
+
 		List<ProductionPO> productionPOs = productionDao.pageProduction(paging, filters, company);
 		List<ProductionVO> productionVOs = new ArrayList<ProductionVO>();
 
 		for (ProductionPO productionPO : productionPOs) {
 
-			ProductionVO productionVO = new ProductionVO(new HouseVO(new VillageVO()),new BrandVO(), new CategoryVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			ProductionVO productionVO = new ProductionVO(new HouseVO(new VillageVO()), new BrandVO(), new CategoryVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
 			BeanUtil.copyProperties(productionPO.getHouse(), productionVO.getHouse(), Arrays.asList("village"));
@@ -93,7 +92,7 @@ public class ProductionServiceImpl implements ProductionService {
 			BeanUtil.copyProperties(productionPO.getSalesman(), productionVO.getSalesman(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionPO.getDesigner(), productionVO.getDesigner(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionPO.getSpliter(), productionVO.getSpliter(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(productionPO.getBrand(), productionVO.getBrand(), Arrays.asList("supplier","category"));
+			BeanUtil.copyProperties(productionPO.getBrand(), productionVO.getBrand(), Arrays.asList("supplier", "category"));
 			BeanUtil.copyProperties(productionPO.getBrand().getCategory(), productionVO.getCategory());
 
 			productionVOs.add(productionVO);
@@ -109,13 +108,13 @@ public class ProductionServiceImpl implements ProductionService {
 
 		CompanyPO companyPO = companyDao.get(company);
 
-		if(companyPO == null){
+		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
 
 		ProductionPO productionPO = new ProductionPO();
 
-		if(productionVO.getSpid() != null){
+		if (productionVO.getSpid() != null) {
 
 			productionPO = productionDao.queryProductionByPno(productionVO.getSpid());
 
@@ -129,18 +128,18 @@ public class ProductionServiceImpl implements ProductionService {
 			productionVO.setHouse(new HouseVO(productionPO.getHouse().getHid()));
 		}
 
-		productionPO = new ProductionPO(new HousePO(),new BrandPO(),new UserPO(), new UserPO(), new UserPO(), new UserPO());
+		productionPO = new ProductionPO(new HousePO(), new BrandPO(), new UserPO(), new UserPO(), new UserPO(), new UserPO());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
-		String no =  companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_PRODUCTION_ZO_INT, currentDate, company);
+		String no = companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 		UserPO designer = userDao.queryUserByUserId(productionVO.getDesigner().getUserId());
 		UserPO salesman = userDao.queryUserByUserId(productionVO.getSalesman().getUserId());
 		UserPO creater = userDao.queryUserByUserId(userId);
 		BrandPO brand = brandDao.queryBrandByBid(productionVO.getBrand().getBid());
 
-		if(productionVO.getSpliter().getUserId() != null){		
+		if (productionVO.getSpliter().getUserId() != null) {
 			UserPO spliter = userDao.queryUserByUserId(productionVO.getSpliter().getUserId());
 			productionPO.setSpliter(spliter);
 		}
@@ -174,16 +173,16 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() == ProductionPO.STATUS_INIT_SHORT || productionPO.getStatus() == ProductionPO.STATUS_DESIGN_SHORT) {
-			
+
 			if (productionPO.getStatus() == ProductionPO.STATUS_INIT_SHORT) {
 				UserPO designer = userDao.queryUserByUserId(productionVO.getDesigner().getUserId());
 				productionPO.setDesigner(designer);
 			}
-			
+
 			UserPO salesman = userDao.queryUserByUserId(productionVO.getSalesman().getUserId());
 			UserPO spliter = userDao.queryUserByUserId(productionVO.getSpliter().getUserId());
 			productionPO.setSalesman(salesman);
-			productionPO.setSpliter(spliter);	
+			productionPO.setSpliter(spliter);
 		}
 
 		productionDao.update(productionPO);
@@ -226,7 +225,7 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_DESIGN_SHORT);
@@ -249,7 +248,7 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_DESIGN_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_SPLIT_SHORT);
@@ -272,21 +271,21 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_SPLIT_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
-		Integer countOutsource = outsourceDao.countOutsource(productionPO.getPid(),OutsourcePO.STATUS_END_SHORT);
-		Integer countHardware = hardwareDao.countHardware(productionPO.getPid(),HardwarePO.STATUS_FINISH_SHORT);
-		Integer countProductionPlan = productionPlanDao.countProductionPlan(productionPO.getPid(),ProductionPlanPO.STATUS_FINISH_INT);
-		Integer countTranpackByPid = tranpackDao.countTranpackByPid(productionPO.getPid(),TranpackPO.STATUS_INSTORE_SHORT );
+		Integer countOutsource = outsourceDao.countOutsource(productionPO.getPid(), OutsourcePO.STATUS_END_SHORT);
+		Integer countHardware = hardwareDao.countHardware(productionPO.getPid(), HardwarePO.STATUS_FINISH_SHORT);
+		Integer countProductionPlan = productionPlanDao.countProductionPlan(productionPO.getPid(), ProductionPlanPO.STATUS_FINISH_INT);
+		Integer countTranpackByPid = tranpackDao.countTranpackByPid(productionPO.getPid(), TranpackPO.STATUS_INSTORE_SHORT);
 
-		if(countOutsource > 0){
-			throw new FLException(220002 , "生产单状态不可操作");
-		}else if(countHardware > 0){
-			throw new FLException(220002 , "生产单状态不可操作");
-		}else if(countProductionPlan > 0){
-			throw new FLException(220002 , "生产单状态不可操作");
-		}else if(countTranpackByPid > 0){
+		if (countOutsource > 0) {
+			throw new FLException(220002, "生产单状态不可操作");
+		} else if (countHardware > 0) {
+			throw new FLException(220002, "生产单状态不可操作");
+		} else if (countProductionPlan > 0) {
+			throw new FLException(220002, "生产单状态不可操作");
+		} else if (countTranpackByPid > 0) {
 			throw new FLException(220002, "生产单状态不可操作");
 		}
 
@@ -310,19 +309,19 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_INSTORE_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
-		Integer countTranpackByPid = tranpackDao.countTranpackByPid(productionPO.getPid(),TranpackPO.STATUS_INSTORE_SHORT );
+		Integer countTranpackByPid = tranpackDao.countTranpackByPid(productionPO.getPid(), TranpackPO.STATUS_INSTORE_SHORT);
 
-		if(countTranpackByPid > 0){
+		if (countTranpackByPid > 0) {
 			throw new FLException(220025, "物流包状态不可操作");
 		}
-		
+
 		productionPO.setStatus(ProductionPO.STATUS_PLAN_SHORT);
 		productionPO.setPlanTime(DateUtil.getDateToTimestamp(new Date()));
 		productionPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		productionDao.update(productionPO);
 
 		tranpackDao.updateTranpack(productionPO.getPid(), TranpackPO.STATUS_LOGISTICS_SHORT);
@@ -341,7 +340,7 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_PLAN_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_TRANSPORT_SHORT);
@@ -364,11 +363,11 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_TRANSPORT_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_MOUNT_SHORT);
-		productionPO.setMountTime(DateUtil.getDateToTimestamp(new Date())); 
+		productionPO.setMountTime(DateUtil.getDateToTimestamp(new Date()));
 		productionPO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		productionDao.update(productionPO);
@@ -387,7 +386,7 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_COMPLETE_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_UPHOLD_SHORT);
@@ -409,7 +408,7 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_COMPLETE_SHORT && productionPO.getStatus() != ProductionPO.STATUS_UPHOLD_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_FINISH_SHORT);
@@ -432,7 +431,7 @@ public class ProductionServiceImpl implements ProductionService {
 		}
 
 		if (productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT && productionPO.getStatus() != ProductionPO.STATUS_DESIGN_SHORT) {
-			throw new FLException(220002 , "生产单状态不可操作");
+			throw new FLException(220002, "生产单状态不可操作");
 		}
 
 		productionPO.setStatus(ProductionPO.STATUS_TERMINAL_SHORT);
@@ -444,4 +443,3 @@ public class ProductionServiceImpl implements ProductionService {
 	}
 
 }
-

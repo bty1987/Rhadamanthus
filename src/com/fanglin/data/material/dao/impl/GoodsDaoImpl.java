@@ -13,6 +13,7 @@ package com.fanglin.data.material.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -72,7 +73,16 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<GoodsPO> queryGoodsByName(String name, int limit, int company) {
-		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.or(Restrictions.ilike(GoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(GoodsPO.COLUMN_NO_STR, name, MatchMode.ANYWHERE)), Restrictions.ilike(GoodsPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
+
+		String likestr = String.format("%%%s%%", name);
+
+		String sql = "SELECT g.* FROM `data`.goods g, communion.brand b WHERE g.bid = b.bid AND  g.`status` = :status AND b.`status` = :bStatus AND (g.`name` LIKE :name OR g.`no` LIKE :no) AND g.company = :company LIMIT :limit";
+
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(GoodsPO.class);
+
+		query.setShort("status", GoodsPO.STATUS_ENABLE_INT).setShort("bStatus", GoodsPO.BRAND_STATUS_INT).setString("name", likestr).setString("no", likestr).setInteger("company", company).setInteger("limit", limit);
+
+		return query.list();
 	}
 
 	@Override
@@ -80,7 +90,7 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 	public List<GoodsPO> queryGoodsByNo(String no, int limit, int company) {
 		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.ilike(GoodsPO.COLUMN_NO_STR, no, MatchMode.ANYWHERE)).setMaxResults(limit).list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<GoodsPO> queryGoodsByAtid(long atid) {

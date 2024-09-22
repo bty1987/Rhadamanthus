@@ -24,6 +24,8 @@ public class CustomerSourceRecordPO implements Serializable {
 
 	public static final short TYPE_SPECIAL_INT = 1;
 
+	public static final short TYPE_USER_RULE_INT = 2;
+
 	private long csrid;
 
 	private long csid;
@@ -111,6 +113,18 @@ public class CustomerSourceRecordPO implements Serializable {
 
 		setCsid(csid);
 		setCcid(ccid);
+		setType(type);
+		setOperater(operater);
+
+		setOperatTime(new Timestamp(System.currentTimeMillis()));
+
+		setComment(comment);
+
+		return this;
+	}
+
+	public CustomerSourceRecordPO init(String comment, Short type, UserPO operater) {
+
 		setType(type);
 		setOperater(operater);
 

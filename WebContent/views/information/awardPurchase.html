@@ -1,5 +1,5 @@
-<div id="awardPurchase">
-    <div class="row">
+<div id="awardPurchase" style="display: none;">
+    <div class="row"  id="pageing">
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
             <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
@@ -128,9 +128,17 @@
             </div>
         </div>
     </div>
-
 </div>
 
+<div id="detailPopUp" style="display: none;">
+    <div class="row">
+        <div class="col-xs-12" id="fl-statement">
+        	<div id="listp" style="margin-left:10px"></div>
+        	<hr />
+            <div id="list" style="margin-left:10px"></div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $.loadScript(['js/information/awardPurchase.js']);

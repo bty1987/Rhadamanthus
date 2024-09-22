@@ -10,10 +10,12 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerDeptRuleDao extends Dao<CustomerDeptRulePO> {
 
-	public List<CustomerDeptRulePO> pageCustomerDeptRule(Paging paging, List<Filter> filters) throws FLException;
+	public List<CustomerDeptRulePO> pageCustomerDeptRule(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public CustomerDeptRulePO queryCustomerDeptRule(Integer did);
+	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did);
 
-	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did, Short type);
+	public CustomerDeptRulePO queryCustomerDeptRule(Integer did, Long dbid);
+
+	public List<CustomerDeptRulePO> queryCustomerDeptRule(Integer did, Short type, Long dbid);
 
 }

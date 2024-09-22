@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerSourceDao extends Dao<CustomerSourcePO> {
 
-	public List<CustomerSourcePO> pageCustomerSource(Paging paging, List<Filter> filters);
+	public List<CustomerSourcePO> pageCustomerSource(Paging paging, List<Filter> filters, int company);
 
 	public CustomerSourcePO queryCustomerSource(String phone);
 

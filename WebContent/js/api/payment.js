@@ -112,6 +112,14 @@ $.extend(api, {
         queryPaymentByOrderId: {
             url: "queryPaymentByOrderId.do"
         }, // 暂时没用到
+        queryPaymentByArid: {
+            url: "queryPaymentByArid.do",
+            type: "query",
+            tranargs: [{
+                result: "payment",
+                args: ["recharge", "balance", "realMoney", "cash", "bank", "checkv", "installment", "accounts", "transfer"]
+            }]
+        },
         queryPaymentByPaymentId: {
             url: "queryPaymentByPaymentId.do",
             type: "query",
@@ -178,7 +186,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "decorationPayments",
-                args: ["referMoney"]
+                args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
             }]
         },
         queryDecoraionReceiptByDrId: {

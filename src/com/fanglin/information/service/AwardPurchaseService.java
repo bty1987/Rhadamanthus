@@ -11,6 +11,8 @@ public interface AwardPurchaseService {
 
 	public void pageAwardPurchase(Paging paging, List<Filter> filters, AwardPurchaseVO awardPurchase, int company);
 
+	public List<AwardPurchaseVO> queryAwardPurchaseByFapid(AwardPurchaseVO awardPurchase) throws FLException;
+
 	public void addAwardPurchase(AwardPurchaseVO awardPurchaseVO, String userId, int company) throws FLException;
 
 	public void purchaseAwardPurchase(AwardPurchaseVO awardPurchase, String userId) throws FLException;

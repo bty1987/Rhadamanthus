@@ -20,13 +20,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "有效"
-            }, {
-                key: "1",
-                value: "无效"
-            }],
+            listPath: constant.balance().balanceAccount.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -51,13 +45,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "支出"
-            }, {
-                key: "1",
-                value: "收款"
-            }],
+            listPath: constant.balance().balance.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -73,13 +61,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "初始"
-            }, {
-                key: "1",
-                value: "完结"
-            }],
+            listPath: constant.balance().balance.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -95,13 +77,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "未付"
-            }, {
-                key: "1",
-                value: "已付"
-            }],
+            listPath: constant.balance().balance.isPay.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -221,13 +197,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "有效"
-            }, {
-                key: "1",
-                value: "失效"
-            }],
+            listPath: constant.balance().balanceDccount.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -252,13 +222,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "支出"
-            }, {
-                key: "1",
-                value: "收款"
-            }],
+            listPath: constant.balance().balance.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -274,13 +238,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "初始"
-            }, {
-                key: "1",
-                value: "完结"
-            }],
+            listPath: constant.balance().balance.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -312,13 +270,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "未付"
-            }, {
-                key: "1",
-                value: "已付"
-            }],
+            listPath: constant.balance().balance.isPay.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -343,13 +295,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "支出"
-            }, {
-                key: "1",
-                value: "收款"
-            }],
+            listPath: constant.balance().balance.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -365,13 +311,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "初始"
-            }, {
-                key: "1",
-                value: "完结"
-            }],
+            listPath: constant.balance().balance.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -387,13 +327,7 @@ Condition.addupRule("balance", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{
-                key: "0",
-                value: "未付"
-            }, {
-                key: "1",
-                value: "已付"
-            }],
+            listPath: constant.balance().balance.isPay.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -415,4 +349,61 @@ Condition.addupRule("balance", {
             valuePath: "name",
         }
     },
+    "balanceOales-balance-no": {
+        label: "结算单号",
+        type: "text",
+        submitConfig: {
+            name: "balanceNo",
+            op: "cn",
+            validate: null
+        }
+    },
+    "balanceOales-balance-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "balanceType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.balance().balance.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceOales-balance-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "balanceStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.balance().balance.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "balanceOales-balance-isPay": {
+        label: "付款标识",
+        type: "select",
+        submitConfig: {
+            name: "balanceIsPay",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.balance().balance.isPay.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
 });

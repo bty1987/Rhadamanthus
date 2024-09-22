@@ -12,17 +12,17 @@ import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.utils.Paging;
 
 @Repository("customerSourceRecordDao")
-public class CustomerSourceRecordDaoImpl extends DaoImpl<CustomerSourceRecordPO> implements CustomerSourceRecordDao{
+public class CustomerSourceRecordDaoImpl extends DaoImpl<CustomerSourceRecordPO> implements CustomerSourceRecordDao {
 
 	public CustomerSourceRecordDaoImpl() {
 		super(CustomerSourceRecordPO.class);
 	}
 
 	@Override
-	public List<CustomerSourceRecordPO> pageCustomerSourceRecord(Paging paging, List<Filter> filters, Long csid){
+	public List<CustomerSourceRecordPO> pageCustomerSourceRecord(Paging paging, List<Filter> filters, Long csid) {
 
 		PagingQuery<CustomerSourceRecordPO> query = pagingQuery(paging, CustomerSourceRecordPO.class);
-		
+
 		if (csid != null) {
 			query.add(Restrictions.eq("csid", csid));
 		}
@@ -40,8 +40,7 @@ public class CustomerSourceRecordDaoImpl extends DaoImpl<CustomerSourceRecordPO>
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 
@@ -51,6 +50,8 @@ public class CustomerSourceRecordDaoImpl extends DaoImpl<CustomerSourceRecordPO>
 
 			if ("csrid".equals(field)) {
 				query.add(query.getCriterion("csrid", data, op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.parseShort(data), op));
 			}
 		}
 	}

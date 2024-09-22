@@ -23,9 +23,11 @@ public class OalesPayDaoImpl extends DaoImpl<OalesPayPO> implements OalesPayDao 
 	}
 
 	@Override
-	public List<OalesPayOO> pageOalesPay(Paging paging, List<Filter> filters) throws FLException {
+	public List<OalesPayOO> pageOalesPay(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<OalesPayOO> query = pagingQuery(paging, OalesPayOO.class);
+
+		query.add(query.getCriterion(OalesPayOO.COLUMN_COMPANY_STR, company, "eq"));
 
 		queryFilterExecute(query, filters);
 

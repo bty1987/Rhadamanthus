@@ -33,12 +33,16 @@ public class CompanyDaoImpl extends DaoImpl<CompanyPO> implements CompanyDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CompanyPO> queryCompany(Short atttype) {
+	public List<CompanyPO> queryCompany(Short atttype, String code) {
 
 		Criteria query = session().createCriteria(CompanyPO.class);
 
 		if (atttype != null) {
 			query.add(Restrictions.eq("atttype", atttype));
+		}
+
+		if (code != null) {
+			query.add(Restrictions.eq("code", code));
 		}
 
 		query.add(Restrictions.eq(CompanyPO.COLUMN_STATUS_STR, CompanyPO.STATUS_ENABLE_INT));

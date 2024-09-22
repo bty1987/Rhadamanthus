@@ -47,6 +47,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
@@ -76,6 +77,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private MessageService messageService;
 
 	@Autowired
+	private com.fanglin.dingding.service.MessageService messageDDService;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
@@ -94,7 +98,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private SystemConfigDao systemConfigDao;
 
 	@Override
-	public void pageCustomerSource(Paging paging, List<Filter> filters, CustomerSourceVO customerSource) {
+	public void pageCustomerSource(Paging paging, List<Filter> filters, CustomerSourceVO customerSource, int company) {
 
 		if (customerSource.getCreater() != null && customerSource.getCreater().getUserId() != null) {
 			filters.add(new Filter("user.userId", customerSource.getCreater().getUserId(), "eq"));
@@ -108,7 +112,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			filters.add(new Filter("user.dept", customerSource.getCreater().getDept().getNo(), "eq"));
 		}
 
-		List<CustomerSourcePO> customerSourcePOs = customerSourceDao.pageCustomerSource(paging, filters);
+		List<CustomerSourcePO> customerSourcePOs = customerSourceDao.pageCustomerSource(paging, filters, company);
 		List<CustomerSourceVO> customerSourceVOs = new ArrayList<CustomerSourceVO>();
 
 		for (CustomerSourcePO customerSourcePO : customerSourcePOs) {
@@ -132,20 +136,20 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
-		return customerSourcePO.ptv(customerSourceVO);
+		customerSourcePO.ptv(customerSourceVO);
+
+		if (customerSourcePO.getCustomer() != null) {
+			customerSourceVO.setPhone(customerSourcePO.getCustomer().getPhone());
+		}
+
+		return customerSourceVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId) throws FLException {
+	public void addCustomerSource(CustomerSourceVO customerSourceVO, String userId, int company) throws FLException {
 
-		CustomerSourcePO customerSourcePO = customerSourceDao.queryCustomerSource(customerSourceVO.getPhone());
-
-		if (customerSourcePO != null && DateUtil.diffDay(customerSourcePO.getCreateTime(), DateUtil.getDateToTimestamp(new Date())) < 1) {
-			throw new FLException(330073, "客户资源保护中");
-		}
-
-		customerSourcePO = new CustomerSourcePO();
+		CustomerSourcePO customerSourcePO = new CustomerSourcePO();
 
 		CustomerPO customerPO = null;
 
@@ -161,7 +165,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		VillagePO villagePO = null;
 
 		if (customerSourceVO.getVillage() != null) {
-			villagePO = villageDao.get(customerSourceVO.getVillage().getVid());
+			villagePO = villageDao.get(customerSourceVO.getVillage().getNo());
 		}
 
 		if (villagePO != null) {
@@ -187,6 +191,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerSourcePO.setCreater(userPO);
 		customerSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_INIT_INT);
+		customerSourcePO.setCompany(company);
 
 		customerSourceDao.save(customerSourcePO);
 
@@ -225,7 +230,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		VillagePO villagePO = null;
 
 		if (customerSourceVO.getVillage() != null) {
-			villagePO = villageDao.get(customerSourceVO.getVillage().getVid());
+			villagePO = villageDao.get(customerSourceVO.getVillage().getNo());
 		}
 
 		if (villagePO != null) {
@@ -337,7 +342,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		VillagePO villagePO = null;
 
 		if (customerSourceVO.getVillage() != null) {
-			villagePO = villageDao.get(customerSourceVO.getVillage().getVid());
+			villagePO = villageDao.get(customerSourceVO.getVillage().getNo());
 		}
 
 		if (villagePO != null) {
@@ -392,7 +397,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerChancePO.setIssueTime(DateUtil.getDateToTimestamp(new Date()));
 		customerChancePO.setStatus(CustomerChancePO.STATUS_INIT_INT);
 
-		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerSourcePO.getCreater().getDept().getDid());
+		customerChancePO.setCreater(issuer);
+		customerChancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerSourcePO.getCreater().getDept().getDid(), customerChanceVO.getBusitype().getDbid());
 
 		if (customerDeptRulePO == null) {
 
@@ -427,6 +435,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerUserRulePO.setSurplus(customerUserRulePO.getSurplus() - 1000);
+			customerUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			customerUserRuleDao.update(customerUserRulePO);
 
@@ -446,17 +455,18 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_AUTO_INT);
-			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
 			customerChancePO.setBusitype(busitype);
 
 			customerChanceDao.save(customerChancePO);
 
+			customerChanceVO.setCcid(customerChancePO.getCcid());
+
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), customerUserRulePO.getChance(), customerUserRulePO.getSurplus(), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
-			messageService.sendMessage(customerChancePO.getBelonger().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
+			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
-			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
-			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			return;
 		}
@@ -474,6 +484,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setCompany(company);
 
 			customerChanceDao.save(customerChancePO);
+
+			customerChanceVO.setCcid(customerChancePO.getCcid());
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动分区分配,分区:%s(%s)", customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
@@ -500,6 +512,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceDao.save(customerChancePO);
 
+			customerChanceVO.setCcid(customerChancePO.getCcid());
+
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动部门分配,部门:%s(%s),分区:%s(%s)", customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
 			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
@@ -521,7 +535,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_USER_INT);
-			customerChancePO.setStatus(CustomerChancePO.STATUS_ISSUE_INT);
 			customerChancePO.setBelonger(belonger);
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
@@ -533,12 +546,14 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceDao.save(customerChancePO);
 
+			customerChanceVO.setCcid(customerChancePO.getCcid());
+
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动人员分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
-			messageService.sendMessage(customerChancePO.getBelonger().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
+			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
-			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
-			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			return;
 		}

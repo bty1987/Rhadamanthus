@@ -409,6 +409,7 @@ $(function() {
         accountBasic.taxDiscount = quotation.taxDiscount;
         accountBasic.discount = quotation.discount;
         accountBasic.quoManageRate = quotation.manageRate;
+        accountBasic.totalPrice = quotation.totalPrice;
 
         accountBasic.foldFrontTotal = Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.managePrice + accountBasic.taxPrice);
         accountBasic.foldFrontFee = Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice);
@@ -417,7 +418,7 @@ $(function() {
             decorationDetail.basicsItems.name.html("报价(" + quotation.version.name + ")");
         }
 
-        decorationDetail.basicsItems.foldFrontTotalPrice.html(accountBasic.taxPrice);
+        decorationDetail.basicsItems.foldFrontTotalPrice.html(accountBasic.totalPrice);
         decorationDetail.basicsItems.foldFrontTotal.html(accountBasic.foldFrontTotal);
         decorationDetail.basicsItems.foldFrontFee.html(accountBasic.foldFrontFee);
 
@@ -768,6 +769,17 @@ $(function() {
         accountBasic.internalCoupon = decorationDetail.items.internalCoupon.val() ? decorationDetail.items.internalCoupon.val() : 0;
         accountBasic.fulldel = decorationDetail.items.fulldel.val() ? decorationDetail.items.fulldel.val() : 0;
         accountBasic.cashback = decorationDetail.items.cashback.val() ? decorationDetail.items.cashback.val() : 0;
+        accountBasic.oalesOutput = com.focusPage('input[id="oalesOutput"]:checked').val();
+        accountBasic.printConf = {
+            "oalesOutput": com.focusPage('input[id="oalesOutput"]:checked').val(),
+            "accountOutput": com.focusPage('input[id="accountOutput"]:checked').val(),
+            "contractOutput": com.focusPage('input[id="contractOutput"]:checked').val(),
+            "protationOutput": com.focusPage('input[id="protationOutput"]:checked').val(),
+            "addOutput": com.focusPage('input[id="addOutput"]:checked').val(),
+            "signFactOutput": com.focusPage('input[id="signFactOutput"]:checked').val(),
+            "materialOutput": com.focusPage('input[id="materialOutput"]:checked').val(),
+            "addReduceOutput": com.focusPage('input[id="addReduceOutput"]:checked').val(),
+        };
 
         params.decoration.decoration = decoration;
         params.decoration.accountBasic = accountBasic;
@@ -918,9 +930,11 @@ $(function() {
                 if ([3].indexOf(v.schedule) == -1) // 工程状态验证
                     return true;
 
-                var managePrice = v.manageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(v.accountDiscount, 10)) : v.managePrice;
-                var taxPrice = v.taxDiscount == 1 ? v.manageDiscount == 1 ? utils.accMul(v.taxPrice, utils.accDiv(v.accountDiscount, 10)) : v.taxPrice : v.taxDiscount == 2 ? v.taxPrice : 0;
-                var totalPrice = utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.calPrice, utils.accDiv(v.accountDiscount, 10)), v.uncalPrice), managePrice), taxPrice);
+                var accountDiscount = v.accountDiscount == 0 ? (v.discount == 0 ? accountBasic.discount : v.discount) : v.accountDiscount;
+
+                var managePrice = v.manageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(accountDiscount, 10)) : v.managePrice;
+                var taxPrice = v.manageDiscount == 1 ? utils.accMul(v.taxPrice, utils.accDiv(accountDiscount, 10)) : v.taxPrice;
+                var totalPrice = utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.calPrice, utils.accDiv(accountDiscount, 10)), v.uncalPrice), managePrice), taxPrice);
 
                 if (v.type == 0) { // 增项
 
@@ -1099,13 +1113,13 @@ $(function() {
 
     function accountSuper() {
 
-        // 决算直接费(算配比) = 打折总额 + 不打折总额 + 车运费 + 管理费 + 增项配比总额 - 减项配比总额 + 增项管理费 - 减项管理费
+        // 决算直接费(算配比) = 打折总额 + 不打折总额 + 车运费 + 增项配比总额 - 减项配比总额
         //
-        // 决算直接费(非配比) = 打折总额 + 不打折总额 + 车运费 + 管理费
+        // 决算直接费(非配比) = 打折总额 + 不打折总额 + 车运费
         //
-        // 决算折前总额(算配比) = 打折总额 + 不打折总额 + 车运费 + 增项配比总额 - 减项配比总额
+        // 决算折前总额(算配比) = 打折总额 + 不打折总额 + 车运费 + 管理费 + 增项配比总额 - 减项配比总额 + 增项管理费 - 减项管理费 + 增项税金 - 减项税金
         //
-        // 决算折前总额(非配比) = 打折总额 + 不打折总额 + 车运费
+        // 决算折前总额(非配比) = 打折总额 + 不打折总额 + 车运费 + 管理费
         //
         // 决算管理费(算配比) = 管理费 + 增项管理费 - 减项管理费
         //
@@ -1134,6 +1148,7 @@ $(function() {
         var flag = accountBasic.cal ? 1 : 0;
 
         beforeTotal = accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
+        console.log(beforeTotal + "=" + accountBasic.undisPrice + "+" + accountBasic.disPrice + "+" + accountBasic.trafficPrice + "+" + (accountBasic.addCalPrice * flag) + "-" + (accountBasic.reduceCalPrice * flag));
 
         _managePrice = accountBasic.managePrice * (accountBasic.manageDiscount == 1 ? accountBasic.discount / 10 : 1);
 
@@ -1147,10 +1162,12 @@ $(function() {
 
         if ([0, 1].indexOf(accountBasic.type) != -1) { // 半包/整装
             contartval = accountBasic.disPrice * accountBasic.dd / 10 + accountBasic.undisPrice + accountBasic.trafficPrice + _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag + _taxPrice + accountBasic.addTaxPrice * flag - accountBasic.reduceTaxPrice * flag;
+            console.log(contartval + "=" + accountBasic.disPrice + "*(" + accountBasic.dd + "/" + 10 + ")+" + accountBasic.undisPrice + "+" + accountBasic.trafficPrice + "+" + _managePrice + "+" + (accountBasic.addManagePrice * flag) + "-" + (accountBasic.reduceManagePrice * flag) + "+" + _taxPrice + "+" + (accountBasic.addTaxPrice * flag) + "-" + (accountBasic.reduceTaxPrice * flag));
         }
 
         if (accountBasic.type == 2) { // 满减
             contartval = (beforeTotal - (beforeTotal) % accountBasic.base) * (accountBasic.discount / 10) + (beforeTotal) % accountBasic.base + _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag + _taxPrice + accountBasic.addTaxPrice * flag - accountBasic.reduceTaxPrice * flag;
+            console.log(contartval + "=(" + (beforeTotal + "-" + (beforeTotal) + "%" + accountBasic.base) + ")*(" + (accountBasic.discount + "/" + 10) + ")+(" + (beforeTotal) + "%" + accountBasic.base + ")+" + _managePrice + "+" + (accountBasic.addManagePrice * flag) + "-" + (accountBasic.reduceManagePrice * flag) + "+" + _taxPrice + "+" + (accountBasic.addTaxPrice * flag) + "-" + (accountBasic.reduceTaxPrice * flag));
         }
 
         service = (beforeTotal + accountBasic.managePrice + accountBasic.addPredisManagePrice * flag - accountBasic.reducePredisManagePrice * flag + accountBasic.taxPrice + accountBasic.addPredisTaxPrice * flag - accountBasic.reducePredisTaxPrice * flag) * accountBasic.material * accountBasic.service;
@@ -1162,6 +1179,8 @@ $(function() {
         taxment = Math.round(_taxPrice + accountBasic.addTaxPrice * flag - accountBasic.reduceTaxPrice * flag);
 
         sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.addTotalPrice * flag + accountBasic.reduceTotalPrice * flag + accountBasic.addUncalPrice * flag - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
+
+        console.log(sub + "=" + contartval + "+" + service + "-" + accountBasic.factPrice + "-" + accountBasic.servicePaidup + "-" + (accountBasic.addTotalPrice * flag) + "+" + (accountBasic.reduceTotalPrice * flag) + "+" + (accountBasic.addUncalPrice * flag) + "-" + decorationDetail.items.preferences.val() + "-" + decorationDetail.items.internalCoupon.val() + "-" + decorationDetail.items.fulldel.val() + "-" + decorationDetail.items.cashback.val());
 
         materialAccount = direct * accountBasic.material;
 

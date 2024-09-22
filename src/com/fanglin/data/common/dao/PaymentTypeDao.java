@@ -15,4 +15,6 @@ public interface PaymentTypeDao extends Dao<PaymentTypePO> {
 
 	public PaymentTypePO queryPaymentTypeByName(String name, int company);
 
+	public PaymentTypePO queryPaymentTypeByName(String name, Short type, Short paytype, Short bustype, Short atttype, int company);
+
 }

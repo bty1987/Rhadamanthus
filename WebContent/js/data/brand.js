@@ -4,9 +4,6 @@ jQuery(function($) {
 
         brand: null,
 
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
             saveDelivery: com.focusPage("#saveDelivery").on("click", saveDelivery),
@@ -66,7 +63,7 @@ jQuery(function($) {
     brand.modals.deliveryModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
-        com.focusPage("input[type='checkbox']").removeAttr("checked");
+        com.focusPage("input[type='checkbox']", "#deliveryModal").removeAttr("checked");
         // com.focusPage(":checked").prop("checked",false);
         com.closeTip();
     });

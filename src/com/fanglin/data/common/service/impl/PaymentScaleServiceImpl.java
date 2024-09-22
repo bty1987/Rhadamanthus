@@ -1,6 +1,7 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.fanglin.data.common.service.PaymentScaleService;
 import com.fanglin.data.common.vo.PaymentScaleVO;
 import com.fanglin.data.po.PaymentScalePO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.BeanUtil;
 
 @Service("paymentScaleService")
 @Transactional(readOnly = true)
@@ -24,17 +26,16 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 	@Override
 	public List<PaymentScaleVO> queryPaymentScale(PaymentScaleVO paymentScale, int company) throws FLException {
 
-		List<PaymentScalePO> paymentScalePOS = paymentScaleDao.queryPaymentScaleByCid(company);
+		List<PaymentScalePO> paymentScalePOS = paymentScaleDao.queryPaymentScaleByCid(company, paymentScale.getTypeness(), paymentScale.getAtttype());
 		List<PaymentScaleVO> paymentScaleVOS = new ArrayList<PaymentScaleVO>();
 
 		for (PaymentScalePO paymentScalePO : paymentScalePOS) {
 
 			PaymentScaleVO paymentScaleVO = new PaymentScaleVO();
+
+			BeanUtil.copyPropertie(paymentScalePO, paymentScaleVO, Arrays.asList("cid"));
+
 			paymentScaleVO.setCid(CompanyServiceImpl.encode(paymentScalePO.getCid()));
-			paymentScaleVO.setName(paymentScalePO.getName());
-			paymentScaleVO.setPsid(paymentScalePO.getPsid());
-			paymentScaleVO.setComment(paymentScalePO.getComment());
-			paymentScaleVO.setStatus(paymentScalePO.getStatus());
 
 			paymentScaleVOS.add(paymentScaleVO);
 		}
@@ -48,10 +49,9 @@ public class PaymentScaleServiceImpl implements PaymentScaleService {
 
 		PaymentScalePO paymentScalePO = new PaymentScalePO();
 
+		BeanUtil.copyPropertie(paymentScale, paymentScalePO, Arrays.asList("cid"));
+
 		paymentScalePO.setCid(company);
-		paymentScalePO.setName(paymentScale.getName());
-		paymentScalePO.setStatus(PaymentScalePO.STATUS_ENABLE_INT);
-		paymentScalePO.setComment(paymentScale.getComment());
 
 		paymentScaleDao.save(paymentScalePO);
 	}

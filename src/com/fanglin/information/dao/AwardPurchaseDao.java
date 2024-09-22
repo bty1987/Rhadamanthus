@@ -11,4 +11,6 @@ public interface AwardPurchaseDao extends Dao<AwardPurchasePO> {
 
 	public List<AwardPurchasePO> pageAwardPurchase(Paging paging, List<Filter> filters, int company);
 
+	public List<AwardPurchasePO> queryAwardPurchaseByFapid(Long fapid);
+
 }

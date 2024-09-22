@@ -31,7 +31,7 @@ public class OalesPayAction extends BaseListAction {
 	@Action(value = "pageOalesPay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageOalesPay() throws FLException {
 
-		oalesPayService.pageOalesPay(getPaging(), getFilters());
+		oalesPayService.pageOalesPay(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -47,7 +47,7 @@ public class OalesPayAction extends BaseListAction {
 	@Action(value = "addOalesPay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addOalesPay() throws FLException {
 
-		oalesPayService.addOalesPay(oalesPay, queryUserId());
+		oalesPayService.addOalesPay(oalesPay, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

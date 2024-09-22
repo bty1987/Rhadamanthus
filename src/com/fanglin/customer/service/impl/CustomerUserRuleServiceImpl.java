@@ -13,7 +13,9 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
+import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.CustomerUserRuleService;
 import com.fanglin.customer.vo.CustomerUserRuleVO;
@@ -32,6 +34,9 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private CustomerSourceRecordDao customerSourceRecordDao;
 
 	@Override
 	public void pageCustomerUserRule(Paging paging, List<Filter> filters, CustomerUserRuleVO customerUserRule, int company) {
@@ -59,6 +64,13 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Override
 	public CustomerUserRuleVO queryCustomerUserRule(CustomerUserRuleVO customerUserRule) throws FLException {
+
+		if (customerUserRule.getUser() != null && customerUserRule.getUser().getUserId() != null) {
+
+			UserPO userPO = userDao.queryUserByUserId(customerUserRule.getUser().getUserId());
+
+			if (userPO != null) customerUserRule.getUser().setUid(userPO.getUid());
+		}
 
 		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(customerUserRule.getUser().getUid());
 
@@ -99,44 +111,57 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCustomerUserRule(CustomerUserRuleVO customerUserRule) throws FLException {
+	public void updateCustomerUserRule(CustomerUserRuleVO customerUserRuleVO, String userId) throws FLException {
 
-		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRule.getCurid());
+		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRuleVO.getCurid());
 
 		if (customerUserRulePO == null) {
 			throw new FLException(330081, "无匹配规则");
 		}
 
-		BeanUtil.copyProperties(customerUserRule, customerUserRulePO, Arrays.asList("user", "creater"));
+		int chance = customerUserRulePO.getChance();
+		int surplus = customerUserRulePO.getSurplus();
+
+		BeanUtil.copyProperties(customerUserRuleVO, customerUserRulePO, Arrays.asList("user", "creater"));
 
 		customerUserRuleDao.update(customerUserRulePO);
+
+		UserPO issuer = userDao.queryUserByUserId(userId);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(String.format("更新人员规则,归属:%s(%s),原机会数:%s,原剩余数:%s,现机会数:%s,现剩余数:%s", customerUserRulePO.getUser().getCurrentName(), customerUserRulePO.getUser().getUserId(), chance, customerUserRuleVO.getChance(), surplus, customerUserRuleVO.getSurplus()), CustomerSourceRecordPO.TYPE_USER_RULE_INT, issuer));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCustomerUserRuleForStatus(CustomerUserRuleVO customerUserRule) throws FLException {
+	public void updateCustomerUserRuleForStatus(CustomerUserRuleVO customerUserRuleVO, String userId) throws FLException {
 
-		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRule.getCurid());
+		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRuleVO.getCurid());
 
 		if (customerUserRulePO == null) {
 			throw new FLException(330081, "无匹配规则");
 		}
 
-		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_DISABLE_INT) {
+		short status = customerUserRulePO.getStatus();
+
+		if (status == CustomerUserRulePO.STATUS_DISABLE_INT) {
 			throw new FLException(330082, "规则不可操作");
 		}
 
-		if (customerUserRulePO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT && customerUserRule.getStatus() < customerUserRulePO.getStatus()) {
+		if (status != CustomerUserRulePO.STATUS_ENABLE_INT && status < customerUserRulePO.getStatus()) {
 			throw new FLException(330082, "规则不可操作");
 		}
 
-		if (customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_ENABLE_INT) {
-			customerUserRulePO.setStatus(customerUserRule.getStatus());
+		if (status == CustomerUserRulePO.STATUS_ENABLE_INT) {
+			customerUserRulePO.setStatus(customerUserRuleVO.getStatus());
 		} else {
 			customerUserRulePO.setStatus(CustomerUserRulePO.STATUS_ENABLE_INT);
 		}
 
 		customerUserRuleDao.update(customerUserRulePO);
+
+		UserPO issuer = userDao.queryUserByUserId(userId);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(String.format("更新人员规则,归属:%s(%s),原状态:%s,现状态:%s", customerUserRulePO.getUser().getCurrentName(), customerUserRulePO.getUser().getUserId(), status, customerUserRulePO.getStatus()), CustomerSourceRecordPO.TYPE_USER_RULE_INT, issuer));
 	}
 
 	@Override

@@ -247,8 +247,6 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			if (balanceSelectionItemPO == null) continue;
 
-			balanceSelectionItemDao.deleteById(balanceSelectionItemVO.getBsiid());
-
 			SelectionItemPD selectionItemPD = balanceSelectionItemPO.getSelectionItem();
 
 			if (selectionItemPD == null) continue;
@@ -258,6 +256,8 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 			selectionItemPD.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_INIT_INT);
 
 			selectionItemDao.update(selectionItemPD);
+
+			balanceSelectionItemDao.delete(balanceSelectionItemPO);
 		}
 
 		balanceSelectionItemDao.flush();
@@ -371,7 +371,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, balanceSelectionPO.getCompany());
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, balanceSelectionPO.getCompany());
 
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 

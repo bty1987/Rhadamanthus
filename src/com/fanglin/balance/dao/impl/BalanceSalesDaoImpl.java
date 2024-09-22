@@ -37,11 +37,13 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, Short status, int company) {
 
 		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
 
 		query.add(Restrictions.eq("company", company));
+
+		if (status != null) query.add(Restrictions.eq("status", status));
 
 		queryFilterExcute(query, filters);
 

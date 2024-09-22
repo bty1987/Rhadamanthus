@@ -27,6 +27,8 @@ public class CustomerDeptRulePO implements Serializable {
 
 	public static final String COLUMN_NAME_STR = "name";
 
+	public static final String COLUMN_COMPANY_STR = "company";
+
 	public static final short TYPE_DEPT_INT = 2;
 
 	public static final short TYPE_RULE_INT = 1;

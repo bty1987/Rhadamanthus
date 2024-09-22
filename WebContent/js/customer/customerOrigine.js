@@ -367,7 +367,7 @@ $(function() {
                     render: "canvas",
                     width: 150,
                     height: 150,
-                    text: " http://fanglin.vip/wx/customersource?csid=" + v.csid
+                    text: "http://fanglin.vip/wx/origine?csid=" + v.csid
                 });
 
                 customerOrigine.modals.codeModal.modal('show');

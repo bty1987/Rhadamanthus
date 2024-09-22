@@ -344,6 +344,22 @@ Condition.addupRule("inventory", {
             validate: null
         }
     },
+    "goods-status": {
+        label: "商品状态",
+        type: "select",
+        submitConfig: {
+            name: "goods.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().common.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "storehouse-name": {
         label: "仓库名",
         type: "text",
@@ -351,6 +367,22 @@ Condition.addupRule("inventory", {
             name: "name",
             op: "cn",
             validate: null
+        }
+    },
+    "storehouse-status": {
+        label: "仓库状态",
+        type: "select",
+        submitConfig: {
+            name: "storehouse.status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.inventory().storehouse.status.datas,
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "goods-goodsName": {

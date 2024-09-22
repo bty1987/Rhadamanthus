@@ -3,7 +3,9 @@ package com.fanglin.dingding.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.dingding.bean.DingMessage;
 import com.fanglin.dingding.bean.LinkMessage;
 import com.fanglin.dingding.bean.OAMessage;
 import com.fanglin.dingding.bean.TextMessage;
@@ -78,13 +81,66 @@ public class MessageService {
 		JSONObject json = HttpHelper.httpPost(url, oa.delivery(deliverValue.getValue(), receiveId, ""));
 
 		if (json == null) {
-			throw new FLException(270007, "发送消息失败");
+			LogUtils.logging(logger, url, company, receiveId);
+			// throw new FLException(270007, "发送消息失败");
 		} else if (json.getInteger("errcode") != 0) {
 			LogUtils.logging(logger, url, json.getInteger("errcode"), json.getString("errmsg"));
 			// throw new FLException(json.getInteger("errcode"), json.getString("errmsg"));
 		}
 
 		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");
+	}
+
+	public int sendDing(String receiveId, String contents, int company) throws FLException {
+
+		SystemConfigPO dingAgentId = systemConfigDao.querySystemConfig("dingAgentId", company);
+
+		if (dingAgentId == null) {
+			return -1;
+		}
+
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+
+		if (accessToken == null) {
+			return -1;
+		}
+
+		String url = String.format(DDApi.DDAPI_DING_SEND_STR, "https://api.dingtalk.com", accessToken);
+
+		Map<String, String> headers = new HashMap<String, String>();
+
+		headers.put("x-acs-dingtalk-access-token", accessToken);
+
+		DingMessage ding = new DingMessage();
+
+		JSONObject json = HttpHelper.httpPost(url, headers, ding.phone(dingAgentId.getValue(), receiveId, contents));
+
+		if (json == null) {
+			LogUtils.logging(logger, url, company, receiveId);
+			// throw new FLException(270007, "发送消息失败");
+		} else {
+			System.out.println(json.toJSONString());
+		}
+
+		return MessagePO.DRESULT_SUCCESS_INT;
+	}
+
+	public static void main(String[] args) {
+
+		String accessToken = "9905a93cf0ff38d8aeacd988f85cd9f6";
+
+		String url = String.format(DDApi.DDAPI_DING_SEND_STR, "https://api.dingtalk.com");
+
+		Map<String, String> headers = new HashMap<String, String>();
+
+		headers.put("x-acs-dingtalk-access-token", accessToken);
+
+		DingMessage ding = new DingMessage();
+
+		JSONObject json = HttpHelper.httpPost(url, headers, ding.phone("dingonatbwxggsycm8go", "FL-00083", "test"));
+
+		System.out.println(json);
+
 	}
 
 	public int sendMessage(int type, String name, String orderId, float money, String comment) {
@@ -193,7 +249,7 @@ public class MessageService {
 		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");
 	}
 
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 
 		String url = String.format(WXApi.WXAPI_SEND_MESSAGE_SERVICE_SCHEDULE_STR, "http://localhost/");
 

@@ -12,6 +12,8 @@ public interface OalesDao extends Dao<OalesPO> {
 
 	public List<OalesPO> pageOales(Paging paging, List<Filter> filters, List<Short> statuses, int company) throws FLException;
 
+	public List<OalesPO> pageOalesForAccount(Paging paging, List<Filter> filters, int company) throws FLException;
+
 	public List<OalesPO> queryOalesByOrderId(String orderId);
 
 	public Long amountOales(String orderId);

@@ -79,9 +79,10 @@ $(function() {
         var caption = $('<caption style="line-height: 65px;font-size:20px;">供应商对账单</caption>').appendTo(table);
 
         var tr1 = $('<tr style="font-size: 7px;"></tr>').appendTo(table);
-        var td1 = $('<td colspan="4" style="border: 1px solid;"></td>').text("供应商名称：" + brand.name).appendTo(tr1);
+        var td1 = $('<td colspan="3" style="border: 1px solid;"></td>').text("供应商名称：" + brand.name).appendTo(tr1);
         var td2 = $('<td colspan="3" style="border: 1px solid;"></td>').text("负责对账员：" + creater.userName).appendTo(tr1);
-        var td3 = $('<td colspan="5" style="border: 1px solid;"></td>').text("单号：" + balanceSales.name).appendTo(tr1);
+        var td3 = $('<td colspan="3" style="border: 1px solid;"></td>').text("单号：" + balanceSales.name).appendTo(tr1);
+        var td3 = $('<td colspan="3" style="border: 1px solid;"></td>').text("公司名称：" + params.company.name).appendTo(tr1);
         var tr2 = $('<tr colspan="11" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
         var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);

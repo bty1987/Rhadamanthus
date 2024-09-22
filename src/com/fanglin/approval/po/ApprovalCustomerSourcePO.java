@@ -24,6 +24,8 @@ public class ApprovalCustomerSourcePO implements Serializable {
 
 	private long ccid;
 
+	private long cid;
+
 	private long hid;
 
 	private long dbid;
@@ -66,6 +68,15 @@ public class ApprovalCustomerSourcePO implements Serializable {
 
 	public void setCcid(long ccid) {
 		this.ccid = ccid;
+	}
+
+	@Column(name = "cid")
+	public long getCid() {
+		return cid;
+	}
+
+	public void setCid(long cid) {
+		this.cid = cid;
 	}
 
 	@Column(name = "hid")

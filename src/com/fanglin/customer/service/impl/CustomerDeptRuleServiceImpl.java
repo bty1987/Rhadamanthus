@@ -45,9 +45,9 @@ public class CustomerDeptRuleServiceImpl implements CustomerDeptRuleService {
 	private DecorationBusitypeDao decorationBusitypeDao;
 
 	@Override
-	public void pageCustomerDeptRule(Paging paging, List<Filter> filters) throws FLException {
+	public void pageCustomerDeptRule(Paging paging, List<Filter> filters, int company) throws FLException {
 
-		List<CustomerDeptRulePO> customerDeptRulePOs = customerDeptRuleDao.pageCustomerDeptRule(paging, filters);
+		List<CustomerDeptRulePO> customerDeptRulePOs = customerDeptRuleDao.pageCustomerDeptRule(paging, filters, company);
 		List<CustomerDeptRuleVO> customerDeptRuleVOs = new ArrayList<CustomerDeptRuleVO>();
 
 		for (CustomerDeptRulePO customerDeptRulePO : customerDeptRulePOs) {
@@ -61,9 +61,25 @@ public class CustomerDeptRuleServiceImpl implements CustomerDeptRuleService {
 	}
 
 	@Override
-	public CustomerDeptRuleVO queryCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO) throws FLException {
+	public List<CustomerDeptRuleVO> queryCustomerDeptRuleByDid(CustomerDeptRuleVO customerDeptRuleVO) throws FLException {
 
-		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerDeptRuleVO.getDepartment().getDid());
+		List<CustomerDeptRulePO> customerDeptRulePOs = customerDeptRuleDao.queryCustomerDeptRule(customerDeptRuleVO.getDepartment().getDid());
+		List<CustomerDeptRuleVO> customerDeptRuleVOs = new ArrayList<CustomerDeptRuleVO>();
+
+		for (CustomerDeptRulePO customerDeptRulePO : customerDeptRulePOs) {
+
+			customerDeptRuleVO = new CustomerDeptRuleVO(new UserBaseVO(), new DepartmentVO(), new DecorationBusitypeVO());
+
+			customerDeptRuleVOs.add(customerDeptRulePO.ptv(customerDeptRuleVO));
+		}
+
+		return customerDeptRuleVOs;
+	}
+
+	@Override
+	public CustomerDeptRuleVO queryCustomerDeptRuleByDbid(CustomerDeptRuleVO customerDeptRuleVO) throws FLException {
+
+		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerDeptRuleVO.getDepartment().getDid(), customerDeptRuleVO.getBusitype().getDbid());
 
 		customerDeptRuleVO.setCreater(new UserBaseVO());
 
@@ -76,11 +92,11 @@ public class CustomerDeptRuleServiceImpl implements CustomerDeptRuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO, String userId) throws FLException {
+	public void addCustomerDeptRule(CustomerDeptRuleVO customerDeptRuleVO, String userId, int company) throws FLException {
 
-		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerDeptRuleVO.getDepartment().getDid());
+		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerDeptRuleVO.getDepartment().getDid(), customerDeptRuleVO.getBusitype().getDbid());
 
-		if (customerDeptRulePO != null) {
+		if (customerDeptRulePO != null && customerDeptRulePO.getBusitype().getName() != null) {
 			throw new FLException(330080, "规则已存在");
 		}
 
@@ -107,6 +123,8 @@ public class CustomerDeptRuleServiceImpl implements CustomerDeptRuleService {
 		customerDeptRulePO.setName(departmentPO.getName());
 
 		customerDeptRulePO.setCreater(creater);
+		customerDeptRulePO.setCompany(company);
+
 		customerDeptRulePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		customerDeptRulePO.setDepartment(departmentPO);
 		customerDeptRulePO.setBusitype(decorationBusitypePO);

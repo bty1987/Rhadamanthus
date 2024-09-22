@@ -98,6 +98,8 @@ public class QuotationItemDaoImpl extends DaoImpl<QuotationItemPO> implements Qu
 			} else if ("company".equals(field)) {
 				query.alias("quotationVersion", "quotationVersion");
 				query.add(query.getCriterion("quotationVersion.company", Integer.parseInt(data), op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.parseShort(data), op));
 			}
 		}
 	}

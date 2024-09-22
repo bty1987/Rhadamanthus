@@ -20,6 +20,7 @@ $(function() {
             name: com.focusPage("#name", "#customerSource"),
             gender: com.focusPage("#gender", "#customerSource"),
             phone: com.focusPage("#phone", "#customerSource"),
+            phone1: com.focusPage("#phone1", "#customerSource"),
             intention: com.focusPage("#intention", "#customerSource"),
             grade: com.focusPage("#grade", "#customerSource"),
             villageName: com.focusPage("#villageName", "#customerSource"),
@@ -41,6 +42,7 @@ $(function() {
             purpose: com.focusPage("#purpose", "#customerSource"),
             price: com.focusPage("#price", "#customerSource"),
 
+            busitype: com.focusPage("#busitype", "#issueCustomerChanceModal"),
             company: com.focusPage("#company", "#issueCustomerChanceModal"),
             region: com.focusPage("#region", "#issueCustomerChanceModal"),
             department: com.focusPage("#department", "#issueCustomerChanceModal"),
@@ -62,6 +64,7 @@ $(function() {
             rule: com.focusPage("#rule1", "#commitFirstApprove"),
             busitype: com.focusPage("#busitype", "#commitFirstApprove"),
             rate: com.focusPage("#rate", "#commitFirstApprove"),
+            phone: com.focusPage("#phone", "#commitFirstApprove")
         },
 
         updateHouseItems: {
@@ -78,14 +81,13 @@ $(function() {
         },
 
         source: null,
-        rule: null,
-        type: null,
-        grade: ["A", "B", "C", "D"],
-        currentCustomerSource: {},
-        customerDeptRule: {
+        rule: {
             "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
         },
-
+        
+        type: null,
+        grade: ["A", "B", "C", "D"],
+        
         depage: params['urlLoadParams'].depage,
     };
 
@@ -151,9 +153,20 @@ $(function() {
         });
     });
 
-    com.post(api.system.queryCompany, {}, function(res) {
+    com.post(api.system.queryCompany, {
+        "company.atttype": "1"
+    }, function(res) {
 
-        customerSource.items.company.bindData(res.companys, 'cid', 'name', true);
+        var $arr = [];
+
+        $.each(res.companys, function(intex, value) {
+
+            if (value.code == "210100") {
+                $arr.push(value);
+            }
+        });
+
+        customerSource.items.company.bindData($arr, 'cid', 'name', true);
     });
 
     com.post(api.communion.queryDepartment, {
@@ -200,7 +213,7 @@ $(function() {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('默认规则: ' + "手动")).appendTo($info);
     }
 
-    drawInfo();
+//    drawInfo();
 
     var searcher = new Searcher();
 
@@ -244,7 +257,11 @@ $(function() {
         field: "phone",
         name: "客户电话",
         prop: "phone",
-        clazz: "grey"
+        clazz: "grey",
+        show: function(v) {
+
+            return customerSource.depage == "user";
+        }
     }, {
         field: "purpose",
         name: "目的",
@@ -268,7 +285,10 @@ $(function() {
     }, {
         field: "village.name",
         name: "楼盘",
-        prop: "village.name",
+        prop: function(v) {
+
+            return v.village && v.village.name != null ? v.village.name + "-" + v.village.cityProper.name : "";
+        },
         clazz: "grey"
     }, {
         field: "houseNumber",
@@ -358,9 +378,17 @@ $(function() {
 
             customerSource.source = v;
 
+            if (v.village && v.village.vid) {
+                com.updateTypeahead(customerSource.updateHouseItems.villageName, v.village.no, v.village.name);
+            }
+
             customerSource.modals.updateForHouse.modal("show");
 
             return false;
+        },
+        show: function(v) {
+
+            return (v.status == 0 || v.status == 2) && customerSource.depage == "user";
         }
     }, {
         name: "更新",
@@ -370,12 +398,16 @@ $(function() {
             customerSource.type = "update";
             customerSource.source = v;
 
-            customerSource.items.villageName.val(v.village.name);
+            if (v.village && v.village.vid) {
+                com.updateTypeahead(customerSource.items.villageName, v.village.no, v.village.name);
+            }
+
             customerSource.items.gender.prop('checked', com.genderType[v.gender]);
             customerSource.items.comment.val(v.comment);
             customerSource.items.price.val(v.price);
             customerSource.items.intention.val(v.intention);
-            customerSource.items.phone.val(v.phone);
+            customerSource.items.phone.val(v.phone.substr(0, 3));
+            customerSource.items.phone1.val(v.phone.substr(7, 11));
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
 
@@ -385,14 +417,14 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 0 || v.status == 2;
+            return (v.status == 0 || v.status == 2) && customerSource.depage == "user";
         }
     }, {
         name: "初审",
         clazz: "btn-success",
         handle: function(v) {
 
-            customerSource.currentCustomerSource = v;
+            customerSource.source = v;
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
@@ -413,50 +445,52 @@ $(function() {
 
             customerSource.source = v;
 
-            var rule = customerSource.customerDeptRule;
-            var source = null;
+            com.focusPage(".company", "#issueCustomerChanceModal").hide();
+            com.focusPage(".belonger", "#issueCustomerChanceModal").hide();
+            com.focusPage(".department", "#issueCustomerChanceModal").hide();
+            com.focusPage(".region", "#issueCustomerChanceModal").hide();
 
-            com.post(api.customer.queryCustomerSource, {
-                "customerSource.csid": v.csid
+            com.cleanItems(customerSource.items);
+
+            com.focusPage(".busitype", "#issueCustomerChanceModal").show();
+
+            com.post(api.customer.queryCustomerDeptRuleByDid, {
+                "customerDeptRule.department.did": v.creater.dept.did,
             }, function(res) {
 
-                source = res.customerSource;
-            }, null, false);
+                if (!res.customerDeptRules || res.customerDeptRules.length == 0) {
 
-            if (!source)
-                return false;
+                    com.focusPage(".busitype", "#issueCustomerChanceModal").hide();
+                    com.focusPage(".belonger", "#issueCustomerChanceModal").show();
 
-            com.post(api.customer.queryCustomerDeptRule, {
-                "customerDeptRule.department.did": source.creater.dept.did
-            }, function(res) {
+                    customerSource.rule = {
+                        "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
+                    };
 
-                customerSource.rule = res.customerDeptRule;
-                rule = res.customerDeptRule;
-            }, null, false);
+                    return false;
+                }
 
-            if (rule.atttype == constant.customer().customerDeptRule.ATTTYPE_AUTO_INT) {
-                com.focusPage(".belonger").hide();
-                com.focusPage(".department").hide();
-                com.focusPage(".region").hide();
-            }
+                if (!res.customerDeptRules || res.customerDeptRules.length == 1) {
 
-            if (rule.atttype == constant.customer().customerDeptRule.ATTTYPE_USER_INT) {
-                com.focusPage(".belonger").show();
-                com.focusPage(".department").hide();
-                com.focusPage(".region").hide();
-            }
+                    com.focusPage(".busitype", "#issueCustomerChanceModal").hide();
 
-            if (rule.atttype == constant.customer().customerDeptRule.ATTTYPE_DEPT_INT) {
-                com.focusPage(".belonger").hide();
-                com.focusPage(".region").hide();
-                com.focusPage(".department").show();
-            }
+                    getRules(res.customerDeptRules[0].busitype.dbid);
 
-            if (rule.atttype == constant.customer().customerDeptRule.ATTTYPE_RULE_INT) {
-                com.focusPage(".region").show();
-                com.focusPage(".belonger").hide();
-                com.focusPage(".department").hide();
-            }
+                    return false;
+                }
+
+                var $arr = [];
+
+                $.each(res.customerDeptRules, function(intex, value) {
+
+                    $arr.push({
+                        "dbid": value.busitype.dbid,
+                        "name": value.busitype.name
+                    });
+                });
+
+                customerSource.items.busitype.bindData($arr, 'dbid', 'name', '请选择');
+            });
 
             customerSource.modals.issueCustomerChanceModal.modal("show");
 
@@ -479,6 +513,10 @@ $(function() {
             });
 
             return false;
+        },
+        show: function(v) {
+
+            return customerSource.depage == "user";
         }
     }, {
         name: "机会",
@@ -486,15 +524,19 @@ $(function() {
         handle: function(v) {
 
             params.customer.customerSource = v;
-            
+
             params['urlLoadParams'].depage = "source";
-            
+
             com.popup4page("#stockRecordPopUp", "/views/customer/customerChance.html?depage=source", "机会", "", function() {
 
                 searcher.doSearch();
             });
 
             return false;
+        },
+        show: function(v) {
+
+            return customerSource.depage == "user";
         }
     }, {
         name: "失效",
@@ -527,31 +569,82 @@ $(function() {
         customerSource.modals.createSourceModal.modal("show");
     });
 
+    customerSource.items.busitype.change(function() {
+
+        var busitype = $(this).val();
+
+        getRules(busitype);
+    });
+
+    function getRules(busitype) {
+
+        com.focusPage(".company", "#issueCustomerChanceModal").hide();
+        com.focusPage(".belonger", "#issueCustomerChanceModal").hide();
+        com.focusPage(".department", "#issueCustomerChanceModal").hide();
+        com.focusPage(".region", "#issueCustomerChanceModal").hide();
+
+        com.post(api.customer.queryCustomerDeptRuleByDbid, {
+            "customerDeptRule.department.did": customerSource.source.creater.dept.did,
+            "customerDeptRule.busitype.dbid": busitype
+        }, function(res) {
+
+            customerSource.rule = res.customerDeptRule;
+        }, function() {
+
+        }, false);
+
+        if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_AUTO_INT) {
+            com.focusPage(".company", "#issueCustomerChanceModal").show();
+            com.focusPage(".belonger", "#issueCustomerChanceModal").hide();
+            com.focusPage(".department", "#issueCustomerChanceModal").hide();
+            com.focusPage(".region", "#issueCustomerChanceModal").hide();
+        }
+
+        if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_USER_INT) {
+            com.focusPage(".company", "#issueCustomerChanceModal").show();
+            com.focusPage(".belonger", "#issueCustomerChanceModal").show();
+            com.focusPage(".department", "#issueCustomerChanceModal").hide();
+            com.focusPage(".region", "#issueCustomerChanceModal").hide();
+        }
+
+        if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_DEPT_INT) {
+            com.focusPage(".company", "#issueCustomerChanceModal").show();
+            com.focusPage(".belonger", "#issueCustomerChanceModal").hide();
+            com.focusPage(".region", "#issueCustomerChanceModal").hide();
+            com.focusPage(".department", "#issueCustomerChanceModal").show();
+        }
+
+        if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_RULE_INT) {
+            com.focusPage(".company", "#issueCustomerChanceModal").show();
+            com.focusPage(".region", "#issueCustomerChanceModal").show();
+            com.focusPage(".belonger", "#issueCustomerChanceModal").hide();
+            com.focusPage(".department", "#issueCustomerChanceModal").hide();
+        }
+    }
+
     function saveDate() {
 
         if (com.validate("customerSource"))
             return false;
 
-        var cid = checkCustomer();
         var built = customerSource.items.built.val();
         var unit = customerSource.items.unit.val();
         var floor = customerSource.items.floor.val();
         var door = customerSource.items.door.val();
         var villageName = customerSource.items.villageName.val();
+        var phone = customerSource.items.phone.val() + "****" + customerSource.items.phone1.val();
 
         var options = {
             "customerSource.name": customerSource.items.name.val(),
             "customerSource.gender": com.genderType[customerSource.items.gender.prop("checked")],
-            "customerSource.phone": customerSource.items.phone.val(),
+            "customerSource.phone": phone,
             "customerSource.intention": customerSource.items.intention.val(),
             "customerSource.price": customerSource.items.price.val(),
             "customerSource.comment": customerSource.items.comment.val(),
             "customerSource.buildArea": customerSource.items.buildArea.val(),
             "customerSource.innerArea": customerSource.items.buildArea.val(),
             "customerSource.freeArea": 0,
-            "customerSource.totalArea": 0,
-
-            "customerSource.customer.cid": cid,
+            "customerSource.totalArea": 0
         };
 
         if (villageName) {
@@ -601,8 +694,18 @@ $(function() {
 
         var options = {
             "customerSource.csid": customerSource.source.csid,
-            "company": customerSource.items.company.val(),
+            "customerChance.busitype.dbid": customerSource.items.busitype.val()
         };
+        
+        if(customerSource.items.company.val()){
+            options["company"] = customerSource.items.company.val();
+        }
+        
+        if(customerSource.items.busitype.val()){
+            options["customerChance.busitype.dbid"] = customerSource.items.busitype.val();
+        } else if(customerSource.busitype){
+            options["customerChance.busitype.dbid"] = customerSource.busitype.dbid;
+        }
 
         if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_USER_INT) {
             options["customerChance.belonger.userId"] = com.typeahead("belonger");
@@ -678,13 +781,13 @@ $(function() {
     }
 
     // 检查获取客户
-    function checkCustomer() {
+    function checkCustomer(items) {
 
         var cid = "";
         var customerOption = {
-            "customer.name": customerSource.items.name.val(),
-            "customer.phone": customerSource.items.phone.val(),
-            "customer.gender": customerSource.items.gender.val(),
+            "customer.name": customerSource.source.name,
+            "customer.phone": items.phone.val(),
+            "customer.gender": customerSource.source.gender,
             "customer.relationshipType": "普通客户",
             "customer.qq": "",
             "customer.wechat": "",
@@ -715,16 +818,19 @@ $(function() {
         }
 
         var hid = checkHouse(customerSource.approveItems);
+        var cid = checkCustomer(customerSource.approveItems);
 
         com.showConfirm("是否确认提交审批", function() {
 
             var option = {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerSource.items.firstApproveComment.val(),
-                "approvalCustomerSource.csid": customerSource.currentCustomerSource.csid,
+                "approvalCustomerSource.csid": customerSource.source.csid,
                 "approvalCustomerSource.hid": hid,
                 "approvalCustomerSource.dbid": customerSource.approveItems.busitype.val(),
                 "approvalCustomerSource.rate": customerSource.approveItems.rate.val(),
+
+                "approvalCustomerSource.cid": cid
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {

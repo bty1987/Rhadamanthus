@@ -63,6 +63,8 @@ public class CustomerUserRulePO implements Serializable {
 
 	private long designPrice;
 
+	private long predisPrice; // 折前额
+
 	private int score;
 
 	private int rank;
@@ -76,6 +78,8 @@ public class CustomerUserRulePO implements Serializable {
 	private UserPO creater;
 
 	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	private Timestamp finishTime;
 
@@ -168,6 +172,15 @@ public class CustomerUserRulePO implements Serializable {
 		this.designPrice = designPrice;
 	}
 
+	@Column(name = "predisPrice")
+	public long getPredisPrice() {
+		return predisPrice;
+	}
+
+	public void setPredisPrice(long predisPrice) {
+		this.predisPrice = predisPrice;
+	}
+
 	@Column(name = "score")
 	public int getScore() {
 		return score;
@@ -230,6 +243,15 @@ public class CustomerUserRulePO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "updateTime")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	@Column(name = "finishTime")

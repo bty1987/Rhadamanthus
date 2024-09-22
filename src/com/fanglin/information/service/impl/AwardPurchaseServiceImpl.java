@@ -75,6 +75,29 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 	}
 
 	@Override
+	public List<AwardPurchaseVO> queryAwardPurchaseByFapid(AwardPurchaseVO awardPurchaseVO) throws FLException {
+
+		List<AwardPurchaseVO> awardPurchaseVOs = new ArrayList<AwardPurchaseVO>();
+
+		AwardPurchasePO awardPurchasePP = awardPurchaseDao.get(awardPurchaseVO.getFapid());
+
+		if (awardPurchasePP != null) {
+			awardPurchaseVOs.add(awardPurchasePP.ptv(new AwardPurchaseVO(new AwardStockVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+		}
+
+		List<AwardPurchasePO> awardPurchasePOs = awardPurchaseDao.queryAwardPurchaseByFapid(awardPurchaseVO.getFapid());
+
+		for (AwardPurchasePO awardPurchasePO : awardPurchasePOs) {
+
+			awardPurchaseVO = new AwardPurchaseVO(new AwardStockVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
+			awardPurchaseVOs.add(awardPurchasePO.ptv(awardPurchaseVO));
+		}
+
+		return awardPurchaseVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addAwardPurchase(AwardPurchaseVO awardPurchaseVO, String userId, int company) throws FLException {
 

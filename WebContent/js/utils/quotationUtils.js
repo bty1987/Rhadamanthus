@@ -468,6 +468,10 @@ var quotationUtils = {
                     }
                 }
 
+                if(extension.type == constant.quotation().extension.TYPE_SUB_INT){
+                    extension.managePrice = -extension.managePrice;
+                }
+
                 if (quotationFunctionAreaItemCs['-扩展项目'] && extension.manageRate != 0 && extension.managePrice != 0) {
                     quotationFunctionAreaItemCs['-扩展项目'].push({
                         subtype: 0,
@@ -551,6 +555,11 @@ var quotationUtils = {
                             quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName].push(addReduceItem);
                         }
                     }
+                }
+
+                if (addReduce.type == constant.quotation().addreduce.TYPE_REDUCE_INT) {
+                    addReduce.managePrice = -addReduce.managePrice;
+                    addReduce.taxPrice = -addReduce.taxPrice;
                 }
 
                 if (quotationFunctionAreaItemCs['-增减项目'] && addReduce.manageRate != 0 && addReduce.managePrice != 0) {

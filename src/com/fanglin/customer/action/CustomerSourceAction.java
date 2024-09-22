@@ -34,7 +34,7 @@ public class CustomerSourceAction extends BaseListAction {
 	@Action(value = "pageCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomerSource() throws FLException {
 
-		customerSourceService.pageCustomerSource(getPaging(), getFilters(), customerSource);
+		customerSourceService.pageCustomerSource(getPaging(), getFilters(), customerSource, queryCompany());
 
 		return SUCCESS;
 	}
@@ -50,7 +50,7 @@ public class CustomerSourceAction extends BaseListAction {
 	@Action(value = "addCustomerSource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerSource() throws FLException {
 
-		customerSourceService.addCustomerSource(customerSource, queryUserId());
+		customerSourceService.addCustomerSource(customerSource, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

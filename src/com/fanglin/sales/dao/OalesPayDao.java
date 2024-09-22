@@ -12,7 +12,7 @@ import com.fanglin.utils.Paging;
 
 public interface OalesPayDao extends Dao<OalesPayPO> {
 
-	public List<OalesPayOO> pageOalesPay(Paging paging, List<Filter> filters) throws FLException;
+	public List<OalesPayOO> pageOalesPay(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<OalesPayPO> queryOalesPay(OalesPayVO oalesPayVO);
 

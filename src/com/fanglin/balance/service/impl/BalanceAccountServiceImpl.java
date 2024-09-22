@@ -173,7 +173,7 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 		UserPO create = userDao.queryUserByUserId(userId);
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, company);
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 		balancePO.setNo(no);

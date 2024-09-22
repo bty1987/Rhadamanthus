@@ -36,7 +36,7 @@ public class SoodsItemServiceImpl implements SoodsItemService {
 	@Override
 	public void pageSoodsItemByQiid(Paging paging, List<Filter> filters, SoodsItemVO soodsItemVO) {
 
-		List<SoodsItemPO> soodsItemPOs = soodsItemDao.pageSoodsItemByQiid(paging, filters, soodsItemVO.getQuotationItem().getQiid(), soodsItemVO.getStatus());
+		List<SoodsItemPO> soodsItemPOs = soodsItemDao.pageSoodsItemByQiid(paging, filters, soodsItemVO.getQuotationItem().getQiid(), soodsItemVO.getStatus(), soodsItemVO.getGoods().getStatus());
 		List<SoodsItemVO> soodsItemVOs = new ArrayList<SoodsItemVO>();
 
 		for (SoodsItemPO soodsItemPO : soodsItemPOs) {

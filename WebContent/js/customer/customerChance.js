@@ -49,6 +49,7 @@ jQuery(function($) {
             rule: com.focusPage("#rule", "#firstApprove"),
             busitype: com.focusPage("#busitype", "#firstApprove"),
             rate: com.focusPage("#rate", "#firstApprove"),
+            phone: com.focusPage("#phone", "#firstApprove")
         },
 
         btns: {
@@ -157,7 +158,7 @@ jQuery(function($) {
             });
         });
         var $enableI = $('<i></i>').addClass('icon-ok-circle bigger-230');
-        var $enableS = $('<span></span>').html("上线分配");
+        var $enableS = $('<span></span>').html("停止接单");
 
         if (customerChance.depage == 'user')
             $enable.append($enableI).append($enableS).appendTo(customerChance.items.infolist);
@@ -172,7 +173,7 @@ jQuery(function($) {
         $('<i></i>').addClass('icon-ban-circle bigger-230');
 
         var $disableI = $('<i></i>').addClass('icon-ban-circle bigger-230');
-        var $disableS = $('<span></span>').html("下线分配");
+        var $disableS = $('<span></span>').html("恢复接单");
 
         if (customerChance.depage == 'user')
             $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
@@ -187,7 +188,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerChance);
 
-    searcher.condition(["customer-chance-createTime", "customer-chance-type", "customer-chance-status", "customer-chance-source-phone", "customer-chance-source-village", "customer-chance-source-createTime"]);
+    searcher.condition(customerChance.depage != "source" ? ["customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-createTime", "customer-chance-type", "customer-chance-status", "customer-chance-source-phone", "customer-chance-source-village", "customer-chance-source-createTime", "customer-chance-source-buildArea", "customer-chance-source-creater", "customer-chance-source-creater-dept", "customer-chance-belonger", "customer-chance-belonger-dept"] : []);
 
     searcher.history(customerChance.depage + "customerChancePostData");
 
@@ -211,16 +212,36 @@ jQuery(function($) {
         field: "source",
         name: "客户姓名",
         prop: "source.name",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.customer.info(btn, v.source.customer.cid);
+        }
     }, {
         field: "phone",
         name: "客户电话",
-        prop: "source.phone",
+        prop: function(v) {
+
+            if (v.customer != null && v.customer.phone != null) {
+                return v.customer.phone.replace(/^(\d{3})\d+(\d{4})$/, "$1****$2");
+            }
+
+        },
         clazz: "grey",
         show: function(v) {
 
-            return (v.isRead == constant.customer().customerChance.ISREAD_READ_INT);
+            return (v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && customerChance.depage == "user";
         }
+    }, {
+        field: "source",
+        name: "楼盘",
+        prop: "source.village.name",
+        clazz: "grey",
+    }, {
+        field: "source",
+        name: "面积",
+        prop: "source.house.innerArea",
+        clazz: "grey",
     }, {
         field: "busitype",
         name: "业务类型",
@@ -230,32 +251,25 @@ jQuery(function($) {
         field: "creater",
         name: "创建人",
         prop: "creater.currentName",
-        clazz: "grey"
-    }, {
-        field: "issuer",
-        name: "分配人",
-        prop: "issuer.currentName",
-        clazz: "grey"
-    }, {
-        field: "createTime",
-        name: "创建时间",
-        prop: "createTime",
-        clazz: "green"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.creater.userId);
+        }
     }, {
         field: "issueTime",
         name: "分配时间",
         prop: "issueTime",
         clazz: "green"
     }, {
-        field: "confirmTime",
-        name: "确认时间",
-        prop: "confirmTime",
-        clazz: "green"
-    }, {
         field: "belonger",
         name: "归属人",
         prop: "belonger.currentName",
-        clazz: "grey"
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.belonger.userId);
+        }
     }, {
         field: "department",
         name: "归属部门",
@@ -313,7 +327,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isRead == constant.customer().customerChance.ISREAD_UNREAD_INT;
+            return v.isRead != constant.customer().customerChance.ISREAD_READ_INT && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT && customerChance.depage == "user";
         }
     }, {
         name: "分配",
@@ -351,6 +365,10 @@ jQuery(function($) {
 
             send(v);
         },
+        show: function(v) {
+
+            return customerChance.depage != "source" && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT;
+        },
     }, {
         name: "确认",
         clazz: "btn-inverse",
@@ -360,7 +378,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user";
         },
     }, {
         name: "转换",
@@ -386,6 +404,8 @@ jQuery(function($) {
 
             customerChance.ccid = v.ccid;
             customerChance.source.csid = v.source.csid;
+            customerChance.source.name = v.source.name;
+            customerChance.source.gender = v.source.gender;
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
@@ -395,7 +415,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user";
         },
     }, {
         name: "审批",
@@ -423,7 +443,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 3 && customerChance.depage != "source";
+            return v.status == 3 && customerChance.depage == "user";
         },
 
     }, {
@@ -442,7 +462,7 @@ jQuery(function($) {
         },
         show: function(res) {
 
-            return customerChance.depage != "source";
+            return customerChance.depage == 'user';
         }
 
     }, ];
@@ -634,6 +654,7 @@ jQuery(function($) {
         }
 
         var hid = checkHouse(customerChance.approveItems);
+        var cid = checkCustomer(customerChance.approveItems);
 
         com.showConfirm("是否确认提交审批", function() {
 
@@ -645,6 +666,7 @@ jQuery(function($) {
                 "approvalCustomerSource.hid": hid,
                 "approvalCustomerSource.dbid": customerChance.approveItems.busitype.val(),
                 "approvalCustomerSource.rate": customerChance.approveItems.rate.val(),
+                "approvalCustomerSource.cid": cid
             };
 
             com.post(api.approval.submitApprovalForCustomerSource, option, function(res) {
@@ -699,6 +721,29 @@ jQuery(function($) {
         }, null, false);
 
         return hid;
+    }
+
+    // 检查获取客户
+    function checkCustomer(items) {
+
+        var cid = "";
+        var customerOption = {
+            "customer.name": customerChance.source.name,
+            "customer.phone": items.phone.val(),
+            "customer.gender": customerChance.source.gender,
+            "customer.relationshipType": "普通客户",
+            "customer.qq": "",
+            "customer.wechat": "",
+            "customer.email": "",
+            "customer.address": ""
+        };
+
+        com.post(api.data.existCustomer, customerOption, function(res) {
+
+            cid = res.customer.cid;
+        }, null, false);
+
+        return cid;
     }
 
     // 启用禁用个人规则

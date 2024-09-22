@@ -51,6 +51,10 @@ public class OalesPO implements Serializable {
 
 	public static final short STATUS_INVALID_INI = 6;// 废单
 
+	public static final short ACCOUNT_STATUS_ACCOUNT_INT = 1;
+
+	public static final short ACCOUNT_STATUS_INIT_INT = 0;
+
 	private long oid;
 
 	private String no;
@@ -93,6 +97,8 @@ public class OalesPO implements Serializable {
 
 	private short status;
 
+	private short accountStatus;
+
 	private String comment;
 
 	private int company;
@@ -103,9 +109,13 @@ public class OalesPO implements Serializable {
 
 	private Timestamp finishTime;
 
+	private Timestamp accountTime;
+
 	private UserPO checker;
 
 	private UserPO materialer;
+
+	private UserPO accounter;
 
 	private int cost;
 
@@ -258,6 +268,16 @@ public class OalesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "auid", referencedColumnName = "uid")
+	public UserPO getAccounter() {
+		return accounter;
+	}
+
+	public void setAccounter(UserPO accounter) {
+		this.accounter = accounter;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "did", referencedColumnName = "did")
 	public DepartmentPO getDept() {
 		return dept;
@@ -322,6 +342,15 @@ public class OalesPO implements Serializable {
 		this.status = status;
 	}
 
+	@Column(name = "accountStatus")
+	public short getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(short accountStatus) {
+		this.accountStatus = accountStatus;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -367,6 +396,15 @@ public class OalesPO implements Serializable {
 		this.finishTime = finishTime;
 	}
 
+	@Column(name = "accountTime")
+	public Timestamp getAccountTime() {
+		return accountTime;
+	}
+
+	public void setAccountTime(Timestamp accountTime) {
+		this.accountTime = accountTime;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "chuid", referencedColumnName = "uid")
 	public UserPO getChecker() {
@@ -407,7 +445,7 @@ public class OalesPO implements Serializable {
 
 	public OalesVO ptv(OalesVO oalesVO) {
 
-		BeanUtil.copyProperties(this, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
+		BeanUtil.copyProperties(this, oalesVO, Arrays.asList("decoration", "channer", "dept", "region", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer", "accounter"));
 
 		if (oalesVO.getDecoration() != null) getDecoration().ptvcascade(oalesVO.getDecoration());
 
@@ -419,6 +457,7 @@ public class OalesPO implements Serializable {
 		if (oalesVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
 		if (oalesVO.getChecker() != null) BeanUtil.copyProperties(getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "duty"));
 		if (oalesVO.getMaterialer() != null) BeanUtil.copyProperties(getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
+		if (oalesVO.getAccounter() != null) BeanUtil.copyProperties(getAccounter(), oalesVO.getAccounter(), Arrays.asList("dept", "duty"));
 
 		return oalesVO;
 	}

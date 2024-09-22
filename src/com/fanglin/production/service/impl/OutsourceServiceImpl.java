@@ -109,7 +109,7 @@ public class OutsourceServiceImpl implements OutsourceService {
 		OutsourcePO outsourcePO = new OutsourcePO(new ProductionPO(), new UserPO(), new UserPO());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_PRODUCTION_LO_INT, currentDate, company);
 		String no = "L" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 		UserPO supplier = userDao.queryUserByUserId(outsourceVO.getSupplier().getUserId());

@@ -212,11 +212,20 @@
             valuePath: "value"
         }
     },
-    "chance-source-phone": {
+    "chance-source-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "source.name",
+            op: "cn",
+            validate: null,
+        }
+    },
+    "chance-customer-phone": {
         label: "电话",
         type: "text",
         submitConfig: {
-            name: "source.phone",
+            name: "customer.phone",
             op: "eq",
             validate: {
                 "reg": /^[0-9]*$/,
@@ -224,11 +233,11 @@
             }
         }
     },
-    "chance-source-village": {
+    "chance-house-village-no": {
         label: "楼盘",
         type: "autofill",
         submitConfig: {
-            name: "source.village",
+            name: "house.village.no",
             op: "eq",
             validate: null
         },
@@ -238,6 +247,103 @@
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "chance-house-houseNumber": {
+        label: "楼号",
+        type: "text",
+        submitConfig: {
+            name: "decoration.house.houseNumber",
+            op: "cn",
+            validate: null
+        }
+    },
+    "chance-source-buildArea": {
+        label: "面积",
+        type: "text",
+        submitConfig: {
+            name: "source.buildArea",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "chance-belonger": {
+        label: "设计师",// 设计师(机会归属人)
+        type: "autofill",
+        submitConfig: {
+            name: "belonger",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "chance-belonger-dept": {
+        label: "设计部",// 设计部(机会归属人部门)
+        type: "autofill",
+        submitConfig: {
+            name: "belonger.dept",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {
+                "dept.type.dtid": 0
+            },
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "chance-source-creater": {
+        label: "业务员",// 业务员(资源创建人)
+        type: "autofill",
+        submitConfig: {
+            name: "source.creater",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "chance-source-creater-dept": {
+        label: "业务部",// 业务部(资源创建人部门)
+        type: "autofill",
+        submitConfig: {
+            name: "source.creater.dept",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {
+                "dept.type.dtid": 2
+            },
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
         }
     },
     "chance-source-createTime": {

@@ -26,6 +26,6 @@ public interface PaymentDao extends Dao<PaymentPO> {
 
 	public List<PaymentPO> queryPaymentByOrderId(String orderId);
 
-	public List<PaymentPO> queryPaymentByReceiptId(long arId);
+	public PaymentDO queryPaymentByReceiptId(long arId);
 
 }

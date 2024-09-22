@@ -283,7 +283,7 @@ public class SalesServiceImpl implements SalesService {
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_SALES_INT, currentDate, company);
 
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
@@ -320,7 +320,7 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setCtype(SalesPO.CTYPE_PASS_INT);
 		salesPO.setCvalue(0);
 
-		salesPO.setGrade(decorationPO.getGrade().equals("C") ? "B" : "");
+		salesPO.setGrade("B");
 
 		ActivityPO activityPO = activityDao.queryActivityForDefault(company, ActivityPO.TYPE_SALES_INT);
 		salesPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());

@@ -58,7 +58,31 @@ public class PaymentTypeDaoImpl extends DaoImpl<PaymentTypePO> implements Paymen
 
 	@Override
 	public PaymentTypePO queryPaymentTypeByName(String name, int company) {
-		return (PaymentTypePO) session().createCriteria(PaymentTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(PaymentTypePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(PaymentTypePO.COLUMN_STATUS_STR, PaymentTypePO.STATUS_ENABLE_INT)).uniqueResult();
+		return queryPaymentTypeByName(name, null, null, null, null, company);
+	}
+
+	@Override
+	public PaymentTypePO queryPaymentTypeByName(String name, Short type, Short paytype, Short bustype, Short atttype, int company) {
+
+		Criteria criteria = session().createCriteria(PaymentTypePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(PaymentTypePO.COLUMN_NAME_STR, name)).add(Restrictions.eq(PaymentTypePO.COLUMN_STATUS_STR, PaymentTypePO.STATUS_ENABLE_INT));
+
+		if (type != null) {
+			criteria.add(Restrictions.eq(PaymentTypePO.COLUMN_TYPE_STR, type));
+		}
+
+		if (paytype != null) {
+			criteria.add(Restrictions.eq(PaymentTypePO.COLUMN_PAYTYPE_STR, paytype));
+		}
+
+		if (bustype != null) {
+			criteria.add(Restrictions.eq(PaymentTypePO.COLUMN_BUSTYPE_STR, bustype));
+		}
+
+		if (atttype != null) {
+			criteria.add(Restrictions.eq(PaymentTypePO.COLUMN_ATTTYPE_STR, atttype));
+		}
+
+		return (PaymentTypePO) criteria.setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -34,7 +34,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	}
 
 	@Override
-	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid, Short status) {
+	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid, Short status, Short goodsStatus) {
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
@@ -45,6 +45,10 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 
 		if (status != null) {
 			query.add(Restrictions.eq("status", status));
+		}
+
+		if (goodsStatus != null) {
+			query.alias("soods.goods", "goods").add(Restrictions.eq("goods.status", goodsStatus));
 		}
 
 		queryFilterExcute(query, filters);
@@ -93,7 +97,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	@Override
 	public int copySoodsItem(long sqiid, long tqiid) {
 
-		String sql = "insert into data.soodsitem (sid, gid, status, qiid) select sid,gid,status,:tqiid company from data.soodsitem where qiid = :sqiid";
+		String sql = "insert into data.soodsitem (sid, gid, status, qiid) select si.sid, si.gid, si.status, :tqiid from data.soodsitem si, quotation.quotationitem sqi, quotation.quotationitem tqi, data.soods s where si.qiid = :sqiid and sqi.qiid = :sqiid and si.sid = s.sid and tqi.qiid = :tqiid and s.selling <= tqi.unitprice";
 
 		session().createSQLQuery(sql).setLong("tqiid", tqiid).setLong("sqiid", sqiid).executeUpdate();
 

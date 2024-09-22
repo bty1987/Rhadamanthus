@@ -58,35 +58,39 @@ public class GoodsStorehouseStockDaoImpl extends DaoImpl<GoodsStorehouseStockPO>
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
-		if (filters != null) {
-			for (Filter filter : filters) {
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		if (filters == null) return;
 
-				query.alias("goods", "goods");
-				query.alias("color", "color");
-				query.alias("format", "format");
-				query.alias("storehouse", "storehouse");
+		for (Filter filter : filters) {
 
-				if (GoodsStorehouseStockPO.COLUMN_GID_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_GID_STR, data, op));
-				} else if (GoodsStorehouseStockPO.COLUMN_CID_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_CID_STR, data, op));
-				} else if (GoodsStorehouseStockPO.COLUMN_FID_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_FID_STR, data, op));
-				} else if (GoodsStorehouseStockPO.COLUMN_SHID_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_SHID_STR, data, op));
-				} else if (GoodsStorehouseStockPO.COLUMN_SNAME_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_STOREHOUSNAME_STR, data, op));
-				} else if (GoodsStorehouseStockPO.COLUMN_NAME_STR.equals(field)) {
-					query.add(query.getCriterion(field, data, op));
-				} else if (GoodsStorehouseStockPO.COLUMN_BARCODE_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_CODE_STR, data, op));
-				}
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.alias("goods", "goods");
+			query.alias("color", "color");
+			query.alias("format", "format");
+			query.alias("storehouse", "storehouse");
+
+			if (GoodsStorehouseStockPO.COLUMN_GID_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_GID_STR, data, op));
+			} else if (GoodsStorehouseStockPO.COLUMN_CID_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_CID_STR, data, op));
+			} else if (GoodsStorehouseStockPO.COLUMN_FID_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_FID_STR, data, op));
+			} else if (GoodsStorehouseStockPO.COLUMN_SHID_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_SHID_STR, data, op));
+			} else if (GoodsStorehouseStockPO.COLUMN_SNAME_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_STOREHOUSNAME_STR, data, op));
+			} else if (GoodsStorehouseStockPO.COLUMN_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (GoodsStorehouseStockPO.COLUMN_BARCODE_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsStorehouseStockPO.COLUMN_CODE_STR, data, op));
+			} else if ("storehouse.status".equals(field)) {
+				query.add(query.getCriterion("storehouse.status", Short.parseShort(data), op));
+			} else if ("goods.status".equals(field)) {
+				query.add(query.getCriterion("goods.status", Short.parseShort(data), op));
 			}
 		}
 	}
-
 }
