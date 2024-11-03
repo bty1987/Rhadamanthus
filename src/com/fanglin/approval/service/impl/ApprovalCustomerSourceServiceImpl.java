@@ -170,12 +170,13 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		decorationService.checkOverDecoration(customerPO.getCid(), housePO.getHid(), company);
 
+		UserPO belonger = customerChancePO.getSource().getCreater();
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源初审,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+		String content = String.format("客源初审,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s),业务类型:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), busitype.getName());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT, content, approvalVO.getComment(), company);
 
@@ -193,7 +194,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 
 		approvalCustomerSourceDao.save(approvalCustomerSourcePO);
 
-		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s). 批注:%s.", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), approvalPO.getAnnotate());
 
 		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, receiver.getCompany());
 

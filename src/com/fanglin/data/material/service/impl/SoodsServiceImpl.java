@@ -18,6 +18,7 @@ import com.fanglin.data.material.dao.SoodsItemDao;
 import com.fanglin.data.material.service.SoodsService;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.material.vo.SoodsVO;
+import com.fanglin.data.po.GoodsBO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.SoodsPO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
@@ -111,7 +112,7 @@ public class SoodsServiceImpl implements SoodsService {
 		}
 
 		soodsPO.setName(soodsVO.getName());
-		soodsPO.setGoods(goodsPO);
+		soodsPO.setGoods(new GoodsBO(goodsPO.getGid()));
 		soodsPO.setNum(soodsVO.getNum());
 		soodsPO.setStatus(SoodsPO.STATUS_INVALID_INT);
 		soodsPO.setSelling(soodsVO.getSelling());

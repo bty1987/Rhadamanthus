@@ -25,6 +25,7 @@ function printProjectTable(type) {
     var _manageProfit = protation.protation.manageProfit;
     var _advanceProfit = protation.protation.advanceProfit;
     var _managePrice = protation.protation.managePrice;
+    var _taxPrice = protation.protation.taxPrice;
     var _preferPrice = protation.protation.preferPrice;
     var _subdPrice = protation.protation.subdPrice;
     var _submPrice = protation.protation.submPrice;
@@ -73,6 +74,11 @@ function printProjectTable(type) {
     contentHtml += '<td width="5%" align="center">' + ((type & 1) == 1 ? _managePrice : '') + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
+    contentHtml += '<td width="5%" align="center">税金</td>';
+    contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
+    contentHtml += '<td width="5%" align="center">' + _taxPrice + '</td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
     contentHtml += '<td width="5%" align="center">管理优惠</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
     contentHtml += '<td width="5%" align="center">' + _manageProfit + '</td>';
@@ -87,7 +93,7 @@ function printProjectTable(type) {
     contentHtml += '<tr style="background-color: #DDDDDD;">';
     contentHtml += '<td width="5%" align="center">小计</td>';
     contentHtml += '<td colspan="2" width="5%" align="center"></td>';
-    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(_quotePrice, _managePrice), _preferPrice),_manageProfit),_advanceProfit), utils.accAdd(utils.accAdd(_subdPrice, _submPrice), _subcPrice))) + '</td>';
+    contentHtml += '<td width="5%" align="center">' + utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_quotePrice, _managePrice), _taxPrice), _preferPrice),_manageProfit),_advanceProfit), utils.accAdd(utils.accAdd(_subdPrice, _submPrice), _subcPrice))) + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;

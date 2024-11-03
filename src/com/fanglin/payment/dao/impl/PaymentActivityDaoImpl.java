@@ -8,6 +8,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.PaymentActivityDao;
 import com.fanglin.payment.po.PaymentActivityPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
 
 @Repository("paymentActivityDao")
@@ -30,10 +31,10 @@ public class PaymentActivityDaoImpl extends DaoImpl<PaymentActivityPO> implement
 	@Override
 	public int amountPaymentActivity(String orderId, Short type) {
 
-		String sql = "select sum(realMoney) from payment.paymentActivity where orderId = :orderId and type = :type";
+		String sql = "select sum(pa.realMoney * pa.multiple) from payment.paymentActivity pa where pa.orderId = :orderId and pa.type = :type";
 		String amount = String.valueOf(session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).uniqueResult());
 
-		return amount == null ? 0 : Integer.parseInt(amount);
+		return amount == null ? 0 : Arith.div(Integer.parseInt(amount), 1000000);
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

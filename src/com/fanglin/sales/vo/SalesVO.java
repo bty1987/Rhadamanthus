@@ -70,6 +70,8 @@ public class SalesVO implements Serializable {
 
 	private Short status;
 
+	private Short type;
+
 	private Long depositpay;
 
 	private Short depositpayStatus;
@@ -358,6 +360,14 @@ public class SalesVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Long getDepositpay() {

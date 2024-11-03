@@ -42,6 +42,16 @@ public class PaymentActivityPO implements Serializable {
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
+	public static final short TYPE_ADVANCE_INT = 0; // 预付
+
+	public static final short TYPE_DECORATION_INT = 1; // 装修
+
+	public static final short TYPE_MATERIAL_INT = 2; // 主材
+
+	public static final short TYPE_SALES_INT = 3; // 销售
+
+	public static final short TYPE_SERVICE_INT = 4; // 服务
+
 	private long paid;
 
 	private String orderId;
@@ -69,6 +79,17 @@ public class PaymentActivityPO implements Serializable {
 	public PaymentActivityPO(ActivityPO activity) {
 		super();
 		this.activity = activity;
+	}
+
+	public PaymentActivityPO(String orderId, short type, long pid, long rid, ActivityPO activity, int realMoney, int multiple) {
+		super();
+		this.orderId = orderId;
+		this.type = type;
+		this.pid = pid;
+		this.rid = rid;
+		this.activity = activity;
+		this.realMoney = realMoney;
+		this.multiple = multiple;
 	}
 
 	@Id

@@ -13,6 +13,7 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -24,6 +25,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.OalesDao;
 import com.fanglin.sales.dao.OalesPayDao;
+import com.fanglin.sales.po.OalesBO;
 import com.fanglin.sales.po.OalesPO;
 import com.fanglin.sales.service.OalesService;
 import com.fanglin.sales.vo.OalesVO;
@@ -95,14 +97,16 @@ public class OalesServiceImpl implements OalesService {
 	@Override
 	public List<OalesVO> queryOalesByOrderId(OalesVO oalesVO) {
 
-		List<OalesPO> oalesPOs = oalesDao.queryOalesByOrderId(oalesVO.getDecoration().getOrderId());
+		List<OalesBO> oalesBOs = oalesDao.queryOalesByOrderId(oalesVO.getDecoration().getOrderId());
 		List<OalesVO> oalesVOs = new ArrayList<OalesVO>();
 
-		for (OalesPO oalesPO : oalesPOs) {
+		for (OalesBO oalesBO : oalesBOs) {
 
 			oalesVO = new OalesVO(null, new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			oalesVOs.add(oalesPO.ptv(oalesVO));
+			oalesVO.setBranding(new BrandVO());
+
+			oalesVOs.add(oalesBO.ptv(oalesVO));
 		}
 
 		return oalesVOs;
@@ -111,7 +115,7 @@ public class OalesServiceImpl implements OalesService {
 	@Override
 	public long amountOales(OalesVO oales) throws FLException {
 
-		Long amount = oalesDao.amountOales(oales.getDecoration().getOrderId());
+		Long amount = oalesDao.amountOales(oales.getDecoration().getOrderId(), oales.getIsScale());
 
 		return amount;
 	}
@@ -254,6 +258,7 @@ public class OalesServiceImpl implements OalesService {
 		if (oalesPO == null) {
 			throw new FLException(370021, "外销单不存在");
 		}
+
 		if (oalesPO.getStatus() != OalesPO.STATUS_SUBMIT_INI && oalesPO.getStatus() != OalesPO.STATUS_REJECT_INT) {
 			throw new FLException(370022, "外销单状态不可操作");
 		}
@@ -307,7 +312,6 @@ public class OalesServiceImpl implements OalesService {
 
 			oalesDao.update(oalesPO);
 		}
-
 	}
 
 	@Override
@@ -319,6 +323,7 @@ public class OalesServiceImpl implements OalesService {
 		if (oalesPO == null) {
 			throw new FLException(370021, "外销单不存在");
 		}
+
 		if (oalesPO.getStatus() != OalesPO.STATUS_CHECK_INT) {
 			throw new FLException(370022, "外销单状态不可操作");
 		}
@@ -338,7 +343,73 @@ public class OalesServiceImpl implements OalesService {
 		if (oalesPO == null) {
 			throw new FLException(370021, "外销单不存在");
 		}
+
 		oalesPO.setStatus(OalesPO.STATUS_INVALID_INI);
+
+		oalesDao.update(oalesPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void refundOales(OalesVO oalesVO, String userId) throws FLException {
+
+		OalesPO oales = oalesDao.get(oalesVO.getOid());
+
+		if (oales == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		if (oales.getStatus() != OalesPO.STATUS_CHECK_INT) {
+			throw new FLException(370022, "外销单状态不可操作");
+		}
+
+		CompanyPO companyPO = companyDao.get(oales.getCompany());
+
+		String currentDate = DateUtil.current("yyMMdd").toString();
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_OALES_INT, currentDate, oales.getCompany());
+		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		OalesPO oalesPO = new OalesPO();
+
+		BeanUtil.copyProperties(oales, oalesPO, Arrays.asList("decoration", "channer", "dept", "region", "supplier", "creater", "servicer", "checker", "materialer", "threshold", "confirmTime", "checkTime"));
+
+		oalesPO.setNo(no);
+		oalesPO.setFoid(oales.getOid());
+
+		oalesPO.setSupplier(oales.getSupplier());
+		oalesPO.setChanner(oales.getChanner());
+		oalesPO.setDept(oales.getChanner().getDept());
+		oalesPO.setRegion(oales.getChanner().getDept().getFatherDept());
+		oalesPO.setMaterialer(oales.getMaterialer());
+		oalesPO.setServicer(oales.getServicer());
+		oalesPO.setDecoration(oales.getDecoration());
+		oalesPO.setCreater(creater);
+
+		oalesPO.setTotal(oalesVO.getTotal());
+		oalesPO.setCost(oalesVO.getCost());
+		oalesPO.setProfit(oalesVO.getProfit());
+		oalesPO.setAward(oalesVO.getAward());
+
+		oalesPO.setType(OalesPO.TYPE_REFUND_INT);
+		oalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		oalesDao.save(oalesPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void scaleOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		oalesPO.setIsScale(OalesPO.ISSCALE_MATCH_INT);
 
 		oalesDao.update(oalesPO);
 	}

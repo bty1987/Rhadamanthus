@@ -228,6 +228,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			List<QuotationPricePO> quotationPricePOs = quotationPriceDao.queryQuotationPrice(functionAreaPO.getFaid(), updateTime);
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 
+			int sort = 1;
+
 			for (QuotationPricePO quotationPricePO : quotationPricePOs) {
 
 				short itemType = QuotationFunctionAreaItemPO.TYPE_COMMON_INT;
@@ -274,6 +276,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				quotationFunctionAreaItemVO.setType(itemType);
 				quotationFunctionAreaItemVO.setSubtype((short) quotationPricePO.getQuotationItem().getQuotationType().getId());
 
+				quotationFunctionAreaItemVO.setIndex(sort++);
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);

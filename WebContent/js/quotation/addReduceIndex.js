@@ -7,6 +7,7 @@
         arid: null,
         qid: null,
         nid: null,
+        quotation: null,
 
         items: {
             addReduceDes: com.focusPage("#addReduceDes"),
@@ -54,6 +55,7 @@
         }, function(res) {
 
             addReduce.qid = res.quotation.qid;
+            addReduce.quotation = res.quotation;
 
             drawquotation(res.quotation);
         }, null, false);
@@ -978,7 +980,7 @@
         options["addReduce.total"] = 0;
         options["addReduce.managePrice"] = 0;
         options["addReduce.taxPrice"] = 0;
-        options["addReduce.taxDiscount"] = constant.quotation().addreduce.TAX_MANAGETAXDISCOUNT_INT;
+        options["addReduce.taxDiscount"] = addReduce.quotation.taxDiscount;
 
         com.post(url, options, function(res) {
 

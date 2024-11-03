@@ -217,9 +217,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		String content = String.format("客源确认,客户名:%s,楼盘:%s,电话:%s", customerChancePO.getSource().getName(), customerChancePO.getHouse().getVillage().getName(), customerChancePO.getCustomer().getPhone());
 
-		UserPO creater = customerChancePO.getSource().getCreater();
+		UserPO creater = customerChancePO.getCreater();
+		UserPO belonger = customerChancePO.getBelonger();
 
-		messageService.sendMessage(creater.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, creater.getCompany());
+		messageService.sendMessage(belonger.getUserId(), creater.getUserId(), content, MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
 	}
 
 	@Override

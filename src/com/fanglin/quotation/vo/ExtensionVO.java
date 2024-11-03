@@ -33,6 +33,10 @@ public class ExtensionVO implements Serializable {
 
 	private Long managePrice;
 
+	private Integer taxRate;
+
+	private Long taxPrice;
+
 	private Long total;
 
 	private Short status;
@@ -138,6 +142,22 @@ public class ExtensionVO implements Serializable {
 
 	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
+	}
+
+	public Integer getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Integer taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public Long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(Long taxPrice) {
+		this.taxPrice = taxPrice;
 	}
 
 	public Long getTotal() {

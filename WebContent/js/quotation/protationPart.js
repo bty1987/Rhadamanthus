@@ -186,12 +186,31 @@ var protationPart = (function() {
                     "d": utils.accAdd(addd, addm),
                     "e": utils.accAdd(utils.accAdd(subd, subm), subc),
                     "f": utils.accAdd(accm, accd),
+                    "h": quo.basicParams["protation.advanceProfit"]
                 });
             }
 
             var _managePrice = utils.changeThrDecimal(isNaN(eval(manageFormula)) ? 0 : eval(manageFormula));
 
-            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
+            var taxFormula = quo.basicParams["protation.taxFormula"] ? quo.basicParams["protation.taxFormula"] : "0";
+
+            if (taxFormula.indexOf("{") != -1 || taxFormula.indexOf("}") != -1) {
+                taxFormula = com.format(taxFormula, {
+                    "a": quo.basicParams["protation.quotePrice"],
+                    "b": quo.basicParams["protation.preferPrice"],
+                    "c": basic,
+                    "d": utils.accAdd(addd, addm),
+                    "e": utils.accAdd(utils.accAdd(subd, subm), subc),
+                    "f": utils.accAdd(accm, accd),
+                    "g": _managePrice,
+                    "h": quo.basicParams["protation.advanceProfit"],
+                    "i": quo.basicParams["protation.manageProfit"]
+                });
+            }
+
+            var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
+
+            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(utils.accAdd(subd, subm), subc)))), utils.accAdd(accm, accd))));
 
             _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
@@ -208,6 +227,7 @@ var protationPart = (function() {
             quo.basicParams["protation.accdPrice"] = accd;
             quo.basicParams["protation.totalPrice"] = total;
             quo.basicParams["protation.managePrice"] = _managePrice;
+            quo.basicParams["protation.taxPrice"] = _taxPrice;
             quo.basicParams["protation.discount"] = _discout;
 
             com.focusPage('#houstCost').text(cost);
@@ -226,6 +246,7 @@ var protationPart = (function() {
             com.focusPage('#totalCost').text(quo.basicParams["protation.totalCost"]);
             com.focusPage('#discount').text(_discout);
             com.focusPage('#managePrice').text(quo.basicParams["protation.managePrice"]);
+            com.focusPage('#taxPrice').text(quo.basicParams["protation.taxPrice"]);
             com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
             com.focusPage('#manageProfit').text(quo.basicParams["protation.manageProfit"]);
             com.focusPage('#advanceProfit').text(quo.basicParams["protation.advanceProfit"]);
@@ -1193,6 +1214,9 @@ var protationPart = (function() {
                     "protation.manageFormula": data.protation.manageFormula, // 管理费公式
                     "protation.manageProfit": data.protation.manageProfit, // 管理优惠
                     "protation.advanceProfit": data.protation.advanceProfit, // 特殊优惠
+                    "protation.taxRate": data.protation.taxRate, // 税金比例
+                    "protation.taxFormula": data.protation.taxFormula, // 税金公式
+                    "protation.taxPrice": data.protation.taxPrice, // 税金
                 };
                 quo.protation = data.protation;
             }, null, false);
@@ -1356,12 +1380,31 @@ var protationPart = (function() {
                     "d": utils.accAdd(addd, addm),
                     "e": utils.accAdd(utils.accAdd(subd, subm), subc),
                     "f": utils.accAdd(accm, accd),
+                    "h": quo.basicParams["protation.advanceProfit"],
                 });
             }
 
             var _managePrice = utils.changeThrDecimal(isNaN(eval(manageFormula)) ? 0 : eval(manageFormula));
 
-            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
+            var taxFormula = quo.basicParams["protation.taxFormula"] ? quo.basicParams["protation.taxFormula"] : "0";
+
+            if (taxFormula.indexOf("{") != -1 || taxFormula.indexOf("}") != -1) {
+                taxFormula = com.format(taxFormula, {
+                    "a": quo.basicParams["protation.quotePrice"],
+                    "b": quo.basicParams["protation.preferPrice"],
+                    "c": basic,
+                    "d": utils.accAdd(addd, addm),
+                    "e": utils.accAdd(utils.accAdd(subd, subm), subc),
+                    "f": utils.accAdd(accm, accd),
+                    "g": _managePrice,
+                    "h": quo.basicParams["protation.advanceProfit"],
+                    "i": quo.basicParams["protation.manageProfit"]
+                });
+            }
+
+            var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
+
+            total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(utils.accAdd(subd, subm), subc)))), utils.accAdd(accm, accd))));
 
             _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
@@ -1378,6 +1421,7 @@ var protationPart = (function() {
             quo.basicParams["protation.accdPrice"] = accd;
             quo.basicParams["protation.totalPrice"] = total;
             quo.basicParams["protation.managePrice"] = _managePrice;
+            quo.basicParams["protation.taxPrice"] = _taxPrice;
             quo.basicParams["protation.discount"] = _discout;
 
             cost = utils.accAdd(utils.accAdd(utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]), utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"])), utils.accAdd(quo.basicParams["protation.mostCost"], utils.accAdd(utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"]), cost)));
@@ -1390,6 +1434,7 @@ var protationPart = (function() {
             com.focusPage('#preferPrice').text(quo.basicParams["protation.preferPrice"]);
             com.focusPage('#discount').text(_discout);
             com.focusPage('#managePrice').text(quo.basicParams["protation.managePrice"]);
+            com.focusPage('#taxPrice').text(quo.basicParams["protation.taxPrice"]);
             com.focusPage('#quoteArea').text(quo.basicParams["protation.quoteArea"]);
             com.focusPage('#manageProfit').text(quo.basicParams["protation.manageProfit"]);
             com.focusPage('#advanceProfit').text(quo.basicParams["protation.advanceProfit"]);

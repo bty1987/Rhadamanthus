@@ -39,6 +39,11 @@ public class PaymentActivityVO implements java.io.Serializable {
 		this.activity = activity;
 	}
 
+	public PaymentActivityVO(String orderId) {
+		super();
+		this.orderId = orderId;
+	}
+
 	public Long getPaid() {
 		return paid;
 	}

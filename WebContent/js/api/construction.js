@@ -203,6 +203,12 @@ $.extend(api, {
         checkoutConstructionSchedule: {
             url: "checkoutConstructionSchedule.do"
         },
+        enterConstructionSchedule: {
+            url: "enterConstructionSchedule.do"
+        },
+        leaveConstructionSchedule: {
+            url: "leaveConstructionSchedule.do"
+        },
 
         queryConstructionDrawingByOrderId: {
             url: "queryConstructionDrawingByOrderId.do"
@@ -334,13 +340,26 @@ $.extend(api, {
             url: "sendConstructer.do"
         },
 
-        pageDrawLineForPlan: {
-            url: "pageDrawLineForPlan.do",
+        pageConstructerRecord: {
+            url: "pageConstructerRecord.do"
+        },
+        queryConstructerRecord: {
+            url: "queryConstructerRecord.do"
+        },
+        addConstructerRecord: {
+            url: "addConstructerRecord.do"
+        },
+
+        pageDrawLine: {
+            url: "pageDrawLine.do",
             demo: true,
             type: "query",
             tranargs: [{
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
             }]
         },
 
@@ -350,10 +369,10 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "drawLines-decoration",
-                args: ["orderTotalPrice"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "drawLines-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
             }]
         },
 
@@ -459,6 +478,7 @@ $.extend(api, {
         },
         deleteQualiter: {
             url: "deleteQualiter.do"
-        },
+        }
+
     }
 });

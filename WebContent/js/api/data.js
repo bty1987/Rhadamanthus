@@ -1640,8 +1640,20 @@ $.extend(api, {
         },
         updateBankAccountForStatus: {
             url: "updateBankAccountForStatus.do"
-        }
+        },
 
+        pageConstructionPeriod: {
+            url: "pageConstructionPeriod.do"
+        },
+        addConstructionPeriod: {
+            url: "addConstructionPeriod.do"
+        },
+        updateConstructionPeriod: {
+            url: "updateConstructionPeriod.do"
+        },
+        deleteConstructionPeriod: {
+            url: "deleteConstructionPeriod.do"
+        }
     }
 });
 

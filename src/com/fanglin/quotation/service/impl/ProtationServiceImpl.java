@@ -186,11 +186,13 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setUnitPrice(presignProducePO.getUnitPrice());
 		protationPO.setManageFormula(presignProducePO.getManageFormula());
 		protationPO.setCostPrice(presignProducePO.getCostPrice());
+		protationPO.setTaxFormula(presignProducePO.getTaxFormula());
 
 		protationPO.setProfitRate(presignProducePO.getProfitRate());
 		protationPO.setCostRate(presignProducePO.getCostRate());
 		protationPO.setMostRate(presignProducePO.getMostRate());
 		protationPO.setManageRate(presignProducePO.getManageRate());
+		protationPO.setTaxRate(presignProducePO.getTaxRate());
 
 		if (presignProducePO.getVersion() != null) {
 			protationPO.setVersion(presignProducePO.getVersion());

@@ -92,7 +92,7 @@ Condition.addupRule("sales", {
         }
     },
     "status": {
-        label: "状态",
+        label: "销售状态",
         type: "select",
         submitConfig: {
             name: "sales.status",
@@ -103,6 +103,38 @@ Condition.addupRule("sales", {
             url: null,
             postData: {},
             listPath: constant.sales().sales.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "type": {
+        label: "销售类型",
+        type: "select",
+        submitConfig: {
+            name: "sales.type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().sales.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesType": {
+        label: "销售类型",
+        type: "select",
+        submitConfig: {
+            name: "sales.type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().sales.type.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -368,7 +400,7 @@ Condition.addupRule("sales", {
         }
     },
     "balance-status": {
-        label: "状态",
+        label: "结算状态",
         type: "select",
         submitConfig: {
             name: "status",
@@ -384,7 +416,7 @@ Condition.addupRule("sales", {
         }
     },
     "balance-type": {
-        label: "类型",
+        label: "结算类型",
         type: "select",
         submitConfig: {
             name: "type",
@@ -852,6 +884,22 @@ Condition.addupRule("sales", {
             url: null,
             postData: {},
             listPath: constant.sales().oales.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oales-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "oales.type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.sales().oales.type.datas,
             keyPath: "key",
             valuePath: "value"
         }

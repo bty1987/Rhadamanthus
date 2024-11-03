@@ -173,9 +173,13 @@
                             <label class="col-sm-3 control-label no-padding-right">开工仪式</label>
                             <div class="col-sm-9">
                                 <select id='isCeremony' class='col-xs-10 col-sm-6'></select>
+                                <button type="button" id="updateProject" class="btn btn-minier btn-yellow" style="margin-left: 155px">修改</button>
+
                             </div>
                         </div>
-                        <div class="form-group">
+						<hr>
+                        <h4 class="oid">放线说明</h4>
+                            <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">预计放线时间</label>
                             <div class="col-sm-9">
                                 <input type="text" id='drawlineTime' class='col-xs-10 col-sm-6'/>
@@ -193,21 +197,20 @@
                                 <input type="text" id='keyTime' class='col-xs-10 col-sm-6'/>
                             </div>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">预计设计完成时间</label>
                             <div class="col-sm-9">
                                 <input type="text" id='designTime' class='col-xs-10 col-sm-6'/>
                             </div>
                         </div>
-                       <div class="form-group">
+                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">备注说明</label>
                             <div class="col-md-9">
                                 <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
-                                <button type="button" id="updateProject" class="btn btn-minier btn-yellow" style="margin-left: 155px;margin-top: 30px;">修改</button>
+                                <button type="button" id="updateDrawline" class="btn btn-minier btn-yellow" style="margin-left: 155px;margin-top: 30px;">修改</button>
                             </div>
                         </div>
-                        <hr>
-                        <h4 class="oid">放线说明</h4>
+                       
                         <div class="form-group">
                             <input class="hide" id="dischargeLineOrderId" type="text"/>
                             <label for="applayTime" class="col-sm-3 control-label no-padding-right">放线时间</label>

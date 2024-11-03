@@ -302,6 +302,50 @@
 	</div>
 </div>
 
+<!--编辑优惠价-->
+<div class="modal fade" id="quotationPreferModal" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog">
+		<div class="modal-content col-md-12">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title">优惠</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="preferPrice">优惠价</label>
+						<div class="col-sm-9">
+							<input type="text" id="preferPrice" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="managePrefer">管理优惠</label>
+						<div class="col-sm-9">
+							<input type="text" id="managePrefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+						</div>
+					</div>
+					<div class="space-4"></div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right" for="advancePrefer">特殊优惠</label>
+						<div class="col-sm-9">
+							<input type="text" id="advancePrefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" id="savePreferBtn" class="btn btn-primary">保存</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
 <script type="text/javascript">
 	$.loadScript(['js/quotation/quotationIndex.js']);
 </script>

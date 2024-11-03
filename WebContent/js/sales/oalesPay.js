@@ -45,7 +45,7 @@ jQuery(function ($) {
             "paging.rows": 10
         };
         searcher.base("condList", "pagenation", "resultList", url);
-        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime', 'sales-oales-confirmTime']);
+        searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-type', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime', 'sales-oales-confirmTime', 'sales-oales-confirmTime']);
         searcher.history("oalsePayPostData");
         searcher.button([{
             id: "exportOalesPay",
@@ -202,6 +202,12 @@ jQuery(function ($) {
             prop: "oales.awardType",
             clazz: "red",
             dataset: constant.sales().oales.awardType.keys,
+        }, {
+            field: "type",
+            name: "外销单类型",
+            prop: "oales.type",
+            clazz: "red",
+            dataset: constant.sales().oales.type.keys,
         }, {
             field: "total",
             name: "总额",

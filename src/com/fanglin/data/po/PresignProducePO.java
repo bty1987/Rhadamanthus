@@ -39,6 +39,10 @@ public class PresignProducePO implements Serializable {
 
 	private String manageFormula;
 
+	private int taxRate;
+
+	private String taxFormula;
+
 	private long costPrice;
 
 	private int profitRate;
@@ -224,6 +228,24 @@ public class PresignProducePO implements Serializable {
 
 	public void setManageFormula(String manageFormula) {
 		this.manageFormula = manageFormula;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxFormula")
+	public String getTaxFormula() {
+		return taxFormula;
+	}
+
+	public void setTaxFormula(String taxFormula) {
+		this.taxFormula = taxFormula;
 	}
 
 	public PresignProduceVO ptv(PresignProduceVO presignProduceVO) {

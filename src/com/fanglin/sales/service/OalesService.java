@@ -33,8 +33,12 @@ public interface OalesService {
 
 	public void finishOales(OalesVO oalesVO) throws FLException;
 
-	public void deleteOales(OalesVO oalesVO) throws FLException;
-
 	public void abateOales(OalesVO oales) throws FLException;
+
+	public void refundOales(OalesVO oalesVO, String userId) throws FLException;
+
+	public void scaleOales(OalesVO oalesVO) throws FLException;
+
+	public void deleteOales(OalesVO oalesVO) throws FLException;
 
 }

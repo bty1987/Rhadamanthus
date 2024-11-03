@@ -84,6 +84,14 @@ $.extend(api, {
         querySalesByNo: {
             url: "querySalesByNo.do"
         },
+        amountSales: {
+            url: "amountSales.do",
+            type: "query",
+            tranargs: [{
+                result: "",
+                args: ["amount"]
+            }]
+        },
         addSales: {
             url: "addSales.do",
             type: "update",
@@ -116,6 +124,9 @@ $.extend(api, {
         },
         updateSalesForAdvance: {
             url: "updateSalesForAdvance.do"
+        },
+        unpaySales: {
+            url: "unpaySales.do"
         },
         sendSales: {
             url: "sendSales.do"
@@ -265,7 +276,16 @@ $.extend(api, {
                 args: ["oales.total", "oales.award", "oales.profit", "oales.cost", "oales.threshold"]
             }
         },
-
+        refundOales: {
+            url: "refundOales.do",
+            type: "update",
+            tranargs: {
+                args: ["oales.total", "oales.award", "oales.profit", "oales.cost"]
+            }
+        },
+        scaleOales: {
+            url: "scaleOales.do"
+        },
         deleteOales: {
             url: "deleteOales.do"
         },

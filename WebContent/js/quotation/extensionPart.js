@@ -8,6 +8,9 @@ var ExtensionDetail = (function() {
         manageDiscount: 0,
         quoManageRate: 0,
         quoManagePrice: 0,
+        quotaxRate: 0,
+        quotaxPrice: 0,
+        quotation: null,
 
         quotationItemId: null,
 
@@ -22,6 +25,8 @@ var ExtensionDetail = (function() {
             "extension.manageRate": 0,
             "extension.managePrice": 0,
             "extension.manageDiscount": 0,
+            "extension.taxRate": 0,
+            "extension.taxPrice": 0,
             "extension.total": 0,
 
             "extensionItem.eid": null,
@@ -34,8 +39,12 @@ var ExtensionDetail = (function() {
         sumLabSumMoney: com.focusPage("#sumLabSumMoney"),
         manageRate: com.focusPage("#manageRate"),
         managePrice: com.focusPage("#managePrice"),
+        taxRate: com.focusPage("#taxRate"),
+        taxPrice: com.focusPage("#taxPrice"),
+
         isCountManage: com.focusPage("#isCountManage"),
         isCountManageDiscount: com.focusPage("#isCountManageDiscount"),
+        isCountTax: com.focusPage("#isCountTax"),
 
         $modals: {},
         $btnItems: {},
@@ -205,7 +214,7 @@ var ExtensionDetail = (function() {
         calculateArFees: function() {
 
             var $arr = $('.fl-quo-item:not([data-del-flag="1"])', '#addReduceItemDiv');
-            var undisPrice = 0, disPrice = 0, total = 0, managePrice = 0, managediscount = 0;
+            var undisPrice = 0, disPrice = 0, total = 0, managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
 
             if ($arr.length) {
                 $arr.each(function(i, e) {
@@ -222,8 +231,6 @@ var ExtensionDetail = (function() {
                     undisPrice = utils.accAdd(undisPrice, _discount == constant.quotation().extensionItem.DISCOUMNT_NODISCOUMNT_INT ? _total : 0);
                     disPrice = utils.accAdd(disPrice, _discount == constant.quotation().extensionItem.DISCOUMNT_DISCOUMNT_INT ? _total : 0);
 
-                    managePrice = utils.accAdd(managePrice, utils.accMul(_total, extensionDetail.quoManageRate));
-
                     total = utils.accAdd(total, utils.accMul(_discount == constant.quotation().extensionItem.DISCOUMNT_DISCOUMNT_INT ? extensionDetail.discount : 1, _total));
                 });
             }
@@ -231,29 +238,49 @@ var ExtensionDetail = (function() {
             undisPrice = utils.changeThrDecimal(undisPrice);
             disPrice = utils.changeThrDecimal(disPrice);
 
-            if (extensionDetail.isCountManageDiscount.prop("checked")) {
-                managediscount = utils.changeTwoDecimal(utils.accMul(extensionDetail.discount, managePrice));
-            } else {
-                managediscount = utils.changeTwoDecimal(managePrice);
-            }
-
             if (extensionDetail.isCountManage.prop("checked")) {
-                total = utils.changeThrDecimal(utils.accAdd(total, managediscount));
+                managePrice = utils.changeTwoDecimal(utils.accMul(total, extensionDetail.quoManageRate));
             } else {
-                total = utils.changeThrDecimal(total);
                 managePrice = 0;
             }
+            
+            if(extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+                taxPrice = utils.changeThrDecimal(utils.accMul(total, extensionDetail.quoTaxRate));
+            }
+
+            if(extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(total, managePrice), extensionDetail.quoTaxRate));
+            }
+            
+            if (extensionDetail.isCountTax.prop("checked")) {
+                taxPrice = taxPrice;
+            } else {
+                total = utils.changeThrDecimal(total);
+                taxPrice = 0;
+            }
+
+            if (extensionDetail.isCountManageDiscount.prop("checked")) {
+                managediscount = utils.changeTwoDecimal(utils.accMul(extensionDetail.discount, managePrice));
+                taxdiscount = extensionDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? utils.changeTwoDecimal(utils.accMul(extensionDetail.discount, taxPrice)) : taxPrice;
+            } else {
+                managediscount = managePrice;
+                taxdiscount = taxPrice;
+            }
+            
+            total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(managediscount, taxdiscount)));
 
             extensionDetail.undisPrice.text(undisPrice);
             extensionDetail.disPrice.text(disPrice);
             extensionDetail.sumLabSumMoney.text(total);
             extensionDetail.managePrice.text(managediscount);
+            extensionDetail.taxPrice.text(taxdiscount);
 
             extensionDetail.basicParams['extension.undisPrice'] = undisPrice;
             extensionDetail.basicParams['extension.disPrice'] = disPrice;
             extensionDetail.basicParams['extension.total'] = total;
             extensionDetail.basicParams['extension.managePrice'] = managePrice;
             extensionDetail.basicParams['extension.manageDiscount'] = extensionDetail.isCountManageDiscount.prop("checked") ? constant.quotation().extension.MANAGEDISCOUNT_DISCOUNT_INT : constant.quotation().extension.MANAGEDISCOUNT_NODISCOUNT_INT;
+            extensionDetail.basicParams['extension.taxPrice'] = taxPrice;
         }
     }
 
@@ -382,6 +409,22 @@ var ExtensionDetail = (function() {
                 if (!extensionDetail.isCountManage.prop("checked")) {
                     options["extension.manageRate"] = 0;
                     options["extension.managePrice"] = 0;
+                }
+
+                com.post(api.quotation.updateExtensionForAdvance, options, function() {
+
+                }, null, false);
+            });
+
+            extensionDetail.isCountTax.on("click", function(e) {
+
+                arCalculator.calculateArFees();
+
+                var options = $.extend({}, extensionDetail.basicParams);
+
+                if (!extensionDetail.isCountTax.prop("checked")) {
+                    options["extension.taxRate"] = 0;
+                    options["extension.taxPrice"] = 0;
                 }
 
                 com.post(api.quotation.updateExtensionForAdvance, options, function() {
@@ -986,6 +1029,8 @@ var ExtensionDetail = (function() {
                 extensionDetail.basicParams["extension.total"] = extension.total;
                 extensionDetail.basicParams["extension.managePrice"] = extension.managePrice;
                 extensionDetail.basicParams["extension.manageRate"] = extension.manageRate;
+                extensionDetail.basicParams["extension.taxPrice"] = extension.taxPrice;
+                extensionDetail.basicParams["extension.taxRate"] = extension.taxRate;
 
                 extensionDetail.basicParams["extensionItem.eid"] = extension.eid;
 
@@ -994,6 +1039,7 @@ var ExtensionDetail = (function() {
                 extensionDetail.type = extension.type;
                 extensionDetail.manageDiscount = extension.manageDiscount;
                 extensionDetail.quoManagePrice = extension.managePrice;
+                extensionDetail.quoTaxPrice = extension.taxPrice;
 
                 extensionDetail.sumLabType.text(constant.quotation().extension.type.keys[extensionDetail.type]);
             }, null, false);
@@ -1015,13 +1061,17 @@ var ExtensionDetail = (function() {
                 extensionDetail.discount = utils.accDiv(quotation.discount, 10);
                 extensionDetail.qid = quotation.qid;
                 extensionDetail.quoManageRate = quotation.manageRate;
+                extensionDetail.quoTaxRate = quotation.taxRate;
+                extensionDetail.quotation = quotation;
                 extensionDetail.versionId = quotation.version.no;
 
                 extensionDetail.discounts.text(quotation.discount);
                 extensionDetail.manageRate.text(quotation.manageRate);
+                extensionDetail.taxRate.text(quotation.taxRate);
                 com.focusPage('#version').text(quotation.version.name);
 
                 extensionDetail.basicParams["extension.manageRate"] = quotation.manageRate;
+                extensionDetail.basicParams["extension.taxRate"] = quotation.taxRate;
 
             }, null, false);
 
@@ -1038,7 +1088,6 @@ var ExtensionDetail = (function() {
                     });
                 }
 
-                arCalculator.calculateArFees();
             }, null, false);
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
@@ -1055,6 +1104,10 @@ var ExtensionDetail = (function() {
 
             if (extensionDetail.manageDiscount == constant.quotation().extension.MANAGEDISCOUNT_DISCOUNT_INT) {
                 extensionDetail.isCountManageDiscount.attr("checked", "checked");
+            }
+
+            if (extensionDetail.quoTaxPrice != 0 && extensionDetail.quoTaxRate != 0) {
+                extensionDetail.isCountTax.attr("checked", "checked");
             }
 
             arCalculator.calculateArFees();

@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -21,6 +22,8 @@ public class OalesVO implements Serializable {
 
 	private DecorationVO decoration;
 
+	private Long foid;
+
 	private HouseVO house;
 
 	private CustomerVO customer;
@@ -29,6 +32,8 @@ public class OalesVO implements Serializable {
 
 	private Long bid;
 
+	private BrandVO branding;
+
 	private String category;
 
 	private String brand;
@@ -36,6 +41,8 @@ public class OalesVO implements Serializable {
 	private Short atttype;
 
 	private Short awardType;
+
+	private Short type;
 
 	private UserBaseVO creater;
 
@@ -60,6 +67,8 @@ public class OalesVO implements Serializable {
 	private Short status;
 
 	private Short accountStatus;
+
+	private Short isScale;
 
 	private String comment;
 
@@ -169,6 +178,14 @@ public class OalesVO implements Serializable {
 		this.decoration = decoration;
 	}
 
+	public Long getFoid() {
+		return foid;
+	}
+
+	public void setFoid(Long foid) {
+		this.foid = foid;
+	}
+
 	public UserBaseVO getSupplier() {
 		return supplier;
 	}
@@ -209,6 +226,14 @@ public class OalesVO implements Serializable {
 		this.bid = bid;
 	}
 
+	public BrandVO getBranding() {
+		return branding;
+	}
+
+	public void setBranding(BrandVO branding) {
+		this.branding = branding;
+	}
+
 	public String getBrand() {
 		return brand;
 	}
@@ -231,6 +256,14 @@ public class OalesVO implements Serializable {
 
 	public void setAwardType(Short awardType) {
 		this.awardType = awardType;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public String getComment() {
@@ -336,6 +369,14 @@ public class OalesVO implements Serializable {
 
 	public void setAccountStatus(Short accountStatus) {
 		this.accountStatus = accountStatus;
+	}
+
+	public Short getIsScale() {
+		return isScale;
+	}
+
+	public void setIsScale(Short isScale) {
+		this.isScale = isScale;
 	}
 
 	public Integer getCompany() {

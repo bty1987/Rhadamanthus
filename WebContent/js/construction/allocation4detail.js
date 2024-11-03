@@ -80,6 +80,8 @@ $(function() {
 
             com.focusPage("#" + operate + "StartTime").val(constructionSchedule.startTime);
             com.focusPage("#" + operate + "EndTime").val(constructionSchedule.endTime);
+            com.focusPage("#" + operate + "EnterTime").val(constructionSchedule.enterTime);
+            com.focusPage("#" + operate + "LeaveTime").val(constructionSchedule.leaveTime);
 
             var otherename = schedule;
             var otherStatus = constructionSchedule.status;
@@ -88,9 +90,12 @@ $(function() {
             var othereFailBtn = com.focusPage("#" + otherename + "Fail");
             var othereValidBtn = com.focusPage("#" + otherename + "Valid");
             var otherePassdBtn = com.focusPage("#" + otherename + "Pass");
+            var otherEnterBtn = com.focusPage("#" + otherename + "Enter");
+            var otherLeaveBtn = com.focusPage("#" + otherename + "Leave");
 
             updatastatusDiv(otherStatus, otherename);
             updatePaymentStatus(constructionSchedule.checkout, otherename);
+            updateEnterStatus(constructionSchedule.workStatus, otherename);
 
             otherSuccessBtn.click(function() {
 
@@ -107,6 +112,51 @@ $(function() {
                 return false;
             });
 
+            otherEnterBtn.click(function() {
+
+                var options = {
+                    "constructionSchedule.csid": constructionSchedule.csid
+                };
+
+                com.post(api.construction.enterConstructionSchedule, options, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    updateEnterStatus(1, otherename);
+                    com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function(res) {
+
+                        var constructionSchedule = res.constructionSchedule;
+                    com.focusPage("#" + operate + "EnterTime").val(constructionSchedule.enterTime);
+                    });
+
+                });
+
+                return false;
+            });
+            
+            otherLeaveBtn.click(function() {
+
+                var options = {
+                    "constructionSchedule.csid": constructionSchedule.csid
+                };
+
+                com.post(api.construction.leaveConstructionSchedule, options, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    updateEnterStatus(2, otherename);
+                    com.post(api.construction.enterConstructionSchedule, options, function(res) {
+                        
+                        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, elementPostData, function(res) {
+
+                            var constructionSchedule = res.constructionSchedule;
+                        com.focusPage("#" + operate + "LeaveTime").val(constructionSchedule.leaveTime);
+                        });
+
+                    });
+                });
+
+                return false;
+            });
+            
             othereFailBtn.click(function() {
 
                 var options = {
@@ -213,6 +263,19 @@ $(function() {
             $("<span></span>").addClass("label label-grey").text("验证").appendTo(statusDiv);
         } else {
             $("<span></span>").addClass("label label-danger").text("通过").appendTo(statusDiv);
+        }
+    }
+
+    function updateEnterStatus(workStatus, statusDiv) {
+
+        var statusDiv = com.focusPage("#" + statusDiv + "enterStatus").html("");
+
+        if (workStatus == 0) {
+            $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
+        } else if(workStatus == 1) {
+            $("<span></span>").addClass("label label-info").text("进场").appendTo(statusDiv);
+        } else if(workStatus  == 2) {
+            $("<span></span>").addClass("label label-success").text("离场").appendTo(statusDiv);
         }
     }
 
@@ -331,6 +394,20 @@ $(function() {
         var paneWorkerSmTh = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTh);
         var paneWorkerInputTwo = $("<input/>").attr("id", name + "EndTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(paneWorkerSmTh);
         var paneWorkerSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
+        
+        // 进场时间
+        var paneWorkerGroupTwo = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+        var paneWorkerStart = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "EnterTime").html("进场时间").appendTo(paneWorkerGroupTwo);
+        var paneWorkerSmTwo = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTwo);
+        var paneWorkerInput = $("<input/>").attr("id", name + "EnterTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(paneWorkerSmTwo);
+        var paneWorkerSpace = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
+        
+        // 出场时间
+        var paneWorkerGroupTh = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+        var paneWorkerEnd = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "LeaveTime").html("出场时间").appendTo(paneWorkerGroupTh);
+        var paneWorkerSmTh = $("<div></div>").addClass("col-sm-4").appendTo(paneWorkerGroupTh);
+        var paneWorkerInputTwo = $("<input/>").attr("id", name + "LeaveTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").appendTo(paneWorkerSmTh);
+        var paneWorkerSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupTwo);
 
         var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
         var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "Status").html(constructionNode[schedule] + "状态").appendTo(paneWorkerGroupF);
@@ -341,6 +418,12 @@ $(function() {
         var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
         var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "paymentStatus").html("款项验证").appendTo(paneWorkerGroupF);
         var paneWorkerLabDiv = $("<div></div>").attr("id", name + "paymentStatus").addClass("col-sm-2").appendTo(paneWorkerGroupF);
+        var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
+        
+        // 进场状态
+        var paneWorkerGroupF = $("<div></div>").addClass("form-group").appendTo(paneWorkerGroup);
+        var paneWorkerLab = $("<label></label>").addClass("col-sm-2 control-label no-padding-right").attr("for", name + "enterStatus").html("进场状态").appendTo(paneWorkerGroupF);
+        var paneWorkerLabDiv = $("<div></div>").attr("id", name + "enterStatus").addClass("col-sm-2").appendTo(paneWorkerGroupF);
         var paneWorkerSpaceTh = $("<div></div>").addClass("space-4").appendTo(paneWorkerGroupF);
 
         var paneWorkerGroupFive = $("<div></div>").addClass("form-group").attr("id", name + "Operate").appendTo(paneWorkerGroup);
@@ -357,6 +440,10 @@ $(function() {
         var paneWorkerHThi = $("<i></i>").addClass("icon-edit").appendTo(paneWorkerHTh);
         var paneWorkerHThSpan = $("<span></span>").html("工人信息").appendTo(paneWorkerHTh);
 
+        // 进场按钮
+        var enterBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("进场").attr("style", "margin-right:5px").attr("id", name + "Enter").appendTo(paneWorkerSmFive);
+        // 离场按钮
+        var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-success").html("离场").attr("style", "margin-right:5px").attr("id", name + "Leave").appendTo(paneWorkerSmFive);
         var paneWorkerGroupSe = $("<div></div>").addClass("form-group").appendTo(paneWorkerForm);
         var paneWorkerEnter = $("<div></div>").attr("id", name + "WorkerEnter").appendTo(paneWorkerGroupSe);
         var paneWorkerEnlab = $("<lable></lable>").addClass("col-sm-1 control-label").attr("for", name + "WorkerName").html("工人姓名").appendTo(paneWorkerEnter);

@@ -110,7 +110,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus", "construction-constructionCreateTime", "construction-constructionStartTime", "construction-constructionEndTime"], "condList", api.construction.pageConstructionSchedule, function(data) {
+    searcher.init(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime"], "condList", api.construction.pageConstructionSchedule, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLinePersonPostData");

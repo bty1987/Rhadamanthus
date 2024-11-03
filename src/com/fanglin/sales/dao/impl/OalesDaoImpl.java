@@ -3,6 +3,7 @@ package com.fanglin.sales.dao.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.sales.dao.OalesDao;
+import com.fanglin.sales.po.OalesBO;
 import com.fanglin.sales.po.OalesPO;
 import com.fanglin.utils.Paging;
 
@@ -55,8 +57,8 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<OalesPO> queryOalesByOrderId(String orderId) {
-		return session().createCriteria(OalesPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
+	public List<OalesBO> queryOalesByOrderId(String orderId) {
+		return session().createCriteria(OalesBO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<OalesPO> query, List<Filter> filters) throws FLException {
@@ -64,10 +66,21 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 	}
 
 	@Override
-	public Long amountOales(String orderId) {
-		String sql = "SELECT SUM(o.total) FROM sales.oales o where o.orderId = :orderId";
+	public Long amountOales(String orderId, Short isScale) {
 
-		BigDecimal sum = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+		StringBuffer sql = new StringBuffer("SELECT SUM(o.total) FROM sales.oales o where o.orderId = :orderId");
+
+		if (isScale != null) {
+			sql.append(" and o.isScale = :isScale");
+		}
+
+		Query query = session().createSQLQuery(sql.toString()).setString("orderId", orderId);
+
+		if (isScale != null) {
+			query.setShort("isScale", isScale);
+		}
+
+		BigDecimal sum = (BigDecimal) query.uniqueResult();
 
 		if (sum == null) {
 			sum = BigDecimal.ZERO;
@@ -108,6 +121,8 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 				query.add(query.getCriterion(String.format("%sno", prefix), data, op));
 			} else if ("oales.status".equals(field)) {
 				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+			} else if ("oales.type".equals(field)) {
+				query.add(query.getCriterion(String.format("%stype", prefix), Short.valueOf(data), op));
 			} else if ("oales.brand.bid".equals(field)) {
 				query.add(query.getCriterion(String.format("%sbid", prefix), Long.valueOf(data), op));
 			} else if ("oales.category".equals(field)) {

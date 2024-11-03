@@ -17,9 +17,8 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
-import com.fanglin.decoration.dao.DecorationDao;
-import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PaytranDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
@@ -88,9 +87,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private PaytranDao paytranDao;
-
-	@Autowired
-	private DecorationDao decorationDao;
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
@@ -489,10 +485,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			paytranDao.updatePaytran(ptids, salesReceiptPO.getSrId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_SALES_INT);
 		}
 
-		// 更新装修单上的销售比例
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(sales.getOrderId());
-
-		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
 
@@ -652,10 +645,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			paytranDao.updatePaytran(ptids, salesReceiptPO.getSrId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_SALES_INT);
 		}
 
-		// 更新装修单上的销售比例
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(sales.getOrderId());
-
-		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
 
@@ -773,10 +763,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesRefundsDao.updateSalesRefundsForStatusBySpid(salesPaymentVO.getSpid(), SalesPaymentPO.STATUS_PAIDFOR_INT);
 		}
 
-		// 更新装修单上的销售比例
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(sales.getOrderId());
-
-		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
 		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
 

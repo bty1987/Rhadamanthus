@@ -22,5 +22,9 @@ public interface ConstructionScheduleService {
 	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
 
 	public int checkoutConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
-
+	
+	public void enterConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+	
+	public void leaveConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+	
 }

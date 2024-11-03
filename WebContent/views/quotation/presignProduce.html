@@ -25,7 +25,7 @@
 								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
-                        
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="version">版本</label>
                             <div class="col-sm-9">
@@ -39,21 +39,21 @@
 								<input type="text" id="quotePrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="discount">折扣</label>
 							<div class="col-sm-9">
 								<input type="text" id="discount" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="manageRate">管理费比例</label>
 							<div class="col-sm-9">
 								<input type="text" id="manageRate" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
-						
+
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="manageFormula">管理费公式</label>
 							<div class="col-sm-9">
@@ -62,11 +62,42 @@
 						</div>
 
 						<div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="comment">说明</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="comment">管理费说明</label>
                             <div class="col-sm-9">
                                 <ul class="list-unstyled col-xs-10 col-sm-10">
                                     <li class="text-warning orange">
-                                        <span>支持参数包括: 起报价 , 优惠额 , 功能区 , 个性 , 减项 , 赋能</span>
+                                        <span>支持参数包括: 起报价 , 优惠额 , 功能区 , 个性 , 减项 , 赋能, 特殊优惠</span>
+                                    </li>
+                                    <li class="text-warning orange">
+                                        <span>支持运算符号包括: + , - , * , / , ( , )</span>
+                                    </li>
+                                    <li class="text-warning orange">
+                                        <span>同时支持数字作为运算元素</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="taxRate">税金比例</label>
+							<div class="col-sm-9">
+								<input type="text" id="taxRate" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="taxFormula">税金公式</label>
+							<div class="col-sm-9">
+								<textarea rows="5" maxlength="64" id="taxFormula" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+
+						<div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taxComment">税金说明</label>
+                            <div class="col-sm-9">
+                                <ul class="list-unstyled col-xs-10 col-sm-10">
+                                    <li class="text-warning orange">
+                                        <span>支持参数包括: 起报价 , 优惠额 , 功能区 , 个性 , 减项 , 赋能, 管理费, 特殊优惠, 管理优惠</span>
                                     </li>
                                     <li class="text-warning orange">
                                         <span>支持运算符号包括: + , - , * , / , ( , )</span>

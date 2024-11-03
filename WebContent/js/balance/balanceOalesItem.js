@@ -183,6 +183,12 @@ $(function() {
         prop: "oales.status",
         clazz: "red",
         dataset: constant.sales().oales.status.keys,
+    }, {
+        fieId: "type",
+        name: "类型",
+        prop: "oales.type",
+        clazz: "red",
+        dataset: constant.sales().oales.type.keys,
     }];
 
     var linebtus = [{

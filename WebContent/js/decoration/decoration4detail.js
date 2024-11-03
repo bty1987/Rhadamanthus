@@ -1186,6 +1186,15 @@ jQuery(function($) {
 
         decorationDetail.printQuotationCNModal.modal("show");
     });
+    
+    com.focusPage("#preferBtn").on("click", function() {
+        
+        com.focusPage('#prefer').val(com.checkNull(quotationUtils.quotationDetail.quotationPrefer.preferPrice, 0));
+        com.focusPage('#manage').val(com.checkNull(quotationUtils.quotationDetail.quotationPrefer.managePrefer, 0));
+        com.focusPage('#advance').val(com.checkNull(quotationUtils.quotationDetail.quotationPrefer.advancePrefer, 0));
+
+        com.focusPage("#quotationPreferModal").modal("show");
+    });
 
     com.focusPage("#btnPrintPresignInfo").on('click', function(res) {
 

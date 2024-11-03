@@ -1,5 +1,6 @@
 package com.fanglin.sales.dao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
@@ -182,6 +183,15 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		return count.intValue();
 	}
 
+	@Override
+	public long amountSales(String orderId, short type) {
+
+		String sql = "select sum(s.amount) from sales.sales s where s.orderId = :orderId and s.type = :type and status in :status and balanceStatus = :balanceStatus";
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).setParameterList("status", Arrays.asList(SalesPO.STATUS_INIT_SHORT, SalesPO.STATUS_END_SHORT)).setShort("balanceStatus", SalesPO.BALANCESTATUS_SETTLEMENT_SHORT).uniqueResult();
+
+		return sqlQuery == null ? 0 : sqlQuery.longValue();
+	}
+
 	private void queryFilterExcute(PagingQuery<SalesPO> query, List<Filter> filters) throws FLException {
 		queryFilterExcute(query, filters, "");
 	}
@@ -243,10 +253,14 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.add(query.getCriterion(String.format("%sbid", prefix), Long.valueOf(data), op));
 			} else if ("sales.status".equals(field)) {
 				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+			} else if ("sales.type".equals(field)) {
+				query.add(query.getCriterion(String.format("%stype", prefix), Short.valueOf(data), op));
 			} else if ("sales.fullpayStatus".equals(field)) {
 				query.add(query.getCriterion(String.format("%sfullpayStatus", prefix), Short.valueOf(data), op));
 			} else if ("sales.isAffirm".equals(field)) {
 				query.add(query.getCriterion(String.format("%sisAffirm", prefix), Short.valueOf(data), op));
+			} else if ("sales.balanceStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%sbalanceStatus", prefix), Short.valueOf(data), op));
 			} else if ("sales.instorer.userId".equals(field)) {
 				query.add(query.getCriterion("instorer.userId", data, op));
 			} else if ("sales.salesman.userId".equals(field)) {

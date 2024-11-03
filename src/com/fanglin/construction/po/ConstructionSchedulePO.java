@@ -48,6 +48,12 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public static final short CHECKOUT_PASS_INT = 1;
 
+	public static final short WORKSTATUS_INIT_INT = 0;
+
+	public static final short WORKSTATUS_ENTER_INT = 1;
+
+	public static final short WORKSTATUS_LEAVE_INT = 2;
+
 	private long csid;
 
 	private long cid;
@@ -60,11 +66,17 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private Timestamp endTime;
 
+	private Timestamp enterTime;
+
+	private Timestamp leaveTime;
+
 	private short status;
 
 	private short checkout;
 
 	private short schedule;
+
+	private short workStatus;
 
 	public ConstructionSchedulePO() {
 		super();
@@ -140,6 +152,24 @@ public class ConstructionSchedulePO implements Serializable {
 		this.endTime = endTime;
 	}
 
+	@Column(name = "enterTime")
+	public Timestamp getEnterTime() {
+		return enterTime;
+	}
+
+	public void setEnterTime(Timestamp enterTime) {
+		this.enterTime = enterTime;
+	}
+
+	@Column(name = "leaveTime")
+	public Timestamp getLeaveTime() {
+		return leaveTime;
+	}
+
+	public void setLeaveTime(Timestamp leaveTime) {
+		this.leaveTime = leaveTime;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -147,6 +177,15 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "workStatus")
+	public short getWorkStatus() {
+		return workStatus;
+	}
+
+	public void setWorkStatus(short workStatus) {
+		this.workStatus = workStatus;
 	}
 
 	@Column(name = "checkout")

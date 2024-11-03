@@ -317,7 +317,15 @@
             var _calPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT].indexOf(_discountFlag) != -1 ? _sum : 0;
             var _consPrice = _subtype == constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate)); // 获取到管理费
-            var _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate)); // 获取到税金
+            var _taxPrice = 0;
+
+            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+                _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate)); // 获取管理税金
+            }
+
+            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+                _taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(_sum, _managePrice), addReduceDetail.taxRate)); // 获取总额税金
+            }
 
             var itemInfo = {
                 "data-totalprice": _sumd,
@@ -369,7 +377,7 @@
                 var _calPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT].indexOf(_discountFlag) != -1 ? _sum : 0;
                 var _consPrice = _subtype == constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
                 var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
-                var _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate));
+                var _taxPrice = 0;
 
                 var itemInfo = {
                     "data-totalprice": _sumd,
@@ -406,30 +414,33 @@
             consprice = utils.changeTwoDecimal(consprice);
             manageprice = utils.changeTwoDecimal(manageprice);
             taxprice = utils.changeTwoDecimal(taxprice);
+            
+            if (!addReduceDetail.isCountManage.prop("checked")) {
+                manageprice = 0;
+            }
+            
+            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+                taxprice = utils.changeThrDecimal(utils.accMul(sum, addReduceDetail.taxRate)); // 获取管理税金
+            }
+
+            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+                taxprice = utils.changeThrDecimal(utils.accMul(utils.accAdd(sum, manageprice), addReduceDetail.taxRate)); // 获取总额税金
+            }
+            
+            if (!addReduceDetail.isCountTax.prop("checked")) {
+                taxprice = 0;
+            }
 
             if (addReduceDetail.isCountManageDiscount.prop("checked")) {
                 managediscount = utils.changeTwoDecimal(utils.accDiv(utils.accMul(addReduceDetail.discount, manageprice), 10));
-                managetaxprice = utils.changeTwoDecimal(utils.accDiv(utils.accMul(addReduceDetail.discount, taxprice), 10));
+                managetaxprice = addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? utils.changeTwoDecimal(utils.accDiv(utils.accMul(addReduceDetail.discount, taxprice), 10)) : utils.changeTwoDecimal(taxprice);
             } else if (!addReduceDetail.isCountManageDiscount.prop("checked")) {
                 managediscount = utils.changeTwoDecimal(manageprice);
                 managetaxprice = utils.changeTwoDecimal(taxprice);
             }
 
-            if (addReduceDetail.isCountManage.prop("checked")) {
-                sum = utils.changeTwoDecimal(utils.accAdd(sum, manageprice));
-                sumd = utils.changeTwoDecimal(utils.accAdd(sumd, managediscount));
-            } else if (!addReduceDetail.isCountManage.prop("checked")) {
-                sum = utils.changeTwoDecimal(sum);
-                manageprice = 0;
-            }
-
-            if (addReduceDetail.isCountTax.prop("checked")) {
-                sum = utils.changeTwoDecimal(utils.accAdd(sum, taxprice));
-                sumd = utils.changeTwoDecimal(utils.accAdd(sumd, managetaxprice));
-            } else if (!addReduceDetail.isCountTax.prop("checked")) {
-                sum = utils.changeTwoDecimal(sum);
-                taxprice = 0;
-            }
+            sum = utils.changeTwoDecimal(utils.accAdd(sum, utils.accAdd(manageprice, taxprice)));
+            sumd = utils.changeTwoDecimal(utils.accAdd(sumd, utils.accAdd(managediscount, managetaxprice)));
 
             com.focusPage("#managePrice").text(managediscount);
             com.focusPage("#sumLabSumMoney").text(sum);
@@ -757,7 +768,7 @@
                     options["addReduce.taxPrice"] = 0;
                     options["addReduce.taxDiscount"] = constant.quotation().addreduce.TAX_NODISCOUNT_INT;
                 } else {
-                    options["addReduce.taxDiscount"] = constant.quotation().addreduce.TAX_MANAGETAXDISCOUNT_INT;
+                    options["addReduce.taxDiscount"] = addReduceDetail.quotation.taxDiscount;
                 }
 
                 com.post(api.addReduce.updateAddReduceForAdvance, options, function() {
@@ -1223,7 +1234,15 @@
             var _consPrice = qv.subtype == constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
 
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
-            var _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate));
+            var _taxPrice = 0;
+
+            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT){
+                _taxPrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.taxRate));
+            }
+
+            if(addReduceDetail.quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT){
+                _taxPrice = utils.changeThrDecimal(utils.accMul(utils.accAdd(_sum,_managePrice), addReduceDetail.taxRate));
+            }
 
             var _class = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(qv.discount) != -1 ? "blue" : "green";
             var _classd = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT].indexOf(qv.discount) != -1 ? "blue" : "green";

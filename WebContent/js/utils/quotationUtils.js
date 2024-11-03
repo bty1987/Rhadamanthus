@@ -27,6 +27,13 @@ var quotationUtils = {
             return false;
         }
 
+        com.post(api.quotation.queryQuotationPrefer, {
+            "quotationPrefer.qid": quotationUtils.quotationDetail.quotation.qid,
+        }, function(res) {
+
+            quotationUtils.quotationDetail.quotationPrefer = res.quotationPrefer;
+        }, null, false);
+
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": params.quotation.orderId,
         }, function(res) {
@@ -70,7 +77,7 @@ var quotationUtils = {
             itemtype: 31
         };
 
-        quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.quotation.orderType, true, showType);
+        quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, quotationUtils.quotationDetail.quotationPrefer, params.quotation.orderType, true, showType);
 
         quotationUtils.initQuotationFunctionAreaDetail();
         quotationUtils.initQuotationWorkerTypeDetail();
@@ -238,7 +245,7 @@ var quotationUtils = {
         quotationUtils.quotationDetail.addReduceTotalPrice = $addReduceTotalPrice; // 增减项总额
         quotationUtils.quotationDetail.addReduceManagePrice = $addReduceManagePrice; // 增减项管理费总额
     },
-    initQuotationDetailItem: function(quotation, quotationFunctionAreas, addReduces, extensions, orderType, dataProcessing, showType) {
+    initQuotationDetailItem: function(quotation, quotationFunctionAreas, addReduces, extensions, quotationPrefer, orderType, dataProcessing, showType) {
 
         var extensionItemTypes = {
             "0": "标准增(扩展)",
@@ -468,7 +475,7 @@ var quotationUtils = {
                     }
                 }
 
-                if(extension.type == constant.quotation().extension.TYPE_SUB_INT){
+                if (extension.type == constant.quotation().extension.TYPE_SUB_INT) {
                     extension.managePrice = -extension.managePrice;
                 }
 
@@ -486,6 +493,23 @@ var quotationUtils = {
                         price: extension.managePrice,
                         quotationTotalPrice: extension.managePrice,
                         total: extension.managePrice,
+                    });
+                }
+
+                if (quotationFunctionAreaItemCs['-扩展项目'] && extension.taxRate != 0 && extension.taxPrice != 0) {
+                    quotationFunctionAreaItemCs['-扩展项目'].push({
+                        subtype: 0,
+                        suptype: 2,
+                        typestr: "管理",
+                        workType: "其他",
+                        itemName: "税金",
+                        num: extension.taxPrice,
+                        measurementUnit: "税金",
+                        _discountNum: quotationUtils.quotationDetail.quotation.taxDiscount,
+                        unitPrice: extension.taxRate,
+                        price: extension.taxPrice,
+                        quotationTotalPrice: extension.taxPrice,
+                        total: extension.taxPrice,
                     });
                 }
             }
@@ -598,6 +622,53 @@ var quotationUtils = {
             }
         }
 
+        if ((showType.itemtype & 32) == 32) {
+            quotationFunctionAreaItemCs['-优惠项目'] = [];
+        }
+
+        if(quotationFunctionAreaItemCs['-优惠项目'] && quotationPrefer.qpid != null){
+            quotationFunctionAreaItemCs['-优惠项目'].push({
+                subtype: null,
+                suptype: 1,
+                typestr: "优惠",
+                workType: "其他",
+                itemName: "优惠额",
+                num: quotationPrefer.preferPrice,
+                measurementUnit: "优惠额",
+                _discountNum:  "-",
+                unitPrice: quotationPrefer.preferPrice,
+                price: quotationPrefer.preferPrice,
+                quotationTotalPrice: quotationPrefer.preferPrice,
+                total: quotationPrefer.preferPrice,
+            }, {
+                subtype: null,
+                suptype: 1,
+                typestr: "优惠",
+                workType: "其他",
+                itemName: "管理优惠",
+                num: quotationPrefer.managePrefer,
+                measurementUnit: "管理优惠",
+                _discountNum:  "-",
+                unitPrice: quotationPrefer.managePrefer,
+                price: quotationPrefer.managePrefer,
+                quotationTotalPrice: quotationPrefer.managePrefer,
+                total: quotationPrefer.managePrefer,
+            }, {
+                subtype: null,
+                suptype: 1,
+                typestr: "优惠",
+                workType: "其他",
+                itemName: "特殊优惠",
+                num: quotationPrefer.advancePrefer,
+                measurementUnit: "特殊优惠",
+                _discountNum:  "-",
+                unitPrice: quotationPrefer.advancePrefer,
+                price: quotationPrefer.advancePrefer,
+                quotationTotalPrice: quotationPrefer.advancePrefer,
+                total: quotationPrefer.advancePrefer,
+            });
+         }
+
         quotationUtils.quotationDataProcessing(quotationFunctionAreaItemCs, reduceNums, dataProcessing);
     },
 
@@ -675,6 +746,38 @@ var quotationUtils = {
         }, null, false);
     },
     initQuotationFunctionAreaDetail: function() {
+        
+        var $quotationSummary = com.focusPage('#quotationSummary').html("");
+
+        //报价信息
+        var inclusiveDiv = $("<div></div>").addClass('row');
+        var inclusiveBody = $("<div></div>").addClass('widget-body');
+        var inclusiveTable = $("<div></div>").addClass('clearfix').css({
+            "margin-top": "15px",
+            "margin-bottom": "15px"
+        });
+
+        var serviceMoneyBody = $("<div></div>").addClass('widget-body');
+
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "managePrefer", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advancePrefer", true), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", false), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
+        serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
+        inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
+        $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
+        $('<div></div>').addClass('hr col-md-12').prependTo(inclusiveDiv);
+
+        inclusiveDiv.appendTo($quotationSummary);
+
+        var $quotation = quotationUtils.quotationDetail.quotation;
+        var $quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
+
+        com.focusPage('#discount', '#quotationSummary').html(com.checkNull($quotation.discount, 0));
+        com.focusPage('#managePrice', '#quotationSummary').html(com.checkNull($quotation.managePrice, 0));
+        com.focusPage('#taxPrice', '#quotationSummary').html(com.checkNull($quotation.taxPrice, 0));
+        com.focusPage('#totalPrice', '#quotationSummary').html(com.checkNull($quotation.totalPrice, 0));
+
+        com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull($quotationPrefer.preferPrice, 0));
+        com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.managePrefer, 0));
+        com.focusPage('#advancePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.advancePrefer, 0));
 
         var $ribbonSubset = com.focusPage('#ribbonSubset').html("");
 
@@ -761,7 +864,7 @@ var quotationUtils = {
         }).appendTo($ulribbon);
 
         $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
-        $dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
+        $dname = $('<h4></h4>').append($('<strong></strong>').attr("id", "totalPrice").css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
     },
     initQuotationWorkerTypeDetail: function() {
 
@@ -872,7 +975,7 @@ var quotationUtils = {
             "margin-bottom": "20px"
         }).appendTo($ulworkType);
         $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
-        $dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
+        $dname = $('<h4></h4>').append($('<strong></strong>').attr("id", "totalPrice").css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
     },
     quotationDataProcessing: function(quotationFunctionAreaItemCs, reduceNums, dataProcessing) {
 
@@ -1130,6 +1233,7 @@ var quotationUtils = {
         var $taxPrice = quotationUtils.quotationDetail.quotation.taxPrice;
         var $Total = 0;
         var $manageDiscount = quotationUtils.quotationDetail.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? utils.accDiv($discount, 10) : 1; // 管理费折扣
+        var $quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
 
         if (quotationUtils.quotationDetail.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
             $taxPrice = utils.changeThrDecimal(utils.accMul($taxPrice, $manageDiscount));
@@ -1143,7 +1247,7 @@ var quotationUtils = {
             // 余数
             var remainder = total % $basePrice;
             // (工程基数 - 工程基数 % 基数) * 折扣 + 工程基数 % 基数 + 管理费
-            var _dicProjectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), utils.accDiv($discount, 10)), remainder), $managePrice), $taxPrice));
+            var _dicProjectPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), utils.accDiv($discount, 10)), remainder), $managePrice), $taxPrice), $quotationPrefer.preferPrice), $quotationPrefer.managePrefer), $quotationPrefer.advancePrefer));
             // 增减增项总额 + 拓展项总额
             var addTotal = utils.accAdd($addReduceTotal, $extensionTotalPrice);
             // 减项非打折项 + 减项打折项 * 折扣
@@ -1161,7 +1265,7 @@ var quotationUtils = {
             var addReduceTotal = utils.accAdd(utils.accAdd(utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10)), $minusQuoTotalPrice), $addReduceTotal);
 
             $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(quotationTotal, $addReduceTotalPrice), $extensionTotalPrice));
-            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd($Total, $managePrice), $trafficPrice), $taxPrice));
+            $Total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd($Total, $managePrice), $trafficPrice), $taxPrice), $quotationPrefer.preferPrice), $quotationPrefer.managePrefer), $quotationPrefer.advancePrefer));
         }
 
         return utils.changeThrDecimal($Total);
@@ -1180,10 +1284,10 @@ var quotationUtils = {
         // var $minusExtensionTotalPrice = quotationUtils.quotationDetail.minusExtensionTotalPrice;//减项中的扩展项总额
 
         var $addReduceTotalPrice = quotationUtils.quotationDetail.addReduceTotalPrice; // 增减项总额
-        var $taxPrice = quotationUtils.quotationDetail.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? utils.changeThrDecimal(utils.accAdd(quotationUtils.quotationDetail.quotation.taxRate, 1)) : quotationUtils.quotationDetail.quotation.taxPrice;
+        var $quotation = quotationUtils.quotationDetail.quotation;
+        var $quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
 
-        var $Total = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd($quotationUndisPrice, $quotationTotalPrice), $addReduceTotalPrice), $extensionTotalPrice), quotationUtils.quotationDetail.quotation.managePrice), quotationUtils.quotationDetail.quotation.trafficPrice);
-        $Total = utils.changeThrDecimal(utils.accMul(utils.accAdd($Total, quotationUtils.quotationDetail.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? $taxPrice : 0), quotationUtils.quotationDetail.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? $taxPrice : 1));
+        var $Total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd($quotationUndisPrice, $quotationTotalPrice), $addReduceTotalPrice), $extensionTotalPrice), $quotation.managePrice), $quotation.trafficPrice), $quotation.taxPrice), $quotationPrefer.preferPrice), $quotationPrefer.managePrefer), $quotationPrefer.advancePrefer));
 
         return utils.changeThrDecimal($Total);
     },
@@ -1201,7 +1305,7 @@ var quotationUtils = {
 
         var serviceMoneyBody = $("<div></div>").addClass('widget-body');
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true),this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
         serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
         inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
@@ -1218,17 +1322,18 @@ var quotationUtils = {
 
             discout = discout < 0 ? 0 : discout > 1 ? 1 : discout;
 
-            com.focusPage('#quotePrice').html(com.checkNull(protation.quotePrice, 0));
-            com.focusPage('#preferPrice').html(com.checkNull(protation.preferPrice, 0));
-            com.focusPage('#discount').html(com.checkNull(discout, 0));
-            com.focusPage('#managePrice').html(com.checkNull(protation.managePrice, 0));
-            com.focusPage('#manageProfit').html(com.checkNull(protation.manageProfit, 0));
-            com.focusPage('#advanceProfit').html(com.checkNull(protation.advanceProfit, 0));
-            com.focusPage('#quoteArea').html(com.checkNull(protation.quoteArea, 0));
-            com.focusPage('#totalPrice').html(com.checkNull(protation.totalPrice, 0));
-            com.focusPage('#product').html(protation.product);
+            com.focusPage('#quotePrice', "#presignItemListDiv").html(com.checkNull(protation.quotePrice, 0));
+            com.focusPage('#preferPrice', "#presignItemListDiv").html(com.checkNull(protation.preferPrice, 0));
+            com.focusPage('#discount', "#presignItemListDiv").html(com.checkNull(discout, 0));
+            com.focusPage('#managePrice', "#presignItemListDiv").html(com.checkNull(protation.managePrice, 0));
+            com.focusPage('#manageProfit', "#presignItemListDiv").html(com.checkNull(protation.manageProfit, 0));
+            com.focusPage('#advanceProfit', "#presignItemListDiv").html(com.checkNull(protation.advanceProfit, 0));
+            com.focusPage('#quoteArea', "#presignItemListDiv").html(com.checkNull(protation.quoteArea, 0));
+            com.focusPage('#taxPrice', "#presignItemListDiv").html(com.checkNull(protation.taxPrice, 0));
+            com.focusPage('#totalPrice', "#presignItemListDiv").html(com.checkNull(protation.totalPrice, 0));
+            com.focusPage('#product', "#presignItemListDiv").html(protation.product);
 
-            if(protation.advanceProfit == 0){
+            if (protation.advanceProfit == 0) {
                 com.focusPage('#advanceProfitShow').hide();
             }
 
@@ -1409,7 +1514,7 @@ var quotationUtils = {
                 "margin-bottom": "20px"
             }).appendTo(presignItemListDiv);
             $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
-            $dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + protation.totalPrice + " 成本: " + protation.totalCost + " 利润: " + profit));
+            $dname = $('<h4></h4>').append($('<strong></strong>').attr("id", "totalPrice").css('color', '#E2737D').html("总额: " + protation.totalPrice + " 成本: " + protation.totalCost + " 利润: " + profit));
         }
     },
     createDivForHolonomy: function(inclass, string, id, isleft) {

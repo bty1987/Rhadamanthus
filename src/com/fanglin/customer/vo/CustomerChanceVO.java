@@ -154,7 +154,7 @@ public class CustomerChanceVO implements Serializable {
 		this.issuer = issuer;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -163,7 +163,7 @@ public class CustomerChanceVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getIssueTime() {
 		return issueTime;
 	}
@@ -172,7 +172,7 @@ public class CustomerChanceVO implements Serializable {
 		this.issueTime = issueTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -181,7 +181,7 @@ public class CustomerChanceVO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getReadTime() {
 		return readTime;
 	}

@@ -9,11 +9,15 @@ jQuery(function($) {
         decoration: params["printConf"].decoration,
         ptype: params["printConf"].ptype,
         rtype: params["printConf"].rtype,
-        index: 1
+        index: 1,
+        projectAmount: 0,
+        materialAmount: 0,
+        refundAmount: 0
     };
 
     printHeader();
     printTable();
+    printFoot();
 
     function printHeader() {
         var $table = $('<table style="font-size: 14px" width="100%" bgcolor="#000000" border="0" cellpadding="1" cellspacing="0"></table>').appendTo($("#receiptList"));
@@ -53,7 +57,23 @@ jQuery(function($) {
         print.ptype.contains("1") ? queryDecoration($tbody) : "";
         print.ptype.contains("3") ? querySales($tbody) : "";
         print.ptype.contains("4") ? queryService($tbody) : "";
+    }
 
+    function printFoot () {
+        var $table = $('<table style="font-size: 14px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0"></table>').appendTo($("#receiptList"));
+        var $tbody = $('<tbody></tbody>').appendTo($table);
+
+        var $tr6 = $('<tr bgcolor="#FFFFFF"></tr>').appendTo($tbody);
+        var $td6 = $('<td width="100%"></td>').appendTo($tr6);
+        var $str6 = $('<strong></strong>').html("工程收款总额: ￥" + print.projectAmount).appendTo($td6);
+
+        var $tr7 = $('<tr bgcolor="#FFFFFF"></tr>').appendTo($tbody);
+        var $td7 = $('<td width="100%"></td>').appendTo($tr7);
+        var $str7 = $('<strong></strong>').html("主材收款总额: ￥" + print.materialAmount).appendTo($td7);
+
+        var $tr8 = $('<tr bgcolor="#FFFFFF"></tr>').appendTo($tbody);
+        var $td8 = $('<td width="100%"></td>').appendTo($tr8);
+        var $str8 = $('<strong></strong>').html("退款总额: ￥" + print.refundAmount).appendTo($td8);
     }
 
     function queryAdvance($tbody) {
@@ -71,8 +91,13 @@ jQuery(function($) {
             var payments = res.paging.data;
 
             $.each(payments, function(i, v) {
+                var type = v.type;
                 v["type"] = constant.payment().advancePayment.paymentType.keys[v.paymentType] + " " + constant.payment().advancePayment.type.keys[v.type];
-                drawPaymentLine(v, $tbody);
+                drawPaymentLine(v, $tbody, function (money) {
+                    if (v.paymentType == 0 && type == 1) print.projectAmount = utils.accAdd(print.projectAmount, money); //合同预付款收款
+                    if (v.paymentType == 2 && type == 1) print.materialAmount = utils.accAdd(print.materialAmount, money); //主材预付款收款
+                    if (type == 0) print.refundAmount = utils.accAdd(print.refundAmount, money); //预付款退款
+                });
             });
         }, null, false)
     }
@@ -91,10 +116,13 @@ jQuery(function($) {
             $.each(decorationPayments, function(i, v) {
                 if (v.paymentStatus == 1 || v.paymentStatus == 2 || v.paymentStatus == 4) {
                     v["type"] = v.paymentType;
-                    drawPaymentLine(v, $tbody);
+                    drawPaymentLine(v, $tbody, function (money) {
+                        if (v.oneType == 0) print.projectAmount = utils.accAdd(print.projectAmount, money); //收款
+                        if (v.oneType == 1) print.refundAmount = utils.accAdd(print.refundAmount, money); //退款
+                    });
                 }
-            }, null, false);
-        })
+            });
+        }, null, false)
     }
 
     function querySales($tbody) {
@@ -116,11 +144,14 @@ jQuery(function($) {
                 if (srid.indexOf(v.salesReceipt.srId) == -1) {
                     srid.push(v.salesReceipt.srId);
 
-                    v.salesReceipt["type"] = constant.payment().materialPayment.paymentType.keys[v.type];
-                    drawPaymentLine(v.salesReceipt, $tbody);
+                    v.salesReceipt["type"] = constant.payment().materialPayment.paymentType.keys[v.type] + "-" + v.sales.brand;
+                    drawPaymentLine(v.salesReceipt, $tbody, function (money) {
+                        if ([2, 3, 8].indexOf(v.type) > -1) print.materialAmount = utils.accAdd(print.materialAmount, money); //收款
+                        if ([4, 5, 6, 7].indexOf(v.type) > -1) print.refundAmount = utils.accAdd(print.refundAmount, money);//退款
+                    });
                 }
-            }, null, false);
-        })
+            });
+        }, null, false)
     }
 
     function queryService($tbody) {
@@ -139,12 +170,15 @@ jQuery(function($) {
 
             $.each(servicePayments, function(i, v) {
                 v.serviceReceipt["type"] = "服务费" + " " + constant.payment().servicePayment.type.keys[v.type];
-                drawPaymentLine(v.serviceReceipt, $tbody);
-            }, null, false);
-        })
+                drawPaymentLine(v.serviceReceipt, $tbody, function (money) {
+                    if (v.type == 0) print.projectAmount = utils.accAdd(print.projectAmount, money); //收款
+                    if (v.type == 1) print.refundAmount = utils.accAdd(print.refundAmount, money); //退款
+                });
+            });
+        }, null, false)
     }
 
-    function drawPaymentLine(payment, $tbody) {
+    function drawPaymentLine(payment, $tbody, func) {
         var options = {
             "type": payment.type,
             "collectTime": payment.collectTime
@@ -156,7 +190,7 @@ jQuery(function($) {
             options["receiptType"] = "现金";
 
            drawLine(options, $tbody);
-
+           func(payment.cash);
         }
 
         if (payment.bank > 0 && print.rtype.contains("2")) {
@@ -174,12 +208,14 @@ jQuery(function($) {
                     options["collectTime"] = _i[2];
 
                     drawLine(options, $tbody);
+                    func(_i[1]);
 
                 }
             } else {
                 options["money"] = payment.bank;
 
                 drawLine(options, $tbody);
+                func(payment.bank)
             }
         }
 
@@ -197,12 +233,14 @@ jQuery(function($) {
                     options["collectTime"] = _i[2];
 
                     drawLine(options, $tbody);
+                    func(_i[1]);
 
                 }
             } else {
                 options["money"] = payment.checkv;
 
                 drawLine(options, $tbody);
+                func(payment.checkv)
             }
         }
 

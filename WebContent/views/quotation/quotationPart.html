@@ -44,6 +44,21 @@
 									<label class=" col-md-6 no-padding-right">优惠总额</label>
 									<label id="costPrice" class="col-md-6 no-padding-left">0.00</label>
 								</div>
+								<div class="form-group">
+									<label class=" col-md-6 no-padding-right">优惠价</label>
+									<label id="preferPrice" class="col-md-4 no-padding-left">0.00</label>
+									<a href="javascript:void(0)" class=" col-md-2" id="preferBtn">
+										<i class="bigger-125 icon-pencil blue"></i>
+									</a>
+								</div>
+								<div class="form-group">
+									<label class=" col-md-6 no-padding-right">管理优惠</label>
+									<label id="managePrefer" class="col-md-6 no-padding-left">0.00</label>
+								</div>
+								<div class="form-group">
+									<label class=" col-md-6 no-padding-right">特殊优惠</label>
+									<label id="advancePrefer" class="col-md-6 no-padding-left">0.00</label>
+								</div>
 								<div class="form-group hide">
 									<label class=" col-md-6 no-padding-right">非业绩总额</label>
 									<label id="unachePrice" class="col-md-6 no-padding-left">0.00</label>
@@ -626,6 +641,51 @@
 				</div>
 			</div>
 		</div>
+		<!--编辑优惠价-->
+		<div class="modal fade" id="quotationPreferModal" tabindex="-1" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content col-md-12">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">优惠</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="prefer">优惠价</label>
+								<div class="col-sm-9">
+									<input type="text" id="prefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+								</div>
+							</div>
+							<div class="space-4"></div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="manage">管理优惠</label>
+								<div class="col-sm-9">
+									<input type="text" id="manage" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+								</div>
+							</div>
+							<div class="space-4"></div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="advance">特殊优惠</label>
+								<div class="col-sm-9">
+									<input type="text" id="advance" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" id="savePreferBtn" class="btn btn-primary">保存</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 

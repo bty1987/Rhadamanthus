@@ -2,7 +2,7 @@ package com.fanglin.data.material.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.MatchMode;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -38,7 +38,16 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SoodsPO> querySoodsByName(String name, int limit, int company) {
-		return session().createCriteria(SoodsPO.class).createAlias("goods", "goods").add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SoodsPO.STATUS_VALID_INT)).add(Restrictions.or(Restrictions.ilike(SoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(SoodsPO.COLUMN_BRAND_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
+
+		String likestr = String.format("%%%s%%", name);
+
+		String sql = "SELECT s.* FROM data.soods s, data.goods g, communion.brand b WHERE s.gid = g.gid AND g.bid = b.bid AND g.status = 0 AND g.status = 0 AND b.status = 0 AND (s.name LIKE :name OR g.name LIKE :goodname) AND s.company = :company LIMIT :limit";
+
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(SoodsPO.class);
+
+		query.setString("name", likestr).setString("goodname", likestr).setInteger("company", company).setInteger("limit", limit);
+
+		return query.list();
 	}
 
 	@Override

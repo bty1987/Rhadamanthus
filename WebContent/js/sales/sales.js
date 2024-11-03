@@ -164,6 +164,7 @@ $(function() {
                     var $finish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完结');
                     var $send = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
                     var $terminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
+                    var $btnUnpay = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算');
                     var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
 
                     var propertyArr = [];
@@ -272,6 +273,9 @@ $(function() {
                             case "activety":
                                 propertyArr.push(["活动归属:", sales.activity, "grey"]);
                                 break;
+                            case "salesType":
+                                propertyArr.push(["类型:", constant.sales().sales.type.keys[v.type], "red"]);
+                                break;
                         }
                     });
                     $.each(propertyArr, function(index, value) {
@@ -309,7 +313,9 @@ $(function() {
                                 $btnDiv.append($btnSub);
                                 break;
                             case "collect":
-                                $btnDiv.append($btnCollect);
+                                if(v.type != constant.sales().sales.TYPE_SUB_INT){
+                                    $btnDiv.append($btnCollect);
+                                }
                                 break;
                             case "add":
                                 if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
@@ -348,7 +354,7 @@ $(function() {
                                 }
                                 break;
                             case "money":
-                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
+                                if (v.status != constant.sales().sales.STATUS_WAST_INT && v.type != constant.sales().sales.TYPE_SUB_INT) {
                                     $btnDiv.append($btnMoney);
                                 }
                                 break;
@@ -360,6 +366,11 @@ $(function() {
                             case "saledelivery":
                                 if ([0, 5].indexOf(v.status) != -1 && [1, 2].indexOf(v.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
                                     $btnDiv.append($btnDelivery);
+                                }
+                                break;
+                            case "unpay":
+                                if (v.type == constant.sales().sales.TYPE_SUB_INT) {
+                                    $btnDiv.append($btnUnpay);
                                 }
                                 break;
                             case "picture":
@@ -441,6 +452,20 @@ $(function() {
                         params.sales.type = "sales";
 
                         com.popup4page("#layerPopUp", "views/sales/sales4payment.html", "收款");
+                    });
+
+
+                    $btnUnpay.click(function() {
+
+                        com.post(api.sales.unpaySales, {
+                            "sales.sid": v.sid
+                        }, function() {
+
+                            com.showAlert(com.info, "更新成功");
+                            salesSearcher.doSearch();
+
+                        });
+
                     });
 
                     // 装修单显示详情

@@ -618,6 +618,11 @@
                                     <span class="lbl">管理</span>
                                 </label>
 
+                                <label class="inline">
+                                    <input type="checkbox" class="ace" value="32" name="type">
+                                    <span class="lbl">优惠</span>
+                                </label>
+
 							</div>
 						</div>
 
@@ -914,6 +919,51 @@
             </div>
         </div>
     </div>
+
+	<!--编辑优惠价-->
+	<div class="modal fade" id="quotationPreferModal" tabindex="-1" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">优惠</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="prefer">优惠价</label>
+							<div class="col-sm-9">
+								<input type="text" id="prefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="manage">管理优惠</label>
+							<div class="col-sm-9">
+								<input type="text" id="manage" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="advance">特殊优惠</label>
+							<div class="col-sm-9">
+								<input type="text" id="advance" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="savePreferBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </div>
 

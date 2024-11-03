@@ -81,20 +81,27 @@ $(function() {
         },
 
         source: null,
+        btnStatue: "open",
         rule: {
             "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
         },
-        
+
         type: null,
         grade: ["A", "B", "C", "D"],
-        
+
         depage: params['urlLoadParams'].depage,
     };
 
     customerSource.btns.saveBtn.bindClick(saveDate);
-    customerSource.btns.issueBtn.bindClick(issueDate);
     customerSource.btns.firstApprovalBtn.bindClick(firstApproval);
     customerSource.btns.updateHouseBtn.bindClick(updateHouse);
+    customerSource.btns.issueBtn.bindClick(function(){
+
+        if (customerSource.btnStatue == "open") {
+            issueDate();
+            customerSource.btns.issueBtn.removeClass('btn btn-primary pull-right').addClass('btn btn-blue pull-right');
+        }
+    });
 
     function bindData(e) {
 
@@ -340,24 +347,6 @@ $(function() {
         name: "创建时间",
         prop: "createTime",
         clazz: "green"
-    }, {
-        field: "designer.currentName",
-        name: "设计师",
-        prop: "designer.currentName",
-        clazz: "grey",
-        click: function(btn, v) {
-
-            tools.personel.info(btn, v.designer.userId);
-        }
-    }, {
-        field: "salesman.currentName",
-        name: "业务员",
-        prop: "salesman.currentName",
-        clazz: "grey",
-        click: function(btn, v) {
-
-            tools.personel.info(btn, v.salesman.userId);
-        }
     }, {
         field: "status",
         name: "状态",
@@ -719,6 +708,8 @@ $(function() {
             options["customerChance.region.did"] = customerSource.items.region.val();
         }
 
+        customerSource.btnStatue = "close";
+
         com.post(api.customer.issueCustomerSource, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
@@ -727,6 +718,12 @@ $(function() {
 
             customerSource.modals.issueCustomerChanceModal.modal("hide");
         });
+
+        setTimeout(function() {
+
+            customerSource.btnStatue = "open";
+            customerSource.btns.issueBtn.removeClass('btn btn-blue pull-right').addClass('btn btn-primary pull-right');
+        }, 3000);
     }
 
     function deleteDate() {

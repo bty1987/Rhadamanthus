@@ -39,7 +39,13 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Timestamp endTime;
 
+	private Timestamp enterTime;
+
+	private Timestamp leaveTime;
+
 	private Short status;
+
+	private Short workStatus;
 
 	private Short checkout;
 
@@ -124,12 +130,38 @@ public class ConstructionScheduleVO implements Serializable {
 		this.endTime = endTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getLeaveTime() {
+		return leaveTime;
+	}
+
+	public void setLeaveTime(Timestamp leaveTime) {
+		this.leaveTime = leaveTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getEnterTime() {
+		return enterTime;
+	}
+
+	public void setEnterTime(Timestamp enterTime) {
+		this.enterTime = enterTime;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getWorkStatus() {
+		return workStatus;
+	}
+
+	public void setWorkStatus(Short workStatus) {
+		this.workStatus = workStatus;
 	}
 
 	public Short getCheckout() {

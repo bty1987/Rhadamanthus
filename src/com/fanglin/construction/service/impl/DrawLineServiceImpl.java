@@ -13,7 +13,6 @@ package com.fanglin.construction.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +57,6 @@ import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -115,7 +113,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
 
 		for (DrawLinePO drawLinePO : drawLinePOs) {
-			drawLineVOs.add(convertBean(drawLinePO));
+			drawLineVOs.add(drawLinePO.ptv(new DrawLineVO(new DecorationVO(), new UserBaseVO(), new DrawLineGroupVO(), new UserBaseVO())));
 		}
 
 		paging.setData(drawLineVOs);
@@ -133,7 +131,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLine(filters, company);
 
 		for (DrawLinePO drawLinePO : drawLinePOs) {
-			drawLineVOs.add(convertBean(drawLinePO));
+			drawLineVOs.add(drawLinePO.ptv(new DrawLineVO(new DecorationVO(), new UserBaseVO(), new DrawLineGroupVO(), new UserBaseVO())));
 		}
 
 		return drawLineVOs;
@@ -248,8 +246,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 		NormtionVO normtionVO = new NormtionVO(orderId, quotationPO.getQid());
 
 		normtionService.makeNormtionForQuotation(normtionVO, null, userId);
-        
-        quotationDao.flush();
+
+		quotationDao.flush();
 
 		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(orderId);
 
@@ -367,38 +365,6 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLineDao.update(drawLinePO);
 
 		return 0;
-	}
-
-	public DrawLineVO convertBean(DrawLinePO drawLinePO) {
-
-		DrawLineVO drawLineVO = new DrawLineVO(new DecorationVO(), new UserBaseVO(), new DrawLineGroupVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(drawLinePO, drawLineVO, Arrays.asList("decoration", "appler", "group", "drawer"));
-
-		if (drawLinePO.getDecoration() != null) {
-
-			drawLinePO.getDecoration().ptvcascade(drawLineVO.getDecoration());
-
-			if (drawLinePO.getDecoration().getSupervisor() != null) {
-				drawLineVO.getDecoration().setSupervisor(new UserBaseVO());
-				drawLineVO.getDecoration().getSupervisor().setBaseInfo(drawLinePO.getDecoration().getSupervisor());
-			}
-		}
-
-		if (drawLinePO.getAppler() != null) {
-			drawLineVO.getAppler().setBaseInfo(drawLinePO.getAppler());
-		}
-
-		if (drawLinePO.getGroup() != null) {
-			BeanUtil.copyProperties(drawLinePO.getGroup(), drawLineVO.getGroup());
-		}
-
-		if (drawLinePO.getDrawer() != null) {
-			drawLineVO.getDrawer().setBaseInfo(drawLinePO.getDrawer());
-		}
-
-		return drawLineVO;
-
 	}
 
 }

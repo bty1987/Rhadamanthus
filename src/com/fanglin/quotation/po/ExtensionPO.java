@@ -59,6 +59,10 @@ public class ExtensionPO implements Serializable {
 
 	private long managePrice;
 
+	private int taxRate;
+
+	private long taxPrice;
+
 	private long total;
 
 	private short status;
@@ -150,6 +154,24 @@ public class ExtensionPO implements Serializable {
 
 	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxPrice")
+	public long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(long taxPrice) {
+		this.taxPrice = taxPrice;
 	}
 
 	@Column(name = "total")

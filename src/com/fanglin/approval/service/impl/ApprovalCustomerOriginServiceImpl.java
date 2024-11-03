@@ -150,6 +150,7 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
+		UserPO belonger = customerOriginPO.getBelonger();
 		UserPO designer = customerOriginPO.getDesigner();
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
@@ -172,7 +173,7 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 
 		customerOriginDao.update(customerOriginPO);
 
-		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s. 业务部:%s,业务员:%s(%s). 批注:%s.", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), belonger.getDept().getName(), belonger.getCurrentName(), belonger.getUserId(), approvalPO.getAnnotate());
 
 		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 

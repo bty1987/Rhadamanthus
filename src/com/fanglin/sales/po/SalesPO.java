@@ -192,6 +192,8 @@ public class SalesPO implements Serializable {
 
 	private short status;
 
+	private short type;
+
 	private long depositpay;
 
 	private short depositpayStatus;
@@ -516,6 +518,15 @@ public class SalesPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "depositpay")

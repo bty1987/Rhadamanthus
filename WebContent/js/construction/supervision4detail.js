@@ -47,7 +47,6 @@ jQuery(function($) {
 
             constructionNode("#stepId", v.schedule, v.csid, v.node.name);
             constructionPane("#step-container", v.schedule, v.csid, v.node.name);
-
             params.construction.cid = v.cid;
         });
 
@@ -77,7 +76,7 @@ jQuery(function($) {
     com.focusPage('[data-rel=popover]').popover({
         html: true
     });
-
+    var constructionSchedule;
     function initWizardSept(schedule, csid) {
 
         addActive(schedule);
@@ -92,7 +91,7 @@ jQuery(function($) {
 
         com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
 
-            var constructionSchedule = res.constructionSchedule;
+            constructionSchedule = res.constructionSchedule;
 
             supervision4detail["constructionSchedule.csid"] = constructionSchedule.csid;
 
@@ -100,11 +99,56 @@ jQuery(function($) {
 
                 com.focusPage("#" + schedule + "StartTime").val(constructionSchedule.startTime);
                 com.focusPage("#" + schedule + "EndTime").val(constructionSchedule.endTime);
+                com.focusPage("#" + schedule + "LeaveTime").val(constructionSchedule.leaveTime);
+                com.focusPage("#" + schedule + "EnterTime").val(constructionSchedule.enterTime);
 
                 var otherename = schedule;
                 var otherStatus = constructionSchedule.status;
 
+                var otherSuccessBtn = com.focusPage("#" + otherename + "Success");
+                var leaveSuccessBtn = com.focusPage("#" + otherename + "Leave");
+
                 updataStatus(schedule, csid, constructionSchedule.status);
+                updateEnterStatus(constructionSchedule.workStatus, otherename);
+                otherSuccessBtn.click(function() {
+
+                    var options = {
+                        "constructionSchedule.csid": constructionSchedule.csid
+                    };
+
+                    com.post(api.construction.enterConstructionSchedule, options, function(res) {
+
+                        com.showAlert(com.info, "操作成功");
+                        updateEnterStatus(1, otherename);
+                        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
+
+                            var constructionSchedule = res.constructionSchedule;
+                            com.focusPage("#" + schedule + "EnterTime").val(constructionSchedule.enterTime);
+                        });
+                    });
+
+                    return false;
+                });
+
+                leaveSuccessBtn.click(function() {
+
+                    var options = {
+                        "constructionSchedule.csid": constructionSchedule.csid
+                    };
+
+                    com.post(api.construction.leaveConstructionSchedule, options, function(res) {
+
+                        com.showAlert(com.info, "操作成功");
+                        updateEnterStatus(2, otherename);
+                        com.post(api.construction.queryConstructionScheduleByOrderIdASchedule, args, function(res) {
+
+                            var constructionSchedule = res.constructionSchedule;
+                            com.focusPage("#" + schedule + "LeaveTime").val(constructionSchedule.leaveTime);
+                        });
+                    });
+
+                    return false;
+                });
 
                 var options = {
                     "constructer.orderId": params.construction.orderId,
@@ -421,6 +465,31 @@ jQuery(function($) {
         var paaneStatusTh = $("<div></div>").attr("id", schedule + "Status").addClass("col-sm-6").appendTo(paneStatusTwo);
         var paneSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
 
+        // 进场时间
+        var paneStartTime = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
+        var paneStartTimeTwo = $("<div></div>").addClass("col-sm-12").appendTo(paneStartTime);
+        var paneSTlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "EnterTime").html("进场时间").appendTo(paneStartTimeTwo);
+        var paneSTThree = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
+        var paneSTInput = $("<input/>").attr("id", schedule + "EnterTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneSTThree);
+
+        // 离场时间
+        var paneETlable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "LeaveTime").html("离场时间").appendTo(paneStartTimeTwo);
+        var paneETFour = $("<div></div>").addClass("col-sm-2").appendTo(paneStartTimeTwo);
+        var paneETInput = $("<input/>").attr("id", schedule + "LeaveTime").attr("type", "text").addClass("col-sm-12").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigge", "manual").appendTo(paneETFour);
+
+        // 离场按钮
+        var enterBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("进场").attr("style", "margin-right:5px").attr("id", schedule + "Success").appendTo(paneStartTimeTwo);
+        // 进场按钮
+        var leaveBtn = $("<button type='button'></button>").addClass("btn btn-xs btn-info").html("离场").attr("style", "margin-right:5px").attr("id", schedule + "Leave").appendTo(paneStartTimeTwo);
+
+        // 状态
+        var panewSpace = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
+        var panewStatus = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
+        var panewStatusTwo = $("<div></div>").addClass("col-sm-12").appendTo(panewStatus);
+        var panewStatusLable = $("<label></label>").addClass("col-sm-1 control-label no-padding-right").attr("for", schedule + "enterStatus").html("进厂状态").appendTo(panewStatusTwo);
+        var paanewStatusTh = $("<div></div>").attr("id", schedule + "enterStatus").addClass("col-sm-6").appendTo(panewStatusTwo);
+        var panewSpaceTwo = $("<div></div>").addClass("space-4").appendTo(paneTabForm);
+
         // 工人信息
         var paneWorker = $("<div></div>").addClass("form-group").appendTo(paneTabForm);
         var paneWorkerH3 = $("<h3></h3>").addClass("header smaller lighter blue").appendTo(paneWorker);
@@ -462,6 +531,19 @@ jQuery(function($) {
         });
         com.focusPage("#step" + schedule).removeClass("step-pane");
         com.focusPage("#step" + schedule).addClass("active");
+    }
+
+    function updateEnterStatus(workStatus, statusDiv) {
+
+        var statusDiv = com.focusPage("#" + statusDiv + "enterStatus").html("");
+
+        if (workStatus == 0) {
+            $("<span></span>").addClass("label label-grey").text("初始").appendTo(statusDiv);
+        } else if (workStatus == 1) {
+            $("<span></span>").addClass("label label-info").text("进场").appendTo(statusDiv);
+        } else if (workStatus == 2) {
+            $("<span></span>").addClass("label label-success").text("离场").appendTo(statusDiv);
+        }
     }
 
     function updataStatus(schedule, csid, status) {

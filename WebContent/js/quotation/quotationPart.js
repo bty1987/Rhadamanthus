@@ -8,6 +8,7 @@ var QuotationDetail = (function() {
         notSalesmanRate: null, // 非业务人员提点
         basicParams: null,
         precontractTime: null,
+        preferParams: null,
 
         quoModals: {},
         settingBtns: {},
@@ -29,6 +30,15 @@ var QuotationDetail = (function() {
                 $btnDiscount: com.focusPage('#discountBtn').on('click', function() { // 折扣界面
 
                     that.quoModals.$domainDiscountModal.modal("show");
+                }),
+                // 优惠
+                $btnDiscount: com.focusPage('#preferBtn').on('click', function() {
+
+                    com.focusPage('#prefer').val(quo.preferParams["quotationPrefer.preferPrice"]);
+                    com.focusPage('#manage').val(quo.preferParams["quotationPrefer.managePrefer"]);
+                    com.focusPage('#advance').val(quo.preferParams["quotationPrefer.advancePrefer"]);
+
+                    that.quoModals.$domainPreferModal.modal("show");
                 }),
                 // 计算总价
                 $btnCalculateTotal: com.focusPage('#calculateTotalBtn').on('click', function() {
@@ -136,6 +146,8 @@ var QuotationDetail = (function() {
                 }),
                 // 编辑折扣
                 $domainDiscountModal: com.focusPage("#discountModal"),
+                // 编辑优惠
+                $domainPreferModal: com.focusPage("#quotationPreferModal"),
                 // 计算总价
                 $calculateTotalModal: com.focusPage('#calculateTotalFeeModal'),
                 // 更新价格
@@ -344,27 +356,31 @@ var QuotationDetail = (function() {
             _dmanagefee = utils.changeThrDecimal(utils.accMul(_managefee, _manageDiscount)); // (未计算车运费之前的总价格+车运费)*管理费比例*管理费折扣
             _dtaxfee = 0;
 
+            var preferPrice = quo.preferParams["quotationPrefer.preferPrice"];
+            var managePrefer = quo.preferParams["quotationPrefer.managePrefer"];
+            var advancelPrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+
             if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
                 _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate));
                 _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
             }
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) {
-                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate));
+                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), preferPrice), managePrefer), advancelPrefer), _taxRate));
                 _dtaxfee = _taxfee;
             }
 
-            _total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxfee));
+            _total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxfee), preferPrice), managePrefer), advancelPrefer));
 
             // 基数是否存在,无需判断装修单类型
             if (quo.basicParams["quotation.basePrice"] && quo.basicParams["quotation.basePrice"] != 0) {
                 // (工程基数 - 工程基数 % 基数) * 折扣 + 工程基数 % 基数 + 管理费
                 var total = utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee); // 工程基数
                 var remainder = utils.changeThrDecimal(total % quo.basicParams['quotation.basePrice']); // 余数
-                _dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), _discount), remainder), _dmanagefee), _dtaxfee));
+                _dtotal = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), _discount), remainder), _dmanagefee), _dtaxfee), preferPrice), managePrefer), advancelPrefer));
             } else {
                 // (未计算车运费之前的总价格+折扣后的车运费)+折扣后的管理费(打折后的总价格)
-                _dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _discount), _undisPrice), _dtransfee), _dmanagefee), _dtaxfee));
+                _dtotal = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _discount), _undisPrice), _dtransfee), _dmanagefee), _dtaxfee), preferPrice), managePrefer), advancelPrefer));
             }
 
             _dtotal = utils.accAdd(_dtotal, !(quo.notSalesmanRate > 0 && quo.notSalesmanRate < 1) ? quo.notSalesmanRate : 0);
@@ -384,6 +400,9 @@ var QuotationDetail = (function() {
             com.focusPage('#sumLabSumMoney').text(utils.changeThrDecimal(_total)); // 显示到左上角的总价
             com.focusPage('#sumLabDiscountMoney').text(utils.changeThrDecimal(_dtotal)); // 显示到左上角的折扣价
             com.focusPage('#taxPrices').text(utils.changeThrDecimal(_dtaxfee));
+            com.focusPage('#preferPrice').text(quo.preferParams["quotationPrefer.preferPrice"]);
+            com.focusPage('#managePrefer').text(quo.preferParams["quotationPrefer.managePrefer"]);
+            com.focusPage('#advancePrefer').text(quo.preferParams["quotationPrefer.advancePrefer"]);
 
             quo.basicParams["quotation.totalPrice"] = utils.changeThrDecimal(_dtotal); // 报价总额
             quo.basicParams["quotation.manageRate"] = utils.changeThrDecimal(utils.accSub(_manageRate, (quo.notSalesmanRate > 0 && quo.notSalesmanRate < 1) ? quo.notSalesmanRate : 0)); // 管理费比例
@@ -598,15 +617,19 @@ var QuotationDetail = (function() {
 
                 var _dtaxfee = 0;
 
+                var preferPrice = quo.preferParams["quotationPrefer.preferPrice"];
+                var managePrefer = quo.preferParams["quotationPrefer.managePrefer"];
+                var advancelPrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
                     _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dtaxRate));
                 }
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _dtransfee), _dmanagefee), _dtaxRate));
+                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _dtransfee), _dmanagefee), preferPrice), managePrefer), advancelPrefer), _dtaxRate));
                 }
 
-                var _ddtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dmanagefee), _dtaxfee));
+                var _ddtotal = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dmanagefee), _dtaxfee), preferPrice), managePrefer), advancelPrefer));
 
                 if (v.base && v.base != 0) {
 
@@ -1314,6 +1337,62 @@ var QuotationDetail = (function() {
             });
         },
 
+        saveQuotationPrefer: function() {
+            com.focusPage('#savePreferBtn').click(function() {
+
+                if (com.validate('quotationPreferModal')) {
+                    return false;
+                }
+
+                if (quo.basicParams["quotation.managePrice"] < managePrefer) {
+
+                    com.showAlert(com.warning, "管理优惠不能大于管理费");
+
+                    return false;
+                }
+
+
+                var oldPreferPrice = quo.preferParams["quotationPrefer.preferPrice"];
+                var oldManagePrice = quo.preferParams["quotationPrefer.managePrefer"];
+                var oldAdvancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+                
+                var preferPrice = com.focusPage('#prefer').val();
+                var managePrefer = com.focusPage('#manage').val();
+                var advancePrefer = com.focusPage('#advance').val();
+                
+                quo.preferParams["quotationPrefer.preferPrice"] = preferPrice;
+                quo.preferParams["quotationPrefer.managePrefer"] = managePrefer;
+                quo.preferParams["quotationPrefer.advancePrefer"] = advancePrefer;
+                
+                quo.calculateQuoFees();
+                
+                var params = {
+                    "quotation.qid": quo.quotationid,
+                    "quotation.totalPrice":  quo.basicParams["quotation.totalPrice"],
+                    "quotation.taxPrice": quo.basicParams["quotation.taxPrice"],
+                    "quotationPrefer.orderId": quo.orderid,
+                    "quotationPrefer.qid": quo.quotationid,
+                    "quotationPrefer.preferPrice": preferPrice,
+                    "quotationPrefer.managePrefer": managePrefer,
+                    "quotationPrefer.advancePrefer": advancePrefer,
+                };
+
+                com.post(api.quotation.updateQuotationPrefer, params, function(res) {
+
+                    quo.quoModals.$domainPreferModal.modal("hide");
+                }, function(res){
+                    
+                    quo.preferParams["quotationPrefer.preferPrice"] = preferPrice;
+                    quo.preferParams["quotationPrefer.managePrefer"] = managePrefer;
+                    quo.preferParams["quotationPrefer.advancePrefer"] = advancePrefer;
+                    
+                    quo.calculateQuoFees();
+                    
+                    quo.quoModals.$domainPreferModal.modal("hide");
+                });
+            });
+        },
+
         // 绑定各种关于报价的操作
         init: function() {
 
@@ -1327,6 +1406,7 @@ var QuotationDetail = (function() {
             this.saveManageRate();
             this.deleteQuotesToDomain();
             this.showDiscountBasePrice();
+            this.saveQuotationPrefer();
         }
     };
 
@@ -2738,6 +2818,26 @@ var QuotationDetail = (function() {
                 com.focusPage('#sumLabDiscount').text(quotation.discount); // 左上角显示的折扣
             }, null, false);
 
+            com.post(api.quotation.queryQuotationPrefer, {
+                "quotationPrefer.qid": quo.quotationid
+            }, function(res) {
+
+                var quotationPrefer = res.quotationPrefer
+
+                quo.preferParams = {
+                    "quotationPrefer.qpid": quotationPrefer.qpid,
+                    "quotationPrefer.orderId": quotationPrefer.orderId,
+                    "quotationPrefer.qid": quotationPrefer.qid,
+                    "quotationPrefer.preferPrice": quotationPrefer.preferPrice ? quotationPrefer.preferPrice : 0,
+                    "quotationPrefer.managePrefer": quotationPrefer.managePrefer ? quotationPrefer.managePrefer : 0,
+                    "quotationPrefer.advancePrefer": quotationPrefer.advancePrefer ? quotationPrefer.advancePrefer : 0,
+                }
+
+                com.focusPage('#preferPrice').text(quo.preferParams["quotationPrefer.preferPrice"]);
+                com.focusPage('#managePrefer').text(quo.preferParams["quotationPrefer.managePrefer"]);
+                com.focusPage('#advancePrefer').text(quo.preferParams["quotationPrefer.advancePrefer"]);
+            }, null, false);
+
             // 通过报价ID获取报价项中的功能区
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {
                 "quotation.qid": quo.quotationid
@@ -2817,26 +2917,30 @@ var QuotationDetail = (function() {
                     _dmanagefee = utils.accMul(_managefee, _manageDiscount); // (未计算车运费之前的总价格+车运费)*管理费比例*管理费折扣,管理费
                     _dtaxfee = 0;
 
+                    var preferPrice = quo.preferParams["quotationPrefer.preferPrice"];
+                    var managePrefer = quo.preferParams["quotationPrefer.managePrefer"];
+                    var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+
                     if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
                         _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate));
                         _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
                     }
 
                     if (_taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate));
+                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), preferPrice), managePrefer), advancePrefer), _taxRate));
                         _dtaxfee = _taxfee
                     }
 
-                    _total = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxfee); // 未计算车运费之前的总价格+车运费+管理费=(未打折的总价格)
+                    _total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxfee), preferPrice), managePrefer), advancePrefer); // 未计算车运费之前的总价格+车运费+管理费=(未打折的总价格)
 
                     if (quo.basicParams["quotation.basePrice"] && quo.basicParams["quotation.basePrice"] != 0) {
                         // (工程基数 - 工程基数 % 基数) * 折扣 + 工程基数 % 基数 + 管理费
                         var total = utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee); // 工程基数
                         var remainder = total % quo.basicParams['quotation.basePrice']; // 余数
-                        _dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), _discount), remainder), _dmanagefee), _dtaxfee));
+                        _dtotal = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), _discount), remainder), _dmanagefee), _dtaxfee), preferPrice), managePrefer), advancePrefer));
                     } else {
                         // (未计算车运费之前的总价格+折扣后的车运费)+折扣后的管理费(打折后的总价格)
-                        _dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _discount), _undisPrice), _dtransfee), _dmanagefee), _dtaxfee));
+                        _dtotal = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(_disPrice, _discount), _undisPrice), _dtransfee), _dmanagefee), _dtaxfee), preferPrice), managePrefer), advancePrefer));
                     }
 
                     _dtotal = utils.accAdd(_dtotal, !(quo.notSalesmanRate > 0 && quo.notSalesmanRate < 1) ? quo.notSalesmanRate : 0);
