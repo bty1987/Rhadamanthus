@@ -79,7 +79,11 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 				query.timeranges(ConstructionScheduleDO.COLUMN_FINISHTIME_STR, data);
 			} else if ("createTime".equals(field)) {
 				query.timeranges(ConstructionScheduleDO.COLUMN_CREATETIME_STR, data);
-			}
+			} else if ("enterTime".equals(field)) {
+				query.timeranges(ConstructionScheduleDO.COLUMN_ENTERTIME_STR, data);
+			} else if ("leaveTime".equals(field)) {
+				query.timeranges(ConstructionScheduleDO.COLUMN_LEAVETIME_STR, data);
+				}
 		}
 	}
 }

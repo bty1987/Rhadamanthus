@@ -85,6 +85,12 @@ public class ProtationDO implements Serializable {
 
 	private long managePrice;
 
+	private int taxRate;
+
+	private String taxFormula;
+
+	private long taxPrice;
+
 	private long totalPrice;
 
 	private short status;
@@ -334,6 +340,33 @@ public class ProtationDO implements Serializable {
 
 	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxFormula")
+	public String getTaxFormula() {
+		return taxFormula;
+	}
+
+	public void setTaxFormula(String taxFormula) {
+		this.taxFormula = taxFormula;
+	}
+
+	@Column(name = "taxPrice")
+	public long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(long taxPrice) {
+		this.taxPrice = taxPrice;
 	}
 
 	@Column(name = "totalPrice")

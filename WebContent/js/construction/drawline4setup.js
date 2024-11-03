@@ -190,6 +190,8 @@ jQuery(function($) {
                 }],
                 ["面积: ", v.decoration.house.buildArea, "blue"],
                 ["合同额: ", v.decoration.orderTotalPrice, "blue"],
+                ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
+                ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
                 ["报价版本: ", v.decoration.version.name, "grey"],
                 ["申请人: ", v.appler.currentName, "grey", function(btn) {
 

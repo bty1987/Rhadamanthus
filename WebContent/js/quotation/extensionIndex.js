@@ -190,8 +190,13 @@ jQuery(function($) {
             dataset: constant.quotation().extension.atttype.keys,
         }, {
             field: "undisPrice",
-            name: "打折项总额",
+            name: "不打折总额",
             prop: "undisPrice",
+            clazz: "blue"
+        }, {
+            field: "disPrice",
+            name: "打折总额",
+            prop: "disPrice",
             clazz: "blue"
         }, {
             field: "manageRate",
@@ -208,6 +213,16 @@ jQuery(function($) {
             field: "managePrice",
             name: "管理费",
             prop: "managePrice",
+            clazz: "blue"
+        }, {
+            field: "taxRate",
+            name: "税金比例",
+            prop: "taxRate",
+            clazz: "blue"
+        }, {
+            field: "taxPrice",
+            name: "税金",
+            prop: "taxPrice",
             clazz: "blue"
         }, {
             field: "total",
@@ -419,6 +434,24 @@ jQuery(function($) {
             show: function(v) {
 
                 return extension.pageConfig.propertyArr.contains("managePrice");
+            }
+        }, {
+            field: "taxRate",
+            name: "税金比例",
+            prop: "taxRate",
+            clazz: "blue",
+            show: function(v) {
+
+                return extension.pageConfig.propertyArr.contains("taxRate");
+            }
+        }, {
+            field: "taxPrice",
+            name: "税金",
+            prop: "taxPrice",
+            clazz: "blue",
+            show: function(v) {
+
+                return extension.pageConfig.propertyArr.contains("taxPrice");
             }
         }, {
             field: "total",

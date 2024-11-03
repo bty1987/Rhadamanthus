@@ -40,6 +40,7 @@ import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesDeliveryItemPO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.service.SalesService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
@@ -63,13 +64,16 @@ public class SalesServiceImpl implements SalesService {
 	private SalesDao salesDao;
 
 	@Autowired
+	private SalesItemDao salesItemDao;
+
+	@Autowired
 	private SalesDeliveryItemDao salesDeliveryItemDao;
 
 	@Autowired
 	private UserDao userDao;
 
 	@Autowired
-	private SalesItemDao salesItemDao;
+	private SalesBalanceService salesBalanceService;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -238,6 +242,14 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
+	public long amountSales(SalesVO salesVO) throws FLException {
+
+		Long amount = salesDao.amountSales(salesVO.getOrderId(), salesVO.getType());
+
+		return amount;
+	}
+
+	@Override
 	public int checkSales(SalesVO salesVO) throws FLException {
 
 		int count = salesDao.countSalesByOrderId(salesVO.getOrderId(), SalesPO.STATUS_INIT_SHORT);
@@ -267,7 +279,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationPO.getStatus() == DecorationPO.STATUS_WASTE_INT || decorationPO.getStatus() == DecorationPO.STATUS_TERMINATION_INT) {
+		if (decorationPO.getStatus() == DecorationPO.STATUS_WASTE_INT) {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
@@ -499,6 +511,44 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unpaySales(SalesVO salesVO, String userId) throws FLException {
+
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesPO.getDepositpayStatus() != SalesPO.DESPOSITPAYSTATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+		if (salesItemDao.countSalesItem(salesVO.getSid()) == 0) {
+			throw new FLException(260060, "销售项数量不足");
+		}
+
+		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_CONFIRM_SHORT);
+		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_CONFIRM_SHORT);
+		salesPO.setFullpayTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesBalanceService.preSalesBalance(Arrays.asList(salesPO.getSid()), userId);
+
+		return 0;
+	}
+
+	@Override
 	public int sendSales(SalesVO salesVO) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
@@ -511,7 +561,7 @@ public class SalesServiceImpl implements SalesService {
 
 		System.out.println(String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 销售单信息确认。", orderId), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 销售单信息确认. ", orderId), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
 
 		return 0;
 	}
@@ -580,6 +630,8 @@ public class SalesServiceImpl implements SalesService {
 		}
 
 		salesPO.setStatus(SalesPO.STATUS_WAST_SHORT);
+
+		salesDao.update(salesPO);
 
 		return 0;
 	}

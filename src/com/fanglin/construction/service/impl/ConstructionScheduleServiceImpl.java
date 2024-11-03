@@ -326,6 +326,45 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void enterConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		if (constructionSchedulePO.getWorkStatus() == ConstructionSchedulePO.WORKSTATUS_LEAVE_INT) {
+			return;
+		}
+
+		constructionSchedulePO.setWorkStatus(ConstructionSchedulePO.WORKSTATUS_ENTER_INT);
+		constructionSchedulePO.setEnterTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionScheduleDao.update(constructionSchedulePO);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public void leaveConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		if (constructionSchedulePO.getWorkStatus() == ConstructionSchedulePO.WORKSTATUS_LEAVE_INT) {
+			return;
+		}
+
+		constructionSchedulePO.setWorkStatus(ConstructionSchedulePO.WORKSTATUS_LEAVE_INT);
+		constructionSchedulePO.setLeaveTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionScheduleDao.update(constructionSchedulePO);
+	}
+
 	private DecorationVO ptv(DecorationPO decorationPO) {
 
 		DecorationVO decorationVO = new DecorationVO();

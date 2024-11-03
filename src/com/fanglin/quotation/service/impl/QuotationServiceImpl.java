@@ -562,9 +562,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		SystemConfigPO quotetionlimit = systemConfigDao.querySystemConfig("quotetionlimit", company);
+		SystemConfigPO quotationlimit = systemConfigDao.querySystemConfig("quotationlimit", company);
 
-		if (quotetionDao.countQuotetionByCuid(userPO.getUid()) >= (quotetionlimit == null ? 10 : Integer.parseInt(quotetionlimit.getValue()))) {
+		if (quotationDao.countQuotationByOrderId(orderId) >= (quotationlimit == null ? 3 : Integer.parseInt(quotationlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 

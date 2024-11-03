@@ -102,12 +102,48 @@ $(function() {
             return false;
         }
 
-        var total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(_protation.quotePrice, _protation.managePrice), preferPrice), preferManage), preferAdvance);
+        var manageFormula = _protation.manageFormula ? _protation.manageFormula : '';
+
+        if (manageFormula.indexOf("{") != -1 || manageFormula.indexOf("}") != -1) {
+            manageFormula = com.format(manageFormula, {
+                "a": _protation.quotePrice,
+                "b": preferPrice,
+                "c": _protation.basicPrice,
+                "d": utils.accAdd(_protation.adddPrice, _protation.addmPrice),
+                "e": utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice),
+                "f": utils.accAdd(_protation.accmPrice, _protation.accdPrice),
+                "h": preferAdvance
+            });
+        }
+
+        var _managePrice = utils.changeThrDecimal(isNaN(eval(manageFormula)) ? 0 : eval(manageFormula));
+
+        var taxFormula = _protation.taxFormula ? _protation.taxFormula : '';
+
+        if (taxFormula.indexOf("{") != -1 || taxFormula.indexOf("}") != -1) {
+            taxFormula = com.format(taxFormula, {
+                "a": _protation.quotePrice,
+                "b": preferPrice,
+                "c": _protation.basicPrice,
+                "d": utils.accAdd(_protation.adddPrice, _protation.addmPrice),
+                "e": utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice),
+                "f": utils.accAdd(_protation.accmPrice, _protation.accdPrice),
+                "g": _managePrice,
+                "h": preferAdvance,
+                "i": preferManage
+            });
+        }
+
+        var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
+
+        var total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_protation.quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance);
         total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(_protation.basicPrice, utils.accAdd(_protation.adddPrice, utils.accSub(_protation.addmPrice, utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice)))), utils.accAdd(_protation.accmPrice, _protation.accdPrice))));
 
         var options = {
             "protation.pid": protation.protation.pid,
             "protation.preferPrice": preferPrice,
+            "protation.managePrice": _managePrice,
+            "protation.taxPrice": _taxPrice,
             "protation.manageProfit": preferManage,
             "protation.advanceProfit": preferAdvance,
             "protation.totalCost": _protation.totalCost,
@@ -818,6 +854,24 @@ $(function() {
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("managePrice");
+            }
+        }, {
+            field: "taxRate",
+            name: "税金比例",
+            prop: "taxRate",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("taxRate");
+            }
+        }, {
+            field: "taxPrice",
+            name: "税金",
+            prop: "taxPrice",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("taxPrice");
             }
         }, {
             field: "preferPrice",

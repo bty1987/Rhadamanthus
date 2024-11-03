@@ -253,7 +253,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourceDao.save(customerSourcePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage().getName(), customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源更新,原楼盘:%s,原楼号:%s,原电话:%s,新楼盘:%s,新楼号%s,新电话%s", villageName, houseNumber, phone, customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "", customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
 	}
 
 	@Override
@@ -465,8 +465,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
-			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
-			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, String.format("部门成员%s(%s)有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, String.format("部门成员%s(%s)有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			return;
 		}
@@ -552,8 +552,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
-			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
-			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, String.format("部门成员%s有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+			if (customerChancePO.getDepartment().getManager() != null) messageService.sendMessage(customerChancePO.getDepartment().getManager().getUserId(), null, String.format("部门成员%s(%s)有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, String.format("部门成员%s(%s)有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 
 			return;
 		}

@@ -383,6 +383,24 @@
             "constructionInfo.ishovel": order.infoItems.ishovel.val(),
             "constructionInfo.iskey": order.infoItems.iskey.val(),
             "constructionInfo.isCeremony": order.infoItems.isCeremony.val(),
+            "constructionInfo.isConfirmPricture": 1
+        };
+
+        if (order.infoItems.dlmConpany.val()) {
+            options["constructionInfo.decoration.conpany"] = order.infoItems.dlmConpany.val();
+        }
+
+        com.post(api.construction.updateConstructionInfoByOrderId, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+        });
+    });
+    
+    com.focusPage("#updateDrawline").on("click", function() {
+
+        var options = {
+            "constructionInfo.orderId": contract.orderId,
+            "constructionInfo.decoration.orderId": contract.orderId,
             "constructionInfo.finishTime": order.infoItems.finishTime.val() + " 00:00:00",
             "constructionInfo.keyTime": order.infoItems.keyTime.val() + " 00:00:00",
             "constructionInfo.designTime": order.infoItems.designTime.val() + " 00:00:00",
@@ -1643,7 +1661,7 @@
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['面积', 'house.buildArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype']],
+                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['面积', 'house.buildArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['预签时间', 'precontractTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype']],
                 list: res.paging.data
             }, function(v) {
 

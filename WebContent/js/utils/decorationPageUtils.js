@@ -235,6 +235,9 @@ $(function() {
     function drawQuotaion(conf) {
 
         var row = createDiv("row");
+        
+        row.append(createDiv("row").append($("<div></div>").addClass("col-sm-4").append($("<h3></h3>").append($('<strong></strong>').addClass("blue").attr("id", "product")))).append(createDiv("pull-right").append(createButton(conf, "preferBtn", "btn btn-xs btn-primary", "优惠", null, '<i class="bigger-120"></i>')), createDiv("col-md-12", "quotationSummary")));
+        
         var $sortable = createDiv("widget-container-span ui-sortable");
         var $tabbable = createDiv("tabbable").appendTo($sortable);
         var $myTab = createUl("myTab", "nav nav-tabs", "margin-top: 7px;").appendTo($tabbable);
@@ -243,6 +246,7 @@ $(function() {
         var quotationWorkerTypeDetail = createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#workTypeSubset").css("color", "#4383b4").append($("<strong></strong>").text("工种分组")));
         var quotationSelectionCategoryDetail = createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#selectionCategory").css("color", "#4383b4").append($("<strong></strong>").text("选材品类")));
         var quotationButtonsDetail = createDiv("pull-right action-buttons").append(createButton(conf, "btnPrintDefaultQuotationInfo", "btn btn-xs btn-primary", "打印报价", null, '<i class="icon-print bigger-120"></i>'), createButton(conf, "btnPrintQuotationCN", "btn btn-xs btn-info", "打印定额", null, '<i class="icon-print bigger-120"></i>'));
+        
         $myTab.append(quotationFunctionAreaDetail);
         $myTab.append(quotationWorkerTypeDetail);
         $myTab.append(quotationSelectionCategoryDetail);

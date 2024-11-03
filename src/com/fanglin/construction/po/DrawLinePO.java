@@ -13,6 +13,7 @@ package com.fanglin.construction.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,9 +24,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "drawline", catalog = "construction")
@@ -36,7 +40,7 @@ public class DrawLinePO implements Serializable {
 	public static final String COLUMN_STARTTIME_STR = "startTime";
 
 	public static final String COLUMN_ENDTIME_STR = "endTime";
-	
+
 	public static final String COLUMN_APPLAYTIME_STR = "applayTime";
 
 	public static final short STATUS_QUEUE_INT = 0;
@@ -51,25 +55,25 @@ public class DrawLinePO implements Serializable {
 
 	private DecorationPO decoration;
 
-	private Timestamp applayTime;
-
-	private String content;
-
 	private long actualTime;
+
+	private Timestamp applayTime;
 
 	private Timestamp startTime;
 
 	private Timestamp endTime;
 
-	private short status;
-
-	private Integer count;
+	private int count;
 
 	private UserPO appler;
 
 	private DrawLineGroupPO group;
 
 	private UserPO drawer;
+
+	private short status;
+
+	private String content;
 
 	private int company;
 
@@ -193,6 +197,29 @@ public class DrawLinePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public DrawLineVO ptv(DrawLineVO drawLineVO) {
+
+		BeanUtil.copyProperties(this, drawLineVO, Arrays.asList("decoration", "appler", "group", "drawer"));
+
+		if (getDecoration() != null) {
+
+			getDecoration().ptvcascade(drawLineVO.getDecoration());
+
+			if (getDecoration().getSupervisor() != null) {
+				drawLineVO.getDecoration().setSupervisor(new UserBaseVO());
+				drawLineVO.getDecoration().getSupervisor().setBaseInfo(getDecoration().getSupervisor());
+			}
+		}
+
+		if (getDrawer() != null) drawLineVO.getDrawer().setBaseInfo(getDrawer());
+		if (getAppler() != null) drawLineVO.getAppler().setBaseInfo(getAppler());
+
+		if (getGroup() != null) BeanUtil.copyProperties(getGroup(), drawLineVO.getGroup());
+
+		return drawLineVO;
+
 	}
 
 }

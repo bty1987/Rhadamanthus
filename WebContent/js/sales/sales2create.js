@@ -36,7 +36,7 @@ jQuery(function() {
             totals: com.focusPage('#totals'), // 总额
             bComment: com.focusPage('#bComment'), // 品牌备注
             supplier: com.focusPage('#supplier'), // 厂商
-
+            type: com.focusPage('#type'), // 类型
         },
         items: {
             left: com.focusPage('#left')
@@ -74,6 +74,7 @@ jQuery(function() {
 
         return v;
     });
+    sales.rightitems.type.bindData(constant.sales().sales.type.datas, "key", "value");
 
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -105,11 +106,11 @@ jQuery(function() {
         return v
     });
 
-    com.post(api.data.queryCategory, {
+    com.post(api.ds.sales, {
         "category.isCoupon": 0
     }, function(res) {
 
-        sales.rightitems.couponInfo.bindData(res.categorys, 'name', 'name', false);
+        sales.rightitems.couponInfo.bindData(res.coupons, 'key', 'value', false);
     });
 
     com.focusPage('#itemModel').on('hidden.bs.modal', function(e) {
@@ -297,6 +298,7 @@ jQuery(function() {
             "sales.dompanys": sales.dompany,
             "sales.otherStatus": com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0,
             "sales.supplier.userId": sales.rightitems.supplier.val(),
+            "sales.type": sales.rightitems.type.val(),
         };
 
         var $lis = com.focusPage('.list-group-item');

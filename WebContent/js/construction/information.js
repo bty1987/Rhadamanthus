@@ -73,8 +73,10 @@ jQuery(function($) {
                 ["预计设计完成时间: ", v.designTime, "green"],
                 ["合同方案确认时间: ", v.decoration.sdesignTime, "green"],
                 ["放线方案确认时间: ", v.decoration.edesignTime, "green"],
-                ["装修单类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
+                ["装修类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
                 ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"],
+                ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
+                ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
             ];
 
             $.each(propertyArr, function (index, value) {

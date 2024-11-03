@@ -176,6 +176,8 @@ public class ExtensionServiceImpl implements ExtensionService {
 		extensionPO.setManageRate(extensionVO.getManageRate());
 		extensionPO.setManagePrice(extensionVO.getManagePrice());
 		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
+		extensionPO.setTaxRate(extensionVO.getTaxRate());
+		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);

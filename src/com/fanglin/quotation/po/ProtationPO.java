@@ -84,6 +84,12 @@ public class ProtationPO implements Serializable {
 
 	private long managePrice;
 
+	private int taxRate;
+
+	private String taxFormula;
+
+	private long taxPrice;
+
 	private int discount;
 
 	private long basicPrice;
@@ -344,6 +350,33 @@ public class ProtationPO implements Serializable {
 		this.managePrice = managePrice;
 	}
 
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxFormula")
+	public String getTaxFormula() {
+		return taxFormula;
+	}
+
+	public void setTaxFormula(String taxFormula) {
+		this.taxFormula = taxFormula;
+	}
+
+	@Column(name = "taxPrice")
+	public long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(long taxPrice) {
+		this.taxPrice = taxPrice;
+	}
+
 	@Column(name = "totalPrice")
 	public long getTotalPrice() {
 		return totalPrice;
@@ -505,6 +538,7 @@ public class ProtationPO implements Serializable {
 		if (protationVO.getTotalPrice() != null) setTotalPrice(protationVO.getTotalPrice());
 		if (protationVO.getTotalCost() != null) setTotalCost(protationVO.getTotalCost());
 		if (protationVO.getManagePrice() != null) setManagePrice(protationVO.getManagePrice());
+		if (protationVO.getTaxPrice() != null) setTaxPrice(protationVO.getTaxPrice());
 		if (protationVO.getDiscount() != null) setDiscount(protationVO.getDiscount());
 		if (protationVO.getPreferPrice() != null) setPreferPrice(protationVO.getPreferPrice());
 		if (protationVO.getManageProfit() != null) setManageProfit(protationVO.getManageProfit());

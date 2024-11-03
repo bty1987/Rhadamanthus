@@ -17,6 +17,8 @@ import com.fanglin.payment.po.PaymentActivityPO;
 import com.fanglin.payment.service.PaymentActivityService;
 import com.fanglin.payment.vo.PaymentActivityVO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.dao.SalesActivityDao;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
 
 @Service("paymentActivityService")
@@ -28,6 +30,9 @@ public class PaymentActivityServiceImpl implements PaymentActivityService {
 
 	@Autowired
 	private ActivityDao activityDao;
+
+	@Autowired
+	private SalesActivityDao salesActivityDao;
 
 	@Override
 	public void pagePaymentActivity(Paging paging, List<Filter> filters) {
@@ -56,13 +61,37 @@ public class PaymentActivityServiceImpl implements PaymentActivityService {
 
 	@Override
 	public int checkPaymentActivityForDecoration(PaymentActivityVO paymentActivityVO) throws FLException {
-		// TODO Auto-generated method stub
+
+		String orderId = paymentActivityVO.getOrderId();
+
+		long payment = paymentActivityDao.amountPaymentActivity(orderId, PaymentActivityPO.TYPE_DECORATION_INT);
+		long salesActivity = salesActivityDao.amountSalesActivityForActivity(orderId);
+
+		if (salesActivity > payment) {
+			throw new FLException(160037, "积分不足");
+		}
+
 		return 0;
+
 	}
 
 	@Override
 	public int checkPaymentActivityForSales(PaymentActivityVO paymentActivityVO) throws FLException {
-		// TODO Auto-generated method stub
+
+		String orderId = paymentActivityVO.getOrderId();
+
+		long payment = paymentActivityDao.amountPaymentActivity(orderId, PaymentActivityPO.TYPE_SALES_INT);
+
+		long oldPayment = salesActivityDao.amountSalesActivityForPayment(orderId);
+
+		long salesActivity = salesActivityDao.amountSalesActivityForActivity(orderId);
+
+		long amount = Arith.add(payment, oldPayment);
+
+		if (salesActivity > amount) {
+			throw new FLException(160037, "积分不足");
+		}
+
 		return 0;
 	}
 

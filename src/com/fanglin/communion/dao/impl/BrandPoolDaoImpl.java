@@ -13,9 +13,9 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 @Repository("brandPoolDao")
-public class BrandPoolDaoImpl extends DaoImpl<BrandPoolPO> implements BrandPoolDao{
+public class BrandPoolDaoImpl extends DaoImpl<BrandPoolPO> implements BrandPoolDao {
 
-	public BrandPoolDaoImpl(){
+	public BrandPoolDaoImpl() {
 		super(BrandPoolPO.class);
 	}
 
@@ -45,8 +45,8 @@ public class BrandPoolDaoImpl extends DaoImpl<BrandPoolPO> implements BrandPoolD
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("name".equals(filter.getField())) {
-				query.add(query.getCriterion("name", filter));
+			if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
 			}
 		}
 	}

@@ -57,6 +57,10 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public static final String COLUMN_STATUSTIME_STR = "startTime";
 
+	public static final String COLUMN_ENTERTIME_STR = "enterTime";
+
+	public static final String COLUMN_LEAVETIME_STR = "leaveTime";
+
 	private long csid;
 
 	private ConstructionPO construction;
@@ -69,7 +73,13 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private Timestamp endTime;
 
+	private Timestamp enterTime;
+
+	private Timestamp leaveTime;
+
 	private short status;
+
+	private short workStatus;
 
 	private short checkout;
 
@@ -146,9 +156,36 @@ public class ConstructionScheduleDO implements Serializable {
 		this.endTime = endTime;
 	}
 
+	@Column(name = "leaveTime")
+	public Timestamp getLeaveTime() {
+		return leaveTime;
+	}
+
+	public void setLeaveTime(Timestamp leaveTime) {
+		this.leaveTime = leaveTime;
+	}
+
+	@Column(name = "enterTime")
+	public Timestamp getEnterTime() {
+		return enterTime;
+	}
+
+	public void setEnterTime(Timestamp enterTime) {
+		this.enterTime = enterTime;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
+	}
+
+	@Column(name = "workStatus")
+	public short getWorkStatus() {
+		return workStatus;
+	}
+
+	public void setWorkStatus(short workStatus) {
+		this.workStatus = workStatus;
 	}
 
 	public void setStatus(short status) {

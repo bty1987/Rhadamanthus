@@ -37,6 +37,8 @@ public class SalesAction extends BaseListAction {
 
 	private List<SalesItemVO> salesItems;
 
+	private Long amount;
+
 	@Action(value = "pageSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSales() throws FLException {
 
@@ -121,6 +123,14 @@ public class SalesAction extends BaseListAction {
 	public String querySalesByNo() throws FLException {
 
 		sales = salesService.querySalesByNo(sales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountSales() throws FLException {
+
+		amount = salesService.amountSales(sales);
 
 		return SUCCESS;
 	}
@@ -237,6 +247,14 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "unpaySales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unpaySales() throws FLException {
+
+		salesService.unpaySales(sales, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "sendSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSales() throws FLException {
 
@@ -299,5 +317,13 @@ public class SalesAction extends BaseListAction {
 
 	public void setSids(List<Long> sids) {
 		this.sids = sids;
+	}
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
 	}
 }

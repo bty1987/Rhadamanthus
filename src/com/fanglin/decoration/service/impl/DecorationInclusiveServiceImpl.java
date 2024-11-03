@@ -143,41 +143,25 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 			throw new FLException(140060, "活动未锁定");
 		}
 
-		long undisPrice = 0;
-		long disPrice = 0;
-		long managePrice = 0;
-
-		long metUndisPrice = 0;
-		long metDisPrice = 0;
-		long metManagePrice = 0;
 		long metTotal = 0;
-
-		long total = 0;
+		long total = quotationPO.getTotalPrice();
 
 		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(orderId);
 
 		for (ExtensionPO extensionPO : extensionPOs) {
 
 			if (extensionPO.getAtttype() == ExtensionPO.ATTTYPE_COMMON_INT) {
-				undisPrice = Arith.add(undisPrice, Arith.mul(extensionPO.getUndisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
-				disPrice = Arith.add(disPrice, Arith.mul(extensionPO.getDisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
-				managePrice = Arith.add(managePrice, Arith.mul(extensionPO.getManagePrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
+				total = Arith.add(total, Arith.mul(extensionPO.getTotal(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
 			}
 
 			if (extensionPO.getAtttype() == ExtensionPO.ATTTYPE_MET_INT) {
-				metUndisPrice = Arith.add(metUndisPrice, Arith.mul(extensionPO.getUndisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
-				metDisPrice = Arith.add(metDisPrice, Arith.mul(extensionPO.getDisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
-				metManagePrice = Arith.add(metManagePrice, Arith.mul(extensionPO.getManagePrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
+				metTotal = Arith.add(metTotal, Arith.mul(extensionPO.getTotal(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
 			}
 
 			extensionPO.setStatus(ExtensionPO.STATUS_LOCK_INT);
 
 			extensionDao.update(extensionPO);
 		}
-
-		total = Arith.add(Arith.add(Arith.add(quotationPO.getTotalPrice(), undisPrice), Arith.div(Arith.mul(disPrice, quotationPO.getDiscount()), 10000)), managePrice);
-
-		metTotal = Arith.add(Arith.add(metUndisPrice, Arith.div(Arith.mul(metDisPrice, quotationPO.getDiscount()), 10000)), metManagePrice);
 
 		SystemConfigPO extensionMetFlag = systemConfigDao.querySystemConfig("QUOTATION_EXTENSION_MET_FLAG", decorationPO.getCompany());
 

@@ -40,7 +40,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "pageSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesBalance() throws FLException {
 
-		salesBalanceService.pageSalesBalance(getPaging(), getFilters(), queryCompany());
+		salesBalanceService.pageSalesBalance(getPaging(), getFilters(), salesBalance, queryCompany());
 
 		return SUCCESS;
 	}
@@ -48,7 +48,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "pageSalesBalanceForDompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesBalanceForDompany() throws FLException {
 
-		salesBalanceService.pageSalesBalanceForDompany(getPaging(), getFilters(), queryCompany());
+		salesBalanceService.pageSalesBalanceForDompany(getPaging(), getFilters(), salesBalance, queryCompany());
 
 		return SUCCESS;
 	}
@@ -56,7 +56,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "pageSalesBalanceForPompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesBalanceForPompany() throws FLException {
 
-		salesBalanceService.pageSalesBalanceForPompany(getPaging(), getFilters(), queryCompany());
+		salesBalanceService.pageSalesBalanceForPompany(getPaging(), getFilters(), salesBalance, queryCompany());
 
 		return SUCCESS;
 	}
@@ -68,15 +68,15 @@ public class SalesBalanceAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesBalanceForCheck", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesBalanceForCheck() throws FLException {
 
-		salesBalanceService.pageSalesBalanceForCheck(getPaging(), getFilters(), queryUserId(), queryCompany());
+		salesBalanceService.pageSalesBalanceForCheck(getPaging(), getFilters(), salesBalance, queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesBalanceForVBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesBalanceForVBalance() throws FLException {
 
@@ -120,7 +120,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "vpostSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String vpostSalesBalance() throws FLException {
 
-		salesBalanceService.vpostSalesBalance(salesBalances,  queryUserId());
+		salesBalanceService.vpostSalesBalance(salesBalances, queryUserId());
 
 		return SUCCESS;
 	}

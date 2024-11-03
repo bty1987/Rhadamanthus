@@ -579,7 +579,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		// 更新装修单上的付款比例
 		if (decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT) {
-			decorationAdditionService.updateDecorationForPayScale(decorationPO);
+			decorationAdditionService.updateDecorationForPayScale(new DecorationVO(decorationPO.getOrderId()));
 		}
 
 		decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
@@ -752,7 +752,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 
 		// 更新装修单上的付款比例
-		decorationAdditionService.updateDecorationForPayScale(decorationPaymentPO.getDecoration());
+		decorationAdditionService.updateDecorationForPayScale(new DecorationVO(decorationPaymentPO.getDecoration().getOrderId()));
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", decorationPaymentPO.getDecoration().getOrderId(), decorationReceiptPO.getDrId()));
 

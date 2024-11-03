@@ -33,7 +33,7 @@ public class SoodsPO implements Serializable {
 
 	private String name;
 
-	private GoodsPO goods;
+	private GoodsBO goods;
 
 	private int num;
 
@@ -80,11 +80,11 @@ public class SoodsPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "gid", referencedColumnName = "gid")
-	public GoodsPO getGoods() {
+	public GoodsBO getGoods() {
 		return goods;
 	}
 
-	public void setGoods(GoodsPO goods) {
+	public void setGoods(GoodsBO goods) {
 		this.goods = goods;
 	}
 

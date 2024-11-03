@@ -219,7 +219,7 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
-    "schedule-decoration-createTime": {
+    "schedule-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -242,6 +242,24 @@ Condition.addupRule("construction", {
         type: "dateRangePicker",
         submitConfig: {
             name: "endTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "schedule-enterTime": {
+        label: "进场时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "enterTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "schedule-leaveTime": {
+        label: "离场时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "leaveTime",
             op: "between",
             validate: null
         }
@@ -366,7 +384,7 @@ Condition.addupRule("construction", {
         type: "dateRangePicker",
         submitConfig: {
             name: "edesignTimeRange",
-            op: "between",
+            op: "eq",
             validate: null
         }
     },

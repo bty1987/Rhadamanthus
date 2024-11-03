@@ -59,7 +59,7 @@ public class BalanceOalesDaoImpl extends DaoImpl<BalanceOalesPO> implements Bala
 	@Override
 	public long amountBalanceOales(long boid) {
 
-		String sql = "select sum(oi.profit) from balance.balanceoalesitem boi, sales.oales oi where boi.boid = :boid and boi.oid = oi.oid";
+		String sql = "select sum(if(oi.type = 0, oi.profit, -oi.profit)) from balance.balanceoalesitem boi, sales.oales oi where boi.boid = :boid and boi.oid = oi.oid";
 
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("boid", boid).uniqueResult();
 

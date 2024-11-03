@@ -1,0 +1,157 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+            <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPeriodModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">工程进度</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="name">工程名称</label>
+                            <div class="col-sm-9">
+                                <input id="name" type="text" class="Perioditem col-xs-12 col-sm-7" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="typeness">类型</label>
+                            <div class="col-sm-9">
+                                <input id="typeness" type="text" class="Perioditem col-xs-12 col-sm-7" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="upperArea">上面积</label>
+                            <div class="col-sm-9">
+                                <input id="upperArea" type="text" class="Perioditem col-xs-12 col-sm-7 v_required " />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="lowerArea">下面积</label>
+                            <div class="col-sm-9">
+                                <input id="lowerArea" type="text" class="Perioditem col-xs-12 col-sm-7 v_required " />
+                            </div>
+                        </div>
+
+                        <!-- <div id="pluginss"></div> -->
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="period">周期</label>
+                            <div class="col-sm-9">
+                                <input id="period" type="text" class="Perioditem v_required col-xs-12 col-sm-7" />
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="company">公司</label>
+                            <div class="col-sm-9">
+                                <input id="company" type="text" class="Perioditem v_required col-xs-12 col-sm-7" />
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id=saveBtn class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe2">更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uName">工程名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="uName" class="col-xs-10 col-sm-6 v_required"
+                                    data-toggle="popover" data-trigger='manual' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uTypeness">类型</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="uTypeness"
+                                    class="col-xs-10 col-sm-6 v_float_3 v_number" data-toggle="popover"
+                                    data-trigger='manual' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uUpperArea">上面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="uUpperArea"
+                                    class="col-xs-10 col-sm-6 v_float_3 v_number" data-toggle="popover"
+                                    data-trigger='manual' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uLowerArea">下面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="uLowerArea"
+                                    class="col-xs-10 col-sm-6 v_float_3 v_number" data-toggle="popover"
+                                    data-trigger='manual' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uPeriod">工期</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="uPeriod"
+                                    class="col-xs-10 col-sm-6 v_float_3 v_number" data-toggle="popover"
+                                    data-trigger='manual' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PeriodPopUp" class="portlet box page-content"></div>
+
+
+<script type="text/javascript">
+    $.loadScript(['js/data/constructionPeriod.js']);
+</script>

@@ -96,7 +96,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	@Override
 	public long amountSalesPayment(String orderId) {
 
-		String sql = "select sum(if(type in (2, 3, 8), referMoney, -refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status != 0";
+		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status != 0";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();

@@ -20,13 +20,12 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.construction.service.DrawLineService;
 import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -46,10 +45,8 @@ public class DrawLineAction extends BaseListAction {
 
 	private List<ConstructionNodeVO> constructionNodes;
 
-	@Action(value = "pageDrawLineForPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDrawLineForPlan() throws FLException {
-
-		getFilters().add(new Filter("status", String.valueOf(DrawLinePO.STATUS_QUEUE_INT), "eq"));
+	@Action(value = "pageDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDrawLine() throws FLException {
 
 		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
 

@@ -2,6 +2,7 @@ package com.fanglin.customer.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("customerUserRuleService")
@@ -85,9 +87,9 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCustomerUserRule(CustomerUserRuleVO customerUserRule, String userId, int company) throws FLException {
+	public void addCustomerUserRule(CustomerUserRuleVO customerUserRuleVO, String userId, int company) throws FLException {
 
-		UserPO user = userDao.queryUserByUserId(customerUserRule.getUser().getUserId());
+		UserPO user = userDao.queryUserByUserId(customerUserRuleVO.getUser().getUserId());
 
 		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(user.getUid());
 
@@ -97,7 +99,7 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 		customerUserRulePO = new CustomerUserRulePO(new UserPO(), new UserPO());
 
-		BeanUtil.copyProperties(customerUserRule, customerUserRulePO, Arrays.asList("user", "creater"));
+		BeanUtil.copyProperties(customerUserRuleVO, customerUserRulePO, Arrays.asList("user", "creater"));
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
@@ -105,6 +107,9 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		customerUserRulePO.setCreater(creater);
 		customerUserRulePO.setStatus(CustomerUserRulePO.STATUS_ENABLE_INT);
 		customerUserRulePO.setCompany(company);
+
+		customerUserRulePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		customerUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		customerUserRuleDao.save(customerUserRulePO);
 	}

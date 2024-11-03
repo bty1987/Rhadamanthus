@@ -26,6 +26,7 @@ var decorationUtils = {
         var $coupon = 0;
         var $totalSalesAndMaterial = 0;
         var $totalDeposit = 0;
+        var $totalSubsidy = 0;
 
         var $statues = {};
         var $balanceStatuses = {};
@@ -78,7 +79,7 @@ var decorationUtils = {
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                 var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('子项');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -205,7 +206,9 @@ var decorationUtils = {
 
                     $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty_2)));
                     $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty_2)));
+                    $('<b></b>').html(constant.sales().oales.atttype.keys[v.atttype]).addClass("red").appendTo($('<strong></strong>').html("类型:").appendTo($('<li></li>').appendTo($ulProperty_2)));
                     $('<b></b>').attr("name", "total").attr("value", v.total).html(v.total).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty_2)));
+                    $('<b></b>').html(constant.data().brand.atttype.keys[v.branding.atttype]).addClass("red").appendTo($('<strong></strong>').html("类型:").appendTo($('<li></li>').appendTo($ulProperty_2)));
 
                     $liLine_2.append($h4_2).append($ulProperty_2).appendTo($uloalesBrand);
 
@@ -411,6 +414,10 @@ var decorationUtils = {
                     $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalSales);
                 }
 
+                if (v.sales.type == 1) {
+                    $totalSubsidy = utils.changeThrDecimal($totalSubsidy + v.sales.total);
+                }
+
                 if (v.type == 2) {
                     $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney);
                 }
@@ -505,8 +512,9 @@ var decorationUtils = {
             var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收总额:" + $totalSalesAndMaterial));
             var $TotalDepositPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("定金总额:" + ($totalDeposit)));
             var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总额:" + $oalesTotal));
+            var $subsidy = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("补贴总额:" + $totalSubsidy));
 
-            $liLine.append($h4).append($couponPrice).append($TotalPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).append($oalesH4).appendTo($ulbrand);
+            $liLine.append($h4).append($couponPrice).append($TotalPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).append($oalesH4).append($subsidy).appendTo($ulbrand);
         }
 
         function oalesTotalData() {
@@ -2307,11 +2315,11 @@ var decorationUtils = {
             com.focusPage('input[name="type"]:checked', '#printQuotationModal #types').prop("checked", false);
             com.focusPage('input[name="itemtype"]:checked', '#printQuotationModal #itemtypes').prop("checked", false);
 
-            if(layout.val() == 1){
+            if (layout.val() == 1) {
                 com.focusPage('input[value="1"]', '#printQuotationModal #types').prop("checked", true);
                 com.focusPage('input[value="2"]', '#printQuotationModal #types').prop("checked", true);
                 com.focusPage('input[value="1"]', '#printQuotationModal #itemtypes').prop("checked", true);
-            }else if(layout.val() == 2 || layout.val() == 3){
+            } else if (layout.val() == 2 || layout.val() == 3) {
                 com.focusPage('input[value="1"]', '#printQuotationModal #types').prop("checked", true);
                 com.focusPage('input[value="2"]', '#printQuotationModal #types').prop("checked", true);
                 com.focusPage('input[value="8"]', '#printQuotationModal #types').prop("checked", true);
@@ -2355,6 +2363,92 @@ var decorationUtils = {
             status = $show.includes("quotationIsPrint") ? true : false
 
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+        });
+
+        com.focusPage("#savePreferBtn").on("click", function() {
+
+            var quotation = quotationUtils.quotationDetail.quotation;
+            var quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
+
+            if (com.validate('quotationPreferModal')) {
+                return false;
+            }
+
+            var totalPrice = 0, dtaxPrice = 0, taxPrice = 0;
+            var discount = utils.accDiv(quotation.discount, 10);
+            var manageDiscount = quotation.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT ? discount : 1;
+            var trafficDiscount = quotation.trafficDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT ? discount : 1;
+            var dmanagePrice = utils.accMul(quotation.managePrice, manageDiscount);
+            var dtrafficPrice = utils.accMul(quotation.trafficPrice, trafficDiscount);
+            var notSalesmanRate = quotation.decoration.notSalesmanRate;
+            var preferPrice = com.focusPage('#prefer').val();
+            var managePrefer = com.focusPage('#manage').val();
+            var advancePrefer = com.focusPage('#advance').val();
+
+            if (quotation.managePrice < managePrefer) {
+
+                com.showAlert(com.warning, "管理优惠不能大于管理费");
+
+                return false;
+            }
+
+            if (quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
+                dtaxPrice = utils.changeThrDecimal(utils.accMul(quotation.taxPrice, manageDiscount));
+                taxPrice = quotation.taxPrice;
+            }
+
+            if (quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
+                dtaxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), preferPrice), managePrefer), advancePrefer), quotation.taxRate));
+                taxPrice = dtaxPrice;
+            }
+
+            if (quotation.basePrice && quotation.basePrice != 0) {
+
+                var total = utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice);
+                var remainder = total % quotation.basePrice;
+                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), discount), remainder), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
+            } else {
+
+                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(quotation.disPrice, discount), quotation.undisPrice), dtrafficPrice), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
+            }
+
+            totalPrice = utils.accAdd(totalPrice, !(notSalesmanRate > 0 && notSalesmanRate < 1) ? notSalesmanRate : 0);
+
+            var params = {
+                "quotation.qid": quotation.qid,
+                "quotation.totalPrice": totalPrice,
+                "quotation.taxPrice": taxPrice,
+                "quotationPrefer.orderId": quotation.orderId,
+                "quotationPrefer.qid": quotation.qid,
+                "quotationPrefer.preferPrice": preferPrice,
+                "quotationPrefer.managePrefer": managePrefer,
+                "quotationPrefer.advancePrefer": advancePrefer,
+            };
+
+            com.post(api.quotation.updateQuotationPrefer, params, function(res) {
+
+                quotationPrefer.preferPrice = preferPrice;
+                quotationPrefer.managePrefer = managePrefer;
+                quotationPrefer.advancePrefer = advancePrefer;
+
+                quotation.taxPrice = taxPrice;
+                quotation.totalPrice = totalPrice;
+
+                var $quotation = quotationUtils.quotationDetail.quotation;
+                var $quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
+
+                com.focusPage('#taxPrice', '#quotationSummary').html(com.checkNull(quotation.taxPrice, 0));
+                com.focusPage('#totalPrice', '#quotationSummary').html(com.checkNull(quotation.totalPrice, 0));
+
+                com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull(quotationPrefer.preferPrice, 0));
+                com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull(quotationPrefer.managePrefer, 0));
+                com.focusPage('#advancePrefer', '#quotationSummary').html(com.checkNull(quotationPrefer.advancePrefer, 0));
+                
+                com.focusPage('#totalPrice', '#ribbonSubset').html(com.checkNull(quotation.totalPrice, 0));
+                com.focusPage('#totalPrice', '#workTypeSubset').html(com.checkNull(quotation.totalPrice, 0));
+
+                com.focusPage("#quotationPreferModal").modal("hide");
+            });
         });
     },
     initPresignPrint: function() {

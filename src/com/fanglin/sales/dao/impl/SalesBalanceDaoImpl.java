@@ -21,12 +21,16 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalance(Paging paging, List<Filter> filters, int company) throws FLException {
+	public List<SalesBalancePO> pageSalesBalance(Paging paging, List<Filter> filters, Short type, int company) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
 		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESCOMPANY_STR, company, "eq"));
 
+		if (type != null) {
+			query.add(query.getCriterion("sales.type", type, "eq"));
+		}
+
 		queryFilterExcute(query, filters);
 
 		query.desc("sbid");
@@ -35,12 +39,16 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
+	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging, List<Filter> filters, Short type, int dompany) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
 		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESDOMPANY_STR, dompany, "eq"));
 
+		if (type != null) {
+			query.add(query.getCriterion("sales.type", type, "eq"));
+		}
+
 		queryFilterExcute(query, filters);
 
 		query.desc("sbid");
@@ -49,11 +57,15 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
+	public List<SalesBalancePO> pageSalesBalanceForPompany(Paging paging, List<Filter> filters, Short type, int pompany) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
 		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESPOMPANY_STR, pompany, "eq"));
+
+		if (type != null) {
+			query.add(query.getCriterion("sales.type", type, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -77,11 +89,15 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForCheck(Paging paging, List<Filter> filters, int pompany, int uid) throws FLException {
+	public List<SalesBalancePO> pageSalesBalanceForCheck(Paging paging, List<Filter> filters, Short type, int pompany) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
 		query.alias("sales", "sales").add(query.getCriterion(SalesBalancePO.COLUMN_SALESPOMPANY_STR, pompany, "eq"));
+
+		if (type != null) {
+			query.add(query.getCriterion("sales.type", type, "eq"));
+		}
 
 		query.add(query.getCriterion("status", SalesBalancePO.STATUS_BALANCE_INT, "eq"));
 		query.add(query.getCriterion("checkStatus", SalesBalancePO.CHECKSTATUS_INIT_INT, "eq"));

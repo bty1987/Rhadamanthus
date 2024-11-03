@@ -55,11 +55,19 @@ public class OalesPO implements Serializable {
 
 	public static final short ACCOUNT_STATUS_INIT_INT = 0;
 
+	public static final short TYPE_REFUND_INT = 1;
+
+	public static final short ISSCALE_INIT_INT = 0;
+
+	public static final short ISSCALE_MATCH_INT = 1;
+
 	private long oid;
 
 	private String no;
 
 	private DecorationPO decoration;
+
+	private long foid;
 
 	private HousePO house;
 
@@ -76,6 +84,8 @@ public class OalesPO implements Serializable {
 	private short atttype;
 
 	private short awardType;
+
+	private short type;
 
 	private UserPO creater;
 
@@ -98,6 +108,8 @@ public class OalesPO implements Serializable {
 	private short status;
 
 	private short accountStatus;
+
+	private short isScale;
 
 	private String comment;
 
@@ -172,6 +184,15 @@ public class OalesPO implements Serializable {
 		this.house = house;
 	}
 
+	@Column(name = "foid")
+	public long getFoid() {
+		return foid;
+	}
+
+	public void setFoid(long foid) {
+		this.foid = foid;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public CustomerPO getCustomer() {
@@ -225,6 +246,15 @@ public class OalesPO implements Serializable {
 
 	public void setAwardType(short awardType) {
 		this.awardType = awardType;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -349,6 +379,15 @@ public class OalesPO implements Serializable {
 
 	public void setAccountStatus(short accountStatus) {
 		this.accountStatus = accountStatus;
+	}
+
+	@Column(name = "isScale")
+	public short getIsScale() {
+		return isScale;
+	}
+
+	public void setIsScale(short isScale) {
+		this.isScale = isScale;
 	}
 
 	@Column(name = "comment")

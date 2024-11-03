@@ -17,6 +17,8 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -59,6 +61,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Autowired
 	private ApprovalDao approvalDao;
 
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
+
 	@Override
 	public List<SalesBalanceVO> pageSalesBalance(List<SalesBalancePO> salesBalancePOs) {
 
@@ -90,11 +95,15 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalance(Paging paging, List<Filter> filters, int company) throws FLException {
+	public void pageSalesBalance(Paging paging, List<Filter> filters, SalesBalanceVO salesBalanceVO, int company) throws FLException {
 
 		if (filters.size() == 0) return;
 
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters, company);
+		short type = 0;
+
+		if (salesBalanceVO != null && salesBalanceVO.getSales() != null && salesBalanceVO.getSales().getType() != null) type = salesBalanceVO.getSales().getType();
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters, type, company);
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
@@ -102,11 +111,15 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
+	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filters, SalesBalanceVO salesBalanceVO, int dompany) throws FLException {
 
 		if (filters.size() == 0) return;
 
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForDompany(paging, filters, dompany);
+		short type = 0;
+
+		if (salesBalanceVO != null && salesBalanceVO.getSales() != null && salesBalanceVO.getSales().getType() != null) type = salesBalanceVO.getSales().getType();
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForDompany(paging, filters, type, dompany);
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
@@ -114,11 +127,15 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
+	public void pageSalesBalanceForPompany(Paging paging, List<Filter> filters, SalesBalanceVO salesBalanceVO, int pompany) throws FLException {
 
 		if (filters.size() == 0) return;
 
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForPompany(paging, filters, pompany);
+		short type = 0;
+
+		if (salesBalanceVO != null && salesBalanceVO.getSales() != null && salesBalanceVO.getSales().getType() != null) type = salesBalanceVO.getSales().getType();
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForPompany(paging, filters, type, pompany);
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
@@ -143,15 +160,15 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, String userId, int pompany) throws FLException {
-
-		UserPO userPO = userDao.queryUserByUserId(userId);
+	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, SalesBalanceVO salesBalanceVO, int pompany) throws FLException {
 
 		if (filters.size() == 0) return;
 
-		if (userPO == null) return;
+		short type = 0;
 
-		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForCheck(paging, filters, pompany, userPO.getUid());
+		if (salesBalanceVO != null && salesBalanceVO.getSales() != null && salesBalanceVO.getSales().getType() != null) type = salesBalanceVO.getSales().getType();
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForCheck(paging, filters, type, pompany);
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
@@ -572,6 +589,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 				salesDao.update(salesPO);
 			}
+
+			decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(salesBalancePO.getSales().getOrderId()));
 		}
 
 		return 0;

@@ -66,7 +66,7 @@ function printProjectTable(subtype, showType) {
 
         $.each(v, function(j, qv) {
 
-            if (subtype.indexOf(qv.subtype) == -1)
+            if (subtype.indexOf(qv.subtype) == -1 && qv.subtype != null)
                 return true;
 
             if (!showType.showStandardPrice && [0, 4, 5].indexOf(qv.type) != -1) {
@@ -163,7 +163,7 @@ function printFinanceTable(subtype, showType) {
                 qv.total = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
             }
 
-            if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1) {
+            if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1 || qv.subtype == null) {
 
                 contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
                 contentHtml += '<td>' + (j + 1) + '</td> ';
@@ -256,7 +256,7 @@ function printCostTable(subtype, showType) {
 
         $.each(v, function(j, qv) {
 
-            if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1) {
+            if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1 || qv.subtype == null) {
 
                 contentHtml += '<tr align="center" bgcolor="#FFFFFF">';
                 contentHtml += '<td>' + (j + 1) + '</td> ';
@@ -359,7 +359,7 @@ function printCustomerTable(subtype, orderType) {
 
         $.each(v, function(j, qv) {
 
-            if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1) {
+            if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1 || qv.subtype == null) {
 
                 if (qv.suptype == 1) {
                     qv.num = 1;
@@ -709,9 +709,16 @@ jQuery(function($) {
         quotationUtils.quotationNormriceProcessing(res.quotationFunctionAreas, [], []);
     }, null, false);
 
+    com.post(api.quotation.queryQuotationPrefer, {
+        "quotationPrefer.qid": printConf.quotationId,
+    }, function(res) {
+
+        quotationUtils.quotationDetail.quotationPrefer = res.quotationPrefer;
+    }, null, false);
+
     quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions);
 
-    quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.quotation.orderType, false, printConf.showType);
+    quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, quotationUtils.quotationDetail.quotationPrefer, params.quotation.orderType, false, printConf.showType);
 
     quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(quotationUtils.quotationDetail.quotation.discount, quotationUtils.quotationDetail.quotation.basePrice);
 

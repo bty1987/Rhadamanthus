@@ -40,6 +40,7 @@ jQuery(function($) {
         status: {},
         atttypes: {},
         awardTypes: {},
+        refund: null,
 
         pageType: params.urlLoadParams.pagetype,
 
@@ -372,12 +373,17 @@ jQuery(function($) {
         prop: "status",
         clazz: "red",
         dataset: constant.sales().oales.status.keys,
+    }, {
+        fieId: "type",
+        name: "类型",
+        prop: "type",
+        clazz: "red",
+        dataset: constant.sales().oales.type.keys,
     }];
     var linebtns = [{
         name: "编辑",
         clazz: "btn-success",
         handle: function(v) {
-
             oales.oid = v.oid;
 
             oales.items.orderId.val(v.decoration.orderId);
@@ -575,6 +581,26 @@ jQuery(function($) {
             return (v.status != constant.sales().oales.STATUS_INVALID_INI && (oales.pageType == "material" || oales.pageType == "finance"));
         }
     }, {
+        name: "退货",
+        clazz: "btn-grey",
+        handle: function(v) {
+
+            oales.oid = v.oid;
+            oales.refund = 1;
+            com.focusPage(".serve").hide();
+            com.focusPage(".material").hide();
+            com.focusPage(".finance").hide();
+            com.focusPage(".refund").show();
+
+            oales.modals.oalesModal.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.type == constant.sales().oales.TYPE_PUR_INT && v.status == constant.sales().oales.STATUS_CHECK_INT);
+        }
+    }, {
         name: "图片",
         clazz: "btn-primary",
         handle: function(v) {
@@ -731,6 +757,10 @@ jQuery(function($) {
             url = api.sales.updateOales;
             options["oales.oid"] = oales.oid;
         }
+        if(oales.refund == 1){
+            url = api.sales.refundOales;
+            options["oales.oid"] = oales.oid;
+        }
 
         com.post(url, options, function(res) {
 
@@ -740,6 +770,7 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
 
             com.cleanTypeahead("brandName");
+            oales.refund = null;
         });
 
     }

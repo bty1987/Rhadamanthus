@@ -26,6 +26,8 @@ jQuery(function($) {
             costRate: com.focusPage("#costRate", "#createPresignProduceModal"),
             mostRate: com.focusPage("#mostRate", "#createPresignProduceModal"),
             manageFormula: com.focusPage("#manageFormula", "#createPresignProduceModal"),
+            taxRate: com.focusPage("#taxRate", "#createPresignProduceModal"),
+            taxFormula: com.focusPage("#taxFormula", "#createPresignProduceModal"),
         },
 
         status: {},
@@ -99,6 +101,21 @@ jQuery(function($) {
         },
         clazz: "grey"
     }, {
+        fieId: "taxRate",
+        name: "税金比例",
+        prop: "taxRate",
+        clazz: "blue"
+    }, {
+        fieId: "taxFormula",
+        name: "税金公式",
+        prop: function(v) {
+
+            var taxFormula = v.taxFormula != null ? paramToFormula(v.taxFormula) : "";
+
+            return taxFormula;
+        },
+        clazz: "grey"
+    }, {
         fieId: "costPrice",
         name: "成本单价",
         prop: "costPrice",
@@ -148,6 +165,8 @@ jQuery(function($) {
             presignProduce.items.costRate.val(v.costRate);
             presignProduce.items.mostRate.val(v.mostRate);
             presignProduce.items.manageFormula.val(v.manageFormula ? paramToFormula(v.manageFormula) : "");
+            presignProduce.items.taxRate.val(v.taxRate);
+            presignProduce.items.taxFormula.val(v.taxFormula ? paramToFormula(v.taxFormula) : "");
 
             if (v.version && v.version.qvId) {
                 presignProduce.items.version.val(v.version.qvId);
@@ -227,16 +246,32 @@ jQuery(function($) {
 
         var manageFormula = presignProduce.items.manageFormula.val();
 
-        if (manageFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+        var taxFormula = presignProduce.items.taxFormula.val();
 
-            com.showAlert(com.warning, "公式存在无效参数");
+        if (manageFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd|\u7279\u6b8a\u4f18\u60e0)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+
+            com.showAlert(com.warning, "管理费公式存在无效参数");
 
             return false;
         }
 
         if (evals(formulaToParam(manageFormula))) {
 
-            com.showAlert(com.warning, "公式运算结果失败");
+            com.showAlert(com.warning, "管理费公式运算结果失败");
+
+            return false;
+        }
+
+        if (taxFormula.replace(/(\u8d77\u62a5\u4ef7|\u4f18\u60e0\u989d|\u529f\u80fd\u533a|\u4e2a\u6027|\u51cf\u9879|\u8d4b\u80fd|\u7ba1\u7406\u8d39|\u7279\u6b8a\u4f18\u60e0|\u7ba1\u7406\u4f18\u60e0)/g, "").replace(/[\+\-\*\/\(\)]/g, "").replace(/[0-9]/g, "") != "") {
+
+            com.showAlert(com.warning, "税金公式存在无效参数");
+
+            return false;
+        }
+
+        if (evals(formulaToParam(taxFormula))) {
+
+            com.showAlert(com.warning, "税金公式运算结果失败");
 
             return false;
         }
@@ -253,6 +288,8 @@ jQuery(function($) {
             "presignProduce.costRate": presignProduce.items.costRate.val(),
             "presignProduce.mostRate": presignProduce.items.mostRate.val(),
             "presignProduce.manageFormula": formulaToParam(manageFormula),
+            "presignProduce.taxRate": presignProduce.items.taxRate.val(),
+            "presignProduce.taxFormula": formulaToParam(taxFormula),
         };
 
         if (presignProduce.items.version.val()) {
@@ -274,13 +311,12 @@ jQuery(function($) {
 
     function formulaToParam(formula) {
 
-        return formula.replace(/\u8d77\u62a5\u4ef7/g, "{a}").replace(/\u4f18\u60e0\u989d/g, "{b}").replace(/\u529f\u80fd\u533a/g, "{c}").replace(/\u4e2a\u6027/g, "{d}").replace(/\u51cf\u9879/g, "{e}").replace(/\u8d4b\u80fd/g, "{f}");
+        return formula.replace(/\u8d77\u62a5\u4ef7/g, "{a}").replace(/\u4f18\u60e0\u989d/g, "{b}").replace(/\u529f\u80fd\u533a/g, "{c}").replace(/\u4e2a\u6027/g, "{d}").replace(/\u51cf\u9879/g, "{e}").replace(/\u8d4b\u80fd/g, "{f}").replace(/\u7ba1\u7406\u8d39/g, "{g}").replace(/\u7279\u6b8a\u4f18\u60e0/g, "{h}").replace(/\u7ba1\u7406\u4f18\u60e0/g, "{i}");
     }
 
     function paramToFormula(param) {
 
-        return param.replace(/\{a\}/g, "\u8d77\u62a5\u4ef7").replace(/\{b\}/g, "\u4f18\u60e0\u989d").replace(/\{c\}/g, "\u529f\u80fd\u533a").replace(/\{d\}/g, "\u4e2a\u6027").replace(/\{e\}/g, "\u51cf\u9879").replace(/\{f\}/g, "\u8d4b\u80fd")
-        \u8d4b\u80fd;
+        return param.replace(/\{a\}/g, "\u8d77\u62a5\u4ef7").replace(/\{b\}/g, "\u4f18\u60e0\u989d").replace(/\{c\}/g, "\u529f\u80fd\u533a").replace(/\{d\}/g, "\u4e2a\u6027").replace(/\{e\}/g, "\u51cf\u9879").replace(/\{f\}/g, "\u8d4b\u80fd").replace(/\{g\}/g, "\u7ba1\u7406\u8d39").replace(/\{h\}/g, "\u7279\u6b8a\u4f18\u60e0").replace(/\{i\}/g, "\u7ba1\u7406\u4f18\u60e0");
     }
 
     function evals(formula) {
@@ -292,6 +328,9 @@ jQuery(function($) {
             "d": 1,
             "e": 1,
             "f": 1,
+            "g": 1,
+            "h": 1,
+            "i": 1,
         });
 
         var res = new Function("return function(){return " + formula + "}")()();

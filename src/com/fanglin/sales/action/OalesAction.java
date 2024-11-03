@@ -136,6 +136,22 @@ public class OalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "refundOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundOales() throws FLException {
+
+		oalesService.refundOales(oales, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "scaleOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String scaleOales() throws FLException {
+
+		oalesService.scaleOales(oales);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteOales() throws FLException {
 

@@ -307,6 +307,7 @@ jQuery(function($) {
         protationItems[0].items.push(["特批优惠", 1, protation.protation.advanceProfit]);
     }
 
+    protationItems[0].items.push(["税金金额", 1, protation.protation.taxPrice]);
     protationItems[3].items.push(["基础增项", 1, protation.protation.adddPrice]);
     protationItems[3].items.push(["主材增项", 1, protation.protation.addmPrice]);
     protationItems[0].item.push(["标配产品", 1]);
@@ -392,9 +393,9 @@ jQuery(function($) {
             });
         }
     }
-    
+
     contractEdit.table.push(table1);
-    
+
     var table2 = {
         "insertWay": 1,
         "keyword": "活动礼品项目列表",
@@ -406,7 +407,7 @@ jQuery(function($) {
         "cellVerticalAlignment": 5,
         "datas": []
     };
-    
+
     var decorationActivityItems = [];
 
     com.post(api.decoration.queryDecorationActivityItem, {
@@ -415,9 +416,9 @@ jQuery(function($) {
 
         decorationActivityItems = res.decorationActivityItems;
     }, null, false);
-    
+
     var index = 0;
-    
+
     if (decorationActivityItems && decorationActivityItems.length) {
 
         $.each(decorationActivityItems, function(i, v) {
@@ -428,7 +429,7 @@ jQuery(function($) {
             table2.datas.push([(index++ + 1), v.activityItemName, v.num]);
         });
     }
-    
+
     contractEdit.table.push(table2);
 
     function talkingData(content, types) {
@@ -440,8 +441,7 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    }
-    ;
+    };
 
     var displayFunc = (function() {
 
@@ -568,8 +568,6 @@ jQuery(function($) {
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };
-
-            console.log(options);
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
 

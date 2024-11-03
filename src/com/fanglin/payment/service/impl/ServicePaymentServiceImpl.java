@@ -13,18 +13,23 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationHolonomyDao;
+import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationHolonomyPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.ActivityPO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
+import com.fanglin.payment.dao.PaymentActivityDao;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.dao.ServicePaymentDao;
 import com.fanglin.payment.dao.ServiceReceiptDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.AdvanceReceiptPO;
+import com.fanglin.payment.po.PaymentActivityPO;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.payment.po.ServicePaymentPO;
@@ -83,6 +88,12 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 
 	@Autowired
 	private PaymentService paymentService;
+
+	@Autowired
+	private DecorationActivityDao decorationActivityDao;
+
+	@Autowired
+	private PaymentActivityDao paymentActivityDao;
 
 	@Override
 	public void pageServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePayment, Integer company) throws FLException {
@@ -277,6 +288,19 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 		}
 
 		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(money, 1000.0)));
+
+		// 是否参加活动, 参加==》生成款项积分
+		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(decoration.getOrderId());
+
+		if (decorationActivityPOs.size() > 0) {
+
+			ActivityPO activity = decorationActivityPOs.get(0).getActivity();
+
+			PaymentActivityPO paymentActivityPO = new PaymentActivityPO(decoration.getOrderId(), PaymentActivityPO.TYPE_SERVICE_INT, servicePaymentPO.getSpid(), servicePaymentPO.getServiceReceipt().getSrId(), activity, (int) servicePaymentPO.getServiceMoney(), activity.getMultiple());
+
+			paymentActivityDao.save(paymentActivityPO);
+
+		}
 
 		return 0;
 	}

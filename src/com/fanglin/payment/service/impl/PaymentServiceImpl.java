@@ -30,6 +30,7 @@ import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.MessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
@@ -268,8 +269,8 @@ public class PaymentServiceImpl implements PaymentService {
 		if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT) {
 			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
 		} else if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT) {
-			// 更新装修单上的销售比例
-			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+
+			decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(decorationPO.getOrderId())); // 更新装修单上的销售比例
 
 			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
 
@@ -405,8 +406,7 @@ public class PaymentServiceImpl implements PaymentService {
 		} else if (paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT) {
 			name = "主材预付款";
 
-			// 更新装修单上的销售比例
-			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+			decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(decorationPO.getOrderId())); // 更新装修单上的销售比例
 		}
 
 		decorationService.sendMessage(paymentPO.getOrderId(), name, String.format("%s退款金额%.3f元", name, Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));

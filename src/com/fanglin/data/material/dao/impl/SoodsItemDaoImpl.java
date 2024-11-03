@@ -6,9 +6,11 @@ import java.util.List;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.SoodsItemDao;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.SoodsItemPO;
 import com.fanglin.data.po.SoodsPO;
@@ -34,7 +36,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	}
 
 	@Override
-	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid, Short status, Short goodsStatus) {
+	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid, Short status) {
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
@@ -47,9 +49,8 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 			query.add(Restrictions.eq("status", status));
 		}
 
-		if (goodsStatus != null) {
-			query.alias("soods.goods", "goods").add(Restrictions.eq("goods.status", goodsStatus));
-		}
+		query.alias("soods.goods", "goods").add(Restrictions.eq("goods.status", GoodsPO.STATUS_ENABLE_INT));
+		query.alias("goods.branding", "brand").add(Restrictions.eq("brand.status", BrandPO.STATUS_ENABLE_INT));
 
 		queryFilterExcute(query, filters);
 

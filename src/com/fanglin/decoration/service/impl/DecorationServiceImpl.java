@@ -1505,7 +1505,7 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		decorationAdditionService.updateDecorationForPayScale(decorationPO);
+		decorationAdditionService.updateDecorationForPayScale(decorationVO);
 	}
 
 	@Override
@@ -1518,7 +1518,7 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+		decorationAdditionService.updateDecorationForSaleScale(decorationVO);
 	}
 
 	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
