@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class FeedbackVO implements Serializable {
 
 	private static final long serialVersionUID = -6929197765043316650L;
@@ -29,6 +31,31 @@ public class FeedbackVO implements Serializable {
 	private List<String> drawings;
 
 	private String company;
+
+	private UserBaseVO receiver;
+
+	private UserBaseVO finisher;
+
+	private UserBaseVO handler;
+
+	private Timestamp receiveTime;
+
+	private Timestamp handleTime;
+
+	private Timestamp finishTime;
+
+	private short status;
+
+	public FeedbackVO() {
+		super();
+	}
+
+	public FeedbackVO(UserBaseVO receiver, UserBaseVO handler, UserBaseVO finisher) {
+		super();
+		this.receiver = receiver;
+		this.handler = handler;
+		this.finisher = finisher;
+	}
 
 	public Long getFid() {
 		return fid;
@@ -89,6 +116,65 @@ public class FeedbackVO implements Serializable {
 
 	public String getPhone() {
 		return phone;
+	}
+
+	public UserBaseVO getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(UserBaseVO receiver) {
+		this.receiver = receiver;
+	}
+
+	public UserBaseVO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserBaseVO finisher) {
+		this.finisher = finisher;
+	}
+
+	public UserBaseVO getHandler() {
+		return handler;
+	}
+
+	public void setHandler(UserBaseVO handler) {
+		this.handler = handler;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getReceiveTime() {
+		return receiveTime;
+	}
+
+	public void setReceiveTime(Timestamp receiveTime) {
+		this.receiveTime = receiveTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getHandleTime() {
+		return handleTime;
+	}
+
+	public void setHandleTime(Timestamp handleTime) {
+		this.handleTime = handleTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	public void setPhone(String phone) {

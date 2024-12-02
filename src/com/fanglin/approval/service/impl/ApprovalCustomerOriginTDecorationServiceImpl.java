@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.vo.CustomerOriginVO;
@@ -50,6 +52,7 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("approvalCustomerOriginTDecorationService")
 @Transactional(readOnly = true)
@@ -72,6 +75,32 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 	@Autowired
 	private MessageService messageService;
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void pageApprovalCustomerOriginTDecoration(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		List<ApprovalCustomerOriginTDecorationPO> approvalCustomerOriginTDecorationPOs = approvalCustomerOriginTDecorationDao.pageApprovalCustomerOriginTDecorationPO(paging, filters, company);
+		List<ApprovalCustomerOriginTDecorationVO> approvalCustomerOriginTDecorationVOs = new ArrayList<ApprovalCustomerOriginTDecorationVO>();
+
+		for (ApprovalCustomerOriginTDecorationPO approvalCustomerOriginTDecorationPO : approvalCustomerOriginTDecorationPOs) {
+
+			ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecorationVO = new ApprovalCustomerOriginTDecorationVO();
+
+			approvalCustomerOriginTDecorationVO.setApproval(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
+			approvalCustomerOriginTDecorationVO.setCustomerOrigin(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new DecorationBusitypeVO()));
+			approvalCustomerOriginTDecorationVO.setDecorationBusitype(new DecorationBusitypeVO());
+			approvalCustomerOriginTDecorationVO.setSalesman(new UserBaseVO());
+
+			BeanUtil.copyProperties(approvalCustomerOriginTDecorationPO, approvalCustomerOriginTDecorationVO, Arrays.asList("approval", "customerOrigin", "decorationBusitype", "salesman"));
+
+			approvalCustomerOriginTDecorationPO.ptv(approvalCustomerOriginTDecorationVO);
+
+			approvalCustomerOriginTDecorationVOs.add(approvalCustomerOriginTDecorationVO);
+		}
+
+		paging.setData(approvalCustomerOriginTDecorationVOs);
+	}
 
 	@Override
 	public ApprovalCustomerOriginTDecorationVO queryApprovalCustomerOriginTDecoration(ApprovalVO approvalVO) throws FLException {
@@ -172,7 +201,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationVO, approvalCustomerOriginTDecorationPO, Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
 
-		approvalCustomerOriginTDecorationPO.setAid(approvalPO.getAid());
+		approvalCustomerOriginTDecorationPO.setApproval(approvalPO);
 
 		approvalCustomerOriginTDecorationDao.save(approvalCustomerOriginTDecorationPO);
 

@@ -134,10 +134,25 @@ $(function() {
             });
         }
 
+        var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, preferManage), _managePrice));
+
+        _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
+
+        if (utils.accMul(_manageDiscount, 10) < protation.presignProduce.manageDiscount) {
+
+            com.showAlert(com.warning, "管理费优惠金额不合理");
+
+            return false;
+        }
+
         var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
 
         var total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_protation.quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance);
         total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(_protation.basicPrice, utils.accAdd(_protation.adddPrice, utils.accSub(_protation.addmPrice, utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice)))), utils.accAdd(_protation.accmPrice, _protation.accdPrice))));
+
+        if(_protation.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT){
+            total = Math.round(total);
+        }
 
         var options = {
             "protation.pid": protation.protation.pid,
@@ -146,6 +161,7 @@ $(function() {
             "protation.taxPrice": _taxPrice,
             "protation.manageProfit": preferManage,
             "protation.advanceProfit": preferAdvance,
+            "protation.manageDiscount": _manageDiscount,
             "protation.totalCost": _protation.totalCost,
             "protation.totalProfit": _protation.totalProfit,
             "protation.totalPrice": total,

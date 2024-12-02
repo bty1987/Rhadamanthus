@@ -8,6 +8,6 @@ public interface SalesDeliveryStatusRightService {
 
 	public List<SalesDeliveryStatusRightVO> querySalesDeliveryStatusRight(SalesDeliveryStatusRightVO salesDeliveryStatusRight);
 
-	public void updateSalesDeliveryStatusRight(List<SalesDeliveryStatusRightVO> salesDeliveryStatusRights);
+	public void updateSalesDeliveryStatusRight(SalesDeliveryStatusRightVO salesDeliveryStatusRight, List<SalesDeliveryStatusRightVO> salesDeliveryStatusRights);
 
 }

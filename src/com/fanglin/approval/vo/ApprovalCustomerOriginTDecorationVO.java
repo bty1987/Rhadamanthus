@@ -12,7 +12,7 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 
 	private Long acodid;
 
-	private Long aid;
+	private ApprovalVO approval;
 
 	private CustomerOriginVO customerOrigin;
 
@@ -27,7 +27,7 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 	private Short resourceType;
 
 	private UserBaseVO salesman;
-	
+
 	private short typeness;
 
 	public ApprovalCustomerOriginTDecorationVO() {
@@ -57,12 +57,12 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 		this.acodid = acodid;
 	}
 
-	public Long getAid() {
-		return aid;
+	public ApprovalVO getApproval() {
+		return approval;
 	}
 
-	public void setAid(Long aid) {
-		this.aid = aid;
+	public void setApproval(ApprovalVO approval) {
+		this.approval = approval;
 	}
 
 	public CustomerOriginVO getCustomerOrigin() {

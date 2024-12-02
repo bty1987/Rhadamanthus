@@ -41,7 +41,7 @@
 
         projectStatusArr: {},
         designStatusArr: {}
-
+    
     };
 
     order.saveBtnRepair = com.focusPage("#saveBtnRepair");
@@ -401,10 +401,10 @@
         var options = {
             "constructionInfo.orderId": contract.orderId,
             "constructionInfo.decoration.orderId": contract.orderId,
-            "constructionInfo.finishTime": order.infoItems.finishTime.val() + " 00:00:00",
-            "constructionInfo.keyTime": order.infoItems.keyTime.val() + " 00:00:00",
-            "constructionInfo.designTime": order.infoItems.designTime.val() + " 00:00:00",
-            "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() + " 00:00:00",
+            "constructionInfo.finishTime": order.infoItems.finishTime.val() ? order.infoItems.finishTime.val() + " 00:00:00" : '',
+            "constructionInfo.keyTime": order.infoItems.keyTime.val() ? order.infoItems.keyTime.val() + " 00:00:00" : '',
+            "constructionInfo.designTime": order.infoItems.designTime.val() ? order.infoItems.designTime.val() + " 00:00:00" : '',
+            "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() ? order.infoItems.drawlineTime.val() + " 00:00:00" : '',
             "constructionInfo.comment": order.infoItems.comment.val(),
             "constructionInfo.isConfirmPricture": 1
         };
@@ -428,8 +428,8 @@
         "company.atttype": "3"
     }, function(res) {
 
-        order.infoItems.dlmConpany.bindData(res.companys, "cid", "name", false);
-        order.signItems.conpany.bindData(res.companys, "cid", "name", false);
+        order.infoItems.dlmConpany.bindData(res.companys, "cid", "name", true);
+        order.signItems.conpany.bindData(res.companys, "cid", "name", true);
     });
 
     com.post(api.data.queryDecorationBusitype, {}, function(res) {
@@ -1396,7 +1396,7 @@
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": orderId
             }, function(res) {
-
+            	
                 var netperfor = 0;
                 var comperfor = 0;
 

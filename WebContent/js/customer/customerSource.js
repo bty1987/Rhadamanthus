@@ -41,6 +41,8 @@ $(function() {
             houseNumber: com.focusPage("#houseNumber", "#customerSource"),
             purpose: com.focusPage("#purpose", "#customerSource"),
             price: com.focusPage("#price", "#customerSource"),
+            customerType: com.focusPage("#customerType", "#customerSource"),
+            demand: com.focusPage("#demand", "#customerSource"),
 
             busitype: com.focusPage("#busitype", "#issueCustomerChanceModal"),
             company: com.focusPage("#company", "#issueCustomerChanceModal"),
@@ -92,10 +94,13 @@ $(function() {
         depage: params['urlLoadParams'].depage,
     };
 
+    customerSource.items.customerType.bindData(constant.customer().customerSource.customerType.datas, "key", "value");
+    customerSource.items.demand.bindData(constant.customer().customerSource.demand.datas, "key", "value");
+
     customerSource.btns.saveBtn.bindClick(saveDate);
     customerSource.btns.firstApprovalBtn.bindClick(firstApproval);
     customerSource.btns.updateHouseBtn.bindClick(updateHouse);
-    customerSource.btns.issueBtn.bindClick(function(){
+    customerSource.btns.issueBtn.bindClick(function() {
 
         if (customerSource.btnStatue == "open") {
             issueDate();
@@ -220,12 +225,12 @@ $(function() {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('默认规则: ' + "手动")).appendTo($info);
     }
 
-//    drawInfo();
+    // drawInfo();
 
     var searcher = new Searcher();
 
     searcher.base("csCondList", "csPagenation", "csResultList", api.customer.pageCustomerSource);
-    searcher.condition(["customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-createTime", "customer-customerSource-status"]);
+    searcher.condition(["customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-creater", "customer-customerSource-createTime", "customer-customerSource-status", "customer-customerSource-customerType", "customer-customerSource-demand"]);
 
     searcher.button([{
         id: "createCustomerSource",
@@ -347,6 +352,18 @@ $(function() {
         name: "创建时间",
         prop: "createTime",
         clazz: "green"
+    }, {
+        field: "customerType",
+        name: "客户类型",
+        prop: "customerType",
+        clazz: "red",
+        dataset: constant.customer().customerSource.customerType.keys
+    }, {
+        field: "demand",
+        name: "装修需求",
+        prop: "demand",
+        clazz: "red",
+        dataset: constant.customer().customerSource.demand.keys
     }, {
         field: "status",
         name: "状态",
@@ -522,10 +539,6 @@ $(function() {
             });
 
             return false;
-        },
-        show: function(v) {
-
-            return customerSource.depage == "user";
         }
     }, {
         name: "失效",
@@ -627,6 +640,8 @@ $(function() {
             "customerSource.name": customerSource.items.name.val(),
             "customerSource.gender": com.genderType[customerSource.items.gender.prop("checked")],
             "customerSource.phone": phone,
+            "customerSource.customerType": customerSource.items.customerType.val(),
+            "customerSource.demand": customerSource.items.demand.val(),
             "customerSource.intention": customerSource.items.intention.val(),
             "customerSource.price": customerSource.items.price.val(),
             "customerSource.comment": customerSource.items.comment.val(),
@@ -685,14 +700,14 @@ $(function() {
             "customerSource.csid": customerSource.source.csid,
             "customerChance.busitype.dbid": customerSource.items.busitype.val()
         };
-        
-        if(customerSource.items.company.val()){
+
+        if (customerSource.items.company.val()) {
             options["company"] = customerSource.items.company.val();
         }
-        
-        if(customerSource.items.busitype.val()){
+
+        if (customerSource.items.busitype.val()) {
             options["customerChance.busitype.dbid"] = customerSource.items.busitype.val();
-        } else if(customerSource.busitype){
+        } else if (customerSource.busitype) {
             options["customerChance.busitype.dbid"] = customerSource.busitype.dbid;
         }
 

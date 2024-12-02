@@ -26,6 +26,15 @@ public class QuotationPreferPO implements Serializable {
 
 	private long advancePrefer;
 
+	public QuotationPreferPO() {
+		super();
+	}
+
+	public QuotationPreferPO(String orderId, long qid){
+		this.orderId = orderId;
+		this.qid = qid;
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "qpid")

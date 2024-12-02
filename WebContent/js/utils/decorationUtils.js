@@ -352,7 +352,9 @@ var decorationUtils = {
 
                 if (v.status == 0)
                     return true;
-
+                if(v.sales.type==1){
+                	v.sales.brand=v.sales.brand + '(补贴)';
+                }
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
                 }
@@ -414,8 +416,8 @@ var decorationUtils = {
                     $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalSales);
                 }
 
-                if (v.sales.type == 1) {
-                    $totalSubsidy = utils.changeThrDecimal($totalSubsidy + v.sales.total);
+                if (v.sales.type == 1 && v.sales.balanceStatus == 3) {
+                    $totalSubsidy = utils.changeThrDecimal($totalSubsidy + ([4, 5, 6].contains(v.type) ? -v.sales.total : v.sales.total));
                 }
 
                 if (v.type == 2) {
@@ -2393,13 +2395,13 @@ var decorationUtils = {
             }
 
             if (quotation.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                dtaxPrice = utils.changeThrDecimal(utils.accMul(quotation.taxPrice, manageDiscount));
-                taxPrice = quotation.taxPrice;
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), preferPrice), managePrefer), advancePrefer), quotation.taxRate));
+                dtaxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
             }
 
             if (quotation.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                dtaxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), preferPrice), managePrefer), advancePrefer), quotation.taxRate));
-                taxPrice = dtaxPrice;
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(quotation.disPrice, quotation.undisPrice), quotation.trafficPrice), quotation.managePrice), preferPrice), managePrefer), advancePrefer), quotation.taxRate));
+                dtaxPrice = taxPrice;
             }
 
             if (quotation.basePrice && quotation.basePrice != 0) {
@@ -2436,9 +2438,14 @@ var decorationUtils = {
 
                 var $quotation = quotationUtils.quotationDetail.quotation;
                 var $quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
+                var $extensionTotalPrice = quotationUtils.quotationDetail.extensionTotalPrice;
+                var $extensionTaxPrice = quotationUtils.quotationDetail.extensionTaxPrice;
 
-                com.focusPage('#taxPrice', '#quotationSummary').html(com.checkNull(quotation.taxPrice, 0));
-                com.focusPage('#totalPrice', '#quotationSummary').html(com.checkNull(quotation.totalPrice, 0));
+                var $totalPrices = utils.changeThrDecimal(utils.accAdd(com.checkNull(quotation.totalPrice, 0), $extensionTotalPrice));
+                var $taxPrices =  utils.changeThrDecimal(utils.accAdd(com.checkNull(quotation.taxPrice, 0), $extensionTaxPrice));
+
+                com.focusPage('#taxPrice', '#quotationSummary').html($taxPrices);
+                com.focusPage('#totalPrice', '#quotationSummary').html($totalPrices);
 
                 com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull(quotationPrefer.preferPrice, 0));
                 com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull(quotationPrefer.managePrefer, 0));

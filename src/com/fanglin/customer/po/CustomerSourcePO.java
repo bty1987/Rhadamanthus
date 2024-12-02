@@ -45,6 +45,18 @@ public class CustomerSourcePO implements Serializable {
 
 	public static final short STATUS_TRAN_INT = 5; // 转换
 
+	public static final short CUSTOMEER_TYPE_GO_STORE = 0; // 到店
+
+	public static final short CUSTOMEER_TYPE_MEASUR_ROOM = 1; // 量房
+
+	public static final short CUSTOMEER_TYPE_GUARD_GARDEN = 2; // 守园
+
+	public static final short DEMAND_BASIC_DECORATION = 0; // 基装
+
+	public static final short DEMAND_OVERALL_DECORATION = 1; // 整装
+
+	public static final short DEMAND_LOCAL_DECORATION = 2; // 局改装
+
 	private long csid;
 
 	private String name;
@@ -78,6 +90,10 @@ public class CustomerSourcePO implements Serializable {
 	private Timestamp createTime;
 
 	private int company;
+
+	private Short customerType;
+
+	private Short demand;
 
 	private short status;
 
@@ -267,6 +283,24 @@ public class CustomerSourcePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "customertype")
+	public Short getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(Short customerType) {
+		this.customerType = customerType;
+	}
+
+	@Column(name = "demand")
+	public Short getDemand() {
+		return demand;
+	}
+
+	public void setDemand(Short demand) {
+		this.demand = demand;
 	}
 
 	@Column(name = "status")

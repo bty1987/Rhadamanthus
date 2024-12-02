@@ -76,21 +76,27 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	@Override
 	public void pageBalanceSales(Paging paging, List<Filter> filters, int company) {
 
-		List<BalanceSalesPO> balanceSalesPOs = balanceSalesDao.pageBalanceSales(paging, filters, company);
+		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSales(paging, filters, company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		BalanceSalesVO balanceSalesVO;
 
-		for (BalanceSalesPO balanceSalesPO : balanceSalesPOs) {
+		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
 
-			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO(), new UserBaseVO());
+			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-			BeanUtil.copyPropertie(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesPO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
+			BeanUtil.copyPropertie(balanceSalesBO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
+
+			BeanUtil.copyPropertie(balanceSalesBO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
+
+			BeanUtil.copyPropertie(balanceSalesBO.getBalance(), balanceSalesVO.getBalance(), Arrays.asList("belonger", "creater"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getBelonger(), balanceSalesVO.getBalance().getBelonger(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getCreater(), balanceSalesVO.getBalance().getCreater(), Arrays.asList("duty", "dept"));
 
 			balanceSalesVOs.add(balanceSalesVO);
+
 		}
 
 		paging.setData(balanceSalesVOs);

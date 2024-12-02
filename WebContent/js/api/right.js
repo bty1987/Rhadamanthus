@@ -51,6 +51,12 @@ $.extend(api, {right: {
     updateQuotationFunctionRight:{url:"updateQuotationFunctionRight.do"},
 
     queryUserFunctionRight: {url: "queryUserFunctionRight.do"},
-    updateUserFunctionRight: {url: "updateUserFunctionRight.do"}
+    updateUserFunctionRight: {url: "updateUserFunctionRight.do"},
+    
+    queryApprovalFunctionRight: {url: "queryApprovalFunctionRight.do"},
+    updateApprovalFunctionRight: {url: "updateApprovalFunctionRight.do"},
+    
+    querySelectionItemStatusRight: {url: "querySelectionItemStatusRight.do"},
+    updateSelectionItemStatusRight: {url: "updateSelectionItemStatusRight.do"}
 
 }});

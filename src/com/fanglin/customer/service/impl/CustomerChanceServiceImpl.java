@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.po.DepartmentPO;
@@ -367,6 +368,35 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChancePO.setIsRead(CustomerChancePO.ISREAD_READ_INT);
 		customerChancePO.setReadTime(DateUtil.getDateToTimestamp(new Date()));
+
+		customerChanceDao.update(customerChancePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void configCustomerChance(CustomerChanceVO customerChance) throws FLException {
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChance.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		if (!StringUtils.isEmpty(customerChance.getIsGroup())) {
+			customerChancePO.setIsGroup(customerChance.getIsGroup());
+		}
+
+		if (!StringUtils.isEmpty(customerChance.getIsPhone())) {
+			customerChancePO.setIsPhone(customerChance.getIsPhone());
+
+		}
+
+		if (!StringUtils.isEmpty(customerChance.getIsMeet())) {
+			customerChancePO.setIsMeet(customerChance.getIsMeet());
+		}
+
+		if (!StringUtils.isEmpty(customerChance.getIsTrue())) {
+			customerChancePO.setIsTrue(customerChance.getIsTrue());
+		}
 
 		customerChanceDao.update(customerChancePO);
 	}

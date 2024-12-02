@@ -406,6 +406,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				throw new FLException(140039, "减项工程量大于引用项目");
 			}
 
+			QuotationItemPO quotationItemPO = quotationItemDao.get(addReduceItemPO.getQiid());
+
+			if (quotationItemPO == null) {
+				throw new FLException(200013, "报价项不存在");
+			}
+
 			long gid = querySelectionItem.getGoods().getGid();
 
 			SelectionItemPO selectionItemPO = new SelectionItemPO(new GoodsPO(gid));
@@ -421,7 +427,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
 			selectionItemPO.setNum(num);
 			selectionItemPO.setInitNum(num);
-			selectionItemPO.setPreprice(addReduceItemPO.getSubPrice());
+			selectionItemPO.setPreprice(quotationItemPO.getUnitPrice());
 			selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			selectionItemDao.save(selectionItemPO);

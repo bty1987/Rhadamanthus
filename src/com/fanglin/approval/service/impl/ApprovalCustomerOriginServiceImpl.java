@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalCustomerOriginDao;
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalCustomerOriginAO;
 import com.fanglin.approval.po.ApprovalCustomerOriginPO;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCustomerOriginService;
@@ -34,6 +36,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.vo.CustomerOriginVO;
@@ -48,6 +51,7 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("approvalCustomerOriginService")
 @Transactional(readOnly = true)
@@ -70,6 +74,30 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 
 	@Autowired
 	private MessageService messageService;
+
+	@Override
+	public void pageApprovalCustomerOrigin(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		List<ApprovalCustomerOriginAO> approvalCustomerOriginAOs = approvalCustomerOriginDao.pageApprovalCustomerOrigin(paging, filters, company);
+		List<ApprovalCustomerOriginVO> approvalCustomerOriginVOs = new ArrayList<ApprovalCustomerOriginVO>();
+
+		for (ApprovalCustomerOriginAO approvalCustomerOriginAO : approvalCustomerOriginAOs) {
+
+			ApprovalCustomerOriginVO approvalCustomerOriginVO = new ApprovalCustomerOriginVO();
+
+			approvalCustomerOriginVO.setApproval(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
+			approvalCustomerOriginVO.setCustomerOrigin(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new DecorationBusitypeVO()));
+
+			BeanUtil.copyProperties(approvalCustomerOriginAO, approvalCustomerOriginVO, Arrays.asList("approval", "customerOrigin"));
+
+			approvalCustomerOriginAO.getApproval().ptv(approvalCustomerOriginVO.getApproval());
+			approvalCustomerOriginAO.getCustomerOrigin().ptv(approvalCustomerOriginVO.getCustomerOrigin());
+
+			approvalCustomerOriginVOs.add(approvalCustomerOriginVO);
+		}
+
+		paging.setData(approvalCustomerOriginVOs);
+	}
 
 	@Override
 	public ApprovalCustomerOriginVO queryApprovalCustomerOrigin(ApprovalVO approvalVO) throws FLException {

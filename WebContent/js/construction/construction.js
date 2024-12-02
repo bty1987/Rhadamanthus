@@ -154,12 +154,18 @@ jQuery(function($) {
         field: "accessoryTotal",
         name: "辅料总额",
         prop: "accessoryTotal",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v){
+            return false;
+        }
     }, {
         field: "salaryTotal",
         name: "工费总额",
         prop: "salaryTotal",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(v){
+            return false;
+        }
     }, {
         field: "currentName",
         name: "锁定人",

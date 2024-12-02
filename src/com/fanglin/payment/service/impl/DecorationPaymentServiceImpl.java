@@ -14,6 +14,7 @@ package com.fanglin.payment.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -509,6 +510,34 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			if (decorationPO.getSaleScale() < paymentTypePO.getSaleScale()) {
 				throw new FLException(120033, "销售比例不足");
 			}
+		}
+
+		// 订单类型整装，收尾款时验证是否存在未付款的增项款/减项款
+		if (decorationPO.getTypeness() == DecorationPO.TYPE_INCLUSIVE_INT) {
+
+			Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT, DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
+
+			List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(orderId, paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
+			List<Short> sorts = new ArrayList<Short>();
+
+			for (DecorationPaymentPO decorationPaymentPOO : decorationPaymentPOs) {
+				sorts.add(decorationPaymentPOO.getSort());
+			}
+
+			Short maxSort = Collections.max(sorts);
+
+			if (sort == maxSort) {
+
+				List<Short> addReduceStatus = Arrays.asList(AddReducePO.STATUS_SUBMIT_INT);
+
+				List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(orderId, addReduceStatus);
+
+				if (addReducePOs.size() > 0) {
+					throw new FLException(140035, "当前增减项款项状态不可操作");
+				}
+
+			}
+
 		}
 
 		if (decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT) {

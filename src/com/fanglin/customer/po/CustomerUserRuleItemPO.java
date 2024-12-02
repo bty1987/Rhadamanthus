@@ -28,6 +28,14 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	private int lowval;
 
+	private short priority;
+
+	private short isSurplus;
+
+	private short isDelete;
+
+	private short status;
+
 	public CustomerUserRuleItemPO() {
 		super();
 	}
@@ -88,4 +96,39 @@ public class CustomerUserRuleItemPO implements Serializable {
 		this.lowval = lowval;
 	}
 
+	@Column(name = "priority")
+	public short getPriority() {
+		return priority;
+	}
+
+	public void setPriority(short priority) {
+		this.priority = priority;
+	}
+
+	@Column(name = "isSurplus")
+	public short getIsSurplus() {
+		return isSurplus;
+	}
+
+	public void setIsSurplus(short isSurplus) {
+		this.isSurplus = isSurplus;
+	}
+
+	@Column(name = "isDelete")
+	public short getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(short isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
 }

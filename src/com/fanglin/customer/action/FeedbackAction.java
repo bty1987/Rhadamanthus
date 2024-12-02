@@ -32,6 +32,22 @@ public class FeedbackAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "receiveFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String receiveFeedback() throws FLException {
+
+		feedbackService.receiveFeedback(feedback, authentication());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "finishFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishFeedback() throws FLException {
+
+		feedbackService.finishFeedback(feedback, authentication());
+
+		return SUCCESS;
+	}
+
 	public FeedbackVO getFeedback() {
 		return feedback;
 	}

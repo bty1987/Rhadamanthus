@@ -38,6 +38,8 @@ public class QuotationVO implements Serializable {
 
 	private Timestamp updateTime;
 
+	private Timestamp lockTime;
+
 	private UserBaseVO creater;
 
 	private QuotationVersionVO version;
@@ -159,6 +161,15 @@ public class QuotationVO implements Serializable {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Timestamp lockTime) {
+		this.lockTime = lockTime;
 	}
 
 	public UserBaseVO getCreater() {

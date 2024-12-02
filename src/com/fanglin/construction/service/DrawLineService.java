@@ -13,15 +13,15 @@ package com.fanglin.construction.service;
 
 import java.util.List;
 
-import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.utils.Paging;
 
 public interface DrawLineService {
 
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) throws FLException;
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, DrawLineVO drawLineVO, int company) throws FLException;
 
 	public List<DrawLineVO> queryDrawLine(List<Filter> filters, int company) throws FLException;
 

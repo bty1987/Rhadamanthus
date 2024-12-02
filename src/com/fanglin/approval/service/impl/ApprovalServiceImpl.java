@@ -12,7 +12,6 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +43,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -117,7 +115,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 
 		for (ApprovalPO approvalPO : approvalPOs) {
-			approvalVOs.add(convertBean(approvalPO));
+			approvalVOs.add(approvalPO.ptv(new ApprovalVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(approvalVOs);
@@ -130,7 +128,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 
 		for (ApprovalPO approvalPO : approvalPOs) {
-			approvalVOs.add(convertBean(approvalPO));
+			approvalVOs.add(approvalPO.ptv(new ApprovalVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(approvalVOs);
@@ -143,7 +141,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 
 		for (ApprovalPO approvalPO : approvalPOs) {
-			approvalVOs.add(convertBean(approvalPO));
+			approvalVOs.add(approvalPO.ptv(new ApprovalVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(approvalVOs);
@@ -154,13 +152,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		UserPO user = userDao.queryUserByUserId(userId);
 		int department = user.getDept().getDid();
+
 		List<ApprovalPO> approvalPOs = approvalDao.pageApprovalForReceiveDept(paging, filters, department, company);
 		List<ApprovalVO> approvalVOs = new ArrayList<ApprovalVO>();
 
 		for (ApprovalPO approvalPO : approvalPOs) {
-
-			approvalVOs.add(convertBean(approvalPO));
-
+			approvalVOs.add(approvalPO.ptv(new ApprovalVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(approvalVOs);
@@ -175,7 +172,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new FLException(240009, "审批信息不存在");
 		}
 
-		return convertBean(approvalPO);
+		return approvalPO.ptv(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
 	}
 
 	@Override
@@ -423,17 +420,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 		approvalDao.update(approvalPO);
 
 		return 0;
-	}
-
-	private ApprovalVO convertBean(ApprovalPO approvalPO) {
-
-		ApprovalVO approvalVO = new ApprovalVO(new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(approvalPO, approvalVO, Arrays.asList("receiver", "sender"));
-		BeanUtil.copyProperties(approvalPO.getReceiver(), approvalVO.getReceiver(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyProperties(approvalPO.getSender(), approvalVO.getSender(), Arrays.asList("dept", "duty"));
-
-		return approvalVO;
 	}
 
 }

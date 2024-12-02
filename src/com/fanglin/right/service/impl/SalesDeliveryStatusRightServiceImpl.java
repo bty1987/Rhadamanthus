@@ -40,19 +40,17 @@ public class SalesDeliveryStatusRightServiceImpl implements SalesDeliveryStatusR
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateSalesDeliveryStatusRight(List<SalesDeliveryStatusRightVO> salesDeliveryStatusRightsVO) {
+	public void updateSalesDeliveryStatusRight(SalesDeliveryStatusRightVO salesDeliveryStatusRightVO, List<SalesDeliveryStatusRightVO> salesDeliveryStatusRightVOs) {
 
-		SalesDeliveryStatusRightVO salesDeliveryStatusRight = salesDeliveryStatusRightsVO.get(0);
+		if (salesDeliveryStatusRightVO == null) return;
 
-		Long bid = salesDeliveryStatusRight.getBid();
+		salesDeliveryStatusRightDao.deleteSalesDeliveryStatus(salesDeliveryStatusRightVO.getBid());
 
-		salesDeliveryStatusRightDao.deleteSalesDeliveryStatus(bid);
-
-		for (SalesDeliveryStatusRightVO salesDeliveryStatusRightVO : salesDeliveryStatusRightsVO) {
+		for (SalesDeliveryStatusRightVO salesDeliveryStatusRight : salesDeliveryStatusRightVOs) {
 
 			SalesDeliveryStatusRightPO salesDeliveryStatusRightPO = new SalesDeliveryStatusRightPO();
 
-			BeanUtil.copyProperties(salesDeliveryStatusRightVO, salesDeliveryStatusRightPO);
+			BeanUtil.copyProperties(salesDeliveryStatusRight, salesDeliveryStatusRightPO);
 
 			salesDeliveryStatusRightDao.save(salesDeliveryStatusRightPO);
 		}

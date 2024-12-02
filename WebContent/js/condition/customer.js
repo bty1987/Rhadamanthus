@@ -468,7 +468,7 @@
                 "departmentType.name": ""
             },
             listPath: "userBases",
-            keyPath: "uid",
+            keyPath: "userId",
             valuePath: "currentName"
         }
     },
@@ -537,6 +537,24 @@
             valuePath: "value"
         }
     },
+	 "customerSource-houseNumber": {
+        label: "楼号",
+        type: "text",
+        submitConfig: {
+            name: "houseNumber",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerSource-name": {
+        label: "客户名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
     "customerSource-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
@@ -562,7 +580,95 @@
             valuePath: "value"
         }
     },
-
+    "customerSource-customerType": {
+        label: "客户类型",
+        type: "select",
+        submitConfig: {
+            name: "customerType",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerSource.customerType.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-demand": {
+        label: "装修需求",
+        type: "select",
+        submitConfig: {
+            name: "demand",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerSource.demand.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-creater": {
+        label: "创建人",
+        type: "autofill",
+        submitConfig: {
+            name: "user.userId",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-salesman": {
+        label: "业务员",
+        type: "autofill",
+        submitConfig: {
+            name: "salesman.userId",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-designer": {
+        label: "设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designer.userId",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "v-name": {
         label: "客户名称",
         type: "text",
@@ -645,6 +751,22 @@
             }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "feedback-company": {
+        label: "装修单公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
         }
     },
 

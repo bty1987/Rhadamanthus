@@ -235,7 +235,9 @@ jQuery(function($) {
         });
     }, null, false);
 
-    quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensionItems, params.orderType, false, params.showType);
+    var quotationPrefer = null;
+
+    quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensionItems, quotationPrefer, params.orderType, false, params.showType);
 
     var table1 = {
         "insertWay": 1,

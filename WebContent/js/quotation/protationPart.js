@@ -208,12 +208,27 @@ var protationPart = (function() {
                 });
             }
 
+            var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, quo.basicParams["protation.manageProfit"]), _managePrice));
+
+            _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
+
+            if (utils.accMul(_manageDiscount, 10) < quo.presignProduce.manageDiscount) {
+
+                com.showAlert(com.warning, "管理费优惠金额不合理");
+
+                return false;
+            }
+
             var _taxPrice = utils.changeThrDecimal(isNaN(eval(taxFormula)) ? 0 : eval(taxFormula));
 
             total = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quo.basicParams["protation.quotePrice"], _managePrice), _taxPrice), quo.basicParams["protation.preferPrice"]), quo.basicParams["protation.manageProfit"]), quo.basicParams["protation.advanceProfit"]));
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(utils.accAdd(subd, subm), subc)))), utils.accAdd(accm, accd))));
 
             _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
+
+            if(quo.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT){
+                total = Math.round(total);
+            }
 
             quo.basicParams["protation.basicPrice"] = basic;
             quo.basicParams["protation.comdPrice"] = comd;
@@ -227,6 +242,7 @@ var protationPart = (function() {
             quo.basicParams["protation.accdPrice"] = accd;
             quo.basicParams["protation.totalPrice"] = total;
             quo.basicParams["protation.managePrice"] = _managePrice;
+            quo.basicParams["protation.manageDiscount"] = _manageDiscount;
             quo.basicParams["protation.taxPrice"] = _taxPrice;
             quo.basicParams["protation.discount"] = _discout;
 
@@ -759,6 +775,7 @@ var protationPart = (function() {
                 var manageProfit = quo.basicParams["protation.manageProfit"];
                 var advanceProfit = quo.basicParams["protation.advanceProfit"];
                 var discount = quo.basicParams["protation.discount"];
+                var manageDiscount = quo.basicParams["protation.manageDiscount"];
 
                 var subd = quo.basicParams["protation.subdPrice"];
                 var subm = quo.basicParams["protation.submPrice"];
@@ -774,6 +791,7 @@ var protationPart = (function() {
                     quo.basicParams["protation.manageProfit"] = manageProfit;
                     quo.basicParams["protation.advanceProfit"] = advanceProfit;
                     quo.basicParams["protation.discount"] = discount;
+                    quo.basicParams["protation.manageDiscount"] = manageDiscount;
 
                     com.showAlert(com.warning, "管理优惠不能大于管理费");
 
@@ -786,6 +804,7 @@ var protationPart = (function() {
                     quo.basicParams["protation.manageProfit"] = manageProfit;
                     quo.basicParams["protation.advanceProfit"] = advanceProfit;
                     quo.basicParams["protation.discount"] = discount;
+                    quo.basicParams["protation.manageDiscount"] = manageDiscount;
 
                     quo.calculateQuoFees();
 
@@ -1213,6 +1232,7 @@ var protationPart = (function() {
                     "protation.manageRate": data.protation.manageRate, // 管理费比例
                     "protation.manageFormula": data.protation.manageFormula, // 管理费公式
                     "protation.manageProfit": data.protation.manageProfit, // 管理优惠
+                    "protation.manageDiscount": data.protation.manageDiscount, // 管理费折扣
                     "protation.advanceProfit": data.protation.advanceProfit, // 特殊优惠
                     "protation.taxRate": data.protation.taxRate, // 税金比例
                     "protation.taxFormula": data.protation.taxFormula, // 税金公式
@@ -1408,6 +1428,10 @@ var protationPart = (function() {
             total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(basic, utils.accAdd(addd, utils.accSub(addm, utils.accAdd(utils.accAdd(subd, subm), subc)))), utils.accAdd(accm, accd))));
 
             _discout = utils.changeThrDecimal(utils.accMul(_discout, 10));
+
+            if(quo.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT){
+                total = Math.round(total);
+            }
 
             quo.basicParams["protation.basicPrice"] = basic;
             quo.basicParams["protation.comdPrice"] = comd;

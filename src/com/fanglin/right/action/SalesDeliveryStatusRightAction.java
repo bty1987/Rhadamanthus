@@ -39,7 +39,7 @@ public class SalesDeliveryStatusRightAction extends BaseListAction {
 	@Action(value = "updateSalesDeliveryStatusRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesDeliveryStatusRight() throws FLException {
 
-		salesDeliveryStatusRightService.updateSalesDeliveryStatusRight(salesDeliveryStatusRights);
+		salesDeliveryStatusRightService.updateSalesDeliveryStatusRight(salesDeliveryStatusRight, salesDeliveryStatusRights);
 
 		return SUCCESS;
 	}

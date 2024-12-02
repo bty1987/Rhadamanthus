@@ -353,6 +353,8 @@ public class NormtionServiceImpl implements NormtionService {
 
 		for (AddReducePO addReducePO : addReducePOs) {
 
+			if (Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus()) && addReducePO.getType() == AddReducePO.TYPE_ADD_INT) continue;
+
 			addReduceVO = new AddReduceVO();
 
 			BeanUtil.copyPropertie(addReducePO, addReduceVO, Arrays.asList("creater", "constructionNode"));

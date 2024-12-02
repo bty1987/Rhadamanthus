@@ -48,7 +48,7 @@ public class DrawLineAction extends BaseListAction {
 	@Action(value = "pageDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDrawLine() throws FLException {
 
-		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), queryCompany());
+		drawLines = drawLineService.pageDrawLine(getPaging(), getFilters(), drawLine, queryCompany());
 
 		return SUCCESS;
 	}

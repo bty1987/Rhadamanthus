@@ -1,5 +1,6 @@
 package com.fanglin.approval.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -24,9 +25,13 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.service.ApprovalService;
 import com.fanglin.payment.dao.SalesPaymentDao;
+import com.fanglin.payment.dao.SalesReceiptDao;
 import com.fanglin.payment.po.SalesPaymentPO;
+import com.fanglin.payment.po.SalesReceiptPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.dao.SalesBalanceDao;
@@ -73,6 +78,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	private SalesPaymentDao salesPaymentDao;
 
 	@Autowired
+	private SalesReceiptDao salesReceiptDao;
+
+	@Autowired
 	private SalesRefundsDao salesRefundsDao;
 
 	@Autowired
@@ -89,6 +97,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 	@Autowired
 	private ApprovalService approvalService;
+
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
 
 	// 获取销售退货审批向信息
 	@Override
@@ -248,6 +259,41 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		salesPaymentDao.save(salesPaymentPO);
 
+		if (salesPO.getType() == SalesPO.TYPE_PROFIT_INT) {
+
+			UserPO operater = approvalPO.getReceiver();
+			Timestamp current = DateUtil.getDateToTimestamp(new Date());
+
+			SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
+
+			salesReceiptPO.setCollecter(operater);
+			salesReceiptPO.setCollecterName(operater.getUserName());
+			salesReceiptPO.setCollectTime(current);
+			salesReceiptPO.setConfirmer(operater);
+			salesReceiptPO.setConfirmerName(operater.getUserName());
+			salesReceiptPO.setConfirmTime(current);
+			salesReceiptPO.setBankInfo("");
+			salesReceiptPO.setCheckvBank("");
+			salesReceiptPO.setCouponInfo("");
+			salesReceiptPO.setComment("");
+			salesReceiptPO.setRealMoney(salesPO.getTotal());
+
+			salesReceiptDao.save(salesReceiptPO);
+
+			salesPaymentPO.setOrderId(salesPO.getOrderId());
+			salesPaymentPO.setSalesReceipt(salesReceiptPO);
+
+			salesPaymentPO.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
+			salesPaymentPO.setCategory(salesPO.getCategory());
+			salesPaymentPO.setBrand(salesPO.getBrand());
+			salesPaymentPO.setCreater(operater);
+			salesPaymentPO.setCreateTime(current);
+			salesPaymentPO.setReferMoney(Math.abs(salesPO.getTotal()));
+			salesPaymentPO.setCompany(salesPO.getCompany());
+
+			salesPaymentDao.update(salesPaymentPO);
+		}
+
 		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
 		SalesRefundsPO salesRefundsPO = new SalesRefundsPO();
 
@@ -362,6 +408,8 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPO.setAmount(salesItemDao.amountSalesItem(salesPO.getSid()));
 
 		salesDao.update(salesPO);
+
+		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(salesPO.getOrderId()));
 
 		return 0;
 	}

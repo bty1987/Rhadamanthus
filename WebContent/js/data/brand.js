@@ -5,12 +5,14 @@ jQuery(function($) {
         brand: null,
 
         btns: {
-            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-            saveDelivery: com.focusPage("#saveDelivery").on("click", saveDelivery),
+            saveBtn: com.focusPage("#saveBtn", "#brandModal").on("click", saveData),
+            saveDelivery: com.focusPage("#saveDelivery", "#deliveryModal").on("click", saveDelivery),
+            saveSelection: com.focusPage("#saveSelection", "#selectionModal").on("click", saveSelection),
         },
 
         items: {
             itemlist: com.focusPage("#itemlist", "#deliveryModal"),
+            selectionlist: com.focusPage("#selectionlist", "#selectionModal"),
             name: com.focusPage("#name", "#brandModal"),
             comment: com.focusPage("#comment", "#brandModal"),
             category: com.focusPage("#category", "#brandModal"),
@@ -26,6 +28,7 @@ jQuery(function($) {
         modals: {
             brandModal: com.focusPage("#brandModal"),
             deliveryModal: com.focusPage("#deliveryModal"),
+            selectionModal: com.focusPage("#selectionModal"),
         },
 
         validator: {
@@ -53,6 +56,12 @@ jQuery(function($) {
         com.clearValidator();
     });
 
+    brand.modals.selectionModal.on('show.bs.modal', function(e) {
+
+        com.cleanItems(brand.items);
+        com.clearValidator();
+    });
+
     brand.modals.brandModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
@@ -63,8 +72,13 @@ jQuery(function($) {
     brand.modals.deliveryModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
-        com.focusPage("input[type='checkbox']", "#deliveryModal").removeAttr("checked");
-        // com.focusPage(":checked").prop("checked",false);
+        com.focusPage("input[type='checkbox']").removeAttr("checked");
+        com.closeTip();
+    });
+
+    brand.modals.selectionModal.on('hide.bs.modal', function(e) {
+
+        com.clearValidator();
         com.closeTip();
     });
 
@@ -77,13 +91,10 @@ jQuery(function($) {
         "user.status": 0
     }, "suppliers", "userId", "userName", null);
 
-    var url = api.data.pageBrand;
-    var conditions = ["data-brand-name", "data-brand-category", "data-brand-atttype"];
-
     var searcher = new Searcher();
 
-    searcher.base("condList", "pagenation", "resultList", url);
-    searcher.condition(conditions);
+    searcher.base("condList", "pagenation", "resultList", api.data.pageBrand);
+    searcher.condition(["data-brand-name", "data-brand-category", "data-brand-atttype"]);
     searcher.history("brandPostData");
 
     if (brand.pageType == "default" || brand.pageType == "finance") {
@@ -150,12 +161,24 @@ jQuery(function($) {
         prop: "comment",
         clazz: "grey"
     }];
+
     var linebtns = [{
         name: "配送状态",
         clazz: "btn-success",
         handle: function(v) {
 
             editDelivery(v);
+        },
+        show: function() {
+
+            return (brand.pageType == "default" || brand.pageType == "finance");
+        }
+    }, {
+        name: "选材状态 ",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            editItem(v);
         },
         show: function() {
 
@@ -178,7 +201,7 @@ jQuery(function($) {
             brand.items.comment.val(v.comment);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
-            
+
             if (brand.pageType == "finance") {
                 com.focusPage(".finance", "#brandModal").removeClass("hide");
             }
@@ -219,9 +242,9 @@ jQuery(function($) {
             brand.items.comment.val(v.comment);
 
             com.updateTypeahead("supplier", v.supplier.userId, v.supplier.currentName);
-            
+
             com.focusPage(".default").hide();
-            
+
             brand.modals.brandModal.modal("show");
             return false;
         },
@@ -260,7 +283,8 @@ jQuery(function($) {
 
             return !v.status;
         },
-        show : function(v){
+        show: function(v) {
+
             return brand.pageType == "finance";
         }
     }];
@@ -282,15 +306,40 @@ jQuery(function($) {
     });
 
     var contentDiv = $('<div class="col-md-12 hr8"></div>').appendTo(brand.items.itemlist);
+    var selectionDiv = $('<div class="col-md-12 hr8"></div>').appendTo(brand.items.selectionlist);
 
     $.each(constant.right().salesDeliveryStatusRight.status.keys, function(i, v) {
 
         contentDiv.prepend(line(i, v));
     });
 
+    $.each(constant.right().selectionItemStatusRight.status.keys, function(i, v) {
+
+        selectionDiv.prepend(line1(i, v));
+    });
+
     function line(i, v) {
 
         var $div = $('<div></div>').addClass('dd-handle clearfix').text(v).appendTo(contentDiv);
+
+        var $input = $('<input name="checkbox">').attr({
+            type: 'checkbox',
+            name: v,
+        }).addClass('ace').val(i);
+
+        var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
+            'margin-bottom': '0',
+            'margin-top': '-5px'
+        });
+
+        var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+
+        $indexCheck.append($label).appendTo($div);
+    }
+
+    function line1(i, v) {
+
+        var $div = $('<div></div>').addClass('dd-handle clearfix').text(v).appendTo(selectionDiv);
 
         var $input = $('<input name="checkbox">').attr({
             type: 'checkbox',
@@ -317,7 +366,7 @@ jQuery(function($) {
 
             $.each(res.salesDeliveryStatusRights, function(i, v) {
 
-                com.focusPage("input[type='checkbox'][value='" + v.status + "']").prop({
+                com.focusPage("input[type='checkbox'][value='" + v.status + "']", "#deliveryModal").prop({
                     "checked": "checked"
                 });
             });
@@ -327,11 +376,33 @@ jQuery(function($) {
         brand.modals.deliveryModal.modal("show");
     }
 
+    function editItem(v) {
+
+        brand.brand = v;
+
+        com.post(api.right.querySelectionItemStatusRight, {
+            "selectionItemStatusRight.bid": brand.brand.bid
+        }, function(res) {
+
+            $.each(res.selectionItemStatusRights, function(i, v) {
+
+                com.focusPage("input[type='checkbox'][value='" + v.status + "']", "#selectionModal").prop({
+                    "checked": "checked"
+                });
+            });
+
+        });
+
+        brand.modals.selectionModal.modal("show");
+    }
+
     function saveDelivery() {
 
-        var options = {};
+        var options = {
+            "salesDeliveryStatusRight.bid": brand.brand.bid
+        };
 
-        com.focusPage("input[type='checkbox']:checked").each(function(i, v) {
+        com.focusPage("input[type='checkbox']:checked", "#deliveryModal").each(function(i, v) {
 
             var that = $(this);
 
@@ -345,6 +416,28 @@ jQuery(function($) {
             brand.modals.deliveryModal.modal("hide");
         });
     }
+
+    function saveSelection() {
+
+        var options = {
+            "selectionItemStatusRight.bid": brand.brand.bid
+        };
+
+        com.focusPage("input[type='checkbox']:checked", "#selectionModal").each(function(i, v) {
+
+            var that = $(this);
+
+            options["selectionItemStatusRights[" + i + "].name"] = that.attr("name");
+            options["selectionItemStatusRights[" + i + "].bid"] = brand.brand.bid;
+            options["selectionItemStatusRights[" + i + "].status"] = that.val();
+        });
+
+        com.post(api.right.updateSelectionItemStatusRight, options, function(res) {
+
+            brand.modals.selectionModal.modal("hide");
+        });
+    }
+
     function supplier(v) {
 
         params.data.brand = v;

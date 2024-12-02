@@ -786,6 +786,15 @@
                 return quotation.pageConfig.propertyArr.contains("updateTime");
             }
         }, {
+            field: "lockTime",
+            name: "锁定时间",
+            prop: "lockTime",
+            clazz: "green",
+            show: function(v) {
+
+                return quotation.pageConfig.propertyArr.contains("lockTime");
+            }
+        }, {
             field: "creater.currentName",
             name: "创建人",
             prop: "creater.currentName",
@@ -1008,13 +1017,13 @@
             var notSalesmanRate = v.decoration.notSalesmanRate;
 
             if (v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                dtaxPrice = utils.changeThrDecimal(utils.accMul(v.taxPrice, manageDiscount));
-                taxPrice = v.taxPrice;
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), v.trafficPrice), preferPrice), managePrefer), advancePrefer), _taxRate));
+                dtaxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
             }
 
             if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                dtaxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), v.trafficPrice), v.managePrice), preferPrice), managePrefer), advancePrefer), v.taxRate));
-                taxPrice = dtaxPrice;
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), v.trafficPrice), v.managePrice), preferPrice), managePrefer), advancePrefer), v.taxRate));
+                dtaxPrice = taxPrice;
             }
 
             if (v.basePrice && v.basePrice != 0) {

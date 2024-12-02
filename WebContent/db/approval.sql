@@ -153,6 +153,21 @@ CREATE TABLE `approvaldecorationterminalitem` (
   PRIMARY KEY (`adtiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同终止审批';
 
+DROP TABLE IF EXISTS `approvalfunction`;
+CREATE TABLE `approvalfunction` (
+  `cfid` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(32) NOT NULL,
+  `key` VARCHAR(64) NOT NULL,
+  `value` VARCHAR(64) NOT NULL,
+  `type` TINYINT(1) NOT NULL,
+  `subType` TINYINT(1) NOT NULL,
+  `status` TINYINT(1) NOT NULL,
+  `sort` INT(4) NOT NULL,
+  `comment` VARCHAR(255) DEFAULT '',
+  `fieldType` VARCHAR(20) NOT NULL COMMENT '分为共享字段和模块独享字段',
+  PRIMARY KEY (`cfid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批功能配置表';
+
 DROP TABLE IF EXISTS `approvalmanifestdb`;
 CREATE TABLE `approvalmanifestdb` (
   `amdbid` int(11) NOT NULL AUTO_INCREMENT,

@@ -65,6 +65,11 @@ $(function() {
         prop: "type",
         clazz: "red",
         dataset: constant.inventory().accessories.type.keys,
+    }, {
+        field: "comment",
+        name: "备注",
+        prop: "comment",
+        clazz: "grey"
     }];
 
 

@@ -516,6 +516,8 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationPO.setStatus(QuotationPO.STATUS_LOCK_INT);
 
+		if(quotationPO.getLockTime() == null) quotationPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
+
 		quotationDao.update(quotationPO);
 
 		return 0;
@@ -602,6 +604,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationTO.setVersion(decorationTO.getVersion());
+		quotationTO.setTaxDiscount(quotetionSO.getTaxDiscount());
 
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
@@ -682,6 +685,7 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationTO.ptp(orderId, userDao.queryUserByUserId(userId), quotationSO.getName(), quotationSO.getStyle(), updateTime);
 
 		quotationTO.setVersion(quotationSO.getVersion());
+		quotationTO.setTaxDiscount(quotationSO.getTaxDiscount());
 
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
@@ -752,6 +756,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationTO.setDiscount(quotationSO.getDiscount());
 		quotationTO.setVersion(quotationSO.getVersion());
+		quotationTO.setTaxDiscount(quotationSO.getTaxDiscount());
 
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 

@@ -190,6 +190,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		customerSourcePO.setCreater(userPO);
 		customerSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		customerSourcePO.setCustomerType(customerSourceVO.getCustomerType());
+		customerSourcePO.setDemand(customerSourceVO.getDemand());
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_INIT_INT);
 		customerSourcePO.setCompany(company);
 
@@ -247,6 +249,14 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
 			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
+		}
+
+		if (customerSourceVO.getCustomerType() != null) {
+			customerSourcePO.setCustomerType(customerSourceVO.getCustomerType());
+		}
+
+		if (customerSourceVO.getDemand() != null) {
+			customerSourcePO.setDemand(customerSourceVO.getDemand());
 		}
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));

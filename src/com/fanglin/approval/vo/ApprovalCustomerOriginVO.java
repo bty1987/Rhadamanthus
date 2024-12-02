@@ -16,6 +16,8 @@ public class ApprovalCustomerOriginVO implements Serializable {
 
 	private CustomerOriginVO customerOrigin;
 
+	private ApprovalVO approval;
+
 	public Long getAcoid() {
 		return acoid;
 	}
@@ -46,6 +48,14 @@ public class ApprovalCustomerOriginVO implements Serializable {
 
 	public void setCustomerOrigin(CustomerOriginVO customerOrigin) {
 		this.customerOrigin = customerOrigin;
+	}
+
+	public ApprovalVO getApproval() {
+		return approval;
+	}
+
+	public void setApproval(ApprovalVO approval) {
+		this.approval = approval;
 	}
 
 }

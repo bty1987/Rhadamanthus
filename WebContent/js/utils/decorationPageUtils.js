@@ -432,8 +432,13 @@ $(function() {
         var row = createDiv("row");
         var left = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("归属设计信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "belongDesignInfo"))));
         var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("归属业务信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "belongSalesmanInfo"))));
+        var rowleft = createDiv("row");
+        var leftDown = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("失效归属设计信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "loseBelongDesignInfo"))));
+        var rightDown = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("失效归属业务信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "loseBelongSalesmanInfo"))));
         row.append(left, right);
-        return [row];
+        rowleft.append(leftDown,rightDown);
+       
+        return [row,rowleft];
     }
 
     function drawAddreuce(conf) {

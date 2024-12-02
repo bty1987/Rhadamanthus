@@ -31,6 +31,8 @@ public class DecorationBusitypePO implements Serializable {
 	private short status;
 
 	private int company;
+	
+	private long no;
 
 	public DecorationBusitypePO() {
 		super();
@@ -86,6 +88,15 @@ public class DecorationBusitypePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+	
+	@Column(name = "no")
+	public long getNo() {
+		return no;
+	}
+
+	public void setNo(long no) {
+		this.no = no;
 	}
 
 }

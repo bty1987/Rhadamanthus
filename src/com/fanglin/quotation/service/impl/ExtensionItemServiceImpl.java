@@ -113,6 +113,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
 		extensionPO.setManageRate(extensionVO.getManageRate());
 		extensionPO.setManagePrice(extensionVO.getManagePrice());
+		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
 		extensionPO.setTaxRate(extensionVO.getTaxRate());
 		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
@@ -152,6 +153,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
 		extensionPO.setManageRate(extensionVO.getManageRate());
 		extensionPO.setManagePrice(extensionVO.getManagePrice());
+		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
 		extensionPO.setTaxRate(extensionVO.getTaxRate());
 		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());

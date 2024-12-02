@@ -38,11 +38,15 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	}
 
 	@Override
-	public List<BalanceSelectionBO> pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceSelectionBO> pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, Short status, int company) {
 
 		PagingQuery<BalanceSelectionBO> query = pagingQuery(paging, BalanceSelectionBO.class);
 
 		query.add(Restrictions.eq("company", company));
+
+		if (status != null) {
+			query.add(Restrictions.eq("status", BalanceSelectionBO.STATUS_ENABLE_CHECK_INT));
+		}
 
 		queryFilterExcute(query, filters);
 

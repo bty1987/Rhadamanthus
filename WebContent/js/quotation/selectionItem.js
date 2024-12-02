@@ -30,7 +30,6 @@ $(function() {
         typeList: [],
         statusList: [],
         postData: '',
-        editFlg: true,
 
         pageType: params.urlLoadParams.type,
 
@@ -246,15 +245,15 @@ $(function() {
             if (selectionItem.pageConfig.pageBtn.contains("print"))
                 $divBtnWrap.append($btnPrint);
 
-            v.status == constant.quotation().selectionItem.STATUS_INIT_INT || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCompile.show() : $btnCompile.hide();
+            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCompile.show() : $btnCompile.hide();
             [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnRefnum.hide() : $btnRefnum.show();
-            v.status == constant.quotation().selectionItem.STATUS_INIT_INT ? $btnRran.show() : $btnRran.hide();
+            v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65 ? $btnRran.show() : $btnRran.hide();
             v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCheck.show() : $btnCheck.hide();
             v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? $btnConfirm.show() : $btnConfirm.hide();
             v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? $btnFinish.show() : $btnFinish.hide();
             v.status == constant.quotation().selectionItem.STATUS_FINISH_INT ? $btnReview.show() : $btnReview.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnBalance.show() : $btnBalance.hide();
-            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnReject.show() : $btnReject.hide();
+            v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnReject.show() : $btnReject.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnDel.hide() : $btnDel.show();
 
             $divBtnWrap.appendTo($h3);
@@ -263,7 +262,6 @@ $(function() {
 
             $btnCompile.click(function(e) {
 
-                selectionItem.editFlg = true;
                 selectionItem.parameters.siid = v.siid;
 
                 selectionItem.title.text("编辑数量");
@@ -282,13 +280,13 @@ $(function() {
 
             $btnRran.click(function(e) {
 
-                selectionItem.editFlg = false;
-                selectionItem.parameters.siid = v.siid;
-                selectionItem.items.num.val(v.num);
+                com.post(api.quotation.tranSelectionItem, {
+                    "selectionItems[0].siid": v.siid
+                }, function(res) {
 
-                selectionItem.title.text("配送");
-                selectionItem.dcomment.hide();
-                selectionItem.modals.updateSelectionItemModal.modal("show");
+                    searcher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             $btnCheck.click(function(e) {
@@ -616,24 +614,13 @@ $(function() {
         if (com.validate('updateSelectionItemModal'))
             return false;
 
-        var url = null, options = {};
-
-        if (selectionItem.editFlg) {
-            options = {
+        var option = {
                 "selectionItem.num": selectionItem.items.num.val(),
                 "selectionItem.comment": selectionItem.items.comment.val(),
                 "selectionItem.siid": selectionItem.parameters.siid,
-            };
-            url = api.quotation.updateSelectionItem;
-        } else {
-            options = {
-                "selectionItems[0].num": selectionItem.items.num.val(),
-                "selectionItems[0].siid": selectionItem.parameters.siid
-            };
-            url = api.quotation.tranSelectionItem;
-        }
+        };
 
-        com.post(url, options, function(res) {
+        com.post(api.quotation.updateSelectionItem, option, function(res) {
 
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
@@ -915,7 +902,7 @@ $(function() {
                     propertyArr.push(["报价版本:", v.decoration.version.name, "blue"]);
                     break;
                 case "quotationItemPrice":
-                    propertyArr.push(["报价项单价:", v.preprice, "blue"]);
+                    propertyArr.push(["单价:", v.preprice, "blue"]);
                     break;
                 case "initNum":
                     propertyArr.push(["预算量:", v.initNum, "blue"]);

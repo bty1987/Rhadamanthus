@@ -23,9 +23,9 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceSalesPO> pageBalanceSales(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceSalesBO> pageBalanceSales(Paging paging, List<Filter> filters, int company) {
 
-		PagingQuery<BalanceSalesPO> query = pagingQuery(paging, BalanceSalesPO.class);
+		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
 
 		query.add(Restrictions.eq("company", company));
 

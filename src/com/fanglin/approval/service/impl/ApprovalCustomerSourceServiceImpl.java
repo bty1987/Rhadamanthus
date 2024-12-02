@@ -11,6 +11,7 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalCustomerSourceDao;
 import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalCustomerSourceAO;
 import com.fanglin.approval.po.ApprovalCustomerSourcePO;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCustomerSourceService;
@@ -37,6 +39,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.po.CustomerChancePO;
@@ -53,6 +56,7 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("approvalCustomerSourceService")
 @Transactional(readOnly = true)
@@ -89,6 +93,31 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 	private MessageService messageService;
 
 	@Override
+	public void pageApprovalCustomerSource(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		List<ApprovalCustomerSourceAO> approvalCustomerSourceAOs = approvalCustomerSourceDao.pageApprovalCustomerSource(paging, filters, company);
+		List<ApprovalCustomerSourceVO> approvalCustomerSourceVOs = new ArrayList<ApprovalCustomerSourceVO>();
+
+		for (ApprovalCustomerSourceAO approvalCustomerSourceAO : approvalCustomerSourceAOs) {
+
+			ApprovalCustomerSourceVO approvalCustomerSourceVO = new ApprovalCustomerSourceVO();
+
+			approvalCustomerSourceVO.setApproval(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
+			approvalCustomerSourceVO.setSource(new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO()))));
+
+			BeanUtil.copyProperties(approvalCustomerSourceAO, approvalCustomerSourceVO, Arrays.asList("approval", "customerSource", "customerChance", "customer", "house", "decorationBusitype"));
+
+			approvalCustomerSourceAO.getApproval().ptv(approvalCustomerSourceVO.getApproval());
+			approvalCustomerSourceAO.getCustomerSource().ptv(approvalCustomerSourceVO.getSource());
+
+			approvalCustomerSourceVOs.add(approvalCustomerSourceVO);
+		}
+
+		paging.setData(approvalCustomerSourceVOs);
+
+	}
+
+	@Override
 	public ApprovalCustomerSourceVO queryApprovalCustomerSource(ApprovalVO approvalVO) throws FLException {
 
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
@@ -97,7 +126,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 			throw new FLException(240009, "审批信息不存在");
 		}
 
-		ApprovalCustomerSourcePO approvalCustomerSourcePO = approvalCustomerSourceDao.queryCustomerSourceByAid(approvalPO.getAid());
+		ApprovalCustomerSourcePO approvalCustomerSourcePO = approvalCustomerSourceDao.queryApprovalCustomerSourceByAid(approvalPO.getAid());
 
 		if (approvalCustomerSourcePO == null) {
 			throw new FLException(240001, "审批信息不存在");
@@ -205,7 +234,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 	@Transactional(rollbackFor = Exception.class)
 	public int approveForCustomerSource(ApprovalPO approvalPO) throws FLException {
 
-		ApprovalCustomerSourcePO approvalCustomerSourcePO = approvalCustomerSourceDao.queryCustomerSourceByAid(approvalPO.getAid());
+		ApprovalCustomerSourcePO approvalCustomerSourcePO = approvalCustomerSourceDao.queryApprovalCustomerSourceByAid(approvalPO.getAid());
 
 		if (approvalCustomerSourcePO == null) {
 			throw new FLException(240001, "审批信息不存在");
@@ -260,7 +289,7 @@ public class ApprovalCustomerSourceServiceImpl implements ApprovalCustomerSource
 	@Override
 	public int refuseForCustomerSource(ApprovalPO approvalPO) throws FLException {
 
-		ApprovalCustomerSourcePO approvalCustomerSourcePO = approvalCustomerSourceDao.queryCustomerSourceByAid(approvalPO.getAid());
+		ApprovalCustomerSourcePO approvalCustomerSourcePO = approvalCustomerSourceDao.queryApprovalCustomerSourceByAid(approvalPO.getAid());
 
 		if (approvalCustomerSourcePO == null) {
 			throw new FLException(240001, "审批信息不存在");

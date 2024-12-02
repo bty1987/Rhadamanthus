@@ -107,7 +107,11 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private NormtionService normtionService;
 
 	@Override
-	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) throws FLException {
+	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, DrawLineVO drawLineVO, int company) throws FLException {
+
+		if (drawLineVO != null && drawLineVO.getStatus() != null) {
+			filters.add(new Filter("status", String.valueOf(drawLineVO.getStatus()), "eq"));
+		}
 
 		List<DrawLinePO> drawLinePOs = drawLineDao.pageDrawLine(paging, filters, company);
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();

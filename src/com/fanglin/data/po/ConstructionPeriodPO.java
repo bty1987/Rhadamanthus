@@ -16,6 +16,8 @@ public class ConstructionPeriodPO implements Serializable {
 
 	private static final long serialVersionUID = 2913775802699365242L;
 
+	public static final String COLUMN_NAME_STR = "name";
+
 	private long cpid;
 
 	private String name;

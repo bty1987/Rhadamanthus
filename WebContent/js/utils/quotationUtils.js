@@ -94,6 +94,8 @@ var quotationUtils = {
         var $minusExtensionItemTotalPrice = 0;// 扩展项减项总额
 
         var $extensionTotalPrice = 0; // 拓展项总额
+        var $extensionManagePrice = 0; // 拓展单管理费总额
+        var $extensionTaxPrice = 0; // 拓展单税金总额
 
         var $addReduceTotal = 0;// 增项总额
         var $minusQuoTotalPrice = 0;// 减项中的报价项非折扣总额
@@ -176,6 +178,8 @@ var quotationUtils = {
                 }
 
                 $extensionTotalPrice = utils.accAdd($extensionTotalPrice, utils.accMul(extension.total, extension.type == 0 ? 1 : -1));
+                $extensionManagePrice = utils.accAdd($extensionManagePrice, utils.accMul(extension.managePrice, extension.type == 0 ? 1 : -1));
+                $extensionTaxPrice = utils.accAdd($extensionTaxPrice, utils.accMul(extension.taxPrice, extension.type == 0 ? 1 : -1));
             }
         }
 
@@ -235,6 +239,8 @@ var quotationUtils = {
         quotationUtils.quotationDetail.minusExtensionItemTotalPrice = $minusExtensionItemTotalPrice; // 扩展项总额
 
         quotationUtils.quotationDetail.extensionTotalPrice = $extensionTotalPrice; // 扩展项总额
+        quotationUtils.quotationDetail.extensionManagePrice = $extensionManagePrice; // 扩展单管理费总额
+        quotationUtils.quotationDetail.extensionTaxPrice = $extensionTaxPrice; // 扩展单税金总额
 
         quotationUtils.quotationDetail.addReduceTotal = $addReduceTotal;// 增项总额
         quotationUtils.quotationDetail.minusQuoTotalPrice = $minusQuoTotalPrice;// 减项中的报价项非折扣总额
@@ -477,6 +483,7 @@ var quotationUtils = {
 
                 if (extension.type == constant.quotation().extension.TYPE_SUB_INT) {
                     extension.managePrice = -extension.managePrice;
+                    extension.taxPrice = -extension.taxPrice;
                 }
 
                 if (quotationFunctionAreaItemCs['-扩展项目'] && extension.manageRate != 0 && extension.managePrice != 0) {
@@ -769,11 +776,18 @@ var quotationUtils = {
 
         var $quotation = quotationUtils.quotationDetail.quotation;
         var $quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
+        var $extensionTotalPrice = quotationUtils.quotationDetail.extensionTotalPrice;
+        var $extensionManagePrice = quotationUtils.quotationDetail.extensionManagePrice;
+        var $extensionTaxPrice = quotationUtils.quotationDetail.extensionTaxPrice;
+
+        var $totalPrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.totalPrice, 0), $extensionTotalPrice));
+        var $managePrices = utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.managePrice, 0), $extensionManagePrice));
+        var $taxPrices =  utils.changeThrDecimal(utils.accAdd(com.checkNull($quotation.taxPrice, 0), $extensionTaxPrice));
 
         com.focusPage('#discount', '#quotationSummary').html(com.checkNull($quotation.discount, 0));
-        com.focusPage('#managePrice', '#quotationSummary').html(com.checkNull($quotation.managePrice, 0));
-        com.focusPage('#taxPrice', '#quotationSummary').html(com.checkNull($quotation.taxPrice, 0));
-        com.focusPage('#totalPrice', '#quotationSummary').html(com.checkNull($quotation.totalPrice, 0));
+        com.focusPage('#managePrice', '#quotationSummary').html($managePrices);
+        com.focusPage('#taxPrice', '#quotationSummary').html($taxPrices);
+        com.focusPage('#totalPrice', '#quotationSummary').html($totalPrices);
 
         com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull($quotationPrefer.preferPrice, 0));
         com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.managePrefer, 0));
@@ -1331,7 +1345,7 @@ var quotationUtils = {
             com.focusPage('#quoteArea', "#presignItemListDiv").html(com.checkNull(protation.quoteArea, 0));
             com.focusPage('#taxPrice', "#presignItemListDiv").html(com.checkNull(protation.taxPrice, 0));
             com.focusPage('#totalPrice', "#presignItemListDiv").html(com.checkNull(protation.totalPrice, 0));
-            com.focusPage('#product', "#presignItemListDiv").html(protation.product);
+            com.focusPage('#product').html(protation.product);
 
             if (protation.advanceProfit == 0) {
                 com.focusPage('#advanceProfitShow').hide();

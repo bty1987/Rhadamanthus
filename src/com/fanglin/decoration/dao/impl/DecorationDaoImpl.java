@@ -363,6 +363,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if (field.contains("escorter")) {
 
 				query.alias(String.format("%sescorter", prefix), "escorter");
+			}else if (field.contains("busitype")) {
+
+				query.alias(String.format("%sbusitype", prefix), "busitype");
 			}
 
 			if ("decoration.orderId".equals(field)) {
@@ -423,8 +426,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.add(query.getCriterion("salesmanRegion.no", data, op));
 			} else if ("decoration.orderType".equals(field)) {
 				query.add(query.getCriterion(String.format("%stypeness", prefix), Short.valueOf(data), op));
-			} else if ("decoration.busitype".equals(field)) {
-				query.add(query.getCriterion(String.format("%sbusitype", prefix), Long.valueOf(data), op));
+			} else if ("decoration.busitype.no".equals(field)) {
+				query.add(query.getCriterion("busitype.no", Long.valueOf(data), op));
 			} else if ("decoration.houseArea".equals(field)) {
 				int dataF = Integer.parseInt(data);
 				query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));

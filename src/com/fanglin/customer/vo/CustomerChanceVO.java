@@ -51,6 +51,14 @@ public class CustomerChanceVO implements Serializable {
 
 	private Short isRead;
 
+	private Short isGroup;
+
+	private Short isPhone;
+
+	private Short isMeet;
+
+	private Short isTrue;
+
 	private String comment;
 
 	private Integer company;
@@ -220,6 +228,38 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setIsRead(Short isRead) {
 		this.isRead = isRead;
+	}
+
+	public Short getIsGroup() {
+		return isGroup;
+	}
+
+	public void setIsGroup(Short isGroup) {
+		this.isGroup = isGroup;
+	}
+
+	public Short getIsPhone() {
+		return isPhone;
+	}
+
+	public void setIsPhone(Short isPhone) {
+		this.isPhone = isPhone;
+	}
+
+	public Short getIsMeet() {
+		return isMeet;
+	}
+
+	public void setIsMeet(Short isMeet) {
+		this.isMeet = isMeet;
+	}
+
+	public Short getIsTrue() {
+		return isTrue;
+	}
+
+	public void setIsTrue(Short isTrue) {
+		this.isTrue = isTrue;
 	}
 
 	public String getComment() {

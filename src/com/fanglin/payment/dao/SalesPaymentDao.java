@@ -10,6 +10,8 @@ import com.fanglin.utils.Paging;
 
 public interface SalesPaymentDao extends Dao<SalesPaymentPO> {
 
+	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters, Short type) throws FLException;
+
 	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException;
 
 	public List<SalesPaymentPO> querySalesPaymentByOrderId(String orderId, List<Filter> filters) throws FLException;

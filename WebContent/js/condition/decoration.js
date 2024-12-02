@@ -201,18 +201,16 @@ Condition.addupRule("decoration", {
         label: "业务类型",
         type: "select",
         submitConfig: {
-            name: "decoration.busitype",
+            name: "decoration.busitype.no",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.data.queryDecorationBusitype,
-            postData: {
-                "timestamp": new Date().getTime()
-            },
-            listPath: "decorationBusitypes",
-            keyPath: "dbid",
-            valuePath: "name"
+            url: null,
+            postData: null,
+            listPath: constant.decoration().decoration.busitype.datas,
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "houseClass": {

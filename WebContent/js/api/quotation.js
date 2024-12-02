@@ -471,7 +471,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "taxRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
+                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "manageDiscount", "taxRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
             }]
         },
         queryPresignProduce: {
@@ -479,7 +479,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "presignProduces",
-                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "taxRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
+                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "manageDiscount", "taxRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
             }]
         },
         queryPresignProduceByPpid: {
@@ -487,21 +487,21 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "presignProduce",
-                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "taxRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
+                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "manageDiscount", "taxRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
             }]
         },
         addPresignProduce: {
             url: "addPresignProduce.do",
             type: "update",
             tranargs: {
-                args: ["presignProduce.quotePrice", "presignProduce.quoteArea", "presignProduce.unitPrice", "presignProduce.discount", "presignProduce.manageRate", "presignProduce.taxRate", "presignProduce.costPrice", "presignProduce.profitRate", "presignProduce.preferPrice", "presignProduce.mostPrice", "presignProduce.costRate", "presignProduce.mostRate"]
+                args: ["presignProduce.quotePrice", "presignProduce.quoteArea", "presignProduce.unitPrice", "presignProduce.discount", "presignProduce.manageRate", "presignProduce.manageDiscount", "presignProduce.taxRate", "presignProduce.costPrice", "presignProduce.profitRate", "presignProduce.preferPrice", "presignProduce.mostPrice", "presignProduce.costRate", "presignProduce.mostRate"]
             }
         },
         updatePresignProduce: {
             url: "updatePresignProduce.do",
             type: "update",
             tranargs: {
-                args: ["presignProduce.quotePrice", "presignProduce.quoteArea", "presignProduce.unitPrice", "presignProduce.discount", "presignProduce.manageRate", "presignProduce.taxRate", "presignProduce.costPrice", "presignProduce.profitRate", "presignProduce.preferPrice", "presignProduce.mostPrice", "presignProduce.costRate", "presignProduce.mostRate"]
+                args: ["presignProduce.quotePrice", "presignProduce.quoteArea", "presignProduce.unitPrice", "presignProduce.discount", "presignProduce.manageRate", "presignProduce.manageDiscount", "presignProduce.taxRate", "presignProduce.costPrice", "presignProduce.profitRate", "presignProduce.preferPrice", "presignProduce.mostPrice", "presignProduce.costRate", "presignProduce.mostRate"]
             }
         },
         updatePresignProduceForStatus: {
@@ -524,7 +524,7 @@ $.extend(api, {
                 args: ["basicNum", "price", "cost", "addPrice", "subPrice", "achePrice"]
             }, {
                 result: "paging-data-presignProduce",
-                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
+                args: ["quotePrice", "quoteArea", "unitPrice", "discount", "manageRate", "manageDiscount", "costPrice", "profitRate", "preferPrice", "mostPrice", "costRate", "mostRate"]
             }]
         },
         queryPresignItemByPiid: {
@@ -609,7 +609,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
+                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
             }, {
                 result: "paging-data-decoration-house",
                 args: ["buildArea"]
@@ -621,7 +621,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "protations",
-                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
+                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
             }]
         },
         queryProtationForDefaultByOrderId: {
@@ -630,7 +630,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "protation",
-                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
+                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
             }]
         },
         queryProtationByPid: {
@@ -639,28 +639,28 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "protation",
-                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
+                args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
             }]
         },
         addProtation: {
             url: "addProtation.do",
             type: "update",
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
             }
         },
         updateProtation: {
             url: "updateProtation.do",
             type: "update",
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
             }
         },
         updateProtationForAdvance: {
             url: "updateProtationForAdvance.do",
             type: "update",
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
             }
         },
         updateProtationForStatus: {
@@ -687,7 +687,7 @@ $.extend(api, {
             type: "update",
             intercept: true,
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit", "protationItem.basicNum", "protationItem.num", "protationItem.cost", "protationItem.price", "protationItem.addPrice", "protationItem.subPrice", "protationItem.achePrice"]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit", "protationItem.basicNum", "protationItem.num", "protationItem.cost", "protationItem.price", "protationItem.addPrice", "protationItem.subPrice", "protationItem.achePrice"]
             }
         },
         deleteProtationItem: {
@@ -695,7 +695,7 @@ $.extend(api, {
             type: "update",
             intercept: true,
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit", "protationItem.basicNum", "protationItem.num", "protationItem.cost", "protationItem.price", "protationItem.addPrice", "protationItem.subPrice", "protationItem.achePrice"]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit", "protationItem.basicNum", "protationItem.num", "protationItem.cost", "protationItem.price", "protationItem.addPrice", "protationItem.subPrice", "protationItem.achePrice"]
             }
         },
         lockProtation: {

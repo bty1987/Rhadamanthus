@@ -1,6 +1,14 @@
 CREATE DATABASE  IF NOT EXISTS `platform`;
 USE `platform`;
 
+CREATE TABLE `approvalfunctionright` (
+  `pid` INT(11) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(32) NOT NULL COMMENT '名称',
+  `cfid` INT(11) NOT NULL COMMENT '',
+  `company` INT(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批-功能权限';
+
 DROP TABLE IF EXISTS `customeroriginfunctionright`;
 CREATE TABLE `customeroriginfunctionright` (
   `cfrid` int(11) NOT NULL AUTO_INCREMENT,

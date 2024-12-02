@@ -93,12 +93,10 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 	}
 
 	@Override
-	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, int company) {
+	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, BalanceSelectionVO balanceSelectionVO, int company) {
 
-		List<BalanceSelectionBO> balanceSelectionBOs = balanceSelectionDao.pageBalanceSelectionForBalance(paging, filters, company);
+		List<BalanceSelectionBO> balanceSelectionBOs = balanceSelectionDao.pageBalanceSelectionForBalance(paging, filters, balanceSelectionVO.getStatus(), company);
 		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
-
-		BalanceSelectionVO balanceSelectionVO;
 
 		for (BalanceSelectionBO balanceSelectionBO : balanceSelectionBOs) {
 

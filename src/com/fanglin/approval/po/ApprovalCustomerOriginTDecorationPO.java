@@ -3,6 +3,7 @@ package com.fanglin.approval.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.approval.vo.ApprovalCustomerOriginTDecorationVO;
 import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "approvalCustomerOriginTDecoration", catalog = "approval")
@@ -24,12 +27,12 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	private long acodid;
 
-	private long aid;
+	private ApprovalPO approval;
 
 	private CustomerOriginPO customerOrigin;
 
 	private short type;
-	
+
 	private DecorationBusitypePO decorationBusitype;
 
 	private String houseType;
@@ -39,7 +42,7 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 	private short resourceType;
 
 	private UserPO salesman;
-	
+
 	private short typeness;
 
 	public ApprovalCustomerOriginTDecorationPO() {
@@ -64,19 +67,20 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 		this.acodid = acodid;
 	}
 
-	@Column(name = "aid")
-	public long getAid() {
-		return aid;
-	}
-
-	public void setAid(long aid) {
-		this.aid = aid;
-	}
-
 	@ManyToOne
 	@JoinColumn(nullable = true, name = "csid", referencedColumnName = "coid")
 	public CustomerOriginPO getCustomerOrigin() {
 		return customerOrigin;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "aid", referencedColumnName = "aid")
+	public ApprovalPO getApproval() {
+		return approval;
+	}
+
+	public void setApproval(ApprovalPO approval) {
+		this.approval = approval;
 	}
 
 	public void setCustomerOrigin(CustomerOriginPO customerOrigin) {
@@ -138,7 +142,7 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 	public void setSalesman(UserPO salesman) {
 		this.salesman = salesman;
 	}
-	
+
 	@Column(name = "typeness")
 	public short getTypeness() {
 		return typeness;
@@ -146,6 +150,21 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	public void setTypeness(short typeness) {
 		this.typeness = typeness;
+	}
+
+	public ApprovalCustomerOriginTDecorationVO ptv(ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecorationVO) {
+
+		BeanUtil.copyProperties(this, approvalCustomerOriginTDecorationVO, Arrays.asList("approval", "customerOrigin", "decorationBusitype", "salesman"));
+
+		if (approvalCustomerOriginTDecorationVO.getSalesman() != null) approvalCustomerOriginTDecorationVO.getSalesman().setBaseInfo(getSalesman());
+
+		if (approvalCustomerOriginTDecorationVO.getDecorationBusitype() != null) BeanUtil.copyProperties(getDecorationBusitype(), approvalCustomerOriginTDecorationVO.getDecorationBusitype());
+
+		if (approvalCustomerOriginTDecorationVO.getApproval() != null) getApproval().ptv(approvalCustomerOriginTDecorationVO.getApproval());
+
+		if (approvalCustomerOriginTDecorationVO.getCustomerOrigin() != null) getCustomerOrigin().ptv(approvalCustomerOriginTDecorationVO.getCustomerOrigin());
+
+		return approvalCustomerOriginTDecorationVO;
 	}
 
 }

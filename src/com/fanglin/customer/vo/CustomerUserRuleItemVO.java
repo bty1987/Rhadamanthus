@@ -18,6 +18,14 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	private Integer lowval;
 
+	private Short priority;
+
+	private Short isSurplus;
+
+	private Short isDelete;
+
+	private Short status;
+
 	public CustomerUserRuleItemVO() {
 		super();
 	}
@@ -70,4 +78,35 @@ public class CustomerUserRuleItemVO implements Serializable {
 		this.lowval = lowval;
 	}
 
+	public Short getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Short priority) {
+		this.priority = priority;
+	}
+
+	public Short getIsSurplus() {
+		return isSurplus;
+	}
+
+	public void setIsSurplus(Short isSurplus) {
+		this.isSurplus = isSurplus;
+	}
+
+	public Short getIsDelete() {
+		return isDelete;
+	}
+
+	public void setIsDelete(Short isDelete) {
+		this.isDelete = isDelete;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
 }

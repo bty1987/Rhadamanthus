@@ -32,6 +32,7 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -129,7 +130,7 @@ public class DecorationPO implements Serializable {
 
 	private String salesmanType = "守园";
 
-	private long busitype;
+	private DecorationBusitypePO busitype;
 
 	private String houseType;
 
@@ -505,12 +506,13 @@ public class DecorationPO implements Serializable {
 		this.salesmanType = salesmanType;
 	}
 
-	@Column(name = "busitype")
-	public long getBusitype() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "busitype", referencedColumnName = "dbid")
+	public DecorationBusitypePO getBusitype() {
 		return busitype;
 	}
 
-	public void setBusitype(long busitype) {
+	public void setBusitype(DecorationBusitypePO busitype) {
 		this.busitype = busitype;
 	}
 
@@ -667,7 +669,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	private void ptv(DecorationVO decorationVO) {
-		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId", "conpany"));
+		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId", "conpany", "busitype"));
 
 		if (decorationVO.getOrderTotalPrice() == null) {
 			decorationVO.setOrderTotalPrice(new Long(0));
@@ -683,6 +685,8 @@ public class DecorationPO implements Serializable {
 		BeanUtil.copyProperties(this.getCustomer(), customerVO);
 
 		decorationVO.setCustomer(customerVO);
+		
+		decorationVO.setBusitype(this.getBusitype().getDbid());
 
 		decorationVO.setDesigner(new UserBaseVO());
 		decorationVO.setSalesman(new UserBaseVO());

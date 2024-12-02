@@ -3,6 +3,7 @@ package com.fanglin.approval.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -14,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -269,6 +272,16 @@ public class ApprovalPO implements java.io.Serializable {
 		setCompany(company);
 
 		return this;
+	}
+
+	public ApprovalVO ptv(ApprovalVO approvalVO) {
+
+		BeanUtil.copyProperties(this, approvalVO, Arrays.asList("receiver", "sender"));
+
+		if (approvalVO.getReceiver() != null) BeanUtil.copyProperties(getReceiver(), approvalVO.getReceiver(), Arrays.asList("dept", "duty"));
+		if (approvalVO.getSender() != null) BeanUtil.copyProperties(getSender(), approvalVO.getSender(), Arrays.asList("dept", "duty"));
+
+		return approvalVO;
 	}
 
 }
