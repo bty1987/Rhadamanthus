@@ -6,13 +6,25 @@ jQuery(function($) {
             changeModal: com.focusPage("#changeModal"),
             approveModal: com.focusPage("#approveModal"),
             firstApprove: com.focusPage("#firstApprove"),
-            QRcodeModal: com.focusPage("#QRcodeModal")
+            QRcodeModal: com.focusPage("#QRcodeModal"),
+            createGroup: com.focusPage("#createGroup"),
+            phoneConnect: com.focusPage("#phoneConnect"),
+            todayMeet: com.focusPage("#todayMeet"),
+            realAddress: com.focusPage("#realAddress"),
         },
         items: {
             region: com.focusPage("#region"),
             department: com.focusPage("#department"),
             belonger: com.focusPage("#belonger"),
             busitype: com.focusPage("#busitype"),
+            isGroup: com.focusPage("#isGroup"),
+            isPhone: com.focusPage("#isPhone"),
+            isMeet: com.focusPage("#isMeet"),
+            isTrue: com.focusPage("#isTrue"),
+            createGroup1: com.focusPage("#createGroup1"),
+            phoneConnect1: com.focusPage("#phoneConnect1"),
+            todayMeet1: com.focusPage("#todayMeet1"),
+            realAddress1: com.focusPage("#realAddress1"),
 
             houseType: com.focusPage("#houseType", "#changeModal"),
             houseClass: com.focusPage("#houseClass", "#changeModal"),
@@ -56,7 +68,12 @@ jQuery(function($) {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
-            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApprove").on("click", firstApproval)
+            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApprove").on("click", firstApproval),
+            updateGroupBtn: com.focusPage("#updateGroupBtn", "#createGroup").bindClick(configCreateGroup),
+            updatephoneBtn: com.focusPage("#updatephoneBtn", "#phoneConnect").bindClick(configPhoneConnect),
+            updateMeetBtn: com.focusPage("#updateMeetBtn", "#todayMeet").bindClick(configTodayMeet),
+            updateAddressBtn: com.focusPage("#updateAddressBtn", "#realAddress").bindClick(configrealAddresst),
+
         },
 
         atttypes: [],
@@ -110,6 +127,11 @@ jQuery(function($) {
     customerChance.items.houseTypeApprove.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
     customerChance.items.houseClassApprove.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerChance.items.resourceTypeApprove.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
+
+    customerChance.items.createGroup1.bindData(constant.customer().customerChance.config.datas, "key", "value");
+    customerChance.items.phoneConnect1.bindData(constant.customer().customerChance.config.datas, "key", "value");
+    customerChance.items.todayMeet1.bindData(constant.customer().customerChance.config.datas, "key", "value");
+    customerChance.items.realAddress1.bindData(constant.customer().customerChance.config.datas, "key", "value");
 
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
@@ -299,6 +321,30 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.customer().customerChance.isRead.keys,
     }, {
+        field: "isGroup",
+        name: "建群",
+        prop: "isGroup",
+        clazz: "red",
+        dataset: constant.customer().customerChance.config.keys,
+    }, {
+        field: "isPhone",
+        name: "电话交接",
+        prop: "isPhone",
+        clazz: "red",
+        dataset: constant.customer().customerChance.config.keys,
+    }, {
+        field: "isMeet",
+        name: "当日见面",
+        prop: "isMeet",
+        clazz: "red",
+        dataset: constant.customer().customerChance.config.keys,
+    }, {
+        field: "isTrue",
+        name: "真实地址",
+        prop: "isTrue",
+        clazz: "red",
+        dataset: constant.customer().customerChance.config.keys,
+    }, {
         field: "readTime",
         name: "已读时间",
         prop: "readTime",
@@ -346,6 +392,70 @@ jQuery(function($) {
         show: function(v) {
 
             return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
+        },
+    }, {
+        name: "建群",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            com.cleanTypeahead('createGroup1');
+
+            customerChance.ccid = v.ccid;
+
+            customerChance.modals.createGroup.modal("show");
+
+        },
+        show: function(v) {
+
+            return (v.status != 1);
+        },
+    }, {
+        name: "电话交接",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            com.cleanTypeahead('phoneConnect1');
+
+            customerChance.ccid = v.ccid;
+
+            customerChance.modals.phoneConnect.modal("show");
+
+        },
+        show: function(v) {
+
+            return (v.status != 1);
+        },
+    }, {
+        name: "当日见面",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            com.cleanTypeahead('todayMeet1');
+
+            customerChance.ccid = v.ccid;
+
+            customerChance.modals.todayMeet.modal("show");
+
+        },
+        show: function(v) {
+
+            return (v.status != 1);
+        },
+    }, {
+        name: "真实地址",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            com.cleanTypeahead('realAddress1');
+
+            customerChance.ccid = v.ccid;
+
+            customerChance.modals.realAddress.modal("show");
+
+        },
+        show: function(v) {
+
+            return (v.status != 1);
         },
     }, {
         name: "失效",
@@ -764,6 +874,66 @@ jQuery(function($) {
             btn2.hide();
             btn1.show();
             return false;
+        });
+    }
+
+    function configCreateGroup() {
+
+        var options = {
+            'customerChance.ccid': customerChance.ccid,
+            'customerChance.isGroup': customerChance.items.createGroup1.val()
+        };
+        com.post(api.customer.configCustomerChance, options, function(res) {
+
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            customerChance.modals.createGroup.modal("hide");
+        });
+    }
+
+    function configPhoneConnect() {
+
+        var options = {
+            'customerChance.ccid': customerChance.ccid,
+            "customerChance.isPhone": customerChance.items.phoneConnect1.val()
+        };
+        com.post(api.customer.configCustomerChance, options, function(res) {
+
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            customerChance.modals.phoneConnect.modal("hide");
+        });
+    }
+
+    function configTodayMeet() {
+
+        var options = {
+            'customerChance.ccid': customerChance.ccid,
+            "customerChance.isMeet": customerChance.items.todayMeet1.val()
+        };
+        com.post(api.customer.configCustomerChance, options, function(res) {
+
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            customerChance.modals.todayMeet.modal("hide");
+        });
+    }
+
+    function configrealAddresst() {
+
+        var options = {
+            'customerChance.ccid': customerChance.ccid,
+            "customerChance.isTrue": customerChance.items.realAddress1.val()
+        };
+        com.post(api.customer.configCustomerChance, options, function(res) {
+
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            customerChance.modals.realAddress.modal("hide");
         });
     }
 

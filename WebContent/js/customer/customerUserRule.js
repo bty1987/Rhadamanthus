@@ -310,7 +310,7 @@ $(function() {
         clazz: "btn-success",
         handle: function(v) {
 
-            params["customerUserRule.curid"] = v.curid;
+            params.customer["curid"] = v.curid;
 
             com.popup4page("#layerPopUp", api.index.customerUserRuleItem.url, "人员规则项目");
 

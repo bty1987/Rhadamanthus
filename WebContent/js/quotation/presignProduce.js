@@ -26,6 +26,7 @@ jQuery(function($) {
             costRate: com.focusPage("#costRate", "#createPresignProduceModal"),
             mostRate: com.focusPage("#mostRate", "#createPresignProduceModal"),
             manageFormula: com.focusPage("#manageFormula", "#createPresignProduceModal"),
+            manageDiscount: com.focusPage("#manageDiscount", "#createPresignProduceModal"),
             taxRate: com.focusPage("#taxRate", "#createPresignProduceModal"),
             taxFormula: com.focusPage("#taxFormula", "#createPresignProduceModal"),
         },
@@ -101,6 +102,11 @@ jQuery(function($) {
         },
         clazz: "grey"
     }, {
+        fieId: "manageDiscount",
+        name: "管理费折扣",
+        prop: "manageDiscount",
+        clazz: "blue"
+    }, {
         fieId: "taxRate",
         name: "税金比例",
         prop: "taxRate",
@@ -165,6 +171,7 @@ jQuery(function($) {
             presignProduce.items.costRate.val(v.costRate);
             presignProduce.items.mostRate.val(v.mostRate);
             presignProduce.items.manageFormula.val(v.manageFormula ? paramToFormula(v.manageFormula) : "");
+            presignProduce.items.manageDiscount.val(v.manageDiscount);
             presignProduce.items.taxRate.val(v.taxRate);
             presignProduce.items.taxFormula.val(v.taxFormula ? paramToFormula(v.taxFormula) : "");
 
@@ -288,6 +295,7 @@ jQuery(function($) {
             "presignProduce.costRate": presignProduce.items.costRate.val(),
             "presignProduce.mostRate": presignProduce.items.mostRate.val(),
             "presignProduce.manageFormula": formulaToParam(manageFormula),
+            "presignProduce.manageDiscount": presignProduce.items.manageDiscount.val(),
             "presignProduce.taxRate": presignProduce.items.taxRate.val(),
             "presignProduce.taxFormula": formulaToParam(taxFormula),
         };

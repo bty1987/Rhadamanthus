@@ -11,6 +11,7 @@ $(function() {
         items: {
             refundTotal: com.focusPage("#refundTotal"),
             loose: com.focusPage("#loose"),
+            ruond: com.focusPage("#ruond"),
             approver: com.focusPage('#salesItemDetialapprover'),
             refundDes: com.focusPage('#refundDes')
         },
@@ -205,6 +206,19 @@ $(function() {
         }
     });
 
+    salesItem.items.ruond.change(function() {
+
+        var refundTotal = Math.ceil(salesItem.items.refundTotal.attr("data-refund-total"));
+
+        if ($(this).prop("checked")) {
+            salesItem.items.refundTotal.val(parseInt(refundTotal));
+            com.focusPage("#refundTotal").val(parseInt(refundTotal));
+        } else {
+            salesItem.items.refundTotal.val(refundTotal);
+            com.focusPage("#refundTotal").val(refundTotal);
+        }
+    });
+
     salesItem.btns.refundBtn.click(function() {
 
         if (salesItem.sales.status != constant.sales().sales.STATUS_INIT_INT && salesItem.sales.status != constant.sales().sales.STATUS_END_INT) {
@@ -247,7 +261,6 @@ $(function() {
     // 全退
     salesItem.btns.fullRefundBtn.click(function() {
 
-
         salesItem.approvalType = constant.sales().refunds.STATUS_TYPE_FULLY_INT;
 
         if (salesItem.sales.status != constant.sales().sales.STATUS_INIT_INT && salesItem.sales.status != constant.sales().sales.STATUS_END_INT) {
@@ -266,7 +279,7 @@ $(function() {
             salesItem.items.approver.empty();
         }, function() {
 
-            refundTotal = utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.coupon), salesItem.sales.venderMaling);
+            refundTotal = utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.type == constant.sales().sales.TYPE_STA_INT ? salesItem.sales.coupon : 0), salesItem.sales.venderMaling);
 
             salesItem.items.refundTotal.attr("data-refund-total", refundTotal).val(parseInt(refundTotal));
 
@@ -294,7 +307,7 @@ $(function() {
             salesItem.items.approver.empty();
         }, function() {
 
-            salesItem.items.refundTotal.val(parseInt(utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.coupon), salesItem.sales.venderMaling)));
+            salesItem.items.refundTotal.val(parseInt(utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.type == constant.sales().sales.TYPE_STA_INT ? salesItem.sales.coupon : 0), salesItem.sales.venderMaling)));
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
@@ -389,8 +402,8 @@ $(function() {
             "approvalSalesRefund.sid": salesItem.sid,
             "approvalSalesRefund.type": salesItem.approvalType,
             "approvalSalesRefund.refund": salesItem.items.refundTotal.val(),
-        // "code": "PROC-97944EDE-7422-4C82-9018-EEC50441408E",
-        // "forms": JSON.stringify(args)
+            // "code": "PROC-97944EDE-7422-4C82-9018-EEC50441408E",
+            // "forms": JSON.stringify(args)
         };
         com.post(api.approval.submitApprovalForSalesRefund, $.extend(options, salesItem.options), function() {
 

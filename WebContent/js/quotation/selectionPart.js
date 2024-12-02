@@ -413,6 +413,7 @@ var selectionDetail = (function() {
                 "selectionItem.postprice": selling,
                 "selectionItem.preprice": selection.nowEditQuote.attr('data-preprice'),
                 "selectionItem.initNum": num,
+                "selectionItem.num": 0,
                 "selectionItem.quoteId": selection.nowEditQuote.attr('data-quoteId'),
                 "selectionItem.type": selection.nowEditQuote.attr('data-type'),
                 "selectionItem.areaId": selection.nowEditQuote.attr('data-areaId'),
@@ -548,7 +549,7 @@ var selectionDetail = (function() {
                 'data-preprice': data.preprice,
             });
 
-            var lineSet = [['name blue', data.itemName], ['num red', data.num]];
+            var lineSet = [['name blue', data.itemName + '(' + data.quotationFunctionAreaName + ')'], ['num red', data.num]];
 
             $.each(lineSet, function(i, v) {
 
@@ -876,7 +877,7 @@ var selectionDetail = (function() {
                         "type": type,
                         "num": rawData.num,
                         "quotationFunctionAreaName": rawData.quotationFunctionAreaName,
-                        "preprice": preprice,
+                        "preprice": rawData.unitPrice,
                     }
                 } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
 
@@ -896,7 +897,7 @@ var selectionDetail = (function() {
                         "type": type,
                         "num": rawData.num,
                         "quotationFunctionAreaName": rawData.quotationFunctionAreaName,
-                        "preprice": preprice,
+                        "preprice": rawData.unitPrice,
                     }
                 }
 

@@ -6,10 +6,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.FeedbackDao;
 import com.fanglin.customer.po.FeedbackPO;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("feedbackDao")
@@ -20,7 +22,7 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 	}
 
 	@Override
-	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters, int company) {
+	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<FeedbackPO> query = pagingQuery(paging, FeedbackPO.class);
 
@@ -35,7 +37,7 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 		return query.list();
 	}
 
-	private void queryFilterExcute(PagingQuery<FeedbackPO> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<FeedbackPO> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) {
 			return;
@@ -53,8 +55,10 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 				query.add(query.getCriterion(FeedbackPO.COLUMN_TYPE_STR, Short.valueOf(data), op));
 			} else if ("phone".equals(field)) {
 				query.add(query.getCriterion(FeedbackPO.COLUMN_PHONE_STR, data, op));
-			} else if ("createTime".equals(filter.getField())) {
+			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", "createTime", data);
+			} else if ("company".equals(field) && FormatUtil.decodeCompany(data) == CompanyPO.TYPE_HEADQUARTER_INT) {
+				query.alias("company", "company").add(query.getCriterion("company.cid", FormatUtil.decodeCompany(data), op));
 			}
 		}
 	}

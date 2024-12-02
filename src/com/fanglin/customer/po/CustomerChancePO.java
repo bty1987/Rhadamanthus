@@ -84,6 +84,14 @@ public class CustomerChancePO implements Serializable {
 	private short status;
 
 	private short isRead;
+	
+	private short isGroup;
+	
+	private short isPhone;
+	
+	private short isMeet;
+	
+	private short isTrue;
 
 	private String comment;
 
@@ -290,6 +298,42 @@ public class CustomerChancePO implements Serializable {
 		this.isRead = isRead;
 	}
 
+	@Column(name = "isGroup")
+	public short getIsGroup() {
+		return isGroup;
+	}
+
+	public void setIsGroup(short isGroup) {
+		this.isGroup = isGroup;
+	}
+
+	@Column(name = "isPhone")
+	public short getIsPhone() {
+		return isPhone;
+	}
+
+	public void setIsPhone(short isPhone) {
+		this.isPhone = isPhone;
+	}
+
+	@Column(name = "isMeet")
+	public short getIsMeet() {
+		return isMeet;
+	}
+
+	public void setIsMeet(short isMeet) {
+		this.isMeet = isMeet;
+	}
+
+	@Column(name = "isTrue")
+	public short getIsTrue() {
+		return isTrue;
+	}
+
+	public void setIsTrue(short isTrue) {
+		this.isTrue = isTrue;
+	}
+	
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;

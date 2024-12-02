@@ -31,6 +31,15 @@ public class ConstructionPeriodDaoImpl extends DaoImpl<ConstructionPeriodPO> imp
 	private static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
 
 		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+
+			if (ConstructionPeriodPO.COLUMN_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(ConstructionPeriodPO.COLUMN_NAME_STR, String.valueOf(filter.getData()), filter.getOp()));
+			}
+		}
 	}
 
 }

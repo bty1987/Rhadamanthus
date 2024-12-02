@@ -40,18 +40,15 @@ $(function() {
             var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('图片');
 
             com.showImg(img, v.picture, 75, 75, '', null, 0);
+            
+            var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
+            var $btnbind = $("<a></a>").addClass("btn btn-minier btn-success").html("接收");
+            var $btnAddUser = $("<a></a>").addClass("btn btn-minier btn-success").html("完成");
+            
+            var propertyArr = [["装修单号:", v.orderId, "blue", function(btn) {
 
-            var propertyArr = [
-                ["装修单号:", v.orderId, "blue", function(btn) {
-
-                    tools.decoration.info(btn, v.orderId);
-                }],
-                ["创建时间: ", v.createTime, "green"],
-                ["电话:", v.phone, "grey"],
-                ["类型:", constant.customer().feedback.status.keys[v.type], "red"],
-                ["公司:", v.company, "grey"],
-                ["说明: ", v.content, "grey"]
-            ];
+                tools.decoration.info(btn, v.orderId);
+            }], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ["接收人: ", v.receiver.userName, "grey"], ["接收时间: ", v.receiveTime, "grey"], ["完成人", v.finisher.userName, "grey"], ["完成时间: ", v.finishTime, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -61,6 +58,7 @@ $(function() {
 
                 if (value[3]) {
                     $b.click(function() {
+
                         value[3]($b);
                     });
                 }
@@ -70,8 +68,28 @@ $(function() {
 
             $divBtnWrap.append($drawingedit).appendTo($h3);
 
+            $divBtnWrap.append($btnView).append($btnbind).append($btnAddUser).appendTo($h3);
+
             $drawingedit.click(function() {
+
                 manageDrawing(v.fid);
+            });
+
+            $btnbind.click(function() {
+
+                balanceOrder(v.fid);
+            });
+
+            $btnAddUser.click(function() {
+
+                finishFeedback(v.fid);
+            });
+
+            $btnView.click(function() {
+
+                params.customer.vid = v.fid;
+
+                com.popup4page("#feedBackRecordPopUp", api.index.feedRecord.url, "记录");
             });
 
             $liLine.append($h3).append($ulProperty);
@@ -80,10 +98,12 @@ $(function() {
         };
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -91,7 +111,8 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type'], "condList", api.customer.pageFeedback, function(res) {
+    searcher.init(['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company'], "condList", api.customer.pageFeedback, function(res) {
+
         displayFunc.init("resultList", res);
     }, "pagenation");
 
@@ -114,6 +135,34 @@ $(function() {
 
             com.popup4photos("#feedbackDrawing");
         }, null, false);
+    }
+
+    function balanceOrder(fid) {
+
+        com.showConfirm("确认要接收吗?", function() {
+
+            var options = {
+                "feedback.fid": fid
+            };
+            com.post(api.customer.receiveFeedback, options, function() {
+
+                com.showAlert(com.info, "接收成功");
+            });
+        });
+    }
+
+    function finishFeedback(fid) {
+
+        com.showConfirm("确认要完成吗?", function() {
+
+            var options = {
+                "feedback.fid": fid
+            };
+            com.post(api.customer.finishFeedback, options, function() {
+
+                com.showAlert(com.info, "完成成功");
+            });
+        });
     }
 
     function addPicture(i, v) {

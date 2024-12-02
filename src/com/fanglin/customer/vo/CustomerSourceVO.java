@@ -48,7 +48,11 @@ public class CustomerSourceVO implements Serializable {
 
 	private Integer company;
 
+	private Short customerType;
+
 	private Short status;
+
+	private Short demand;
 
 	private String comment;
 
@@ -211,6 +215,22 @@ public class CustomerSourceVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Short getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(Short customerType) {
+		this.customerType = customerType;
+	}
+
+	public Short getDemand() {
+		return demand;
+	}
+
+	public void setDemand(Short demand) {
+		this.demand = demand;
 	}
 
 	public Short getStatus() {

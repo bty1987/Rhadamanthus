@@ -5,7 +5,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -137,17 +136,18 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<SalesPO> pageSalesForSupplier(Paging paging, List<Filter> filters, int company, int uid) throws FLException {
 
-		String sql = "SELECT s.* FROM sales.sales s, communion.brand b WHERE s.bid = b.bid AND b.`status` = :bStatus AND b.ocuid = :uid AND s.company = :company";
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
-		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(SalesPO.class);
+		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
+		query.add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
 
-		query.setShort("bStatus", SalesPO.BRAND_STATUS_INT).setInteger("company", company).setInteger("uid", uid);
+		queryFilterExcute(query, filters);
+
+		query.desc("sid");
 
 		return query.list();
-
 	}
 
 	@Override

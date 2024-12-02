@@ -12,7 +12,7 @@ public interface BalanceSelectionService {
 
 	public void pageBalanceSelection(Paging paging, List<Filter> filters, int company);
 
-	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, int company);
+	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, BalanceSelectionVO balanceSelectionVO, int company);
 
 	public List<BalanceSelectionVO> queryBalanceSelection(BalanceSelectionVO balanceSelectionVO, int company);
 

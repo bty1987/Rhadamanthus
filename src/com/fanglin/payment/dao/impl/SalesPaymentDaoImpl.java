@@ -25,6 +25,18 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 
 	@Override
+	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters, Short type) throws FLException {
+
+		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
+
+		queryFilterExecute(query, filters);
+
+		query.add(Restrictions.eq(SalesPaymentPO.COLUMN_TYPE_STR, type));
+
+		return query.list();
+	}
+
+	@Override
 	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
@@ -96,7 +108,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	@Override
 	public long amountSalesPayment(String orderId) {
 
-		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status != 0";
+		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status != 0 and ((s.type = 1 and s.balancestatus = 3) or s.type = 0)";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();

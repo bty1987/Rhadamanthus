@@ -33,9 +33,7 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.sales.dao.OalesDao;
-import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.OalesPO;
-import com.fanglin.sales.po.SalesPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
@@ -59,9 +57,6 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
-
-	@Autowired
-	private SalesDao salesDao;
 
 	@Autowired
 	private OalesDao oalesDao;
@@ -221,8 +216,6 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
 		saleTotal = Arith.add(saleTotal, advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0);
-
-		saleTotal = Arith.add(saleTotal, salesDao.amountSales(orderId, SalesPO.CTYPE_POINT_INT));
 
 		saleTotal = Arith.add(saleTotal, oalesDao.amountOales(orderId, OalesPO.ISSCALE_MATCH_INT));
 

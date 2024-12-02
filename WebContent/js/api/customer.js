@@ -31,6 +31,9 @@
     },
     customerUserRuleItem: {
         url: "/views/customer/customerUserRuleItem.html"
+    },
+    feedRecord: {
+        url: "/views/customer/feedbackRecord.html"
     }
 });
 
@@ -79,7 +82,12 @@ $.extend(api, {
         addVrecord: {
             url: "addVrecord.do"
         },
-
+        queryFeedbackRecord: {
+            url: "queryFeedbackRecord.do"
+        },
+        addFeedbackRecord: {
+            url: "addFeedbackRecord.do"
+        },
         pageCustomerOrigin: {
             url: "pageCustomerOrigin.do",
             type: "query",
@@ -667,6 +675,12 @@ $.extend(api, {
 
         queryFeedbackDrawing: {
             url: "queryFeedbackDrawing.do"
+        },
+        receiveFeedback: {
+            url: "receiveFeedback.do"
+        },
+        finishFeedback: {
+            url: "finishFeedback.do"
         },
         addFeedbackDrawing: {
             url: "addFeedbackDrawing.do"

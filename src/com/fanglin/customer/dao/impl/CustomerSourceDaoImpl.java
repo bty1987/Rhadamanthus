@@ -64,6 +64,10 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 				query.add(Restrictions.eq(CustomerSourcePO.COLUMN_DESIGNER_STR, Integer.valueOf(data)));
 			} else if ("salesman".equals(field)) {
 				query.add(Restrictions.eq(CustomerSourcePO.COLUMN_SALESMAN_STR, Integer.valueOf(data)));
+			} else if ("customertype".equals(field)) {
+				query.add(query.getCriterion("customertype", Short.valueOf(data), op));
+			} else if ("demand".equals(field)) {
+				query.add(query.getCriterion("demand", Short.valueOf(data), op));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			} else if ("village".equals(field)) {

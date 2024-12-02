@@ -103,6 +103,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if (salesPayment != null) salesPayment.filter(filters);
 
+		filters.add(new Filter(SalesPaymentPO.COLUMN_SALES_TYPE_STR, String.valueOf(SalesPO.TYPE_INIT_INT), "eq"));
+
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPayment(paging, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 

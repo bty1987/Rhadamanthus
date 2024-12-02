@@ -894,7 +894,7 @@ jQuery(function($) {
                     return false;
                 }
 
-                decorationDetail.paymentItems.otherPayment.val(utils.accMul(decorationMidpack.materialPrice, utils.accDiv(paymentScaleItem.scale, 100)));
+                decorationDetail.paymentItems.otherPayment.val(parseInt(utils.accMul(decorationMidpack.materialPrice, utils.accDiv(paymentScaleItem.scale, 100))));
 
             }, null, false);
 
@@ -916,7 +916,7 @@ jQuery(function($) {
                     return false;
                 }
 
-                decorationDetail.paymentItems.otherPayment.val(utils.accMul(decorationHolonomy.materialPrice, utils.accDiv(paymentScaleItem.scale, 100)));
+                decorationDetail.paymentItems.otherPayment.val(parseInt(utils.accMul(decorationHolonomy.materialPrice, utils.accDiv(paymentScaleItem.scale, 100))));
 
             }, null, false);
         }
@@ -1571,6 +1571,7 @@ jQuery(function($) {
                 break;
             case "belong":
                 decorationUtils.initDecorationBelong(decorationDetail.orderId, 0);
+                decorationUtils.initDecorationBelong(decorationDetail.orderId, 1);
                 break;
             case "payment":
 

@@ -383,6 +383,9 @@ $.extend(api, {
             }, {
                 result: "paging-data-salesReceipt",
                 args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "paging-data-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         querySalesPaymentBySid: {
@@ -394,6 +397,9 @@ $.extend(api, {
             }, {
                 result: "salesPayments-salesReceipt",
                 args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "salesPayments-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         querySalesPaymentForNotInitBySrid: {
@@ -405,6 +411,9 @@ $.extend(api, {
             }, {
                 result: "salesPayments-salesReceipt",
                 args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "salesPayments-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         querySalesReceiptBySrId: {
@@ -424,6 +433,9 @@ $.extend(api, {
             }, {
                 result: "salesPayments-salesReceipt",
                 args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "salesPayments-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         amountSalesPayment: {

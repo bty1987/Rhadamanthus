@@ -27,4 +27,6 @@ public interface CustomerChanceService {
 	public void changeCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
 
 	public void readCustomerChance(CustomerChanceVO customerChangeVO) throws FLException;
+
+	public void configCustomerChance(CustomerChanceVO customerChance) throws FLException;
 }

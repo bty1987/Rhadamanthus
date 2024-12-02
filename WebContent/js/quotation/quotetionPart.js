@@ -1893,6 +1893,10 @@
                 "data-action": "collapse"
             });
 
+            if($btns["$btnSet"]){
+                $btns["$btnSet"].hide();
+            }
+
             var _lineSet = [];
             _lineSet.push(["line", "0"]);
             _lineSet.push(["formula", "数量"]);

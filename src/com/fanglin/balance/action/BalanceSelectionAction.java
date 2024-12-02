@@ -42,7 +42,7 @@ public class BalanceSelectionAction extends BaseListAction {
 	@Action(value = "pageBalanceSelectionForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalanceSelectionForBalance() throws FLException {
 
-		balanceSelectionService.pageBalanceSelectionForBalance(getPaging(), getFilters(), queryCompany());
+		balanceSelectionService.pageBalanceSelectionForBalance(getPaging(), getFilters(), balanceSelection, queryCompany());
 
 		return SUCCESS;
 	}

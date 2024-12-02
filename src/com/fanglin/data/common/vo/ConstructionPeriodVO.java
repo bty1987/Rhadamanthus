@@ -22,6 +22,7 @@ public class ConstructionPeriodVO implements Serializable {
 
 	public ConstructionPeriodVO() {
 		super();
+
 	}
 
 	public Long getCpid() {

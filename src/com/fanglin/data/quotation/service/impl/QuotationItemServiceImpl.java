@@ -13,7 +13,6 @@ package com.fanglin.data.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,8 +182,8 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 		quotationPricePO.setUnitPrice(quotationItemPO.getUnitPrice());
 		quotationPricePO.setSubPrice(quotationItemPO.getSubPrice());
 
-		quotationPricePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		quotationPricePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+		quotationPricePO.setCreateTime(DateUtil.getDateToTimestamp(DateUtil.parseDate("2015-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss")));
+		quotationPricePO.setUpdateTime(DateUtil.getDateToTimestamp(DateUtil.parseDate("2015-01-01 00:00:00", "yyyy-MM-dd hh:mm:ss")));
 
 		quotationPriceDao.save(quotationPricePO);
 

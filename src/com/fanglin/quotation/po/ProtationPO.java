@@ -82,6 +82,8 @@ public class ProtationPO implements Serializable {
 
 	private String manageFormula;
 
+	private int manageDiscount;
+
 	private long managePrice;
 
 	private int taxRate;
@@ -341,6 +343,15 @@ public class ProtationPO implements Serializable {
 		this.manageFormula = manageFormula;
 	}
 
+	@Column(name = "manageDiscount")
+	public int getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(int manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
 	@Column(name = "managePrice")
 	public long getManagePrice() {
 		return managePrice;
@@ -537,6 +548,7 @@ public class ProtationPO implements Serializable {
 
 		if (protationVO.getTotalPrice() != null) setTotalPrice(protationVO.getTotalPrice());
 		if (protationVO.getTotalCost() != null) setTotalCost(protationVO.getTotalCost());
+		if (protationVO.getManageDiscount() != null) setManageDiscount(protationVO.getManageDiscount());
 		if (protationVO.getManagePrice() != null) setManagePrice(protationVO.getManagePrice());
 		if (protationVO.getTaxPrice() != null) setTaxPrice(protationVO.getTaxPrice());
 		if (protationVO.getDiscount() != null) setDiscount(protationVO.getDiscount());

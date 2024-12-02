@@ -34,6 +34,22 @@ jQuery(function($) {
         editFlg: false,
     };
 
+    var periodList = [];
+    var tem = {
+        "key": -1,
+        "value": ""
+    };
+    periodList.push(tem);
+
+    $.each(constant.decoration().decoration.typeness.datas, function(i, val) {
+
+        periodList.push(val);
+    });
+
+    constructionPeriod.items.typeness.bindData(periodList, "key", "value").prop("-1", false);
+
+    constructionPeriod.items.uTypeness.bindData(periodList, "key", "value");
+
     constructionPeriod.btns.saveBtn.bindClick(saveData);
     constructionPeriod.btns.updateBtn.bindClick(update);
 
@@ -85,7 +101,7 @@ jQuery(function($) {
             var $span = $('<span></span>').addClass('lbl status-lbl');
             var $btnUpdate = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
 
-            var propertyArr = [["工程名称: ", v.name, "blue"], ["类型: ", v.typeness, "red"], ["上面积: ", v.upperArea, "blue"], ["下面积: ", v.lowerArea, "blue"], ["工期: ", v.period, "blue"], ["公司: ", v.company, "blue"], ];
+            var propertyArr = [["工程名称: ", v.name, "blue"], ["类型: ", constant.decoration().decoration.typeness.keys[v.typeness], "red"], ["上面积: ", v.upperArea, "blue"], ["下面积: ", v.lowerArea, "blue"], ["工期: ", v.period, "blue"], ["公司: ", v.company, "blue"], ];
 
             $.each(propertyArr, function(index, value) {
 
@@ -202,4 +218,4 @@ jQuery(function($) {
         constructionPeriod.modals.addModal.modal("hide");
     }
 
-})
+});

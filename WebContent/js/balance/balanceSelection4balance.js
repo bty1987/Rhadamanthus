@@ -16,6 +16,10 @@ jQuery(function($) {
 
     seacher.base("bscondList1", "bspagenation1", "bsresultList1", api.balance.pageBalanceSelectionForBalance);
 
+    seacher.param({
+        "balanceSelection.status": constant.balance().balanceSales.STATUS_ENABLE_CHECK_INT
+    });
+
     seacher.condition(["balance-balanceSelection-balance-no", "balance-balanceSelection-balance-type", "balance-balanceSelection-balance-status", "balance-balanceSelection-brand", "balance-balanceSelection-balance-isPay"]);
 
     seacher.history("balanceSelectionPostData");

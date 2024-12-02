@@ -393,6 +393,7 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setProfit(oalesVO.getProfit());
 		oalesPO.setAward(oalesVO.getAward());
 
+		oalesPO.setStatus(OalesPO.STATUS_CONFIRM_INI);
 		oalesPO.setType(OalesPO.TYPE_REFUND_INT);
 		oalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 

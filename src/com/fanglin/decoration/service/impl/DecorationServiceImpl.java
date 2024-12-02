@@ -41,6 +41,7 @@ import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DecorationMeasureDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.data.po.DecorationMeasureItemPO;
 import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.data.po.QuotationVersionPO;
@@ -76,6 +77,8 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.right.dao.DecorationDesignDepartmentRightDao;
 import com.fanglin.right.dao.DecorationSalesmanDepartmentRightDao;
 import com.fanglin.right.dao.DecorationStatusRightDao;
@@ -104,6 +107,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private QuotationDao quotationDao;
 
 	@Autowired
 	private QuotationVersionDao quotationVersionDao;
@@ -895,7 +901,9 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
 		decorationPO.setResourceType(decorationVO.getResourceType());// 量房0 资源1
 		decorationPO.setOrderTotalPrice(0);
-		decorationPO.setBusitype(decorationVO.getBusitype());
+		DecorationBusitypePO decorationBusitypePO = new DecorationBusitypePO();
+		decorationBusitypePO.setDbid(decorationVO.getBusitype());
+		decorationPO.setBusitype(decorationBusitypePO);
 		decorationPO.setCompany(company);
 		decorationPO.setPaySacle((short) 0);
 		decorationPO.setGrade(decorationVO.getGrade());
@@ -1000,7 +1008,9 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		if (decorationVO.getBusitype() != null) {
-			decorationPO.setBusitype(decorationVO.getBusitype());
+			DecorationBusitypePO decorationBusitypePO = new DecorationBusitypePO();
+			decorationBusitypePO.setDbid(decorationVO.getBusitype());
+			decorationPO.setBusitype(decorationBusitypePO);
 		}
 
 		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(orderId);
@@ -1480,6 +1490,13 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		if (decorationVO.getNotSalesmanRate() != null) {
+
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+			if (quotationPO != null && quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
+				throw new FLException(200033, "报价已锁定");
+			}
+
 			serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, orderId, String.format("装修单: %s, 原非提: %s, 现非提: %s.", orderId, decorationPO.getNotSalesmanRate(), decorationVO.getNotSalesmanRate())));
 
 			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());

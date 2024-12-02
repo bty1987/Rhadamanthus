@@ -1,5 +1,6 @@
 package com.fanglin.sales.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -31,6 +32,10 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
+import com.fanglin.payment.dao.SalesPaymentDao;
+import com.fanglin.payment.dao.SalesReceiptDao;
+import com.fanglin.payment.po.SalesPaymentPO;
+import com.fanglin.payment.po.SalesReceiptPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -68,6 +73,12 @@ public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	private SalesDeliveryItemDao salesDeliveryItemDao;
+
+	@Autowired
+	private SalesPaymentDao salesPaymentDao;
+
+	@Autowired
+	private SalesReceiptDao salesReceiptDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -539,11 +550,52 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260060, "销售项数量不足");
 		}
 
+		if (salesPaymentDao.countSalesPayment(salesPO.getSid(), null) > 0) {
+			throw new FLException(150002, "款项已存在");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+		Timestamp current = DateUtil.getDateToTimestamp(new Date());
+
 		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_CONFIRM_SHORT);
 		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_CONFIRM_SHORT);
-		salesPO.setFullpayTime(DateUtil.getDateToTimestamp(new Date()));
+		salesPO.setFullpayTime(current);
+		salesPO.setFullpay(salesPO.getTotal());
+		salesPO.setPompany(salesPO.getCompany());
 
 		salesBalanceService.preSalesBalance(Arrays.asList(salesPO.getSid()), userId);
+
+		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
+
+		salesReceiptPO.setCollecter(operater);
+		salesReceiptPO.setCollecterName(operater.getUserName());
+		salesReceiptPO.setCollectTime(current);
+		salesReceiptPO.setConfirmer(operater);
+		salesReceiptPO.setConfirmerName(operater.getUserName());
+		salesReceiptPO.setConfirmTime(current);
+		salesReceiptPO.setBankInfo("");
+		salesReceiptPO.setCheckvBank("");
+		salesReceiptPO.setCouponInfo("");
+		salesReceiptPO.setComment("");
+		salesReceiptPO.setRealMoney(salesPO.getTotal());
+
+		salesReceiptDao.save(salesReceiptPO);
+
+		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(operater, salesPO);
+
+		salesPaymentPO.setOrderId(salesPO.getOrderId());
+		salesPaymentPO.setSalesReceipt(salesReceiptPO);
+
+		salesPaymentPO.setType(SalesPaymentPO.TYPE_REPLENISHMENT_INT);
+		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
+		salesPaymentPO.setCategory(salesPO.getCategory());
+		salesPaymentPO.setBrand(salesPO.getBrand());
+		salesPaymentPO.setCreater(operater);
+		salesPaymentPO.setCreateTime(current);
+		salesPaymentPO.setReferMoney(Math.abs(salesPO.getTotal()));
+		salesPaymentPO.setCompany(salesPO.getCompany());
+
+		salesPaymentDao.save(salesPaymentPO);
 
 		return 0;
 	}

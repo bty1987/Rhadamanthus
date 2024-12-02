@@ -17,6 +17,8 @@ import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.material.vo.SoodsVO;
 import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -34,6 +36,8 @@ import com.fanglin.quotation.po.SelectionPO;
 import com.fanglin.quotation.service.SelectionItemService;
 import com.fanglin.quotation.vo.SelectionItemVO;
 import com.fanglin.quotation.vo.SelectionVO;
+import com.fanglin.right.dao.SelectionItemStatusRightDao;
+import com.fanglin.right.po.SelectionItemStatusRightPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -59,6 +63,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	private AddReduceDao addReduceDao;
 
 	@Autowired
+	private QuotationItemDao quotationItemDao;
+
+	@Autowired
 	private BrandDao brandDao;
 
 	@Autowired
@@ -66,6 +73,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private SelectionItemStatusRightDao selectionItemStatusRightDao;
 
 	@Override
 	public void pageSelectionItem(Paging paging, List<Filter> filters, Integer company, SelectionItemVO selectionItemVO) throws FLException {
@@ -191,7 +201,15 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		SelectionItemPO _selectionItemPO = selectionItemDao.querySelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
 
+		List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(brandPO.getBid());
+
 		if (_selectionItemPO == null) {
+
+			QuotationItemPO quotationItemPO = quotationItemDao.get(selectionItemVO.getQiid());
+
+			if (quotationItemPO == null) {
+				throw new FLException(200013, "报价项不存在");
+			}
 
 			SelectionItemPO selectionItemPO = new SelectionItemPO();
 
@@ -201,13 +219,18 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setSuid(suid);
 			selectionItemPO.setSid(selectionVO.getSid());
 			selectionItemPO.setOrderId(selectionPO.getOrderId());
-			selectionItemPO.setNum(selectionItemVO.getInitNum());
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
 			selectionItemPO.setCompany(company);
 			selectionItemPO.setCreater(userDao.queryUserByUserId(userId));
 			selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setSgid(selectionItemVO.getSoods().getSid());
 			selectionItemPO.setQiid(selectionItemVO.getQiid());
+
+			selectionItemPO.setPreprice(quotationItemPO.getUnitPrice());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_INIT_SHORT, userDao.queryUserByUserId(userId));
+			}
 
 			selectionItemDao.save(selectionItemPO);
 
@@ -231,6 +254,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				_selectionItemPO.setSuid(suid);
 				_selectionItemPO.setGoods(goodsPO);
 				_selectionItemPO.setPostprice(selectionItemVO.getPostprice());
+
+				if (rights != null && rights.size() != 0) {
+					checkSelectionItem(_selectionItemPO, rights, SelectionItemPO.STATUS_INIT_SHORT, userDao.queryUserByUserId(userId));
+				}
 			} else if (_selectionItemPO.getGoods().getGid() == goodsPO.getGid()) {
 
 				_selectionItemPO.setPostprice(selectionItemVO.getPostprice());
@@ -310,20 +337,15 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(140035, "增减项状态不可操作");
 			}
 
-			if (selectionItemVO.getNum() == null) {
-				selectionItemVO.setNum(selectionItemPO.getNum());
-			}
-
-			if (selectionItemVO.getNum() != selectionItemPO.getNum()) {
-
-				updateSelectionTotal(selectionItemPO, selectionItemVO.getNum());
-
-				selectionItemPO.setNum(selectionItemVO.getNum());
-			}
-
 			selectionItemPO.setTraner(traner);
 			selectionItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_TRAN_SHORT);
+
+			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_TRAN_SHORT, traner);
+			}
 
 			selectionItemDao.update(selectionItemPO);
 		}
@@ -357,6 +379,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_CHECK_SHORT);
 
+			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_CHECK_SHORT, checker);
+			}
+
 			selectionItemDao.update(selectionItemPO);
 		}
 
@@ -384,6 +412,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setConfirmer(confirmer);
 			selectionItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_CONFIRM_SHORT);
+
+			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_CONFIRM_SHORT, confirmer);
+			}
 
 			selectionItemDao.update(selectionItemPO);
 		}
@@ -413,6 +447,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
 
+			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_FINISH_SHORT, finish);
+			}
+
 			selectionItemDao.update(selectionItemPO);
 		}
 
@@ -441,6 +481,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setReviewTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_REVIEW_SHORT);
 
+			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_REVIEW_SHORT, reviewer);
+			}
+
 			selectionItemDao.update(selectionItemPO);
 		}
 
@@ -468,6 +514,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setBalancer(balancer);
 			selectionItemPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
+
+			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_BALANCE_SHORT, balancer);
+			}
 
 			selectionItemDao.update(selectionItemPO);
 		}
@@ -564,7 +616,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200038, "选材项不存在");
 		}
 
-		if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT).contains(selectionItemPO.getStatus())) {
+		if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT).contains(selectionItemPO.getStatus())) {
 			throw new FLException(200039, "选材项状态不可操作");
 		}
 
@@ -624,6 +676,81 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionPO.setTotal(Arith.sub(addTotal, subTotal));
 
 		selectionDao.update(selectionPO);
+	}
+
+	private void checkSelectionItem(SelectionItemPO selectionItemPO, List<SelectionItemStatusRightPO> rights, Short status, UserPO userPO) {
+
+		List<Short> statuses = new ArrayList<Short>();
+
+		for (SelectionItemStatusRightPO selectionItemStatusRightPO : rights) {
+			statuses.add(selectionItemStatusRightPO.getStatus());
+		}
+
+		if (!statuses.contains(status)) return;
+
+		switch (status) {
+			case SelectionItemPO.STATUS_INIT_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
+				selectionItemPO.setCreater(userPO);
+				selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_TRAN_SHORT, userPO);
+
+				break;
+			case SelectionItemPO.STATUS_TRAN_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_TRAN_SHORT);
+				selectionItemPO.setTraner(userPO);
+				selectionItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_CHECK_SHORT, userPO);
+
+				break;
+			case SelectionItemPO.STATUS_CHECK_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_CHECK_SHORT);
+				selectionItemPO.setChecker(userPO);
+				selectionItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_CONFIRM_SHORT, userPO);
+
+				break;
+			case SelectionItemPO.STATUS_CONFIRM_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_CONFIRM_SHORT);
+				selectionItemPO.setConfirmer(userPO);
+				selectionItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_FINISH_SHORT, userPO);
+
+				break;
+			case SelectionItemPO.STATUS_FINISH_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
+				selectionItemPO.setFinish(userPO);
+				selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_REVIEW_SHORT, userPO);
+
+				break;
+			case SelectionItemPO.STATUS_REVIEW_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_REVIEW_SHORT);
+				selectionItemPO.setReviewer(userPO);
+				selectionItemPO.setReviewTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_BALANCE_SHORT, userPO);
+
+				break;
+			case SelectionItemPO.STATUS_BALANCE_SHORT:
+
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
+				selectionItemPO.setBalancer(userPO);
+				selectionItemPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+
+				break;
+		}
 	}
 
 }

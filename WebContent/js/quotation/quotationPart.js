@@ -361,7 +361,7 @@ var QuotationDetail = (function() {
             var advancelPrefer = quo.preferParams["quotationPrefer.advancePrefer"];
 
             if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) {
-                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate));
+                _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), preferPrice), managePrefer), advancelPrefer), _taxRate));
                 _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
             }
 
@@ -622,7 +622,7 @@ var QuotationDetail = (function() {
                 var advancelPrefer = quo.preferParams["quotationPrefer.advancePrefer"];
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dtaxRate));
+                    _dtaxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), preferPrice), managePrefer), advancelPrefer), _dtaxRate));
                 }
 
                 if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
@@ -1344,6 +1344,14 @@ var QuotationDetail = (function() {
                     return false;
                 }
 
+                var preferPrice = com.focusPage('#prefer').val();
+                var managePrefer = com.focusPage('#manage').val();
+                var advancePrefer = com.focusPage('#advance').val();
+
+                var oldPreferPrice = quo.preferParams["quotationPrefer.preferPrice"];
+                var oldManagePrice = quo.preferParams["quotationPrefer.managePrefer"];
+                var oldAdvancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
+
                 if (quo.basicParams["quotation.managePrice"] < managePrefer) {
 
                     com.showAlert(com.warning, "管理优惠不能大于管理费");
@@ -1351,24 +1359,15 @@ var QuotationDetail = (function() {
                     return false;
                 }
 
-
-                var oldPreferPrice = quo.preferParams["quotationPrefer.preferPrice"];
-                var oldManagePrice = quo.preferParams["quotationPrefer.managePrefer"];
-                var oldAdvancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
-                
-                var preferPrice = com.focusPage('#prefer').val();
-                var managePrefer = com.focusPage('#manage').val();
-                var advancePrefer = com.focusPage('#advance').val();
-                
                 quo.preferParams["quotationPrefer.preferPrice"] = preferPrice;
                 quo.preferParams["quotationPrefer.managePrefer"] = managePrefer;
                 quo.preferParams["quotationPrefer.advancePrefer"] = advancePrefer;
-                
+
                 quo.calculateQuoFees();
-                
+
                 var params = {
                     "quotation.qid": quo.quotationid,
-                    "quotation.totalPrice":  quo.basicParams["quotation.totalPrice"],
+                    "quotation.totalPrice": quo.basicParams["quotation.totalPrice"],
                     "quotation.taxPrice": quo.basicParams["quotation.taxPrice"],
                     "quotationPrefer.orderId": quo.orderid,
                     "quotationPrefer.qid": quo.quotationid,
@@ -1381,13 +1380,15 @@ var QuotationDetail = (function() {
 
                     quo.quoModals.$domainPreferModal.modal("hide");
                 }, function(res){
-                    
-                    quo.preferParams["quotationPrefer.preferPrice"] = preferPrice;
-                    quo.preferParams["quotationPrefer.managePrefer"] = managePrefer;
-                    quo.preferParams["quotationPrefer.advancePrefer"] = advancePrefer;
-                    
+
+                    com.showAlert(com.error, res.errorMsg);
+
+                    quo.preferParams["quotationPrefer.preferPrice"] = oldPreferPrice;
+                    quo.preferParams["quotationPrefer.managePrefer"] = oldManagePrice;
+                    quo.preferParams["quotationPrefer.advancePrefer"] = oldAdvancePrefer;
+
                     quo.calculateQuoFees();
-                    
+
                     quo.quoModals.$domainPreferModal.modal("hide");
                 });
             });
@@ -2187,6 +2188,10 @@ var QuotationDetail = (function() {
                 "data-action": "collapse"
             });
 
+            if($btns["$btnSet"]){
+                $btns["$btnSet"].hide();
+            }
+
             var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "数量"], ["name", "名称"], ["type", "类型"], ["unit", "单位"], ["worktype", "工种"], ["cell price unitprice", "价格"], ["cell price discountprice", "价格"], ["cell price totalprice-discount", "价格"], ["btns", "功能", {
                 "width": "100px"
             }]];
@@ -2922,7 +2927,7 @@ var QuotationDetail = (function() {
                     var advancePrefer = quo.preferParams["quotationPrefer.advancePrefer"];
 
                     if (_taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate));
+                        _taxfee = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), preferPrice), managePrefer), advancePrefer), _taxRate));
                         _dtaxfee = utils.changeThrDecimal(utils.accMul(_taxfee, _manageDiscount));
                     }
 

@@ -62,6 +62,8 @@ public class SalesPaymentPO implements Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
+	public static final String COLUMN_SALES_TYPE_STR = "sales.type";
+
 	public static final short ADVANCETYPE_CONTRACT_INT = 1;
 
 	public static final short ADVANCETYPE_ENGINEERING_INT = 2;

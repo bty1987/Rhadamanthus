@@ -189,9 +189,9 @@ jQuery(function($) {
         quotationUtils.quotationDetail.addReduces = res.addReduces;
     }, null, false);
 
-    quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.orderType, false, params.showType);
+    var quotationPrefer = null;
 
-    console.log(quotationUtils.quotationDetail.quotationFunctionAreaItemCs);
+    quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, quotationPrefer, params.orderType, false, params.showType);
 
     contractEdit.table = {
         "insertWay": 1,

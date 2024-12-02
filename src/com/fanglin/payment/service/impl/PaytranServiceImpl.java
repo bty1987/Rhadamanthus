@@ -294,19 +294,51 @@ public class PaytranServiceImpl implements PaytranService {
 			return;
 		}
 
-		String path = "";
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paytranPO.getOrderId());
+
+		String grade = decorationPO.getGrade();
+
+		String atttypeAndGradePath = "PAYMENT_PLATFORM_%s_PATH_%s_%s_STR";
+		String gradePath = "PAYMENT_PLATFORM_%s_PATH_%s_STR";
+		String wxpayPath = "PAYMENT_PLATFORM_%s_PATH_STR";
+		String commonPath = "PAYMENT_PLATFORM_PATH_STR";
 
 		if (paytranPO.getWay() == PaytranPO.WAY_ACQUIRE_SHORT) {
-			path = "PAYMENT_PLATFORM_POSPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "POSPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "POSPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "POSPAY");
+
 		} else if (paytranPO.getWay() == PaytranPO.WAY_WXPAY_SHORT) {
-			path = "PAYMENT_PLATFORM_WXPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "WXPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "WXPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "WXPAY");
+
 		} else if (paytranPO.getWay() == PaytranPO.WAY_ALIPAY_SHORT) {
-			path = "PAYMENT_PLATFORM_WXPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "WXPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "WXPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "WXPAY");
+
 		} else if (paytranPO.getWay() == PaytranPO.WAY_CODEPAY_SHORT) {
-			path = "PAYMENT_PLATFORM_POSPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "POSPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "POSPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "POSPAY");
+
 		}
 
-		SystemConfigPO airpos = systemConfigDao.querySystemConfig(path, company);
+		List<String> paths = Arrays.asList(atttypeAndGradePath, gradePath, wxpayPath, commonPath);
+
+		SystemConfigPO airpos = null;
+
+		for (String path : paths) {
+
+			airpos = systemConfigDao.querySystemConfig(path, company);
+
+			if (airpos != null) break;
+		}
 
 		if (airpos == null || "".equals(airpos.getValue())) {
 			throw new FLException(150071, "不支持其他支付平台");
@@ -373,17 +405,51 @@ public class PaytranServiceImpl implements PaytranService {
 			throw new FLException(150047, "转换款支付不可操作");
 		}
 
-		String path = "";
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paytranPO.getOrderId());
+
+		String grade = decorationPO.getGrade();
+
+		String atttypeAndGradePath = "PAYMENT_PLATFORM_%s_PATH_%s_%s_STR";
+		String gradePath = "PAYMENT_PLATFORM_%s_PATH_%s_STR";
+		String wxpayPath = "PAYMENT_PLATFORM_%s_PATH_STR";
+		String commonPath = "PAYMENT_PLATFORM_PATH_STR";
 
 		if (paytranPO.getWay() == PaytranPO.WAY_ACQUIRE_SHORT) {
-			path = "PAYMENT_PLATFORM_POSPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "POSPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "POSPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "POSPAY");
+
 		} else if (paytranPO.getWay() == PaytranPO.WAY_WXPAY_SHORT) {
-			path = "PAYMENT_PLATFORM_WXPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "WXPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "WXPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "WXPAY");
+
 		} else if (paytranPO.getWay() == PaytranPO.WAY_ALIPAY_SHORT) {
-			path = "PAYMENT_PLATFORM_WXPAY_PATH_STR";
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "WXPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "WXPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "WXPAY");
+
+		} else if (paytranPO.getWay() == PaytranPO.WAY_CODEPAY_SHORT) {
+
+			atttypeAndGradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_%s_STR", "POSPAY", paytranPO.getAtttype(), grade);
+			gradePath = String.format("PAYMENT_PLATFORM_%s_PATH_%s_STR", "POSPAY", grade);
+			wxpayPath = String.format("PAYMENT_PLATFORM_%s_PATH_STR", "POSPAY");
+
 		}
 
-		SystemConfigPO airpos = systemConfigDao.querySystemConfig(path, company);
+		List<String> paths = Arrays.asList(atttypeAndGradePath, gradePath, wxpayPath, commonPath);
+
+		SystemConfigPO airpos = null;
+
+		for (String path : paths) {
+
+			airpos = systemConfigDao.querySystemConfig(path, company);
+
+			if (airpos != null) break;
+		}
 
 		if (airpos == null || "".equals(airpos.getValue())) {
 			throw new FLException(150071, "不支持其他支付平台");

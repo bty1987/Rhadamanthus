@@ -1603,5 +1603,14 @@ Condition.addupRule("data", {
             keyPath: "key",
             valuePath: "value"
         }
-    }
+    },
+    "constructionPeriod-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
 });

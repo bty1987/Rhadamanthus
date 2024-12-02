@@ -62,6 +62,8 @@ public class ProtationVO implements Serializable {
 
 	private String manageFormula;
 
+	private Integer manageDiscount;
+
 	private Long managePrice;
 
 	private Integer taxRate;
@@ -313,6 +315,14 @@ public class ProtationVO implements Serializable {
 
 	public void setManageFormula(String manageFormula) {
 		this.manageFormula = manageFormula;
+	}
+
+	public Integer getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Integer manageDiscount) {
+		this.manageDiscount = manageDiscount;
 	}
 
 	public Long getManagePrice() {

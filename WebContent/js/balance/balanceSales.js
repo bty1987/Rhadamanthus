@@ -29,7 +29,7 @@ jQuery(function($) {
 
     seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSales);
 
-    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+    seacher.condition(["balance-balanceSelse-balance-no", "balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
 
     seacher.button([{
         id: "createBalanceSales",
@@ -41,6 +41,15 @@ jQuery(function($) {
     seacher.history("balanceSalesPostData");
 
     var lineprops = [{
+        fieId: "balance.no",
+        name: "结算单号",
+        prop: "balance.no",
+        clazz: "blue",
+        show: function(v) {
+
+            return (v.balance.no != "0000000000");
+        }
+    }, {
         fieId: "brand.name",
         name: "品牌名",
         prop: "brand.name",

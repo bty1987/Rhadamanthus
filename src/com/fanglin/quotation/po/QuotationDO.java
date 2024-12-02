@@ -43,6 +43,8 @@ public class QuotationDO implements Serializable {
 
 	private Timestamp updateTime;
 
+	private Timestamp lockTime;
+
 	private UserPO creater;
 
 	private QuotationVersionPO version;
@@ -150,6 +152,15 @@ public class QuotationDO implements Serializable {
 
 	public void setUpdateTime(Timestamp updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	@Column(name = "lockTime")
+	public Timestamp getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Timestamp lockTime) {
+		this.lockTime = lockTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

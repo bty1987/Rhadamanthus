@@ -7,7 +7,11 @@ $.extend(api.index, {
     },
     createProcessIndex: {
         url: "views/approval/process2create.html"
+    },
+    approvalCustomerSharedIndex: {
+        url: "views/approval/approvalCustomerShared.html"
     }
+
 });
 
 $.extend(api, {
@@ -27,10 +31,6 @@ $.extend(api, {
         },
         pageApprovalForReceiveDept: {
             url: "pageApprovalForReceiveDept.do",
-            demo: true
-        },
-        pageApprover: {
-            url: "pageApprover.do",
             demo: true
         },
         queryApprovalByAId: {
@@ -61,9 +61,7 @@ $.extend(api, {
                 args: ["unitPrice", "purchasePrice", "salePrice", "price", "discount", "postDiscount", "num", "total", "prePoint", "postPoint", "rawPoint"]
             }]
         },
-        queryApproverByType: {
-            url: "queryApproverByType.do"
-        },
+        
         queryApprovalDecorationActivity: {
             url: "queryApprovalDecorationActivity.do",
             type: "query",
@@ -171,17 +169,45 @@ $.extend(api, {
         submitApprovalForCustomerOrigin: {
             url: "submitApprovalForCustomerOrigin.do"
         },
+        pageApprovalCustomerOrigin: {
+            url: "pageApprovalCustomerOrigin.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-source",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
 
         submitApprovalForCustomerChance: {
             url: "submitApprovalForCustomerChance.do"
         },
 
+        pageApprovalCustomerSource: {
+            url: "pageApprovalCustomerSource.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-source",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
         submitApprovalForCustomerSource: {
             url: "submitApprovalForCustomerSource.do",
             type: "update",
             tranargs: {
                 args: ["approvalCustomerSource.rate"]
             }
+        },
+        
+        pageApprovalCustomerOriginTDecoration: {
+            url: "pageApprovalCustomerOriginTDecoration.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-source",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
         },
 
         submitApprovalForDecorationTerminal: {
@@ -201,12 +227,6 @@ $.extend(api, {
         refuseApproval: {
             url: "refuseApproval.do"
         },
-        deleteApprover: {
-            url: "deleteApprover.do"
-        },
-        addApprover: {
-            url: "addApprover.do"
-        },
         submitApprovalForSalesDayment: {
             url: "submitApprovalForSalesDayment.do"
         },
@@ -215,6 +235,20 @@ $.extend(api, {
         },
         refuseForSalesDayment: {
             url: "refuseForSalesDayment.do"
+        },
+        
+        pageApprover: {
+            url: "pageApprover.do",
+            demo: true
+        },
+        queryApproverByType: {
+            url: "queryApproverByType.do"
+        },
+        deleteApprover: {
+            url: "deleteApprover.do"
+        },
+        addApprover: {
+            url: "addApprover.do"
         },
 
         pageProcess: {
@@ -250,6 +284,10 @@ $.extend(api, {
 
         queryProcessRefer: {
             url: "queryProcessRefer.do"
+        },
+        queryApprovalFunction: {
+            url: "queryApprovalFunction.do"
         }
+        
     }
 });

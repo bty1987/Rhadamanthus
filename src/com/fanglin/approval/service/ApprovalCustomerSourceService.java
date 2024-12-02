@@ -11,12 +11,18 @@
 
 package com.fanglin.approval.service;
 
+import java.util.List;
+
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.vo.ApprovalCustomerSourceVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Paging;
 
 public interface ApprovalCustomerSourceService {
+
+	public void pageApprovalCustomerSource(Paging paging, List<Filter> filters,int company) throws FLException;
 
 	public ApprovalCustomerSourceVO queryApprovalCustomerSource(ApprovalVO approvalVO) throws FLException;
 

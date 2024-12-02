@@ -32,6 +32,22 @@ public class SalesDeliveryStatusRightPO {
 
 	private int company;
 
+	public SalesDeliveryStatusRightPO() {
+		super();
+	}
+
+	public SalesDeliveryStatusRightPO(long bid) {
+		super();
+		this.bid = bid;
+	}
+
+	public SalesDeliveryStatusRightPO(String name, long bid, short status) {
+		super();
+		this.name = name;
+		this.bid = bid;
+		this.status = status;
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "sdsrid")

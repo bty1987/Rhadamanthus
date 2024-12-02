@@ -36,15 +36,9 @@ public class SalesPO implements Serializable {
 
 	public static final short STATUS_END_SHORT = 5;
 
-	public static final short TYPE_DEPOSIT_SHORT = 2;
+	public static final short TYPE_INIT_INT = 0;
 
-	public static final short TYPE_FULLAMOUNT_SHORT = 3;
-
-	public static final short TYPE_REFUNDFULL_SHORT = 5;
-
-	public static final short TYPE_REFUNDCOUPON_SHORT = 6;
-
-	public static final short TYPE_REFUNDDEPOSIT_SHORT = 7;
+	public static final short TYPE_PROFIT_INT = 1;
 
 	public static final short BALANCESTATUS_INIT_SHORT = 0;
 
@@ -131,8 +125,6 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_IUID_STR = "instorer.uid";
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-
-	public static final short BRAND_STATUS_INT = 0;
 
 	private long sid;
 
