@@ -1,6 +1,7 @@
 package com.fanglin.customer.dao.impl;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
@@ -46,13 +47,17 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	}
 
 	@Override
-	public CustomerUserRulePO pullCustomerUserRule(int company, int area) {
+	public CustomerUserRulePO pullCustomerUserRule(int company, int area, List<Integer> uids) {
 
-		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' order by cur.surplus desc limit 1";
+		if (uids == null) uids = new ArrayList<Integer>();
+
+		uids.add(0);
+
+		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRulePO.class);
 
-		query.setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area);
+		query.setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).setParameterList("uids", uids);
 
 		return (CustomerUserRulePO) query.uniqueResult();
 	}

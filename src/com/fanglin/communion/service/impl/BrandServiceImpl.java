@@ -207,6 +207,8 @@ public class BrandServiceImpl implements BrandService {
 
 		brandDao.save(brandPO);
 
+		brandVO.setNo(brandNo.toString());
+
 		return 0;
 	}
 

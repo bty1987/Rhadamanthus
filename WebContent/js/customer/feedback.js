@@ -48,7 +48,7 @@ $(function() {
             var propertyArr = [["装修单号:", v.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.orderId);
-            }], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ["接收人: ", v.receiver.userName, "grey"], ["接收时间: ", v.receiveTime, "grey"], ["完成人", v.finisher.userName, "grey"], ["完成时间: ", v.finishTime, "grey"]];
+            }], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ["接收人: ", v.receiver.userName, "grey"], ["接收时间: ", v.receiveTime, "grey"],["处理人: ", v.handler.userName, "grey"], ["处理时间: ", v.handleTime, "grey"], ["完成人", v.finisher.userName, "grey"], ["完成时间: ", v.finishTime, "grey"], ["状态: ", constant.customer().feedback.feedbackStatus.keys[v.status], "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -111,7 +111,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company'], "condList", api.customer.pageFeedback, function(res) {
+    searcher.init(['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "condList", api.customer.pageFeedback, function(res) {
 
         displayFunc.init("resultList", res);
     }, "pagenation");

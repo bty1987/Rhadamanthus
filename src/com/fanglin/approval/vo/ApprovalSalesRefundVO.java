@@ -1,5 +1,9 @@
 package com.fanglin.approval.vo;
 
+
+
+import com.fanglin.sales.vo.SalesVO;
+
 public class ApprovalSalesRefundVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4375086454094267620L;
@@ -7,9 +11,13 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 	private Long asrid;
 
 	private Long aid;
+	
+	private ApprovalVO approval;
 
 	private Long sid;
 
+	private SalesVO sales;
+	
 	private Long refund;
 
 	private Long refundTotal;
@@ -64,4 +72,23 @@ public class ApprovalSalesRefundVO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	public ApprovalVO getApproval() {
+		return approval;
+	}
+
+	public void setApproval(ApprovalVO approval) {
+		this.approval = approval;
+	}
+
+	public SalesVO getSales() {
+		return sales;
+	}
+
+	public void setSales(SalesVO sales) {
+		this.sales = sales;
+	}
+
+
+
+	
 }

@@ -48,6 +48,13 @@
 						</div>
 
 						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="discountt">二级折扣</label>
+							<div class="col-sm-9">
+								<input type="text" id="discountt" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="manageRate">管理费比例</label>
 							<div class="col-sm-9">
 								<input type="text" id="manageRate" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
@@ -81,8 +88,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="manageDiscount">管理费折扣</label>
                             <div class="col-sm-9">
-                                <input type="checkbox" id="manageDiscount" class="ace"/>
-                                <span class="lbl discount-lbl"></span>
+                                <input type="text" id="manageDiscount" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="manageDiscountt">二级管理费折扣</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="manageDiscountt" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
                             </div>
                         </div>
 
@@ -105,7 +118,7 @@
                             <div class="col-sm-9">
                                 <ul class="list-unstyled col-xs-10 col-sm-10">
                                     <li class="text-warning orange">
-                                        <span>支持参数包括: 起报价 , 优惠额 , 功能区 , 个性 , 减项 , 赋能, 管理费, 特殊优惠, 管理优惠</span>
+                                        <span>支持参数包括: 起报价 , 优惠额 , 功能区 , 个性 , 减项 , 赋能 , 管理费 , 特殊优惠 , 管理优惠</span>
                                     </li>
                                     <li class="text-warning orange">
                                         <span>支持运算符号包括: + , - , * , / , ( , )</span>

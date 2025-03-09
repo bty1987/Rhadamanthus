@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.material.dao.AoodsDao;
+import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.dao.NoodsDao;
 import com.fanglin.data.material.service.AoodsService;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
@@ -26,10 +29,13 @@ import com.fanglin.data.po.NoodsPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.OrganizationDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.OrganizationPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.PinYin4Util;
 
 @Service("aoodsService")
 @Transactional(readOnly = true)
@@ -47,6 +53,15 @@ public class AoodsServiceImpl implements AoodsService {
 	@Autowired
 	private NoodsDao noodsDao;
 
+	@Autowired
+	private GoodsDao goodsDao;
+
+	@Autowired
+	private BrandDao brandDao;
+
+	@Autowired
+	private OrganizationDao organizationDao;
+
 	@Override
 	public void pageAoods(Paging paging, List<Filter> filters, int company, String companyType) throws FLException {
 
@@ -58,7 +73,7 @@ public class AoodsServiceImpl implements AoodsService {
 			AoodsVO aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO());
 
 			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
-			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
+			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
 			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
@@ -93,7 +108,7 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsVO.setGid(aoodsPO.getGoods().getGid());
 			aoodsVO.setName(aoodsPO.getGoods().getName());
 
-			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
+			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
 			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
@@ -121,7 +136,7 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsVO.setGid(aoodsPO.getGoods().getGid());
 			aoodsVO.setName(aoodsPO.getGoods().getName());
 
-			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
+			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
 			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
@@ -147,7 +162,7 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsVO.setGid(aoodsPO.getGoods().getGid());
 			aoodsVO.setName(aoodsPO.getGoods().getName());
 
-			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
+			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
 			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
@@ -286,6 +301,57 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setNoods(noodsPO);
 
 		aoodsDao.update(aoodsPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateKaoods(AoodsVO aoodsVO, GoodsVO goodsVO) throws FLException {
+
+		OrganizationPO organizationPO = organizationDao.queryOrganization(aoodsVO.getBompany());
+
+		if (organizationPO == null) {
+			throw new FLException(230026, "组织不存在");
+		}
+
+		int cid = organizationPO.getCompany();
+
+		BrandPO brandPO = brandDao.queryBrand(goodsVO.getBrand());
+
+		if (brandPO == null) {
+			throw new FLException(130077, "品牌不存在");
+		}
+
+		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
+
+		GoodsPO goodsPO = goodsDao.queryGoodsByNo(goodsVO.getNo(), cid);
+
+		if (goodsPO == null) goodsPO = new GoodsPO();
+
+		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+
+		goodsPO.setAlias(goodsVO.getName());
+		goodsPO.setPinyin((String) pinyins.get(0));
+		goodsPO.setCompany(cid);
+		goodsPO.setBrand(brandPO.getName());
+		goodsPO.setBid(brandPO.getBid());
+		goodsPO.setCategory(brandPO.getCategory().getName());
+		goodsPO.setBarcode("");
+
+		goodsDao.saveOrUpdate(goodsPO);
+
+		AoodsPO aoodsPO = aoodsDao.queryAoods(goodsPO.getGid(), cid); // gid+bompany
+
+		if (aoodsPO == null) aoodsPO = new AoodsPO();
+
+		aoodsPO.setName(goodsVO.getName());
+		aoodsPO.setGoods(goodsPO);
+		aoodsPO.setStatus(goodsVO.getStatus());
+		aoodsPO.setCompany(cid);
+		aoodsPO.setBompany(cid);
+
+		aoodsDao.saveOrUpdate(aoodsPO);
 
 		return 0;
 	}

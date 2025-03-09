@@ -90,8 +90,8 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
-			BeanUtil.copyProperties(accessoriesPO.getHouse(), accessoriesVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyPropertie(accessoriesPO.getHouse().getVillage(), accessoriesVO.getHouse().getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
+
+			accessoriesPO.getHouse().ptv(accessoriesVO.getHouse());
 
 			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
 			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
@@ -112,9 +112,10 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
 
 			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
 			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
-			BeanUtil.copyProperties(accessoriesPO.getHouse(), accessoriesVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyPropertie(accessoriesPO.getHouse().getVillage(), accessoriesVO.getHouse().getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
+
+			accessoriesPO.getHouse().ptv(accessoriesVO.getHouse());
 
 			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
 			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
@@ -124,6 +125,25 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		}
 
 		return accessoriesVOs;
+	}
+
+	@Override
+	public AccessoriesVO queryAccessoriesByAid(AccessoriesVO accessories) {
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessories.getAid());
+
+		AccessoriesVO accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+
+		BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "supervisor", "creater", "approver", "deliver"));
+
+		accessoriesPO.getHouse().ptv(accessoriesVO.getHouse());
+
+		accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
+		accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
+		accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
+
+		return accessoriesVO;
+
 	}
 
 	@Override

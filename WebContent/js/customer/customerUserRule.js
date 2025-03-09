@@ -347,7 +347,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 1 || v.status == 2 || v.status == 3;
+            return (v.status == 1 || v.status == 2 || v.status == 3) && customerUserRule.depage == null;
         }
     }, {
         name: "停止接单",

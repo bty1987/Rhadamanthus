@@ -176,6 +176,11 @@
   ], "constantStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
+  ], "attnode": [
+    {"key" : "0", "value" : "创建"},
+    {"key" : "1", "value" : "预签"},
+    {"key" : "2", "value" : "签单"},
+    {"key" : "3", "value" : "付款"}
   ], 
   "errorCode": 0,
   "errorMsg": ""

@@ -102,15 +102,12 @@ public class BuildingRecordServiceImpl implements BuildingRecordService {
 
 		BeanUtil.copyProperties(buildingRecordPO, buildingRecordVO, Arrays.asList("buildingHouse", "buildingCustomer", "operater"));
 
-		// hosueSourse
 		BuildingHousePO buildingHousePO = buildingRecordPO.getBuildingHouse();
 		if (buildingHousePO != null) {
 			BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-			BeanUtil.copyProperties(buildingHousePO.getHouse(), buildingHouseVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(buildingHousePO.getHouse().getVillage(), buildingHouseVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+			if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
 		}
 
-		// buildingCustomer
 		BuildingCustomerPO buildingCustomerPO = buildingRecordPO.getBuildingCustomer();
 		if (buildingCustomerPO != null) {
 			BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
@@ -123,5 +120,4 @@ public class BuildingRecordServiceImpl implements BuildingRecordService {
 		return buildingRecordVO;
 
 	}
-
 }

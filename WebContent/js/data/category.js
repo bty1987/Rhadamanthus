@@ -42,9 +42,9 @@ jQuery(function($) {
     //
     //     category.categoryItems.type.bindData(res.categoryType, "key", "value");
     // });
-    category.categoryItems.type.bindData(constant.data.category.type.datas, 'key', 'value')
+    category.categoryItems.type.bindData(constant.data.category.type.datas, 'key', 'value');
     category.categoryItems.isCoupon.bindData(constant.data.category.isCoupon.datas, 'key', 'value');
-    category.categoryItems.isCount.bindData(constant.data.category.isCount.datas, 'key', 'value')
+    category.categoryItems.isCount.bindData(constant.data.category.isCount.datas, 'key', 'value');
 
     $.extend(com.validator, category.validator);
 
@@ -179,6 +179,18 @@ jQuery(function($) {
         com.post(url, options, function(res) {
 
             searcher.doSearch();
+
+            var no = res.category.no;
+
+            if(editFlg) no = category.categoryItems.no.val();
+
+            var categoryData = {
+                "no": no,
+                "name": category.categoryItems.categoryName.val(),
+                "companyName": "方林集团"
+            };
+
+            kingdeeUtils.categoryToKingdee(categoryData);
         });
 
         category.modal.modal("hide");

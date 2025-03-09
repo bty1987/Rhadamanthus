@@ -31,12 +31,18 @@
             preferPrice: com.focusPage('#preferPrice', "#quotationPreferModal"),
             managePrefer: com.focusPage('#managePrefer', "#quotationPreferModal"),
             advancePrefer: com.focusPage('#advancePrefer', "#quotationPreferModal"),
+            produceShow: com.focusPage('#produceShow', "#quotationPreferModal"),
+            produce: com.focusPage('#produce', "#quotationPreferModal"),
+
+            changeReason: com.focusPage("#changeReason", "#approveModal"),
+            approveManSel: com.focusPage("#approveManSel", "#approveModal"),
         },
 
         modals: {
             quotationModal: com.focusPage("#quotationModal"),
             replicaQuotationModal: com.focusPage("#replicaQuotationModal"),
-            quotationPreferModal: com.focusPage("#quotationPreferModal")
+            quotationPreferModal: com.focusPage("#quotationPreferModal"),
+            approveModal: com.focusPage('#approveModal'),
         },
 
         orderId: params.quotation.orderId,
@@ -55,6 +61,7 @@
         }, ],
 
         pageConfig: null,
+        presignProduces: null,
 
         datasets: {
             "quotationLimit": 3,
@@ -74,6 +81,39 @@
             quotation.items.quotations.bindData(res.quotations, 'qid', 'name');
         });
     });
+
+    com.post(api.quotation.queryPresignProduce, {}, function(res) {
+
+        quotation.presignProduces = res.presignProduces;
+
+        com.focusPage('#produce').bindData(res.presignProduces, "ppid", "name");
+    }, null, false);
+
+    com.post(api.approval.queryApproverByType, {
+        "approver.type": 22
+    }, function(res) {
+
+        $.each(res.approvers, function(i, v) {
+
+            var comment = v.comment == null ? "" : v.comment;
+
+            var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(quotation.items.approveManSel);
+            var $approvaler = $('<label></label>').appendTo($div);
+
+            var $input = $('<input>').attr({
+                "type": "radio",
+                "name": "form-field-radio",
+                "class": "ace",
+                "uid": v.userBase.uid,
+                "userId": v.userBase.userId
+            }).appendTo($approvaler);
+
+            var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
+            var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
+
+            var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
+        });
+    }, null, false);
 
     com.focusPage('#btnBack').on('click', function() {
 
@@ -521,20 +561,47 @@
             clazz: "btn-info",
             handle: function(v) {
 
+                var managePrice = 0, quotationPrefer = null;
+
                 com.post(api.quotation.queryQuotationPrefer, {
                     "quotationPrefer.qid": v.qid
                 }, function(res) {
 
-                    var quotationPrefer = res.quotationPrefer;
+                    quotationPrefer = res.quotationPrefer;
 
+                    quotation.items.produce.val(quotationPrefer.ppid ? quotationPrefer.ppid : 0);
                     quotation.items.preferPrice.val(quotationPrefer.preferPrice ? quotationPrefer.preferPrice : 0);
                     quotation.items.managePrefer.val(quotationPrefer.managePrefer ? quotationPrefer.managePrefer : 0);
                     quotation.items.advancePrefer.val(quotationPrefer.advancePrefer ? quotationPrefer.advancePrefer : 0);
 
-                    quotation.modals.quotationPreferModal.modal("show");
-                });
+                    if (quotationPrefer.discount && quotationPrefer.discount == 10) {
+                        com.focusPage('#preferPrice').attr("disabled", "disabled");
+                    } else {
+                    	com.focusPage('#preferPrice').removeAttr("disabled");
+                    }
 
-                updateQuotationPrefer(v);
+                    if (quotationPrefer.manageDiscount && quotationPrefer.manageDiscount == 10) {
+                        com.focusPage('#managePrefer').attr("disabled", "disabled");
+                    } else {
+                    	com.focusPage('#managePrefer').removeAttr("disabled");
+                    }
+
+                    quotation.items.produceShow.hide();
+
+                    quotation.modals.quotationPreferModal.modal("show");
+                }, null, false);
+
+                com.post(api.quotation.queryExtensionByOrderId, {
+                    "extension.orderId": v.decoration.orderId
+                }, function(res) {
+                    $.each(res.extensions, function(i, v) {
+
+                        managePrice = utils.accAdd(managePrice, v.type == constant.quotation().extension.TYPE_ADD_INT ? v.managePrice : -v.managePrice);
+                    });
+
+                }, null, false);
+
+                updateQuotationPrefer(v, quotationPrefer, managePrice);
             }
         };
 
@@ -989,7 +1056,7 @@
         quotation.modals.replicaQuotationModal.modal("show");
     });
 
-    function updateQuotationPrefer(v){
+    function updateQuotationPrefer(v, quotationPrefer, extensionManagePrice){
 
         com.focusPage('#savePreferBtn').click(function() {
 
@@ -1000,10 +1067,51 @@
             var preferPrice = quotation.items.preferPrice.val();
             var managePrefer = quotation.items.managePrefer.val();
             var advancePrefer = quotation.items.advancePrefer.val();
+            var preferDiscount = quotationPrefer.discount != null ? quotationPrefer.discount : 0;
+            var preferManageDiscount = quotationPrefer.manageDiscount != null ? quotationPrefer.manageDiscount : 0;
+            var quotePrice = quotationPrefer.quotePrice != null ? quotationPrefer.quotePrice : 0;
 
-            if (v.managePrice < managePrefer) {
+            var _discount = 0, _discountValue = 0;
+            var _managePrice = utils.changeThrDecimal(utils.accAdd(v.managePrice, extensionManagePrice));
+            var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
+            var _totalPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(v.undisPrice, v.disPrice), quotePrice), v.trafficPrice));
+
+            if (v.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
+                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(quotePrice, preferPrice), quotePrice));
+                _discountValue = preferDiscount;
+            } else {
+                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_totalPrice, preferPrice), _totalPrice));
+                _discountValue = v.discount;
+            }
+
+            _discount = _discount < 0 ? 0 : _discount > 1 ? 1 : _discount;
+
+            var protation = null;
+
+            com.post(api.quotation.queryProtationForDefaultByOrderId, {
+            	"protation.orderId": v.decoration.orderId
+            }, function(res){
+            	if(res.protation.pid) 
+            		protation = res.protation;
+            }, null, false);
+
+            if (utils.accMul(_discount, 10) < _discountValue || (protation && utils.accMul(_discount, 10) < protation.discount)) {
+
+                com.showAlert(com.warning, "优惠金额不合理");
+
+                return false;
+            }
+
+            if (_managePrice < managePrefer) {
 
                 com.showAlert(com.warning, "管理优惠不能大于管理费");
+
+                return false;
+            }
+
+            if (utils.accMul(_manageDiscount, 10) < preferManageDiscount || (protation && _manageDiscount < protation.manageDiscount)) {
+
+                com.showAlert(com.warning, "管理费优惠金额不合理");
 
                 return false;
             }
@@ -1017,23 +1125,23 @@
             var notSalesmanRate = v.decoration.notSalesmanRate;
 
             if (v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT) { // 管理税金
-                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), v.trafficPrice), preferPrice), managePrefer), advancePrefer), _taxRate));
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), quotePrice), v.trafficPrice), preferPrice), managePrefer), advancePrefer), v.taxRate));
                 dtaxPrice = utils.changeThrDecimal(utils.accMul(taxPrice, manageDiscount));
             }
 
             if (v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT) { // 总额税金
-                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), v.trafficPrice), v.managePrice), preferPrice), managePrefer), advancePrefer), v.taxRate));
+                taxPrice = utils.changeThrDecimal(utils.accMul(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), quotePrice), v.trafficPrice), v.managePrice), preferPrice), managePrefer), advancePrefer), v.taxRate));
                 dtaxPrice = taxPrice;
             }
 
             if (v.basePrice && v.basePrice != 0) {
 
-                var total = utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), v.trafficPrice);
+                var total = utils.accAdd(utils.accAdd(utils.accAdd(v.disPrice, v.undisPrice), quotePrice), v.trafficPrice);
                 var remainder = total % v.basePrice;
                 totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder), discount), remainder), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
             } else {
 
-                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.disPrice, discount), v.undisPrice), dtrafficPrice), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
+                totalPrice = utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.disPrice, discount), v.undisPrice), quotePrice), dtrafficPrice), dmanagePrice), dtaxPrice), preferPrice), managePrefer), advancePrefer));
             }
 
             totalPrice = utils.accAdd(totalPrice, !(notSalesmanRate > 0 && notSalesmanRate < 1) ? notSalesmanRate : 0);
@@ -1042,12 +1150,17 @@
                 "quotation.qid": v.qid,
                 "quotation.totalPrice": totalPrice,
                 "quotation.taxPrice": taxPrice,
-                "quotationPrefer.orderId": v.orderId,
                 "quotationPrefer.qid": v.qid,
                 "quotationPrefer.preferPrice": preferPrice,
                 "quotationPrefer.managePrefer": managePrefer,
-                "quotationPrefer.advancePrefer": advancePrefer
+                "quotationPrefer.advancePrefer": advancePrefer,
             };
+
+			if(parseFloat(advancePrefer) > quotationPrefer.advancePrefer && parseFloat(advancePrefer) > protation.advanceProfit){
+				submitApprovalForQuotationPrefer(v, params, quotationPrefer);
+				quotation.modals.approveModal.modal("show");
+				return false;
+			}
 
             com.post(api.quotation.updateQuotationPrefer, params, function(res) {
 
@@ -1056,5 +1169,43 @@
             });
         });
     };
+
+    function submitApprovalForQuotationPrefer(v, options, quotationPrefer) {
+
+        com.focusPage('#submitApproveBtn').bindClick(function() {
+
+            if (com.validate("approveModal")) {
+                return false;
+            }
+
+            var receiverId = quotation.items.approveManSel.find('input:checked').attr('userid');
+
+            if (receiverId == null || receiverId == "") {
+                com.showAlert(com.error, "请选择审批人!");
+                return false;
+            }
+
+            var params = {
+                "approval.receiver.userId": receiverId,
+                "approval.comment": quotation.items.changeReason.val(),
+                "approvalQuotationPrefer.qid": v.qid,
+                "approvalQuotationPrefer.qpid": quotationPrefer.qpid,
+                "approvalQuotationPrefer.ppid": quotationPrefer.presignProduce.ppid,
+                "approvalQuotationPrefer.preferPrice": options["quotationPrefer.preferPrice"],
+                "approvalQuotationPrefer.managePrefer": options["quotationPrefer.managePrefer"],
+                "approvalQuotationPrefer.advancePrefer": options["quotationPrefer.advancePrefer"],
+                "approvalQuotationPrefer.taxPrice": options["quotation.taxPrice"],
+                "approvalQuotationPrefer.totalPrice": options["quotation.totalPrice"],
+            };
+
+            com.post(api.approval.submitApprovalForQuotationPrefer, params, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                quotation.modals.approveModal.modal("hide");
+                quotation.modals.quotationPreferModal.modal("hide");
+            });
+        });
+    }
 
 });

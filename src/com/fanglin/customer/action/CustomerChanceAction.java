@@ -59,6 +59,14 @@ public class CustomerChanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerChance() throws FLException {
+
+		customerChanceService.updateCustomerChance(customerChance);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "issueCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String issueCustomerChance() throws FLException {
 
@@ -111,6 +119,14 @@ public class CustomerChanceAction extends BaseListAction {
 	public String configCustomerChance() throws FLException {
 
 		customerChanceService.configCustomerChance(customerChance);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "fineCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String fineCustomerChance() throws FLException {
+
+		customerChanceService.fineCustomerChance(customerChance, queryUserId());
 
 		return SUCCESS;
 	}

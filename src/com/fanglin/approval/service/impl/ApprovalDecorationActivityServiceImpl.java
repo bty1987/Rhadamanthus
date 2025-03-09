@@ -163,9 +163,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
 			decorationActivityItemPO.setReceiveTime(approvalPO.getApprovalTime());
 
-			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
+			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
 				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
+			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPayment() == DecorationActivityItemPO.ISPAYMENT_CAL_INT) {
 				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
 			}
 

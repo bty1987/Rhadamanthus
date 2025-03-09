@@ -31,10 +31,12 @@ import com.fanglin.customer.dao.CustomerDeptRuleDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
 import com.fanglin.customer.dao.CustomerUserRuleDao;
+import com.fanglin.customer.dao.CustomerUserRuleItemDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerDeptRulePO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
+import com.fanglin.customer.po.CustomerUserRuleItemPO;
 import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
@@ -50,6 +52,7 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -69,6 +72,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 	@Autowired
 	private CustomerUserRuleDao customerUserRuleDao;
+
+	@Autowired
+	private CustomerUserRuleItemDao customerUserRuleItemDao;
 
 	@Autowired
 	private CustomerSourceRecordDao customerSourceRecordDao;
@@ -117,7 +123,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		for (CustomerSourcePO customerSourcePO : customerSourcePOs) {
 
-			customerSource = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+			customerSource = new CustomerSourceVO(new VillageVO(new CityProperVO(), new VillageVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
 			customerSourceVOs.add(customerSourcePO.ptv(customerSource));
 		}
@@ -134,7 +140,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			throw new FLException(330071, "客户资源不存在");
 		}
 
-		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+		CustomerSourceVO customerSourceVO = new CustomerSourceVO(new VillageVO(new CityProperVO(), new VillageVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
 		customerSourcePO.ptv(customerSourceVO);
 
@@ -152,6 +158,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		CustomerSourcePO customerSourcePO = new CustomerSourcePO();
 
 		CustomerPO customerPO = null;
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		if (customerSourceDao.queryCustomerSource(creater.getUid(), customerSourceVO.getPhone(), company) != null) {
+			throw new FLException(330071, "客户手机号码存在");
+		}
 
 		if (customerSourceVO.getCustomer() != null) {
 			customerPO = customerDao.get(customerSourceVO.getCustomer().getCid());
@@ -179,6 +191,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		}
 
 		if (housePO != null) {
+			if (customerSourceDao.countCustomerByHouseNumber(housePO.getHouseNumber(), housePO.getVillage().getVid()) != null) {
+				throw new FLException(330071, "客户楼盘楼号存在");
+			}
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
 			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
@@ -186,12 +201,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
-		UserPO userPO = userDao.queryUserByUserId(userId);
-
-		customerSourcePO.setCreater(userPO);
+		customerSourcePO.setCreater(creater);
 		customerSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		customerSourcePO.setCustomerType(customerSourceVO.getCustomerType());
-		customerSourcePO.setDemand(customerSourceVO.getDemand());
 		customerSourcePO.setStatus(CustomerSourcePO.STATUS_INIT_INT);
 		customerSourcePO.setCompany(company);
 
@@ -249,14 +260,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
 			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
-		}
-
-		if (customerSourceVO.getCustomerType() != null) {
-			customerSourcePO.setCustomerType(customerSourceVO.getCustomerType());
-		}
-
-		if (customerSourceVO.getDemand() != null) {
-			customerSourcePO.setDemand(customerSourceVO.getDemand());
 		}
 
 		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
@@ -438,13 +441,40 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 				customerUserRuleDao.pollingCustomerUserRule(company);
 			}
 
-			CustomerUserRulePO customerUserRulePO = customerUserRuleDao.pullCustomerUserRule(company, area);
+			List<Integer> exporters = new ArrayList<Integer>();
 
-			if (customerUserRulePO == null) {
-				throw new FLException(330081, "无匹配规则");
+			CustomerUserRulePO customerUserRulePO;
+			CustomerUserRuleItemPO customerUserRuleItemPO;
+
+			while (true) {
+
+				customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid());
+
+				if (customerUserRuleItemPO == null) {
+					throw new FLException(330081, "无匹配规则");
+				}
+
+				customerUserRulePO = customerUserRuleDao.get(customerUserRuleItemPO.getCurid());
+
+				if (customerUserRulePO == null) {
+					throw new FLException(330081, "无匹配规则");
+				}
+
+				if (customerSourceDao.countCustomerSource(customerUserRulePO.getUser().getUid(), customerSourcePO.getPhone(), company) == 0) break;
+				if (exporters.size() >= 100) throw new FLException(330081, "无匹配规则");
+
+				exporters.add(customerUserRulePO.getUser().getUid());
 			}
 
-			customerUserRulePO.setSurplus(customerUserRulePO.getSurplus() - 1000);
+			if (customerUserRuleItemPO.getIsSurplus() == CustomerUserRuleItemPO.ISSURPLUS_ENABLE_INT) {
+				customerUserRulePO.setSurplus(customerUserRulePO.getSurplus() - 1000);
+			}
+
+			if (customerUserRuleItemPO.getIsDelete() == CustomerUserRuleItemPO.ISDELETE_ENABLE_INT) {
+				customerUserRuleItemPO.setStatus(CustomerUserRuleItemPO.STATUS_DISABLED_INT);
+				customerUserRuleItemDao.save(customerUserRuleItemPO);
+			}
+
 			customerUserRulePO.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			customerUserRuleDao.update(customerUserRulePO);
@@ -471,7 +501,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
 
-			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), customerUserRulePO.getChance(), customerUserRulePO.getSurplus(), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), Arith.div(customerUserRulePO.getChance(), 1000.0), Arith.div(customerUserRulePO.getSurplus(), 1000.0), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
 			messageDDService.sendDing(customerChancePO.getBelonger().getUserId(), "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", CompanyPO.TYPE_HEADQUARTER_INT);
 
@@ -496,8 +526,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChanceDao.save(customerChancePO);
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
-
-			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动分区分配,分区:%s(%s)", customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
 			if (customerChancePO.getRegion().getManager() != null) messageService.sendMessage(customerChancePO.getRegion().getManager().getUserId(), null, "客户资源分配,请登录信息平台进行查看", MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 

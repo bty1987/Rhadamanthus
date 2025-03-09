@@ -660,10 +660,7 @@ public class SalesPO implements Serializable {
 
 		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher", "creater"));
 
-		if (salesVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), salesVO.getHouse(), Arrays.asList("village"));
-		if (salesVO.getHouse() != null && salesVO.getHouse().getVillage() != null) BeanUtil.copyProperties(getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		if (salesVO.getHouse() != null && salesVO.getHouse().getVillage() != null && salesVO.getHouse().getVillage().getCityProper() != null) BeanUtil.copyProperties(getHouse().getVillage().getCityProper(), salesVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-		if (salesVO.getHouse() != null && salesVO.getHouse().getVillage() != null && salesVO.getHouse().getVillage().getCityProper() != null && salesVO.getHouse().getVillage().getCityProper().getCity() != null) BeanUtil.copyProperties(getHouse().getVillage().getCityProper().getCity(), salesVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
+		if (salesVO.getHouse() != null && getHouse() != null) getHouse().ptv(salesVO.getHouse());
 
 		if (salesVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), salesVO.getCustomer());
 

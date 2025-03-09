@@ -32,10 +32,18 @@ public class ProxyPaymentServiceImpl implements ProxyPaymentService {
 
 		String platform = "";
 
-		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_B_STR", proxyPaymentPO.getCompany());
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_7_B_STR", proxyPaymentPO.getCompany());
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_B_STR", proxyPaymentPO.getCompany());
+		}
 
 		if (systemConfigPO == null) {
 			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", proxyPaymentPO.getCompany());
+		}
+
+		if (systemConfigPO == null) {
+			systemConfigPO = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_PATH_STR", proxyPaymentPO.getCompany());
 		}
 
 		if (systemConfigPO != null) platform = systemConfigPO.getValue();

@@ -51,7 +51,7 @@ public class SalesActivityDaoImpl extends DaoImpl<SalesActivityPO> implements Sa
 	@Override
 	public long amountSalesActivityForPayment(String orderId) {
 
-		String sql = "select sum(sp.referMoney * a.multiple * if(sp.type in (2, 3, 8), 1, -1)) from sales.sales s, payment.salespayment sp, information.activity a where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.activityid = a.aid";
+		String sql = "select sum(sp.referMoney * a.multiple * if(sp.type in (2, 3, 8), 1, -1)) from sales.sales s, payment.salespayment sp, information.activity a where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.activityid = a.aid and ((s.type = 1 and s.balancestatus = 3) or s.type = 0)";
 
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 

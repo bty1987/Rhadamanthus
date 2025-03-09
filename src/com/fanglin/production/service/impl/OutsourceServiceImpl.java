@@ -272,14 +272,14 @@ public class OutsourceServiceImpl implements OutsourceService {
 
 		BeanUtil.copyProperties(outsourcePO, outsourceVO, Arrays.asList("production", "creater", "supplier"));
 		BeanUtil.copyProperties(outsourcePO.getProduction(), outsourceVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-		BeanUtil.copyProperties(outsourcePO.getProduction().getHouse(), outsourceVO.getProduction().getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(outsourcePO.getProduction().getHouse().getVillage(), outsourceVO.getProduction().getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(outsourcePO.getCreater(), outsourceVO.getCreater(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyProperties(outsourcePO.getSupplier(), outsourceVO.getSupplier(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyProperties(outsourcePO.getProduction().getCreater(), outsourceVO.getProduction().getCreater(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyProperties(outsourcePO.getProduction().getSalesman(), outsourceVO.getProduction().getSalesman(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyProperties(outsourcePO.getProduction().getDesigner(), outsourceVO.getProduction().getDesigner(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyProperties(outsourcePO.getProduction().getSpliter(), outsourceVO.getProduction().getSpliter(), Arrays.asList("duty", "dept"));
+
+		if (outsourcePO.getProduction().getHouse() != null) outsourcePO.getProduction().getHouse().ptv(outsourceVO.getProduction().getHouse());
 
 		return outsourceVO;
 	}

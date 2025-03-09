@@ -44,18 +44,16 @@ public class PresignPriceDaoImpl extends DaoImpl<PresignPricePO> implements Pres
 	}
 
 	@Override
-	public PresignPricePO queryPresignPricePrice(Long ppid, Integer quoteArea) {
+	public PresignPricePO queryPresignPrice(Long ppid, Integer quoteArea) {
 
 		Criteria query = session().createCriteria(PresignPricePO.class);
 
 		query.add(Restrictions.eq("ppid", ppid));
-		query.add(Restrictions.eq("status", PresignPricePO.STATUS_ENABLE_INT));
 		query.add(Restrictions.le("upperArea", quoteArea));
 		query.add(Restrictions.ge("lowerArea", quoteArea));
 		query.setMaxResults(1);
 
 		return (PresignPricePO) query.uniqueResult();
-
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

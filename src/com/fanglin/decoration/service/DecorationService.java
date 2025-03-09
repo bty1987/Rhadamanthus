@@ -34,7 +34,7 @@ public interface DecorationService {
 
 	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone, int company) throws FLException;
+	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone) throws FLException;
 
 	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 

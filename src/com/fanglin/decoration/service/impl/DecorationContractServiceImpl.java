@@ -149,7 +149,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		return Signature.view(decorationContractPO);
@@ -175,7 +175,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		String orderId = decorationContractPO.getOrderId();
@@ -191,7 +191,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		String orderId = decorationContractPO.getOrderId();
@@ -226,13 +226,60 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Transactional(rollbackFor = Exception.class)
 	public int addDecorationContract(DecorationContractVO decorationContractVO, ContractVO contractVO, String data, String table, String userId) throws FLException {
 
+		ContractPO contractPO = contractDao.get(contractVO.getCid());
+
+		if (contractPO == null) {
+			throw new FLException(130044, "合同模版不存在");
+		}
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		DecorationContractPO decorationContractPO = new DecorationContractPO(new UserPO());
 
 		BeanUtil.copyProperties(decorationContractVO, decorationContractPO, Arrays.asList("creater"));
 
-		ContractPO contractPO = contractDao.get(contractVO.getCid());
+		decorationContractPO.setCid(contractPO.getCid());
+		decorationContractPO.setNo(contractPO.getNo());
+		decorationContractPO.setName(contractPO.getName());
+		decorationContractPO.setTitle(contractPO.getTitle());
+		decorationContractPO.setCreater(creater);
+		decorationContractPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationContractPO.setStatus(DecorationContractPO.STATUS_VALID_INT);
+
+		decorationContractDao.save(decorationContractPO);
+
+		JSONObject params = JSONObject.parseObject(data);
+
+		JSONArray tables = JSON.parseArray(table);
+
+		Signature.generate(decorationContractPO, params, tables);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int makeDecorationContract(DecorationContractVO decorationContractVO, String data, String table, String userId) throws FLException {
+
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(140067, "合同不存在");
+		}
+
+		ContractPO contractPO = contractDao.get(decorationContractPO.getCid());
+
+		if (contractPO == null) {
+			throw new FLException(130044, "合同模版不存在");
+		}
+
+		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_UNMAKE_INT) {
+			throw new FLException(130028, "合同状态不可操作");
+		}
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		BeanUtil.copyProperties(decorationContractVO, decorationContractPO, Arrays.asList("creater"));
 
 		decorationContractPO.setCid(contractPO.getCid());
 		decorationContractPO.setNo(contractPO.getNo());
@@ -262,7 +309,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
@@ -286,7 +333,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
@@ -303,7 +350,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
@@ -328,7 +375,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
@@ -349,7 +396,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_SIGN_INT) {
@@ -376,7 +423,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
 		if (decorationContractPO == null) {
-			throw new FLException(130002, "合同信息不存在");
+			throw new FLException(140067, "合同不存在");
 		}
 
 		decorationContractPO.setIshow(decorationContractVO.getIshow());
@@ -409,7 +456,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140005, "订单合同不能修改");
 		}
 
-		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderId(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
 		if (decorationPayments == null || decorationPayments.size() == 0) {
 			throw new FLException(140006, "订单没有进行款项交付,不能签订合同");

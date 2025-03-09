@@ -39,6 +39,14 @@ public class ApprovalSalesRefundAction extends BaseListAction {
 
 	private String forms;
 
+	@Action(value = "pageApprovalSalesRefund", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageApprovalSalesRefund() throws FLException {
+
+		approvalSalesRefundService.pageApprovalSalesRefund(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryApprovalSalesRefundItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalSalesRefundItem() throws FLException {
 

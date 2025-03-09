@@ -34,6 +34,14 @@ public class PresignPriceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryPresignPrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPresignPrice() throws FLException {
+
+		presignPrice = presignPriceService.queryPresignPrice(presignPrice);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addPresignPrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPresignPrice() throws FLException {
 

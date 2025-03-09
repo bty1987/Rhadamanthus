@@ -171,6 +171,33 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "phoneAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String phoneAuthCode() throws FLException {
+
+		try {
+			String userId = request.getParameter("userId");
+			String phone = request.getParameter("phone");
+			String code = request.getParameter("code");
+			String secret = request.getParameter("secret");
+
+			if (SystemConfig.getString("disable") != null && !SystemConfig.getString("disable").equals(userId)) {
+				throw new FLException(110018, "平台暂停使用");
+			}
+
+			setAuthentication(loginService.phoneAuthCode(userId, phone, code, secret));
+		} catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+
+			LogUtils.logging(logger, e, "requestAuthCode", "common");
+		}
+
+		return SUCCESS;
+	}
+
 	@Action(value = "changeAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String changeAuthCode() throws FLException {
 

@@ -92,7 +92,7 @@ public class DecorationAction extends BaseListAction {
 	@Action(value = "pageDecorationForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationForCustomer() throws FLException {
 
-		decorationService.pageDecorationForCustomer(getPaging(), getFilters(), customerPhone, queryCompany());
+		decorationService.pageDecorationForCustomer(getPaging(), getFilters(), customerPhone);
 
 		return SUCCESS;
 	}

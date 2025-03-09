@@ -13,7 +13,7 @@ public interface VillageService {
 
 	public VillageVO queryVillageByVid(VillageVO villageVO) throws FLException;
 
-	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName, Integer company);
+	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName, VillageVO village, Integer company);
 
 	public int addVillage(VillageVO villageVO, Integer company) throws FLException;
 

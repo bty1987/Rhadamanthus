@@ -176,7 +176,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT, DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
 
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
 		for (DecorationPaymentPO decorationPayment : decorationPaymentPOs) {
 

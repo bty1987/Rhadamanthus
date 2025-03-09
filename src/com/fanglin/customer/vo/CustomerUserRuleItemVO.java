@@ -2,11 +2,15 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.DepartmentVO;
+
 public class CustomerUserRuleItemVO implements Serializable {
 
 	private static final long serialVersionUID = 6941559609803170652L;
 
 	private Long curiid;
+
+	private DepartmentVO department;
 
 	private Long curid;
 
@@ -30,12 +34,25 @@ public class CustomerUserRuleItemVO implements Serializable {
 		super();
 	}
 
+	public CustomerUserRuleItemVO(DepartmentVO department) {
+		super();
+		this.department = department;
+	}
+
 	public Long getCuriid() {
 		return curiid;
 	}
 
 	public void setCuriid(Long curiid) {
 		this.curiid = curiid;
+	}
+
+	public DepartmentVO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentVO department) {
+		this.department = department;
 	}
 
 	public Long getCurid() {

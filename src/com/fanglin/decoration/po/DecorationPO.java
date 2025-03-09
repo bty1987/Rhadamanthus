@@ -669,6 +669,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	private void ptv(DecorationVO decorationVO) {
+
 		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId", "conpany", "busitype"));
 
 		if (decorationVO.getOrderTotalPrice() == null) {
@@ -676,16 +677,14 @@ public class DecorationPO implements Serializable {
 		}
 
 		decorationVO.setHouse(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))));
-		BeanUtil.copyProperties(this.getHouse(), decorationVO.getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(this.getHouse().getVillage(), decorationVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		BeanUtil.copyProperties(this.getHouse().getVillage().getCityProper(), decorationVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-		BeanUtil.copyProperties(this.getHouse().getVillage().getCityProper().getCity(), decorationVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
+
+		getHouse().ptv(decorationVO.getHouse());
 
 		CustomerVO customerVO = new CustomerVO();
 		BeanUtil.copyProperties(this.getCustomer(), customerVO);
 
 		decorationVO.setCustomer(customerVO);
-		
+
 		decorationVO.setBusitype(this.getBusitype().getDbid());
 
 		decorationVO.setDesigner(new UserBaseVO());

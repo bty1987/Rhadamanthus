@@ -17,6 +17,19 @@ public class ServiceNodeVO implements Serializable {
 	private Short status;
 
 	private Integer company;
+	
+	private Long psnid;
+	
+	private Short attnode;
+	
+	private Integer blankNum;
+	
+	private Integer workNum;
+	
+	private Short loop;
+	
+	private Short userType;
+	
 
 	public Long getSnid() {
 		return snid;
@@ -66,4 +79,53 @@ public class ServiceNodeVO implements Serializable {
 		this.company = company;
 	}
 
+	public Long getPsnid() {
+		return psnid;
+	}
+
+	public void setPsnid(Long psnid) {
+		this.psnid = psnid;
+	}
+
+	public Short getAttnode() {
+		return attnode;
+	}
+
+	public void setAttnode(Short attnode) {
+		this.attnode = attnode;
+	}
+
+	public Integer getBlankNum() {
+		return blankNum;
+	}
+
+	public void setBlankNum(Integer blankNum) {
+		this.blankNum = blankNum;
+	}
+
+	public Integer getWorkNum() {
+		return workNum;
+	}
+
+	public void setWorkNum(Integer workNum) {
+		this.workNum = workNum;
+	}
+
+	public Short getLoop() {
+		return loop;
+	}
+
+	public void setLoop(Short loop) {
+		this.loop = loop;
+	}
+
+	public Short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Short userType) {
+		this.userType = userType;
+	}
+
+	
 }

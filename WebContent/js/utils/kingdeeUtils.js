@@ -702,5 +702,189 @@ var kingdeeUtils = {
 
             kingdeeUtils.receivableBill(receivableBillItems, receipt.collectTime, "YSD02_SYS", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, "项目地址:"+decoration.house.village.name+' '+decoration.house.houseNumber);
         }
+    },
+
+    kingdeeThirdPartyCommon: function(items, objectName) {
+
+        var kingdeeOptions = {
+            "api": "kingdee.kingdee.thirdPartyCommon",
+            "tableName": objectName,
+            "data": JSON.stringify(items),
+            "redis": 0
+        };
+
+        com._post_(api.home.library, kingdeeOptions, function(res) {
+            if (res.code == 0) {
+                com.showAlert(com.info, "操作成功");
+            } else {
+                com.showAlert(com.warning, res.code + " " + res.msg);
+            }
+        }, function(error){
+            com.showAlert(com.error, error.errorMsg);
+        });
+    },
+
+    categoryToKingdee: function(category) {
+
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var items = [
+                {
+                    "FNumber": category.no,
+                    "FDataValue": category.name,
+                    "FCreateOrgName": category.companyName,
+                    "FDescription": ""
+                }
+            ]; // 编码/名称/组织名称/备注
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "Category");
+
+        });
+    },
+
+    brandToKingdee: function(brand) {
+
+        console.log(config.kingdee)
+        console.log(config.kingdee == false)
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var category = null;
+
+            com.post(api.data.queryCategoryByCId, {"category.cid": brand.categoryId}, function (res) {
+                category = res.category;
+            }, null, false);
+
+            var items = [
+                {
+                    "FNumber": brand.no,
+                    "FName": brand.name,
+                    "FCreateOrgName": brand.companyName, // 100 方林集团(虚拟)
+                    "F_UNW_WLPL": category.no
+                }
+            ]; // 编码/名称/组织名称或公司/品类编码
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "Brand");
+        });
+    },
+
+    dutyToKingdee: function(duty) {
+
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var items = [
+                {
+                    "FName": duty.name,
+                    "FNumber": duty.name,
+                    "FCreateOrgName": duty.companyName // params.company.fullname
+                }
+            ]; // 岗位名称/编码/组织名称
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "Position");
+        });
+    },
+
+    userToKingdee: function(user) {
+
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var items = [
+                {
+                    "FName": user.userName,
+                    "FNumber": user.drganizationNo,
+                    "FCreateOrgName": user.drganizationName,
+                    "FStaffNumber": user.userId,
+                    "FPostDept": user.deptName,
+                    "FWorkOrgId": user.drganizationNo,
+                    "FSupervisor": user.dutyName == "工程部监理" ? "0" : "1"
+                }
+            ]; // 员工姓名/组织编码/组织名称/员工编号/所属部门/工作组织/监理
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "Staff");
+        });
+    },
+
+    decorationToKingdee: function(decoration) {
+
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+            console.log(decoration.address == null);
+            console.log("-----------------------------");
+
+            if (decoration.address == null) {
+                com.post(api.data.queryHouseByHid, {"house.hid": decoration.houseId}, function(res) {
+                    decoration["address"] = (res.house.village.cityProper.city.name == null ? " " : res.house.village.cityProper.city.name) + " " + (res.house.village.cityProper == null ? " " : res.house.village.cityProper.name) + " " + res.house.village.name + " " + (res.house.houseNumber == null ? " " : res.house.houseNumber);
+                }, null, false);
+            }
+
+            var items = [
+                {
+                    "FName": decoration.address,
+                    "FNumber": decoration.orderId,
+                    "FCreateOrgName": decoration.drganizationName,
+                    "FDescription": decoration.drganizationNo
+                }
+            ]; // 客户姓名/编码/组织名称/备注
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "Customer");
+        });
+    },
+
+    accessoriesOutToKingdee: function(accessories) {
+
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var accessoriesNo = "";
+            var approverTime = "";
+
+            com.post(api.inventory.queryAccessoriesByAid, {"accessories.aid": accessories.aid}, function(res) {
+                accessoriesNo = res.accessories.no;
+                approverTime = res.accessories.approverTime;
+            }, null, false);
+
+            var items = {
+                "fdate": new Date(approverTime).toISOString(),
+                "fcustomer_name": accessories.drganizationName,
+                "ffldh": accessoriesNo,
+                "fentity": accessories.items
+            }; // 审批时间/公司名/辅料单号/项目
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "SalesOutStock");
+        });
+    },
+
+    accessoriesReturnToKingdee: function(accessories) {
+
+        if (config.kingdee == false) return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var accessoriesNo = "";
+            var approverTime = "";
+
+            com.post(api.inventory.queryAccessoriesByAid, {"accessories.aid": accessories.aid}, function(res) {
+                accessoriesNo = res.accessories.no;
+                approverTime = res.accessories.approverTime;
+            }, null, false);
+
+            var items = {
+                "fdate": new Date(approverTime).toISOString(),
+                "fcustomer_name": accessories.drganizationName,
+                "ffldh": accessoriesNo,
+                "fentity": accessories.items
+            }; // 审批时间/公司名/辅料单号/项目
+
+            kingdeeUtils.kingdeeThirdPartyCommon(items, "SalesReturnStock");
+        });
     }
 };

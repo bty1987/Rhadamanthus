@@ -15,30 +15,25 @@ import com.fanglin.utils.Paging;
 @Repository("approvalCustomerOriginTDecorationDao")
 public class ApprovalCustomerOriginTDecorationDaoImpl extends DaoImpl<ApprovalCustomerOriginTDecorationPO> implements ApprovalCustomerOriginTDecorationDao {
 
-	public ApprovalCustomerOriginTDecorationDaoImpl(){
+	public ApprovalCustomerOriginTDecorationDaoImpl() {
 		super(ApprovalCustomerOriginTDecorationPO.class);
 	}
-	
+
 	@Override
-	public List<ApprovalCustomerOriginTDecorationPO> pageApprovalCustomerOriginTDecorationPO(Paging paging, List<Filter> filters, Integer company)throws FLException {
-		
+	public List<ApprovalCustomerOriginTDecorationPO> pageApprovalCustomerOriginTDecorationPO(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
 		PagingQuery<ApprovalCustomerOriginTDecorationPO> query = pagingQuery(paging, ApprovalCustomerOriginTDecorationPO.class);
 
 		queryFilterExcute(query, filters, "");
 
 		return query.list();
-
 	}
-	
+
 	@Override
 	public ApprovalCustomerOriginTDecorationPO queryCustomerOriginTDecorationByAid(long aid) {
-		
-		return (ApprovalCustomerOriginTDecorationPO) session().createCriteria(ApprovalCustomerOriginTDecorationPO.class).add(Restrictions.eq("aid", aid)).uniqueResult();
-	
+		return (ApprovalCustomerOriginTDecorationPO) session().createCriteria(ApprovalCustomerOriginTDecorationPO.class).createAlias("approval", "approval").add(Restrictions.eq("approval.aid", aid)).uniqueResult();
 	}
 
-
-	
 	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
 
 		if (filters == null) return;
@@ -46,8 +41,11 @@ public class ApprovalCustomerOriginTDecorationDaoImpl extends DaoImpl<ApprovalCu
 		for (Filter filter : filters) {
 
 			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
 			query.alias("customerOrigin", "customerOrigin");
+
 			if ("village".equals(field)) {
 				query.alias("customerOrigin.village", "village");
 				query.add(query.getCriterion("village.no", filter));
@@ -56,18 +54,18 @@ public class ApprovalCustomerOriginTDecorationDaoImpl extends DaoImpl<ApprovalCu
 			} else if ("phone".equals(field)) {
 				query.add(query.getCriterion("customerOrigin.phone", filter));
 			} else if ("createTime".equals(field)) {
-				query.timeranges("customerOrigin.createTime", filter.getData());			
+				query.timeranges("customerOrigin.createTime", data);
 			} else if ("status".equals(field)) {
-				query.add(query.getCriterion("customerOrigin.status", Short.valueOf(filter.getData()), filter.getOp()));
+				query.add(query.getCriterion("customerOrigin.status", Short.valueOf(data), op));
 			} else if ("designer.userId".equals(field)) {
 				query.alias("customerOrigin.designer", "designer");
-				query.add(query.getCriterion("designer.userId", filter));		
+				query.add(query.getCriterion("designer.userId", filter));
 			} else if ("salesman.userId".equals(field)) {
-				query.alias("customerOrigin.salesman", "salesman");	
-				query.add(query.getCriterion("salesman.userId", filter));		
+				query.alias("customerOrigin.salesman", "salesman");
+				query.add(query.getCriterion("salesman.userId", filter));
 			} else if ("user.userId".equals(field)) {
 				query.alias("customerOrigin.creater", "creater");
-				query.add(query.getCriterion("creater.userId", filter));	
+				query.add(query.getCriterion("creater.userId", filter));
 			}
 		}
 	}

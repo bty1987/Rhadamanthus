@@ -2,6 +2,8 @@ package com.fanglin.data.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "goods", catalog = "data")
@@ -71,11 +76,19 @@ public class GoodsPO implements java.io.Serializable {
 
 	private int selling;
 
+	private int confine;
+
 	private int pieceNum;
 
 	private AccessoriesTypePO accessoriesType;
 
 	private short type;
+
+	private GoodsKindPO onekind;
+
+	private GoodsKindPO twokind;
+
+	private GoodsKindPO thrkind;
 
 	private short status;
 
@@ -93,6 +106,14 @@ public class GoodsPO implements java.io.Serializable {
 	public GoodsPO(AccessoriesTypePO accessoriesType) {
 		super();
 		this.accessoriesType = accessoriesType;
+	}
+
+	public GoodsPO(AccessoriesTypePO accessoriesType, GoodsKindPO onekind, GoodsKindPO twokind, GoodsKindPO thrkind) {
+		super();
+		this.accessoriesType = accessoriesType;
+		this.onekind = onekind;
+		this.twokind = twokind;
+		this.thrkind = thrkind;
 	}
 
 	@Id
@@ -205,6 +226,15 @@ public class GoodsPO implements java.io.Serializable {
 		this.selling = selling;
 	}
 
+	@Column(name = "confine")
+	public int getConfine() {
+		return confine;
+	}
+
+	public void setConfine(int confine) {
+		this.confine = confine;
+	}
+
 	@Column(name = "pieceNum")
 	public int getPieceNum() {
 		return pieceNum;
@@ -233,6 +263,36 @@ public class GoodsPO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "onekind", referencedColumnName = "gkid")
+	public GoodsKindPO getOnekind() {
+		return onekind;
+	}
+
+	public void setOnekind(GoodsKindPO onekind) {
+		this.onekind = onekind;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "twokind", referencedColumnName = "gkid")
+	public GoodsKindPO getTwokind() {
+		return twokind;
+	}
+
+	public void setTwokind(GoodsKindPO twokind) {
+		this.twokind = twokind;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "thrkind", referencedColumnName = "gkid")
+	public GoodsKindPO getThrkind() {
+		return thrkind;
+	}
+
+	public void setThrkind(GoodsKindPO thrkind) {
+		this.thrkind = thrkind;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return this.status;
@@ -249,5 +309,17 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public GoodsVO ptv(GoodsVO goodsVO) {
+
+		BeanUtil.copyProperties(this, goodsVO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+
+		if (goodsVO.getAccessoriesType() != null && getAccessoriesType() != null) BeanUtil.copyProperties(getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
+		if (goodsVO.getOnekind() != null && getOnekind() != null) BeanUtil.copyProperties(getOnekind(), goodsVO.getOnekind());
+		if (goodsVO.getTwokind() != null && getTwokind() != null) BeanUtil.copyProperties(getTwokind(), goodsVO.getTwokind());
+		if (goodsVO.getThrkind() != null && getThrkind() != null) BeanUtil.copyProperties(getThrkind(), goodsVO.getThrkind());
+
+		return goodsVO;
 	}
 }

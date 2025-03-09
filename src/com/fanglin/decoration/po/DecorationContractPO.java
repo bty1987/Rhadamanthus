@@ -40,6 +40,8 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public static final short STATUS_FILE_INT = 3;// 归档
 
+	public static final short STATUS_UNMAKE_INT = 5;
+
 	public static final short TYPE_SIGNET_INT = 1;// 签章
 
 	public static final short TYPE_SIGN_INT = 2;// 签订

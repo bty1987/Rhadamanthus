@@ -192,8 +192,8 @@ public class ProductionPlanServiceImpl implements ProductionPlanService {
 		BeanUtil.copyProperties(productionPlanPO, productionPlanVO, Arrays.asList("creater", "production"));
 		BeanUtil.copyProperties(productionPlanPO.getCreater(), productionPlanVO.getCreater(), Arrays.asList("duty", "dept"));
 		BeanUtil.copyProperties(productionPlanPO.getProduction(), productionPlanVO.getProduction(), Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-		BeanUtil.copyProperties(productionPlanPO.getProduction().getHouse(), productionPlanVO.getProduction().getHouse(), Arrays.asList("village"));
-		BeanUtil.copyPropertie(productionPlanPO.getProduction().getHouse().getVillage(), productionPlanVO.getProduction().getHouse().getVillage(), Arrays.asList("cityProper"));
+
+		if (productionPlanPO.getProduction().getHouse() != null) productionPlanPO.getProduction().getHouse().ptv(productionPlanVO.getProduction().getHouse());
 
 		return productionPlanVO;
 	}

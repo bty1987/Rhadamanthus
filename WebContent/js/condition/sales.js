@@ -107,6 +107,22 @@ Condition.addupRule("sales", {
             valuePath: "value"
         }
     },
+    "balanceStatus": {
+        label: "销售结算",
+        type: "select",
+        submitConfig: {
+            name: "sales.balanceStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: null,
+            postData: {},
+            listPath: constant.sales().sales.balanceStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "type": {
         label: "销售类型",
         type: "select",

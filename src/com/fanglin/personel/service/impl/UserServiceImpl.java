@@ -467,7 +467,7 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setDept(departmentPO);
 
-		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
+		userPO.setDuty(dutyDao.get(userVO.getDuty().getDid()));
 
 		userPO.setPinYin(PinYin4Util.getPinyin(userVO.getCurrentName()).get(0));
 
@@ -545,6 +545,8 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
+		userInfoVO.getUser().ptv(userInfoPO.getUser());
+
 	}
 
 	@Override
@@ -590,10 +592,8 @@ public class UserServiceImpl implements UserService {
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "userName", "loginId", "password", "role", "isLogin", "company", "extranet"));
 
 		userPO.setDept(departmentPO);
-		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
-		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
-		BeanUtil.copyProperties(userVO.getDept(), userPO.getDept(), Arrays.asList("departmentType"));
+		userPO.setDuty(dutyDao.get(userVO.getDuty().getDid()));
 
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
 
@@ -659,6 +659,8 @@ public class UserServiceImpl implements UserService {
 
 			userExperienceDao.save(userExperiencePO);
 		}
+
+		userInfoVO.getUser().ptv(userInfoPO.getUser());
 
 	}
 

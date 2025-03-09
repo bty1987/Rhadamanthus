@@ -11,6 +11,7 @@
 package com.fanglin.system.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.system.vo.CityVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "city", catalog = "communion")
@@ -128,4 +132,12 @@ public class CityPO implements Serializable {
 		this.y = y;
 	}
 
+	public CityVO ptv(CityVO cityVO) {
+
+		BeanUtil.copyProperties(this, cityVO, Arrays.asList("region"));
+
+		if (cityVO.getRegion() != null && getRegion() != null) BeanUtil.copyProperties(getRegion(), cityVO.getRegion());
+
+		return cityVO;
+	}
 }

@@ -32,6 +32,8 @@ public interface ProtationService {
 
 	public int updateProtation(ProtationVO protationVO) throws FLException;
 
+	public int updateProtationForProfit(ProtationVO protationVO) throws FLException;
+
 	public int updateProtationForAdvance(ProtationVO protationVO) throws FLException;
 
 	public int updateProtationForStatus(ProtationVO protationVO) throws FLException;

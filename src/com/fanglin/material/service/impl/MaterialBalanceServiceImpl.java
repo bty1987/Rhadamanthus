@@ -55,8 +55,7 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 	@Override
 	public void pageMaterialBalance(Paging paging, List<Filter> filters, int company) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<MaterialBalancePO> materialBalancePOs = materialBalanceDao.pageMaterialBalance(paging, filters, company);
 		List<MaterialBalanceVO> materialBalanceVOs = new ArrayList<MaterialBalanceVO>();
@@ -69,8 +68,8 @@ public class MaterialBalanceServiceImpl implements MaterialBalanceService {
 
 			BeanUtil.copyProperties(materialBalancePO, materialBalanceVO, Arrays.asList("material", "creater", "instorer", "poster"));
 			BeanUtil.copyProperties(materialBalancePO.getMaterial(), materialBalanceVO.getMaterial(), Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse(), materialBalanceVO.getMaterial().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(materialBalancePO.getMaterial().getHouse().getVillage(), materialBalanceVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
+
+			if (materialBalancePO.getMaterial().getHouse() != null) materialBalancePO.getMaterial().getHouse().ptv(materialBalanceVO.getMaterial().getHouse());
 
 			BeanUtil.copyProperties(materialBalancePO.getMaterial().getCustomer(), materialBalanceVO.getMaterial().getCustomer());
 

@@ -89,6 +89,53 @@ public class LoginServiceImpl implements LoginService {
 		} catch (Exception e) {
 			throw new FLException(110000, "系统处理问题");
 		}
+	}
+
+	@Override
+	public String phoneAuthCode(String userId, String phone, String code, String secret) throws FLException {
+
+		try {
+
+			try {
+				if (!code.equals(AESHelper.decrypt(secret, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
+					throw new FLException(330010, "验证码错误");
+				}
+			} catch (Exception e) {
+				throw new FLException(330010, "验证码错误");
+			}
+
+			Authentication authentication = null;
+
+			int $company = 0;
+
+			UserPO userPO = userDao.queryUserByUserId(userId);
+
+			if (userPO == null) {
+				throw new FLException(110004, "该用户不能登陆系统");
+			}
+
+			if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) {
+				throw new FLException(110004, "该用户不能登陆系统");
+			}
+
+			if (phone != null && !phone.equals(userPO.getPhone())) {
+				throw new FLException(110021, "电话不匹配");
+			}
+
+			$company = userPO.getCompany();
+
+			authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, $company, userPO.getFreedom());
+			authentication.setTimout((short) 1);
+
+			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+		} catch (FLException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new FLException(110000, "系统处理问题");
+		}
+	}
+
+	public static void main(String[] args) {
 
 	}
 

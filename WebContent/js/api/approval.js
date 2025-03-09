@@ -36,6 +36,16 @@ $.extend(api, {
         queryApprovalByAId: {
             url: "queryApprovalByAId.do"
         },
+
+        pageApprovalSalesRefund: {
+            url: "pageApprovalSalesRefund.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-source",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
         queryApprovalSalesRefundItem: {
             url: "queryApprovalSalesRefundItem.do",
             type: "query",
@@ -61,7 +71,7 @@ $.extend(api, {
                 args: ["unitPrice", "purchasePrice", "salePrice", "price", "discount", "postDiscount", "num", "total", "prePoint", "postPoint", "rawPoint"]
             }]
         },
-        
+
         queryApprovalDecorationActivity: {
             url: "queryApprovalDecorationActivity.do",
             type: "query",
@@ -111,6 +121,20 @@ $.extend(api, {
             type: "update",
             tranargs: {
                 args: ["approvalQuotationDiscount.newDiscount", "approvalQuotationDiscount.oldDiscount", "approvalQuotationDiscount.basePrice"]
+            }
+        },
+        submitApprovalForProtationPrefer: {
+            url: "submitApprovalForProtationPrefer.do",
+            type: "update",
+            tranargs: {
+                args: ["approvalProtationPrefer.preferPrice", "approvalProtationPrefer.managePrefer", "approvalProtationPrefer.advancePrefer", "approvalProtationPrefer.taxPrice", "approvalProtationPrefer.totalPrice", "protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
+            }
+        },
+        submitApprovalForQuotationPrefer: {
+            url: "submitApprovalForQuotationPrefer.do",
+            type: "update",
+            tranargs: {
+                args: ["approvalQuotationPrefer.preferPrice", "approvalQuotationPrefer.managePrefer", "approvalQuotationPrefer.advancePrefer", "approvalQuotationPrefer.taxPrice", "approvalQuotationPrefer.totalPrice"]
             }
         },
         submitApprovalForDecorationRefund: {
@@ -199,7 +223,7 @@ $.extend(api, {
                 args: ["approvalCustomerSource.rate"]
             }
         },
-        
+
         pageApprovalCustomerOriginTDecoration: {
             url: "pageApprovalCustomerOriginTDecoration.do",
             demo: true,
@@ -236,7 +260,7 @@ $.extend(api, {
         refuseForSalesDayment: {
             url: "refuseForSalesDayment.do"
         },
-        
+
         pageApprover: {
             url: "pageApprover.do",
             demo: true
@@ -288,6 +312,6 @@ $.extend(api, {
         queryApprovalFunction: {
             url: "queryApprovalFunction.do"
         }
-        
+
     }
 });

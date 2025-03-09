@@ -33,6 +33,10 @@ jQuery(function($) {
         current: new Date(),
     };
 
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
+
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
@@ -43,17 +47,15 @@ jQuery(function($) {
         var proper = village.cityProper;
         var customer = res.decoration.customer;
 
-        contractEdit.cover["con-orderId"] = data.orderId;
+        contractEdit.cover["cov-orderId"] = data.orderId;
         com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-designer-name", "#form").val(data.designer.currentName);
+        com.focusPage("#cov-designer-name", "#form").val(data.designer.currentName);
 
         contractEdit.customer = customer;
 
-        com.focusPage("#con-province-name", "#form").val(proper.city.province);
-        com.focusPage("#con-city-name", "#form").val(proper.city.name);
-        com.focusPage("#con-proper-name", "#form").val(proper.name);
-        com.focusPage("#con-village-name", "#form").val(village.name);
-        com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
+        contractEdit.cover["cov-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
 
     }, null, false);
 

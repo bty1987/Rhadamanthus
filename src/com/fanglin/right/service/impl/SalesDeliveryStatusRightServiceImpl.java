@@ -46,6 +46,8 @@ public class SalesDeliveryStatusRightServiceImpl implements SalesDeliveryStatusR
 
 		salesDeliveryStatusRightDao.deleteSalesDeliveryStatus(salesDeliveryStatusRightVO.getBid());
 
+		if (salesDeliveryStatusRightVOs == null) return;
+
 		for (SalesDeliveryStatusRightVO salesDeliveryStatusRight : salesDeliveryStatusRightVOs) {
 
 			SalesDeliveryStatusRightPO salesDeliveryStatusRightPO = new SalesDeliveryStatusRightPO();

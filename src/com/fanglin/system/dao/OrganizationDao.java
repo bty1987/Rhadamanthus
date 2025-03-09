@@ -22,4 +22,6 @@ public interface OrganizationDao extends Dao<OrganizationPO> {
 	public List<OrganizationPO> pageOrganization(Paging paging, List<Filter> filters, Integer company);
 
 	public List<OrganizationPO> queryOrganization(String name, Integer company);
+
+	public OrganizationPO queryOrganization(String no);
 }

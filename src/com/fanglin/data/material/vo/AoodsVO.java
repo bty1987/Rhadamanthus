@@ -30,11 +30,11 @@ public class AoodsVO implements Serializable {
 
 	private Long gid;
 
-	private int balance;
+	private Integer balance;
 
 	private Integer selling;
 
-	private short atttype;
+	private Short atttype;
 
 	public AoodsVO() {
 		super();
@@ -146,11 +146,11 @@ public class AoodsVO implements Serializable {
 		this.gid = gid;
 	}
 
-	public int getBalance() {
+	public Integer getBalance() {
 		return balance;
 	}
 
-	public void setBalance(int balance) {
+	public void setBalance(Integer balance) {
 		this.balance = balance;
 	}
 
@@ -162,11 +162,11 @@ public class AoodsVO implements Serializable {
 		this.selling = selling;
 	}
 
-	public short getAtttype() {
+	public Short getAtttype() {
 		return atttype;
 	}
 
-	public void setAtttype(short atttype) {
+	public void setAtttype(Short atttype) {
 		this.atttype = atttype;
 	}
 

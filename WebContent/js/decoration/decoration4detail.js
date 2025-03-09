@@ -64,7 +64,7 @@ jQuery(function($) {
     var decorationActivity = {
         activityItemType: {},
         stateTypes: {},
-        states: {},
+        states: {}
     };
 
     var salesActivityItem = {
@@ -1186,12 +1186,27 @@ jQuery(function($) {
 
         decorationDetail.printQuotationCNModal.modal("show");
     });
-    
+
     com.focusPage("#preferBtn").on("click", function() {
-        
-        com.focusPage('#prefer').val(com.checkNull(quotationUtils.quotationDetail.quotationPrefer.preferPrice, 0));
-        com.focusPage('#manage').val(com.checkNull(quotationUtils.quotationDetail.quotationPrefer.managePrefer, 0));
-        com.focusPage('#advance').val(com.checkNull(quotationUtils.quotationDetail.quotationPrefer.advancePrefer, 0));
+
+        var quotationPrefer = quotationUtils.quotationDetail.quotationPrefer;
+
+        com.focusPage('#produce').val(com.checkNull(quotationPrefer.ppid, 0));
+        com.focusPage('#prefer').val(com.checkNull(quotationPrefer.preferPrice, 0));
+        com.focusPage('#manage').val(com.checkNull(quotationPrefer.managePrefer, 0));
+        com.focusPage('#advance').val(com.checkNull(quotationPrefer.advancePrefer, 0));
+
+        if (quotationPrefer.discount && quotationPrefer.discount == 10) {
+            com.focusPage('#prefer').attr("disabled", "disabled");
+        } else {
+            com.focusPage('#prefer').removeAttr("disabled");
+        }
+
+        if (quotationPrefer.manageDiscount && quotationPrefer.manageDiscount == 10) {
+            com.focusPage('#manage').attr("disabled", "disabled");
+        } else {
+        	com.focusPage('#manage').removeAttr("disabled");
+        }
 
         com.focusPage("#quotationPreferModal").modal("show");
     });
@@ -1680,12 +1695,22 @@ jQuery(function($) {
                         com.post(api.decoration.changeDecorationForHouse, {
                             "decoration.orderId": decorationDetail.orderId,
                             "decoration.house.hid": decorationDetail.houseItems.thid
-                        }, function(res) {
+                        }, function(fes) {
 
                             com.showAlert(com.info, "操作成功");
                             decorationDetail.items.villageName.val(decorationDetail.houseItems.villageName);
                             decorationDetail.items.houseNumber.val(decorationDetail.houseItems.houseNumber);
                             decorationDetail.villageChangeModal.modal("hide");
+
+                            var decorationData = {
+                                "orderId": decorationDetail.orderId,
+                                "houseId": res.house.hid,
+                                "address": (res.house.village.cityProper.city.name == null ? " " : res.house.village.cityProper.city.name) + " " + (res.house.village.cityProper == null ? " " : res.house.village.cityProper.name) + " " + res.house.village.name + " " + (res.house.houseNumber == null ? " " : res.house.houseNumber),
+                                "drganizationNo": params.company.drganization.no,
+                                "drganizationName": params.company.drganization.name
+                            };
+
+                            kingdeeUtils.decorationToKingdee(decorationData);
                         }, null, false);
 
                     });

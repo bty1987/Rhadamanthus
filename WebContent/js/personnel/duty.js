@@ -169,9 +169,18 @@
         } else {
             url = api.system.addDuty;
         }
-        com.post(url, options, successCallback);
+        com.post(url, options, function (res) {
 
-        duty.modal.modal("hide");
+            dutySeacher.doSearch();
+            duty.modal.modal("hide");
+
+            var dutyData = {
+                "name": duty.dutyItems.name.val(),
+                "companyName": "方林集团"
+            };
+
+            kingdeeUtils.dutyToKingdee(dutyData);
+        });
     }
 
     // 添加
@@ -195,12 +204,6 @@
 
             failcallBack && failcallBack();
         });
-    }
-    // 刷新
-    function successCallback() {
-
-        // $('button.btn-search','#condList').click();//调用成功后,执行查询操作
-        dutySeacher.doSearch();// 调用成功后,执行com.Seacher中的doSeach方法
     }
 
 });

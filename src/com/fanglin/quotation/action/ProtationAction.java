@@ -86,6 +86,14 @@ public class ProtationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateProtationForProfit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateProtationForProfit() throws FLException {
+
+		protationService.updateProtationForProfit(protation);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateProtationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateProtationForAdvance() throws FLException {
 

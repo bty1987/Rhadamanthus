@@ -18,6 +18,7 @@
         taxRate: 0,
         taxDiscount: 0,
         isCountIn: false,
+        customFlag: false,
 
         isCountManage: com.focusPage("#isCountManage"),
         isCountManageDiscount: com.focusPage("#isCountManageDiscount"),
@@ -634,6 +635,8 @@
                 if (com.validate("addItemModal"))
                     return false;
 
+                var index = com.focusPage('#addReduceItemDiv').find('.fl-quo-item').length;
+
                 var addRow = {
                     "num": com.focusPage("#num").val(),// 工程预算量
                     "itemName": com.focusPage("#itemName").val(),// 名称
@@ -646,7 +649,8 @@
                     "subtype": com.focusPage("#quotationType").val(),
                     "type": constant.quotation().addReduceItem.TYPE_CUSTOM_QUOTATION_INT, // 类型(隐藏属性)
                     "discount": constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT,
-                    "itemtype": constant.quotation().addReduceItem.ITEMTYPE_NORM_INT
+                    "itemtype": constant.quotation().addReduceItem.ITEMTYPE_NORM_INT,
+                    "index": (index + 1)
                 };
 
                 /*
@@ -667,11 +671,14 @@
                     "addReduceItem.num": addRow.num,// 工程量 ;
                     "addReduceItem.quotationFunctionAreaId": addRow.quotationFunctionAreaId,// 所属功能区Id ;
                     "addReduceItem.quotationFunctionAreaName": com.focusPage("#addQuotationFunctionAreaId").find('option:selected').text(),// 所属功能区name ;
-                    "addReduceItem.content": addRow.content
+                    "addReduceItem.content": addRow.content,
+                    "addReduceItem.index": addRow.index
                 };
 
                 var _index = com.focusPage('.fl-quo-item:not([data-del="1"])', '#addReduceItemDiv').length;
                 var $item = painter.createQuote(_index + 1, addRow).appendTo(com.focusPage('#addReduceItemDiv > ul'));
+                $item.find(".icon-arrow-up").removeClass("grey").addClass("green");
+                $item.find(".icon-arrow-down").removeClass("grey").addClass("red");
 
                 arCalculator.calculateQuoteFee($item);
                 arCalculator.calculateFees();
@@ -803,7 +810,7 @@
 
             com.focusPage('.fl-quo-item:not([data-del="1"])', '#addReduceItemDiv').each(function() {
 
-                $(this).find('.line .cell-wrap').text($this.index() + 1);
+                $(this).find('.line .cell-wrap').text($(this).index() + 1);
             });
         },
         /*
@@ -924,11 +931,13 @@
             var $arwrap = com.focusPage('#addReduceItemDiv');
             var $editInput = that.$nowEditInput ? that.$nowEditInput : $arwrap.find('.fl-quo-input');
 
-            com.focusPage('.fl-quo-item.current').removeClass('current');
-            $line.addClass('current');
+            quote.checkedStyle($line);
+
             $editInput.removeClass('hide').appendTo($numCell).find('input').val(null).focus();
+
             that.$nowLine = $line;
             that.$nowEditInput = $editInput;
+
             that.$nowEditInput.find('input').off('keydown').on("keydown", function(e) {
 
                 var $input = $(this);
@@ -964,6 +973,7 @@
                     "addReduceItem.subPrice": that.$nowLine.attr('data-subPrice'), // 退减价
                     "addReduceItem.num": that.$nowLine.find('.num .cell-wrap').text(),// 工程量 ;
                     "addReduceItem.quotationFunctionAreaId": that.$nowLine.find('.quotationFunctionArea').attr('data-quotationfunctionareaid'),// 所属功能区Id ;
+                    "addReduceItem.index": that.$nowLine.find('.line .cell-wrap').text(),
                 };
 
                 // addReduceItem.quoteItemId , 引用报价项Id , type类型为0, 1, 3需要传递该参数 , 同时分别传递标准报价项id , 系统定义项id , 报价中报价项Id ;
@@ -975,6 +985,9 @@
                 }
 
                 com.clearValidator();
+
+                that.$nowLine.find(".icon-arrow-up").removeClass("grey").addClass("green");
+                that.$nowLine.find(".icon-arrow-down").removeClass("grey").addClass("red");
 
                 arCalculator.calculateQuoteFee(that.$nowLine);
                 arCalculator.calculateFees();
@@ -1093,14 +1106,12 @@
             if ($quote.find(".fl-quo-input"))
                 $quote.find(".fl-quo-input").insertAfter(com.focusPage('.fl-quo-list')).addClass('hide');
 
-            $quote.attr("data-del", "1")
-
             if (!_ariid) {
                 $quote.remove();
             } else {
-                that.sortQuote();
-                arCalculator.calculateFees();
+                $quote.attr("data-del", "1");
 
+                arCalculator.calculateFees();
                 var _params = $.extend({}, addReduceDetail.basicParams);
                 _params["addReduceItem.ariId"] = _ariid;
                 _params["addReduceItem.quotationItemId"] = quotationItemId;
@@ -1115,6 +1126,53 @@
                     arCalculator.calculateFees();
                 }, false);
             }
+
+            that.sortQuote();
+        },
+
+        checkedStyle: function($item) {
+
+            com.focusPage('.fl-quo-item.current').removeClass('current');
+            $item.addClass('current');
+        },
+
+        moveAreaItem: function($quote, $movequote, $direction) {
+
+            if (!$quote.attr('data-ariid')) {
+                return false;
+            }
+
+            if ($direction == "up") {
+
+                if ($quote.prev().length == 0 || !$movequote.attr('data-ariid')) {
+                    return false;
+                }
+
+                $quote.insertBefore($movequote);
+            }
+
+            if ($direction == "down") {
+
+                if ($quote.next().length == 0 || !$movequote.attr('data-ariid')) {
+                    return false;
+                }
+
+                $quote.insertBefore($movequote);
+            }
+
+            var nowline = $quote.find(".cell.line .cell-wrap").text();
+            var upline = $movequote.find(".cell.line .cell-wrap").text();
+
+            $quote.find(".cell.line .cell-wrap").text(upline);
+            $movequote.find(".cell.line .cell-wrap").text(nowline);
+
+            var params = {};
+            params["addReduceItems[" + 0 + "].ariId"] = $quote.attr('data-ariid');
+            params["addReduceItems[" + 0 + "].index"] = upline;
+            params["addReduceItems[" + 1 + "].ariId"] = $movequote.attr('data-ariid');
+            params["addReduceItems[" + 1 + "].index"] = nowline;
+ 
+            com.post(api.addReduce.updateAddReduceItemForIndex, params);
         },
 
         init: function() {
@@ -1266,7 +1324,7 @@
             ["price totalprice-discount", _sum, ["style", "white-space:nowrap"]], // 总价
             ];
 
-            var $checkCell, $checkCellWrap, $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo, $discountCell, $discountCellWrap, $checkDiscount, $lblDiscount;
+            var $checkCell, $checkCellWrap, $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo, $up, $down, $discountCell, $discountCellWrap, $checkDiscount, $lblDiscount;
 
             $.each(_lineSet, function(i, v) {
 
@@ -1317,8 +1375,30 @@
 
                 com.showTip(this, "报价信息", "top");
             });
+            $up = $('<a></a>').attr({
+                "href": "javascript:void(0)"
+            }).css({
+                "padding-left": "5px"
+            }).append('<i class="bigger-125 icon-arrow-up"></i>').mouseenter(function() {
 
-            $btnCellWrap.append($input).append($btnDel).append($btnInfo).appendTo($btnCell);
+                com.showTip(this, "向上", "top");
+            });
+            $down = $('<a></a>').attr({
+                "href": "javascript:void(0)"
+            }).css({
+                "padding-left": "5px"
+            }).append('<i class="bigger-125 icon-arrow-down"></i>').mouseenter(function() {
+
+                com.showTip(this, "向下", "top");
+            });
+
+            if (qv.ariId) {
+                $up.find("i").addClass("green"), $down.find("i").addClass("red");
+            } else {
+                $up.find("i").addClass("grey"), $down.find("i").addClass("grey");
+            }
+
+            $btnCellWrap.append($input).append($btnDel).append($btnInfo).append($up).append($down).appendTo($btnCell);
 
             $item.append($discountCell).append($checkCell).append($btnCell);
 
@@ -1359,6 +1439,22 @@
             $btnInfo.click(function() {
 
                 qv.content && com.showTip(this, qv.content, 'left');
+                return false;
+            });
+
+            // 向上移动
+            $up.click(function(e) {
+
+                quote.checkedStyle($item);
+                quote.moveAreaItem($item, $item.prev(), 'up');
+                return false;
+            });
+
+            // 向下移动
+            $down.click(function(e) {
+
+                quote.checkedStyle($item);
+                quote.moveAreaItem($item, $item.next(), 'down');
                 return false;
             });
 
@@ -1442,11 +1538,19 @@
 
             }, null, false);
 
+            com.post(api.system.querySystemConfigByKey, {
+                "systemConfig.key": "QUOTATION_PART_CUSTOM_FLAG"
+            }, function(res) {
+
+                if (res.systemConfig.value)
+                    addReduceDetail.customFlag = true;
+
+            }, null, false);
+
             if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_ADD_INT) {
 
                 com.focusPage('#sumLabType').text('增项');
                 com.focusPage('#addNormalItemBtn').removeClass('hide');
-                com.focusPage('#addNewItemBtn').removeClass('hide');
                 com.focusPage('.unitprice .cell-wrap').text('增补价');
 
             } else if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_REDUCE_INT) {
@@ -1457,6 +1561,11 @@
                 com.focusPage('#addSystemDefineItemBtn').removeClass('hide');
                 com.focusPage('#addItemBtn').removeClass('hide');
 
+            }
+
+            if (addReduceDetail.artype == constant.quotation().addreduce.TYPE_ADD_INT && addReduceDetail.customFlag){
+
+                com.focusPage('#addNewItemBtn').removeClass('hide');
             }
 
             // 根据装修单号获取默认报价
@@ -1512,6 +1621,15 @@
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));
             if (addReduceDetail.addReduceItems && addReduceDetail.addReduceItems.length) {
+
+                addReduceDetail.addReduceItems.sort(function(a, b) {
+                    if (a.index == null || b.index == null) {
+                        return b.index - a.index;
+                    } else {
+                        return a.index - b.index;
+                    }
+                });
+
                 $.each(addReduceDetail.addReduceItems, function(i, v) {
 
                     painter.createQuote(i + 1, v).appendTo($ul);

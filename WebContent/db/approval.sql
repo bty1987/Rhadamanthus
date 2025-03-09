@@ -231,6 +231,20 @@ CREATE TABLE `approvalmaterialrefunditem` (
   PRIMARY KEY (`amriid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='主材退货项审批表';
 
+DROP TABLE IF EXISTS `approvalprotationprefer`;
+CREATE TABLE `approvalprotationprefer` (
+  `appid` INT(11) NOT NULL AUTO_INCREMENT,
+  `aid` INT(11) NOT NULL COMMENT '审批ID',
+  `pid` INT(11) NOT NULL COMMENT '预签报价ID',
+  `ppid` INT(11) NOT NULL COMMENT '预签产品ID',
+  `preferPrice` INT(10) DEFAULT 0 COMMENT '优惠额',
+  `managePrefer` INT(10) DEFAULT 0 COMMENT '管理优惠',
+  `advancePrefer` INT(10) DEFAULT 0 COMMENT '特殊优惠',
+  `taxPrice` INT(10)  DEFAULT 0 COMMENT '税金',
+  `totalPrice` INT(10)  DEFAULT 0 COMMENT '总额',
+  PRIMARY KEY (`appid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预签报价优惠审批';
+
 DROP TABLE IF EXISTS `approvalquotationdiscount`;
 CREATE TABLE `approvalquotationdiscount` (
   `aqdid` int(11) NOT NULL AUTO_INCREMENT,

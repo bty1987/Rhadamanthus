@@ -42,6 +42,8 @@ public class PricePO implements Serializable {
 
 	private int selling;
 
+	private int confine;
+
 	private short ctype;
 
 	private int cvalue;
@@ -102,6 +104,14 @@ public class PricePO implements Serializable {
 
 	public void setSelling(int selling) {
 		this.selling = selling;
+	}
+
+	public int getConfine() {
+		return confine;
+	}
+
+	public void setConfine(int confine) {
+		this.confine = confine;
 	}
 
 	@Column(name = "ctype")

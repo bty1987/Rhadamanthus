@@ -20,29 +20,29 @@ import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.utils.Paging;
 
 public interface GoodsService {
-	
+
 	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company) throws FLException;
-	
-	public void pageGoodsForAdvance(Paging paging, List<Filter> filters,int company) throws FLException;
-	
-	public List<GoodsVO> queryGoods(List<Filter> filters,int company) throws FLException;
-	
-	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO,int company);
-	
-	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO,int company);
-	
+
+	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company) throws FLException;
+
+	public List<GoodsVO> queryGoods(List<Filter> filters, int company) throws FLException;
+
+	public List<GoodsVO> queryGoodsByNo(GoodsVO goodsVO, int company);
+
+	public List<GoodsVO> queryGoodsByName(GoodsVO goodsVO, int company);
+
 	public List<GoodsVO> queryGoodsByAtid(GoodsVO goodsVO);
-	
-	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO,int company);
-	
+
+	public GoodsVO queryGoodsByBarcode(GoodsVO goodsVO, int company);
+
 	public GoodsVO queryGoodsByGId(GoodsVO goodsVO);
-	
-	public int addGoods(GoodsVO goodsVO,int company) throws FLException;
-	
+
+	public int addGoods(GoodsVO goodsVO, int company) throws FLException;
+
 	public int updateGoods(GoodsVO goodsVO) throws FLException;
-	
+
 	public int updateGoodsForStatus(GoodsVO goodsVO) throws FLException;
-	
-	public int addPackage(GoodsVO goodsVO,List<GoodsPackageVO> goodsPackageVOs,int company) throws FLException;
+
+	public int addPackage(GoodsVO goodsVO, List<GoodsPackageVO> goodsPackageVOs, int company) throws FLException;
 
 }

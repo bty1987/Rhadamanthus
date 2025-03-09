@@ -74,6 +74,8 @@ public class QuotationVO implements Serializable {
 
 	private Long costPrice;
 
+	private Long consPrice;
+
 	private Long totalPrice;
 
 	private Short defaults;
@@ -310,6 +312,14 @@ public class QuotationVO implements Serializable {
 
 	public void setTotalPrice(Long totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Long getConsPrice() {
+		return consPrice;
+	}
+
+	public void setConsPrice(Long consPrice) {
+		this.consPrice = consPrice;
 	}
 
 	public Long getTotalPrice() {

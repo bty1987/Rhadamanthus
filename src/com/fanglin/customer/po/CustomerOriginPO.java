@@ -387,10 +387,7 @@ public class CustomerOriginPO implements Serializable {
 
 		BeanUtil.copyProperties(this, customerOriginVO, Arrays.asList("village", "creater", "belonger", "region", "customer", "house", "designer", "salesman", "department", "decorationBusitype"));
 
-		if (customerOriginVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
-		if (customerOriginVO.getVillage() != null) BeanUtil.copyProperties(getVillage(), customerOriginVO.getVillage(), Arrays.asList("cityProper"));
-		if (customerOriginVO.getVillage() != null && customerOriginVO.getVillage().getCityProper() != null && getVillage() != null) BeanUtil.copyProperties(getVillage().getCityProper(), customerOriginVO.getVillage().getCityProper(), Arrays.asList("city"));
-
+		if (customerOriginVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerOriginVO.getHouse());
 		if (customerOriginVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerOriginVO.getCustomer());
 
 		if (customerOriginVO.getCreater() != null) customerOriginVO.getCreater().setBaseInfo(getCreater());

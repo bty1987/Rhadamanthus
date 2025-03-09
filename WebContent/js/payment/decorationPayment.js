@@ -417,7 +417,7 @@ jQuery(function($) {
                 decorationPayment.modals.codepayModal.html("");
 
                 paymentUtils.initQrcode("decorationPayment", "decorationCodeQrcodeModal"); // 收款码
-                paymentUtils.showQRCode("decorationPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.decoration.orderId + "&paymentType=1" + "&pid=" + v.dpid, "decorationCodeQrcodeModal");
+                paymentUtils.showQRCode("decorationPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.decoration.orderId + "&paymentType=1" + "&pid=" + v.dpid + "&atttype=0", "decorationCodeQrcodeModal");
             });
 
             // 微信推送

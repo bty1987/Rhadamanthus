@@ -56,9 +56,9 @@ public class FeedbackRecordServiceImpl implements FeedbackRecordService {
 
 		String userId = authentication.getUserId();
 
-		FeedbackPO feedback = feedbackDao.get(feedbackRecordVO.getFeedback().getFid());
+		FeedbackPO feedbackPO = feedbackDao.get(feedbackRecordVO.getFeedback().getFid());
 
-		if (feedback == null) {
+		if (feedbackPO == null) {
 			throw new FLException(330053, "反馈信息不存在");
 		}
 
@@ -68,19 +68,19 @@ public class FeedbackRecordServiceImpl implements FeedbackRecordService {
 
 		BeanUtil.copyPropertie(feedbackRecordVO, feedbackRecordPO, Arrays.asList("feedback", "handler"));
 
-		feedbackRecordPO.setFeedback(feedback);
+		feedbackRecordPO.setFeedback(feedbackPO);
 		feedbackRecordPO.setHandler(userPO);
 		feedbackRecordPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		feedbackRecordDao.save(feedbackRecordPO);
 
-		if (feedback.getStatus() != FeedbackPO.STATUS_HANDLE_INT) return 0;
+		if (!Arrays.asList(FeedbackPO.STATUS_RECEIVE_INT, FeedbackPO.STATUS_HANDLE_INT).contains(feedbackPO.getStatus())) return 0;
 
-		feedback.setHandler(userPO);
-		feedback.setStatus(FeedbackPO.STATUS_HANDLE_INT);
-		feedback.setHandleTime(DateUtil.getDateToTimestamp(new Date()));
+		feedbackPO.setHandler(userPO);
+		feedbackPO.setStatus(FeedbackPO.STATUS_HANDLE_INT);
+		feedbackPO.setHandleTime(DateUtil.getDateToTimestamp(new Date()));
 
-		feedbackDao.update(feedback);
+		feedbackDao.update(feedbackPO);
 
 		return 0;
 	}

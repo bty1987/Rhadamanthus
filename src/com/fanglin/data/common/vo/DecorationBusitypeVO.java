@@ -10,6 +10,8 @@ public class DecorationBusitypeVO implements Serializable {
 
 	private String name;
 
+	private Short outside;
+
 	private Short status;
 
 	private Integer company;
@@ -18,8 +20,7 @@ public class DecorationBusitypeVO implements Serializable {
 		super();
 	}
 
-	public DecorationBusitypeVO(Long dbid, String name, Short status,
-			Integer company) {
+	public DecorationBusitypeVO(Long dbid, String name, Short status, Integer company) {
 		super();
 		this.dbid = dbid;
 		this.name = name;
@@ -41,6 +42,14 @@ public class DecorationBusitypeVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Short getOutside() {
+		return outside;
+	}
+
+	public void setOutside(Short outside) {
+		this.outside = outside;
 	}
 
 	public Short getStatus() {

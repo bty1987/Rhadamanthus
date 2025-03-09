@@ -245,9 +245,9 @@ $(function() {
             if (selectionItem.pageConfig.pageBtn.contains("print"))
                 $divBtnWrap.append($btnPrint);
 
-            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCompile.show() : $btnCompile.hide();
+            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT || selectionItem.pageType == "expert" ? $btnCompile.show() : $btnCompile.hide();
             [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnRefnum.hide() : $btnRefnum.show();
-            v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65 ? $btnRran.show() : $btnRran.hide();
+            (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || selectionItem.pageType == "expert" ? $btnRran.show() : $btnRran.hide();
             v.status == constant.quotation().selectionItem.STATUS_TRAN_INT ? $btnCheck.show() : $btnCheck.hide();
             v.status == constant.quotation().selectionItem.STATUS_CHECK_INT ? $btnConfirm.show() : $btnConfirm.hide();
             v.status == constant.quotation().selectionItem.STATUS_CONFIRM_INT ? $btnFinish.show() : $btnFinish.hide();
@@ -264,8 +264,11 @@ $(function() {
 
                 selectionItem.parameters.siid = v.siid;
 
-                selectionItem.title.text("编辑数量");
+                selectionItem.title.text("编辑");
+                
                 selectionItem.dcomment.show();
+                selectionItem.items.comment.val(v.comment);
+                
                 selectionItem.modals.updateSelectionItemModal.modal("show");
             });
 

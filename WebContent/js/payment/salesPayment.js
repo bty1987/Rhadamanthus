@@ -359,7 +359,7 @@ $(function() {
 
                 com.focusPage("#salesCodeQrcodeModal").html("");
                 paymentUtils.initQrcode("salesPayment", "salesCodeQrcodeModal"); // 收款码
-                paymentUtils.showQRCode("salesPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.sales.orderId + "&paymentType=3" + "&pid=" + v.spid, "salesCodeQrcodeModal");
+                paymentUtils.showQRCode("salesPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.sales.orderId + "&paymentType=3" + "&pid=" + v.spid + "&atttype=1", "salesCodeQrcodeModal");
             });
 
             // 微信推送

@@ -82,6 +82,7 @@ var quotationUtils = {
         quotationUtils.initQuotationFunctionAreaDetail();
         quotationUtils.initQuotationWorkerTypeDetail();
         quotationUtils.initQuotationSelectionCategoryDetail();
+        quotationUtils.initApproverDetail();
 
     },
     statisticalQuotationItem: function(quotationFunctionAreas, addReduces, extensions) {
@@ -766,7 +767,7 @@ var quotationUtils = {
 
         var serviceMoneyBody = $("<div></div>").addClass('widget-body');
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "managePrefer", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advancePrefer", true), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", false), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", false), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", false), this.createDivForHolonomy("col-md-2", "折扣", "discount", false), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", false), this.createDivForHolonomy("col-md-2", "管理优惠", "managePrefer", false), this.createDivForHolonomy("col-md-2", "特殊优惠", "advancePrefer", false), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", false), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
         serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
         inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
@@ -792,6 +793,16 @@ var quotationUtils = {
         com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull($quotationPrefer.preferPrice, 0));
         com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.managePrefer, 0));
         com.focusPage('#advancePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.advancePrefer, 0));
+        com.focusPage('#quotePrice', '#quotationSummary').html(com.checkNull($quotationPrefer.quotePrice, 0));
+
+        if ($quotation.decoration.type != constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
+            com.focusPage('#quotePriceShow').hide();
+        }
+
+        if (com.checkNull($quotationPrefer.advancePrefer, 0) == 0) {
+            com.focusPage('#advancePreferShow').hide();
+            com.focusPage('#advanceShow', "#quotationPreferModal").hide();
+        }
 
         var $ribbonSubset = com.focusPage('#ribbonSubset').html("");
 
@@ -878,7 +889,7 @@ var quotationUtils = {
         }).appendTo($ulribbon);
 
         $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
-        $dname = $('<h4></h4>').append($('<strong></strong>').attr("id", "totalPrice").css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
+        $dname = $('<h4 class="hide"></h4>').append($('<strong></strong>').attr("id", "totalPrice").css('color', '#E2737D').html("总额: " + $total)).appendTo($dhead);
     },
     initQuotationWorkerTypeDetail: function() {
 
@@ -1790,6 +1801,36 @@ var quotationUtils = {
 
             return data;
         }
+    },
+
+    initApproverDetail: function() {
+
+        com.post(api.approval.queryApproverByType, {
+            "approver.type": 22
+        }, function(res) {
+
+            $.each(res.approvers, function(i, v) {
+
+                var comment = v.comment == null ? "" : v.comment;
+
+                var approveManSel = com.focusPage("#approveManSel", "#approveModal");
+                var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(approveManSel);
+                var $approvaler = $('<label></label>').appendTo($div);
+
+                var $input = $('<input>').attr({
+                    "type": "radio",
+                    "name": "form-field-radio",
+                    "class": "ace",
+                    "uid": v.userBase.uid,
+                    "userId": v.userBase.userId
+                }).appendTo($approvaler);
+
+                var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
+                var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
+
+                var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
+            });
+        }, null, false);
     },
 
 };

@@ -80,7 +80,13 @@ jQuery(function($) {
         field: "busitype",
         name: "业务类型",
         prop: "busitype.name",
-        clazz: "grey"
+        clazz: "red"
+    }, {
+        field: "department.status",
+        name: "部门状态",
+        prop: "department.status",
+        clazz: "red",
+        dataset: constant.personel().dept.status.keys
     }, {
         field: "creater",
         name: "创建人",
@@ -92,6 +98,7 @@ jQuery(function($) {
         prop: "createTime",
         clazz: "green"
     }];
+    
     var linebtns = [{
         name: "删除",
         clazz: "btn-warning",

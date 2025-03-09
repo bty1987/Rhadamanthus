@@ -11,6 +11,7 @@ $(function() {
         modals: {
             protationModal: com.focusPage('#protationModal'),
             protationPreferModal: com.focusPage('#protationPreferModal'),
+            approveModal: com.focusPage('#approveModal'),
         },
 
         items: {
@@ -25,6 +26,8 @@ $(function() {
             preferPrices: com.focusPage("#preferPrices", "#protationPreferModal"),
             preferManage: com.focusPage("#preferManage", "#protationPreferModal"),
             preferAdvance: com.focusPage("#preferAdvance", "#protationPreferModal"),
+            changeReason: com.focusPage("#changeReason", "#approveModal"),
+            approveManSel: com.focusPage("#approveManSel", "#approveModal"),
         },
 
         datasets: {
@@ -53,6 +56,32 @@ $(function() {
 
         protation.items.version.bindData(res.quotationVersions, "qvId", "name", "无");
     });
+
+    com.post(api.approval.queryApproverByType, {
+        "approver.type": 22
+    }, function(res) {
+
+        $.each(res.approvers, function(i, v) {
+
+            var comment = v.comment == null ? "" : v.comment;
+
+            var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(protation.items.approveManSel);
+            var $approvaler = $('<label></label>').appendTo($div);
+
+            var $input = $('<input>').attr({
+                "type": "radio",
+                "name": "form-field-radio",
+                "class": "ace",
+                "uid": v.userBase.uid,
+                "userId": v.userBase.userId
+            }).appendTo($approvaler);
+
+            var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
+            var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
+
+            var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
+        });
+    }, null, false);
 
     com.focusPage('#btnBack').on('click', function() {
 
@@ -89,16 +118,12 @@ $(function() {
         discout = discout < 0 ? 0 : discout > 1 ? 1 : discout;
 
         if (utils.accMul(discout, 10) < protation.presignProduce.discount) {
-
             com.showAlert(com.warning, "优惠金额不合理");
-
             return false;
         }
 
         if (_protation.managePrice < preferManage) {
-
             com.showAlert(com.warning, "管理优惠不能大于管理费");
-
             return false;
         }
 
@@ -139,9 +164,7 @@ $(function() {
         _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
 
         if (utils.accMul(_manageDiscount, 10) < protation.presignProduce.manageDiscount) {
-
             com.showAlert(com.warning, "管理费优惠金额不合理");
-
             return false;
         }
 
@@ -155,7 +178,8 @@ $(function() {
         }
 
         var options = {
-            "protation.pid": protation.protation.pid,
+            "protation.pid": _protation.pid,
+            "protation.ppid": _protation.ppid,
             "protation.preferPrice": preferPrice,
             "protation.managePrice": _managePrice,
             "protation.taxPrice": _taxPrice,
@@ -166,6 +190,14 @@ $(function() {
             "protation.totalProfit": _protation.totalProfit,
             "protation.totalPrice": total,
         };
+
+        if(preferAdvance > protation.protation.advanceProfit){
+            submitApproveProtationPrefer(options);
+
+            protation.modals.approveModal.modal("show");
+
+            return false;
+        }
 
         com.post(api.quotation.updateProtationForAdvance, options, function(res) {
 
@@ -219,6 +251,43 @@ $(function() {
             });
         }
     });
+
+    function submitApproveProtationPrefer(options) {
+
+        com.focusPage('#submitApproveBtn').bindClick(function() {
+
+            if (com.validate("approveModal")) {
+                return false;
+            }
+
+            var receiverId = protation.items.approveManSel.find('input:checked').attr('userid');
+
+            if (receiverId == null || receiverId == "") {
+                com.showAlert(com.error, "请选择审批人!");
+                return false;
+            }
+
+            var params = $.extend({}, {
+                "approval.receiver.userId": receiverId,
+                "approval.comment": protation.items.changeReason.val(),
+                "approvalProtationPrefer.pid": options["protation.pid"],
+                "approvalProtationPrefer.ppid": options["protation.ppid"],
+                "approvalProtationPrefer.preferPrice": options["protation.preferPrice"],
+                "approvalProtationPrefer.managePrefer": options["protation.manageProfit"],
+                "approvalProtationPrefer.advancePrefer": options["protation.advanceProfit"],
+                "approvalProtationPrefer.taxPrice": options["protation.taxPrice"],
+                "approvalProtationPrefer.totalPrice": options["protation.totalPrice"],
+            }, options);
+
+            com.post(api.approval.submitApprovalForProtationPrefer, params, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                protation.modals.approveModal.modal("hide");
+                protation.modals.protationPreferModal.modal("hide");
+            });
+        });
+    }
 
     function initProtationList() {
 
@@ -278,29 +347,6 @@ $(function() {
     }
 
     var searcher = new Searcher();
-
-    var btnPrefer = {
-        name: "优惠",
-        clazz: "btn-purple",
-        handle: function(v) {
-
-            com.post(api.quotation.queryPresignProduceByPpid, {
-                "presignProduce.ppid": v.ppid
-            }, function(res) {
-
-                protation.presignProduce = res.presignProduce;
-            });
-
-            protation.protation = v;
-
-            protation.items.preferPrices.val(v.preferPrice);
-            protation.items.preferManage.val(v.manageProfit);
-            protation.items.preferAdvance.val(v.advanceProfit);
-
-            protation.modals.protationPreferModal.modal("show");
-
-        }
-    };
 
     var btnUpdate = {
         name: "修改",
@@ -464,6 +510,75 @@ $(function() {
             return (v.status == constant.quotation().protation.STATUS_LOCK_INT);
         }
     };
+    
+    var btnPrefer = {
+        name: "优惠",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            com.post(api.quotation.queryPresignProduceByPpid, {
+                "presignProduce.ppid": v.ppid
+            }, function(res) {
+
+                protation.presignProduce = res.presignProduce;
+            }, null, false);
+
+            protation.protation = v;
+
+            protation.items.preferPrices.val(v.preferPrice);
+            protation.items.preferManage.val(v.manageProfit);
+            protation.items.preferAdvance.val(v.advanceProfit);
+
+            if (protation.presignProduce.discount == 10)
+                protation.items.preferPrices.attr("disabled", "disabled");
+
+            if (protation.presignProduce.manageDiscount == 10)
+                protation.items.preferManage.attr("disabled", "disabled");
+
+            protation.modals.protationPreferModal.modal("show");
+
+        }
+    };
+    
+    var btnPreferMore = {
+        name: "更优惠",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            var pid = v.pid
+
+            var options = {
+                "protation.pid": pid,
+                "protation.discount": 1
+            }
+
+            com.post(api.quotation.updateProtationForProfit, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            })
+        }
+    };
+    
+    var btnManagePreferMore = {
+        name: "管理更优惠",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            var pid = v.pid
+
+            var options = {
+                "protation.pid": pid,
+                "protation.manageDiscount": 1
+            }
+
+            com.post(api.quotation.updateProtationForProfit, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            })
+        }
+    };
 
     if (protation.pageType == null) {
 
@@ -528,9 +643,6 @@ $(function() {
 
         var cardbtns = [];
 
-        if (protation.pageConfig.pageBtn.contains("prefer"))
-            cardbtns.push(btnPrefer);
-
         if (protation.pageConfig.pageBtn.contains("update"))
             cardbtns.push(btnUpdate);
 
@@ -548,6 +660,15 @@ $(function() {
 
         if (protation.pageConfig.pageBtn.contains("unlock"))
             cardbtns.push(btnUnlock);
+        
+        if (protation.pageConfig.pageBtn.contains("prefer"))
+            cardbtns.push(btnPrefer);
+        
+        if (protation.pageConfig.pageBtn.contains("preferMore"))
+            cardbtns.push(btnPreferMore);
+        
+        if (protation.pageConfig.pageBtn.contains("managePreferMore"))
+            cardbtns.push(btnManagePreferMore);
 
         searcher.base("condList", "pagenation", "resultList", protation.pageConfig.apiPage);
         searcher.condition(protation.pageConfig.condArr);

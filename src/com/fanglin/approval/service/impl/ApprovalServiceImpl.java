@@ -26,13 +26,16 @@ import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.service.ApprovalCustomerSourceService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
+import com.fanglin.approval.service.ApprovalDecorationContractService;
 import com.fanglin.approval.service.ApprovalDecorationHolonomyService;
 import com.fanglin.approval.service.ApprovalDecorationRefundService;
 import com.fanglin.approval.service.ApprovalDecorationTerminalService;
 import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
+import com.fanglin.approval.service.ApprovalProtationPreferService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
+import com.fanglin.approval.service.ApprovalQuotationPreferService;
 import com.fanglin.approval.service.ApprovalSalesDaymentService;
 import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
@@ -104,6 +107,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalCustomerSourceService approvalCustomerSourceService;
+
+	@Autowired
+	private ApprovalProtationPreferService approvalProtationPreferService;
+
+	@Autowired
+	private ApprovalQuotationPreferService approvalQuotationPreferService;
+
+	@Autowired
+	private ApprovalDecorationContractService approvalDecorationContractService;
 
 	@Autowired
 	private UserDao userDao;
@@ -263,6 +275,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT:
 				approvalCustomerSourceService.approveForCustomerSource(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT:
+				approvalProtationPreferService.approveForProtationPrefer(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT:
+				approvalQuotationPreferService.approveForQuotationPrefer(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_CONTRACT_INT:
+				approvalDecorationContractService.approveForDecorationContract(approvalPO);
 				break;
 			default:
 				break;

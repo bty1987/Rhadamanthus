@@ -9,4 +9,10 @@ public interface CustomerUserRuleItemDao extends Dao<CustomerUserRuleItemPO> {
 
 	public List<CustomerUserRuleItemPO> queryCustomerUserRuleItem(Long curid);
 
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company);
+
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids, int did);
+
+	public int existCustomerUserRuleItem(int company, int area);
+
 }

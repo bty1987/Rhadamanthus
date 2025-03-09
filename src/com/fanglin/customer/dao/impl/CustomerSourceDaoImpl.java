@@ -1,7 +1,9 @@
 package com.fanglin.customer.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -34,8 +36,20 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 	}
 
 	@Override
-	public CustomerSourcePO queryCustomerSource(String phone) {
-		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq("phone", phone)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+	public CustomerSourcePO queryCustomerSource(int uid, String phone, int company) {
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid)).add(Restrictions.eq("phone", phone)).add(Restrictions.eq("company", company)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public Integer countCustomerSource(int uid, String phone, int company) {
+
+		String sql = "SELECT count(1) as count FROM customer.customersource sc, customer.customerchance cc WHERE sc.csid = cc.csid AND cc.buid = :buid AND sc.company = :company AND sc.phone = :phone limit 1";
+
+		SQLQuery query = session().createSQLQuery(sql.toString());
+
+		query.setInteger("company", company).setString("phone", phone).setInteger("buid", uid);
+
+		return ((BigInteger) query.uniqueResult()).intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -86,4 +100,10 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 		}
 
 	}
+
+	@Override
+	public CustomerSourcePO countCustomerByHouseNumber(String houseNumber, long vid) {
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq("houseNumber", houseNumber)).add(Restrictions.eq("village.vid", vid)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+	}
+
 }

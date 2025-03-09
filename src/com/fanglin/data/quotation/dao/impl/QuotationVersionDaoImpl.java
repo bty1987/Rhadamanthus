@@ -55,6 +55,11 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 	}
 
 	@Override
+	public QuotationVersionPO queryQuotationVersionByQvId(long qvId) {
+		return (QuotationVersionPO) session().createCriteria(QuotationVersionPO.class).add(Restrictions.eq("qvId", qvId)).uniqueResult();
+	}
+
+	@Override
 	public QuotationVersionPO queryQuotationVersionForDefault(int company, short type, short defaultFlag) {
 		return (QuotationVersionPO) createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("type", type)).add(Restrictions.eq("defaultFlag", defaultFlag)).setMaxResults(1).uniqueResult();
 	}

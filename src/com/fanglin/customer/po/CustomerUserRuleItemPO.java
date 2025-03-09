@@ -6,9 +6,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.communion.po.DepartmentPO;
 
 @Entity
 @Table(name = "customerUserRuleItem", catalog = "customer")
@@ -16,7 +21,17 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	private static final long serialVersionUID = 1886589670333755624L;
 
+	public static final short ISSURPLUS_ENABLE_INT = 0;
+
+	public static final short ISDELETE_ENABLE_INT = 0;
+
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_DISABLED_INT = 1;
+
 	private long curiid;
+
+	private DepartmentPO department;
 
 	private long curid;
 
@@ -49,6 +64,16 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	public void setCuriid(long curiid) {
 		this.curiid = curiid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "did", referencedColumnName = "did")
+	public DepartmentPO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentPO department) {
+		this.department = department;
 	}
 
 	@Column(name = "curid")

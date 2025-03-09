@@ -31,6 +31,16 @@ public class FeedbackPO implements Serializable {
 	public static final String COLUMN_PHONE_STR = "phone";
 
 	public static final String COLUMN_COMPANY_STR = "company";
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final String COLUMN_HANDLETIME_STR = "handleTime";	
+	
+	public static final String COLUMN_RECEIVETIME_STR = "receiveTime";
+	
+	public static final String COLUMN_HANDLER_STR = "handler.userId";
+	
+	public static final String COLUMN_RECEIVER_STR = "receiver.userId";
 
 	public static final Short STATUS_INITIAL_INT = 0;
 
@@ -226,9 +236,9 @@ public class FeedbackPO implements Serializable {
 
 		BeanUtil.copyPropertie(this, feedbackVO, Arrays.asList("company", "receiver", "finisher", "handler"));
 
-		if (feedbackVO.getReceiver() != null) feedbackVO.getReceiver().ptv(getReceiver());
-		if (feedbackVO.getHandler() != null) feedbackVO.getHandler().ptv(getHandler());
-		if (feedbackVO.getFinisher() != null) feedbackVO.getFinisher().ptv(getFinisher());
+		if (feedbackVO.getReceiver() != null && getReceiver() != null) feedbackVO.getReceiver().ptv(getReceiver());
+		if (feedbackVO.getHandler() != null && getHandler() != null) feedbackVO.getHandler().ptv(getHandler());
+		if (feedbackVO.getFinisher() != null && getFinisher() != null) feedbackVO.getFinisher().ptv(getFinisher());
 
 		feedbackVO.setCompany(getCompany().getName());
 

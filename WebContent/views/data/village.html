@@ -22,6 +22,12 @@
 						<div class="col-xs-12">
 							<form class="form-horizontal">
 								<div class="col-md-12">
+									<div class="form-group" id="parentVillageDiv">
+										<label class="col-sm-3 control-label no-padding-right" for="parentVillage">上级楼盘</label>
+										<div class="col-sm-9">
+											<input class="col-xs-10 col-sm-6 v_name" maxlength="20" type="text" id="parentVillage" />
+										</div>
+									</div>
 
 									<div class="form-group" id ="nodiv">
 										<label class="col-sm-3 control-label no-padding-right" for="no">楼盘编号</label>
@@ -183,7 +189,6 @@
 </div>
 
 <div id="villagePopUp" class="portlet box page-content"></div>
-
 <script type="text/javascript">
 	$(function(){
         $.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx', function(){

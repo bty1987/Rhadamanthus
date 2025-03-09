@@ -92,10 +92,6 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationPO.getType() == DecorationPO.TYPE_MIDPACK_INT) {
-			decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
-		}
-
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
 		if (!status.contains(decorationPO.getStatus())) {
@@ -148,6 +144,10 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 		if (decorationMidpackVO.getMaterialRate() == 0) {
 			decorationMidpackPO.setMaterialPrice(decorationMidpackVO.getMaterialPrice());
 			decorationMidpackPO.setMaterialOrigin(decorationMidpackVO.getMaterialPrice());
+		}
+
+		if (decorationMidpackPO.getMaterialPrice() == 0) {
+			decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
 		}
 
 		decorationDao.update(decorationPO);

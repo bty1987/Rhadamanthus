@@ -18,7 +18,9 @@ public class PriceVO implements Serializable {
 
 	private Integer purchase; // 进价
 
-	private Integer selling;// 售价
+	private Integer selling; // 售价
+
+	private Integer confine; // 限价
 
 	private Short ctype; // 结算类型,0:底价,1:点位
 
@@ -91,6 +93,14 @@ public class PriceVO implements Serializable {
 
 	public void setSelling(Integer selling) {
 		this.selling = selling;
+	}
+
+	public Integer getConfine() {
+		return confine;
+	}
+
+	public void setConfine(Integer confine) {
+		this.confine = confine;
 	}
 
 	public Short getCtype() {

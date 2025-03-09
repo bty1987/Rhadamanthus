@@ -20,7 +20,7 @@
                 "msg": "格式不正确A-Z,0-9"
             },
             alone: true
-        },
+        }
     },
     "relationship": {
         label: "关系客户",
@@ -218,7 +218,7 @@
         submitConfig: {
             name: "source.name",
             op: "cn",
-            validate: null,
+            validate: null
         }
     },
     "chance-customer-phone": {
@@ -356,7 +356,7 @@
         }
     },
     "chance-createTime": {
-        label: "创建时间",
+        label: "分配时间",
         type: "dateRangePicker",
         submitConfig: {
             name: "createTime",
@@ -392,6 +392,50 @@
             url: null,
             postData: null,
             listPath: constant.customer().customerChance.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "chance-finer": {
+        label: "罚款人",
+        type: "autofill",
+        submitConfig: {
+            name: "finer",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "chance-fineTime": {
+        label: "罚款时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "fineTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "chance-isFine": {
+        label: "罚款状态",
+        type: "select",
+        submitConfig: {
+            name: "isFine",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerChance.isFine.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -537,7 +581,7 @@
             valuePath: "value"
         }
     },
-	 "customerSource-houseNumber": {
+    "customerSource-houseNumber": {
         label: "楼号",
         type: "text",
         submitConfig: {
@@ -753,8 +797,82 @@
             valuePath: "value"
         }
     },
+    "feedback-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().feedback.feedbackStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "feedback-handler": {
+        label: "处理人",
+        type: "autofill",
+        submitConfig: {
+            name: "handler",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": "0"
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "feedback-receiver": {
+        label: "接收人",
+        type: "autofill",
+        submitConfig: {
+            name: "receiver",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": "0"
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "feedback-handleTime": {
+        label: "处理时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "handleTime",
+            op: "cn",
+            validate: null
+        }
+    },
+
+    "feedback-receiveTime": {
+        label: "接收时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "receiveTime",
+            op: "cn",
+            validate: null
+        }
+    },
     "feedback-company": {
-        label: "装修单公司",
+        label: "公司",
         type: "select",
         submitConfig: {
             name: "company",
@@ -769,6 +887,7 @@
             valuePath: "name"
         }
     },
+
 
     "member-no": {
         label: "会员编号",
@@ -1030,6 +1149,48 @@
             url: null,
             postData: {},
             listPath: constant.customer().customerUserRule.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "customerProtectRule-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.customer().customerProtectRule.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerProtectRule-value": {
+        label: "数值",
+        type: "text",
+        submitConfig: {
+            name: "value",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerProtectRule-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.customer().customerProtectRule.status.datas,
             keyPath: "key",
             valuePath: "value"
         }

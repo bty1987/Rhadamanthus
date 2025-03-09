@@ -14,7 +14,6 @@ package com.fanglin.payment.service.impl;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -186,7 +185,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
 
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPaymentVO.getDecoration().getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(decorationPaymentVO.getDecoration().getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 
 		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
@@ -202,7 +201,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	public List<DecorationPaymentVO> queryDecorationPaymentForNotInitByDrId(DecorationReceiptVO decorationReceiptVO) {
 
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentForNotInitByDrId(decorationReceiptVO.getDrId());
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentForNotInit(decorationReceiptVO.getDrId());
 
 		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
 			DecorationPaymentVO decorationPaymentVO = changePOToVO(decorationPaymentPO);
@@ -288,7 +287,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		int company = decorationPO.getCompany();
 
-		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
+		List<DecorationPaymentPO> decorationPayments = decorationPaymentDao.queryDecorationPaymentByOrderId(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
 
 		if (decorationPayments != null && decorationPayments.size() > 0) {
 			throw new FLException(150001, "款项已付,不可修改");
@@ -427,7 +426,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		String orderId = decorationPaymentVO.getDecoration().getOrderId();
 		String paymentType = decorationPaymentVO.getPaymentType();
 
-		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAType(orderId, paymentType);
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(orderId, paymentType);
 		DecorationReceiptPO decorationReceiptPO = decorationPaymentPO.getDecorationReceipt();
 
 		if (decorationPaymentPO != null && (DecorationPaymentPO.PAYMENTSTATUS_PAY_INT == (decorationPaymentPO.getPaymentStatus()) || DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT == (decorationPaymentPO.getPaymentStatus()))) {
@@ -489,7 +488,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		// 装修款收款过程利用排序字段控制收款顺序
 		if (sort > 1) {
-			DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAndSort(orderId, (short) (sort - 1));
+			DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPayment(orderId, (short) (sort - 1));
 
 			if (prevDecorationPaymentPO != null) {
 				if (prevDecorationPaymentPO.getPaymentStatus() == (DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT)) {
@@ -512,32 +511,11 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			}
 		}
 
-		// 订单类型整装，收尾款时验证是否存在未付款的增项款/减项款
-		if (decorationPO.getTypeness() == DecorationPO.TYPE_INCLUSIVE_INT) {
+		int count1 = decorationPaymentDao.countDecorationPayment(orderId, Arrays.asList(DecorationPaymentPO.ONETYPE_ADD_INT), Arrays.asList(DecorationPaymentPO.TWOTYPE_DEAL_INT), Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT));
+		int count2 = decorationPaymentDao.countDecorationPayment(orderId, new ArrayList<Short>(), Arrays.asList(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT), Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT));
 
-			Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT, DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
-
-			List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(orderId, paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
-			List<Short> sorts = new ArrayList<Short>();
-
-			for (DecorationPaymentPO decorationPaymentPOO : decorationPaymentPOs) {
-				sorts.add(decorationPaymentPOO.getSort());
-			}
-
-			Short maxSort = Collections.max(sorts);
-
-			if (sort == maxSort) {
-
-				List<Short> addReduceStatus = Arrays.asList(AddReducePO.STATUS_SUBMIT_INT);
-
-				List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(orderId, addReduceStatus);
-
-				if (addReducePOs.size() > 0) {
-					throw new FLException(140035, "当前增减项款项状态不可操作");
-				}
-
-			}
-
+		if (decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT && count1 == 1 && count2 > 0) {
+			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
 
 		if (decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT) {
@@ -912,7 +890,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		// 装修款收款过程利用排序字段控制收款顺序
 		if (sort > 1) {
-			DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAndSort(orderId, (short) (sort - 1));
+			DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPayment(orderId, (short) (sort - 1));
 
 			if (prevDecorationPaymentPO != null) {
 				if (prevDecorationPaymentPO.getPaymentStatus() == (DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT)) {
@@ -921,7 +899,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			}
 		}
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=1", orderId, decorationPaymentPO.getDpid()));
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=1&atttype=0", orderId, decorationPaymentPO.getDpid()));
 
 	}
 

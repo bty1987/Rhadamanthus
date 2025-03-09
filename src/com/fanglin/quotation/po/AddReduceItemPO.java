@@ -65,6 +65,8 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	private String content;
 
+	private int index;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "ariId")
@@ -228,6 +230,15 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "[index]")
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 }

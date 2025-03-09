@@ -51,8 +51,10 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
-	public long amountDecorationActivityItemForIsPrefor(String orderId, Short type, List<Short> states, Short isPrefor) {
+	public long amountDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment) {
+
 		StringBuffer sql = new StringBuffer();
+
 		sql.append("SELECT COALESCE(SUM(money*num), 0) AS priceSum FROM decoration.decorationActivityitem WHERE orderId =:orderId");
 
 		if (type != null) {
@@ -67,8 +69,14 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 			sql.append(" AND isPrefor = :isPrefor");
 		}
 
+		if (isPayment != null) {
+			sql.append(" AND isPayment = :isPayment");
+		}
+
 		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
+
 		sqlQuery.setString("orderId", orderId);
+
 		if (type != null) {
 			sqlQuery.setShort("type", type);
 		}
@@ -79,6 +87,10 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 
 		if (isPrefor != null) {
 			sqlQuery.setShort("isPrefor", isPrefor);
+		}
+
+		if (isPrefor != null) {
+			sqlQuery.setShort("isPayment", isPayment);
 		}
 
 		BigDecimal amount = (BigDecimal) sqlQuery.uniqueResult();

@@ -243,6 +243,17 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateAddReduceItemForIndex(List<AddReduceItemVO> addReduceItemVOs) throws FLException {
+
+		for (AddReduceItemVO addReduceItemVO : addReduceItemVOs) {
+			addReduceItemDao.updateAddReduceItemForIndex(addReduceItemVO.getAriId(), addReduceItemVO.getIndex());
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());

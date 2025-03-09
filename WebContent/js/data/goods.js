@@ -16,8 +16,12 @@ $(function() {
             measurementUnit: com.focusPage("#measurementUnit"),
             purchase: com.focusPage("#purchase"),
             selling: com.focusPage("#selling"),
+            confine: com.focusPage("#confine"),
             pieceNum: com.focusPage("#pieceNum"),
             accessoriesType: com.focusPage("#accessoriesType"),
+            onekind: com.focusPage("#onekind"),
+            twokind: com.focusPage("#twokind"),
+            thrkind: com.focusPage("#thrkind"),
 
             executeTimes: com.focusPage("#executeTimes"),
             executeDates: com.focusPage("#executeDates"),
@@ -58,6 +62,29 @@ $(function() {
     com.post(api.data.queryAccessoriesType, {}, function(res) {
 
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
+    });
+
+    com.post(api.data.queryGoodsKind, {}, function(res) {
+        var oneKinds = [];
+        var twoKinds = [];
+        var thrKinds = [];
+
+        $.each(res.goodsKinds, function(i, v) {
+            switch (v.level) {
+                case 1:
+                    oneKinds.push({"key": v.gkid, "value": v.name});
+                    break;
+                case 2:
+                    twoKinds.push({"key": v.gkid, "value": v.name});
+                    break;
+                case 3:
+                    thrKinds.push({"key": v.gkid, "value": v.name});
+                    break;
+            }
+        });
+        goods.items.onekind.bindData(oneKinds, 'key', 'value');
+        goods.items.twokind.bindData(twoKinds, 'key', 'value');
+        goods.items.thrkind.bindData(thrKinds, 'key', 'value');
     });
 
     goods.btns.importBtn.click(function() {
@@ -153,7 +180,7 @@ $(function() {
             var $deleteGoods = $("<li></li>").append($("<a></a>").attr("id", "deletePriceBtn").text("删除商品价格")).appendTo($addUpdateUl);
             var $statusGoods = $("<li></li>").append($("<a></a>").attr("id", "statusGoodsBtn").text("更新商品状态")).appendTo($addUpdateUl);
 
-            return [$btnGroup, $exportGroup, $importGroup, $updateGroup, ];
+            return [$btnGroup, $exportGroup, $importGroup, $updateGroup];
         })
 
     } else {
@@ -212,6 +239,11 @@ $(function() {
         prop: "selling",
         clazz: "blue"
     }, {
+        field: "confine",
+        name: "限价",
+        prop: "confine",
+        clazz: "blue"
+    }, {
         field: "pieceNum",
         name: "件数 ",
         prop: "pieceNum",
@@ -229,6 +261,21 @@ $(function() {
             return v.type == "0" ? "商品" : "套餐";
         },
         clazz: "red"
+    }, {
+        field: "onekind.name",
+        name: "一类",
+        prop: "onekind.name",
+        clazz: "grey"
+    }, {
+        field: "twokind.name",
+        name: "二类",
+        prop: "twokind.name",
+        clazz: "grey"
+    }, {
+        field: "thrkind.name",
+        name: "三类",
+        prop: "thrkind.name",
+        clazz: "grey"
     }, {
         field: "status",
         name: "状态 ",
@@ -262,8 +309,12 @@ $(function() {
             goods.items.measurementUnit.val(v.measurementUnit);
             goods.items.purchase.val(v.purchase);
             goods.items.selling.val(v.selling);
+            goods.items.confine.val(v.confine);
             goods.items.pieceNum.val(v.pieceNum);
             goods.items.accessoriesType.val(v.accessoriesType.atid);
+            goods.items.onekind.val(v.onekind.gkid);
+            goods.items.twokind.val(v.twokind.gkid);
+            goods.items.thrkind.val(v.thrkind.gkid);
 
             com.popup4model("#addLayer", "编辑");
         },
@@ -551,7 +602,11 @@ $(function() {
             "goods.alias": goods.items.alias.val(),
             "goods.purchase": goods.items.purchase.val(),
             "goods.selling": goods.items.selling.val(),
-            "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid
+            "goods.confine": goods.items.confine.val(),
+            "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid,
+            "goods.onekind.gkid": goods.items.onekind.val(),
+            "goods.twokind.gkid": goods.items.twokind.val(),
+            "goods.thrkind.gkid": goods.items.thrkind.val()
         };
 
         if (!gid) {

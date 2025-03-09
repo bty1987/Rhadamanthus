@@ -30,17 +30,10 @@ public class ServiceNodeServiceImpl implements ServiceNodeService {
 		List<ServiceNodeVO> serviceNodeVOs = new ArrayList<ServiceNodeVO>();
 
 		for (ServiceNodePO serviceNodePO : serviceNodePOs) {
-
-			ServiceNodeVO servcieNodeVO = new ServiceNodeVO();
-
-			BeanUtil.copyProperties(serviceNodePO, servcieNodeVO);
-
-			serviceNodeVOs.add(servcieNodeVO);
-
+			serviceNodeVOs.add(serviceNodePO.ptv(new ServiceNodeVO()));
 		}
 
 		paging.setData(serviceNodeVOs);
-
 	}
 
 	@Override
@@ -48,7 +41,9 @@ public class ServiceNodeServiceImpl implements ServiceNodeService {
 	public int addServiceNode(ServiceNodeVO serviceNodeVO) {
 
 		ServiceNodePO serviceNodePO = new ServiceNodePO();
+
 		BeanUtil.copyProperties(serviceNodeVO, serviceNodePO);
+
 		serviceNodePO.setStatus(ServiceNodePO.SERVICESTATUS_ENABLE_INT);
 		serviceNodePO.setCompany(ServiceNodePO.SERVICE_COMPANY_INIT);
 
@@ -66,10 +61,6 @@ public class ServiceNodeServiceImpl implements ServiceNodeService {
 		if (serviceNodePO == null) {
 			throw new FLException(130025, "服务节点不存在");
 		}
-
-		serviceNodePO.setName(serviceNodeVO.getName());
-		serviceNodePO.setDetail(serviceNodeVO.getDetail());
-		serviceNodePO.setType(serviceNodeVO.getType());
 
 		serviceNodeDao.update(serviceNodePO);
 

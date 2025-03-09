@@ -72,6 +72,14 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "makeDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeDecorationContract() throws FLException {
+
+		decorationContractService.makeDecorationContract(decorationContract, data, table, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "signDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String signDecorationContract() throws FLException {
 

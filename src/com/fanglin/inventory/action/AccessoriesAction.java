@@ -55,6 +55,14 @@ public class AccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryAccessoriesByAid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAccessoriesByAid() throws FLException {
+
+		accessories = accessoriesService.queryAccessoriesByAid(accessories);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAccessories() throws FLException {
 

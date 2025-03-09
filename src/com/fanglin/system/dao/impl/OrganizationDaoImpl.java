@@ -59,6 +59,11 @@ public class OrganizationDaoImpl extends DaoImpl<OrganizationPO> implements Orga
 		return query.list();
 	}
 
+	@Override
+	public OrganizationPO queryOrganization(String no) {
+		return (OrganizationPO) session().createCriteria(OrganizationPO.class).add(Restrictions.eq(OrganizationPO.COLUMN_NO_STR, no)).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

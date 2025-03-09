@@ -56,7 +56,7 @@ public class VillageAction extends BaseListAction {
 	@Action(value = "queryVillageForNameByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryVillageForNameByPinyin() throws FLException {
 
-		villages = villageService.queryVillageForNameByPinyin(pinyinName, queryCompany());
+		villages = villageService.queryVillageForNameByPinyin(pinyinName, village, queryCompany());
 
 		for (VillageVO villageVO : villages) {
 			KeyValueVO keyValueVO = new KeyValueVO();

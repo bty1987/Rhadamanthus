@@ -5,19 +5,23 @@ jQuery(function($) {
         dbid: null,
 
         btns: {
-            addDecorationBusitypeBtn: com.focusPage("#addDecorationBusitypeBtn").on("click", saveData),
+            addDecorationBusitypeBtn: com.focusPage("#addDecorationBusitypeBtn").on("click", saveData)
         },
 
         modals: {
-            DecorationBusitypeModal: com.focusPage("#DecorationBusitypeModal"),
+            DecorationBusitypeModal: com.focusPage("#DecorationBusitypeModal")
         },
 
         items: {
             name: com.focusPage("#decorationBusitypeName"),
+            outside: com.focusPage("#outside")
         },
 
         status: ["启用", "禁用"],
+        outsides: constant.data().decorationBusitype.outside.keys
     };
+
+    decorationBusitype.items.outside.bindData(constant.data().decorationBusitype.outside.datas, "key", "value");
 
     var seacher = new Searcher();
 
@@ -33,12 +37,18 @@ jQuery(function($) {
     seacher.history("decorationBusitypePostData");
 
     var lineprops = [{
+        field: "outside",
+        name: "三方标识",
+        prop: "outside",
+        clazz: "grey",
+        dataset: constant.data().decorationBusitype.outside.keys
+    },{
         field: "status",
         name: "状态",
         prop: "status",
         clazz: "red",
         dataset: decorationBusitype.status
-    }, ];
+    }];
 
     var linebtus = [{
         name: "编辑",
@@ -49,6 +59,7 @@ jQuery(function($) {
             decorationBusitype.dbid = v.dbid;
 
             decorationBusitype.items.name.val(v.name);
+            decorationBusitype.items.outside.val(v.outside);
 
             decorationBusitype.modals.DecorationBusitypeModal.modal("show");
             return false;
@@ -70,7 +81,7 @@ jQuery(function($) {
 
             return !v.status;
         }
-    }, ];
+    }];
 
     seacher.line("name", lineprops, linebtus).render();
 
@@ -88,12 +99,16 @@ jQuery(function($) {
         if (com.validate('DecorationBusitypeModal'))
             return false;
 
-        var url;
+        var url = api.data.addDecorationBusitype;
         var options = {
             "decorationBusitype.name": decorationBusitype.items.name.val(),
+            "decorationBusitype.outside": decorationBusitype.items.outside.val()
         };
 
-        decorationBusitype.editFlg ? url = api.data.addDecorationBusitype : url = api.data.updateDecorationBusitype, options["decorationBusitype.dbid"] = decorationBusitype.dbid;
+        if (!decorationBusitype.editFlg) {
+            url = api.data.updateDecorationBusitype;
+            options["decorationBusitype.dbid"] = decorationBusitype.dbid;
+        }
 
         com.post(url, options, function() {
 

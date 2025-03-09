@@ -1106,7 +1106,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		String orderId = salesPaymentPO.getSales().getOrderId();
 
-		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=3", orderId, salesPaymentPO.getSpid()));
+		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=3&atttype=1", orderId, salesPaymentPO.getSpid()));
 
 	}
 

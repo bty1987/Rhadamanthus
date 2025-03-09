@@ -233,7 +233,25 @@ jQuery(function($) {
 			var $label = $('<label></label>').appendTo($h3);
 
 			var $input = $('<input>').attr({"type": "checkbox", "name": "pids", "class": "ace ace-checkbox-2"});
-			if (payment.pageConfig.pageBtn.contains("selectall")) $label.append($input.attr({"pid": v.pid}));
+			if (payment.pageConfig.pageBtn.contains("selectall")) $label.append($input.attr({
+				"pid": v.pid,
+				"paymenttype": v.paymentType,
+				"arid": v.arId,
+				"collecttype": v.type,
+				"comment": v.comment,
+				"customerid": v.decoration.customer.cid,
+				"orderid": v.decoration.orderId,
+				"grade": v.decoration.grade,
+				"villagename": v.decoration.house.village.name,
+				"housenumber": v.decoration.house.houseNumber,
+				"cash": v.cash,
+				"cashinfo": v.cashInfo,
+				"bank": v.bank,
+				"bankinfo": v.bankInfo,
+				"checkv": v.checkv,
+				"checkvbank": v.checkvBank,
+				"collectTime": v.collectTime
+			}));
 
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').html(orderId).appendTo($label);
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr("id",orderId+"ul");
@@ -351,7 +369,8 @@ jQuery(function($) {
 			$btnCode.click(function () {
 				com.focusPage("#"+payment.type+"collectCodeQrcodeModal").html("");
 				paymentUtils.initQrcode("collect", payment.type+"collectCodeQrcodeModal"); //收款码
-				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=0"+"&pid="+ v.pid, payment.type+"collectCodeQrcodeModal");
+				var atttype = v.paymentType == 2 ? constant.payment().paytran.ATTTYPE_MATERIAL_INT : constant.payment().paytran.ATTTYPE_DECORATION_INT;
+				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=0"+"&pid="+v.pid+"&atttype="+atttype, payment.type+"collectCodeQrcodeModal");
 			});
 
 			//微信推送
@@ -675,9 +694,36 @@ jQuery(function($) {
 	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
 		var $inputs = com.focusPage('input[name="pids"]:checked');
+		var kingdeePayments = [];
+
 
 		$.each($inputs, function(i, v){
 			options["paymentIds["+i+"]"] = $(v).attr('pid');
+
+			var kingdeePayment = {
+				"paymentType": $(v).attr('paymentType'),
+				"arId": $(v).attr('arid'),
+				"type": $(v).attr('collecttype'),
+				"comment": $(v).attr('comment'),
+				"cash": $(v).attr('cash'),
+				"cashInfo": $(v).attr('cashinfo'),
+				"bank": $(v).attr('bank'),
+				"bankInfo": $(v).attr('bankinfo'),
+				"checkv": $(v).attr('checkv'),
+				"checkvBank": $(v).attr('checkvbank'),
+				"collectTime": $(v).attr('collecttime'),
+				"decoration" : {
+					"customer" : {"cid": $(v).attr('customerid')},
+					"orderId": $(v).attr('orderid'),
+					"grade": $(v).attr('grade'),
+					"house": {
+						"village": {"name": $(v).attr('villagename')},
+						"houseNumber": $(v).attr('housenumber')
+					}
+				}
+			};
+
+			kingdeePayments.push(kingdeePayment);
 		});
 
 		if($inputs.length == 0){
@@ -688,7 +734,13 @@ jQuery(function($) {
 		com.showConfirm("确定要将符合条件的所有收款项目,置为已确认状态吗?", function(result) {
 			com.post(api.payment.confirmPayment, options, function(res){
 				searcher.doSearch();
-				com.showAlert(com.info, "确认成功")
+
+				// 同步金蝶
+				$.each(kingdeePayments, function(i, v){
+					kingdeeUtils.payment(v, payment.htmlName);
+				});
+
+				com.showAlert(com.info, "确认成功");
 			});
 		});
 	});

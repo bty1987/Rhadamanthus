@@ -53,6 +53,8 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	private NormriceVO normrice;
 
+	private Integer index;
+
 	public AddReduceItemVO() {
 		super();
 	}
@@ -249,6 +251,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setNormrice(NormriceVO normrice) {
 		this.normrice = normrice;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
 	}
 
 }

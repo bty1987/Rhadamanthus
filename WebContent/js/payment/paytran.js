@@ -188,7 +188,7 @@ jQuery(function($) {
                 com.focusPage("#paytranCodeQrcodeModal").html("");
                 paymentUtils.initQrcode("paytran", "paytranCodeQrcodeModal"); // 收款码
                 var pid = v.type == '6' ? v.ptid : v.pid;
-                paymentUtils.showQRCode("paytranqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.orderId + "&paymentType=" + v.type + "&pid=" + pid, "paytranCodeQrcodeModal");
+                paymentUtils.showQRCode("paytranqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.orderId + "&paymentType=" + v.type + "&pid=" + pid + "&atttype="+v.atttype, "paytranCodeQrcodeModal");
             });
 
             $wechat.click(function() {

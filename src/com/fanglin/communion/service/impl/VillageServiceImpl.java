@@ -21,7 +21,6 @@ import com.fanglin.system.po.CityProperPO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
-import com.fanglin.system.vo.RegionVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -48,7 +47,7 @@ public class VillageServiceImpl implements VillageService {
 		List<VillageVO> villageVOs = new ArrayList<VillageVO>();
 
 		for (VillagePO villagePO : villagePOs) {
-			villageVOs.add(covertBean(villagePO));
+			villageVOs.add(villagePO.ptv(new VillageVO(new CityProperVO(new CityVO()), new VillageVO())));
 		}
 
 		paging.setData(villageVOs);
@@ -63,22 +62,22 @@ public class VillageServiceImpl implements VillageService {
 			throw new FLException(130003, "楼盘信息不存在");
 		}
 
-		villageVO = covertBean(villagePO);
-
-		return villageVO;
+		return villagePO.ptv(villageVO);
 	}
 
 	@Override
-	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName, Integer company) {
+	public List<VillageVO> queryVillageForNameByPinyin(String pinyinName, VillageVO village, Integer company) {
 
 		Paging paging = new Paging(0, 20);
 
 		List<VillageVO> villageVOs = new ArrayList<VillageVO>();
 
-		List<VillagePO> villagePOs = villageDao.queryVillageByPinyin(paging, pinyinName, company);
+		Long pvid = village == null ? null : village.getParentVillage().getVid();
+
+		List<VillagePO> villagePOs = villageDao.queryVillageByPinyin(paging, pinyinName, pvid, company);
 
 		for (VillagePO villagePO : villagePOs) {
-			villageVOs.add(covertBean(villagePO));
+			villageVOs.add(villagePO.ptv(new VillageVO(new CityProperVO(new CityVO()), new VillageVO())));
 		}
 
 		return villageVOs;
@@ -104,7 +103,9 @@ public class VillageServiceImpl implements VillageService {
 
 		villagePO.setNo(no.toString());
 
-		BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "cityProper"));
+		BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "cityProper", "parentVillage"));
+
+		if (villageVO.getParentVillage() != null) villagePO.setParentVillage(villageDao.get(villageVO.getParentVillage().getNo()));
 
 		villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
 		villagePO.setPinyinAB((String) PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
@@ -112,6 +113,14 @@ public class VillageServiceImpl implements VillageService {
 		villagePO.setCompany(company);
 
 		villageDao.save(villagePO);
+
+		villageDao.flush();
+		villageDao.refresh(villagePO);
+
+		if (villagePO.getParentVillage() == null) {
+			villagePO.setParentVillage(villagePO);
+			villageDao.update(villagePO);
+		}
 
 		return 0;
 	}
@@ -135,11 +144,13 @@ public class VillageServiceImpl implements VillageService {
 
 		villageVO.setVid(villagePO.getVid());
 
-		BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "x", "y", "cityProper", "company"));
+		BeanUtil.copyProperties(villageVO, villagePO, Arrays.asList("no", "x", "y", "cityProper", "parentVillage", "company"));
 
 		villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
 		villagePO.setPinyinAB((String) PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
 		villagePO.setPinyinAll((String) PinYin4Util.getPinyin(villageVO.getName()).get(0));
+
+		if (villageVO.getParentVillage() != null) villagePO.setParentVillage(villageDao.get(villageVO.getParentVillage().getNo()));
 
 		villageDao.update(villagePO);
 
@@ -192,24 +203,6 @@ public class VillageServiceImpl implements VillageService {
 		villageDao.update(villagePO);
 
 		return 0;
-	}
-
-	public VillageVO covertBean(VillagePO villagePO) {
-		VillageVO villageVO = new VillageVO();
-
-		BeanUtil.copyProperties(villagePO, villageVO, Arrays.asList("cityProper"));
-
-		villageVO.setCityProper(new CityProperVO());
-
-		BeanUtil.copyProperties(villagePO.getCityProper(), villageVO.getCityProper(), Arrays.asList("city"));
-
-		villageVO.getCityProper().setCity(new CityVO());
-		BeanUtil.copyProperties(villagePO.getCityProper().getCity(), villageVO.getCityProper().getCity(), Arrays.asList("region"));
-
-		villageVO.getCityProper().getCity().setRegion(new RegionVO());
-		BeanUtil.copyProperties(villagePO.getCityProper().getCity().getRegion(), villageVO.getCityProper().getCity().getRegion());
-
-		return villageVO;
 	}
 
 }

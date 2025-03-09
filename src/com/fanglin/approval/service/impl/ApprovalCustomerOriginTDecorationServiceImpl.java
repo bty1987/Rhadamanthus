@@ -123,13 +123,10 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
 		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
-		BeanUtil.copyProperties(customerOriginPO.getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(customerOriginPO.getDesigner(), customerOriginVO.getDesigner(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyProperties(customerOriginPO.getSalesman(), customerOriginVO.getSalesman(), Arrays.asList("dept", "duty"));
 
-		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage(), customerOriginVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage().getCityProper(), customerOriginVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage().getCityProper().getCity(), customerOriginVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
+		if (customerOriginPO.getHouse() != null) customerOriginPO.getHouse().ptv(customerOriginVO.getHouse());
 
 		if (customerOriginPO.getDesigner() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept(), customerOriginVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
@@ -151,7 +148,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			BeanUtil.copyProperties(approvalCustomerOriginTDecorationPO.getSalesman().getDept().getFatherDept(), approvalCustomerOriginTDecorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 
-		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, approvalCustomerOriginTDecorationVO, Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
+		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, approvalCustomerOriginTDecorationVO, Arrays.asList("approval", "customerOrigin", "decorationBusitype", "salesman"));
 
 		return approvalCustomerOriginTDecorationVO;
 	}

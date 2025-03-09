@@ -30,4 +30,6 @@ public interface BrandDao extends Dao<BrandPO> {
 
 	public BrandPO queryBrandByNo(String no);
 
+	public BrandPO queryBrand(String kino);
+
 }

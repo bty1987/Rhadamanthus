@@ -63,6 +63,8 @@ public class ExtensionPO implements Serializable {
 
 	private long taxPrice;
 
+	private long consPrice;
+
 	private long total;
 
 	private short status;
@@ -172,6 +174,15 @@ public class ExtensionPO implements Serializable {
 
 	public void setTaxPrice(long taxPrice) {
 		this.taxPrice = taxPrice;
+	}
+
+	@Column(name = "consPrice")
+	public long getConsPrice() {
+		return consPrice;
+	}
+
+	public void setConsPrice(long consPrice) {
+		this.consPrice = consPrice;
 	}
 
 	@Column(name = "total")

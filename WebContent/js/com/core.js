@@ -556,6 +556,27 @@
             cancel && cancel();
         });
     },
+
+     /**
+     * 确认窗口是否
+     * 
+     * @param content 确认提示内容
+     * @param yes 是按钮回调方法
+     * @param no 否按钮回调方法
+     */
+    showWhether: function(content, yes, no){
+        layer.alert(content, {
+          btn: ['是', '否'],
+          btnAlign: 'c',
+          btn1: function(){
+            yes && yes();
+          },
+          btn2: function(){
+            no && no();
+          }
+        });
+      },
+
     /**
      * 选择窗口
      * 

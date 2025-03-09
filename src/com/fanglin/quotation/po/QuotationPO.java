@@ -41,9 +41,11 @@ public class QuotationPO implements Serializable {
 
 	public static final short DEFAULTS_DEFAULT_INT = 1;
 
+	public static final short STATUS_INIT_INT = 0;
+
 	public static final short STATUS_LOCK_INT = 1;
 
-	public static final short STATUS_INIT_INT = 0;
+	public static final short STATUS_APPROVE_INT = 2;
 
 	public static final short KEEPRICE_LATEST_INT = 0;
 
@@ -100,6 +102,8 @@ public class QuotationPO implements Serializable {
 	private long unachePrice;
 
 	private long costPrice;
+
+	private long consPrice;
 
 	private long totalPrice;
 
@@ -337,6 +341,15 @@ public class QuotationPO implements Serializable {
 
 	public void setCostPrice(long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	@Column(name = "consPrice")
+	public long getConsPrice() {
+		return consPrice;
+	}
+
+	public void setConsPrice(long consPrice) {
+		this.consPrice = consPrice;
 	}
 
 	@Column(name = "totalPrice")

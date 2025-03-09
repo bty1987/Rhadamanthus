@@ -24,6 +24,8 @@ public interface DecorationContractService {
 
 	public int addDecorationContract(DecorationContractVO decorationContractVO, ContractVO contractVO, String data, String table, String userId) throws FLException;
 
+	public int makeDecorationContract(DecorationContractVO decorationContractVO, String data, String table, String userId) throws FLException;
+
 	public String signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException;
 
 	public String signDecorationContractForCustomer(DecorationContractVO decorationContractVO, CustomerVO customerVO) throws FLException;

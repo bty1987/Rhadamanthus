@@ -25,7 +25,7 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company) throws FLException;
 
-	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company) throws FLException;
+	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company) throws FLException;
 

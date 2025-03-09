@@ -7,8 +7,12 @@ import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Paging;
 
 public interface ApprovalSalesRefundService {
+
+	public void pageApprovalSalesRefund(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<ApprovalSalesRefundItemVO> queryApprovalSalesRefundItem(ApprovalVO approvalVO) throws FLException;
 

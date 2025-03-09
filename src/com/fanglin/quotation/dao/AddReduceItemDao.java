@@ -14,6 +14,7 @@ package com.fanglin.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
@@ -26,5 +27,7 @@ public interface AddReduceItemDao extends Dao<AddReduceItemPO> {
 	public long countAddReduceItem(long qfaid);
 
 	public long countAddReduceItem(List<QuotationFunctionAreaPO> quotationFunctionAreas);
+
+	public int updateAddReduceItemForIndex(long ariid, int index) throws FLException;
 
 }

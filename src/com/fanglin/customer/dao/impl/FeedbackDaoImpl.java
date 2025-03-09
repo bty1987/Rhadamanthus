@@ -59,6 +59,18 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 				query.timeranges("createTime", "createTime", data);
 			} else if ("company".equals(field) && FormatUtil.decodeCompany(data) == CompanyPO.TYPE_HEADQUARTER_INT) {
 				query.alias("company", "company").add(query.getCriterion("company.cid", FormatUtil.decodeCompany(data), op));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion(FeedbackPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
+			} else if ("handleTime".equals(field)) {
+				query.timeranges("handleTime", "handleTime", data);
+			} else if ("receiveTime".equals(field)) {
+				query.timeranges("receiveTime", "receiveTime", data);
+			} else if ("handler".equals(field)) {
+				query.alias("handler", "handler");
+				query.add(query.getCriterion(FeedbackPO.COLUMN_HANDLER_STR, data, op));
+			} else if ("receiver".equals(field)) {
+				query.alias("receiver", "receiver");
+				query.add(query.getCriterion(FeedbackPO.COLUMN_RECEIVER_STR, data, op));
 			}
 		}
 	}

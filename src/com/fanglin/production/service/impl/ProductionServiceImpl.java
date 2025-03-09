@@ -86,14 +86,15 @@ public class ProductionServiceImpl implements ProductionService {
 			ProductionVO productionVO = new ProductionVO(new HouseVO(new VillageVO()), new BrandVO(), new CategoryVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(productionPO, productionVO, Arrays.asList("house", "creater", "brand", "salesman", "designer", "spliter"));
-			BeanUtil.copyProperties(productionPO.getHouse(), productionVO.getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(productionPO.getHouse().getVillage(), productionVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+
 			BeanUtil.copyProperties(productionPO.getCreater(), productionVO.getCreater(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionPO.getSalesman(), productionVO.getSalesman(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionPO.getDesigner(), productionVO.getDesigner(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionPO.getSpliter(), productionVO.getSpliter(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionPO.getBrand(), productionVO.getBrand(), Arrays.asList("supplier", "category"));
 			BeanUtil.copyProperties(productionPO.getBrand().getCategory(), productionVO.getCategory());
+
+			if (productionPO.getHouse() != null) productionPO.getHouse().ptv(productionVO.getHouse());
 
 			productionVOs.add(productionVO);
 		}

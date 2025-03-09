@@ -218,9 +218,9 @@ jQuery(function($) {
         }, {
             "name": "备注",
             "value": comment
-        }, ];
+        }];
 
-        if (com.focusPage("#dingApprove", "#violation").prop("checked")) {
+        if (com.focusPage("#dingApprove", "#approveModal").prop("checked")) {
             options["code"] = "PROC-AA84B687-1572-4203-85D9-5ADE611042A0"; // test
             options["code"] = "PROC-12D5DBE9-1974-4B95-89C9-0BB85DA00CEB"; // product
             options["forms"] = JSON.stringify(args);
