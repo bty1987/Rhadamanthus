@@ -15,7 +15,7 @@ public interface CustomerUserRuleDao extends Dao<CustomerUserRulePO> {
 
 	public CustomerUserRulePO pullCustomerUserRule(int company);
 
-	public CustomerUserRulePO pullCustomerUserRule(int company, int area);
+	public CustomerUserRulePO pullCustomerUserRule(int company, int area, List<Integer> userList);
 
 	public int existCustomerUserRule(int company, int area);
 

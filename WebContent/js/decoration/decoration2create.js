@@ -393,12 +393,23 @@ jQuery(function($) {
         }
 
         btn.button('loading');
-        com.post(url, options, function() {
+        com.post(url, options, function(data) {
 
             com.showAlert(com.info, "操作成功");
             initCreate();
 
             btn.button('reset');
+
+            var decorationData = {
+                "orderId": data.decoration.orderId,
+                "houseId": orderEntry.houseItems.hid,
+                "address": null,
+                "drganizationNo": params.company.drganization.no,
+                "drganizationName": params.company.drganization.name
+            };
+
+            kingdeeUtils.decorationToKingdee(decorationData);
+
         }, function(e) {
 
             com.showAlert(com.error, e.errorMsg);

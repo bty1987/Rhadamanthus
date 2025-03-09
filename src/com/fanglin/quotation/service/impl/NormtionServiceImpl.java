@@ -353,7 +353,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 		for (AddReducePO addReducePO : addReducePOs) {
 
-			if (Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus()) && addReducePO.getType() == AddReducePO.TYPE_ADD_INT) continue;
+			if (!Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus()) && addReducePO.getType() == AddReducePO.TYPE_ADD_INT && addReducePO.getPaytype() == AddReducePO.PAYTYPE_PAY_INT) continue;
 
 			addReduceVO = new AddReduceVO();
 

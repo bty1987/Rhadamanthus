@@ -15,6 +15,7 @@ jQuery(function($) {
             name: com.focusPage("#name", "#priceModal"),
             purchase: com.focusPage("#purchase", "#priceModal"),
             selling: com.focusPage("#selling", "#priceModal"),
+            confine: com.focusPage("#confine", "#priceModal"),
             cvalue: com.focusPage("#cvalue", "#priceModal"),
             ctype: com.focusPage("#ctype", "#priceModal"),
             type: com.focusPage("#type", "#priceModal"),
@@ -52,6 +53,11 @@ jQuery(function($) {
         fieId: "selling",
         name: "售价",
         prop: "selling",
+        clazz: "grey"
+    }, {
+        fieId: "confine",
+        name: "限价",
+        prop: "confine",
         clazz: "grey"
     }, {
         fieId: "ctype",
@@ -150,6 +156,7 @@ jQuery(function($) {
             "price.name": price.items.name.val(),
             "price.purchase": price.items.purchase.val(),
             "price.selling": price.items.selling.val(),
+            "price.confine": price.items.confine.val(),
             "price.ctype": price.items.ctype.val(),
             "price.cvalue": price.items.cvalue.val(),
             "price.type": price.items.type.val(),

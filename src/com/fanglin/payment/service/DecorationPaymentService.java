@@ -35,6 +35,8 @@ public interface DecorationPaymentService {
 
 	public DecorationPaymentVO queryDecorationPaymentByDpid(DecorationPaymentVO decorationPaymentVO);
 
+	public void sendDecorationPayment(DecorationPaymentVO decorationPayment) throws FLException;
+
 	public void checkDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
@@ -52,7 +54,5 @@ public interface DecorationPaymentService {
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 
 	public int deleteDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
-
-	public void sendDecorationPayment(DecorationPaymentVO decorationPayment) throws FLException;
 
 }

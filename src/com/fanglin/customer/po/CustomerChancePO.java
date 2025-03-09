@@ -47,6 +47,10 @@ public class CustomerChancePO implements Serializable {
 
 	public static final short ISREAD_READ_INT = 1;// 已读
 
+	public static final short ISFINE_FINE_INT = 1;// 罚款
+
+	public static final short ISMEET_MEET_INT = 2;
+
 	private long ccid;
 
 	private String orderId;
@@ -59,15 +63,17 @@ public class CustomerChancePO implements Serializable {
 
 	private DecorationBusitypePO busitype;
 
-	private UserPO belonger;
-
 	private DepartmentPO department;
 
 	private DepartmentPO region;
 
+	private UserPO belonger;
+
 	private UserPO creater;
 
 	private UserPO issuer;
+
+	private UserPO finer;
 
 	private Timestamp createTime;
 
@@ -77,6 +83,10 @@ public class CustomerChancePO implements Serializable {
 
 	private Timestamp readTime;
 
+	private Timestamp fineTime;
+
+	private Timestamp meetTime;
+
 	private int rate;
 
 	private short type;
@@ -84,14 +94,16 @@ public class CustomerChancePO implements Serializable {
 	private short status;
 
 	private short isRead;
-	
+
 	private short isGroup;
-	
+
 	private short isPhone;
-	
+
 	private short isMeet;
-	
+
 	private short isTrue;
+
+	private short isFine;
 
 	private String comment;
 
@@ -196,6 +208,16 @@ public class CustomerChancePO implements Serializable {
 		this.issuer = issuer;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "fuid", referencedColumnName = "uid")
+	public UserPO getFiner() {
+		return finer;
+	}
+
+	public void setFiner(UserPO finer) {
+		this.finer = finer;
+	}
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -230,6 +252,15 @@ public class CustomerChancePO implements Serializable {
 
 	public void setReadTime(Timestamp readTime) {
 		this.readTime = readTime;
+	}
+
+	@Column(name = "meetTime")
+	public Timestamp getMeetTime() {
+		return meetTime;
+	}
+
+	public void setMeetTime(Timestamp meetTime) {
+		this.meetTime = meetTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -333,7 +364,25 @@ public class CustomerChancePO implements Serializable {
 	public void setIsTrue(short isTrue) {
 		this.isTrue = isTrue;
 	}
-	
+
+	@Column(name = "isFine")
+	public short getIsFine() {
+		return isFine;
+	}
+
+	public void setIsFine(short isFine) {
+		this.isFine = isFine;
+	}
+
+	@Column(name = "fineTime")
+	public Timestamp getFineTime() {
+		return fineTime;
+	}
+
+	public void setFineTime(Timestamp fineTime) {
+		this.fineTime = fineTime;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -354,12 +403,9 @@ public class CustomerChancePO implements Serializable {
 
 	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {
 
-		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("customer", "house", "source", "busitype", "creater", "issuer", "belonger", "department", "region"));
+		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("customer", "house", "source", "busitype", "creater", "issuer", "finer", "belonger", "department", "region"));
 
-		if (customerChanceVO.getHouse() != null && getHouse() != null) BeanUtil.copyProperties(getHouse(), customerChanceVO.getHouse(), Arrays.asList("village"));
-		if (customerChanceVO.getHouse().getVillage() != null && getHouse() != null && getHouse().getVillage() != null) BeanUtil.copyProperties(getHouse().getVillage(), customerChanceVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		if (customerChanceVO.getHouse().getVillage() != null && customerChanceVO.getHouse().getVillage().getCityProper() != null && getHouse() != null && getHouse().getVillage() != null) BeanUtil.copyProperties(getHouse().getVillage().getCityProper(), customerChanceVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-
+		if (customerChanceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerChanceVO.getHouse());
 		if (customerChanceVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerChanceVO.getCustomer());
 
 		if (customerChanceVO.getSource() != null) getSource().ptv(customerChanceVO.getSource());
@@ -368,6 +414,7 @@ public class CustomerChancePO implements Serializable {
 
 		if (customerChanceVO.getCreater() != null) customerChanceVO.getCreater().setBaseInfo(getCreater());
 		if (customerChanceVO.getIssuer() != null) customerChanceVO.getIssuer().setBaseInfo(getIssuer());
+		if (customerChanceVO.getFiner() != null) customerChanceVO.getFiner().setBaseInfo(getFiner());
 		if (customerChanceVO.getBelonger() != null) customerChanceVO.getBelonger().setBaseInfo(getBelonger());
 
 		if (customerChanceVO.getDepartment() != null && getDepartment() != null) customerChanceVO.setDepartment(getDepartment().ptv());

@@ -119,14 +119,13 @@ $(function() {
         });
     }
 
-    function drawInit(e) {
-
-        com.initTypeahead(e.villageName, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
+    function initVillage(containId, args) {
+        
+        com.initTypeahead(containId, api.data.queryVillageForNameByPinyin, "pinyinName", args, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
             com.post(api.data.queryVillageByVid, {
                 "village.no": k
             }, function(res) {
-
                 e.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
             }, null, false);
 
@@ -137,9 +136,10 @@ $(function() {
     bindData(customerSource.items);
     bindData(customerSource.approveItems);
     bindData(customerSource.updateHouseItems);
-    drawInit(customerSource.items);
-    drawInit(customerSource.approveItems);
-    drawInit(customerSource.updateHouseItems);
+    
+    initVillage(com.focusPage("#villageName", "#customerSource"), null);
+    initVillage(com.focusPage("#villageName1", "#commitFirstApprove"), null);
+    initVillage(com.focusPage("#villageName2", "#updateForHouse"), null);
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -166,19 +166,11 @@ $(function() {
     });
 
     com.post(api.system.queryCompany, {
-        "company.atttype": "1"
+        "company.atttype": "1",
+        "company.code": params.company.code
     }, function(res) {
 
-        var $arr = [];
-
-        $.each(res.companys, function(intex, value) {
-
-            if (value.code == "210100") {
-                $arr.push(value);
-            }
-        });
-
-        customerSource.items.company.bindData($arr, 'cid', 'name', true);
+        customerSource.items.company.bindData(res.companys, 'cid', 'name', true);
     });
 
     com.post(api.communion.queryDepartment, {
@@ -383,11 +375,17 @@ $(function() {
         handle: function(v) {
 
             customerSource.source = v;
+            
+            com.cleanTypeahead(customerSource.updateHouseItems.villageName);
+            
+            if(v.village && v.village.parentVillage && v.village.parentVillage.vid){
+                com.focusPage("#villageName2").typeahead("args", {"village.parentVillage.vid": v.village.parentVillage.vid});
+            }
 
             if (v.village && v.village.vid) {
                 com.updateTypeahead(customerSource.updateHouseItems.villageName, v.village.no, v.village.name);
             }
-
+            
             customerSource.modals.updateForHouse.modal("show");
 
             return false;
@@ -403,11 +401,17 @@ $(function() {
 
             customerSource.type = "update";
             customerSource.source = v;
+            
+            com.cleanTypeahead(customerSource.items.villageName);
+            
+            if(v.village && v.village.parentVillage && v.village.parentVillage.vid){
+                com.focusPage("#villageName").typeahead("args", {"village.parentVillage.vid": v.village.parentVillage.vid});
+            }
 
             if (v.village && v.village.vid) {
                 com.updateTypeahead(customerSource.items.villageName, v.village.no, v.village.name);
             }
-
+            
             customerSource.items.gender.prop('checked', com.genderType[v.gender]);
             customerSource.items.comment.val(v.comment);
             customerSource.items.price.val(v.price);
@@ -442,7 +446,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == constant.customer().customerSource.STATUS_INIT_INT;
+            return v.status == -1;
         }
     }, {
         name: "分配",

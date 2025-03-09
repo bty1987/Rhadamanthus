@@ -118,6 +118,8 @@ public class CategoryServiceImpl implements CategoryService {
 
 		categoryDao.save(categoryPO);
 
+		categoryVO.setNo(no.toString());
+
 		return 0;
 	}
 

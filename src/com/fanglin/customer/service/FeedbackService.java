@@ -12,6 +12,8 @@ public interface FeedbackService {
 
 	public void pageFeedback(Paging paging, List<Filter> filters, int company) throws FLException;
 
+	public void pageFeedbackByOrderId(Paging paging, List<Filter> filters) throws FLException;
+
 	public int addFeedback(FeedbackVO feedbackVO) throws FLException;
 
 	public int receiveFeedback(FeedbackVO feedback, Authentication authentication) throws FLException;

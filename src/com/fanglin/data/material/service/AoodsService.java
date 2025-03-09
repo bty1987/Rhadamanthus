@@ -5,12 +5,13 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.vo.AoodsVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.utils.Paging;
 
 public interface AoodsService {
 
 	public void pageAoods(Paging paging, List<Filter> filters, int company, String companyType) throws FLException;
-	
+
 	public List<AoodsVO> queryAoods(AoodsVO aoodsVO, String orderId);
 
 	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, int company);
@@ -24,6 +25,8 @@ public interface AoodsService {
 	public int updateAoodsForStatus(AoodsVO aoodsVO) throws FLException;
 
 	public int updateAoodsForNorm(AoodsVO aoodsVO) throws FLException;
+
+	public int updateKaoods(AoodsVO aoodsVO, GoodsVO goodsVO) throws FLException;
 
 	public int copyAoods(AoodsVO aoodsVO, int company) throws FLException;
 

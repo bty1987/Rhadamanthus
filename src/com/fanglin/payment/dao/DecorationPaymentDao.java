@@ -27,22 +27,22 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters) throws FLException;
 
-	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType);
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId, Short[] paymentStatus, short oneType, short twoType);
 
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType);
-
-	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId);
+	public List<DecorationPaymentPO> queryDecorationPaymentForNotInit(long drId);
 
 	public List<DecorationPaymentPO> queryDecorationPaymentByDrid(long drId);
 
-	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort);
+	public DecorationPaymentPO queryDecorationPayment(String orderId, String paymentType);
 
-	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId);
-
-	public int deleteDecorationPaymentForBase(String orderId);
+	public DecorationPaymentPO queryDecorationPayment(String orderId, short sort);
 
 	public long amountDecorationPayment(String orderId, Short[] paymentStatus, short oneType, short twoType);
 
 	public int countDecorationPayment(String orderId, List<Short> onetypes, List<Short> twotypes, List<Short> statuses);
+
+	public int changeDecorationPayment(String oldOrderId, String newOrderId);
+
+	public int deleteDecorationPaymentForBase(String orderId);
 
 }

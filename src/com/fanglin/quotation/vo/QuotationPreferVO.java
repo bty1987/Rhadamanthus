@@ -2,6 +2,8 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.data.quotation.vo.PresignProduceVO;
+
 public class QuotationPreferVO implements Serializable {
 
 	private static final long serialVersionUID = 4258626277674770799L;
@@ -12,11 +14,30 @@ public class QuotationPreferVO implements Serializable {
 
 	private Long qid;
 
+	private PresignProduceVO presignProduce;
+
 	private Long preferPrice;
 
 	private Long managePrefer;
 
 	private Long advancePrefer;
+
+	private Integer discount;
+
+	private Integer manageDiscount;
+
+	private Long quotePrice;
+
+	private Integer quoteArea;
+
+	public QuotationPreferVO() {
+		super();
+	}
+
+	public QuotationPreferVO(PresignProduceVO presignProduce) {
+		super();
+		this.presignProduce = presignProduce;
+	}
 
 	public Long getQpid() {
 		return qpid;
@@ -42,6 +63,14 @@ public class QuotationPreferVO implements Serializable {
 		this.qid = qid;
 	}
 
+	public PresignProduceVO getPresignProduce() {
+		return presignProduce;
+	}
+
+	public void setPresignProduce(PresignProduceVO presignProduce) {
+		this.presignProduce = presignProduce;
+	}
+
 	public Long getPreferPrice() {
 		return preferPrice;
 	}
@@ -64,5 +93,37 @@ public class QuotationPreferVO implements Serializable {
 
 	public void setAdvancePrefer(Long advancePrefer) {
 		this.advancePrefer = advancePrefer;
+	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
+	public Integer getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Integer manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	public Long getQuotePrice() {
+		return quotePrice;
+	}
+
+	public void setQuotePrice(Long quotePrice) {
+		this.quotePrice = quotePrice;
+	}
+
+	public Integer getQuoteArea() {
+		return quoteArea;
+	}
+
+	public void setQuoteArea(Integer quoteArea) {
+		this.quoteArea = quoteArea;
 	}
 }

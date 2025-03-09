@@ -94,7 +94,7 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			try {
 				sourceValue = sourceReadMethod.invoke(source);
 			} catch (Exception e) {
-				System.out.println(String.format("%s get %s value of source object is failed, exception is <%s>", source.getClass().toString(), sourcePropertyDescriptor.getName(), e.getMessage()));
+				// System.out.println(String.format("%s get %s value of source object is failed, exception is <%s>", source.getClass().toString(), sourcePropertyDescriptor.getName(), e.getMessage()));
 				continue;
 			}
 
@@ -111,7 +111,7 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			try {
 				targetWriteMethod.invoke(target, sourceValue);
 			} catch (Exception e) {
-				System.out.println(String.format("%s set %s value of target object is failed, exception is <%s>", target.getClass().toString(), targetWriteMethod.getName(), e.getMessage()));
+				// System.out.println(String.format("%s set %s value of target object is failed, exception is <%s>", target.getClass().toString(), targetWriteMethod.getName(), e.getMessage()));
 				continue;
 			}
 		}

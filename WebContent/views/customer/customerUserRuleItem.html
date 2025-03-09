@@ -32,18 +32,34 @@
                         </div>
                         <div class="space-4"></div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right orange" for="uppval">起始值</label>
+                        <div class="form-group deptype">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="deptype">部门类型</label>
                             <div class="col-sm-9">
-                                <input type="text" id="uppval" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual' />
+                                <select id="deptype" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
-                        <div class="form-group">
+                        <div class="form-group deptSel">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="deptSel">部门名称</label>
+                            <div class="col-sm-9">
+                                <select class="col-sm-7 col-xs-10" id="deptSel" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        
+                        <div class="form-group uppval">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="uppval">起始值</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="uppval" class="col-xs-10 col-sm-7 v_number" data-toggle="popover" data-trigger='manual' />
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group lowval">
                             <label class="col-sm-3 control-label no-padding-right orange" for="lowval">终止值</label>
                             <div class="col-sm-9">
-                                <input type="text" id="lowval" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual' />
+                                <input type="text" id="lowval" class="col-xs-10 col-sm-7 v_number" data-toggle="popover" data-trigger='manual' />
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -55,7 +71,23 @@
                             </div>
                         </div>
                         <div class="space-4"></div>
-                        
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="isSurplus">减剩余数</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" id="isSurplus" class="ace ace-switch ace-switch-5" />
+                                <span class="lbl isOrNot"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="isDelete">是否删除</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" id="isDelete" class="ace ace-switch ace-switch-5" />
+                                <span class="lbl isOrNot"></span>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="status">状态</label>
                             <div class="col-sm-9">
@@ -63,23 +95,6 @@
                             </div>
                         </div>
                         <div class="space-4"></div>
-                        
-                        <div class="form-group" id="genderGroup">
-                            <label class="col-sm-3 control-label no-padding-right" for="isSurplus" style=color:#FF892A>减剩余数</label>
-                            <div class="col-sm-9">
-                                <input type="checkbox" id="isSurplus" class="ace ace-switch ace-switch-5" />
-                                <span class="lbl isOrNot"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group" id="genderGroup">
-                            <label class="col-sm-3 control-label no-padding-right" for="isDelete" style=color:#FF892A>是否删除</label>
-                            <div class="col-sm-9">
-                                <input type="checkbox" id="isDelete" class="ace ace-switch ace-switch-5" />
-                                <span class="lbl isOrNot"></span>
-                            </div>
-                        </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveItemBtn" class="btn btn-primary">保存</button>

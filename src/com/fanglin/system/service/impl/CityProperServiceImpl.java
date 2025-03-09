@@ -22,6 +22,7 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.VillageDao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.system.dao.CityDao;
 import com.fanglin.system.dao.CityProperDao;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.system.po.CityProperPO;
@@ -43,6 +44,9 @@ public class CityProperServiceImpl implements CityProperService {
 	private CityProperDao cityProperDao;
 
 	@Autowired
+	private CityDao cityDao;
+
+	@Autowired
 	private VillageDao villageDao;
 
 	@Autowired
@@ -55,7 +59,7 @@ public class CityProperServiceImpl implements CityProperService {
 		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
 
 		for (CityProperPO cityProperPO : cityProperPOs) {
-			cityProperVOs.add(covertBean(cityProperPO));
+			cityProperVOs.add(cityProperPO.ptv(new CityProperVO(new CityVO(new RegionVO()))));
 		}
 
 		paging.setData(cityProperVOs);
@@ -68,7 +72,7 @@ public class CityProperServiceImpl implements CityProperService {
 		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
 
 		for (CityProperPO cityProperPO : cityProperPOs) {
-			cityProperVOs.add(covertBean(cityProperPO));
+			cityProperVOs.add(cityProperPO.ptv(new CityProperVO(new CityVO(new RegionVO()))));
 		}
 
 		return cityProperVOs;
@@ -80,7 +84,7 @@ public class CityProperServiceImpl implements CityProperService {
 		CityProperPO cityProperPO = cityProperDao.get(cityProperVO.getCpid());
 
 		if (cityProperPO != null) {
-			cityProperVO = covertBean(cityProperPO);
+			cityProperVO = cityProperPO.ptv(new CityProperVO(new CityVO(new RegionVO())));
 		}
 
 		return cityProperVO;
@@ -88,11 +92,12 @@ public class CityProperServiceImpl implements CityProperService {
 
 	@Override
 	public List<CityProperVO> queryCityProperByCid(CityProperVO cityProperVO) {
+
 		List<CityProperPO> cityProperPOs = cityProperDao.queryCityProperByCid(cityProperVO.getCity().getCid());
 		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
 
 		for (CityProperPO cityProperPO : cityProperPOs) {
-			cityProperVOs.add(covertBean(cityProperPO));
+			cityProperVOs.add(cityProperPO.ptv(new CityProperVO(new CityVO(new RegionVO()))));
 		}
 
 		return cityProperVOs;
@@ -105,7 +110,7 @@ public class CityProperServiceImpl implements CityProperService {
 		List<CityProperVO> cityProperVOs = new ArrayList<CityProperVO>();
 
 		for (CityProperPO cityProperPO : cityProperPOs) {
-			cityProperVOs.add(covertBean(cityProperPO));
+			cityProperVOs.add(cityProperPO.ptv(new CityProperVO(new CityVO(new RegionVO()))));
 		}
 
 		return cityProperVOs;
@@ -115,9 +120,17 @@ public class CityProperServiceImpl implements CityProperService {
 	@Transactional
 	public void addCityProper(CityProperVO cityProperVO) throws FLException {
 
-		CityProperPO cityProperPO = null;
+		if (cityProperVO.getCity() == null) {
+			throw new FLException(230019, "城市不存在");
+		}
 
-		cityProperPO = new CityProperPO();
+		CityPO cityPO = cityDao.get(cityProperVO.getCity().getCid());
+
+		if (cityPO == null) {
+			throw new FLException(230019, "城市不存在");
+		}
+
+		CityProperPO cityProperPO = new CityProperPO();
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CITY_PROPER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, 0);
 
@@ -129,8 +142,7 @@ public class CityProperServiceImpl implements CityProperService {
 
 		BeanUtil.copyProperties(cityProperVO, cityProperPO, Arrays.asList("no", "city"));
 
-		cityProperPO.setCity(new CityPO());
-		BeanUtil.copyProperties(cityProperVO.getCity(), cityProperPO.getCity(), Arrays.asList("region"));
+		cityProperPO.setCity(cityPO);
 
 		cityProperPO.setPinyin((String) PinYin4Util.getPinyin(cityProperVO.getName()).get(0));
 
@@ -147,10 +159,19 @@ public class CityProperServiceImpl implements CityProperService {
 			throw new FLException(230018, "城区不存在");
 		}
 
+		if (cityProperVO.getCity() == null) {
+			throw new FLException(230019, "城市不存在");
+		}
+
+		CityPO cityPO = cityDao.get(cityProperVO.getCity().getCid());
+
+		if (cityPO == null) {
+			throw new FLException(230019, "城市不存在");
+		}
+
 		BeanUtil.copyProperties(cityProperVO, cityProperPO, Arrays.asList("no", "city"));
 
-		cityProperPO.setCity(new CityPO());
-		BeanUtil.copyProperties(cityProperVO.getCity(), cityProperPO.getCity(), Arrays.asList("region"));
+		cityProperPO.setCity(cityPO);
 
 		cityProperPO.setPinyin((String) PinYin4Util.getPinyin(cityProperVO.getName()).get(0));
 
@@ -178,6 +199,7 @@ public class CityProperServiceImpl implements CityProperService {
 	@Override
 	@Transactional
 	public String deleteCityProper(List<Integer> cpids) {
+
 		String quotedCityProper = "";
 
 		for (Integer cpid : cpids) {
@@ -203,19 +225,6 @@ public class CityProperServiceImpl implements CityProperService {
 	@Transactional
 	public void deleteCityProperByCpid(Integer cpid) {
 		cityProperDao.deleteById(cpid);
-	}
-
-	public CityProperVO covertBean(CityProperPO cityProperPO) {
-		CityProperVO cityProperVO = new CityProperVO();
-		BeanUtil.copyProperties(cityProperPO, cityProperVO, Arrays.asList("city"));
-
-		cityProperVO.setCity(new CityVO());
-		BeanUtil.copyProperties(cityProperPO.getCity(), cityProperVO.getCity(), Arrays.asList("region"));
-
-		cityProperVO.getCity().setRegion(new RegionVO());
-		BeanUtil.copyProperties(cityProperPO.getCity().getRegion(), cityProperVO.getCity().getRegion());
-
-		return cityProperVO;
 	}
 
 }

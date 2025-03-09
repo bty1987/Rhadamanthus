@@ -152,7 +152,7 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 			throw new FLException(330082, "规则不可操作");
 		}
 
-		if (status != CustomerUserRulePO.STATUS_ENABLE_INT && status < customerUserRulePO.getStatus()) {
+		if (customerUserRuleVO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT && customerUserRuleVO.getStatus() < customerUserRulePO.getStatus()) {
 			throw new FLException(330082, "规则不可操作");
 		}
 

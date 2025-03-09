@@ -46,6 +46,8 @@ public class SelectionItemStatusRightServiceImpl implements SelectionItemStatusR
 
 		selectionItemStatusRightDao.deleteSelectionItemStatus(selectionItemStatusRightVO.getBid());
 
+		if (selectionItemStatusRightVOs == null) return;
+
 		for (SelectionItemStatusRightVO selectionItemStatusRight : selectionItemStatusRightVOs) {
 
 			SelectionItemStatusRightPO selectionItemStatusRightPO = new SelectionItemStatusRightPO();

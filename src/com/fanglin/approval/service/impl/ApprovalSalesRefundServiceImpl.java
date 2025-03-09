@@ -15,13 +15,19 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundDao;
 import com.fanglin.approval.dao.ApprovalSalesRefundItemDao;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.po.ApprovalSalesRefundAO;
 import com.fanglin.approval.po.ApprovalSalesRefundItemPO;
 import com.fanglin.approval.po.ApprovalSalesRefundPO;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
@@ -34,6 +40,7 @@ import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.payment.po.SalesReceiptPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesBalanceItemDao;
 import com.fanglin.sales.dao.SalesDao;
@@ -48,9 +55,13 @@ import com.fanglin.sales.po.SalesRefundsItemPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.vo.SalesItemVO;
+import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.Paging;
 
 @Service("approvalSalesRefundService")
 @Transactional(readOnly = true)
@@ -100,6 +111,25 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
+
+	@Override
+	public void pageApprovalSalesRefund(Paging paging, List<Filter> filters, int company) throws FLException {
+
+		List<ApprovalSalesRefundAO> approvalSalesRefundAOs = approvalSalesRefundDao.pageApprovalSalesRefund(paging, filters, company);
+		List<ApprovalSalesRefundVO> approvalSalesRefundVOs = new ArrayList<ApprovalSalesRefundVO>();
+
+		for (ApprovalSalesRefundAO approvalSalesRefundAO : approvalSalesRefundAOs) {
+
+			ApprovalSalesRefundVO approvalSalesRefundVO = new ApprovalSalesRefundVO();
+
+			approvalSalesRefundVO.setApproval(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
+			approvalSalesRefundVO.setSales(new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()));
+
+			approvalSalesRefundVOs.add(approvalSalesRefundAO.ptv(approvalSalesRefundVO));
+		}
+
+		paging.setData(approvalSalesRefundVOs);
+	}
 
 	// 获取销售退货审批向信息
 	@Override

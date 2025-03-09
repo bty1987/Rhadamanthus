@@ -1,5 +1,7 @@
 package com.fanglin.data.material.vo;
 
+import com.fanglin.data.common.vo.GoodsKindVO;
+
 public class GoodsVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5543447445422987680L;
@@ -28,14 +30,22 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Integer selling;
 
+	private Integer confine;
+
 	private Integer pieceNum;
 
 	private AccessoriesTypeVO accessoriesType;
 
 	private Short type;
 
+	private GoodsKindVO onekind;
+
+	private GoodsKindVO twokind;
+
+	private GoodsKindVO thrkind;
+
 	private Short status;
-	
+
 	private Short checkup;
 
 	public GoodsVO() {
@@ -50,6 +60,14 @@ public class GoodsVO implements java.io.Serializable {
 	public GoodsVO(AccessoriesTypeVO accessoriesType) {
 		super();
 		this.accessoriesType = accessoriesType;
+	}
+
+	public GoodsVO(AccessoriesTypeVO accessoriesType, GoodsKindVO onekind, GoodsKindVO twokind, GoodsKindVO thrkind) {
+		super();
+		this.accessoriesType = accessoriesType;
+		this.onekind = onekind;
+		this.twokind = twokind;
+		this.thrkind = thrkind;
 	}
 
 	public Long getGid() {
@@ -148,6 +166,14 @@ public class GoodsVO implements java.io.Serializable {
 		this.selling = selling;
 	}
 
+	public Integer getConfine() {
+		return confine;
+	}
+
+	public void setConfine(Integer confine) {
+		this.confine = confine;
+	}
+
 	public Integer getPieceNum() {
 		return pieceNum;
 	}
@@ -170,6 +196,30 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public GoodsKindVO getOnekind() {
+		return onekind;
+	}
+
+	public void setOnekind(GoodsKindVO onekind) {
+		this.onekind = onekind;
+	}
+
+	public GoodsKindVO getTwokind() {
+		return twokind;
+	}
+
+	public void setTwokind(GoodsKindVO twokind) {
+		this.twokind = twokind;
+	}
+
+	public GoodsKindVO getThrkind() {
+		return thrkind;
+	}
+
+	public void setThrkind(GoodsKindVO thrkind) {
+		this.thrkind = thrkind;
 	}
 
 	public Short getStatus() {

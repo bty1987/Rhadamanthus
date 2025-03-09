@@ -14,6 +14,7 @@ package com.fanglin.system.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.system.vo.CompanyVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "company", catalog = "communion")
@@ -213,6 +217,14 @@ public class CompanyPO implements Serializable {
 
 	public void setBlock(short block) {
 		this.block = block;
+	}
+	
+	public CompanyVO ptv(CompanyVO companyVO) {
+
+		BeanUtil.copyProperties(this, companyVO, Arrays.asList("drganization", "srganization"));
+		if (companyVO.getDrganization() != null) BeanUtil.copyProperties(getDrganization(), companyVO.getDrganization());
+		if (companyVO.getSrganization() != null) BeanUtil.copyProperties(getSrganization(), companyVO.getSrganization());
+		return companyVO;
 	}
 
 }

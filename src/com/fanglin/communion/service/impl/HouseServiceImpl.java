@@ -40,7 +40,7 @@ public class HouseServiceImpl implements HouseService {
 		List<HouseVO> houseVOs = new ArrayList<HouseVO>();
 
 		for (HousePO housePO : housePOs) {
-			houseVOs.add(convertBean(housePO));
+			houseVOs.add(housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO()))))));
 		}
 
 		paging.setData(houseVOs);
@@ -55,9 +55,7 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		houseVO = convertBean(housePO);
-
-		return houseVO;
+		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO())))));
 	}
 
 	@Override
@@ -69,9 +67,7 @@ public class HouseServiceImpl implements HouseService {
 			throw new FLException(320002, "房产不存在");
 		}
 
-		houseVO = convertBean(housePO);
-
-		return houseVO;
+		return housePO.ptv(new HouseVO(new VillageVO(new CityProperVO(new CityVO(new RegionVO())))));
 	}
 
 	@Override
@@ -143,26 +139,6 @@ public class HouseServiceImpl implements HouseService {
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
 
 		return 0;
-	}
-
-	private HouseVO convertBean(HousePO housePO) throws FLException {
-
-		HouseVO houseVO = new HouseVO(new VillageVO());
-
-		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
-
-		BeanUtil.copyProperties(housePO.getVillage(), houseVO.getVillage(), Arrays.asList("cityProper"));
-
-		houseVO.getVillage().setCityProper(new CityProperVO());
-		BeanUtil.copyProperties(housePO.getVillage().getCityProper(), houseVO.getVillage().getCityProper(), Arrays.asList("city"));
-
-		houseVO.getVillage().getCityProper().setCity(new CityVO());
-		BeanUtil.copyProperties(housePO.getVillage().getCityProper().getCity(), houseVO.getVillage().getCityProper().getCity(), Arrays.asList("region"));
-
-		houseVO.getVillage().getCityProper().getCity().setRegion(new RegionVO());
-		BeanUtil.copyProperties(housePO.getVillage().getCityProper().getCity().getRegion(), houseVO.getVillage().getCityProper().getCity().getRegion());
-
-		return houseVO;
 	}
 
 }

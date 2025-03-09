@@ -658,7 +658,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 		String orderId = paymentPO.getOrderId();
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
+		short atttype = paymentPO.getPaymentType() == PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT ? PaytranPO.ATTTYPE_MATERIAL_INT : PaytranPO.ATTTYPE_DECORATION_INT;
+
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=0&atttype=%s", paymentPO.getOrderId(), paymentPO.getPid(), atttype));
 
 	}
 

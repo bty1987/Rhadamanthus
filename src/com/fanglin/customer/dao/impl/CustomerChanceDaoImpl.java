@@ -20,11 +20,13 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	}
 
 	@Override
-	public List<CustomerChancePO> pageCustomerChance(Paging paging, List<Filter> filters, int company) {
+	public List<CustomerChancePO> pageCustomerChance(Paging paging, List<Filter> filters, Integer company) {
 
 		PagingQuery<CustomerChancePO> query = pagingQuery(paging, CustomerChancePO.class);
 
-		query.add(query.getCriterion("company", company, "eq"));
+		if (company != null) {
+			query.add(query.getCriterion("company", company, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -90,6 +92,10 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				}
 			}
 
+			if (field.contains("finer")) {
+				query.alias("finer", "finer");
+			}
+
 			if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
 			} else if ("type".equals(field)) {
@@ -125,6 +131,14 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 				query.add(query.getCriterion("village.no", data, op));
 			} else if ("house.houseNumber".equals(field)) {
 				query.add(query.getCriterion("house.houseNumber", data, op));
+			} else if ("finer".equals(field)) {
+				query.add(query.getCriterion("finer.userId", data, op));
+			} else if ("fineTime".equals(field)) {
+				query.timeranges("fineTime", data);
+			} else if ("isFine".equals(field)) {
+				query.add(query.getCriterion("isFine", Short.valueOf(data), op));
+			} else if ("source.createTime".equals(field)) {
+				query.timeranges("source.createTime", data);
 			}
 		}
 	}

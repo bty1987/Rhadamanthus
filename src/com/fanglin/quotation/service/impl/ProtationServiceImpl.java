@@ -199,7 +199,7 @@ public class ProtationServiceImpl implements ProtationService {
 			protationPO.setVersion(presignProducePO.getVersion());
 		}
 
-		PresignPricePO presignPricePO = presignPriceDao.queryPresignPricePrice(ppid, protationVO.getQuoteArea());
+		PresignPricePO presignPricePO = presignPriceDao.queryPresignPrice(ppid, protationVO.getQuoteArea());
 
 		if (presignPricePO != null) {
 			protationPO.setQuotePrice(presignPricePO.getPrice());
@@ -323,9 +323,38 @@ public class ProtationServiceImpl implements ProtationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateProtationForProfit(ProtationVO protationVO) throws FLException {
+
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
+
+		if (protationPO == null) {
+			throw new FLException(200046, "预签不存在");
+		}
+
+		PresignProducePO presignProducePO = presignProduceDao.get(protationPO.getPpid());
+
+		if (presignProducePO == null) {
+			throw new FLException(130080, "预签产品不存在");
+		}
+
+		if (protationVO.getDiscount() != null) {
+			protationPO.setDiscount(presignProducePO.getDiscountt());
+		}
+
+		if (protationVO.getManageDiscount() != null) {
+			protationPO.setManageDiscount(presignProducePO.getManageDiscountt());
+		}
+
+		protationDao.update(protationPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateProtationForAdvance(ProtationVO protationVO) throws FLException {
 
-		ProtationPO protationPO = protationDao.get(protationVO.getPid());
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
 
 		if (protationPO == null) {
 			throw new FLException(200046, "预签不存在");
@@ -418,7 +447,7 @@ public class ProtationServiceImpl implements ProtationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int lockProtation(ProtationVO protationVO) throws FLException {
 
-		ProtationPO protationPO = protationDao.get(protationVO.getPid());
+		ProtationPO protationPO = checkProtation(protationVO.getPid());
 
 		if (protationPO == null) {
 			throw new FLException(200003, "报价不存在");
@@ -441,7 +470,11 @@ public class ProtationServiceImpl implements ProtationService {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		protationPO.setStatus(ProtationPO.STATUS_UNLOCK_INT);
+		if (protationPO.getStatus() != ProtationPO.STATUS_LOCK_INT) {
+			throw new FLException(200047, "预签状态不可操作");
+		}
+
+		protationPO.setStatus(ProtationPO.STATUS_INIT_INT);
 
 		protationDao.update(protationPO);
 

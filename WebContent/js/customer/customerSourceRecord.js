@@ -2,20 +2,25 @@ $(function() {
 
     var customerSourceRecord = {
 
-        csid: params.customer.customerSource.csid
+        csid: params.customer.customerSource.csid,
+        pageType: params['urlLoadParams'].type
     };
 
     var searcher = new Searcher();
 
     searcher.base("recordCondList", "recordPagenation", "recordResultList", api.customer.pageCustomerSourceRecord);
     searcher.condition();
+    searcher.history("customerSourceRecordData" + customerSourceRecord.pageType);
 
-    searcher.param({
-        "customerSourceRecord.csid": customerSourceRecord.csid,
-        "customerSourceRecord.type": 0
-    });
+    var param = {
+        "customerSourceRecord.csid": customerSourceRecord.csid
+    };
 
-    searcher.history("customerSourceRecordData");
+    if (customerSourceRecord.pageType == "0") {
+        param["customerSourceRecord.type"] = customerSourceRecord.pageType;
+    }
+
+    searcher.param(param);
 
     var lineprops = [{
         fieId: "userName",

@@ -80,6 +80,11 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_NO_STR, no)).uniqueResult();
 	}
 
+	@Override
+	public BrandPO queryBrand(String kino) {
+		return (BrandPO) session().createCriteria(BrandPO.class).add(Restrictions.eq(BrandPO.COLUMN_KINO_STR, kino)).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

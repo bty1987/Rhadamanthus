@@ -1,6 +1,5 @@
 package com.fanglin.data.quotation.service.impl;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +39,16 @@ public class PresignPriceServiceImpl implements PresignPriceService {
 		}
 
 		paging.setData(presignPriceVOs);
+	}
 
+	@Override
+	public PresignPriceVO queryPresignPrice(PresignPriceVO presignPriceVO) {
+
+		PresignPricePO presignPricePO = presignPriceDao.queryPresignPrice(presignPriceVO.getPpid(), presignPriceVO.getLowerArea());
+
+		BeanUtil.copyProperties(presignPricePO, presignPriceVO);
+
+		return presignPriceVO;
 	}
 
 	@Override
@@ -58,7 +66,7 @@ public class PresignPriceServiceImpl implements PresignPriceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updatePresignPrice(PresignPriceVO presignPriceVO) throws FLException, ParseException {
+	public int updatePresignPrice(PresignPriceVO presignPriceVO) throws FLException {
 
 		PresignPricePO presignPricePO = presignPriceDao.get(presignPriceVO.getPspid());
 

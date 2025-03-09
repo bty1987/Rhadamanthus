@@ -21,7 +21,6 @@ jQuery(function(a) {
         deptList: {},
         eItems: {},
         eEditFlg: true,
-        cItems: {},
         loginFlag: true,
         getProp: {
             "0": true,
@@ -36,7 +35,8 @@ jQuery(function(a) {
             addOperationModal: com.focusPage('#addOperationModal')
         },
         cItems: {},
-        isExpert: params.personel.isExpert
+        isExpert: params.personel.isExpert,
+        company: params.company
     };
 
     if (params.type == 1) {
@@ -617,7 +617,7 @@ jQuery(function(a) {
                 "userInfo.palary": user.items.palary.val(),
                 "userInfo.salary": user.items.salary.val(),// 工资
                 "userInfo.bank": user.items.bank.val(),// 开户行
-                "userInfo.bankCardNum": user.items.bankCardNum.val(),// 银行卡号
+                "userInfo.bankCardNum": user.items.bankCardNum.val()// 银行卡号
 
             };
 
@@ -668,6 +668,22 @@ jQuery(function(a) {
                 } else {
                     com.showAlert(com.error, e.errorMsg);
                 }
+
+                var returnUser = res.userInfo.user;
+                var deptName = returnUser.dept.name;
+                var dutyName = returnUser.duty.name;
+
+                var userData = {
+                    "userId": returnUser.userId,
+                    "userName": returnUser.userName,
+                    "deptName": deptName,
+                    "dutyName": dutyName,
+                    "drganizationNo": user.company.drganization.no,
+                    "drganizationName": user.company.drganization.name
+                };
+
+                kingdeeUtils.userToKingdee(userData);
+
             }, null, false);
         }
     }

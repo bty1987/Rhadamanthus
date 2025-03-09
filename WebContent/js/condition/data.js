@@ -1613,4 +1613,40 @@ Condition.addupRule("data", {
             validate: null
         }
     },
+
+    "goodsKind-no": {
+        label: "编号",
+        type: "text",
+        submitConfig: {
+            name: "no",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "goodsKind-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "goodsKind-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().goodsKind.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
 });

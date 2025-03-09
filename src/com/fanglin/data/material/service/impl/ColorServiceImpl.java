@@ -37,7 +37,7 @@ public class ColorServiceImpl implements ColorService {
 			ColorVO colorVO = new ColorVO(new GoodsVO());
 
 			BeanUtil.copyProperties(colorGO, colorVO, Arrays.asList("goods"));
-			BeanUtil.copyProperties(colorGO.getGoods(), colorVO.getGoods(), Arrays.asList("accessoriesType"));
+			colorGO.getGoods().ptv(colorVO.getGoods());
 
 			colorVOs.add(colorVO);
 		}

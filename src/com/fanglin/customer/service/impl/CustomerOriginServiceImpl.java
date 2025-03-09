@@ -426,10 +426,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
-		if (customerOriginPO.getVillage() != null) {
-			BeanUtil.copyProperties(customerOriginPO.getVillage(), customerOriginVO.getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(customerOriginPO.getVillage().getCityProper(), customerOriginVO.getVillage().getCityProper(), Arrays.asList("city"));
-		}
+		if (customerOriginPO.getVillage() != null) customerOriginPO.getVillage().ptv(customerOriginVO.getVillage());
 
 		BeanUtil.copyProperties(customerOriginPO.getCreater(), customerOriginVO.getCreater(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyProperties(customerOriginPO.getBelonger(), customerOriginVO.getBelonger(), Arrays.asList("dept", "duty"));

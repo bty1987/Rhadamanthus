@@ -583,7 +583,7 @@
             divItem2.append(createCalItem("折前总价", 'normal'));
             divItem2.append(createCalItem("打折总额", 'normal'));
             divItem2.append(createCalItem("非打折总额", 'normal'));
-            divItem2.append(createCalItem("非业绩", 'normal'));
+            divItem2.append(createCalItem("非业绩", 'normal').addClass("hide"));
             divItem2.append(createCalItem("管理费", 'normal'));
             divItem2.append(createCalItem("税金", 'normal'));
             divItem2.append(createCalItem("优惠", 'normal').addClass("hide"));
@@ -664,7 +664,7 @@
                     halfPriceDiv.append(createCalItem(_ddtotal, 'normal'));
                     halfPriceDiv.append(createCalItem(_cdiscount, 'normal'));
                     halfPriceDiv.append(createCalItem(_ndiscount, 'normal'));
-                    halfPriceDiv.append(createCalItem(_unachefee, 'normal'));
+                    halfPriceDiv.append(createCalItem(_unachefee, 'normal').addClass("hide"));
                     halfPriceDiv.append(createCalItem(_ddmanagefee, 'normal'));
                     halfPriceDiv.append(createCalItem(_ddtaxfee, 'normal'));
                     halfPriceDiv.append(createCalItem(_costfee, 'normal').addClass("hide"));
@@ -701,7 +701,7 @@
                     halfPacksDiv.append(createCalItem(_ddtotal, 'normal'));
                     halfPacksDiv.append(createCalItem(_cdiscount, 'normal'));
                     halfPacksDiv.append(createCalItem(_ndiscount, 'normal'));
-                    halfPacksDiv.append(createCalItem(_unachefee, 'normal'));
+                    halfPacksDiv.append(createCalItem(_unachefee, 'normal').addClass("hide"));
                     halfPacksDiv.append(createCalItem(_ddmanagefee, 'normal'));
                     halfPacksDiv.append(createCalItem(_ddtaxfee, 'normal'));
                     halfPacksDiv.append(createCalItem(_costfee, 'normal').addClass("hide"));
@@ -1892,10 +1892,6 @@
             $btns["$btnFold"].attr({
                 "data-action": "collapse"
             });
-
-            if($btns["$btnSet"]){
-                $btns["$btnSet"].hide();
-            }
 
             var _lineSet = [];
             _lineSet.push(["line", "0"]);

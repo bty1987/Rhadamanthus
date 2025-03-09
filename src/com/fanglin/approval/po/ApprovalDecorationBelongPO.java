@@ -1,26 +1,27 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "approvaldecorationbelong", catalog = "approval")
 public class ApprovalDecorationBelongPO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 6406336972630667566L;
-	
+
 	public static final String COLUMN_AID_STR = "aid";
 
 	private int adbId;
-	
+
 	private long aid;
-	
+
 	private String orderId;
-	
+
 	private short belongType;
 
 	@Id

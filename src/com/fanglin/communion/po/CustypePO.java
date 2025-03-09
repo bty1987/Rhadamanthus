@@ -65,7 +65,7 @@ public class CustypePO implements java.io.Serializable {
 
 	private ReceiptTypePO receiptType;
 
-	private short platform;
+	private short platform; // 支付方式 0：pos 1: wxpay
 
 	private short atttype; // 业务类型: 0预付 , 1装修 , 2主材/占位 , 3销售 , 4服务
 

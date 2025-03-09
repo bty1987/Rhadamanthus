@@ -137,6 +137,8 @@ jQuery(function() {
         var goodsNo = sales.leftitems.goodsNo.val();
 
         var $purchase = price.purchase;
+        var $confine = price.confine;
+        
         var $selling = sales.leftitems.selling.val(); // 折让价
         var $disPrice = sales.leftitems.disPrice.val(); // 折扣价
         var $discount = sales.leftitems.discount.val(); // 折扣
@@ -147,6 +149,11 @@ jQuery(function() {
 
         if (price.ctype == 0 && $disPrice < price.purchase) {
             com.showAlert(com.warning, "折扣价低于控价");
+            return false;
+        }
+        
+        if (price.ctype == 1 && price.confine != 0 && $disPrice > price.confine) {
+            com.showAlert(com.warning, "折扣价高于限价");
             return false;
         }
 

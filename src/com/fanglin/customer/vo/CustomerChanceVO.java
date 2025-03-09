@@ -35,6 +35,8 @@ public class CustomerChanceVO implements Serializable {
 
 	private UserBaseVO issuer;
 
+	private UserBaseVO finer;
+
 	private Timestamp createTime;
 
 	private Timestamp issueTime;
@@ -42,6 +44,8 @@ public class CustomerChanceVO implements Serializable {
 	private Timestamp confirmTime;
 
 	private Timestamp readTime;
+
+	private Timestamp meetTime;
 
 	private Integer rate;
 
@@ -59,6 +63,10 @@ public class CustomerChanceVO implements Serializable {
 
 	private Short isTrue;
 
+	private Short isFine;
+
+	private Timestamp fineTime;
+
 	private String comment;
 
 	private Integer company;
@@ -67,7 +75,7 @@ public class CustomerChanceVO implements Serializable {
 		super();
 	}
 
-	public CustomerChanceVO(CustomerVO customer, HouseVO house, CustomerSourceVO source, DecorationBusitypeVO busitype, UserBaseVO creater, UserBaseVO issuer, UserBaseVO belonger, DepartmentVO department, DepartmentVO region) {
+	public CustomerChanceVO(CustomerVO customer, HouseVO house, CustomerSourceVO source, DecorationBusitypeVO busitype, UserBaseVO creater, UserBaseVO issuer, UserBaseVO finer, UserBaseVO belonger, DepartmentVO department, DepartmentVO region) {
 
 		super();
 
@@ -77,6 +85,7 @@ public class CustomerChanceVO implements Serializable {
 		this.busitype = busitype;
 		this.creater = creater;
 		this.issuer = issuer;
+		this.finer = finer;
 		this.belonger = belonger;
 		this.department = department;
 		this.region = region;
@@ -162,6 +171,14 @@ public class CustomerChanceVO implements Serializable {
 		this.issuer = issuer;
 	}
 
+	public UserBaseVO getFiner() {
+		return finer;
+	}
+
+	public void setFiner(UserBaseVO finer) {
+		this.finer = finer;
+	}
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -196,6 +213,15 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setReadTime(Timestamp readTime) {
 		this.readTime = readTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getMeetTime() {
+		return meetTime;
+	}
+
+	public void setMeetTime(Timestamp meetTime) {
+		this.meetTime = meetTime;
 	}
 
 	public Integer getRate() {
@@ -260,6 +286,23 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setIsTrue(Short isTrue) {
 		this.isTrue = isTrue;
+	}
+
+	public Short getIsFine() {
+		return isFine;
+	}
+
+	public void setIsFine(Short isFine) {
+		this.isFine = isFine;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getFineTime() {
+		return fineTime;
+	}
+
+	public void setFineTime(Timestamp fineTime) {
+		this.fineTime = fineTime;
 	}
 
 	public String getComment() {

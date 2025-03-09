@@ -14,11 +14,13 @@ package com.fanglin.common.service;
 import com.fanglin.core.interceptor.FLException;
 
 public interface LoginService {
-	
+
 	public String requestAuthCode(String userId, String code, String secret) throws FLException;
-	
+
+	public String phoneAuthCode(String userId, String phone, String code, String secret) throws FLException;
+
 	public String changeAuthCode(String authentication, String company) throws FLException;
-	
+
 	public String updateAuthCode(String authentication, String password) throws FLException;
 
 }

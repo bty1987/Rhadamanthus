@@ -388,6 +388,14 @@ $.extend(api, {
                 args: ["total"]
             }]
         },
+        queryAccessoriesByAid: {
+            url: "queryAccessoriesByAid.do",
+            type: "query",
+            tranargs: [{
+                result: "accessoriess",
+                args: ["total"]
+            }]
+        },
         addAccessories: {
             url: "addAccessories.do",
             type: "update",

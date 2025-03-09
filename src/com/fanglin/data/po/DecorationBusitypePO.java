@@ -28,10 +28,12 @@ public class DecorationBusitypePO implements Serializable {
 
 	private String name;
 
+	private short outside;
+
 	private short status;
 
 	private int company;
-	
+
 	private long no;
 
 	public DecorationBusitypePO() {
@@ -43,8 +45,7 @@ public class DecorationBusitypePO implements Serializable {
 		this.dbid = dbid;
 	}
 
-	public DecorationBusitypePO(long dbid, String name, short status,
-			int company) {
+	public DecorationBusitypePO(long dbid, String name, short status, int company) {
 		super();
 		this.dbid = dbid;
 		this.name = name;
@@ -72,6 +73,15 @@ public class DecorationBusitypePO implements Serializable {
 		this.name = name;
 	}
 
+	@Column(name = "outside")
+	public short getOutside() {
+		return outside;
+	}
+
+	public void setOutside(short outside) {
+		this.outside = outside;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -89,7 +99,7 @@ public class DecorationBusitypePO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@Column(name = "no")
 	public long getNo() {
 		return no;

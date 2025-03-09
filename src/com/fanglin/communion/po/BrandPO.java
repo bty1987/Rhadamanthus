@@ -31,6 +31,8 @@ public class BrandPO implements java.io.Serializable {
 
 	public static final String COLUMN_STATUS_ATTTYPE = "atttype";
 
+	public static final String COLUMN_KINO_STR = "kino";
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	private long bid;

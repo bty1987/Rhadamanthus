@@ -42,7 +42,9 @@ public class ApprovalCustomerSourceDaoImpl extends DaoImpl<ApprovalCustomerSourc
 		for (Filter filter : filters) {
 
 			String field = filter.getField();
+
 			query.alias("customerSource", "customerSource");
+
 			if ("village".equals(field)) {
 				query.alias("house", "house");
 				query.alias("house.village", "village");
@@ -58,7 +60,7 @@ public class ApprovalCustomerSourceDaoImpl extends DaoImpl<ApprovalCustomerSourc
 				query.alias("customerSource.creater", "creater");
 				query.add(query.getCriterion("creater.userId", filter));
 			} else if ("createTime".equals(field)) {
-				query.timeranges("customerSource.createTime", filter.getData());			
+				query.timeranges("customerSource.createTime", filter.getData());
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("customerSource.status", Short.valueOf(filter.getData()), filter.getOp()));
 			}

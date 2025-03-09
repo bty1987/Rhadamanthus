@@ -35,11 +35,15 @@ public class PresignProducePO implements Serializable {
 
 	private int discount;
 
+	private int discountt;
+
 	private int manageRate;
 
 	private String manageFormula;
 
 	private int manageDiscount;
+
+	private int manageDiscountt;
 
 	private int taxRate;
 
@@ -65,6 +69,11 @@ public class PresignProducePO implements Serializable {
 
 	public PresignProducePO() {
 		super();
+	}
+
+	public PresignProducePO(long ppid) {
+		super();
+		this.ppid = ppid;
 	}
 
 	@Id
@@ -214,6 +223,15 @@ public class PresignProducePO implements Serializable {
 		this.discount = discount;
 	}
 
+	@Column(name = "discountt")
+	public int getDiscountt() {
+		return discountt;
+	}
+
+	public void setDiscountt(int discountt) {
+		this.discountt = discountt;
+	}
+
 	@Column(name = "manageRate")
 	public int getManageRate() {
 		return manageRate;
@@ -239,6 +257,15 @@ public class PresignProducePO implements Serializable {
 
 	public void setManageDiscount(int manageDiscount) {
 		this.manageDiscount = manageDiscount;
+	}
+
+	@Column(name = "manageDiscountt")
+	public int getManageDiscountt() {
+		return manageDiscountt;
+	}
+
+	public void setManageDiscountt(int manageDiscountt) {
+		this.manageDiscountt = manageDiscountt;
 	}
 
 	@Column(name = "taxRate")

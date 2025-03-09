@@ -40,12 +40,16 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 	}
 
 	@Override
-	public List<VillagePO> queryVillageByPinyin(Paging paging, String pinyinName, Integer company) {
+	public List<VillagePO> queryVillageByPinyin(Paging paging, String pinyinName, Long pvid, Integer company) {
 
 		PagingQuery<VillagePO> query = pagingQuery(paging, VillagePO.class);
 
 		if (StringUtils.isNotEmpty(pinyinName)) {
 			query.add(Restrictions.eq(VillagePO.COLUMN_STATUS_STR, VillagePO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.ilike("name", pinyinName, MatchMode.ANYWHERE), Restrictions.ilike("pinyinAB", pinyinName, MatchMode.ANYWHERE)));
+		}
+
+		if (pvid != null) {
+			query.alias("parentVillage", "parentVillage").add(Restrictions.eq(VillagePO.COLUMN_PVID_STR, pvid));
 		}
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {

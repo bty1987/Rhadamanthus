@@ -33,9 +33,9 @@ public class ProtationDO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0;
 
-	public static final short STATUS_UNLOCK_INT = 0;
-
 	public static final short STATUS_LOCK_INT = 2;
+
+	public static final short STATUS_APPROVE_INT = 3;
 
 	private long pid;
 

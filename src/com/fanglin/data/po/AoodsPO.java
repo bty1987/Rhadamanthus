@@ -29,6 +29,8 @@ public class AoodsPO implements Serializable {
 
 	public static final String COLUMN_ANAME_STR = "accessoriesType.name";
 
+	public static final String COLUMN_GID_STR = "goods.gid";
+
 	public static final String COLUMN_NO_STR = "goods.no";
 
 	public static final String COLUMN_PINYIN_STR = "goods.pinyin";

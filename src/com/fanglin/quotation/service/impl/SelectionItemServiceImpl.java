@@ -302,7 +302,10 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		updateSelectionTotal(selectionItemPO, selectionItemVO.getNum());
 
 		selectionItemPO.setNum(selectionItemVO.getNum());
-		selectionItemPO.setComment(selectionItemVO.getComment());
+
+		if (selectionItemVO.getComment() != null) {
+			selectionItemPO.setComment(selectionItemVO.getComment());
+		}
 
 		selectionItemDao.update(selectionItemPO);
 
@@ -691,63 +694,61 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		switch (status) {
 			case SelectionItemPO.STATUS_INIT_SHORT:
 
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
-				selectionItemPO.setCreater(userPO);
-				selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_TRAN_SHORT);
+				selectionItemPO.setTraner(userPO);
+				selectionItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+
+				selectionItemPO.setNum(selectionItemPO.getInitNum());
 
 				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_TRAN_SHORT, userPO);
 
 				break;
 			case SelectionItemPO.STATUS_TRAN_SHORT:
 
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_TRAN_SHORT);
-				selectionItemPO.setTraner(userPO);
-				selectionItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_CHECK_SHORT);
+				selectionItemPO.setChecker(userPO);
+				selectionItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
 				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_CHECK_SHORT, userPO);
 
 				break;
 			case SelectionItemPO.STATUS_CHECK_SHORT:
 
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_CHECK_SHORT);
-				selectionItemPO.setChecker(userPO);
-				selectionItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_CONFIRM_SHORT);
+				selectionItemPO.setConfirmer(userPO);
+				selectionItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_CONFIRM_SHORT, userPO);
 
 				break;
 			case SelectionItemPO.STATUS_CONFIRM_SHORT:
 
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_CONFIRM_SHORT);
-				selectionItemPO.setConfirmer(userPO);
-				selectionItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
+				selectionItemPO.setFinish(userPO);
+				selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_FINISH_SHORT, userPO);
 
 				break;
 			case SelectionItemPO.STATUS_FINISH_SHORT:
 
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
-				selectionItemPO.setFinish(userPO);
-				selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_REVIEW_SHORT);
+				selectionItemPO.setReviewer(userPO);
+				selectionItemPO.setReviewTime(DateUtil.getDateToTimestamp(new Date()));
 
 				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_REVIEW_SHORT, userPO);
 
 				break;
 			case SelectionItemPO.STATUS_REVIEW_SHORT:
 
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_REVIEW_SHORT);
-				selectionItemPO.setReviewer(userPO);
-				selectionItemPO.setReviewTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemPO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
+				selectionItemPO.setBalancer(userPO);
+				selectionItemPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 
 				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_BALANCE_SHORT, userPO);
 
 				break;
 			case SelectionItemPO.STATUS_BALANCE_SHORT:
-
-				selectionItemPO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
-				selectionItemPO.setBalancer(userPO);
-				selectionItemPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 
 				break;
 		}

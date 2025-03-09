@@ -37,7 +37,7 @@ public class FormatServiceImpl implements FormatService {
 			FormatVO formatVO = new FormatVO(new GoodsVO());
 
 			BeanUtil.copyProperties(formatGO, formatVO, Arrays.asList("goods"));
-			BeanUtil.copyProperties(formatGO.getGoods(), formatVO.getGoods(), Arrays.asList("accessoriesType"));
+			formatGO.getGoods().ptv(formatVO.getGoods());
 
 			formatVOs.add(formatVO);
 		}

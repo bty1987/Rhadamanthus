@@ -38,6 +38,11 @@ public class CityVO implements Serializable {
 		this.no = no;
 	}
 
+	public CityVO(RegionVO region) {
+		super();
+		this.region = region;
+	}
+
 	public Integer getCid() {
 		return cid;
 	}

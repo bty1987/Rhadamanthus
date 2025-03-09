@@ -37,7 +37,7 @@ public class PriceServiceImpl implements PriceService {
 			PriceVO priceVO = new PriceVO(new GoodsVO());
 
 			BeanUtil.copyProperties(priceGO, priceVO, Arrays.asList("goods"));
-			BeanUtil.copyProperties(priceGO.getGoods(), priceVO.getGoods(), Arrays.asList("accessoriesType"));
+			priceGO.getGoods().ptv(priceVO.getGoods());
 
 			priceVOs.add(priceVO);
 		}

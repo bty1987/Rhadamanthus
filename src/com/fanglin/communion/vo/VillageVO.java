@@ -16,6 +16,8 @@ public class VillageVO implements Serializable {
 
 	private CityProperVO cityProper;
 
+	private VillageVO parentVillage;
+
 	private String developer;
 
 	private String salesPhone;
@@ -43,6 +45,17 @@ public class VillageVO implements Serializable {
 	public VillageVO(CityProperVO cityProper) {
 		super();
 		this.cityProper = cityProper;
+	}
+
+	public VillageVO(CityProperVO cityProper, VillageVO parentVillage) {
+		super();
+		this.cityProper = cityProper;
+		this.parentVillage = parentVillage;
+	}
+
+	public VillageVO(VillageVO parentVillage) {
+		super();
+		this.parentVillage = parentVillage;
 	}
 
 	public Long getVid() {
@@ -75,6 +88,14 @@ public class VillageVO implements Serializable {
 
 	public void setCityProper(CityProperVO cityProper) {
 		this.cityProper = cityProper;
+	}
+
+	public VillageVO getParentVillage() {
+		return parentVillage;
+	}
+
+	public void setParentVillage(VillageVO parentVillage) {
+		this.parentVillage = parentVillage;
 	}
 
 	public String getDeveloper() {

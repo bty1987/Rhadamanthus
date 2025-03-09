@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import cn.hutool.core.bean.BeanUtil;
+
+import com.fanglin.communion.vo.ServiceNodeVO;
+
 @Entity
 @Table(name = "serviceNode", catalog = "communion")
 public class ServiceNodePO implements Serializable {
@@ -37,6 +41,18 @@ public class ServiceNodePO implements Serializable {
 	private short status;
 
 	private int company;
+
+	private long psnid;
+
+	private short attnode;
+
+	private int blankNum;
+
+	private int workNum;
+
+	private short loop;
+
+	private short userType;
 
 	@Id
 	@GeneratedValue
@@ -92,6 +108,67 @@ public class ServiceNodePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "psnid")
+	public long getPsnid() {
+		return psnid;
+	}
+
+	public void setPsnid(long psnid) {
+		this.psnid = psnid;
+	}
+
+	@Column(name = "attnode")
+	public short getAttnode() {
+		return attnode;
+	}
+
+	public void setAttnode(short attnode) {
+		this.attnode = attnode;
+	}
+
+	@Column(name = "blankNum")
+	public int getBlankNum() {
+		return blankNum;
+	}
+
+	public void setBlankNum(int blankNum) {
+		this.blankNum = blankNum;
+	}
+
+	@Column(name = "workNum")
+	public int getWorkNum() {
+		return workNum;
+	}
+
+	public void setWorkNum(int workNum) {
+		this.workNum = workNum;
+	}
+
+	@Column(name = "`loop`")
+	public short getLoop() {
+		return loop;
+	}
+
+	public void setLoop(short loop) {
+		this.loop = loop;
+	}
+
+	@Column(name = "userType")
+	public short getUserType() {
+		return userType;
+	}
+
+	public void setUserType(short userType) {
+		this.userType = userType;
+	}
+
+	public ServiceNodeVO ptv(ServiceNodeVO serviceNodeVO) {
+
+		BeanUtil.copyProperties(this, serviceNodeVO);
+
+		return serviceNodeVO;
 	}
 
 }

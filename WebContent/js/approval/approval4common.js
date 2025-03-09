@@ -43,11 +43,12 @@
 
             typeName = "customerOrigin";
         }
+       
 
         var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix ');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v[typeName].name));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(constant.approval().approval.type.keys[v.type]));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $pass = $("<a></a>").addClass("btn btn-minier btn-success").html("通过");
@@ -244,10 +245,10 @@
 
                     break;
                 case "approval.createTime":
-                    propertyArr.push(["提交时间: ", v.approval.createTime, "grey"]);
+                    propertyArr.push(["提交时间: ", v.approval.createTime, "green"]);
                     break;
                 case "approval.approvalTime":
-                    propertyArr.push(["审批时间: ", v.approval.approvalTime, "grey"]);
+                    propertyArr.push(["审批时间: ", v.approval.approvalTime, "green"]);
                     break;
                 case "approval.status":
                     propertyArr.push(["审批状态: ", constant.approval().approval.status.keys[v.approval.status], "red"]);
@@ -346,6 +347,58 @@
                 case "customerOrigin.phone":
                     propertyArr.push(["客源电话: ", v.customerOrigin.phone, "blue"]);
                     break;
+                case "sales.customer.name":
+                    propertyArr.push(["姓名: ", v.sales.customer.name, "blue"]);
+                    break;   
+                case "sales.customer.gender":
+                    propertyArr.push(["性别: ", v.sales.customer.gender, "grey"]);
+                    break;  
+                case "sales.customer.phone":
+                    propertyArr.push(["客户电话: ", v.sales.customer.phone, "grey"]);
+                    break;    
+                case "sales.orderId":
+                    propertyArr.push(["装修单号: ", v.sales.orderId, "grey"]);
+                    break; 
+                case "sales.category":
+                    propertyArr.push(["商品品类: ", v.sales.category, "grey"]);
+                    break; 
+                case "sales.brand":
+                    propertyArr.push(["商品品牌: ", v.sales.brand, "grey"]);
+                    break; 
+                case "sales.salesman.currentName":
+                    propertyArr.push(["渠道: ", v.sales.salesman.currentName, "grey"]);
+                    break; 
+                case "sales.dept.name":
+                    propertyArr.push(["部门: ", v.sales.dept.name, "grey"]);
+                    break;  
+                case "sales.region.name":
+                    propertyArr.push(["分区: ", v.sales.region.name, "grey"]);
+                    break;  
+                case "sales.house.village.name":
+                    propertyArr.push(["楼盘: ", v.sales.house.village.name, "grey"]);
+                    break;  
+                case "sales.house.houseNumber":
+                    propertyArr.push(["楼号: ", v.sales.house.houseNumber, "grey"]);
+                    break;  
+                case "sales.total":
+                    propertyArr.push(["总额: ", v.sales.total, "grey"]);
+                    break;  
+                case "sales.amount":
+                    propertyArr.push(["当前总额: ", v.sales.amount, "grey"]);
+                    break;  
+                case "sales.maling":
+                    propertyArr.push(["抹零: ", v.sales.maling, "grey"]);
+                    break;  
+                case "refund":
+                    propertyArr.push(["退款: ", v.refund, "grey"]);
+                    break; 
+                case "type":
+                    propertyArr.push(["类型: ", constant.sales().refunds.type.keys[v.type], "red"]);
+                    break; 
+                case "sales.status":
+                    propertyArr.push(["状态: ", constant.sales().refunds.status.keys[v.sales.status], "red"]);
+                    break; 
+
             }
         });
         

@@ -41,7 +41,7 @@
 
         projectStatusArr: {},
         designStatusArr: {}
-    
+
     };
 
     order.saveBtnRepair = com.focusPage("#saveBtnRepair");
@@ -395,7 +395,7 @@
             com.showAlert(com.info, "操作成功");
         });
     });
-    
+
     com.focusPage("#updateDrawline").on("click", function() {
 
         var options = {
@@ -1169,7 +1169,7 @@
             params.quotation.decorationType = type;
             params.quotation.decorationTypeness = typeness;
             params.quotation.atttype = atttype;
-            
+
             params.urlLoadParams.type = null;
 
             params.historyPage = api.index.decorationIndex.url;
@@ -1248,7 +1248,6 @@
                 }
 
                 com.showTip(btn, "券优惠:" + couponCut1 + "<br\>物品优惠:" + thingCut + "<br\>优惠总额:" + utils.accAdd(couponCut1, thingCut) + "<br\>计入金额类型:" + couponCut2 + "<br\>不计入金额类型:" + couponCut3 + "<br\>计入业绩类型:" + couponCut1 + "<br\>不计入业绩类型:" + couponCut4);
-
             });
         };
 
@@ -1262,6 +1261,7 @@
 
                 quotation = res.quotation;
             }, null, false);
+
             var notpoint = 0;// 非业务人员提点金额
 
             if (decoration.notSalesmanRate > 0 && decoration.notSalesmanRate < 1) {
@@ -1270,8 +1270,37 @@
                 notpoint = decoration.notSalesmanRate;
             }
 
+            var couponCut = 0;
+            var thingCut = 0;
+            
+            com.post(api.decoration.queryDecorationActivityItem, {
+                "decoration.orderId": decoration.orderId
+            }, function(res) {
+
+                var decorationActivityItems = res.decorationActivityItems;
+
+                for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
+
+                    var item = decorationActivityItems[i];
+                    
+                    if ([constant.decoration().decorationActivityItem.STATUS_INIT_INT, constant.decoration().decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration().decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration().decorationActivityItem.STATUS_WAIT_INT, constant.decoration().decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) == -1)
+                        continue;
+
+                    if (item.isPrefor != constant.decoration().decorationActivityItem.ISAFFIRM_INITIA_INT)
+                        continue;
+
+                    if (item.type == 0) {// 0卷, 02456状态, 0计业绩
+                        couponCut = utils.accAdd(couponCut, utils.accMul(item.money, item.num));
+                    } else if (item.type == 1) {// 1物品, 02456状态, 0计业绩
+                        thingCut = utils.accAdd(thingCut, utils.accMul(item.money, item.num));
+                    }
+
+                }
+            }, null, false);
+
             // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-非计入业绩
-            var netPerformance = utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, notpoint), decoration.couponCut), decoration.thingCut);
+            var netPerformance = utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, notpoint), couponCut), thingCut);
+
             com.showTip(btn, "净业绩:" + netPerformance);
         };
 
@@ -1294,8 +1323,36 @@
                 notpoint = decoration.notSalesmanRate;
             }
 
+            var couponCut = 0;
+            var thingCut = 0;
+
+            com.post(api.decoration.queryDecorationActivityItem, {
+                "decoration.orderId": decoration.orderId
+            }, function(res) {
+
+                var decorationActivityItems = res.decorationActivityItems;
+
+                for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
+
+                    var item = decorationActivityItems[i];
+
+                    if ([constant.decoration().decorationActivityItem.STATUS_INIT_INT, constant.decoration().decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration().decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration().decorationActivityItem.STATUS_WAIT_INT, constant.decoration().decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) == -1)
+                        continue;
+
+                    if (item.isPrefor != constant.decoration().decorationActivityItem.ISAFFIRM_INITIA_INT)
+                        continue;
+
+                    if (item.type == 0) { // 0卷, 02456状态, 0计业绩
+                        couponCut = utils.accAdd(couponCut, utils.accMul(item.money, item.num));
+                    } else if (item.type == 1) { // 1物品, 02456状态, 0计业绩
+                        thingCut = utils.accAdd(thingCut, utils.accMul(item.money, item.num));
+                    }
+                }
+            }, null, false);
+
             // 净业绩 = 预签额 - 物品金额 - 非提金额
-            var netPerformance = utils.accSub(utils.accSub(decoration.precontractPrice, decoration.thingCut), notpoint);
+            var netPerformance = utils.accSub(utils.accSub(decoration.precontractPrice, thingCut), notpoint);
+
             com.showTip(btn, "净业绩:" + netPerformance);
         };
 
@@ -1396,7 +1453,7 @@
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": orderId
             }, function(res) {
-            	
+
                 var netperfor = 0;
                 var comperfor = 0;
 

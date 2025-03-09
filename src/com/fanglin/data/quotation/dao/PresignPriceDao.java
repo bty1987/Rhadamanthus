@@ -13,6 +13,6 @@ public interface PresignPriceDao extends Dao<PresignPricePO> {
 
 	public List<PresignPricePO> queryPresignPrice(long ppid);
 
-	public PresignPricePO queryPresignPricePrice(Long ppid, Integer quoteArea);
+	public PresignPricePO queryPresignPrice(Long ppid, Integer quoteArea);
 
 }

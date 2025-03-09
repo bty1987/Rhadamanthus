@@ -319,6 +319,17 @@ jQuery(function() {
             com.showAlert(com.warning, "折扣价低于控价");
             return false;
         }
+        
+        if (price.ctype == 1 && price.confine != 0 && $disPrice > price.confine) {
+            
+            setTimeout(function() {
+
+                com.closeMask(mask, popup);
+            }, 800);
+            
+            com.showAlert(com.warning, "折扣价高于限价");
+            return false;
+        }
 
         cycTotal();
 

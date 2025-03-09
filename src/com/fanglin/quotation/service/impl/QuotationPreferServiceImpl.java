@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.po.HousePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.PresignProducePO;
+import com.fanglin.data.quotation.vo.PresignProduceVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -32,12 +36,22 @@ public class QuotationPreferServiceImpl implements QuotationPreferService {
 	@Autowired
 	private DecorationDao decorationDao;
 
+	@Autowired
+	private HouseDao houseDao;
+
 	@Override
 	public QuotationPreferVO queryQuotationPrefer(QuotationPreferVO quotationPreferVO) throws FLException {
 
 		QuotationPreferPO quotationPreferPO = quotationPreferDao.queryQuotationPreferByQid(quotationPreferVO.getQid());
 
-		BeanUtil.copyProperties(quotationPreferPO, quotationPreferVO);
+		BeanUtil.copyProperties(quotationPreferPO, quotationPreferVO, Arrays.asList("presignProduce"));
+
+		if (quotationPreferPO != null && quotationPreferPO.getPresignProduce() != null) {
+
+			quotationPreferVO.setPresignProduce(new PresignProduceVO());
+
+			quotationPreferPO.getPresignProduce().ptv(quotationPreferVO.getPresignProduce());
+		}
 
 		return quotationPreferVO;
 	}
@@ -52,8 +66,8 @@ public class QuotationPreferServiceImpl implements QuotationPreferService {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		if (quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
-			throw new FLException(200033, "报价已锁定");
+		if (quotationPO.getStatus() != QuotationPO.STATUS_INIT_INT) {
+			throw new FLException(200030, "报价不可操作");
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
@@ -68,15 +82,26 @@ public class QuotationPreferServiceImpl implements QuotationPreferService {
 			throw new FLException(200005, "报价不能修改");
 		}
 
+		if (decorationPO.getHouse() != null && quotationPreferVO.getQuoteArea() != null) {
+
+			HousePO housePO = decorationPO.getHouse();
+
+			housePO.setInnerArea(quotationPreferVO.getQuoteArea());
+
+			houseDao.update(housePO);
+		}
+
 		QuotationPreferPO quotationPreferPO = quotationPreferDao.queryQuotationPreferByQid(quotationPreferVO.getQid());
 
 		if (quotationPreferPO == null) {
-			quotationPreferPO = new QuotationPreferPO(quotationPO.getOrderId(), quotationPO.getQid());
+			quotationPreferPO = new QuotationPreferPO(quotationPO.getOrderId(), quotationPO.getQid(), decorationPO.getHouse().getInnerArea());
 		}
 
-		quotationPreferPO.setPreferPrice(quotationPreferVO.getPreferPrice());
-		quotationPreferPO.setManagePrefer(quotationPreferVO.getManagePrefer());
-		quotationPreferPO.setAdvancePrefer(quotationPreferVO.getAdvancePrefer());
+		if (quotationPreferVO.getPresignProduce() != null && quotationPreferVO.getPresignProduce().getPpid() != null) {
+			quotationPreferPO.setPresignProduce(new PresignProducePO(quotationPreferVO.getPresignProduce().getPpid()));
+		}
+
+		quotationPreferPO.convert(quotationPreferVO);
 
 		quotationPreferDao.save(quotationPreferPO);
 

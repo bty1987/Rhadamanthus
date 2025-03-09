@@ -19,6 +19,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -53,6 +54,15 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 
 	public long countAddReduceItem(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
 		return (Long) createCriteria(AddReduceItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
+	}
+
+	@Override
+	public int updateAddReduceItemForIndex(long ariid, int index) throws FLException {
+
+		String sql = "update AddReduceItemPO set index = :index where ariId = :ariId";
+		session().createQuery(sql).setInteger("index", index).setLong("ariId", ariid).executeUpdate();
+
+		return 0;
 	}
 
 }

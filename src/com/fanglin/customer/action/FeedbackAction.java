@@ -12,7 +12,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.FeedbackService;
 import com.fanglin.customer.vo.FeedbackVO;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class FeedbackAction extends BaseListAction {
@@ -23,7 +23,15 @@ public class FeedbackAction extends BaseListAction {
 	private FeedbackService feedbackService;
 
 	private FeedbackVO feedback;
+	
+	@Action(value = "pageFeedbackByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageFeedbackByOrderId() throws FLException {
 
+		feedbackService.pageFeedbackByOrderId(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+	
 	@Action(value = "addFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addFeedback() throws FLException {
 
@@ -55,5 +63,6 @@ public class FeedbackAction extends BaseListAction {
 	public void setFeedback(FeedbackVO feedback) {
 		this.feedback = feedback;
 	}
+
 
 }

@@ -35,6 +35,9 @@ $.extend(api.index, {
     goods4condition: {
         url: "/views/data/goods4condition.html"
     },
+    village4rule: {
+        url: "/views/data/village4rule.html"
+    }
 });
 
 $.extend(api, {
@@ -129,21 +132,6 @@ $.extend(api, {
         deleteBrandByBids: {
             url: "deleteBrandByBids.do",
             server: "communion"
-        },
-        pageBrandPool: {
-            url: "pageBrandPool.do"
-        },
-        queryBrandPoolByName: {
-            url: "queryBrandPoolByName.do"
-        },
-        updateBrandPoolForStatus: {
-            url: "updateBrandPoolForStatus.do"
-        },
-        addBrandPool: {
-            url: "addBrandPool.do"
-        },
-        updateBrandPool: {
-            url: "updateBrandPool.do"
         },
 
         pageCategory: {
@@ -262,6 +250,16 @@ $.extend(api, {
             demo: true
         },
 
+        queryVillageRule: {
+            url: "queryVillageRule.do"
+        },
+        addVillageRule: {
+            url: "addVillageRule.do"
+        },
+        deleteVillageRule: {
+            url: "deleteVillageRule.do",
+        },
+        
         addVillage: {
             url: "addVillage.do",
             server: "communion"
@@ -350,6 +348,19 @@ $.extend(api, {
         },
         updateConstructionPaceForStatus: {
             url: "updateConstructionPaceForStatus.do"
+        },
+
+        pageConstructionPeriod: {
+            url: "pageConstructionPeriod.do"
+        },
+        addConstructionPeriod: {
+            url: "addConstructionPeriod.do"
+        },
+        updateConstructionPeriod: {
+            url: "updateConstructionPeriod.do"
+        },
+        deleteConstructionPeriod: {
+            url: "deleteConstructionPeriod.do"
         },
 
         pageDrawlineGroup: {
@@ -453,19 +464,11 @@ $.extend(api, {
                 args: ["scale"]
             }]
         },
-        fetchPaymentScaleItem: {
-            url: "fetchPaymentScaleItem.do",
-            type: "query",
-            tranargs: [{
-                result: "paymentScaleItems",
-                args: ["scale"]
-            }]
-        },
         queryPaymentScaleItem: {
             url: "queryPaymentScaleItem.do",
             type: "query",
             tranargs: [{
-                result: "paymentScaleItem",
+                result: "paymentScaleItems",
                 args: ["scale"]
             }]
         },
@@ -1624,35 +1627,6 @@ $.extend(api, {
         },
         queryDecorationMeasure: {
             url: "queryDecorationMeasure.do"
-        },
-
-        pageBankAccount: {
-            url: "pageBankAccount.do"
-        },
-        queryBankAccount: {
-            url: "queryBankAccount.do"
-        },
-        addBankAccount: {
-            url: "addBankAccount.do"
-        },
-        updateBankAccount: {
-            url: "updateBankAccount.do"
-        },
-        updateBankAccountForStatus: {
-            url: "updateBankAccountForStatus.do"
-        },
-
-        pageConstructionPeriod: {
-            url: "pageConstructionPeriod.do"
-        },
-        addConstructionPeriod: {
-            url: "addConstructionPeriod.do"
-        },
-        updateConstructionPeriod: {
-            url: "updateConstructionPeriod.do"
-        },
-        deleteConstructionPeriod: {
-            url: "deleteConstructionPeriod.do"
         }
     }
 });

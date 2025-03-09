@@ -1256,6 +1256,22 @@
             user.simpleAddUserModal.modal("hide");
 
             userSeacher.doSearch();
+
+            var returnUser = res.userInfo.user;
+            var deptName = returnUser.dept.name;
+            var dutyName = returnUser.duty.name;
+            var company = params.company;
+
+            var userData = {
+                "userId": returnUser.userId,
+                "userName": returnUser.userName,
+                "deptName": deptName,
+                "dutyName": dutyName,
+                "drganizationNo": company.drganization.no,
+                "drganizationName": company.drganization.name
+            };
+
+            kingdeeUtils.userToKingdee(userData);
         });
     }
 

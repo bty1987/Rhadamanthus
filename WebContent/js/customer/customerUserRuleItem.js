@@ -13,6 +13,8 @@ $(function() {
         items: {
             name: com.focusPage("#name", "#customerUserRuleItem"),
             type: com.focusPage("#type", "#customerUserRuleItem"),
+            deptype: com.focusPage("#deptype","#customerUserRuleItem"),
+            deptSel: com.focusPage("#deptSel", "#customerUserRuleItem"),
             uppval: com.focusPage("#uppval", "#customerUserRuleItem"),
             lowval: com.focusPage("#lowval", "#customerUserRuleItem"),
             priority: com.focusPage("#priority", "#customerUserRuleItem"),
@@ -41,6 +43,29 @@ $(function() {
         com.clearValidator();
     });
 
+    customerUserRuleItem.items.type.on("change", function () {
+
+        if (customerUserRuleItem.items.type.val() == 2) {
+
+            com.post(api.communion.queryDepartmentType, {}, function (res) {
+
+                customerUserRuleItem.items.deptype.bindData(res.departmentTypes, "dtid", "name", true);
+            });
+        }
+    }).trigger("change");
+
+    customerUserRuleItem.items.deptype.on("change", function (b, d) {
+
+        if (customerUserRuleItem.items.type.val() == 2) {
+
+            com.post(api.communion.queryDepartmentByDtid, {
+                "dept.type.dtid": $(this).val()
+            }, function (res) {
+                customerUserRuleItem.items.deptSel.bindData(res.deptList, "did", "name");
+            });
+        }
+    }).trigger("change");
+
     var searcher = new Searcher();
 
     searcher.base("condListCustomerUserRuleItem", "pagenationCustomerUserRuleItem", "resultListCustomerUserRuleItem", api.customer.queryCustomerUserRuleItem);
@@ -66,6 +91,11 @@ $(function() {
         prop: "type",
         clazz: "red",
         dataset: constant.customer().customerUserRuleItem.type.keys
+    }, {
+        fieId: "department.name",
+        name: "部门",
+        prop: "department.name",
+        clazz: "grey"
     }, {
         fieId: "uppval",
         name: "起始值",
@@ -123,7 +153,37 @@ $(function() {
 
     com.focusPage('#addCustomerUserRuleItem', '#pagenationCustomerUserRuleItem').on("click", function() {
 
+        com.focusPage(".deptype").hide();
+        com.focusPage(".deptSel").hide();
+
         customerUserRuleItem.modals.addCustomerUserRuleItemModal.modal("show");
+    });
+
+    customerUserRuleItem.items.type.change(function() {
+
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_AREA_INT) {
+            com.focusPage(".deptype").hide();
+            com.focusPage(".deptSel").hide();
+            com.focusPage(".uppval").show();
+            com.focusPage(".lowval").show();
+            com.focusPage("#isDelete").prop("checked", false);
+        }
+
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_OTHER_INT) {
+            com.focusPage(".deptype").hide();
+            com.focusPage(".deptSel").hide();
+            com.focusPage(".uppval").hide();
+            com.focusPage(".lowval").hide();
+            com.focusPage("#isDelete").prop("checked", true);
+        };
+
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_INT) {
+            com.focusPage(".deptype").show();
+            com.focusPage(".deptSel").show();
+            com.focusPage(".uppval").hide();
+            com.focusPage(".lowval").hide();
+            com.focusPage("#isDelete").prop("checked", true);
+        }
     });
 
     function saveData(v) {
@@ -134,9 +194,11 @@ $(function() {
         var url = api.customer.addCustomerUserRuleItem;
         var options = {
             "customerUserRuleItem.curid": params.customer.curid,
+            "customerUserRuleItem.department.did": customerUserRuleItem.items.deptSel.val(),
             "customerUserRuleItem.name": customerUserRuleItem.items.name.val(),
             "customerUserRuleItem.type": customerUserRuleItem.items.type.val(),
             "customerUserRuleItem.uppval": customerUserRuleItem.items.uppval.val(),
+            "customerUserRuleItem.lowval": customerUserRuleItem.items.lowval.val(),
             "customerUserRuleItem.priority": customerUserRuleItem.items.priority.val(),
             "customerUserRuleItem.status": customerUserRuleItem.items.status.val(),
             "customerUserRuleItem.isSurplus": customerUserRuleItem.getProp[customerUserRuleItem.items.isSurplus.prop("checked")],

@@ -62,6 +62,19 @@ public class FeedbackServiceImpl implements FeedbackService {
 	}
 
 	@Override
+	public void pageFeedbackByOrderId(Paging paging, List<Filter> filters) throws FLException {
+
+		List<FeedbackPO> feedbackPOs = feedbackDao.pageFeedback(paging, filters, CompanyPO.TYPE_HEADQUARTER_INT);
+		List<FeedbackVO> feedbackVOs = new ArrayList<FeedbackVO>();
+
+		for (FeedbackPO feedbackPO : feedbackPOs) {
+			feedbackVOs.add(feedbackPO.ptv(new FeedbackVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+		}
+
+		paging.setData(feedbackVOs);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addFeedback(FeedbackVO feedbackVO) throws FLException {
 
@@ -139,5 +152,4 @@ public class FeedbackServiceImpl implements FeedbackService {
 		return 0;
 
 	}
-
 }

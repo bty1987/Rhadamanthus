@@ -67,19 +67,14 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType) {
-		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType) {
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId, Short[] paymentStatus, short oneType, short twoType) {
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentForNotInitByDrId(long drId) {
+	public List<DecorationPaymentPO> queryDecorationPaymentForNotInit(long drId) {
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drId", drId)).add(Restrictions.not(Restrictions.eq("paymentStatus", DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT))).list();
 	}
 
@@ -90,26 +85,23 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort) {
+	public DecorationPaymentPO queryDecorationPayment(String orderId, String paymentType) {
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
+	}
+
+	@Override
+	public DecorationPaymentPO queryDecorationPayment(String orderId, short sort) {
 		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).uniqueResult();
 	}
 
 	@Override
-	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId) {
+	public int changeDecorationPayment(String oldOrderId, String newOrderId) {
 
 		String sql = "update payment.decorationpayment set orderId=:newOrderId where orderId=:oldOrderId";
 
 		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
 
 		return 0;
-	}
-
-	@Override
-	public int deleteDecorationPaymentForBase(String orderId) {
-
-		String sql = "delete from payment.decorationpayment where orderId=:orderId and onetype = :onetype and twotype = :twotype";
-
-		return session().createSQLQuery(sql).setString("orderId", orderId).setInteger("onetype", DecorationPaymentPO.ONETYPE_ADD_INT).setInteger("twotype", DecorationPaymentPO.TWOTYPE_DEAL_INT).executeUpdate();
 	}
 
 	@Override
@@ -125,33 +117,41 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 
 		String sql = "SELECT count(*) from payment.decorationpayment dp where dp.orderId = :orderId ";
 
-		if (onetypes.size() > 0) {
+		if (onetypes != null && onetypes.size() > 0) {
 			sql = sql.concat(" AND dp.onetype IN :onetypes ");
 		}
 
-		if (twotypes.size() > 0) {
+		if (twotypes != null && twotypes.size() > 0) {
 			sql = sql.concat(" AND dp.twotype IN :twotypes ");
 		}
 
-		if (statuses.size() > 0) {
+		if (statuses != null && statuses.size() > 0) {
 			sql = sql.concat(" AND dp.paymentStatus IN :statuses ");
 		}
 
 		Query query = session().createSQLQuery(sql).setString("orderId", orderId);
 
-		if (onetypes.size() > 0) {
+		if (onetypes != null && onetypes.size() > 0) {
 			query.setParameterList("onetypes", onetypes);
 		}
 
-		if (twotypes.size() > 0) {
+		if (twotypes != null && twotypes.size() > 0) {
 			query.setParameterList("twotypes", twotypes);
 		}
 
-		if (statuses.size() > 0) {
+		if (statuses != null && statuses.size() > 0) {
 			query.setParameterList("statuses", statuses);
 		}
 
 		return ((BigInteger) query.uniqueResult()).intValue();
+	}
+
+	@Override
+	public int deleteDecorationPaymentForBase(String orderId) {
+
+		String sql = "delete from payment.decorationpayment where orderId=:orderId and onetype = :onetype and twotype = :twotype";
+
+		return session().createSQLQuery(sql).setString("orderId", orderId).setInteger("onetype", DecorationPaymentPO.ONETYPE_ADD_INT).setInteger("twotype", DecorationPaymentPO.TWOTYPE_DEAL_INT).executeUpdate();
 	}
 
 	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query, List<Filter> filters) throws FLException {

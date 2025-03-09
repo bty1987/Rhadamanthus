@@ -57,7 +57,6 @@ public class QuotationPriceServiceImpl implements QuotationPriceService {
 		}
 
 		paging.setData(quotationPriceVOs);
-
 	}
 
 	@Override

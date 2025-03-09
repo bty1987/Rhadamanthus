@@ -106,6 +106,10 @@ public class CustomerDeptRuleServiceImpl implements CustomerDeptRuleService {
 			throw new FLException(310001, "部门不存在");
 		}
 
+		if (departmentPO.getStatus() == DepartmentPO.STATUS_DISABLE_INT) {
+			throw new FLException(310003, "状态不可操作");
+		}
+
 		short type = CustomerDeptRulePO.TYPE_DEPT_INT; // 部门
 
 		if (departmentPO.getFatherDept() == null || departmentPO.getFatherDept().getDid() == departmentPO.getDid()) {

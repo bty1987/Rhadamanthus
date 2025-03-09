@@ -2,15 +2,13 @@ jQuery(function($) {
 
     var customerChance = {
         modals: {
+            updateModal: com.focusPage("#updateModal"),
             issueModal: com.focusPage("#issueModal"),
             changeModal: com.focusPage("#changeModal"),
             approveModal: com.focusPage("#approveModal"),
-            firstApprove: com.focusPage("#firstApprove"),
+            firstApproveModal: com.focusPage("#firstApproveModal"),
             QRcodeModal: com.focusPage("#QRcodeModal"),
-            createGroup: com.focusPage("#createGroup"),
-            phoneConnect: com.focusPage("#phoneConnect"),
-            todayMeet: com.focusPage("#todayMeet"),
-            realAddress: com.focusPage("#realAddress"),
+            configModal: com.focusPage("#configModal")
         },
         items: {
             region: com.focusPage("#region"),
@@ -21,10 +19,8 @@ jQuery(function($) {
             isPhone: com.focusPage("#isPhone"),
             isMeet: com.focusPage("#isMeet"),
             isTrue: com.focusPage("#isTrue"),
-            createGroup1: com.focusPage("#createGroup1"),
-            phoneConnect1: com.focusPage("#phoneConnect1"),
-            todayMeet1: com.focusPage("#todayMeet1"),
-            realAddress1: com.focusPage("#realAddress1"),
+            isFine: com.focusPage("#isFine"),
+            configEvent: com.focusPage("#configEvent", "#configModal"),
 
             houseType: com.focusPage("#houseType", "#changeModal"),
             houseClass: com.focusPage("#houseClass", "#changeModal"),
@@ -43,40 +39,54 @@ jQuery(function($) {
             approveMan: com.focusPage("#approveMan", "#approveModal"),
             approveComment: com.focusPage("#approveComment", "#approveModal"),
 
-            firstApproveComment: com.focusPage("#firstApproveComment", "#firstApprove"),
+            firstApproveComment: com.focusPage("#firstApproveComment", "#firstApproveModal"),
 
             infolist: com.focusPage("#infolist"),
         },
 
+        updateItems: {
+            villageName: com.focusPage("#villageName", "#updateModal"),
+            built: com.focusPage("#built", "#updateModal"),
+            unit: com.focusPage("#unit", "#updateModal"),
+            floor: com.focusPage("#floor", "#updateModal"),
+            door: com.focusPage("#door", "#updateModal"),
+            builtrule: com.focusPage("#builtrule", "#updateModal"),
+            unitrule: com.focusPage("#unitrule", "#updateModal"),
+            floorrule: com.focusPage("#floorrule", "#updateModal"),
+            doorrule: com.focusPage("#doorrule", "#updateModal"),
+            rule: com.focusPage("#rule", "#updateModal"),
+            busitype: com.focusPage("#busitype", "#updateModal"),
+            rate: com.focusPage("#rate", "#updateModal"),
+            phone: com.focusPage("#phone", "#updateModal")
+        },
+
         approveItems: {
-            villageName: com.focusPage("#villageName", "#firstApprove"),
-            built: com.focusPage("#built", "#firstApprove"),
-            unit: com.focusPage("#unit", "#firstApprove"),
-            floor: com.focusPage("#floor", "#firstApprove"),
-            door: com.focusPage("#door", "#firstApprove"),
-            builtrule: com.focusPage("#builtrule", "#firstApprove"),
-            unitrule: com.focusPage("#unitrule", "#firstApprove"),
-            floorrule: com.focusPage("#floorrule", "#firstApprove"),
-            doorrule: com.focusPage("#doorrule", "#firstApprove"),
-            rule: com.focusPage("#rule", "#firstApprove"),
-            busitype: com.focusPage("#busitype", "#firstApprove"),
-            rate: com.focusPage("#rate", "#firstApprove"),
-            phone: com.focusPage("#phone", "#firstApprove")
+            villageName: com.focusPage("#villageName", "#firstApproveModal"),
+            built: com.focusPage("#built", "#firstApproveModal"),
+            unit: com.focusPage("#unit", "#firstApproveModal"),
+            floor: com.focusPage("#floor", "#firstApproveModal"),
+            door: com.focusPage("#door", "#firstApproveModal"),
+            builtrule: com.focusPage("#builtrule", "#firstApproveModal"),
+            unitrule: com.focusPage("#unitrule", "#firstApproveModal"),
+            floorrule: com.focusPage("#floorrule", "#firstApproveModal"),
+            doorrule: com.focusPage("#doorrule", "#firstApproveModal"),
+            rule: com.focusPage("#rule", "#firstApproveModal"),
+            busitype: com.focusPage("#busitype", "#firstApproveModal"),
+            rate: com.focusPage("#rate", "#firstApproveModal"),
+            phone: com.focusPage("#phone", "#firstApproveModal")
         },
 
         btns: {
             issueSaveBtn: com.focusPage("#saveBtn", "#issueModal").on("click", issue),
             changeBtn: com.focusPage("#changeBtn", "#changeModal").on("click", change),
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
-            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApprove").on("click", firstApproval),
-            updateGroupBtn: com.focusPage("#updateGroupBtn", "#createGroup").bindClick(configCreateGroup),
-            updatephoneBtn: com.focusPage("#updatephoneBtn", "#phoneConnect").bindClick(configPhoneConnect),
-            updateMeetBtn: com.focusPage("#updateMeetBtn", "#todayMeet").bindClick(configTodayMeet),
-            updateAddressBtn: com.focusPage("#updateAddressBtn", "#realAddress").bindClick(configrealAddresst),
-
+            firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApproveModal").on("click", firstApproval),
+            updateBtn: com.focusPage("#updateBtn", "#updateModal").on("click", update),
+            configBtn: com.focusPage("#configBtn", "#configModal").on("click", configEvent)
         },
 
         atttypes: [],
+        config: [],
 
         decoration: {
             "types": {}
@@ -97,7 +107,8 @@ jQuery(function($) {
         ccid: null,
 
         depage: params['urlLoadParams'].depage,
-
+        confirmEventType: null,
+        show: null
     };
 
     com.post(api.ds.building, {}, function(res) {
@@ -106,18 +117,36 @@ jQuery(function($) {
         customerChance.approveItems.unitrule.bindData(res.buildruleTwo, "key", "value");
         customerChance.approveItems.floorrule.bindData(res.buildruleTwo, "key", "value");
         customerChance.approveItems.doorrule.bindData(res.buildruleThr, "key", "value");
+
+        customerChance.updateItems.builtrule.bindData(res.buildruleOne, "key", "value");
+        customerChance.updateItems.unitrule.bindData(res.buildruleTwo, "key", "value");
+        customerChance.updateItems.floorrule.bindData(res.buildruleTwo, "key", "value");
+        customerChance.updateItems.doorrule.bindData(res.buildruleThr, "key", "value");
     });
 
-    com.initTypeahead(customerChance.approveItems.villageName, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
+    function initVillage(containId, ruleId, args) {
 
-        com.post(api.data.queryVillageByVid, {
-            "village.no": k
-        }, function(res) {
+        com.initTypeahead(containId, api.data.queryVillageForNameByPinyin, "pinyinName", args, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
-            customerChance.approveItems.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
-        }, null, false);
+            com.post(api.data.queryVillageByVid, {
+                "village.no": k
+            }, function(res) {
 
-        return v;
+                ruleId.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+            }, null, false);
+
+            return v;
+        });
+    }
+
+    initVillage(customerChance.updateItems.villageName, customerChance.updateItems.rule);
+    initVillage(customerChance.approveItems.villageName, customerChance.approveItems.rule);
+
+    $.each(constant.customer().customerChance.config.datas, function(i, v) {
+
+        if (v.key != 0) {
+            customerChance.config.push(v);
+        }
     });
 
     customerChance.items.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
@@ -128,10 +157,8 @@ jQuery(function($) {
     customerChance.items.houseClassApprove.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
     customerChance.items.resourceTypeApprove.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');
 
-    customerChance.items.createGroup1.bindData(constant.customer().customerChance.config.datas, "key", "value");
-    customerChance.items.phoneConnect1.bindData(constant.customer().customerChance.config.datas, "key", "value");
-    customerChance.items.todayMeet1.bindData(constant.customer().customerChance.config.datas, "key", "value");
-    customerChance.items.realAddress1.bindData(constant.customer().customerChance.config.datas, "key", "value");
+    customerChance.items.configEvent.bindData(customerChance.config, "key", "value");
+    customerChance.items.isFine.bindData(constant.customer().customerChance.config.datas, "key", "value");
 
     com.post(api.data.queryDecorationAtttype, {}, function(res) {
 
@@ -203,14 +230,14 @@ jQuery(function($) {
         customerChance.userRule.status == 0 ? $enable.hide() : $disable.hide();
     }
 
-    if (customerChance.depage != "source")
-        drawInfo();
+//    if (customerChance.depage != "source")
+//        drawInfo();
 
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerChance);
 
-    searcher.condition(customerChance.depage != "source" ? ["customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-createTime", "customer-chance-type", "customer-chance-status", "customer-chance-source-phone", "customer-chance-source-village", "customer-chance-source-createTime", "customer-chance-source-buildArea", "customer-chance-source-creater", "customer-chance-source-creater-dept", "customer-chance-belonger", "customer-chance-belonger-dept"] : []);
+    searcher.condition(customerChance.depage != "source" ? ["customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime"] : []);
 
     searcher.history(customerChance.depage + "customerChancePostData");
 
@@ -237,7 +264,7 @@ jQuery(function($) {
         clazz: "grey",
         click: function(btn, v) {
 
-            tools.customer.info(btn, v.source.customer.cid);
+            tools.customer.info(btn, v.customer.cid);
         }
     }, {
         field: "phone",
@@ -252,18 +279,28 @@ jQuery(function($) {
         clazz: "grey",
         show: function(v) {
 
-            return (v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && customerChance.depage == "user";
+            return ((v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && customerChance.depage == "user") || customerChance.depage == "manage";
         }
     }, {
         field: "source",
         name: "楼盘",
-        prop: "source.village.name",
+        prop: function(v) {
+
+            var info = "";
+
+            if (v.house)
+                info = v.house.village.name;
+            else
+                info = v.source.village.name;
+
+            return info;
+        },
         clazz: "grey",
     }, {
         field: "source",
         name: "面积",
         prop: "source.house.innerArea",
-        clazz: "grey",
+        clazz: "blue",
     }, {
         field: "busitype",
         name: "业务类型",
@@ -334,7 +371,7 @@ jQuery(function($) {
         dataset: constant.customer().customerChance.config.keys,
     }, {
         field: "isMeet",
-        name: "当日见面",
+        name: "是否见面",
         prop: "isMeet",
         clazz: "red",
         dataset: constant.customer().customerChance.config.keys,
@@ -344,6 +381,30 @@ jQuery(function($) {
         prop: "isTrue",
         clazz: "red",
         dataset: constant.customer().customerChance.config.keys,
+        show: function(v) {
+
+            return customerChance.show != null;
+        }
+    }, {
+        field: "isFine",
+        name: "是否罚款",
+        prop: "isFine",
+        clazz: "red",
+        dataset: constant.customer().customerChance.isFine.keys,
+    }, {
+        field: "fineTime",
+        name: "罚款时间",
+        prop: "fineTime",
+        clazz: "green",
+    }, {
+        field: "finer.currentName",
+        name: "罚款人",
+        prop: "finer.currentName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.finer.userId);
+        }
     }, {
         field: "readTime",
         name: "已读时间",
@@ -358,7 +419,7 @@ jQuery(function($) {
 
     var linebtns = [{
         name: "已读",
-        clazz: "btn-info",
+        clazz: "btn-yellow",
         handle: function(v) {
 
             com.post(api.customer.readCustomerChance, {
@@ -377,7 +438,7 @@ jQuery(function($) {
         }
     }, {
         name: "分配",
-        clazz: "btn-yellow",
+        clazz: "btn-success",
         handle: function(v) {
 
             com.cleanTypeahead('region');
@@ -392,74 +453,94 @@ jQuery(function($) {
         show: function(v) {
 
             return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
-        },
+        }
     }, {
-        name: "建群",
-        clazz: "btn-yellow",
+        name: "是否建群",
+        clazz: "btn-warning",
         handle: function(v) {
-
-            com.cleanTypeahead('createGroup1');
 
             customerChance.ccid = v.ccid;
 
-            customerChance.modals.createGroup.modal("show");
+            customerChance.confirmEventType = "isGroup";
 
+            com.focusPage("#configTitle", "#configModal").text("是否建群");
+            com.focusPage("#configName", "#configModal").text("建群");
+
+            customerChance.modals.configModal.modal("show");
         },
         show: function(v) {
 
-            return (v.status != 1);
-        },
+            return v.isGroup != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+        }
     }, {
-        name: "电话交接",
-        clazz: "btn-yellow",
+        name: "是否电话交接",
+        clazz: "btn-inverse",
         handle: function(v) {
-
-            com.cleanTypeahead('phoneConnect1');
 
             customerChance.ccid = v.ccid;
 
-            customerChance.modals.phoneConnect.modal("show");
+            customerChance.confirmEventType = "isPhone";
 
+            com.focusPage("#configTitle", "#configModal").text("是否电话交接");
+            com.focusPage("#configName", "#configModal").text("电话交接");
+
+            customerChance.modals.configModal.modal("show");
         },
         show: function(v) {
 
-            return (v.status != 1);
-        },
+            return v.isPhone != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+        }
     }, {
-        name: "当日见面",
-        clazz: "btn-yellow",
+        name: "是否见面",
+        clazz: "btn-purple",
         handle: function(v) {
-
-            com.cleanTypeahead('todayMeet1');
 
             customerChance.ccid = v.ccid;
 
-            customerChance.modals.todayMeet.modal("show");
+            customerChance.confirmEventType = "isMeet";
 
+            com.focusPage("#configTitle", "#configModal").text("是否见面");
+            com.focusPage("#configName", "#configModal").text("是否见面");
+
+            customerChance.modals.configModal.modal("show");
         },
         show: function(v) {
 
-            return (v.status != 1);
-        },
+            return v.isMeet != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+        }
     }, {
         name: "真实地址",
-        clazz: "btn-yellow",
+        clazz: "btn-danger",
         handle: function(v) {
-
-            com.cleanTypeahead('realAddress1');
 
             customerChance.ccid = v.ccid;
 
-            customerChance.modals.realAddress.modal("show");
+            customerChance.confirmEventType = "isTrue";
 
+            com.focusPage("#configTitle", "#configModal").text("是否真实地址");
+            com.focusPage("#configName", "#configModal").text("真实地址");
+
+            customerChance.modals.configModal.modal("show");
         },
         show: function(v) {
 
-            return (v.status != 1);
+            // return v.isTrue != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+            return customerChance.show != null;
+        }
+    }, {
+        name: "罚款",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            fineCustomerChance(v.ccid);
         },
+        show: function(v) {
+
+            return customerChance.depage == "manage" && v.isFine == constant.customer().customerChance.ISFINE_UNFINE_INT;
+        }
     }, {
         name: "失效",
-        clazz: "btn-success",
+        clazz: "btn-yellow",
         handle: function(v) {
 
             disable(v.ccid);
@@ -470,7 +551,7 @@ jQuery(function($) {
         },
     }, {
         name: "推送",
-        clazz: "btn-warning",
+        clazz: "btn-success",
         handle: function(v) {
 
             send(v);
@@ -481,7 +562,7 @@ jQuery(function($) {
         },
     }, {
         name: "确认",
-        clazz: "btn-inverse",
+        clazz: "btn-warning",
         handle: function(v) {
 
             confirm(v.ccid);
@@ -492,7 +573,7 @@ jQuery(function($) {
         },
     }, {
         name: "转换",
-        clazz: "btn-danger",
+        clazz: "btn-inverse",
         handle: function(v) {
 
             customerChance.ccid = v.ccid;
@@ -504,8 +585,42 @@ jQuery(function($) {
             return v.status == 3 && customerChance.depage != "source";
         },
     }, {
+        name: "编辑",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            com.cleanTypeahead("villageName");
+
+            com.cleanItems(customerChance.updateItems);
+
+            customerChance.ccid = v.ccid;
+            customerChance.source.csid = v.source.csid;
+            customerChance.source.name = v.source.name;
+            customerChance.source.gender = v.source.gender;
+
+            var village = v.house.village;
+
+            if (village && village.parentVillage && village.parentVillage.vid) {
+                com.focusPage("#villageName", "#updateModal").typeahead("args", {
+                    "village.parentVillage.vid": village.parentVillage.vid
+                });
+            }
+
+            if (village && village.vid) {
+                com.updateTypeahead(customerChance.updateItems.villageName, village.no, village.name);
+            }
+
+            customerChance.modals.updateModal.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2;
+        },
+    }, {
         name: "初审",
-        clazz: "btn-pink",
+        clazz: "btn-purple",
         handle: function(v) {
 
             com.cleanTypeahead("villageName");
@@ -519,13 +634,13 @@ jQuery(function($) {
 
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
-            customerChance.modals.firstApprove.modal("show");
+            customerChance.modals.firstApproveModal.modal("show");
 
             return false;
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user";
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2;
         },
     }, {
         name: "审批",
@@ -563,6 +678,10 @@ jQuery(function($) {
 
             params.customer.customerSource = v.source;
 
+            if (customerChance.depage != "manage") {
+                params['urlLoadParams'].type = 0;
+            }
+
             com.popup4page("#stockRecordPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
 
                 searcher.doSearch();
@@ -572,10 +691,9 @@ jQuery(function($) {
         },
         show: function(res) {
 
-            return customerChance.depage == 'user';
+            return !customerChance.depage || customerChance.depage == "manage";
         }
-
-    }, ];
+    }];
 
     searcher.line("source.name", lineprops, linebtns).render();
 
@@ -611,6 +729,7 @@ jQuery(function($) {
         customerChance.items.busitypeApprove.bindData($arr, 'dbid', 'name');
         customerChance.items.busitype.bindData($arr, "dbid", "name", true);
         customerChance.approveItems.busitype.bindData($arr, 'dbid', 'name');
+        customerChance.updateItems.busitype.bindData($arr, 'dbid', 'name');
     });
 
     function issue() {
@@ -667,6 +786,7 @@ jQuery(function($) {
 
         customerChance.modals.QRcodeModal.modal('show');
     }
+    ;
 
     function confirm(ccid) {
 
@@ -749,10 +869,39 @@ jQuery(function($) {
         });
     }
 
+    function update() {
+
+        if (com.validate("updateModal")) {
+            return false;
+        }
+
+        var hid = checkHouse(customerChance.updateItems);
+        var cid = checkCustomer(customerChance.updateItems);
+
+        var option = {
+            "customerChance.ccid": customerChance.ccid,
+            "customerChance.house.hid": hid,
+            "customerChance.busitype.dbid": customerChance.approveItems.busitype.val(),
+            "customerChance.rate": customerChance.approveItems.rate.val(),
+            "customerChance.customer.cid": cid
+        };
+
+        com.post(api.customer.updateCustomerChance, option, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            com.clearValidator();
+            searcher.doSearch();
+
+            customerChance.modals.updateModal.modal("hide");
+        });
+
+    }
+
     // 提交初审
     function firstApproval() {
 
-        if (com.validate("firstApprove")) {
+        if (com.validate("firstApproveModal")) {
             return false;
         }
 
@@ -786,7 +935,7 @@ jQuery(function($) {
                 com.clearValidator();
                 searcher.doSearch();
 
-                customerChance.modals.firstApprove.modal("hide");
+                customerChance.modals.firstApproveModal.modal("hide");
             });
 
         });
@@ -866,7 +1015,7 @@ jQuery(function($) {
 
         com.post(api.customer.updateCustomerUserRuleForStatus, {
             "customerUserRule.curid": customerChance.userRule.curid,
-            "customerUserRule.status": 1,
+            "customerUserRule.status": 2,
         }, function(res) {
 
             com.showAlert(com.info, "操作成功");
@@ -877,63 +1026,50 @@ jQuery(function($) {
         });
     }
 
-    function configCreateGroup() {
+    function configEvent(v) {
 
         var options = {
-            'customerChance.ccid': customerChance.ccid,
-            'customerChance.isGroup': customerChance.items.createGroup1.val()
+            "customerChance.ccid": customerChance.ccid
         };
+
+        if (customerChance.confirmEventType == "isGroup") {
+            options["customerChance.isGroup"] = customerChance.items.configEvent.val();
+        }
+
+        if (customerChance.confirmEventType == "isPhone") {
+            options["customerChance.isPhone"] = customerChance.items.configEvent.val();
+        }
+
+        if (customerChance.confirmEventType == "isMeet") {
+            options["customerChance.isMeet"] = customerChance.items.configEvent.val();
+        }
+
+        if (customerChance.confirmEventType == "isTrue") {
+            options["customerChance.isTrue"] = customerChance.items.configEvent.val();
+        }
+
         com.post(api.customer.configCustomerChance, options, function(res) {
 
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-            customerChance.modals.createGroup.modal("hide");
+            com.showAlert(com.info, "操作成功");
+
+            customerChance.modals.configModal.modal("hide");
         });
     }
 
-    function configPhoneConnect() {
+    function fineCustomerChance(ccid) {
 
         var options = {
-            'customerChance.ccid': customerChance.ccid,
-            "customerChance.isPhone": customerChance.items.phoneConnect1.val()
+            'customerChance.ccid': ccid
         };
-        com.post(api.customer.configCustomerChance, options, function(res) {
 
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-            customerChance.modals.phoneConnect.modal("hide");
-        });
-    }
+        com.showConfirm("确认要罚款吗", function() {
 
-    function configTodayMeet() {
+            com.post(api.customer.fineCustomerChance, options, function(res) {
 
-        var options = {
-            'customerChance.ccid': customerChance.ccid,
-            "customerChance.isMeet": customerChance.items.todayMeet1.val()
-        };
-        com.post(api.customer.configCustomerChance, options, function(res) {
-
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-            customerChance.modals.todayMeet.modal("hide");
-        });
-    }
-
-    function configrealAddresst() {
-
-        var options = {
-            'customerChance.ccid': customerChance.ccid,
-            "customerChance.isTrue": customerChance.items.realAddress1.val()
-        };
-        com.post(api.customer.configCustomerChance, options, function(res) {
-
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-            customerChance.modals.realAddress.modal("hide");
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功!");
+            });
         });
     }
 

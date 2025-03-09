@@ -29,7 +29,7 @@ public interface CityService {
 
 	public List<CityVO> queryCityByName(CityVO cityVO);
 
-	public void addCity(CityVO cityVO);
+	public void addCity(CityVO cityVO) throws FLException;
 
 	public void updateCity(CityVO cityVO) throws FLException;
 

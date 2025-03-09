@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.service.AoodsService;
 import com.fanglin.data.material.vo.AoodsVO;
+import com.fanglin.data.material.vo.GoodsVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -24,9 +25,11 @@ public class AoodsAction extends BaseListAction {
 	@Autowired
 	private AoodsService aoodsService;
 
+	private List<AoodsVO> aoodes;
+
 	private AoodsVO aoods;
 
-	private List<AoodsVO> aoodes;
+	private GoodsVO goods;
 
 	private String orderId;
 
@@ -43,12 +46,11 @@ public class AoodsAction extends BaseListAction {
 	@Action(value = "queryAoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAoods() throws FLException {
 
-	
-		aoodes = aoodsService.queryAoods(aoods,orderId);
+		aoodes = aoodsService.queryAoods(aoods, orderId);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryAoodsByAtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAoodsByAtid() throws FLException {
 
@@ -97,12 +99,28 @@ public class AoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateKaoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateKaoods() throws FLException {
+
+		aoodsService.updateKaoods(aoods, goods);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "copyAoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copyAoods() throws FLException {
 
 		aoodsService.copyAoods(aoods, queryCompany());
 
 		return SUCCESS;
+	}
+
+	public List<AoodsVO> getAoodes() {
+		return aoodes;
+	}
+
+	public void setAoodes(List<AoodsVO> aoodes) {
+		this.aoodes = aoodes;
 	}
 
 	public AoodsVO getAoods() {
@@ -113,12 +131,12 @@ public class AoodsAction extends BaseListAction {
 		this.aoods = aoods;
 	}
 
-	public List<AoodsVO> getAoodes() {
-		return aoodes;
+	public GoodsVO getGoods() {
+		return goods;
 	}
 
-	public void setAoodes(List<AoodsVO> aoodes) {
-		this.aoodes = aoodes;
+	public void setGoods(GoodsVO goods) {
+		this.goods = goods;
 	}
 
 	public String getOrderId() {

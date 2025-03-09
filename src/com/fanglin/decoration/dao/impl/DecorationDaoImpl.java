@@ -77,11 +77,13 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company) throws FLException {
+	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
-		query.add(query.getCriterion("company", company, "eq"));
+		if (company != null) {
+			query.add(query.getCriterion("company", company, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -363,7 +365,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if (field.contains("escorter")) {
 
 				query.alias(String.format("%sescorter", prefix), "escorter");
-			}else if (field.contains("busitype")) {
+			} else if (field.contains("busitype")) {
 
 				query.alias(String.format("%sbusitype", prefix), "busitype");
 			}

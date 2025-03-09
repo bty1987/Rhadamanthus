@@ -48,6 +48,7 @@ import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaParamDao;
+import com.fanglin.quotation.dao.QuotationPreferDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
@@ -59,6 +60,7 @@ import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.po.QuotationPreferPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionPO;
@@ -116,6 +118,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private QuotationItemDao quotationItemDao;
+
+	@Autowired
+	private QuotationPreferDao quotationPreferDao;
 
 	@Autowired
 	private AddReduceItemDao addReduceItemDao;
@@ -255,7 +260,7 @@ public class QuotationServiceImpl implements QuotationService {
 			versionPO = protationPO.getVersion();
 		}
 
-		if (presignPO != null && presignPO.getVersion() != null && DateUtil.diffDay(decorationPO.getPrecontractTime(), DateUtil.getDateToTimestamp(new Date())) > (keeprice == null ? 365 : Integer.parseInt(keeprice.value("365")))) {
+		if (presignPO != null && protationPO.getVersion() != null && DateUtil.diffDay(decorationPO.getPrecontractTime(), DateUtil.getDateToTimestamp(new Date())) > (keeprice == null ? 365 : Integer.parseInt(keeprice.value("365")))) {
 			versionPO = presignPO.getVersion();
 		}
 
@@ -320,6 +325,22 @@ public class QuotationServiceImpl implements QuotationService {
 			QuotationFunctionAreaItemPO taxPrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index).toTax(versionPO, autogeneration);
 			quotationFunctionAreaItemDao.save(taxPrice);
 		}
+
+		QuotationPreferPO quotationPreferPO = new QuotationPreferPO();
+
+		quotationPreferPO.setOrderId(orderId);
+		quotationPreferPO.setQid(quotationPO.getQid());
+		quotationPreferPO.setQuoteArea(decorationPO.getHouse().getInnerArea());
+
+		if (protationPO != null) {
+
+			quotationPreferPO.setPresignProduce(presignPO);
+			quotationPreferPO.setDiscount(presignPO.getDiscount());
+			quotationPreferPO.setManageDiscount(presignPO.getManageDiscount());
+			quotationPreferPO.setQuotePrice(presignPO.getQuotePrice());
+		}
+
+		quotationPreferDao.save(quotationPreferPO);
 
 		return 0;
 	}
@@ -504,7 +525,7 @@ public class QuotationServiceImpl implements QuotationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int lockQuotation(QuotationVO quotationVO, String userId) throws FLException {
 
-		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
 
 		if (quotationPO == null) {
 			throw new FLException(200003, "报价不存在");
@@ -516,7 +537,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationPO.setStatus(QuotationPO.STATUS_LOCK_INT);
 
-		if(quotationPO.getLockTime() == null) quotationPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
+		if (quotationPO.getLockTime() == null) quotationPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationDao.update(quotationPO);
 
@@ -531,6 +552,10 @@ public class QuotationServiceImpl implements QuotationService {
 
 		if (quotationPO == null) {
 			throw new FLException(200003, "报价不存在");
+		}
+
+		if (quotationPO.getStatus() != QuotationPO.STATUS_LOCK_INT) {
+			throw new FLException(200030, "报价状态不可操作");
 		}
 
 		checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
@@ -812,6 +837,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationPO.setCostPrice(quotationVO.getCostPrice());
 		quotationPO.setUnachePrice(quotationVO.getUnachePrice());
+		quotationPO.setConsPrice(quotationVO.getConsPrice());
 
 		if (quotationVO.getTrafficDiscount() != null) quotationPO.setTrafficDiscount(quotationVO.getTrafficDiscount());
 		if (quotationVO.getManageDiscount() != null) quotationPO.setManageDiscount(quotationVO.getManageDiscount());
@@ -906,6 +932,8 @@ public class QuotationServiceImpl implements QuotationService {
 
 			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemSO : quotetionFunctionAreaItemPOs) {
 
+				if (quotetionFunctionAreaItemSO.getType() == QuotetionFunctionAreaItemPO.TYPE_CUSTOM_INT) continue;
+
 				QuotationFunctionAreaItemPO quotationFunctionAreaItemTO = QuotationFunctionAreaItemPO.factoryToInstance(quotationFunctionAreaTO.getQfaId(), index);
 
 				quotationFunctionAreaItemTO.ptp(quotetionFunctionAreaItemSO);
@@ -992,7 +1020,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		if (quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
+		if (quotationPO.getStatus() != QuotationPO.STATUS_INIT_INT) {
 			throw new FLException(200030, "报价状态不可操作");
 		}
 

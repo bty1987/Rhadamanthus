@@ -10,11 +10,13 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerChanceService {
 
-	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, int company);
+	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, Integer company);
 
 	public List<CustomerChanceVO> queryCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 
 	public CustomerChanceVO queryCustomerChanceByCcid(CustomerChanceVO customerChanceVO) throws FLException;
+
+	public void updateCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 
 	public void disableCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
 
@@ -29,4 +31,6 @@ public interface CustomerChanceService {
 	public void readCustomerChance(CustomerChanceVO customerChangeVO) throws FLException;
 
 	public void configCustomerChance(CustomerChanceVO customerChance) throws FLException;
+
+	public void fineCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
 }

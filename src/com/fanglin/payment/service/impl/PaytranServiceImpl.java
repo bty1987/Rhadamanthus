@@ -194,7 +194,7 @@ public class PaytranServiceImpl implements PaytranService {
 
 		long pid = paytranPO.getType() == PaytranPO.TYPE_PAYTRAN_INT ? paytranPO.getPtid() : paytranPO.getPid();
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paytranPO.getMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=%s", paytranPO.getOrderId(), pid, paytranPO.getType()));
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paytranPO.getMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=%s&atttype=%s", paytranPO.getOrderId(), pid, paytranPO.getType(), paytranPO.getAtttype()));
 
 	}
 
@@ -595,7 +595,7 @@ public class PaytranServiceImpl implements PaytranService {
 
 			// 装修款收款过程利用排序字段控制收款顺序
 			if (sort > 1) {
-				DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAndSort(oderId, (short) (sort - 1));
+				DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPayment(oderId, (short) (sort - 1));
 
 				if (prevDecorationPaymentPO != null) {
 					if (prevDecorationPaymentPO.getPaymentStatus() == (DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT)) {
@@ -646,6 +646,8 @@ public class PaytranServiceImpl implements PaytranService {
 			if (proxyPaymentPO == null) {
 				throw new FLException(150003, "款项不存在");
 			}
+
+			company = proxyPaymentPO.getCreater().getCompany();
 
 			proxyPaymentPO.setUnionId(wxpay.getUnionId());
 

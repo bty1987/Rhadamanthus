@@ -294,7 +294,7 @@ jQuery(function($) {
 			$btnCode.click(function () {
 				com.focusPage("#"+servicePayment.type+"serviceCollectQrcodeModal").html("");
 				paymentUtils.initQrcode("collect", servicePayment.type+"serviceCollectQrcodeModal"); //收款码
-				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=4"+"&pid="+ v.spid, servicePayment.type+"serviceCollectQrcodeModal");
+				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=4"+"&pid="+v.spid+"&atttype=0", servicePayment.type+"serviceCollectQrcodeModal");
 			});
 
 			//微信推送

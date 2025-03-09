@@ -63,19 +63,29 @@ public class CustomerSourcePO implements Serializable {
 
 	private String gender;
 
+	private short customerType;
+
+	private VillagePO village;
+
+	private String houseNumber;
+
 	private String phone;
 
 	private String purpose;
 
 	private String intention;
 
+	private short demand;
+
 	private String price;
 
 	private String grade;
 
-	private VillagePO village;
+	private String referOrderId;
 
-	private String houseNumber;
+	private String source;
+
+	private String contact;
 
 	private int buildArea;
 
@@ -89,15 +99,11 @@ public class CustomerSourcePO implements Serializable {
 
 	private Timestamp createTime;
 
-	private int company;
-
-	private Short customerType;
-
-	private Short demand;
-
 	private short status;
 
 	private String comment;
+
+	private int company;
 
 	private CustomerPO customer;
 
@@ -202,6 +208,33 @@ public class CustomerSourcePO implements Serializable {
 		this.grade = grade;
 	}
 
+	@Column(name = "referOrderId")
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
+	}
+
+	@Column(name = "source")
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	@Column(name = "contact")
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
 	@ManyToOne
 	@JoinColumn(nullable = true, name = "vid", referencedColumnName = "vid")
 	public VillagePO getVillage() {
@@ -286,11 +319,11 @@ public class CustomerSourcePO implements Serializable {
 	}
 
 	@Column(name = "customertype")
-	public Short getCustomerType() {
+	public short getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(Short customerType) {
+	public void setCustomerType(short customerType) {
 		this.customerType = customerType;
 	}
 
@@ -299,7 +332,7 @@ public class CustomerSourcePO implements Serializable {
 		return demand;
 	}
 
-	public void setDemand(Short demand) {
+	public void setDemand(short demand) {
 		this.demand = demand;
 	}
 
@@ -374,17 +407,16 @@ public class CustomerSourcePO implements Serializable {
 
 		BeanUtil.copyProperties(this, customerSourceVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
-		if (customerSourceVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), customerSourceVO.getHouse(), Arrays.asList("village"));
-		if (customerSourceVO.getVillage() != null) BeanUtil.copyProperties(getVillage(), customerSourceVO.getVillage(), Arrays.asList("cityProper"));
-		if (customerSourceVO.getVillage() != null && customerSourceVO.getVillage().getCityProper() != null && getVillage() != null) BeanUtil.copyProperties(getVillage().getCityProper(), customerSourceVO.getVillage().getCityProper(), Arrays.asList("city"));
+		if (customerSourceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerSourceVO.getHouse());
+		if (customerSourceVO.getVillage() != null && getVillage() != null) getVillage().ptv(customerSourceVO.getVillage());
 
-		if (customerSourceVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerSourceVO.getCustomer());
+		if (customerSourceVO.getCustomer() != null && getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerSourceVO.getCustomer());
 
-		if (customerSourceVO.getCreater() != null) customerSourceVO.getCreater().setBaseInfo(getCreater());
+		if (customerSourceVO.getCreater() != null && getCreater() != null) customerSourceVO.getCreater().setBaseInfo(getCreater());
 		if (customerSourceVO.getCreater() != null && customerSourceVO.getCreater().getDept() != null) BeanUtil.copyProperties(getCreater().getDept(), customerSourceVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 
-		if (customerSourceVO.getDesigner() != null) customerSourceVO.getDesigner().setBaseInfo(getDesigner());
-		if (customerSourceVO.getSalesman() != null) customerSourceVO.getSalesman().setBaseInfo(getSalesman());
+		if (customerSourceVO.getDesigner() != null && getDesigner() != null) customerSourceVO.getDesigner().setBaseInfo(getDesigner());
+		if (customerSourceVO.getSalesman() != null && getSalesman() != null) customerSourceVO.getSalesman().setBaseInfo(getSalesman());
 
 		return customerSourceVO;
 	}

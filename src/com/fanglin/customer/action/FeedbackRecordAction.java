@@ -28,6 +28,8 @@ public class FeedbackRecordAction extends BaseListAction {
 
 	private List<FeedbackRecordVO> feedbackRecords;
 
+	private String orderId;
+
 	@Action(value = "queryFeedbackRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFeedbackRecord() {
 
@@ -58,6 +60,14 @@ public class FeedbackRecordAction extends BaseListAction {
 
 	public void setFeedbackRecords(List<FeedbackRecordVO> feedbackRecords) {
 		this.feedbackRecords = feedbackRecords;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 }

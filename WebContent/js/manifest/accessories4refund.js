@@ -2,13 +2,14 @@ jQuery(function ($) {
 
     var accessories = {
         aid: params.manifest.aid,
+        accessories: params.manifest.accessories,
 
         refundBtn: com.focusPage("#refundBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
 
         items: {
-            list: com.focusPage('#list'),
-        },
+            list: com.focusPage('#list')
+        }
     };
 
     accessories.refundBtn.click(function () {
@@ -22,6 +23,13 @@ jQuery(function ($) {
             com.showAlert(com.warning, "请选择商品");
             return false;
         }
+
+        var accessoriesReturnItems = [];
+        var decoration = {};
+
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": accessories.accessories.orderId}, function(res) {
+            decoration = res.decoration;
+        }, null, false);
 
         var options = {
             "accessories[0].aid": accessories.aid
@@ -51,9 +59,33 @@ jQuery(function ($) {
             options["accessoriesItems[" + i + "].storehouse.shid"] = $line.attr("data-shid");
             options["accessoriesItems[" + i + "].outprice"] = $line.find(".outprice").text();
             options["accessoriesItems[" + i + "].num"] = crnum;
+
+            var house = decoration.house;
+
+            var returnItems = {
+                "num": crnum,
+                "shid": $line.attr("data-shid"),
+                "orderId": decoration.orderId,
+                "address": (house.village.cityProper.city.name == null ? " " : house.village.cityProper.city.name) + " " + (house.village.cityProper == null ? " " : house.village.cityProper.name) + " " + house.village.name + " " + (house.houseNumber == null ? " " : house.houseNumber),
+                "gooodNo": $line.attr('data-gno'),
+                "supervisorUserId": decoration.supervisor.userId,
+                "supervisorName": decoration.supervisor.userName,
+                "aiid": $line.attr('data-aiid')
+            };
+
+            accessoriesReturnItems.push(returnItems);
         }
 
-        com.post(api.inventory.addManifestForAR, options);
+        com.post(api.inventory.addManifestForAR, options, function (res) {
+
+            var accessoriesReturnData = {
+                "aid": accessories.aid,
+                "drganizationName": params.company.drganization.name,
+                "items": accessoriesReturnItems
+            };
+
+            kingdeeUtils.accessoriesReturnToKingdee(accessoriesReturnData);
+        });
 
     });
 
@@ -70,7 +102,8 @@ jQuery(function ($) {
                 "data-cid": v.color.cid,
                 "data-fid": v.format.fid,
                 "data-shid": v.outstorehouse.shid,
-                "id": "line" + v.goods.gid
+                "id": "line" + v.goods.gid,
+                "data-gno": v.goods.no
             });
             $line.find('div.no').text(v.goods.no);
             $line.find('div.name').text(v.goods.name);
@@ -109,7 +142,7 @@ jQuery(function ($) {
             {cellClass: "storehouse grey"},//出货仓库
             {cellClass: "outprice blue"},//出库价
             {cellClass: "surplus blue"},//数量
-            {cellClass: "num", hasInput: true},//退货数量
+            {cellClass: "num", hasInput: true}//退货数量
         ];
 
         $.each(_lineInfoSet, function (i, v) {

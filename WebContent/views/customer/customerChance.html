@@ -5,14 +5,13 @@
     <hr>
 
     <div class="row">
-
         <div class="col-xs-12">
             <div id="condList" class="fl_search clearfix"></div>
             <div id="resultList" class="clearfix tab-pane active"></div>
             <div id="pagenation" class="fl-page-wrap clearfix"></div>
         </div>
     </div>
-    <!-- 分配 -->
+
     <div class="modal fade" id="issueModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -219,8 +218,7 @@
         </div>
     </div>
 
-
-    <div class="modal fade" id="firstApprove" tabindex="-1">
+    <div class="modal fade" id="firstApproveModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -306,7 +304,80 @@
             </div>
         </div>
     </div>
-    <!-- 二维码 -->
+    
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="commitFirstApproveDialog">提交审批</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">楼盘名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="villageName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="7" class="v_required" style="width: 10%;" id="built">
+                                <select id="builtrule"
+                                    style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"
+                                    id="unit">
+                                <select id="unitrule"
+                                    style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"
+                                    id="floor">
+                                <select id="floorrule"
+                                    style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" maxlength="3" class="v_required" style="float: none; width: 10%;"
+                                    id="door">
+                                <select id="doorrule"
+                                    style="padding: 0px;font-size: 1px; width: 10%!important; height: 25px; vertical-align: bottom"></select>
+                                <span id="errMsg"></span>
+                                <div class="col-md-12" style="padding: 0px;">
+                                    <span id="rule" class="red"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="busitype" class="col-sm-3 control-label no-padding-right orange">业务类型</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-6 v_required" id="busitype"></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="rate" value="0" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange">电话</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_phone v_required" id="phone" maxlength="11">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="updateBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" id="firstCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="modal fade" id="QRcodeModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content col-md-12">
@@ -326,112 +397,46 @@
             </div>
         </div>
     </div>
-    <!--建群-->
-    <div class="modal fade" id="createGroup" tabindex="-1">
+    
+    <!--是否建群/见面/电话交接/真实地址-->
+    <div class="modal fade" id="configModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title">--是否是建群--</h4>
+                    <h4 class="modal-title" id="configTitle"></h4>
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="createGroup1">建群</label>
-                    <div class="col-sm-9">
-                        <select id="createGroup1" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
-                            style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
-                    </div>
-                </div>
-                <div class="space-4"></div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal">
+                                <div class="col-md-12">
 
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updateGroupBtn" class="btn btn-primary">保存</button>
+                                    <div class="form-group">
+                                        <label for="configEvent" class="col-sm-3 control-label no-padding-right orange"  id="configName"></label>
+                                        <div class="col-sm-9">
+                                            <select class="col-xs-10 col-sm-6 v_required" id="configEvent"></select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="configBtn" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <!--电话交接-->
-    <div class="modal fade" id="phoneConnect" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">--是否是电话交接--</h4>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="phoneConnect1">电话交接</label>
-                    <div class="col-sm-9">
-                        <select id="phoneConnect1" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
-                            style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updatephoneBtn" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--当日见面-->
-    <div class="modal fade" id="todayMeet" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">--是否当日见面--</h4>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="todayMeet1">当日见面</label>
-                    <div class="col-sm-9">
-                        <select id="todayMeet1" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
-                            style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updateMeetBtn" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!--真实地址-->
-    <div class="modal fade" id="realAddress" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">--是否真实地址--</h4>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-sm-3 control-label no-padding-right" for="realAddress1">真实地址</label>
-                    <div class="col-sm-9">
-                        <select id="realAddress1" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
-                            style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
-                    </div>
-                </div>
-                <div class="space-4"></div>
-
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updateAddressBtn" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div id="stockRecordPopUp" class="portlet box page-content"></div>

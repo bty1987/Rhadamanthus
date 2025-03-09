@@ -20,19 +20,29 @@ public class CustomerSourceVO implements Serializable {
 
 	private String gender;
 
+	private Short customerType;
+
+	private VillageVO village;
+
+	private String houseNumber;
+
 	private String phone;
 
 	private String purpose;
 
 	private String intention;
 
+	private Short demand;
+
 	private String price;
 
 	private String grade;
 
-	private VillageVO village;
+	private String referOrderId;
 
-	private String houseNumber;
+	private String source;
+
+	private String contact;
 
 	private Integer buildArea;
 
@@ -46,15 +56,11 @@ public class CustomerSourceVO implements Serializable {
 
 	private Timestamp createTime;
 
-	private Integer company;
-
-	private Short customerType;
-
 	private Short status;
 
-	private Short demand;
-
 	private String comment;
+
+	private Integer company;
 
 	private CustomerVO customer;
 
@@ -142,6 +148,30 @@ public class CustomerSourceVO implements Serializable {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 	public VillageVO getVillage() {

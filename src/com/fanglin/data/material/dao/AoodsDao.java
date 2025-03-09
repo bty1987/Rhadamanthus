@@ -18,6 +18,8 @@ public interface AoodsDao extends Dao<AoodsPO> {
 
 	public List<AoodsPO> queryAoodsByName(String name, int limit, int company);
 
+	public AoodsPO queryAoods(long gid, int bompany);
+
 	public int countAoods(long gid, int bompany);
 
 	public int countAoods(int company);

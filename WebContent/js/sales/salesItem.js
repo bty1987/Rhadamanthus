@@ -30,7 +30,7 @@ $(function() {
         options: {},
         approvalType: null,
 
-        deliveryStatus: constant.sales().salesDeliveryItem.status.keys,
+        deliveryStatus: constant.sales().salesDeliveryItem.status.keys
     };
 
     com.focusPage('#fl-statement').statement("销售单", "子项");
@@ -184,7 +184,7 @@ $(function() {
 
             if (deliveryItems.hasOwnProperty(v.siid))
                 v["deliveryStatus"] = deliveryItems[v.siid];
-        })
+        });
 
         if (salesItems.length == 0) {
             emptyData("list");
@@ -377,7 +377,7 @@ $(function() {
         }
 
         var args = [{
-            "name": "装修单号",
+            "name": "订单号",
             "value": salesItem.sales.orderId
         }, {
             "name": "设计部",
@@ -386,25 +386,33 @@ $(function() {
             "name": "品牌",
             "value": salesItem.sales.brand
         }, {
-            "name": "实退款金额",
+            "name": "实退款金额（元）",
             "value": parseInt(salesItem.items.refundTotal.val())
         }, {
             "name": "办理状态",
             "value": constant.sales().refunds.type.keys[salesItem.approvalType]
         }, {
             "name": "退货原因",
-            "value": $("#refundDes").val()
-        }, ]
+            "value": com.focusPage("#refundDes").val()
+        }, {
+            "name": "备注",
+            "value": salesItem.sales.comment
+        }];
 
         var options = {
             "approval.receiver.userId": com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid'),
-            "approval.comment": $("#refundDes").val(),
+            "approval.comment": com.focusPage("#refundDes").val(),
             "approvalSalesRefund.sid": salesItem.sid,
             "approvalSalesRefund.type": salesItem.approvalType,
-            "approvalSalesRefund.refund": salesItem.items.refundTotal.val(),
-            // "code": "PROC-97944EDE-7422-4C82-9018-EEC50441408E",
-            // "forms": JSON.stringify(args)
+            "approvalSalesRefund.refund": salesItem.items.refundTotal.val()
         };
+
+        if (com.focusPage("#dingApprove", "#layerRefund").prop("checked")) {
+            options["code"] = "PROC-87776E9E-42E3-4E58-9D98-CDA9B0F28816"; // test
+            options["code"] = "PROC-EF6YJDXRN2-2EQFBYULQQ5CPGGVZAUU1-ME75EHVI-9"; // product
+            options["forms"] = JSON.stringify(args);
+        }
+
         com.post(api.approval.submitApprovalForSalesRefund, $.extend(options, salesItem.options), function() {
 
             salesItem.btns.refundCancelBtn.trigger('click');

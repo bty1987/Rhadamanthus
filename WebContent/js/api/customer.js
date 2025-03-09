@@ -298,6 +298,9 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data-source",
                 args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }, {
+                result: "paging-data-source-house",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
             }]
         },
         queryCustomerChanceByCcid: {
@@ -306,7 +309,13 @@ $.extend(api, {
             tranargs: [{
                 result: "source",
                 args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }, {
+                result: "paging-data-source-house",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
             }]
+        },
+        updateCustomerChance: {
+            url: "updateCustomerChance.do"
         },
         issueCustomerChance: {
             url: "issueCustomerChance.do"
@@ -325,6 +334,12 @@ $.extend(api, {
         },
         readCustomerChance: {
             url: "readCustomerChance.do"
+        },
+        configCustomerChance: {
+            url: "configCustomerChance.do"
+        },
+        fineCustomerChance: {
+            url: "fineCustomerChance.do"
         },
 
         pageVustomerByUnionId: {
@@ -713,6 +728,33 @@ $.extend(api, {
         deleteConversation: {
             url: "deleteConversation.do"
         },
+
+        pageCustomerProtectRule: {
+            url: "pageCustomerProtectRule.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["value", "days"]
+            }]
+        },
+        queryCustomerProtectRule: {
+            url: "queryCustomerProtectRule.do",
+            type: "query",
+            tranargs: [{
+                result: "customerProtectRules",
+                args: ["value", "days"]
+            }]
+        },
+        addCustomerProtectRule: {
+            url: "addCustomerProtectRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerProtectRule.value", "customerProtectRule.days"]
+            }
+        },
+        deleteCustomerProtectRule: {
+            url: "deleteCustomerProtectRule.do"
+        }
     }
 });
 

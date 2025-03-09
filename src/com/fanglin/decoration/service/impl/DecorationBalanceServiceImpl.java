@@ -70,21 +70,18 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
 		DecorationBalancePO decorationBalancePO = decorationBalanceDao.queryDecorationBalance(decorationPO.getDoid());
+		DecorationBalanceVO decorationBalance = new DecorationBalanceVO(new DecorationVO(new CustomerVO(), new HouseVO(new VillageVO())), new UserBaseVO(new DutyVO()));
 
-		DecorationBalanceVO decirationBalanceVO = new DecorationBalanceVO(new DecorationVO(new CustomerVO(), new HouseVO(new VillageVO())), new UserBaseVO(new DutyVO()));
-
-		BeanUtil.copyPropertie(decorationBalancePO, decirationBalanceVO, Arrays.asList("decoration", "user"));
+		BeanUtil.copyPropertie(decorationBalancePO, decorationBalance, Arrays.asList("decoration", "user"));
 
 		if (decorationBalancePO != null) {
-			BeanUtil.copyPropertie(decorationBalancePO.getUser(), decirationBalanceVO.getUser(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(decorationBalancePO.getUser().getDuty(), decirationBalanceVO.getUser().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(decorationBalancePO.getDecoration(), decirationBalanceVO.getDecoration(), Arrays.asList("customer", "house", "designer", "salesman", "supervisor", "creater", "quoter", "escorter", "contractUserId", "version"));
-			BeanUtil.copyPropertie(decorationBalancePO.getDecoration().getCustomer(), decirationBalanceVO.getDecoration().getCustomer());
-			BeanUtil.copyPropertie(decorationBalancePO.getDecoration().getHouse(), decirationBalanceVO.getDecoration().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyPropertie(decorationBalancePO.getDecoration().getHouse().getVillage(), decirationBalanceVO.getDecoration().getHouse().getVillage(), Arrays.asList("cityProper", "x", "y"));
+			BeanUtil.copyPropertie(decorationBalancePO.getUser(), decorationBalance.getUser(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyPropertie(decorationBalancePO.getUser().getDuty(), decorationBalance.getUser().getDuty(), Arrays.asList("departmentType"));
+
+			decorationBalancePO.getDecoration().ptvcascade(decorationBalance.getDecoration());
 		}
 
-		return decirationBalanceVO;
+		return decorationBalance;
 	}
 
 	@Override

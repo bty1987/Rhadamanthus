@@ -1,6 +1,7 @@
 package com.fanglin.communion.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,15 +9,21 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.system.po.CityProperPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "village", catalog = "communion")
 public class VillagePO implements Serializable {
 
 	private static final long serialVersionUID = -6088354807004872639L;
+
+	public static final String COLUMN_PVID_STR = "parentVillage.vid";
 
 	public static final String COLUMN_STATUS_STR = "status";
 
@@ -35,6 +42,8 @@ public class VillagePO implements Serializable {
 	private String pinyinAll;
 
 	private CityProperPO cityProper;
+
+	private VillagePO parentVillage;
 
 	private String developer;
 
@@ -68,6 +77,12 @@ public class VillagePO implements Serializable {
 	public VillagePO(CityProperPO cityProper) {
 		super();
 		this.cityProper = cityProper;
+	}
+
+	public VillagePO(CityProperPO cityProper, VillagePO parentVillage) {
+		super();
+		this.cityProper = cityProper;
+		this.parentVillage = parentVillage;
 	}
 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,6 +140,16 @@ public class VillagePO implements Serializable {
 
 	public void setCityProper(CityProperPO cityProper) {
 		this.cityProper = cityProper;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "pvid", referencedColumnName = "vid")
+	public VillagePO getParentVillage() {
+		return parentVillage;
+	}
+
+	public void setParentVillage(VillagePO parentVillage) {
+		this.parentVillage = parentVillage;
 	}
 
 	@Column(name = "developer")
@@ -215,6 +240,16 @@ public class VillagePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public VillageVO ptv(VillageVO villageVO) {
+
+		BeanUtil.copyProperties(this, villageVO, Arrays.asList("cityProper", "parentVillage"));
+
+		if (villageVO.getCityProper() != null && getCityProper() != null) getCityProper().ptv(villageVO.getCityProper());
+		if (villageVO.getParentVillage() != null && getParentVillage() != null) getParentVillage().ptv(villageVO.getParentVillage());
+
+		return villageVO;
 	}
 
 }

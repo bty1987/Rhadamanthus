@@ -20,11 +20,15 @@ public class PresignProduceVO implements Serializable {
 
 	private Integer discount;
 
+	private Integer discountt;
+
 	private Integer manageRate;
 
 	private String manageFormula;
 
 	private Integer manageDiscount;
+
+	private Integer manageDiscountt;
 
 	private Integer taxRate;
 
@@ -185,6 +189,14 @@ public class PresignProduceVO implements Serializable {
 		this.discount = discount;
 	}
 
+	public Integer getDiscountt() {
+		return discountt;
+	}
+
+	public void setDiscountt(Integer discountt) {
+		this.discountt = discountt;
+	}
+
 	public Integer getManageRate() {
 		return manageRate;
 	}
@@ -207,6 +219,14 @@ public class PresignProduceVO implements Serializable {
 
 	public void setManageDiscount(Integer manageDiscount) {
 		this.manageDiscount = manageDiscount;
+	}
+
+	public Integer getManageDiscountt() {
+		return manageDiscountt;
+	}
+
+	public void setManageDiscountt(Integer manageDiscountt) {
+		this.manageDiscountt = manageDiscountt;
 	}
 
 	public Integer getTaxRate() {

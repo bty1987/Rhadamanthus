@@ -28,6 +28,7 @@ var ExtensionDetail = (function() {
             "extension.taxRate": 0,
             "extension.taxPrice": 0,
             "extension.total": 0,
+            "extension.consPrice": 0,
 
             "extensionItem.eid": null,
         },
@@ -214,7 +215,7 @@ var ExtensionDetail = (function() {
         calculateArFees: function() {
 
             var $arr = $('.fl-quo-item:not([data-del-flag="1"])', '#addReduceItemDiv');
-            var undisPrice = 0, disPrice = 0, total = 0, managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
+            var undisPrice = 0, disPrice = 0, total = 0,consPrice = 0 , managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
 
             if ($arr.length) {
                 $arr.each(function(i, e) {
@@ -225,8 +226,11 @@ var ExtensionDetail = (function() {
                     var _num = parseFloat($this.find('.num .cell-wrap').text());
 
                     var _discount = parseInt($this.find(".discountprice").attr("data-discount"));
+                    var _subtype = parseInt($this.find(".subtypedict").attr("data-subtype"));
 
                     var _total = utils.accMul(_unitPrice, _num);
+
+                    consPrice = utils.accAdd(consPrice, _subtype == constant.quotation().quotationFunctionAreaItem.SUBTYPE_PROJECT_INT ? _total : 0);
 
                     undisPrice = utils.accAdd(undisPrice, _discount == constant.quotation().extensionItem.DISCOUMNT_NODISCOUMNT_INT ? _total : 0);
                     disPrice = utils.accAdd(disPrice, _discount == constant.quotation().extensionItem.DISCOUMNT_DISCOUMNT_INT ? _total : 0);
@@ -281,6 +285,7 @@ var ExtensionDetail = (function() {
             extensionDetail.basicParams['extension.managePrice'] = managePrice;
             extensionDetail.basicParams['extension.manageDiscount'] = extensionDetail.isCountManageDiscount.prop("checked") ? constant.quotation().extension.MANAGEDISCOUNT_DISCOUNT_INT : constant.quotation().extension.MANAGEDISCOUNT_NODISCOUNT_INT;
             extensionDetail.basicParams['extension.taxPrice'] = taxPrice;
+            extensionDetail.basicParams['extension.consPrice'] = consPrice;
         }
     }
 
@@ -1031,6 +1036,7 @@ var ExtensionDetail = (function() {
                 extensionDetail.basicParams["extension.manageRate"] = extension.manageRate;
                 extensionDetail.basicParams["extension.taxPrice"] = extension.taxPrice;
                 extensionDetail.basicParams["extension.taxRate"] = extension.taxRate;
+                extensionDetail.basicParams["extension.consPrice"] = extension.consPrice;
 
                 extensionDetail.basicParams["extensionItem.eid"] = extension.eid;
 

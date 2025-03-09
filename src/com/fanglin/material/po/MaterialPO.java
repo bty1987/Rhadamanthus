@@ -565,7 +565,7 @@ public class MaterialPO implements java.io.Serializable {
 		BeanUtil.copyProperties(this, materialVO, Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
 
 		if (materialVO.getHouse() != null) BeanUtil.copyProperties(getHouse(), materialVO.getHouse(), Arrays.asList("village"));
-		if (materialVO.getHouse() != null) BeanUtil.copyProperties(getHouse().getVillage(), materialVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		if (materialVO.getHouse() != null && materialVO.getHouse().getVillage() != null && getHouse() != null && getHouse().getVillage() != null) getHouse().getVillage().ptv(materialVO.getHouse().getVillage());
 
 		if (materialVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), materialVO.getCustomer());
 

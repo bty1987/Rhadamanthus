@@ -141,7 +141,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
 		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
-		query.add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
+		query.add(Restrictions.or(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"), query.alias("brand", "brand").getCriterion("brand.ocuid", uid, "eq")));
 
 		queryFilterExcute(query, filters);
 

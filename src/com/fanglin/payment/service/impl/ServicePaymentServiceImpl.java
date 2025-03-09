@@ -522,7 +522,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 
 		String orderId = servicePaymentPO.getDecoration().getOrderId();
 
-		decorationService.sendMessage(orderId, "装修收款", String.format("服务待付款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=4", orderId, servicePaymentPO.getSpid()));
+		decorationService.sendMessage(orderId, "装修收款", String.format("服务待付款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=4&atttype=0", orderId, servicePaymentPO.getSpid()));
 
 	}
 

@@ -14,6 +14,8 @@ public interface AccessoriesService {
 
 	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO);
 
+	public AccessoriesVO queryAccessoriesByAid(AccessoriesVO accessoriesVO);
+
 	public int addAccessories(AccessoriesVO accessoriesVO, List<AccessoriesItemVO> accessoriesItemVOs, String userId) throws FLException;
 
 	public int preoutAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException;

@@ -43,6 +43,8 @@ public class GoodsBO implements java.io.Serializable {
 
 	private int selling;
 
+	private int confine;
+
 	private int pieceNum;
 
 	private AccessoriesTypePO accessoriesType;
@@ -176,6 +178,15 @@ public class GoodsBO implements java.io.Serializable {
 
 	public void setSelling(int selling) {
 		this.selling = selling;
+	}
+
+	@Column(name = "confine")
+	public int getConfine() {
+		return confine;
+	}
+
+	public void setConfine(int confine) {
+		this.confine = confine;
 	}
 
 	@Column(name = "pieceNum")

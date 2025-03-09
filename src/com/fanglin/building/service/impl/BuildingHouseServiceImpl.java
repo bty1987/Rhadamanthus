@@ -389,10 +389,10 @@ public class BuildingHouseServiceImpl implements BuildingHouseService {
 		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(new HouseVO(villageVO), new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 
 		BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-		BeanUtil.copyProperties(buildingHousePO.getHouse(), buildingHouseVO.getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(buildingHousePO.getHouse().getVillage(), buildingHouseVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		BeanUtil.copyProperties(buildingHousePO.getHouse().getVillage().getCityProper(), buildingHouseVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+
 		BeanUtil.copyProperties(buildingHousePO.getCustomer(), buildingHouseVO.getCustomer());
+
+		if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
 
 		if (buildingHousePO.getCreate() != null) {
 			BeanUtil.copyProperties(buildingHousePO.getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));

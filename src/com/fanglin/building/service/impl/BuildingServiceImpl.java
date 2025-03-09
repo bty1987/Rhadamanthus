@@ -207,7 +207,6 @@ public class BuildingServiceImpl implements BuildingService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateBuildingForBalanceStatus(BuildingVO buildingVO) throws FLException {
 
-		// 判断房产单是否存在
 		BuildingPO buildingPO = buildingDao.get(buildingVO.getBid());
 
 		if (buildingPO == null) {
@@ -231,14 +230,12 @@ public class BuildingServiceImpl implements BuildingService {
 		BuildingHouseVO buildingHouseVO = new BuildingHouseVO(houseVO, new CustomerVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
 
-		// buildingHouse
 		BuildingHousePO buildingHousePO = buildingPO.getBuildingHouse();
 		BeanUtil.copyProperties(buildingHousePO, buildingHouseVO, Arrays.asList("house", "customer", "create", "followUser", "keyer", "department", "region"));
-		BeanUtil.copyProperties(buildingHousePO.getHouse(), buildingHouseVO.getHouse(), Arrays.asList("village"));
-		BeanUtil.copyProperties(buildingHousePO.getHouse().getVillage(), buildingHouseVO.getHouse().getVillage(), Arrays.asList("cityProper"));
-		BeanUtil.copyProperties(buildingHousePO.getHouse().getVillage().getCityProper(), buildingHouseVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
 		BeanUtil.copyProperties(buildingHousePO.getCustomer(), buildingHouseVO.getCustomer());
 		BeanUtil.copyProperties(buildingHousePO.getCreate(), buildingHouseVO.getCreate(), Arrays.asList("dept", "duty"));
+
+		if (buildingHousePO.getHouse() != null) buildingHousePO.getHouse().ptv(buildingHouseVO.getHouse());
 
 		if (buildingHousePO.getFollowUser() != null) {
 			BeanUtil.copyProperties(buildingHousePO.getFollowUser(), buildingHouseVO.getFollowUser(), Arrays.asList("dept", "duty"));

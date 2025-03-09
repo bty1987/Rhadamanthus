@@ -23,6 +23,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.CityDao;
 import com.fanglin.system.dao.CityProperDao;
+import com.fanglin.system.dao.RegionDao;
 import com.fanglin.system.po.CityPO;
 import com.fanglin.system.po.RegionPO;
 import com.fanglin.system.service.CityService;
@@ -42,10 +43,13 @@ public class CityServiceImpl implements CityService {
 	private CityDao cityDao;
 
 	@Autowired
+	private RegionDao regionDao;
+
+	@Autowired
 	private CountingService countingService;
 
 	@Autowired
-	private CityProperDao cityProper;
+	private CityProperDao cityProperDao;
 
 	@Override
 	public void pageCity(Paging paging, List<Filter> filters) {
@@ -54,13 +58,7 @@ public class CityServiceImpl implements CityService {
 		List<CityVO> cityVOs = new ArrayList<CityVO>();
 
 		for (CityPO cityPO : cityPOs) {
-			CityVO cityVO = new CityVO();
-			BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
-
-			cityVO.setRegion(new RegionVO());
-			BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
-
-			cityVOs.add(cityVO);
+			cityVOs.add(cityPO.ptv(new CityVO(new RegionVO())));
 		}
 
 		paging.setData(cityVOs);
@@ -73,14 +71,7 @@ public class CityServiceImpl implements CityService {
 		List<CityVO> cityVOs = new ArrayList<CityVO>();
 
 		for (CityPO cityPO : cityPOs) {
-			CityVO cityVO = new CityVO();
-
-			BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
-
-			cityVO.setRegion(new RegionVO());
-			BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
-
-			cityVOs.add(cityVO);
+			cityVOs.add(cityPO.ptv(new CityVO(new RegionVO())));
 		}
 
 		return cityVOs;
@@ -95,12 +86,7 @@ public class CityServiceImpl implements CityService {
 			throw new FLException(230019, "城市不存在");
 		}
 
-		BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
-
-		cityVO.setRegion(new RegionVO());
-		BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
-
-		return cityVO;
+		return cityPO.ptv(new CityVO(new RegionVO()));
 	}
 
 	public List<CityVO> queryCityByRid(CityVO cityVO) {
@@ -109,14 +95,7 @@ public class CityServiceImpl implements CityService {
 		List<CityVO> cityVOs = new ArrayList<CityVO>();
 
 		for (CityPO cityPO : cityPOs) {
-			cityVO = new CityVO();
-
-			BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
-
-			cityVO.setRegion(new RegionVO());
-			BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
-
-			cityVOs.add(cityVO);
+			cityVOs.add(cityPO.ptv(new CityVO(new RegionVO())));
 		}
 
 		return cityVOs;
@@ -129,13 +108,7 @@ public class CityServiceImpl implements CityService {
 		List<CityVO> cityVOs = new ArrayList<CityVO>();
 
 		for (CityPO cityPO : cityPOs) {
-			cityVO = new CityVO();
-			BeanUtil.copyProperties(cityPO, cityVO, Arrays.asList("region"));
-
-			cityVO.setRegion(new RegionVO());
-			BeanUtil.copyProperties(cityPO.getRegion(), cityVO.getRegion());
-
-			cityVOs.add(cityVO);
+			cityVOs.add(cityPO.ptv(new CityVO(new RegionVO())));
 		}
 
 		return cityVOs;
@@ -143,7 +116,17 @@ public class CityServiceImpl implements CityService {
 
 	@Override
 	@Transactional
-	public void addCity(CityVO cityVO) {
+	public void addCity(CityVO cityVO) throws FLException {
+
+		if (cityVO.getRegion() == null) {
+			throw new FLException(230020, "大区不存在");
+		}
+
+		RegionPO regionPO = regionDao.get(cityVO.getRegion().getRid());
+
+		if (regionPO == null) {
+			throw new FLException(230020, "大区不存在");
+		}
 
 		CityPO cityPO = new CityPO();
 
@@ -158,8 +141,7 @@ public class CityServiceImpl implements CityService {
 		cityPO.setName(cityVO.getName());
 		cityPO.setProvince(cityVO.getProvince());
 
-		cityPO.setRegion(new RegionPO(cityVO.getRegion().getRid()));
-		BeanUtil.copyProperties(cityVO.getRegion(), cityPO.getRegion());
+		cityPO.setRegion(regionPO);
 
 		cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
 
@@ -176,10 +158,19 @@ public class CityServiceImpl implements CityService {
 			throw new FLException(230019, "城市不存在");
 		}
 
+		if (cityVO.getRegion() == null) {
+			throw new FLException(230020, "大区不存在");
+		}
+
+		RegionPO regionPO = regionDao.get(cityVO.getRegion().getRid());
+
+		if (regionPO == null) {
+			throw new FLException(230020, "大区不存在");
+		}
+
 		BeanUtil.copyProperties(cityVO, cityPO, Arrays.asList("no", "region"));
 
-		cityPO.setRegion(new RegionPO(cityVO.getRegion().getRid()));
-		BeanUtil.copyProperties(cityVO.getRegion(), cityPO.getRegion());
+		cityPO.setRegion(regionPO);
 
 		cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
 
@@ -202,7 +193,6 @@ public class CityServiceImpl implements CityService {
 		cityDao.update(cityPO);
 
 		return 0;
-
 	}
 
 	@Override
@@ -213,19 +203,15 @@ public class CityServiceImpl implements CityService {
 
 			CityPO cityPO = cityDao.get(cid);
 
-			if (cityPO != null) {
+			if (cityPO == null) continue;
 
-				int count = cityProper.countCityProperByCid(cid);
-
-				if (count > 0) {
-					throw new FLException(230006, String.format("城市[%s]已被引用, 不能被删除", cid));
-				}
-
-				cityDao.delete(cityPO);
+			if (cityProperDao.countCityProperByCid(cid) > 0) {
+				throw new FLException(230006, String.format("城市[%s]已被引用, 不能被删除", cid));
 			}
+
+			cityDao.delete(cityPO);
 		}
 
 		return 0;
 	}
-
 }

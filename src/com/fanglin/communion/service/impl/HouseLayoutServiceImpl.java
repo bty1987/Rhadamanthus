@@ -37,7 +37,8 @@ public class HouseLayoutServiceImpl implements HouseLayoutService {
 			HouseLayoutVO houseLayoutVO = new HouseLayoutVO(new VillageVO());
 
 			BeanUtil.copyProperties(houseLayoutPO, houseLayoutVO, Arrays.asList("village"));
-			BeanUtil.copyProperties(houseLayoutPO.getVillage(), houseLayoutVO.getVillage(), Arrays.asList("cityProper"));
+
+			if (houseLayoutPO.getVillage() != null) houseLayoutPO.getVillage().ptv(houseLayoutVO.getVillage());
 
 			houseLayoutVOs.add(houseLayoutVO);
 		}
@@ -54,7 +55,8 @@ public class HouseLayoutServiceImpl implements HouseLayoutService {
 			houseLayoutVO = new HouseLayoutVO(new VillageVO());
 
 			BeanUtil.copyProperties(houseLayoutPO, houseLayoutVO, Arrays.asList("village"));
-			BeanUtil.copyProperties(houseLayoutPO.getVillage(), houseLayoutVO.getVillage(), Arrays.asList("cityProper"));
+
+			if (houseLayoutPO.getVillage() != null) houseLayoutPO.getVillage().ptv(houseLayoutVO.getVillage());
 
 			houseLayoutVOs.add(houseLayoutVO);
 		}

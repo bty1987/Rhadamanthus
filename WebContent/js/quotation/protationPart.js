@@ -9,6 +9,13 @@ var protationPart = (function() {
 
         modals: {},
         btns: {},
+        oldProtation: {
+            preferPrice: 0,
+            manageProfit: 0,
+            advanceProfit: 0,
+            discount: 0,
+            manageDiscount: 0
+        },
 
         // 定义左下角按钮重定义及指定弹窗显示
         initSettingBtns: function() {
@@ -65,6 +72,18 @@ var protationPart = (function() {
                     com.focusPage('#preferPrices').val(quo.basicParams["protation.preferPrice"]);
                     com.focusPage('#preferManage').val(quo.basicParams["protation.manageProfit"]);
                     com.focusPage('#preferAdvance').val(quo.basicParams["protation.advanceProfit"]);
+                }),
+                $preferPriceClose: com.focusPage('#closeBtn', '#functionAreaPreferPrice').click(function() {
+                    quote.oldProtationData();
+                }),
+                $preferPriceX: com.focusPage('.close', '#functionAreaPreferPrice').click(function() {
+                    quote.oldProtationData();
+                }),
+                $approveClose: com.focusPage('#closeApproveBtn', '#approveModal').click(function() {
+                    quote.oldProtationData();
+                }),
+                $approveX: com.focusPage('.close', '#approveModal').click(function() {
+                    quote.oldProtationData();
                 }),
             };
             return that;
@@ -771,11 +790,11 @@ var protationPart = (function() {
 
             com.focusPage('#saveFunctionAreaBtn').click(function() {
 
-                var preferPrice = quo.basicParams["protation.preferPrice"];
-                var manageProfit = quo.basicParams["protation.manageProfit"];
-                var advanceProfit = quo.basicParams["protation.advanceProfit"];
-                var discount = quo.basicParams["protation.discount"];
-                var manageDiscount = quo.basicParams["protation.manageDiscount"];
+                quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
+                quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
+                quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
+                quo.oldProtation.discount = quo.basicParams["protation.discount"];
+                quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
 
                 var subd = quo.basicParams["protation.subdPrice"];
                 var subm = quo.basicParams["protation.submPrice"];
@@ -787,12 +806,6 @@ var protationPart = (function() {
 
                 if (quo.basicParams["protation.manageProfit"] > quo.basicParams["protation.managePrice"]) {
 
-                    quo.basicParams["protation.preferPrice"] = preferPrice;
-                    quo.basicParams["protation.manageProfit"] = manageProfit;
-                    quo.basicParams["protation.advanceProfit"] = advanceProfit;
-                    quo.basicParams["protation.discount"] = discount;
-                    quo.basicParams["protation.manageDiscount"] = manageDiscount;
-
                     com.showAlert(com.warning, "管理优惠不能大于管理费");
 
                     return false;
@@ -800,14 +813,13 @@ var protationPart = (function() {
 
                 if (!quo.calculateQuoFees()) {
 
-                    quo.basicParams["protation.preferPrice"] = preferPrice;
-                    quo.basicParams["protation.manageProfit"] = manageProfit;
-                    quo.basicParams["protation.advanceProfit"] = advanceProfit;
-                    quo.basicParams["protation.discount"] = discount;
-                    quo.basicParams["protation.manageDiscount"] = manageDiscount;
+                    quote.oldProtationData();
 
-                    quo.calculateQuoFees();
+                    return false;
+                }
 
+                if(quo.basicParams["protation.advanceProfit"] > quo.oldProtation.advanceProfit){
+                    com.focusPage("#approveModal").modal("show");
                     return false;
                 }
 
@@ -820,11 +832,60 @@ var protationPart = (function() {
             });
         },
 
+        // 修改优惠价格申请按钮方法
+        submitApproveProtationPrefer: function() {
+
+            com.focusPage('#submitApproveBtn').bindClick(function() {
+
+                if (com.validate("approveModal")) {
+                    return false;
+                }
+
+                var receiverId = com.focusPage("#approveManSel", "#approveModal").find('input:checked').attr('userid');
+
+                if (receiverId == null || receiverId == "") {
+                    com.showAlert(com.error, "请选择审批人!");
+                    return false;
+                }
+
+                var params = $.extend({}, {
+                    "approval.receiver.userId": receiverId,
+                    "approval.comment": com.focusPage("#changeReason", "#approveModal").val(),
+                    "approvalProtationPrefer.pid": quo.protation.pid,
+                    "approvalProtationPrefer.ppid": quo.protation.ppid,
+                    "approvalProtationPrefer.preferPrice": quo.basicParams["protation.preferPrice"],
+                    "approvalProtationPrefer.managePrefer": quo.basicParams["protation.manageProfit"],
+                    "approvalProtationPrefer.advancePrefer": quo.basicParams["protation.advanceProfit"],
+                    "approvalProtationPrefer.taxPrice": quo.basicParams["protation.totalPrice"],
+                    "approvalProtationPrefer.totalPrice": quo.basicParams["protation.totalPrice"],
+                }, quo.basicParams);
+
+                com.post(api.approval.submitApprovalForProtationPrefer, params, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    com.focusPage("#approveModal").modal("hide");
+                    com.focusPage("#functionAreaPreferPrice").modal("hide");
+                });
+            });
+        },
+
+        // 还原优惠价格
+        oldProtationData: function() {
+            quo.basicParams["protation.preferPrice"] = quo.oldProtation.preferPrice;
+            quo.basicParams["protation.manageProfit"] = quo.oldProtation.manageProfit;
+            quo.basicParams["protation.advanceProfit"] = quo.oldProtation.advanceProfit;
+            quo.basicParams["protation.discount"] = quo.oldProtation.discount;
+            quo.basicParams["protation.manageDiscount"] = quo.oldProtation.manageDiscount;
+
+            quo.calculateQuoFees();
+        },
+
         init: function() {
 
             this.clearQuoteSelected();
             this.calculationNum();
             this.saveFunctionAreaPreferPrice();
+            this.submitApproveProtationPrefer();
         }
     };
 
@@ -1266,7 +1327,7 @@ var protationPart = (function() {
             }, function(res) {
 
                 quo.presignProduce = res.presignProduce;
-            });
+            }, null, false);
 
             var protationFunctionAreas = [{
                 "pfaid": 1,
@@ -1330,6 +1391,33 @@ var protationPart = (function() {
                     }
 
                     protationFunctionAreas[type].protationFunctionAreaItems.push(v);
+                });
+            }, null, false);
+
+            com.post(api.approval.queryApproverByType, {
+                "approver.type": 22
+            }, function(res) {
+
+                $.each(res.approvers, function(i, v) {
+
+                    var comment = v.comment == null ? "" : v.comment;
+
+                    var approveManSel = com.focusPage("#approveManSel", "#approveModal");
+                    var $div = $('<div></div>').addClass("radio no-padding").attr("style", "margin-bottom:10px").appendTo(approveManSel);
+                    var $approvaler = $('<label></label>').appendTo($div);
+
+                    var $input = $('<input>').attr({
+                        "type": "radio",
+                        "name": "form-field-radio",
+                        "class": "ace",
+                        "uid": v.userBase.uid,
+                        "userId": v.userBase.userId
+                    }).appendTo($approvaler);
+
+                    var $span = $('<span></span>').addClass('lbl').appendTo($approvaler);
+                    var $name = $('<label></label>').attr('style', 'margin-left:10px;').text(v.userBase.currentName).appendTo($span);
+
+                    var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
                 });
             }, null, false);
 
@@ -1478,6 +1566,12 @@ var protationPart = (function() {
             profit = utils.changeThrDecimal(utils.accSub(1.0, utils.accDiv(cost, utils.accSub(total, quo.basicParams["protation.activityAmount"]) == 0 ? 1 : utils.accSub(total, quo.basicParams["protation.activityAmount"]))));
 
             com.focusPage('#profitRate').text(profit);
+
+            if (quo.presignProduce.discount == 10)
+                com.focusPage('#preferPrices').attr("disabled", "disabled");
+
+            if (quo.presignProduce.manageDiscount == 10)
+                com.focusPage('#preferManage').attr("disabled", "disabled");
 
             if (quo.basicParams["protation.advanceProfit"] != 0) {
                 com.focusPage('#advanceProfitShow').show();

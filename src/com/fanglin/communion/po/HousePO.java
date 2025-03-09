@@ -1,6 +1,7 @@
 package com.fanglin.communion.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "house", catalog = "communion")
@@ -46,13 +50,13 @@ public class HousePO implements Serializable {
 	private short type;
 
 	private int buildArea;
-	
+
 	private int freeArea;
-	
+
 	private int innerArea;
-	
+
 	private int quoteArea;
-	
+
 	private int totalArea;
 
 	private short maxFloor;
@@ -172,7 +176,7 @@ public class HousePO implements Serializable {
 	public void setBuildArea(int buildArea) {
 		this.buildArea = buildArea;
 	}
-	
+
 	@Column(name = "freeArea")
 	public int getFreeArea() {
 		return freeArea;
@@ -190,7 +194,7 @@ public class HousePO implements Serializable {
 	public void setInnerArea(int innerArea) {
 		this.innerArea = innerArea;
 	}
-	
+
 	@Column(name = "quoteArea")
 	public int getQuoteArea() {
 		return quoteArea;
@@ -301,6 +305,15 @@ public class HousePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public HouseVO ptv(HouseVO houseVO) {
+
+		BeanUtil.copyProperties(this, houseVO, Arrays.asList("village"));
+
+		if (houseVO.getVillage() != null && getVillage() != null) getVillage().ptv(houseVO.getVillage());
+
+		return houseVO;
 	}
 
 }

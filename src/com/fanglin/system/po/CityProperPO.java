@@ -3,6 +3,7 @@ package com.fanglin.system.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "cityproper", catalog = "communion")
@@ -108,6 +112,15 @@ public class CityProperPO implements Serializable {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public CityProperVO ptv(CityProperVO cityProperVO) {
+
+		BeanUtil.copyProperties(this, cityProperVO, Arrays.asList("city"));
+
+		if (cityProperVO.getCity() != null && getCity() != null) getCity().ptv(cityProperVO.getCity());
+
+		return cityProperVO;
 	}
 
 }

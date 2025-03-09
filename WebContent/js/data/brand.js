@@ -7,7 +7,7 @@ jQuery(function($) {
         btns: {
             saveBtn: com.focusPage("#saveBtn", "#brandModal").on("click", saveData),
             saveDelivery: com.focusPage("#saveDelivery", "#deliveryModal").on("click", saveDelivery),
-            saveSelection: com.focusPage("#saveSelection", "#selectionModal").on("click", saveSelection),
+            saveSelection: com.focusPage("#saveSelection", "#selectionModal").on("click", saveSelection)
         },
 
         items: {
@@ -21,14 +21,14 @@ jQuery(function($) {
             agentPhone: com.focusPage("#agentPhone", "#brandModal"),
             supplier: com.focusPage("#supplier", "#brandModal"),
             kino: com.focusPage("#kino", "#brandModal"),
-            kiname: com.focusPage("#kiname", "#brandModal"),
+            kiname: com.focusPage("#kiname", "#brandModal")
 
         },
 
         modals: {
             brandModal: com.focusPage("#brandModal"),
             deliveryModal: com.focusPage("#deliveryModal"),
-            selectionModal: com.focusPage("#selectionModal"),
+            selectionModal: com.focusPage("#selectionModal")
         },
 
         validator: {
@@ -38,7 +38,7 @@ jQuery(function($) {
                 errorMsg: "请以B_作为前缀 , 之后以三位数字组成(如B_001)."
             }
         },
-        pageType: params['urlLoadParams'].type,
+        pageType: params['urlLoadParams'].type
     };
 
     com.focusPage('#fl-statement').statement("主材品牌", "主材品牌信息列表");
@@ -67,6 +67,7 @@ jQuery(function($) {
         com.clearValidator();
         com.cleanTypeahead('supplier');
         com.closeTip();
+        com.cleanItems(brand.items)
     });
 
     brand.modals.deliveryModal.on('hide.bs.modal', function(e) {
@@ -138,7 +139,7 @@ jQuery(function($) {
         name: "业务类型",
         prop: "atttype",
         clazz: "red",
-        dataset: constant.data().brand.atttype.keys,
+        dataset: constant.data().brand.atttype.keys
     }, {
         fieId: "agentName",
         name: "代理",
@@ -154,7 +155,7 @@ jQuery(function($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: constant.data().common.status.keys,
+        dataset: constant.data().common.status.keys
     }, {
         field: "comment",
         name: "说明",
@@ -258,14 +259,14 @@ jQuery(function($) {
         handle: function(v) {
 
             supplier(v);
-        },
+        }
     }, {
         name: "驻店",
         clazz: "btn-primary",
         handle: function(v) {
 
             instorer(v);
-        },
+        }
     }, {
         name: "状态",
         type: "switch",
@@ -324,7 +325,7 @@ jQuery(function($) {
 
         var $input = $('<input name="checkbox">').attr({
             type: 'checkbox',
-            name: v,
+            name: v
         }).addClass('ace').val(i);
 
         var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
@@ -343,7 +344,7 @@ jQuery(function($) {
 
         var $input = $('<input name="checkbox">').attr({
             type: 'checkbox',
-            name: v,
+            name: v
         }).addClass('ace').val(i);
 
         var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
@@ -479,6 +480,19 @@ jQuery(function($) {
         com.post(url, options, function(res) {
 
             searcher.doSearch();
+
+            var no = res.brand.no;
+
+            if (brand.brand) no = brand.brand.no;
+
+            var brandData = {
+                "no": no,
+                "name": brand.items.name.val(),
+                "companyName": "方林集团",
+                "categoryId": brand.items.category.val()
+            };
+
+            kingdeeUtils.brandToKingdee(brandData);
         });
 
         brand.modals.brandModal.modal("hide");

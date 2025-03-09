@@ -9,7 +9,8 @@ jQuery(function($) {
         },
         record: {},
         storehouses: [],
-        decorationStatus: {}
+        decorationStatus: {},
+        decoration: {}
     };
 
     accessories.decorationStatus = constant.decoration().decoration.status.keys;
@@ -18,6 +19,7 @@ jQuery(function($) {
         "decoration.orderId": accessories.orderId
     }, function(res) {
 
+        accessories.decoration = res.decoration;
         orderInfo('orderInfo', res.decoration);
     }, null, false);
 
@@ -51,6 +53,8 @@ jQuery(function($) {
             return false;
         }
 
+        var accessoriesOutItems = [];
+
         var options = {
             "accessories[0].aid": accessories.aid
         };
@@ -66,12 +70,35 @@ jQuery(function($) {
             options["accessoriesItems[" + i + "].storehouse.shid"] = $this.find('.storehouse select').val();// – 仓库ID
             options["accessoriesItems[" + i + "].outprice"] = $this.find('.outprice').text();// – 仓库ID
             options["accessoriesItems[" + i + "].num"] = $this.find('.number').text();// – 数量
+
+            var house = accessories.decoration.house;
+
+            var outItems = {
+                "num": $this.find('.number').text(),
+                "shid": $this.find('.storehouse select').val(),
+                "orderId": accessories.decoration.orderId,
+                "address": (house.village.cityProper.city.name == null ? " " : house.village.cityProper.city.name) + " " + (house.village.cityProper == null ? " " : house.village.cityProper.name) + " " + house.village.name + " " + (house.houseNumber == null ? " " : house.houseNumber),
+                "gooodNo": $this.attr('data-gno'),
+                "supervisorUserId": accessories.decoration.supervisor.userId,
+                "supervisorName": accessories.decoration.supervisor.userName,
+                "aiid": $this.attr('data-aiid')
+            };
+
+            accessoriesOutItems.push(outItems);
         });
 
         com.post(api.inventory.addManifestForAS, options, function(data) {
 
             com.showAlert(com.info, "操作成功");
             com.focusPage('#list').empty();
+
+            var accessoriesOutData = {
+                "aid": accessories.aid,
+                "drganizationName": params.company.drganization.name,
+                "items": accessoriesOutItems
+            };
+
+            kingdeeUtils.accessoriesOutToKingdee(accessoriesOutData);
         });
     });
 
@@ -87,33 +114,34 @@ jQuery(function($) {
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col8');
 
-        var _lineInfoSet = [{
-            cellClass: "no blue"
-        },// 编号
-        {
-            cellClass: "name grey"
-        },// 名称
-        {
-            cellClass: "color",
-            hasSelect: true
-        },// 颜色
-        {
-            cellClass: "format",
-            hasSelect: true
-        },// 规格
-        {
-            cellClass: "measurementUnit grey"
-        },// 单位
-        {
-            cellClass: "storehouse grey",
-            hasSelect: true
-        },// 仓库
-        {
-            cellClass: "outprice blue",
-            hasInput: true
-        }, {
-            cellClass: "number blue"
-        },// 数量
+        var _lineInfoSet = [
+            {
+                cellClass: "no blue"
+            },// 编号
+            {
+                cellClass: "name grey"
+            },// 名称
+            {
+                cellClass: "color",
+                hasSelect: true
+            },// 颜色
+            {
+                cellClass: "format",
+                hasSelect: true
+            },// 规格
+            {
+                cellClass: "measurementUnit grey"
+            },// 单位
+            {
+                cellClass: "storehouse grey",
+                hasSelect: true
+            },// 仓库
+            {
+                cellClass: "outprice blue",
+                hasInput: true
+            }, {
+                cellClass: "number blue"
+            } // 数量
         ];
 
         $.each(_lineInfoSet, function(i, v) {
@@ -140,7 +168,8 @@ jQuery(function($) {
 
         $line.attr({
             "data-gid": item.goods.gid,
-            "data-aiid": item.aiid
+            "data-aiid": item.aiid,
+            "data-gno": item.goods.no
         });
 
         $line.find('.no').text(item.goods.no);

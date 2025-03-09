@@ -117,6 +117,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		extensionPO.setTaxRate(extensionVO.getTaxRate());
 		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
+		extensionPO.setConsPrice(extensionVO.getConsPrice());
 
 		extensionDao.update(extensionPO);
 
@@ -157,6 +158,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		extensionPO.setTaxRate(extensionVO.getTaxRate());
 		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
+		extensionPO.setConsPrice(extensionVO.getConsPrice());
 
 		extensionDao.update(extensionPO);
 		extensionItemDao.delete(extensionItemPO);
@@ -215,8 +217,8 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		if (quotationPO.getStatus() == QuotationPO.STATUS_LOCK_INT) {
-			throw new FLException(200033, "报价已锁定");
+		if (quotationPO.getStatus() != QuotationPO.STATUS_INIT_INT) {
+			throw new FLException(200030, "报价不可操作");
 		}
 	}
 
