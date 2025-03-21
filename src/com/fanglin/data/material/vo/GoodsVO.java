@@ -44,6 +44,8 @@ public class GoodsVO implements java.io.Serializable {
 
 	private GoodsKindVO thrkind;
 
+	private String path;
+
 	private Short status;
 
 	private Short checkup;
@@ -220,6 +222,14 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setThrkind(GoodsKindVO thrkind) {
 		this.thrkind = thrkind;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public Short getStatus() {

@@ -2,13 +2,34 @@ $(function() {
 
     var feedback = {
 
+        saveBtn: com.focusPage("#saveBtn"),
+
         modals: {
-            feedbackDrawingModal: com.focusPage("#feedbackDrawingModal")
-        }
+            feedbackDrawingModal: com.focusPage("#feedbackDrawingModal"),
+            creatFeedbackModal: com.focusPage("#creatFeedback")
+        },
+        items: {
+            orderId: com.focusPage("#orderId"),
+            phone: com.focusPage("#phone"),
+            feedbackType: com.focusPage("#feedbackType"),
+            content: com.focusPage("#content"),
+        },
 
     };
 
+    feedback.items.feedbackType.bindData(constant.customer().feedback.status.datas, "key", "value");
+
     com.popup4photos("#resultList");
+
+    feedback.saveBtn.bindClick(saveData);
+
+    feedback.modals.creatFeedbackModal.on("hide.bs.modal", function() {
+
+        com.clearValidator();
+        com.cleanTypeahead('orderId');
+        com.cleanItems(feedback.items);
+
+    });
 
     var displayFunc = (function() {
 
@@ -40,15 +61,15 @@ $(function() {
             var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('图片');
 
             com.showImg(img, v.picture, 75, 75, '', null, 0);
-            
+
             var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
             var $btnbind = $("<a></a>").addClass("btn btn-minier btn-success").html("接收");
             var $btnAddUser = $("<a></a>").addClass("btn btn-minier btn-success").html("完成");
-            
+
             var propertyArr = [["装修单号:", v.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.orderId);
-            }], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ["接收人: ", v.receiver.userName, "grey"], ["接收时间: ", v.receiveTime, "grey"],["处理人: ", v.handler.userName, "grey"], ["处理时间: ", v.handleTime, "grey"], ["完成人", v.finisher.userName, "grey"], ["完成时间: ", v.finishTime, "grey"], ["状态: ", constant.customer().feedback.feedbackStatus.keys[v.status], "grey"]];
+            }], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ["接收人: ", v.receiver.userName, "grey"], ["接收时间: ", v.receiveTime, "grey"], ["处理人: ", v.handler.userName, "grey"], ["处理时间: ", v.handleTime, "grey"], ["完成人", v.finisher.userName, "grey"], ["完成时间: ", v.finishTime, "grey"], ["状态: ", constant.customer().feedback.feedbackStatus.keys[v.status], "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -114,7 +135,19 @@ $(function() {
     searcher.init(['customer-feedback-orderId', 'customer-feedback-phone', 'customer-feedback-createTime', 'customer-feedback-type', 'customer-feedback-company', 'customer-feedback-status', 'customer-feedback-handler', 'customer-feedback-receiver', 'customer-feedback-handleTime', 'customer-feedback-receiveTime'], "condList", api.customer.pageFeedback, function(res) {
 
         displayFunc.init("resultList", res);
-    }, "pagenation");
+    }, "pagenation", "groupUserPostData", null, false, null, function() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addFeedback').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    });
+
+    com.focusPage('#addFeedback', '#pagenation').click(function() {
+
+        feedback.modals.creatFeedbackModal.modal("show");
+    });
 
     function manageDrawing(fid) {
 
@@ -181,4 +214,26 @@ $(function() {
 
     }
 
+    function saveData() {
+
+        if (com.validate('creatFeedback')) {
+            return false;
+        }
+
+        var options = {
+            "feedback.orderId": feedback.items.orderId.val(),
+            "feedback.phone": feedback.items.phone.val(),
+            "feedback.feedbackType": feedback.items.feedbackType.val(),
+            "feedback.content": feedback.items.content.val()
+        };
+
+        com.post(api.customer.addFeedback, options, function(res) {
+
+            searcher.doSearch();
+            com.showAlert(com.info, "保存成功");
+
+        }, null, false);
+
+        feedback.modals.creatFeedbackModal.modal("hide");
+    }
 });

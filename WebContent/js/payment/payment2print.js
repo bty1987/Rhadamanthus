@@ -144,7 +144,7 @@ jQuery(function($) {
                 if (srid.indexOf(v.salesReceipt.srId) == -1) {
                     srid.push(v.salesReceipt.srId);
 
-                    v.salesReceipt["type"] = constant.payment().materialPayment.paymentType.keys[v.type] + "-" + v.sales.brand;
+                    v.salesReceipt["type"] = constant.payment().materialPayment.paymentType.keys[v.type] + "-" + v.sales.brand.name;
                     drawPaymentLine(v.salesReceipt, $tbody, function (money) {
                         if ([2, 3, 8].indexOf(v.type) > -1) print.materialAmount = utils.accAdd(print.materialAmount, money); //收款
                         if ([4, 5, 6, 7].indexOf(v.type) > -1) print.refundAmount = utils.accAdd(print.refundAmount, money);//退款

@@ -841,7 +841,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "sales.orderId"], ["销售单号", "sales.no"], ['楼盘地址', ['sales.house.village.cityProper.city.name', 'sales.house.village.cityProper.name', 'sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand'], ['应收金额', 'referMoney'], ['收款人', 'salesReceipt.collecter.currentName'], ['收款时间', 'salesReceipt.collectTime'], ['类型', 'type'], ['状态', 'status'], ['备注', 'salesReceipt.comment'], ['现金', 'salesReceipt.cash'], ['刷卡', ['salesReceipt.bank', 'salesReceipt.bankInfo']], ['银行', ['salesReceipt.checkv', 'salesReceipt.checkvBank']], ['分期', ['salesReceipt.installment', 'salesReceipt.installBank']], ['对公', ['salesReceipt.accounts', 'salesReceipt.accountsBank']], ['预付款', 'salesReceipt.advance'], ['券', ['salesReceipt.coupon', 'salesReceipt.couponInfo']]],
+                column: [["装修单号", "sales.orderId"], ["销售单号", "sales.no"], ['楼盘地址', ['sales.house.village.cityProper.city.name', 'sales.house.village.cityProper.name', 'sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand.name'], ['应收金额', 'referMoney'], ['收款人', 'salesReceipt.collecter.currentName'], ['收款时间', 'salesReceipt.collectTime'], ['类型', 'type'], ['状态', 'status'], ['备注', 'salesReceipt.comment'], ['现金', 'salesReceipt.cash'], ['刷卡', ['salesReceipt.bank', 'salesReceipt.bankInfo']], ['银行', ['salesReceipt.checkv', 'salesReceipt.checkvBank']], ['分期', ['salesReceipt.installment', 'salesReceipt.installBank']], ['对公', ['salesReceipt.accounts', 'salesReceipt.accountsBank']], ['预付款', 'salesReceipt.advance'], ['券', ['salesReceipt.coupon', 'salesReceipt.couponInfo']]],
                 list: res.paging.data
             }, function(v) {
 

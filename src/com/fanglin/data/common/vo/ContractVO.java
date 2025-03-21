@@ -18,6 +18,8 @@ public class ContractVO implements Serializable {
 
 	private String path;
 
+	private String videopath;
+
 	private String url;
 
 	private Short status;
@@ -76,6 +78,14 @@ public class ContractVO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public String getVideopath() {
+		return videopath;
+	}
+
+	public void setVideopath(String videopath) {
+		this.videopath = videopath;
 	}
 
 	public String getUrl() {

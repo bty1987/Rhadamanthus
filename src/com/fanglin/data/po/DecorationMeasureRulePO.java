@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "decorationMeasure", catalog = "data")
-public class DecorationMeasurePO implements Serializable {
+@Table(name = "decorationMeasureRule", catalog = "data")
+public class DecorationMeasureRulePO implements Serializable {
 
 	private static final long serialVersionUID = 5783409708080638787L;
 
@@ -24,7 +24,7 @@ public class DecorationMeasurePO implements Serializable {
 
 	private String comment;
 
-	public DecorationMeasurePO() {
+	public DecorationMeasureRulePO() {
 		super();
 	}
 

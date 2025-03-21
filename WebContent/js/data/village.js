@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
 
     var village = {
 
@@ -9,18 +9,18 @@ $(function () {
         },
 
         modals: {
-            modal: com.focusPage("#villageModal").on("hide.bs.modal", function (a) {
+            modal: com.focusPage("#villageModal").on("hide.bs.modal", function(a) {
 
                 com.clearValidator();
                 com.clearValidator("#no", true);
                 com.cleanTypeahead("#parentVillage");
                 com.focusPage("#parentVillage").removeClass("v_typeahead v_required");
             }),
-            mapModal: com.focusPage('#mapModal').on("hide.bs.modal", function (a) {
+            mapModal: com.focusPage('#mapModal').on("hide.bs.modal", function(a) {
 
                 com.focusPage('#mapContainer').removeClass('changing-point');
             }).on("shown.bs.modal", drawMap),
-            drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function (a) {
+            drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
 
                 com.clearValidator();
             })
@@ -33,14 +33,14 @@ $(function () {
         },
         items: {
             parentVillage: com.focusPage("#parentVillage"),
-            no: com.focusPage("#no").blur(function () {
+            no: com.focusPage("#no").blur(function() {
 
                 var $this = $(this);
 
                 if ($this.val() != 0 && $this.val().trim()) {
                     com.post(api.data.queryVillageByVid, {
                         "village.no": $this.val()
-                    }, function (res) {
+                    }, function(res) {
 
                         if (a.village.no) {
                             com.showTips($this, "该楼盘编号已经存在", true);
@@ -57,7 +57,7 @@ $(function () {
             nameRuleSel: com.focusPage("#nameRuleSel"),
             name: com.focusPage("#villagename"),
             cityProperSel: com.focusPage("#cityProperSel"),
-            citySel: com.focusPage("#citySel").on("change", function (b, c) {
+            citySel: com.focusPage("#citySel").on("change", function(b, c) {
 
                 bindCityProper($(this).val(), village.items.cityProperSel, false, c)
             }),
@@ -97,12 +97,12 @@ $(function () {
 
     var mp;
 
-    com.post(api.system.queryCity, {}, function (res) {
+    com.post(api.system.queryCity, {}, function(res) {
 
         village.items.citySel.bindData(res.citys, "cid", "name", false).trigger("change")
     });
 
-    com.post(api.common.queryBuildingNameRule, {}, function (res) {
+    com.post(api.common.queryBuildingNameRule, {}, function(res) {
 
         village.items.nameRuleSel.bindData(res.buildingNameRules, "ruleContent", "ruleContent", false).trigger("change");
     });
@@ -111,7 +111,8 @@ $(function () {
 
     com.initTypeahead('parentVillage', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
-    village.items.parentVillage.on("change", function (res) {
+    village.items.parentVillage.on("change", function(res) {
+
         if (village.items.parentVillage.val().trim() != "") {
             village.items.parentVillage.addClass("v_typeahead");
         } else {
@@ -119,15 +120,15 @@ $(function () {
         }
     });
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
 
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
 
                     creatLine(v).appendTo($ul);
                 });
@@ -135,7 +136,7 @@ $(function () {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
 
@@ -146,7 +147,7 @@ $(function () {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $btnRule = $('<a></a>').addClass('btn btn-minier btn-yellow').html('規則');
+            var $btnRule = $('<a></a>').addClass('btn btn-minier btn-yellow').html('规则');
             var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('位置');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
             var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('管理图片');
@@ -160,7 +161,7 @@ $(function () {
 
             var propertyArr = [["上级楼盘:", com.checkNull(v.parentVillage && v.parentVillage.name, "暂无"), "grey"], ["楼盘编号:", v.no, "grey"], ["所在城市:", v.cityProper.city.name, "grey"], ["所在城区:", v.cityProper.name, "grey"], ["开发商:", v.developer ? v.developer : "-", "grey"], ["售楼电话:", v.salesPhone ? v.salesPhone : "-", "grey"], ["交房时间:", v.deliveryTime, "green"], ["说明:", v.content, "grey"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -178,29 +179,26 @@ $(function () {
 
             $liLine.append($urldiv).append($h3).append($ulProperty);
 
-            $btnEdit.click(function () {
+            $btnEdit.click(function() {
 
                 editVillage(v);
             });
 
-            $btnRule.click(function () {
+            $btnRule.click(function() {
 
                 params.vid = v.vid;
 
                 params.data.village = v;
-              
-                com.popup4page("#villagePopUp", api.index.village4rule.url, "規則");
+
+                com.popup4page("#villagePopUp1", api.index.village4rule.url, "規則");
             });
 
-
-
-
-            $btnPosition.click(function () {
+            $btnPosition.click(function() {
 
                 editPosition(v);
             });
 
-            $drawingedit.click(function () {
+            $drawingedit.click(function() {
 
                 village.vid = v.vid;
                 village.no = v.no;
@@ -208,7 +206,7 @@ $(function () {
                 managedrawing(v.vid);
             });
 
-            $houseLayout.click(function () {
+            $houseLayout.click(function() {
 
                 params.vid = v.vid;
 
@@ -217,7 +215,7 @@ $(function () {
                 com.popup4page("#villagePopUp", "/views/data/houseLayout.html", "户型");
             });
 
-            $statusSwitch.prop("checked", v.status == 0 ? true : false).switchBtn("status-lbl").on("click", function () {
+            $statusSwitch.prop("checked", v.status == 0 ? true : false).switchBtn("status-lbl").on("click", function() {
 
                 updateStatus(v.no, $statusSwitch.prop("checked") ? 0 : 1);
             });
@@ -226,12 +224,12 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
 
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
 
                 return creatLine(v);
             }
@@ -240,10 +238,10 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(['data-village-name', 'system-city'], "condList", api.data.pageVillage, function (data) {
+    searcher.init(['data-village-name', 'system-city'], "condList", api.data.pageVillage, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", "villagePostData", null, false, null, function () {
+    }, "pagenation", "villagePostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addVillage').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -262,14 +260,14 @@ $(function () {
         com.post(api.data.updateVillageForStatus, {
             "village.no": id,
             "village.status": status
-        }, function () {
+        }, function() {
 
             searcher.doSearch();
         });
     }
 
     // 添加按钮
-    com.focusPage('a[name="addVillage"]', '#pagenation').click(function () {
+    com.focusPage('a[name="addVillage"]', '#pagenation').click(function() {
 
         village.editFlg = false;
 
@@ -308,7 +306,7 @@ $(function () {
             url = api.data.updateVillage;
         }
 
-        com.post(url, option, function (res) {
+        com.post(url, option, function(res) {
 
             village.modals.modal.modal("hide");
 
@@ -329,7 +327,7 @@ $(function () {
         b.parentVillage != null ? com.updateTypeahead("parentVillage", b.parentVillage.no, b.parentVillage.name) : "";
         village.items.no.val(b.no).prop("disabled", !0).css("display", "block");
         village.items.name.val(b.name);
-        village.items.citySel.val(b.cityProper.city.cid).trigger("change", function () {
+        village.items.citySel.val(b.cityProper.city.cid).trigger("change", function() {
 
             village.items.cityProperSel.val(b.cityProper.cpid)
         });
@@ -352,12 +350,12 @@ $(function () {
         com.post(api.communion.queryDataDrawing, {
             "dataDrawing.sid": vid,
             "dataDrawing.type": 0
-        }, function (data) {
+        }, function(data) {
 
             var dataDrawings = data.dataDrawings;
 
             if (dataDrawings && dataDrawings.length) {
-                $.each(dataDrawings, function (i, value) {
+                $.each(dataDrawings, function(i, value) {
 
                     appendGalleryElement("villageDrawing", value);
                 });
@@ -373,7 +371,7 @@ $(function () {
 
         com.uploadify("#villageUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
-        }, 1, function (data) {
+        }, 1, function(data) {
 
             var options = {};
 
@@ -384,7 +382,7 @@ $(function () {
             options["dataDrawing.type"] = 0;
             options["dataDrawing.filesize"] = data.filesize;
 
-            com.post(api.communion.addDataDrawing, options, function (res) {
+            com.post(api.communion.addDataDrawing, options, function(res) {
 
                 var drawing = res.dataDrawing;
 
@@ -406,18 +404,18 @@ $(function () {
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
         com.showImg(img, value.drawingUrl, 150, 150, value.name, null, value.drawingType);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
 
             com.post(api.communion.deleteDataDrawing, {
                 "dataDrawing.ddid": value.ddid
-            }, function (res) {
+            }, function(res) {
 
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 
-        var toolok = $("<a></a>").attr("href", "#").on("click", function () {
+        var toolok = $("<a></a>").attr("href", "#").on("click", function() {
 
             updateVillageUrl(village.no, value.drawingUrl);
         }).appendTo(toolsDiv);
@@ -431,7 +429,7 @@ $(function () {
             "village.url": url
         };
 
-        com.post(api.data.updateVillageForUrl, options, function (res) {
+        com.post(api.data.updateVillageForUrl, options, function(res) {
 
             searcher.doSearch();
         }, null, false);
@@ -493,7 +491,7 @@ $(function () {
 
     // 标记点提示框样式
     ComplexCustomOverlay.prototype = new BMap.Overlay();
-    ComplexCustomOverlay.prototype.initialize = function (map) {
+    ComplexCustomOverlay.prototype.initialize = function(map) {
 
         this._map = map;
 
@@ -532,7 +530,7 @@ $(function () {
         return circle;// 当调用map.removeOverlay或者map.clearOverlays方法时,API会自动将initialize方法返回的DOM元素进行移除.
     };
 
-    ComplexCustomOverlay.prototype.draw = function () {
+    ComplexCustomOverlay.prototype.draw = function() {
 
         var map = this._map;
         var pixel = map.pointToOverlayPixel(this._point);
@@ -542,21 +540,21 @@ $(function () {
     };
 
     // 重选位置点击
-    com.focusPage('[name="resetPositionBtn"]').click(function () {
+    com.focusPage('[name="resetPositionBtn"]').click(function() {
 
         com.focusPage('#mapContainer').addClass('changing-point');
         mp.clearOverlays();
     });
 
     // 重新加载地图
-    com.focusPage('[name="resetMapBtn"]').click(function () {
+    com.focusPage('[name="resetMapBtn"]').click(function() {
 
         // mp.reset();
         drawMap();
     });
 
     // 确认位置
-    com.focusPage("#placeBtn").click(function () {
+    com.focusPage("#placeBtn").click(function() {
 
         getPlace(com.focusPage("#city").val(), com.focusPage("#name").val());
     });
@@ -570,7 +568,7 @@ $(function () {
             'village.y': village.currentVill.tempPoint.y * 1000000
         };
 
-        com.post(api.data.updateVillageForPosition, params, function (res) {
+        com.post(api.data.updateVillageForPosition, params, function(res) {
 
             village.modals.mapModal.modal('hide');
 
@@ -630,7 +628,7 @@ $(function () {
 
             com.post(api.system.queryCityProperByCid, {
                 "cityProper.city.cid": a
-            }, function (res) {
+            }, function(res) {
 
                 b.bindData(res.cityPropers, "cpid", "name", d);
                 c && c();
@@ -644,7 +642,7 @@ $(function () {
             url: "http://api.map.baidu.com/place/v2/search?query=" + villageName + "&region=" + city + "&output=json&ak=LRGsFoxg2Z21c9on5s5YhBQ9zeewZGw8",
             type: "GET",
             dataType: "JSONP",
-            success: function (data) {
+            success: function(data) {
 
                 var lng;
                 var lat;

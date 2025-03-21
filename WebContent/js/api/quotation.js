@@ -339,6 +339,16 @@ $.extend(api, {
             }
         },
 
+        queryQuotationRtem: {
+            url: "queryQuotationRtem.do",
+        },
+        addQuotationRtem: {
+            url: "addQuotationRtem.do",
+        },
+        deleteQuotationRtem: {
+            url: "deleteQuotationRtem.do",
+        },
+
         pageQuotationPrice: {
             url: "pageQuotationPrice.do",
             demo: true,

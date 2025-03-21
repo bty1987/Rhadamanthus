@@ -40,11 +40,43 @@ public class CustomerUserRuleItemDaoImpl extends DaoImpl<CustomerUserRuleItemPO>
 
 		uids.add(0);
 
-		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 AND curi.did = :did)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) or (curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
 
-		query.setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).setInteger("did", did).setParameterList("uids", uids);
+		query.setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).setInteger("did", did).setInteger("uppval1", area).setInteger("lowval1", area).setParameterList("uids", uids);
+
+		return (CustomerUserRuleItemPO) query.uniqueResult();
+	}
+
+	@Override
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, int area, List<Integer> uids) {
+
+		if (uids == null) uids = new ArrayList<Integer>();
+
+		uids.add(0);
+
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 0 and curi.uppval < :uppval and curi.lowval >= :lowval) OR (curi.type = 1)) AND TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
+
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
+
+		query.setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).setParameterList("uids", uids);
+
+		return (CustomerUserRuleItemPO) query.uniqueResult();
+	}
+
+	@Override
+	public CustomerUserRuleItemPO pullCustomerUserRuleItem(int company, List<Integer> uids, int did, int area) {
+
+		if (uids == null) uids = new ArrayList<Integer>();
+
+		uids.add(0);
+
+		String sql = "select curi.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and ((curi.type = 1) or (curi.type = 2 and curi.did = :did and curi.uppval < :uppval1 and curi.lowval >= :lowval1)) and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
+
+		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRuleItemPO.class);
+
+		query.setInteger("company", company).setInteger("did", did).setInteger("uppval1", area).setInteger("lowval1", area).setParameterList("uids", uids);
 
 		return (CustomerUserRuleItemPO) query.uniqueResult();
 	}

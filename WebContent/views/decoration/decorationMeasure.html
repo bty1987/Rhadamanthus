@@ -1,0 +1,194 @@
+<div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+	</div>
+	
+	<div class="modal fade" id="applyModal" tabindex="-1">
+		<div class="modal-dialog" style="width:800px;">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="drawLineApplyDialog">部署信息</h4>
+				</div>
+				<div class="modal-body">
+					<div id="calendar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="drawLineDialog">放线确认信息</h4>
+                </div>
+                
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="applayTime">放线日期</label>
+                            <div class="col-sm-9">
+                                <input class=" date-picker-date col-xs-10 col-sm-5 v_required" id="applayTime" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal fade" id="editModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="drawLineDialog">放线确认信息</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="actualDate">放线日期</label>
+							<div class="col-sm-9">
+								<input type="text" class="hide" id=dlid />
+								<input class=" date-picker-date col-xs-10 col-sm-5 v_required" id="actualDate" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="startTime">开始时间</label>
+							<div class="col-sm-9">
+								<div class="bootstrap-timepicker">
+									<input id="startTime" type="text" class="timepicker v_required col-xs-10 col-sm-5"/>
+								</div>
+							</div>
+						</div>
+					
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="endTime">结束时间</label>
+							<div class="col-sm-9">
+								<div class="bootstrap-timepicker">
+									<input id="endTime" type="text" class="timepicker v_required col-xs-10 col-sm-5"/>
+								</div>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="drawLineGroup">放线小组</label>
+							<div class="col-sm-9">
+								<select class='col-xs-10 col-sm-5 v_required' id='drawLineGroup' data-toggle="popover" data-trigger='manual' ></select>
+							</div>
+						</div>
+					</form>
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="constructionInfoModal" tabindex="-1" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title" id="myModalLabel">工程信息</h4>
+				</div>
+				<div class="modal-body" >
+					<form class="form-horizontal">
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right">工期</label>
+							<div class="col-sm-9">
+								<input type="text" id='timeLimit' class='col-xs-10 col-sm-6 v_number' />
+							</div>
+						</div>
+						<div class="form-group">
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right ">铲大白</label>
+								<div class="col-md-9">
+									<select id='ishovel' class='col-xs-10 col-sm-6'></select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right ">钥匙</label>
+								<div class="col-sm-9">
+									<select id='iskey' class='col-xs-10 col-sm-6'></select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right ">开工仪式</label>
+								<div class="col-sm-9">
+									<select id='isCeremony' class='col-xs-10 col-sm-6'></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">预计放线时间</label>
+								<div class="col-sm-9">
+									<input type="text" id='drawlineTime' class='col-xs-10 col-sm-6' />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">预计完工时间</label>
+								<div class="col-sm-9">
+									<input type="text" id='finishTime' class='col-xs-10 col-sm-6' />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">预计领钥匙时间</label>
+								<div class="col-sm-9">
+									<input type="text" id='keyTime' class='col-xs-10 col-sm-6' />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">预计设计完成时间</label>
+								<div class="col-sm-9">
+									<input type="text" id='designTime' class='col-xs-10 col-sm-6' />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right">备注说明</label>
+								<div class="col-md-9">
+									<textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+								</div>
+							</div>
+							<div class="space-4"></div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveInfoBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="canceInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/decoration/decorationMeasure.js']);
+</script>

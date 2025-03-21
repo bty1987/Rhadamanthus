@@ -363,7 +363,7 @@
                     propertyArr.push(["商品品类: ", v.sales.category, "grey"]);
                     break; 
                 case "sales.brand":
-                    propertyArr.push(["商品品牌: ", v.sales.brand, "grey"]);
+                    propertyArr.push(["商品品牌: ", v.sales.brand.name, "grey"]);
                     break; 
                 case "sales.salesman.currentName":
                     propertyArr.push(["渠道: ", v.sales.salesman.currentName, "grey"]);

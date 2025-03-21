@@ -69,6 +69,8 @@ public class CustomerChanceVO implements Serializable {
 
 	private String comment;
 
+	private String annotate;
+
 	private Integer company;
 
 	public CustomerChanceVO() {
@@ -311,6 +313,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getAnnotate() {
+		return annotate;
+	}
+
+	public void setAnnotate(String annotate) {
+		this.annotate = annotate;
 	}
 
 	public Integer getCompany() {

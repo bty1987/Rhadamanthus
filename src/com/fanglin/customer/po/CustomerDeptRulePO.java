@@ -33,6 +33,12 @@ public class CustomerDeptRulePO implements Serializable {
 
 	public static final short TYPE_RULE_INT = 1;
 
+	public static final short FOCUS_COM_INT = 0;
+
+	public static final short FOCUS_AREA_INT = 1;
+
+	public static final short FOCUS_DEPT_INT = 2;
+
 	private long cdrid;
 
 	private String name;
@@ -44,6 +50,8 @@ public class CustomerDeptRulePO implements Serializable {
 	private short atttype;
 
 	private DecorationBusitypePO busitype;
+
+	private short focus;
 
 	private UserPO creater;
 
@@ -111,6 +119,15 @@ public class CustomerDeptRulePO implements Serializable {
 
 	public void setBusitype(DecorationBusitypePO busitype) {
 		this.busitype = busitype;
+	}
+
+	@Column(name = "focus")
+	public short getFocus() {
+		return focus;
+	}
+
+	public void setFocus(short focus) {
+		this.focus = focus;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

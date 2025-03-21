@@ -39,7 +39,8 @@ $(function() {
         "referMoney": utils.changeThrDecimal(data.depositpay),
         "capitalize": utils.getCNMoney(utils.changeThrDecimal(data.depositpay)),
         "salesItems": [],
-        "title": params.company.fullname + "主材代购确认单-定金"
+        "title": params.company.fullname + "主材代购确认单-定金",
+        "type": data.type
     };
 
     com.post(querySalesItemBySid, {
@@ -59,7 +60,7 @@ $(function() {
         var img = $('<img/>').css("position", "absolute").css("top", "50px").css("left", "50px").appendTo(div);
         com.showImg(img, data.supplier.userPhoto, 200, 200, '');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
-        var caption = $('<caption style="line-height: 65px;font-size:23px; font-weight:bolder">商品销售单</caption>').appendTo(table);
+        var caption = $('<caption style="line-height: 65px;font-size:23px; font-weight:bolder"></caption>').html((printer.args.type == 1 ? "补贴" : "") + "商品销售单").appendTo(table);
 
         var tr28 = $('<tr style="height: 70px;"></tr>').appendTo(table);
         var td55 = $('<td rowspan="3"></td>').appendTo(tr28);
@@ -105,7 +106,7 @@ $(function() {
 
             moneryName = "实收金额";
             netReceipts = utils.changeThrDecimal(data.fullpay);
-            var tr8 = $('<tr style="border: 1px solid;height: 25px;text-align: center;  font-size: 13px;"></tr>').appendTo(table);
+            var tr8 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
 
             var td24 = $('<td colspan="3" style="border: 1px solid;"></td>').text("商品名称").appendTo(tr8);
             var td25 = $('<td style="border: 1px solid;"></td>').text("规格").appendTo(tr8);
@@ -166,7 +167,7 @@ $(function() {
         var div2 = $('<div></div>').appendTo(td37);
 
         com.post(api.data.queryTalking, {
-            "types[0]": 6
+            "types[0]": printer.args.type == 1 ? 8 : 6
         }, function(v) {
 
             var talkings = v.talkings
@@ -186,10 +187,10 @@ $(function() {
 
         var tr23 = $('<tr style="border: 1px solid; text-align: center; font-size: 10px;"></tr>').appendTo(table);
         var td48 = $('<td style="border: 1px solid;"></td>').text("特殊说明:").appendTo(tr23);
-        var option = {
+        
+        com.post(api.data.queryBrandByBid, {
             "brand.bid": data.bid
-        };
-        com.post(api.data.queryBrandByBid, option, function(v) {
+        }, function(v) {
 
             var td49 = $('<td colspan="7" style="border: 1px solid;"></td>').text(v.brand.comment == null ? "" : v.brand.comment).appendTo(tr23);
             var td18 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').text(v.brand.agentName == null ? "" : v.brand.agentName).appendTo(tr5);

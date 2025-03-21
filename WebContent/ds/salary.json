@@ -21,7 +21,11 @@
     {"key": "7", "name": "工具押金","oneType":"3", "status": "1"},
     {"key": "8", "name": "借款","oneType":"3", "status": "1"},
     {"key": "9", "name": "工人家属保险","oneType":"3", "status": "1"},
-    {"key": "10", "name": "附加项","oneType":"0", "status": "0"}
+    {"key": "10", "name": "附加项","oneType":"0", "status": "0"},
+    {"key": "11", "name": "预支工费","oneType":"0", "status": "0"},
+    {"key": "12", "name": "运费","oneType":"0", "status": "0"},
+    {"key": "13", "name": "上楼费","oneType":"0", "status": "0"},
+    {"key": "14", "name": "工人维修款","oneType":"0", "status": "0"}
   ],
   "type":[
     {"id": 0, "name": "加"},

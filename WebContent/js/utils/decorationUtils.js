@@ -353,7 +353,7 @@ var decorationUtils = {
                 if (v.status == 0)
                     return true;
                 if (v.sales.type == 1) {
-                    v.sales.brand = v.sales.brand + '(补贴)';
+                    v.sales.brand.name = v.sales.brand.name + '(补贴)';
                 }
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
@@ -369,7 +369,7 @@ var decorationUtils = {
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-                var propertyArr = [["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand, "grey"], ["应收额:", v.referMoney, "blue"], ["实收额:", v.referMoney, "blue"], ["收款时间:", salesReceipt.collectTime, "green "], ["状态:", materialUtils.paymentStatusInit(v.status), "red"]];
+                var propertyArr = [["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand.name, "grey"], ["应收额:", v.referMoney, "blue"], ["实收额:", v.referMoney, "blue"], ["收款时间:", salesReceipt.collectTime, "green "], ["状态:", materialUtils.paymentStatusInit(v.status), "red"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -417,7 +417,7 @@ var decorationUtils = {
                     return true;
                 }
 
-                var $salesBrands = com.focusPage("[name='" + v.sales.brand + "_s']");
+                var $salesBrands = com.focusPage("[name='" + v.sales.brand.name + "_s']");
 
                 if (![2, 7].contains(v.type) && v.status == 2) {
                     var $totalSales = [4, 5, 6].contains(v.type) ? -v.referMoney : v.referMoney;
@@ -445,15 +445,15 @@ var decorationUtils = {
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
                 } else {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand + "_s");
-                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand.name + "_s");
+                    var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand.name));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                     var _refer = [2, 3, 8].contains(v.type) ? v.referMoney : -v.referMoney;
                     var _coupon = [2, 3, 8].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
 
                     $('<b></b>').html(v.sales.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
-                    $('<b></b>').html(v.sales.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').html(v.sales.brand.name).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
@@ -2408,10 +2408,11 @@ var decorationUtils = {
             var protation = null
 
             com.post(api.quotation.queryProtationForDefaultByOrderId, {
-            	"protation.orderId": decoration.orderId
-            }, function(res){
-            	if(res.protation.pid) 
-            		protation = res.protation;
+                "protation.orderId": decoration.orderId
+            }, function(res) {
+
+                if (res.protation.pid)
+                    protation = res.protation;
             }, null, false);
 
             if (utils.accMul(_discount, 10) < _discountValue || (protation && utils.accMul(_discount, 10) < protation.discount)) {
@@ -2469,7 +2470,7 @@ var decorationUtils = {
                 "quotationPrefer.advancePrefer": advancePrefer,
             };
 
-            if(parseFloat(advancePrefer) > quotationPrefer.advancePrefer && parseFloat(advancePrefer) > protation.advanceProfit){
+            if (parseFloat(advancePrefer) > quotationPrefer.advancePrefer && parseFloat(advancePrefer) > protation.advanceProfit) {
                 com.focusPage('#approveModal').modal("show");
                 decorationUtils.initApproval(params);
                 return false;

@@ -53,7 +53,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 
 		uids.add(0);
 
-		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
+		String sql = "select cur.* from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval and TIMEDIFF(now(), cur.updateTime) > '00:05:00' AND cur.uid NOT IN :uids order by curi.priority desc, cur.surplus desc limit 1";
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerUserRulePO.class);
 
@@ -74,7 +74,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int countCustomerUserRule(int company) {
 
-		String sql = "select count(*) from customer.customeruserrule where surplus >= 1000 and company = :company and status = 0";
+		String sql = "select count(*) from customer.customeruserrule where company = :company and status = 0";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
@@ -83,7 +83,7 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 	@Override
 	public int countCustomerUserRule(int company, int area) {
 
-		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.surplus >= 1000 and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval";
+		String sql = "select count(*) from customer.customeruserrule cur, customer.customeruserruleitem curi where cur.curid = curi.curid and cur.company = :company and cur.status = 0 and curi.uppval < :uppval and curi.lowval >= :lowval";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setInteger("uppval", area).setInteger("lowval", area).uniqueResult();
 
 		return count == null ? 0 : count.intValue();

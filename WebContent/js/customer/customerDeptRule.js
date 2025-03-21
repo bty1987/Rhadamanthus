@@ -13,6 +13,7 @@ jQuery(function($) {
             deptSel: com.focusPage("#deptSel", "#customerDeptRuleModal"),
             atttype: com.focusPage("#atttype", "#customerDeptRuleModal"),
             busitype: com.focusPage("#busitype", "#customerDeptRuleModal"),
+            focus: com.focusPage("#focus", "#customerDeptRuleModal"),
         },
     };
 
@@ -37,6 +38,7 @@ jQuery(function($) {
     });
 
     customerDeptRule.items.atttype.bindData(constant.customer().customerDeptRule.atttype.datas, "key", "value");
+    customerDeptRule.items.focus.bindData(constant.customer().customerDeptRule.focus.datas, "key", "value");
 
     customerDeptRule.modals.customerDeptRuleModal.on('hide.bs.modal', function(e) {
 
@@ -87,6 +89,12 @@ jQuery(function($) {
         prop: "department.status",
         clazz: "red",
         dataset: constant.personel().dept.status.keys
+    }, {
+        field: "focus",
+        name: "聚焦",
+        prop: "focus",
+        clazz: "red",
+        dataset: constant.customer().customerDeptRule.focus.keys,
     }, {
         field: "creater",
         name: "创建人",
@@ -139,6 +147,7 @@ jQuery(function($) {
             "customerDeptRule.atttype": customerDeptRule.items.atttype.val(),
             "customerDeptRule.department.did": customerDeptRule.items.deptSel.val(),
             "customerDeptRule.busitype.dbid": customerDeptRule.items.busitype.val(),
+            "customerDeptRule.focus": customerDeptRule.items.focus.val(),
         };
 
         com.post(url, options, function(res) {

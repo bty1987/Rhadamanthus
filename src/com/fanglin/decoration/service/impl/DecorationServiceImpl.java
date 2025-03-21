@@ -39,7 +39,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.dao.DecorationMeasureDao;
+import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.data.po.DecorationMeasureItemPO;
@@ -177,7 +177,7 @@ public class DecorationServiceImpl implements DecorationService {
 	private DecorationAdditionService decorationAdditionService;
 
 	@Autowired
-	private DecorationMeasureDao decorationMeasureDao;
+	private DecorationMeasureRuleDao decorationMeasureRuleDao;
 
 	@Autowired
 	private PaymentTypeDao paymentTypeDao;
@@ -1562,7 +1562,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));
 
-		List<DecorationMeasureItemPO> measures = decorationMeasureDao.queryDecorationMeasure(company);
+		List<DecorationMeasureItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
 
 		for (DecorationMeasureItemPO measure : measures) {
 			companys.add(measure.getCompany());

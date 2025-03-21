@@ -13,10 +13,17 @@ package com.fanglin.decoration.service;
 
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 
 public interface DecorationBelongService {
 
 	public List<DecorationBelongVO> queryDecorationBelong(DecorationBelongVO decorationBelongVO);
+
+	public int sendDecorationBelong(DecorationBelongVO decorationBelongVO) throws FLException;
+
+	public int confirmDecorationBelong(DecorationBelongVO decorationBelongVO) throws FLException;
+
+	public int tranDecorationBelong(String orderId, Short type, String userId) throws FLException;
 
 }

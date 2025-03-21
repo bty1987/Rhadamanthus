@@ -1648,5 +1648,31 @@ Condition.addupRule("data", {
             keyPath: "key",
             valuePath: "value"
         }
+    },
+
+    "inspect-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "inspect-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().inspect.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 });

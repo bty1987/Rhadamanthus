@@ -141,7 +141,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 		salesPaymentPO.setType(SalesPaymentPO.TYPE_DEPOSITREFUND_INT);
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(salesPO.getCategory());
-		salesPaymentPO.setBrand(salesPO.getBrand());
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());
 
 		salesPaymentPO.setCreater(approvalPO.getReceiver());
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

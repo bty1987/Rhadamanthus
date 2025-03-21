@@ -498,6 +498,10 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
+		if (customerPO.getSignno() == null || "".equals(customerPO.getSignno())) {
+			customerPO.setSignno(Signature.register(customerPO.getNo()));
+		}
+
 		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
 			return customerPO.getAuthurl();
 		}

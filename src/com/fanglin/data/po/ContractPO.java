@@ -36,6 +36,8 @@ public class ContractPO implements Serializable {
 
 	private String path;
 
+	private String videopath;
+
 	private short status;
 
 	private short atttype;
@@ -100,6 +102,15 @@ public class ContractPO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	@Column(name = "videopath")
+	public String getVideopath() {
+		return videopath;
+	}
+
+	public void setVideopath(String videopath) {
+		this.videopath = videopath;
 	}
 
 	@Column(name = "status")

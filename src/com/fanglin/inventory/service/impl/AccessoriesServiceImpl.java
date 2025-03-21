@@ -185,7 +185,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		}
 
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_COMMON_INT && constructionPO.getAccessory() != ConstructionPO.ACCESSORY_OPEN_SHORT) {
-			throw new FLException(120028, "辅料已禁用");
+			throw new FLException(120028, "工程辅料已锁定");
 		}
 
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_COMMON_INT && Arith.add(constructionPO.getAccessoryTotal(), accessoriesVO.getTotal()) > constructionPO.getAccessoryLimit()) {
@@ -279,7 +279,6 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
-	// 撤销状态
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int cancelAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
@@ -332,7 +331,6 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
-	// 拒绝状态
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int refuseAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {

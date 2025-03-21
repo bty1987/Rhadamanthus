@@ -3,6 +3,8 @@ package com.fanglin.customer.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -13,11 +15,16 @@ import com.fanglin.customer.dao.CustomerCompanyRuleDao;
 import com.fanglin.customer.po.CustomerCompanyRulePO;
 import com.fanglin.utils.Paging;
 
-@Repository("customerCompanytRuleDao")
+@Repository("customerCompanyRuleDao")
 public class CustomerCompanyRuleDaoImpl extends DaoImpl<CustomerCompanyRulePO> implements CustomerCompanyRuleDao {
+
+	public CustomerCompanyRuleDaoImpl() {
+		super(CustomerCompanyRulePO.class);
+	}
 
 	@Override
 	public List<CustomerCompanyRulePO> pageCustomerCompanyRule(Paging paging, List<Filter> filters, int company) throws FLException {
+
 		PagingQuery<CustomerCompanyRulePO> query = pagingQuery(paging, CustomerCompanyRulePO.class);
 
 		query.add(Restrictions.eq("companys", company));
@@ -27,23 +34,26 @@ public class CustomerCompanyRuleDaoImpl extends DaoImpl<CustomerCompanyRulePO> i
 		return query.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<CustomerCompanyRulePO> queryCustomerCompanyRule(Integer cid, Integer uppval, Integer lowval, Short type) {
+	@SuppressWarnings("unchecked")
+	public List<CustomerCompanyRulePO> queryCustomerCompanyRule(int company, Integer did, Integer val) {
 
-		Criteria criteria = session().createCriteria(CustomerCompanyRulePO.class).createAlias("company", "company").add(Restrictions.eq("company.cid", cid));
+		Criteria criteria = session().createCriteria(CustomerCompanyRulePO.class).createAlias("dept", "dept", CriteriaSpecification.LEFT_JOIN).add(Restrictions.eq("companys", company));
 
-		if (type != null) {
-			criteria.add(Restrictions.eq("type", type));
+		LogicalExpression area = null;
+		LogicalExpression dept = null;
+
+		if (val != null) {
+			area = Restrictions.and(Restrictions.eq("type", CustomerCompanyRulePO.TYPE_AREA_INT), Restrictions.and(Restrictions.ge("lowval", val), Restrictions.le("uppval", val)));
 		}
 
-		if (uppval != null) {
-			criteria.add(Restrictions.eq("uppval", uppval));
+		if (did != null) {
+			dept = Restrictions.and(Restrictions.eq("type", CustomerCompanyRulePO.TYPE_DEPT_INT), Restrictions.eq("dept.did", did));
 		}
 
-		if (lowval != null) {
-			criteria.add(Restrictions.eq("lowval", lowval));
-		}
+		if (area != null && dept != null) criteria.add(Restrictions.or(area, dept));
+		if (area != null && dept == null) criteria.add(area);
+		if (area == null && dept != null) criteria.add(dept);
 
 		return criteria.list();
 	}
@@ -58,10 +68,12 @@ public class CustomerCompanyRuleDaoImpl extends DaoImpl<CustomerCompanyRulePO> i
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("cusType".equals(field)) {
+			if ("type".equals(field)) {
 				query.add(query.getCriterion("type", Short.valueOf(data), op));
-			} else if ("cusAtttype".equals(field)) {
-				query.add(query.getCriterion("atttype", Short.valueOf(data), op));
+			} else if ("uppval".equals(field)) {
+				query.add(query.getCriterion("uppval", Integer.valueOf(data), op));
+			} else if ("lowval".equals(field)) {
+				query.add(query.getCriterion("lowval", Integer.valueOf(data), op));
 			}
 		}
 	}

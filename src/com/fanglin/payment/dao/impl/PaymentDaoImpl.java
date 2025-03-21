@@ -9,6 +9,7 @@
 
 package com.fanglin.payment.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -55,6 +56,16 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	@Override
 	public List<PaymentPO> queryPaymentByOrderId(String orderId) {
 		return session().createCriteria(PaymentPO.class).add(Restrictions.eq("orderId", String.valueOf(orderId))).list();
+	}
+
+	@Override
+	public int amountPayment(String orderId, Short type, Short paymentType, Short[] status) {
+
+		String sql = "SELECT SUM(p.recharge) FROM payment.payment p WHERE p.orderId = :orderId AND p.type = :type AND p.paymentType = :paymentType AND `status` IN :status";
+
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).setShort("paymentType", paymentType).setParameterList("status", status).uniqueResult();
+
+		return sqlQuery == null ? 0 : sqlQuery.intValue();
 	}
 
 	@Override

@@ -145,7 +145,7 @@ $(function() {
                     var tr5 = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>').appendTo(table);
                     var td14 = $('<td style="border: 1px solid;"></td>').text(index).appendTo(tr5);
                     var td15 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.category).appendTo(tr5);
-                    var td16 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.brand).appendTo(tr5);
+                    var td16 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.brand.name).appendTo(tr5);
                     var td17 = $('<td id="tr5_refer' + v.sales.bid + '" style="border: 1px solid;"></td>').attr("value", _refer).text(_refer).appendTo(tr5);
                     
                     $total = utils.changeThrDecimal($total + _refer);

@@ -2,7 +2,7 @@ package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
-public class DecorationMeasureVO implements Serializable {
+public class DecorationMeasureRuleVO implements Serializable {
 
 	private static final long serialVersionUID = 1289031066363118974L;
 
@@ -14,7 +14,7 @@ public class DecorationMeasureVO implements Serializable {
 
 	private String comment;
 
-	public DecorationMeasureVO() {
+	public DecorationMeasureRuleVO() {
 		super();
 	}
 

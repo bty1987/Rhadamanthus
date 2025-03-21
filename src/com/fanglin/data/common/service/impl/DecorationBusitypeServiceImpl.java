@@ -1,6 +1,7 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,12 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 	@Autowired
 	private DecorationBusitypeDao decorationBusitypeDao;
 
-	
 	@Override
 	public void pageDecorationBusitype(Paging paging, List<Filter> filters, int company) {
 
 		List<DecorationBusitypePO> decorationBusitypePOs = decorationBusitypeDao.pageDecorationBusitype(paging, filters, company);
 		List<DecorationBusitypeVO> decorationBusitypeVOs = new ArrayList<DecorationBusitypeVO>();
-		
+
 		for (DecorationBusitypePO decorationBusitypePO : decorationBusitypePOs) {
 			DecorationBusitypeVO decorationBusitypeVO = new DecorationBusitypeVO();
 
@@ -37,7 +37,7 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 
 			decorationBusitypeVOs.add(decorationBusitypeVO);
 		}
-		
+
 		paging.setData(decorationBusitypeVOs);
 	}
 
@@ -67,7 +67,7 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 
 		decorationBusitypePO.setCompany(company);
 		decorationBusitypePO.setStatus(DecorationBusitypePO.STATUS_ENABLE_INT);
-		
+
 		decorationBusitypeDao.save(decorationBusitypePO);
 		return 0;
 	}
@@ -78,12 +78,12 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 
 		DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.get(decorationBusitypeVO.getDbid());
 
-		if(decorationBusitypePO == null){
+		if (decorationBusitypePO == null) {
 			throw new FLException(130061, "业务类型不存在");
 		}
 
 		decorationBusitypePO.setStatus(decorationBusitypeVO.getStatus());
-		
+
 		decorationBusitypeDao.update(decorationBusitypePO);
 	}
 
@@ -97,8 +97,8 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 			throw new FLException(130061, "业务类型不存在");
 		}
 
-		decorationBusitypePO.setName(decorationBusitypeVO.getName());
-		
+		BeanUtil.copyPropertie(decorationBusitypeVO, decorationBusitypePO, Arrays.asList("status"));
+
 		decorationBusitypeDao.update(decorationBusitypePO);
 	}
 

@@ -35,21 +35,27 @@ import com.fanglin.utils.DateUtil;
 @Table(name = "decorationbelong", catalog = "decoration")
 public class DecorationBelongPO implements Serializable {
 
-	private static final long serialVersionUID = 11111344461146L;
+	private static final long serialVersionUID = -9133628832037246531L;
 
-	public static final Short BELONGTYPE_DESIGN_INT = 0;
+	public static final short BELONGTYPE_DESIGN_INT = 0;
 
-	public static final Short BELONGTYPE_SALESMAN_INT = 1;
+	public static final short BELONGTYPE_SALESMAN_INT = 1;
 
-	public static final Short STATUS_INVALID_INT = 0;
+	public static final short BELONGTYPE_ALL_INT = 2;
 
-	public static final Short STATUS_EFFCTIVE_INT = 1;
+	public static final short STATUS_INVALID_INT = 0;
 
-	public static final Short DEFAULTFLAG_TRUE_INT = 1;
+	public static final short STATUS_EFFCTIVE_INT = 1;
 
-	public static final Short DEFAULTFLAG_FALSE_INT = 0;
+	public static final short STATUS_CONFIRM_INT = 2;
 
-	public static final Short TYPE_RATE_INT = 1; // 默认比例为1
+	public static final short STATUS_APPROVE_INT = 3;
+
+	public static final short DEFAULTFLAG_TRUE_INT = 1;
+
+	public static final short DEFAULTFLAG_FALSE_INT = 0;
+
+	public static final short TYPE_RATE_INT = 1; // 默认比例为1
 
 	private long dbid;
 

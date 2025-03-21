@@ -8,9 +8,11 @@ jQuery(function($) {
             approveModal: com.focusPage("#approveModal"),
             firstApproveModal: com.focusPage("#firstApproveModal"),
             QRcodeModal: com.focusPage("#QRcodeModal"),
-            configModal: com.focusPage("#configModal")
+            configModal: com.focusPage("#configModal"),
+            disableModal: com.focusPage("#disableModal")
         },
         items: {
+            villageRule: com.focusPage("#villageRule"),
             region: com.focusPage("#region"),
             department: com.focusPage("#department"),
             belonger: com.focusPage("#belonger"),
@@ -42,10 +44,13 @@ jQuery(function($) {
             firstApproveComment: com.focusPage("#firstApproveComment", "#firstApproveModal"),
 
             infolist: com.focusPage("#infolist"),
+
+            annotate: com.focusPage("#annotate", "#disableModal"),
         },
 
         updateItems: {
             villageName: com.focusPage("#villageName", "#updateModal"),
+            villageRule: com.focusPage("#villageRule", "#updateModal"),
             built: com.focusPage("#built", "#updateModal"),
             unit: com.focusPage("#unit", "#updateModal"),
             floor: com.focusPage("#floor", "#updateModal"),
@@ -62,6 +67,7 @@ jQuery(function($) {
 
         approveItems: {
             villageName: com.focusPage("#villageName", "#firstApproveModal"),
+            villageRule: com.focusPage("#villageRule", "#firstApproveModal"),
             built: com.focusPage("#built", "#firstApproveModal"),
             unit: com.focusPage("#unit", "#firstApproveModal"),
             floor: com.focusPage("#floor", "#firstApproveModal"),
@@ -82,7 +88,8 @@ jQuery(function($) {
             approveBtn: com.focusPage("#approvalBtn", "#approveModal").on("click", approval),
             firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#firstApproveModal").on("click", firstApproval),
             updateBtn: com.focusPage("#updateBtn", "#updateModal").on("click", update),
-            configBtn: com.focusPage("#configBtn", "#configModal").on("click", configEvent)
+            configBtn: com.focusPage("#configBtn", "#configModal").on("click", configEvent),
+            disableBtn: com.focusPage("#disableBtn", "#disableModal").on("click", disable),
         },
 
         atttypes: [],
@@ -105,6 +112,7 @@ jQuery(function($) {
         },
 
         ccid: null,
+        vid: null,
 
         depage: params['urlLoadParams'].depage,
         confirmEventType: null,
@@ -130,11 +138,25 @@ jQuery(function($) {
 
             com.post(api.data.queryVillageByVid, {
                 "village.no": k
+
             }, function(res) {
 
+                customerChance.vid = res.village.vid
                 ruleId.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
             }, null, false);
 
+            com.post(api.data.queryVillageRule, {
+                "villageRule.vid": customerChance.vid
+            }, function(res) {
+
+                var rules = [];
+
+                $.each(res.villageRules, function(i, v) {
+
+                    rules.push(v.rule);
+                });
+                customerChance.items.villageRule.bindData(rules, "rule", "ruleContent", false).trigger("change");
+            });
             return v;
         });
     }
@@ -230,8 +252,8 @@ jQuery(function($) {
         customerChance.userRule.status == 0 ? $enable.hide() : $disable.hide();
     }
 
-//    if (customerChance.depage != "source")
-//        drawInfo();
+    // if (customerChance.depage != "source")
+    // drawInfo();
 
     var searcher = new Searcher();
 
@@ -295,6 +317,11 @@ jQuery(function($) {
 
             return info;
         },
+        clazz: "grey",
+    }, {
+        field: "houseNumber",
+        name: "楼号",
+        prop: "house.houseNumber",
         clazz: "grey",
     }, {
         field: "source",
@@ -539,11 +566,13 @@ jQuery(function($) {
             return customerChance.depage == "manage" && v.isFine == constant.customer().customerChance.ISFINE_UNFINE_INT;
         }
     }, {
-        name: "失效",
+        name: "不匹配",
         clazz: "btn-yellow",
         handle: function(v) {
 
-            disable(v.ccid);
+            customerChance.ccid = v.ccid;
+
+            customerChance.modals.disableModal.modal("show");
         },
         show: function(v) {
 
@@ -640,7 +669,8 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2;
+            // return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2;
+            return false;
         },
     }, {
         name: "审批",
@@ -668,7 +698,8 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 3 && customerChance.depage == "user";
+            // return v.status == 3 && customerChance.depage == "user";
+            return false;
         },
 
     }, {
@@ -755,21 +786,19 @@ jQuery(function($) {
         customerChance.modals.issueModal.modal("hide");
     }
 
-    function disable(ccid) {
+    function disable() {
 
         var options = {
-            "customerChance.ccid": ccid,
+            "customerChance.ccid": customerChance.ccid,
         };
 
-        com.showConfirm("确认失效机会", function() {
+        com.post(api.customer.disableCustomerChance, options, function(res) {
 
-            com.post(api.customer.disableCustomerChance, options, function(res) {
-
-                searcher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+            
+            customerChance.modals.disableModal.modal("hide");
         });
-
     }
 
     function send(v) {
@@ -876,6 +905,10 @@ jQuery(function($) {
         }
 
         var hid = checkHouse(customerChance.updateItems);
+
+        if (!hid)
+            return false;
+
         var cid = checkCustomer(customerChance.updateItems);
 
         var option = {
@@ -913,6 +946,10 @@ jQuery(function($) {
         }
 
         var hid = checkHouse(customerChance.approveItems);
+
+        if (!hid)
+            return false;
+
         var cid = checkCustomer(customerChance.approveItems);
 
         com.showConfirm("是否确认提交审批", function() {
@@ -945,9 +982,19 @@ jQuery(function($) {
     function checkHouse(items) {
 
         var hid = "";
+        var villageRule = items.villageRule.val().toString();
+        var houseNumber = "";
+
         var rulenum = [items.built.val().trim().toUpperCase(), items.builtrule.val(), items.unit.val().trim().toUpperCase(), items.unitrule.val(), items.floor.val().trim().toUpperCase(), items.floorrule.val(), items.door.val().trim().toUpperCase(), items.doorrule.val()];
 
         var houseNumber = houseUtils.creatHouseNumber(rulenum);
+
+        var regex = new RegExp(villageRule);
+
+        if (!regex.test(houseNumber)) {
+            com.showAlert(com.error, "楼号格式错误");
+            return false;
+        }
 
         var houseOption = {
             "house.village.no": com.typeahead(items.villageName),

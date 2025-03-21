@@ -25,6 +25,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -218,12 +220,16 @@ public class CompanyPO implements Serializable {
 	public void setBlock(short block) {
 		this.block = block;
 	}
-	
-	public CompanyVO ptv(CompanyVO companyVO) {
+
+	public CompanyVO ptv(CompanyVO companyVO) throws FLException {
 
 		BeanUtil.copyProperties(this, companyVO, Arrays.asList("drganization", "srganization"));
+
 		if (companyVO.getDrganization() != null) BeanUtil.copyProperties(getDrganization(), companyVO.getDrganization());
 		if (companyVO.getSrganization() != null) BeanUtil.copyProperties(getSrganization(), companyVO.getSrganization());
+
+		companyVO.setCid(CompanyServiceImpl.encode(getCid()));
+
 		return companyVO;
 	}
 

@@ -14,6 +14,8 @@ public class SoodsVO implements Serializable {
 
 	private GoodsVO goods;
 
+	private String format;
+
 	private Long qiid;
 
 	private QuotationItemVO quotationItem;
@@ -64,6 +66,14 @@ public class SoodsVO implements Serializable {
 
 	public void setGoods(GoodsVO goods) {
 		this.goods = goods;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	public Long getQiid() {

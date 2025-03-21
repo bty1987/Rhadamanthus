@@ -132,7 +132,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 		salesPaymentPO.setType(approvalSalesDiscountPO.getPaymentType());
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);// 0.销售单初始状态
 		salesPaymentPO.setCategory(salesPO.getCategory());
-		salesPaymentPO.setBrand(salesPO.getBrand());
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());
 		salesPaymentPO.setCreater(sender);
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setReferMoney(approvalSalesDiscountPO.getReferMoney());

@@ -31,7 +31,7 @@ $(function() {
 
             var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id", v.rid).attr("type", constant.sales().refunds.type.keys[v.type]).attr("createTime", v.createTime).attr('total', v.total).html('打印').appendTo($btnDiv);
 
-            var propertyArr = [["商品品类:", refund.sales.category, "grey"], ["商品品牌:", refund.sales.brand, "grey", tools.brand.info, refund.sales.bid], ["退款总额:", v.total, "blue"], ["类型:", constant.sales().refunds.type.keys[v.type], "red"], ["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId], ["创建时间:", v.createTime, "green"], ["备注:", v.comment, "grey"]];
+            var propertyArr = [["商品品类:", refund.sales.category, "grey"], ["商品品牌:", refund.sales.brand.name, "grey", tools.brand.info, refund.sales.bid], ["退款总额:", v.total, "blue"], ["类型:", constant.sales().refunds.type.keys[v.type], "red"], ["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId], ["创建时间:", v.createTime, "green"], ["备注:", v.comment, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 

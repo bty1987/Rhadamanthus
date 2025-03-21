@@ -2,6 +2,7 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.system.vo.CompanyVO;
 
 public class CustomerCompanyRuleVO implements Serializable {
@@ -12,11 +13,13 @@ public class CustomerCompanyRuleVO implements Serializable {
 
 	private CompanyVO company;
 
-	private Short type;
+	private DepartmentVO dept;
 
 	private Integer uppval;
 
 	private Integer lowval;
+
+	private Short type;
 
 	private Integer companys;
 
@@ -24,9 +27,10 @@ public class CustomerCompanyRuleVO implements Serializable {
 		super();
 	}
 
-	public CustomerCompanyRuleVO(CompanyVO company) {
+	public CustomerCompanyRuleVO(CompanyVO company, DepartmentVO dept) {
 		super();
 		this.company = company;
+		this.dept = dept;
 	}
 
 	public Long getCcrid() {
@@ -45,12 +49,12 @@ public class CustomerCompanyRuleVO implements Serializable {
 		this.company = company;
 	}
 
-	public Short getType() {
-		return type;
+	public DepartmentVO getDept() {
+		return dept;
 	}
 
-	public void setType(Short type) {
-		this.type = type;
+	public void setDept(DepartmentVO dept) {
+		this.dept = dept;
 	}
 
 	public Integer getUppval() {
@@ -67,6 +71,14 @@ public class CustomerCompanyRuleVO implements Serializable {
 
 	public void setLowval(Integer lowval) {
 		this.lowval = lowval;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Integer getCompanys() {

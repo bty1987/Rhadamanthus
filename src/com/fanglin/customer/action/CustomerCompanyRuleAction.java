@@ -39,7 +39,7 @@ public class CustomerCompanyRuleAction extends BaseListAction {
 	@Action(value = "queryCustomerCompanyRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerCompanyRule() throws FLException {
 
-		customerCompanyRules = customerCompanyRuleService.queryCustomerCompanyRule(customerCompanyRule, queryCompany());
+		customerCompanyRules = customerCompanyRuleService.queryCustomerCompanyRule(customerCompanyRule,queryCompany());
 
 		return SUCCESS;
 	}

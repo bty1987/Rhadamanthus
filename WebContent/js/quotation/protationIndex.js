@@ -116,8 +116,13 @@ $(function() {
         var discout = utils.changeThrDecimal(utils.accDiv(utils.accSub(_protation.quotePrice, preferPrice), _protation.quotePrice));
 
         discout = discout < 0 ? 0 : discout > 1 ? 1 : discout;
+        
+        if (preferPrice > _protation.quotePrice) {
+            com.showAlert(com.warning, "优惠金额不合理");
+            return false;
+        }
 
-        if (utils.accMul(discout, 10) < protation.presignProduce.discount) {
+        if (utils.accMul(discout, 10) < protation.protation.discount) {
             com.showAlert(com.warning, "优惠金额不合理");
             return false;
         }
@@ -162,8 +167,13 @@ $(function() {
         var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, preferManage), _managePrice));
 
         _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
+        
+        if (preferManage > _managePrice) {
+            com.showAlert(com.warning, "管理费优惠金额不合理");
+            return false;
+        }
 
-        if (utils.accMul(_manageDiscount, 10) < protation.presignProduce.manageDiscount) {
+        if (utils.accMul(_manageDiscount, 10) < protation.protation.manageDiscount) {
             com.showAlert(com.warning, "管理费优惠金额不合理");
             return false;
         }
@@ -173,7 +183,7 @@ $(function() {
         var total = utils.accSub(utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(_protation.quotePrice, _managePrice), _taxPrice), preferPrice), preferManage), preferAdvance);
         total = utils.changeThrDecimal(utils.accAdd(total, utils.accAdd(utils.accAdd(_protation.basicPrice, utils.accAdd(_protation.adddPrice, utils.accSub(_protation.addmPrice, utils.accAdd(utils.accAdd(_protation.subdPrice, _protation.submPrice), _protation.subcPrice)))), utils.accAdd(_protation.accmPrice, _protation.accdPrice))));
 
-        if(_protation.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT){
+        if (_protation.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
             total = Math.round(total);
         }
 
@@ -191,7 +201,7 @@ $(function() {
             "protation.totalPrice": total,
         };
 
-        if(preferAdvance > protation.protation.advanceProfit){
+        if (preferAdvance > protation.protation.advanceProfit) {
             submitApproveProtationPrefer(options);
 
             protation.modals.approveModal.modal("show");
@@ -510,7 +520,7 @@ $(function() {
             return (v.status == constant.quotation().protation.STATUS_LOCK_INT);
         }
     };
-    
+
     var btnPrefer = {
         name: "优惠",
         clazz: "btn-purple",
@@ -529,17 +539,19 @@ $(function() {
             protation.items.preferManage.val(v.manageProfit);
             protation.items.preferAdvance.val(v.advanceProfit);
 
-            if (protation.presignProduce.discount == 10)
+            console.log(protation)
+
+            if (v.discount == 10)
                 protation.items.preferPrices.attr("disabled", "disabled");
 
-            if (protation.presignProduce.manageDiscount == 10)
+            if (v.manageDiscount == 10)
                 protation.items.preferManage.attr("disabled", "disabled");
 
             protation.modals.protationPreferModal.modal("show");
 
         }
     };
-    
+
     var btnPreferMore = {
         name: "更优惠",
         clazz: "btn-purple",
@@ -559,7 +571,7 @@ $(function() {
             })
         }
     };
-    
+
     var btnManagePreferMore = {
         name: "管理更优惠",
         clazz: "btn-purple",
@@ -660,13 +672,13 @@ $(function() {
 
         if (protation.pageConfig.pageBtn.contains("unlock"))
             cardbtns.push(btnUnlock);
-        
+
         if (protation.pageConfig.pageBtn.contains("prefer"))
             cardbtns.push(btnPrefer);
-        
+
         if (protation.pageConfig.pageBtn.contains("preferMore"))
             cardbtns.push(btnPreferMore);
-        
+
         if (protation.pageConfig.pageBtn.contains("managePreferMore"))
             cardbtns.push(btnManagePreferMore);
 
@@ -991,6 +1003,15 @@ $(function() {
             show: function(v) {
 
                 return protation.pageConfig.propertyArr.contains("managePrice");
+            }
+        }, {
+            field: "manageDiscount",
+            name: "管理折扣",
+            prop: "manageDiscount",
+            clazz: "blue",
+            show: function(v) {
+
+                return protation.pageConfig.propertyArr.contains("manageDiscount");
             }
         }, {
             field: "taxRate",

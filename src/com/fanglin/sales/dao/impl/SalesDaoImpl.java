@@ -141,7 +141,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
 		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
-		query.add(Restrictions.or(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"), query.alias("brand", "brand").getCriterion("brand.ocuid", uid, "eq")));
+		query.add(Restrictions.or(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"), query.alias("brand", "brand").getCriterion("brand.supplier.uid", uid, "eq")));
 
 		queryFilterExcute(query, filters);
 
@@ -233,7 +233,10 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.alias(String.format("%sdept", prefix), "dept");
 			} else if (field.contains("department")) {
 				query.alias(String.format("%sdept", prefix), "dept");
+			}else if (field.contains("brand")) {
+				query.alias(String.format("%sbrand", prefix), "brand");
 			}
+			
 
 			if ("sales.no".equals(field)) {
 				query.add(query.getCriterion(String.format("%sno", prefix), data, op));
@@ -245,12 +248,12 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.add(query.getCriterion("village.no", data, op));
 			} else if ("sales.grade".equals(field)) {
 				query.add(query.getCriterion(String.format("%sgrade", prefix), data, op));
-			} else if ("sales.brand".equals(field)) {
-				query.add(query.getCriterion(String.format("%sbrand", prefix), data, op));
+			} else if ("sales.brand.name".equals(field)) {
+				query.add(query.getCriterion("brand.name", data, op));
 			} else if ("sales.category".equals(field)) {
 				query.add(query.getCriterion(String.format("%scategory", prefix), data, op));
-			} else if ("sales.brand.bid".equals(field)) {
-				query.add(query.getCriterion(String.format("%sbid", prefix), Long.valueOf(data), op));
+			} else if ("brand.bid".equals(field)) {
+				query.add(query.getCriterion("brand.bid", Long.valueOf(data), op));
 			} else if ("sales.status".equals(field)) {
 				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
 			} else if ("sales.type".equals(field)) {

@@ -67,8 +67,8 @@ public class ApprovalSalesRefundDaoImpl extends DaoImpl<ApprovalSalesRefundPO> i
 				query.add(query.getCriterion("sales.no", filter));
 			} else if ("sales.category".equals(field)) {
 				query.add(query.getCriterion("sales.category", filter));
-			} else if ("sales.brand".equals(field)) {
-				query.add(query.getCriterion("sales.brand", filter));
+			} else if ("sales.brand.bid".equals(field)) {
+				query.add(query.getCriterion("sales.brand.bid", Long.valueOf(data), op));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("sales.status", Short.valueOf(data), op));
 			}

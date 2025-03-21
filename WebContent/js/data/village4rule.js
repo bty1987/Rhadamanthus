@@ -2,153 +2,111 @@ jQuery(function($) {
 
     var villageRule = {
 
-        saveBtn: com.focusPage("#saveBtn"),
-        cancelBtn: com.focusPage("#cancelBtn"),
+        btns: {
+            saveItemBtn: com.focusPage("#saveItemBtn"),
+            addRuleModalBtn: com.focusPage('#addRuleModalBtn'),
+            canceItemlBtn: com.focusPage('#canceItemlBtn'),
+        },
 
         modals: {
             addRuleModal: com.focusPage("#addRuleModal")
         },
         items: {
-            ruleSel: com.focusPage("#ruleSel")
+            rule: com.focusPage("#rule", "#addRuleModal"),
+            ruleExample: com.focusPage("#ruleExample", "#addRuleModal"),
+            ruleContent: com.focusPage("#ruleContent", "#addRuleModal"),
+            rulefill: com.focusPage("#rulefill", "#addRuleModal")
         },
 
         vid: params.vid,
     };
 
-    villageRule.saveBtn.bindClick(saveData);
-
-    villageRule.modals.addRuleModal.on("hide.bs.modal", function() {
-
-        com.clearValidator();
-        com.cleanTypeahead('ruleSel');
-        com.cleanItems(villageRule.items);
-
-    });
-
-    com.initTypeahead('ruleSel', api.personel.queryUserByPinyin, "pinyinName", {
-        "user.status": "0",
-        "departmentType.name": ""
-    }, "autoFillKeyValue", "key", "value", null);
-
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var villageBase = v.village;
-            var buildingnameruleBase = v.buildingNameRule;
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.rule));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-            var propertyArr = [["楼盘名:", villageBase.name, "green"], ["建筑规则:", buildingnameruleBase.rule, "blue"], ["规则编码:", buildingnameruleBase.buildingNameRuleId, "green"], ["规则示例:", buildingnameruleBase.ruleExample, "grey"], ["规则内容:", buildingnameruleBase.ruleContent, "blue"], ["规则填充:", buildingnameruleBase.rulefill, "grey"]];
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b style="float: right"></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                if (value[3]) {
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnDel).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDel.bindClick(function() {
-
-                deleteVillageRule(v.vrid);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
     var searcher = new Searcher();
 
-    searcher.init([], "condListas", api.data.queryVillageRule, function(data) {
+    var linebtns = [{
+        name: "删除",
+        clazz: "btn-danger",
+        handle: function(v) {
 
-        displayFunc.init('resultListas', data);
+            com.post(api.data.deleteVillageRule, {
+                "villageRule.vrid": v.vrid
+            }, function(res) {
 
-    }, "pagenationas", "groupUserPostData", {
-        "villageRule.village.vid": villageRule.vid
-    }, false, null, function() {
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+        }
+    }];
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addVillageRule').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    searcher.set("condList", "pagenation", "resultLists", api.data.queryVillageRule, {
+        "villageRule.vid": villageRule.vid
+    }, null, null, "villageRules", true);
 
-        return [$adda];
+    var lineprops = [{
+        fieId: "rule.buildingNameRuleId",
+        name: "编号",
+        prop: "rule.buildingNameRuleId",
+        clazz: "blue"
+    }, {
+        fieId: "rule.rule",
+        name: "规则",
+        prop: "rule.rule",
+        clazz: "red"
+    }, {
+        fieId: "rule.ruleExample",
+        name: "示例",
+        prop: "rule.ruleExample",
+        clazz: "green"
+    }, {
+        fieId: "rule.ruleContent",
+        name: "内容",
+        prop: "rule.ruleContent",
+        clazz: "grey"
+    }, {
+        fieId: "rule.rulefill",
+        name: "填充",
+        prop: "rule.rulefill",
+        clazz: "grey"
+    }];
+
+    com.post(api.common.queryBuildingNameRule, {}, function(res) {
+
+        villageRule.items.rule.bindData(res.buildingNameRules, "id", "ruleContent", false).trigger("change");
     });
 
-    com.focusPage('#addVillageRule', '#pagenationas').click(function() {
+    searcher.line("rule.rule", lineprops, linebtns).render();
+
+    villageRule.btns.canceItemlBtn.click(function() {
+
+        com.closePopup();
+    });
+
+    villageRule.btns.addRuleModalBtn.click(function() {
 
         villageRule.modals.addRuleModal.modal("show");
     });
 
-    function deleteVillageRule(vrid) {
+    villageRule.btns.saveItemBtn.click(function() {
 
-        com.post(api.data.deleteVillageRule, {
-            "villageRule.vrid": vrid
-        }, function() {
-
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-        }, null, false);
-    }
-
-    function saveData() {
-
-        if (com.validate('form')) {
+        if (com.validate('addRuleModal')) {
             return false;
         }
 
-        var options = {
-            "villageRule.village.vid": v.vid,
-            "villageRule.rule": villageRule.items.ruleSel.val()
+        var url = api.data.addVillageRule;
+
+        var option = {
+
+            "villageRule.vid": villageRule.vid,
+            "villageRule.rule.id": villageRule.items.rule.val(),
+
         };
 
-        com.post(api.data.addVillageRule, options, function(res) {
+        com.post(url, option, function(e) {
 
+            com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-            com.showAlert(com.info, "保存成功");
 
-        }, null, false);
-        villageRule.modals.addRuleModal.modal("hide");
-    }
+            villageRule.modals.addRuleModal.modal("hide");
+        });
+    });
 });

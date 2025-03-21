@@ -325,7 +325,7 @@ $(function() {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.activity.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var propertyArr = [["装修单号:", v.sales.orderId, "grey"], ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"], ["客户名:", v.sales.customer.name, "grey"], ["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand, "grey"], ["定金:", v.sales.depositpay, "blue"], ["补款:", v.sales.fullpay, "blue"], ["定金状态:", salesActivityItem.depositpayStatus[v.sales.depositpayStatus], "red"], ["补款状态:", salesActivityItem.fullpayStatus[v.sales.fullpayStatus], "red"], ["总额:", v.sales.total, "blue"]];
+            var propertyArr = [["装修单号:", v.sales.orderId, "grey"], ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"], ["客户名:", v.sales.customer.name, "grey"], ["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand.name, "grey"], ["定金:", v.sales.depositpay, "blue"], ["补款:", v.sales.fullpay, "blue"], ["定金状态:", salesActivityItem.depositpayStatus[v.sales.depositpayStatus], "red"], ["补款状态:", salesActivityItem.fullpayStatus[v.sales.fullpayStatus], "red"], ["总额:", v.sales.total, "blue"]];
 
             $.each(propertyArr, function(index, value) {
 

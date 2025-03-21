@@ -1,33 +1,44 @@
-<div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="condListas" class="fl_search clearfix"></div> <!-- 查询条件-->
-            <div id="resultListas" class="clearfix tab-pane active"></div> <!--查询结果-->
-            <div id="pagenationas" class="fl-page-wrap clearfix"></div> <!--分页-->
-        </div>
-    </div>
-    <div class="modal fade" id="addRuleModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myRuleLabel">楼盘规则</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" id="form">
 
-                        <div class="form-group">
-                            <label for="ruleSel" class="col-sm-3 control-label no-padding-right orange">规则</label>
-                            <div class="col-md-9">
-                                <input type="text" class="col-md-4 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="ruleSel" placeholder="规则">
-                            </div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+        <div id="resultLists" class="clearfix tab-pane active"></div> <!--查询结果-->
+        
+        <div class="row" style="margin-top: 20px">
+            <div class="col-xs-12">
+                 <a class="btn btn-minier btn-primary pull-left" id="addRuleModalBtn" style="margin-right: 10px">
+                     <i class="icon-plus bigger-110"></i>
+                     <span>添加</span>
+                 </a>
+                 <a class="btn btn-minier" id="returnBtn">
+                     <i class="icon-mail-forward bigger-110"></i>
+                     <span>返回</span>
+                 </a>
+            </div>
+       </div>
+   </div>
+</div>
+
+<div class="modal fade" id="addRuleModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">楼盘规则</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="rule" class="col-sm-3 control-label no-padding-right orange">规则</label>
+                        <div class="col-md-9">
+                            <select class="col-xs-10 col-sm-6 v_required" id="rule" ></select>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveItemBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="canceItemlBtn" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

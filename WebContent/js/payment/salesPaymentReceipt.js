@@ -50,7 +50,7 @@ jQuery(function($) {
 
         for ( var i = 0; i < salesPayments.length; i++) {
             var salesPayment = salesPayments[i];
-            salesBrand = salesPayment.sales.brand;
+            salesBrand = salesPayment.sales.brand.name;
 
             commonInfo["orderId"] = salesPayment.sales.orderId;
             commonInfo["no"] = salesPayment.sales.no;

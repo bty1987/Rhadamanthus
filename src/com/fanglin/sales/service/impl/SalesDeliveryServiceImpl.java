@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
@@ -129,7 +130,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
 			salesDeliveryItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, traner);
@@ -161,7 +162,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
 			salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
@@ -208,7 +209,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
 			salesDeliveryItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CONFIRM_INT, confirmer);
@@ -255,7 +256,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_FINISH_INT);
 			salesDeliveryItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
@@ -392,7 +393,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {
 
-			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
 
 			salesDeliveryItemVOs.add(salesDeliveryItemPO.ptv(salesDeliveryItemVO));
 		}

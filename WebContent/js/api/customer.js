@@ -34,7 +34,16 @@
     },
     feedRecord: {
         url: "/views/customer/feedbackRecord.html"
-    }
+    },
+    customerCompanyRule: {
+        url: "/views/customer/customerCompanyRule.html"
+    },
+    customerprofile: {
+        url: "/views/customer/customerProfile.html"
+    },
+    customerProfile4detailIndex: {
+        url: "/views/customer/customerProfile4detail.html"
+    },
 });
 
 $.extend(api, {
@@ -149,6 +158,67 @@ $.extend(api, {
 
         queryCustomerOriginFunction: {
             url: "queryCustomerOriginFunction.do"
+        },
+
+        pageCustomerCompanyRule: {
+            url: "pageCustomerCompanyRule.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["uppval", "lowval"]
+            }]
+        },
+        queryCustomerCompanyRule: {
+            url: "queryCustomerCompanyRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerCompanyRule.uppval", "customerUserRuleItem.lowval"],
+                query: [{
+                    result: "customerCompanyRules",
+                    args: ["uppval", "lowval"]
+                }]
+            }
+        },
+        addCustomerCompanyRule: {
+            url: "addCustomerCompanyRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerCompanyRule.uppval", "customerCompanyRule.lowval"]
+            }
+        },
+        deleteCustomerCompanyRule: {
+            url: "deleteCustomerCompanyRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerCompanyRule.uppval", "customerCompanyRule.lowval"]
+            }
+        },
+
+        pageCustomerProtectRule: {
+            url: "pageCustomerProtectRule.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["uppval", "lowval", "days"]
+            }]
+        },
+        queryCustomerProtectRule: {
+            url: "queryCustomerProtectRule.do",
+            type: "query",
+            tranargs: [{
+                result: "customerProtectRules",
+                args: ["uppval", "lowval", "days"]
+            }]
+        },
+        addCustomerProtectRule: {
+            url: "addCustomerProtectRule.do",
+            type: "update",
+            tranargs: {
+                args: ["customerProtectRule.uppval", "customerProtectRule.lowval", "customerProtectRule.days"]
+            }
+        },
+        deleteCustomerProtectRule: {
+            url: "deleteCustomerProtectRule.do"
         },
 
         pageCustomerDeptRule: {
@@ -340,8 +410,22 @@ $.extend(api, {
         },
         fineCustomerChance: {
             url: "fineCustomerChance.do"
+        },      
+        pageCustomerprofile: {
+            url: "pageCustomerprofile.do"
         },
-
+        queryCustomerProfileByOrderId: {
+            url: "queryCustomerProfileByOrderId.do"
+        },
+        queryCustomerProfileByCpid: {
+            url: "queryCustomerProfileByCpid.do"
+        },
+        handleCustomerProfile: {
+            url: "handleCustomerProfile.do"
+        },
+        makeCustomerProfile: {
+            url: "makeCustomerProfile.do"
+        },
         pageVustomerByUnionId: {
             url: "pageVustomerByUnionId.do"
         },
@@ -727,34 +811,8 @@ $.extend(api, {
         },
         deleteConversation: {
             url: "deleteConversation.do"
-        },
-
-        pageCustomerProtectRule: {
-            url: "pageCustomerProtectRule.do",
-            type: "query",
-            tranargs: [{
-                result: "paging-data",
-                args: ["value", "days"]
-            }]
-        },
-        queryCustomerProtectRule: {
-            url: "queryCustomerProtectRule.do",
-            type: "query",
-            tranargs: [{
-                result: "customerProtectRules",
-                args: ["value", "days"]
-            }]
-        },
-        addCustomerProtectRule: {
-            url: "addCustomerProtectRule.do",
-            type: "update",
-            tranargs: {
-                args: ["customerProtectRule.value", "customerProtectRule.days"]
-            }
-        },
-        deleteCustomerProtectRule: {
-            url: "deleteCustomerProtectRule.do"
         }
+
     }
 });
 

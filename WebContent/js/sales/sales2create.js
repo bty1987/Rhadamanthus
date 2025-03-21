@@ -295,7 +295,7 @@ jQuery(function() {
             "sales.customer.cid": sales.customer.cid,
             "sales.guider.userId": com.typeahead("guider"),
             "sales.instorer.userId": com.typeahead("instorer"),
-            "sales.bid": sales.brand.bid,
+            "sales.brand.bid": sales.brand.bid,
             "sales.coupon": sales.rightitems.coupon.val(),
             "sales.couponInfo": '#' + sales.rightitems.couponInfo.val() + ':' + sales.rightitems.coupon.val() + '#',
             "sales.comment": sales.rightitems.comment.val(),

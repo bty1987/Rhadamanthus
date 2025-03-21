@@ -11,8 +11,10 @@ public interface CustomerProtectRuleDao extends Dao<CustomerProtectRulePO> {
 
 	public List<CustomerProtectRulePO> pageCustomerProtectRule(Paging paging, List<Filter> filters, int company);
 
-	public List<CustomerProtectRulePO> queryCustomerProtectRule(Short type, Integer value, Integer days);
+	public List<CustomerProtectRulePO> queryCustomerProtectRule(Short type, Integer uppval, Integer lowval, Integer days);
 
-	public CustomerProtectRulePO queryCustomerProtectRule(Short type, Integer value);
+	public List<CustomerProtectRulePO> queryCustomerProtectRule(Short type, Integer uppval, Integer lowval);
+
+	public CustomerProtectRulePO queryCustomerProtectRule(Short type, Long value);
 
 }
