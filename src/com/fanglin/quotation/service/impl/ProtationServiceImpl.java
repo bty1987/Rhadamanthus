@@ -184,6 +184,7 @@ public class ProtationServiceImpl implements ProtationService {
 
 		protationPO.setProduct(presignProducePO.getName());
 		protationPO.setUnitPrice(presignProducePO.getUnitPrice());
+		protationPO.setDiscount(presignProducePO.getDiscount());
 		protationPO.setManageFormula(presignProducePO.getManageFormula());
 		protationPO.setManageDiscount(presignProducePO.getManageDiscount());
 		protationPO.setCostPrice(presignProducePO.getCostPrice());

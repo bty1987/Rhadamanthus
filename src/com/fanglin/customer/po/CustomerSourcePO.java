@@ -18,6 +18,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.customer.vo.CustomerSourceVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 
@@ -68,6 +69,8 @@ public class CustomerSourcePO implements Serializable {
 	private VillagePO village;
 
 	private String houseNumber;
+
+	private DecorationBusitypePO busitype;
 
 	private String phone;
 
@@ -254,6 +257,16 @@ public class CustomerSourcePO implements Serializable {
 		this.houseNumber = houseNumber;
 	}
 
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "dbid", referencedColumnName = "dbid")
+	public DecorationBusitypePO getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(DecorationBusitypePO busitype) {
+		this.busitype = busitype;
+	}
+
 	@Column(name = "buildArea")
 	public int getBuildArea() {
 		return buildArea;
@@ -409,6 +422,8 @@ public class CustomerSourcePO implements Serializable {
 
 		if (customerSourceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerSourceVO.getHouse());
 		if (customerSourceVO.getVillage() != null && getVillage() != null) getVillage().ptv(customerSourceVO.getVillage());
+
+		if (customerSourceVO.getBusitype() != null && getBusitype() != null) BeanUtil.copyProperties(getBusitype(), customerSourceVO.getBusitype());
 
 		if (customerSourceVO.getCustomer() != null && getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerSourceVO.getCustomer());
 

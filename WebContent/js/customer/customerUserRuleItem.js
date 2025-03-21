@@ -180,8 +180,8 @@ $(function() {
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_INT) {
             com.focusPage(".deptype").show();
             com.focusPage(".deptSel").show();
-            com.focusPage(".uppval").hide();
-            com.focusPage(".lowval").hide();
+            com.focusPage(".uppval").show();
+            com.focusPage(".lowval").show();
             com.focusPage("#isDelete").prop("checked", true);
         }
     });

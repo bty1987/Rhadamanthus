@@ -68,6 +68,8 @@
             "quotationNum": 0,
         }
     };
+    
+    var pageConfig = drawNode.getConfig("customerService");
 
     quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
     quotation.items.replicaOrderId.on("blur", function() {
@@ -176,7 +178,7 @@
                 "quotation.content": quotation.items.content.val(),
             };
 
-            if(quotation.items.createOredrIdGroup.css("display") != "none"){
+            if (quotation.items.createOredrIdGroup.css("display") != "none") {
                 options["quotation.orderId"] = quotation.items.createOredrId.val();
             }
 
@@ -275,7 +277,7 @@
                 "quotation.keeprice": keeprice
             };
 
-            if(quotation.items.replicaOredrIdGroup.css("display") != "none"){
+            if (quotation.items.replicaOredrIdGroup.css("display") != "none") {
                 options["quotation.orderId"] = quotation.items.replicaOredrId.val();
             }
 
@@ -293,7 +295,7 @@
                 "quotation.keeprice": keeprice
             };
 
-            if(quotation.items.replicaOredrIdGroup.css("display") != "none"){
+            if (quotation.items.replicaOredrIdGroup.css("display") != "none") {
                 options["quotation.orderId"] = quotation.items.replicaOredrId.val();
             }
 
@@ -557,53 +559,82 @@
     };
 
     var btnPrefer = {
-            name: "优惠",
-            clazz: "btn-info",
-            handle: function(v) {
+        name: "优惠",
+        clazz: "btn-info",
+        handle: function(v) {
 
-                var managePrice = 0, quotationPrefer = null;
+            var managePrice = 0, quotationPrefer = null;
 
-                com.post(api.quotation.queryQuotationPrefer, {
-                    "quotationPrefer.qid": v.qid
-                }, function(res) {
+            com.post(api.quotation.queryQuotationPrefer, {
+                "quotationPrefer.qid": v.qid
+            }, function(res) {
 
-                    quotationPrefer = res.quotationPrefer;
+                quotationPrefer = res.quotationPrefer;
 
-                    quotation.items.produce.val(quotationPrefer.ppid ? quotationPrefer.ppid : 0);
-                    quotation.items.preferPrice.val(quotationPrefer.preferPrice ? quotationPrefer.preferPrice : 0);
-                    quotation.items.managePrefer.val(quotationPrefer.managePrefer ? quotationPrefer.managePrefer : 0);
-                    quotation.items.advancePrefer.val(quotationPrefer.advancePrefer ? quotationPrefer.advancePrefer : 0);
+                quotation.items.produce.val(quotationPrefer.ppid ? quotationPrefer.ppid : 0);
+                quotation.items.preferPrice.val(quotationPrefer.preferPrice ? quotationPrefer.preferPrice : 0);
+                quotation.items.managePrefer.val(quotationPrefer.managePrefer ? quotationPrefer.managePrefer : 0);
+                quotation.items.advancePrefer.val(quotationPrefer.advancePrefer ? quotationPrefer.advancePrefer : 0);
 
-                    if (quotationPrefer.discount && quotationPrefer.discount == 10) {
-                        com.focusPage('#preferPrice').attr("disabled", "disabled");
-                    } else {
-                    	com.focusPage('#preferPrice').removeAttr("disabled");
-                    }
+                if (quotationPrefer.discount && quotationPrefer.discount == 10) {
+                    com.focusPage('#preferPrice').attr("disabled", "disabled");
+                } else {
+                    com.focusPage('#preferPrice').removeAttr("disabled");
+                }
 
-                    if (quotationPrefer.manageDiscount && quotationPrefer.manageDiscount == 10) {
-                        com.focusPage('#managePrefer').attr("disabled", "disabled");
-                    } else {
-                    	com.focusPage('#managePrefer').removeAttr("disabled");
-                    }
+                if (quotationPrefer.manageDiscount && quotationPrefer.manageDiscount == 10) {
+                    com.focusPage('#managePrefer').attr("disabled", "disabled");
+                } else {
+                    com.focusPage('#managePrefer').removeAttr("disabled");
+                }
 
-                    quotation.items.produceShow.hide();
+                quotation.items.produceShow.hide();
 
-                    quotation.modals.quotationPreferModal.modal("show");
-                }, null, false);
+                quotation.modals.quotationPreferModal.modal("show");
+            }, null, false);
 
-                com.post(api.quotation.queryExtensionByOrderId, {
-                    "extension.orderId": v.decoration.orderId
-                }, function(res) {
-                    $.each(res.extensions, function(i, v) {
+            com.post(api.quotation.queryExtensionByOrderId, {
+                "extension.orderId": v.decoration.orderId
+            }, function(res) {
 
-                        managePrice = utils.accAdd(managePrice, v.type == constant.quotation().extension.TYPE_ADD_INT ? v.managePrice : -v.managePrice);
-                    });
+                $.each(res.extensions, function(i, v) {
 
-                }, null, false);
+                    managePrice = utils.accAdd(managePrice, v.type == constant.quotation().extension.TYPE_ADD_INT ? v.managePrice : -v.managePrice);
+                });
 
-                updateQuotationPrefer(v, quotationPrefer, managePrice);
-            }
-        };
+            }, null, false);
+
+            updateQuotationPrefer(v, quotationPrefer, managePrice);
+        }
+    };
+    
+    var btnDecoration = {
+        name: "装修单",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": v.decoration.orderId
+            }, function(res) {
+
+                var decoration = res.decoration;
+
+                params.decoration.orderId = decoration.orderId;
+                params.decoration.orderType = decoration.type;
+                params.decoration.orderTypeness = decoration.typeness;
+                params.decoration.versionId = decoration.versionId;
+                params.decoration.notSalesmanRate = decoration.notSalesmanRate;
+
+                params.decoration.viewNode = Object.values(pageConfig.nodes);
+
+                params.quotation.orderId = v.orderId;
+
+                com.popup4page("#layerPopUp", api.index.decorationDetailIndex.url, "装修单详情: " + v.orderId);
+            });
+
+            return false;
+        }
+    };
 
     if (quotation.pageType == null) {
 
@@ -664,6 +695,9 @@
         quotation.pageConfig = getConfig(params['urlLoadParams'].depage, 3);
 
         var cardbtns = [];
+        
+        if (quotation.pageConfig.pageBtn.contains("btnDecoration"))
+            cardbtns.push(btnDecoration);
 
         if (quotation.pageConfig.pageBtn.contains("view"))
             cardbtns.push(btnView);
@@ -700,7 +734,7 @@
             var $createA = $('<a></a>').addClass('btn btn-minier btn-default pull-left').attr('name', 'create').css("margin", "0px 3px");
             var $createI = $('<i></i>').addClass('icon-plus-sign bigger-110').appendTo($createA);
             var $createSpan = $('<span></span>').text('创建').appendTo($createA);
-            
+
             var $replicaA = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'replica').css("margin", "0px 3px");
             var $replicaI = $('<i></i>').addClass('icon-hdd bigger-110').appendTo($replicaA);
             var $replicaSpan = $('<span></span>').text('拷贝').appendTo($replicaA);
@@ -1056,7 +1090,7 @@
         quotation.modals.replicaQuotationModal.modal("show");
     });
 
-    function updateQuotationPrefer(v, quotationPrefer, extensionManagePrice){
+    function updateQuotationPrefer(v, quotationPrefer, extensionManagePrice) {
 
         com.focusPage('#savePreferBtn').click(function() {
 
@@ -1089,10 +1123,11 @@
             var protation = null;
 
             com.post(api.quotation.queryProtationForDefaultByOrderId, {
-            	"protation.orderId": v.decoration.orderId
-            }, function(res){
-            	if(res.protation.pid) 
-            		protation = res.protation;
+                "protation.orderId": v.decoration.orderId
+            }, function(res) {
+
+                if (res.protation.pid)
+                    protation = res.protation;
             }, null, false);
 
             if (utils.accMul(_discount, 10) < _discountValue || (protation && utils.accMul(_discount, 10) < protation.discount)) {
@@ -1156,11 +1191,11 @@
                 "quotationPrefer.advancePrefer": advancePrefer,
             };
 
-			if(parseFloat(advancePrefer) > quotationPrefer.advancePrefer && parseFloat(advancePrefer) > protation.advanceProfit){
-				submitApprovalForQuotationPrefer(v, params, quotationPrefer);
-				quotation.modals.approveModal.modal("show");
-				return false;
-			}
+            if (parseFloat(advancePrefer) > quotationPrefer.advancePrefer && parseFloat(advancePrefer) > protation.advanceProfit) {
+                submitApprovalForQuotationPrefer(v, params, quotationPrefer);
+                quotation.modals.approveModal.modal("show");
+                return false;
+            }
 
             com.post(api.quotation.updateQuotationPrefer, params, function(res) {
 
@@ -1168,7 +1203,8 @@
                 quotation.modals.quotationPreferModal.modal("hide");
             });
         });
-    };
+    }
+    ;
 
     function submitApprovalForQuotationPrefer(v, options, quotationPrefer) {
 

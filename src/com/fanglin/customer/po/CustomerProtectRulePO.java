@@ -29,7 +29,9 @@ public class CustomerProtectRulePO implements Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
-	public static final String COLUMN_VALUE_STR = "value";
+	public static final String COLUMN_UPPVAL_STR = "uppval";
+
+	public static final String COLUMN_LOWVAL_STR = "lowval";
 
 	public static final String COLUMN_DAYS_STR = "days";
 
@@ -41,13 +43,21 @@ public class CustomerProtectRulePO implements Serializable {
 
 	public static final short STATUS_DISABLE_SHORT = 1; // 失效
 
+	public static final short TYPE_AREA_INT = 0;
+
+	public static final short TYPE_PAYMENT_ADVANCE_INT = 1;
+
+	public static final short TYPE_PAYMENT_DESIGN_INT = 2;
+
 	private long cprid;
 
 	private String title;
 
 	private short type; // 0: 面积 , 1: 预付 , 2: 设计
 
-	private int value;
+	private int uppval;
+
+	private int lowval;
 
 	private int days;
 
@@ -102,13 +112,22 @@ public class CustomerProtectRulePO implements Serializable {
 		this.type = type;
 	}
 
-	@Column(name = "value")
-	public int getValue() {
-		return value;
+	@Column(name = "uppval")
+	public int getUppval() {
+		return uppval;
 	}
 
-	public void setValue(int value) {
-		this.value = value;
+	public void setUppval(int uppval) {
+		this.uppval = uppval;
+	}
+
+	@Column(name = "lowval")
+	public int getLowval() {
+		return lowval;
+	}
+
+	public void setLowval(int lowval) {
+		this.lowval = lowval;
 	}
 
 	@Column(name = "days")

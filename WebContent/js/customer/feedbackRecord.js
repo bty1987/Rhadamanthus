@@ -88,7 +88,9 @@ jQuery(function($) {
     });
 
     // 保存
-    com.focusPage("#saveBtn").click(function() {
+    com.focusPage("#saveBtn", "#vrecordModal").click(function() {
+        
+        console.log(111)
 
         if (com.validate("form")) {
             return false;

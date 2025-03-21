@@ -96,6 +96,12 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 			} else if ("user.dept.fatherDept".equals(field)) {
 				query.alias("dept.fatherDept", "fatherDept");
 				query.add(query.getCriterion("fatherDept.no", data, op));
+			} else if ("source".equals(field)) {
+				query.add(query.getCriterion("source", data, op));
+			} else if ("contact".equals(field)) {
+				query.add(query.getCriterion("contact", data, op));
+			} else if ("referOrderId".equals(field)) {
+				query.add(query.getCriterion("referOrderId", data, op));
 			}
 		}
 

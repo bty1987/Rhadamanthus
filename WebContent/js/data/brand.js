@@ -268,6 +268,15 @@ jQuery(function($) {
             instorer(v);
         }
     }, {
+        name: "回尺指标",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            params.remeasureFormatBid = v.bid;
+
+            com.popup4page("#remeasureformatPopUp", "/views/data/remeasureFormat.html", "回尺指标");
+        }
+    }, {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",

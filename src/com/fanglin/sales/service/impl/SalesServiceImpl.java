@@ -17,6 +17,7 @@ import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
@@ -108,7 +109,7 @@ public class SalesServiceImpl implements SalesService {
 
 		for (SalesPO salesPO : salesPOs) {
 
-			SalesVO salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			SalesVO salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO());
 
 			salesPO.ptv(salesVO);
 
@@ -229,7 +230,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO());
 
 		salesPO.ptv(salesVO);
 
@@ -245,7 +246,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO());
 
 		salesPO.ptv(salesVO);
 
@@ -296,12 +297,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO(), new UserPO());
+		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO(), new UserPO(), new BrandPO());
 
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
-		BrandPO brandPO = brandDao.get(salesVO.getBid());
+		BrandPO brandPO = brandDao.get(salesVO.getBrand().getBid());
 		UserPO supplier = userDao.queryUserByUserId(salesVO.getSupplier().getUserId());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
@@ -323,7 +324,7 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setGuideDept(guider.getDept());
 		salesPO.setHouse(decorationPO.getHouse());
 		salesPO.setCustomer(decorationPO.getCustomer());
-		salesPO.setBrand(brandPO.getName());
+		salesPO.setBrand(brandPO);
 		salesPO.setCategory(brandPO.getCategory().getName());
 
 		salesPO.setAmount(salesVO.getTotal());
@@ -589,7 +590,7 @@ public class SalesServiceImpl implements SalesService {
 		salesPaymentPO.setType(SalesPaymentPO.TYPE_REPLENISHMENT_INT);
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
 		salesPaymentPO.setCategory(salesPO.getCategory());
-		salesPaymentPO.setBrand(salesPO.getBrand());
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());
 		salesPaymentPO.setCreater(operater);
 		salesPaymentPO.setCreateTime(current);
 		salesPaymentPO.setReferMoney(Math.abs(salesPO.getTotal()));

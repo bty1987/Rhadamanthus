@@ -163,7 +163,7 @@ public class SalesKingdeeServiceImpl implements SalesKingdeeService {
 
 			SalesPO sales = salesPaymentPO.getSales();
 
-			BrandPO brands = brandDao.get(sales.getBid());
+			BrandPO brands = brandDao.get(sales.getBrand().getBid());
 			String brandBatch = brands.getKino(); // 品牌
 			String supplierBatch = brands.getSupplier().getOldUserId(); // 厂商 TODO
 
@@ -232,7 +232,7 @@ public class SalesKingdeeServiceImpl implements SalesKingdeeService {
 
 		String purpose = systemConfigDao.querySystemConfig("replaceMaterial", salesPO.getPompany()).getValue(); // 收款用途 1004-代收主材款
 
-		BrandPO brands = brandDao.get(salesPO.getBid());
+		BrandPO brands = brandDao.get(salesPO.getBrand().getBid());
 		String brand = brands.getKino(); // 品牌
 		String supplier = brands.getSupplier().getOldUserId(); // 厂商 TODO
 

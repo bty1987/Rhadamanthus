@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -50,9 +51,7 @@ public class SalesVO implements Serializable {
 
 	private String category;
 
-	private Long bid;
-
-	private String brand;
+	private BrandVO brand;
 
 	private String comment;
 
@@ -106,7 +105,7 @@ public class SalesVO implements Serializable {
 		super();
 	}
 
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer) {
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer,BrandVO brand) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -116,9 +115,10 @@ public class SalesVO implements Serializable {
 		this.guider = guider;
 		this.guideDept = guideDept;
 		this.instorer = instorer;
+		this.brand = brand;
 	}
 
-	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher, UserBaseVO creater) {
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO guider, DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher, UserBaseVO creater,BrandVO brand) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -131,6 +131,7 @@ public class SalesVO implements Serializable {
 		this.supplier = supplier;
 		this.finisher = finisher;
 		this.creater = creater;
+		this.brand = brand;
 	}
 
 	public Long getSid() {
@@ -277,19 +278,11 @@ public class SalesVO implements Serializable {
 		this.category = category;
 	}
 
-	public Long getBid() {
-		return bid;
-	}
-
-	public void setBid(Long bid) {
-		this.bid = bid;
-	}
-
-	public String getBrand() {
+	public BrandVO getBrand() {
 		return brand;
 	}
 
-	public void setBrand(String brand) {
+	public void setBrand(BrandVO brand) {
 		this.brand = brand;
 	}
 

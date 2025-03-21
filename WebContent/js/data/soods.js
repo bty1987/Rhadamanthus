@@ -9,6 +9,7 @@ $(function() {
             cost: com.focusPage("#cost"),
             balance: com.focusPage("#balance"),
             goods: com.focusPage("#goodsName"),
+            format: com.focusPage('#format'),
             name: com.focusPage("#name"),
             quote: com.focusPage("#quote"),
             num: com.focusPage("#num"),
@@ -22,6 +23,7 @@ $(function() {
 
         uitems: {
             uSoodsName: com.focusPage("#uSoodsName"),
+            uFormat: com.focusPage("#uFormat"),
             uSelling: com.focusPage("#uSelling"),
             uCost: com.focusPage("#uCost"),
             uBalance: com.focusPage("#uBalance")
@@ -178,6 +180,7 @@ $(function() {
             $btnCompile.click(function() {
 
                 soods.uitems.uSoodsName.val(v.name);
+                soods.uitems.uFormat.val(v.format);
                 soods.uitems.uSelling.val(v.selling);
                 soods.uitems.uCost.val(v.cost);
                 soods.uitems.uBalance.val(v.balance);
@@ -348,7 +351,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["选材: ", 'name'], ["商品: ", 'goods.name'], ["选材ID: ", 'sid'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
+                column: [["选材: ", 'name'], ["商品: ", 'goods.name'], ["选材ID: ", 'sid'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["规格: ", 'format'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
                 list: res.paging.data
             }, function(v) {
 
@@ -375,6 +378,7 @@ $(function() {
         var option = {
             "soods.sid": soods.sid,
             "soods.name": soods.uitems.uSoodsName.val(),
+            "soods.format": soods.uitems.uFormat.val(),
             "soods.selling": soods.uitems.uSelling.val(),
             "soods.cost": soods.uitems.uCost.val(),
             "soods.balance": soods.uitems.uBalance.val()
@@ -406,6 +410,7 @@ $(function() {
         var option = {
             "soods.name": soods.items.soodsName.val(),
             "soods.goods.gid": gid,
+            "soods.format": soods.items.format.val(),
             "soods.num": soods.items.soodsnum.val(),
             "soods.selling": soods.items.selling.val(),
             "soods.cost": soods.items.cost.val(),
@@ -419,6 +424,7 @@ $(function() {
             soods.addSoodsModal.modal("hide");
         });
     }
+    
     // 显示图片
     function managedrawing(sid) {
 

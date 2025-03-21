@@ -35,6 +35,10 @@ $(function() {
             exportBtn: com.focusPage("#exportBtn")
         },
 
+        modals : {
+            drawingGoodsModal: com.focusPage("#drawingGoodsModal")
+        },
+
         pageType: params['urlLoadParams'].type
     };
 
@@ -70,16 +74,18 @@ $(function() {
         var thrKinds = [];
 
         $.each(res.goodsKinds, function(i, v) {
-            switch (v.level) {
-                case 1:
-                    oneKinds.push({"key": v.gkid, "value": v.name});
-                    break;
-                case 2:
-                    twoKinds.push({"key": v.gkid, "value": v.name});
-                    break;
-                case 3:
-                    thrKinds.push({"key": v.gkid, "value": v.name});
-                    break;
+            if (v.status == 0) {
+                switch (v.level) {
+                    case 1:
+                        oneKinds.push({"key": v.gkid, "value": v.name});
+                        break;
+                    case 2:
+                        twoKinds.push({"key": v.gkid, "value": v.name});
+                        break;
+                    case 3:
+                        thrKinds.push({"key": v.gkid, "value": v.name});
+                        break;
+                }
             }
         });
         goods.items.onekind.bindData(oneKinds, 'key', 'value');
@@ -116,6 +122,8 @@ $(function() {
 
         return v;
     });
+
+    initUploadBtn();
 
     var searcher = new Searcher();
 
@@ -199,6 +207,10 @@ $(function() {
     }
 
     var lineprops = [{
+        field: "path",
+        type: "img",
+        prop: "path"
+    },{
         field: "no",
         name: "编号",
         prop: "no",
@@ -352,6 +364,30 @@ $(function() {
         show: function(v) {
 
             return goods.pageType == "senior" || !goods.pageType;
+        }
+    }, {
+        name: "图片",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            goods.gid = v.gid;
+
+            com.focusPage('#goodsDrawing').html("");
+
+            com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": v.gid, "dataDrawing.type": 2}, function(data) {
+
+                var dataDrawings = data.dataDrawings;
+
+                if (dataDrawings && dataDrawings.length > 0) {
+                    $.each(dataDrawings, function(i, value) {
+
+                        appendGalleryElement("goodsDrawing", value);
+                    });
+                    com.popup4photos("#goodsDrawing");
+                }
+            }, null, false);
+
+            goods.modals.drawingGoodsModal.modal("show");
         }
     }, {
         name: "状态",
@@ -744,5 +780,72 @@ $(function() {
 
         0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
     });
+
+    // 上传图片
+    function initUploadBtn() {
+
+        com.uploadify("#goodsUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 1, function(data) {
+
+            var options = {};
+
+            options["dataDrawing.sid"] = goods.gid;
+            options["dataDrawing.name"] = data.strutsUploadsFileName;
+            options["dataDrawing.drawingUrl"] = data.resUrl;
+            options["dataDrawing.drawingType"] = 0;
+            options["dataDrawing.type"] = 2;
+            options["dataDrawing.filesize"] = data.filesize;
+
+            com.post(api.communion.addDataDrawing, options, function(res) {
+
+                var drawing = res.dataDrawing;
+
+                appendGalleryElement("goodsDrawing", drawing);
+                com.popup4photos("#goodsDrawing");
+            });
+
+            searcher.doSearch();
+        });
+    }
+
+    function appendGalleryElement(galleryId, value) {
+
+        var gallery = com.focusPage("#" + galleryId);
+
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.ddid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+
+        com.showImg(img, value.drawingUrl, 150, 150, value.name, null, value.drawingType);
+
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
+            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": value.ddid}, function(res) {
+                com.focusPage("#gallery_li" + value.ddid).remove();
+            });
+
+        }).appendTo(toolsDiv);
+
+        var goodsUrl = $("<a></a>").attr("href", "#").on("click", function() {
+
+            var option = {
+                "goods.gid": goods.gid,
+                "goods.path": value.drawingUrl
+            };
+
+            com.post(api.data.updateGoods, option, function(e) {
+
+                searcher.doSearch();
+                com.showAlert(com.info, "操作成功");
+            });
+
+        }).appendTo(toolsDiv);
+
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+        $("<i></i>").addClass("icon-plus green").appendTo(goodsUrl);
+    }
 
 });

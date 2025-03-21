@@ -55,7 +55,7 @@ $(function() {
             }], ["楼盘地址:", v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber, "grey", function(btn) {
 
                 tools.house.info(btn, v.salesBalance.sales.house.hid);
-            }], ["品类:", v.salesBalance.sales.category, "grey"], ["品牌:", v.salesBalance.sales.brand, "grey"], ["类型:", balanceSalesBalance.types[v.salesBalance.type], "red"], ["结算值:", v.salesBalance.pbalance, "blue"], ["一类:", constant.sales().salesBalance.onetype.keys[v.salesBalance.onetype], "red"], ["状态:", constant.balance().balanceSales.status.keys[v.salesBalance.status], "red"]];
+            }], ["品类:", v.salesBalance.sales.category, "grey"], ["品牌:", v.salesBalance.sales.brand.name, "grey"], ["类型:", balanceSalesBalance.types[v.salesBalance.type], "red"], ["结算值:", v.salesBalance.pbalance, "blue"], ["一类:", constant.sales().salesBalance.onetype.keys[v.salesBalance.onetype], "red"], ["状态:", constant.balance().balanceSales.status.keys[v.salesBalance.status], "red"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -242,7 +242,7 @@ $(function() {
             }), function(res) {
 
                 $.exceler({
-                    column: [['销售单号', 'salesBalance.sales.no'], ['装修单号', 'salesBalance.sales.orderId'], ['楼盘地址', 'address'], ['品类', 'salesBalance.sales.category'], ['品牌', 'salesBalance.sales.brand'], ['类型', 'salesBalance.type'], ['结算值', 'salesBalance.pbalance'], ['一类', 'salesBalance.onetype'], ['状态', 'salesBalance.status'], ['供应商减免金额', 'venderMaling'], ['折扣/抹零金额', 'salesBalance.allowance'], ['销售收入', 'salesRevenue'], ['销售金额', 'salesAmount'], ['销售成本', 'salesBalance.pbalance'], ['应付账款', 'accountsPayable'], ['结算利润', 'settlementProfit'], ['公司利润', 'corporateProfits'], ['收款时间', 'salesBalance.createTime'], ['销售成本比例', 'salesCostRatio'], ['结算利润占比', 'proportionOfSettlementProfit'], ['公司利润占比', 'comProfits'], ['主材打折占比', 'discountProportionOfMainMaterials']],
+                    column: [['销售单号', 'salesBalance.sales.no'], ['装修单号', 'salesBalance.sales.orderId'], ['楼盘地址', 'address'], ['品类', 'salesBalance.sales.category'], ['品牌', 'salesBalance.sales.brand.name'], ['类型', 'salesBalance.type'], ['结算值', 'salesBalance.pbalance'], ['一类', 'salesBalance.onetype'], ['状态', 'salesBalance.status'], ['供应商减免金额', 'venderMaling'], ['折扣/抹零金额', 'salesBalance.allowance'], ['销售收入', 'salesRevenue'], ['销售金额', 'salesAmount'], ['销售成本', 'salesBalance.pbalance'], ['应付账款', 'accountsPayable'], ['结算利润', 'settlementProfit'], ['公司利润', 'corporateProfits'], ['收款时间', 'salesBalance.createTime'], ['销售成本比例', 'salesCostRatio'], ['结算利润占比', 'proportionOfSettlementProfit'], ['公司利润占比', 'comProfits'], ['主材打折占比', 'discountProportionOfMainMaterials']],
                     list: res.paging.data,
                 }, function(v) {
 

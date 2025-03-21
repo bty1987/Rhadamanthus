@@ -12,6 +12,6 @@ public interface CustomerCompanyRuleDao extends Dao<CustomerCompanyRulePO> {
 
 	public List<CustomerCompanyRulePO> pageCustomerCompanyRule(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public List<CustomerCompanyRulePO> queryCustomerCompanyRule(Integer cid, Integer uppval, Integer lowval, Short type);
+	public List<CustomerCompanyRulePO> queryCustomerCompanyRule(int company, Integer did, Integer val);
 
 }

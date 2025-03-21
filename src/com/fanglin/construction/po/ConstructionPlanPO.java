@@ -16,7 +16,10 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.po.ConstructionPacePO;
@@ -88,7 +91,8 @@ public class ConstructionPlanPO implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "pace")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cppid", referencedColumnName = "cpid")
 	public ConstructionPacePO getPace() {
 		return pace;
 	}

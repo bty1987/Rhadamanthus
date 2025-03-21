@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.vo.CustomerCompanyRuleVO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
@@ -24,15 +26,21 @@ public class CustomerCompanyRulePO implements Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "cid";
 
+	public static final short TYPE_AREA_INT = 0;
+
+	public static final short TYPE_DEPT_INT = 2;
+
 	private long ccrid;
 
 	private CompanyPO company;
 
-	private short type;
+	private DepartmentPO dept;
 
 	private int uppval;
 
 	private int lowval;
+
+	private short type;
 
 	private int companys;
 
@@ -57,13 +65,14 @@ public class CustomerCompanyRulePO implements Serializable {
 		this.company = company;
 	}
 
-	@Column(name = "type")
-	public short getType() {
-		return type;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "did", referencedColumnName = "did")
+	public DepartmentPO getDept() {
+		return dept;
 	}
 
-	public void setType(short type) {
-		this.type = type;
+	public void setDept(DepartmentPO dept) {
+		this.dept = dept;
 	}
 
 	@Column(name = "uppval")
@@ -84,6 +93,16 @@ public class CustomerCompanyRulePO implements Serializable {
 		this.lowval = lowval;
 	}
 
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "companys")
 	public int getCompanys() {
 		return companys;
 	}
@@ -92,13 +111,13 @@ public class CustomerCompanyRulePO implements Serializable {
 		this.companys = companys;
 	}
 
-	public CustomerCompanyRuleVO ptv(CustomerCompanyRuleVO customerCompanyRuleVO) {
+	public CustomerCompanyRuleVO ptv(CustomerCompanyRuleVO customerCompanyRuleVO) throws FLException {
 
-		BeanUtil.copyProperties(this, customerCompanyRuleVO, Arrays.asList("company"));
+		BeanUtil.copyProperties(this, customerCompanyRuleVO, Arrays.asList("company", "dept", "companys"));
 
 		if (customerCompanyRuleVO.getCompany() != null && getCompany() != null) getCompany().ptv(customerCompanyRuleVO.getCompany());
+		if (customerCompanyRuleVO.getDept() != null && getDept() != null) customerCompanyRuleVO.setDept(getDept().ptv());
 
 		return customerCompanyRuleVO;
 	}
-
 }

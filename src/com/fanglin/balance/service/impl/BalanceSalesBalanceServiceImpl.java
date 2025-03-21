@@ -13,6 +13,7 @@ import com.fanglin.balance.po.BalanceSalesBalancePO;
 import com.fanglin.balance.service.BalanceSalesBalanceService;
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.balance.vo.BalanceSalesVO;
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -57,7 +58,7 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 
 		for (BalanceSalesBalancePO balanceSalesBalancePO : balanceSalesBalancePOs) {
 
-			balanceSalesBalanceVO = new BalanceSalesBalanceVO(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO()));
+			balanceSalesBalanceVO = new BalanceSalesBalanceVO(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO()));
 
 			BeanUtil.copyProperties(balanceSalesBalancePO, balanceSalesBalanceVO, Arrays.asList("salesBalance"));
 			BeanUtil.copyProperties(balanceSalesBalancePO.getSalesBalance(), balanceSalesBalanceVO.getSalesBalance(), Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));

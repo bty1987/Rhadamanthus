@@ -8,6 +8,7 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class CustomerSourceVO implements Serializable {
@@ -25,6 +26,8 @@ public class CustomerSourceVO implements Serializable {
 	private VillageVO village;
 
 	private String houseNumber;
+
+	private DecorationBusitypeVO busitype;
 
 	private String phone;
 
@@ -76,7 +79,7 @@ public class CustomerSourceVO implements Serializable {
 		super();
 	}
 
-	public CustomerSourceVO(VillageVO village, UserBaseVO creater, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman) {
+	public CustomerSourceVO(VillageVO village, UserBaseVO creater, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman, DecorationBusitypeVO busitype) {
 		super();
 		this.village = village;
 		this.creater = creater;
@@ -84,6 +87,7 @@ public class CustomerSourceVO implements Serializable {
 		this.house = house;
 		this.designer = designer;
 		this.salesman = salesman;
+		this.busitype = busitype;
 	}
 
 	public Long getCsid() {
@@ -188,6 +192,14 @@ public class CustomerSourceVO implements Serializable {
 
 	public void setHouseNumber(String houseNumber) {
 		this.houseNumber = houseNumber;
+	}
+
+	public DecorationBusitypeVO getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(DecorationBusitypeVO busitype) {
+		this.busitype = busitype;
 	}
 
 	public Integer getBuildArea() {

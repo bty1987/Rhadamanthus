@@ -22,8 +22,10 @@ public interface DecorationBelongDao extends Dao<DecorationBelongPO> {
 
 	public List<DecorationBelongPO> queryDecorationBelongByOrderIds(List<String> orderIds);
 
-	public int changeDecorationBelongForOrderId(String newOrderId, String oldOrderId);
+	public int countDecorationBelong(String orderId, short type, short status);
 
-	public int updateDecorationBelongStatusByOrderId(String OrderId, Short status);
+	public int changeDecorationBelongForOrderId(String source, String target);
+
+	public int updateDecorationBelong(String orderId, Short type, Short source, Short target);
 
 }

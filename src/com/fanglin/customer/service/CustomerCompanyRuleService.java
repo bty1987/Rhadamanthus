@@ -11,7 +11,7 @@ public interface CustomerCompanyRuleService {
 
 	public void pageCustomerCompanyRule(Paging paging, List<Filter> filters, int cid) throws FLException;
 
-	public List<CustomerCompanyRuleVO> queryCustomerCompanyRule(CustomerCompanyRuleVO customerCompanyRule, int cid) throws FLException;
+	public List<CustomerCompanyRuleVO> queryCustomerCompanyRule(CustomerCompanyRuleVO customerCompanyRule,int company) throws FLException;
 
 	public void addCustomerCompanyRule(CustomerCompanyRuleVO customerCompanyRule, String userId, int company) throws FLException;
 

@@ -2,6 +2,8 @@ package com.fanglin.communion.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "brand", catalog = "communion")
@@ -202,4 +206,10 @@ public class BrandPO implements java.io.Serializable {
 		this.status = status;
 	}
 
+	public BrandVO ptv(BrandVO brandVO) {
+
+		BeanUtil.copyProperties(this, brandVO, Arrays.asList("category", "supplier"));
+
+		return brandVO;
+	}
 }

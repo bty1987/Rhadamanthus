@@ -181,7 +181,7 @@ $(function(){
                     return false;
                 }
 
-                productionSales.items.brand.val(data.sales.category+"-"+data.sales.brand);
+                productionSales.items.brand.val(data.sales.category+"-"+data.sales.brand.name);
                 productionSales.productionPostData["productionSales.sid"] = data.sales.sid;
                 productionSales.productionPostData["productionSales.total"] = data.sales.total;
 

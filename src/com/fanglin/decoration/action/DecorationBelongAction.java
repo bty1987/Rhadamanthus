@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationBelongService;
 import com.fanglin.decoration.vo.DecorationBelongVO;
 
@@ -42,6 +43,22 @@ public class DecorationBelongAction extends BaseListAction {
 	public String queryDecorationBelong() {
 
 		decorationBelongs = decorationBelongService.queryDecorationBelong(decorationBelong);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationBelong() throws FLException {
+
+		decorationBelongService.sendDecorationBelong(decorationBelong);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmDecorationBelong() throws FLException {
+
+		decorationBelongService.confirmDecorationBelong(decorationBelong);
 
 		return SUCCESS;
 	}

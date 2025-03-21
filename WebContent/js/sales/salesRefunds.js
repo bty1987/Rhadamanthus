@@ -19,7 +19,7 @@ jQuery(function ($) {
     }, {
         field: "brand",
         name: "商品品牌",
-        prop: "sales.brand",
+        prop: "sales.brand.name",
         clazz: "grey"
     }, {
         field: "total",

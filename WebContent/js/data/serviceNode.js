@@ -81,7 +81,7 @@
         field: "psnid ",
         name: "上级节点",
         prop: "psnid",
-        clazz: "red",
+        clazz: "grey",
         dataset: serviceNode.psnid
     }, {
         field: "attnode ",
@@ -93,13 +93,13 @@
         field: "blankNum ",
         name: "间隔天数",
         prop: "blankNum",
-        clazz: "red",
+        clazz: "blue",
         dataset: serviceNode.blankNum
     }, {
         field: "workNum ",
         name: "工期天数",
         prop: "workNum",
-        clazz: "red",
+        clazz: "blue",
         dataset: serviceNode.workNum
     }, {
         field: "loop ",

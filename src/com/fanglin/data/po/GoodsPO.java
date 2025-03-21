@@ -90,6 +90,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	private GoodsKindPO thrkind;
 
+	private String path;
+
 	private short status;
 
 	private int company;
@@ -291,6 +293,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setThrkind(GoodsKindPO thrkind) {
 		this.thrkind = thrkind;
+	}
+
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@Column(name = "status")

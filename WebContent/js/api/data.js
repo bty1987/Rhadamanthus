@@ -37,6 +37,9 @@ $.extend(api.index, {
     },
     village4rule: {
         url: "/views/data/village4rule.html"
+    },
+    inspectItem: {
+        url: "/views/data/inspectItem.html"
     }
 });
 
@@ -132,6 +135,55 @@ $.extend(api, {
         deleteBrandByBids: {
             url: "deleteBrandByBids.do",
             server: "communion"
+        },
+        pageBrandPool: {
+            url: "pageBrandPool.do"
+        },
+        queryBrandPoolByName: {
+            url: "queryBrandPoolByName.do"
+        },
+        updateBrandPoolForStatus: {
+            url: "updateBrandPoolForStatus.do"
+        },
+        addBrandPool: {
+            url: "addBrandPool.do"
+        },
+        updateBrandPool: {
+            url: "updateBrandPool.do"
+        },
+
+        queryRemeasureFormatByBid: {
+            url: "queryRemeasureFormatByBid.do",
+            type: "query",
+            tranargs: [{
+                result: "remeasureFormats",
+                args: ["value"]
+            }]
+        },
+        queryRemeasureFormatByRfid: {
+            url: "queryRemeasureFormatByRfid.do",
+            type: "query",
+            tranargs: [{
+                result: "remeasureFormat",
+                args: ["value"]
+            }]
+        },
+        addRemeasureFormat: {
+            url: "addRemeasureFormat.do",
+            type: "update",
+            tranargs: {
+                args: ["remeasureFormat.value"]
+            }
+        },
+        updateRemeasureFormat: {
+            url: "updateRemeasureFormat.do",
+            type: "update",
+            tranargs: {
+                args: ["remeasureFormat.value"]
+            }
+        },
+        updateRemeasureFormatForStatus: {
+            url: "updateRemeasureFormatForStatus.do"
         },
 
         pageCategory: {
@@ -251,15 +303,20 @@ $.extend(api, {
         },
 
         queryVillageRule: {
-            url: "queryVillageRule.do"
+            url: "queryVillageRule.do",
+            type: "query",
+            tranargs: [{
+                result: "villageRules",
+                args: ["price"]
+            }]
         },
         addVillageRule: {
             url: "addVillageRule.do"
         },
         deleteVillageRule: {
-            url: "deleteVillageRule.do",
+            url: "deleteVillageRule.do"
         },
-        
+
         addVillage: {
             url: "addVillage.do",
             server: "communion"
@@ -464,11 +521,19 @@ $.extend(api, {
                 args: ["scale"]
             }]
         },
+        fetchPaymentScaleItem: {
+            url: "fetchPaymentScaleItem.do",
+            type: "query",
+            tranargs: [{
+                result: "paymentScaleItems",
+                args: ["scale"]
+            }]
+        },
         queryPaymentScaleItem: {
             url: "queryPaymentScaleItem.do",
             type: "query",
             tranargs: [{
-                result: "paymentScaleItems",
+                result: "paymentScaleItem",
                 args: ["scale"]
             }]
         },
@@ -1625,8 +1690,69 @@ $.extend(api, {
             url: "deleteConstant.do",
             server: "communion"
         },
-        queryDecorationMeasure: {
-            url: "queryDecorationMeasure.do"
+        queryDecorationMeasureRule: {
+            url: "queryDecorationMeasureRule.do"
+        },
+
+        pageBankAccount: {
+            url: "pageBankAccount.do"
+        },
+        queryBankAccount: {
+            url: "queryBankAccount.do"
+        },
+        addBankAccount: {
+            url: "addBankAccount.do"
+        },
+        updateBankAccount: {
+            url: "updateBankAccount.do"
+        },
+        updateBankAccountForStatus: {
+            url: "updateBankAccountForStatus.do"
+        },
+
+        pageGoodsKind: {
+            url: "pageGoodsKind.do"
+        },
+        queryGoodsKind: {
+            url: "queryGoodsKind.do"
+        },
+        addGoodsKind: {
+            url: "addGoodsKind.do"
+        },
+        updateGoodsKind: {
+            url: "updateGoodsKind.do"
+        },
+        updateGoodsKindForStatus: {
+            url: "updateGoodsKindForStatus.do"
+        },
+
+        pageInspect: {
+            url: "pageInspect.do"
+        },
+        queryInspect: {
+            url: "queryInspect.do"
+        },
+        addInspect: {
+            url: "addInspect.do"
+        },
+        updateInspect: {
+            url: "updateInspect.do"
+        },
+        updateInspectForStatus: {
+            url: "updateInspectForStatus.do"
+        },
+
+        queryInspectItem: {
+            url: "queryInspectItem.do"
+        },
+        addInspectItem: {
+            url: "addInspectItem.do"
+        },
+        updateInspectItem: {
+            url: "updateInspectItem.do"
+        },
+        deleteInspectItem: {
+            url: "deleteInspectItem.do"
         }
     }
 });

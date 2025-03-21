@@ -107,6 +107,8 @@ public class CustomerChancePO implements Serializable {
 
 	private String comment;
 
+	private String annotate;
+
 	private int company;
 
 	public CustomerChancePO() {
@@ -390,6 +392,15 @@ public class CustomerChancePO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "annotate")
+	public String getAnnotate() {
+		return annotate;
+	}
+
+	public void setAnnotate(String annotate) {
+		this.annotate = annotate;
 	}
 
 	@Column(name = "company")

@@ -20,7 +20,7 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="crstomersourceDialog">创建资源</h4>
+                    <h4 class="modal-title" id="crstomersourceDialog">资源</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" id="from1">
@@ -49,19 +49,40 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right"for="customerType">客户类型</label>
+                            <label class="col-sm-3 control-label no-padding-right orange"for="customerType">客户类型</label>
                             <div class="col-sm-9">
                                 <select id="customerType" class="col-xs-10 col-sm-6 v_required"data-toggle="popover" style="min-width: 50%; width: 180px;"data-trigger='manual'></select>
                             </div>
                         </div>
                       
                          <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right"for="demand">装修需求</label>
+                            <label class="col-sm-3 control-label no-padding-right orange" for="demand">装修需求</label>
                             <div class="col-sm-9">
                                 <select id="demand" class="col-xs-10 col-sm-6 v_required"data-toggle="popover" style="min-width: 50%; width: 180px;"data-trigger='manual'></select>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="businessType">业务类型</label>
+                            <div class="col-sm-9">
+                                <select id="businessType" class="col-xs-10 col-sm-6 v_required"data-toggle="popover" style="min-width: 50%; width: 180px;"data-trigger='manual'></select>
+                            </div>
+                        </div>
                        
+                        <div class="form-group source">
+                            <label for="source" class="col-sm-3 control-label no-padding-right orange">来源方</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6" maxlength="32" id="source" />
+                            </div>
+                        </div>
+
+                        <div class="form-group contact">
+                            <label for="contact" class="col-sm-3 control-label no-padding-right orange">对接人</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6" maxlength="32" id="contact" />
+                            </div>
+                        </div>
+
                         
                         <div class="form-group hide">
                             <label for="purpose" class="col-sm-3 control-label no-padding-right">目的</label>
@@ -97,6 +118,14 @@
                                 <input type="text" class="m-wrap col-xs-6" id="villageName">
                             </div>
                         </div>
+
+                        <div class="form-group villageRule">
+                            <label class="col-sm-3 control-label no-padding-right">楼盘规则</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-6 v_required" id="villageRule" ></select>
+                            </div>
+                        </div>
+
 
                         <div class="form-group rule">
                             <label for="built" class="col-sm-3 control-label no-padding-right">楼牌号</label>
@@ -147,6 +176,49 @@
                                 <span style="margin-left: 10px; line-height: 34px">平</span>
                             </div>
                         </div>
+                        
+                        <div class="form-group" >
+                            <label class="col-sm-3 control-label no-padding-right orange" for="referCustomer">推荐客户</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" id="referCustomer" class="ace ace-switch ace-switch-5"/>
+                                <span class="lbl isOrNot"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group referCustomerInfo">
+                            <label class="col-sm-3 control-label no-padding-right orange">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="referOrderId">
+                            </div>
+                        </div>
+
+                        <div class="form-group referCustomerInfo">
+                            <label class="col-sm-3 control-label no-padding-right orange">手机号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="referPhone">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group referCustomerInfo">
+                            <label class="col-sm-3 control-label no-padding-right orange">楼盘</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="referVillage">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group referCustomerInfo">
+                            <label class="col-sm-3 control-label no-padding-right orange">楼号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="referHouseNumber">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group referCustomerInfo">
+                            <label class="col-sm-3 control-label no-padding-right orange">签单时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="m-wrap col-xs-6 v_required" id="referContractTime" readonly="readonly">
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">备注</label>
@@ -173,10 +245,17 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                        <div class="form-group busitype">
+                        <div class="form-group busitype hide">
                             <label for="busitype" class="col-sm-3 control-label no-padding-right orange">业务类型</label>
                             <div class="col-sm-9">
                                 <select class="col-xs-10 col-sm-6 v_required" id="busitype"></select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="busitype" class="col-sm-3 control-label no-padding-right orange">业务类型</label>
+                            <div class="col-sm-9">
+                                <input type="text" class=" m-wrap col-xs-6" id="busitypeInfo" readonly="readonly">
                             </div>
                         </div>
 

@@ -20,7 +20,7 @@
                 "msg": "格式不正确A-Z,0-9"
             },
             alone: true
-        }
+        },
     },
     "relationship": {
         label: "关系客户",
@@ -218,7 +218,7 @@
         submitConfig: {
             name: "source.name",
             op: "cn",
-            validate: null
+            validate: null,
         }
     },
     "chance-customer-phone": {
@@ -595,6 +595,32 @@
         type: "text",
         submitConfig: {
             name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerSource-contact": {
+        label: "对接人",
+        type: "text",
+        submitConfig: {
+            name: "contact",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerSource-source": {
+        label: "来源方",
+        type: "text",
+        submitConfig: {
+            name: "source",
+            op: "eq",
+            validate: null
+        }
+    },"customerSource-referOrderId": {
+        label: "推荐单号",
+        type: "text",
+        submitConfig: {
+            name: "referOrderId",
             op: "eq",
             validate: null
         }
@@ -1153,6 +1179,40 @@
             valuePath: "value"
         }
     },
+    "customerCompanyRule-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.customer,
+            postData: {"timestamp": new Date().getTime()},
+            listPath: "companyType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerCompanyRule-uppval": {
+        label: "起始值",
+        type: "text",
+        submitConfig: {
+            name: "uppval",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerCompanyRule-lowval": {
+        label: "终止值",
+        type: "text",
+        submitConfig: {
+            name: "lowval",
+            op: "eq",
+            validate: null
+        }
+    },
 
     "customerProtectRule-type": {
         label: "类型",
@@ -1170,12 +1230,21 @@
             valuePath: "value"
         }
     },
-    "customerProtectRule-value": {
-        label: "数值",
+    "customerProtectRule-uppval": {
+        label: "起始值",
         type: "text",
         submitConfig: {
-            name: "value",
-            op: "eq",
+            name: "uppval",
+            op: "ge",
+            validate: null
+        }
+    },
+    "customerProtectRule-lowval": {
+        label: "终止值",
+        type: "text",
+        submitConfig: {
+            name: "lowval",
+            op: "le",
             validate: null
         }
     },

@@ -25,6 +25,8 @@ public class CustomerDeptRuleVO implements Serializable {
 
 	private DecorationBusitypeVO busitype;
 
+	private Short focus;
+
 	private UserBaseVO creater;
 
 	private Timestamp createTime;
@@ -81,6 +83,14 @@ public class CustomerDeptRuleVO implements Serializable {
 
 	public void setAtttype(Short atttype) {
 		this.atttype = atttype;
+	}
+
+	public Short getFocus() {
+		return focus;
+	}
+
+	public void setFocus(Short focus) {
+		this.focus = focus;
 	}
 
 	public UserBaseVO getCreater() {

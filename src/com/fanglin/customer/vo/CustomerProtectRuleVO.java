@@ -17,7 +17,9 @@ public class CustomerProtectRuleVO implements Serializable {
 
 	private Short type;
 
-	private Integer value;
+	private Integer uppval;
+
+	private Integer lowval;
 
 	private Integer days;
 
@@ -62,12 +64,20 @@ public class CustomerProtectRuleVO implements Serializable {
 		this.type = type;
 	}
 
-	public Integer getValue() {
-		return value;
+	public Integer getUppval() {
+		return uppval;
 	}
 
-	public void setValue(Integer value) {
-		this.value = value;
+	public void setUppval(Integer uppval) {
+		this.uppval = uppval;
+	}
+
+	public Integer getLowval() {
+		return lowval;
+	}
+
+	public void setLowval(Integer lowval) {
+		this.lowval = lowval;
 	}
 
 	public Integer getDays() {

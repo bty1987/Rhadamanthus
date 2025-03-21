@@ -1,0 +1,108 @@
+<div id="quotationRtem" class="page-content">
+	<div class="row">
+		<div id="quotationRtemList">
+			<div  class="col-xs-12">
+				<div id="rtemCondList" class="fl_search clearfix"></div>
+				<div id="rtemResultList" class="clearfix tab-pane active"></div>
+				<div id="rtemPagenation" class="fl-page-wrap clearfix"></div>
+				<h3>
+					<a id="addQuotationRtemBtn" class="btn btn-minier btn-success"><i class="icon-plus bigger-110"></i>添加</a>
+				</h3>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="createQuotationRtemModal" tabindex="-1" data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="addQuotationPrice">关联报价项</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="targetItem">关联报价项</label>
+							<div class="col-sm-9">
+								<input type="text" id="targetItem" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual' disabled/>
+								<button id="addQuotationItemBtn" class="btn btn-xs btn-info col-xs-2 col-sm-2" type="button" style="padding: 5px 4px;">关联</button>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
+							<div class="col-sm-9">
+								<select id="type" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="formula">公式</label>
+							<div class="col-sm-9">
+								<textarea rows="5" maxlength="64" id="formula" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange">公式说明</label>
+							<div class="col-sm-9">
+								<ul class="list-unstyled col-xs-10 col-sm-10">
+									<li class="text-warning orange">
+										<span>支持参数包括: </span>
+									</li>
+									<li class="text-warning orange">
+										<span>支持运算符号包括: + , - , * , / , ( , )</span>
+									</li>
+									<li class="text-warning orange">
+										<span>同时支持数字作为运算元素</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="comment">说明</label>
+							<div class="col-sm-9">
+								<textarea rows="5" maxlength="64" id="comment" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveQuotationRtemBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="quotationItemsModal" tabindex="-1" data-backdrop="static">
+		<div class="modal-dialog" style="width:900px;">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="selectItemDialog">选择报价项目</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div id="itemCondList" class="fl_search clearfix"></div>
+						<div id="itemResultList" class="clearfix tab-pane active"></div>
+						<div id="itemPagenation" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript">
+	$.loadScript(['js/quotation/quotationRtem.js']);
+</script>

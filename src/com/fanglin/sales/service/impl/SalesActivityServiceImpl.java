@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
@@ -51,7 +52,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 			SalesPO salesPO = salesActivityPO.getSales();
 
-			salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
+			salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()), new ActivityVO(new UserBaseVO()));
 
 			BeanUtil.copyProperties(activityPO, salesActivityVO.getActivity(), Arrays.asList("creater"));
 
@@ -74,7 +75,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 
 		for (Iterator<Object> iterator = salesTotal.iterator(); iterator.hasNext();) {
 
-			SalesActivityVO salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
+			SalesActivityVO salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()), new ActivityVO(new UserBaseVO()));
 
 			Object[] objects = (Object[]) iterator.next();
 

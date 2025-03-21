@@ -12,22 +12,33 @@ $(function() {
         items: {
             title: com.focusPage("#title", "#customerProtectRule"),
             type: com.focusPage("#type", "#customerProtectRule"),
-            value: com.focusPage("#value", "#customerProtectRule"),
+            uppval: com.focusPage("#uppval", "#customerProtectRule"),
+            lowval: com.focusPage("#lowval", "#customerProtectRule"),
             days: com.focusPage("#days", "#customerProtectRule")
         }
     };
 
     customerProtectRule.modals.addCustomerProtectRuleModal.on("hide.bs.modal", function(a) {
+
         com.cleanItems(customerProtectRule.items);
         com.clearValidator();
     });
 
     customerProtectRule.items.type.bindData(constant.customer().customerProtectRule.type.datas, "key", "value");
 
+    customerProtectRule.items.type.on("change", function() {
+
+        if (customerProtectRule.items.type.val() == 0) {
+            com.focusPage("#uppvalDiv").removeClass("hide");
+        } else {
+            com.focusPage("#uppvalDiv").addClass("hide");
+        }
+    });
+
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerProtectRule);
-    searcher.condition(["customer-customerProtectRule-type", "customer-customerProtectRule-value", "customer-customerProtectRule-status"]);
+    searcher.condition(["customer-customerProtectRule-type", "customer-customerProtectRule-uppval", "customer-customerProtectRule-lowval", "customer-customerProtectRule-status"]);
     searcher.history("customerProtectRulePostData");
 
     searcher.button([{
@@ -44,15 +55,20 @@ $(function() {
         clazz: "red",
         dataset: constant.customer().customerProtectRule.type.keys
     }, {
-        fieId: "value",
-        name: "数值",
-        prop: "value",
+        fieId: "uppval",
+        name: "起始值",
+        prop: "uppval",
+        clazz: "blue"
+    }, {
+        fieId: "lowval",
+        name: "终止值",
+        prop: "lowval",
         clazz: "blue"
     }, {
         fieId: "days",
         name: "天数",
         prop: "days",
-        clazz: "green"
+        clazz: "blue"
     }, {
         fieId: "creater",
         name: "创建人",
@@ -75,8 +91,13 @@ $(function() {
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
+
             com.showConfirm("确认删除当前规则吗?", function(res) {
-                com.post(api.customer.deleteCustomerProtectRule, {"customerProtectRule.cprid": v.cprid}, function(res) {
+
+                com.post(api.customer.deleteCustomerProtectRule, {
+                    "customerProtectRule.cprid": v.cprid
+                }, function(res) {
+
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
@@ -90,6 +111,7 @@ $(function() {
 
     com.focusPage('#addCustomerProtectRule', '#pagenation').on("click", function() {
 
+        com.focusPage("#uppvalDiv").removeClass("hide");
         customerProtectRule.modals.addCustomerProtectRuleModal.modal("show");
     });
 
@@ -102,11 +124,16 @@ $(function() {
         var options = {
             "customerProtectRule.title": customerProtectRule.items.title.val(),
             "customerProtectRule.type": customerProtectRule.items.type.val(),
-            "customerProtectRule.value": customerProtectRule.items.value.val(),
+            "customerProtectRule.uppval": customerProtectRule.items.uppval.val(),
+            "customerProtectRule.lowval": customerProtectRule.items.lowval.val(),
             "customerProtectRule.days": customerProtectRule.items.days.val()
         };
 
-        com.post(url, options, function () {
+        if (customerProtectRule.items.uppval.val() == "")
+            options["customerProtectRule.uppval"] = customerProtectRule.items.lowval.val();
+
+        com.post(url, options, function() {
+
             searcher.doSearch();
             customerProtectRule.modals.addCustomerProtectRuleModal.modal("hide");
         });

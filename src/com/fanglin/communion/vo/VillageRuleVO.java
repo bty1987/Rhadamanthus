@@ -16,10 +16,12 @@ public class VillageRuleVO implements Serializable {
 		super();
 	}
 
+	
 	public VillageRuleVO(BuildingNameRuleVO rule) {
 		super();
 		this.rule = rule;
 	}
+
 
 	public Long getVrid() {
 		return vrid;

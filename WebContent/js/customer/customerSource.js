@@ -24,6 +24,7 @@ $(function() {
             intention: com.focusPage("#intention", "#customerSource"),
             grade: com.focusPage("#grade", "#customerSource"),
             villageName: com.focusPage("#villageName", "#customerSource"),
+            villageRule: com.focusPage("#villageRule", "#customerSource"),
             built: com.focusPage("#built", "#customerSource"),
             unit: com.focusPage("#unit", "#customerSource"),
             floor: com.focusPage("#floor", "#customerSource"),
@@ -43,8 +44,18 @@ $(function() {
             price: com.focusPage("#price", "#customerSource"),
             customerType: com.focusPage("#customerType", "#customerSource"),
             demand: com.focusPage("#demand", "#customerSource"),
+            businessType: com.focusPage("#businessType", "#customerSource"),
+            referCustomer: com.focusPage("#referCustomer", "#customerSource"),
+            referPhone: com.focusPage("#referPhone", "#customerSource"),
+            referOrderId: com.focusPage("#referOrderId", "#customerSource"),
+            referVillage: com.focusPage("#referVillage", "#customerSource"),
+            referHouseNumber: com.focusPage("#referHouseNumber", "#customerSource"),
+            referContractTime: com.focusPage("#referContractTime", "#customerSource"),
+            source: com.focusPage("#source", "#customerSource"),
+            contact: com.focusPage("#contact", "#customerSource"),
 
             busitype: com.focusPage("#busitype", "#issueCustomerChanceModal"),
+            busitypeInfo: com.focusPage("#busitypeInfo", "#issueCustomerChanceModal"),
             company: com.focusPage("#company", "#issueCustomerChanceModal"),
             region: com.focusPage("#region", "#issueCustomerChanceModal"),
             department: com.focusPage("#department", "#issueCustomerChanceModal"),
@@ -82,10 +93,15 @@ $(function() {
             rule: com.focusPage("#rule2", "#updateForHouse")
         },
 
+        vid: null,
         source: null,
         btnStatue: "open",
         rule: {
             "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
+        },
+
+        refer: {
+            orderId: null
         },
 
         type: null,
@@ -119,14 +135,19 @@ $(function() {
         });
     }
 
-    function initVillage(containId, args) {
-        
+    function initVillage(containId, ruleId, args) {
+
         com.initTypeahead(containId, api.data.queryVillageForNameByPinyin, "pinyinName", args, "autoFillKeyValue", "key", "value", function(list, k, v) {
 
             com.post(api.data.queryVillageByVid, {
                 "village.no": k
+
             }, function(res) {
-                e.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+
+                customerSource.vid = res.village.vid
+
+                if (ruleId)
+                    ruleId.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
             }, null, false);
 
             return v;
@@ -136,10 +157,246 @@ $(function() {
     bindData(customerSource.items);
     bindData(customerSource.approveItems);
     bindData(customerSource.updateHouseItems);
-    
-    initVillage(com.focusPage("#villageName", "#customerSource"), null);
-    initVillage(com.focusPage("#villageName1", "#commitFirstApprove"), null);
-    initVillage(com.focusPage("#villageName2", "#updateForHouse"), null);
+
+    initVillage(com.focusPage("#villageName", "#customerSource"), com.focusPage("#rule", "#customerSource"), null);
+    initVillage(com.focusPage("#villageName1", "#commitFirstApprove"), com.focusPage("#rule1", "#commitFirstApprove"), null);
+    initVillage(com.focusPage("#villageName2", "#updateForHouse"), com.focusPage("#rule2", "#updateForHouse"), null);
+    initVillage(com.focusPage("#referVillage", "#customerSource"), null, null);
+
+    com.post(api.customer.queryCustomerDeptRuleByDid, {
+
+        "customerDeptRule.department.did": params.userInfo.user.dept.did,
+    }, function(res) {
+
+        var busitypes = [];
+
+        $.each(res.customerDeptRules, function(i, v) {
+
+            busitypes.push(v.busitype);
+        });
+
+        customerSource.items.businessType.bindData(busitypes, "dbid", "name", false, null, "outside").trigger("change");
+    });
+
+    customerSource.items.businessType.change(function(e) {
+
+        var outside = $("#businessType option:selected").attr("other");
+
+        if (outside == 0) {
+            com.focusPage(".source", "#createsource").hide();
+            com.focusPage(".contact", "#createsource").hide();
+        } else {
+            com.focusPage(".source", "#createsource").show();
+            com.focusPage(".contact", "#createsource").show();
+        }
+    });
+
+    com.focusPage('#referCustomer').on("click", function() {
+
+        if (customerSource.items.referCustomer.prop("checked")) {
+            com.focusPage(".referCustomerInfo", "#createsource").show();
+        } else {
+            com.focusPage(".referCustomerInfo", "#createsource").hide();
+        }
+    });
+
+    customerSource.items.villageName.blur(function() {
+
+        com.post(api.data.queryVillageRule, {
+            "villageRule.vid": customerSource.vid
+        }, function(res) {
+
+            var rules = [];
+
+            $.each(res.villageRules, function(i, v) {
+
+                rules.push(v.rule);
+            });
+
+            customerSource.items.villageRule.bindData(rules, "rule", "ruleContent", false).trigger("change");
+        });
+    });
+
+    customerSource.items.referOrderId.blur(function() {
+
+        console.log("referOrderId");
+        
+        var orderId = customerSource.items.referOrderId.val();
+        
+        var options = {
+            "decoration.orderId": orderId
+        }
+        
+        com.post(api.decoration.queryDecorationForCommonByOrderId, options, function(res) {
+
+            var decoration = res.decoration;
+
+            if (decoration.orderId) {
+                customerSource.items.referOrderId.val(decoration.orderId);
+                customerSource.items.referPhone.val(decoration.customer.phone);
+
+                customerSource.refer.orderId = decoration.orderId;
+            }
+
+            if (decoration.precontractTime)
+                customerSource.items.referContractTime.val(decoration.precontractTime);
+
+            if (decoration.contractTime)
+                customerSource.items.referContractTime.val(decoration.precontractTime);
+        }, function(res){
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
+    customerSource.items.referPhone.blur(function() {
+
+        customerSource.refer.orderId = null;
+
+        var phone = customerSource.items.referPhone.val();
+
+        var options = {
+            "customerPhone": phone,
+            "paging.page": 1,
+            "paging.rows": 10,
+        }
+
+        var decoration = null;
+
+        com.post(api.decoration.pageDecorationForCustomer, options, function(res) {
+            
+            if(res.paging.totalRecords == 0) {
+                com.showAlert(com.error, "推荐客户不存在");
+                return false;
+            }
+
+            var decorations = res.paging.data;
+
+            $.each(decorations, function(i, v) {
+
+                if (v.orderId == orderId)
+                    decoration = v;
+
+                if (decoration.orderId) {
+                    customerSource.items.referOrderId.val(decoration.orderId);
+                    customerSource.items.referPhone.val(decoration.customer.phone);
+
+                    customerSource.refer.orderId = decoration.orderId;
+                }
+
+                if (decoration.precontractTime)
+                    customerSource.items.referContractTime.val(decoration.precontractTime);
+
+                if (decoration.contractTime)
+                    customerSource.items.referContractTime.val(decoration.precontractTime);
+
+                return false;
+            });
+        }, function(res){
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
+    customerSource.items.referVillage.blur(function() {
+
+        customerSource.refer.orderId = null;
+
+        var villageno = com.typeahead(customerSource.items.referVillage);
+        var housenumber = customerSource.items.referHouseNumber.val();
+
+        var options = {
+            "house.village.no": villageno,
+            "house.houseNumber": housenumber,
+            "house.status": 0,
+        };
+
+        var house = null;
+        var decoration = null;
+
+        com.post(api.data.queryHouseByNoAHnum, options, function(res) {
+
+            house = res.house;
+        }, null, false);
+
+        if (!house)
+            return false;
+
+        var options = {
+            "decoration.house.hid": house.hid
+        }
+
+        com.post(api.decoration.checkDecoration, options, function(res) {
+
+            var decoration = res.decoration;
+
+            if (decoration.orderId) {
+                customerSource.items.referOrderId.val(decoration.orderId);
+                customerSource.items.referPhone.val(decoration.customer.phone);
+
+                customerSource.refer.orderId = decoration.orderId;
+            }
+
+            if (decoration.precontractTime)
+                customerSource.items.referContractTime.val(decoration.precontractTime);
+
+            if (decoration.contractTime)
+                customerSource.items.referContractTime.val(decoration.precontractTime);
+        }, function(res){
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
+    customerSource.items.referHouseNumber.blur(function() {
+
+        customerSource.refer.orderId = null;
+
+        var villageno = com.typeahead(customerSource.items.referVillage);
+        var housenumber = customerSource.items.referHouseNumber.val();
+
+        var options = {
+            "house.village.no": villageno,
+            "house.houseNumber": housenumber,
+            "house.status": 0,
+        };
+
+        var house = null;
+        var decoration = null;
+
+        com.post(api.data.queryHouseByNoAHnum, options, function(res) {
+
+            house = res.house;
+        }, null, false);
+
+        if (!house)
+            return false;
+
+        var options = {
+            "decoration.house.hid": house.hid
+        }
+
+        com.post(api.decoration.checkDecoration, options, function(res) {
+
+            var decoration = res.decoration;
+
+            if (decoration.orderId) {
+                customerSource.items.referOrderId.val(decoration.orderId);
+                customerSource.items.referPhone.val(decoration.customer.phone);
+
+                customerSource.refer.orderId = decoration.orderId;
+            }
+
+            if (decoration.precontractTime)
+                customerSource.items.referContractTime.val(decoration.precontractTime);
+
+            if (decoration.contractTime)
+                customerSource.items.referContractTime.val(decoration.precontractTime);
+        }, function(res){
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -163,14 +420,6 @@ $(function() {
 
             customerSource.items.department.bindData(res.deptList, "did", "name", true);
         });
-    });
-
-    com.post(api.system.queryCompany, {
-        "company.atttype": "1",
-        "company.code": params.company.code
-    }, function(res) {
-
-        customerSource.items.company.bindData(res.companys, 'cid', 'name', true);
     });
 
     com.post(api.communion.queryDepartment, {
@@ -222,7 +471,7 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.base("csCondList", "csPagenation", "csResultList", api.customer.pageCustomerSource);
-    searcher.condition(["customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-creater", "customer-customerSource-createTime", "customer-customerSource-status", "customer-customerSource-customerType", "customer-customerSource-demand"]);
+    searcher.condition(["customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-contact", "customer-customerSource-source", "customer-customerSource-referOrderId", "customer-customerSource-creater", "customer-customerSource-createTime", "customer-customerSource-status", "customer-customerSource-customerType", "customer-customerSource-demand"]);
 
     searcher.button([{
         id: "createCustomerSource",
@@ -305,6 +554,11 @@ $(function() {
         prop: "buildArea",
         clazz: "blue"
     }, {
+        field: "busitype",
+        name: "业务类型",
+        prop: "busitype.name",
+        clazz: "grey"
+    }, {
         field: "freeArea",
         name: "赠送面积",
         prop: "freeArea",
@@ -357,11 +611,26 @@ $(function() {
         clazz: "red",
         dataset: constant.customer().customerSource.demand.keys
     }, {
+        field: "source",
+        name: "来源方",
+        prop: "source",
+        clazz: "red",
+    }, {
+        field: "contact",
+        name: "对接人",
+        prop: "contact",
+        clazz: "red",
+    }, {
         field: "status",
         name: "状态",
         prop: "status",
         clazz: "red",
         dataset: constant.customer().customerSource.status.keys
+    }, {
+        field: "referOrderId",
+        name: "推荐单号",
+        prop: "referOrderId",
+        clazz: "red",
     }, {
         field: "comment",
         name: "备注",
@@ -375,17 +644,19 @@ $(function() {
         handle: function(v) {
 
             customerSource.source = v;
-            
+
             com.cleanTypeahead(customerSource.updateHouseItems.villageName);
-            
-            if(v.village && v.village.parentVillage && v.village.parentVillage.vid){
-                com.focusPage("#villageName2").typeahead("args", {"village.parentVillage.vid": v.village.parentVillage.vid});
+
+            if (v.village && v.village.parentVillage && v.village.parentVillage.vid) {
+                com.focusPage("#villageName2").typeahead("args", {
+                    "village.parentVillage.vid": v.village.parentVillage.vid
+                });
             }
 
             if (v.village && v.village.vid) {
                 com.updateTypeahead(customerSource.updateHouseItems.villageName, v.village.no, v.village.name);
             }
-            
+
             customerSource.modals.updateForHouse.modal("show");
 
             return false;
@@ -401,17 +672,21 @@ $(function() {
 
             customerSource.type = "update";
             customerSource.source = v;
-            
+
             com.cleanTypeahead(customerSource.items.villageName);
-            
-            if(v.village && v.village.parentVillage && v.village.parentVillage.vid){
-                com.focusPage("#villageName").typeahead("args", {"village.parentVillage.vid": v.village.parentVillage.vid});
+
+            if (v.village && v.village.parentVillage && v.village.parentVillage.vid) {
+                com.focusPage("#villageName").typeahead("args", {
+                    "village.parentVillage.vid": v.village.parentVillage.vid
+                });
             }
 
             if (v.village && v.village.vid) {
                 com.updateTypeahead(customerSource.items.villageName, v.village.no, v.village.name);
             }
-            
+
+            com.focusPage(".referCustomerInfo", "#createsource").hide();
+
             customerSource.items.gender.prop('checked', com.genderType[v.gender]);
             customerSource.items.comment.val(v.comment);
             customerSource.items.price.val(v.price);
@@ -420,6 +695,7 @@ $(function() {
             customerSource.items.phone1.val(v.phone.substr(7, 11));
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
+            customerSource.items.businessType.val(v.busitype.dbid);
 
             customerSource.modals.createSourceModal.modal("show");
 
@@ -464,43 +740,24 @@ $(function() {
 
             com.focusPage(".busitype", "#issueCustomerChanceModal").show();
 
-            com.post(api.customer.queryCustomerDeptRuleByDid, {
-                "customerDeptRule.department.did": v.creater.dept.did,
+            com.post(api.customer.queryCustomerCompanyRule, {
+                "customerCompanyRule.uppval": customerSource.source.innerArea,
+                "customerCompanyRule.dept.did": params.userInfo.user.dept.did
             }, function(res) {
 
-                if (!res.customerDeptRules || res.customerDeptRules.length == 0) {
+                var companys = [];
 
-                    com.focusPage(".busitype", "#issueCustomerChanceModal").hide();
-                    com.focusPage(".belonger", "#issueCustomerChanceModal").show();
+                $.each(res.customerCompanyRules, function(i, v) {
 
-                    customerSource.rule = {
-                        "atttype": constant.customer().customerDeptRule.ATTTYPE_USER_INT
-                    };
-
-                    return false;
-                }
-
-                if (!res.customerDeptRules || res.customerDeptRules.length == 1) {
-
-                    com.focusPage(".busitype", "#issueCustomerChanceModal").hide();
-
-                    getRules(res.customerDeptRules[0].busitype.dbid);
-
-                    return false;
-                }
-
-                var $arr = [];
-
-                $.each(res.customerDeptRules, function(intex, value) {
-
-                    $arr.push({
-                        "dbid": value.busitype.dbid,
-                        "name": value.busitype.name
-                    });
+                    companys.push(v.company);
                 });
 
-                customerSource.items.busitype.bindData($arr, 'dbid', 'name', '请选择');
+                customerSource.items.company.bindData(companys, 'cid', 'name', true);
             });
+
+            getRules(v.busitype.dbid);
+
+            customerSource.items.busitypeInfo.val(v.busitype.name);
 
             customerSource.modals.issueCustomerChanceModal.modal("show");
 
@@ -570,8 +827,12 @@ $(function() {
 
     com.focusPage('#createCustomerSource').on("click", function() {
 
+        com.focusPage(".referCustomerInfo", "#createsource").hide();
+
         customerSource.type = "create";
+
         deleteDate();
+
         customerSource.modals.createSourceModal.modal("show");
     });
 
@@ -646,14 +907,21 @@ $(function() {
             "customerSource.phone": phone,
             "customerSource.customerType": customerSource.items.customerType.val(),
             "customerSource.demand": customerSource.items.demand.val(),
+            "customerSource.busitype.dbid": customerSource.items.businessType.val(),
             "customerSource.intention": customerSource.items.intention.val(),
             "customerSource.price": customerSource.items.price.val(),
             "customerSource.comment": customerSource.items.comment.val(),
             "customerSource.buildArea": customerSource.items.buildArea.val(),
             "customerSource.innerArea": customerSource.items.buildArea.val(),
+            "customerSource.source": customerSource.items.source.val(),
+            "customerSource.contact": customerSource.items.contact.val(),
             "customerSource.freeArea": 0,
-            "customerSource.totalArea": 0
+            "customerSource.totalArea": 0,
         };
+
+        if(customerSource.refer.orderId){
+            options["customerSource.referOrderId"] = customerSource.refer.orderId;
+        }
 
         if (villageName) {
 
@@ -661,10 +929,12 @@ $(function() {
 
                 var hid = checkHouse(customerSource.items);
 
+                if (!hid)
+                    return false;
+
                 options["customerSource.house.hid"] = hid;
 
             } else {
-
                 options["customerSource.village.no"] = com.typeahead(customerSource.items.villageName);
             }
         }
@@ -758,10 +1028,21 @@ $(function() {
     // 检查获取楼盘
     function checkHouse(items) {
 
-        var hid = "";
+        var hid = null;
+        var villageRule = items.villageRule.val().toString();
+        var houseNumber = "";
+
         var rulenum = [items.built.val().trim().toUpperCase(), items.builtrule.val(), items.unit.val().trim().toUpperCase(), items.unitrule.val(), items.floor.val().trim().toUpperCase(), items.floorrule.val(), items.door.val().trim().toUpperCase(), items.doorrule.val()];
 
         var houseNumber = houseUtils.creatHouseNumber(rulenum);
+
+        var regex = new RegExp(villageRule);
+
+        if (!regex.test(houseNumber)) {
+
+            com.showAlert(com.error, "楼号格式错误");
+            return false;
+        }
 
         var houseOption = {
             "house.village.no": com.typeahead(items.villageName),
@@ -819,6 +1100,36 @@ $(function() {
         return cid;
     }
 
+    function checkDecoration(orderId, phone, hid) {
+
+        var options = {
+            "customerPhone": phone,
+            "paging.page": 1,
+            "paging.rows": 10,
+        }
+
+        var decoration = null;
+
+        com.post(api.decoration.pageDecorationForCustomer, options, function(res) {
+
+            var decorations = res.paging.data;
+
+            $.each(decorations, function(i, v) {
+
+                if (v.orderId == orderId)
+                    decoration = v;
+            });
+
+        }, null, false);
+
+        if (!decoration) {
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        }
+
+        return true;
+    }
+
     // 提交初审
     function firstApproval() {
 
@@ -834,6 +1145,10 @@ $(function() {
         }
 
         var hid = checkHouse(customerSource.approveItems);
+
+        if (!hid)
+            return false;
+
         var cid = checkCustomer(customerSource.approveItems);
 
         com.showConfirm("是否确认提交审批", function() {
@@ -883,6 +1198,9 @@ $(function() {
             if (built || unit || floor || door) {
 
                 var hid = checkHouse(customerSource.updateHouseItems);
+
+                if (!hid)
+                    return false;
 
                 options["customerSource.house.hid"] = hid;
 

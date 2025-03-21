@@ -12,10 +12,11 @@ jQuery(function($) {
             title: com.focusPage("#title"),
             page: com.focusPage("#page"),
             path: com.focusPage("#path"),
-            atttype: com.focusPage("#atttype"),
+            videopath: com.focusPage("#videopath"),
+            atttype: com.focusPage("#atttype")
         },
 
-        cid: null,
+        cid: null
 
     };
 
@@ -31,6 +32,13 @@ jQuery(function($) {
 
         contract.items.path.val(data.resUrl);
         contract.items.filesize.val(data.filesize);
+    });
+
+    com.uploadify("#videoUpload", "上传视频", api.common.uploadOther, 'btn btn-pink', '*.mp4', {
+        'uploadType': 2
+    }, 1, function(data) {
+
+        contract.items.videopath.val(data.resUrl);
     });
 
     contract.btns.saveBtn.click(saveData);
@@ -88,7 +96,7 @@ jQuery(function($) {
             return v.status == 0 ? "启用" : "禁用";
         },
         clazz: "red"
-    }, ];
+    }];
 
     var linebtns = [{
         name: "更新",
@@ -123,8 +131,8 @@ jQuery(function($) {
         init: function(v) {
 
             return !v.status;
-        },
-    }, ];
+        }
+    }];
 
     searcher.line("name", lineprops, linebtns).render();
 
@@ -155,6 +163,7 @@ jQuery(function($) {
         contract.items.title.val(v.title);
         contract.items.page.val(v.page);
         contract.items.path.val(v.path);
+        contract.items.videopath.val(v.videopath);
         contract.items.atttype.val(v.atttype);
     }
 
@@ -170,8 +179,9 @@ jQuery(function($) {
             "contract.title": contract.items.title.val(),
             "contract.page": contract.items.page.val(),
             "contract.path": contract.items.path.val(),
+            "contract.videopath": contract.items.videopath.val(),
             "contract.url": config.server + contract.items.path.val(),
-            "contract.atttype": contract.items.atttype.val(),
+            "contract.atttype": contract.items.atttype.val()
         };
 
         if (contract.cid) {

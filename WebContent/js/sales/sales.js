@@ -205,7 +205,7 @@ $(function() {
                                 propertyArr.push(["品类:", v.category, "grey"]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.brand, "grey", tools.brand.info, v.bid]);
+                                propertyArr.push(["品牌:", v.brand.name, "grey", tools.brand.info, v.brand.bid]);
                                 break;
                             case "depositpay":
                                 propertyArr.push(["定金:", v.depositpay, "blue"]);

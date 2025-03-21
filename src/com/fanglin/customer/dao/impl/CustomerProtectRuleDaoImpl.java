@@ -36,7 +36,7 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CustomerProtectRulePO> queryCustomerProtectRule(Short type, Integer value, Integer days) {
+	public List<CustomerProtectRulePO> queryCustomerProtectRule(Short type, Integer uppval, Integer lowval, Integer days) {
 
 		Criteria criteria = session().createCriteria(CustomerDeptRulePO.class);
 
@@ -44,8 +44,12 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 			criteria.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type));
 		}
 
-		if (value != null) {
-			criteria.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_VALUE_STR, value));
+		if (uppval != null) {
+			criteria.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_UPPVAL_STR, uppval));
+		}
+
+		if (lowval != null) {
+			criteria.add(Restrictions.eq(CustomerProtectRulePO.COLUMN_LOWVAL_STR, lowval));
 		}
 
 		if (days != null) {
@@ -57,8 +61,14 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 	}
 
 	@Override
-	public CustomerProtectRulePO queryCustomerProtectRule(Short type, Integer value) {
-		return (CustomerProtectRulePO) session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type)).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_VALUE_STR, value)).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<CustomerProtectRulePO> queryCustomerProtectRule(Short type, Integer uppval, Integer lowval) {
+		return session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type)).add(Restrictions.or(Restrictions.between(CustomerProtectRulePO.COLUMN_UPPVAL_STR, uppval, lowval), Restrictions.between(CustomerProtectRulePO.COLUMN_LOWVAL_STR, uppval, lowval))).list();
+	}
+
+	@Override
+	public CustomerProtectRulePO queryCustomerProtectRule(Short type, Long value) {
+		return (CustomerProtectRulePO) session().createCriteria(CustomerProtectRulePO.class).add(Restrictions.eq(CustomerProtectRulePO.COLUMN_TYPE_STR, type)).add(Restrictions.le(CustomerProtectRulePO.COLUMN_UPPVAL_STR, value)).add(Restrictions.ge(CustomerProtectRulePO.COLUMN_LOWVAL_STR, value)).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
@@ -75,7 +85,9 @@ public class CustomerProtectRuleDaoImpl extends DaoImpl<CustomerProtectRulePO> i
 				query.add(query.getCriterion(field, data, op));
 			} else if (CustomerProtectRulePO.COLUMN_TYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
-			} else if (CustomerProtectRulePO.COLUMN_VALUE_STR.equals(field)) {
+			} else if (CustomerProtectRulePO.COLUMN_UPPVAL_STR.equals(field)) {
+				query.add(query.getCriterion(field, Arith.mul(Integer.valueOf(data), 1000000), op));
+			} else if (CustomerProtectRulePO.COLUMN_LOWVAL_STR.equals(field)) {
 				query.add(query.getCriterion(field, Arith.mul(Integer.valueOf(data), 1000000), op));
 			} else if (CustomerProtectRulePO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));

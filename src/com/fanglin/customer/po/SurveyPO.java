@@ -50,17 +50,17 @@ public class SurveyPO implements Serializable {
 
 	private Timestamp createTime;
 
-	private short status;
-
-	private int company;
-
 	private Timestamp sendTime;
-
-	private List<SurveyItemPO> items;
 
 	private Timestamp finishTime;
 
 	private Timestamp handleTime;
+
+	private short status;
+
+	private int company;
+
+	private List<SurveyItemPO> items;
 
 	public SurveyPO() {
 		super();

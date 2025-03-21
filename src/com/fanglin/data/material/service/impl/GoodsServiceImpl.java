@@ -252,14 +252,12 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new FLException(260004, "商品不存在");
 		}
 
+		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+
 		if (goodsVO.getAccessoriesType() != null && goodsVO.getAccessoriesType().getAtid() != null) goodsPO.setAccessoriesType(new AccessoriesTypePO(goodsVO.getAccessoriesType().getAtid()));
 		if (goodsVO.getOnekind() != null && goodsVO.getOnekind().getGkid() != null) goodsPO.setOnekind(new GoodsKindPO(goodsVO.getOnekind().getGkid()));
 		if (goodsVO.getTwokind() != null && goodsVO.getTwokind().getGkid() != null) goodsPO.setTwokind(new GoodsKindPO(goodsVO.getTwokind().getGkid()));
 		if (goodsVO.getThrkind() != null && goodsVO.getThrkind().getGkid() != null) goodsPO.setThrkind(new GoodsKindPO(goodsVO.getThrkind().getGkid()));
-
-		goodsPO.setPurchase(goodsVO.getPurchase());
-		goodsPO.setSelling(goodsVO.getSelling());
-		goodsPO.setAlias(goodsVO.getAlias());
 
 		goodsDao.update(goodsPO);
 

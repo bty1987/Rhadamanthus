@@ -35,6 +35,8 @@ public class SoodsPO implements Serializable {
 
 	private GoodsBO goods;
 
+	private String format;
+
 	private int num;
 
 	private int selling;
@@ -86,6 +88,15 @@ public class SoodsPO implements Serializable {
 
 	public void setGoods(GoodsBO goods) {
 		this.goods = goods;
+	}
+
+	@Column(name = "format")
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
 	}
 
 	@Column(name = "num")

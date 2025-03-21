@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -109,7 +110,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		paging.setData(salesPaymentVOs);
@@ -122,7 +123,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return salesPaymentVOs;
@@ -153,7 +154,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return salesPaymentVOs;
@@ -167,7 +168,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return salesPaymentVOs;
@@ -178,7 +179,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPaymentVO.getSpid());
 
-		return salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO())));
+		return salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO())));
 	}
 
 	@Override
@@ -243,7 +244,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPaymentPO.setType(salesPaymentVO.getType());
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(sales.getCategory());
-		salesPaymentPO.setBrand(sales.getBrand());
+		salesPaymentPO.setBrand(sales.getBrand().getName());
 
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 
@@ -330,7 +331,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(sales.getCategory());
-		salesPaymentPO.setBrand(sales.getBrand());
+		salesPaymentPO.setBrand(sales.getBrand().getName());
 
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 
@@ -957,7 +958,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPaymentPO.setType(SalesPaymentPO.TYPE_DEPOSITREFUND_INT);
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(salesPO.getCategory());
-		salesPaymentPO.setBrand(salesPO.getBrand());
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());
 
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		salesPaymentPO.setCreater(userPO);
@@ -1012,7 +1013,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPaymentPO.setType(SalesPaymentPO.TYPE_VOUCHERREFUND_INT);
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(salesPO.getCategory());
-		salesPaymentPO.setBrand(salesPO.getBrand());
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());
 
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		salesPaymentPO.setCreater(userPO);

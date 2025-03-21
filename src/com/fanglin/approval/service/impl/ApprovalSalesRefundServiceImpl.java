@@ -22,6 +22,7 @@ import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
@@ -123,7 +124,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			ApprovalSalesRefundVO approvalSalesRefundVO = new ApprovalSalesRefundVO();
 
 			approvalSalesRefundVO.setApproval(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
-			approvalSalesRefundVO.setSales(new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()));
+			approvalSalesRefundVO.setSales(new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()));
 
 			approvalSalesRefundVOs.add(approvalSalesRefundAO.ptv(approvalSalesRefundVO));
 		}
@@ -282,7 +283,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesPaymentPO.setCreater(approvalPO.getSender());
 		salesPaymentPO.setCategory(salesPO.getCategory());
 		salesPaymentPO.setReferMoney(approvalSalesRefundPO.getRefund());// 退款金额
-		salesPaymentPO.setBrand(salesPO.getBrand());// 品牌
+		salesPaymentPO.setBrand(salesPO.getBrand().getName());// 品牌
 		salesPaymentPO.setStatus(SalesPO.STATUS_INIT_SHORT);
 		salesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPaymentPO.setType(SalesPaymentPO.TYPE_REFUNDS_INT);
@@ -315,7 +316,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 			salesPaymentPO.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
 			salesPaymentPO.setCategory(salesPO.getCategory());
-			salesPaymentPO.setBrand(salesPO.getBrand());
+			salesPaymentPO.setBrand(salesPO.getBrand().getName());
 			salesPaymentPO.setCreater(operater);
 			salesPaymentPO.setCreateTime(current);
 			salesPaymentPO.setReferMoney(Math.abs(salesPO.getTotal()));

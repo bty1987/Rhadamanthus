@@ -11,12 +11,12 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.decoration.dao.DecorationBelongDao;
@@ -53,21 +53,30 @@ public class DecorationBelongDaoImpl extends DaoImpl<DecorationBelongPO> impleme
 	}
 
 	@Override
-	public int changeDecorationBelongForOrderId(String newOrderId, String oldOrderId) {
+	public int countDecorationBelong(String orderId, short type, short status) {
 
-		String sql = "update decoration.decorationbelong set orderId=:newOrderId where orderId=:oldOrderId";
-		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
+		String sql = "select count(*) from decoration.decorationbelong where orderId = :orderId and type = :type and status = :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).setShort("status", status).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int changeDecorationBelongForOrderId(String source, String target) {
+
+		String sql = "update decoration.decorationbelong set orderId=:source where orderId=:target";
+		session().createSQLQuery(sql).setString("source", source).setString("target", target).executeUpdate();
 
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int updateDecorationBelongStatusByOrderId(String orderId, Short status) {
+	public int updateDecorationBelong(String orderId, Short type, Short source, Short target) {
 
-		String sql = "update decoration.decorationbelong set status=:status where orderId=:orderId";
-		session().createSQLQuery(sql).setString("orderId", orderId).setShort("status", status).executeUpdate();
+		String sql = "update decoration.decorationbelong set status = :target where orderId=:orderId and status = :source and type = :type";
+		session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).setShort("source", source).setShort("target", target).executeUpdate();
 
 		return 0;
 	}
+
 }
