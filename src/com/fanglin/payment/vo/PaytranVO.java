@@ -49,6 +49,8 @@ public class PaytranVO implements Serializable {
 
 	private Short way;
 
+	private String bompany;
+
 	public PaytranVO() {
 		super();
 	}
@@ -215,6 +217,14 @@ public class PaytranVO implements Serializable {
 
 	public void setWay(Short way) {
 		this.way = way;
+	}
+
+	public String getBompany() {
+		return bompany;
+	}
+
+	public void setBompany(String bompany) {
+		this.bompany = bompany;
 	}
 
 }

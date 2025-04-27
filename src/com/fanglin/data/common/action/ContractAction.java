@@ -46,6 +46,14 @@ public class ContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryContractByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryContractByCid() throws FLException {
+
+		contract = contractService.queryContractByCid(contract);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "countContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String contractCount() throws FLException {
 

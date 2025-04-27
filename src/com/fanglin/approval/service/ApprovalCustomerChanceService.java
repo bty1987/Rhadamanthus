@@ -15,4 +15,8 @@ public interface ApprovalCustomerChanceService {
 
 	public int refuseForCustomerChance(ApprovalPO approvalPO) throws FLException;
 
+	public int submitApprovalForCustomerChanceToDisabled(ApprovalVO approvalVO, ApprovalCustomerChanceVO approvalCustomerChanceVO, String userId, int company) throws FLException;
+
+	public int approveForCustomerChanceToDisabled(ApprovalPO approvalPO) throws FLException;
+
 }

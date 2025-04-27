@@ -57,11 +57,10 @@ $(function() {
 
             $print.click(function() {
 
-                v.type = refund.refundType[v.type];
-
                 params.sales.sales = refund.sales;
                 params.sales.refunds = v;
                 params.sales.flag = "refund";
+                
                 com.popup("销售退货单:" + refund.sales.orderId, api.index.salesRefundsPrintIndex.url, function() {
 
                     parent.layer.getFrameIndex(window.name);

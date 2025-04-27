@@ -48,6 +48,16 @@ public class PriceDaoImpl extends DaoImpl<PricePO> implements PriceDao {
 		return (PricePO) session().createCriteria(PricePO.class).add(Restrictions.eq(PricePO.COLUMN_PID_STR, pid)).uniqueResult();
 	}
 
+	@Override
+	public int batchSavePrice(long gid, long gpid) {
+
+		String sql = "INSERT INTO `data`.price (gid, `name`, type, purchase, selling, confine, ctype, cvalue, `status`) SELECT :gid, pp.`name`, pp.type, pp.purchase, pp.selling, pp.confine, pp.ctype, pp.cvalue, pp.`status` FROM communion.pricepool pp WHERE pp.gpid = :gpid";
+
+		session().createSQLQuery(sql).setLong("gid", gid).setLong("gpid", gpid).executeUpdate();
+
+		return 0;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

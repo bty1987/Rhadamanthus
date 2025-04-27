@@ -40,6 +40,10 @@ public class QuotationVO implements Serializable {
 
 	private Timestamp lockTime;
 
+	private Integer workTime;
+
+	private Integer audiTime;
+
 	private UserBaseVO creater;
 
 	private QuotationVersionVO version;
@@ -76,11 +80,19 @@ public class QuotationVO implements Serializable {
 
 	private Long consPrice;
 
+	private Long comsPrice;
+
+	private Long undisComPrice;
+
+	private Long disComPrice;
+
 	private Long totalPrice;
 
 	private Short defaults;
 
 	private Short status;
+
+	private short attstatus;
 
 	private Short keeprice;
 
@@ -172,6 +184,22 @@ public class QuotationVO implements Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	public Integer getWorkTime() {
+		return workTime;
+	}
+
+	public void setWorkTime(Integer workTime) {
+		this.workTime = workTime;
+	}
+
+	public Integer getAudiTime() {
+		return audiTime;
+	}
+
+	public void setAudiTime(Integer audiTime) {
+		this.audiTime = audiTime;
 	}
 
 	public UserBaseVO getCreater() {
@@ -322,6 +350,30 @@ public class QuotationVO implements Serializable {
 		this.consPrice = consPrice;
 	}
 
+	public Long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(Long comsPrice) {
+		this.comsPrice = comsPrice;
+	}
+
+	public Long getUndisComPrice() {
+		return undisComPrice;
+	}
+
+	public void setUndisComPrice(Long undisComPrice) {
+		this.undisComPrice = undisComPrice;
+	}
+
+	public Long getDisComPrice() {
+		return disComPrice;
+	}
+
+	public void setDisComPrice(Long disComPrice) {
+		this.disComPrice = disComPrice;
+	}
+
 	public Long getTotalPrice() {
 		return totalPrice;
 	}
@@ -340,6 +392,14 @@ public class QuotationVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public short getAttstatus() {
+		return attstatus;
+	}
+
+	public void setAttstatus(short attstatus) {
+		this.attstatus = attstatus;
 	}
 
 	public Short getKeeprice() {

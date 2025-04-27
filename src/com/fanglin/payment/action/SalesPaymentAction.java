@@ -15,6 +15,7 @@ import com.fanglin.payment.service.SalesPaymentService;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.payment.vo.SalesReceiptVO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -117,7 +118,9 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayment() throws FLException, Exception {
 
-		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, ptids, queryUserId(), queryCompany());
+		int company = salesPayment.getBompany() != null ? CompanyServiceImpl.decode(salesPayment.getBompany()) : queryCompany();
+
+		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, ptids, queryUserId(), company);
 
 		return SUCCESS;
 	}
@@ -125,7 +128,9 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPayments", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayments() throws FLException, Exception {
 
-		salesPaymentService.collectSalesPayments(spids, salesPayment, salesReceipt, ptids, queryUserId(), queryCompany());
+		int company = salesPayment.getBompany() != null ? CompanyServiceImpl.decode(salesPayment.getBompany()) : queryCompany();
+
+		salesPaymentService.collectSalesPayments(spids, salesPayment, salesReceipt, ptids, queryUserId(), company);
 
 		return SUCCESS;
 	}
@@ -170,10 +175,26 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "affirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSalesPayment() throws FLException, Exception {
+
+		salesPaymentService.affirmSalesPayment(salesPayment);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "sendSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSalesPayment() throws FLException {
 
 		salesPaymentService.sendSalesPayment(salesPayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pushSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pushSalesPayment() throws FLException {
+
+		salesPaymentService.pushSalesPayment(salesPayment);
 
 		return SUCCESS;
 	}

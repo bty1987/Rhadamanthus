@@ -13,6 +13,8 @@ public interface ContractService {
 
 	public List<ContractVO> queryContract(ContractVO contract, int company);
 
+	public ContractVO queryContractByCid(ContractVO contract);
+
 	public int countContract(int company) throws FLException;
 
 	public int addContract(ContractVO contractVO, int company) throws FLException;

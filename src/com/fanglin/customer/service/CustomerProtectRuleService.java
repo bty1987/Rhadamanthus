@@ -13,6 +13,8 @@ public interface CustomerProtectRuleService {
 
 	public List<CustomerProtectRuleVO> queryCustomerProtectRule(CustomerProtectRuleVO customerProtectRule);
 
+	public CustomerProtectRuleVO checkCustomerProtectRule(CustomerProtectRuleVO customerProtectRuleVO, String userId, int company) throws FLException;
+
 	public void addCustomerProtectRule(CustomerProtectRuleVO customerProtectRule, String userId, int company) throws FLException;
 
 	public void deleteCustomerProtectRule(CustomerProtectRuleVO customerProtectRule) throws FLException;

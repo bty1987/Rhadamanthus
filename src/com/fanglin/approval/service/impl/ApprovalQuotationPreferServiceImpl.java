@@ -72,7 +72,9 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 			throw new FLException(200033, "报价已锁定");
 		}
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+		String orderId = quotationPO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
@@ -95,9 +97,9 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", qpid, approvalQuotationPreferVO.getPreferPrice(), approvalQuotationPreferVO.getManagePrefer(), approvalQuotationPreferVO.getAdvancePrefer());
+		String content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalQuotationPreferVO.getPreferPrice() / 1000, approvalQuotationPreferVO.getManagePrefer() / 1000, approvalQuotationPreferVO.getAdvancePrefer() / 1000);
 
-		approvalPO = new ApprovalPO().init(sender, receiver, "", qpid, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, qpid, ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -168,6 +170,41 @@ public class ApprovalQuotationPreferServiceImpl implements ApprovalQuotationPref
 
 		quotationPO.setTotalPrice(approvalQuotationPreferPO.getTotalPrice());
 		quotationPO.setTaxPrice(approvalQuotationPreferPO.getTaxPrice());
+
+		quotationPO.setStatus(QuotationPO.STATUS_INIT_INT);
+
+		quotationDao.update(quotationPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refuseForQuotationPrefer(ApprovalPO approvalPO) throws FLException {
+
+		ApprovalQuotationPreferPO approvalQuotationPreferPO = approvalQuotationPreferDao.queryApprovalQuotationPreferByAid(approvalPO.getAid());
+
+		if (approvalQuotationPreferPO == null) {
+			throw new FLException(240003, "审批信息不完整");
+		}
+
+		QuotationPreferPO quotationPreferPO = quotationPreferDao.get(approvalQuotationPreferPO.getQpid());
+
+		if (quotationPreferPO == null) {
+			throw new FLException(200066, "报价优惠不存在");
+		}
+
+		QuotationPO quotationPO = quotationDao.get(approvalQuotationPreferPO.getQid());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		if (quotationPO.getStatus() != QuotationPO.STATUS_APPROVE_INT) {
+			throw new FLException(200030, "报价不可操作");
+		}
+
+		quotationPO.setStatus(QuotationPO.STATUS_INIT_INT);
 
 		quotationDao.update(quotationPO);
 

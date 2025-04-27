@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -26,6 +27,10 @@ public class DataDrawingPO implements Serializable {
 	public static final short STATUS_INIT_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
+
+	public static final short TYPE_GOODS_SHORT = 2;
+
+	public static final short TYPE_GOODSPOOL_SHORT = 5;
 
 	private long ddid;
 

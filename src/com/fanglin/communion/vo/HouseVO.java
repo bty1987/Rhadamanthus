@@ -23,13 +23,13 @@ public class HouseVO implements Serializable {
 	private Short type;
 
 	private Integer buildArea;
-	
+
 	private Integer freeArea;
-	
+
 	private Integer innerArea;
-	
+
 	private Integer quoteArea;
-	
+
 	private Integer totalArea;
 
 	private Short maxFloor;
@@ -49,6 +49,8 @@ public class HouseVO implements Serializable {
 	private Short parlourType;
 
 	private Short heatingType;
+
+	private Short isLift;
 
 	private Integer company;
 
@@ -137,7 +139,7 @@ public class HouseVO implements Serializable {
 	public void setBuildArea(Integer buildArea) {
 		this.buildArea = buildArea;
 	}
-	
+
 	public Integer getFreeArea() {
 		return freeArea;
 	}
@@ -153,7 +155,7 @@ public class HouseVO implements Serializable {
 	public void setInnerArea(Integer innerArea) {
 		this.innerArea = innerArea;
 	}
-	
+
 	public Integer getQuoteArea() {
 		return quoteArea;
 	}
@@ -240,6 +242,14 @@ public class HouseVO implements Serializable {
 
 	public void setHeatingType(Short heatingType) {
 		this.heatingType = heatingType;
+	}
+
+	public Short getIsLift() {
+		return isLift;
+	}
+
+	public void setIsLift(Short isLift) {
+		this.isLift = isLift;
 	}
 
 	public Integer getCompany() {

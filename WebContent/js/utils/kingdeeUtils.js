@@ -1,6 +1,7 @@
 var kingdeeUtils = {
 
     workerSalary: function(params) {
+
         var dompany = "";
         var conpany = "";
         var companyNo = ""; // 装修公司编号
@@ -11,7 +12,10 @@ var kingdeeUtils = {
         var supervisor = ""; // 监理编号
         var workerNo = ""; // 工人编号
 
-        com.post(api.salary.queryWorkerSalaryByWsid, {"workerSalary.wsid": params.wsid}, function(res) {
+        com.post(api.salary.queryWorkerSalaryByWsid, {
+            "workerSalary.wsid": params.wsid
+        }, function(res) {
+
             var decoration = res.workerSalary.decoration;
             dompany = decoration.dompany;
             conpany = decoration.conpany;
@@ -19,17 +23,26 @@ var kingdeeUtils = {
             workerNo = res.workerSalary.user.userId;
         }, null, false);
 
-        com.post(api.system.queryCompanyByCid, {"company.cid": dompany}, function(res) {
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": dompany
+        }, function(res) {
+
             companyDorgNo = res.company.drganization.no;
             companyNo = res.company.no;
         }, null, false);
 
-        com.post(api.system.queryCompanyByCid, {"company.cid": conpany}, function(res) {
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": conpany
+        }, function(res) {
+
             conpanyName = res.company.name;
             conpanySorgNo = res.company.srganization.no;
         }, null, false);
 
-        com.post(api.data.queryConstructionNodeByCnid, {"constructionNode.cnid": params.cnid}, function(res) {
+        com.post(api.data.queryConstructionNodeByCnid, {
+            "constructionNode.cnid": params.cnid
+        }, function(res) {
+
             constructionNodeKino = res.constructionNode.kino;
         }, null, false);
 
@@ -37,7 +50,7 @@ var kingdeeUtils = {
         var supplier = "";
         var grade = params.decoration.grade;
 
-        if((grade == "A" || grade == "C") && conpanyName == "中迈劳务") {
+        if ((grade == "A" || grade == "C") && conpanyName == "中迈劳务") {
             payOrg = companyDorgNo;
             supplier = "000030";
         } else {
@@ -48,7 +61,7 @@ var kingdeeUtils = {
         kingdeeUtils.payableBill(params.salary, params.approveTime, supplier, payOrg, params.decoration.orderId, supervisor, workerNo, constructionNodeKino, params.twotype, conpanySorgNo, companyNo, grade);
     },
 
-    balance: function (balanceSales) {
+    balance: function(balanceSales) {
 
         var balanceBillItems = [];
         var decorationInfos = [];
@@ -60,16 +73,20 @@ var kingdeeUtils = {
             return false;
         }
 
-        $.each(items, function (i, v) {
+        $.each(items, function(i, v) {
 
-            //代收金额/服务费金额/客户/销售单号/代收服务费/优惠券/代收券
+            // 代收金额/服务费金额/客户/销售单号/代收服务费/优惠券/代收券
             balanceBillItems.push(kingdeeUtils.balanceBillItem(v.salesRevenue, v.serviceMoney, v.orderId, v.no, v.coupon));
 
-            decorationInfos.push({"orderId": v.orderId, "address": v.address});
+            decorationInfos.push({
+                "orderId": v.orderId,
+                "address": v.address,
+                "dorgNo": v.dorgNo
+            });
         });
 
         // 单据编号/创建人/业务日期/币别/类型/核算类别/款项组织/结算组织/品牌/供应商/结算单号/代收服务费合计/代收合计
-        var billNo =  Date.now() + balanceSales.bsid;
+        var billNo = Date.now() + balanceSales.bsid;
         var creator = balanceSales.creater.userId;
         var date = balanceSales.balanceTime;
         var salesGrade = balanceSales.grade;
@@ -83,21 +100,22 @@ var kingdeeUtils = {
         kingdeeUtils.balanceBill(balanceBillItems, decorationInfos, billNo, creator, date, "0003", salesGrade, paymentOrg, paymentOrg, brand, supplier, balanceNo, payment, income);
     },
 
-    payment: function (payment, htmlName) {
+    payment: function(payment, htmlName) {
+
         var companyDorgNo = ""; // 装修公司装修编号
         var companySorgNo = ""; // 装修公司销售编号
 
         var paymentType = null;
 
-        var receivableTotal = 0;  // 应收单总额
-        var fundBankMoney = 0;  // 资金类型的银行金额
+        var receivableTotal = 0; // 应收单总额
+        var fundBankMoney = 0; // 资金类型的银行金额
 
-        var collectBillItems = [];  // 收款单单据体
-        var refundBillItems = [];  // 收款退款单据体
-        var materialTransferBillItems = [];  // 转款单单据体
-        var receivableBillItems = [];  // 应收单单据体
+        var collectBillItems = []; // 收款单单据体
+        var refundBillItems = []; // 收款退款单据体
+        var materialTransferBillItems = []; // 转款单单据体
+        var receivableBillItems = []; // 应收单单据体
 
-        var sign = "-";  // 正负数
+        var sign = "-"; // 正负数
         var receipt = ["sales", "service"].contains(htmlName) ? payment[htmlName + "Receipt"] : payment;
 
         var cash = receipt.cash;
@@ -108,12 +126,24 @@ var kingdeeUtils = {
         var checkvInfo = receipt.checkvBank;
         var advance = receipt.advance;
 
-        com.post(api.system.queryCompanyByCid, {"company.cid": params.company.cid}, function(res) {
+        var decoration = payment.decoration;
+
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": decoration.orderId
+        }, function(res) {
+
+            decoration = res.decoration;
+        }, null, false);
+
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": decoration.bompany ? decoration.bompany : params.company.cid
+        }, function(res) {
+
             companyDorgNo = res.company.drganization.no;
             companySorgNo = res.company.srganization.no;
         }, null, false);
 
-        var orgno = companyDorgNo;  // 组织编号
+        var orgno = companyDorgNo; // 组织编号
         var currenCollectReceiptType = "SKDLX01_SYS"; // 销售收款单
         var currenRefundReceiptType = "SKTKDLX01_SYS"; // 销售业务退款单
         var currenPurposes = "SFKYT01_SYS"; // 销售收款
@@ -124,35 +154,45 @@ var kingdeeUtils = {
 
         switch (htmlName) {
             case "payment":
-                option = {"paymentType.name": constant.payment().advancePayment.paymentType.keys[payment.paymentType]};
-                receiptNo =  Date.now() + payment.arId;
+                option = {
+                    "paymentType.name": constant.payment().advancePayment.paymentType.keys[payment.paymentType]
+                };
+                receiptNo = Date.now() + payment.arId;
 
                 currenCollectReceiptType = "SKDLX02_SYS"; // 其他业务收款单
                 currenRefundReceiptType = "SKTKDLX02_SYS"; // 其他业务退款单
                 currenPurposes = "1008"; // 装修收款
                 break;
             case "":
-                option = {"paymentType.name": payment.paymentType};
-                receiptNo =  Date.now() + payment.drId;
+                option = {
+                    "paymentType.name": payment.paymentType
+                };
+                receiptNo = Date.now() + payment.drId;
                 break;
             case "service":
                 var name = "服务费";
-                if (payment.type == 1) name = "服务费退款";
-                option = {"paymentType.name": name};
-                receiptNo =  Date.now() + payment.serviceReceipt.srId;
+                if (payment.type == 1)
+                    name = "服务费退款";
+                option = {
+                    "paymentType.name": name
+                };
+                receiptNo = Date.now() + payment.serviceReceipt.srId;
                 break;
         }
 
         com.post(url, option, function(ptdata) {
+
             paymentType = ptdata.paymentType;
         }, null, false);
 
         var bustype = paymentType.bustype; // 款项业务类型(装修/主材)
         var paytype = paymentType.paytype; // 款项类型(收/退款)
 
-        if (htmlName == "payment") payment.type == 0 ? paytype = 1 : paytype = 0;
+        if (htmlName == "payment")
+            payment.type == 0 ? paytype = 1 : paytype = 0;
 
-        if (paytype == 0) sign = ""; // 收款
+        if (paytype == 0)
+            sign = ""; // 收款
 
         // 主材类型
         if (bustype == 1) {
@@ -164,7 +204,11 @@ var kingdeeUtils = {
         }
 
         if (cash > 0) {
-            com.post(api.data.queryReceiptTypeByNo, {"receiptType.no": cashInfo}, function(rpData) {
+            com.post(api.data.queryReceiptTypeByNo, {
+                "receiptType.bompany": decoration.bompany ? decoration.bompany : params.company.cid,
+                "receiptType.no": cashInfo
+            }, function(rpData) {
+
                 var receiptType = rpData.receiptType;
 
                 if (paytype == 0) { // 收款
@@ -182,14 +226,14 @@ var kingdeeUtils = {
         }
 
         if (bank > 0) {
-            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, payment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, payment.decoration.customer.cid);
+            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, payment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, payment.decoration.customer.cid, decoration.bompany ? decoration.bompany : params.company.cid);
 
             receivableTotal = bankDatas[0];
             fundBankMoney = bankDatas[1];
         }
 
         if (checkv > 0) {
-            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, payment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, payment.decoration.customer.cid);
+            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, payment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, payment.decoration.customer.cid, decoration.bompany ? decoration.bompany : params.company.cid);
 
             receivableTotal = checkvDatas[0];
             fundBankMoney = checkvDatas[1];
@@ -206,18 +250,19 @@ var kingdeeUtils = {
         kingdeeUtils.joinReceipt(collectBillItems, refundBillItems, materialTransferBillItems, null, receivableBillItems, fundBankMoney, 0, receivableTotal, currenCollectReceiptType, currenRefundReceiptType, orgno, payment, paymentType, receiptNo, htmlName);
     },
 
-    salesPayment: function (payment, htmlName) {
+    salesPayment: function(payment, htmlName) {
+
         var companyDorgNo = ""; // 装修公司装修编号
         var companySorgNo = ""; // 装修公司销售编号
 
         var paymentType = null;
 
-        var fundBankMoney = 0;  // 资金类型的银行金额
+        var fundBankMoney = 0; // 资金类型的银行金额
 
-        var collectBillItems = [];  // 收款单单据体
-        var refundBillItems = [];  // 收款退款单据体
+        var collectBillItems = []; // 收款单单据体
+        var refundBillItems = []; // 收款退款单据体
 
-        var sign = "-";  // 正负数
+        var sign = "-"; // 正负数
         var receipt = payment.salesReceipt;
 
         var cash = receipt.cash;
@@ -230,7 +275,19 @@ var kingdeeUtils = {
         var coupon = receipt.coupon;
         var couponInfo = receipt.couponInfo;
 
-        com.post(api.system.queryCompanyByCid, {"company.cid": params.company.cid}, function(res) {
+        var decoration = payment.decoration;
+
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": decoration.orderId
+        }, function(res) {
+
+            decoration = res.decoration;
+        }, null, false);
+
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": params.company.cid
+        }, function(res) {
+
             companyDorgNo = res.company.drganization.no;
             companySorgNo = res.company.srganization.no;
         }, null, false);
@@ -241,19 +298,27 @@ var kingdeeUtils = {
         var currenPurposes = "1004";
 
         var url = api.data.queryPaymentTypeByName;
-        var option = {"paymentType.name": constant.payment().materialPayment.paymentType.keys[payment.type]};
-        var receiptNo =  Date.now() + payment.salesReceipt.srId; // 单据编号
+        var option = {
+            "paymentType.name": constant.payment().materialPayment.paymentType.keys[payment.type]
+        };
+        var receiptNo = Date.now() + payment.salesReceipt.srId; // 单据编号
 
         com.post(url, option, function(ptdata) {
+
             paymentType = ptdata.paymentType;
         }, null, false);
 
         var paytype = paymentType.paytype; // 款项类型(收/退款)
 
-        if (paytype == 0) sign = ""; // 收款
+        if (paytype == 0)
+            sign = ""; // 收款
 
         if (cash > 0) {
-            com.post(api.data.queryReceiptTypeByNo, {"receiptType.no": cashInfo}, function(rpData) {
+            com.post(api.data.queryReceiptTypeByNo, {
+                "receiptType.bompany": decoration.bompany ? decoration.bompany : params.company.cid,
+                "receiptType.no": cashInfo
+            }, function(rpData) {
+
                 var receiptType = rpData.receiptType;
 
                 if (paytype == 0) { // 收款
@@ -269,12 +334,12 @@ var kingdeeUtils = {
         }
 
         if (bank > 0) {
-            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, payment, paymentType, 0, fundBankMoney, collectBillItems, refundBillItems, payment.sales.customer.cid);
+            var bankDatas = kingdeeUtils.bankAndCheckv(true, bankInfo, paytype, currenPurposes, payment, paymentType, 0, fundBankMoney, collectBillItems, refundBillItems, payment.sales.customer.cid, decoration.bompany ? decoration.bompany : params.company.cid);
             fundBankMoney = bankDatas[1];
         }
 
         if (checkv > 0) {
-            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, payment, paymentType, 0, fundBankMoney, collectBillItems, refundBillItems, payment.sales.customer.cid);
+            var checkvDatas = kingdeeUtils.bankAndCheckv(false, checkvInfo, paytype, currenPurposes, payment, paymentType, 0, fundBankMoney, collectBillItems, refundBillItems, payment.sales.customer.cid, decoration.bompany ? decoration.bompany : params.company.cid);
             fundBankMoney = checkvDatas[1];
         }
 
@@ -282,65 +347,80 @@ var kingdeeUtils = {
         kingdeeUtils.joinReceipt(collectBillItems, refundBillItems, null, null, null, fundBankMoney, 0, 0, currenCollectReceiptType, currenRefundReceiptType, orgno, payment, paymentType, receiptNo, htmlName);
     },
 
-    bankAndCheckv: function (isBank, info, paytype, currenPurposes, decorationPayment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, cid) {
-        if (info.indexOf("#") != -1) {
-            var _s = info.split('#');
+    bankAndCheckv: function(isBank, info, paytype, currenPurposes, decorationPayment, paymentType, receivableTotal, fundBankMoney, collectBillItems, refundBillItems, customerId, bompany) {
 
-            for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
-                var _i = _s[i].split('|');
+        if (info.indexOf("#") == -1)
+            return [0, 0];
+        
+        var _s = info.split('#');
 
-                com.post(api.data.queryReceiptTypeByNo, {"receiptType.no": _i[0]}, function(rpData) {
-                    var receiptType = rpData.receiptType;
+        for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
+            var _i = _s[i].split('|');
 
-                    if (receiptType.fund == null) {
-                        com.showAlert(com.error, "当前公司无匹配"+(isBank ? "'刷卡'" : "'银行'") +"类型数据.");
-                        return false;
-                    }
+            com.post(api.data.queryReceiptTypeByNo, {
+                "receiptType.bompany": bompany,
+                "receiptType.no": _i[0]
+            }, function(rpData) {
 
-                    if (paytype == 0) { // 收款
-                        var comment = "";
+                var receiptType = rpData.receiptType;
 
-                        if (isBank) {
-                            com.post(api.payment.queryPaytranByPtid, {"paytran.ptid": _i[3]}, function(pydata) {
-                                comment = pydata.paytran.msgId;
-                            }, null, false);
-                        }
+                if (receiptType.fund == null) {
+                    com.showAlert(com.error, "当前公司无匹配" + (isBank ? "'刷卡'" : "'银行'") + "类型数据.");
+                    return false;
+                }
 
-                        if (receiptType.fund == 0) return; // 非资金
+                if (paytype == 0) { // 收款
+                    var comment = "";
 
-                        fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
-                        receivableTotal = utils.accAdd(receivableTotal, _i[1]);
+                    if (isBank) {
+                        com.post(api.payment.queryPaytranByPtid, {
+                            "paytran.ptid": _i[3]
+                        }, function(pydata) {
 
-                        var bankCollect = kingdeeUtils.collectBillItem(currenPurposes, receiptType.kibalance, _i[1], receiptType.bankno, _i[2], comment);
-                        collectBillItems.push(bankCollect);
-
-                    } else if (paytype == 1) { // 退款
-                        if (receiptType.fund == 0) return; // 非资金
-
-                        fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
-                        receivableTotal = utils.accSub(receivableTotal, _i[1]);
-
-                        var customerAccountName;
-                        var customerAccountBank;
-                        var customerAccountBankNo;
-                        
-                        com.post(api.data.queryCustomerById, {"customer.cid": cid}, function (res) {
-                            customerAccountName =  res.customer.companyName;
-                            customerAccountBank =  res.customer.companyBank;
-                            customerAccountBankNo =  res.customer.companyBankno;
+                            comment = pydata.paytran.msgId;
                         }, null, false);
-
-                        var bankRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, _i[1], receiptType.bankno, decorationPayment.comment, customerAccountName, customerAccountBank, customerAccountBankNo);
-                        refundBillItems.push(bankRefund);
                     }
-                }, null, false);
-            }
 
-            return [receivableTotal, fundBankMoney];
+                    if (receiptType.fund == 0)
+                        return; // 非资金
+
+                    fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
+                    receivableTotal = utils.accAdd(receivableTotal, _i[1]);
+
+                    var bankCollect = kingdeeUtils.collectBillItem(currenPurposes, receiptType.kibalance, _i[1], receiptType.bankno, _i[2], comment);
+                    collectBillItems.push(bankCollect);
+
+                } else if (paytype == 1) { // 退款
+                    if (receiptType.fund == 0)
+                        return; // 非资金
+
+                    fundBankMoney = utils.accAdd(fundBankMoney, _i[1]);
+                    receivableTotal = utils.accSub(receivableTotal, _i[1]);
+
+                    var customerAccountName;
+                    var customerAccountBank;
+                    var customerAccountBankNo;
+
+                    com.post(api.data.queryCustomerById, {
+                        "customer.cid": customerId
+                    }, function(res) {
+
+                        customerAccountName = res.customer.companyName;
+                        customerAccountBank = res.customer.companyBank;
+                        customerAccountBankNo = res.customer.companyBankno;
+                    }, null, false);
+
+                    var bankRefund = kingdeeUtils.collectRefundBillItem(receiptType.kibalance, currenPurposes, _i[1], receiptType.bankno, decorationPayment.comment, customerAccountName, customerAccountBank, customerAccountBankNo);
+                    refundBillItems.push(bankRefund);
+                }
+            }, null, false);
         }
+
+        return [receivableTotal, fundBankMoney];
     },
 
-    SP2MTBillItems: function (salesPayment, materialTransferTotal, materialTransferBillItems) {
+    SP2MTBillItems: function(salesPayment, materialTransferTotal, materialTransferBillItems) {
+
         var kino;
         var supplier;
         var depOut;
@@ -351,16 +431,25 @@ var kingdeeUtils = {
         var bid = salesPayment.sales.bid;
         var no = salesPayment.sales.no;
 
-        com.post(api.data.queryBrandByBid, {"brand.bid": bid}, function (brandData) {
+        com.post(api.data.queryBrandByBid, {
+            "brand.bid": bid
+        }, function(brandData) {
+
             kino = brandData.brand.kino;
             supplier = brandData.brand.supplier.oldUserId;
         }, null, false);
 
-        com.post(api.data.queryPaymentTypeByName, {"paymentType.name": "定金出"}, function (resPayType) {
+        com.post(api.data.queryPaymentTypeByName, {
+            "paymentType.name": "定金出"
+        }, function(resPayType) {
+
             depOut = resPayType.paymentType.kino
         }, null, false);
 
-        com.post(api.data.queryPaymentTypeByName, {"paymentType.name": "定金转全款"}, function (payTypeRes) {
+        com.post(api.data.queryPaymentTypeByName, {
+            "paymentType.name": "定金转全款"
+        }, function(payTypeRes) {
+
             depTurn = payTypeRes.paymentType.kino
         }, null, false);
 
@@ -370,9 +459,12 @@ var kingdeeUtils = {
             materialTransferBillItems.push(kingdeeUtils.materialTransferBillItem(depositpay, kino, supplier, no, depTurn));
         }
 
-        var option = {"paymentType.name": constant.payment().materialPayment.paymentType.keys[salesPayment.type]};
+        var option = {
+            "paymentType.name": constant.payment().materialPayment.paymentType.keys[salesPayment.type]
+        };
 
         com.post(api.data.queryPaymentTypeByName, option, function(ptdata) {
+
             currentDataKino = ptdata.paymentType.kino;
         }, null, false);
 
@@ -382,8 +474,9 @@ var kingdeeUtils = {
         return [materialTransferTotal, materialTransferBillItems]
     },
 
-    payableBill: function (money, date, supplier, payOry, orderId, supervisor, workerNo, constructionNodeKino, twotype, conpanySorgNo, companyNo, grade) {
-        var paramItem = [ {
+    payableBill: function(money, date, supplier, payOry, orderId, supervisor, workerNo, constructionNodeKino, twotype, conpanySorgNo, companyNo, grade) {
+
+        var paramItem = [{
             "FCOSTID": "CI002",
             "FPRICEUNITID": "UOM001",
             "Fprice": money,
@@ -415,14 +508,15 @@ var kingdeeUtils = {
             "F_SFKD_Assistant1": conpanySorgNo,
             "F_SFKD_Assistant2": companyNo,
             "F_SFKD_Base7": grade,
-            "FEntityDetail":data,
+            "FEntityDetail": data,
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    collectBillItem: function (purpose, settletype, money, bankNo, settleno, comment) {
+    collectBillItem: function(purpose, settletype, money, bankNo, settleno, comment) {
+
         // 收款用途/结算方式/应收金额/银行账号/结算号(刷卡+银行)/备注(银行-转换款的msgid-金蝶平台订单号)
         var paramItem = {
             "FPURPOSEID": purpose,
@@ -436,7 +530,7 @@ var kingdeeUtils = {
         return paramItem;
     },
 
-    collectBill: function (items, collectTime, billType, wlOrgType, contactunit, payOrgType, payOrg, pompany, settleOrg, grade, paymentType, comment) {
+    collectBill: function(items, collectTime, billType, wlOrgType, contactunit, payOrgType, payOrg, pompany, settleOrg, grade, paymentType, comment, address, dorgNo) {
 
         var data = JSON.stringify(items);
 
@@ -445,8 +539,8 @@ var kingdeeUtils = {
             "api": "kingdee.kingdee.collectbill",
             "FDATE": collectTime,
             "FBILLTYPEID": billType,
-            "FCONTACTUNITTYPE":  wlOrgType,
-            "FCONTACTUNIT":  contactunit,
+            "FCONTACTUNITTYPE": wlOrgType,
+            "FCONTACTUNIT": contactunit,
             "FPAYUNITTYPE": payOrgType,
             "FPAYUNIT": payOrg,
             "FPAYORGID": pompany,
@@ -455,13 +549,17 @@ var kingdeeUtils = {
             "F_SFKD_Base": paymentType,
             "FREMARK": comment.replace(/\n/g, " "),
             "FRECEIVEBILLENTRY": data,
+            "orderId": contactunit,
+            "address": address,
+            "dorgNo": dorgNo,
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    collectRefundBillItem: function (settletype, purpose, refundMoney, bankNo, comment, customerAccountName, customerAccountBank, customerAccountBankNo) {
+    collectRefundBillItem: function(settletype, purpose, refundMoney, bankNo, comment, customerAccountName, customerAccountBank, customerAccountBankNo) {
+
         // 结算方式/原收款用途/应退金额/我方银行账号/备注/对方账户名称/对方开户行/对方银行账号
         var paramItem = {
             "FSETTLETYPEID": settletype,
@@ -477,7 +575,7 @@ var kingdeeUtils = {
         return paramItem;
     },
 
-    collectRefundBill: function (items, collectTime, receiptType, settleorg, contactunittype, rectunittype, contactunit, rectunit, payorgid, grade, paymentType) {
+    collectRefundBill: function(items, collectTime, receiptType, settleorg, contactunittype, rectunittype, contactunit, rectunit, payorgid, grade, paymentType, address, dorgNo) {
 
         var data = JSON.stringify(items);
 
@@ -495,13 +593,17 @@ var kingdeeUtils = {
             "F_ORA_BASE": grade,
             "F_SFKD_GCKXLX": paymentType,
             "FREFUNDBILLENTRY": data,
+            "orderId": contactunit,
+            "address": address,
+            "dorgNo": dorgNo,
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    bankTransitionBillItem: function (realMoney, paymentType) {
+    bankTransitionBillItem: function(realMoney, paymentType) {
+
         // 实收金额/款项类型
         var paramItem = {
             "F_SFKD_ShiShouAmount": realMoney,
@@ -511,7 +613,8 @@ var kingdeeUtils = {
         return paramItem;
     },
 
-    bankTransitionBill: function (items, billNo, date, wlOrgType, payOrgType, collectOrg, salesOrg, grade, customer, realMoney) {
+    bankTransitionBill: function(items, billNo, date, wlOrgType, payOrgType, collectOrg, salesOrg, grade, customer, realMoney, address, dorgNo) {
+
         var data = JSON.stringify(items);
 
         // 单据编号/业务日期/往来单位类型/付款单位类型/收款组织/销售组织/核算类别/客户/实收金额/单据体明细
@@ -527,13 +630,17 @@ var kingdeeUtils = {
             "F_ora_Base2": customer,
             "F_SFKD_RealAmount": realMoney,
             "FEntity": data,
+            "orderId": customer,
+            "address": address,
+            "dorgNo": dorgNo,
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    materialTransferBillItem: function (realMoney, brand, supplier, salesNo, paymentType) {
+    materialTransferBillItem: function(realMoney, brand, supplier, salesNo, paymentType) {
+
         // 实收金额/品牌/供应商/销售单号/款项类型
         var paramItem = {
             "F_SFKD_RealAmount": realMoney,
@@ -546,7 +653,8 @@ var kingdeeUtils = {
         return paramItem;
     },
 
-    materialTransferBill: function (items, billNo, collectTime, wlOrgType, payOrgType, grade, collectOrg, salesOrg, customer, realMoney) {
+    materialTransferBill: function(items, billNo, collectTime, wlOrgType, payOrgType, grade, collectOrg, salesOrg, customer, realMoney, address, dorgNo) {
+
         var data = JSON.stringify(items);
 
         // 单据编号/业务日期/往来单位类型/付款单位类型/核算类别/收款组织/销售组织/客户/实收金额/单据体明细
@@ -562,13 +670,17 @@ var kingdeeUtils = {
             "F_ora_Base": customer,
             "F_SFKD_ShiShouAmount": realMoney,
             "FEntity": data,
+            "orderId": customer,
+            "address": address,
+            "dorgNo": dorgNo,
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    receivableBillItem: function (costid, noTaxAmount, taxAmount) {
+    receivableBillItem: function(costid, noTaxAmount, taxAmount) {
+
         // 费用项目编码/不含税金额/税额
         var paramItem = {
             "FCOSTID": costid,
@@ -579,7 +691,7 @@ var kingdeeUtils = {
         return paramItem;
     },
 
-    receivableBill: function (items, collectTime, billType, customer, settleOrg, collectOrg, grade, paymentType, comment) {
+    receivableBill: function(items, collectTime, billType, customer, settleOrg, collectOrg, grade, paymentType, comment, address, dorgNo) {
 
         var data = JSON.stringify(items);
 
@@ -595,34 +707,17 @@ var kingdeeUtils = {
             "F_SFKD_Base2": paymentType,
             "FAR_Remark": comment.replace(/\n/g, " "),
             "FENTITYDETAIL": data,
+            "orderId": customer,
+            "address": address,
+            "dorgNo": dorgNo,
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    kingdeePost: function(options) {
-        com._post_(api.home.library, options, function(res) {
-            if (res.code == 0) {
-                com.showAlert(com.info, "操作成功");
-            } else {
-                var msg = "";
-                if (res.msg instanceof Array) {
-                    msg = "#";
-                    $.each(res.msg, function(i, v){
-                        msg = msg + v.FieldName + ":" + v.Message + "#";
-                    });
-                } else {
-                    msg = res.msg;
-                }
-                com.showAlert(com.warning, msg);
-            }
-        }, function(error){
-            com.showAlert(com.error, error.errorMsg);
-        });
-    },
+    balanceBill: function(items, decorationInfos, billNo, creator, date, type, salesGrade, paymentOrg, balanceOrg, brand, supplier, balanceNo, collectionServiceAmount, collectionAmount) {
 
-    balanceBill: function (items, decorationInfos, billNo, creator, date, type, salesGrade, paymentOrg, balanceOrg, brand, supplier, balanceNo, collectionServiceAmount, collectionAmount) {
         var data = JSON.stringify(items);
         var decorationInfoDatas = JSON.stringify(decorationInfos);
 
@@ -647,10 +742,11 @@ var kingdeeUtils = {
             "redis": 0
         };
 
-        kingdeeUtils.kingdeePost(options);
+        kingdeeUtils.library(options);
     },
 
-    balanceBillItem: function (collectionMoney, serviceMoney, orderId, salesNo, coupon) {
+    balanceBillItem: function(collectionMoney, serviceMoney, orderId, salesNo, coupon) {
+
         // 代收金额/服务费金额/客户/装修单号/销售单号/优惠券
         var paramItem = {
             "F_SFKD_JieSuanAmount": collectionMoney,
@@ -666,45 +762,293 @@ var kingdeeUtils = {
     joinReceipt: function(collectBillItems, refundBillItems, materialTransferBillItems, bankTransitionBillItems, receivableBillItems, fundBankMoney, bankTransitionTotal, receivableTotal, currenCollectReceiptType, currenRefundReceiptType, orgno, payment, paymentType, receiptNo, htmlName) {
 
         var decoration = payment.decoration;
-        if (htmlName == "sales") decoration = payment.sales;
+        var dompany = "";
+
+        if (htmlName == "sales")
+            decoration = payment.sales;
+
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": decoration.orderId
+        }, function(res) {
+
+            dompany = res.decoration.bompany;
+        }, null, false);
+
+        var address = (decoration.house.village.cityProper.city.name == null ? " " : decoration.house.village.cityProper.city.name) + " " + (decoration.house.village.cityProper == null ? " " : decoration.house.village.cityProper.name) + " " + decoration.house.village.name + " " + (decoration.house.houseNumber == null ? " " : decoration.house.houseNumber);
+        var dorgNo = "";
 
         var receipt = ["sales", "service"].contains(htmlName) ? payment[htmlName + "Receipt"] : payment;
 
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": dompany
+        }, function(res) {
+
+            dorgNo = res.company.drganization.no;
+        }, null, false);
+
         if (collectBillItems.length > 0) {
-            kingdeeUtils.collectBill(collectBillItems, receipt.collectTime, currenCollectReceiptType, "BD_Customer", decoration.orderId, "BD_Customer", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, receipt.comment)
+            kingdeeUtils.collectBill(collectBillItems, receipt.collectTime, currenCollectReceiptType, "BD_Customer", decoration.orderId, "BD_Customer", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, receipt.comment, address, dorgNo)
         }
 
         if (refundBillItems.length > 0) {
-            kingdeeUtils.collectRefundBill(refundBillItems, receipt.collectTime, currenRefundReceiptType, orgno, "BD_Customer", "BD_Customer", decoration.orderId, decoration.orderId, orgno, decoration.grade, paymentType.kino);
+            kingdeeUtils.collectRefundBill(refundBillItems, receipt.collectTime, currenRefundReceiptType, orgno, "BD_Customer", "BD_Customer", decoration.orderId, decoration.orderId, orgno, decoration.grade, paymentType.kino, address, dorgNo);
         }
 
         if (materialTransferBillItems.length > 0) {
             var materialRealMoney = receipt.advance;
 
-            if (paymentType.paytype == 1) materialRealMoney = -receipt.advance; // 退款
+            if (paymentType.paytype == 1)
+                materialRealMoney = -receipt.advance; // 退款
 
-            if (paymentType.bustype == 1) materialRealMoney = payment.referMoney;
+            if (paymentType.bustype == 1)
+                materialRealMoney = payment.referMoney;
 
-            kingdeeUtils.materialTransferBill(materialTransferBillItems, receiptNo, receipt.collectTime, "BD_Customer", "BD_Customer", decoration.grade, orgno, orgno, decoration.orderId, materialRealMoney);
+            kingdeeUtils.materialTransferBill(materialTransferBillItems, receiptNo, receipt.collectTime, "BD_Customer", "BD_Customer", decoration.grade, orgno, orgno, decoration.orderId, materialRealMoney, address, dorgNo);
         }
 
         if (bankTransitionBillItems != null && bankTransitionBillItems.length > 0) {
-            kingdeeUtils.bankTransitionBill(bankTransitionBillItems, receiptNo, receipt.collectTime, "BD_Customer", "BD_Customer", orgno, orgno, decoration.grade, decoration.orderId, bankTransitionTotal);
+            kingdeeUtils.bankTransitionBill(bankTransitionBillItems, receiptNo, receipt.collectTime, "BD_Customer", "BD_Customer", orgno, orgno, decoration.grade, decoration.orderId, bankTransitionTotal, address, dorgNo);
         }
 
         // 应收单
-        if (paymentType.bustype == 0 && utils.accAdd(utils.accAdd(receipt.cash, fundBankMoney), receipt.advance) > 0){
+        if (paymentType.bustype == 0 && utils.accAdd(utils.accAdd(receipt.cash, fundBankMoney), receipt.advance) > 0) {
 
             var noTaxMoney = utils.accDiv(receivableTotal, (utils.accAdd(1, utils.accDiv(paymentType.taxrate, 100)))); // 不含税金额
             var taxMoney = utils.accSub(receivableTotal, noTaxMoney);
 
             receivableBillItems.push(kingdeeUtils.receivableBillItem(paymentType.kibalance, noTaxMoney, taxMoney));
 
-            kingdeeUtils.receivableBill(receivableBillItems, receipt.collectTime, "YSD02_SYS", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, "项目地址:"+decoration.house.village.name+' '+decoration.house.houseNumber);
+            kingdeeUtils.receivableBill(receivableBillItems, receipt.collectTime, "YSD02_SYS", decoration.orderId, orgno, orgno, decoration.grade, paymentType.kino, "项目地址:" + decoration.house.village.name + ' ' + decoration.house.houseNumber, address, dorgNo);
         }
     },
 
-    kingdeeThirdPartyCommon: function(items, objectName) {
+    category: function(category) {
+
+        if (config.kingdee == false)
+            return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var items = [{
+                "FNumber": category.no,
+                "FDataValue": category.name,
+                "FCreateOrgName": category.companyName,
+                "FDescription": ""
+            }]; // 编码/名称/组织名称/备注
+
+            kingdeeUtils.common(items, "Category");
+
+        });
+    },
+
+    brand: function(brand) {
+
+        if (config.kingdee == false)
+            return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var category = null;
+
+            com.post(api.data.queryCategoryByCId, {
+                "category.cid": brand.categoryId
+            }, function(res) {
+
+                category = res.category;
+            }, null, false);
+
+            var items = [{
+                "FNumber": brand.no,
+                "FName": brand.name,
+                "FCreateOrgName": brand.companyName, // 100 方林集团(虚拟)
+                "F_UNW_WLPL": category.no
+            }]; // 编码/名称/组织名称或公司/品类编码
+
+            kingdeeUtils.common(items, "Brand");
+        });
+    },
+
+    duty: function(duty) {
+
+        if (config.kingdee == false)
+            return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var items = [{
+                "FName": duty.name,
+                "FNumber": duty.name,
+                "FCreateOrgName": duty.companyName
+            }]; // 岗位名称/编码/组织名称
+
+            kingdeeUtils.common(items, "Position");
+        });
+    },
+
+    user: function(user) {
+
+        if (config.kingdee == false)
+            return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            var items = [{
+                "FName": user.userName,
+                "FNumber": user.drganizationNo,
+                "FCreateOrgName": user.drganizationName,
+                "FStaffNumber": user.userId,
+                "FPostDept": user.deptName,
+                "FWorkOrgId": user.drganizationNo,
+                "FSupervisor": user.dutyName == "工程部监理" ? "0" : "1"
+            }]; // 员工姓名/组织编码/组织名称/员工编号/所属部门/工作组织/监理
+
+            kingdeeUtils.common(items, "Staff");
+        });
+    },
+
+    decoration: function(decoration) {
+
+        if (config.kingdee == false)
+            return false;
+
+        com.showConfirm("数据需要同步金蝶吗?", function(res) {
+
+            if (decoration.address == null) {
+                com.post(api.data.queryHouseByHid, {
+                    "house.hid": decoration.houseId
+                }, function(res) {
+
+                    decoration["address"] = (res.house.village.cityProper.city.name == null ? " " : res.house.village.cityProper.city.name) + " " + (res.house.village.cityProper == null ? " " : res.house.village.cityProper.name) + " " + res.house.village.name + " " + (res.house.houseNumber == null ? " " : res.house.houseNumber);
+                }, null, false);
+            }
+
+            var items = [{
+                "FName": decoration.address,
+                "FNumber": decoration.orderId,
+                "FCreateOrgName": decoration.drganizationName,
+                "FDescription": decoration.drganizationNo
+            }]; // 客户姓名/编码/组织名称/备注
+
+            kingdeeUtils.common(items, "Customer");
+        });
+    },
+
+    accessories: function(aid, type, outOrReturnStr) {
+
+        if (config.kingdee == false)
+            return false;
+
+        var accessoriesNo = "";
+        var approverTime = "";
+        var accessories = null;
+        var decoration = null;
+
+        com.post(api.inventory.queryAccessoriesByAid, {
+            "accessories.aid": aid
+        }, function(res) {
+
+            accessoriesNo = res.accessories.no;
+
+            accessories = res.accessories;
+        }, null, false);
+
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": accessories.orderId
+        }, function(res) {
+
+            decoration = res.decoration;
+        }, null, false);
+
+        var manifestOptions = {
+            "accessoriesManifest.accessories.aid": aid,
+            "accessoriesManifest.manifest.type": type
+        };
+
+        com.post(api.inventory.queryManifestByAid, manifestOptions, function(res) {
+
+            var manifest = res.manifests;
+
+            var address = (decoration.house.village.cityProper.city.name == null ? " " : decoration.house.village.cityProper.city.name) + " " + (decoration.house.village.cityProper == null ? " " : decoration.house.village.cityProper.name) + " " + decoration.house.village.name + " " + (decoration.house.houseNumber == null ? " " : decoration.house.houseNumber);
+
+            if (manifest.length == 0) {
+                com.showAlert(com.warning, "无符合条件辅料单.");
+                return false;
+            }
+
+            $.each(manifest, function(i, v) {
+
+                var objs = [];
+
+                approverTime = v.manifestTime;
+
+                com.post(api.inventory.queryManifestItemByMid, {
+                    "manifest.mid": v.mid
+                }, function(res) {
+
+                    var manifestItems = res.manifestItems;
+
+                    if (manifestItems.length == 0) {
+                        com.showAlert(com.warning, "无符合条件辅料项目.");
+                        return false;
+                    }
+
+                    $.each(manifestItems, function(i, v) {
+
+                        var obj = {
+                            "frealqty": String(v.num), // 领用数量
+                            "fstock_code": type == constant.inventory.manifest.TYPE_AS_INT ? String(v.outstorehouse.shid) : String(v.instorehouse.shid), // 仓库编号
+                            "f_zxdh": accessories.orderId, // 装修单号
+                            "faddress": address, // 楼盘地址
+                            "fmaterial_code": v.goods.no, // 商品编号
+                            "fsupervisor": accessories.supervisor.userId, // 监理编号
+                            "fsupervisor_name": accessories.supervisor.userName, // 监理姓名
+                            "fentrynote": String(v.aiid) // 辅料项ID
+                        };
+
+                        objs.push(obj);
+                    });
+                }, null, false);
+
+                var items = {
+                    "fdate": new Date().toISOString(),
+                    "fcustomer_name": params.company.name,
+                    "ffldh": accessoriesNo,
+                    "fentity": objs
+                }; // 审批时间/公司名/辅料单号/项目
+
+                kingdeeUtils.common(items, outOrReturnStr);
+
+            }, null, false);
+
+        });
+    },
+
+    library: function(options) {
+
+        com._post_(api.home.library, options, function(res) {
+
+            if (res.code == 0) {
+                com.showAlert(com.info, "操作成功");
+            } else {
+                var msg = "";
+                if (res.msg instanceof Array) {
+                    msg = "#";
+                    $.each(res.msg, function(i, v) {
+
+                        msg = msg + v.FieldName + ":" + v.Message + "#";
+                    });
+                } else {
+                    msg = res.msg;
+                }
+                com.showAlert(com.warning, msg);
+            }
+        }, function(error) {
+
+            com.showAlert(com.error, error.errorMsg);
+        });
+    },
+
+    common: function(items, objectName) {
 
         var kingdeeOptions = {
             "api": "kingdee.kingdee.thirdPartyCommon",
@@ -714,177 +1058,15 @@ var kingdeeUtils = {
         };
 
         com._post_(api.home.library, kingdeeOptions, function(res) {
+
             if (res.code == 0) {
                 com.showAlert(com.info, "操作成功");
             } else {
                 com.showAlert(com.warning, res.code + " " + res.msg);
             }
-        }, function(error){
+        }, function(error) {
+
             com.showAlert(com.error, error.errorMsg);
         });
     },
-
-    categoryToKingdee: function(category) {
-
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-
-            var items = [
-                {
-                    "FNumber": category.no,
-                    "FDataValue": category.name,
-                    "FCreateOrgName": category.companyName,
-                    "FDescription": ""
-                }
-            ]; // 编码/名称/组织名称/备注
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "Category");
-
-        });
-    },
-
-    brandToKingdee: function(brand) {
-
-        console.log(config.kingdee)
-        console.log(config.kingdee == false)
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-
-            var category = null;
-
-            com.post(api.data.queryCategoryByCId, {"category.cid": brand.categoryId}, function (res) {
-                category = res.category;
-            }, null, false);
-
-            var items = [
-                {
-                    "FNumber": brand.no,
-                    "FName": brand.name,
-                    "FCreateOrgName": brand.companyName, // 100 方林集团(虚拟)
-                    "F_UNW_WLPL": category.no
-                }
-            ]; // 编码/名称/组织名称或公司/品类编码
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "Brand");
-        });
-    },
-
-    dutyToKingdee: function(duty) {
-
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-
-            var items = [
-                {
-                    "FName": duty.name,
-                    "FNumber": duty.name,
-                    "FCreateOrgName": duty.companyName // params.company.fullname
-                }
-            ]; // 岗位名称/编码/组织名称
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "Position");
-        });
-    },
-
-    userToKingdee: function(user) {
-
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-
-            var items = [
-                {
-                    "FName": user.userName,
-                    "FNumber": user.drganizationNo,
-                    "FCreateOrgName": user.drganizationName,
-                    "FStaffNumber": user.userId,
-                    "FPostDept": user.deptName,
-                    "FWorkOrgId": user.drganizationNo,
-                    "FSupervisor": user.dutyName == "工程部监理" ? "0" : "1"
-                }
-            ]; // 员工姓名/组织编码/组织名称/员工编号/所属部门/工作组织/监理
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "Staff");
-        });
-    },
-
-    decorationToKingdee: function(decoration) {
-
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-            console.log(decoration.address == null);
-            console.log("-----------------------------");
-
-            if (decoration.address == null) {
-                com.post(api.data.queryHouseByHid, {"house.hid": decoration.houseId}, function(res) {
-                    decoration["address"] = (res.house.village.cityProper.city.name == null ? " " : res.house.village.cityProper.city.name) + " " + (res.house.village.cityProper == null ? " " : res.house.village.cityProper.name) + " " + res.house.village.name + " " + (res.house.houseNumber == null ? " " : res.house.houseNumber);
-                }, null, false);
-            }
-
-            var items = [
-                {
-                    "FName": decoration.address,
-                    "FNumber": decoration.orderId,
-                    "FCreateOrgName": decoration.drganizationName,
-                    "FDescription": decoration.drganizationNo
-                }
-            ]; // 客户姓名/编码/组织名称/备注
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "Customer");
-        });
-    },
-
-    accessoriesOutToKingdee: function(accessories) {
-
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-
-            var accessoriesNo = "";
-            var approverTime = "";
-
-            com.post(api.inventory.queryAccessoriesByAid, {"accessories.aid": accessories.aid}, function(res) {
-                accessoriesNo = res.accessories.no;
-                approverTime = res.accessories.approverTime;
-            }, null, false);
-
-            var items = {
-                "fdate": new Date(approverTime).toISOString(),
-                "fcustomer_name": accessories.drganizationName,
-                "ffldh": accessoriesNo,
-                "fentity": accessories.items
-            }; // 审批时间/公司名/辅料单号/项目
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "SalesOutStock");
-        });
-    },
-
-    accessoriesReturnToKingdee: function(accessories) {
-
-        if (config.kingdee == false) return false;
-
-        com.showConfirm("数据需要同步金蝶吗?", function(res) {
-
-            var accessoriesNo = "";
-            var approverTime = "";
-
-            com.post(api.inventory.queryAccessoriesByAid, {"accessories.aid": accessories.aid}, function(res) {
-                accessoriesNo = res.accessories.no;
-                approverTime = res.accessories.approverTime;
-            }, null, false);
-
-            var items = {
-                "fdate": new Date(approverTime).toISOString(),
-                "fcustomer_name": accessories.drganizationName,
-                "ffldh": accessoriesNo,
-                "fentity": accessories.items
-            }; // 审批时间/公司名/辅料单号/项目
-
-            kingdeeUtils.kingdeeThirdPartyCommon(items, "SalesReturnStock");
-        });
-    }
 };

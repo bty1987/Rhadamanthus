@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ReceiptTypeDao;
@@ -51,9 +50,6 @@ public class SalesKingdeeServiceImpl implements SalesKingdeeService {
 
 	@Autowired
 	private ReceiptTypeDao receiptTypeDao;
-
-	@Autowired
-	private BrandDao brandDao;
 
 	@Autowired
 	private CompanyDao companyDao;
@@ -163,7 +159,7 @@ public class SalesKingdeeServiceImpl implements SalesKingdeeService {
 
 			SalesPO sales = salesPaymentPO.getSales();
 
-			BrandPO brands = brandDao.get(sales.getBrand().getBid());
+			BrandPO brands = sales.getBrand();
 			String brandBatch = brands.getKino(); // 品牌
 			String supplierBatch = brands.getSupplier().getOldUserId(); // 厂商 TODO
 
@@ -232,7 +228,7 @@ public class SalesKingdeeServiceImpl implements SalesKingdeeService {
 
 		String purpose = systemConfigDao.querySystemConfig("replaceMaterial", salesPO.getPompany()).getValue(); // 收款用途 1004-代收主材款
 
-		BrandPO brands = brandDao.get(salesPO.getBrand().getBid());
+		BrandPO brands = salesPO.getBrand();
 		String brand = brands.getKino(); // 品牌
 		String supplier = brands.getSupplier().getOldUserId(); // 厂商 TODO
 

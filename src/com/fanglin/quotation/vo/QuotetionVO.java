@@ -55,6 +55,10 @@ public class QuotetionVO implements Serializable {
 
 	private Long costPrice;
 
+	private Long consPrice;
+
+	private Long comsPrice;
+
 	private Long unachePrice;
 
 	private Short keeprice;
@@ -256,6 +260,22 @@ public class QuotetionVO implements Serializable {
 
 	public void setCostPrice(Long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	public Long getConsPrice() {
+		return consPrice;
+	}
+
+	public void setConsPrice(Long consPrice) {
+		this.consPrice = consPrice;
+	}
+
+	public Long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(Long comsPrice) {
+		this.comsPrice = comsPrice;
 	}
 
 	public Long getUnachePrice() {

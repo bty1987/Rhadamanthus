@@ -4,6 +4,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,7 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fanglin.customer.vo.CustomerProfileItemVO;
+import com.fanglin.customer.vo.CustomerProfileOptionVO;
+import com.fanglin.customer.vo.CustomerProfileVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "customerprofile", catalog = "customer")
@@ -152,4 +158,18 @@ public class CustomerProfilePO implements Serializable {
 		this.items = items;
 	}
 
+	public CustomerProfileVO ptv(CustomerProfileVO customerProfileVO) {
+
+		BeanUtil.copyProperties(this, customerProfileVO, Arrays.asList("items", "creater"));
+
+		if (customerProfileVO.getCreater() != null && getCreater() != null) customerProfileVO.getCreater().setBaseInfo(getCreater());
+
+		if (customerProfileVO.getItems() == null || getItems() == null) return customerProfileVO;
+
+		for (CustomerProfileItemPO itemPO : getItems()) {
+			customerProfileVO.getItems().add(itemPO.ptv(new CustomerProfileItemVO(new ArrayList<CustomerProfileOptionVO>())));
+		}
+
+		return customerProfileVO;
+	}
 }

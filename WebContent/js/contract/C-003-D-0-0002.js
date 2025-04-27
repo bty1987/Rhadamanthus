@@ -426,12 +426,18 @@ jQuery(function($) {
                 data["sin-company-phone"] = data["con-company-phone"];
             }
 
+            var url = api.decoration.addDecorationContract;
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };
+            
+            if(params.decoration.contract && params.decoration.contract.dcid){
+                url = api.decoration.makeDecorationContract;
+                options["decorationContract.dcid"] = params.decoration.contract.dcid
+            }
 
             console.log(options);
 
@@ -449,7 +455,7 @@ jQuery(function($) {
             mask.css("top", target.height() - mask.height() + 30);
             popup.css("overflow", "hidden");
 
-            com.post(api.decoration.addDecorationContract, options, function(res) {
+            com.post(url, options, function(res) {
 
                 mask.remove();
                 com.closePopup();

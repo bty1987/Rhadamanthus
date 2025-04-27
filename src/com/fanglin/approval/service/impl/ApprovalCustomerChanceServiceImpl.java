@@ -138,7 +138,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 		String content = String.format("客源转装修单,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(ccid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(ccid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_CHANCE_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -174,7 +174,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		CustomerChancePO customerChancePO = approvalCustomerChancePO.getChance();
 
 		if (customerChancePO == null) {
-			throw new FLException(330001, "客源不存在");
+			throw new FLException(330075, "客户机会不存在");
 		}
 
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
@@ -249,6 +249,85 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 		UserPO designer = customerChancePO.getBelonger();
 		UserPO salesman = customerSourcePO.getCreater();
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
+		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, salesman.getCompany());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int submitApprovalForCustomerChanceToDisabled(ApprovalVO approvalVO, ApprovalCustomerChanceVO approvalCustomerChanceVO, String userId, int company) throws FLException {
+
+		Long ccid = approvalCustomerChanceVO.getChance().getCcid();
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_CUSTOMER_CHANCE_DISABLED_INT, String.valueOf(ccid));
+
+		if (approvalPO != null) {
+			throw new FLException(240004, "正在审批中,不能提交新审批");
+		}
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(ccid);
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		if (CustomerChancePO.STATUS_CONFIRM_INT == customerChancePO.getStatus()) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
+		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
+
+		if (customerSourcePO.getStatus() == CustomerSourcePO.STATUS_CONFIRM_INT) {
+			throw new FLException(330074, "客户资源不可操作");
+		}
+
+		UserPO receiver = customerChancePO.getDepartment().getManager();
+		UserPO sender = customerChancePO.getBelonger();
+
+		HousePO housePO = customerSourcePO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客户机会不匹配,客户名:%s,楼盘:%s %s %s %s", customerSourcePO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+
+		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(ccid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_CHANCE_DISABLED_INT, content, approvalVO.getComment(), company);
+
+		approvalDao.save(approvalPO);
+
+		String contents = String.format("客户机会不匹配,客户名:%s,楼盘:%s %s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+
+		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, receiver.getCompany());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int approveForCustomerChanceToDisabled(ApprovalPO approvalPO) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(Long.parseLong(approvalPO.getIdent()));
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		CustomerSourcePO customerSourcePO = customerChancePO.getSource();
+
+		HousePO housePO = customerSourcePO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客户机会不匹配,审批通过,客户名:%s,楼盘:%s %s,批注:%s", customerSourcePO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+
+		UserPO designer = customerChancePO.getBelonger();
+		UserPO salesman = customerSourcePO.getCreater();
+
+		customerChancePO.setStatus(CustomerChancePO.STATUS_DISABLE_INT);
+		customerChancePO.setAnnotate(approvalPO.getComment());
+
+		customerChanceDao.update(customerChancePO);
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, salesman.getCompany());

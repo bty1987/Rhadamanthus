@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.construction.service.ConstructionDrawingService;
 import com.fanglin.construction.vo.ConstructionDrawingVO;
+import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -39,6 +40,8 @@ public class ConstructionDrawingAction extends BaseListAction {
 	private ConstructionDrawingVO constructionDrawing;
 
 	private ConstructionVO construction;
+
+	private ConstructionScheduleVO constructionSchedule;
 
 	private List<ConstructionDrawingVO> constructionDrawings;
 
@@ -69,7 +72,7 @@ public class ConstructionDrawingAction extends BaseListAction {
 	@Action(value = "addConstructionDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionDrawings() throws FLException {
 
-		constructionDrawings = constructionDrawingService.addConstructionDrawings(constructionDrawings, queryUserId());
+		constructionDrawings = constructionDrawingService.addConstructionDrawings(constructionSchedule, constructionDrawings, queryUserId());
 
 		return SUCCESS;
 	}
@@ -92,6 +95,14 @@ public class ConstructionDrawingAction extends BaseListAction {
 
 	public ConstructionVO getConstruction() {
 		return construction;
+	}
+
+	public ConstructionScheduleVO getConstructionSchedule() {
+		return constructionSchedule;
+	}
+
+	public void setConstructionSchedule(ConstructionScheduleVO constructionSchedule) {
+		this.constructionSchedule = constructionSchedule;
 	}
 
 	public void setConstruction(ConstructionVO construction) {

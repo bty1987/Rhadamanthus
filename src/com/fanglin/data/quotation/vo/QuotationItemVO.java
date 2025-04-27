@@ -70,6 +70,8 @@ public class QuotationItemVO implements Serializable {
 
 	private Integer offset;
 
+	private Short isRtem;
+
 	private String comment;
 
 	public QuotationItemVO() {
@@ -275,6 +277,14 @@ public class QuotationItemVO implements Serializable {
 
 	public void setOffset(Integer offset) {
 		this.offset = offset;
+	}
+
+	public Short getIsRtem() {
+		return isRtem;
+	}
+
+	public void setIsRtem(Short isRtem) {
+		this.isRtem = isRtem;
 	}
 
 	public String getComment() {

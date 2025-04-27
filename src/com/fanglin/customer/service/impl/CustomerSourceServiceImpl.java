@@ -210,10 +210,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
 		}
 
+		if (housePO != null && customerSourceDao.queryCustomerSource(creater.getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), company) != null) {
+			throw new FLException(330071, "客户楼盘楼号存在");
+		}
+
 		if (housePO != null) {
-			if (customerSourceDao.countCustomerByHouseNumber(housePO.getHouseNumber(), housePO.getVillage().getVid()) != null) {
-				throw new FLException(330071, "客户楼盘楼号存在");
-			}
+
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
 			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
@@ -277,7 +279,12 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			housePO = houseDao.get(customerSourceVO.getHouse().getHid());
 		}
 
+		if (housePO != null && customerSourceDao.queryCustomerSource(customerSourcePO.getCreater().getUid(), housePO.getHouseNumber(), housePO.getVillage().getVid(), customerSourcePO.getCompany()) != null) {
+			throw new FLException(330071, "客户楼盘楼号存在");
+		}
+
 		if (housePO != null) {
+
 			customerSourcePO.setHouse(housePO);
 			customerSourcePO.setVillage(housePO.getVillage());
 			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
@@ -421,10 +428,6 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			throw new FLException(330074, "客户资源不可操作");
 		}
 
-		if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company) != null) {
-			throw new FLException(330076, "客户机会已存在");
-		}
-
 		short atttype = CustomerChancePO.ATTTYPE_USER_INT;
 
 		DecorationBusitypePO busitype = customerSourcePO.getBusitype();
@@ -460,6 +463,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		int area = customerSourcePO.getInnerArea();
 
 		if (atttype == CustomerChancePO.ATTTYPE_AUTO_INT) {
+
+			if (customerChanceDao.queryCustomerChance(customerSourcePO.getCsid(), company) != null) {
+				throw new FLException(330076, "客户机会已存在");
+			}
 
 			if (customerUserRuleDao.existCustomerUserRule(company, area) == 0) {
 				throw new FLException(330081, "无匹配规则");
@@ -559,7 +566,11 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_REGION_INT);
 			customerChancePO.setRegion(region);
-			customerChancePO.setCompany(company);
+			customerChancePO.setCompany(region.getCompany());
+
+			if (region.getManager() != null) {
+				customerChancePO.setBelonger(region.getManager());
+			}
 
 			customerChanceDao.save(customerChancePO);
 
@@ -581,9 +592,14 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChancePO.setType(CustomerChancePO.ATTTYPE_DEPT_INT);
 			customerChancePO.setDepartment(dept);
 			customerChancePO.setRegion(dept.getFatherDept());
+			customerChancePO.setCompany(dept.getCompany());
 
 			if (dept.getFatherDept() == null) {
 				customerChancePO.setRegion(dept);
+			}
+
+			if (dept.getManager() != null) {
+				customerChancePO.setBelonger(dept.getManager());
 			}
 
 			customerChanceDao.save(customerChancePO);

@@ -9,4 +9,6 @@ public interface DataDrawingDao extends Dao<DataDrawingPO> {
 
 	public List<DataDrawingPO> queryDataDrawing(Long sid, Short type);
 
+	public int batchSaveDataDrawing(long gid, long gpid, int uid);
+
 }

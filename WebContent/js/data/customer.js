@@ -236,6 +236,16 @@ jQuery(function($) {
             return false;
         }
     }, {
+        name: "画像",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            params.customer.cid = v.cid;
+            com.popup4page("#customerProfilePopUp", api.index.customerProfile4detailIndex.url, "画像");
+
+            return false;
+        }
+    }, {
         name: "记录",
         clazz: "btn-pink",
         handle: function(v) {
@@ -243,7 +253,7 @@ jQuery(function($) {
             params.customer.cid = v.cid;
             com.popup4page('#customerRecordPopUp', api.index.customerRecordIndex.url, "记录");
         }
-    }, ];
+    }];
 
     searcher.line("name", lineprops, linebtns).render();
 

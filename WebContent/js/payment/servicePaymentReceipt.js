@@ -13,7 +13,7 @@ jQuery(function($) {
         cash: 0,
         checkBankInfoNum: 0,
         receiptNo: "",
-        organization: parent.params.company.drganization.name,
+        organization: "",
         url: parent.api.index.servicePaymentReceiptIndex.url
     };
 
@@ -43,6 +43,14 @@ jQuery(function($) {
     com.post(queryDecorationForCommonByOrderId, {"decoration.orderId": params.payment.orderId}, function(res) {
 
         receipt.order = res.decoration;
+
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": res.decoration.bompany
+        }, function(data) {
+
+            receipt.organization = data.company.drganization.name;
+        }, null, false);
+
     }, null, false);
 
     var queryServicePaymentForNotInitBySrId = api.payment.queryServicePaymentForNotInitBySrId;
@@ -121,7 +129,7 @@ jQuery(function($) {
 
         printer.name = "payment";
         printer.args = {
-            "title": params.company.drganization.name + "收款收据",
+            "title": receipt.organization + "收款收据",
             "orderId": receipt.order.orderId,
             "orderAddr": receipt.order.house.village.cityProper.city.name + ' ' + receipt.order.house.village.cityProper.name + ' ' + receipt.order.house.village.name + receipt.order.house.houseNumber,
             "collectTime": receipt.serviceReceipt.collectTime,
@@ -177,7 +185,7 @@ jQuery(function($) {
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
             receipt.receiptNo = (Array(10).join(0) + params.payment.serId).slice(-10);
             var spanNo = $('<span style="float: left;"></span>').html("编号:" + receipt.receiptNo).appendTo(headReceiptDiv);
-            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.drganization.name + "收款收据").appendTo(headReceiptDiv);
+            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(receipt.organization + "收款收据").appendTo(headReceiptDiv);
 
             var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 

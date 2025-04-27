@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
@@ -49,6 +50,9 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
 
 	@Autowired
+	private ExtensionItemDao extensionItemDao;
+
+	@Autowired
 	private SelectionItemDao selectionItemDao;
 
 	@Override
@@ -71,6 +75,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
 
 				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
+				quotationFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 			}
 
@@ -131,7 +136,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 			quotationFunctionAreaItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(quotationFunctionAreaItemVO.getQuotationFunctionAreaId()));
 
-			if (Arrays.asList(QuotationFunctionAreaItemPO.TYPE_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_COST_INT, QuotationFunctionAreaItemPO.TYPE_IGNORE_INT, QuotationFunctionAreaItemPO.TYPE_UNACHE_INT).contains(quotationFunctionAreaItemVO.getType())) {
+			if (Arrays.asList(QuotationFunctionAreaItemPO.TYPE_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_COST_INT, QuotationFunctionAreaItemPO.TYPE_IGNORE_INT, QuotationFunctionAreaItemPO.TYPE_UNACHE_INT, QuotationFunctionAreaItemPO.TYPE_CMPREH_INT).contains(quotationFunctionAreaItemVO.getType())) {
 
 				quotationFunctionAreaItemPO.setQuotationItem(new QuotationItemPO(quotationFunctionAreaItemVO.getQuotationItemId()));
 				quotationFunctionAreaItemPO.setContent(null);
@@ -145,6 +150,10 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			quotationFunctionAreaItemVO.setQfaiId(quotationFunctionAreaItemPO.getQfaiId());
 
 			long qfaiid = quotationFunctionAreaItemPO.getQfaiId();
+
+			if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), qfaiid) > 0) {
+				throw new FLException(200043, "存在关联扩展项");
+			}
 
 			int count = selectionItemDao.countSelectionItem(orderId, areaId, qfaiid);
 
@@ -260,6 +269,10 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 		if (quotationFunctionAreaPO == null) {
 			throw new FLException(200012, "功能区不存在");
+		}
+
+		if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), qfaiIds) > 0) {
+			throw new FLException(200043, "存在关联扩展项");
 		}
 
 		if (selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId(), qfaiIds, SelectionItemPO.TYPE_QUOTATION_SHORT) > 0) {

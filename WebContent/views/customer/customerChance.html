@@ -378,6 +378,41 @@
         </div>
     </div>
     
+    <div class="modal fade" id="belongApproveModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title" id="commitBelongApproveDialog">提交审批</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group" id="belongApproveCommentGroup">
+                            <label class="col-sm-3 control-label no-padding-right">审批备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="belongApproveComment" class=" m-wrap col-xs-6" maxlength="128" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="belongApproveManGroup">
+                            <label for="firstApproveMan" class="col-sm-3 control-label no-padding-right">审批人</label>
+                            <div class="col-sm-9">
+                                <div id="belongApproveMan" class="col-xs-6 m-wrap"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="belongApprovalBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="modal fade" id="QRcodeModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content col-md-12">
@@ -452,7 +487,7 @@
                             <form class="form-horizontal">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="configEvent" class="col-sm-3 control-label no-padding-right orange"  id="annotate">不匹配原因</label>
+                                        <label for="configEvent" class="col-sm-3 control-label no-padding-right orange">不匹配原因</label>
                                         <div class="col-sm-9">
                                             <textarea class="col-xs-10 col-sm-6 v_required" id="annotate" rows="3" cols="3"></textarea>
                                         </div>

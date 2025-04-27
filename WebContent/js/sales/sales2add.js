@@ -62,7 +62,7 @@ jQuery(function() {
         sales.rightitems.salesman.val(data.salesman.currentName);
         sales.rightitems.instorer.val(data.instorer.currentName);
         sales.rightitems.guider.val(data.guider.currentName);
-        sales.rightitems.brands.val(data.brand + '-' + data.category);
+        sales.rightitems.brands.val(data.brand.name + '-' + data.category);
         sales.rightitems.coupon.val(data.coupon);
         sales.rightitems.couponInfo.val(data.couponInfo);
         sales.rightitems.totals.val(data.total);
@@ -281,7 +281,7 @@ jQuery(function() {
         if (com.validate('left', 'bottom'))
             return false;
 
-        if (sales.leftitems.brand.val() != sales.brand) {
+        if (sales.leftitems.brand.val() != sales.brand.name) {
             com.showAlert(com.warning, "销售项品牌与主材品牌不符,请检查");
             return false;
         }

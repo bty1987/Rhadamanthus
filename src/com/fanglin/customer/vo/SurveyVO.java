@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class SurveyVO implements Serializable {
 
@@ -20,11 +20,11 @@ public class SurveyVO implements Serializable {
 
 	private String name;
 
-	private UserVO creater;
+	private UserBaseVO creater;
 
-	private UserVO sender;
+	private UserBaseVO sender;
 
-	private UserVO finisher;
+	private UserBaseVO finisher;
 
 	private Timestamp createTime;
 
@@ -50,9 +50,16 @@ public class SurveyVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public SurveyVO(List<SurveyItemVO> items, UserVO creater, UserVO sender, UserVO finisher) {
+	public SurveyVO(List<SurveyItemVO> items, UserBaseVO creater, UserBaseVO sender, UserBaseVO finisher) {
 		super();
 		this.items = items;
+		this.creater = creater;
+		this.sender = sender;
+		this.finisher = finisher;
+	}
+
+	public SurveyVO(UserBaseVO creater, UserBaseVO sender, UserBaseVO finisher) {
+		super();
 		this.creater = creater;
 		this.sender = sender;
 		this.finisher = finisher;
@@ -90,27 +97,27 @@ public class SurveyVO implements Serializable {
 		this.name = name;
 	}
 
-	public UserVO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserVO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 
-	public UserVO getSender() {
+	public UserBaseVO getSender() {
 		return sender;
 	}
 
-	public void setSender(UserVO sender) {
+	public void setSender(UserBaseVO sender) {
 		this.sender = sender;
 	}
 
-	public UserVO getFinisher() {
+	public UserBaseVO getFinisher() {
 		return finisher;
 	}
 
-	public void setFinisher(UserVO finisher) {
+	public void setFinisher(UserBaseVO finisher) {
 		this.finisher = finisher;
 	}
 

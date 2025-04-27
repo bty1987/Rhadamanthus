@@ -111,6 +111,7 @@ $(function() {
                     var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
                     var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('反结');
+                    var $btnReject = $('<a></a>').addClass('btn btn-minier btn-purple').html('驳回');
                     var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
 
                     var coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
@@ -140,7 +141,7 @@ $(function() {
                                 propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey", tools.personel.info, v.sales.instorer.userId]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.sales.brand.name, "grey", tools.brand.info, v.sales.bid]);
+                                propertyArr.push(["品牌:", v.sales.brand.name, "grey", tools.brand.info, v.sales.brand.bid]);
                                 break;
                             case "depositpay":
                                 propertyArr.push(["定金:", v.sales.depositpay, "blue"]);
@@ -289,6 +290,9 @@ $(function() {
                                 break;
                             case "status":
                                 $btnDiv.append($btnStatus);
+                                break;
+                            case "reject":
+                                $btnDiv.append($btnReject);
                                 break;
                             case "vbalance":
                                 $btnDiv.append($btnVbalance);
@@ -447,7 +451,21 @@ $(function() {
                             salesBalanceSearcher.doSearch();
                         });
                     });
+
+                    $btnReject.click(function(e) {
+
+                        com.post(api.sales.rejectSalesBalance, {
+                            "salesBalance.sbid": v.sbid
+                        }, function(res) {
+
+                            com.showAlert(com.info, "操作成功");
+
+                            salesBalanceSearcher.doSearch();
+                        });
+                    });
+
                     $picture.click(function() {
+
                         managedrawing(v);
                         initUploadBtn(v);
                     });
@@ -468,7 +486,7 @@ $(function() {
     var salesBalanceSearcher = new Searcher();
 
     var salesBalanceParams = {}
-    if (salesBalance.pageType == "allowance"){
+    if (salesBalance.pageType == "allowance") {
         salesBalanceParams["salesBalance.sales.type"] = 1;
     }
 
@@ -616,7 +634,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值:", 'sales.coupon'], ["券信息:", 'sales.couponInfo'], ["驻店:", 'sales.instorer.currentName'], ["预结值:", 'balance'], ["预结时间:", 'createTime'], ["预结人:", 'creater.currentName'], ["厂结:", 'vbalance'], ["厂结人:", 'voster.currentName'], ["厂结时间:", 'venderTime'], ["结算值:", 'pbalance'], ["结算时间:", 'postTime'], ["结算人:", 'poster.currentName'], ["抹零:", 'sales.maling'], ["厂商抹零:", 'sales.venderMaling'], ["状态:", 'status'], ["类型:", 'type'], ["等级:", 'sales.grade'], ],
+                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand.name'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值:", 'sales.coupon'], ["券信息:", 'sales.couponInfo'], ["驻店:", 'sales.instorer.currentName'], ["预结值:", 'balance'], ["预结时间:", 'createTime'], ["预结人:", 'creater.currentName'], ["厂结:", 'vbalance'], ["厂结人:", 'voster.currentName'], ["厂结时间:", 'venderTime'], ["结算值:", 'pbalance'], ["结算时间:", 'postTime'], ["结算人:", 'poster.currentName'], ["抹零:", 'sales.maling'], ["厂商抹零:", 'sales.venderMaling'], ["状态:", 'status'], ["类型:", 'type'], ["等级:", 'sales.grade'], ],
                 list: res.paging.data
 
             }, function(v) {
@@ -762,6 +780,7 @@ $(function() {
             salesBalanceSearcher.doSearch();
         });
     }
+
     function managedrawing(v) {
 
         com.focusPage('#salesDrawing').html("");
@@ -786,6 +805,7 @@ $(function() {
 
         salesBalance.drawingModal.modal("show");
     }
+
     function appendGalleryElement(galleryId, value) {
 
         var gallery = com.focusPage("#" + galleryId);
@@ -804,9 +824,10 @@ $(function() {
                 com.focusPage("#gallery_li" + value.spid).remove();
             });
         }).appendTo(toolsDiv);
-        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
     }
+
     function initUploadBtn(v) {
 
         com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {

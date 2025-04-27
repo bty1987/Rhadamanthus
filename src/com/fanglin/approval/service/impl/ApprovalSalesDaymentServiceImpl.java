@@ -83,7 +83,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("销售不退定金,销售单号:%s,品牌:%s", salesPO.getNo(), salesPO.getBrand());
+		String content = String.format("销售不退定金,销售单号:%s,品牌:%s", salesPO.getNo(), salesPO.getBrand().getName());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, salesPO.getOrderId(), String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT, content, approvalVO.getComment(), company);
 

@@ -210,6 +210,14 @@ $.extend(api, {
                 args: ["uppval", "lowval", "days"]
             }]
         },
+        checkCustomerProtectRule: {
+            url: "checkCustomerProtectRule.do",
+            type: "query",
+            tranargs: [{
+                result: "customerProtectRule",
+                args: ["uppval", "lowval", "days"]
+            }]
+        },
         addCustomerProtectRule: {
             url: "addCustomerProtectRule.do",
             type: "update",
@@ -410,7 +418,11 @@ $.extend(api, {
         },
         fineCustomerChance: {
             url: "fineCustomerChance.do"
-        },      
+        },
+        finishCustomerChance: {
+            url: "finishCustomerChance.do"
+        },
+        
         pageCustomerprofile: {
             url: "pageCustomerprofile.do"
         },

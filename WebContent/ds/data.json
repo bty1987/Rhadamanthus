@@ -79,8 +79,7 @@
     {"key" : "4", "value" : "主材活动优惠"},
     {"key" : "5", "value" : "其他"},
     {"key" : "6", "value" : "主材打印说明"},
-    {"key" : "7", "value" : "决算打印说明"},
-    {"key" : "8", "value" : "国补打印说明"}
+    {"key" : "7", "value" : "决算打印说明"}
   ], "taskLevel": [
     {"key" : "0", "value" : "功能级"},
     {"key" : "1", "value" : "模块级"}
@@ -144,7 +143,8 @@
   ], "signetType": [
     {"key" : "0", "value" : "合同"},
     {"key" : "1", "value" : "款项"},
-    {"key" : "2", "value" : "人资"}
+    {"key" : "2", "value" : "人资"},
+    {"key" : "3", "value" : "厂商"}
   ], "aoodsAtttype": [
     {"key" : "0", "value" : "标准"},
     {"key" : "1", "value" : "外辅"}

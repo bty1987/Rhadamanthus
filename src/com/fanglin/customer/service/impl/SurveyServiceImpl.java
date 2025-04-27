@@ -28,7 +28,7 @@ import com.fanglin.data.po.SurveyTemplateOptionPO;
 import com.fanglin.data.po.SurveyTemplatePO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -62,14 +62,7 @@ public class SurveyServiceImpl implements SurveyService {
 		List<SurveyVO> surveyVOs = new ArrayList<SurveyVO>();
 
 		for (SurveyPO surveyPO : surveyPOs) {
-
-			SurveyVO surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO(), new UserVO(), new UserVO());
-
-			BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater", "sender", "finisher"));
-			BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(surveyPO.getSender(), surveyVO.getSender(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(surveyPO.getFinisher(), surveyVO.getFinisher(), Arrays.asList("dept", "role", "duty"));
-			surveyVOs.add(surveyVO);
+			surveyVOs.add(surveyPO.ptv(new SurveyVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(surveyVOs);
@@ -82,49 +75,22 @@ public class SurveyServiceImpl implements SurveyService {
 		List<SurveyVO> surveyVOs = new ArrayList<SurveyVO>();
 
 		for (SurveyPO surveyPO : surveyPOs) {
-
-			surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO(), new UserVO(), new UserVO());
-
-			BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater", "sender", "finisher"));
-			BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(surveyPO.getSender(), surveyVO.getSender(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(surveyPO.getFinisher(), surveyVO.getFinisher(), Arrays.asList("dept", "role", "duty"));
-
-			surveyVOs.add(surveyVO);
+			surveyVOs.add(surveyPO.ptv(new SurveyVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return surveyVOs;
 	}
 
 	@Override
-	public SurveyVO querySurveyBySid(SurveyVO surveyVO) {
+	public SurveyVO querySurveyBySid(SurveyVO surveyVO) throws FLException {
 
 		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
 
-		surveyVO = new SurveyVO(new ArrayList<SurveyItemVO>(), new UserVO(), new UserVO(), new UserVO());
-
-		BeanUtil.copyProperties(surveyPO, surveyVO, Arrays.asList("items", "creater", "sender", "finisher"));
-		BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-		BeanUtil.copyProperties(surveyPO.getSender(), surveyVO.getSender(), Arrays.asList("dept", "role", "duty"));
-		BeanUtil.copyProperties(surveyPO.getFinisher(), surveyVO.getFinisher(), Arrays.asList("dept", "role", "duty"));
-
-		for (SurveyItemPO itemPO : surveyPO.getItems()) {
-
-			SurveyItemVO itemVO = new SurveyItemVO(new ArrayList<SurveyOptionVO>());
-
-			BeanUtil.copyPropertie(itemPO, itemVO, Arrays.asList("options"));
-
-			for (SurveyOptionPO optionPO : itemPO.getOptions()) {
-
-				SurveyOptionVO optionVO = new SurveyOptionVO();
-
-				BeanUtil.copyPropertie(optionPO, optionVO);
-
-				itemVO.getOptions().add(optionVO);
-			}
-
-			surveyVO.getItems().add(itemVO);
+		if (surveyPO == null) {
+			throw new FLException(330058, "调研不存在");
 		}
+
+		surveyVO = surveyPO.ptv(new SurveyVO(new ArrayList<SurveyItemVO>(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()));
 
 		return surveyVO;
 	}
@@ -297,6 +263,7 @@ public class SurveyServiceImpl implements SurveyService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void finishSurvey(SurveyVO surveyVO, String userId) throws FLException {
+
 		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
 
 		if (surveyPO == null) {
@@ -306,6 +273,7 @@ public class SurveyServiceImpl implements SurveyService {
 		if (surveyPO.getStatus() != SurveyPO.STATUS_HANDLE_INT) {
 			throw new FLException(330059, "调研状态不可操作");
 		}
+
 		UserPO finisher = userdDao.queryUserByUserId(userId);
 
 		surveyPO.setStatus(SurveyPO.STATUS_FINISH_INT);

@@ -47,6 +47,10 @@ public class QuotationDO implements Serializable {
 
 	private Timestamp lockTime;
 
+	private int workTime;
+
+	private int audiTime;
+
 	private UserPO creater;
 
 	private QuotationVersionPO version;
@@ -83,11 +87,19 @@ public class QuotationDO implements Serializable {
 
 	private long consPrice;
 
+	private long comsPrice;
+
+	private long undisComPrice;
+
+	private long disComPrice;
+
 	private long totalPrice;
 
 	private short defaults;
 
 	private short status;
+
+	private short attstatus;
 
 	private String content;
 
@@ -165,6 +177,24 @@ public class QuotationDO implements Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	@Column(name = "workTime")
+	public int getWorkTime() {
+		return workTime;
+	}
+
+	public void setWorkTime(int workTime) {
+		this.workTime = workTime;
+	}
+
+	@Column(name = "audiTime")
+	public int getAudiTime() {
+		return audiTime;
+	}
+
+	public void setAudiTime(int audiTime) {
+		this.audiTime = audiTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -331,6 +361,33 @@ public class QuotationDO implements Serializable {
 		this.consPrice = consPrice;
 	}
 
+	@Column(name = "comsPrice")
+	public long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(long comsPrice) {
+		this.comsPrice = comsPrice;
+	}
+
+	@Column(name = "undisComPrice")
+	public long getUndisComPrice() {
+		return undisComPrice;
+	}
+
+	public void setUndisComPrice(long undisComPrice) {
+		this.undisComPrice = undisComPrice;
+	}
+
+	@Column(name = "disComPrice")
+	public long getDisComPrice() {
+		return disComPrice;
+	}
+
+	public void setDisComPrice(long disComPrice) {
+		this.disComPrice = disComPrice;
+	}
+
 	@Column(name = "totalPrice")
 	public long getTotalPrice() {
 		return totalPrice;
@@ -356,6 +413,15 @@ public class QuotationDO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "attstatus")
+	public short getAttstatus() {
+		return attstatus;
+	}
+
+	public void setAttstatus(short attstatus) {
+		this.attstatus = attstatus;
 	}
 
 	@Column(name = "content")

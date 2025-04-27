@@ -129,7 +129,7 @@ $(function () {
                         propertyArr.push(["备注:", v.comment, "grey"]);
                         break;
                     case "brand":
-                        propertyArr.push(["品牌:", v.salesItem.goods.brand, "grey", tools.brand.info, v.sales.bid]);
+                        propertyArr.push(["品牌:", v.salesItem.goods.brand, "grey", tools.brand.info, v.sales.brand.bid]);
                         break;
                     case "category":
                         propertyArr.push(["品类:", v.salesItem.goods.category, "grey"]);

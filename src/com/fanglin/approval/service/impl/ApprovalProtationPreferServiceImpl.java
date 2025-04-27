@@ -74,10 +74,11 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 		}
 
 		String orderId = protationPO.getOrderId();
+		String pid = String.valueOf(protationPO.getPid());
 
 		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 
-		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT, orderId);
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT, pid);
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -96,9 +97,9 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalProtationPreferVO.getPreferPrice(), approvalProtationPreferVO.getManagePrefer(), approvalProtationPreferVO.getAdvancePrefer());
+		String content = String.format("装修单号:%s,优惠额:%s,管理优惠额:%s特批优惠额:%s", orderId, approvalProtationPreferVO.getPreferPrice() / 1000, approvalProtationPreferVO.getManagePrefer() / 1000, approvalProtationPreferVO.getAdvancePrefer() / 1000);
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, pid, ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -163,10 +164,39 @@ public class ApprovalProtationPreferServiceImpl implements ApprovalProtationPref
 		protationPO.setAdvanceProfit(approvalProtationPreferPO.getAdvancePrefer());
 		protationPO.setTotalPrice(approvalProtationPreferPO.getTotalPrice());
 
+		protationPO.setStatus(ProtationPO.STATUS_INIT_INT);
+
 		if (protationPO.getDefaults() == ProtationPO.DEFAULT_DEFAULT_INT) {
 			decorationPO.setPrecontractPrice(protationPO.getTotalPrice());
 			decorationDao.update(decorationPO);
 		}
+
+		protationDao.update(protationPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refuseForProtationPrefer(ApprovalPO approvalPO) throws FLException {
+
+		ApprovalProtationPreferPO approvalProtationPreferPO = approvalProtationPreferDao.queryApprovalProtationPreferByAId(approvalPO.getAid());
+
+		if (approvalProtationPreferPO == null) {
+			throw new FLException(240003, "审批信息不完整");
+		}
+
+		ProtationPO protationPO = protationDao.get(approvalProtationPreferPO.getPid());
+
+		if (protationPO == null) {
+			throw new FLException(200046, "预签不存在");
+		}
+
+		if (protationPO.getStatus() != ProtationPO.STATUS_APPROVE_INT) {
+			throw new FLException(200047, "预签状态不可操作");
+		}
+
+		protationPO.setStatus(ProtationPO.STATUS_INIT_INT);
 
 		protationDao.update(protationPO);
 

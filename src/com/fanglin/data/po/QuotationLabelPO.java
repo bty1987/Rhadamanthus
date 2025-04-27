@@ -17,6 +17,8 @@ public class QuotationLabelPO implements Serializable {
 
 	private static final long serialVersionUID = -615038657868256340L;
 
+	public static final String COLUMN_NAME_STR = "name";
+
 	private long qlid;
 
 	private String name;

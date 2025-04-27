@@ -30,8 +30,8 @@ $(function() {
     };
 
     custype.items.atttype.bindData(constant.payment().receipt.paymentType.datas, "key", "value");
-    custype.items.dgrade.bindData(constant.data().custype.dgrade.datas, "key", "value");
-    custype.items.sgrade.bindData(constant.data().custype.sgrade.datas, "key", "value");
+    custype.items.dgrade.bindData(constant.data().custype.dgrade.datas, "key", "value", true);
+    custype.items.sgrade.bindData(constant.data().custype.sgrade.datas, "key", "value", true);
 
     custype.modals.addCustypeModal.on("hide.bs.modal", function(a) {
 
@@ -196,11 +196,8 @@ $(function() {
             "custype.atttype": custype.items.atttype.val()
         };
 
-        if (["0", "1", "4"].indexOf(custype.items.atttype.val()) == -1) {
-            options["custype.sgrade"] = custype.items.sgrade.val();
-        } else {
-            options["custype.dgrade"] = custype.items.dgrade.val();
-        }
+        if (custype.items.dgrade.val() != "" && custype.items.dgrade.val() != null && custype.items.dgrade.val() != undefined) options["custype.dgrade"] = custype.items.dgrade.val();
+        if (custype.items.sgrade.val() != "" && custype.items.sgrade.val() != null && custype.items.sgrade.val() != undefined) options["custype.sgrade"] = custype.items.sgrade.val();
 
         if (custype.currentCtid != null) {
             url = api.data.updateCustype;

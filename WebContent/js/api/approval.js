@@ -116,6 +116,9 @@ $.extend(api, {
                 args: ["approvalDecorationBelongItems.rate"]
             }
         },
+        submitApprovalForDecorationContract: {
+            url: "submitApprovalForDecorationContract.do",
+        },
         submitApprovalForQuotationDiscount: {
             url: "submitApprovalForQuotationDiscount.do",
             type: "update",
@@ -205,6 +208,9 @@ $.extend(api, {
 
         submitApprovalForCustomerChance: {
             url: "submitApprovalForCustomerChance.do"
+        },
+        submitApprovalForCustomerChanceToDisabled: {
+            url: "submitApprovalForCustomerChanceToDisabled.do"
         },
 
         pageApprovalCustomerSource: {

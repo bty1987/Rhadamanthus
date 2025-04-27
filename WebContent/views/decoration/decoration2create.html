@@ -56,9 +56,16 @@
 										</div>
 
 										<div class="form-group">
-											<label for="designerId" class="col-sm-3 control-label no-padding-right">跟单员</label>
+											<label for="designerId" class="col-sm-3 control-label no-padding-right">方案设计</label>
 											<div class="col-md-9">
 												<input type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="escorterId" placeholder="请输入跟单员">
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label for="materialerId" class="col-sm-3 control-label no-padding-right">跟单员</label>
+											<div class="col-md-9">
+												<input type="text" class="col-xs-10 col-sm-5" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="materialerId" placeholder="请输入主材员">
 											</div>
 										</div>
 
@@ -424,6 +431,13 @@
 											<select class='col-xs-10 col-sm-6' id='heatingType'></select>
 										</div>
 									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label no-padding-right" for="feature">三不</label>
+										<div class="col-sm-9">
+											<textarea id="feature" maxlength="512" class="col-xs-10 col-sm-6" rows="3" ></textarea>
+										</div>
+									</div>
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group">
@@ -462,13 +476,15 @@
 											<select class='col-xs-10 col-sm-6' id='parlourType' ></select>
 										</div>
 									</div>
-
+									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="feature">三不</label>
+										<label for="islift" class="col-sm-3 control-label no-padding-right">有无电梯</label>
 										<div class="col-sm-9">
-											<textarea id="feature" maxlength="512" class="col-xs-10 col-sm-6" rows="3" ></textarea>
+											<select class='col-xs-10 col-sm-6' id='islift' ></select>
 										</div>
 									</div>
+
+									
 
 								</div>
 							</div>

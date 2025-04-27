@@ -53,7 +53,7 @@ Condition.addupRule("sales", {
         label: "品牌",
         type: "text",
         submitConfig: {
-            name: "sales.brand",
+            name: "sales.brand.name",
             op: "cn",
             validate: null
         },
@@ -355,7 +355,7 @@ Condition.addupRule("sales", {
         label: "品牌",
         type: "text",
         submitConfig: {
-            name: "sales.brand",
+            name: "sales.brand.name",
             op: "cn",
             validate: null
         },
@@ -392,7 +392,7 @@ Condition.addupRule("sales", {
         label: "品牌",
         type: "text",
         submitConfig: {
-            name: "sales.brand",
+            name: "sales.brand.name",
             op: "cn",
             validate: null
         },
@@ -401,7 +401,7 @@ Condition.addupRule("sales", {
         label: "品牌",// 中文名
         type: "autofill",// 类型
         submitConfig: {// 向后台提交的配置
-            name: "sales.brand",// 接口中的参数名
+            name: "brand.bid",// 接口中的参数名
             op: "eq",// 查询方式
             validate: null
         // 校验规则
@@ -588,7 +588,7 @@ Condition.addupRule("sales", {
         label: "品牌",
         type: "text",
         submitConfig: {
-            name: "sales.brand",
+            name: "sales.brand.name",
             op: "cn",
             validata: null
         }

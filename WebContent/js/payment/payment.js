@@ -98,7 +98,8 @@ jQuery(function($) {
 		currentOrderId: "",
 		pageConfig: {},
 		typeNo: 0,
-		atttype: 0
+		atttype: 0,
+		decoration: {}
 	};
 
 	//隐藏触发
@@ -135,9 +136,6 @@ jQuery(function($) {
 
 	//info信息是分页显示信息的, util是下拉框信息
 	paymentUtils.getReceiptType(payment);
-
-	//现金方式
-	com.selectTypeahead("cashInfo", payment.cashUtil, "key", "value", null);
 
 	//转账方式(银行)
 	payment.btns.checkvAdd.click(function(){
@@ -498,8 +496,19 @@ jQuery(function($) {
 
 		payment.payment = decoration;
 
-		payment.items.myModalLabel.text(decoration.paymentType+"信息");
-		payment.items.paymentMethod.text(decoration.paymentType+"方式");
+		// 查询装修单信息
+		com.post(api.decoration.queryDecorationForCommonByOrderId, {
+			"decoration.orderId": decoration.orderId
+		}, function(res) {
+
+			payment.decoration = res.decoration;
+		}, null, false);
+
+		//info信息是分页显示信息的, util是下拉框信息
+		paymentUtils.getReceiptType(payment);
+
+		payment.items.myModalLabel.text(decoration.paymentType + "信息");
+		payment.items.paymentMethod.text(decoration.paymentType + "方式");
 		payment.btns.collectBtn.text(decoration.paymentType);
 		//payment.paymentTypes = v.paymentType;
 
@@ -507,10 +516,12 @@ jQuery(function($) {
 		if(payment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(payment, payment.typeUpdate);
 		if(payment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
 
+		com.selectTypeahead("cashInfo", payment.cashUtil, "key", "value", null); // 现金方式
+
 		// 根据等级在数组中筛选出符合要求的用于显示
 		getReceiptTypeForGrade(0, decoration.grade);
 
-		payment.modals.collectModal.attr("grade", decoration.grade);
+		payment.modals.collectModal.attr("grade", decoration.grade); // 刷卡&银行
 
 		if(decoration.paymentType == "收款"){
 			payment.items.balanceDiv.hide();
@@ -551,6 +562,18 @@ jQuery(function($) {
 		if(payment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(payment);
 		if(payment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(payment, 1);
 		if(payment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
+
+		// 查询装修单信息
+		com.post(api.decoration.queryDecorationForCommonByOrderId, {
+			"decoration.orderId": v.decoration.orderId
+		}, function(res) {
+
+			payment.decoration = res.decoration;
+		}, null, false);
+
+		paymentUtils.getReceiptType(payment);
+
+		com.selectTypeahead("cashInfo", payment.cashUtil, "key", "value", null); // 现金方式
 
 		getReceiptTypeForGrade(0, v.grade);
 
@@ -736,9 +759,9 @@ jQuery(function($) {
 				searcher.doSearch();
 
 				// 同步金蝶
-				$.each(kingdeePayments, function(i, v){
-					kingdeeUtils.payment(v, payment.htmlName);
-				});
+				//$.each(kingdeePayments, function(i, v){
+				//	kingdeeUtils.payment(v, payment.htmlName);
+				//});
 
 				com.showAlert(com.info, "确认成功");
 			});

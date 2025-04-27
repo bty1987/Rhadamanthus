@@ -65,6 +65,16 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
+	public ContractVO queryContractByCid(ContractVO contract) {
+
+		ContractPO contractPO = contractDao.get(contract.getCid());
+
+		if (contractPO != null) BeanUtil.copyProperties(contractPO, contract);
+
+		return contract;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int countContract(int company) throws FLException {
 

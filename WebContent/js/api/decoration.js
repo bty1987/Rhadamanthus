@@ -54,6 +54,10 @@ $.extend(api.index, {
         url: "/views/decoration/decorationContract.html"
     },
 
+    decorationPictureIndex: {
+        url: "/views/decoration/decorationPicture.html"
+    },
+    
     decorationSales2print: {
         url: "/views/decoration/decorationSales2print.html"
     },
@@ -166,6 +170,10 @@ $.extend(api, {
         sendDecorationContractForAuth: {
             url: "sendDecorationContractForAuth.do"
         },
+        
+        queryDecorationMeasure: {
+            url: "queryDecorationMeasure.do"
+        },
         sendDecorationContract: {
             url: "sendDecorationContract.do"
         },
@@ -184,6 +192,9 @@ $.extend(api, {
         addDecorationContract: {
             url: "addDecorationContract.do"
         },
+        makeDecorationContract: {
+            url: "makeDecorationContract.do"
+        },
         affixDecorationContract: {
             url: "affixDecorationContract.do"
         },
@@ -195,6 +206,13 @@ $.extend(api, {
         },
         showDecorationContract: {
             url: "showDecorationContract.do"
+        },
+       
+        failureDecorationMeasure: {
+            url: "failureDecorationMeasure.do"
+        },
+        applayDecorationMeasure: {
+            url: "applayDecorationMeasure.do"
         },
         presignDecorationContract: {
             url: "presignDecorationContract.do",
@@ -235,7 +253,10 @@ $.extend(api, {
                 args: ["decorationMidpack.materialPrice"]
             }
         },
-
+        updateDecorationMeasure: {
+            url: "updateDecorationMeasure.do"
+        },
+        
         pageDecoration: {
             url: "pageDecoration.do",
             demo: true,
@@ -245,6 +266,30 @@ $.extend(api, {
                 args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
+        pageDecorationMeasure: {
+            url: "pageDecorationMeasure.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
+        pageDecorationMeasureForApplay: {
+            url: "pageDecorationMeasureForApplay.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-decoration-house",
                 args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
             }]
         },
@@ -404,6 +449,18 @@ $.extend(api, {
                 args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
             }]
         },
+        pageDecorationForMaterialer: {
+            url: "pageDecorationForMaterialer.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
         pageDecorationForBelong: {
             url: "pageDecorationForBelong.do",
             demo: true,
@@ -544,6 +601,13 @@ $.extend(api, {
                 result: "decorationBelongs",
                 args: ["rate"]
             }]
+        },
+        tranDecorationBelong: {
+            url: "tranDecorationBelong.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationBelongs.rate"]
+            }
         },
 
         queryDecorationPictureByOrderId: {

@@ -32,6 +32,11 @@ public class CustomerProfileDaoImpl extends DaoImpl<CustomerProfilePO> implement
 	}
 
 	@Override
+	public CustomerProfilePO queryCustomerProfileByCid(long cid) {
+		return (CustomerProfilePO) session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq("cid", cid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public CustomerProfilePO queryCustomerProfileByOrderId(String orderId) {
 		return (CustomerProfilePO) session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq(CustomerProfilePO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
 	}

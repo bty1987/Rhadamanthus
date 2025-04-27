@@ -37,6 +37,7 @@
             "addReduce.uncalPrice": 0,
             "addReduce.calPrice": 0,
             "addReduce.consPrice": 0,
+            "addReduce.comsPrice": 0,
             "addReduce.discount": 0,
             "addReduce.manageDiscount": 0,
             "addReduce.taxRate": 0,
@@ -317,6 +318,7 @@
             var _uncalPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(_discountFlag) != -1 ? _sum : 0;
             var _calPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT].indexOf(_discountFlag) != -1 ? _sum : 0;
             var _consPrice = _subtype == constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
+            var _comsPrice = _subtype != constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate)); // 获取到管理费
             var _taxPrice = 0;
 
@@ -335,6 +337,7 @@
                 "data-uncalprice": _uncalPrice,
                 "data-calprice": _calPrice,
                 "data-consprice": _consPrice,
+                "data-comsprice": _comsPrice,
                 "data-manageprice": _managePrice,
                 "data-taxprice": _taxPrice,
             };
@@ -344,7 +347,7 @@
         },
         calculateFees: function() {
 
-            var sum = 0, sumd = 0, undisprice = 0, disprice = 0, uncalprice = 0, calprice = 0, consprice = 0, manageprice = 0, taxprice = 0, managetaxprice = 0;
+            var sum = 0, sumd = 0, undisprice = 0, disprice = 0, uncalprice = 0, calprice = 0, consprice = 0, comsprice = 0, manageprice = 0, taxprice = 0, managetaxprice = 0;
 
             var $items = com.focusPage('.fl-quo-item:not([data-del="1"])', '#addReduceItemDiv');
 
@@ -377,6 +380,7 @@
                 var _uncalPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(_discountFlag) != -1 ? _sum : 0;
                 var _calPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT].indexOf(_discountFlag) != -1 ? _sum : 0;
                 var _consPrice = _subtype == constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
+                var _comsPrice = _subtype != constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
                 var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
                 var _taxPrice = 0;
 
@@ -387,7 +391,7 @@
                     "data-uncalprice": _uncalPrice,
                     "data-calprice": _calPrice,
                     "data-consprice": _consPrice,
-                    "data-manageprice": _managePrice,
+                    "data-comsPrice": _comsPrice,
                     "data-taxprice": _taxPrice,
                 };
 
@@ -402,6 +406,7 @@
                 uncalprice = utils.accAdd(uncalprice, _uncalPrice);
                 calprice = utils.accAdd(calprice, _calPrice);
                 consprice = utils.accAdd(consprice, _consPrice);
+                comsprice = utils.accAdd(comsprice, _comsPrice);
                 manageprice = utils.accAdd(manageprice, _managePrice);
                 taxprice = utils.accAdd(taxprice, _taxPrice);
             });
@@ -413,6 +418,7 @@
             uncalprice = utils.changeTwoDecimal(uncalprice);
             calprice = utils.changeTwoDecimal(calprice);
             consprice = utils.changeTwoDecimal(consprice);
+            comsprice = utils.changeTwoDecimal(comsprice);
             manageprice = utils.changeTwoDecimal(manageprice);
             taxprice = utils.changeTwoDecimal(taxprice);
             
@@ -451,6 +457,7 @@
             com.focusPage("#uncalprice").text(uncalprice);
             com.focusPage("#calprice").text(calprice);
             com.focusPage("#consprice").text(consprice);
+            com.focusPage("#comsprice").text(comsprice);
             com.focusPage("#taxPrice").text(managetaxprice);
 
             addReduceDetail.basicParams["addReduce.total"] = sumd;
@@ -460,6 +467,7 @@
             addReduceDetail.basicParams["addReduce.uncalPrice"] = uncalprice;
             addReduceDetail.basicParams["addReduce.calPrice"] = calprice;
             addReduceDetail.basicParams["addReduce.consPrice"] = consprice;
+            addReduceDetail.basicParams["addReduce.comsPrice"] = comsprice;
             addReduceDetail.basicParams["addReduce.manageDiscount"] = addReduceDetail.isCountManageDiscount.prop("checked") ? 1 : 0;
             addReduceDetail.basicParams["addReduce.taxPrice"] = taxprice;
 
@@ -1290,6 +1298,7 @@
             var _uncalPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_NON_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_NON_INT].indexOf(qv.discount) != -1 ? _sum : 0;
             var _calPrice = [constant.quotation().addReduceItem.DISCOUNT_NODISCOUNT_INT, constant.quotation().addReduceItem.DISCOUNT_DISCOUNT_INT].indexOf(qv.discount) != -1 ? _sum : 0;
             var _consPrice = qv.subtype == constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
+            var _comsPrice = qv.subtype != constant.quotation().addReduceItem.SUBTYPE_PROJECT_INT ? _sum : 0;
 
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
             var _taxPrice = 0;
@@ -1466,6 +1475,7 @@
                 "data-uncalprice": _uncalPrice,
                 "data-calprice": _calPrice,
                 "data-consprice": _consPrice,
+                "data-comsprice": _comsPrice,
                 "data-manageprice": _managePrice,
                 "data-addPrice": qv.addPrice,
                 "data-unitPrice": qv.unitPrice,
@@ -1518,6 +1528,7 @@
                 addReduceDetail.basicParams["addReduce.uncalPrice"] = addReduce.uncalPrice;
                 addReduceDetail.basicParams["addReduce.calPrice"] = addReduce.calPrice;
                 addReduceDetail.basicParams["addReduce.consPrice"] = addReduce.consPrice;
+                addReduceDetail.basicParams["addReduce.comsPrice"] = addReduce.comsPrice;
                 addReduceDetail.basicParams["addReduce.taxPrice"] = addReduce.taxPrice;
                 addReduceDetail.basicParams["addReduce.taxRate"] = addReduce.manageRate;
                 addReduceDetail.basicParams["addReduce.status"] = addReduce.status;

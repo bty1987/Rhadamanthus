@@ -15,30 +15,54 @@ jQuery(function($) {
             title: com.focusPage("#title", "#customerProfileDetailModal"),
             particulars: com.focusPage("#particulars", "#customerProfileDetailModal")
         },
-        cpid: params.customer.cpid
     };
 
     show(customerProfileDetail.cpid);
 
     function show(cpid) {
 
-        com.post(api.customer.queryCustomerProfileByCpid, {
-            "customerProfile.cpid": cpid
-        }, function(res) {
+        var url = null;
+        var args = null;
+
+        if (params.customer.cpid) {
+            url = api.customer.queryCustomerProfileByCpid;
+            args = {
+                "customerProfile.cpid": params.customer.cpid
+            }
+        }
+
+        if (params.customer.cid) {
+            url = api.customer.queryCustomerProfileByCid;
+            args = {
+                "customerProfile.cid": params.customer.cid
+            }
+        }
+
+        if (params.decoration.orderId) {
+            url = api.customer.queryCustomerProfileByOrderId;
+            args = {
+                "customerProfile.orderId": params.decoration.orderId
+            }
+        }
+        
+        if (!url)
+            return false
+
+        com.post(url, args, function(res) {
 
             customerProfileDetail.items.name.html(res.customerProfile.name);
-            
+
             var state = res.customerProfile.status;
-            
+
             $.each(res.customerProfile.items, function(i, v) {
 
                 if (v.type != constant.customer().survey.TYPE_TEXT_INT) {
                     var contentDiv = $('<div class="col-md-6 hr8" style="display: flex;"></div>').appendTo(customerProfileDetail.items.itemlist);
                     var titleSpan = $('<span class="label-text col-sm-3 orange"></span>').html((i) + ". " + v.name).appendTo(contentDiv);
                 }
-                
+
                 var type = v.type;
-                
+
                 if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
                     customerProfileDetail.items.title.html(v.content);
                 } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
@@ -46,17 +70,17 @@ jQuery(function($) {
                     var textArea = $('<textarea class="col-sm-9 text "></textarea>').prop('id', v.cpiid + "textarea").html(v.content).appendTo(contentDiv);
 
                 } else if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
-                    
+
                     var ridioDivAll = $('<div class="col-sm-9 control-group"></div>').prop('id', v.cpiid).appendTo(contentDiv);
-                    
+
                     $.each(v.options, function(j, option) {
 
                         elect(ridioDivAll, option, type, state);
                     });
                 } else if (v.type == constant.customer().survey.TYPE_MULTIPLE_INT) {
-                    
+
                     var checkDivAll = $('<div class="col-sm-9 control-group"></div>').prop('id', v.cpiid).appendTo(contentDiv);
-                    
+
                     $.each(v.options, function(j, option) {
 
                         elect(checkDivAll, option, type, state);
@@ -71,7 +95,7 @@ jQuery(function($) {
             com.focusPage("#execute", "#customerProfileDetailModal").click(function() {
 
                 var options = {};
-                
+
                 options["customerProfile.cpid"] = res.customerProfile.cpid;
 
                 $.each(res.customerProfile.items, function(i, v) {
@@ -80,7 +104,7 @@ jQuery(function($) {
                         options["customerProfile.items[" + i + "].cpiid"] = v.cpiid;
                         options["customerProfile.items[" + i + "].name"] = v.name;
                     }
-                    
+
                     if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
                         options["customerProfile.items[" + i + "].cpiid"] = v.cpiid;
                         options["customerProfile.items[" + i + "].content"] = v.content;
@@ -127,7 +151,7 @@ jQuery(function($) {
                     $.each(v.options, function(j, b) {
 
                         options["customerProfile.items[" + i + "].cpiid"] = v.cpiid;
-                        
+
                         if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
                             options["customerProfile.items[" + i + "].options[" + j + "].cpoid"] = b.cpoid;
                             options["customerProfile.items[" + i + "].options[" + j + "].title"] = b.title;
@@ -138,7 +162,7 @@ jQuery(function($) {
                         }
                     })
                 });
-                
+
                 com.showConfirm("是否提交客户画像信息", function() {
 
                     com.post(api.customer.handleCustomerProfile, options, function() {
@@ -153,13 +177,13 @@ jQuery(function($) {
             com.focusPage('#btnBack').on("click", function() {
 
                 customerProfileDetail.modals.customerProfileDetailModal.modal("hide");
-                
+
                 com.closePopup();
             });
 
         });
     }
-    
+
     function elect(contentDiv, option, type, status) {
 
         var ridioDiv = $('<div class="col-sm-4"></div>').appendTo(contentDiv);

@@ -467,7 +467,7 @@ var paymentUtils = {
             var _s = bankInfo.split('#');
             for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
                 var _i = _s[i].split('|');
-                info += bankArray[_i[0]] == null ? "无匹配" : bankArray[_i[0]] + " " + _i[1] + ", ";
+                info += (bankArray && bankArray[_i[0]] == null ? "无匹配" : bankArray[_i[0]]) + " " + _i[1] + ", ";
 
                 if (flag) {
                     info += _i[2] + ", ";
@@ -486,7 +486,7 @@ var paymentUtils = {
             var _s = couponInfo.split('#');
             for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
                 var _i = _s[i].split(':');
-                _info += couponArray[_i[0]][1] + " " + _i[1] + ", ";
+                _info += (couponArray && couponArray[_i[0]] ? couponArray[_i[0]][1] : "无匹配") + " " + _i[1] + ", ";
             }
         }
         return _info;
@@ -523,10 +523,33 @@ var paymentUtils = {
 
     // 获取收款类型的基础信息 info信息是分页显示信息的, util和cash,bank,checkv是下拉框信息(下拉框不显示禁用)
     getReceiptType: function(payment) {
+        payment.cash = [];
+        payment.bank = [];
+        payment.checkv = [];
+        payment.accounts = [];
+        payment.couponType = [];
+        payment.posValues = [];
+
+        payment.cashUtil = [];
+        payment.bankUtil = [];
+        payment.checkvUtil = [];
+
+        payment.cashInfo = [];
+        payment.bankInfo = [];
+        payment.checkvInfo = [];
+        payment.accountsInfo = [];
+        payment.couponTypeData = [];
 
         var notCouponPageName = ["payment", "paymentCheck", "service", "serviceCheck", "paymentPos", "servicePos", "proxy"];
         var noAccountsPageName = ["proxy"];
-        com.post(api.data.queryReceiptType, {}, function(res) {
+
+        var queryOptions = {};
+
+        if (payment.decoration && payment.decoration.bompany) {
+            queryOptions["receiptType.bompany"] = payment.decoration.bompany
+        }
+
+        com.post(api.data.queryReceiptType, queryOptions, function(res) {
 
             $.each(res.receiptTypes, function(i, v) {
 
@@ -772,7 +795,7 @@ var paymentUtils = {
                     propertyArr.push(["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"]);
                     break;
                 case "brand":
-                    var brand = payment.htmlName == "sales" ? decoration.brand : v.brand;
+                    var brand = payment.htmlName == "sales" ? decoration.brand.name : v.brand;
                     propertyArr.push(["品牌:", brand == null || brand == "" ? "---" : brand, "grey"]);
                     break;
                 case "referMoney":
@@ -836,6 +859,12 @@ var paymentUtils = {
                 case "confirmTime":
                     var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["确认时间:", obj.confirmTime, "green"]);
+                    break;
+                case "isAffirm":
+                    propertyArr.push(["客户确认状态:", payment.isAffirms[v.isAffirm], "red"]);
+                    break;
+                case "affirmTime":
+                    propertyArr.push(["客户确认时间:", com.checkNull(v.affirmTime, "暂无"), "green"]);
                     break;
                 case "status":
                     var status = ["payment", "sales", "service", "activity", "proxy"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];

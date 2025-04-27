@@ -40,7 +40,7 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
-		query.alias("sales", "sales").alias("sales.supplier", "supplier").add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
+		query.alias("sales", "sales").add(Restrictions.or(query.alias("sales.supplier", "supplier").getCriterion("supplier.uid", uid, "eq"), query.alias("sales.brand", "brand").getCriterion("brand.supplier.uid", uid, "eq")));
 
 		queryFilterExcute(query, filters);
 

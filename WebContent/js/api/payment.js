@@ -239,8 +239,14 @@ $.extend(api, {
                 args: ["decorationPayment.cash", "decorationPayment.bank", "decorationPayment.checkv", "decorationPayment.advance", "decorationPayment.coupon"]
             }
         },
+        refundDecorationPaymentForDesign: {
+            url: "refundDecorationPaymentForDesign.do"
+        },
         confirmDecorationPayment: {
             url: "confirmDecorationPayment.do"
+        },
+        affirmDecorationPayment: {
+            url: "affirmDecorationPayment.do"
         },
         changeDecorationPaymentForTime: {
             url: "changeDecorationPaymentForTime.do"
@@ -250,6 +256,9 @@ $.extend(api, {
         },
         sendDecorationPayment: {
             url: "sendDecorationPayment.do"
+        },
+        pushDecorationPayment: {
+            url: "pushDecorationPayment.do"
         },
 
         pageMaterialPayment: {
@@ -491,6 +500,9 @@ $.extend(api, {
         confirmSalesPayment: {
             url: "confirmSalesPayment.do"
         },
+        affirmSalesPayment: {
+            url: "affirmSalesPayment.do"
+        },
         cancelSalesPayment: {
             url: "cancelSalesPayment.do"
         },
@@ -520,6 +532,9 @@ $.extend(api, {
         },
         sendSalesPayment: {
             url: "sendSalesPayment.do"
+        },
+        pushSalesPayment: {
+            url: "pushSalesPayment.do"
         },
 
         makeServicePayment: {

@@ -48,6 +48,17 @@ public class ColorDaoImpl extends DaoImpl<ColorPO> implements ColorDao {
 		return (ColorPO) session().createCriteria(ColorPO.class).add(Restrictions.eq(ColorPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(ColorPO.COLUMN_NAME_STR, name)).uniqueResult();
 	}
 
+	@Override
+	public int batchSaveColor(long gid, long gpid) {
+
+		String sql = "INSERT INTO `data`.color (gid, `name`, `status`) SELECT :gid, cp.`name`, cp.`status` FROM communion.colorpool cp WHERE cp.gpid = :gpid";
+
+		session().createSQLQuery(sql).setLong("gid", gid).setLong("gpid", gpid).executeUpdate();
+
+		return 0;
+
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

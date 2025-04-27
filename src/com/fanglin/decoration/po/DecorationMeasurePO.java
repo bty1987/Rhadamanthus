@@ -30,27 +30,27 @@ import com.fanglin.personel.po.UserPO;
 public class DecorationMeasurePO implements Serializable {
 
 	private static final long serialVersionUID = -7484137001624425539L;
-	
+
 	public static final short STATUS_QUEUE_INT = 0;
-	
+
 	public static final short STATUS_APPLICATION_INT = 1;
-	
+
 	public static final short STATUS_SUCCESS_INT = 2;
-	
+
 	public static final short STATUS_FAIL_INT = 3;
-	
+
 	public static final String COLUMN_STARTTIME_STR = "startTime";
 
 	public static final String COLUMN_ENDTIME_STR = "endTime";
-	
+
 	public static final String COLUMN_APPLAYTIME_STR = "applayTime";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String DECORATIONMEASURE_ORDERID_STR = "orderId";
 
 	private long dmid;
-	
+
 	private DecorationPO decoration;
 
 	private Timestamp applayTime;
@@ -66,9 +66,9 @@ public class DecorationMeasurePO implements Serializable {
 	private short status;
 
 	private short count;
-	
+
 	private UserPO appler;
-	
+
 	private UserPO measurer;
 
 	private int company;
@@ -83,9 +83,9 @@ public class DecorationMeasurePO implements Serializable {
 	public void setDmid(Long dmid) {
 		this.dmid = dmid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "doid", referencedColumnName = "doid")
+	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
 	public DecorationPO getDecoration() {
 		return decoration;
 	}
@@ -94,7 +94,7 @@ public class DecorationMeasurePO implements Serializable {
 		this.decoration = decoration;
 	}
 
-	@Column(name="applayTime")
+	@Column(name = "applayTime")
 	public Timestamp getApplayTime() {
 		return applayTime;
 	}
@@ -103,7 +103,7 @@ public class DecorationMeasurePO implements Serializable {
 		this.applayTime = applayTime;
 	}
 
-	@Column(name="content")
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
@@ -112,7 +112,7 @@ public class DecorationMeasurePO implements Serializable {
 		this.content = content;
 	}
 
-	@Column(name="actualTime")
+	@Column(name = "actualTime")
 	public Long getActualTime() {
 		return actualTime;
 	}
@@ -120,7 +120,8 @@ public class DecorationMeasurePO implements Serializable {
 	public void setActualTime(Long actualTime) {
 		this.actualTime = actualTime;
 	}
-	@Column(name="startTime")
+
+	@Column(name = "startTime")
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -129,7 +130,7 @@ public class DecorationMeasurePO implements Serializable {
 		this.startTime = startTime;
 	}
 
-	@Column(name="endTime")
+	@Column(name = "endTime")
 	public Timestamp getEndTime() {
 		return endTime;
 	}
@@ -153,6 +154,7 @@ public class DecorationMeasurePO implements Serializable {
 	public void setCount(Short count) {
 		this.count = count;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "apuid", referencedColumnName = "uid")
 	public UserPO getAppler() {
@@ -162,7 +164,7 @@ public class DecorationMeasurePO implements Serializable {
 	public void setAppler(UserPO appler) {
 		this.appler = appler;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "meuid", referencedColumnName = "uid")
 	public UserPO getMeasurer() {
@@ -173,7 +175,7 @@ public class DecorationMeasurePO implements Serializable {
 		this.measurer = measurer;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -181,7 +183,5 @@ public class DecorationMeasurePO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-
-	
 
 }

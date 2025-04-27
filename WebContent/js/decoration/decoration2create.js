@@ -22,7 +22,14 @@ jQuery(function($) {
         },
 
         maketype: params.urlLoadParams.maketype,
+        entrytype: params.urlLoadParams.entrytype,
+        
+        profitflag: null,
     };
+    
+    com.post(api.system.querySystemConfigByKey, {"systemConfig.key": "COUNTRY_PROFIT_FLAG_STR"}, function(res){
+        if(res.systemConfig.scid) orderEntry.profitflag = res.systemConfig.value;
+    });
 
     orderEntry.orderItems.customerId = com.focusPage("#customerId");
     orderEntry.orderItems.villageId = com.focusPage("#villageId");
@@ -49,6 +56,7 @@ jQuery(function($) {
     orderEntry.orderItems.status = com.focusPage("#status");
     orderEntry.orderItems.quoterId = com.focusPage("#quoterId");
     orderEntry.orderItems.escorterId = com.focusPage("#escorterId");
+    orderEntry.orderItems.materialerId = com.focusPage("#materialerId");
 
     orderEntry.btns.saveBtn = com.focusPage("#saveBtn").on("click", createOrder);
     orderEntry.btns.cancelBtn = com.focusPage("#cancelBtn").on("click", initCreate);
@@ -63,6 +71,7 @@ jQuery(function($) {
 
         checkPhone($(this));
     });
+    
     orderEntry.customerItems.qq = com.focusPage("#qq");
     orderEntry.customerItems.wechat = com.focusPage("#wechat");
     orderEntry.customerItems.email = com.focusPage("#email");
@@ -87,6 +96,7 @@ jQuery(function($) {
     orderEntry.houseItems.waterVapour = com.focusPage("#waterVapour");
     orderEntry.houseItems.parlourType = com.focusPage("#parlourType");
     orderEntry.houseItems.heatingType = com.focusPage("#heatingType");
+    orderEntry.houseItems.islift = com.focusPage("#islift");
     orderEntry.houseItems.rule = com.focusPage("#rule");
 
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value) {
@@ -229,6 +239,10 @@ jQuery(function($) {
         "user.status": 0,
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('materialerId', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, "autoFillKeyValue", "key", "value");
 
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
@@ -292,6 +306,7 @@ jQuery(function($) {
         orderEntry.houseItems.orientation.bindData(res.orientation, "key", "value");
         orderEntry.houseItems.waterVapour.bindData(res.waterVapour, "key", "value");
         orderEntry.houseItems.parlourType.bindData(res.parlourType, "key", "value");
+        orderEntry.houseItems.islift.bindData(res.elevator, "key", "value");
         orderEntry.houseItems.heatingType.bindData(res.heatingType, "key", "value");
         orderEntry.houseItems.builtrule.bindData(res.buildrule, "key", "value");
         orderEntry.houseItems.unitrule.bindData(res.buildrule, "key", "value");
@@ -380,19 +395,25 @@ jQuery(function($) {
             "decoration.typeness": orderEntry.orderItems.orderType.val(),
             "decoration.quoter.userId": com.typeahead("quoterId"),
             "decoration.escorter.userId": com.typeahead("escorterId"),
+            "decoration.materialer.userId": com.typeahead("materialerId"),
             "decoration.house.hid": orderEntry.houseItems.hid,
             "decoration.grade": orderEntry.orderItems.orderGrade.val()
         };
 
         if (com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.decorationFlag)
-            return;
+            return false;
 
         if (orderEntry.houseItems.hid == null) {
             com.showAlert(com.error, "房产信息未填写");
-            return;
+            return false;
+        }
+        
+        if(orderEntry.profitflag && orderEntry.entrytype){
+            options["decoration.bompany"] = orderEntry.profitflag;
         }
 
         btn.button('loading');
+        
         com.post(url, options, function(data) {
 
             com.showAlert(com.info, "操作成功");
@@ -408,7 +429,7 @@ jQuery(function($) {
                 "drganizationName": params.company.drganization.name
             };
 
-            kingdeeUtils.decorationToKingdee(decorationData);
+            kingdeeUtils.decoration(decorationData);
 
         }, function(e) {
 
@@ -428,6 +449,7 @@ jQuery(function($) {
         com.cleanTypeahead("salesmanId");
         com.cleanTypeahead("quoterId");
         com.cleanTypeahead("escorterId");
+        com.cleanTypeahead("materialerId");
         com.cleanTypeahead("customerId");
 
         com.focusPage(".chosen-single span").html("");
@@ -469,6 +491,7 @@ jQuery(function($) {
         houseOptions["house.waterVapour"] = orderEntry.houseItems.waterVapour.val();
         houseOptions["house.parlourType"] = orderEntry.houseItems.parlourType.val();
         houseOptions["house.heatingType"] = orderEntry.houseItems.heatingType.val();
+        houseOptions["house.isLift"] = orderEntry.houseItems.islift.val();
 
         var url = api.data.addHouse;
         houseOptions["house.status"] = 0;

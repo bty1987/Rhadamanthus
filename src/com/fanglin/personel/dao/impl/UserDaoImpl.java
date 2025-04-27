@@ -45,6 +45,12 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 	@Override
 	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid) {
+		pageUserByPinyin(paging, pinyin, status, company, dtid, null);
+		return null;
+	}
+
+	@Override
+	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
@@ -60,19 +66,23 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		if (StringUtils.isNotEmpty(pinyin)) {
 
-			Disjunction pinyinDisjunction = Restrictions.disjunction();
+			Disjunction disjunction = Restrictions.disjunction();
 
-			pinyinDisjunction.add(Restrictions.like("currentName", pinyin, MatchMode.ANYWHERE));
-			pinyinDisjunction.add(Restrictions.like("pinYin", pinyin, MatchMode.ANYWHERE));
-			pinyinDisjunction.add(Restrictions.like("userId", pinyin, MatchMode.ANYWHERE));
+			disjunction.add(Restrictions.like("currentName", pinyin, MatchMode.ANYWHERE));
+			disjunction.add(Restrictions.like("pinYin", pinyin, MatchMode.ANYWHERE));
+			disjunction.add(Restrictions.like("userId", pinyin, MatchMode.ANYWHERE));
 
-			query.add(pinyinDisjunction);
+			query.add(disjunction);
 		}
 
 		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 
 		if (dtid != 0) {
 			query.add(Restrictions.eq("dept.type.dtid", dtid));
+		}
+
+		if (did != null) {
+			query.add(Restrictions.eq("dept.did", did));
 		}
 
 		if (status != 3) {

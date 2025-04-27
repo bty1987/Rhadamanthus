@@ -18,7 +18,7 @@
 						<form class="form-horizontal">
 							<div style='color:red;text-align:center;display:none;' class='payWayError'>请选择付款方式</div>
 							<div class="form-group">
-								<label class="col-md-3 control-label" id="paymentMethod">付款方式</label>
+								<label class="col-md-3 control-label no-padding-right" id="paymentMethod">付款方式</label>
 								<div class="col-sm-9" id="checkbox">
 									<label class="hide cashCheckbox">
 										<input type="checkbox" class="ace" id="cashCheckbox">
@@ -86,7 +86,7 @@
 								<div class="space-4"></div>
 
 								<div class="form-group">
-									<label for="cash" class="col-md-3 control-label">现金金额</label>
+									<label for="cash" class="col-md-3 control-label no-padding-right">现金金额</label>
 									<div class="col-sm-9">
 										<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3"  data-toggle="popover" data-trigger='manual'/>
 									</div>
@@ -216,6 +216,7 @@
 </div>
 
 <div class="modal fade" id="collectCodeQrcodeModal" tabindex="-1"></div>
+<div id="layerPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
 	$.loadScript(['js/utils/paymentUtils.js', 'js/utils/kingdeeUtils.js', 'js/payment/payment.js']);

@@ -66,6 +66,8 @@ public class CustomerSourcePO implements Serializable {
 
 	private short customerType;
 
+	private short houseAttr;
+
 	private VillagePO village;
 
 	private String houseNumber;
@@ -164,6 +166,24 @@ public class CustomerSourcePO implements Serializable {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+
+	@Column(name = "customertype")
+	public short getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(short customerType) {
+		this.customerType = customerType;
+	}
+
+	@Column(name = "houseAttr")
+	public short getHouseAttr() {
+		return houseAttr;
+	}
+
+	public void setHouseAttr(short houseAttr) {
+		this.houseAttr = houseAttr;
 	}
 
 	@Column(name = "phone")
@@ -329,15 +349,6 @@ public class CustomerSourcePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
-	}
-
-	@Column(name = "customertype")
-	public short getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(short customerType) {
-		this.customerType = customerType;
 	}
 
 	@Column(name = "demand")

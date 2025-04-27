@@ -653,4 +653,47 @@ Condition.addupRule("decoration", {
             valuePath: "value"
         }
     },
+    "measure-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "1",
+                "value": "申请量尺"
+            }, {
+                "key": "3",
+                "value": "量尺失败"
+            }, {
+                "key": "2",
+                "value": "量尺成功"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "measure-actualDate": {
+        label: "量尺时间",
+        type: "datePicker",
+        submitConfig: {
+            name: "actualDate",
+            op: "between",
+            validate: null
+        }
+    },
+    "measure-applayTime": {
+        label: "申请时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "applayTime",
+            op: "between",
+            validate: null
+        }
+    }
 });

@@ -79,7 +79,7 @@ var decorationUtils = {
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                 var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('子项');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand.name, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["类型:", constant.sales().sales.type.keys[v.type], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -410,7 +410,7 @@ var decorationUtils = {
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($ulsales);
 
                 if (v.sales.type == 1 && v.sales.balanceStatus == 3) {
-                    $totalSubsidy = utils.changeThrDecimal($totalSubsidy + ([4, 5, 6].contains(v.type) ? -v.sales.total : v.sales.total));
+                    $totalSubsidy = utils.changeThrDecimal($totalSubsidy + ([4, 5, 6].contains(v.type) ? -v.referMoney : v.referMoney));
                 }
 
                 if (v.sales.type == 1 && v.sales.balanceStatus != 3) {
@@ -1435,13 +1435,15 @@ var decorationUtils = {
                     decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
                 } else if (type == 4) {
                     decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
+                } else if (type == 5) {
+                    decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
                 }
             });
         } else {
             com.showAlert(com.error, data.errorMsg);
         }
     },
-    initDecorationPicture: function(designId, pictureId, cadId, contractId, originalId, agreeId, orderId) {
+    initDecorationPicture: function(designId, pictureId, cadId, contractId, originalId, agreeId,designContractPictureId, orderId) {
 
         var $desgin = com.focusPage("#" + designId).html("");
         var $picture = com.focusPage("#" + pictureId).html("");
@@ -1449,7 +1451,8 @@ var decorationUtils = {
         var $cad = com.focusPage("#" + cadId).html("");
         var $original = com.focusPage("#" + originalId).html("");
         var $agree = com.focusPage("#" + agreeId).html("");
-
+        var $contractPicture= com.focusPage("#" + designContractPictureId).html("");
+        
         com.post(api.decoration.queryDecorationPictureByOrderId, {
             "decorationPicture.orderId": orderId
         }, function(res) {
@@ -1471,6 +1474,8 @@ var decorationUtils = {
                     decorationUtils.addPicture($contract, decorationPicture);
                 } else if (decorationPicture.type == 4) {
                     decorationUtils.addPicture($original, decorationPicture);
+                } else if (decorationPicture.type == 5) {
+                    decorationUtils.addPicture($contractPicture, decorationPicture);
                 }
             }
 
@@ -1479,6 +1484,7 @@ var decorationUtils = {
             com.popup4photos("#projectPictures");
             com.popup4photos("#ContractPictures");
             com.popup4photos("#CADProjectPicture");
+            com.popup4photos("#designContractPicture");
         });
 
         com.post(api.decoration.queryDecorationContractByOrderId, {
@@ -1558,7 +1564,7 @@ var decorationUtils = {
         com.popup4photos("#projectPictures");
         com.popup4photos("#ContractPictures");
         com.popup4photos("#CADProjectPicture");
-
+        com.popup4photos("#designContractPicture");
     },
     addCAD: function(e, i) {
 
@@ -2395,17 +2401,12 @@ var decorationUtils = {
             var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
             var _totalPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(quotation.undisPrice, quotation.disPrice), quotePrice), quotation.trafficPrice));
 
-            if (decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
-                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(quotePrice, preferPrice), quotePrice));
-                _discountValue = preferDiscount;
-            } else {
-                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_totalPrice, preferPrice), _totalPrice));
-                _discountValue = quotation.discount;
-            }
-
-            _discount = _discount < 0 ? 0 : _discount > 1 ? 1 : _discount;
-
-            var protation = null
+            var protation = {
+                "quotePrice": 1,
+                "preferPrice": 0,
+                "managePrice": 0,
+                "manageProfit": 0
+            };
 
             com.post(api.quotation.queryProtationForDefaultByOrderId, {
                 "protation.orderId": decoration.orderId
@@ -2415,7 +2416,38 @@ var decorationUtils = {
                     protation = res.protation;
             }, null, false);
 
-            if (utils.accMul(_discount, 10) < _discountValue || (protation && utils.accMul(_discount, 10) < protation.discount)) {
+            if (decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
+                
+                _preferPrice = quotationPrefer.quotePrice;
+                
+                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(quotationPrefer.quotePrice, preferPrice), quotationPrefer.quotePrice));
+                _discountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.quotePrice, protation.preferPrice), protation.quotePrice));
+
+                _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
+                _manageDiscountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.managePrice, protation.manageProfit), protation.managePrice));
+            } else {
+                
+                _preferPrice = _totalPrice;
+                
+                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_totalPrice, preferPrice), _totalPrice));
+                _discountValue = quotation.discount;
+
+                _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
+                _manageDiscountValue = quotation.discount;
+            }
+
+            _discount = _discount < 0 ? 0 : _discount > 1 ? 1 : _discount;
+            _discountValue = _discountValue < 0 ? 0 : _discountValue > 1 ? 1 : _discountValue;
+
+            _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
+            _manageDiscountValue = _manageDiscountValue < 0 ? 0 : _manageDiscountValue > 1 ? 1 : _manageDiscountValue;
+            
+            if (_preferPrice < preferPrice) {
+                com.showAlert(com.warning, "优惠金额不合理");
+                return false;
+            }
+
+            if (_discount < _discountValue) {
                 com.showAlert(com.warning, "优惠金额不合理");
                 return false;
             }
@@ -2425,7 +2457,7 @@ var decorationUtils = {
                 return false;
             }
 
-            if (utils.accMul(_manageDiscount, 10) < preferManageDiscount || (protation && _manageDiscount < protation.manageDiscount)) {
+            if (_manageDiscount < _manageDiscountValue) {
                 com.showAlert(com.warning, "管理费优惠金额不合理");
                 return false;
             }
@@ -2502,11 +2534,6 @@ var decorationUtils = {
 
                 com.focusPage('#totalPrice', '#ribbonSubset').html("总额: " + com.checkNull(quotation.totalPrice, 0));
                 com.focusPage('#totalPrice', '#workTypeSubset').html(com.checkNull(quotation.totalPrice, 0));
-
-                if (com.checkNull(quotationPrefer.advancePrefer, 0) == 0) {
-                    com.focusPage('#advancePreferShow').hide();
-                    com.focusPage('#advanceShow', "#quotationPreferModal").hide();
-                }
 
                 com.focusPage("#quotationPreferModal").modal("hide");
             });

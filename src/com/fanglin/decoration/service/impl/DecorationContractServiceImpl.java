@@ -208,7 +208,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (type == DecorationContractPO.TYPE_SIGNET_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
-			url = String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
+			url = String.format("%s/signature.html?cid=%d&name=%s", isv.getValue(), decorationPO.getCustomer().getCid(), decorationPO.getCustomer().getName());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = Signature.extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {

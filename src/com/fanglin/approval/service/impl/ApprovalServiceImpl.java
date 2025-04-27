@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.service.ApprovalCustomerChanceService;
 import com.fanglin.approval.service.ApprovalCustomerOriginService;
 import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.service.ApprovalCustomerSourceService;
@@ -107,6 +108,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalCustomerSourceService approvalCustomerSourceService;
+
+	@Autowired
+	private ApprovalCustomerChanceService approvalCustomerChanceService;
 
 	@Autowired
 	private ApprovalProtationPreferService approvalProtationPreferService;
@@ -276,6 +280,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT:
 				approvalCustomerSourceService.approveForCustomerSource(approvalPO);
 				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_CHANCE_DISABLED_INT:
+				approvalCustomerChanceService.approveForCustomerChanceToDisabled(approvalPO);
+				break;
 			case ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT:
 				approvalProtationPreferService.approveForProtationPrefer(approvalPO);
 				break;
@@ -327,6 +334,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 				break;
 			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_SOURCE_INT:
 				approvalCustomerSourceService.refuseForCustomerSource(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_PROTATION_PREFER_INT:
+				approvalProtationPreferService.refuseForProtationPrefer(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT:
+				approvalQuotationPreferService.refuseForQuotationPrefer(approvalPO);
 				break;
 			default:
 				break;
@@ -391,6 +404,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
 			throw new FLException(240009, "审批状态不可操作");
 		}
+
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
 		approvalPO = refuse(approvalPO);

@@ -31,7 +31,7 @@ jQuery(function() {
         sales: null,
 
         sid: params.sales.sales.sid,
-        bid: params.sales.sales.bid,
+        bid: params.sales.sales.brand.bid,
         cid: null,
         flag: true,
         otherStatus: null,
@@ -167,7 +167,7 @@ jQuery(function() {
                 "sales.guider.userId": com.typeahead("guider"),
                 "sales.instorer.userId": com.typeahead("instorer"),
                 "sales.salesman.userId": com.typeahead("salesmanName"),
-                "sales.bid": sales.bid,
+                "sales.brand.bid": sales.sales.brand.bid,
                 "sales.supplier.userId": sales.sales.supplier.userId,
                 "sales.coupon": sales.items.SupplementCoupon.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementCoupon.val())) : 0,
                 "sales.comment": sales.items.comment.val(),
@@ -175,7 +175,9 @@ jQuery(function() {
                 "sales.total": isNaN(parseFloat(sales.items.totals.val())) ? 0 : utils.changeThrDecimal(parseFloat(sales.items.totals.val())),
                 "sales.house.hid": sales.salePostData["sales.house.hid"],
                 "sales.dompanys": sales.salePostData["sales.dompanys"],
-                "sales.otherStatus": sales.otherStatus
+                "sales.otherStatus": sales.otherStatus,
+                "sales.grade": sales.sales.grade,
+                "sales.type": sales.sales.type,
             };
 
             if (sales.items.SupplementCoupon.val() == "" || sales.items.SupplementCoupon.val() == 0) {
@@ -274,9 +276,9 @@ jQuery(function() {
         sales.items.SupplementOrderId.val(res.sales.orderId);
         sales.items.customerName.val(res.sales.customer.name);
         sales.items.brands.attr({
-            'data-brand': res.sales.brand,
+            'data-brand': res.sales.brand.name,
             'data-category': res.sales.category
-        }).val(res.sales.brand + '-' + res.sales.category);
+        }).val(res.sales.brand.name + '-' + res.sales.category);
         sales.items.orderAddr.val(res.sales.house.village.name + " " + res.sales.house.houseNumber);
     }, null, false);
 

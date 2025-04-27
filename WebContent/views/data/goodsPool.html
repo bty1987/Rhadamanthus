@@ -1,0 +1,495 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div id="condListGoodsPool" class="fl_search clearfix"></div> <!-- 查询条件-->
+        <div id="resultListGoodsPool" class="clearfix tab-pane active"></div> <!--查询结果-->
+        <div id="pagenationGoodsPool" class="fl-page-wrap clearfix"></div> <!--分页-->
+    </div>
+</div>
+
+<div id="addGoodsPoolLayer" class="page-content" style="display: none;">
+    <div class="row">
+        <form class="form-horizontal" id="formGoodsPool">
+
+            <div class="widget-main">
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">商品编号</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_required" id="no" name="no" >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">添加类型</label>
+                    <div class="col-md-9">
+                        <select id="type" name="type" class="col-xs-10 col-sm-7 v_required" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">名称</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name" data-required="1" data-toggle="popover" data-trigger='manual' >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">别名</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7" id="alias" name="alias" data-required="1" data-toggle="popover" data-trigger='manual' >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">条形码</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7" id="barcode" name="barcode" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">品牌</label>
+                    <div class="col-md-9">
+                        <input type="text" autocomplete="off" id="brand" class="col-xs-10 col-sm-7 editable v_required">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">品类</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_required" id="category" name="category" readonly="readonly" data-required="1" data-toggle="popover" data-trigger='manual' >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">单位</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7 v_required" id="measurementUnit" name="measurementUnit" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">控价</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="purchase" name="purchase" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">售价</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="selling" name="selling" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">限价</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="confine" name="confine" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right orange">件数</label>
+                    <div class="col-md-9">
+                        <input type="text" class="col-xs-10 col-sm-7 v_float_3" id="pieceNum" name="pieceNum" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">辅类</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7" id="accessoriesType" name="accessoriesType" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">一类</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7" id="onekind" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">二类</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7" id="twokind" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">三类</label>
+                    <div class="col-md-9">
+                        <select class="col-xs-10 col-sm-7" id="thrkind" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">颜色级联</label>
+                    <div class="col-md-9" id="colorcascadeDiv"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">规格级联</label>
+                    <div class="col-md-9" id="formatcascadeDiv"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">价格级联</label>
+                    <div class="col-md-9" id="pricecascadeDiv"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right">图片级联</label>
+                    <div class="col-md-9" id="picturecascadeDiv"></div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="goodsPoolLayerPopUp" class="portlet box page-content"></div>
+
+<div id="goodsListPopUp" class="portlet box page-content"></div>
+
+<div id="importGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="importGoodsPoolForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品编号 商品名 条形码 品类 品牌 单位 件数 辅类</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">商品编号</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">条形码</div>
+                            <div class="cell">品类</div>
+                            <div class="cell">品牌ID</div>
+                            <div class="cell">品牌</div>
+                            <div class="cell">单位</div>
+                            <div class="cell">件数</div>
+                            <div class="cell">辅类</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">JF-ZSH-A013</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">134679852</div>
+                            <div class="cell">饰品</div>
+                            <div class="cell">101</div>
+                            <div class="cell">森盛</div>
+                            <div class="cell">幅</div>
+                            <div class="cell">2</div>
+                            <div class="cell">力工</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="importColorGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="importColorGoodsPoolForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 颜色</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">颜色</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">蓝色</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="importFormatGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="importFormatGoodsPoolForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 规格</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">规格</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col3">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">400*400</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="importPriceGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="importPriceGoodsPoolForm">
+        
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 控价 售价 结算类型 结算值</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+                <p>价格类型请填写0或1, 0: 正价, 1: 特价</p>
+                <p>结算类型请填写0或1, 0: 底价, 1: 点位</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col7">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">价格说明</div>
+                            <div class="cell">类型</div>
+                            <div class="cell">控价</div>
+                            <div class="cell">售价</div>
+                            <div class="cell">结算类型</div>
+                            <div class="cell">结算值</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col7">
+                            <div class="cell">1331</div>
+                            <div class="cell">测试</div>
+                            <div class="cell">0</div>
+                            <div class="cell">100</div>
+                            <div class="cell">200</div>
+                            <div class="cell">0</div>
+                            <div class="cell">150</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div id="deletePriceGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="deletePriceGoodsPoolForm">
+
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col2">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名称</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col2">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="statusGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="statusGoodsPoolForm">
+
+            <div class="form-group alert alert-danger">
+                <p>上传字段均为文本类型</p>
+                <p>上传格式: 商品ID 商品名 状态(0:启用, 1:禁用)</p>
+                <p>注意: 上传文件中请填写具体内容, 不显示表头</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col2">
+                            <div class="cell">商品ID</div>
+                            <div class="cell">商品名称</div>
+                            <div class="cell">状态</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col2">
+                            <div class="cell">1331</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">0</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="exportGoodsPool" style="display: none;" class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="exportGoodsPoolForm">
+        
+            <div class="form-group alert alert-info">
+                <p>格式: 商品编号 商品名 条形码 品类 品牌 单位 件数 辅类</p>
+            </div>
+            
+            <div class="form-group">
+                <ul class="flex-table center">
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">商品编号</div>
+                            <div class="cell">商品名</div>
+                            <div class="cell">条形码</div>
+                            <div class="cell">品类</div>
+                            <div class="cell">品牌ID</div>
+                            <div class="cell">品牌</div>
+                            <div class="cell">单位</div>
+                            <div class="cell">件数</div>
+                            <div class="cell">辅类</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="line-wrap content col9">
+                            <div class="cell">JF-ZSH-A013</div>
+                            <div class="cell">森盛-装饰画-A013</div>
+                            <div class="cell">134679852</div>
+                            <div class="cell">饰品</div>
+                            <div class="cell">101</div>
+                            <div class="cell">森盛</div>
+                            <div class="cell">幅</div>
+                            <div class="cell">2</div>
+                            <div class="cell">力工</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        
+        </form>
+    </div>
+</div>
+
+<div id="exportGoodsPoolModal" style="display: none; " class="page-content">
+    <div class="row-fluid">
+        <form class="form-horizontal" id="exportGoodsPoolModalForm">
+        
+            <div class="form-group alert alert-info">
+                <p>颜色格式: 商品ID 商品编号 商品名 颜色 品类 品牌</p>
+            </div>
+            
+            <div class="form-group alert alert-info">
+                <p>规格格式: 商品ID 商品编号 商品名 规格说明 品类 品牌</p>
+            </div>
+            
+            <div class="form-group alert alert-info">
+                <p>价格格式: 商品ID 商品编号 商品名 价格说明 控价 售价 结算类型 结算值 类型 品类 品牌</p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="form-group hide" style="margin: 0px;" id="uploadGoodsPoolDiv">
+	<div id="fileUpload">
+	    <label class="col-sm-3 control-label no-padding-right" for="attachment"></label>
+	    <div class="col-sm-9">
+	        <div id="attachment"></div>
+	        <input type="text" class="hidden" id="filePath"/>
+	    </div>
+	</div>
+	
+	<label class="col-sm-3 control-label no-padding-right" for="executeDates"><strong>执行日期</strong></label>
+	<div class="col-sm-9">
+	    <input class="date-picker v_required " id="executeDates" type="text" readonly="readonly"
+	           data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+	</div>
+	
+	<label class="col-sm-3 control-label no-padding-right" for="executeTimes"><strong>执行时间</strong></label>
+	<div class="col-sm-9">
+	    <div class="bootstrap-timepicker">
+	        <input id="executeTimes" type="text" class="v_required"/>
+	    </div>
+	</div>
+	
+	<label class="col-sm-3 control-label no-padding-right"></label>
+	<div class="col-sm-9">
+		<a class="btn btn-success btn-sm" id="importBtn">导入</a>
+		<a class="btn btn-sm" id="exportBtn">导出</a>
+	</div>
+</div>
+
+<div class="modal fade" id="drawingGoodsPoolModal"  tabindex="-1">
+    <div class="modal-dialog" style="width:60%" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">商品图片信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row-fluid">
+                            <ul class="ace-thumbnails" id="goodsPoolDrawing"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                    <a class="form-group" id = "goodsPoolUpload"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/planUtils.js','js/data/goodsPool.js']);
+</script>

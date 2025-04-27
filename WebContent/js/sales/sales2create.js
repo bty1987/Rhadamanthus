@@ -57,6 +57,8 @@ jQuery(function() {
         dompany: null,
         bid: null,
         suppliers: [],
+
+        pageType: params['urlLoadParams'].type,
     };
 
     com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function(list, k, v) {
@@ -74,6 +76,10 @@ jQuery(function() {
 
         return v;
     });
+
+    if (sales.pageType == "profit")
+        com.focusPage("#typeGroup").addClass("hide");
+
     sales.rightitems.type.bindData(constant.sales().sales.type.datas, "key", "value");
 
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {
@@ -138,7 +144,7 @@ jQuery(function() {
 
         var $purchase = price.purchase;
         var $confine = price.confine;
-        
+
         var $selling = sales.leftitems.selling.val(); // 折让价
         var $disPrice = sales.leftitems.disPrice.val(); // 折扣价
         var $discount = sales.leftitems.discount.val(); // 折扣
@@ -151,7 +157,7 @@ jQuery(function() {
             com.showAlert(com.warning, "折扣价低于控价");
             return false;
         }
-        
+
         if (price.ctype == 1 && price.confine != 0 && $disPrice > price.confine) {
             com.showAlert(com.warning, "折扣价高于限价");
             return false;
@@ -305,8 +311,14 @@ jQuery(function() {
             "sales.dompanys": sales.dompany,
             "sales.otherStatus": com.focusPage("[data-otherStatus=1]").length > 0 ? 1 : 0,
             "sales.supplier.userId": sales.rightitems.supplier.val(),
-            "sales.type": sales.rightitems.type.val(),
         };
+
+        if (sales.pageType == "profit") {
+            options["sales.grade"] = "A";
+        } else {
+            options["sales.grade"] = "B";
+            options["sales.type"] = sales.rightitems.type.val();
+        }
 
         var $lis = com.focusPage('.list-group-item');
 
@@ -491,9 +503,12 @@ jQuery(function() {
                 sales.suppliers[i] = v.supplier
             });
         }, null, false);
-        com.post(api.data.queryBrandByBid, {"brand.bid": v.bid}, function (res){
-            if (res.brand.supplier != null || res.brand.supplier != ""){
-                $('<option selected="selected"></option>').attr("value" , res.brand.supplier.userId).html(res.brand.supplier.currentName).appendTo(com.focusPage("#supplier"));
+        com.post(api.data.queryBrandByBid, {
+            "brand.bid": v.bid
+        }, function(res) {
+
+            if (res.brand.supplier != null || res.brand.supplier != "") {
+                $('<option selected="selected"></option>').attr("value", res.brand.supplier.userId).html(res.brand.supplier.currentName).appendTo(com.focusPage("#supplier"));
 
             }
         })

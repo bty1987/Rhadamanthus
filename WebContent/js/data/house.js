@@ -26,6 +26,7 @@ $(function() {
             waterVapour: com.focusPage("#waterVapour", "#houseModal"),
             parlourType: com.focusPage("#parlourType", "#houseModal"),
             heatingType: com.focusPage("#heatingType", "#houseModal"),
+            islift: com.focusPage("#islift", "#houseModal"),
             builtrule: com.focusPage("#builtrule", "#houseModal"),
             unitrule: com.focusPage("#unitrule", "#houseModal"),
             floorrule: com.focusPage("#floorrule", "#houseModal"),
@@ -97,10 +98,12 @@ $(function() {
         house.items.waterVapour.bindData(res.waterVapour, "key", "value");
         house.items.parlourType.bindData(res.parlourType, "key", "value");
         house.items.heatingType.bindData(res.heatingType, "key", "value");
+        house.items.islift.bindData(res.elevator, "key", "value");
         house.items.builtrule.bindData(res.buildrule, "key", "value");
         house.items.unitrule.bindData(res.buildrule, "key", "value");
         house.items.floorrule.bindData(res.buildrule, "key", "value");
         house.items.doorrule.bindData(res.buildrule, "key", "value");
+
         house.type = res.houseType.split("key", "value");
         house.houseType = res.houseType.split("key", "value");// 房产类型
         house.orientation = res.orientation.split("key", "value");// 房屋朝向
@@ -108,6 +111,7 @@ $(function() {
         house.parlourType = res.parlourType.split("key", "value");// 客厅类型
         house.heatingType = res.heatingType.split("key", "value");// 供暖类型
         house.through = res.through.split("key", "value");// 是否越层
+        house.elevator = res.elevator.split("key", "value");// 有无电梯
     }, null, false);
 
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, key, value) {
@@ -219,15 +223,24 @@ $(function() {
         prop: "heatingType",
         clazz: "red",
         dataset: house.heatingType
+    }, {
+        field: "isLift",
+        name: "有无电梯",
+        prop: "isLift",
+        clazz: "red",
+        dataset: house.elevator
     }, ];
+    
     var linebtns = [{
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(b) {
 
             inithouse();
+            
             house.editFlag = true;
             house.houseFlag = false;
+            
             com.focusPage("#ohousetype").css({
                 "display": "block"
             });
@@ -237,9 +250,11 @@ $(function() {
             com.focusPage("#nhouseNumber").css({
                 "display": "none"
             });
+            
             house.cancelHouselBtn.prop("disabled", true);
             house.items.no.prop("disabled", true);
             com.updateTypeahead('no', b.village.no, b.village.name);
+            
             house.items.hid = b.hid;
             house.items.houseNumber = b.houseNumber;
             house.items.oldhouseNumber.val(b.houseNumber);
@@ -255,6 +270,7 @@ $(function() {
             house.items.waterVapour.val(b.waterVapour);
             house.items.parlourType.val(b.parlourType);
             house.items.heatingType.val(b.heatingType);
+            house.items.islift.val(b.isLift);
 
             house.modals.houseModal.modal("show");
 
@@ -318,6 +334,7 @@ $(function() {
         options["house.waterVapour"] = house.items.waterVapour.val();
         options["house.parlourType"] = house.items.parlourType.val();
         options["house.heatingType"] = house.items.heatingType.val();
+        options["house.isLift"] = house.items.islift.val();
 
         if (house.editFlag) {
             url = api.data.updateHouse;
@@ -352,6 +369,7 @@ $(function() {
         com.clearValidator();
         com.cleanItems(house.items);
         com.cleanTypeahead("no");
+        
         house.items.built.removeAttr("readonly", "readonly");
         house.items.unit.removeAttr("readonly", "readonly");
         house.items.floor.removeAttr("readonly", "readonly");

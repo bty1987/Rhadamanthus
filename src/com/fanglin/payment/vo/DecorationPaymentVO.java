@@ -34,7 +34,7 @@ public class DecorationPaymentVO implements Serializable {
 	private Short oneType;
 
 	private Short twoType;
-	
+
 	private Long ptid;
 
 	private String paymentType;
@@ -88,6 +88,10 @@ public class DecorationPaymentVO implements Serializable {
 	private String comment;
 
 	private Long psId;
+
+	private Short isAffirm;
+
+	private Timestamp affirmTime;
 
 	private Integer company;
 
@@ -357,6 +361,23 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setPsId(Long psId) {
 		this.psId = psId;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	public Integer getCompany() {

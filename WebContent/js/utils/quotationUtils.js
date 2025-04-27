@@ -122,7 +122,7 @@ var quotationUtils = {
 
                 var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
 
-                if (quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_COMMON_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_CUSTOM_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_UNACHE_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_HIDE_INT) {
+                if (quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_COMMON_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_CUSTOM_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_UNACHE_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_HIDE_INT || quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_CMPREH_INT) {
                     if (quotationFunctionAreaItem.discount == constant.quotation().quotationFunctionAreaItem.DISCOUNT_NODISCOUNT_INT) {
                         _disPrice = utils.accAdd(_disPrice, utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.initNum));
                     } else if (quotationFunctionAreaItem.discount == constant.quotation().quotationFunctionAreaItem.DISCOUNT_DISCOUNT_INT) {
@@ -135,7 +135,7 @@ var quotationUtils = {
                 }
             }
 
-            if (quotationFunctionArea.type == constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT) {
+            if (quotationFunctionArea.type == constant.quotation().quotationFunctionArea.TYPE_PROJECT_NUM_INT || quotationFunctionArea.type == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
                 $quotationUndisPrice = utils.accAdd($quotationUndisPrice, _undisPrice);
                 $quotationTotalPrice = utils.accAdd($quotationTotalPrice, _disPrice);
                 $quotationCostPrice = utils.accAdd($quotationCostPrice, _costPrice);
@@ -356,11 +356,15 @@ var quotationUtils = {
                     quotationFunctionAreaItem.discount = $decorationtype == 2 ? 1 : quotationFunctionAreaItem.discount;
                 }
 
+                if (quotationFunctionAreaItem.type == constant.quotation().quotationFunctionAreaItem.TYPE_CMPREH_INT) {
+                    quotationFunctionAreaItem.typestr = "综合";
+                }
+
                 if (quotationFunctionAreaItem.discount == 1) {
                     _discountNum = discount;
                 }
 
-                if ([0, 1, 6, 7].indexOf(quotationFunctionAreaItem.type) != -1) {
+                if ([0, 1, 6, 7, 9].indexOf(quotationFunctionAreaItem.type) != -1) {
                     _price = quotationFunctionAreaItem.unitPrice;
                     _dcp = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, utils.accDiv(_discountNum, 10)));
                     _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, _dcp));
@@ -798,12 +802,7 @@ var quotationUtils = {
         if ($quotation.decoration.type != constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
             com.focusPage('#quotePriceShow').hide();
         }
-
-        if (com.checkNull($quotationPrefer.advancePrefer, 0) == 0) {
-            com.focusPage('#advancePreferShow').hide();
-            com.focusPage('#advanceShow', "#quotationPreferModal").hide();
-        }
-
+        
         var $ribbonSubset = com.focusPage('#ribbonSubset').html("");
 
         var $ulribbon = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($ribbonSubset);

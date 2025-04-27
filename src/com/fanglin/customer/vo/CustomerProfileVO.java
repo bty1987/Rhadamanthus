@@ -48,6 +48,11 @@ public class CustomerProfileVO implements Serializable {
 		this.creater = creater;
 	}
 
+	public CustomerProfileVO(UserBaseVO creater) {
+		super();
+		this.creater = creater;
+	}
+
 	public Long getCpid() {
 		return cpid;
 	}

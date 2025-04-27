@@ -957,4 +957,25 @@ Condition.addupRule("quotation", {
             valuePath: "name"
         }
     },
+
+    "quotationLabel-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    // 记录
+    "quotationRecord-operatTime": {
+        label: "记录时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "operatTime",
+            op: "eq",
+            validate: null
+        }
+    }
 });

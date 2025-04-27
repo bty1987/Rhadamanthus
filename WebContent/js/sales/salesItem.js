@@ -45,6 +45,10 @@ $(function() {
     if ((salesItem.sales.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) || salesItem.dompany == "pompany") {
         hideButtons([salesItem.btns.refundBtn, salesItem.btns.refundCancelBtn, salesItem.btns.refundCommitBtn, salesItem.btns.fullRefundBtn, salesItem.btns.reOrderBtn]);
     }
+    
+    if(salesItem.sales.type == 1){
+        hideButtons([salesItem.btns.refundBtn]);
+    }
 
     var initList = function(listData) {
 
@@ -384,7 +388,7 @@ $(function() {
             "value": salesItem.sales.dept.name
         }, {
             "name": "品牌",
-            "value": salesItem.sales.brand
+            "value": salesItem.sales.brand.name
         }, {
             "name": "实退款金额（元）",
             "value": parseInt(salesItem.items.refundTotal.val())

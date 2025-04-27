@@ -161,6 +161,14 @@ public class DecorationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageDecorationForMaterialer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationForMaterialer() throws FLException {
+
+		decorationService.pageDecorationForMaterialer(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "pageDecorationForBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationForBelong() throws FLException {
 

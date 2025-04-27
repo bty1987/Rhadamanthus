@@ -47,17 +47,33 @@ jQuery(function($) {
 
         var payment = res.payment;
         arid = payment.arId;
+        var decorationCommon = null;
+        var drganization = null;
+        var srganization = null;
 
         if (!payment.pid) {
             return;
         }
 
+        com.post(queryDecorationForCommonByOrderId, {"decoration.orderId": orderId}, function(data) {
+            decorationCommon = data.decoration;
+
+            com.post(api.system.queryCompanyByCid, {
+                "company.cid": data.decoration.bompany
+            }, function(data) {
+
+                drganization = data.company.drganization;
+                srganization = data.company.srganization;
+            }, null, false);
+
+        }, null, false);
+
         if (payment.paymentType == parent.constant.payment().advancePayment.PAYMENTTYPE_BALANCE_INT) {
-            receipt.organizationName = parent.params.company.drganization.name + "收款收据";
-            receipt.organization = parent.params.company.drganization.name;
+            receipt.organizationName = drganization.name + "收款收据";
+            receipt.organization = drganization.name;
         } else if (payment.paymentType == parent.constant.payment().advancePayment.PAYMENTTYPE_MATERIAL_INT) {
-            receipt.organizationName = parent.params.company.srganization.name + "代收款收据";
-            receipt.organization = parent.params.company.srganization.name;
+            receipt.organizationName = srganization.name + "代收款收据";
+            receipt.organization = srganization.name;
         }
 
         commonInfo["customerName"] = payment.customer.name;
@@ -116,26 +132,23 @@ jQuery(function($) {
 
         var _items = [];
 
-        com.post(queryDecorationForCommonByOrderId, {"decoration.orderId": orderId}, function(data) {
+        createReceiptTable(commonInfo, receipt.receipts, decorationCommon, getPaymentType(payment.paymentType));
 
-            createReceiptTable(commonInfo, receipt.receipts, data.decoration, getPaymentType(payment.paymentType));
-
-            printer.name = "payment";
-            printer.args = {
-                "title": receipt.organizationName,
-                "orderId": orderId,
-                "orderAddr": addr,
-                "collectTime": commonInfo["collectTime"],
-                "collecter": commonInfo["collectUserName"],
-                "referMoney": commonInfo["total"],
-                "capitalize": utils.getCNMoney(commonInfo["total"]),
-                "payments": [{
-                    "paymentType": getPaymentType(payment.paymentType),
-                    "money": payment.recharge
-                }],
-                "receipts": paymentItems
-            };
-        }, null, false);
+        printer.name = "payment";
+        printer.args = {
+            "title": receipt.organizationName,
+            "orderId": orderId,
+            "orderAddr": addr,
+            "collectTime": commonInfo["collectTime"],
+            "collecter": commonInfo["collectUserName"],
+            "referMoney": commonInfo["total"],
+            "capitalize": utils.getCNMoney(commonInfo["total"]),
+            "payments": [{
+                "paymentType": getPaymentType(payment.paymentType),
+                "money": payment.recharge
+            }],
+            "receipts": paymentItems
+        };
     }, null, false);
 
     paymentUtils.initSignet(receipt.htmlName);

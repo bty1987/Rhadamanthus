@@ -175,8 +175,8 @@ $(function() {
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单状态", "status"), createDiv("col-sm-9").append(createInput("status", "col-xs-10 col-sm-5", true, "text", "0"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "量房时间", "measureTime"), createDiv("col-sm-9").append(createInput("measureTime", "col-xs-10 col-sm-5", true, "text", "0"))));
         rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "报价员", "quoterId"), createDiv("col-sm-9").append(createInput("quoterId", "col-xs-10 col-sm-5", [], null, null, "popover", "manual"))));
-        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "跟单员", "escorterId"), createDiv("col-sm-9").append(createInput("escorterId", "col-xs-10 col-sm-5", [], null, null, "popover", 'manual'))));
-
+        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "方案设计", "escorterId"), createDiv("col-sm-9").append(createInput("escorterId", "col-xs-10 col-sm-5", [], null, null, "popover", 'manual'))));
+        rightitems1.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "跟单员", "materialerId"), createDiv("col-sm-9").append(createInput("materialerId", "col-xs-10 col-sm-5", [], null, null, "popover", 'manual'))));
         rightgroup1.append(rightitems1);
         form1.append(left1, right1).appendTo(row1);
 
@@ -235,9 +235,9 @@ $(function() {
     function drawQuotaion(conf) {
 
         var row = createDiv("row");
-        
+
         row.append(createDiv("row").append($("<div></div>").addClass("col-sm-4").append($("<h3></h3>").append($('<strong></strong>').addClass("blue").attr("id", "product")))).append(createDiv("pull-right").append(createButton(conf, "preferBtn", "btn btn-xs btn-primary", "优惠", null, '<i class="bigger-120"></i>')), createDiv("col-md-12", "quotationSummary")));
-        
+
         var $sortable = createDiv("widget-container-span ui-sortable");
         var $tabbable = createDiv("tabbable").appendTo($sortable);
         var $myTab = createUl("myTab", "nav nav-tabs", "margin-top: 7px;").appendTo($tabbable);
@@ -246,7 +246,7 @@ $(function() {
         var quotationWorkerTypeDetail = createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#workTypeSubset").css("color", "#4383b4").append($("<strong></strong>").text("工种分组")));
         var quotationSelectionCategoryDetail = createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#selectionCategory").css("color", "#4383b4").append($("<strong></strong>").text("选材品类")));
         var quotationButtonsDetail = createDiv("pull-right action-buttons").append(createButton(conf, "btnPrintDefaultQuotationInfo", "btn btn-xs btn-primary", "打印报价", null, '<i class="icon-print bigger-120"></i>'), createButton(conf, "btnPrintQuotationCN", "btn btn-xs btn-info", "打印定额", null, '<i class="icon-print bigger-120"></i>'));
-        
+
         $myTab.append(quotationFunctionAreaDetail);
         $myTab.append(quotationWorkerTypeDetail);
         $myTab.append(quotationSelectionCategoryDetail);
@@ -294,21 +294,37 @@ $(function() {
         var $contractMap = $show.includes("contractMap") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同备档")), createDiv("inline pull-right", "ContractUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createUl("ContractPictures", "ace-thumbnails"))))) : null;
         var $CADProjectPicture = $show.includes("CADProjectPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("工程文件CAD")), createDiv("inline pull-right", "CADUpload").css("text-align", "right")), createDiv().css("min-height", "150px").append(createDiv("infobox-container", "CADProjectPicture"))))) : null;
         var $contractFile = $show.includes("contractFiles") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同文件"))), createDiv().css("min-height", "150px").append(createDiv("infobox-container", "contractFiles"))))) : null;
+        var $designContractPicture = $show.includes("designContractPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同方案2")), createDiv("inline pull-right", "designContractPictureUpload_a").css("text-align", "right").append(createDiv("pull-left", "designContractPictureUpload_b"))), createDiv().css("min-height", "150px").append(createUl("designContractPicture", "ace-thumbnails"))))) : null;
 
-        var row2 = createDiv("row").append($OriginalPicture).append($designPictures).append($projectPictures).append($contractMap).append($CADProjectPicture).append($contractFile).appendTo(stepPane);
+        var row2 = createDiv("row").append($OriginalPicture).append($designPictures).append($designContractPicture).append($projectPictures).append($contractMap).append($CADProjectPicture).append($contractFile).appendTo(stepPane);
 
         var $btns = conf.opt == null ? [] : conf.opt.btn == null ? [] : conf.opt.btn;
 
         if ($btns.includes("designPictureUpload")) {
-            decorationUtils.loadHuploadify("designPictureUpload_b", "上传合同方案", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
+        	
+        	decorationUtils.loadHuploadify("designPictureUpload_b", "上传合同方案", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                 decorationUtils.addDecorationPicture(data, 1, "designPictures");
             }, "btn btn-minier btn-primary");
+
+//        	var $btnView = $("<a></a>").addClass("uploadify-button btn btn-minier btn-primary").html("上传合同方案").click(function() {
+//
+//                com.popup4page("#designPictureUpload_c", api.index.decorationPictureIndex.url, "上传合同");
+//            });
+//
+//            container = com.focusPage('#designPictureUpload_b').append($btnView);
         }
         if ($btns.includes("projectPictureUpload")) {
             decorationUtils.loadHuploadify("projectPictureUpload_b", "上传放线方案", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                 decorationUtils.addDecorationPicture(data, 2, "projectPictures");
+            }, "btn btn-minier btn-primary");
+        }
+        
+        if ($btns.includes("designContractPictureUpload")) {
+            decorationUtils.loadHuploadify("designContractPictureUpload_b", "上传合同方案2", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
+
+                decorationUtils.addDecorationPicture(data, 5, "designContractPicture");
             }, "btn btn-minier btn-primary");
         }
         if ($btns.includes("OriginalUpload")) {
@@ -436,9 +452,9 @@ $(function() {
         var leftDown = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("失效归属设计信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "loseBelongDesignInfo"))));
         var rightDown = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("失效归属业务信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "loseBelongSalesmanInfo"))));
         row.append(left, right);
-        rowleft.append(leftDown,rightDown);
-       
-        return [row,rowleft];
+        rowleft.append(leftDown, rightDown);
+
+        return [row, rowleft];
     }
 
     function drawAddreuce(conf) {
@@ -483,6 +499,7 @@ $(function() {
             var isCADUpload = false;
             var isContractUpload = false;
             var isOriginalUpload = false;
+            var isdesignContractPictureUpload = false;
 
             var title = {
                 "basic": "基本信息",
@@ -586,6 +603,12 @@ $(function() {
                 decorationUtils.loadHuploadify("ContractUpload", "上传合同备档", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                     decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
+                }, "btn btn-inverse");
+            }
+            if (isdesignContractPictureUpload) {
+                decorationUtils.loadHuploadify("designContractPictureUpload", "上传合同2", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
+
+                    decorationUtils.addDecorationPicture(data, 5, "designContractPictureUpload");
                 }, "btn btn-inverse");
             }
 

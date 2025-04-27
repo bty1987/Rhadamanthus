@@ -224,7 +224,7 @@ public class SalesPO implements Serializable {
 		this.sid = sid;
 	}
 
-	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO guider, DepartmentPO guideDept, UserPO instorer, UserPO supplier,BrandPO brand) {
+	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO guider, DepartmentPO guideDept, UserPO instorer, UserPO supplier, BrandPO brand) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -650,7 +650,7 @@ public class SalesPO implements Serializable {
 
 	public void ptv(SalesVO salesVO) {
 
-		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher", "creater","brand"));
+		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher", "creater", "brand"));
 
 		if (salesVO.getHouse() != null && getHouse() != null) getHouse().ptv(salesVO.getHouse());
 
@@ -670,8 +670,8 @@ public class SalesPO implements Serializable {
 		if (salesVO.getSalesman() != null && salesVO.getSalesman().getDept() != null) BeanUtil.copyProperties(getSalesman().getDept(), salesVO.getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		if (salesVO.getGuider() != null && salesVO.getGuider().getDept() != null) BeanUtil.copyProperties(getGuider().getDept(), salesVO.getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		if (salesVO.getInstorer() != null && salesVO.getInstorer().getDept() != null) BeanUtil.copyProperties(getInstorer().getDept(), salesVO.getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-		if (salesVO.getBrand() != null) BeanUtil.copyProperties(getBrand(), salesVO.getBrand(), Arrays.asList("supplier"));
 
+		if (salesVO.getBrand() != null && getBrand() != null) getBrand().ptv(salesVO.getBrand());
 
 	}
 

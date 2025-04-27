@@ -15,18 +15,21 @@ $(function() {
     var data = params.sales.sales;
 
     var trList = $("#reslist");
-
-    var querySalesItemBySid = api.sales.querySalesItemBySid;
+    
+    var decoration = {};
 
     com.post(api.decoration.queryDecorationByOrderId, {
         "decorationOrderId": data.orderId
     }, function(res) {
 
         var decorationInfo = res.decoration;
+        
         options.designer = decorationInfo.designer.currentName == null ? "" : decorationInfo.designer.currentName;
         options.supervisor = decorationInfo.supervisor.currentName == null ? "" : decorationInfo.supervisor.currentName;
+        
+        decoration = res.decoration;
     }, null, false);
-
+    
     printer.name = "salesPaymentForDeposit";
     printer.args = {
         "orderId": data.orderId,
@@ -34,7 +37,7 @@ $(function() {
         "designer": options.designer,
         "supervisor": options.supervisor,
         "salesNo": data.no,
-        "brand": data.brand,
+        "brand": data.brand.name,
         "createTime": data.createTime,
         "referMoney": utils.changeThrDecimal(data.depositpay),
         "capitalize": utils.getCNMoney(utils.changeThrDecimal(data.depositpay)),
@@ -43,7 +46,7 @@ $(function() {
         "type": data.type
     };
 
-    com.post(querySalesItemBySid, {
+    com.post(api.sales.querySalesItemBySid, {
         'sales.sid': params.sales.sales.sid
     }, function(data) {
 
@@ -60,7 +63,7 @@ $(function() {
         var img = $('<img/>').css("position", "absolute").css("top", "50px").css("left", "50px").appendTo(div);
         com.showImg(img, data.supplier.userPhoto, 200, 200, '');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
-        var caption = $('<caption style="line-height: 65px;font-size:23px; font-weight:bolder"></caption>').html((printer.args.type == 1 ? "补贴" : "") + "商品销售单").appendTo(table);
+        var caption = $('<caption style="line-height: 65px;font-size:23px; font-weight:bolder"></caption>').html((printer.args.type == 1 ? "补贴" : "") + (data.grade == 'A' ? "装修材料明细单" :"商品销售单")).appendTo(table);
 
         var tr28 = $('<tr style="height: 70px;"></tr>').appendTo(table);
         var td55 = $('<td rowspan="3"></td>').appendTo(tr28);
@@ -87,7 +90,7 @@ $(function() {
         var td57 = $('<td style="border-bottom: 1px solid #3F3F3F"></td>').appendTo(tr4);
 
         var td13 = $('<td></td>').text("品牌: ").appendTo(tr4);
-        var td14 = $('<td  colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.brand).appendTo(tr4);
+        var td14 = $('<td  colspan="3" style="border-bottom: 1px solid #3F3F3F"></td>').text(data.brand.name).appendTo(tr4);
 
         var tr5 = $('<tr style="height: 30px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
         var td15 = $('<td></td>').text("楼盘地址: ").appendTo(tr5);
@@ -105,7 +108,7 @@ $(function() {
             printer.args.title = params.company.fullname + "主材代购确认单";
 
             moneryName = "实收金额";
-            netReceipts = utils.changeThrDecimal(data.fullpay);
+            netReceipts = utils.changeThrDecimal(data.fullpay - (data.type == 1 ? data.coupon : 0));
             var tr8 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
 
             var td24 = $('<td colspan="3" style="border: 1px solid;"></td>').text("商品名称").appendTo(tr8);
@@ -189,7 +192,7 @@ $(function() {
         var td48 = $('<td style="border: 1px solid;"></td>').text("特殊说明:").appendTo(tr23);
         
         com.post(api.data.queryBrandByBid, {
-            "brand.bid": data.bid
+            "brand.bid": data.brand.bid
         }, function(v) {
 
             var td49 = $('<td colspan="7" style="border: 1px solid;"></td>').text(v.brand.comment == null ? "" : v.brand.comment).appendTo(tr23);

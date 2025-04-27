@@ -11,39 +11,39 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "decorationMeasureItem", catalog = "data")
-public class DecorationMeasureItemPO implements Serializable {
+@Table(name = "decorationmeasureruleitem", catalog = "data")
+public class DecorationMeasureRuleItemPO implements Serializable {
 
 	private static final long serialVersionUID = 5303493399968307535L;
 
-	private long dmiid;
+	private long dmriid;
 
-	private long dmid;
+	private long dmrid;
 
 	private int company;
 
-	public DecorationMeasureItemPO() {
+	public DecorationMeasureRuleItemPO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "dmiid")
-	public long getDmiid() {
-		return dmiid;
+	@Column(name = "dmriid")
+	public long getDmriid() {
+		return dmriid;
 	}
 
-	public void setDmiid(long dmiid) {
-		this.dmiid = dmiid;
+	public void setDmriid(long dmriid) {
+		this.dmriid = dmriid;
 	}
 
-	@Column(name = "dmid")
-	public long getDmid() {
-		return dmid;
+	@Column(name = "dmrid")
+	public long getDmrid() {
+		return dmrid;
 	}
 
-	public void setDmid(long dmid) {
-		this.dmid = dmid;
+	public void setDmrid(long dmrid) {
+		this.dmrid = dmrid;
 	}
 
 	@Column(name = "company")

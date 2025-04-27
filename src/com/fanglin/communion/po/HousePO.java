@@ -77,6 +77,8 @@ public class HousePO implements Serializable {
 
 	private short heatingType;
 
+	private short isLift;
+
 	private int company;
 
 	public HousePO() {
@@ -292,6 +294,15 @@ public class HousePO implements Serializable {
 
 	public void setHeatingType(short heatingType) {
 		this.heatingType = heatingType;
+	}
+
+	@Column(name = "isLift")
+	public short getIsLift() {
+		return isLift;
+	}
+
+	public void setIsLift(short isLift) {
+		this.isLift = isLift;
 	}
 
 	public String address() {

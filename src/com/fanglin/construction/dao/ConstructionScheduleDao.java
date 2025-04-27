@@ -15,12 +15,14 @@ public interface ConstructionScheduleDao extends Dao<ConstructionSchedulePO> {
 
 	public List<ConstructionSchedulePO> queryConstructionScheduleByOrderId(String orderId);
 
-	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(Long cid);
+	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(long cid);
 
 	public ConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId, short schedule);
 
-	public ConstructionSchedulePO queryConstructionSchedule(String orderId, long cnid);
+	public ConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId, long cnid);
 
 	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, short schedule);
+
+	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, long cnid);
 
 }

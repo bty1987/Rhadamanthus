@@ -64,7 +64,10 @@ jQuery(function($) {
         var orderIdVal = paytran.items.orderId.val();
 
         if (!paytran.decoration && orderIdVal != "") {
-            com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": orderIdVal}, function(res) {
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": orderIdVal
+            }, function(res) {
+
                 paytran.decoration = res.decoration;
             }, null, false);
         }
@@ -154,7 +157,9 @@ jQuery(function($) {
 
             $cancel.click(function() {
 
-                com.post(api.payment.cancelPaytran, {"paytran.ptid": v.ptid}, function(res) {
+                com.post(api.payment.cancelPaytran, {
+                    "paytran.ptid": v.ptid
+                }, function(res) {
                     com.showAlert(com.info, "撤销完成");
                     searcher.doSearch();
                 });
@@ -164,10 +169,12 @@ jQuery(function($) {
 
             $check.click(function() {
 
-                com.post(api.payment.checkPaytran, {"paytran.ptid": v.ptid}, function(res) {
+                com.post(api.payment.checkPaytran, {
+                    "paytran.ptid": v.ptid
+                }, function(res) {
+
                     com.showAlert(com.info, "验证完成");
                     searcher.doSearch();
-
                 });
 
                 return false;

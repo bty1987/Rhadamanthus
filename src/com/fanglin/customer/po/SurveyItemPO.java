@@ -3,6 +3,7 @@ package com.fanglin.customer.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fanglin.customer.vo.SurveyItemVO;
+import com.fanglin.customer.vo.SurveyOptionVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "surveyitem", catalog = "customer")
@@ -102,6 +107,19 @@ public class SurveyItemPO implements Serializable {
 
 	public void setOptions(List<SurveyOptionPO> options) {
 		this.options = options;
+	}
+
+	public SurveyItemVO ptv(SurveyItemVO surveyItemVO) {
+
+		BeanUtil.copyPropertie(this, surveyItemVO, Arrays.asList("options"));
+
+		if (surveyItemVO.getOptions() == null || getOptions() == null) return surveyItemVO;
+
+		for (SurveyOptionPO optionPO : getOptions()) {
+			surveyItemVO.getOptions().add(optionPO.ptv(new SurveyOptionVO()));
+		}
+
+		return surveyItemVO;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.fanglin.customer.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -12,6 +13,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fanglin.customer.vo.CustomerProfileItemVO;
+import com.fanglin.customer.vo.CustomerProfileOptionVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "customerprofileitem", catalog = "customer")
@@ -102,6 +107,19 @@ public class CustomerProfileItemPO implements Serializable {
 
 	public void setOptions(List<CustomerProfileOptionPO> options) {
 		this.options = options;
+	}
+
+	public CustomerProfileItemVO ptv(CustomerProfileItemVO customerProfileItemVO) {
+
+		BeanUtil.copyPropertie(this, customerProfileItemVO, Arrays.asList("options"));
+
+		if (customerProfileItemVO.getOptions() == null || getOptions() == null) return customerProfileItemVO;
+
+		for (CustomerProfileOptionPO optionPO : getOptions()) {
+			customerProfileItemVO.getOptions().add(optionPO.ptv(new CustomerProfileOptionVO()));
+		}
+
+		return customerProfileItemVO;
 	}
 
 }

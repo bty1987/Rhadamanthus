@@ -301,22 +301,6 @@ $.extend(api, {
             url: "queryVillageForNameByPinyin.do",
             demo: true
         },
-
-        queryVillageRule: {
-            url: "queryVillageRule.do",
-            type: "query",
-            tranargs: [{
-                result: "villageRules",
-                args: ["price"]
-            }]
-        },
-        addVillageRule: {
-            url: "addVillageRule.do"
-        },
-        deleteVillageRule: {
-            url: "deleteVillageRule.do"
-        },
-
         addVillage: {
             url: "addVillage.do",
             server: "communion"
@@ -335,6 +319,22 @@ $.extend(api, {
         },
         updateVillageForUrl: {
             url: "updateVillageForUrl.do",
+            server: "communion"
+        },
+        queryVillageRule: {
+            url: "queryVillageRule.do",
+            type: "query",
+            tranargs: [{
+                result: "villageRules",
+                args: ["price"]
+            }]
+        },
+        addVillageRule: {
+            url: "addVillageRule.do",
+            server: "communion"
+        },
+        deleteVillageRule: {
+            url: "deleteVillageRule.do",
             server: "communion"
         },
 
@@ -696,15 +696,25 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
 
         queryColorByGid: {
-            url: "queryColorByGid.do"
+            url: "queryColorByGid.do",
+            type: "query",
+            tranargs: [{
+                result: "colors-goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         queryColorForEnableByGid: {
-            url: "queryColorForEnableByGid.do"
+            url: "queryColorForEnableByGid.do",
+            type: "query",
+            tranargs: [{
+                result: "colors-goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         addColor: {
             url: "addColor.do"
@@ -718,15 +728,25 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
 
         queryFormatByGid: {
-            url: "queryFormatByGid.do"
+            url: "queryFormatByGid.do",
+            type: "query",
+            tranargs: [{
+                result: "formats-goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         queryFormatForEnableByGid: {
-            url: "queryFormatForEnableByGid.do"
+            url: "queryFormatForEnableByGid.do",
+            type: "query",
+            tranargs: [{
+                result: "formats-goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         addFormat: {
             url: "addFormat.do"
@@ -740,7 +760,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         pageGoodsForAdvance: {
@@ -748,37 +768,92 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         queryGoods: {
-            url: "queryGoods.do"
+            url: "queryGoods.do",
+            type: "query",
+            tranargs: [{
+                result: "goodes",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         queryGoodsByNo: {
-            url: "queryGoodsByNo.do"
+            url: "queryGoodsByNo.do",
+            type: "query",
+            tranargs: [{
+                result: "goodes",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         queryGoodsByName: {
             url: "queryGoodsByName.do",
             type: "query",
             tranargs: [{
                 result: "goodes",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         queryGoodsByAtid: {
-            url: "queryGoodsByAtid.do"
+            url: "queryGoodsByAtid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodes",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         queryGoodsByBarcode: {
-            url: "queryGoodsByBarcode.do"
+            url: "queryGoodsByBarcode.do",
+            type: "query",
+            tranargs: [{
+                result: "goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
         },
         queryGoodsByGId: {
             url: "queryGoodsByGId.do",
             type: "query",
             tranargs: [{
                 result: "goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
+        queryGoodsByGpid: {
+            url: "queryGoodsByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodes",
+                args: ["purchase", "selling", "pieceNum", "confine"]
+            }]
+        },
+        addGoods: {
+            url: "addGoods.do",
+            type: "update",
+            tranargs: {
+                args: ["goods.pieceNum", "goods.purchase", "goods.selling", "goods.confine"]
+            }
+        },
+        
+        updateGoods: {
+            url: "updateGoods.do",
+            type: "update",
+            tranargs: {
+                args: ["goods.pieceNum", "goods.purchase", "goods.selling", "goods.confine"]
+            }
+        },
+        updateGoodsForStatus: {
+            url: "updateGoodsForStatus.do"
+        },
+        showGoods: {
+            url: "showGoods.do"
+        },
+        
+        pageGoodsRecord: {
+            url: "pageGoodsRecord.do"
+        },
+        
+
         queryPackage: {
             url: "queryPackage.do",
             type: "query",
@@ -787,15 +862,8 @@ $.extend(api, {
                 args: ["num"]
             }, {
                 result: "goodsPackages-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
-        },
-        addGoods: {
-            url: "addGoods.do",
-            type: "update",
-            tranargs: {
-                args: ["goods.pieceNum", "goods.purchase", "goods.selling"]
-            }
         },
         addPackage: {
             url: "addPackage.do",
@@ -805,35 +873,27 @@ $.extend(api, {
             }
 
         },
-        updateGoods: {
-            url: "updateGoods.do",
-            type: "update",
-            tranargs: {
-                args: ["goods.pieceNum", "goods.purchase", "goods.selling"]
-            }
-        },
-        updateGoodsForStatus: {
-            url: "updateGoodsForStatus.do"
-        },
 
         pagePrice: {
             url: "pagePrice.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["purchase", "selling", "cvalue"]
+                args: ["purchase", "selling", "cvalue", "confine"]
             }, {
                 result: "paging-data-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
-
         queryPriceByGid: {
             url: "queryPriceByGid.do",
             type: "query",
             tranargs: [{
                 result: "prices",
-                args: ["purchase", "selling", "cvalue"]
+                args: ["purchase", "selling", "cvalue", "confine"]
+            }, {
+                result: "prices-goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         queryPriceByPid: {
@@ -841,21 +901,24 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "price",
-                args: ["purchase", "selling", "cvalue"]
+                args: ["purchase", "selling", "cvalue", "confine"]
+            }, {
+                result: "price-goods",
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         addPrice: {
             url: "addPrice.do",
             type: "update",
             tranargs: {
-                args: ["price.purchase", "price.selling", "price.cvalue"]
+                args: ["price.purchase", "price.selling", "price.cvalue", "price.confine"]
             }
-        },
-        deletePrice: {
-            url: "deletePrice.do"
         },
         updatePriceForStatus: {
             url: "updatePriceForStatus.do"
+        },
+        deletePrice: {
+            url: "deletePrice.do"
         },
 
         pageAoods: {
@@ -866,10 +929,9 @@ $.extend(api, {
                 args: ["totalimit", "balance", "selling"]
             }, {
                 result: "paging-data-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
-
         queryAoods: {
             url: "queryAoods.do",
             type: "query",
@@ -878,10 +940,9 @@ $.extend(api, {
                 args: ["totalimit", "balance", "selling"]
             }, {
                 result: "aoodes-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
-
         queryAoodsByName: {
             url: "queryAoodsByName.do",
             type: "query",
@@ -890,7 +951,7 @@ $.extend(api, {
                 args: ["totalimit", "balance", "selling"]
             }, {
                 result: "aoodes-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         queryAoodsByAtid: {
@@ -901,7 +962,7 @@ $.extend(api, {
                 args: ["totalimit", "balance", "selling"]
             }, {
                 result: "aoodes-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         addAoods: {
@@ -936,7 +997,7 @@ $.extend(api, {
                 args: ["num", "selling", "cost", "balance"]
             }, {
                 result: "paging-data-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         querySoodsByName: {
@@ -947,10 +1008,9 @@ $.extend(api, {
                 args: ["num", "selling", "cost", "balance"]
             }, {
                 result: "soodes-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
-
         querySoods: {
             url: "querySoods.do",
             type: "query",
@@ -959,7 +1019,7 @@ $.extend(api, {
                 args: ["num", "selling", "cost", "balance"]
             }, {
                 result: "soodes-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         addSoods: {
@@ -1009,7 +1069,7 @@ $.extend(api, {
                 args: ["num", "selling"]
             }, {
                 result: "paging-data-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }, {
                 result: "paging-data-quotationItem",
                 args: ["pieceNum", "purchase", "selling"]
@@ -1232,7 +1292,7 @@ $.extend(api, {
                 args: ["normnum", "storenum", "price"]
             }, {
                 result: "normoods-goods",
-                args: ["purchase", "selling", "pieceNum"]
+                args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
         addNormood: {
@@ -1338,11 +1398,86 @@ $.extend(api, {
             url: "deleteBrandBalance.do"
         },
 
+        queryBrandProduct: {
+            url: "queryBrandProduct.do",
+            type: "query",
+            tranargs: [{
+                result: "brandProducts",
+                args: ["cvalue"]
+            }]
+        },
+        addBrandProduct: {
+            url: "addBrandProduct.do",
+        },
+        updateBrandProduct: {
+            url: "updateBrandProduct.do"
+        },
+        deleteBrandProduct: {
+            url: "deleteBrandProduct.do"
+        },
+        
+        queryBrandDeliver: {
+            url: "queryBrandDeliver.do",
+            type: "query",
+            tranargs: [{
+                result: "brandDelivers",
+                args: ["cvalue"]
+            }]
+        },
+        addBrandDeliver: {
+            url: "addBrandDeliver.do",
+        },
+        updateBrandDeliver: {
+            url: "updateBrandDeliver.do"
+        },
+        deleteBrandDeliver: {
+            url: "deleteBrandDeliver.do"
+        },
+		
+		queryBrandInstall: {
+            url: "queryBrandInstall.do",
+            type: "query",
+            tranargs: [{
+                result: "brandInstalls",
+                args: ["cvalue"]
+            }]
+        },
+        addBrandInstall: {
+            url: "addBrandInstall.do",
+        },
+        updateBrandInstall: {
+            url: "updateBrandInstall.do"
+        },
+        deleteBrandInstall: {
+            url: "deleteBrandInstall.do"
+        },
+        
+        queryBrandServer: {
+            url: "queryBrandServer.do",
+            type: "query",
+            tranargs: [{
+                result: "brandServers",
+                args: ["cvalue"]
+            }]
+        },
+        addBrandServer: {
+            url: "addBrandServer.do",
+        },
+        updateBrandServer: {
+            url: "updateBrandServer.do"
+        },
+        deleteBrandServer: {
+            url: "deleteBrandServer.do"
+        },
+
         pageContract: {
             url: "pageContract.do"
         },
         queryContract: {
             url: "queryContract.do"
+        },
+        queryContractByCid: {
+            url: "queryContractByCid.do"
         },
         addContract: {
             url: "addContract.do"
@@ -1753,7 +1888,49 @@ $.extend(api, {
         },
         deleteInspectItem: {
             url: "deleteInspectItem.do"
-        }
+        },
+        pageSupplierSignet: {
+            url: "pageSupplierSignet.do"
+        },
+        querySupplierSignet: {
+            url: "querySupplierSignet.do"
+        },
+        querySupplierSignetBySid: {
+            url: "querySupplierSignetBySid.do"
+        },
+        addSupplierSignet: {
+            url: "addSupplierSignet.do"
+        },
+        updateSupplierSignet: {
+            url: "updateSupplierSignet.do"
+        },
+        registSupplierSignet: {
+            url: "registSupplierSignet.do"
+        },
+        authSupplierSignet: {
+            url: "authSupplierSignet.do"
+        },
+        confirmSupplierSignet: {
+            url: "confirmSupplierSignet.do"
+        },
+        signateSupplierSignet: {
+            url: "signateSupplierSignet.do"
+        },
+        autoSupplierSignet: {
+            url: "autoSupplierSignet.do"
+        },
+        cancelSupplierSignet: {
+            url: "cancelSupplierSignet.do"
+        },
+        copySupplierSignet: {
+            url: "copySupplierSignet.do"
+        },
+        selectSupplierSignet: {
+            url: "selectSupplierSignet.do"
+        },
+        moveSupplierSignet: {
+            url: "moveSupplierSignet.do"
+        },
     }
 });
 

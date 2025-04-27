@@ -45,6 +45,10 @@ public class ConstructionDrawingPO implements Serializable {
 
 	private long cid;
 
+	private long csid;
+
+	private long cnid;
+
 	private String drawingName;
 
 	private String drawingUrl;
@@ -79,6 +83,24 @@ public class ConstructionDrawingPO implements Serializable {
 
 	public void setCid(long cid) {
 		this.cid = cid;
+	}
+
+	@Column(name = "csid")
+	public long getCsid() {
+		return csid;
+	}
+
+	public void setCsid(long csid) {
+		this.csid = csid;
+	}
+
+	@Column(name = "cnid")
+	public long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(long cnid) {
+		this.cnid = cnid;
 	}
 
 	@Column(name = "drawingName")

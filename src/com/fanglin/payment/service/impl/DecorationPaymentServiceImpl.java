@@ -768,6 +768,77 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int refundDecorationPaymentForDesign(DecorationPaymentVO decorationPaymentVO, String userId, int company) throws FLException {
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		if (decorationPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		if (decorationPaymentPO.getPaymentStatus() == DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
+			throw new FLException(150012, "款项不能进行退款");
+		}
+
+		String paymentTypeStr = decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_REFUND_STR;
+
+		PaymentTypePO refundPaymentType = paymentTypeDao.queryPaymentTypeByName(paymentTypeStr, company);
+
+		if (refundPaymentType == null) {
+			throw new FLException(130091, "款项类型不存在");
+		}
+
+		UserPO user = userDao.queryUserByUserId(userId);
+		Timestamp time = DateUtil.getDateToTimestamp(new Date());
+
+		// 生成设计费退款收据
+		DecorationReceiptPO refundDecorationReceiptPO = new DecorationReceiptPO();
+
+		refundDecorationReceiptPO.setAdvance(decorationPaymentPO.getReferMoney());
+		refundDecorationReceiptPO.setAdvanceType(DecorationPaymentPO.ADVANCETYPE_TYPE_BALANCE_INT);
+		refundDecorationReceiptPO.setCollectTime(time);
+		refundDecorationReceiptPO.setCollecter(user);
+		refundDecorationReceiptPO.setCollecterName(user.getCurrentName());
+		refundDecorationReceiptPO.setType(DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT);
+
+		// 生成设计费退款款项数据
+		DecorationPaymentPO refundDecorationPaymentPO = new DecorationPaymentPO();
+
+		refundDecorationPaymentPO.setDecoration(decorationPaymentPO.getDecoration());
+		refundDecorationPaymentPO.setDecorationReceipt(refundDecorationReceiptPO);
+		refundDecorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+		refundDecorationPaymentPO.setTwoType(decorationPaymentPO.getTwoType());
+		refundDecorationPaymentPO.setPtid(refundPaymentType.getPtid());
+		refundDecorationPaymentPO.setPaymentType(paymentTypeStr);
+		refundDecorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
+		refundDecorationPaymentPO.setCreater(user);
+		refundDecorationPaymentPO.setCreateTime(time);
+		refundDecorationPaymentPO.setReferMoney(decorationPaymentPO.getReferMoney());
+		refundDecorationPaymentPO.setCompany(company);
+
+		// 原设计费变成设计费历史
+		decorationPaymentPO.setPaymentType(decorationPaymentPO.getPaymentType() + DecorationPaymentPO.PAYMENTTYPE_HISTORY_STR);
+		decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_HISTORY_INT);
+		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_HISTORY_INT);
+
+		decorationReceiptDao.save(refundDecorationReceiptPO);
+		decorationPaymentDao.save(refundDecorationPaymentPO);
+		decorationPaymentDao.update(decorationPaymentPO);
+
+		// 生成预付款数据
+		PaymentVO paymentVO = getPaymentVO(refundDecorationPaymentPO, refundDecorationReceiptPO);
+		paymentService.returnPayment(paymentVO, userId);
+
+		// 更新装修单上的付款比例
+		decorationAdditionService.updateDecorationForPayScale(new DecorationVO(decorationPaymentPO.getDecoration().getOrderId()));
+
+		decorationService.sendMessage(refundDecorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(refundDecorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=1", refundDecorationPaymentPO.getDecoration().getOrderId(), refundDecorationReceiptPO.getDrId()));
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws FLException {
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDpids(ids);
@@ -791,6 +862,24 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				decorationPaymentDao.update(decorationPaymentPO);
 			}
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException {
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		if (decorationPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		decorationPaymentPO.setIsAffirm(DecorationPaymentPO.ISAFFIRM_CONFIRM_SHORT);
+		decorationPaymentPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationPaymentDao.update(decorationPaymentPO);
 
 		return 0;
 	}
@@ -900,6 +989,21 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=1&atttype=0", orderId, decorationPaymentPO.getDpid()));
+
+	}
+
+	@Override
+	public void pushDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException {
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		if (decorationPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		String orderId = decorationPaymentPO.getDecoration().getOrderId();
+
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/confirm/confirm?orderId=%s&pid=%s&paymentType=1", orderId, decorationPaymentPO.getDpid()));
 
 	}
 

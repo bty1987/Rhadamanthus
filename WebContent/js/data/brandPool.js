@@ -1,17 +1,17 @@
 $(function() {
 
     var brandPool = {
-            bpid: null,
+        bpid: null,
 
-            modals: {
-                brandPoolModal: com.focusPage("#brandPoolModal")
-            },
+        modals: {
+            brandPoolModal: com.focusPage("#brandPoolModal")
+        },
 
-            items: {
-                name: com.focusPage("#name", "#brandPoolModal"),
-                comment: com.focusPage("#comment", "#brandPoolModal"),
-                category: com.focusPage("#category", "#brandPoolModal")
-            }
+        items: {
+            name: com.focusPage("#name", "#brandPoolModal"),
+            comment: com.focusPage("#comment", "#brandPoolModal"),
+            category: com.focusPage("#category", "#brandPoolModal")
+        }
     };
 
     brandPool.modals.brandPoolModal.on('hide.bs.modal', function(e) {
@@ -36,7 +36,7 @@ $(function() {
             brandPool.items.comment.val(v.comment);
 
             brandPool.modals.brandPoolModal.modal("show");
-         }
+        }
     }, {
         name: "状态",
         type: "switch",
@@ -74,12 +74,12 @@ $(function() {
         name: "名称",
         prop: "name",
         clazz: "grey"
-    },{
+    }, {
         field: "category.name",
         name: "品类",
         prop: "category.name",
         clazz: "grey"
-    },{
+    }, {
         field: "comment",
         name: "说明",
         prop: "comment",
@@ -90,7 +90,7 @@ $(function() {
 
         return v.no + " " + v.name;
     }, lineprops, btns).render();
-    
+
     com.focusPage('#addBrandPool', '#pagenation').on("click", function() {
 
         brandPool.bpid = null;

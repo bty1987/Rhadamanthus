@@ -41,6 +41,8 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 
 	public static final short TYPE_TAX_INT = 8;
 
+	public static final short TYPE_CMPREH_INT = 9;
+
 	private long qfaiId;
 
 	private String itemName;

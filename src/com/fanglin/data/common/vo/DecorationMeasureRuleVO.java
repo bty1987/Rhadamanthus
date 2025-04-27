@@ -6,7 +6,7 @@ public class DecorationMeasureRuleVO implements Serializable {
 
 	private static final long serialVersionUID = 1289031066363118974L;
 
-	private Long dmid;
+	private Long dmrid;
 
 	private String name;
 
@@ -18,12 +18,12 @@ public class DecorationMeasureRuleVO implements Serializable {
 		super();
 	}
 
-	public Long getDmid() {
-		return dmid;
+	public Long getDmrid() {
+		return dmrid;
 	}
 
-	public void setDmid(Long dmid) {
-		this.dmid = dmid;
+	public void setDmrid(Long dmrid) {
+		this.dmrid = dmrid;
 	}
 
 	public String getName() {

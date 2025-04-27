@@ -75,6 +75,8 @@ public class DecorationBelongPO implements Serializable {
 
 	private Timestamp operateTime;
 
+	private Timestamp updateTime;
+
 	private short status;
 
 	private short defaultFlag;
@@ -180,6 +182,14 @@ public class DecorationBelongPO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
+	}
+
 	public short getStatus() {
 		return status;
 	}
@@ -212,6 +222,8 @@ public class DecorationBelongPO implements Serializable {
 		setType(DecorationBelongPO.BELONGTYPE_DESIGN_INT);
 		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
 
+		setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
+
 		return this;
 	}
 
@@ -230,6 +242,8 @@ public class DecorationBelongPO implements Serializable {
 		setDefaultFlag(DecorationBelongPO.DEFAULTFLAG_TRUE_INT);
 		setType(DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		setStatus(DecorationBelongPO.STATUS_INVALID_INT);
+
+		setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		return this;
 	}

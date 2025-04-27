@@ -33,4 +33,6 @@ public interface CustomerChanceService {
 	public void configCustomerChance(CustomerChanceVO customerChance) throws FLException;
 
 	public void fineCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
+
+	public void finishCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
 }

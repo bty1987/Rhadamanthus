@@ -135,7 +135,7 @@ jQuery(function($) {
                 ["量尺时间: ", v.actualTime, "green"],
                 ["开始时间: ", v.startTime, "green"],
                 ["结束时间: ", v.endTime, "green"],
-                ["状态: ", constant.construction().drawLine.status.keys[v.status], "red"],
+                ["状态: ", constant.decoration().measure.status.keys[v.status], "red"],
             	["描述: ", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {

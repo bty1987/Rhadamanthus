@@ -11,9 +11,11 @@ public interface CustomerProfileService {
 
 	public void pageCustomerProfile(Paging paging, List<Filter> filters, int company);
 
-	public CustomerProfileVO queryCustomerProfileByOrderId(CustomerProfileVO customerProfileVO);
+	public CustomerProfileVO queryCustomerProfileByCid(CustomerProfileVO customerProfileVO) throws FLException;
 
-	public CustomerProfileVO queryCustomerProfileByCpid(CustomerProfileVO customerProfileVO);
+	public CustomerProfileVO queryCustomerProfileByOrderId(CustomerProfileVO customerProfileVO) throws FLException;
+
+	public CustomerProfileVO queryCustomerProfileByCpid(CustomerProfileVO customerProfileVO) throws FLException;
 
 	public int makeCustomerProfile(CustomerProfileVO customerProfileVO, String userId, int company) throws FLException;
 

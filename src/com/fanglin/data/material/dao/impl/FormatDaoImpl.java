@@ -48,6 +48,17 @@ public class FormatDaoImpl extends DaoImpl<FormatPO> implements FormatDao {
 		return (FormatPO) session().createCriteria(FormatPO.class).add(Restrictions.eq(FormatPO.COLUMN_GID_STR, gid)).add(Restrictions.eq(FormatPO.COLUMN_INFO_STR, info)).uniqueResult();
 	}
 
+	@Override
+	public int batchSaveFormat(long gid, long gpid) {
+
+		String sql = "INSERT INTO `data`.format (gid, info, `status`) SELECT :gid, fp.info, fp.`status` FROM communion.formatpool fp WHERE fp.gpid = :gpid";
+
+		session().createSQLQuery(sql).setLong("gid", gid).setLong("gpid", gpid).executeUpdate();
+
+		return 0;
+
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

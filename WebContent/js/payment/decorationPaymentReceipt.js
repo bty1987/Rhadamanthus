@@ -13,7 +13,7 @@ jQuery(function($) {
         cash: 0,
         checkBankInfoNum: 0,
         receiptNo: "",
-        organization: parent.params.company.drganization.name,
+        organization: "",
         url: parent.api.index.decorationPaymentReceiptIndex.url
     };
 
@@ -40,6 +40,14 @@ jQuery(function($) {
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.payment.orderId}, function(res) {
         receipt.order = res.decoration;
+
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": res.decoration.bompany
+        }, function(data) {
+
+            receipt.organization = data.company.drganization.name;
+        }, null, false);
+
     }, null, false);
 
     com.post(api.payment.queryDecorationPaymentForNotInitByDrId, {"decorationReceipt.drId": params.payment.drId}, function(res) {
@@ -119,7 +127,7 @@ jQuery(function($) {
 
         printer.name = "payment";
         printer.args = {
-            "title": params.company.drganization.name + "收款收据",
+            "title": receipt.organization + "收款收据",
             "orderId": receipt.order.orderId,
             "orderAddr": receipt.order.house.village.cityProper.city.name + ' ' + receipt.order.house.village.cityProper.name + ' ' + receipt.order.house.village.name + receipt.order.house.houseNumber,
             "collectTime": receipt.decorationReceipt.collectTime,
@@ -165,7 +173,7 @@ jQuery(function($) {
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
             receipt.receiptNo = (Array(10).join(0) + params.payment.drId).slice(-10);
             var spanNo = $('<span style="float: left;"></span>').html("编号:" + receipt.receiptNo).appendTo(headReceiptDiv);
-            var headReceiptH2 = $('<h3 class="col-md-12" style="font-weight: bold;"></h3>').text(parent.params.company.drganization.name + "收款收据").appendTo(headReceiptDiv);
+            var headReceiptH2 = $('<h3 class="col-md-12" style="font-weight: bold;"></h3>').text(receipt.organization + "收款收据").appendTo(headReceiptDiv);
 
             var receiptTable = $('<table border="1" style="width: 100%; height: 200px; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 

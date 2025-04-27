@@ -19,11 +19,11 @@ import com.fanglin.customer.po.CustomerProtectRulePO;
 import com.fanglin.customer.service.CustomerProtectRuleService;
 import com.fanglin.customer.vo.CustomerProtectRuleVO;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
-import com.fanglin.data.po.DecorationMeasureItemPO;
+import com.fanglin.data.po.DecorationMeasureRuleItemPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.service.DecorationBelongService;
+import com.fanglin.decoration.service.impl.DecorationBelongServiceImpl;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
@@ -32,6 +32,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -62,7 +63,7 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 	private ApprovalDecorationBelongService approvalDecorationBelongService;
 
 	@Autowired
-	private DecorationBelongService decorationBelongService;
+	private DecorationBelongServiceImpl decorationBelongService;
 
 	@Override
 	public void pageCustomerProtectRule(Paging paging, List<Filter> filters, int company) {
@@ -94,6 +95,73 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 		}
 
 		return customerProtectRuleVOs;
+	}
+
+	@Override
+	public CustomerProtectRuleVO checkCustomerProtectRule(CustomerProtectRuleVO customerProtectRuleVO, String userId, int company) throws FLException {
+
+		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));
+
+		List<DecorationMeasureRuleItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
+
+		for (DecorationMeasureRuleItemPO measure : measures) {
+			companys.add(measure.getCompany());
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByHid(customerProtectRuleVO.getHid(), companys);
+
+		if (decorationPO == null) {
+
+			List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(customerProtectRuleVO.getCid(), null, companys);
+
+			if (decorationPOs.size() > 0) decorationPO = decorationPOs.get(0);
+		}
+
+		if (decorationPO == null) return customerProtectRuleVO;
+
+		if (Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		if (Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT).contains(decorationPO.getStatus()) || DecorationPO.BALANCESTATUS_CONDUCT_INT == decorationPO.getBalanceStatus()) return customerProtectRuleVO;
+
+		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
+
+		CustomerProtectRulePO customerProtectRulePO = null;
+
+		if (DecorationPO.STATUS_INIT_INT == decorationPO.getStatus()) {
+
+			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
+
+			if (customerProtectRulePO != null && DateUtil.diffDay(decorationPO.getMeasureTime(), DateUtil.getDateToTimestamp(new Date())) < Arith.div(customerProtectRulePO.getDays(), 10000000)) { // 量尺时间-当前时间>保护规则天数
+				return customerProtectRulePO.ptv(customerProtectRuleVO);
+			}
+		}
+
+		if (DecorationPO.STATUS_DEPOSIT_INT == decorationPO.getStatus()) {
+
+			int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime()); // QUERY ADVANCEPAYMENT
+
+			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
+
+			if (customerProtectRulePO != null && DateUtil.diffDay(decorationPO.getDepositTime(), DateUtil.getDateToTimestamp(new Date())) < Arith.div(customerProtectRulePO.getDays(), 1000000)) {
+				return customerProtectRulePO.ptv(customerProtectRuleVO);
+			}
+
+			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR); // QUERY DESIGNPAYMENT
+
+			int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
+
+			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
+
+			if (customerProtectRulePO != null && DateUtil.diffDay(decorationPO.getDepositTime(), DateUtil.getDateToTimestamp(new Date())) < Arith.div(customerProtectRulePO.getDays(), 1000000)) {
+				return customerProtectRulePO.ptv(customerProtectRuleVO);
+			}
+		}
+
+		customerProtectRuleVO.setOrderId(decorationPO.getOrderId());
+
+		return customerProtectRuleVO;
 	}
 
 	@Override
@@ -134,9 +202,9 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));
 
-		List<DecorationMeasureItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
+		List<DecorationMeasureRuleItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
 
-		for (DecorationMeasureItemPO measure : measures) {
+		for (DecorationMeasureRuleItemPO measure : measures) {
 			companys.add(measure.getCompany());
 		}
 
@@ -161,9 +229,9 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		if (DecorationPO.STATUS_INIT_INT == decorationPO.getStatus()) {
 
-			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, (long) decorationPO.getHouse().getInnerArea());
+			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getMeasureTime()) > customerProtectRulePO.getDays()) { // 量尺时间-当前时间>保护规则天数
+			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getMeasureTime()) < customerProtectRulePO.getDays()) { // 量尺时间-当前时间>保护规则天数
 				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
 				return false;
 			}
@@ -171,24 +239,22 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		if (DecorationPO.STATUS_DEPOSIT_INT == decorationPO.getStatus()) {
 
-			Short[] status = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
-
-			long advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_TYPE_COLLECTION_INT, PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, status); // QUERY ADVANCEPAYMENT
+			int advanceAmount = paymentDao.amountPayment(decorationPO.getOrderId(), PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT, decorationPO.getDepositTime()); // QUERY ADVANCEPAYMENT
 
 			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_ADVANCE_INT, advanceAmount);
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getDepositTime()) > customerProtectRulePO.getDays()) {
+			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getDepositTime()) < customerProtectRulePO.getDays()) {
 				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
 				return false;
 			}
 
 			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.queryDecorationPayment(decorationPO.getOrderId(), DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR); // QUERY DESIGNPAYMENT
 
-			long designAmount = decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0;
+			int designAmount = (int) (decorationPaymentPO != null ? decorationPaymentPO.getReferMoney() : 0);
 
 			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_PAYMENT_DESIGN_INT, designAmount);
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getDepositTime()) > customerProtectRulePO.getDays()) {
+			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getDepositTime()) < customerProtectRulePO.getDays()) {
 				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
 				return false;
 			}
@@ -198,4 +264,5 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 		return false;
 	}
+
 }

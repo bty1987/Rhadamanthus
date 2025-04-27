@@ -24,6 +24,8 @@ public class SalesPaymentVO implements Serializable {
 
 	private Short type;
 
+	private String types;
+
 	private Short status;
 
 	private UserBaseVO creater;
@@ -70,9 +72,13 @@ public class SalesPaymentVO implements Serializable {
 
 	private String comment;
 
+	private Short isAffirm;
+
+	private Timestamp affirmTime;
+
 	private Integer company;
 
-	private String types;
+	private String bompany;
 
 	public SalesPaymentVO() {
 		super();
@@ -131,6 +137,14 @@ public class SalesPaymentVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public String getTypes() {
+		return types;
+	}
+
+	public void setTypes(String types) {
+		this.types = types;
 	}
 
 	public Short getStatus() {
@@ -328,6 +342,23 @@ public class SalesPaymentVO implements Serializable {
 		this.comment = comment;
 	}
 
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
 	public Integer getCompany() {
 		return company;
 	}
@@ -336,12 +367,12 @@ public class SalesPaymentVO implements Serializable {
 		this.company = company;
 	}
 
-	public String getTypes() {
-		return types;
+	public String getBompany() {
+		return bompany;
 	}
 
-	public void setTypes(String types) {
-		this.types = types;
+	public void setBompany(String bompany) {
+		this.bompany = bompany;
 	}
 
 	public SalesPaymentVO filter(List<Filter> filters) {

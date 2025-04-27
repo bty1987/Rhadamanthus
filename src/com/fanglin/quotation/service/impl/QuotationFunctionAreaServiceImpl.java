@@ -129,6 +129,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 					quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
 					quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 					quotationFunctionAreaItemVO.setExpres(quotationItemPO.getFormula());
+					quotationFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 				}
 
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
@@ -268,6 +269,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				quotationFunctionAreaItemVO.setFormula(quotationItemPO.getFormula());
 				quotationFunctionAreaItemVO.setNum(0);
 				quotationFunctionAreaItemVO.setDiscount(quotationItemPO.getDiscount());
+				quotationFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 
 				quotationFunctionAreaItemVO.setAddPrice(quotationPricePO.getAddPrice());
 				quotationFunctionAreaItemVO.setUnitPrice(quotationPricePO.getUnitPrice());

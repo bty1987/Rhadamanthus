@@ -32,6 +32,8 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	private String value;
 
+	private String bompany;
+
 	private List<ReceiptTypeItemVO> receiptTypeItems;
 
 	public Integer getRtId() {
@@ -136,6 +138,14 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public String getBompany() {
+		return bompany;
+	}
+
+	public void setBompany(String bompany) {
+		this.bompany = bompany;
 	}
 
 	public List<ReceiptTypeItemVO> getReceiptTypeItems() {

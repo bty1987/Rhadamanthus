@@ -9,8 +9,7 @@ jQuery(function($) {
         },
         record: {},
         storehouses: [],
-        decorationStatus: {},
-        decoration: {}
+        decorationStatus: {}
     };
 
     accessories.decorationStatus = constant.decoration().decoration.status.keys;
@@ -19,7 +18,6 @@ jQuery(function($) {
         "decoration.orderId": accessories.orderId
     }, function(res) {
 
-        accessories.decoration = res.decoration;
         orderInfo('orderInfo', res.decoration);
     }, null, false);
 
@@ -53,8 +51,6 @@ jQuery(function($) {
             return false;
         }
 
-        var accessoriesOutItems = [];
-
         var options = {
             "accessories[0].aid": accessories.aid
         };
@@ -71,34 +67,16 @@ jQuery(function($) {
             options["accessoriesItems[" + i + "].outprice"] = $this.find('.outprice').text();// – 仓库ID
             options["accessoriesItems[" + i + "].num"] = $this.find('.number').text();// – 数量
 
-            var house = accessories.decoration.house;
-
-            var outItems = {
-                "num": $this.find('.number').text(),
-                "shid": $this.find('.storehouse select').val(),
-                "orderId": accessories.decoration.orderId,
-                "address": (house.village.cityProper.city.name == null ? " " : house.village.cityProper.city.name) + " " + (house.village.cityProper == null ? " " : house.village.cityProper.name) + " " + house.village.name + " " + (house.houseNumber == null ? " " : house.houseNumber),
-                "gooodNo": $this.attr('data-gno'),
-                "supervisorUserId": accessories.decoration.supervisor.userId,
-                "supervisorName": accessories.decoration.supervisor.userName,
-                "aiid": $this.attr('data-aiid')
-            };
-
-            accessoriesOutItems.push(outItems);
         });
 
         com.post(api.inventory.addManifestForAS, options, function(data) {
 
             com.showAlert(com.info, "操作成功");
+
             com.focusPage('#list').empty();
 
-            var accessoriesOutData = {
-                "aid": accessories.aid,
-                "drganizationName": params.company.drganization.name,
-                "items": accessoriesOutItems
-            };
+            kingdeeUtils.accessories(accessories.aid, 7, "SalesOutStock");
 
-            kingdeeUtils.accessoriesOutToKingdee(accessoriesOutData);
         });
     });
 
@@ -168,8 +146,7 @@ jQuery(function($) {
 
         $line.attr({
             "data-gid": item.goods.gid,
-            "data-aiid": item.aiid,
-            "data-gno": item.goods.no
+            "data-aiid": item.aiid
         });
 
         $line.find('.no').text(item.goods.no);

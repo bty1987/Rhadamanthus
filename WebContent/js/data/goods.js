@@ -35,7 +35,7 @@ $(function() {
             exportBtn: com.focusPage("#exportBtn")
         },
 
-        modals : {
+        modals: {
             drawingGoodsModal: com.focusPage("#drawingGoodsModal")
         },
 
@@ -69,21 +69,32 @@ $(function() {
     });
 
     com.post(api.data.queryGoodsKind, {}, function(res) {
+
         var oneKinds = [];
         var twoKinds = [];
         var thrKinds = [];
 
         $.each(res.goodsKinds, function(i, v) {
+
             if (v.status == 0) {
                 switch (v.level) {
                     case 1:
-                        oneKinds.push({"key": v.gkid, "value": v.name});
+                        oneKinds.push({
+                            "key": v.gkid,
+                            "value": v.name
+                        });
                         break;
                     case 2:
-                        twoKinds.push({"key": v.gkid, "value": v.name});
+                        twoKinds.push({
+                            "key": v.gkid,
+                            "value": v.name
+                        });
                         break;
                     case 3:
-                        thrKinds.push({"key": v.gkid, "value": v.name});
+                        thrKinds.push({
+                            "key": v.gkid,
+                            "value": v.name
+                        });
                         break;
                 }
             }
@@ -210,7 +221,7 @@ $(function() {
         field: "path",
         type: "img",
         prop: "path"
-    },{
+    }, {
         field: "no",
         name: "编号",
         prop: "no",
@@ -288,6 +299,12 @@ $(function() {
         name: "三类",
         prop: "thrkind.name",
         clazz: "grey"
+    }, {
+        fieId: "isShow",
+        name: "是否出样",
+        prop: "isShow",
+        clazz: "red",
+        dataset: constant.data().goods.isShow.keys
     }, {
         field: "status",
         name: "状态 ",
@@ -374,7 +391,10 @@ $(function() {
 
             com.focusPage('#goodsDrawing').html("");
 
-            com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": v.gid, "dataDrawing.type": 2}, function(data) {
+            com.post(api.communion.queryDataDrawing, {
+                "dataDrawing.sid": v.gid,
+                "dataDrawing.type": 2
+            }, function(data) {
 
                 var dataDrawings = data.dataDrawings;
 
@@ -388,6 +408,15 @@ $(function() {
             }, null, false);
 
             goods.modals.drawingGoodsModal.modal("show");
+        }
+    }, {
+        name: "记录",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            params.data.goods = v;
+
+            com.popup4page('#layerPopUp', 'views/data/goodsRecord.html', '记录');
         }
     }, {
         name: "状态",
@@ -413,6 +442,26 @@ $(function() {
         show: function(v) {
 
             return goods.pageType == "senior" || !goods.pageType;
+        }
+    }, {
+        name: "是否出样",
+        type: "switch",
+        clazz: "isOrNot",
+        handle: function(v, check) {
+
+            com.post(api.data.showGoods, {
+                "goods.gid": v.gid,
+                "goods.isShow": v.isShow == 0 ? 1 : 0
+            }, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        init: function(v) {
+            return !v.isShow;
         }
     }];
 
@@ -823,7 +872,10 @@ $(function() {
 
         var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
 
-            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": value.ddid}, function(res) {
+            com.post(api.communion.deleteDataDrawing, {
+                "dataDrawing.ddid": value.ddid
+            }, function(res) {
+
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
 

@@ -78,6 +78,10 @@ public class QuotetionPO implements Serializable {
 
 	private long costPrice;
 
+	private long consPrice;
+
+	private long comsPrice;
+
 	private long unachePrice;
 
 	private String content;
@@ -299,6 +303,24 @@ public class QuotetionPO implements Serializable {
 
 	public void setCostPrice(long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	@Column(name = "consPrice")
+	public long getConsPrice() {
+		return consPrice;
+	}
+
+	public void setConsPrice(long consPrice) {
+		this.consPrice = consPrice;
+	}
+
+	@Column(name = "comsPrice")
+	public long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(long comsPrice) {
+		this.comsPrice = comsPrice;
 	}
 
 	@Column(name = "unachePrice")

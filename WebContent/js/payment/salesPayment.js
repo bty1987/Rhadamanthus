@@ -4,6 +4,7 @@ $(function() {
         htmlName: "sales",
         depage: params['urlLoadParams'].depage,
         type: params['urlLoadParams'].paytype,
+        profit: params['urlLoadParams'].profit,
         pageFlag: params['urlLoadParams'].depage + params['urlLoadParams'].paytype,
         paytypes: [],
         paymentStatusArray: constant.payment().salesPayment.status.keys,
@@ -95,8 +96,9 @@ $(function() {
         typeNo: 3,
         atttype: 1,
         collectType: [constant.payment().materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_FULL_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_NOTREFUND_INT],
-        refundType: [constant.payment().materialPayment.PAYMENTTYPE_TYPE_REJECT_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_FULL_REFUND_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT]
-
+        refundType: [constant.payment().materialPayment.PAYMENTTYPE_TYPE_REJECT_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_FULL_REFUND_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, constant.payment().materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT],
+        isAffirms: constant.payment.decorationPayment.isAffirm.keys,
+        decoration: {}
     };
 
     // 隐藏触发
@@ -140,18 +142,12 @@ $(function() {
     // 绑定收款单位的基础信息
     paymentUtils.getReceiptType(salesPayment);
 
-    // 现金方式
-    com.selectTypeahead("cashInfo", salesPayment.cashUtil, "key", "value", null);
-
     // 转账方式(银行)
     salesPayment.btns.checkvAdd.click(function() {
 
         paymentUtils.addBank(salesPayment);
         return false;
     });
-
-    // 优惠券
-    com.selectTypeahead("couponType", salesPayment.couponType, 'no', 'name');
 
     salesPayment.items.advanceType.bindData([{
         "key": "3",
@@ -212,6 +208,7 @@ $(function() {
             var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
             var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
+            var $customerPush = $('<a></a>').addClass('btn btn-minier btn-warning').html('客户推送');
 
             var propertyArr = paymentUtils.getPropertyArr(salesPayment, v, v.sales, salesPayment.paymentStatusArray);
 
@@ -287,6 +284,8 @@ $(function() {
                 $divBtnWrap.append($btnCheck);
             if (v.status == constant.payment().materialPayment.STATUS_CONFIRM_INT && salesPayment.pageConfig.pageBtn.contains("toKingdee"))
                 $divBtnWrap.append($btnKingdee);
+            if (v.isAffirm == constant.payment().decorationPayment.ISAFFIRM_INIT_SHORT && salesPayment.pageConfig.pageBtn.contains("customerPush"))
+                $divBtnWrap.append($customerPush);
 
             // 收款弹窗
             $btnCollect.click(function() {
@@ -418,6 +417,20 @@ $(function() {
                 kingdeeUtils.salesPayment(v, salesPayment.htmlName);
             });
 
+            // 客户推送
+            $customerPush.click(function() {
+
+                com.showConfirm("是否推送给客户", function() {
+
+                    com.post(api.payment.pushSalesPayment, {
+                        "salesPayment.spid": v.spid
+                    }, function(res) {
+
+                        com.showAlert(com.info, "发送成功");
+                    });
+                });
+            });
+
             return $liLine;
         };
 
@@ -508,6 +521,19 @@ $(function() {
 
         salesPayment.payment = payment;
 
+        // 查询装修单信息
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": payment.sales.orderId
+        }, function(res) {
+
+            salesPayment.decoration = res.decoration;
+            
+            if(!salesPayment.profit) salesPayment.decoration.bompany = null;
+        }, null, false);
+
+        // 绑定收款单位的基础信息
+        paymentUtils.getReceiptType(salesPayment);
+
         salesPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
         salesPayment.items.comment.removeAttr("disabled");
 
@@ -533,11 +559,16 @@ $(function() {
         if (isCollects)
             salesPayment.items.couponCheckbox.parent().addClass("hide");
 
-        // 根据装修单等级获取收据类型等级
-        var grade = payment.sales.grade == "B" ? "B" : "";
+        com.selectTypeahead("cashInfo", salesPayment.cashUtil, "key", "value", null); // 现金方式
+
+        com.selectTypeahead("couponType", salesPayment.couponType, 'no', 'name'); // 优惠券
+
+        // 根据销售单等级获取收据类型等级
+        // var grade = payment.sales.grade == "B" ? "B" : "";
+        var grade = payment.sales.grade == "C" ? "" : payment.sales.grade;
 
         // 根据等级在数组中筛选出符合要求的用于显示
-        paymentUtils.initBankGrade(salesPayment, grade);
+        paymentUtils.initBankGrade(salesPayment, grade); // 刷卡&银行
 
         if (type == 1) {// 退款
 
@@ -586,7 +617,25 @@ $(function() {
         if (salesPayment.pageConfig.paytypes.contains("coupon"))
             paymentUtils.initCoupon(salesPayment, 1);
 
-        var grade = payment.sales.grade == "B" ? "B" : "";
+        // 查询装修单信息
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": payment.sales.orderId
+        }, function(res) {
+
+            salesPayment.decoration = res.decoration;
+            
+            if(!salesPayment.profit) salesPayment.decoration.bompany = null;
+        }, null, false);
+
+        // 绑定收款单位的基础信息
+        paymentUtils.getReceiptType(salesPayment);
+
+        com.selectTypeahead("cashInfo", salesPayment.cashUtil, "key", "value", null); // 现金方式
+
+        com.selectTypeahead("couponType", salesPayment.couponType, 'no', 'name'); // 优惠券
+
+        // var grade = payment.sales.grade == "B" ? "B" : "";
+        var grade = payment.sales.grade == "C" ? "" : payment.sales.grade;
 
         paymentUtils.initBankGrade(salesPayment, grade);
 
@@ -632,6 +681,8 @@ $(function() {
 
                 options["salesPayment.sales.sid"] = payment.sales.sid;
             }
+            
+            if(salesPayment.profit) options["salesPayment.bompany"] = salesPayment.decoration.bompany;
 
         } else if (salesPayment.refundType.contains(payment.type) && payment.status == 0) {
             url = api.payment.refundSalesPayment;

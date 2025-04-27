@@ -344,7 +344,8 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setCtype(SalesPO.CTYPE_PASS_INT);
 		salesPO.setCvalue(0);
 
-		salesPO.setGrade("B");
+		if (salesVO.getGrade() == null) salesPO.setGrade("B");
+		else salesPO.setGrade(salesVO.getGrade());
 
 		ActivityPO activityPO = activityDao.queryActivityForDefault(company, ActivityPO.TYPE_SALES_INT);
 		salesPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());

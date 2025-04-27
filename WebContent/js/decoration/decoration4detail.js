@@ -113,6 +113,7 @@ jQuery(function($) {
 
     decorationDetail.items.quoterId = com.focusPage('#quoterId');
     decorationDetail.items.escorterId = com.focusPage('#escorterId');
+    decorationDetail.items.materialerId = com.focusPage('#materialerId');
     decorationDetail.btnSaveBasedecorationInfo = com.focusPage("#btnSaveBasedecorationInfo").on("click", saveBaseDecorationInfo);
 
     decorationDetail.paymentItems.otherPaymentType = com.focusPage("#otherPaymentType");
@@ -434,6 +435,10 @@ jQuery(function($) {
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
     com.initTypeahead('escorterId', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, "autoFillKeyValue", "key", "value");
+    com.initTypeahead('materialerId', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
@@ -1196,16 +1201,44 @@ jQuery(function($) {
         com.focusPage('#manage').val(com.checkNull(quotationPrefer.managePrefer, 0));
         com.focusPage('#advance').val(com.checkNull(quotationPrefer.advancePrefer, 0));
 
-        if (quotationPrefer.discount && quotationPrefer.discount == 10) {
+        var protation = {
+            "quotePrice": 1,
+            "preferPrice": 0,
+            "managePrice": 0,
+            "manageProfit": 0
+        };
+
+        com.post(api.quotation.queryProtationForDefaultByOrderId, {
+            "protation.orderId": decorationDetail.orderId
+        }, function(res) {
+
+            if (res.protation.pid)
+                protation = res.protation;
+        }, null, false);
+
+        if (decorationDetail.orderType == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
+
+            _discountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.quotePrice, protation.preferPrice), protation.quotePrice));
+            _manageDiscountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.managePrice, protation.manageProfit), protation.managePrice));
+        } else {
+
+            _discountValue = quotationPrefer.discount;
+            _manageDiscountValue = quotationPrefer.manageDiscount;
+        }
+
+        _discountValue = _discountValue < 0 ? 0 : _discountValue > 1 ? 1 : _discountValue;
+        _manageDiscountValue = _manageDiscountValue < 0 ? 0 : _manageDiscountValue > 1 ? 1 : _manageDiscountValue;
+
+        if (_discountValue == 10) {
             com.focusPage('#prefer').attr("disabled", "disabled");
         } else {
             com.focusPage('#prefer').removeAttr("disabled");
         }
 
-        if (quotationPrefer.manageDiscount && quotationPrefer.manageDiscount == 10) {
+        if (_manageDiscountValue == 10) {
             com.focusPage('#manage').attr("disabled", "disabled");
         } else {
-        	com.focusPage('#manage').removeAttr("disabled");
+            com.focusPage('#manage').removeAttr("disabled");
         }
 
         com.focusPage("#quotationPreferModal").modal("show");
@@ -1277,6 +1310,7 @@ jQuery(function($) {
         decorationDetail.items.grade.val(decoration.grade);
         decorationDetail.items.quoterId.val(decoration.quoter.currentName);
         decorationDetail.items.escorterId.val(decoration.escorter.currentName);
+        decorationDetail.items.materialerId.val(decoration.materialer.currentName);
 
         com.post(api.data.queryDecorationBusitype, {}, function(res) {
 
@@ -1321,6 +1355,7 @@ jQuery(function($) {
 
         com.updateTypeahead('quoterId', decoration.quoter == null ? "" : decoration.quoter.userId, decoration.quoter.currentName == null ? "" : decoration.quoter.currentName);
         com.updateTypeahead('escorterId', decoration.escorter == null ? "" : decoration.escorter.userId, decoration.escorter.currentName == null ? "" : decoration.escorter.currentName);
+        com.updateTypeahead('materialerId', decoration.materialer == null ? "" : decoration.materialer.userId, decoration.materialer.currentName == null ? "" : decoration.materialer.currentName);
 
         decorationDetail.customer.cid = decoration.customer.cid;
         decorationDetail.customer.phone = decoration.customer.phone;
@@ -1455,6 +1490,7 @@ jQuery(function($) {
                 "decoration.house.innerArea": decorationDetail.items.innerArea.val(),
                 "decoration.quoter.userId": com.typeahead("quoterId"),
                 "decoration.escorter.userId": com.typeahead("escorterId"),
+                "decoration.materialer.userId": com.typeahead("materialerId"),
             };
 
             com.post(api.decoration.changeDecorationForAdvance, options, function() {
@@ -1566,7 +1602,7 @@ jQuery(function($) {
                 decorationUtils.initPresignPrint();
                 break;
             case "picture":
-                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
+                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles","designContractPicture", decorationDetail.orderId);
                 break;
             case "material":
                 decorationUtils.initMaterial(decorationDetail);
@@ -1710,7 +1746,7 @@ jQuery(function($) {
                                 "drganizationName": params.company.drganization.name
                             };
 
-                            kingdeeUtils.decorationToKingdee(decorationData);
+                            kingdeeUtils.decoration(decorationData);
                         }, null, false);
 
                     });

@@ -72,6 +72,10 @@ public class SalesPaymentPO implements Serializable {
 
 	public static final short ADVANCETYPE_ZHENGLIN_INT = 4;
 
+	public static final short ISAFFIRM_INIT_SHORT = 0;
+
+	public static final short ISAFFIRM_CONFIRM_SHORT = 1;
+
 	private long spid;
 
 	private SalesReceiptPO salesReceipt;
@@ -93,6 +97,10 @@ public class SalesPaymentPO implements Serializable {
 	private Timestamp createTime;
 
 	private long referMoney;
+
+	private short isAffirm; // 客户确认状态 0: 未确认 , 1: 确认
+
+	private Timestamp affirmTime; // 客户确认时间
 
 	private int company;
 
@@ -122,6 +130,16 @@ public class SalesPaymentPO implements Serializable {
 
 	public void setSpid(long spid) {
 		this.spid = spid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "srid", referencedColumnName = "srid")
+	public SalesReceiptPO getSalesReceipt() {
+		return salesReceipt;
+	}
+
+	public void setSalesReceipt(SalesReceiptPO salesReceipt) {
+		this.salesReceipt = salesReceipt;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -157,6 +175,10 @@ public class SalesPaymentPO implements Serializable {
 		return status;
 	}
 
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
 	@Column(name = "category")
 	public String getCategory() {
 		return category;
@@ -173,10 +195,6 @@ public class SalesPaymentPO implements Serializable {
 
 	public void setBrand(String brand) {
 		this.brand = brand;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -207,14 +225,22 @@ public class SalesPaymentPO implements Serializable {
 		this.referMoney = referMoney;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "srid", referencedColumnName = "srid")
-	public SalesReceiptPO getSalesReceipt() {
-		return salesReceipt;
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
 	}
 
-	public void setSalesReceipt(SalesReceiptPO salesReceipt) {
-		this.salesReceipt = salesReceipt;
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	@Column(name = "company")

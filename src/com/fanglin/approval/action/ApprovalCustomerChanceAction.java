@@ -54,6 +54,14 @@ public class ApprovalCustomerChanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "submitApprovalForCustomerChanceToDisabled", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitApprovalForCustomerChanceToDisabled() throws FLException {
+
+		approvalCustomerChanceService.submitApprovalForCustomerChanceToDisabled(approval, approvalCustomerChance, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	public ApprovalVO getApproval() {
 		return approval;
 	}

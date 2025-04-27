@@ -270,6 +270,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setUncalPrice(0);
 		addReducePO.setCalPrice(0);
 		addReducePO.setConsPrice(0);
+		addReducePO.setComsPrice(0);
 		addReducePO.setAccountDiscount(addReducePO.getDiscount());
 
 		if(decorationPO.getType() == DecorationPO.TYPE_HOLONOMY_INT){
@@ -298,6 +299,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
 		addReducePO.setConsPrice(addReduceVO.getConsPrice());
+		addReducePO.setComsPrice(addReduceVO.getComsPrice());
 
 		addReduceDao.update(addReducePO);
 
@@ -331,6 +333,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
 		addReducePO.setConsPrice(addReduceVO.getConsPrice());
+		addReducePO.setComsPrice(addReduceVO.getComsPrice());
 		addReducePO.setTotal(addReduceVO.getTotal());
 
 		addReduceDao.update(addReducePO);

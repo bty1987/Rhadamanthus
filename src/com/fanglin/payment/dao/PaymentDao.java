@@ -9,6 +9,7 @@
 
 package com.fanglin.payment.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -27,6 +28,8 @@ public interface PaymentDao extends Dao<PaymentPO> {
 	public List<PaymentPO> queryPaymentByOrderId(String orderId);
 
 	public int amountPayment(String orderId, Short type, Short paymentType, Short[] status);
+
+	public int amountPayment(String orderId, Short paymentType, Timestamp collectTime);
 
 	public PaymentDO queryPaymentByReceiptId(long arId);
 

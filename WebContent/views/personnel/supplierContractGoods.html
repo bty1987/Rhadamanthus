@@ -1,0 +1,67 @@
+<div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div>
+			<div id="resultList" class="clearfix tab-pane active"></div>
+			<div id="pagenation" class="fl-page-wrap clearfix"></div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addSupplierAddBrandModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title" id="villageDialog">添加商品</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-xs-12">
+						<form class="form-horizontal">
+							<div class="form-group default">
+								<label class="col-sm-3 control-label no-padding-right"
+									for="supplier">商品</label>
+								<div class="col-sm-9">
+									<input type="text" id="goodsName" maxlength="12"
+										class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
+										data-trigger='manual' />
+								</div>
+							</div>
+							<div class="space-4"></div>
+
+							<div class="form-group default">
+								<label class="col-sm-3 control-label no-padding-right"
+									for="supplier">价格</label>
+								<div class="col-sm-9">
+									<input type="text" id="price" class="col-xs-10 col-sm-6"
+										data-toggle="popover" data-trigger='manual' />
+								</div>
+							</div>
+							<div class="space-4"></div>
+
+							<div class="form-group default">
+								<label class="col-sm-3 control-label no-padding-right"
+									for="category">结算价</label>
+								<div class="col-sm-9">
+									<input type="text" id="balance" class="col-xs-10 col-sm-6"
+										data-toggle="popover" data-trigger='manual' />
+								</div>
+							</div>
+
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="submitBtn" class="btn btn-primary">保存</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $.loadScript(['js/personnel/supplierContractGoods.js']);
+</script>

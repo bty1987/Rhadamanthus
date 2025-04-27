@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.SalesBalanceVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesbalance", catalog = "sales")
@@ -440,6 +443,26 @@ public class SalesBalancePO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public SalesBalanceVO ptv(SalesBalanceVO salesBalanceVO) {
+
+		BeanUtil.copyPropertie(this, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
+
+		if (salesBalanceVO.getSalesman() != null && getSalesman() != null) BeanUtil.copyProperties(getSalesman(), salesBalanceVO.getSalesman(), Arrays.asList("dept", "duty"));
+		if (salesBalanceVO.getDept() != null && getDept() != null) BeanUtil.copyProperties(getDept(), salesBalanceVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesBalanceVO.getRegion() != null && getRegion() != null) BeanUtil.copyProperties(getRegion(), salesBalanceVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+
+		if (salesBalanceVO.getRefunds() != null && getRefunds() != null) BeanUtil.copyPropertie(getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("sales", "creater"));
+		if (salesBalanceVO.getCreater() != null && getCreater() != null) BeanUtil.copyPropertie(getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
+		if (salesBalanceVO.getPoster() != null && getPoster() != null) BeanUtil.copyPropertie(getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept", "duty"));
+		if (salesBalanceVO.getChecker() != null && getChecker() != null) BeanUtil.copyPropertie(getChecker(), salesBalanceVO.getChecker(), Arrays.asList("dept", "duty"));
+		if (salesBalanceVO.getVoster() != null && getVoster() != null) BeanUtil.copyPropertie(getVoster(), salesBalanceVO.getVoster(), Arrays.asList("dept", "duty"));
+		if (salesBalanceVO.getCreater() != null && getCreater() != null) BeanUtil.copyPropertie(getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
+
+		if (salesBalanceVO.getSales() != null && getSales() != null) getSales().ptv(salesBalanceVO.getSales());
+
+		return salesBalanceVO;
 	}
 
 }

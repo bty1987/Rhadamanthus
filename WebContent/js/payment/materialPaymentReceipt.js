@@ -11,7 +11,7 @@ jQuery(function($) {
 		checkBankInfo: {},
 		receiptsNum:0,
 		receiptNo: "",
-		organization: parent.params.company.srganization.name,
+		organization: "",
 		url: parent.api.index.materialPaymentReceiptIndex.url
 	};
 
@@ -52,6 +52,13 @@ jQuery(function($) {
 		commonInfo["total"] = 0.0;
 
 		receipt.commonInfo = commonInfo;
+
+		com.post(api.system.queryCompanyByCid, {
+			"company.cid": res.decoration.bompany
+		}, function(data) {
+
+			receipt.organization = data.company.srganization.name;
+		}, null, false);
 
 	}, null, false);
 	
@@ -137,7 +144,7 @@ jQuery(function($) {
 
 		printer.name = "payment";
 		printer.args = {
-			"title": params.company.srganization.name +"专用收据",
+			"title": receipt.organization +"专用收据",
 			"orderId": receipt.commonInfo["orderId"],
 			"orderAddr": receipt.commonInfo["orderAddr"],
 			"collectTime": receipt.commonInfo["collectTime"],
@@ -166,7 +173,7 @@ jQuery(function($) {
 		var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
 		receipt.receiptNo = (Array(10).join(0)+params.payment.mrId).slice(-10);
 		var spanNo = $('<span style="float: left;"></span>').html("编号:"+receipt.receiptNo).appendTo(headReceiptDiv);
-		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
+		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(receipt.organization + "代收款收据").appendTo(headReceiptDiv);
 
 		var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 

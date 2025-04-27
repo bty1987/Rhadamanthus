@@ -60,79 +60,50 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		List<CustomerProfileVO> customerProfileVOs = new ArrayList<CustomerProfileVO>();
 
 		for (CustomerProfilePO customerProfilePO : customerProfilePOs) {
-
-			CustomerProfileVO customerProfileVO = new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO());
-
-			BeanUtil.copyProperties(customerProfilePO, customerProfileVO, Arrays.asList("items", "creater"));
-
-			customerProfileVO.getCreater().setBaseInfo(customerProfilePO.getCreater());
-
-			customerProfileVOs.add(customerProfileVO);
+			customerProfileVOs.add(customerProfilePO.ptv(new CustomerProfileVO(new UserBaseVO())));
 		}
 
 		paging.setData(customerProfileVOs);
 	}
 
 	@Override
-	public CustomerProfileVO queryCustomerProfileByOrderId(CustomerProfileVO customerProfileVO) {
+	public CustomerProfileVO queryCustomerProfileByCid(CustomerProfileVO customerProfileVO) throws FLException {
 
-		CustomerProfilePO customerProfilePO = customerProfileDao.queryCustomerProfileByOrderId(customerProfileVO.getOrderId());
+		CustomerProfilePO customerProfilePO = customerProfileDao.queryCustomerProfileByCid(customerProfileVO.getCid());
 
-		customerProfileVO = new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO());
-
-		BeanUtil.copyProperties(customerProfilePO, customerProfileVO, Arrays.asList("items", "creater"));
-
-		customerProfileVO.getCreater().setBaseInfo(customerProfilePO.getCreater());
-
-		for (CustomerProfileItemPO itemPO : customerProfilePO.getItems()) {
-
-			CustomerProfileItemVO itemVO = new CustomerProfileItemVO(new ArrayList<CustomerProfileOptionVO>());
-
-			BeanUtil.copyPropertie(itemPO, itemVO, Arrays.asList("options"));
-
-			for (CustomerProfileOptionPO optionPO : itemPO.getOptions()) {
-
-				CustomerProfileOptionVO optionVO = new CustomerProfileOptionVO();
-
-				BeanUtil.copyPropertie(optionPO, optionVO);
-
-				itemVO.getOptions().add(optionVO);
-			}
-
-			customerProfileVO.getItems().add(itemVO);
+		if (customerProfilePO == null) {
+			throw new FLException(330087, "客户画像不存在");
 		}
+
+		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
 
 		return customerProfileVO;
 	}
 
 	@Override
-	public CustomerProfileVO queryCustomerProfileByCpid(CustomerProfileVO customerProfileVO) {
+	public CustomerProfileVO queryCustomerProfileByOrderId(CustomerProfileVO customerProfileVO) throws FLException {
+
+		CustomerProfilePO customerProfilePO = customerProfileDao.queryCustomerProfileByOrderId(customerProfileVO.getOrderId());
+
+		if (customerProfilePO == null) {
+			throw new FLException(330087, "客户画像不存在");
+		}
+
+		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
+
+		return customerProfileVO;
+	}
+
+	@Override
+	public CustomerProfileVO queryCustomerProfileByCpid(CustomerProfileVO customerProfileVO) throws FLException {
 
 		CustomerProfilePO customerProfilePO = customerProfileDao.get(customerProfileVO.getCpid());
 
-		customerProfileVO = new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO());
-
-		BeanUtil.copyProperties(customerProfilePO, customerProfileVO, Arrays.asList("items", "creater"));
-
-		customerProfileVO.getCreater().setBaseInfo(customerProfilePO.getCreater());
-
-		for (CustomerProfileItemPO itemPO : customerProfilePO.getItems()) {
-
-			CustomerProfileItemVO itemVO = new CustomerProfileItemVO(new ArrayList<CustomerProfileOptionVO>());
-
-			BeanUtil.copyPropertie(itemPO, itemVO, Arrays.asList("options"));
-
-			for (CustomerProfileOptionPO optionPO : itemPO.getOptions()) {
-
-				CustomerProfileOptionVO optionVO = new CustomerProfileOptionVO();
-
-				BeanUtil.copyPropertie(optionPO, optionVO);
-
-				itemVO.getOptions().add(optionVO);
-			}
-
-			customerProfileVO.getItems().add(itemVO);
+		if (customerProfilePO == null) {
+			throw new FLException(330087, "客户画像不存在");
 		}
+
+		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
 
 		return customerProfileVO;
 	}
@@ -221,7 +192,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		CustomerProfilePO customerProfilePO = customerProfileDao.get(customerProfileVO.getCpid());
 
 		if (customerProfilePO == null) {
-			throw new FLException(330058, "调研不存在");
+			throw new FLException(330087, "客户画像不存在");
 		}
 
 		BeanUtil.copyProperties(customerProfileVO, customerProfilePO, Arrays.asList("items"));

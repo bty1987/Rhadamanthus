@@ -8,7 +8,7 @@ import com.fanglin.sales.vo.SalesRefundsItemVO;
 import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.utils.Paging;
 
-public interface SalesRefundsItemService {
+public interface SalesRefundsService {
 
 	public void pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException;
 
@@ -17,5 +17,9 @@ public interface SalesRefundsItemService {
 	public List<SalesRefundsItemVO> querySalesRefundsItemBySid(SalesRefundsVO refundsVO);
 
 	public List<SalesRefundsItemVO> querySalesRefundsItemByRid(SalesRefundsVO refundsVO);
+
+	public int sendSalesRefunds(SalesRefundsVO refundsVO) throws FLException;
+
+	public int affirmSalesRefunds(SalesRefundsVO refundsVO) throws FLException;
 
 }

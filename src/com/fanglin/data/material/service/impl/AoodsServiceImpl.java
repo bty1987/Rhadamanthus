@@ -187,32 +187,17 @@ public class AoodsServiceImpl implements AoodsService {
 
 		aoodsPO.setName(aoodsVO.getName());
 		aoodsPO.setGoods(new GoodsPO(aoodsVO.getGoods().getGid()));
-		aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
 		aoodsPO.setStatus(AoodsPO.STATUS_ENABLE_INT);
 		aoodsPO.setCheckup(AoodsPO.CHECKUP_CHECK_INT);
-
 		aoodsPO.setAtttype(aoodsVO.getAtttype());
 		aoodsPO.setBalance(aoodsVO.getBalance());
 		aoodsPO.setSelling(aoodsVO.getSelling());
-
 		aoodsPO.setCompany(company);
 		aoodsPO.setBompany(cid);
 
-		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() == null) {
-			aoodsPO.setConstructionNode(null);
-		}
-
-		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() != null) {
-			aoodsPO.setConstructionNode(new ConstructionNodePO(aoodsVO.getConstructionNode().getCnid()));
-		}
-
-		if (aoodsVO.getNoods() != null && aoodsVO.getNoods().getNid() == null) {
-			aoodsPO.setNoods(null);
-		}
-
-		if (aoodsVO.getNoods() != null && aoodsVO.getNoods().getNid() != null) {
-			aoodsPO.setNoods(new NoodsPO(aoodsVO.getNoods().getNid()));
-		}
+		if (aoodsVO.getAccessoriesType() != null && aoodsVO.getAccessoriesType().getAtid() != null) aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
+		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() != null) aoodsPO.setConstructionNode(new ConstructionNodePO(aoodsVO.getConstructionNode().getCnid()));
+		if (aoodsVO.getNoods() != null && aoodsVO.getNoods().getNid() != null) aoodsPO.setNoods(new NoodsPO(aoodsVO.getNoods().getNid()));
 
 		aoodsDao.save(aoodsPO);
 

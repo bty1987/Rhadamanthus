@@ -32,6 +32,8 @@ import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
@@ -63,6 +65,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Autowired
 	private DepartmentDao departmentDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -97,7 +102,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		for (CustomerChancePO customerChancePO : customerChancePOs) {
 
-			customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO(new VillageVO())), new CustomerSourceVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+			customerChanceVO = new CustomerChanceVO(new CustomerVO(), new HouseVO(new VillageVO(new VillageVO())), new CustomerSourceVO(new VillageVO(new CityProperVO(), new VillageVO()), new UserBaseVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(), new UserBaseVO(), new DecorationBusitypeVO()), new DecorationBusitypeVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 
 			customerChanceVOs.add(customerChancePO.ptv(customerChanceVO));
 		}
@@ -191,7 +196,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
-		String content = String.format("客户机会释放", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo());
+		UserPO belonger = customerChancePO.getBelonger() == null ? operator : customerChancePO.getBelonger();
+		DepartmentPO dept = customerChancePO.getDepartment() == null ? operator.getDept() : customerChancePO.getDepartment();
+		DepartmentPO region = dept.getFatherDept() == null ? dept : dept.getFatherDept();
+
+		String content = String.format("客户机会释放", belonger.getCurrentName(), belonger.getUserId(), dept.getName(), dept.getNo(), region.getName(), region.getNo());
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), content, CustomerSourceRecordPO.TYPE_COMMON_INT, operator));
 	}
@@ -337,7 +346,11 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		customerChanceDao.update(customerChancePO);
 
-		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("手动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
+		belonger = customerChancePO.getBelonger() == null ? issuer : customerChancePO.getBelonger();
+		dept = customerChancePO.getDepartment() == null ? issuer.getDept() : customerChancePO.getDepartment();
+		region = dept.getFatherDept() == null ? dept : dept.getFatherDept();
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("手动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", belonger.getCurrentName(), belonger.getUserId(), dept.getName(), dept.getNo(), region.getName(), dept.getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 
 		if (belonger != null) messageService.sendMessage(belonger.getUserId(), null, "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
 
@@ -466,5 +479,36 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChancePO.setIsFine(CustomerChancePO.ISFINE_FINE_INT);
 
 		customerChanceDao.update(customerChancePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void finishCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		if (customerChancePO.getStatus() != CustomerChancePO.STATUS_CONFIRM_INT) {
+			throw new FLException(330077, "客户机会不可操作");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		customerChancePO.setOrderId(decorationVO.getOrderId());
+		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
+
+		customerChanceDao.update(customerChancePO);
+
+		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerChancePO.getSource().getCsid(), customerChancePO.getCcid(), String.format("客户机会完成,装修单号:%s,归属:%s(%s),部门:%s(%s),分区:%s(%s)", decorationPO.getOrderId(), customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
+
 	}
 }

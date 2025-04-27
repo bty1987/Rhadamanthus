@@ -24,6 +24,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
+	public static final String COLUMN_GPID_STR = "gpid";
+
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final String COLUMN_NAME_STR = "name";
@@ -53,6 +55,8 @@ public class GoodsPO implements java.io.Serializable {
 	public static final short BRAND_STATUS_INT = 0;
 
 	private long gid;
+
+	private long gpid;
 
 	private String no;
 
@@ -92,6 +96,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	private String path;
 
+	private short isShow;
+
 	private short status;
 
 	private int company;
@@ -127,6 +133,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setGid(long gid) {
 		this.gid = gid;
+	}
+
+	@Column(name = "gpid")
+	public long getGpid() {
+		return gpid;
+	}
+
+	public void setGpid(long gpid) {
+		this.gpid = gpid;
 	}
 
 	@Column(name = "no")
@@ -302,6 +317,15 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	@Column(name = "isShow")
+	public short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(short isShow) {
+		this.isShow = isShow;
 	}
 
 	@Column(name = "status")

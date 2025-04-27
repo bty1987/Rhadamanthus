@@ -16,14 +16,18 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
+import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionItemService;
 import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("extensionItemService")
@@ -47,6 +51,12 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 	@Autowired
 	private SelectionItemDao selectionItemDao;
+
+	@Autowired
+	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+
+	@Autowired
+	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
@@ -84,13 +94,19 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		checkExtension(extensionPO);
 
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(extensionItemVO.getQuotationFunctionAreaId());
+
 		if (extensionItemVO.getEiid() == null) {
 
 			extensionItemPO = new ExtensionItemPO();
 
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
-			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
+			extensionItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
+
+			if (extensionItemPO.getType() == ExtensionItemPO.TYPE_SUB_QUOTE_INT) {
+				handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemPO.getQuoteItemId(), extensionItemVO.getNum(), 0);
+			}
 		} else {
 
 			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
@@ -102,6 +118,10 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
+
+			if (extensionItemPO.getType() == ExtensionItemPO.TYPE_SUB_QUOTE_INT) {
+				handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemPO.getQuoteItemId(), extensionItemVO.getNum(), extensionItemPO.getNum());
+			}
 		}
 
 		extensionItemPO.setNum(extensionItemVO.getNum());
@@ -118,6 +138,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
 		extensionPO.setConsPrice(extensionVO.getConsPrice());
+		extensionPO.setComsPrice(extensionVO.getComsPrice());
 
 		extensionDao.update(extensionPO);
 
@@ -220,6 +241,28 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		if (quotationPO.getStatus() != QuotationPO.STATUS_INIT_INT) {
 			throw new FLException(200030, "报价不可操作");
 		}
+	}
+
+	private Long handleQuotationItem(ExtensionItemPO extensionItemPO, long quotationFunctionAreaId, short index, long quotationItemId, int vonum, int ponum) throws FLException {
+
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaId, index), quotationItemId);
+
+		if (quotationFunctionAreaItemPO == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		int quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+		int _diff = Arith.sub(vonum, ponum);
+
+		if (_diff > 0 && quotationFunctionAreaItemNum < _diff) {
+			throw new FLException(140039, "减项工程量大于引用项目");
+		}
+
+		quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, Arith.sub(ponum, vonum)));
+
+		quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+
+		return quotationFunctionAreaId;
 	}
 
 }

@@ -251,12 +251,20 @@ jQuery(function($) {
                 data["con-reWork-month"] = com.focusPage("#con-reWork-data").val().substr(5, 2);
                 data["con-reWork-day"] = com.focusPage("#con-reWork-data").val().substr(8, 2);
             }
-
+            
+            var url = api.decoration.addDecorationContract;
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data)
             };
+            
+            if(params.decoration.contract && params.decoration.contract.dcid){
+                url = api.decoration.makeDecorationContract;
+                options["decorationContract.dcid"] = params.decoration.contract.dcid
+            }
+
+            console.log(options);
 
             var popup = com.focusPage("#popup-page");
             var target = com.focusPage("#layerPopUp");
@@ -272,7 +280,7 @@ jQuery(function($) {
             mask.css("top", target.height() - mask.height() + 30);
             popup.css("overflow", "hidden");
 
-            com.post(api.decoration.addDecorationContract, options, function(res) {
+            com.post(url, options, function(res) {
 
                 mask.remove();
                 com.closePopup();
