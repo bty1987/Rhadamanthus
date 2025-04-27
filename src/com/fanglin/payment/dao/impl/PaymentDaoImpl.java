@@ -10,6 +10,7 @@
 package com.fanglin.payment.dao.impl;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -52,8 +53,8 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		return query.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<PaymentPO> queryPaymentByOrderId(String orderId) {
 		return session().createCriteria(PaymentPO.class).add(Restrictions.eq("orderId", String.valueOf(orderId))).list();
 	}
@@ -64,6 +65,16 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		String sql = "SELECT SUM(p.recharge) FROM payment.payment p WHERE p.orderId = :orderId AND p.type = :type AND p.paymentType = :paymentType AND `status` IN :status";
 
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("type", type).setShort("paymentType", paymentType).setParameterList("status", status).uniqueResult();
+
+		return sqlQuery == null ? 0 : sqlQuery.intValue();
+	}
+
+	@Override
+	public int amountPayment(String orderId, Short paymentType, Timestamp collectTime) {
+
+		String sql = "SELECT SUM(IF(p.type in (1, 3), p.recharge, -p.recharge)) FROM payment.payment p, payment.advancereceipt ar WHERE p.orderId = :orderId AND p.paymentType = :paymentType AND p.status IN (1, 2) AND p.arid = ar.arid AND ar.collectTime <= :collectTime";
+
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("paymentType", paymentType).setTimestamp("collectTime", collectTime).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.intValue();
 	}

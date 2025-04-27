@@ -31,6 +31,12 @@ public class CustomerProtectRuleVO implements Serializable {
 
 	private Integer company;
 
+	private Long hid;
+
+	private Long cid;
+
+	private String orderId;
+
 	public CustomerProtectRuleVO() {
 		super();
 	}
@@ -119,6 +125,30 @@ public class CustomerProtectRuleVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Long getHid() {
+		return hid;
+	}
+
+	public void setHid(Long hid) {
+		this.hid = hid;
+	}
+
+	public Long getCid() {
+		return cid;
+	}
+
+	public void setCid(Long cid) {
+		this.cid = cid;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 }

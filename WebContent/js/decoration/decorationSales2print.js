@@ -46,28 +46,12 @@ $(function() {
 
     var table = createHeader().appendTo(trList);
 
-    var purCategory = [];
-    var unpCategory = [];
-
     com.post(api.payment.querySalesPaymentByOrderId, {
         "salesPayment.sales.orderId": params.decoration.orderId
     }, function(res) {
 
         createLine(res.salesPayments);
         createFooter();
-    }, null, false);
-
-    com.post(api.data.queryCategory, {}, function(res) {
-
-        $.each(res.categorys, function(index, value) {
-
-            if (value.type == 0)
-                return;
-
-            if (unpCategory.indexOf(value.name) == -1 && (value.name) != "") {
-                unpCategory.push(value.name);
-            }
-        });
     }, null, false);
 
     function createHeader() {
@@ -110,13 +94,6 @@ $(function() {
                 if (v.status == 0)
                     return true;
 
-                if (purCategory.indexOf(v.sales.category) == -1) {
-                    purCategory.push(v.sales.category);
-                }
-
-                if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1))
-                    ;
-
                 if (![2, 7].indexOf(v.type) != -1 && v.status == 2) {
                     var $totalSales = [4, 5, 6].indexOf(v.type) != -1 ? -v.referMoney : v.referMoney;
                     $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalSales);
@@ -126,7 +103,9 @@ $(function() {
                     $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney);
                 }
                 
-                var ele = $("#tr5_refer" + v.sales.bid + "");
+                var ele = $("#tr5_refer" + v.sales.brand.bid + "");
+                
+                console.log("#tr5_refer" + v.sales.brand.bid)
 
                 if (ele.length != 0) {
 
@@ -146,7 +125,7 @@ $(function() {
                     var td14 = $('<td style="border: 1px solid;"></td>').text(index).appendTo(tr5);
                     var td15 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.category).appendTo(tr5);
                     var td16 = $('<td colspan="2" style="border: 1px solid;"></td>').text(v.sales.brand.name).appendTo(tr5);
-                    var td17 = $('<td id="tr5_refer' + v.sales.bid + '" style="border: 1px solid;"></td>').attr("value", _refer).text(_refer).appendTo(tr5);
+                    var td17 = $('<td id="tr5_refer' + v.sales.brand.bid + '" style="border: 1px solid;"></td>').attr("value", _refer).text(_refer).appendTo(tr5);
                     
                     $total = utils.changeThrDecimal($total + _refer);
                 }

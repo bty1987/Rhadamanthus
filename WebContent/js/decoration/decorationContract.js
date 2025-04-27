@@ -13,9 +13,13 @@ jQuery(function($) {
             passhkm: com.focusPage("#passhkm", "#customerModal"),
             qrcode: null,
             qrcodeCustomer: com.focusPage("#qrcodeCustomer"),
+            
+            approveContract: com.focusPage("#approveContract", "#approvalModal"),
+            approveComment: com.focusPage("#approveComment", "#approvalModal"),
         },
         btns: {
             saveBtn: com.focusPage('#saveBtn'),
+            approvalBtn: com.focusPage('#approvalBtn'),
             register: com.focusPage("#register"),
             authentication: com.focusPage("#authentication"),
             sendAuth: com.focusPage("#sendAuth"),
@@ -26,15 +30,20 @@ jQuery(function($) {
             identityBtn: com.focusPage("#identityBtn", "#customerModal"),
             passportBtn: com.focusPage("#passportBtn", "#customerModal"),
             passhkmBtn: com.focusPage("#passhkmBtn", "#customerModal"),
+            
+            approvalSubmitBtn: com.focusPage("#approvalSubmitBtn", "#approvalModal").on("click", approval),
         },
         modals: {
             qrcodeModal: null,
             decorationContractModal: com.focusPage("#decorationContractModal"),
             customerModal: com.focusPage("#customerModal"),
+            approvalModal: com.focusPage("#approvalModal"),
         },
 
         decorationInfo: com.focusPage("#decorationInfo"),
         customerInfo: com.focusPage("#customerInfo"),
+        
+        decoration: null,
 
         dcid: null,
         identity: null,
@@ -49,11 +58,11 @@ jQuery(function($) {
     };
 
     com.focusPage('#fl-statement').statement("装修单", "合同");
-
     com.focusPage('#fl-statement2').statement("合同", "列表");
 
     if (decorationContract.showtype == "design") {
         decorationContract.btns.saveBtn.addClass("hide");
+        decorationContract.btns.approvalBtn.addClass("hide");
     }
 
     decorationContract.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{
@@ -68,12 +77,41 @@ jQuery(function($) {
     }, function(res) {
 
         var decoration = res.decoration;
-        customerItems(decoration);
+        
         decorationContract.authFlag = [1, 2].indexOf(decoration.customer.status) != -1;
         decorationContract.identity = decoration.customer.identity;
         decorationContract.passport = decoration.customer.passport;
         decorationContract.passhkm = decoration.customer.passhkm;
+        
+        params.customer.cid = decoration.customer.cid;
+        
+        decorationContract.decoration = decoration;
+    }, null, false);
+    
+    com.post(api.data.confirmCustomer, {
+        "customer.cid": params.customer.cid
+    }, function(res) {
+
+        decorationContract.authFlag = true;
+        
+        decorationContract.btns.saveBtn.removeClass("hide");
+        decorationContract.btns.approvalBtn.removeClass("hide");
+        decorationContract.btns.authentication.addClass("hide");
+    }, function(res){
+        console.log(res);
+    }, null, false);
+    
+    com.post(api.data.queryContract, {"contract.atttype": constant.data().contract.ATTTYPE_DECORATION_INT}, function(res) {
+        decorationContract.items.approveContract.bindData(res.contracts, "cid", "name", " ");
     });
+    
+    if(decorationContract.authFlag) {
+        decorationContract.btns.saveBtn.removeClass("hide");
+        decorationContract.btns.approvalBtn.removeClass("hide");
+        decorationContract.btns.authentication.addClass("hide");
+    }
+    
+    customerItems(decorationContract.decoration);
 
     decorationContract.status = constant.decoration().decorationContract.status.keys;
 
@@ -102,8 +140,9 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('姓名: ' + decoration.customer.name)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" || decoration.customer.phone == null ? "暂无" : [3, 6, 8].indexOf(decoration.status) == -1 ? decoration.customer.phone.replace(/^(\d{3})\d+(\d{4})$/, "$1****$2") : decoration.customer.phone))).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('地址: ' + (decoration.customer.address == "" ? "暂无" : decoration.customer.address))).appendTo($info);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType));
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" || decoration.customer.identity == null ? "暂无" : decoration.customer.identity.replace(/(.{6}).*(.{4})/, '$1********$2')))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').addClass("red").text('认证: ' + (decorationContract.authFlag ? "已认证" : "未认证"))).appendTo($info);
 
         var $widget2 = $('<div></div>').addClass("").prependTo(decorationContract.decorationInfo);
         var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);
@@ -215,6 +254,19 @@ jQuery(function($) {
         show: function(v) {
 
             return v.status == 0;
+        }
+    }, {
+        name: "生成",
+        clazz: "btn-yellow",
+        handle: function(v) {
+            
+            console.log(v);
+
+            makeContract(v);
+        },
+        show: function(v) {
+
+            return v.status == 5;
         }
     }, {
         name: "归档",
@@ -402,11 +454,25 @@ jQuery(function($) {
             com.showAlert(com.warning, "客户未认证");
             return false;
         }
+        
+        params.decoration.contract = null;
 
         com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function() {
 
             searcher.doSearch();
         });
+    });
+    
+    decorationContract.btns.approvalBtn.on("click", function() {
+
+        if (!decorationContract.authFlag) {
+            com.showAlert(com.warning, "客户未认证");
+            return false;
+        }
+        
+        approvalUtils.initqueryApprovalUser('approveMan', 24);
+
+        decorationContract.modals.approvalModal.modal("show");
     });
 
     // 注册按钮
@@ -474,6 +540,7 @@ jQuery(function($) {
             com.showAlert(com.info, "二维码已生成");
         });
     });
+    
     // 认证-港澳通行证二维码
     decorationContract.btns.passhkmBtn.on("click", function() {
 
@@ -534,7 +601,6 @@ jQuery(function($) {
                 "customer.cid": params.decoration.cid
             });
         });
-
     });
 
     function sendNotice(title, dcid, type) {
@@ -578,6 +644,16 @@ jQuery(function($) {
         }, function(res) {
 
             com.popup4frame("客户签", res.redirect);
+        });
+    }
+    
+    function makeContract(v) {
+        
+        params.decoration.contract = v;
+
+        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function() {
+
+            searcher.doSearch();
         });
     }
 
@@ -649,6 +725,60 @@ jQuery(function($) {
         }, function() {
 
             searcher.doSearch();
+        });
+    }
+    
+    function approval() {
+
+        if (com.validate("approvalModal")) {
+            return false;
+        }
+
+        var approver = com.focusPage("#approveMan").find('input:checked').attr('userid');
+
+        if (approver == null || approver == "") {
+            com.showAlert(com.error, "请选择审批人");
+            return false;
+        }
+        
+        var contract = null;
+        
+        com.post(api.data.queryContractByCid, {"contract.cid": decorationContract.items.approveContract.val()}, function(res){
+            
+            contract = res.contract;
+        }, null, false);
+        
+        if(!contract){
+            com.showAlert(com.error, "合同模板不存在");
+            return false;
+        }
+        
+        var contractargs = com.splitUrl(contract.page);
+        
+        if (contractargs.company == "1" && decorationContract.decoration.customer.type == 0) {
+            com.showAlert(com.warning, "客户类型为个人");
+            return false;
+        }
+
+        com.showConfirm("是否确认提交审批", function() {
+
+            var options = {
+                "approval.receiver.userId": approver,
+                "approval.comment": decorationContract.items.approveComment.val(),
+                
+                "approvalDecorationContract.cid": decorationContract.items.approveContract.val(),
+                "approvalDecorationContract.orderId": decorationContract.decoration.orderId,
+            };
+            
+            com.post(api.approval.submitApprovalForDecorationContract, options, function(res) {
+
+                com.showAlert(com.info, "操作成功");
+
+                com.clearValidator();
+                searcher.doSearch();
+
+                decorationContract.modals.approvalModal.modal("hide");
+            });
         });
     }
 });

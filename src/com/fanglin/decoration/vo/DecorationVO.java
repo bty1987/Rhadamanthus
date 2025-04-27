@@ -50,6 +50,8 @@ public class DecorationVO implements Serializable {
 
 	private UserBaseVO contractUserId;
 
+	private UserBaseVO materialer;
+
 	private QuotationVersionVO version;
 
 	private Short type;
@@ -129,6 +131,8 @@ public class DecorationVO implements Serializable {
 	private String dompany;
 
 	private String conpany;
+
+	private String bompany;
 
 	public DecorationVO() {
 		super();
@@ -232,6 +236,14 @@ public class DecorationVO implements Serializable {
 
 	public void setContractUserId(UserBaseVO contractUserId) {
 		this.contractUserId = contractUserId;
+	}
+
+	public UserBaseVO getMaterialer() {
+		return materialer;
+	}
+
+	public void setMaterialer(UserBaseVO materialer) {
+		this.materialer = materialer;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -563,8 +575,16 @@ public class DecorationVO implements Serializable {
 		this.conpany = conpany;
 	}
 
+	public String getBompany() {
+		return bompany;
+	}
+
+	public void setBompany(String bompany) {
+		this.bompany = bompany;
+	}
+
 	public void vtp(DecorationPO decorationPO) {
-		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter", "contractUserId", "conpany"));
+		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter", "contractUserId", "conpany", "bompany"));
 	}
 
 }

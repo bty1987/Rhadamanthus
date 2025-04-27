@@ -255,7 +255,21 @@ $(function() {
         show: function (v) {
             return (v.status == constant.inventory().accessories.STATUS_ADVANCE_INT && v.type == constant.inventory().accessories.TYPE_POST_INT)
         }
-    },];
+    }, {
+        name: "出库-金蝶",
+        clazz: "btn-inverse hide",
+        handle: function (v) {
+            kingdeeUtils.accessories(v.aid, 7, "SalesOutStock");
+            return false;
+        }
+    }, {
+        name: "入库-金蝶",
+        clazz: "btn-purple hide",
+        handle: function (v) {
+            kingdeeUtils.accessories(v.aid, 8, "SalesReturnStock");
+            return false;
+        }
+    }];
     searcher.line("no", lineprops, linebtns).render();
 
     // 打印货单项

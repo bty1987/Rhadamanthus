@@ -44,6 +44,14 @@ public class CustomerProtectRuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "checkCustomerProtectRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkCustomerProtectRule() throws FLException {
+
+		customerProtectRule = customerProtectRuleService.checkCustomerProtectRule(customerProtectRule, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addCustomerProtectRule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerProtectRule() throws FLException {
 

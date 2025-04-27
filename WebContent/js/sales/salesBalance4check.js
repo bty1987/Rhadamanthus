@@ -114,7 +114,7 @@ $(function() {
                                 propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey", tools.personel.info, v.sales.instorer.userId]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.sales.brand.name, "grey", tools.brand.info, v.sales.bid]);
+                                propertyArr.push(["品牌:", v.sales.brand.name, "grey", tools.brand.info, v.sales.brand.bid]);
                                 break;
                             case "depositpay":
                                 propertyArr.push(["定金:", v.sales.depositpay, "blue"]);
@@ -208,7 +208,7 @@ $(function() {
                         "data-status": v.status,
                         "data-vbalance": v.vbalance,
                         "data-pbalance": v.pbalance,
-                        "data-bid": v.sales.bid,
+                        "data-bid": v.sales.brand.bid,
                         "data-onetype": v.onetype,
                         "data-type": v.type,
                         "data-depositpay": v.sales.depositpay,
@@ -360,7 +360,7 @@ $(function() {
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $small = $('<small></small>').addClass('blue').html(constant.payment().materialPayment.paymentType.keys[v.type]);
-                var propertyArr = [["销售单号:", v.sales.no, "blue"], ["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand, "grey"], ["应收额:", v.referMoney, "blue"], ["收款时间:", v.salesReceipt.collectTime, "green"], ["确认时间:", v.salesReceipt.confirmTime, "green"], ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]];
+                var propertyArr = [["销售单号:", v.sales.no, "blue"], ["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand.name, "grey"], ["应收额:", v.referMoney, "blue"], ["收款时间:", v.salesReceipt.collectTime, "green"], ["确认时间:", v.salesReceipt.confirmTime, "green"], ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]];
                 $.each(propertyArr, function(index, value) {
 
                     var $liProperty = $('<li></li>');

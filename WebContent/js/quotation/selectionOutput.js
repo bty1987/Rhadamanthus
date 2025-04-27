@@ -25,8 +25,8 @@ var printselectionDetail = (function() {
             var supervisorName = decoration.supervisor.currentName ? decoration.supervisor.currentName : " ";
             var supervisorPhone = decoration.supervisor.phone ? decoration.supervisor.phone : " ";
             var quoterName = decoration.quoter.currentName ? decoration.quoter.currentName : " ";
-            var escorterName = decoration.escorter.currentName ? decoration.escorter.currentName : " ";
-            var escorterPhone = decoration.escorter.phone ? decoration.escorter.phone : " ";
+            var materialerName = decoration.materialer.currentName ? decoration.materialer.currentName : " ";
+            var materialerPhone = decoration.materialer.phone ? decoration.materialer.phone : " ";
             var affirmTime = params.selection.affirmTime != null ? params.selection.affirmTime : "";
 
             headHtml += '<table style="font-size: 14px" width="100%" border="0" cellpadding="1" cellspacing="0">';
@@ -44,7 +44,7 @@ var printselectionDetail = (function() {
             headHtml += '<tr bgcolor="#FFFFFF">';
             headHtml += '<td colspan="1" width="33%">设计师: ' + decoration.designer.currentName + '</td>';
             headHtml += '<td colspan="1" width="33%">预算员: ' + quoterName + '</td>';
-            headHtml += '<td colspan="1" width="33%">主材员: ' + escorterName + '</td>';
+            headHtml += '<td colspan="1" width="33%">主材员: ' + materialerName + '</td>';
             headHtml += '</tr>';
             headHtml += '<tr bgcolor="#FFFFFF">';
             headHtml += '<td colspan="1" width="33%">确认状态: ' + constant.quotation().selection.isAffirm.keys[params.selection.isAffirm] + '</td>';

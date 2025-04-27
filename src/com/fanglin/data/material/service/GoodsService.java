@@ -37,11 +37,15 @@ public interface GoodsService {
 
 	public GoodsVO queryGoodsByGId(GoodsVO goodsVO);
 
-	public int addGoods(GoodsVO goodsVO, int company) throws FLException;
+	public List<GoodsVO> queryGoodsByGpid(GoodsVO goods);
+
+	public int addGoods(GoodsVO goodsVO, int company, String userId) throws FLException;
 
 	public int updateGoods(GoodsVO goodsVO) throws FLException;
 
 	public int updateGoodsForStatus(GoodsVO goodsVO) throws FLException;
+
+	public int showGoods(GoodsVO goodsVO) throws FLException;
 
 	public int addPackage(GoodsVO goodsVO, List<GoodsPackageVO> goodsPackageVOs, int company) throws FLException;
 

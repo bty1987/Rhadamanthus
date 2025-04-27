@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.sales.service.SalesRefundsItemService;
+import com.fanglin.sales.service.SalesRefundsService;
 import com.fanglin.sales.vo.SalesRefundsItemVO;
 import com.fanglin.sales.vo.SalesRefundsVO;
 
@@ -23,7 +23,7 @@ public class SalesRefundsAction extends BaseListAction {
 	private static final long serialVersionUID = 3474050727800940828L;
 
 	@Autowired
-	private SalesRefundsItemService refundsItemService;
+	private SalesRefundsService salesRefundsService;
 
 	private SalesRefundsVO refunds;
 
@@ -34,7 +34,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "pageSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesRefunds() throws FLException {
 
-		refundsItemService.pageSalesRefunds(getPaging(), getFilters());
+		salesRefundsService.pageSalesRefunds(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
@@ -42,7 +42,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "querySalesRefundsBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesRefundsBySid() {
 
-		refundses = refundsItemService.querySalesRefundsBySid(refunds);
+		refundses = salesRefundsService.querySalesRefundsBySid(refunds);
 
 		return SUCCESS;
 	}
@@ -50,7 +50,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "querySalesRefundsItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesRefundsItemBySid() {
 
-		refundsItems = refundsItemService.querySalesRefundsItemBySid(refunds);
+		refundsItems = salesRefundsService.querySalesRefundsItemBySid(refunds);
 
 		return SUCCESS;
 	}
@@ -58,7 +58,23 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "querySalesRefundsItemByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesRefundsItemByRid() {
 
-		refundsItems = refundsItemService.querySalesRefundsItemByRid(refunds);
+		refundsItems = salesRefundsService.querySalesRefundsItemByRid(refunds);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendSalesRefunds() throws FLException {
+
+		salesRefundsService.sendSalesRefunds(refunds);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSalesRefunds() throws FLException {
+
+		salesRefundsService.affirmSalesRefunds(refunds);
 
 		return SUCCESS;
 	}

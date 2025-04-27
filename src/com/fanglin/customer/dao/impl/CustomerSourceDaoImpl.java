@@ -41,6 +41,11 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 	}
 
 	@Override
+	public CustomerSourcePO queryCustomerSource(int uid, String houseNumber, long vid, int company) {
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).createAlias("creater", "creater").add(Restrictions.eq("creater.uid", uid)).add(Restrictions.eq("houseNumber", houseNumber)).add(Restrictions.eq("village.vid", vid)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public Integer countCustomerSource(int uid, String phone, int company) {
 
 		String sql = "SELECT count(1) as count FROM customer.customersource sc, customer.customerchance cc WHERE sc.csid = cc.csid AND cc.buid = :buid AND sc.company = :company AND sc.phone = :phone limit 1";
@@ -105,11 +110,6 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 			}
 		}
 
-	}
-
-	@Override
-	public CustomerSourcePO countCustomerByHouseNumber(String houseNumber, long vid) {
-		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq("houseNumber", houseNumber)).add(Restrictions.eq("village.vid", vid)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
 	}
 
 }

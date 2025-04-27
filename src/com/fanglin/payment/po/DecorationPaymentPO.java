@@ -31,81 +31,89 @@ import com.fanglin.personel.po.UserPO;
 public class DecorationPaymentPO implements Serializable {
 
 	private static final long serialVersionUID = 1341114461146L;
-	
-	public static final short ADVANCETYPE_TYPE_BALANCE_INT = 1; 
-	
-	public static final short ADVANCETYPE_TYPE_PROJECT_INT = 2; 
-	
+
+	public static final short ADVANCETYPE_TYPE_BALANCE_INT = 1;
+
+	public static final short ADVANCETYPE_TYPE_PROJECT_INT = 2;
+
 	public static final String PAYMENTTYPE_ADVANCE_STR = "预付款";
-	
+
 	public static final String PAYMENTTYPE_DESIGN_STR = "设计费";
-	
+
 	public static final String PAYMENTTYPE_ADD_STR = "增项款";
-	
+
 	public static final String PAYMENTTYPE_REDUCE_STR = "减项款";
-	
+
 	public static final String PAYMENTTYPE_CONTRACT_REFUND_STR = "合同退款";
-	
+
 	public static final String PAYMENTTYPE_PENALTY_STR = "违约金";
-	
+
 	public static final String PAYMENTTYPE_REFUND_STR = "退款";
-	
+
 	public static final String PAYMENTTYPE_HISTORY_STR = "历史";
-	
+
 	public static final String PAYMENTTYPE_OTHER_STR = "其他退款";
-	
+
 	public static final short PAYMENTSTATUS_UNPAY_INT = 0;
-	
+
 	public static final short PAYMENTSTATUS_PAY_INT = 1;
-	
+
 	public static final short PAYMENTSTATUS_CONFIRM_INT = 2;
-	
+
 	public static final short PAYMENTSTATUS_APPLYING_INT = 3;
-	
+
 	public static final short PAYMENTSTATUS_HISTORY_INT = 4;
-	
+
 	public static final short CHARSCALE_COUNT_INT = 0;
-	
-	public static final short ONETYPE_ADD_INT = 0;         
-	
-	public static final short ONETYPE_REFUND_INT = 1;      
-	
-	public static final short ONETYPE_HISTORY_INT = 2;     
-	
-	public static final short TWOTYPE_BASE_INT = 0;        
-	
-	public static final short TWOTYPE_DEAL_INT = 1;        
-	
-	public static final short TWOTYPE_ADD_REDUCE_INT = 2;  
-	
+
+	public static final short ONETYPE_ADD_INT = 0;
+
+	public static final short ONETYPE_REFUND_INT = 1;
+
+	public static final short ONETYPE_HISTORY_INT = 2;
+
+	public static final short TWOTYPE_BASE_INT = 0;
+
+	public static final short TWOTYPE_DEAL_INT = 1;
+
+	public static final short TWOTYPE_ADD_REDUCE_INT = 2;
+
 	public static final short TWOTYPE_OTHER_INT = 3;
 
+	public static final short ISAFFIRM_INIT_SHORT = 0;
+
+	public static final short ISAFFIRM_CONFIRM_SHORT = 1;
+
 	private long dpid;
-	
+
 	private DecorationPO decoration;
-	
+
 	private DecorationReceiptPO decorationReceipt;
-	
+
 	private short oneType;
-	
+
 	private short twoType;
-	
+
 	private long ptid;
-	
+
 	private String paymentType;
-	
+
 	private short paymentStatus;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private long referMoney;
-	
+
 	private short sort;
-	
+
+	private short isAffirm; // 客户确认状态 0: 未确认 , 1: 确认
+
+	private Timestamp affirmTime; // 客户确认时间
+
 	private int company;
-	
+
 	public DecorationPaymentPO() {
 		super();
 	}
@@ -123,14 +131,14 @@ public class DecorationPaymentPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationPO getDecoration(){
+	public DecorationPO getDecoration() {
 		return decoration;
 	}
 
-	public void setDecoration(DecorationPO decoration){
+	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "drId", referencedColumnName = "drId")
 	public DecorationReceiptPO getDecorationReceipt() {
@@ -140,7 +148,7 @@ public class DecorationPaymentPO implements Serializable {
 	public void setDecorationReceipt(DecorationReceiptPO decorationReceipt) {
 		this.decorationReceipt = decorationReceipt;
 	}
-	
+
 	@Column(name = "onetype")
 	public short getOneType() {
 		return oneType;
@@ -158,7 +166,7 @@ public class DecorationPaymentPO implements Serializable {
 	public void setTwoType(short twoType) {
 		this.twoType = twoType;
 	}
-	
+
 	@Column(name = "ptid")
 	public long getPtid() {
 		return ptid;
@@ -169,11 +177,11 @@ public class DecorationPaymentPO implements Serializable {
 	}
 
 	@Column(name = "paymentType")
-	public String getPaymentType(){
+	public String getPaymentType() {
 		return paymentType;
 	}
 
-	public void setPaymentType(String paymentType){
+	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
 	}
 
@@ -185,32 +193,32 @@ public class DecorationPaymentPO implements Serializable {
 	public void setPaymentStatus(short paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cuid", referencedColumnName = "uid")
-	public UserPO getCreater(){
+	public UserPO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserPO creater){
+	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
 
-	@Column(name="createTime")
-	public Timestamp getCreateTime(){
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	@Column(name = "referMoney")
-	public long getReferMoney(){
+	public long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(long referMoney){
+	public void setReferMoney(long referMoney) {
 		this.referMoney = referMoney;
 	}
 
@@ -221,6 +229,24 @@ public class DecorationPaymentPO implements Serializable {
 
 	public void setSort(short sort) {
 		this.sort = sort;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	@Column(name = "company")

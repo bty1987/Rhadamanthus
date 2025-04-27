@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.ReceiptTypeService;
 import com.fanglin.data.common.vo.ReceiptTypeVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -39,7 +40,9 @@ public class ReceiptTypeAction extends BaseListAction {
 	@Action(value = "queryReceiptType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryReceiptType() throws FLException {
 
-		receiptTypes = receiptTypeService.queryReceiptType(queryCompany());
+		int company = receiptType != null && receiptType.getBompany() != null ? CompanyServiceImpl.decode(receiptType.getBompany()) : queryCompany();
+
+		receiptTypes = receiptTypeService.queryReceiptType(company);
 
 		return SUCCESS;
 	}
@@ -47,7 +50,9 @@ public class ReceiptTypeAction extends BaseListAction {
 	@Action(value = "queryReceiptTypeByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryReceiptTypeByType() throws FLException {
 
-		receiptTypes = receiptTypeService.queryReceiptTypeByType(receiptType, queryCompany());
+		int company = receiptType != null && receiptType.getBompany() != null ? CompanyServiceImpl.decode(receiptType.getBompany()) : queryCompany();
+
+		receiptTypes = receiptTypeService.queryReceiptTypeByType(receiptType, company);
 
 		return SUCCESS;
 	}
@@ -55,7 +60,9 @@ public class ReceiptTypeAction extends BaseListAction {
 	@Action(value = "queryReceiptTypeByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryReceiptTypeByNo() throws FLException {
 
-		receiptType = receiptTypeService.queryReceiptTypeByNo(receiptType, queryCompany());
+		int company = receiptType != null && receiptType.getBompany() != null ? CompanyServiceImpl.decode(receiptType.getBompany()) : queryCompany();
+
+		receiptType = receiptTypeService.queryReceiptTypeByNo(receiptType, company);
 
 		return SUCCESS;
 	}

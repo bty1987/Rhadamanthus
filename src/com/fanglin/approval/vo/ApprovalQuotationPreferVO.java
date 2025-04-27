@@ -22,6 +22,10 @@ public class ApprovalQuotationPreferVO implements Serializable {
 
 	private Long advancePrefer;
 
+	private Long totalPrice;
+
+	private Long taxPrice;
+
 	public ApprovalQuotationPreferVO() {
 		super();
 	}
@@ -100,6 +104,22 @@ public class ApprovalQuotationPreferVO implements Serializable {
 
 	public void setAdvancePrefer(Long advancePrefer) {
 		this.advancePrefer = advancePrefer;
+	}
+
+	public Long getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(Long totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public Long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(Long taxPrice) {
+		this.taxPrice = taxPrice;
 	}
 
 }

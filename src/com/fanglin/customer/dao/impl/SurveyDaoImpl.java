@@ -34,9 +34,7 @@ public class SurveyDaoImpl extends DaoImpl<SurveyPO> implements SurveyDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SurveyPO> querySurveyByOrderId(String orderId) {
-
 		return session().createCriteria(SurveyPO.class).add(Restrictions.eq(SurveyPO.COLUMN_ORDERID_STR, orderId)).list();
-
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

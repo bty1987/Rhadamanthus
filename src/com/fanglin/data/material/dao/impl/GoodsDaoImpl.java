@@ -119,28 +119,34 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 		return (GoodsPO) session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_COMPANY_STR, company)).add(Restrictions.eq(GoodsPO.COLUMN_STATUS_STR, GoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq(GoodsPO.COLUMN_BARCODE_STR, barcode)).uniqueResult();
 	}
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<GoodsPO> queryGoodsByGpid(Long gpid) {
+		return session().createCriteria(GoodsPO.class).add(Restrictions.eq(GoodsPO.COLUMN_GPID_STR, gpid)).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				if (GoodsPO.COLUMN_NAME_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsPO.COLUMN_NAME_STR, data, op));
-				} else if (GoodsPO.COLUMN_NO_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsPO.COLUMN_NO_STR, data, op));
-				} else if (GoodsPO.COLUMN_BARCODE_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsPO.COLUMN_BARCODE_STR, data, op));
-				} else if (GoodsPO.COLUMN_CATEGORY_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsPO.COLUMN_CATEGORY_STR, data, op));
-				} else if (GoodsPO.COLUMN_BRAND_STR.equals(field)) {
-					query.add(query.getCriterion(GoodsPO.COLUMN_BRAND_STR, data, op));
-				} else if (GoodsPO.COLUMN_STATUS_STR.equals(field)) {
-					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
-				}
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (GoodsPO.COLUMN_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsPO.COLUMN_NAME_STR, data, op));
+			} else if (GoodsPO.COLUMN_NO_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsPO.COLUMN_NO_STR, data, op));
+			} else if (GoodsPO.COLUMN_BARCODE_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsPO.COLUMN_BARCODE_STR, data, op));
+			} else if (GoodsPO.COLUMN_CATEGORY_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsPO.COLUMN_CATEGORY_STR, data, op));
+			} else if (GoodsPO.COLUMN_BRAND_STR.equals(field)) {
+				query.add(query.getCriterion(GoodsPO.COLUMN_BRAND_STR, data, op));
+			} else if (GoodsPO.COLUMN_STATUS_STR.equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			}
 		}
 	}

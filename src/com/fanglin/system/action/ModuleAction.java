@@ -24,6 +24,8 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.service.ModuleService;
+import com.fanglin.system.service.RoleModuleService;
+import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.SystemConfig;
@@ -38,13 +40,18 @@ public class ModuleAction extends BaseListAction {
 	@Autowired
 	private ModuleService moduleService;
 
+	@Autowired
+	private RoleModuleService roleModuleService;
+
 	private ModuleVO module;
+
+	private List<ModuleVO> modules;
 
 	private RoleVO role;
 
 	private UserVO user;
 
-	private List<ModuleVO> modules;
+	private List<CompanyVO> companys;
 
 	@Action(value = "pageModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageModule() {
@@ -134,6 +141,18 @@ public class ModuleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "syncRoleModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncRoleModule() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		roleModuleService.syncRoleModule(role, companys, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteModule() throws FLException {
 
@@ -176,6 +195,14 @@ public class ModuleAction extends BaseListAction {
 
 	public void setUser(UserVO user) {
 		this.user = user;
+	}
+
+	public List<CompanyVO> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<CompanyVO> companys) {
+		this.companys = companys;
 	}
 
 }

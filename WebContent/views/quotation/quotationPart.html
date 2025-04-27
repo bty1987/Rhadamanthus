@@ -1,5 +1,12 @@
-
-<div id="decorationOrderMaterialDetailed" class="page-content">
+<div class="container" id="resumeTimer" style="display: none;">
+	<div class="text-center">
+		<div class=" col-md-12">
+			<div style="padding: 10px 0px;color: grey;">已暂停报价单操作</div>
+			<button class="btn btn-xs btn-primary" id="resumeTimerBtn" style="padding: 5px 200px;">恢复</button>
+		</div>
+	</div>
+</div>
+<div id="quotationPart" class="page-content">
 	<div class="row">
 		<div class="col-xs-12 col-md-3">
 			<div class="widget-box  transparent">
@@ -13,7 +20,7 @@
 							<div class="col-md-12">
 								<div class="form-group">
 									<label class=" col-md-4 no-padding-right">装修单号</label>
-									<label id=orderId class="col-md-8 no-padding-left">0.00</label>
+									<label id="orderId" class="col-md-8 no-padding-left">0.00</label>
 								</div>
 								<div class="form-group">
 									<label class=" col-md-4 no-padding-right">楼盘地址</label>
@@ -39,6 +46,10 @@
 								<div class="form-group">
 									<label class=" col-md-6 no-padding-right">基数</label>
 									<label id="basePrice" class="col-md-6 no-padding-left">0.00</label>
+								</div>
+								<div class="form-group hide">
+									<label class=" col-md-6 no-padding-right">综合项目</label>
+									<label id="rtemPrice" class="col-md-6 no-padding-left">0.00</label>
 								</div>
 								<div class="form-group">
 									<label class=" col-md-6 no-padding-right">打折总额</label>
@@ -101,6 +112,14 @@
 		<!--左下角按钮-->
 		<div class="col-xs-12 col-md-3" style="position:fixed; bottom:10px; background-color: white;">
 			<div class="col-md-12">
+				<div class="col-md-12">
+					<div class="ui-pg-div">
+						<button class="btn btn-minier btn-warning col-md-4" id="pauseTimerBtn">
+							<i class="icon-play-circle"></i>暂停
+						</button>
+					</div>
+				</div>
+				<div class="col-md-12 space-8"></div>
 				<div class="col-md-12">
 					<div class="ui-pg-div">
 						<button class="btn btn-minier btn-danger col-md-4" id="calculateTotalBtn">
@@ -213,7 +232,7 @@
 								<div class="form-group">
 									<label class="col-md-3 control-label no-padding-right" for="girth">周长</label>
 									<div class="col-md-9">
-										<input type="text" id="girth" data-toggle="popover" data-trigger='manual' class="col-xs-10 col-md-5 v_required v_float_3" />
+										<input type="text" id="girth" data-toggle="popover" data-trigger='manual' class="col-xs-10 col-md-5 v_required v_float_3" value="0"/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -221,7 +240,7 @@
 								<div class="form-group">
 									<label class="col-md-3 control-label no-padding-right" for="area">面积</label>
 									<div class="col-md-9">
-										<input type="text" id="area" data-toggle="popover" data-trigger='manual' class="col-xs-10 col-md-5 v_required v_float_3" />
+										<input type="text" id="area" data-toggle="popover" data-trigger='manual' class="col-xs-10 col-md-5 v_required v_float_3" value="0"/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -229,7 +248,7 @@
 								<div class="form-group">
 									<label class="col-md-3 control-label no-padding-right" for="height">举架</label>
 									<div class="col-md-9">
-										<input type="text" id="height" data-toggle="popover" data-trigger='manual' class="col-xs-10 col-md-5 v_required v_float_3" />
+										<input type="text" id="height" data-toggle="popover" data-trigger='manual' class="col-xs-10 col-md-5 v_required v_float_3" value="0"/>
 									</div>
 								</div>
 								<div class="space-4"></div>

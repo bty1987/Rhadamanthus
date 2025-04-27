@@ -118,6 +118,8 @@ public class DecorationPO implements Serializable {
 
 	private UserPO contracter;
 
+	private UserPO materialer;
+
 	private DepartmentPO designDept;
 
 	private DepartmentPO salesDept;
@@ -201,6 +203,8 @@ public class DecorationPO implements Serializable {
 	private int company;
 
 	private int conpany;
+
+	private int bompany;
 
 	public DecorationPO() {
 	}
@@ -304,6 +308,16 @@ public class DecorationPO implements Serializable {
 
 	public void setContracter(UserPO contracter) {
 		this.contracter = contracter;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "msuid", referencedColumnName = "uId")
+	public UserPO getMaterialer() {
+		return materialer;
+	}
+
+	public void setMaterialer(UserPO materialer) {
+		this.materialer = materialer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -524,22 +538,6 @@ public class DecorationPO implements Serializable {
 		this.otherStatus = otherStatus;
 	}
 
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
-	}
-
-	public int getConpany() {
-		return conpany;
-	}
-
-	public void setConpany(int conpany) {
-		this.conpany = conpany;
-	}
-
 	public int getQuotationTimeLimit() {
 		return quotationTimeLimit;
 	}
@@ -668,9 +666,34 @@ public class DecorationPO implements Serializable {
 		this.factPrice = factPrice;
 	}
 
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	public int getConpany() {
+		return conpany;
+	}
+
+	public void setConpany(int conpany) {
+		this.conpany = conpany;
+	}
+
+	@Column(name = "bompany")
+	public int getBompany() {
+		return bompany;
+	}
+
+	public void setBompany(int bompany) {
+		this.bompany = bompany;
+	}
+
 	private void ptv(DecorationVO decorationVO) {
 
-		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId", "conpany", "busitype"));
+		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "materialer", "conpany", "busitype", "bompany"));
 
 		if (decorationVO.getOrderTotalPrice() == null) {
 			decorationVO.setOrderTotalPrice(new Long(0));
@@ -747,6 +770,10 @@ public class DecorationPO implements Serializable {
 
 		if (decorationVO.getEscorter() != null && this.getEscorter() != null) {
 			BeanUtil.copyPropertie(this.getEscorter(), decorationVO.getEscorter(), Arrays.asList("duty", "dept"));
+		}
+
+		if (decorationVO.getMaterialer() != null && this.getMaterialer() != null) {
+			BeanUtil.copyPropertie(this.getMaterialer(), decorationVO.getMaterialer(), Arrays.asList("duty", "dept"));
 		}
 	}
 

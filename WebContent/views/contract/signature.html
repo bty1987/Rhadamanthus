@@ -57,17 +57,29 @@
 <script src="/assets/altogether/js/jSignature.min.js"></script>
 <script type="text/javascript">
 
+    var name = getQueryParams(window.location.href)['name'];
+    
+    if(name && name != null && name != 'null' && name != 'undefined'){
+    
+        var tx = name.length == 1 ? 25 : name.length == 2 ? 10 : name.length == 3 ? 5 : 0;
+        var ts = name.length == 1 ? 50 : name.length == 2 ? 40 : name.length == 3 ? 30 : 25;
+    
+        var backword = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="' + tx + '%" y="60%" fill="grey" font-size="' + ts + 'vw">' + name + '</text></svg>';
+        var style = $('<style>.text-background { background: url(\'' + backword + '\') no-repeat center; }</style>');
+        $('head').append(style);
+    }
+
     var arguments = {
         width: '100%',
         height: '845px',
-        cssclass: 'zx11',
+        cssclass: 'text-background',
         color: 'darkblue',
         signatureLine: false,//去除默认画布上那条横线
         lineWidth: '16'
     };
     
     var imgpath = "";
-
+    
     $("#signature").jSignature(arguments);
     
     var authentication = "eX3o2SZdrpVOV9HC4UYTRA==";
@@ -232,6 +244,15 @@
             u8arr[n] = bstr.charCodeAt(n);
         }
         return new Blob([u8arr], {type:mime});
+    }
+    
+    function getQueryParams(url) {
+        var params = new URLSearchParams(new URL(url, window.location.origin).search);
+        var query = {};
+        for (var param of params.entries()) {
+            query[param[0]] = param[1];
+        }
+        return query;
     }
 
 </script>

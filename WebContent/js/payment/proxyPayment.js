@@ -69,7 +69,8 @@ jQuery(function($) {
         htmlName: "proxy",
         typeNo: 7,
         atttype: 0,
-        isexpires: constant.payment().proxyPayment.isexpire.keys
+        isexpires: constant.payment().proxyPayment.isexpire.keys,
+        decoration: {}
     };
 
     // 隐藏触发

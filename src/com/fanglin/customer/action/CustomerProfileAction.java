@@ -36,6 +36,14 @@ public class CustomerProfileAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCustomerProfileByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerProfileByCid() throws FLException {
+
+		customerProfile = customerProfileService.queryCustomerProfileByCid(customerProfile);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryCustomerProfileByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerProfileByOrderId() throws FLException {
 

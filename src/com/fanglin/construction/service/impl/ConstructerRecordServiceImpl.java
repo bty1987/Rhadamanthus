@@ -83,7 +83,7 @@ public class ConstructerRecordServiceImpl implements ConstructerRecordService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionSchedule(constructionPO.getDecoration().getOrderId(), constructerRecordVO.getCnid());
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(constructionPO.getDecoration().getOrderId(), constructerRecordVO.getCnid());
 
 		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");

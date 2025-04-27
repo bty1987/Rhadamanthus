@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
-import com.fanglin.data.po.DecorationMeasureItemPO;
+import com.fanglin.data.po.DecorationMeasureRuleItemPO;
 import com.fanglin.data.po.DecorationMeasureRulePO;
 
 @Repository("decorationMeasureRuleDao")
@@ -25,11 +25,11 @@ public class DecorationMeasureRuleDaoImpl extends DaoImpl<DecorationMeasureRuleP
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationMeasureItemPO> queryDecorationMeasureRule(int company) {
+	public List<DecorationMeasureRuleItemPO> queryDecorationMeasureRule(int company) {
 
-		String sql = "select dm2.* from data.decorationmeasureitem dm1, data.decorationmeasureitem dm2 where dm1.company = :company and dm1.dmid = dm2.dmid";
+		String sql = "select dm2.* from data.decorationmeasureruleitem dm1, data.decorationmeasureruleitem dm2 where dm1.company = :company and dm1.dmrid = dm2.dmrid";
 
-		Query query = session().createSQLQuery(sql).addEntity(DecorationMeasureItemPO.class).setInteger("company", company);
+		Query query = session().createSQLQuery(sql).addEntity(DecorationMeasureRuleItemPO.class).setInteger("company", company);
 
 		return query.list();
 	}

@@ -124,6 +124,14 @@ public class QuotationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateQuotationForTime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationForTime() throws FLException {
+
+		quotationService.updateQuotationForTime(quotation);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteQuotationById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteQuotationById() throws FLException {
 
@@ -176,6 +184,22 @@ public class QuotationAction extends BaseListAction {
 	public String unlockQuotation() throws FLException {
 
 		quotationService.unlockQuotation(quotation, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "auditQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String auditQuotation() throws FLException {
+
+		quotationService.auditQuotation(quotation, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "finishQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishQuotation() throws FLException {
+
+		quotationService.finishQuotation(quotation, queryUserId());
 
 		return SUCCESS;
 	}

@@ -137,10 +137,26 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "refundDecorationPaymentForDesign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundDecorationPaymentForDesign() throws FLException, Exception {
+
+		decorationPaymentService.refundDecorationPaymentForDesign(decorationPayment, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "confirmDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmDecorationPayment() throws FLException, Exception {
 
 		decorationPaymentService.confirmDecorationPayment(paymentIds, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmDecorationPayment() throws FLException, Exception {
+
+		decorationPaymentService.affirmDecorationPayment(decorationPayment);
 
 		return SUCCESS;
 	}
@@ -165,6 +181,14 @@ public class DecorationPaymentAction extends BaseListAction {
 	public String sendDecorationPayment() throws FLException {
 
 		decorationPaymentService.sendDecorationPayment(decorationPayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pushDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pushDecorationPayment() throws FLException {
+
+		decorationPaymentService.pushDecorationPayment(decorationPayment);
 
 		return SUCCESS;
 	}

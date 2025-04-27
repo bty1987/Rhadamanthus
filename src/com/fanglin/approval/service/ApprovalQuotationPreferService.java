@@ -10,4 +10,6 @@ public interface ApprovalQuotationPreferService {
 	public int submitApprovalForQuotationPrefer(ApprovalVO approvalVO, ApprovalQuotationPreferVO approvalQuotationPreferVO, String userId, int company, String code, String forms) throws FLException;
 
 	public int approveForQuotationPrefer(ApprovalPO approvalPO) throws FLException;
+
+	public int refuseForQuotationPrefer(ApprovalPO approvalPO) throws FLException;
 }

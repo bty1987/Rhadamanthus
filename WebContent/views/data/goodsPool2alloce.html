@@ -1,0 +1,68 @@
+<div id="allocationGoodsPool">
+    <div id="fl-statement">
+        <div class="page-header">
+            <h1>
+                <span>商品池</span>
+                <small><i class="icon-double-angle-right"></i>商品</small>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="goodsListResultlist" class="clearfix tab-pane active"></div>
+            <div>
+                <a class="btn btn-minier btn-primary pull-left" id="allocationGoodsPoolBtn" style="margin-top: 7px;margin-left: 2px">
+                    <i class="icon-plus bigger-110"></i>
+                    <span>添加</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="allocationGoodsPoolModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">分配商品</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right">公司</label>
+                            <div class="col-md-9">
+                                <select class="col-xs-10 col-sm-7" id="company" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="createSoods">创建选材</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" id="createSoods" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                                <span class="lbl isOrNot"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="createAoods">创建辅材</label>
+                            <div class="col-sm-9">
+                                <input type="checkbox" id="createAoods" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                                <span class="lbl isOrNot"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="submitAllocationBtn" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/goodsPool2alloce.js']);
+</script>

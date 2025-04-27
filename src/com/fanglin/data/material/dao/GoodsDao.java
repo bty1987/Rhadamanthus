@@ -40,4 +40,6 @@ public interface GoodsDao extends Dao<GoodsPO> {
 
 	public GoodsPO queryGoodsByBarcode(String barcode, int company);
 
+	public List<GoodsPO> queryGoodsByGpid(Long gpid);
+
 }

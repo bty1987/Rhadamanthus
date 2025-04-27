@@ -43,56 +43,6 @@
         Condition = Condition(api);
         Condition.init('js/condition/');
 
-        com._post_(api.home.library, {
-            "api": "system.login.upgrade",
-            "userId": res.userInfo.user.userId,
-        }, function(res) {
-
-            if (res.code != 0) {
-                alert(res.msg);
-
-                window.onbeforeunload = null;
-                com.deleteCookie("authentication");
-
-                if (parent.window.isPC) {
-                    nwRestart();
-                } else {
-                    window.location.href = '/';
-                }
-            }
-        }, null, false);
-
-        com._post_(api.home.library, {
-            "userId": params.userInfo.user.userId,
-            "loginTime": window.loginTime,
-            "redis": 0,
-            "api": "system.login.login"
-        });
-
-        interval = setInterval(function() {
-
-            com._post_(api.home.library, {
-                "userId": params.userInfo.user.userId,
-                "redis": 0,
-                "api": "system.login.index",
-                "loginTime": window.loginTime
-            }, function(res) {
-
-                if (res.code != 0) {
-                    alert('登录超时,请重新登录.');
-
-                    window.onbeforeunload = null;
-                    com.deleteCookie("authentication");
-
-                    if (parent.window.isPC) {
-                        nwRestart();
-                    } else {
-                        window.location.href = '/';
-                    }
-                }
-            })
-        }, config.singlePointTime);
-
         $(".user-info-dropmenu .user-name").text(res.userInfo.user.currentName);
         $(".user-info-dropmenu #userId").text(res.userInfo.user.currentName);
         $(".user-name").text(res.userInfo.user.currentName);

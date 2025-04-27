@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.customer.vo.SurveyOptionVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "surveyoption", catalog = "customer")
 public class SurveyOptionPO implements Serializable {
@@ -77,6 +80,13 @@ public class SurveyOptionPO implements Serializable {
 
 	public void setChecked(short checked) {
 		this.checked = checked;
+	}
+
+	public SurveyOptionVO ptv(SurveyOptionVO surveyOptionVO) {
+
+		BeanUtil.copyPropertie(this, surveyOptionVO);
+
+		return surveyOptionVO;
 	}
 
 }

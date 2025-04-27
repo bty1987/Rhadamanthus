@@ -46,6 +46,10 @@ public class QuotationPO implements Serializable {
 	public static final short STATUS_LOCK_INT = 1;
 
 	public static final short STATUS_APPROVE_INT = 2;
+	
+	public static final short ATTSTATUS_AUDI_INT = 2;
+	
+	public static final short ATTSTATUS_FINISH_INT = 3;
 
 	public static final short KEEPRICE_LATEST_INT = 0;
 
@@ -68,6 +72,10 @@ public class QuotationPO implements Serializable {
 	private Timestamp updateTime;
 
 	private Timestamp lockTime;
+
+	private int workTime;
+
+	private int audiTime;
 
 	private UserPO creater;
 
@@ -105,11 +113,19 @@ public class QuotationPO implements Serializable {
 
 	private long consPrice;
 
+	private long comsPrice;
+
+	private long undisComPrice;
+
+	private long disComPrice;
+
 	private long totalPrice;
 
 	private short defaults;
 
 	private short status;
+
+	private short attstatus;
 
 	private String content;
 
@@ -186,6 +202,24 @@ public class QuotationPO implements Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	@Column(name = "workTime")
+	public int getWorkTime() {
+		return workTime;
+	}
+
+	public void setWorkTime(int workTime) {
+		this.workTime = workTime;
+	}
+
+	@Column(name = "audiTime")
+	public int getAudiTime() {
+		return audiTime;
+	}
+
+	public void setAudiTime(int audiTime) {
+		this.audiTime = audiTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -352,6 +386,33 @@ public class QuotationPO implements Serializable {
 		this.consPrice = consPrice;
 	}
 
+	@Column(name = "comsPrice")
+	public long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(long comsPrice) {
+		this.comsPrice = comsPrice;
+	}
+
+	@Column(name = "undisComPrice")
+	public long getUndisComPrice() {
+		return undisComPrice;
+	}
+
+	public void setUndisComPrice(long undisComPrice) {
+		this.undisComPrice = undisComPrice;
+	}
+
+	@Column(name = "disComPrice")
+	public long getDisComPrice() {
+		return disComPrice;
+	}
+
+	public void setDisComPrice(long disComPrice) {
+		this.disComPrice = disComPrice;
+	}
+
 	@Column(name = "totalPrice")
 	public long getTotalPrice() {
 		return totalPrice;
@@ -377,6 +438,15 @@ public class QuotationPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "attstatus")
+	public short getAttstatus() {
+		return attstatus;
+	}
+
+	public void setAttstatus(short attstatus) {
+		this.attstatus = attstatus;
 	}
 
 	@Column(name = "content")

@@ -37,6 +37,8 @@ public interface DecorationPaymentService {
 
 	public void sendDecorationPayment(DecorationPaymentVO decorationPayment) throws FLException;
 
+	public void pushDecorationPayment(DecorationPaymentVO decorationPayment) throws FLException;
+
 	public void checkDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
@@ -49,7 +51,11 @@ public interface DecorationPaymentService {
 
 	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
 
+	public int refundDecorationPaymentForDesign(DecorationPaymentVO decorationPayment, String userId, int company) throws FLException;
+
 	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException;
+
+	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 

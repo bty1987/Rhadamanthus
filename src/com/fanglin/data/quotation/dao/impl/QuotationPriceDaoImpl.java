@@ -40,9 +40,9 @@ public class QuotationPriceDaoImpl extends DaoImpl<QuotationPricePO> implements 
 	}
 
 	@Override
-	public List<QuotationPricePO> pageQuotationPrice(Paging paging, List<Filter> filters, String versionId, Timestamp updateTime) {
+	public List<QuotationPricePO> pageQuotationPrice(Paging paging, List<Filter> filters, String versionId, Timestamp updateTime, Short type) {
 
-		String sql = queryFilterExcute(versionId, updateTime, filters);
+		String sql = queryFilterExcute(versionId, updateTime, type, filters);
 
 		PagingQuery<QuotationPricePO> query = pagingQuery(paging, QuotationPricePO.class);
 
@@ -115,7 +115,7 @@ public class QuotationPriceDaoImpl extends DaoImpl<QuotationPricePO> implements 
 		}
 	}
 
-	private String queryFilterExcute(String versionId, Timestamp updateTime, List<Filter> filters) {
+	private String queryFilterExcute(String versionId, Timestamp updateTime, Short type, List<Filter> filters) {
 
 		StringBuffer select = new StringBuffer("SELECT qp.*");
 
@@ -124,6 +124,10 @@ public class QuotationPriceDaoImpl extends DaoImpl<QuotationPricePO> implements 
 
 		from.append(" LEFT JOIN quotation.quotationitem qi ON qp.qiid = qi.qiid");
 		where.append(String.format(" WHERE qi.status = %s", QuotationItemPO.STATUS_ENABLE_INT));
+
+		if (type != null) {
+			where.append(String.format(" AND qi.type = '%s'", type));
+		}
 
 		from.append(" LEFT JOIN quotation.quotationversion qv ON qi.versionId = qv.no");
 		where.append(String.format(" AND qv.no = '%s'", versionId));

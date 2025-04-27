@@ -1,0 +1,46 @@
+<style>
+	/* 进度条样式 */
+	.progress-bar {
+	    width: 100%;
+	    height: 20px;
+	    background-color: #f3f3f3;
+	    border-radius: 10px;
+	    margin-bottom: 10px;
+	    overflow: hidden;
+	}
+	
+	.progress-bar .progress {
+	    height: 100%;
+	    background-color: #4caf50;
+	    width: 0%;
+	    transition: width 0.3s ease;
+	}
+	
+	.progress-bar .label {
+	    text-align: center;
+	    color: #333;
+	    font-size: 12px;
+	    line-height: 20px;
+	}
+
+</style>
+
+<div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condListas" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultListas" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenationas" class="fl-page-wrap clearfix step-content row-fluid position-relative">
+				<a class="btn btn-minier btn-yellow pull-left" id="add" style="margin: 0px 3px;">
+					<i class="icon-plus bigger-110"></i>
+					<span>批量上传合同方案</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	 $.loadScript(['js/utils/decorationPageUtils.js', 'js/utils/decorationUtils.js', 'js/decoration/decorationPicture.js']);
+</script>

@@ -166,12 +166,12 @@ $.extend(api, {
         updateRoleTask: {
             url: "updateRoleTask.do",
             server: "communion",
-            intercept: true,
+            intercept: true
         },
         deleteRoleTask: {
             url: "deleteRoleTask.do",
             server: "communion",
-            intercept: true,
+            intercept: true
         },
 
         pageTaskParam: {
@@ -207,7 +207,209 @@ $.extend(api, {
             url: "addCustomerRecord.do"
         },
 
+        pageGoodsPool: {
+            url: "pageGoodsPool.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryGoodsPool: {
+            url: "queryGoodsPool.do",
+            type: "query",
+            tranargs: [{
+                result: "goodsPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryGoodsPoolByNo: {
+            url: "queryGoodsPoolByNo.do",
+            type: "query",
+            tranargs: [{
+                result: "goodsPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryGoodsPoolByName: {
+            url: "queryGoodsPoolByName.do",
+            type: "query",
+            tranargs: [{
+                result: "goodsPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryGoodsPoolByAtid: {
+            url: "queryGoodsPoolByAtid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodsPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryGoodsPoolByBarcode: {
+            url: "queryGoodsPoolByBarcode.do",
+            type: "query",
+            tranargs: [{
+                result: "goodsPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryGoodsPoolByGpid: {
+            url: "queryGoodsByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodsPool",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        addGoodsPool: {
+            url: "addGoodsPool.do",
+            type: "update",
+            tranargs: {
+                args: ["goodsPool.purchase", "goodsPool.selling", "goodsPool.confine", "goodsPool.pieceNum"]
+            },
+            server: "communion"
+        },
+        updateGoodsPool: {
+            url: "updateGoodsPool.do",
+            type: "update",
+            tranargs: {
+                args: ["goodsPool.purchase", "goodsPool.selling", "goodsPool.confine", "goodsPool.pieceNum"]
+            },
+            server: "communion"
+        },
+        updateGoodsPoolForStatus: {
+            url: "updateGoodsPoolForStatus.do",
+            server: "communion"
+        },
 
+        pageColorPool: {
+            url: "pageColorPool.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-goodPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+
+        queryColorPoolByGpid: {
+            url: "queryColorPoolByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryColorPoolForEnableByGpid: {
+            url: "queryColorPoolForEnableByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        addColorPool: {
+            url: "addColorPool.do",
+            type: "update",
+            tranargs: {
+                args: ["goodPools.purchase", "goodPools.selling", "goodPools.confine", "goodPools.pieceNum"]
+            },
+            server: "communion"
+        },
+        updateColorPoolForStatus: {
+            url: "updateColorPoolForStatus.do",
+            server: "communion"
+        },
+
+        pageFormatPool: {
+            url: "pageFormatPool.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-goodsPool",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+
+        queryFormatPoolByGpid: {
+            url: "queryFormatPoolByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryFormatPoolForEnableByGpid: {
+            url: "queryFormatPoolForEnableByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "goodPools",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        addFormatPool: {
+            url: "addFormatPool.do",
+            type: "update",
+            tranargs: {
+                args: ["goodPools.purchase", "goodPools.selling", "goodPools.confine", "goodPools.pieceNum"]
+            },
+            server: "communion"
+        },
+        updateFormatPoolForStatus: {
+            url: "updateFormatPoolForStatus.do",
+            server: "communion"
+        },
+
+        pagePricePool: {
+            url: "pagePricePool.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["purchase", "selling", "confine", "cvalue"]
+            }, {
+                result: "paging-data-goods",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+
+        queryPricePoolByGpid: {
+            url: "queryPricePoolByGpid.do",
+            type: "query",
+            tranargs: [{
+                result: "pricePools",
+                args: ["purchase", "selling", "confine", "cvalue"]
+            }, {
+                result: "pricePools-goodsPool",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        queryPricePoolByPpid: {
+            url: "queryPricePoolByPpid.do",
+            type: "query",
+            tranargs: [{
+                result: "pricePool",
+                args: ["purchase", "selling", "confine", "cvalue"]
+            }, {
+                result: "pricePool-goodsPool",
+                args: ["purchase", "selling", "confine", "pieceNum"]
+            }]
+        },
+        addPricePool: {
+            url: "addPricePool.do",
+            type: "update",
+            tranargs: {
+                args: ["pricePool.purchase", "pricePool.selling", "pricePool.confine", "pricePool.cvalue"]
+            },
+            server: "communion"
+        },
+        updatePricePoolForStatus: {
+            url: "updatePricePoolForStatus.do",
+            server: "communion"
+        },
+        deletePricePool: {
+            url: "deletePricePool.do",
+            server: "communion"
+        }
     }
 });
 

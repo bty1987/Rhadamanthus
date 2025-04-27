@@ -29,6 +29,7 @@ var ExtensionDetail = (function() {
             "extension.taxPrice": 0,
             "extension.total": 0,
             "extension.consPrice": 0,
+            "extension.comsPrice": 0,
 
             "extensionItem.eid": null,
         },
@@ -155,7 +156,7 @@ var ExtensionDetail = (function() {
                     quote.quotesRecord = [];
 
                     that.$modals.functionAreaModal.modal("show");
-                }),
+                }).addClass(extensionDetail.type == 0 ? "" : "hide"),
 
                 // 选择标准报价项按钮点击(增项)
                 addQuotaionItemBtn: com.focusPage('#addQuotaionItemBtn').on('click', function() {
@@ -174,7 +175,7 @@ var ExtensionDetail = (function() {
                     event.stopPropagation();
                     com.clearValidator();
                     that.$modals.addItemModal.modal("show");
-                }),
+                }).addClass("hide"),
 
                 submitAddReduceDetailOKBtn: com.focusPage('#submitAddReduceDetailOKBtn').on('click', function(event) {
 
@@ -182,7 +183,6 @@ var ExtensionDetail = (function() {
 
                         com.showAlert(com.info, '提交成功');
                     }, null, false);
-
                 }),
 
                 // 保存
@@ -215,7 +215,7 @@ var ExtensionDetail = (function() {
         calculateArFees: function() {
 
             var $arr = $('.fl-quo-item:not([data-del-flag="1"])', '#addReduceItemDiv');
-            var undisPrice = 0, disPrice = 0, total = 0,consPrice = 0 , managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
+            var undisPrice = 0, disPrice = 0, total = 0, consPrice = 0, comsPrice = 0 , managePrice = 0, managediscount = 0, taxPrice = 0, taxdiscount = 0;
 
             if ($arr.length) {
                 $arr.each(function(i, e) {
@@ -230,7 +230,8 @@ var ExtensionDetail = (function() {
 
                     var _total = utils.accMul(_unitPrice, _num);
 
-                    consPrice = utils.accAdd(consPrice, _subtype == constant.quotation().quotationFunctionAreaItem.SUBTYPE_PROJECT_INT ? _total : 0);
+                    consPrice = utils.accAdd(consPrice, _subtype == constant.quotation().extensionItem.SUBTYPE_PROJECT_INT ? _total : 0);
+                    comsPrice = utils.accAdd(comsPrice, _subtype != constant.quotation().extensionItem.SUBTYPE_PROJECT_INT ? _total : 0);
 
                     undisPrice = utils.accAdd(undisPrice, _discount == constant.quotation().extensionItem.DISCOUMNT_NODISCOUMNT_INT ? _total : 0);
                     disPrice = utils.accAdd(disPrice, _discount == constant.quotation().extensionItem.DISCOUMNT_DISCOUMNT_INT ? _total : 0);
@@ -286,6 +287,7 @@ var ExtensionDetail = (function() {
             extensionDetail.basicParams['extension.manageDiscount'] = extensionDetail.isCountManageDiscount.prop("checked") ? constant.quotation().extension.MANAGEDISCOUNT_DISCOUNT_INT : constant.quotation().extension.MANAGEDISCOUNT_NODISCOUNT_INT;
             extensionDetail.basicParams['extension.taxPrice'] = taxPrice;
             extensionDetail.basicParams['extension.consPrice'] = consPrice;
+            extensionDetail.basicParams['extension.comsPrice'] = comsPrice;
         }
     }
 
@@ -1037,6 +1039,7 @@ var ExtensionDetail = (function() {
                 extensionDetail.basicParams["extension.taxPrice"] = extension.taxPrice;
                 extensionDetail.basicParams["extension.taxRate"] = extension.taxRate;
                 extensionDetail.basicParams["extension.consPrice"] = extension.consPrice;
+                extensionDetail.basicParams["extension.comsPrice"] = extension.comsPrice;
 
                 extensionDetail.basicParams["extensionItem.eid"] = extension.eid;
 

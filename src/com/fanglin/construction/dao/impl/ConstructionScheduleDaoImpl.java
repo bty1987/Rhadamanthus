@@ -40,23 +40,28 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(Long cid) {
+	public List<ConstructionSchedulePO> queryConstructionScheduleByCid(long cid) {
 		return session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).list();
 	}
 
 	@Override
 	public ConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId, short schedule) {
-		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).uniqueResult();
+		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public ConstructionSchedulePO queryConstructionSchedule(String orderId, long cnid) {
-		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CNID_STR, cnid)).uniqueResult();
+	public ConstructionSchedulePO queryConstructionScheduleByOrderId(String orderId, long cnid) {
+		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CNID_STR, cnid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, short schedule) {
-		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).uniqueResult();
+		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_SCHEDULE_STR, schedule)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, long cnid) {
+		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CNID_STR, cnid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
@@ -83,7 +88,7 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 				query.timeranges(ConstructionScheduleDO.COLUMN_ENTERTIME_STR, data);
 			} else if ("leaveTime".equals(field)) {
 				query.timeranges(ConstructionScheduleDO.COLUMN_LEAVETIME_STR, data);
-				}
+			}
 		}
 	}
 }

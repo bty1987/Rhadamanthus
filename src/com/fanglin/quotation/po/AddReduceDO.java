@@ -100,6 +100,8 @@ public class AddReduceDO implements Serializable {
 
 	private long consPrice;
 
+	private long comsPrice;
+
 	private long total;
 
 	private int discount;
@@ -240,6 +242,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setConsPrice(long consPrice) {
 		this.consPrice = consPrice;
+	}
+
+	@Column(name = "comsPrice")
+	public long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(long comsPrice) {
+		this.comsPrice = comsPrice;
 	}
 
 	@Column(name = "schedule")

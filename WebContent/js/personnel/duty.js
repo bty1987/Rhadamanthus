@@ -179,7 +179,7 @@
                 "companyName": "方林集团"
             };
 
-            kingdeeUtils.dutyToKingdee(dutyData);
+            kingdeeUtils.duty(dutyData);
         });
     }
 

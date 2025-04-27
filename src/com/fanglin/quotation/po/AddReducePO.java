@@ -116,6 +116,8 @@ public class AddReducePO implements Serializable {
 
 	private long consPrice;
 
+	private long comsPrice;
+
 	private long total;
 
 	private short schedule;
@@ -318,6 +320,15 @@ public class AddReducePO implements Serializable {
 		this.consPrice = consPrice;
 	}
 
+	@Column(name = "comsPrice")
+	public long getComsPrice() {
+		return comsPrice;
+	}
+
+	public void setComsPrice(long comsPrice) {
+		this.comsPrice = comsPrice;
+	}
+
 	@Column(name = "total")
 	public long getTotal() {
 		return total;
@@ -422,6 +433,7 @@ public class AddReducePO implements Serializable {
 		setUncalPrice(addReduceVO.getUncalPrice());
 		setCalPrice(addReduceVO.getCalPrice());
 		setConsPrice(addReduceVO.getConsPrice());
+		setComsPrice(addReduceVO.getComsPrice());
 		setTotal(addReduceVO.getTotal());
 
 		return this;

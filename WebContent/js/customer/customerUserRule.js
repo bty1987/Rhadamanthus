@@ -75,7 +75,7 @@ $(function() {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerUserRule);
 
-    searcher.condition(["customer-customerUserRule-createTime", "customer-customerUserRule-finishTime", "customer-customerUserRule-user", "customer-customerUserRule-creater", "customer-customerUserRule-status"]);
+    searcher.condition(["customer-customerUserRule-user", "customer-customerUserRule-creater", "customer-customerUserRule-createTime", "customer-customerUserRule-finishTime", "customer-customerUserRule-status"]);
 
     var extraParams = {
         "customerUserRule.user.userId": params.userInfo.user.userId
@@ -347,7 +347,7 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == 1 || v.status == 2 || v.status == 3) && customerUserRule.depage == null;
+            return (v.status == 1 || v.status == 2 || v.status == 3);
         }
     }, {
         name: "停止接单",

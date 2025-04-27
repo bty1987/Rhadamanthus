@@ -10,6 +10,6 @@ public interface QuotationRecordService {
 
 	public void pageQuotationRecord(Paging paging, List<Filter> filters, QuotationRecordVO quotationRecord);
 
-	public int addQuotationRecord(QuotationRecordVO quotationRecordVO);
+	public int addQuotationRecord(QuotationRecordVO quotationRecordVO, String userId);
 
 }

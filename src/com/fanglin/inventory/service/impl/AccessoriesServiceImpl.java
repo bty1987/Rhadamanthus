@@ -178,7 +178,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionSchedule(orderId, accessoriesVO.getCnid());
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId, accessoriesVO.getCnid());
 
 		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
@@ -279,6 +279,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
+	// 撤销状态
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int cancelAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
@@ -331,6 +332,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
+	// 拒绝状态
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int refuseAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {

@@ -109,7 +109,9 @@ jQuery(function($) {
         functions: [],
         pageConfig: {},
         typeNo: 1,
-        atttype: 0
+        atttype: 0,
+        isAffirms: constant.payment.decorationPayment.isAffirm.keys,
+        decoration: {}
     };
 
     // 隐藏触发
@@ -170,18 +172,12 @@ jQuery(function($) {
     // 绑定收款单位的基础信息
     paymentUtils.getReceiptType(decorationPayment);
 
-    // 现金方式
-    com.selectTypeahead("cashInfo", decorationPayment.cashUtil, "key", "value", null);
-
     // 转账方式(银行)
     decorationPayment.btns.checkvAdd.click(function() {
 
         paymentUtils.addBank(decorationPayment);
         return false;
     });
-
-    // 优惠券方式
-    com.selectTypeahead("couponType", decorationPayment.couponType, 'no', 'name');
 
     decorationPayment.items.advanceType.bindData([{
         "key": "1",
@@ -260,6 +256,7 @@ jQuery(function($) {
             var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
             var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
+            var $customerPush = $('<a></a>').addClass('btn btn-minier btn-warning').html('客户推送');
 
             var propertyArr = paymentUtils.getPropertyArr(decorationPayment, v, v.decoration, decorationPayment.paymentStatusArray);
 
@@ -317,6 +314,8 @@ jQuery(function($) {
                 $divBtnWrap.append($btnCheck);
             if (v.paymentStatus == constant.payment().decorationPayment.PAYMENTSTATUS_CONFIRM_INT && decorationPayment.pageConfig.pageBtn.contains("toKingdee"))
                 $divBtnWrap.append($btnKingdee);
+            if (v.isAffirm == constant.payment().decorationPayment.ISAFFIRM_INIT_SHORT && decorationPayment.pageConfig.pageBtn.contains("customerPush"))
+                $divBtnWrap.append($customerPush);
 
             // 退款 增减项款 收款点击显示模态框
             $btnCollect.click(function() {
@@ -497,6 +496,20 @@ jQuery(function($) {
             $btnKingdee.click(function() {
 
                 kingdeeUtils.payment(v, decorationPayment.htmlName);
+            });
+
+            // 客户推送
+            $customerPush.click(function() {
+
+                com.showConfirm("是否推送给客户", function() {
+
+                    com.post(api.payment.pushDecorationPayment, {
+                        "decorationPayment.dpid": v.dpid
+                    }, function(res) {
+
+                        com.showAlert(com.info, "发送成功");
+                    });
+                });
             });
 
             return $liLine;
@@ -709,6 +722,17 @@ jQuery(function($) {
 
         decorationPayment.payment = payment;
 
+        // 查询装修单信息
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": payment.decoration.orderId
+        }, function(res) {
+
+            decorationPayment.decoration = res.decoration;
+        }, null, false);
+
+        // 绑定收款单位的基础信息
+        paymentUtils.getReceiptType(decorationPayment);
+
         decorationPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
         decorationPayment.items.comment.removeAttr("disabled");
 
@@ -727,10 +751,16 @@ jQuery(function($) {
         if (decorationPayment.pageConfig.paytypes.contains("coupon"))
             paymentUtils.initCoupon(decorationPayment, 0);
 
+        // 现金方式
+        com.selectTypeahead("cashInfo", decorationPayment.cashUtil, "key", "value", null);
+
+        // 优惠券方式
+        com.selectTypeahead("couponType", decorationPayment.couponType, 'no', 'name');
+
         // 根据装修单等级获取收据类型等级
         var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
 
-        // 根据等级在数组中筛选出符合要求的用于显示
+        // 根据等级在数组中筛选出符合要求的用于显示 刷卡&银行
         paymentUtils.initBankGrade(decorationPayment, grade);
 
         if (type == constant.payment().decorationPayment.ONETYPE_REFUND_INT) {// 退款
@@ -774,6 +804,23 @@ jQuery(function($) {
             }, "balanceAdvance");
         if (decorationPayment.pageConfig.paytypes.contains("coupon"))
             paymentUtils.initCoupon(decorationPayment, 1);
+
+        // 查询装修单信息
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": payment.decoration.orderId
+        }, function(res) {
+
+            decorationPayment.decoration = res.decoration;
+        }, null, false);
+
+        // 绑定收款单位的基础信息
+        paymentUtils.getReceiptType(decorationPayment);
+
+        // 现金方式
+        com.selectTypeahead("cashInfo", decorationPayment.cashUtil, "key", "value", null);
+
+        // 优惠券方式
+        com.selectTypeahead("couponType", decorationPayment.couponType, 'no', 'name');
 
         var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
 

@@ -23,4 +23,6 @@ public interface ApprovalProtationPreferService {
 
 	public int approveForProtationPrefer(ApprovalPO approvalPO) throws FLException;
 
+	public int refuseForProtationPrefer(ApprovalPO approvalPO) throws FLException;
+
 }

@@ -25,7 +25,7 @@ $(function(){
                 ["分区:", v.region.name, "grey"],
                 ["导购:", v.guider.currentName, "grey"],
                 ["驻店:", v.instorer.currentName, "grey"],
-                ["品牌:", v.brand, "grey"],
+                ["品牌:", v.brand.name, "grey"],
                 ["定金:", v.depositpay, "blue"],
                 ["补款:", v.fullpay, "blue"],
                 ["等级:", v.grade, "red"],

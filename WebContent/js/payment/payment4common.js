@@ -338,7 +338,7 @@ jQuery(function($) {
         }, {
             field: "brand",
             name: "品牌",
-            prop: "sales.brand",
+            prop: "sales.brand.name",
             clazz: "grad"
         }, {
             field: "dept",
@@ -389,7 +389,7 @@ jQuery(function($) {
 
         var lineprops = linepropsSales.concat(getReceiptTypeLineprops("salesReceipt"));
 
-        searcherSales.line("sales.brand", lineprops, []).render();
+        searcherSales.line("sales.brand.name", lineprops, []).render();
     }
 
     function service() {

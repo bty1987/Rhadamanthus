@@ -10,7 +10,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.po.SalesBalancePO;
-import com.fanglin.sales.po.SalesPO;
 import com.fanglin.utils.Paging;
 
 @Repository("salesBalanceDao")
@@ -79,7 +78,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
-		query.alias("sales", "sales").alias("sales.supplier", "supplier").add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
+		query.alias("sales", "sales").add(Restrictions.or(query.alias("sales.supplier", "supplier").getCriterion("supplier.uid", uid, "eq"), query.alias("sales.brand", "brand").getCriterion("brand.supplier.uid", uid, "eq")));
 
 		queryFilterExcute(query, filters);
 

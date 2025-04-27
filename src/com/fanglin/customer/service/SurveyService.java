@@ -13,7 +13,7 @@ public interface SurveyService {
 
 	public List<SurveyVO> querySurveyByOrderId(SurveyVO surveyVO);
 
-	public SurveyVO querySurveyBySid(SurveyVO surveyVO);
+	public SurveyVO querySurveyBySid(SurveyVO surveyVO) throws FLException;
 
 	public int sendSurvey(SurveyVO surveyVO, String userId) throws FLException;
 

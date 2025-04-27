@@ -12,7 +12,7 @@ jQuery(function($) {
         checkBankInfo: {},
         receiptsNum: 0,
         receiptNo: "",
-        organization: parent.params.company.srganization.name,
+        organization: "",
         url: parent.api.index.salesPaymentReceiptIndex.url
     };
 
@@ -37,10 +37,10 @@ jQuery(function($) {
         });
 
     }, null, false);
+    
+    var receiptTitle = null;
 
-    var querySalesPaymentForNotInitBySrId = api.payment.querySalesPaymentForNotInitBySrid;
-
-    com.post(querySalesPaymentForNotInitBySrId, {"salesReceipt.srId": params.payment.srId}, function(res) {
+    com.post(api.payment.querySalesPaymentForNotInitBySrid, {"salesReceipt.srId": params.payment.srId}, function(res) {
 
         var salesPayments = res.salesPayments;
         var commonInfo = {};
@@ -49,7 +49,11 @@ jQuery(function($) {
         var salesPaymentDes = "";
 
         for ( var i = 0; i < salesPayments.length; i++) {
+            
             var salesPayment = salesPayments[i];
+            
+            if(salesPayment.sales.grade == "A") receiptTitle = "装修材料明细单";
+            
             salesBrand = salesPayment.sales.brand.name;
 
             commonInfo["orderId"] = salesPayment.sales.orderId;
@@ -145,6 +149,14 @@ jQuery(function($) {
     com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": receipt.commonInfo.orderId}, function(res) {
 
         receipt.commonInfo.decorationType = res.decoration.typeness;
+
+        com.post(api.system.queryCompanyByCid, {
+            "company.cid": res.decoration.bompany
+        }, function(data) {
+
+            receipt.organization = data.company.srganization.name;
+        }, null, false);
+
     }, null, false);
 
     if (receipt.paymentItems.length > 0) {
@@ -152,7 +164,7 @@ jQuery(function($) {
 
         printer.name = "salesPayment";
         printer.args = {
-            "title": params.company.srganization.name + "代收款收据",
+            "title": receiptTitle ? receiptTitle : (receipt.organization + "代收款收据"),
             "orderId": receipt.commonInfo.orderId,
             "decorationType": receipt.commonInfo.decorationType,
             "orderAddr": receipt.commonInfo.orderAddr,
@@ -184,7 +196,7 @@ jQuery(function($) {
         var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
         receipt.receiptNo = (Array(10).join(0) + params.payment.srId).slice(-10);
         var spanNo = $('<span style="float: left;"></span>').html("编号:" + receipt.receiptNo).appendTo(headReceiptDiv);
-        var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
+        var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(receiptTitle ? receiptTitle : (receipt.organization + "代收款收据")).appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var noReceiptTd = $('<td style="width: 15%"></td>').text('装修单号: ' + commonInfo["orderId"]).appendTo(orderReceiptTr);

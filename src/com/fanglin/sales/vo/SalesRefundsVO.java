@@ -22,13 +22,17 @@ public class SalesRefundsVO implements Serializable {
 
 	private Short status;
 
-	private UserVO creater;
+	private Short isAffirm;
 
-	private String comment;
+	private UserVO creater;
 
 	private Timestamp createTime;
 
 	private Timestamp balanceTime;
+
+	private Timestamp affirmTime;
+
+	private String comment;
 
 	public SalesRefundsVO() {
 		super();
@@ -116,6 +120,22 @@ public class SalesRefundsVO implements Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	public String getComment() {

@@ -8,6 +8,8 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Long gid;
 
+	private Long gpid;
+
 	private String no;
 
 	private String name;
@@ -46,9 +48,13 @@ public class GoodsVO implements java.io.Serializable {
 
 	private String path;
 
+	private Short isShow;
+
 	private Short status;
 
 	private Short checkup;
+
+	private String company;
 
 	public GoodsVO() {
 		super();
@@ -78,6 +84,14 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setGid(Long gid) {
 		this.gid = gid;
+	}
+
+	public Long getGpid() {
+		return gpid;
+	}
+
+	public void setGpid(Long gpid) {
+		this.gpid = gpid;
 	}
 
 	public String getNo() {
@@ -232,6 +246,14 @@ public class GoodsVO implements java.io.Serializable {
 		this.path = path;
 	}
 
+	public Short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(Short isShow) {
+		this.isShow = isShow;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -246,6 +268,14 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setCheckup(Short checkup) {
 		this.checkup = checkup;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

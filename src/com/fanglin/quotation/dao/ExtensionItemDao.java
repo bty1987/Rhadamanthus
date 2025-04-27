@@ -16,6 +16,8 @@ public interface ExtensionItemDao extends Dao<ExtensionItemPO> {
 
 	public long countExtensionItem(long qfaid, long quoteItemId);
 
+	public long countExtensionItem(long qfaid, List<Long> quoteItemIds);
+
 	public long countExtensionItem(List<QuotationFunctionAreaPO> quotationFunctionAreas);
 
 	public int deleteExtensionItem(String orderId);

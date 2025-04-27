@@ -20,11 +20,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.dao.ColorPoolDao;
+import com.fanglin.communion.dao.DataDrawingDao;
+import com.fanglin.communion.dao.FormatPoolDao;
+import com.fanglin.communion.dao.GoodsPoolDao;
+import com.fanglin.communion.dao.PricePoolDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.ColorPoolPO;
+import com.fanglin.communion.po.DataDrawingPO;
+import com.fanglin.communion.po.FormatPoolPO;
+import com.fanglin.communion.po.GoodsPoolPO;
+import com.fanglin.communion.po.PricePoolPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.GoodsKindVO;
+import com.fanglin.data.material.dao.ColorDao;
+import com.fanglin.data.material.dao.FormatDao;
 import com.fanglin.data.material.dao.GoodsDao;
+import com.fanglin.data.material.dao.PriceDao;
 import com.fanglin.data.material.service.GoodsService;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.material.vo.GoodsVO;
@@ -40,6 +53,9 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.right.dao.BrandUserRightDao;
 import com.fanglin.right.po.BrandUserRightPO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
@@ -62,6 +78,33 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private BrandDao brandDao;
+
+	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
+	private GoodsPoolDao goodsPoolDao;
+
+	@Autowired
+	private ColorPoolDao colorPoolDao;
+
+	@Autowired
+	private FormatPoolDao formatPoolDao;
+
+	@Autowired
+	private PricePoolDao pricePoolDao;
+
+	@Autowired
+	private DataDrawingDao dataDrawingDao;
+
+	@Autowired
+	private ColorDao colorDao;
+
+	@Autowired
+	private FormatDao formatDao;
+
+	@Autowired
+	private PriceDao priceDao;
 
 	@Override
 	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
@@ -202,15 +245,40 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
+	public List<GoodsVO> queryGoodsByGpid(GoodsVO goodsVO) {
+
+		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByGpid(goodsVO.getGpid());
+		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
+
+		for (GoodsPO goodsPO : goodsPOs) {
+
+			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+
+			goodsVO = goodsPO.ptv(goodsVO);
+
+			CompanyPO company = companyDao.get(goodsPO.getCompany());
+
+			goodsVO.setCompany(company.getName());
+
+			goodsVOs.add(goodsVO);
+
+		}
+
+		return goodsVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addGoods(GoodsVO goodsVO, int company) throws FLException {
+	public int addGoods(GoodsVO goodsVO, int company, String userId) throws FLException {
+
+		if (goodsVO.getCompany() != null) {
+			company = CompanyServiceImpl.decode(goodsVO.getCompany());
+		}
 
 		List<GoodsPO> goodsPOs = goodsDao.queryGoodsByName(goodsVO.getName(), company);
 
 		if (goodsPOs.size() != 0) {
-
 			throw new FLException(260046, "商品已存在");
-
 		}
 
 		GoodsPO goodsPO = new GoodsPO();
@@ -237,7 +305,47 @@ public class GoodsServiceImpl implements GoodsService {
 
 		goodsDao.save(goodsPO);
 
-		goodsVO.setGid(goodsPO.getGid());
+		long gid = goodsPO.getGid();
+
+		goodsVO.setGid(gid);
+
+		long gpid = goodsPO.getGpid();
+
+		if (gpid == 0) return 0;
+
+		GoodsPoolPO goodsPoolPO = goodsPoolDao.get(gpid);
+
+		if (goodsPoolPO == null) return 0;
+
+		if ((goodsPoolPO.getColorcascade() & GoodsPoolPO.CASCADE_YES_SHORT) > 0) { // 颜色 级联时创建商品颜色
+
+			List<ColorPoolPO> colorPools = colorPoolDao.queryColorPoolByGpid(gpid);
+
+			if (colorPools.size() > 0) colorDao.batchSaveColor(gid, gpid);
+		}
+
+		if ((goodsPoolPO.getFormatcascade() & GoodsPoolPO.CASCADE_YES_SHORT) > 0) { // 规格 级联时创建商品规格
+
+			List<FormatPoolPO> formatPoolPOs = formatPoolDao.queryFormatPoolByGpid(gpid);
+
+			if (formatPoolPOs.size() > 0) formatDao.batchSaveFormat(gid, gpid);
+		}
+
+		if ((goodsPoolPO.getPricecascade() & GoodsPoolPO.CASCADE_YES_SHORT) > 0) { // 价格 级联时创建商品价格
+
+			List<PricePoolPO> pricePoolPOs = pricePoolDao.queryPricePoolByGpid(gpid, null);
+
+			if (pricePoolPOs.size() > 0) priceDao.batchSavePrice(gid, gpid);
+		}
+
+		if ((goodsPoolPO.getPicturecascade() & GoodsPoolPO.CASCADE_YES_SHORT) > 0) { // 图片 级联时创建商品图片
+
+			List<DataDrawingPO> dataDrawingPOs = dataDrawingDao.queryDataDrawing(gpid, DataDrawingPO.TYPE_GOODSPOOL_SHORT);
+
+			UserPO userPO = userDao.queryUserByUserId(userId);
+
+			if (dataDrawingPOs.size() > 0) dataDrawingDao.batchSaveDataDrawing(gid, gpid, userPO.getUid());
+		}
 
 		return 0;
 	}
@@ -275,6 +383,23 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 
 		goodsPO.setStatus(goodsVO.getStatus());
+
+		goodsDao.update(goodsPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int showGoods(GoodsVO goodsVO) throws FLException {
+
+		GoodsPO goodsPO = goodsDao.get(goodsVO.getGid());
+
+		if (goodsPO == null) {
+			throw new FLException(260004, "商品不存在");
+		}
+
+		goodsPO.setIsShow(goodsVO.getIsShow());
 
 		goodsDao.update(goodsPO);
 

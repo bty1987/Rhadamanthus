@@ -330,7 +330,13 @@ public class UserServiceImpl implements UserService {
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
 		}
 
-		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid);
+		Integer did = null;
+
+		if (userVO.getDept() != null && userVO.getDept().getDid() != null) {
+			did = userVO.getDept().getDid();
+		}
+
+		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did);
 
 		for (UserPO userPO : userPOs) {
 			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO()).ptv(userPO));

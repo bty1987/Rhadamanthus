@@ -288,6 +288,9 @@ $(function() {
                 "approvalProtationPrefer.taxPrice": options["protation.taxPrice"],
                 "approvalProtationPrefer.totalPrice": options["protation.totalPrice"],
             }, options);
+            
+            params["protation.advanceProfit"] = null;
+            params["protation.totalPrice"] = null;
 
             com.post(api.approval.submitApprovalForProtationPrefer, params, function(res) {
 

@@ -4,6 +4,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,7 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fanglin.customer.vo.SurveyItemVO;
+import com.fanglin.customer.vo.SurveyOptionVO;
+import com.fanglin.customer.vo.SurveyVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "survey", catalog = "customer")
@@ -202,4 +208,20 @@ public class SurveyPO implements Serializable {
 		this.handleTime = handleTime;
 	}
 
+	public SurveyVO ptv(SurveyVO surveyVO) {
+
+		BeanUtil.copyProperties(this, surveyVO, Arrays.asList("items", "creater", "sender", "finisher"));
+
+		if (surveyVO.getCreater() != null && getCreater() != null) surveyVO.getCreater().setBaseInfo(getCreater());
+		if (surveyVO.getSender() != null && getSender() != null) surveyVO.getSender().setBaseInfo(getSender());
+		if (surveyVO.getFinisher() != null && getFinisher() != null) surveyVO.getFinisher().setBaseInfo(getFinisher());
+
+		if (surveyVO.getItems() == null || getItems() == null) return surveyVO;
+
+		for (SurveyItemPO itemPO : getItems()) {
+			surveyVO.getItems().add(itemPO.ptv(new SurveyItemVO(new ArrayList<SurveyOptionVO>())));
+		}
+
+		return surveyVO;
+	}
 }

@@ -42,4 +42,6 @@ public interface SalesBalanceService {
 
 	public int postSalesBalance(List<SalesBalanceVO> sbids, String userId) throws FLException;
 
+	public int rejectSalesBalance(SalesBalanceVO salesBalanceVO, String userId) throws FLException;
+
 }

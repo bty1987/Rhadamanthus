@@ -15,4 +15,6 @@ public interface PriceDao extends Dao<PricePO> {
 	public List<PricePO> queryPriceByGid(long gid, Short status);
 
 	public PricePO queryPriceByPid(long pid);
+
+	public int batchSavePrice(long gid, long gpid);
 }

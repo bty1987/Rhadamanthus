@@ -44,6 +44,16 @@ public class QuotationRtemPO implements Serializable {
 
 	private String comment;
 
+	public QuotationRtemPO() {
+		super();
+	}
+
+	public QuotationRtemPO(QuotationItemPO source, QuotationItemPO target) {
+		super();
+		this.source = source;
+		this.target = target;
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "qrid")

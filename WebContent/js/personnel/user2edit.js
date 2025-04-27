@@ -682,7 +682,7 @@ jQuery(function(a) {
                     "drganizationName": user.company.drganization.name
                 };
 
-                kingdeeUtils.userToKingdee(userData);
+                kingdeeUtils.user(userData);
 
             }, null, false);
         }

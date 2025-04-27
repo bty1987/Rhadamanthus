@@ -2,7 +2,6 @@ jQuery(function ($) {
 
     var accessories = {
         aid: params.manifest.aid,
-        accessories: params.manifest.accessories,
 
         refundBtn: com.focusPage("#refundBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
@@ -23,13 +22,6 @@ jQuery(function ($) {
             com.showAlert(com.warning, "请选择商品");
             return false;
         }
-
-        var accessoriesReturnItems = [];
-        var decoration = {};
-
-        com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": accessories.accessories.orderId}, function(res) {
-            decoration = res.decoration;
-        }, null, false);
 
         var options = {
             "accessories[0].aid": accessories.aid
@@ -60,31 +52,11 @@ jQuery(function ($) {
             options["accessoriesItems[" + i + "].outprice"] = $line.find(".outprice").text();
             options["accessoriesItems[" + i + "].num"] = crnum;
 
-            var house = decoration.house;
-
-            var returnItems = {
-                "num": crnum,
-                "shid": $line.attr("data-shid"),
-                "orderId": decoration.orderId,
-                "address": (house.village.cityProper.city.name == null ? " " : house.village.cityProper.city.name) + " " + (house.village.cityProper == null ? " " : house.village.cityProper.name) + " " + house.village.name + " " + (house.houseNumber == null ? " " : house.houseNumber),
-                "gooodNo": $line.attr('data-gno'),
-                "supervisorUserId": decoration.supervisor.userId,
-                "supervisorName": decoration.supervisor.userName,
-                "aiid": $line.attr('data-aiid')
-            };
-
-            accessoriesReturnItems.push(returnItems);
         }
 
         com.post(api.inventory.addManifestForAR, options, function (res) {
 
-            var accessoriesReturnData = {
-                "aid": accessories.aid,
-                "drganizationName": params.company.drganization.name,
-                "items": accessoriesReturnItems
-            };
-
-            kingdeeUtils.accessoriesReturnToKingdee(accessoriesReturnData);
+            kingdeeUtils.accessories(accessories.aid, 8, "SalesReturnStock");
         });
 
     });
@@ -102,8 +74,7 @@ jQuery(function ($) {
                 "data-cid": v.color.cid,
                 "data-fid": v.format.fid,
                 "data-shid": v.outstorehouse.shid,
-                "id": "line" + v.goods.gid,
-                "data-gno": v.goods.no
+                "id": "line" + v.goods.gid
             });
             $line.find('div.no').text(v.goods.no);
             $line.find('div.name').text(v.goods.name);

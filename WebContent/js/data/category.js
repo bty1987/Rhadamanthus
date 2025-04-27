@@ -190,7 +190,7 @@ jQuery(function($) {
                 "companyName": "方林集团"
             };
 
-            kingdeeUtils.categoryToKingdee(categoryData);
+            kingdeeUtils.category(categoryData);
         });
 
         category.modal.modal("hide");

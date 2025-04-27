@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var brandInstorer = {
 
@@ -18,7 +18,7 @@ jQuery(function ($) {
         },
 
     };
-    brandInstorer.modals.brandInstorerModal.on("hide.bs.modal", function () {
+    brandInstorer.modals.brandInstorerModal.on("hide.bs.modal", function() {
 
         com.cleanItems(brandInstorer.items);
         com.cleanTypeahead('instorer');
@@ -51,7 +51,8 @@ jQuery(function ($) {
     }, {
         fieId: "instorer.isLogin",
         name: "登陆状态",
-        prop: function (v) {
+        prop: function(v) {
+
             return v.instorer.isLogin == "0" ? "禁用" : "启用";
         },
         clazz: "red"
@@ -70,11 +71,11 @@ jQuery(function ($) {
     var linebtns = [{
         name: "删除",
         clazz: "btn-warning",
-        handle: function (v) {
+        handle: function(v) {
 
             com.post(api.communion.deleteBrandInstorer, {
                 "brandInstorer.biid": v.biid
-            }, function (res) {
+            }, function(res) {
 
                 com.showAlert(com.info, "操作成功");
 
@@ -82,11 +83,11 @@ jQuery(function ($) {
             });
         }
     }];
+    
     searcher.line("instorer.currentName", lineprops, linebtns).render();
 
-    com.focusPage('#addBrandInstorer').on("click", function () {
+    com.focusPage('#addBrandInstorer').on("click", function() {
         brandInstorer.modals.brandInstorerModal.modal("show");
-
     });
 
     function saveData() {
@@ -102,7 +103,7 @@ jQuery(function ($) {
             "brandInstorer.instorer.userId": com.typeahead(brandInstorer.items.instorer)
         };
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
@@ -110,6 +111,5 @@ jQuery(function ($) {
 
             brandInstorer.modals.brandInstorerModal.modal("hide");
         });
-
     }
 });

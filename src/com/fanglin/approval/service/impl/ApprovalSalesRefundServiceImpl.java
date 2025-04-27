@@ -124,7 +124,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			ApprovalSalesRefundVO approvalSalesRefundVO = new ApprovalSalesRefundVO();
 
 			approvalSalesRefundVO.setApproval(new ApprovalVO(new UserBaseVO(), new UserBaseVO()));
-			approvalSalesRefundVO.setSales(new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()));
+			approvalSalesRefundVO.setSales(new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()));
 
 			approvalSalesRefundVOs.add(approvalSalesRefundAO.ptv(approvalSalesRefundVO));
 		}
@@ -205,7 +205,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
-		String content = String.format("装修单号:%s,销售单号:%s,品牌:%s,退款金额:%.3f,类型:%s", salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), Arith.div(approvalSalesRefundVO.getRefund(), 1000.0), refundType);
+		String content = String.format("装修单号:%s,销售单号:%s,品牌:%s,退款金额:%.3f,类型:%s", salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand().getName(), Arith.div(approvalSalesRefundVO.getRefund(), 1000.0), refundType);
 
 		approvalPO = new ApprovalPO().init(sender, receiver, salesPO.getOrderId(), String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, content, approvalVO.getComment(), company);
 
@@ -326,6 +326,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(approvalPO.getSender().getUserId());
+
 		SalesRefundsPO salesRefundsPO = new SalesRefundsPO();
 
 		salesRefundsPO.setSales(salesPO);
@@ -335,6 +336,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesRefundsPO.setType(approvalSalesRefundPO.getType());
 		salesRefundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesRefundsPO.setStatus(SalesRefundsPO.STATUS_TYPE_REFUNDS_INT);
+		salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_NONE_INT);
 		salesRefundsPO.setComment(approvalPO.getComment());
 
 		salesRefundsDao.save(salesRefundsPO);

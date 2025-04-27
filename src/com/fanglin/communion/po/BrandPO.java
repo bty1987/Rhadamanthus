@@ -210,6 +210,11 @@ public class BrandPO implements java.io.Serializable {
 
 		BeanUtil.copyProperties(this, brandVO, Arrays.asList("category", "supplier"));
 
+		if (getCategory() != null) {
+			brandVO.setCategoryId(getCategory().getNo());
+			brandVO.setCategoryName(getCategory().getName());
+		}
+
 		return brandVO;
 	}
 }

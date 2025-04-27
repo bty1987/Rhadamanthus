@@ -8,13 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.QuotationBigCategoryVO;
+import com.fanglin.communion.vo.QuotationClassificationVO;
+import com.fanglin.communion.vo.QuotationSmallCategoryVO;
+import com.fanglin.communion.vo.QuotationTypeVO;
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationRtemPO;
+import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.dao.QuotationRtemDao;
 import com.fanglin.data.quotation.service.QuotationRtemService;
+import com.fanglin.data.quotation.vo.QuotationCtemVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.data.quotation.vo.QuotationRtemVO;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("quotationRtemService")
@@ -24,6 +33,9 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 	@Autowired
 	private QuotationRtemDao quotationRtemDao;
 
+	@Autowired
+	private QuotationItemDao quotationItemDao;
+
 	@Override
 	public List<QuotationRtemVO> queryQuotationRtem(QuotationRtemVO quotationRtemVO) throws FLException {
 
@@ -32,7 +44,9 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 
 		for (QuotationRtemPO quotationRtemPO : quotationRtemPOs) {
 
-			quotationRtemVOs.add(quotationRtemPO.ptv(new QuotationRtemVO(new QuotationItemVO(), new QuotationItemVO())));
+			QuotationItemVO quotationItemVO = new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO());
+
+			quotationRtemVOs.add(quotationRtemPO.ptv(new QuotationRtemVO(quotationItemVO, quotationItemVO)));
 		}
 
 		return quotationRtemVOs;
@@ -42,14 +56,35 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addQuotationRtem(QuotationRtemVO quotationRtemVO) throws FLException {
 
-		QuotationRtemPO quotationRtemPO = new QuotationRtemPO();
+		if (quotationRtemVO.getSource() == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		QuotationItemPO source = quotationItemDao.get(quotationRtemVO.getSource().getQiid());
+
+		if (source == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		if (quotationRtemVO.getTarget() == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		QuotationItemPO target = quotationItemDao.get(quotationRtemVO.getTarget().getQiid());
+
+		if (target == null) {
+			throw new FLException(200013, "报价项不存在");
+		}
+
+		QuotationRtemPO quotationRtemPO = new QuotationRtemPO(source, target);
 
 		BeanUtil.copyProperties(quotationRtemVO, quotationRtemPO, Arrays.asList("source", "target"));
 
-		quotationRtemPO.setSource(new QuotationItemPO(quotationRtemVO.getSource().getQiid()));
-		quotationRtemPO.setTarget(new QuotationItemPO(quotationRtemVO.getTarget().getQiid()));
-
 		quotationRtemDao.save(quotationRtemPO);
+
+		source.setIsRtem(quotationRtemDao.countQuotationRtem(source.getQiid()) > 0 ? QuotationItemPO.ISRTEM_CACSE_INT : QuotationItemPO.ISRTEM_NONE_INT);
+
+		quotationItemDao.update(source);
 
 		return 0;
 	}
@@ -60,9 +95,16 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 
 		QuotationRtemPO quotationRtemPO = quotationRtemDao.get(quotationRtemVO.getQrid());
 
+		if (quotationRtemPO == null) return 0;
+
 		quotationRtemDao.delete(quotationRtemPO);
+
+		QuotationItemPO source = quotationRtemPO.getSource();
+
+		source.setIsRtem(quotationRtemDao.countQuotationRtem(source.getQiid()) > 0 ? QuotationItemPO.ISRTEM_CACSE_INT : QuotationItemPO.ISRTEM_NONE_INT);
+
+		quotationItemDao.update(source);
 
 		return 0;
 	}
-
 }

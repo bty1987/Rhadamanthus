@@ -18,4 +18,6 @@ public interface ColorDao extends Dao<ColorPO> {
 
 	public ColorPO queryColorByName(long gid, String name);
 
+	public int batchSaveColor(long gid, long gpid);
+
 }

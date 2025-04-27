@@ -141,6 +141,14 @@ public class SalesBalanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "rejectSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectSalesBalance() throws FLException {
+
+		salesBalanceService.rejectSalesBalance(salesBalance, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public SalesBalanceVO getSalesBalance() {
 		return salesBalance;
 	}

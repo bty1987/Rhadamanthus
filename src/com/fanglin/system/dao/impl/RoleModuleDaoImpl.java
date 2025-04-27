@@ -111,7 +111,30 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	}
 
 	@Override
-	public int deleteRoleModuleByRid(int rid, Integer company) {
+	public int syncRoleModule(int rid, int cuid, List<Integer> companys) {
+
+		StringBuffer syncsql = new StringBuffer("insert into communion.rolemodule (rid, mid, link, access, cuid, company) ");
+
+		syncsql.append(" select rm1.* from (select rm.rid, rm.mid, rm.access, rm.link, :cuid, co.cid 'company' from communion.company co inner join communion.rolemodule rm where rm.rid = :rid and co.cid in :companys) rm1 ");
+		syncsql.append(" left join communion.rolemodule rm2 on (rm1.rid = rm2.rid and rm1.mid = rm2.mid and rm1.company = rm2.company) ");
+		syncsql.append(" where rm2.rmid is null ");
+
+		session().createSQLQuery(syncsql.toString()).setInteger("cuid", cuid).setInteger("rid", rid).setParameterList("companys", companys).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteRoleModule(int rid, int company) {
+
+		String sql = "delete from communion.rolemodule where rid = 1 and mid not in (select mid from (select mid from communion.rolemodule where rid1 = 1 and company1 = 1) t) and company != 1;";
+		session().createSQLQuery(sql).setInteger("rid", rid).setInteger("company", company).setInteger("rid1", rid).setInteger("company1", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteRoleModuleByRid(int rid, int company) {
 
 		String sql = "delete from communion.rolemodule where rid = :rid and company = :company";
 		session().createSQLQuery(sql).setInteger("rid", rid).setInteger("company", company).executeUpdate();
@@ -120,7 +143,7 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	}
 
 	@Override
-	public int deleteRoleModuleByRid(int rid, short system, Integer company) {
+	public int deleteRoleModuleByRid(int rid, short system, int company) {
 
 		String update = "update communion.rolemodule rm, communion.module m set rm.mid = -1 where rm.rid = :rid and rm.mid = m.mid and m.system = :system and rm.company = :company";
 		session().createSQLQuery(update).setInteger("rid", rid).setShort("system", system).setInteger("company", company).executeUpdate();
@@ -132,7 +155,7 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	}
 
 	@Override
-	public int deleteRoleModuleByMid(int mid, Integer company) {
+	public int deleteRoleModuleByMid(int mid, int company) {
 
 		String sql = "delete from communion.rolemodule where mid = :mid and company = :company";
 		session().createSQLQuery(sql).setInteger("mid", mid).setInteger("company", company).executeUpdate();

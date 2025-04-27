@@ -93,8 +93,16 @@ public class DrawLineAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pretreatDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pretreatDrawLine() throws FLException {
+
+		drawLineService.pretreatDrawLine(drawLine, constructionNodes, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "successDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setDrawLineForSuccess() throws FLException {
+	public String successDrawLine() throws FLException {
 
 		drawLine.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
 
@@ -104,7 +112,7 @@ public class DrawLineAction extends BaseListAction {
 	}
 
 	@Action(value = "failureDrawLine", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String setDrawLineForFailure() throws FLException {
+	public String failureDrawLine() throws FLException {
 
 		drawLine.setStatus(DrawLinePO.STATUS_FAIL_INT);
 

@@ -15,8 +15,8 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.system.po.RoleModuleRO;
 import com.fanglin.system.po.RoleModulePO;
+import com.fanglin.system.po.RoleModuleRO;
 import com.fanglin.utils.Paging;
 
 public interface RoleModuleDao extends Dao<RoleModulePO> {
@@ -41,10 +41,14 @@ public interface RoleModuleDao extends Dao<RoleModulePO> {
 
 	public int countRoleModuleByMid(int mid, Integer company);
 
-	public int deleteRoleModuleByRid(int rid, Integer company);
+	public int syncRoleModule(int rid, int cuid, List<Integer> companys);
 
-	public int deleteRoleModuleByRid(int rid, short system, Integer company);
+	public int deleteRoleModule(int rid, int company);
 
-	public int deleteRoleModuleByMid(int mid, Integer company);
+	public int deleteRoleModuleByRid(int rid, int company);
+
+	public int deleteRoleModuleByRid(int rid, short system, int company);
+
+	public int deleteRoleModuleByMid(int mid, int company);
 
 }

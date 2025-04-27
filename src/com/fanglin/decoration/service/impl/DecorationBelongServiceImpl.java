@@ -12,6 +12,7 @@
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -106,6 +107,28 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int tranDecorationBelong(DecorationBelongVO decorationBelongVO, List<DecorationBelongVO> decorationBelongVOs) throws FLException {
+
+		String orderId = decorationBelongVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_RESIGNED_INT, DecorationPO.STATUS_COMPLETED_INT).contains(decorationPO.getStatus())) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		for (DecorationBelongVO decorationBelong : decorationBelongVOs) {
+			tranDecorationBelong(decorationPO.getOrderId(), decorationBelong.getType(), decorationBelong.getBelonger().getUserId());
+		}
+
+		return 0;
+	}
+
 	public int tranDecorationBelong(String orderId, Short type, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
@@ -114,7 +137,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		UserPO userPO = userDao.get(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");

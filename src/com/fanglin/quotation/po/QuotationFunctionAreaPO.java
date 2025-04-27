@@ -36,6 +36,8 @@ public class QuotationFunctionAreaPO implements Serializable {
 
 	public static final short TYPE_NOT_COUNT_INT = 3; // 不计算
 
+	public static final short TYPE_CMPREH_INT = 7; // 综合
+
 	private long qfaId;
 
 	private QuotationPO quotation;

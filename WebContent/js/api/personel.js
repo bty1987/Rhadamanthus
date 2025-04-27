@@ -64,6 +64,15 @@ $.extend(api.index, {
     },
     macontrol: {
         url: "/views/personnel/macontrol.html"
+    },
+    supplierContract4create: {
+        url: "/views/personnel/supplierContract4create.html"
+    },supplierContractBrand: {
+        url: "/views/personnel/supplierContractBrand.html"
+    },supplierContractGoods: {
+        url: "/views/personnel/supplierContractGoods.html"
+    },supplierSignet: {
+        url: "/views/data/supplierSignet.html"
     }
 });
 
@@ -172,6 +181,41 @@ $.extend(api, {
             url: "queryUserContract.do"
         },
 
+        
+        querySupplierContract: {
+            url: "querySupplierContract.do"
+        },
+        viewSupplierContract: {
+            url: "viewSupplierContract.do"
+        },
+        signSupplierContractForCompany: {
+            url: "signSupplierContractForCompany.do"
+        },
+        signSupplierContractForUser: {
+            url: "signSupplierContractForUser.do"
+        },
+        affixSupplierContract: {
+            url: "affixSupplierContract.do"
+        },
+        expireSupplierContract: {
+            url: "expireSupplierContract.do"
+        },
+        filingSupplierContract: {
+            url: "filingSupplierContract.do"
+        },
+        addSupplierContract: {
+            url: "addSupplierContract.do",
+            server: "communion"
+        },
+        updateSupplierContract: {
+            url: "updateSupplierContract.do",
+            server: "communion"
+        },
+        deleteSupplierContract: {
+            url: "deleteSupplierContract.do",
+            server: "communion"
+        },
+        
         queryUserEducation: {
             url: "queryUserEducation.do"
         },
@@ -467,9 +511,42 @@ $.extend(api, {
             url: "filingUserContract.do",
             server: "communion"
         },
-
         queryUserFunction: {
             url: "queryUserFunction.do"
+        },
+        pageSupplierContractBrand: {
+            url: "pageSupplierContractBrand.do",
+            type: "query",
+            tranargs: [{
+                result: "supplierContractBrand",
+                args: ["cvalue", "breakpay"]
+            }]
+        },
+        querySupplierContractBrand: {
+            url: "querySupplierContractBrand.do",
+            type: "query",
+            tranargs: [{
+                result: "supplierContractBrand",
+                args: ["cvalue", "breakpay"]
+            }]
+        },
+        addSupplierContractBrand: {
+            url: "addSupplierContractBrand.do"
+        },
+        deleteSupplierContractBrand: {
+            url: "deleteSupplierContractBrand.do"
+        },
+        pageSupplierContractGoods: {
+            url: "pageSupplierContractGoods.do"     
+        },
+        querySupplierContractGoods: {
+            url: "querySupplierContractGoods.do"
+        },
+        addSupplierContractGoods: {
+            url: "addSupplierContractGoods.do"
+        },
+        deleteSupplierContractGoods: {
+            url: "deleteSupplierContractGoods.do"
         }
 
     }

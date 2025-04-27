@@ -237,7 +237,12 @@ $.extend(api, {
                 args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue"]
             }]
         },
-
+        sendSalesRefunds: {
+            url: "sendSalesRefunds.do"
+        },
+        affirmSalesRefunds: {
+            url: "affirmSalesRefunds.do"
+        },
         pageOales: {
             url: "pageOales.do",
             type: "query",
@@ -420,6 +425,9 @@ $.extend(api, {
         },
         postSalesBalance: {
             url: "postSalesBalance.do"
+        },
+        rejectSalesBalance: {
+            url: "rejectSalesBalance.do"
         },
         querySalesBalanceItemBySbid: {
             url: "querySalesBalanceItemBySbid.do",

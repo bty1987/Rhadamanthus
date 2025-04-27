@@ -11,10 +11,10 @@ public interface QuotationLabelService {
 
 	public void pageQuotationLabel(Paging paging, List<Filter> filters);
 
-	public int addQuotationLabel(QuotationLabelVO QuotationLabelVO) throws FLException;
+	public int addQuotationLabel(QuotationLabelVO quotationLabelVO) throws FLException;
 
-	public int updateQuotationLabel(QuotationLabelVO QuotationLabelVO) throws FLException;
+	public int updateQuotationLabel(QuotationLabelVO quotationLabelVO) throws FLException;
 
-	public int deleteQuotationLabel(QuotationLabelVO QuotationLabelVO) throws FLException;
+	public int deleteQuotationLabel(QuotationLabelVO quotationLabelVO) throws FLException;
 
 }

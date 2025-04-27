@@ -68,7 +68,7 @@
             "quotationNum": 0,
         }
     };
-    
+
     var pageConfig = drawNode.getConfig("customerService");
 
     quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
@@ -365,6 +365,49 @@
 
     var searcher = new Searcher();
 
+    var btnRecord = {
+        name: "记录",
+        clazz: "btn-primary",
+        handle: function(v) {
+
+            params.quotation.quotation = v;
+
+            params.urlLoadParams.pageType = "query";
+
+            com.popup4page("#quotationRecordPopUp", "/views/quotation/quotationRecord.html", "记录");
+        }
+    };
+
+    var btnAudit = {
+        name: "审核",
+        clazz: "btn-warning",
+        handle: function(v) {
+            com.post(api.quotation.auditQuotation, {
+                "quotation.qid": v.qid
+            });
+            searcher.doSearch();
+        },
+        show: function(v) {
+
+            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT,constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
+        }
+    };
+
+    var btnFinish = {
+        name: "完成",
+        clazz: "btn-warning",
+        handle: function(v) {
+            com.post(api.quotation.finishQuotation, {
+                "quotation.qid": v.qid
+            });
+            searcher.doSearch();
+        },
+        show: function(v) {
+
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_AUDI_INT);
+        }
+    };
+
     var btnCopy = {
         name: "复制",
         clazz: "btn-yellow",
@@ -415,6 +458,40 @@
         }
     };
 
+    var btnAudi = {
+        name: "审核",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
+            params.quotation.quotation = v;
+            quotation.pageType != null ? params.quotation.attpaging = "audi" : params.quotation.attpages = "audi";
+
+            com.switchPage(api.index.quotationPartIndex.url);
+        },
+        show: function(v) {
+
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_AUDI_INT);
+        }
+    };
+
+    var btnWork = {
+        name: "制作",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
+            params.quotation.quotation = v;
+            quotation.pageType != null ? params.quotation.attpaging = "work" : params.quotation.attpages = "work";
+
+            com.switchPage(api.index.quotationPartIndex.url);
+        },
+        show: function(v) {
+
+            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT,constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
+        }
+    };
+
     var btnView = {
         name: "查看",
         clazz: "btn-success",
@@ -422,8 +499,13 @@
 
             params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
             params.quotation.quotation = v;
+            quotation.pageType != null ? params.quotation.attpaging = null : params.quotation.attpages = null;
 
             com.switchPage(api.index.quotationPartIndex.url);
+        },
+        show: function(v) {
+
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_FINISH_INT);
         }
     };
 
@@ -607,7 +689,7 @@
             updateQuotationPrefer(v, quotationPrefer, managePrice);
         }
     };
-    
+
     var btnDecoration = {
         name: "装修单",
         clazz: "btn-info",
@@ -638,9 +720,9 @@
 
     if (quotation.pageType == null) {
 
-        var cardbtns = [btnCopy, btnUpdate, btnView, btnDelete, btnDefault, btnLock, btnUnlock, {
+        var cardbtns = [btnFinish, btnCopy, btnUpdate, btnWork, btnDelete, btnDefault, btnLock, btnUnlock, {
             type: "newline"
-        }, btnSelection, btnNormtion];
+        }, btnSelection, btnNormtion, btnRecord];
 
         com.focusPage('#fl-statement').statement("报价", "报价").show();
         com.focusPage('#decorationInfo').show();
@@ -695,9 +777,24 @@
         quotation.pageConfig = getConfig(params['urlLoadParams'].depage, 3);
 
         var cardbtns = [];
-        
+
+        if (quotation.pageConfig.pageBtn.contains("record"))
+            cardbtns.push(btnRecord);
+
+        if (quotation.pageConfig.pageBtn.contains("audit"))
+            cardbtns.push(btnAudit);
+
+        if (quotation.pageConfig.pageBtn.contains("finish"))
+            cardbtns.push(btnFinish);
+
         if (quotation.pageConfig.pageBtn.contains("btnDecoration"))
             cardbtns.push(btnDecoration);
+
+        if (quotation.pageConfig.pageBtn.contains("work"))
+            cardbtns.push(btnWork);
+
+        if (quotation.pageConfig.pageBtn.contains("audi"))
+            cardbtns.push(btnAudi);
 
         if (quotation.pageConfig.pageBtn.contains("view"))
             cardbtns.push(btnView);
@@ -965,6 +1062,16 @@
                 return quotation.pageConfig.propertyArr.contains("status");
             }
         }, {
+            field: "attstatus",
+            name: "业务状态",
+            prop: "attstatus",
+            dataset: constant.quotation().quotation.attstatus.keys,
+            clazz: "red",
+            show: function(v) {
+
+                return quotation.pageConfig.propertyArr.contains("attstatus");
+            }
+        }, {
             field: "content",
             name: "说明",
             prop: "content",
@@ -1105,22 +1212,18 @@
             var preferManageDiscount = quotationPrefer.manageDiscount != null ? quotationPrefer.manageDiscount : 0;
             var quotePrice = quotationPrefer.quotePrice != null ? quotationPrefer.quotePrice : 0;
 
-            var _discount = 0, _discountValue = 0;
+            var _preferPrice = 0, _discount = 0, _discountValue = 0, _manageDiscount = 0, _manageDiscountValue = 0;
+
             var _managePrice = utils.changeThrDecimal(utils.accAdd(v.managePrice, extensionManagePrice));
             var _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
             var _totalPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(v.undisPrice, v.disPrice), quotePrice), v.trafficPrice));
 
-            if (v.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
-                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(quotePrice, preferPrice), quotePrice));
-                _discountValue = preferDiscount;
-            } else {
-                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_totalPrice, preferPrice), _totalPrice));
-                _discountValue = v.discount;
-            }
-
-            _discount = _discount < 0 ? 0 : _discount > 1 ? 1 : _discount;
-
-            var protation = null;
+            var protation = {
+                "quotePrice": 1,
+                "preferPrice": 0,
+                "managePrice": 0,
+                "manageProfit": 0
+            };
 
             com.post(api.quotation.queryProtationForDefaultByOrderId, {
                 "protation.orderId": v.decoration.orderId
@@ -1130,24 +1233,49 @@
                     protation = res.protation;
             }, null, false);
 
-            if (utils.accMul(_discount, 10) < _discountValue || (protation && utils.accMul(_discount, 10) < protation.discount)) {
+            if (v.decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
+                
+                _preferPrice = quotationPrefer.quotePrice;
+                
+                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(quotationPrefer.quotePrice, preferPrice), quotationPrefer.quotePrice));
+                _discountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.quotePrice, protation.preferPrice), protation.quotePrice));
 
+                _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
+                _manageDiscountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.managePrice, protation.manageProfit), protation.managePrice));
+            } else {
+                
+                _preferPrice = _totalPrice;
+                
+                _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_totalPrice, preferPrice), _totalPrice));
+                _discountValue = quo.basicParams["quotation.discount"];
+
+                _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
+                _manageDiscountValue = quo.basicParams["quotation.discount"];
+            }
+
+            _discount = _discount < 0 ? 0 : _discount > 1 ? 1 : _discount;
+            _discountValue = _discountValue < 0 ? 0 : _discountValue > 1 ? 1 : _discountValue;
+
+            _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
+            _manageDiscountValue = _manageDiscountValue < 0 ? 0 : _manageDiscountValue > 1 ? 1 : _manageDiscountValue;
+            
+            if (_preferPrice < preferPrice) {
                 com.showAlert(com.warning, "优惠金额不合理");
+                return false;
+            }
 
+            if (_discount < _discountValue) {
+                com.showAlert(com.warning, "优惠金额不合理");
                 return false;
             }
 
             if (_managePrice < managePrefer) {
-
                 com.showAlert(com.warning, "管理优惠不能大于管理费");
-
                 return false;
             }
 
-            if (utils.accMul(_manageDiscount, 10) < preferManageDiscount || (protation && _manageDiscount < protation.manageDiscount)) {
-
+            if (_manageDiscount < _manageDiscountValue) {
                 com.showAlert(com.warning, "管理费优惠金额不合理");
-
                 return false;
             }
 
@@ -1233,6 +1361,9 @@
                 "approvalQuotationPrefer.taxPrice": options["quotation.taxPrice"],
                 "approvalQuotationPrefer.totalPrice": options["quotation.totalPrice"],
             };
+            
+            params["quotation.advancePrefer"] = null;
+            params["quotation.totalPrice"] = null;
 
             com.post(api.approval.submitApprovalForQuotationPrefer, params, function(res) {
 

@@ -330,6 +330,12 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
+	public int synceRoleModule(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId, Integer company) throws FLException {
+
+		return 0;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteModule(ModuleVO moduleVO, Integer company) throws FLException {
 

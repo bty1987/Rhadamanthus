@@ -128,6 +128,7 @@
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
+                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-yellow').html('合同');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
                     var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
@@ -161,6 +162,15 @@
                         com.focusPage("#tree3").removeData("tree");
                     });
 
+                    $btnContract.click(function() {
+
+                        params.personel.userId = v.userId;
+                        params.personel.uid = v.uid;
+                        params.historyPage = "/views/personnel/supplier.html";
+
+                        com.switchPage("/views/personnel/supplierContract.html");
+                    });
+
                     // 编辑
                     $btnEdit.click(function() {
 
@@ -192,7 +202,7 @@
                     if (supplier.pageType == 'manage') {
                         $divBtnWrap.append($btnEdit).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
                     } else {
-                        $divBtnWrap.append($btnEdit).appendTo($h3);
+                        $divBtnWrap.append($btnContract).append($btnEdit).appendTo($h3);
                     }
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);

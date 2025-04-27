@@ -2,6 +2,7 @@ package com.fanglin.sales.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,42 +17,57 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesRefundsDao;
 import com.fanglin.sales.dao.SalesRefundsItemDao;
+import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsItemPO;
 import com.fanglin.sales.po.SalesRefundsPO;
-import com.fanglin.sales.service.SalesRefundsItemService;
+import com.fanglin.sales.service.SalesRefundsService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesRefundsItemVO;
 import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
-@Service("RefundsItemService")
+@Service("SalesRefundsService")
 @Transactional(readOnly = true)
-public class SalesRefundsItemServiceImpl implements SalesRefundsItemService {
+public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 	@Autowired
-	private SalesRefundsDao refundsDao;
+	private SalesRefundsDao salesRefundsDao;
 
 	@Autowired
-	private SalesRefundsItemDao refundsItemDao;
+	private SalesRefundsItemDao salesRefundsItemDao;
+
+	@Autowired
+	private DecorationService decorationService;
+
+	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private SalesDao salesDao;
 
 	@Override
 	public void pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException {
 
 		List<SalesRefundsVO> refundsVOs = new ArrayList<SalesRefundsVO>();
-		List<SalesRefundsPO> refundsPOs = refundsDao.pageSalesRefunds(paging, filters);
+		List<SalesRefundsPO> refundsPOs = salesRefundsDao.pageSalesRefunds(paging, filters);
 
 		for (SalesRefundsPO refundsPO : refundsPOs) {
 
-			SalesRefundsVO refundsVO = new SalesRefundsVO(new UserVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()));
+			SalesRefundsVO refundsVO = new SalesRefundsVO(new UserVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()));
 
 			BeanUtil.copyProperties(refundsPO, refundsVO, Arrays.asList("creater", "sales"));
 			BeanUtil.copyProperties(refundsPO.getCreater(), refundsVO.getCreater(), Arrays.asList("role", "dept", "duty"));
@@ -68,7 +84,7 @@ public class SalesRefundsItemServiceImpl implements SalesRefundsItemService {
 	public List<SalesRefundsVO> querySalesRefundsBySid(SalesRefundsVO refundsVO) {
 
 		List<SalesRefundsVO> refundsVOs = new ArrayList<SalesRefundsVO>();
-		List<SalesRefundsPO> refundsPOs = refundsDao.querySalesRefundsBySid(refundsVO.getSales().getSid());
+		List<SalesRefundsPO> refundsPOs = salesRefundsDao.querySalesRefundsBySid(refundsVO.getSales().getSid());
 
 		for (SalesRefundsPO refundsPO : refundsPOs) {
 
@@ -88,7 +104,7 @@ public class SalesRefundsItemServiceImpl implements SalesRefundsItemService {
 	@Override
 	public List<SalesRefundsItemVO> querySalesRefundsItemBySid(SalesRefundsVO refundsVO) {
 
-		List<SalesRefundsItemPO> RefundsItemPOs = refundsItemDao.querySalesRefundsItemBySid(refundsVO.getSales().getSid());
+		List<SalesRefundsItemPO> RefundsItemPOs = salesRefundsItemDao.querySalesRefundsItemBySid(refundsVO.getSales().getSid());
 		List<SalesRefundsItemVO> RefundsItemVOs = new ArrayList<SalesRefundsItemVO>();
 
 		for (SalesRefundsItemPO refundsItemPO : RefundsItemPOs) {
@@ -110,7 +126,7 @@ public class SalesRefundsItemServiceImpl implements SalesRefundsItemService {
 	@Override
 	public List<SalesRefundsItemVO> querySalesRefundsItemByRid(SalesRefundsVO refundsVO) {
 
-		List<SalesRefundsItemPO> RefundsItemPOs = refundsItemDao.querySalesRefundsItemByRid(refundsVO.getRid());
+		List<SalesRefundsItemPO> RefundsItemPOs = salesRefundsItemDao.querySalesRefundsItemByRid(refundsVO.getRid());
 		List<SalesRefundsItemVO> RefundsItemVOs = new ArrayList<SalesRefundsItemVO>();
 
 		for (SalesRefundsItemPO refundsItemPO : RefundsItemPOs) {
@@ -127,6 +143,73 @@ public class SalesRefundsItemServiceImpl implements SalesRefundsItemService {
 		}
 
 		return RefundsItemVOs;
+	}
+
+	@Override
+	public int sendSalesRefunds(SalesRefundsVO refundsVO) throws FLException {
+
+		SalesRefundsPO salesRefundsPO = salesRefundsDao.get(refundsVO.getRid());
+
+		if (salesRefundsPO == null) {
+			throw new FLException(370016, "退货单不存在");
+		}
+
+		SalesPO salesPO = salesDao.get(salesRefundsPO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(370001, "销售单不存在");
+		}
+
+		String orderId = salesPO.getOrderId();
+
+		System.out.println(String.format("pages/sales/refunds/refunds?sid=%s&rid=%s&orderId=%s", salesPO.getSid(), refundsVO.getRid(), orderId));
+
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 退货单信息确认. ", orderId), String.format("pages/sales/refunds/refunds?sid=%s&rid=%s&orderId=%s", salesPO.getSid(), refundsVO.getRid(), orderId));
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmSalesRefunds(SalesRefundsVO refundsVO) throws FLException {
+
+		SalesRefundsPO salesRefundsPO = salesRefundsDao.get(refundsVO.getRid());
+
+		if (salesRefundsPO == null) {
+			throw new FLException(370016, "退货单不存在");
+		}
+
+		SalesPO salesPO = salesDao.get(salesRefundsPO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(370001, "销售单不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (refundsVO.getSales() == null && refundsVO.getSales().getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cusDecorationVO.setOrderId(decorationPO.getOrderId());
+		cusDecorationVO.setUnionId(refundsVO.getSales().getCustomer().getNo());
+
+		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
+		}
+
+		salesRefundsPO.setIsAffirm(SalesRefundsPO.ISAFFIRM_AFFIRM_INT);
+		salesRefundsPO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesRefundsDao.update(salesRefundsPO);
+
+		return 0;
 	}
 
 }

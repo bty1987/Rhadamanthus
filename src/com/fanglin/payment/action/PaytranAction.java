@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.service.PaytranService;
 import com.fanglin.payment.vo.PaytranVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -63,7 +64,9 @@ public class PaytranAction extends BaseListAction {
 	@Action(value = "addPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addPaytran() throws FLException {
 
-		paytranService.addPaytran(paytran, queryUserId(), queryCompany());
+		int company = paytran.getBompany() != null ? CompanyServiceImpl.decode(paytran.getBompany()) : queryCompany();
+
+		paytranService.addPaytran(paytran, queryUserId(), company);
 
 		return SUCCESS;
 	}
@@ -71,7 +74,9 @@ public class PaytranAction extends BaseListAction {
 	@Action(value = "checkPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkPaytran() throws FLException {
 
-		paytranService.checkPaytran(paytran, queryUserId(), queryCompany());
+		int company = paytran.getBompany() != null ? CompanyServiceImpl.decode(paytran.getBompany()) : queryCompany();
+
+		paytranService.checkPaytran(paytran, queryUserId(), company);
 
 		return SUCCESS;
 	}
@@ -79,7 +84,9 @@ public class PaytranAction extends BaseListAction {
 	@Action(value = "cancelPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelPaytran() throws FLException {
 
-		paytranService.cancelPaytran(paytran, queryCompany());
+		int company = paytran.getBompany() != null ? CompanyServiceImpl.decode(paytran.getBompany()) : queryCompany();
+
+		paytranService.cancelPaytran(paytran, company);
 
 		return SUCCESS;
 	}
@@ -95,7 +102,9 @@ public class PaytranAction extends BaseListAction {
 	@Action(value = "pospay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pospay() throws FLException {
 
-		paytranService.pospay(paytran, queryCompany());
+		int company = paytran.getBompany() != null ? CompanyServiceImpl.decode(paytran.getBompany()) : queryCompany();
+
+		paytranService.pospay(paytran, company);
 
 		return SUCCESS;
 	}

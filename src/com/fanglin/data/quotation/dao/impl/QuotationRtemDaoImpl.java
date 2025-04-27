@@ -1,5 +1,6 @@
 package com.fanglin.data.quotation.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -26,6 +27,15 @@ public class QuotationRtemDaoImpl extends DaoImpl<QuotationRtemPO> implements Qu
 	@SuppressWarnings("unchecked")
 	public List<QuotationRtemPO> queryQuotationRtem(Long sid) {
 		return session().createCriteria(QuotationRtemPO.class).add(Restrictions.eq("source.qiid", sid)).list();
+	}
+
+	@Override
+	public int countQuotationRtem(long sqiid) {
+
+		String sql = "select count(*) from quotation.quotationrtem where sqiid = :sqiid";
+		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("sqiid", sqiid).uniqueResult();
+
+		return num.intValue();
 	}
 
 }

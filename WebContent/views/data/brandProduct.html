@@ -1,0 +1,59 @@
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+        <div id="resultLists" class="clearfix tab-pane active"></div> <!--查询结果-->
+        <div id="pagenationBrandProduct" class="fl-page-wrap clearfix"></div> <!--分页-->
+   </div>
+</div>
+
+<div class="modal fade" id="addBrandProductModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">生产</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label no-padding-right orange">名称</label>
+                        <div class="col-md-9">
+                            <input type="text" id="name" maxlength="20" class="col-xs-10 col-sm-6 v_required" />
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="constructionNode" class="col-sm-3 control-label no-padding-right orange">工程节点</label>
+                        <div class="col-md-9">
+                            <select class="col-xs-10 col-sm-6 v_required" id="constructionNode" ></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="workNum" class="col-sm-3 control-label no-padding-right orange">工期</label>
+                        <div class="col-md-9">
+                            <input type="text" id="workNum" maxlength="20" class="col-xs-10 col-sm-6 v_required" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="comment" class="col-sm-3 control-label no-padding-right orange">说明</label>
+                        <div class="col-md-9">
+                            <input type="text" id="comment" maxlength="20" class="col-xs-10 col-sm-6" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveItemBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="canceItemlBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/brandProduct.js']);
+</script>
+

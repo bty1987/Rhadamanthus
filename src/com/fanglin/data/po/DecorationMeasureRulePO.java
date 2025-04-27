@@ -11,12 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "decorationMeasureRule", catalog = "data")
+@Table(name = "decorationmeasurerule", catalog = "data")
 public class DecorationMeasureRulePO implements Serializable {
 
 	private static final long serialVersionUID = 5783409708080638787L;
 
-	private long dmid;
+	private long dmrid;
 
 	private String name;
 
@@ -30,13 +30,13 @@ public class DecorationMeasureRulePO implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "dmid")
-	public long getDmid() {
-		return dmid;
+	@Column(name = "dmrid")
+	public long getDmrid() {
+		return dmrid;
 	}
 
-	public void setDmid(long dmid) {
-		this.dmid = dmid;
+	public void setDmrid(long dmrid) {
+		this.dmrid = dmrid;
 	}
 
 	@Column(name = "name")

@@ -1271,7 +1271,7 @@
                 "drganizationName": company.drganization.name
             };
 
-            kingdeeUtils.userToKingdee(userData);
+            kingdeeUtils.user(userData);
         });
     }
 

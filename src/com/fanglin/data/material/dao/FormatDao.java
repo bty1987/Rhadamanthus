@@ -18,4 +18,6 @@ public interface FormatDao extends Dao<FormatPO> {
 
 	public FormatPO queryFormatByInfo(long gid, String info);
 
+	public int batchSaveFormat(long gid, long gpid);
+
 }

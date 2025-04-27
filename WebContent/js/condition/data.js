@@ -1674,5 +1674,46 @@ Condition.addupRule("data", {
             keyPath: "key",
             valuePath: "value"
         }
+    },
+    "goodsRecord-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().goodsRecord.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "goodsRecord-operator": {
+        label: "操作人",
+        type: "autofill",
+        submitConfig: {
+            name: "operator.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":"0" },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "goodsRecord-operateTime": {
+        label: "操作时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "operateTime",
+            op: "between",
+            validate: null
+        }
     }
 });

@@ -229,12 +229,25 @@ jQuery(function($) {
                 delete data["con-company-name"];
             }
 
+            var url = api.decoration.addDecorationContract;
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };
+            
+            if(params.decoration.contract && params.decoration.contract.dcid){
+                url = api.decoration.makeDecorationContract;
+                options["decorationContract.dcid"] = params.decoration.contract.dcid
+            }
+
+            console.log(options);
+
+            com.post(url, options, function(res) {
+
+                com.closePopup();
+            });
 
             console.log(data);
 
@@ -252,7 +265,7 @@ jQuery(function($) {
             mask.css("top", target.height() - mask.height() + 30);
             popup.css("overflow", "hidden");
 
-            com.post(api.decoration.addDecorationContract, options, function(res) {
+            com.post(url, options, function(res) {
 
                 com.closePopup();
             }, function(res) {

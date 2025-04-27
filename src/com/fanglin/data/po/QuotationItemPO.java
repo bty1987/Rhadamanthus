@@ -54,6 +54,10 @@ public class QuotationItemPO implements Serializable {
 
 	public static final short TYPE_UNACHE_INT = 4;
 
+	public static final short ISRTEM_NONE_INT = 0;
+
+	public static final short ISRTEM_CACSE_INT = 1;
+
 	private long qiid;
 
 	private String no;
@@ -90,13 +94,15 @@ public class QuotationItemPO implements Serializable {
 
 	private int achePrice;
 
+	private String formula;
+
 	private short type;
 
 	private short status;
 
 	private short discount;
 
-	private String formula;
+	private short isRtem;
 
 	private String comment;
 
@@ -316,6 +322,15 @@ public class QuotationItemPO implements Serializable {
 		this.formula = formula;
 	}
 
+	@Column(name = "isRtem")
+	public short getIsRtem() {
+		return isRtem;
+	}
+
+	public void setIsRtem(short isRtem) {
+		this.isRtem = isRtem;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -330,17 +345,12 @@ public class QuotationItemPO implements Serializable {
 		BeanUtil.copyProperties(this, quotationItemVO, Arrays.asList("version", "category", "classification", "bigCategory", "smallCategory", "unit", "workType", "quotationCtem"));
 
 		if (quotationItemVO.getVersion() != null) BeanUtil.copyPropertie(getQuotationVersion(), quotationItemVO.getVersion());
-
 		if (quotationItemVO.getCategory() != null) BeanUtil.copyPropertie(getQuotationType(), quotationItemVO.getCategory());
-
 		if (quotationItemVO.getClassification() != null) BeanUtil.copyPropertie(getQuotationClassification(), quotationItemVO.getClassification());
-
 		if (quotationItemVO.getBigCategory() != null) BeanUtil.copyPropertie(getQuotationBigCategory(), quotationItemVO.getBigCategory());
-
 		if (quotationItemVO.getSmallCategory() != null) BeanUtil.copyPropertie(getQuotationSmallCategory(), quotationItemVO.getSmallCategory());
 
 		if (quotationItemVO.getUnit() != null) BeanUtil.copyPropertie(getMeasurementUnit(), quotationItemVO.getUnit());
-
 		if (quotationItemVO.getWorkType() != null) BeanUtil.copyPropertie(getWorkType(), quotationItemVO.getWorkType());
 
 		if (quotationItemVO.getQuotationCtem() != null) BeanUtil.copyPropertie(getQuotationCtem(), quotationItemVO.getQuotationCtem());

@@ -110,7 +110,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		paging.setData(salesPaymentVOs);
@@ -123,7 +123,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return salesPaymentVOs;
@@ -154,7 +154,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return salesPaymentVOs;
@@ -168,7 +168,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
+			salesPaymentVOs.add(salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()))));
 		}
 
 		return salesPaymentVOs;
@@ -179,7 +179,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPaymentVO.getSpid());
 
-		return salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(),new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO())));
+		return salesPaymentPO.ptv(new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new BrandVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO())));
 	}
 
 	@Override
@@ -855,6 +855,24 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmSalesPayment(SalesPaymentVO salesPayment) throws FLException {
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPayment.getSpid());
+
+		if (salesPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		salesPaymentPO.setIsAffirm(SalesPaymentPO.ISAFFIRM_CONFIRM_SHORT);
+		salesPaymentPO.setAffirmTime(new Timestamp(System.currentTimeMillis()));
+
+		salesPaymentDao.update(salesPaymentPO);
+
+		return 0;
+	}
+
 	// 撤销定金销售款
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -1108,6 +1126,21 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		String orderId = salesPaymentPO.getSales().getOrderId();
 
 		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/redirect/redirect?orderId=%s&pid=%s&paymentType=3&atttype=1", orderId, salesPaymentPO.getSpid()));
+
+	}
+
+	@Override
+	public void pushSalesPayment(SalesPaymentVO salesPayment) throws FLException {
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPayment.getSpid());
+
+		if (salesPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		String orderId = salesPaymentPO.getSales().getOrderId();
+
+		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payment/confirm/confirm?orderId=%s&pid=%s&paymentType=3", orderId, salesPaymentPO.getSpid()));
 
 	}
 

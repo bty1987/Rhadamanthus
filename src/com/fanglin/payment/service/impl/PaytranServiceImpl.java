@@ -545,7 +545,7 @@ public class PaytranServiceImpl implements PaytranService {
 				throw new FLException(140013, "订单不存在");
 			}
 
-			company = decorationPO.getCompany();
+			company = decorationPO.getBompany();
 			grade = decorationPO.getGrade();
 		}
 
@@ -850,7 +850,7 @@ public class PaytranServiceImpl implements PaytranService {
 			paytranPO.setOutOrderNo(orderNo);
 		}
 
-		SystemConfigPO airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_POSPAY_PATH_STR", decorationPO.getCompany());
+		SystemConfigPO airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_POSPAY_PATH_STR", decorationPO.getBompany());
 
 		if (airpos == null || "".equals(airpos.getValue())) {
 			throw new FLException(150071, "不支持其他支付平台");

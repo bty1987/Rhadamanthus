@@ -85,7 +85,8 @@ jQuery(function($) {
 		isCollect: "",
 		pageConfig: {},
 		typeNo: 4,
-		atttype: 0
+		atttype: 0,
+		decoration: {}
 	};
 
 	//隐藏触发
@@ -125,8 +126,6 @@ jQuery(function($) {
 	});
 
 	paymentUtils.getReceiptType(servicePayment);
-
-	com.selectTypeahead("cashInfo", servicePayment.cashUtil, "key", "value", null);
 
 	//转账方式(银行)
 	servicePayment.btns.checkvAdd.click(function(){
@@ -375,6 +374,16 @@ jQuery(function($) {
 
 		servicePayment.payment = payment;
 
+		// 查询装修单信息
+		com.post(api.decoration.queryDecorationForCommonByOrderId, {
+			"decoration.orderId": payment.decoration.orderId
+		}, function(res) {
+
+			servicePayment.decoration = res.decoration;
+		}, null, false);
+
+		paymentUtils.getReceiptType(servicePayment);
+
 		servicePayment.items.comment.html("");
 
 		servicePayment.isCollect == 2 ? servicePayment.items.myModalLabel.html("退款信息") : servicePayment.items.myModalLabel.html("付款信息");
@@ -390,11 +399,13 @@ jQuery(function($) {
 		if(servicePayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
 		if(servicePayment.pageConfig.paytypes.contains("advance")) paymentUtils.initAdvance(servicePayment, type, {"advancePayment.decoration.orderId": payment.decoration.orderId}, "balanceAdvance");
 
+		com.selectTypeahead("cashInfo", servicePayment.cashUtil, "key", "value", null); // 现金
+
 		//根据装修单等级获取收据类型等级
 		var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
 
 		// 根据等级在数组中筛选出符合要求的用于显示
-		paymentUtils.initBankGrade(servicePayment, grade);
+		paymentUtils.initBankGrade(servicePayment, grade); // 刷卡&银行
 
 		servicePayment.modals.collectModal.modal("show");
 
@@ -418,6 +429,18 @@ jQuery(function($) {
 		if(servicePayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(servicePayment);
 		if(servicePayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(servicePayment, 1);
 		if(servicePayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
+
+		// 查询装修单信息
+		com.post(api.decoration.queryDecorationForCommonByOrderId, {
+			"decoration.orderId": v.decoration.orderId
+		}, function(res) {
+
+			servicePayment.decoration = res.decoration;
+		}, null, false);
+
+		paymentUtils.getReceiptType(servicePayment);
+
+		com.selectTypeahead("cashInfo", servicePayment.cashUtil, "key", "value", null); // 现金
 
 		//根据装修单等级获取收据类型等级
 		var grade = ["A", "C"].contains(v.decoration.grade) ? "A" : "";

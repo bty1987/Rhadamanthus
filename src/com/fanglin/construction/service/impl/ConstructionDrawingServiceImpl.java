@@ -11,10 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionDrawingDao;
+import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionDrawingPO;
 import com.fanglin.construction.po.ConstructionPO;
+import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.service.ConstructionDrawingService;
 import com.fanglin.construction.vo.ConstructionDrawingVO;
+import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
@@ -35,6 +38,9 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 
 	@Autowired
 	private ConstructionDao constructionDao;
+
+	@Autowired
+	private ConstructionScheduleDao constructionScheduleDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -112,7 +118,24 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 		constructionDrawingPO.setCreater(userDao.queryUserByUserId(userId));
 		constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
-		constructionDrawingDao.saveOrUpdate(constructionDrawingPO);
+		ConstructionSchedulePO constructionSchedulePO = null;
+
+		if (constructionDrawingVO.getCsid() != null) {
+			constructionSchedulePO = constructionScheduleDao.get(constructionDrawingVO.getCsid());
+		}
+
+		if (constructionSchedulePO == null) {
+			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(constructionDrawingVO.getCid(), constructionDrawingVO.getSchedule());
+		}
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		constructionDrawingPO.setCsid(constructionSchedulePO.getCsid());
+		constructionDrawingPO.setCnid(constructionSchedulePO.getCnid());
+
+		constructionDrawingDao.save(constructionDrawingPO);
 
 		constructionDrawingVO.setCdId(constructionDrawingPO.getCdId());
 
@@ -121,27 +144,40 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<ConstructionDrawingVO> addConstructionDrawings(List<ConstructionDrawingVO> constructionDrawings, String userId) {
+	public List<ConstructionDrawingVO> addConstructionDrawings(ConstructionScheduleVO constructionScheduleVO, List<ConstructionDrawingVO> constructionDrawings, String userId) {
 
 		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>();
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		for (ConstructionDrawingVO constructionDrawing : constructionDrawings) {
+		ConstructionSchedulePO constructionSchedulePO = null;
+
+		if (constructionScheduleVO.getCsid() != null) {
+			constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+		}
+
+		if (constructionSchedulePO == null) {
+			constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(constructionScheduleVO.getCid(), constructionScheduleVO.getSchedule());
+		}
+
+		for (ConstructionDrawingVO constructionDrawingVO : constructionDrawings) {
 
 			ConstructionDrawingPO constructionDrawingPO = new ConstructionDrawingPO();
 
-			BeanUtil.copyProperties(constructionDrawing, constructionDrawingPO, Arrays.asList("creater"));
-			// 新添加的创建人和创建时间
+			BeanUtil.copyProperties(constructionDrawingVO, constructionDrawingPO, Arrays.asList("creater"));
+
 			constructionDrawingPO.setCreater(creater);
 			constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
+			if (constructionSchedulePO == null) continue;
+
+			constructionDrawingPO.setCsid(constructionSchedulePO.getCsid());
+			constructionDrawingPO.setCnid(constructionSchedulePO.getCnid());
+
 			constructionDrawingDao.save(constructionDrawingPO);
 
-			ConstructionDrawingVO _constructionDrawingVO = new ConstructionDrawingVO();
-			BeanUtil.copyProperties(constructionDrawingPO, _constructionDrawingVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(constructionDrawingPO, constructionDrawingVO, Arrays.asList("creater"));
 
-			constructionDrawingVOs.add(_constructionDrawingVO);
 		}
 
 		return constructionDrawingVOs;

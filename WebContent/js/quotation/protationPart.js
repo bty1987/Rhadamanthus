@@ -66,6 +66,12 @@ var protationPart = (function() {
                 }),
                 // 优惠价格修改
                 $preferPriceBlueButton: com.focusPage('#preferPriceBlueButton').click(function() {
+                    
+                    quo.oldProtation.preferPrice = quo.basicParams["protation.preferPrice"];
+                    quo.oldProtation.manageProfit = quo.basicParams["protation.manageProfit"];
+                    quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
+                    quo.oldProtation.discount = quo.basicParams["protation.discount"];
+                    quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
 
                     com.focusPage('#functionAreaPreferPrice').modal("show");
 
@@ -799,6 +805,8 @@ var protationPart = (function() {
                 quo.oldProtation.advanceProfit = quo.basicParams["protation.advanceProfit"];
                 quo.oldProtation.discount = quo.basicParams["protation.discount"];
                 quo.oldProtation.manageDiscount = quo.basicParams["protation.manageDiscount"];
+                
+                console.log(quo.oldProtation);
 
                 var subd = quo.basicParams["protation.subdPrice"];
                 var subm = quo.basicParams["protation.submPrice"];
@@ -857,9 +865,12 @@ var protationPart = (function() {
                     "approvalProtationPrefer.preferPrice": quo.basicParams["protation.preferPrice"],
                     "approvalProtationPrefer.managePrefer": quo.basicParams["protation.manageProfit"],
                     "approvalProtationPrefer.advancePrefer": quo.basicParams["protation.advanceProfit"],
-                    "approvalProtationPrefer.taxPrice": quo.basicParams["protation.totalPrice"],
+                    "approvalProtationPrefer.taxPrice": quo.basicParams["protation.taxPrice"],
                     "approvalProtationPrefer.totalPrice": quo.basicParams["protation.totalPrice"],
                 }, quo.basicParams);
+                
+                params["protation.advanceProfit"] = null;
+                params["protation.totalPrice"] = null;
 
                 com.post(api.approval.submitApprovalForProtationPrefer, params, function(res) {
 

@@ -105,7 +105,7 @@ public class QuotationItemServiceImpl implements QuotationItemService {
 
 		if (quotationPriceVO == null) return;
 
-		List<QuotationPricePO> quotationPricePOs = quotationPriceDao.pageQuotationPrice(paging, filters, quotationItemVO.getVersion().getNo(), quotationPriceVO.getUpdateTime());
+		List<QuotationPricePO> quotationPricePOs = quotationPriceDao.pageQuotationPrice(paging, filters, quotationItemVO.getVersion().getNo(), quotationPriceVO.getUpdateTime(), quotationItemVO.getType());
 
 		for (QuotationPricePO quotationPricePO : quotationPricePOs) {
 			quotationItemVOs.add(quotationPricePO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO(), new QuotationCtemVO(null, null, null, null, null, null))));

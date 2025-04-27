@@ -33,6 +33,10 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	public static final short STATUS_TYPE_REFUNDS_INT = 0;
 
+	public static final short ISAFFIRM_AFFIRM_INT = 0;
+
+	public static final short ISAFFIRM_NONE_INT = 0;
+
 	public static final String COLUMN_CUID_STR = "user.uid";
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
@@ -51,7 +55,7 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	private short type; // 类型
 
-	private String comment; // 说明
+	private short isAffirm; // 确认状态 , 0: 确认 , 1: 未确认
 
 	private UserPO creater; // 创建人
 
@@ -59,14 +63,19 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	private Timestamp balanceTime;// 结算时间
 
+	private Timestamp affirmTime;// 确认时间
+
+	private String comment; // 说明
+
 	public SalesRefundsPO(long rid) {
+
 		super();
+
 		this.rid = rid;
 	}
 
 	public SalesRefundsPO() {
 		super();
-
 	}
 
 	@Id
@@ -152,6 +161,24 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	@Column(name = "comment")

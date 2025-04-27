@@ -213,6 +213,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(drawLinePO.getDecoration().getHouse().getBuildArea(), decorationPO.getCompany());
+
 		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
 		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
 
@@ -296,6 +297,82 @@ public class DrawLineServiceImpl implements DrawLineService {
 	}
 
 	@Override
+	public int pretreatDrawLine(DrawLineVO drawLineVO, List<ConstructionNodeVO> constructionNodes, String userId) throws FLException {
+
+		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
+
+		if (drawLinePO == null) {
+			throw new FLException(120014, "不存在该放线信息");
+		}
+
+		if (drawLinePO.getStatus() != DrawLinePO.STATUS_APPLICATION_INT) {
+			throw new FLException(120017, "订单放线状态错误");
+		}
+
+		DecorationPO decorationPO = drawLinePO.getDecoration();
+
+		String orderId = decorationPO.getOrderId();
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+
+		if (constructionPO == null) {
+			constructionPO = new ConstructionPO(decorationPO);
+
+			ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(drawLinePO.getDecoration().getHouse().getBuildArea(), decorationPO.getCompany());
+
+			SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
+			SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
+
+			if (constructionCostPO == null) {
+				constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
+				constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
+			} else {
+				constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
+				constructionPO.setSalaryLimit(constructionCostPO.getSalary());
+			}
+
+			constructionPO.setStartTime(drawLineVO.getApplayTime());
+			constructionPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
+
+			constructionDao.save(constructionPO);
+		}
+
+		constructionDao.flush();
+
+		long cid = constructionPO.getCid();
+
+		ConstructionInfoPO constructionInfo = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
+
+		if (constructionInfo == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		int timelimit = 0;
+
+		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
+
+			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit + constructionNodeVO.getTimeLimit()));
+
+			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodeVO.getCnid());
+
+			if (constructionSchedulePO != null) {
+
+				constructionSchedulePO.setStartTime(startTime);
+				constructionSchedulePO.setEndTime(endTime);
+
+				constructionScheduleDao.update(constructionSchedulePO);
+			} else {
+				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid()));
+			}
+
+			timelimit = timelimit + constructionNodeVO.getTimeLimit();
+		}
+
+		return 0;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int successDrawLine(DrawLineVO drawLineVO, List<ConstructionNodeVO> constructionNodes, String userId) throws FLException {
 
@@ -334,7 +411,17 @@ public class DrawLineServiceImpl implements DrawLineService {
 			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit));
 			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit + constructionNodeVO.getTimeLimit()));
 
-			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid()));
+			ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByCid(cid, constructionNodeVO.getCnid());
+
+			if (constructionSchedulePO != null) {
+
+				constructionSchedulePO.setStartTime(startTime);
+				constructionSchedulePO.setEndTime(endTime);
+
+				constructionScheduleDao.update(constructionSchedulePO);
+			} else {
+				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid()));
+			}
 
 			timelimit = timelimit + constructionNodeVO.getTimeLimit();
 		}

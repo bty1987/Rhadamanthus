@@ -52,6 +52,8 @@ public interface DecorationService {
 
 	public void pageDecorationForEscorter(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
+	public void pageDecorationForMaterialer(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
+
 	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication) throws FLException;
 
 	public List<DecorationVO> queryDecorationByCustomerId(DecorationVO decorationVO, Authentication authentication) throws FLException;

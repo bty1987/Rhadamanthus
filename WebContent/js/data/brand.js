@@ -216,6 +216,42 @@ jQuery(function($) {
             return (brand.pageType == "default" || brand.pageType == "finance");
         }
     }, {
+        name: "生产",
+        clazz: "btn-danger",
+        handle: function(v) {
+        	
+        	params.data.brand = v;
+        	
+        	com.popup4page("#brandProductPopUp", "/views/data/brandProduct.html", "生产");
+        }
+    }, {
+        name: "交付",
+        clazz: "btn-danger",
+        handle: function(v) {
+        	
+        	params.data.brand = v;
+        	
+        	com.popup4page("#brandDeliverPopUp", "/views/data/brandDeliver.html", "交付");
+        }
+    }, {
+        name: "安装",
+        clazz: "btn-danger",
+        handle: function(v) {
+        	
+        	params.data.brand = v;
+        	
+        	com.popup4page("#brandInstallPopUp", "/views/data/brandInstall.html", "安装");
+        }
+    }, {
+        name: "服务",
+        clazz: "btn-danger",
+        handle: function(v) {
+        	
+        	params.data.brand = v;
+        	
+        	com.popup4page("#brandServerPopUp", "/views/data/brandServer.html", "服务");
+        }
+    }, {
         name: "结算",
         clazz: "btn-danger",
         handle: function(v) {
@@ -447,9 +483,10 @@ jQuery(function($) {
             brand.modals.selectionModal.modal("hide");
         });
     }
-
+    
     function supplier(v) {
-
+        console.log('Hello, World!');
+        console.log(v);
         params.data.brand = v;
 
         com.popup4page("#supplierPopUp", "/views/data/brandSupplier.html", "厂商");
@@ -501,7 +538,7 @@ jQuery(function($) {
                 "categoryId": brand.items.category.val()
             };
 
-            kingdeeUtils.brandToKingdee(brandData);
+            kingdeeUtils.brand(brandData);
         });
 
         brand.modals.brandModal.modal("hide");

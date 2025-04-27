@@ -42,7 +42,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.DecorationBusitypePO;
-import com.fanglin.data.po.DecorationMeasureItemPO;
+import com.fanglin.data.po.DecorationMeasureRuleItemPO;
 import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationVersionDao;
@@ -590,7 +590,6 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-
 			decorationVO.setDiscount(decorationPO.getDiscount());
 
 			addition(decorationPO.getAddition(), decorationVO);
@@ -655,7 +654,6 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
-
 			decorationVO.setDiscount(decorationPO.getDiscount());
 
 			addition(decorationPO.getAddition(), decorationVO);
@@ -729,7 +727,40 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			decorationVO.setDiscount(decorationPO.getDiscount());
 
+			addition(decorationPO.getAddition(), decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
+
+	@Override
+	public void pageDecorationForMaterialer(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
+		String userId = authentication.getUserId();
+		int company = authentication.getCompany();
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
+
+		filters.add(new Filter("decoration.materialer.userId", userPO.getUserId(), "eq"));
+
+		List<Integer> designDepartmentIds = null;
+		List<Short> statuses = null;
+
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationPO.ptvcascade(decorationVO);
+
+			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 			decorationVO.setDiscount(decorationPO.getDiscount());
 
 			addition(decorationPO.getAddition(), decorationVO);
@@ -804,6 +835,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationVO.setEscorter(new UserBaseVO());
 		decorationVO.setQuoter(new UserBaseVO());
 		decorationVO.setSupervisor(new UserBaseVO());
+		decorationVO.setMaterialer(new UserBaseVO());
 
 		decorationPO.ptvcascade(decorationVO);
 
@@ -821,6 +853,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationVO.setDompany(CompanyServiceImpl.encode(decorationPO.getCompany()));
 		decorationVO.setConpany(CompanyServiceImpl.encode(decorationPO.getConpany()));
+		decorationVO.setBompany(CompanyServiceImpl.encode(decorationPO.getBompany()));
 
 		return decorationVO;
 	}
@@ -903,15 +936,13 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
 		decorationPO.setHouseType(decorationVO.getHouseType());
-		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
 		decorationPO.setResourceType(decorationVO.getResourceType());// 量房0 资源1
+		decorationPO.setBusitype(new DecorationBusitypePO(decorationVO.getBusitype()));
 		decorationPO.setOrderTotalPrice(0);
-		DecorationBusitypePO decorationBusitypePO = new DecorationBusitypePO();
-		decorationBusitypePO.setDbid(decorationVO.getBusitype());
-		decorationPO.setBusitype(decorationBusitypePO);
-		decorationPO.setCompany(company);
 		decorationPO.setPaySacle((short) 0);
 		decorationPO.setGrade(decorationVO.getGrade());
+		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
+		decorationPO.setCompany(company);
 
 		decorationPO.setCustomer(new CustomerPO(decorationVO.getCustomer().getCid()));
 		decorationPO.setHouse(new HousePO(decorationVO.getHouse().getHid()));
@@ -927,6 +958,17 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationVO.getEscorter() != null) {
 			UserPO escorter = userDao.queryUserByUserId(decorationVO.getEscorter().getUserId());
 			decorationPO.setEscorter(escorter);
+		}
+
+		if (decorationVO.getMaterialer() != null) {
+			UserPO materialer = userDao.queryUserByUserId(decorationVO.getMaterialer().getUserId());
+			decorationPO.setMaterialer(materialer);
+		}
+
+		if (decorationVO.getBompany() != null) {
+			decorationPO.setBompany(CompanyServiceImpl.decode(decorationVO.getBompany()));
+		} else {
+			decorationPO.setBompany(company);
 		}
 
 		decorationPO.setDesigner(designer);
@@ -1038,6 +1080,11 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setEscorter(escorter);
 		}
 
+		if (decorationVO.getMaterialer() != null) {
+			UserPO materialer = userDao.queryUserByUserId(decorationVO.getMaterialer().getUserId());
+			decorationPO.setMaterialer(materialer);
+		}
+
 		HousePO housePO = decorationPO.getHouse();
 
 		if (decorationVO.getHouse() != null && decorationVO.getHouse().getBuildArea() != null) {
@@ -1072,7 +1119,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setCustomer(customerPO);
 		decorationDao.update(decorationPO);
-
 	}
 
 	@Override
@@ -1562,9 +1608,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		List<Integer> companys = new ArrayList<Integer>(Arrays.asList(company));
 
-		List<DecorationMeasureItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
+		List<DecorationMeasureRuleItemPO> measures = decorationMeasureRuleDao.queryDecorationMeasureRule(company);
 
-		for (DecorationMeasureItemPO measure : measures) {
+		for (DecorationMeasureRuleItemPO measure : measures) {
 			companys.add(measure.getCompany());
 		}
 

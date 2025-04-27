@@ -215,6 +215,10 @@ jQuery(function($) {
             options["constructionDrawing.csid"] = csid;
             options["constructionDrawing.schedule"] = schedule;
 
+            options["constructionSchedule.cid"] = params.construction.cid;
+            options["constructionSchedule.csid"] = csid;
+            options["constructionSchedule.schedule"] = schedule;
+
             com.post(api.construction.addConstructionDrawing, options, function(res) {
 
                 var drawing = res.constructionDrawing;

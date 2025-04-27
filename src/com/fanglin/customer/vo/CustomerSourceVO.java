@@ -23,6 +23,8 @@ public class CustomerSourceVO implements Serializable {
 
 	private Short customerType;
 
+	private Short houseAttr;
+
 	private VillageVO village;
 
 	private String houseNumber;
@@ -136,6 +138,22 @@ public class CustomerSourceVO implements Serializable {
 
 	public void setIntention(String intention) {
 		this.intention = intention;
+	}
+
+	public Short getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(Short customerType) {
+		this.customerType = customerType;
+	}
+
+	public Short getHouseAttr() {
+		return houseAttr;
+	}
+
+	public void setHouseAttr(Short houseAttr) {
+		this.houseAttr = houseAttr;
 	}
 
 	public String getPrice() {
@@ -257,14 +275,6 @@ public class CustomerSourceVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
-	}
-
-	public Short getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(Short customerType) {
-		this.customerType = customerType;
 	}
 
 	public Short getDemand() {

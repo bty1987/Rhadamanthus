@@ -89,7 +89,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 			sqlQuery.setShort("isPrefor", isPrefor);
 		}
 
-		if (isPrefor != null) {
+		if (isPayment != null) {
 			sqlQuery.setShort("isPayment", isPayment);
 		}
 

@@ -63,6 +63,14 @@ public class DecorationBelongAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "tranDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranDecorationBelong() throws FLException {
+
+		decorationBelongService.tranDecorationBelong(decorationBelong, decorationBelongs);
+
+		return SUCCESS;
+	}
+
 	public DecorationBelongVO getDecorationBelong() {
 		return decorationBelong;
 	}

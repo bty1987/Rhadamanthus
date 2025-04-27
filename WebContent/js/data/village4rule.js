@@ -38,7 +38,7 @@ jQuery(function($) {
         }
     }];
 
-    searcher.set("condList", "pagenation", "resultLists", api.data.queryVillageRule, {
+    searcher.set("condLists", "pagenation", "resultLists", api.data.queryVillageRule, {
         "villageRule.vid": villageRule.vid
     }, null, null, "villageRules", true);
 

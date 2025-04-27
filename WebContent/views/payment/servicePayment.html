@@ -39,13 +39,13 @@
 							<div id="infoDiv">
 								<h4 class="header blue bolder smaller">基本信息</h4>
 								<div class="form-group">
-									<label class="col-md-3 control-label" for="referMoney">应收款</label>
+									<label class="col-md-3 control-label no-padding-right" for="referMoney">应收款</label>
 									<div class="col-md-9">
 										<input type="text" id="referMoney" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual'/>
 									</div>
 								</div>
 								<div class="form-group" id="serviceMoneyDiv" style="display: none">
-									<label class="col-md-3 control-label" for="serviceMoney">剩余服务费</label>
+									<label class="col-md-3 control-label no-padding-right" for="serviceMoney">剩余服务费</label>
 									<div class="col-md-9">
 										<input type="text" id="serviceMoney" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual'/>
 									</div>
@@ -139,7 +139,7 @@
 								</div>
 
 								<div class="form-group">
-									<label for="advance" class="col-md-3 control-label">金额</label>
+									<label for="advance" class="col-md-3 control-label no-padding-right">金额</label>
 									<div class="col-md-9 block no-padding-right  ">
 										<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual'/>
 									</div>
@@ -193,6 +193,7 @@
 </div>
 
 <div class="modal fade" id="serviceCollectQrcodeModal" tabindex="-1"></div>
+<div id="layerPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
 	$.loadScript(['js/utils/paymentUtils.js', 'js/utils/kingdeeUtils.js', 'js/payment/servicePayment.js']);

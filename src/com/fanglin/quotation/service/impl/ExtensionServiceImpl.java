@@ -180,6 +180,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
 		extensionPO.setConsPrice(extensionVO.getConsPrice());
+		extensionPO.setComsPrice(extensionVO.getComsPrice());
 
 		extensionDao.update(extensionPO);
 	}

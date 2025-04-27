@@ -12,7 +12,7 @@ public interface QuotationPriceDao extends Dao<QuotationPricePO> {
 
 	public List<QuotationPricePO> pageQuotationPrice(Paging paging, List<Filter> filters, Long qiid, Short status);
 
-	public List<QuotationPricePO> pageQuotationPrice(Paging paging, List<Filter> filters, String versionId, Timestamp updateTime);
+	public List<QuotationPricePO> pageQuotationPrice(Paging paging, List<Filter> filters, String versionId, Timestamp updateTime, Short type);
 
 	public List<QuotationPricePO> queryQuotationPrice(long faid, Timestamp updateTime);
 

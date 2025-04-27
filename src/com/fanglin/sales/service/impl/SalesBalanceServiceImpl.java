@@ -20,6 +20,8 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.payment.dao.SalesPaymentDao;
+import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -48,16 +50,19 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	private SalesBalanceDao salesBalanceDao;
 
 	@Autowired
+	private SalesBalanceItemDao salesBalanceItemDao;
+
+	@Autowired
 	private SalesDao salesDao;
 
 	@Autowired
 	private SalesItemDao salesItemDao;
 
 	@Autowired
-	private UserDao userDao;
+	private SalesPaymentDao salesPaymentDao;
 
 	@Autowired
-	private SalesBalanceItemDao salesBalanceItemDao;
+	private UserDao userDao;
 
 	@Autowired
 	private ApprovalDao approvalDao;
@@ -72,7 +77,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
 
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
+			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
 
@@ -597,4 +602,57 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rejectSalesBalance(SalesBalanceVO salesBalanceVO, String userId) throws FLException {
+
+		SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
+
+		if (salesBalancePO == null) {
+			throw new FLException(260037, "销售结算信息不存在");
+		}
+
+		if (salesBalancePO.getOnetype() != SalesBalancePO.ONETYPE_INIT_INT) {
+			throw new FLException(260038, "销售结算状态不可操作");
+		}
+
+		if (salesBalancePO.getStatus() != SalesBalancePO.STATUS_PREBALANCE_INT) {
+			throw new FLException(260038, "销售结算状态不可操作");
+		}
+
+		SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(salesPO.getSid()));
+
+		if (approvalPO != null) {
+			throw new FLException(240007, "存在未处理审批信息");
+		}
+
+		salesBalanceDao.delete(salesBalancePO);
+
+		salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_INIT_SHORT);
+
+		salesDao.update(salesPO);
+
+		if (SalesPO.TYPE_INIT_INT == salesPO.getType()) return 0;
+
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentsBySid(salesPO.getSid());
+
+		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
+			salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
+
+			salesPaymentDao.update(salesPaymentPO);
+		}
+
+		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
+		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+
+		salesDao.update(salesPO);
+
+		return 0;
+	}
 }
