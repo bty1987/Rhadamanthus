@@ -51,39 +51,40 @@ public class HouseDaoImpl extends DaoImpl<HousePO> implements HouseDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			query.alias("village", "village");
-			for (Filter filter : filters) {
+		if (filters == null) return;
 
-				if ("villageName".equals(filter.getField())) {
-					query.add(Restrictions.or(Restrictions.ilike("village.name", filter.getData(), MatchMode.ANYWHERE), Restrictions.or(Restrictions.ilike("village.pinyinAB", filter.getData(), MatchMode.ANYWHERE), Restrictions.ilike("village.pinyinAll", filter.getData(), MatchMode.ANYWHERE))));
-				} else if ("type".equals(filter.getField())) {
-					query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
-				} else if ("through".equals(filter.getField())) {
-					query.add(Restrictions.eq("through", Short.valueOf(filter.getData())));
-				} else if ("roomNum".equals(filter.getField())) {
-					if (filter.getData().equals("6")) {
-						query.add(Restrictions.ge("roomNum", Integer.valueOf(filter.getData())));
-					} else {
-						query.add(Restrictions.eq("roomNum", Integer.valueOf(filter.getData())));
-					}
-				} else if ("waterVapour".equals(filter.getField())) {
-					query.add(Restrictions.eq("waterVapour", Short.valueOf(filter.getData())));
-				} else if ("heatingType".equals(filter.getField())) {
-					query.add(Restrictions.eq("heatingType", Short.valueOf(filter.getData())));
-				} else if ("orientation".equals(filter.getField())) {
-					query.add(Restrictions.eq("orientation", Short.valueOf(filter.getData())));
-				} else if ("houseNumber".equals(filter.getField())) {
-					query.add(query.getCriterion("houseNumber", filter));
-				} else if ("status".equals(filter.getField())) {
-					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
-				} else if ("buildingArea".equals(filter.getField())) {
-					String area[] = filter.getData().split("-");
-					query.add(Restrictions.ge("buildArea", Integer.valueOf(area[0])));
-					query.add(Restrictions.le("buildArea", Integer.valueOf(area[1])));
-				} else if ("parlourType".equals(filter.getField())) {
-					query.add(Restrictions.eq("parlourType", Short.valueOf(filter.getData())));
+		query.alias("village", "village");
+
+		for (Filter filter : filters) {
+
+			if ("villageName".equals(filter.getField())) {
+				query.add(Restrictions.or(Restrictions.ilike("village.name", filter.getData(), MatchMode.ANYWHERE), Restrictions.or(Restrictions.ilike("village.pinyinAB", filter.getData(), MatchMode.ANYWHERE), Restrictions.ilike("village.pinyinAll", filter.getData(), MatchMode.ANYWHERE))));
+			} else if ("type".equals(filter.getField())) {
+				query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
+			} else if ("through".equals(filter.getField())) {
+				query.add(Restrictions.eq("through", Short.valueOf(filter.getData())));
+			} else if ("roomNum".equals(filter.getField())) {
+				if (filter.getData().equals("6")) {
+					query.add(Restrictions.ge("roomNum", Integer.valueOf(filter.getData())));
+				} else {
+					query.add(Restrictions.eq("roomNum", Integer.valueOf(filter.getData())));
 				}
+			} else if ("waterVapour".equals(filter.getField())) {
+				query.add(Restrictions.eq("waterVapour", Short.valueOf(filter.getData())));
+			} else if ("heatingType".equals(filter.getField())) {
+				query.add(Restrictions.eq("heatingType", Short.valueOf(filter.getData())));
+			} else if ("orientation".equals(filter.getField())) {
+				query.add(Restrictions.eq("orientation", Short.valueOf(filter.getData())));
+			} else if ("houseNumber".equals(filter.getField())) {
+				query.add(query.getCriterion("houseNumber", filter));
+			} else if ("status".equals(filter.getField())) {
+				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+			} else if ("buildingArea".equals(filter.getField())) {
+				String area[] = filter.getData().split("-");
+				query.add(Restrictions.ge("buildArea", Integer.valueOf(area[0])));
+				query.add(Restrictions.le("buildArea", Integer.valueOf(area[1])));
+			} else if ("parlourType".equals(filter.getField())) {
+				query.add(Restrictions.eq("parlourType", Short.valueOf(filter.getData())));
 			}
 		}
 	}

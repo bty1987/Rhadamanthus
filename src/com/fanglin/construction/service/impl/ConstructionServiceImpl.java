@@ -34,7 +34,9 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserPartnerDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserPartnerPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
@@ -53,6 +55,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private UserPartnerDao userPartnerDao;
 
 	@Autowired
 	private QualiterDao qualiterDao;
@@ -194,6 +199,12 @@ public class ConstructionServiceImpl implements ConstructionService {
 		constructionDao.update(constructionPO);
 
 		decorationPO.setSupervisor(supervisor);
+
+		UserPartnerPO partner = userPartnerDao.queryUserPartner(supervisor.getUid(), UserPartnerPO.TYPE_SALES_INT, decorationPO.getCompany());
+
+		if (partner != null) {
+			decorationPO.setMaterialer(partner.getPartner());
+		}
 
 		decorationDao.update(decorationPO);
 

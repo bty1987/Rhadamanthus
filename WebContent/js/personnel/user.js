@@ -61,12 +61,19 @@
 
             userrole: com.focusPage("#userrole", "#userRoleModal"),
             role: com.focusPage("#role", "#userRoleModal"),
-            selectrole: com.focusPage("#roles", "#userRoleModal")
+            selectrole: com.focusPage("#roles", "#userRoleModal"),
+            isPrefor: com.focusPage("#isPrefor", "#transferModal")
         },
         postData: null,
         isExpert: true,
         pageType: params['urlLoadParams'].type,
-        pageConfig: {}
+        pageConfig: {},
+        getProp: {
+            "0": true,
+            "1": false,
+            "true": 0,
+            "false": 1
+        }
     };
 
     if (user.pageType == 'expert') {
@@ -271,6 +278,7 @@
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html('查看');
                     var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-info').html('汇总');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-info').html('编辑');
+                    var $btnPartner = $('<a></a>').addClass('btn btn-minier btn-info').html('合作');
 
                     var $addDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('添加钉钉');
                     var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉');
@@ -337,6 +345,15 @@
                         params.type = 1;
                         params.personel.isExpert = user.isExpert;
                         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑");
+                    });
+
+                    $btnPartner.click(function() {
+
+                        params.personel.partner = {
+                            "uid": v.uid
+                        }
+
+                        com.popup4page("#userPartnerPopUp", api.index.userPartnerIndex.url, "合作");
                     });
 
                     // 添加点击事件
@@ -794,6 +811,9 @@
 
                     if (user.pageConfig.pageBtn.contains("edit"))
                         $divBtnWrap.append($btnEdit);
+
+                    if (user.pageConfig.pageBtn.contains("partner"))
+                        $divBtnWrap.append($btnPartner);
 
                     if (user.pageConfig.pageBtn.contains("addDD") && v.status == constant.personel.user.STATUS_ONJOB_INT)
                         $divBtnWrap.append($addDD);
@@ -1372,6 +1392,8 @@
 
     }
 
+    user.items.isPrefor.bindData(constant.personel.userExperience.isPrefor.datas, "key", "value");
+
     function save() {
 
         if (com.validate('transferModal'))
@@ -1385,7 +1407,7 @@
             "user.dept.did": user.items.dept.val(),
             "user.duty.did": user.items.duty.val(),
             "user.role.rid": com.typeahead("roleTran"),
-
+            "user.isPrefor": user.getProp[user.items.isPrefor.prop("checked")],
             "approve": "agree"
         };
 

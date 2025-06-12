@@ -47,7 +47,7 @@ $(function() {
         salesBalance.postData = "salesBalanceForPompanyPostData";
     }
 
-    if (salesBalance.pageType == "allowance") {
+    if (salesBalance.pageType.indexOf("allowance") != -1) {
         salesBalance.postData = "salesBalanceForAllowancePostData";
     }
 
@@ -486,7 +486,8 @@ $(function() {
     var salesBalanceSearcher = new Searcher();
 
     var salesBalanceParams = {}
-    if (salesBalance.pageType == "allowance") {
+    
+    if (salesBalance.pageType.indexOf("allowance") != -1) {
         salesBalanceParams["salesBalance.sales.type"] = 1;
     }
 
@@ -623,7 +624,7 @@ $(function() {
             historicalRecord = params.salesBalanceForPompanyPostData;
         } else if (salesBalance.pageType == "bsupplier") {
             historicalRecord = params.salesBalanceForSuppleirPostData;
-        } else if (salesBalance.pageType == "allowance") {
+        } else if (salesBalance.pageType.indexOf("allowance") != -1) {
             historicalRecord = params.salesBalanceForAllowancePostData;
         } else {
             historicalRecord = params.salesBalancePostData;

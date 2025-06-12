@@ -74,7 +74,7 @@ public class AddReducePO implements Serializable {
 
 	public static final short ISAFFIRM_UNSUBMIT_INT = 0;
 
-	public final short ISAFFIRM_CONFIRMED_INT = 1;
+	public static final short ISAFFIRM_CONFIRMED_INT = 1;
 
 	private long arId;
 

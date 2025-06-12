@@ -40,7 +40,10 @@ $.extend(api.index, {
     },
     inspectItem: {
         url: "/views/data/inspectItem.html"
-    }
+    },
+    constructionNodeIndex: {
+        url: "/views/data/constructionPeriod4node.html"
+    },
 });
 
 $.extend(api, {
@@ -136,6 +139,7 @@ $.extend(api, {
             url: "deleteBrandByBids.do",
             server: "communion"
         },
+
         pageBrandPool: {
             url: "pageBrandPool.do"
         },
@@ -408,16 +412,59 @@ $.extend(api, {
         },
 
         pageConstructionPeriod: {
-            url: "pageConstructionPeriod.do"
+            url: "pageConstructionPeriod.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["upperArea", "lowerArea", "period"]
+            }]
+        },
+        queryConstructionPeriod: {
+            url: "queryConstructionPeriod.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPeriod.upperArea", "constructionPeriod.lowerArea", "constructionPeriod.period"],
+                query: [{
+                    result: "constructionPeriods",
+                    args: ["upperArea", "lowerArea", "period"]
+                }]
+            }
         },
         addConstructionPeriod: {
-            url: "addConstructionPeriod.do"
+            url: "addConstructionPeriod.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPeriod.upperArea", "constructionPeriod.lowerArea", "constructionPeriod.period"]
+            }
         },
         updateConstructionPeriod: {
-            url: "updateConstructionPeriod.do"
+            url: "updateConstructionPeriod.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPeriod.upperArea", "constructionPeriod.lowerArea", "constructionPeriod.period"]
+            }
         },
         deleteConstructionPeriod: {
             url: "deleteConstructionPeriod.do"
+        },
+
+        queryConstructionPeriodNodeByCpid: {
+            url: "queryConstructionPeriodNodeByCpid.do",
+            type: "query",
+            tranargs: [{
+                result: "constructionPeriodNodes",
+                args: ["period"]
+            }]
+        },
+        addConstructionPeriodNode: {
+            url: "addConstructionPeriodNode.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPeriodNode.period"]
+            }
+        },
+        deleteConstructionPeriodNodeByCpnid: {
+            url: "deleteConstructionPeriodNodeByCpnid.do",
         },
 
         pageDrawlineGroup: {
@@ -456,7 +503,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
             }]
         },
         queryConstructionNode: {
@@ -464,7 +511,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "contructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
             }]
         },
         queryConstructionNodeByCnid: {
@@ -472,7 +519,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "contructionNode",
-                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
             }]
         },
         queryConstructionNodeByOrderId: {
@@ -480,21 +527,21 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "contructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
             }]
         },
         addConstructionNode: {
             url: "addConstructionNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit"]
             }
         },
         updateConstructionNode: {
             url: "updateConstructionNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit"]
             }
         },
         updateConstructionNodeForStatus: {
@@ -834,7 +881,7 @@ $.extend(api, {
                 args: ["goods.pieceNum", "goods.purchase", "goods.selling", "goods.confine"]
             }
         },
-        
+
         updateGoods: {
             url: "updateGoods.do",
             type: "update",
@@ -848,11 +895,10 @@ $.extend(api, {
         showGoods: {
             url: "showGoods.do"
         },
-        
+
         pageGoodsRecord: {
             url: "pageGoodsRecord.do"
         },
-        
 
         queryPackage: {
             url: "queryPackage.do",
@@ -1325,19 +1371,40 @@ $.extend(api, {
         // 业务类型
         pageDecorationBusitype: {
             url: "pageDecorationBusitype.do",
-            demo: true
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["notSalesmanRate"]
+            }]
         },
         queryDecorationBusitype: {
-            url: "queryDecorationBusitype.do"
+            url: "queryDecorationBusitype.do",
+            type: "query",
+            tranargs: [{
+                result: "decorationBusitypes",
+                args: ["notSalesmanRate"]
+            }]
         },
         addDecorationBusitype: {
-            url: "addDecorationBusitype.do"
+            url: "addDecorationBusitype.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationBusitype.notSalesmanRate"]
+            }
         },
         updateDecorationBusitype: {
-            url: "updateDecorationBusitype.do"
+            url: "updateDecorationBusitype.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationBusitype.notSalesmanRate"]
+            }
         },
         updateDecorationBusitypeForStatus: {
-            url: "updateDecorationBusitypeForStatus.do"
+            url: "updateDecorationBusitypeForStatus.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationBusitype.notSalesmanRate"]
+            }
         },
 
         pageDecorationAtttype: {
@@ -1415,7 +1482,7 @@ $.extend(api, {
         deleteBrandProduct: {
             url: "deleteBrandProduct.do"
         },
-        
+
         queryBrandDeliver: {
             url: "queryBrandDeliver.do",
             type: "query",
@@ -1433,8 +1500,8 @@ $.extend(api, {
         deleteBrandDeliver: {
             url: "deleteBrandDeliver.do"
         },
-		
-		queryBrandInstall: {
+
+        queryBrandInstall: {
             url: "queryBrandInstall.do",
             type: "query",
             tranargs: [{
@@ -1451,7 +1518,7 @@ $.extend(api, {
         deleteBrandInstall: {
             url: "deleteBrandInstall.do"
         },
-        
+
         queryBrandServer: {
             url: "queryBrandServer.do",
             type: "query",

@@ -32,6 +32,14 @@ public class ConstructionPeriodAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryConstructionPeriod", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionPeriod() throws FLException {
+
+		constructionPeriod = constructionPeriodService.queryConstructionPeriod(constructionPeriod, queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addConstructionPeriod", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionPeriod() throws FLException {
 

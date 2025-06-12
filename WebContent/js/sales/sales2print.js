@@ -108,7 +108,7 @@ $(function() {
             printer.args.title = params.company.fullname + "主材代购确认单";
 
             moneryName = "实收金额";
-            netReceipts = utils.changeThrDecimal(data.fullpay - (data.type == 1 ? data.coupon : 0));
+            netReceipts = utils.changeThrDecimal(data.fullpay - data.coupon);
             var tr8 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 13px;"></tr>').appendTo(table);
 
             var td24 = $('<td colspan="3" style="border: 1px solid;"></td>').text("商品名称").appendTo(tr8);

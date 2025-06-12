@@ -19,7 +19,7 @@ public class SupplierSignetPO implements Serializable, Signet {
 	private static final long serialVersionUID = -5044490485583381348L;
 
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_SUID_STR = "suid";
 
 	public static final short STATUS_INIT_INT = 0;
@@ -33,8 +33,8 @@ public class SupplierSignetPO implements Serializable, Signet {
 	public static final short STATUS_CANCEL_INT = 5;
 
 	private long ssid;
-	
-	private long suid;//厂商ID
+
+	private long suid;// 厂商ID
 
 	private String no;
 
@@ -55,7 +55,7 @@ public class SupplierSignetPO implements Serializable, Signet {
 	private String authurl;
 
 	private short type;
-	
+
 	private int company;
 
 	public SupplierSignetPO() {

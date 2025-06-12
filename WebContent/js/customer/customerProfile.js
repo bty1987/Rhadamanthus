@@ -134,6 +134,7 @@ jQuery(function($) {
             // com.switchPage(api.index.profileInfo.url); 跳转新页面
 
             params.customer.cpid = v.cpid;
+
             com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
 
             return false;

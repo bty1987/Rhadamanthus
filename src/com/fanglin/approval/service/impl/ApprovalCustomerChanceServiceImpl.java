@@ -33,6 +33,7 @@ import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerProfileDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
@@ -66,6 +67,9 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerProfileDao customerProfileDao;
 
 	@Autowired
 	private DecorationServiceImpl decorationService;
@@ -189,7 +193,7 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		decorationVO.setDesigner(new UserBaseVO(customerChancePO.getBelonger().getUserId()));
 		decorationVO.setSalesman(new UserBaseVO(customerSourcePO.getCreater().getUserId()));
 		decorationVO.setGrade("C");
-		decorationVO.setNotSalesmanRate(0);
+		decorationVO.setNotSalesmanRate(customerChancePO.getBusitype().getNotSalesmanRate());
 		decorationVO.setBusitype(approvalCustomerChancePO.getBusitype().getDbid());
 
 		decorationService.tranDecoration(decorationVO, approvalPO.getSender().getCompany());
@@ -204,6 +208,8 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);
 
 		customerChanceDao.update(customerChancePO);
+
+		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
 
 		HousePO housePO = customerSourcePO.getHouse();
 		VillagePO villagePO = housePO.getVillage();

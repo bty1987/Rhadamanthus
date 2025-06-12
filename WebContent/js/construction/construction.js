@@ -62,7 +62,7 @@ jQuery(function($) {
 
     searcher.base("constructionCondList", "constructionPagenation", "constructionResultList", api.construction.pageConstructionForBase);
 
-    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus"]);
+    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus", "construction-process", "construction-startTime", "construction-endTime"]);
 
     var lineprops = [{
         field: "decoration",
@@ -135,11 +135,74 @@ jQuery(function($) {
         prop: "decoration.house.buildArea",
         clazz: "blue"
     }, {
+        type: "newline",
+    }, {
         field: "projectStatus",
         name: "进度",
         prop: "decoration.projectStatus",
         dataset: constant.decoration().decoration.projectStatus.keys,
         clazz: "red"
+    }, {
+        field: "process",
+        name: "进度",
+        prop: "process",
+        dataset: constant.construction().construction.process.keys,
+        clazz: "red"
+    }, {
+        field: "createTime",
+        name: "创建时间",
+        prop: "createTime",
+        clazz: "green"
+    }, {
+        field: "startTime",
+        name: "开工时间",
+        prop: "startTime",
+        clazz: "green"
+    }, {
+        field: "pro-endTime",
+        name: "预计完工时间",
+        prop: function(v) {
+
+            var d1 = v.startTime ? new Date(v.startTime) : new Date();
+            
+            return com.dateFormat(new Date((d1 + (v.period * 24 * 24 * 60 * 60 * 1000))), "yyyy-MM-dd");
+        },
+        clazz: "green"
+    }, {
+        field: "endTime",
+        name: "完工时间",
+        prop: "endTime",
+        clazz: "green"
+    }, {
+        field: "finishTime",
+        name: "验收时间",
+        prop: "finishTime",
+        clazz: "green"
+    }, {
+        field: "period",
+        name: "预计工期",
+        prop: "period",
+        clazz: "blue"
+    }, {
+        field: "post-workdays",
+        name: "实际工期",
+        prop: function(v) {
+
+            var d1 = v.endTime ? new Date(v.endTime) : new Date();
+            var d2 = v.startTime ? new Date(v.startTime) : new Date();
+
+            var timeDiff = Math.abs(d2.getTime() - d1.getTime());
+
+            return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+        },
+        clazz: "blue"
+    }, {
+        field: "processTime",
+        name: "基础完工时间",
+        prop: "processTime",
+        clazz: "green"
+    }, {
+        type: "newline",
     }, {
         field: "accessoryLimit",
         name: "辅料额上限",
@@ -155,7 +218,8 @@ jQuery(function($) {
         name: "辅料总额",
         prop: "accessoryTotal",
         clazz: "blue",
-        show: function(v){
+        show: function(v) {
+
             return false;
         }
     }, {
@@ -163,7 +227,8 @@ jQuery(function($) {
         name: "工费总额",
         prop: "salaryTotal",
         clazz: "blue",
-        show: function(v){
+        show: function(v) {
+
             return false;
         }
     }, {

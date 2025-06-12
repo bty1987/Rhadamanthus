@@ -25,6 +25,32 @@ var Validator = function() {
                 return obj.attr('data-typeahead-key').trim().length == 0 ? true : false;
             }
         },
+        radio: {
+            type: "v_radio",
+            errorMsg: "请选择至少一个选项",
+            func: function(obj) {
+                
+                if (obj.val() == null || obj.val() == undefined)
+                    return true;
+                if (toString.apply(obj.val()) === '[object Array]')
+                    return obj.val().toString().trim().length != 1 ? true : false;
+                
+                return !($('input[name="' + obj.attr("id") + '"]').is(':checked'));
+            }
+        },
+        checkbox: {
+            type: "v_checkbox",
+            errorMsg: "请选择至少一个选项",
+            func: function(obj) {
+                
+                if (obj.val() == null || obj.val() == undefined)
+                    return true;
+                if (toString.apply(obj.val()) === '[object Array]')
+                    return obj.val().toString().trim().length != 1 ? true : false;
+                
+                return !($('input[name="' + obj.attr("id") + '"]').is(':checked'));
+            }
+        },
         number: {
             type: "v_number",
             regex: /^[0-9]*$/,

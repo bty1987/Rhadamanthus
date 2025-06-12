@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
+import com.fanglin.data.common.vo.SupplierSignetVO;
 import com.fanglin.personel.service.SupplierContractService;
 import com.fanglin.personel.vo.SupplierContractVO;
 import com.fanglin.utils.SystemConfig;
@@ -31,14 +32,18 @@ public class SupplierContractAction extends BaseListAction {
 
 	private List<SupplierContractVO> supplierContracts;
 
+	private SupplierSignetVO supplierSignet;
+
 	private ContractVO contract;
-	
-	private String redirect;
-	
+
 	private SignetVO signet;
-	
+
+	private String redirect;
+
 	private String data;
-	
+
+	private String table;
+
 	@Action(value = "querySupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySupplierContract() {
 
@@ -46,7 +51,7 @@ public class SupplierContractAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "viewSupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String viewSupplierContract() throws FLException {
 
@@ -54,7 +59,7 @@ public class SupplierContractAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "signSupplierContractForCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String signSupplierContractForCompany() throws FLException {
 
@@ -67,14 +72,14 @@ public class SupplierContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "signSupplierContractForUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String signSupplierContractForUser() throws FLException {
+	@Action(value = "signSupplierContractForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String signSupplierContractForSupplier() throws FLException {
 
-		redirect = supplierContractService.signSupplierContractForUser(supplierContract);
+		redirect = supplierContractService.signSupplierContractForSupplier(supplierSignet, supplierContract);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addSupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSupplierContract() throws FLException {
 
@@ -82,11 +87,23 @@ public class SupplierContractAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		supplierContractService.addSupplierContract(supplierContract, contract, data, queryUserId());
+		supplierContractService.addSupplierContract(supplierContract, contract, queryUserId());
 
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "makeSupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeSupplierContract() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		supplierContractService.makeSupplierContract(supplierContract, data, table);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "affixSupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affixSupplierContract() throws FLException {
 
@@ -94,7 +111,7 @@ public class SupplierContractAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		supplierContractService.affixSupplierContract(supplierContract);
+		supplierContractService.affixSupplierContract(supplierContract, queryUserId());
 
 		return SUCCESS;
 	}
@@ -134,7 +151,7 @@ public class SupplierContractAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteSupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSupplierContract() throws FLException {
 
@@ -145,15 +162,6 @@ public class SupplierContractAction extends BaseListAction {
 		supplierContractService.deleteSupplierContract(supplierContract);
 
 		return SUCCESS;
-	}
-
-	public SupplierContractService getSupplierContractService() {
-		return supplierContractService;
-	}
-
-	public void setSupplierContractService(
-			SupplierContractService supplierContractService) {
-		this.supplierContractService = supplierContractService;
 	}
 
 	public SupplierContractVO getSupplierContract() {
@@ -188,6 +196,14 @@ public class SupplierContractAction extends BaseListAction {
 		this.redirect = redirect;
 	}
 
+	public SupplierSignetVO getSupplierSignet() {
+		return supplierSignet;
+	}
+
+	public void setSupplierSignet(SupplierSignetVO supplierSignet) {
+		this.supplierSignet = supplierSignet;
+	}
+
 	public SignetVO getSignet() {
 		return signet;
 	}
@@ -204,4 +220,11 @@ public class SupplierContractAction extends BaseListAction {
 		this.data = data;
 	}
 
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
+	}
 }

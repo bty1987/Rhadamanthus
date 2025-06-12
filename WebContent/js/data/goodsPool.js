@@ -19,6 +19,7 @@ $(function() {
             confine: com.focusPage("#confine", "#addGoodsPoolLayer"),
             pieceNum: com.focusPage("#pieceNum", "#addGoodsPoolLayer"),
             accessoriesType: com.focusPage("#accessoriesType", "#addGoodsPoolLayer"),
+            zerokind: com.focusPage("#zerokind", "#addGoodsPoolLayer"),
             onekind: com.focusPage("#onekind", "#addGoodsPoolLayer"),
             twokind: com.focusPage("#twokind", "#addGoodsPoolLayer"),
             thrkind: com.focusPage("#thrkind", "#addGoodsPoolLayer"),
@@ -39,7 +40,7 @@ $(function() {
             exportBtn: com.focusPage("#exportBtn", "#uploadGoodsPoolDiv")
         },
 
-        modals : {
+        modals: {
             drawingGoodsPoolModal: com.focusPage("#drawingGoodsPoolModal")
         }
     };
@@ -65,28 +66,61 @@ $(function() {
     });
 
     com.post(api.data.queryGoodsKind, {}, function(res) {
+
         var oneKinds = [];
         var twoKinds = [];
         var thrKinds = [];
 
         $.each(res.goodsKinds, function(i, v) {
-            if (v.status == 0) {
-                switch (v.level) {
-                    case 1:
-                        oneKinds.push({"key": v.gkid, "value": v.name});
-                        break;
-                    case 2:
-                        twoKinds.push({"key": v.gkid, "value": v.name});
-                        break;
-                    case 3:
-                        thrKinds.push({"key": v.gkid, "value": v.name});
-                        break;
-                }
+
+            if (v.status != 0)
+                return true;
+
+            switch (v.level) {
+                case 1:
+                    oneKinds.push({
+                        "key": v.gkid,
+                        "value": v.name
+                    });
+                    break;
+                case 2:
+                    twoKinds.push({
+                        "key": v.gkid,
+                        "value": v.name
+                    });
+                    break;
+                case 3:
+                    thrKinds.push({
+                        "key": v.gkid,
+                        "value": v.name
+                    });
+                    break;
             }
         });
+
         goodsPool.items.onekind.bindData(oneKinds, 'key', 'value');
         goodsPool.items.twokind.bindData(twoKinds, 'key', 'value');
         goodsPool.items.thrkind.bindData(thrKinds, 'key', 'value');
+    });
+
+    goodsPool.items.onekind.change(function() {
+
+        updateZerokind();
+    });
+
+    goodsPool.items.twokind.change(function() {
+
+        updateZerokind();
+    });
+
+    goodsPool.items.thrkind.change(function() {
+
+        updateZerokind();
+    });
+
+    goodsPool.btns.importBtn.click(function() {
+
+        importGoods();
     });
 
     goodsPool.btns.importBtn.click(function() {
@@ -107,7 +141,9 @@ $(function() {
 
                 goodsPool.bid = k;
 
-                com.post(api.data.queryBrandByBid, {"brand.bid": k}, function(res) {
+                com.post(api.data.queryBrandByBid, {
+                    "brand.bid": k
+                }, function(res) {
 
                     goodsPool.items.category.val(res.brand.categoryName);
                 });
@@ -181,7 +217,7 @@ $(function() {
     var lineprops = [{
         type: "img",
         prop: "path"
-    },{
+    }, {
         field: "no",
         name: "编号",
         prop: "no",
@@ -243,6 +279,11 @@ $(function() {
         clazz: "red",
         dataset: constant.data().goods.type.keys
     }, {
+        field: "zerokind.name",
+        name: "统计类别",
+        prop: "zerokind.name",
+        clazz: "grey"
+    }, {
         field: "onekind.name",
         name: "一类",
         prop: "onekind.name",
@@ -261,9 +302,12 @@ $(function() {
         fieId: "colorcascadeStr",
         name: "颜色级联",
         prop: function(v) {
+
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
-                if ((v.colorcascade & j.key) > 0) str = str + j.value + " ";
+            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+
+                if ((v.colorcascade & j.key) > 0)
+                    str = str + j.value + " ";
             });
 
             return v.colorcascadeStr = str
@@ -273,9 +317,12 @@ $(function() {
         fieId: "formatcascadeStr",
         name: "规格级联",
         prop: function(v) {
+
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
-                if ((v.formatcascade & j.key) > 0) str = str + j.value + " ";
+            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+
+                if ((v.formatcascade & j.key) > 0)
+                    str = str + j.value + " ";
             });
 
             return v.formatcascadeStr = str
@@ -285,9 +332,12 @@ $(function() {
         fieId: "pricecascadeStr",
         name: "价格级联",
         prop: function(v) {
+
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
-                if ((v.pricecascade & j.key) > 0) str = str + j.value + " ";
+            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+
+                if ((v.pricecascade & j.key) > 0)
+                    str = str + j.value + " ";
             });
 
             return v.pricecascadeStr = str
@@ -297,9 +347,12 @@ $(function() {
         fieId: "picturecascadeStr",
         name: "图片级联",
         prop: function(v) {
+
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
-                if ((v.picturecascade & j.key) > 0) str = str + j.value + " ";
+            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+
+                if ((v.picturecascade & j.key) > 0)
+                    str = str + j.value + " ";
             });
 
             return v.picturecascadeStr = str
@@ -337,9 +390,12 @@ $(function() {
             goodsPool.items.confine.val(v.confine);
             goodsPool.items.pieceNum.val(v.pieceNum);
             goodsPool.items.accessoriesType.val(v.accessoriesType.atid);
+            goodsPool.items.zerokind.val(v.zerokind.gkid);
             goodsPool.items.onekind.val(v.onekind.gkid);
             goodsPool.items.twokind.val(v.twokind.gkid);
             goodsPool.items.thrkind.val(v.thrkind.gkid);
+            
+            updateZerokind();
 
             drawRadio(constant.data().goodsPool.cascade.datas, "color", com.focusPage("#colorcascadeDiv"), false, v.colorcascade);
             drawRadio(constant.data().goodsPool.cascade.datas, "format", com.focusPage("#formatcascadeDiv"), false, v.formatcascade);
@@ -384,7 +440,10 @@ $(function() {
 
             com.focusPage('#goodsPoolDrawing').html("");
 
-            com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": v.gpid, "dataDrawing.type": 5}, function(data) {
+            com.post(api.communion.queryDataDrawing, {
+                "dataDrawing.sid": v.gpid,
+                "dataDrawing.type": 5
+            }, function(data) {
 
                 var dataDrawings = data.dataDrawings;
 
@@ -402,7 +461,7 @@ $(function() {
     }, {
         name: "分配",
         clazz: "btn-danger",
-        handle: function (v) {
+        handle: function(v) {
 
             params.data.goodsPool = v;
 
@@ -414,7 +473,10 @@ $(function() {
         clazz: "status-lbl",
         handle: function(v, check) {
 
-            com.post(api.communion.updateGoodsPoolForStatus, {"goodsPool.gpid": v.gpid, "goodsPool.status": v.status == 0 ? 1 : 0}, function(res) {
+            com.post(api.communion.updateGoodsPoolForStatus, {
+                "goodsPool.gpid": v.gpid,
+                "goodsPool.status": v.status == 0 ? 1 : 0
+            }, function(res) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -468,15 +530,26 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['商品ID', 'gpid'], ['商品编码', 'no'], ['商品名称', 'name'], ['别名', 'alias'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌ID', 'bid'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['辅类', 'accessoriesType.name'], ['类型', 'type'], ['一类', 'onekind.name'], ['二类', 'twokind.name'], ['三类', 'thrkind.name']],
+                column: [['商品ID', 'gpid'], ['商品编码', 'no'], ['商品名称', 'name'], ['别名', 'alias'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌ID', 'bid'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['辅类', 'accessoriesType.name'], ['类型', 'type'], ['统计类别', 'zerokind.name'], ['一类', 'onekind.name'], ['二类', 'twokind.name'], ['三类', 'thrkind.name']],
                 list: res.paging.data
             }, function(v) {
 
                 v.type = v.type == "0" ? "商品" : "套餐";
-                v.accessoriesType = v.accessoriesType == null ? {"accessoriesType": ""} : v.accessoriesType;
-                v.onekind = v.onekind == null ? {"onekind": ""} : v.onekind;
-                v.twokind = v.twokind == null ? {"twokind": ""} : v.twokind;
-                v.thrkind = v.thrkind == null ? {"thrkind": ""} : v.thrkind;
+                v.accessoriesType = v.accessoriesType == null ? {
+                    "accessoriesType": ""
+                } : v.accessoriesType;
+                v.zerokind = v.zerokind == null ? {
+                    "zerokind": ""
+                } : v.zerokind;
+                v.onekind = v.onekind == null ? {
+                    "onekind": ""
+                } : v.onekind;
+                v.twokind = v.twokind == null ? {
+                    "twokind": ""
+                } : v.twokind;
+                v.thrkind = v.thrkind == null ? {
+                    "thrkind": ""
+                } : v.thrkind;
             });
         });
     });
@@ -661,18 +734,22 @@ $(function() {
         var colorcascadeVal = 0, formatcascade = 0, pricecascade = 0, picturecascade = 0;
 
         $.each($colorcascades, function(i, v) {
+
             colorcascadeVal = utils.accAdd(parseInt(colorcascadeVal), parseInt($(v).attr('value')));
         });
 
         $.each($formatcascade, function(i, v) {
+
             formatcascade = utils.accAdd(parseInt(formatcascade), parseInt($(v).attr('value')));
         });
 
         $.each($pricecascade, function(i, v) {
+
             pricecascade = utils.accAdd(parseInt(pricecascade), parseInt($(v).attr('value')));
         });
 
         $.each($picturecascade, function(i, v) {
+
             picturecascade = utils.accAdd(parseInt(picturecascade), parseInt($(v).attr('value')));
         });
 
@@ -684,6 +761,7 @@ $(function() {
             "goodsPool.selling": goodsPool.items.selling.val(),
             "goodsPool.confine": goodsPool.items.confine.val(),
             "goodsPool.accessoriesType.atid": atid == null || atid == "" ? "" : atid,
+            "goodsPool.zerokind.gkid": goodsPool.items.zerokind.val(),
             "goodsPool.onekind.gkid": goodsPool.items.onekind.val(),
             "goodsPool.twokind.gkid": goodsPool.items.twokind.val(),
             "goodsPool.thrkind.gkid": goodsPool.items.thrkind.val(),
@@ -718,6 +796,7 @@ $(function() {
     }
 
     function readonly(disabled) {
+
         com.focusPage("#colorcascadeDiv").html("");
         com.focusPage("#formatcascadeDiv").html("");
         com.focusPage("#pricecascadeDiv").html("");
@@ -731,6 +810,31 @@ $(function() {
         goodsPool.items.brand.attr("disabled", disabled);
         goodsPool.items.measurementUnit.attr("disabled", disabled);
         goodsPool.items.pieceNum.attr("disabled", disabled);
+    }
+
+    function updateZerokind() {
+
+        var zerokinds = [];
+
+        if (goodsPool.items.onekind.val())
+            zerokinds.push({
+                "key": goodsPool.items.onekind.val(),
+                "value": goodsPool.items.onekind.find(':selected').text()
+            });
+
+        if (goodsPool.items.twokind.val())
+            zerokinds.push({
+                "key": goodsPool.items.twokind.val(),
+                "value": goodsPool.items.twokind.find(':selected').text()
+            });
+
+        if (goodsPool.items.thrkind.val())
+            zerokinds.push({
+                "key": goodsPool.items.thrkind.val(),
+                "value": goodsPool.items.thrkind.find(':selected').text()
+            });
+
+        goodsPool.items.zerokind.bindData(zerokinds, 'key', 'value', '无');
     }
 
     function importGoodsPool() {
@@ -875,7 +979,10 @@ $(function() {
 
         var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
 
-            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": value.ddid}, function(res) {
+            com.post(api.communion.deleteDataDrawing, {
+                "dataDrawing.ddid": value.ddid
+            }, function(res) {
+
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
 
@@ -901,12 +1008,22 @@ $(function() {
     }
 
     function drawRadio(items, name, div, addFlag, num) {
-        $.each(items, function (i, v) {
+
+        $.each(items, function(i, v) {
+
             var $label = $('<label></label>').addClass('inline').appendTo(div);
-            var $input = $('<input />').addClass('ace').attr({'type': 'checkbox', 'value':v.key, 'name': name + 'cascade'}).appendTo($label);
-            if (addFlag && i == 0 ) $input.attr('checked', true);
-            if (!addFlag && (num & v.key) > 0) $input.attr('checked', true);
-            var $span = $('<span></span>').addClass('lbl').css({'margin-right': '10px'}).html(v.value).appendTo($label);
+            var $input = $('<input />').addClass('ace').attr({
+                'type': 'checkbox',
+                'value': v.key,
+                'name': name + 'cascade'
+            }).appendTo($label);
+            if (addFlag && i == 0)
+                $input.attr('checked', true);
+            if (!addFlag && (num & v.key) > 0)
+                $input.attr('checked', true);
+            var $span = $('<span></span>').addClass('lbl').css({
+                'margin-right': '10px'
+            }).html(v.value).appendTo($label);
         });
     }
 

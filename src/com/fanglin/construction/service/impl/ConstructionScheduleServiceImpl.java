@@ -89,7 +89,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			constructionScheduleVO.setOrderId(constructionScheduleDO.getDecoration().getOrderId());
 
 			constructionVOs.add(constructionScheduleVO);
-
 		}
 
 		paging.setData(constructionVOs);
@@ -214,6 +213,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			constructionPO.setCnid(constructionNodePO.getCnid());
 		}
 
+		if (constructionNodePO.getMark() == ConstructionNodePO.MARK_START_INT) {
+			constructionPO.setStartTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
 		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionDao.update(constructionPO);
@@ -264,7 +267,15 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		constructionScheduleDao.update(constructionSchedulePO);
 
-		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+		if (constructionNodePO.getProcess() != ConstructionNodePO.PROCESS_INIT_INT && constructionScheduleDao.countConstructionSchedule(constructionPO.getCid(), ConstructionSchedulePO.STATUS_FINISH_INT, constructionNodePO.getProcess()) + 1 == constructionNodeDao.countConstructionNode(constructionNodePO.getProcess(), decorationPO.getCompany())) {
+			constructionPO.setProcess(constructionNodePO.getProcess());
+			constructionPO.setProcessTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
+		if (constructionNodePO.getMark() == ConstructionNodePO.MARK_FINISH_INT) {
+			constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
 		constructionDao.update(constructionPO);
 
 		if (constructionNodePO.getEndSurvey() != null && constructionNodePO.getEndSurvey().getStatus() == ConstructionNodePO.STATUS_INIT_SHORT) {

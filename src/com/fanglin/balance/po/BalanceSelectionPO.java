@@ -3,6 +3,8 @@ package com.fanglin.balance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceSelectionVO;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "balanceselection", catalog = "balance")
@@ -36,7 +41,9 @@ public class BalanceSelectionPO implements java.io.Serializable {
 
 	public static final short STATUS_UNLOCK_INT = 1;// 锁定
 
-	public static final short STATUS_ENABLE_CHECK_INT = 2;// 结算
+	public static final short STATUS_WAIT_INT = 2;// 待审
+
+	public static final short STATUS_ENABLE_CHECK_INT = 3;// 审核
 
 	private long bsid;
 
@@ -56,19 +63,23 @@ public class BalanceSelectionPO implements java.io.Serializable {
 
 	private long profit;
 
-	private short status;
-
-	private int company;
-
 	private UserPO creater;
+
+	private UserPO auditer;
 
 	private UserPO balancer;
 
 	private Timestamp createTime;
 
+	private Timestamp lockTime;
+
+	private Timestamp auditTime;
+
 	private Timestamp balanceTime;
 
-	private Timestamp lockTime;
+	private short status;
+
+	private int company;
 
 	public BalanceSelectionPO() {
 		super();
@@ -191,13 +202,14 @@ public class BalanceSelectionPO implements java.io.Serializable {
 		this.creater = creater;
 	}
 
-	@Column(name = "createTime")
-	public Timestamp getCreateTime() {
-		return createTime;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "auid", referencedColumnName = "uid")
+	public UserPO getAuditer() {
+		return auditer;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public void setAuditer(UserPO auditer) {
+		this.auditer = auditer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -210,13 +222,13 @@ public class BalanceSelectionPO implements java.io.Serializable {
 		this.balancer = balancer;
 	}
 
-	@Column(name = "balanceTime")
-	public Timestamp getBalanceTime() {
-		return balanceTime;
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setBalanceTime(Timestamp balanceTime) {
-		this.balanceTime = balanceTime;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	@Column(name = "lockTime")
@@ -228,4 +240,49 @@ public class BalanceSelectionPO implements java.io.Serializable {
 		this.lockTime = lockTime;
 	}
 
+	@Column(name = "auditTime")
+	public Timestamp getAuditTime() {
+		return auditTime;
+	}
+
+	public void setAuditTime(Timestamp auditTime) {
+		this.auditTime = auditTime;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
+	public BalanceSelectionPO init(BrandPO brand, String grade, UserPO creater, int company) {
+
+		setName(String.format("%s-%s-%s", brand.getName(), DateUtil.current("yyyyMMdd"), grade));
+		setBrand(brand);
+
+		setGrade(grade);
+
+		setCreater(creater);
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		setCompany(company);
+
+		return this;
+	}
+
+	public BalanceSelectionVO ptv(BalanceSelectionVO balanceSelectionVO) {
+
+		BeanUtil.copyPropertie(this, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "auditer", "balancer"));
+
+		if (balanceSelectionVO.getBrand() != null && getBrand() != null) getBrand().ptv(balanceSelectionVO.getBrand());
+
+		if (balanceSelectionVO.getCreater() != null && getCreater() != null) balanceSelectionVO.getCreater().setBaseInfo(getCreater());
+		if (balanceSelectionVO.getAuditer() != null && getAuditer() != null) balanceSelectionVO.getAuditer().setBaseInfo(getAuditer());
+		if (balanceSelectionVO.getBalancer() != null && getBalancer() != null) balanceSelectionVO.getBalancer().setBaseInfo(getBalancer());
+
+		return balanceSelectionVO;
+	}
 }

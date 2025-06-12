@@ -1,7 +1,6 @@
 package com.fanglin.balance.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +29,6 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -66,17 +64,8 @@ public class BalanceServiceImpl implements BalanceService {
 		List<BalancePO> balancePOs = balanceDao.pageBalance(paging, filters, company);
 		List<BalanceVO> balanceVOs = new ArrayList<BalanceVO>();
 
-		BalanceVO balanceVO;
-
 		for (BalancePO balancePO : balancePOs) {
-
-			balanceVO = new BalanceVO(new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(balancePO, balanceVO, Arrays.asList("belonger", "creater"));
-			BeanUtil.copyProperties(balancePO.getBelonger(), balanceVO.getBelonger(), Arrays.asList("duty", "dept", "role"));
-			BeanUtil.copyProperties(balancePO.getCreater(), balanceVO.getCreater(), Arrays.asList("duty", "dept", "role"));
-
-			balanceVOs.add(balanceVO);
+			balanceVOs.add(balancePO.ptv(new BalanceVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceVOs);
@@ -96,14 +85,7 @@ public class BalanceServiceImpl implements BalanceService {
 		List<BalancePO> balancePOs = balanceDao.queryBalance(filters, company);
 
 		for (BalancePO balancePO : balancePOs) {
-
-			balanceVO = new BalanceVO(new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(balancePO, balanceVO, Arrays.asList("belonger", "creater"));
-			BeanUtil.copyProperties(balancePO.getBelonger(), balanceVO.getBelonger(), Arrays.asList("duty", "dept", "role"));
-			BeanUtil.copyProperties(balancePO.getCreater(), balanceVO.getCreater(), Arrays.asList("duty", "dept", "role"));
-
-			balanceVOs.add(balanceVO);
+			balanceVOs.add(balancePO.ptv(new BalanceVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return balanceVOs;

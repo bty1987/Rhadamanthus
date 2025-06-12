@@ -35,6 +35,12 @@
     feedRecord: {
         url: "/views/customer/feedbackRecord.html"
     },
+    feedComplaint: {
+        url: "/views/customer/feedbackComplaint.html"
+    },
+    feedbackGuarantee: {
+        url: "/views/customer/feedbackGuarantee.html"
+    },
     customerCompanyRule: {
         url: "/views/customer/customerCompanyRule.html"
     },
@@ -43,6 +49,9 @@
     },
     customerProfile4detailIndex: {
         url: "/views/customer/customerProfile4detail.html"
+    },
+    feedbackGuarantee2edit: {
+        url: "/views/customer/feedbackGuarantee2edit.html"
     },
 });
 
@@ -81,7 +90,6 @@ $.extend(api, {
         deleteVustomer: {
             url: "deleteVustomer.do"
         },
-
         pageVrecord: {
             url: "pageVrecord.do"
         },
@@ -91,12 +99,7 @@ $.extend(api, {
         addVrecord: {
             url: "addVrecord.do"
         },
-        queryFeedbackRecord: {
-            url: "queryFeedbackRecord.do"
-        },
-        addFeedbackRecord: {
-            url: "addFeedbackRecord.do"
-        },
+
         pageCustomerOrigin: {
             url: "pageCustomerOrigin.do",
             type: "query",
@@ -422,15 +425,24 @@ $.extend(api, {
         finishCustomerChance: {
             url: "finishCustomerChance.do"
         },
-        
+
         pageCustomerprofile: {
             url: "pageCustomerprofile.do"
         },
         queryCustomerProfileByOrderId: {
             url: "queryCustomerProfileByOrderId.do"
         },
+        queryCustomerProfileByCid: {
+            url: "queryCustomerProfileByCid.do"
+        },
+        queryCustomerProfileByCsid: {
+            url: "queryCustomerProfileByCsid.do"
+        },
         queryCustomerProfileByCpid: {
             url: "queryCustomerProfileByCpid.do"
+        },
+        addCustomerProfile: {
+            url: "addCustomerProfile.do"
         },
         handleCustomerProfile: {
             url: "handleCustomerProfile.do"
@@ -572,7 +584,75 @@ $.extend(api, {
         addFeedback: {
             url: "addFeedback.do"
         },
-
+        finishFeedback: {
+            url: "finishFeedback.do"
+        },
+        receiveFeedback: {
+            url: "receiveFeedback.do"
+        },
+        queryFeedbackBackVisit: {
+            url: "queryFeedbackBackVisit.do"
+        },
+        addFeedbackBackVisit: {
+            url: "addFeedbackBackVisit.do"
+        },
+        queryFeedbackRecord: {
+            url: "queryFeedbackRecord.do"
+        },
+        addFeedbackRecord: {
+            url: "addFeedbackRecord.do"
+        },
+        queryFeedbackComplaint: {
+            url: "queryFeedbackComplaint.do"
+        },
+        addFeedbackComplaint: {
+            url: "addFeedbackComplaint.do"
+        },
+        updateFeedbackComplaint: {
+            url: "updateFeedbackComplaint.do"
+        },
+        finishFeedbackComplaint: {
+            url: "finishFeedbackComplaint.do"
+        },
+        queryFeedbackComplaintDept: {
+            url: "queryFeedbackComplaintDept.do"
+        },
+        addFeedbackComplaintDept: {
+        	 url: "addFeedbackComplaintDept.do",
+        },
+        updateFeedbackComplaintDept: {
+            url: "updateFeedbackComplaintDept.do"
+        },
+        deleteFeedbackComplaintDept: {
+            url: "deleteFeedbackComplaintDept.do"
+        },
+        queryFeedbackDrawing: {
+            url: "queryFeedbackDrawing.do"
+        },
+        queryFeedbackDrawingBySid: {
+            url: "queryFeedbackDrawingBySid.do"
+        },
+        addFeedbackDrawing: {
+            url: "addFeedbackDrawing.do"
+        },
+        deleteFeedbackDrawing: {
+            url: "deleteFeedbackDrawing.do"
+        },
+        updateFeedbackDrawing: {
+            url: "updateFeedbackDrawing.do"
+        },
+        queryFeedbackGuarantee: {
+            url: "queryFeedbackGuarantee.do"
+        },
+        queryFeedbackGuaranteeByFgid: {
+            url: "queryFeedbackGuaranteeByFgid.do"
+        },
+        addFeedbackGuarantee: {
+            url: "addFeedbackGuarantee.do"
+        },
+        updateFeedbackGuarantee: {
+            url: "updateFeedbackGuarantee.do"
+        },
         pageGroup: {
             url: "pageGroup.do"
         },
@@ -784,19 +864,6 @@ $.extend(api, {
             }
         },
 
-        queryFeedbackDrawing: {
-            url: "queryFeedbackDrawing.do"
-        },
-        receiveFeedback: {
-            url: "receiveFeedback.do"
-        },
-        finishFeedback: {
-            url: "finishFeedback.do"
-        },
-        addFeedbackDrawing: {
-            url: "addFeedbackDrawing.do"
-        },
-
         pageDroup: {
             url: "pageDroup.do"
         },
@@ -812,6 +879,7 @@ $.extend(api, {
         bindDroup: {
             url: "bindDroup.do"
         },
+
         pageConversation: {
             url: "pageConversation.do"
         },

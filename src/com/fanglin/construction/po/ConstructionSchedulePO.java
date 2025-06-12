@@ -62,6 +62,8 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private long cnid;
 
+	private int period;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -82,7 +84,7 @@ public class ConstructionSchedulePO implements Serializable {
 		super();
 	}
 
-	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, long cnid) {
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, long cnid, int period) {
 
 		super();
 
@@ -90,6 +92,7 @@ public class ConstructionSchedulePO implements Serializable {
 		this.orderId = orderId;
 
 		this.cnid = cnid;
+		this.period = period;
 		this.schedule = schedule;
 
 		this.startTime = startTime;
@@ -132,6 +135,15 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setCnid(long cnid) {
 		this.cnid = cnid;
+	}
+
+	@Column(name = "period")
+	public int getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(int period) {
+		this.period = period;
 	}
 
 	@Column(name = "startTime")

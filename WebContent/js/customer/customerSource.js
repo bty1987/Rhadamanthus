@@ -108,6 +108,8 @@ $(function() {
         type: null,
         grade: ["A", "B", "C", "D"],
 
+        profileTemplate: null,
+
         depage: params['urlLoadParams'].depage,
     };
 
@@ -174,15 +176,26 @@ $(function() {
 
         $.each(res.customerDeptRules, function(i, v) {
 
+            v.busitype.other = v.busitype.outside + "-" + v.busitype.isRefer;
+
             busitypes.push(v.busitype);
         });
 
-        customerSource.items.businessType.bindData(busitypes, "dbid", "name", false, null, "outside").trigger("change");
+        customerSource.items.businessType.bindData(busitypes, "dbid", "name", '请选择', null, "other").trigger("change");
     });
 
     customerSource.items.businessType.change(function(e) {
 
-        var outside = $("#businessType option:selected").attr("other");
+        var other = $("#businessType option:selected").attr("other");
+
+        if (!other)
+            return false;
+
+        if (other.indexOf('-') == -1)
+            return false;
+
+        var outside = other.split('-')[0];
+        var isRefer = other.split('-')[1];
 
         if (outside == 0) {
             com.focusPage(".source", "#createsource").hide();
@@ -190,6 +203,14 @@ $(function() {
         } else {
             com.focusPage(".source", "#createsource").show();
             com.focusPage(".contact", "#createsource").show();
+        }
+
+        if (isRefer == 0) {
+            com.focusPage("#referCustomer", "#createsource").prop("checked", null).removeAttr("disabled", "disabled");
+            com.focusPage(".referCustomerInfo", "#createsource").hide();
+        } else {
+            com.focusPage("#referCustomer", "#createsource").prop("checked", "checked").attr("disabled", "disabled");
+            com.focusPage(".referCustomerInfo", "#createsource").show();
         }
     });
 
@@ -234,6 +255,8 @@ $(function() {
             if (decoration.orderId) {
                 customerSource.items.referOrderId.val(decoration.orderId);
                 customerSource.items.referPhone.val(decoration.customer.phone);
+                customerSource.items.referVillage.val(decoration.house.village.name);
+                customerSource.items.referHouseNumber.val(decoration.house.houseNumber);
 
                 customerSource.refer.orderId = decoration.orderId;
             }
@@ -275,12 +298,13 @@ $(function() {
 
             $.each(decorations, function(i, v) {
 
-                if (v.orderId == orderId)
-                    decoration = v;
+                decoration = v;
 
                 if (decoration.orderId) {
                     customerSource.items.referOrderId.val(decoration.orderId);
                     customerSource.items.referPhone.val(decoration.customer.phone);
+                    customerSource.items.referVillage.val(decoration.house.village.name);
+                    customerSource.items.referHouseNumber.val(decoration.house.houseNumber);
 
                     customerSource.refer.orderId = decoration.orderId;
                 }
@@ -404,7 +428,7 @@ $(function() {
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
-        "departmentType.name": ""
+        "departmentType.name": "",
     }, 'autoFillKeyValue', 'key', 'value');
 
     customerSource.items.company.change(function(res) {
@@ -475,7 +499,7 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.base("csCondList", "csPagenation", "csResultList", api.customer.pageCustomerSource);
-    searcher.condition(["customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-contact", "customer-customerSource-source", "customer-customerSource-referOrderId", "customer-customerSource-creater", "customer-customerSource-createTime", "customer-customerSource-status", "customer-customerSource-customerType", "customer-customerSource-demand"]);
+    searcher.condition(["customer-customerSource-name", "customer-customerSource-phone", "customer-customerSource-village", "customer-customerSource-contact", "customer-customerSource-source", "customer-customerSource-referOrderId", "customer-customerSource-creater", "customer-customerSource-createTime", "customer-customerSource-status", "customer-customerSource-customerType", "customer-customerSource-demand"]);
 
     searcher.button([{
         id: "createCustomerSource",
@@ -517,7 +541,7 @@ $(function() {
         clazz: "grey",
         show: function(v) {
 
-            return customerSource.depage == "user";
+            return (customerSource.depage == "user");
         }
     }, {
         field: "purpose",
@@ -554,29 +578,20 @@ $(function() {
         clazz: "blue"
     }, {
         field: "buildArea",
-        name: "建筑面积",
+        name: "派尺面积",
         prop: "buildArea",
         clazz: "blue"
     }, {
         field: "busitype",
         name: "业务类型",
         prop: "busitype.name",
-        clazz: "grey"
+        clazz: "red"
     }, {
-        field: "freeArea",
-        name: "赠送面积",
-        prop: "freeArea",
-        clazz: "blue"
-    }, {
-        field: "innerArea",
-        name: "套内面积",
-        prop: "innerArea",
-        clazz: "blue"
-    }, {
-        field: "totalArea",
-        name: "总面积",
-        prop: "totalArea",
-        clazz: "blue"
+        field: "outside",
+        name: "三方标识",
+        prop: "busitype.outside",
+        clazz: "red",
+        dataset: constant.data.decorationBusitype.outside.keys
     }, {
         type: "newline"
     }, {
@@ -643,7 +658,7 @@ $(function() {
 
             return v.referOrderId ? v.referOrderId : "";
         },
-        clazz: "grey",
+        clazz: "blue",
         click: function(btn, v) {
 
             tools.decoration.info(btn, v.referOrderId);
@@ -686,6 +701,8 @@ $(function() {
         name: "更新",
         clazz: "btn-info",
         handle: function(v) {
+
+            deleteDate();
 
             customerSource.type = "update";
             customerSource.source = v;
@@ -791,7 +808,7 @@ $(function() {
         handle: function(v) {
 
             params.customer.customerSource = v;
-            com.popup4page("#stockRecordPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
+            com.popup4page("#layerPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
 
                 searcher.doSearch();
             });
@@ -811,7 +828,7 @@ $(function() {
 
             params['urlLoadParams'].depage = "source";
 
-            com.popup4page("#stockRecordPopUp", "/views/customer/customerChance.html?depage=source", "机会", "", function() {
+            com.popup4page("#layerPopUp", "/views/customer/customerChance.html?depage=source", "机会", "", function() {
 
                 searcher.doSearch();
             });
@@ -838,6 +855,24 @@ $(function() {
 
             return v.status == constant.customer().customerSource.STATUS_INIT_INT || v.status == 2 || v.status == 3 || v.status == 4;
         }
+    }, {
+        name: "画像",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            params.customer.source = v;
+            // com.switchPage(api.index.profileInfo.url); 跳转新页面
+
+            params.customer.csid = v.csid;
+            params.customer.profile = {
+                "type": 0,
+                "csid": v.csid
+            }
+
+            com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
+
+            return false;
+        }
     }];
 
     searcher.line("name", lineprops, linebtns).render();
@@ -849,6 +884,24 @@ $(function() {
         customerSource.type = "create";
 
         deleteDate();
+
+        customerSource.profileTemplate = null;
+
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "CUSTOMER_PROFILE_TEMPLATE_0"
+        }, function(res) {
+
+            customerSource.profileTemplate = res.systemConfig.value;
+        }, null, false);
+
+        if (customerSource.profileTemplate) {
+            com.post(api.data.querySurveyTemplateByStid, {
+                "surveyTemplate.stid": customerSource.profileTemplate
+            }, function(res) {
+
+                display(res.surveyTemplate);
+            }, null, false);
+        }
 
         customerSource.modals.createSourceModal.modal("show");
     });
@@ -937,6 +990,13 @@ $(function() {
             "customerSource.totalArea": 0,
         };
 
+        var isRefer = $("#businessType option:selected").attr("other").split('-')[1];
+
+        if (isRefer == 1 && !customerSource.refer.orderId) {
+            com.showAlert("请填写推荐客户信息");
+            return false;
+        }
+
         if (customerSource.refer.orderId) {
             options["customerSource.referOrderId"] = customerSource.refer.orderId;
         }
@@ -975,12 +1035,17 @@ $(function() {
             com.post(api.customer.addCustomerSource, options, function(res) {
 
                 com.showAlert(com.info, "操作成功");
-                searcher.doSearch();
-                deleteDate();
-                customerSource.modals.createSourceModal.modal("hide");
-            });
-        }
 
+                handle(res.customerSource.csid);
+
+                searcher.doSearch();
+
+                deleteDate();
+
+                customerSource.modals.createSourceModal.modal("hide");
+
+            }, null, false);
+        }
     }
 
     function issueDate() {
@@ -996,7 +1061,7 @@ $(function() {
         if (customerSource.items.company.val()) {
             options["company"] = customerSource.items.company.val();
         }
-        
+
         if (customerSource.items.busitype.is(':visible')) {
             options["customerChance.busitype.dbid"] = customerSource.items.busitype.val();
         }
@@ -1012,7 +1077,7 @@ $(function() {
         if (customerSource.rule.atttype == constant.customer().customerDeptRule.ATTTYPE_RULE_INT) {
             options["customerChance.region.did"] = customerSource.items.region.val();
         }
-        
+
         customerSource.btnStatue = "close";
 
         com.post(api.customer.issueCustomerSource, options, function(res) {
@@ -1039,6 +1104,8 @@ $(function() {
         com.cleanItems(customerSource.items);
         com.cleanItems(customerSource.approveItems);
         com.cleanItems(customerSource.updateHouseItems);
+
+        com.focusPage(".item", "#from1").remove();
     }
 
     // 检查获取楼盘
@@ -1237,5 +1304,165 @@ $(function() {
             deleteDate();
             customerSource.modals.updateForHouse.modal("hide");
         });
+    }
+
+    function display(profile) {
+
+        var state = 0;
+
+        $.each(profile.items, function(i, v) {
+
+            if (v.type != constant.customer().survey.TYPE_TEXT_INT) {
+                var contentDiv = $('<div class="form-group item"></div>').addClass("item").attr("id", v.cpiid).attr("cpiid", v.cpiid).attr("type", v.type).appendTo(com.focusPage("#from1"));
+                var titleSpan = $('<label class="col-sm-3 control-label no-padding-right"></span>').html(v.name).appendTo(contentDiv);
+                var groupDiv = $('<div class="col-sm-9"></div>').appendTo(contentDiv);
+
+                if (v.require == 0)
+                    titleSpan.addClass("orange");
+            }
+
+            var type = v.type;
+
+            if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
+                customerProfileDetail.items.title.html(v.content);
+            } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
+
+                var textArea = $('<textarea class="col-xs-6 text "></textarea>').prop('id', v.cpiid + "textarea").html(v.content).appendTo(groupDiv);
+
+                if (v.require == 0)
+                    textArea.addClass("v_required");
+
+            } else if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
+
+                var radioDivAll = $('<div></div>').prop('id', 'form-field-checkbox' + v.stiid).appendTo(groupDiv);
+
+                if (v.require == 0)
+                    radioDivAll.addClass("v_radio");
+
+                $.each(v.options, function(j, option) {
+
+                    option["cpiid"] = i;
+                    elect(radioDivAll, option, type, state);
+                });
+            } else if (v.type == constant.customer().survey.TYPE_MULTIPLE_INT) {
+
+                var checkDivAll = $('<div></div>').prop('id', 'form-field-checkbox' + v.stiid).appendTo(groupDiv);
+
+                if (v.require == 0)
+                    checkDivAll.addClass("v_checkbox");
+
+                $.each(v.options, function(j, option) {
+
+                    option["cpiid"] = i;
+                    elect(checkDivAll, option, type, state);
+                });
+            }
+        });
+    }
+
+    function handle(csid) {
+
+        var options = {
+            "customerProfile.csid": csid,
+            "customerProfile.type": 0,
+            "customerProfile.tid": customerSource.profileTemplate
+        };
+
+        var items = com.focusPage(".item", "#from1");
+
+        if (!items)
+            return false;
+        if (items.length == 0)
+            return false;
+
+        $.each(items, function(i, v) {
+
+            var item = $(v);
+
+            var type = item.attr("type");
+
+            if (type == constant.customer().survey.TYPE_INPUT_INT) {
+
+                options["customerProfile.items[" + i + "].name"] = item.find("label").html();
+                options["customerProfile.items[" + i + "].content"] = item.find("textarea").val();
+                options["customerProfile.items[" + i + "].type"] = type;
+            }
+
+            if (type == constant.customer().survey.TYPE_SINGLE_INT) {
+
+                var soptions = item.find("input[type='radio']");
+
+                options["customerProfile.items[" + i + "].name"] = item.find("label").html();
+                options["customerProfile.items[" + i + "].type"] = type;
+
+                $.each(soptions, function(k, n) {
+
+                    var subt = $(n);
+                    var cpoid = subt.attr("cpoid");
+
+                    options["customerProfile.items[" + i + "].options[" + k + "].title"] = subt.next("span").html();
+
+                    if (subt.prop("checked")) {
+                        options["customerProfile.items[" + i + "].options[" + k + "].checked"] = 0;
+                    } else {
+                        options["customerProfile.items[" + i + "].options[" + k + "].checked"] = 1;
+                    }
+                });
+            }
+
+            if (type == constant.customer().survey.TYPE_MULTIPLE_INT) {
+
+                var soptions = item.find("input[type='checkbox']");
+
+                options["customerProfile.items[" + i + "].name"] = item.find("label").html();
+                options["customerProfile.items[" + i + "].type"] = type;
+
+                $.each(soptions, function(k, n) {
+
+                    var subt = $(n);
+                    var cpoid = subt.attr("cpoid");
+
+                    options["customerProfile.items[" + i + "].options[" + k + "].title"] = subt.next("span").html();
+
+                    if (subt.prop("checked")) {
+                        options["customerProfile.items[" + i + "].options[" + k + "].checked"] = 0;
+                    } else {
+                        options["customerProfile.items[" + i + "].options[" + k + "].checked"] = 1;
+                    }
+                });
+            }
+        });
+
+        com.post(api.customer.addCustomerProfile, options, null, null, false);
+    }
+
+    function elect(contentDiv, option, type, status) {
+
+        var ridioDiv = $('<div class="col-sm-4"></div>').appendTo(contentDiv);
+        var div = $('<div></div>').addClass("").appendTo(ridioDiv);
+        var label = $('<label  class="label-text"></label>').appendTo(div);
+
+        var input = $('<input class="ace">').attr({
+            'name': 'form-field-checkbox' + option.stiid,
+            "cpoid": option.cpoid
+        }).appendTo(label);
+
+        if (type == constant.customer().survey.TYPE_SINGLE_INT) {
+            input.prop({
+                'type': 'radio'
+            })
+        } else if (type == constant.customer().survey.TYPE_MULTIPLE_INT) {
+            input.prop({
+                'type': 'checkbox'
+            })
+        }
+
+        var span = $('<span class="lbl blue" style="padding-left: 5px;"></span>').html(option.title).appendTo(label);
+
+        if (option.checked == 0) {
+            input.attr('checked', true);
+        } else {
+            input.attr('checked', false);
+        }
     }
 });

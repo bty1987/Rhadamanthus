@@ -75,18 +75,8 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		List<BalanceSelectionPO> balanceSelectionPOs = balanceSelectionDao.pageBalanceSelection(paging, filters, company);
 		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
 
-		BalanceSelectionVO balanceSelectionVO;
-
 		for (BalanceSelectionPO balanceSelectionPO : balanceSelectionPOs) {
-
-			balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-			BeanUtil.copyProperties(balanceSelectionPO.getCreater(), balanceSelectionVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-			BeanUtil.copyProperties(balanceSelectionPO.getBalancer(), balanceSelectionVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-			BeanUtil.copyPropertie(balanceSelectionPO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("category", "supplier"));
-
-			balanceSelectionVOs.add(balanceSelectionVO);
+			balanceSelectionVOs.add(balanceSelectionPO.ptv(new BalanceSelectionVO(new BrandVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSelectionVOs);
@@ -99,19 +89,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
 
 		for (BalanceSelectionBO balanceSelectionBO : balanceSelectionBOs) {
-
-			balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceSelectionBO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-			BeanUtil.copyProperties(balanceSelectionBO.getCreater(), balanceSelectionVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-			BeanUtil.copyProperties(balanceSelectionBO.getBalancer(), balanceSelectionVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-			BeanUtil.copyPropertie(balanceSelectionBO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("category", "supplier"));
-			BeanUtil.copyPropertie(balanceSelectionBO.getBalance(), balanceSelectionVO.getBalance(), Arrays.asList("belonger", "creater"));
-			BeanUtil.copyPropertie(balanceSelectionBO.getBalance().getBelonger(), balanceSelectionVO.getBalance().getBelonger(), Arrays.asList("duty", "dept", "role"));
-			BeanUtil.copyPropertie(balanceSelectionBO.getBalance().getCreater(), balanceSelectionVO.getBalance().getCreater(), Arrays.asList("duty", "dept", "role"));
-
-			balanceSelectionVOs.add(balanceSelectionVO);
-
+			balanceSelectionVOs.add(balanceSelectionBO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSelectionVOs);
@@ -124,13 +102,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		List<BalanceSelectionPO> balanceSelectionPOs = balanceSelectionDao.queryBalanceSelection(balanceSelectionVO.getName(), company);
 
 		for (BalanceSelectionPO balanceSelectionPO : balanceSelectionPOs) {
-
-			balanceSelectionVO = new BalanceSelectionVO(new BrandVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceSelectionPO, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-			BeanUtil.copyPropertie(balanceSelectionPO.getBrand(), balanceSelectionVO.getBrand(), Arrays.asList("supplier"));
-
-			balanceSelectionVOs.add(balanceSelectionVO);
+			balanceSelectionVOs.add(balanceSelectionPO.ptv(new BalanceSelectionVO(new BrandVO(), new UserBaseVO())));
 		}
 
 		return balanceSelectionVOs;
@@ -179,6 +151,19 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
 
+		if (balanceSelectionPO == null && balanceSelectionVO.getBrand() != null) {
+			balanceSelectionPO = balanceSelectionDao.queryBalanceSelection(balanceSelectionVO.getBrand().getBid(), "C", company);
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		if (balanceSelectionPO == null && balanceSelectionVO.getBrand() != null) {
+
+			BrandPO brand = brandDao.queryBrandByBid(balanceSelectionVO.getBrand().getBid());
+
+			balanceSelectionDao.save(new BalanceSelectionPO(brand).init(brand, "C", operater, company));
+		}
+
 		if (balanceSelectionPO == null) {
 			throw new FLException(350027, "结算选材不存在");
 		}
@@ -187,7 +172,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 			throw new FLException(350028, "结算选材不可操作");
 		}
 
-		UserPO operater = userDao.queryUserByUserId(userId);
+		if (balanceSelectionItem == null || balanceSelectionItem.size() == 0) return 0;
 
 		for (BalanceSelectionItemVO balanceSelectionItemVO : balanceSelectionItem) {
 
@@ -195,11 +180,13 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			if (selectionItemPO == null) continue;
 
+			if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_INIT_INT) continue;
+
 			BalanceSelectionItemPO balanceSelectionItemPO = new BalanceSelectionItemPO();
 
 			SelectionItemPD selectionItemPD = new SelectionItemPD(selectionItemPO.getSiid());
 
-			balanceSelectionItemPO.setBsid(balanceSelectionVO.getBsid());
+			balanceSelectionItemPO.setBsid(balanceSelectionPO.getBsid());
 			balanceSelectionItemPO.setSelectionItem(selectionItemPD);
 
 			balanceSelectionItemDao.save(balanceSelectionItemPO);
@@ -214,6 +201,80 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionItemDao.flush();
 
 		long amount = balanceSelectionDao.amountBalaceSelection(balanceSelectionVO.getBsid());
+
+		balanceSelectionPO.setIncome(balanceSelectionVO.getIncome());
+		balanceSelectionPO.setCost(amount);
+		balanceSelectionPO.setPayment(amount);
+		balanceSelectionPO.setProfit(balanceSelectionVO.getProfit());
+
+		balanceSelectionDao.update(balanceSelectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int batchBalanceSelection(BalanceSelectionVO balanceSelectionVO, List<BalanceSelectionItemVO> balanceSelectionItems, String userId, int company) throws FLException {
+
+		if (balanceSelectionItems == null || balanceSelectionItems.size() == 0) return 0;
+
+		BalanceSelectionPO balanceSelectionPO = null;
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		if (balanceSelectionPO == null && balanceSelectionVO.getBrand() != null) {
+			balanceSelectionPO = balanceSelectionDao.queryBalanceSelection(balanceSelectionVO.getBrand().getBid(), "C", company);
+		}
+
+		if (balanceSelectionPO == null && balanceSelectionVO.getBrand() != null) {
+
+			BrandPO brand = brandDao.queryBrandByBid(balanceSelectionVO.getBrand().getBid());
+
+			balanceSelectionDao.save(new BalanceSelectionPO(brand).init(brand, "C", operater, company));
+		}
+
+		for (BalanceSelectionItemVO balanceSelectionItemVO : balanceSelectionItems) {
+
+			SelectionItemPO selectionItemPO = selectionItemDao.get(balanceSelectionItemVO.getSelectionItem().getSiid());
+
+			if (selectionItemPO == null) continue;
+
+			if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_INIT_INT) continue;
+
+			if (balanceSelectionPO == null) {
+				balanceSelectionPO = balanceSelectionDao.queryBalanceSelection(selectionItemPO.getGoods().getBid(), "C", company);
+			}
+
+			if (balanceSelectionPO == null) {
+
+				BrandPO brand = new BrandPO(selectionItemPO.getGoods().getGid());
+
+				brand.setName(selectionItemPO.getGoods().getBrand());
+
+				balanceSelectionPO = new BalanceSelectionPO();
+
+				balanceSelectionDao.save(new BalanceSelectionPO(brand).init(brand, "C", operater, company));
+			}
+
+			BalanceSelectionItemPO balanceSelectionItemPO = new BalanceSelectionItemPO();
+
+			SelectionItemPD selectionItemPD = new SelectionItemPD(selectionItemPO.getSiid());
+
+			balanceSelectionItemPO.setBsid(balanceSelectionPO.getBsid());
+			balanceSelectionItemPO.setSelectionItem(selectionItemPD);
+
+			balanceSelectionItemDao.save(balanceSelectionItemPO);
+
+			selectionItemPO.setAccounter(operater);
+			selectionItemPO.setAccountTime(DateUtil.getDateToTimestamp(new Date()));
+			selectionItemPO.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_ACCOUNT_INT);
+
+			selectionItemDao.update(selectionItemPO);
+		}
+
+		balanceSelectionItemDao.flush();
+
+		long amount = balanceSelectionDao.amountBalaceSelection(balanceSelectionPO.getBsid());
 
 		balanceSelectionPO.setIncome(balanceSelectionVO.getIncome());
 		balanceSelectionPO.setCost(amount);
@@ -274,6 +335,27 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException {
+
+		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelection.getBsid());
+
+		if (balanceSelectionPO == null) {
+			throw new FLException(350027, "结算选材不存在");
+		}
+
+		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_INIT_INT) {
+			throw new FLException(350028, "结算选材不可操作");
+		}
+
+		balanceSelectionPO.setName(balanceSelection.getName());
+
+		balanceSelectionDao.update(balanceSelectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int lockBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException {
 
 		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
@@ -322,19 +404,42 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException {
+	public int auditBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException {
 
-		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelection.getBsid());
+		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
 
 		if (balanceSelectionPO == null) {
 			throw new FLException(350027, "结算选材不存在");
 		}
 
-		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_INIT_INT) {
+		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_UNLOCK_INT) {
 			throw new FLException(350028, "结算选材不可操作");
 		}
 
-		balanceSelectionPO.setName(balanceSelection.getName());
+		balanceSelectionPO.setStatus(BalanceSelectionPO.STATUS_WAIT_INT);
+		balanceSelectionPO.setAuditer(userDao.queryUserByUserId(userId));
+		balanceSelectionPO.setAuditTime(DateUtil.getDateToTimestamp(new Date()));
+
+		balanceSelectionDao.update(balanceSelectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unauditBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException {
+
+		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
+
+		if (balanceSelectionPO == null) {
+			throw new FLException(350027, "结算选材不存在");
+		}
+
+		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_WAIT_INT) {
+			throw new FLException(350028, "结算选材不可操作");
+		}
+
+		balanceSelectionPO.setStatus(BalanceSelectionPO.STATUS_UNLOCK_INT);
 
 		balanceSelectionDao.update(balanceSelectionPO);
 
@@ -351,7 +456,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 			throw new FLException(350027, "结算选材不存在");
 		}
 
-		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_UNLOCK_INT) {
+		if (balanceSelectionPO.getStatus() != BalanceSelectionPO.STATUS_WAIT_INT) {
 			throw new FLException(350028, "结算选材不可操作");
 		}
 

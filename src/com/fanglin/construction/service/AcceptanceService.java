@@ -12,13 +12,14 @@
 package com.fanglin.construction.service;
 
 import com.fanglin.construction.vo.AcceptanceVO;
+import com.fanglin.core.interceptor.FLException;
 
 public interface AcceptanceService {
-	
-	public AcceptanceVO queryAcceptanceById(int actId);
-	
-	public AcceptanceVO queryAcceptanceByOrderId(AcceptanceVO acceptanceVO);
-	
-	public void saveOrUpdateAcceptance(AcceptanceVO acceptanceVO);
+
+	public AcceptanceVO queryAcceptanceById(AcceptanceVO acceptanceVO);
+
+	public AcceptanceVO queryAcceptanceByOrderId(AcceptanceVO acceptanceVO) throws FLException;
+
+	public int updateAcceptance(AcceptanceVO acceptanceVO) throws FLException;
 
 }

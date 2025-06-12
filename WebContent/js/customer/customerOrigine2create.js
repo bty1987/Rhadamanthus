@@ -23,24 +23,86 @@ jQuery(function($) {
             innerArea: com.focusPage("#innerArea", "#addcustomerorigine"),
             designer: com.focusPage("#designer", "#addcustomerorigine"),
             salesman: com.focusPage("#salesman", "#addcustomerorigine"),
-            decorationBusitype: com.focusPage("#decorationBusitype", "#addcustomerorigine")
+            decorationBusitype: com.focusPage("#decorationBusitype", "#addcustomerorigine"),
+            referCustomer: com.focusPage("#referCustomer", "#addcustomerorigine"),
+            referPhone: com.focusPage("#referPhone", "#addcustomerorigine"),
+            referOrderId: com.focusPage("#referOrderId", "#addcustomerorigine"),
+            referVillage: com.focusPage("#referVillage", "#addcustomerorigine"),
+            referHouseNumber: com.focusPage("#referHouseNumber", "#addcustomerorigine"),
+            referContractTime: com.focusPage("#referContractTime", "#addcustomerorigine"),
+            source: com.focusPage("#source", "#addcustomerorigine"),
+            contact: com.focusPage("#contact", "#addcustomerorigine"),
         },
+
+        refer: {
+            orderId: null
+        },
+
         grade: ["A", "B", "C", "D"],
         decorationBusitypes: []
     };
+
+    function initVillage(containId) {
+
+        com.initTypeahead(containId, api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
+
+            com.post(api.data.queryVillageByVid, {
+                "village.no": k
+            }, function(res) {
+
+                customerOrigine.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
+            }, null, false);
+            return v;
+        });
+    }
+
+    initVillage(com.focusPage("#referVillage", "#addcustomerorigine"));
+    initVillage(com.focusPage("#villageNoCreate", "#addcustomerorigine"));
+
+    com.focusPage('#referCustomer').on("click", function() {
+
+        if (customerOrigine.items.referCustomer.prop("checked")) {
+            com.focusPage(".referCustomerInfo", "#addcustomerorigine").show();
+        } else {
+            com.focusPage(".referCustomerInfo", "#addcustomerorigine").hide();
+        }
+    });
 
     com.post(api.data.queryDecorationBusitype, {}, function(res) {
 
         var decorationBusitypes = [];
 
-        $.each(res.decorationBusitypes, function(intex, value) {
+        $.each(res.decorationBusitypes, function(index, value) {
 
             if (value.status == 0) {
+                value.other = value.outside + "-" + value.isRefer;
                 decorationBusitypes.push(value);
             }
         });
 
-        customerOrigine.items.decorationBusitype.bindData(decorationBusitypes, 'dbid', 'name');
+        customerOrigine.items.decorationBusitype.bindData(decorationBusitypes, 'dbid', 'name', false, null, "other").trigger("change");
+    });
+
+    customerOrigine.items.decorationBusitype.change(function(e) {
+        var outside = $("#decorationBusitype option:selected").attr("other").split('-')[0];
+        var isRefer = $("#decorationBusitype option:selected").attr("other").split('-')[1];
+
+        if (outside == 0) {
+            com.focusPage(".source", "#addcustomerorigine").hide();
+            com.focusPage(".contact", "#addcustomerorigine").hide();
+        } else {
+            com.focusPage(".source", "#addcustomerorigine").show();
+            com.focusPage(".contact", "#addcustomerorigine").show();
+        }
+
+        if (isRefer == 0) {
+            com.focusPage("#referCustomer", "#addcustomerorigine").prop("checked", null).removeAttr("disabled", "disabled");
+            com.focusPage(".referCustomerInfo", "#addcustomerorigine").hide();
+        } else {
+            com.focusPage("#referCustomer", "#addcustomerorigine").prop("checked", "checked").attr("disabled", "disabled");
+            com.focusPage(".referCustomerInfo", "#addcustomerorigine").show();
+        }
+
     });
 
     customerOrigine.saveBtn.bindClick(addcustomerOrigin);
@@ -52,16 +114,6 @@ jQuery(function($) {
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0
     }, 'autoFillKeyValue', 'key', 'value', null);
-    com.initTypeahead('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v) {
-
-        com.post(api.data.queryVillageByVid, {
-            "village.no": k
-        }, function(res) {
-
-            customerOrigine.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
-        }, null, false);
-        return v;
-    });
 
     customerOrigine.items.grade.bindData(customerOrigine.grade, "key", "value", false);
     customerOrigine.items.gender.switchBtn("gender");
@@ -79,10 +131,209 @@ jQuery(function($) {
         getTotalArea();
     });
 
+    customerOrigine.items.referOrderId.blur(function() {
+
+        var orderId = customerOrigine.items.referOrderId.val();
+
+        var options = {
+            "decoration.orderId": orderId
+        }
+
+        com.post(api.decoration.queryDecorationForCommonByOrderId, options, function(res) {
+
+            var decoration = res.decoration;
+
+            if (decoration.orderId) {
+                customerOrigine.items.referOrderId.val(decoration.orderId);
+                customerOrigine.items.referPhone.val(decoration.customer.phone);
+
+                customerOrigine.refer.orderId = decoration.orderId;
+            }
+
+            if (decoration.precontractTime)
+                customerOrigine.items.referContractTime.val(decoration.precontractTime);
+
+            if (decoration.contractTime)
+                customerOrigine.items.referContractTime.val(decoration.contractTime);
+
+            if (decoration.house && decoration.house.village && decoration.house.village.name)
+                customerOrigine.items.referVillage.val(decoration.house.village.name);
+
+            if (decoration.house && decoration.house.houseNumber)
+                customerOrigine.items.referHouseNumber.val(decoration.house.houseNumber);
+        }, function(res) {
+
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
+    customerOrigine.items.referPhone.blur(function() {
+
+        customerOrigine.refer.orderId = null;
+
+        var phone = customerOrigine.items.referPhone.val();
+
+        var options = {
+            "customerPhone": phone,
+            "paging.page": 1,
+            "paging.rows": 10,
+        }
+
+        var decoration = null;
+
+        com.post(api.decoration.pageDecorationForCustomer, options, function(res) {
+
+            if (res.paging.totalRecords == 0) {
+                com.showAlert(com.error, "推荐客户不存在");
+                return false;
+            }
+
+            var decorations = res.paging.data;
+
+            $.each(decorations, function(i, v) {
+
+                    decoration = v;
+
+                if (decoration.orderId) {
+                    customerOrigine.items.referOrderId.val(decoration.orderId);
+                    customerOrigine.items.referPhone.val(decoration.customer.phone);
+
+                    customerOrigine.refer.orderId = decoration.orderId;
+                }
+
+                if (decoration.precontractTime)
+                    customerOrigine.items.referContractTime.val(decoration.precontractTime);
+
+                if (decoration.contractTime)
+                    customerOrigine.items.referContractTime.val(decoration.precontractTime);
+
+                if (decoration.house && decoration.house.village && decoration.house.village.name)
+                    customerOrigine.items.referVillage.val(decoration.house.village.name);
+
+                if (decoration.house && decoration.house.houseNumber)
+                    customerOrigine.items.referHouseNumber.val(decoration.house.houseNumber);
+
+                return false;
+            });
+        }, function(res) {
+
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
+    customerOrigine.items.referVillage.blur(function() {
+
+        customerOrigine.refer.orderId = null;
+
+        var villageno = com.typeahead(customerOrigine.items.referVillage);
+        var housenumber = customerOrigine.items.referHouseNumber.val();
+
+        var options = {
+            "house.village.no": villageno,
+            "house.houseNumber": housenumber,
+            "house.status": 0,
+        };
+
+        var house = null;
+        var decoration = null;
+
+        com.post(api.data.queryHouseByNoAHnum, options, function(res) {
+
+            house = res.house;
+        }, null, false);
+
+        if (!house)
+            return false;
+
+        var options = {
+            "decoration.house.hid": house.hid
+        }
+
+        com.post(api.decoration.checkDecoration, options, function(res) {
+
+            var decoration = res.decoration;
+
+            if (decoration.orderId) {
+                customerOrigine.items.referOrderId.val(decoration.orderId);
+                customerOrigine.items.referPhone.val(decoration.customer.phone);
+
+                customerOrigine.refer.orderId = decoration.orderId;
+            }
+
+            if (decoration.precontractTime)
+                customerOrigine.items.referContractTime.val(decoration.precontractTime);
+
+            if (decoration.contractTime)
+                customerOrigine.items.referContractTime.val(decoration.precontractTime);
+        }, function(res) {
+
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
+    customerOrigine.items.referHouseNumber.blur(function() {
+
+        customerOrigine.refer.orderId = null;
+
+        var villageno = com.typeahead(customerOrigine.items.referVillage);
+        var housenumber = customerOrigine.items.referHouseNumber.val();
+
+        var options = {
+            "house.village.no": villageno,
+            "house.houseNumber": housenumber,
+            "house.status": 0,
+        };
+
+        var house = null;
+        var decoration = null;
+
+        com.post(api.data.queryHouseByNoAHnum, options, function(res) {
+
+            house = res.house;
+        }, null, false);
+
+        if (!house)
+            return false;
+
+        var options = {
+            "decoration.house.hid": house.hid
+        }
+
+        com.post(api.decoration.checkDecoration, options, function(res) {
+
+            var decoration = res.decoration;
+
+            if (decoration.orderId) {
+                customerOrigine.items.referOrderId.val(decoration.orderId);
+                customerOrigine.items.referPhone.val(decoration.customer.phone);
+
+                customerOrigine.refer.orderId = decoration.orderId;
+            }
+
+            if (decoration.precontractTime)
+                customerOrigine.items.referContractTime.val(decoration.precontractTime);
+
+            if (decoration.contractTime)
+                customerOrigine.items.referContractTime.val(decoration.precontractTime);
+        }, function(res) {
+
+            com.showAlert(com.error, "推荐客户不存在");
+            return false;
+        });
+    });
+
     function addcustomerOrigin() {
 
         if (com.validate("addcustomerorigine"))
             return false;
+
+        if (customerOrigine.items.referCustomer.prop("checked") && customerOrigine.items.referOrderId.val() == ""){
+            com.showAlert(com.error, "请填写推荐单号！");
+            return false;
+        }
 
         var options = {
             "customerOrigin.name": customerOrigine.items.name.val(),
@@ -101,8 +352,14 @@ jQuery(function($) {
             "customerOrigin.innerArea": customerOrigine.items.innerArea.val(),
             "customerOrigin.designer.userId": com.typeahead("designer"),
             "customerOrigin.salesman.userId": com.typeahead("salesman"),
-            "customerOrigin.decorationBusitype.dbid": customerOrigine.items.decorationBusitype.val()
+            "customerOrigin.decorationBusitype.dbid": customerOrigine.items.decorationBusitype.val(),
+            "customerOrigin.source": customerOrigine.items.source.val(),
+            "customerOrigin.contact": customerOrigine.items.contact.val()
         };
+
+        if (customerOrigine.refer.orderId) {
+            options["customerOrigin.referOrderId"] = customerOrigine.refer.orderId;
+        }
 
         com.post(api.customer.addCustomerOrigin, options, function(res) {
 

@@ -28,6 +28,13 @@ $.extend(api.index, {
         url: "/views/quotation/quotationOutput.html"
     },
 
+    quotationRefundIndex: {
+        url: "/views/quotation/quotationRefundIndex.html"
+    },
+    quotationRefundPartIndex: {
+        url: "/views/quotation/quotationRefundPart.html"
+    },
+
     addReduceIndex: {
         url: "/views/quotation/addReduceIndex.html"
     },
@@ -60,6 +67,9 @@ $.extend(api.index, {
     },
     selectionPartIndex: {
         url: "/views/quotation/selectionPart.html"
+    },
+    selectionItemIndex: {
+        url: "/views/quotation/selectionItem.html"
     },
     selectionOutputIndex: {
         url: "/views/quotation/selectionOutput.html"
@@ -1004,6 +1014,81 @@ $.extend(api, {
             type: "update",
             tranargs: {
                 args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", "quotation.costPrice", "quotation.unachePrice", "quotation.consPrice", "quotation.comsPrice", "quotation.undisComPrice", "quotation.disComPrice", "quotation.taxPrice", "quotation.taxRate"]
+            }
+        },
+
+        pageQuotationRefund:{
+            url: "pageQuotationRefund.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["totalPrice"]
+            }, {
+                result: "paging-data-decoration",
+                args: ["notSalesmanRate"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea"]
+            }]
+        },
+        queryQuotationRefundById: {
+            url: "queryQuotationRefundById.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "quotationRefund",
+                args: ["totalPrice"]
+            }]
+        },
+        addQuotationRefund: {
+            url: "addQuotationRefund.do",
+            type: "update",
+            tranargs: {
+                args: ["quotationRefund.totalPrice"],
+            }
+        },
+        updateQuotationRefund: {
+            url: "updateQuotationRefund.do",
+            type: "update",
+            tranargs: {
+                args: ["quotationRefund.totalPrice"],
+            }
+        },
+        deleteQuotationRefund:{
+            url: "deleteQuotationRefund.do"
+        },
+
+        queryQuotationRefundItem:{
+            url: "queryQuotationRefundItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "quotationRefundItems",
+                args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
+            }]
+        },
+        updateQuotationRefundItem:{
+            url: "updateQuotationRefundItem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["quotationRefund.totalPrice", "quotationRefundItem.unitPrice", "quotationRefundItem.addPrice", "quotationRefundItem.subPrice", "quotationRefundItem.initNum", "quotationRefundItem.num"],
+                query: [{
+                    result: "quotationRefundItem",
+                    args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
+                }]
+            }
+        },
+        updateQuotationRefundItemForIndex:{
+            url: "updateQuotationRefundItemForIndex.do"
+        },
+        deleteQuotationRefundItem:{
+            url: "deleteQuotationRefundItem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["quotationRefund.totalPrice"]
             }
         },
 

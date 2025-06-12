@@ -13,13 +13,14 @@ $(function() {
         items: {
             name: com.focusPage("#name", "#customerUserRuleItem"),
             type: com.focusPage("#type", "#customerUserRuleItem"),
-            deptype: com.focusPage("#deptype","#customerUserRuleItem"),
+            deptype: com.focusPage("#deptype", "#customerUserRuleItem"),
             deptSel: com.focusPage("#deptSel", "#customerUserRuleItem"),
             uppval: com.focusPage("#uppval", "#customerUserRuleItem"),
             lowval: com.focusPage("#lowval", "#customerUserRuleItem"),
             priority: com.focusPage("#priority", "#customerUserRuleItem"),
             isSurplus: com.focusPage("#isSurplus", "#addCustomerUserRuleItemModal"),
             isDelete: com.focusPage("#isDelete", "#addCustomerUserRuleItemModal"),
+            handleTime: com.focusPage("#handleTime", "#addCustomerUserRuleItemModal"),
             status: com.focusPage("#status", "#customerUserRuleItem"),
         },
 
@@ -30,6 +31,8 @@ $(function() {
             "false": 1
         },
     };
+
+    com.datetime(customerUserRuleItem.items.handleTime);
 
     customerUserRuleItem.items.type.bindData(constant.customer().customerUserRuleItem.type.datas, "key", "value");
     customerUserRuleItem.items.status.bindData(constant.customer().customerUserRuleItem.status.datas, "key", "value");
@@ -43,24 +46,19 @@ $(function() {
         com.clearValidator();
     });
 
-    customerUserRuleItem.items.type.on("change", function () {
+    com.post(api.communion.queryDepartmentType, {}, function(res) {
 
-        if (customerUserRuleItem.items.type.val() == 2) {
+        customerUserRuleItem.items.deptype.bindData(res.departmentTypes, "dtid", "name", true);
+    }, null, false);
 
-            com.post(api.communion.queryDepartmentType, {}, function (res) {
+    customerUserRuleItem.items.deptype.on("change", function(b, d) {
 
-                customerUserRuleItem.items.deptype.bindData(res.departmentTypes, "dtid", "name", true);
-            });
-        }
-    }).trigger("change");
-
-    customerUserRuleItem.items.deptype.on("change", function (b, d) {
-
-        if (customerUserRuleItem.items.type.val() == 2) {
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_INT) {
 
             com.post(api.communion.queryDepartmentByDtid, {
                 "dept.type.dtid": $(this).val()
-            }, function (res) {
+            }, function(res) {
+
                 customerUserRuleItem.items.deptSel.bindData(res.deptList, "did", "name");
             });
         }
@@ -92,10 +90,23 @@ $(function() {
         clazz: "red",
         dataset: constant.customer().customerUserRuleItem.type.keys
     }, {
+        fieId: "departmentType.name",
+        name: "部门类型",
+        prop: "departmentType.name",
+        clazz: "grey",
+        show: function(v) {
+
+            return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_TYPE_INT;
+        }
+    }, {
         fieId: "department.name",
         name: "部门",
         prop: "department.name",
-        clazz: "grey"
+        clazz: "grey",
+        show: function(v) {
+
+            return v.type == constant.customer().customerUserRuleItem.TYPE_DEPT_INT;
+        }
     }, {
         fieId: "uppval",
         name: "起始值",
@@ -130,6 +141,11 @@ $(function() {
         prop: "status",
         clazz: "red",
         dataset: constant.customer().customerUserRuleItem.status.keys
+    }, {
+        field: "handleTime",
+        name: "操作时间",
+        prop: "handleTime",
+        clazz: "green"
     }];
 
     var linebtns = [{
@@ -175,7 +191,15 @@ $(function() {
             com.focusPage(".uppval").hide();
             com.focusPage(".lowval").hide();
             com.focusPage("#isDelete").prop("checked", true);
-        };
+        }
+
+        if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_TYPE_INT) {
+            com.focusPage(".deptype").show();
+            com.focusPage(".deptSel").hide();
+            com.focusPage(".uppval").show();
+            com.focusPage(".lowval").show();
+            com.focusPage("#isDelete").prop("checked", true);
+        }
 
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_INT) {
             com.focusPage(".deptype").show();
@@ -194,6 +218,7 @@ $(function() {
         var url = api.customer.addCustomerUserRuleItem;
         var options = {
             "customerUserRuleItem.curid": params.customer.curid,
+            "customerUserRuleItem.departmentType.dtid": customerUserRuleItem.items.deptype.val(),
             "customerUserRuleItem.department.did": customerUserRuleItem.items.deptSel.val(),
             "customerUserRuleItem.name": customerUserRuleItem.items.name.val(),
             "customerUserRuleItem.type": customerUserRuleItem.items.type.val(),
@@ -202,8 +227,8 @@ $(function() {
             "customerUserRuleItem.priority": customerUserRuleItem.items.priority.val(),
             "customerUserRuleItem.status": customerUserRuleItem.items.status.val(),
             "customerUserRuleItem.isSurplus": customerUserRuleItem.getProp[customerUserRuleItem.items.isSurplus.prop("checked")],
-            "customerUserRuleItem.isDelete": customerUserRuleItem.getProp[customerUserRuleItem.items.isDelete.prop("checked")]
-
+            "customerUserRuleItem.isDelete": customerUserRuleItem.getProp[customerUserRuleItem.items.isDelete.prop("checked")],
+            "customerUserRuleItem.handleTime": customerUserRuleItem.items.handleTime.val()
         };
 
         com.post(url, options, function() {
@@ -212,7 +237,6 @@ $(function() {
             searcher.doSearch();
             customerUserRuleItem.modals.addCustomerUserRuleItemModal.modal("hide");
         });
-
     }
 
 });

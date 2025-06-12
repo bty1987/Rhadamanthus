@@ -21,7 +21,9 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesActivityItemDao;
+import com.fanglin.sales.dao.SalesActivityRecordDao;
 import com.fanglin.sales.po.SalesActivityItemPO;
+import com.fanglin.sales.po.SalesActivityRecordPO;
 import com.fanglin.sales.service.SalesActivityItemService;
 import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.vo.SalesActivityItemVO;
@@ -37,6 +39,9 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Autowired
 	private SalesActivityItemDao salesActivityItemDao;
+
+	@Autowired
+	private SalesActivityRecordDao salesActivityRecordDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -104,6 +109,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			salesActivityItemPO.setIsStock(awardStockPO.getIsStock());
 
 			salesActivityItemDao.save(salesActivityItemPO);
+
+			salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemVO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_VALID_INT, user, salesActivityItemVO.getContent()));
 		}
 
 		return 0;
@@ -134,6 +141,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		salesActivityItemPO.setContent(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
+
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_UNVALID_INT, operater, salesActivityItemVO.getContent()));
 
 		return 0;
 	}
@@ -183,6 +192,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 		awardRecordDao.save(awardRecordPO);
 
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_RECEIVE_INT, operater, salesActivityItemVO.getContent()));
+
 		return 0;
 	}
 
@@ -229,6 +240,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
+
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_DELIVERY_INT, operater, salesActivityItemVO.getContent()));
 	}
 
 	@Override
@@ -247,6 +260,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
+		salesActivityItemPO.setDiscountPrice(salesActivityItemVO.getDiscountPrice());
+
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DISCOUNT_INT);
 
 		salesActivityItemPO.setOperater(operater);
@@ -255,6 +270,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		salesActivityItemPO.setContent(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
+
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_DISCOUNT_INT, operater, salesActivityItemVO.getContent()));
 	}
 
 	@Override
@@ -281,6 +298,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		salesActivityItemPO.setComment(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
+
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_UNRETURNED_INT, operater, ""));
 	}
 
 	@Override
@@ -320,6 +339,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
+
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_REFUND_INT, operater, salesActivityItemVO.getContent()));
 	}
 
 	@Override
@@ -338,6 +359,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
+		salesActivityItemPO.setExpendPrice(salesActivityItemVO.getExpendPrice());
+
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_CONSUME_INT);
 
 		salesActivityItemPO.setRefunder(operater);
@@ -346,6 +369,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		salesActivityItemPO.setComment(salesActivityItemVO.getContent());
 
 		salesActivityItemDao.update(salesActivityItemPO);
+
+		salesActivityRecordDao.save(new SalesActivityRecordPO().init(salesActivityItemPO.getAid(), salesActivityItemPO, SalesActivityItemPO.STATUS_CONSUME_INT, operater, salesActivityItemVO.getContent()));
 	}
 
 	@Override

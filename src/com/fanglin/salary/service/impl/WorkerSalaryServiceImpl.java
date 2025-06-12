@@ -605,6 +605,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setDecoration(constructionPO.getDecoration());
 			workerSalaryPO.setCid(cid);
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
+			workerSalaryPO.setCnid(constructionSchedulePO.getCnid());
+
+			company = constructionPO.getDecoration().getCompany();
 		} else {
 			workerSalaryPO.setCid(0);
 			workerSalaryPO.setCsid(0);

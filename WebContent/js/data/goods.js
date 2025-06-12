@@ -19,6 +19,7 @@ $(function() {
             confine: com.focusPage("#confine"),
             pieceNum: com.focusPage("#pieceNum"),
             accessoriesType: com.focusPage("#accessoriesType"),
+            zerokind: com.focusPage("#zerokind"),
             onekind: com.focusPage("#onekind"),
             twokind: com.focusPage("#twokind"),
             thrkind: com.focusPage("#thrkind"),
@@ -76,32 +77,49 @@ $(function() {
 
         $.each(res.goodsKinds, function(i, v) {
 
-            if (v.status == 0) {
-                switch (v.level) {
-                    case 1:
-                        oneKinds.push({
-                            "key": v.gkid,
-                            "value": v.name
-                        });
-                        break;
-                    case 2:
-                        twoKinds.push({
-                            "key": v.gkid,
-                            "value": v.name
-                        });
-                        break;
-                    case 3:
-                        thrKinds.push({
-                            "key": v.gkid,
-                            "value": v.name
-                        });
-                        break;
-                }
+            if (v.status != 0)
+                return true;
+            
+            switch (v.level) {
+                case 1:
+                    oneKinds.push({
+                        "key": v.gkid,
+                        "value": v.name
+                    });
+                    break;
+                case 2:
+                    twoKinds.push({
+                        "key": v.gkid,
+                        "value": v.name
+                    });
+                    break;
+                case 3:
+                    thrKinds.push({
+                        "key": v.gkid,
+                        "value": v.name
+                    });
+                    break;
             }
         });
-        goods.items.onekind.bindData(oneKinds, 'key', 'value');
-        goods.items.twokind.bindData(twoKinds, 'key', 'value');
-        goods.items.thrkind.bindData(thrKinds, 'key', 'value');
+        
+        goods.items.onekind.bindData(oneKinds, 'key', 'value', '无');
+        goods.items.twokind.bindData(twoKinds, 'key', 'value', '无');
+        goods.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
+    });
+
+    goods.items.onekind.change(function() {
+
+        updateZerokind();
+    });
+
+    goods.items.twokind.change(function() {
+
+        updateZerokind();
+    });
+
+    goods.items.thrkind.change(function() {
+
+        updateZerokind();
     });
 
     goods.btns.importBtn.click(function() {
@@ -222,6 +240,11 @@ $(function() {
         type: "img",
         prop: "path"
     }, {
+        field: "gid",
+        name: "ID",
+        prop: "gid",
+        clazz: "blue"
+    }, {
         field: "no",
         name: "编号",
         prop: "no",
@@ -285,6 +308,11 @@ $(function() {
         },
         clazz: "red"
     }, {
+        field: "zerokind.name",
+        name: "统计类别",
+        prop: "zerokind.name",
+        clazz: "grey"
+    }, {
         field: "onekind.name",
         name: "一类",
         prop: "onekind.name",
@@ -341,9 +369,12 @@ $(function() {
             goods.items.confine.val(v.confine);
             goods.items.pieceNum.val(v.pieceNum);
             goods.items.accessoriesType.val(v.accessoriesType.atid);
+            goods.items.zerokind.val(v.zerokind.gkid);
             goods.items.onekind.val(v.onekind.gkid);
             goods.items.twokind.val(v.twokind.gkid);
             goods.items.thrkind.val(v.thrkind.gkid);
+            
+            updateZerokind();
 
             com.popup4model("#addLayer", "编辑");
         },
@@ -461,6 +492,7 @@ $(function() {
             return false;
         },
         init: function(v) {
+
             return !v.isShow;
         }
     }];
@@ -689,6 +721,7 @@ $(function() {
             "goods.selling": goods.items.selling.val(),
             "goods.confine": goods.items.confine.val(),
             "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid,
+            "goods.zerokind.gkid": goods.items.zerokind.val(),
             "goods.onekind.gkid": goods.items.onekind.val(),
             "goods.twokind.gkid": goods.items.twokind.val(),
             "goods.thrkind.gkid": goods.items.thrkind.val()
@@ -730,6 +763,31 @@ $(function() {
         goods.items.pieceNum.attr("disabled", disabled);
     }
 
+    function updateZerokind() {
+
+        var zerokinds = [];
+
+        if (goods.items.onekind.val())
+            zerokinds.push({
+                "key": goods.items.onekind.val(),
+                "value": goods.items.onekind.find(':selected').text()
+            });
+
+        if (goods.items.twokind.val())
+            zerokinds.push({
+                "key": goods.items.twokind.val(),
+                "value": goods.items.twokind.find(':selected').text()
+            });
+
+        if (goods.items.thrkind.val())
+            zerokinds.push({
+                "key": goods.items.thrkind.val(),
+                "value": goods.items.thrkind.find(':selected').text()
+            });
+
+        goods.items.zerokind.bindData(zerokinds, 'key', 'value', '无');
+    }
+
     function importGoods() {
 
         if (com.validate("uploaddiv")) {
@@ -769,7 +827,6 @@ $(function() {
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
         });
-
     }
 
     function exportGoods() {

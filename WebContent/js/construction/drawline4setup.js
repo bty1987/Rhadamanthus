@@ -160,49 +160,33 @@ jQuery(function($) {
             var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-warning').html('人员部署');
             var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
             var $successBtn = $('<a></a>').addClass('btn btn-minier btn-info').html('放线');
+
             if (v.startTime != null && v.endTime != null) {
                 var startTime = v.startTime.substr(11);
                 var endTime = v.endTime.substr(11);
             }
+
             var actualTime = v.actualTime;
 
-            var propertyArr = [
-                ["装修单: ", v.decoration.orderId, "blue", function(btn) {
+            var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
-                    tools.decoration.info(btn, v.decoration.orderId);
-                }],
-                ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
+                tools.decoration.info(btn, v.decoration.orderId);
+            }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
 
-                    tools.house.info(btn, v.decoration.house.hid);
-                }],
-                ["楼号: ", v.decoration.house.houseNumber, "grey"],
-                ["客户: ", v.decoration.customer.name, "grey", function(btn) {
+                tools.house.info(btn, v.decoration.house.hid);
+            }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
 
-                    tools.customer.info(btn, v.decoration.customer.cid);
-                }],
-                ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
+                tools.customer.info(btn, v.decoration.customer.cid);
+            }], ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
 
-                    tools.personel.info(btn, v.decoration.designer.userId);
-                }],
-                ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
+                tools.personel.info(btn, v.decoration.designer.userId);
+            }], ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
 
-                    tools.personel.info(btn, v.decoration.supervisor.userId);
-                }],
-                ["面积: ", v.decoration.house.buildArea, "blue"],
-                ["合同额: ", v.decoration.orderTotalPrice, "blue"],
-                ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
-                ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
-                ["报价版本: ", v.decoration.version.name, "grey"],
-                ["申请人: ", v.appler.currentName, "grey", function(btn) {
+                tools.personel.info(btn, v.decoration.supervisor.userId);
+            }], ["面积: ", v.decoration.house.buildArea, "blue"], ["合同额: ", v.decoration.orderTotalPrice, "blue"], ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"], ["报价版本: ", v.decoration.version.name, "grey"], ["申请人: ", v.appler.currentName, "grey", function(btn) {
 
-                    tools.personel.info(btn, v.appler.userId);
-                }],
-                ["放线时间: ", actualTime, "green"],
-                ["开始时间: ", startTime, "green"],
-                ["结束时间: ", endTime, "green"],
-                ["状态: ", constant.construction().drawLine.status.keys[v.status], "red"],
-                ["描述: ", v.content, "grey"]
-            ];
+                tools.personel.info(btn, v.appler.userId);
+            }], ["放线时间: ", actualTime, "green"], ["开始时间: ", startTime, "green"], ["结束时间: ", endTime, "green"], ["状态: ", constant.construction().drawLine.status.keys[v.status], "red"], ["描述: ", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -339,7 +323,7 @@ jQuery(function($) {
 
         if (start == NaN || end == NaN || start >= end) {
             com.showAlert(com.info, "起始时间和结束时间非法");
-            return;
+            return false;
         }
 
         var options = {
@@ -399,6 +383,14 @@ jQuery(function($) {
             });
         }, null, false);
 
+        com.post(api.data.queryConstructionNode, {}, function(res) {
+
+            constructionNodes = res.constructionNodes.sort(function(a, b) {
+
+                return a.sort - b.sort;
+            });
+        }, null, false);
+
         $.each(constructionNodes, function(index, value) {
 
             var $liLi = $('<li></li>').addClass('item-blue clearfix');
@@ -428,8 +420,9 @@ jQuery(function($) {
                 "type": "text",
                 "name": "timeLimits",
                 "text_sort": value.sort,
-                "value": value.timeLimit
-            }).addClass('ace ace-checkbox-2 v_required');
+                "value": value.timeLimit,
+                "cnid": value.cnid,
+            }).addClass('timeLimits ace ace-checkbox-2 v_required');
 
             var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'normal').html(value.name);
 
@@ -453,6 +446,28 @@ jQuery(function($) {
         });
 
         $uli.appendTo(drawline.items.contructionNodes);
+        
+        var period = null;
+
+        com.post(api.data.queryConstructionPeriod, {
+            "constructionPeriod.lowerArea": v.decoration.house.innerArea
+        }, function(res) {
+
+            period = res.constructionPeriod;
+        }, null, false);
+        
+        if (!period || !period.cpid)
+            return false;
+
+        com.post(api.data.queryConstructionPeriodNodeByCpid, {
+            "constructionPeriodNode.cpid": period.cpid
+        }, function(res) {
+
+            $.each(res.constructionPeriodNodes, function(i, v) {
+
+                com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#contructionNodes").val(v.period);
+            });
+        });
     }
 
     drawline.modals.applyModal.on('shown.bs.modal', function(e) {
@@ -463,7 +478,7 @@ jQuery(function($) {
     function seveSuccess() {
 
         if (com.validate("contructionNodeModal")) {
-            return;
+            return false;
         }
 
         var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
@@ -489,7 +504,6 @@ jQuery(function($) {
             searcher.doSearch();
         });
     }
-    ;
 
     function initPlan() {
 

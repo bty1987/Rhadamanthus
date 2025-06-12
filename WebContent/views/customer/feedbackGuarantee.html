@@ -1,0 +1,193 @@
+
+<div id="customerContent" class="widget-container-span col-md-12">
+
+	<div id="fl-statement"></div>
+
+	<div class="widget-container-span col-xs-6 col-md-3" id="decorationInfo"></div>
+	<div class="widget-container-span col-xs-6 col-md-3" id="customerInfo"></div>
+
+	<div id="add" class="widget-container-span col-xs-6 col-md-3">
+		<a href="#" id="backBtn" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;"> <i class="icon-mail-forward bigger-230"></i>
+			<span>返回</span> </a>
+	</div>
+</div>
+
+<div class="widget-container-span col-md-12">
+	<div class="widget-box transparent">
+		<div id="fl-statement2">
+			<div id="creatFeedbackGuarantee">
+
+				<div class="row">
+					<form class="form-horizontal" id="from">
+						<div class="col-xs-12 col-sm-6">
+							<div class="control-group">
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="orderId">装修单号</label>
+									<div class="col-sm-9">
+										<input id="orderId" type="text" class="col-xs-10 col-sm-5" value="" readonly="readonly">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="source">信息来源</label>
+									<div class="col-sm-9">
+										<select id="source" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange orange" for="workType">工种</label>
+									<div class="col-sm-9">
+									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="change_workType" value="1"><span class="lbl blue">水工</span></label>
+									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="change_workType" value="2"><span class="lbl blue">电工</span></label>
+									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="change_workType" value="3"><span class="lbl blue">瓦工</span></label>
+									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="change_workType" value="4"><span class="lbl blue">木工</span></label>
+									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="change_workType" value="5"><span class="lbl blue">油工</span></label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="source">装修年份</label>
+									<div class="col-sm-9">
+										<input id="renovationYear" type="text" class="col-xs-10 col-sm-5" value="" >
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange orange" for="workType">维修结果</label>
+									<div class="col-sm-9">
+										<select id="repairResult" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+									</div>
+								</div>
+								
+<!-- 							<div class="form-group">
+									<label for="designerId" class="col-sm-3 control-label no-padding-right orange">施工监理</label>
+									<div class="col-md-9">
+										<input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="svuid" placeholder="请输入施工监理">
+									</div>
+								</div> -->
+								
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange">上传图片</label>
+                                    <div class="col-sm-9">
+                                        <a id="infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement v_required" target="_blank">
+                                        </a>
+                                        <div id="path"></div>
+                                    </div>
+                                </div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6">
+							<div class="control-group">
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="phone">客户电话</label>
+									<div class="col-sm-9">
+										<input id="phone" type="text" class="col-xs-10 col-sm-5 v_required v_phones" value="">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="cutomerType">客户类型</label>
+									<div class="col-sm-9">
+										<select id="cutomerType" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="xzdeptType">维修部门</label>
+									<div class="col-sm-9" id="‌choiceDeptType"></div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="supplier">品牌</label>
+									<div class="col-sm-9">
+										<input type="text" id="brandName" maxlength="12" class="col-xs-10 col-sm-5 " data-toggle="popover" data-trigger='manual' />
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="reportedDate">报修日期</label>
+									<div class="col-sm-9">
+									    <input type="text" id="reportedDate" class="col-xs-10 col-sm-5 date-picker-date v_required" data-date-format="yyyy-mm-dd">									
+									</div>
+								</div>
+<!-- 							<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange orange" for="workType">监理状态</label>
+									<div class="col-sm-9">
+										<select id="svUserStatus" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+									</div>
+								</div> -->
+					 		    <div class="form-group">
+									<label for="contact" class="col-sm-3 control-label no-padding-right orange">问题简述说明</label>
+									<div class="col-sm-9">
+										<textarea id="content" class=" col-xs-10 col-sm-6 v_required" maxlength="128" rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div id="plumber‌" style="display: none;">水工选项：</div>
+						<div id="electrician‌" style="display: none;margin-top: 20px;">电工选项：</div>
+						<div id="tiler‌Type" style="display: none;margin-top: 20px;">瓦工选项：</div>
+						<div id="carpenter‌Type‌" style="display: none;margin-top: 20px;">木工选项：</div>							         
+						<div id="painter‌‌Type" style="display: none;margin-top: 20px;">油工选项：</div>
+					</form>
+
+					<div class="row-fluid wizard-actions" id="btnDisplay">
+						<button class="btn btn-xs btn-warning" type="button" id="saveBtn" data-loading-text="保存中...">
+							<i class="icon-ok bigger-110"></i> <span>保存</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<div class="widget-container-span col-md-12">
+	<div class="widget-box transparent">
+		<div id="fl-statement4">
+		 <div id="recordCondList" class="fl_search clearfix"></div>
+	     <div id="recordResultList" class="clearfix tab-pane action"></div>
+	     <div id="recordPagenation" class="fl-page-wrap clearfix"></div>
+		</div>
+    </div>
+</div>
+
+<div class="widget-container-span col-md-12">
+	<div class="widget-box transparent">
+		<div id="fl-statement3">
+		 <div id="condList" class="fl_search clearfix"></div>
+	     <div id="resultList" class="clearfix tab-pane action"></div>
+	     <div id="pagenation" class="fl-page-wrap clearfix"></div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="drawingModal" tabindex="-1">
+    <div class="modal-dialog" style="width:60%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">上传图片</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="row-fluid">
+                            <ul class="ace-thumbnails" id="feedbackDrawing"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                    <a class="form-group" id="feedbackUpload"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="layerPopUp" class="portlet box page-content"></div> <!-- 弹窗 -->
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/feedbackGuarantee.js'])
+</script>

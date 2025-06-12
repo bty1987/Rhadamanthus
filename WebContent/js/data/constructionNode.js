@@ -24,6 +24,7 @@ jQuery(function($) {
             endtalk: com.focusPage("#endtalk", "#updateModal"),
             startSurvey: com.focusPage("#startSurvey", "#updateModal"),
             endSurvey: com.focusPage("#endSurvey", "#updateModal"),
+            process: com.focusPage("#process", "#updateModal"),
             timeLimit: com.focusPage("#timeLimit", "#updateModal"),
             kino: com.focusPage("#kino", "#updateModal"),
             kiname: com.focusPage("#kiname", "#updateModal")
@@ -36,6 +37,8 @@ jQuery(function($) {
 
         editFlg: false,
     };
+
+    constructionNode.items.process.bindData(constant.data().constructionNode.process.datas, "key", "value");
 
     constructionNode.modals.updateModal.on('show.bs.hide', function(e) {
 
@@ -111,16 +114,32 @@ jQuery(function($) {
         prop: "endSurvey.name",
         clazz: "grey"
     }, {
+        fieId: "process",
+        name: "进度",
+        prop: "process",
+        clazz: "red",
+        dataset: constant.data().constructionNode.process.keys
+    }, {
         fieId: "timeLimit",
         name: "工期",
         prop: "timeLimit",
-        clazz: "grey"
+        clazz: "blue"
     }, {
-        field: "status == 0 ",
+        field: "status",
         name: "状态",
         prop: "status",
         clazz: "red",
         dataset: constructionNode.status
+    }, {
+        field: "mark",
+        name: "工程标识",
+        prop: "mark",
+        clazz: "red",
+        dataset: {
+            0: '无',
+            1: '开工标识',
+            2: '完工标识'
+        }
     }, {
         fieId: "kino",
         name: "金蝶编号",
@@ -138,7 +157,6 @@ jQuery(function($) {
         clazz: "blue"
     }, ];
 
-    // 数据右边的按钮
     var linebtns = [{
         name: "编辑",
         clazz: "btn-yellow",
@@ -154,10 +172,12 @@ jQuery(function($) {
             constructionNode.items.endtalk.val(v.endtalk);
             constructionNode.items.startSurvey.val(v.startSurvey.stid);
             constructionNode.items.endSurvey.val(v.endSurvey.stid);
+            constructionNode.items.process.val(v.process);
             constructionNode.items.timeLimit.val(v.timeLimit);
             constructionNode.items.kino.val(v.kino);
             constructionNode.items.kiname.val(v.kiname);
             constructionNode.modals.updateModal.modal("show");
+
             return false;
         }
     }, ];
@@ -190,14 +210,15 @@ jQuery(function($) {
             "constructionNode.endtalk": constructionNode.items.endtalk.val(),
             "constructionNode.kino": constructionNode.items.kino.val(),
             "constructionNode.kiname": constructionNode.items.kiname.val(),
+            "constructionNode.process": constructionNode.items.process.val(),
             "constructionNode.timeLimit": constructionNode.items.timeLimit.val()
         }
-        
-        if(constructionNode.items.startSurvey.val()) {
+
+        if (constructionNode.items.startSurvey.val()) {
             options["constructionNode.startSurvey.stid"] = constructionNode.items.startSurvey.val();
         }
-        
-        if(constructionNode.items.endSurvey.val()) {
+
+        if (constructionNode.items.endSurvey.val()) {
             options["constructionNode.endSurvey.stid"] = constructionNode.items.endSurvey.val();
         }
 

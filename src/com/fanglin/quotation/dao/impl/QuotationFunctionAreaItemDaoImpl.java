@@ -20,7 +20,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
-import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 
 @Repository("quotationFunctionAreaItemDao")
 public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionAreaItemPO> implements QuotationFunctionAreaItemDao {
@@ -51,10 +50,10 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	}
 
 	@Override
-	public int updateQuotationFunctionAreaItemForIndex(String table, QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO) throws FLException {
+	public int updateQuotationFunctionAreaItemForIndex(String table, long qfaiid, int index) throws FLException {
 
-		String sql = String.format("update %s  set index = :index where qfaiId = :qfaiId", table);
-		session().createQuery(sql).setInteger("index", QuotationFunctionAreaItemVO.getIndex()).setLong("qfaiId", QuotationFunctionAreaItemVO.getQfaiId()).executeUpdate();
+		String sql = String.format("update %s  set index = :index where qfaiid = :qfaiid", table);
+		session().createQuery(sql).setLong("qfaiid", qfaiid).setInteger("index", index).executeUpdate();
 
 		return 0;
 	}

@@ -79,6 +79,14 @@ public class BalanceSelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "batchBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String batchBalanceSelection() throws FLException {
+
+		balanceSelectionService.batchBalanceSelection(balanceSelection, balanceSelectionItems, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "unbindBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String unbindBalanceSelection() throws FLException {
 
@@ -114,6 +122,22 @@ public class BalanceSelectionAction extends BaseListAction {
 	public String balanceBalanceSelection() throws FLException {
 
 		balanceSelectionService.balanceBalanceSelection(balanceSelection, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "auditBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String auditBalanceSelection() throws FLException {
+
+		balanceSelectionService.auditBalanceSelection(balanceSelection, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "unauditBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unauditBalanceSelection() throws FLException {
+
+		balanceSelectionService.unauditBalanceSelection(balanceSelection);
 
 		return SUCCESS;
 	}

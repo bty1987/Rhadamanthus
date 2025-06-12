@@ -65,12 +65,28 @@ Condition.addupRule("construction", {
             op: "eq",
             validate: null
         },
-        dataSource: {// 从后台取数据的各种配置
+        dataSource: {
             url: api.data.queryConstructionNode,
             postData: {},
             listPath: "constructionNodes",
             keyPath: "cnid",
             valuePath: "name"
+        }
+    },
+    "process": {
+        label: "进度",
+        type: "select",
+        submitConfig: {
+            name: "construction.process",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().construction.process.datas,
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "projectStatusFlag": {
@@ -135,6 +151,42 @@ Condition.addupRule("construction", {
             }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "createTime": {
+        label: "开工时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "construction.createTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "startTime": {
+        label: "开工时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "construction.startTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "endTime": {
+        label: "完工时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "construction.endTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "finishTime": {
+        label: "验收时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "construction.finishTime",
+            op: "between",
+            validate: null
         }
     },
     "salesman": {

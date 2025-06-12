@@ -84,7 +84,7 @@ jQuery(function($) {
 
         contractEdit.decoration = decoration;
 
-        contractEdit.cover["cov-buildarea"] = decoration.house.buildArea;
+        contractEdit.cover["cov-buildarea"] = decoration.house.innerArea;
         contractEdit.cover["cov-address"] = decoration.house.village.name + " " + decoration.house.houseNumber;
         contractEdit.cover["cov-designer-name"] = decoration.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = decoration.designer.phone;

@@ -40,6 +40,8 @@ public class CustomerProfileItemPO implements Serializable {
 
 	private short type;
 
+	private short require;
+
 	private String content;
 
 	private List<CustomerProfileOptionPO> options;
@@ -89,6 +91,15 @@ public class CustomerProfileItemPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "`require`")
+	public short getRequire() {
+		return require;
+	}
+
+	public void setRequire(short require) {
+		this.require = require;
 	}
 
 	@Column(name = "content")

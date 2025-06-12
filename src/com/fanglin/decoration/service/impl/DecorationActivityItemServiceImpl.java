@@ -25,8 +25,10 @@ import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
+import com.fanglin.decoration.dao.DecorationActivityRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.decoration.po.DecorationActivityRecordPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
@@ -48,6 +50,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
+
+	@Autowired
+	private DecorationActivityRecordDao decorationActivityRecordDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -118,6 +123,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		BeanUtil.copyProperties(decorationActivityItemPO, decorationActivityItemVO, Arrays.asList("creater", "receiver", "refunder"));
 
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, creater, "");
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
 		return 0;
 	}
 
@@ -165,6 +174,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		awardRecordDao.save(awardRecordPO);
 
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_RECEIVE_INT, operater, decorationActivityItemVO.getContent());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
 		return 0;
 	}
 
@@ -205,6 +218,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemDao.flush();
 
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
+
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_UNVALID_INT, operater, decorationActivityItemVO.getContent());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
 
 		return 0;
 	}
@@ -249,6 +266,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_DELIVERY_INT, operater, decorationActivityItemVO.getContent());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
@@ -283,10 +304,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setRefunder(operater);
 		decorationActivityItemPO.setRefundTime(DateUtil.getDateToTimestamp(new Date()));
 
-		decorationActivityItemPO.setComment(decorationActivityItemVO.getComment());
-
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
+
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_WAIT_INT, operater, decorationActivityItemVO.getComment());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
 
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
@@ -338,6 +361,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_RETREAT_INT, operater, decorationActivityItemVO.getComment());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getComment());
 
 		awardRecordDao.save(awardRecordPO);
@@ -381,6 +408,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
 
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_CONSUME_INT, operater, decorationActivityItemVO.getComment());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
+
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
@@ -417,6 +448,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		decorationActivityItemDao.flush();
+
+		DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_DISCOUNT_INT, operater, decorationActivityItemVO.getContent());
+
+		decorationActivityRecordDao.save(decorationActivityRecordPO);
 
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 

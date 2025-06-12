@@ -22,41 +22,33 @@
 				<h4 class="modal-title" id="aid">添加签章</h4>
 			</div>
 			<div class="modal-body">
-				<form class="form-horizontal" novalidate="novalidate"
-					id="signetModal">
+				<form class="form-horizontal" novalidate="novalidate" id="signetModal">
 
 					<div class="form-group">
-						<label for="name"
-							class="col-sm-3 control-label no-padding-right orange">编号</label>
+						<label for="name" class="col-sm-3 control-label no-padding-right orange">编号</label>
 						<div class="col-sm-8">
-							<input type="text" class="col-xs-8 m-wrap v_required"
-								maxlength="32" id="no">
+							<input type="text" class="col-xs-8 m-wrap v_required" maxlength="32" id="no">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="name"
-							class="col-sm-3 control-label no-padding-right orange">名称</label>
+						<label for="name" class="col-sm-3 control-label no-padding-right orange">名称</label>
 						<div class="col-sm-8">
-							<input type="text" class="col-xs-8 m-wrap v_required"
-								maxlength="32" id="name">
+							<input type="text" class="col-xs-8 m-wrap v_required" maxlength="32" id="name">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right orange"
-							for="relationshipType">类型</label>
-						<div class="col-sm-9">
-							<select class="col-xs-10 col-sm-6 v_required" id="type"></select>
+						<label class="col-sm-3 control-label no-padding-right orange" for="relationshipType">类型</label>
+						<div class="col-sm-8">
+							<select class="col-xs-8 m-wrap v_required" id="type"></select>
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="name"
-							class="col-sm-3 control-label no-padding-right orange">关键字</label>
+						<label for="name" class="col-sm-3 control-label no-padding-right orange">关键字</label>
 						<div class="col-sm-8">
-							<input type="text" class="col-xs-8 m-wrap v_required"
-								maxlength="64" id="keyword">
+							<input type="text" class="col-xs-8 m-wrap v_required" maxlength="64" id="keyword">
 						</div>
 					</div>
 
@@ -87,8 +79,7 @@
 					</div>
 
 					<div class="form-group" style="text-align: center">
-						<button type="button" id="submitBtn"
-							class="btn btn-primary pull-right">确定</button>
+						<button type="button" id="submitBtn" class="btn btn-primary pull-right">确定</button>
 					</div>
 				</form>
 			</div>
@@ -106,30 +97,24 @@
 				<h4 class="modal-title" id="aid">复制</h4>
 			</div>
 			<div class="modal-body">
-				<form class="form-horizontal" novalidate="novalidate"
-					id="copySignetModal">
+				<form class="form-horizontal" novalidate="novalidate" id="copySignetModal">
 
 					<div class="form-group">
-						<label for="name"
-							class="col-sm-3 control-label no-padding-right orange">编号</label>
+						<label for="name" class="col-sm-3 control-label no-padding-right orange">编号</label>
 						<div class="col-sm-8">
-							<input type="text" class="col-xs-8 m-wrap v_required"
-								maxlength="32" id="no">
+							<input type="text" class="col-xs-8 m-wrap v_required" maxlength="32" id="no">
 						</div>
 					</div>
 
 					<div class="form-group">
-						<label for="name"
-							class="col-sm-3 control-label no-padding-right orange">名称</label>
+						<label for="name" class="col-sm-3 control-label no-padding-right orange">名称</label>
 						<div class="col-sm-8">
-							<input type="text" class="col-xs-8 m-wrap v_required"
-								maxlength="32" id="name">
+							<input type="text" class="col-xs-8 m-wrap v_required" maxlength="32" id="name">
 						</div>
 					</div>
 
 					<div class="form-group" style="text-align: center">
-						<button type="button" id="copyBtn"
-							class="btn btn-primary pull-right">确定</button>
+						<button type="button" id="copyBtn" class="btn btn-primary pull-right">确定</button>
 					</div>
 				</form>
 			</div>
@@ -147,20 +132,17 @@
 				<h4 class="modal-title" id="aid">切换公司</h4>
 			</div>
 			<div class="modal-body">
-				<form class="form-horizontal" novalidate="novalidate"
-					id="moveSignetModal">
+				<form class="form-horizontal" novalidate="novalidate" id="moveSignetModal">
 
 					<div class="form-group">
-						<label class="col-sm-3 control-label no-padding-right orange"
-							for="company">公司</label>
+						<label class="col-sm-3 control-label no-padding-right orange" for="company">公司</label>
 						<div class="col-sm-9">
 							<select class="col-xs-10 col-sm-6 v_required" id="company"></select>
 						</div>
 					</div>
 
 					<div class="form-group" style="text-align: center">
-						<button type="button" id="moveBtn"
-							class="btn btn-primary pull-right">确定</button>
+						<button type="button" id="moveBtn" class="btn btn-primary pull-right">确定</button>
 					</div>
 				</form>
 			</div>
@@ -173,31 +155,25 @@
 <div class="modal fade" id="createSignet" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
-		<div class="modal-header">
+			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">
 					<span>&times;</span><span class="sr-only">Close</span>
 				</button>
 				<h4 class="modal-title" id="aid">创建</h4>
+			</div>
+			<div class="modal-body">
+				<ul>
+					<li><a href="#" id="createSignature"> <span>创建</span> </a></li>
+				</ul>
+				<ul class="ace-thumbnails" id="images"></ul>
+			</div>
 		</div>
-      <div class="modal-body">
-        <ul>
-            <li>
-                <a href="#" id="createSignature">
-                    <span>创建</span>
-                </a>
-            </li>
-        </ul>
-        <ul class="ace-thumbnails" id="images"></ul>
-    </div>
-</div>
-</div>
+	</div>
 </div>
 
 
 <div id="qrcodeModal"></div>
 
-<div id="layerPopUpA" class="portlet box"></div>
-
 <script type="text/javascript">
-	$.loadScript([ 'js/data/supplierSignet.js','js/data/signature.js' ]);
+    $.loadScript([ 'js/data/supplierSignet.js']);
 </script>

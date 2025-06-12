@@ -17,21 +17,20 @@ jQuery(function($) {
     var contractEdit = {
 
         cover: {},
-
+        table: [],
         modal: {},
 
         item: {},
 
         contractArgs: params.personel.contractargs,
         uid: params.personel.uid,
+        ucid:params.ucid,
+        scid:null,
 
         current: new Date(),
     };
 
-    console.log('params.personel.contractargs');
     console.log(params.personel.contractargs);
-
-    console.log('params.personel.uid');
     console.log(params.personel.uid);
 
     if (contractEdit.contractArgs.type == "1") {
@@ -53,28 +52,79 @@ jQuery(function($) {
     com.datetime(com.focusPage("#con-term-start-date"));
     com.datetime(com.focusPage("#con-term-end-date"));
 
+    var supplierContractBrands = [];
 
-    com.post(api.common.current, {}, function(res) {
-        contractEdit.current = new Date(res.current);
-    }, null, false);
-    console.log(params.personel.userId);
-    com.post(api.personel.queryUserInfoByUserId, {
-        "userInfo.user.userId": params.personel.userId
+    com.post(api.personel.pageSupplierContractBrand, {
+        "paging.page": 1,
+        "paging.rows": 10,
+        "supplierContractBrand.scid": params.personel.contractargs.scid
     }, function(res) {
 
-        var userInfo = res.userInfo;
-        var user = userInfo.user;
+        supplierContractBrands = res.paging.data;
+    }, null, false);
 
-        com.focusPage("#con-user-name", "#form").val(user.currentName);
-        com.focusPage("#con-user-phone", "#form").val(user.phone);
-        com.focusPage("#con-user-addr", "#form").val(userInfo.address);
-        com.focusPage("#con-company-name", "#form").val(user.companys);
-        contractEdit.user = user;
+    console.log(supplierContractBrands);
 
-        contractEdit.cover["cov-user-name"] = user.currentName;
-        contractEdit.cover["con-user-householdType"] = userInfo.householdType == 1 ? '非农业' : '农业';
+    var supplierContractGoods = [];
 
-    });
+    com.post(api.personel.pageSupplierContractGoods, {
+        "paging.page": 1,
+        "paging.rows": 10,
+        "supplierContractGoods.scid": params.personel.contractargs.scid
+        
+    }, function(res) {
+
+        supplierContractGoods = res.paging.data;
+    }, null, false);
+
+    console.log(supplierContractGoods);
+
+   var table1 = {
+       "insertWay": 1,
+       "keyword": "厂商商品列表",
+       "pageBegin": 1,
+       "headers": ["序号", "商品名称", "价格", "结算价"],
+       "colWidthPercent": [1, 3, 3],
+       "headersAlignment": 1,
+       "cellHorizontalAlignment": 0,
+       "cellVerticalAlignment": 5,
+       "datas": []
+   };
+
+   var table2 = {
+       "insertWay": 1,
+       "keyword": "厂商品牌列表",
+       "pageBegin": 1,
+       "headers": ["品牌名称", "结算类型", "结算值", "违约金"],
+       "colWidthPercent": [1, 3, 1, 3],
+       "headersAlignment": 1,
+       "cellHorizontalAlignment": 0,
+       "cellVerticalAlignment": 5,
+       "datas": []
+   };
+
+    var index = 0;
+
+    index = 0;
+
+    if (supplierContractGoods && supplierContractGoods.length) {
+
+        $.each(supplierContractGoods, function(i, v) {
+
+            table1.datas.push([(index++ + 1), v.goods.name, v.balance, v.price]);
+        });
+    }
+
+    if (supplierContractBrands && supplierContractBrands.length) {
+
+        $.each(supplierContractBrands, function(i, v) {
+            
+            table2.datas.push([(index++ + 1), v.brand.name, v.ctype, v.breakpay, v.cvalue ]);
+        });
+    }
+
+   contractEdit.table.push(table1);
+   contractEdit.table.push(table2);
 
     com.focusPage("#preservation").unbind().on('click', function() {
 
@@ -96,47 +146,25 @@ jQuery(function($) {
             data = $.extend({}, data, contractEdit.cover);
 
             console.log(data);
+            
+            var termStartDate = com.focusPage("#con-term-start-date").val();
+            var termEndDate = com.focusPage("#con-term-start-date").val();
 
-            data["con-start-year"] = com.focusPage("#con-term-start-date").val().substr(0, 4);
-            data["con-start-month"] = com.focusPage("#con-term-start-date").val().substr(5, 2);
-            data["con-start-day"] = com.focusPage("#con-term-start-date").val().substr(8, 2);
-            data["con-end-year"] = com.focusPage("#con-term-end-date").val().substr(0, 4);
-            data["con-end-month"] = com.focusPage("#con-term-end-date").val().substr(5, 2);
-            data["con-end-day"] = com.focusPage("#con-term-end-date").val().substr(8, 2);
-
-            if (contractEdit.contractArgs.type != "1") {
-                delete data["con-start-year2"];
-                delete data["con-start-month2"];
-                delete data["con-start-day2"];
-                delete data["con-end-year2"];
-                delete data["con-end-month2"];
-                delete data["con-end-day2"];
-                delete data["con-company-name"];
-            }
-
-            if (contractEdit.contractArgs.type != "1" && contractEdit.contractArgs.type != "2") {
-                delete data["con-company-addr"];
-            }
-
-            if (contractEdit.contractArgs.type == "2") {
-                delete data["con-work-year"];
-                delete data["con-work-month"];
-                delete data["con-work-day"];
-                delete data["con-user-householdType"];
-            }
-            console.log(data);
-
+            data["con-tern-start-year"] = termStartDate.substr(0, 4);
+            data["con-tern-start-month"] = termStartDate.substr(5, 2);
+            data["con-tern-start-day"] = termStartDate.substr(8, 2);
+            data["con-tern-end-year"] = termEndDate.substr(0, 4);
+            data["con-tern-end-month"] = termEndDate.substr(5, 2);
+            data["con-tern-end-day"] = termEndDate.substr(8, 2);
+            
             var options = {
-                "userContract.uid": contractEdit.uid,
-                "contract.cid": params.personel.contractargs.cid,
+                "supplierContract.scid": params.personel.contractargs.scid,
                 "data": JSON.stringify(data),
-                "contract.no": params.personel.contractargs.no,
-                "contract.name": params.personel.contractargs.name,
-                "contract.title": params.personel.contractargs.title,
+                //"table": JSON.stringify(contractEdit.table)
             };
 
             console.log(options);
-
+            
             var popup = com.focusPage("#popup-page");
             var target = com.focusPage("#layerPopUp");
 
@@ -151,9 +179,10 @@ jQuery(function($) {
             mask.css("top", target.height() - mask.height() + 30);
             popup.css("overflow", "hidden");
 
-            com.post(api.personel.addSupplierContract, options, function(res) {
+            com.post(api.personel.makeSupplierContract, options, function(res) {
 
                 com.closePopup();
+                mask.remove();
             }, function(res) {
 
                 com.showAlert(com.error, res.errorMsg);

@@ -327,14 +327,17 @@ $(function() {
                 });
             });
         });
+        
+        console.log(params['urlLoadParams'].depage)
 
-        if (balanceSales.status == constant.balance().balanceSales.STATUS_INIT_INT) {
+        if (balanceSales.status == constant.balance().balanceSales.STATUS_INIT_INT || params['urlLoadParams'].depage == 'material') {
 
             $adda.hide();
             $profitPrint.hide();
         }
 
         return [$adda, $profitPrint, $export];
+        
     }, 'bsbresultList');
 
 });

@@ -3,6 +3,7 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.data.material.vo.SoodsVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "soods", catalog = "data")
@@ -160,6 +164,15 @@ public class SoodsPO implements Serializable {
 
 	public void setBalance(int balance) {
 		this.balance = balance;
+	}
+
+	public SoodsVO ptv(SoodsVO soodsVO) {
+
+		BeanUtil.copyProperties(this, soodsVO, Arrays.asList("goods"));
+
+		if (soodsVO.getGoods() != null && getGoods() != null) BeanUtil.copyProperties(getGoods(), soodsVO.getGoods(), Arrays.asList("accessoriesType"));
+
+		return soodsVO;
 	}
 
 }

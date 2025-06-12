@@ -82,7 +82,7 @@ jQuery(function($) {
             rate: com.focusPage("#rate", "#firstApproveModal"),
             phone: com.focusPage("#phone", "#firstApproveModal")
         },
-        
+
         belongItems: {
             belongApproveComment: com.focusPage("#belongApproveComment", "#belongApproveModal"),
         },
@@ -119,19 +119,25 @@ jQuery(function($) {
 
         ccid: null,
         vid: null,
-        
+
         orderId: null,
 
         source: {},
         chance: {},
 
-        depage: params['urlLoadParams'].depage,
         confirmEventType: null,
-        show: null
+        show: null,
+
+        depage: params['urlLoadParams'].depage,
+        detype: params['urlLoadParams'].detype,
     };
-    
-    com.post(api.system.querySystemConfigByKey, {"systemConfig.key": "COUNTRY_PROFIT_FLAG_STR"}, function(res){
-        if(res.systemConfig.scid) customerChance.profitflag = res.systemConfig.value;
+
+    com.post(api.system.querySystemConfigByKey, {
+        "systemConfig.key": "COUNTRY_PROFIT_FLAG_STR"
+    }, function(res) {
+
+        if (res.systemConfig.scid)
+            customerChance.profitflag = res.systemConfig.value;
     });
 
     com.post(api.ds.building, {}, function(res) {
@@ -317,7 +323,7 @@ jQuery(function($) {
         clazz: "grey",
         show: function(v) {
 
-            return ((v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && customerChance.depage == "user") || customerChance.depage == "manage";
+            return ((v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && customerChance.depage == "user");
         }
     }, {
         field: "source",
@@ -351,14 +357,20 @@ jQuery(function($) {
         clazz: "grey",
     }, {
         field: "source",
-        name: "面积",
-        prop: "source.house.innerArea",
+        name: "派尺面积",
+        prop: "source.buildArea",
         clazz: "blue",
     }, {
         field: "busitype",
         name: "业务类型",
-        prop: "busitype.name",
+        prop: "source.busitype.name",
         clazz: "red",
+    }, {
+        field: "outside",
+        name: "三方标识",
+        prop: "busitype.outside",
+        clazz: "red",
+        dataset: constant.data().decorationBusitype.outside.keys
     }, {
         field: "creater",
         name: "创建人",
@@ -464,6 +476,32 @@ jQuery(function($) {
         prop: "readTime",
         clazz: "green"
     }, {
+        field: "source.source",
+        name: "来源方",
+        prop: "source.source",
+        clazz: "grey",
+    }, {
+        field: "source.contact",
+        name: "对接人",
+        prop: "source.contact",
+        clazz: "grey",
+    }, {
+        field: "referOrderId",
+        name: "推荐单号",
+        prop: function(v) {
+
+            return v.source.referOrderId ? v.source.referOrderId : "";
+        },
+        clazz: "blue",
+        click: function(btn, v) {
+
+            tools.decoration.info(btn, v.referOrderId);
+        },
+        show: function(v) {
+
+            return (customerChance.depage == null || customerChance.depage == "manage");
+        }
+    }, {
         field: "comment",
         name: "备注",
         prop: "comment",
@@ -487,7 +525,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isRead != constant.customer().customerChance.ISREAD_READ_INT && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT && customerChance.depage == "user";
+            return v.isRead != constant.customer().customerChance.ISREAD_READ_INT && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT && customerChance.depage == "user" && customerChance.detype == null;
         }
     }, {
         name: "分配",
@@ -505,7 +543,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source";
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage != "source" && customerChance.detype == null;
         }
     }, {
         name: "是否建群",
@@ -523,7 +561,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isGroup != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+            return v.isGroup != constant.customer().customerChance.CONFIRM_CONFIRM_INT && customerChance.detype == null;
         }
     }, {
         name: "是否电话交接",
@@ -541,7 +579,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isPhone != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+            return v.isPhone != constant.customer().customerChance.CONFIRM_CONFIRM_INT && customerChance.detype == null;
         }
     }, {
         name: "是否见面",
@@ -559,7 +597,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isMeet != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
+            return v.isMeet != constant.customer().customerChance.CONFIRM_CONFIRM_INT && customerChance.detype == null;
         }
     }, {
         name: "真实地址",
@@ -578,7 +616,7 @@ jQuery(function($) {
         show: function(v) {
 
             // return v.isTrue != constant.customer().customerChance.CONFIRM_CONFIRM_INT;
-            return customerChance.show != null;
+            return customerChance.show != null && customerChance.detype == null;
         }
     }, {
         name: "罚款",
@@ -589,7 +627,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return customerChance.depage == "manage" && v.isFine == constant.customer().customerChance.ISFINE_UNFINE_INT;
+            return customerChance.depage == "manage" && v.isFine == constant.customer().customerChance.ISFINE_UNFINE_INT && customerChance.detype == null;
         }
     }, {
         name: "不匹配",
@@ -603,7 +641,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2 || v.status == 3) && customerChance.depage != "source";
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2 || v.status == 3) && customerChance.depage != "source" && customerChance.detype == null;
         },
     }, {
         name: "推送",
@@ -614,7 +652,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return customerChance.depage != "source" && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT;
+            return customerChance.depage != "source" && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT && customerChance.detype == null;
         },
     }, {
         name: "确认",
@@ -625,7 +663,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user";
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user" && customerChance.detype == null;
         },
     }, {
         name: "转换",
@@ -634,13 +672,13 @@ jQuery(function($) {
 
             customerChance.ccid = v.ccid;
             customerChance.chance = v;
-            
-            if(!v.house || !v.house.hid){
+
+            if (!v.house || !v.house.hid) {
                 com.showAlert(com.error, "房产不存在");
                 return false;
             }
-            
-            if(!v.customer || !v.customer.cid){
+
+            if (!v.customer || !v.customer.cid) {
                 com.showAlert(com.error, "客户不存在");
                 return false;
             }
@@ -655,11 +693,11 @@ jQuery(function($) {
                 if (rule.cprid && rule.orderId) {
 
                     customerChance.orderId = rule.orderId;
-                    
+
                     approvalUtils.initqueryApprovalUser('belongApproveMan', 3);
-                    
+
                     customerChance.modals.belongApproveModal.modal("show");
-                    
+
                     return false;
                 }
 
@@ -676,7 +714,7 @@ jQuery(function($) {
                     }, function(res) {
 
                         flag = true;
-                        
+
                     }, null, false);
 
                     if (!flag)
@@ -696,7 +734,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 3 && customerChance.depage != "source";
+            return v.status == 3 && customerChance.depage != "source" && customerChance.detype == null;
         },
     }, {
         name: "编辑",
@@ -705,14 +743,14 @@ jQuery(function($) {
 
             com.cleanTypeahead("villageName");
             com.cleanItems(customerChance.updateItems);
-            
+
             customerChance.ccid = v.ccid;
             customerChance.source.csid = v.source.csid;
             customerChance.source.name = v.source.name;
             customerChance.source.gender = v.source.gender;
 
             var village = (v.house.village && v.house.village.vid) ? v.house.village : v.source.village;
-            
+
             if (village && village.parentVillage && village.parentVillage.vid) {
                 com.focusPage("#villageName", "#updateModal").typeahead("args", {
                     "village.parentVillage.vid": village.parentVillage.vid
@@ -729,7 +767,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
         name: "初审",
@@ -739,14 +777,14 @@ jQuery(function($) {
             com.cleanTypeahead("villageName");
             com.cleanTypeahead("firstApproveComment");
             com.cleanItems(customerChance.approveItems);
-            
+
             customerChance.ccid = v.ccid;
             customerChance.source.csid = v.source.csid;
             customerChance.source.name = v.source.name;
             customerChance.source.gender = v.source.gender;
 
             var village = (v.house.village && v.house.village.vid) ? v.house.village : v.source.village;
-            
+
             if (village && village.parentVillage && village.parentVillage.vid) {
                 com.focusPage("#villageName", "#firstApproveModal").typeahead("args", {
                     "village.parentVillage.vid": village.parentVillage.vid
@@ -757,6 +795,8 @@ jQuery(function($) {
                 com.updateTypeahead(customerChance.approveItems.villageName, village.no, village.name);
             }
 
+            customerChance.approveItems.busitype.val(v.busitype.dbid);
+
             approvalUtils.initqueryApprovalUser('firstApproveMan', 20);
 
             customerChance.modals.firstApproveModal.modal("show");
@@ -765,7 +805,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
         name: "审批",
@@ -784,7 +824,9 @@ jQuery(function($) {
             com.cleanTypeahead('approveComment');
 
             v.busitype != null ? customerChance.items.busitypeApprove.val(v.busitype.dbid) : "";
+
             com.updateTypeahead('villageNoDesigerApprove', v.source.village.no, v.source.village.name + "-" + v.source.village.cityProper.name);
+
             customerChance.items.houseNumberApprove.val(v.source.houseNumber);
             customerChance.items.nameApprove.val(v.source.name);
             customerChance.items.phoneApprove.val(v.source.phone);
@@ -794,7 +836,7 @@ jQuery(function($) {
         show: function(v) {
 
             // return v.status == 3 && customerChance.depage == "user";
-            return false;
+            return  customerChance.detype == null;
         },
 
     }, {
@@ -808,7 +850,7 @@ jQuery(function($) {
                 params['urlLoadParams'].type = 0;
             }
 
-            com.popup4page("#stockRecordPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
+            com.popup4page("#layerPopUp", "/views/customer/customerSourceRecord.html", "记录", "", function() {
 
                 searcher.doSearch();
             });
@@ -819,6 +861,29 @@ jQuery(function($) {
 
             return !customerChance.depage || customerChance.depage == "manage";
         }
+    }, {
+        name: "画像",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            params.customer.source = v;
+            // com.switchPage(api.index.profileInfo.url); 跳转新页面
+
+            params.customer.csid = v.source.csid;
+            params.customer.profile = {
+                "type": 1,
+                "csid": v.source.csid
+            }
+            
+            com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
+
+            return false;
+        },
+        show: function(v) {
+
+            // return v.status == 3 && customerChance.depage == "user";
+            return  customerChance.detype == null;
+        },
     }];
 
     searcher.line("source.name", lineprops, linebtns).render();
@@ -837,8 +902,20 @@ jQuery(function($) {
         customerChance.items.department.bindData(res.deptList, "did", "name", true);
     });
 
+    var ruleflag = null;
+
+    com.post(api.system.querySystemConfigByKey, {
+        "systemConfig.key": "CUSTOMER_CHANCE_ISSUE_RULE"
+    }, function(res) {
+
+        ruleflag = res.systemConfig.value;
+
+    }, null, false);
+
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
+        "user.dept.did": (((customerChance.depage == "dept" || customerChance.depage == "user") && ruleflag != null) ? params.userInfo.user.dept.did : null),
+        "user.dept.fatherDept.did": (customerChance.depage == "region" && ruleflag != null ? params.userInfo.user.dept.fatherDept.did : null),
     }, "autoFillKeyValue", "key", "value");
 
     com.post(api.data.queryDecorationBusitype, {}, function(res) {
@@ -861,7 +938,7 @@ jQuery(function($) {
     function issue() {
 
         if (com.validate("issueModal")) {
-            return;
+            return false;
         }
 
         var options = {
@@ -889,7 +966,7 @@ jQuery(function($) {
 
             "approvalCustomerChance.chance.ccid": customerChance.ccid
         };
-        
+
         com.post(api.approval.submitApprovalForCustomerChanceToDisabled, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
@@ -944,8 +1021,8 @@ jQuery(function($) {
             "decoration.houseType": customerChance.items.houseType.val(),
             "decoration.houseClass": customerChance.items.houseClass.val(),
         };
-        
-        if(customerChance.profitflag){
+
+        if (customerChance.profitflag) {
             options["decoration.bompany"] = customerChance.profitflag;
         }
 
@@ -1018,7 +1095,7 @@ jQuery(function($) {
             "customerChance.ccid": customerChance.ccid,
             "customerChance.house.hid": hid,
             "customerChance.busitype.dbid": customerChance.approveItems.busitype.val(),
-            "customerChance.rate": customerChance.approveItems.rate.val(),
+            "customerChance.rate": 0,
             "customerChance.customer.cid": cid
         };
 
@@ -1064,7 +1141,7 @@ jQuery(function($) {
                 "approvalCustomerSource.ccid": customerChance.ccid,
                 "approvalCustomerSource.hid": hid,
                 "approvalCustomerSource.dbid": customerChance.approveItems.busitype.val(),
-                "approvalCustomerSource.rate": customerChance.approveItems.rate.val(),
+                "approvalCustomerSource.rate": 0,
                 "approvalCustomerSource.cid": cid
             };
 
@@ -1080,7 +1157,7 @@ jQuery(function($) {
 
         });
     }
-    
+
     function belongApproval() {
 
         if (com.validate("belongApproveModal")) {
@@ -1100,21 +1177,21 @@ jQuery(function($) {
                 "approval.receiver.userId": approver,
                 "approval.comment": customerChance.belongItems.belongApproveComment.val()
             };
-            
+
             options["approvalDecorationBelong.orderId"] = customerChance.orderId;
             options["approvalDecorationBelong.belongType"] = 0;
-            
+
             options["approvalDecorationBelongItems[0].orderId"] = customerChance.orderId;
             options["approvalDecorationBelongItems[0].userId"] = customerChance.chance.belonger.userId;
             options["approvalDecorationBelongItems[0].bdid"] = customerChance.chance.department.did;
             options["approvalDecorationBelongItems[0].brid"] = customerChance.chance.region.did;
             options["approvalDecorationBelongItems[0].rate"] = 1;
             options["approvalDecorationBelongItems[0].defaultFlag"] = 1;
-            
+
             com.post(api.approval.submitApprovalForDecorationBelong, options, function(res) {
 
                 com.showAlert(com.info, "操作成功");
-                
+
                 com.post(api.customer.finishCustomerChance, {
                     "customerChance.ccid": customerChance.chance.ccid,
                     "decoration.orderId": customerChance.orderId

@@ -20,7 +20,9 @@ jQuery(function($) {
             updateName: com.focusPage("#updata"),
         },
 
-        status: {}
+        status: {},
+
+        depage: params['urlLoadParams'].depage,
     };
 
     com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
@@ -148,7 +150,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_ENABLE_CHECK_INT);
+            return (v.status == constant.balance().balanceSales.STATUS_ENABLE_CHECK_INT) && balanceSales.depage == null;
         }
     }, {
         name: "明细",
@@ -266,7 +268,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != constant.balance().balanceSales.STATUS_INIT_INT);
+            return (v.status != constant.balance().balanceSales.STATUS_INIT_INT) && balanceSales.depage == null;
         }
     }, {
         name: "删除",

@@ -76,14 +76,6 @@ public class OalesPayAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public OalesPayService getOalesPayService() {
-		return oalesPayService;
-	}
-
-	public void setOalesPayService(OalesPayService oalesPayService) {
-		this.oalesPayService = oalesPayService;
-	}
-
 	public OalesPayVO getOalesPay() {
 		return oalesPay;
 	}

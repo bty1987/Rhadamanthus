@@ -52,14 +52,6 @@ public class CustomerUserRuleItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public CustomerUserRuleItemService getCustomerUserRuleItemService() {
-		return customerUserRuleItemService;
-	}
-
-	public void setCustomerUserRuleItemService(CustomerUserRuleItemService customerUserRuleItemService) {
-		this.customerUserRuleItemService = customerUserRuleItemService;
-	}
-
 	public List<CustomerUserRuleItemVO> getCustomerUserRuleItems() {
 		return customerUserRuleItems;
 	}

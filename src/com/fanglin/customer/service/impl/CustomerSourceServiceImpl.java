@@ -232,6 +232,8 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerSourceDao.save(customerSourcePO);
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), 0, String.format("客户资源创建,楼盘:%s,楼号:%s,电话:%s", villagePO != null ? villagePO.getName() : "", customerSourcePO.getHouseNumber(), customerSourcePO.getPhone()), CustomerSourceRecordPO.TYPE_COMMON_INT, customerSourcePO.getCreater()));
+
+		customerSourceVO.setCsid(customerSourcePO.getCsid());
 	}
 
 	@Override
@@ -486,9 +488,10 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 			while (true) {
 
-				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid());
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_COM_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid(), customerSourcePO.getCreater().getDept().getType().getDtid());
 				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_AREA_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters);
-				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, exporters, customerSourcePO.getCreater().getDept().getDid(), area);
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_TYPE_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, customerSourcePO.getCreater().getDept().getType().getDtid(), exporters);
+				if (customerDeptRulePO.getFocus() == CustomerDeptRulePO.FOCUS_DEPT_INT) customerUserRuleItemPO = customerUserRuleItemDao.pullCustomerUserRuleItem(company, area, exporters, customerSourcePO.getCreater().getDept().getDid());
 
 				if (customerUserRuleItemPO == null) {
 					throw new FLException(330081, "无匹配规则");

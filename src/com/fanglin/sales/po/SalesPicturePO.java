@@ -2,6 +2,7 @@ package com.fanglin.sales.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.SalesPictureVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesPicture", catalog = "sales")
@@ -50,7 +53,6 @@ public class SalesPicturePO implements Serializable {
 
 	public SalesPicturePO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public SalesPicturePO(long spid, long sid, long siid, String name, String path, short type, UserPO creater, Timestamp createTime, short status) {
@@ -157,6 +159,15 @@ public class SalesPicturePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	public SalesPictureVO ptv(SalesPictureVO salesPictureVO) {
+
+		BeanUtil.copyProperties(this, salesPictureVO, Arrays.asList("creater"));
+
+		if (salesPictureVO.getCreater() != null && getCreater() != null) salesPictureVO.getCreater().setBaseInfo(getCreater());
+
+		return salesPictureVO;
 	}
 
 }

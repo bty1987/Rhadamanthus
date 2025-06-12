@@ -86,6 +86,8 @@ public class GoodsPoolPO implements java.io.Serializable {
 
 	private short type;
 
+	private GoodsKindPO zerokind;
+
 	private GoodsKindPO onekind;
 
 	private GoodsKindPO twokind;
@@ -118,9 +120,13 @@ public class GoodsPoolPO implements java.io.Serializable {
 		this.accessoriesType = accessoriesType;
 	}
 
-	public GoodsPoolPO(AccessoriesTypePO accessoriesType, GoodsKindPO onekind, GoodsKindPO twokind, GoodsKindPO thrkind) {
+	public GoodsPoolPO(AccessoriesTypePO accessoriesType, GoodsKindPO zerokind, GoodsKindPO onekind, GoodsKindPO twokind, GoodsKindPO thrkind) {
+
 		super();
+
 		this.accessoriesType = accessoriesType;
+
+		this.zerokind = zerokind;
 		this.onekind = onekind;
 		this.twokind = twokind;
 		this.thrkind = thrkind;
@@ -274,6 +280,16 @@ public class GoodsPoolPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zerokind", referencedColumnName = "gkid")
+	public GoodsKindPO getZerokind() {
+		return zerokind;
+	}
+
+	public void setZerokind(GoodsKindPO zerokind) {
+		this.zerokind = zerokind;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "onekind", referencedColumnName = "gkid")
 	public GoodsKindPO getOnekind() {
 		return onekind;
@@ -362,6 +378,8 @@ public class GoodsPoolPO implements java.io.Serializable {
 		BeanUtil.copyProperties(this, goodsPoolVO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
 
 		if (goodsPoolVO.getAccessoriesType() != null && getAccessoriesType() != null) BeanUtil.copyProperties(getAccessoriesType(), goodsPoolVO.getAccessoriesType(), Arrays.asList("workType"));
+
+		if (goodsPoolVO.getZerokind() != null && getZerokind() != null) BeanUtil.copyProperties(getZerokind(), goodsPoolVO.getZerokind());
 		if (goodsPoolVO.getOnekind() != null && getOnekind() != null) BeanUtil.copyProperties(getOnekind(), goodsPoolVO.getOnekind());
 		if (goodsPoolVO.getTwokind() != null && getTwokind() != null) BeanUtil.copyProperties(getTwokind(), goodsPoolVO.getTwokind());
 		if (goodsPoolVO.getThrkind() != null && getThrkind() != null) BeanUtil.copyProperties(getThrkind(), goodsPoolVO.getThrkind());

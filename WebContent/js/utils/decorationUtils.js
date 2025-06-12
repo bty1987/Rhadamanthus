@@ -596,7 +596,7 @@ var decorationUtils = {
                         });
                     }
                 });
-
+                
             } else {
                 uiBtnMethod(uiPgDiv, _decorationActivity);
             }
@@ -675,10 +675,10 @@ var decorationUtils = {
         var typeLi = $("<strong></strong>").text("类型:").appendTo(nameLi);
         var typeSpan = $("<span></span>").attr("id", "type_" + _activityItem.daiId).attr("type", _activityItem.type).text(config.types[_activityItem.type]).appendTo(nameLi);
         var $stateTypeLi = $("<li></li>").appendTo(ul);
-        var $stateTypeStrong = $("<strong></strong>").text("状态类型:").appendTo($stateTypeLi);
+        var $stateTypeStrong = $("<strong></strong>").text("办理类型:").appendTo($stateTypeLi);
         var $stateTypeSpan = $("<span></span>").addClass("red").attr("id", "stateType_" + _activityItem.daiId).text(config.stateTypes[_activityItem.stateType]).appendTo($stateTypeLi);
         var stateLi = $("<li></li>").appendTo(ul);
-        var stateState = $("<strong></strong>").text("状态:").appendTo(stateLi);
+        var stateState = $("<strong></strong>").text("办理状态:").appendTo(stateLi);
         var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + _activityItem.daiId).text(config.states[_activityItem.state]).appendTo(stateLi);
         var moneyLi = $("<li></li>").appendTo(ul);
         var moneyState = $("<strong></strong>").text("金额:").appendTo(moneyLi);
@@ -751,6 +751,16 @@ var decorationUtils = {
                             com.focusPage("#pricing_" + res.decorationActivityItem.daiId).remove();
                         });
                     });
+                });
+                
+                var decorationActivityRecordBtn = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录").css("margin", "0px 3px").appendTo(uiPgDiv);
+
+                decorationActivityRecordBtn.on("click", function() {
+
+                    params.decoration.decorationActivityItem = _activityItem;
+
+                    com.popup4page("#decorationActivityRecordPopUp", "/views/decoration/decorationActivityRecord.html", "记录");
+
                 });
             } else {
                 uiBtnMethod(uiPgDiv, _activityItem);
@@ -2157,7 +2167,7 @@ var decorationUtils = {
         var $spanOne = $("<span></span>").css({
             'color': '#fff',
             'margin': '0 5px'
-        }).html("状态类型 :" + $stateTypeText).appendTo($span);
+        }).html("办理类型 :" + $stateTypeText).appendTo($span);
         var $spanTwo = $("<span></span>").css({
             'color': '#fff',
             'margin': '0 5px'

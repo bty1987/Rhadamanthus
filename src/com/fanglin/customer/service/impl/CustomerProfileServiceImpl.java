@@ -67,31 +67,42 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 	}
 
 	@Override
-	public CustomerProfileVO queryCustomerProfileByCid(CustomerProfileVO customerProfileVO) throws FLException {
+	public List<CustomerProfileVO> queryCustomerProfileByCsid(CustomerProfileVO customerProfileVO) throws FLException {
 
-		CustomerProfilePO customerProfilePO = customerProfileDao.queryCustomerProfileByCid(customerProfileVO.getCid());
+		List<CustomerProfilePO> customerProfilePOs = customerProfileDao.queryCustomerProfileByCsid(customerProfileVO.getCsid(), customerProfileVO.getType());
+		List<CustomerProfileVO> customerProfileVOs = new ArrayList<CustomerProfileVO>();
 
-		if (customerProfilePO == null) {
-			throw new FLException(330087, "客户画像不存在");
+		for (CustomerProfilePO customerProfilePO : customerProfilePOs) {
+			customerProfileVOs.add(customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO())));
 		}
 
-		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
-
-		return customerProfileVO;
+		return customerProfileVOs;
 	}
 
 	@Override
-	public CustomerProfileVO queryCustomerProfileByOrderId(CustomerProfileVO customerProfileVO) throws FLException {
+	public List<CustomerProfileVO> queryCustomerProfileByCid(CustomerProfileVO customerProfileVO) throws FLException {
 
-		CustomerProfilePO customerProfilePO = customerProfileDao.queryCustomerProfileByOrderId(customerProfileVO.getOrderId());
+		List<CustomerProfilePO> customerProfilePOs = customerProfileDao.queryCustomerProfileByCid(customerProfileVO.getCid(), customerProfileVO.getType());
+		List<CustomerProfileVO> customerProfileVOs = new ArrayList<CustomerProfileVO>();
 
-		if (customerProfilePO == null) {
-			throw new FLException(330087, "客户画像不存在");
+		for (CustomerProfilePO customerProfilePO : customerProfilePOs) {
+			customerProfileVOs.add(customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO())));
 		}
 
-		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
+		return customerProfileVOs;
+	}
 
-		return customerProfileVO;
+	@Override
+	public List<CustomerProfileVO> queryCustomerProfileByOrderId(CustomerProfileVO customerProfileVO) throws FLException {
+
+		List<CustomerProfilePO> customerProfilePOs = customerProfileDao.queryCustomerProfileByOrderId(customerProfileVO.getOrderId(), customerProfileVO.getType());
+		List<CustomerProfileVO> customerProfileVOs = new ArrayList<CustomerProfileVO>();
+
+		for (CustomerProfilePO customerProfilePO : customerProfilePOs) {
+			customerProfileVOs.add(customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO())));
+		}
+
+		return customerProfileVOs;
 	}
 
 	@Override
@@ -106,6 +117,79 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		customerProfileVO = customerProfilePO.ptv(new CustomerProfileVO(new ArrayList<CustomerProfileItemVO>(), new UserBaseVO()));
 
 		return customerProfileVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addCustomerProfile(CustomerProfileVO customerProfileVO, String userId, int company) throws FLException {
+
+		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(customerProfileVO.getTid());
+
+		if (surveyTemplatePO == null) {
+			throw new FLException(130096, "调研模板不存在");
+		}
+
+		if (customerProfileVO.getItems() == null) {
+			throw new FLException(330087, "客户画像不存在");
+		}
+
+		CustomerProfilePO customerProfilePO = new CustomerProfilePO();
+
+		UserPO creater = userdDao.queryUserByUserId(userId);
+
+		String orderId = customerProfileVO.getOrderId();
+
+		BeanUtil.copyProperties(customerProfileVO, customerProfilePO, Arrays.asList("creater"));
+
+		customerProfilePO.setName(surveyTemplatePO.getName());
+		customerProfilePO.setCreater(creater);
+		customerProfilePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		customerProfilePO.setOrderId(orderId);
+		customerProfilePO.setTid(surveyTemplatePO.getStid());
+		customerProfilePO.setType(customerProfileVO.getType());
+		customerProfilePO.setCompany(company);
+
+		customerProfileDao.save(customerProfilePO);
+
+		List<CustomerProfileItemVO> customerProfileItems = customerProfileVO.getItems();
+
+		for (CustomerProfileItemVO itemVO : customerProfileItems) {
+
+			CustomerProfileItemPO customerProfileItemPO = new CustomerProfileItemPO();
+
+			customerProfileItemPO.setName(itemVO.getName());
+			customerProfileItemPO.setContent(itemVO.getContent());
+			customerProfileItemPO.setType(itemVO.getType());
+			customerProfileItemPO.setRequire(itemVO.getRequire());
+
+			customerProfileItemPO.setCpid(customerProfilePO.getCpid());
+
+			customerProfileItemDao.save(customerProfileItemPO);
+
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(itemVO.getType())) continue;
+
+			List<CustomerProfileOptionVO> options = itemVO.getOptions();
+
+			if (options == null) continue;
+
+			for (CustomerProfileOptionVO optionVO : options) {
+
+				CustomerProfileOptionPO customerProfileOptionPO = new CustomerProfileOptionPO();
+
+				customerProfileOptionPO.setTitle(optionVO.getTitle());
+
+				customerProfileOptionPO.setCpid(customerProfilePO.getCpid());
+				customerProfileOptionPO.setCpiid(customerProfileItemPO.getCpiid());
+				customerProfileOptionPO.setTitle(optionVO.getTitle());
+				customerProfileOptionPO.setChecked(optionVO.getChecked());
+
+				customerProfileOptionDao.save(customerProfileOptionPO);
+			}
+		}
+
+		customerProfileVO.setCpid(customerProfilePO.getCpid());
+
+		return 0;
 	}
 
 	@Override
@@ -131,6 +215,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 		customerProfilePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		customerProfilePO.setOrderId(orderId);
 		customerProfilePO.setTid(surveyTemplatePO.getStid());
+		customerProfilePO.setType(customerProfileVO.getType());
 		customerProfilePO.setCompany(company);
 
 		customerProfileDao.save(customerProfilePO);
@@ -155,6 +240,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 			customerProfileItemPO.setName(surveyTemplateItemPO.getName());
 			customerProfileItemPO.setContent(surveyTemplateItemPO.getContent());
 			customerProfileItemPO.setType(surveyTemplateItemPO.getType());
+			customerProfileItemPO.setRequire(surveyTemplateItemPO.getRequire());
 
 			customerProfileItemPO.setCpid(customerProfilePO.getCpid());
 
@@ -189,13 +275,9 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 	@Transactional(rollbackFor = Exception.class)
 	public void handleCustomerProfile(CustomerProfileVO customerProfileVO) throws FLException {
 
-		CustomerProfilePO customerProfilePO = customerProfileDao.get(customerProfileVO.getCpid());
-
-		if (customerProfilePO == null) {
+		if (customerProfileVO.getItems() == null) {
 			throw new FLException(330087, "客户画像不存在");
 		}
-
-		BeanUtil.copyProperties(customerProfileVO, customerProfilePO, Arrays.asList("items"));
 
 		List<CustomerProfileItemVO> customerProfileItems = customerProfileVO.getItems();
 
@@ -205,9 +287,8 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 
 			if (Arrays.asList(CustomerProfileItemPO.TYPE_TEXT_INT, CustomerProfileItemPO.TYPE_INPUT_INT).contains(itemPO.getType())) {
 				itemPO.setContent(itemVO.getContent());
+				customerProfileItemDao.update(itemPO);
 			}
-
-			customerProfileItemDao.update(itemPO);
 
 			List<CustomerProfileOptionVO> options = itemVO.getOptions();
 
@@ -226,10 +307,6 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 				customerProfileOptionDao.update(optionPO);
 			}
 		}
-
-		customerProfilePO.setStatus(SurveyPO.STATUS_HANDLE_INT);
-
-		customerProfileDao.update(customerProfilePO);
 	}
 
 }

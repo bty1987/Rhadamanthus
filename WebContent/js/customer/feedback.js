@@ -37,13 +37,15 @@ $(function() {
 
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
 
-                    creatLine(v).appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
+            if (!listData || listData.length == 0)
+                return false;
+
+            $.each(listData, function(i, v) {
+
+                creatLine(v).appendTo($ul);
+            });
+            $ul.appendTo($tableWrap);
         };
 
         var creatLine = function(v) {
@@ -64,8 +66,11 @@ $(function() {
 
             var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
             var $btnbind = $("<a></a>").addClass("btn btn-minier btn-success").html("接收");
-            var $btnAddUser = $("<a></a>").addClass("btn btn-minier btn-success").html("完成");
-
+            var $btnDone = $("<a></a>").addClass("btn btn-minier btn-success").html("完成");
+            var $btnPlaint = $("<a></a>").addClass("btn btn-minier btn-danger").html("投诉");
+            var $btnGuarantee = $("<a></a>").addClass("btn btn-minier btn-danger").html("维修");
+            var $btnBackVisit = $("<a></a>").addClass("btn btn-minier btn-danger").html("回访");
+            
             var propertyArr = [["装修单号:", v.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.orderId);
@@ -89,7 +94,7 @@ $(function() {
 
             $divBtnWrap.append($drawingedit).appendTo($h3);
 
-            $divBtnWrap.append($btnView).append($btnbind).append($btnAddUser).appendTo($h3);
+            $divBtnWrap.append($btnView).append($btnbind).append($btnDone).append($btnPlaint).append($btnGuarantee).append($btnBackVisit).appendTo($h3);
 
             $drawingedit.click(function() {
 
@@ -101,11 +106,42 @@ $(function() {
                 balanceOrder(v.fid);
             });
 
-            $btnAddUser.click(function() {
+            $btnDone.click(function() {
 
                 finishFeedback(v.fid);
             });
 
+            $btnGuarantee.click(function() {
+
+                params.fid = v.fid;
+                params.decoration.orderId = v.orderId;
+                params.customer.vid = v.fid;
+                params.historyPage = "/views/customer/feedback.html";
+
+                com.switchPage(api.index.feedbackGuarantee.url);
+            });
+            
+            $btnPlaint.click(function() {
+
+                params.customer.vid = v.fid;
+                params.decoration.orderId = v.orderId;
+                params.historyPage = "/views/customer/feedback.html";
+
+                com.switchPage(api.index.feedComplaint.url);
+            });
+            
+            $btnBackVisit.click(function() {
+
+                params.fid = v.fid;
+                params.decoration.orderId = v.orderId;
+                
+                params.historyPage = "/views/customer/feedback.html";
+
+                com.switchPage("/views/customer/feedbackBackVisit.html");
+            });
+
+            
+            
             $btnView.click(function() {
 
                 params.customer.vid = v.fid;

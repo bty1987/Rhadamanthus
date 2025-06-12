@@ -17,17 +17,17 @@ import com.fanglin.data.common.vo.BrandBalanceVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class BrandBalanceAction extends BaseListAction{
+public class BrandBalanceAction extends BaseListAction {
 
 	private static final long serialVersionUID = 7881057103305242351L;
-	
+
 	@Autowired
 	private BrandBalanceService brandBalanceService;
-	
+
 	private List<BrandBalanceVO> brandBalances;
-	
+
 	private BrandBalanceVO brandBalance;
-	
+
 	@Action(value = "queryBrandBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBrandBalance() throws FLException {
 
@@ -35,7 +35,7 @@ public class BrandBalanceAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addBrandBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBrandBalance() throws FLException {
 
@@ -43,21 +43,13 @@ public class BrandBalanceAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteBrandBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteBrandBalance() throws FLException {
 
 		brandBalanceService.deleteBrandBalance(brandBalance);
 
 		return SUCCESS;
-	}
-
-	public BrandBalanceService getBrandBalanceService() {
-		return brandBalanceService;
-	}
-
-	public void setBrandBalanceService(BrandBalanceService brandBalanceService) {
-		this.brandBalanceService = brandBalanceService;
 	}
 
 	public List<BrandBalanceVO> getBrandBalances() {
@@ -75,5 +67,5 @@ public class BrandBalanceAction extends BaseListAction{
 	public void setBrandBalance(BrandBalanceVO brandBalance) {
 		this.brandBalance = brandBalance;
 	}
-	
+
 }

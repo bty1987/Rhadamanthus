@@ -13,6 +13,7 @@ package com.fanglin.decoration.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,8 +24,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.fadada.bean.Contract;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "decorationcontract", catalog = "decoration")
@@ -310,6 +313,17 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public void setFilesize(int filesize) {
 		this.filesize = filesize;
+	}
+
+	public DecorationContractVO ptv(DecorationContractVO decorationContractVO) {
+
+		BeanUtil.copyProperties(this, decorationContractVO, Arrays.asList("contract", "creater", "signner", "filinner"));
+
+		if (decorationContractVO.getCreater() != null && getCreater() != null) decorationContractVO.getCreater().setBaseInfo(getCreater());
+		if (decorationContractVO.getSignner() != null && getSignner() != null) decorationContractVO.getSignner().setBaseInfo(getSignner());
+		if (decorationContractVO.getFilinner() != null && getFilinner() != null) decorationContractVO.getFilinner().setBaseInfo(getFilinner());
+
+		return decorationContractVO;
 	}
 
 }

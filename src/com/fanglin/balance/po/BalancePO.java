@@ -3,6 +3,7 @@ package com.fanglin.balance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "balance", catalog = "balance")
@@ -207,6 +210,16 @@ public class BalancePO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public BalanceVO ptv(BalanceVO balanceVO) {
+
+		BeanUtil.copyProperties(this, balanceVO, Arrays.asList("belonger", "creater"));
+
+		if (balanceVO.getCreater() != null && getCreater() != null) balanceVO.getCreater().setBaseInfo(getCreater());
+		if (balanceVO.getBelonger() != null && getBelonger() != null) balanceVO.getBelonger().setBaseInfo(getBelonger());
+
+		return balanceVO;
 	}
 
 }

@@ -49,6 +49,10 @@ public class QuotationCommonAction extends BaseListAction {
 
 	private SelectionVO selection;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAddReduceByOrderId() throws FLException {
 
@@ -60,7 +64,7 @@ public class QuotationCommonAction extends BaseListAction {
 	@Action(value = "affirmAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmAddReduce() throws FLException {
 
-		addReduceService.affirmAddReduce(decoration, addReduces);
+		addReduceService.affirmAddReduce(decoration, addReduces, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -111,6 +115,22 @@ public class QuotationCommonAction extends BaseListAction {
 
 	public void setSelection(SelectionVO selection) {
 		this.selection = selection;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

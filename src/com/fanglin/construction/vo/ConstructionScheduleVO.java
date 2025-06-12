@@ -35,6 +35,8 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Long cnid;
 
+	private Integer period;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -110,6 +112,14 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setCnid(Long cnid) {
 		this.cnid = cnid;
+	}
+
+	public Integer getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Integer period) {
+		this.period = period;
 	}
 
 	@JSON(format = "yyyy-MM-dd")

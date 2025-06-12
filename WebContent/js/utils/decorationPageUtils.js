@@ -195,7 +195,7 @@ $(function() {
         leftitems2.push(createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务备注", "notSalesmanContent"), createDiv("col-sm-9").append('<textarea id="notSalesmanContent" class="col-xs-10 col-sm-5"rows="3" data-toggle="popover"data-trigger="manual" maxlength="128"readonly="readonly"></textarea>')));
 
         leftgroup2.append(leftitems2);
-
+        
         var right2 = createDiv("col-xs-12 col-sm-6");
         var rightgroup2 = createDiv("control-group").appendTo(right2);
         var rightitems2 = [];
@@ -221,6 +221,24 @@ $(function() {
                 $obj.removeAttr("readonly");
             }
         });
+        
+        com.post(api.system.querySystemConfigByKey, {
+            "systemConfig.key": "notSalesmanRate"
+        }, function(res) {
+
+            if (!res.systemConfig.value) return false;
+            
+            var data = [];
+            
+            $.each(res.systemConfig.value.split(","), function(i, v){
+                data.push({"k": v, "v": v});
+            });
+            
+            var item = com.focusPage("#notSalesmanRate", leftgroup2);
+            var tmp = createSelect("notSalesmanRate", "col-xs-10 col-sm-5", [], null, null, "popover", "manual").prop("disabled", item.prop("disabled")).bindData(data, "k", "v").insertAfter(item);
+            
+            item.remove();
+        }, null, false);
 
         return [row1, $('<hr>'), row2];
     }
@@ -236,7 +254,7 @@ $(function() {
 
         var row = createDiv("row");
 
-        row.append(createDiv("row").append($("<div></div>").addClass("col-sm-4").append($("<h3></h3>").append($('<strong></strong>').addClass("blue").attr("id", "product")))).append(createDiv("pull-right").append(createButton(conf, "preferBtn", "btn btn-xs btn-primary", "优惠", null, '<i class="bigger-120"></i>')), createDiv("col-md-12", "quotationSummary")));
+        row.append(createDiv("row").append($("<div></div>").addClass("col-sm-4").append($("<h3></h3>").append($('<strong></strong>').addClass("blue").attr("id", "quotationVersion")))).append(createDiv("pull-right").append(createButton(conf, "preferBtn", "btn btn-xs btn-primary", "优惠", null, '<i class="bigger-120"></i>')), createDiv("col-md-12", "quotationSummary")));
 
         var $sortable = createDiv("widget-container-span ui-sortable");
         var $tabbable = createDiv("tabbable").appendTo($sortable);

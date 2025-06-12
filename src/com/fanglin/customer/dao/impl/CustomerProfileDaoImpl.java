@@ -2,6 +2,7 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,7 @@ public class CustomerProfileDaoImpl extends DaoImpl<CustomerProfilePO> implement
 
 	@Override
 	public List<CustomerProfilePO> pageCustomerProfile(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<CustomerProfilePO> query = pagingQuery(paging, CustomerProfilePO.class);
 
 		query.add(Restrictions.eq("company", company));
@@ -32,13 +34,52 @@ public class CustomerProfileDaoImpl extends DaoImpl<CustomerProfilePO> implement
 	}
 
 	@Override
-	public CustomerProfilePO queryCustomerProfileByCid(long cid) {
-		return (CustomerProfilePO) session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq("cid", cid)).setMaxResults(1).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<CustomerProfilePO> queryCustomerProfileByCsid(long csid, Short type) {
+
+		Criteria query = session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq("csid", csid));
+
+		if (type != null) {
+			query.add(Restrictions.eq("type", type));
+		}
+
+		return query.list();
 	}
 
 	@Override
-	public CustomerProfilePO queryCustomerProfileByOrderId(String orderId) {
-		return (CustomerProfilePO) session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq(CustomerProfilePO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<CustomerProfilePO> queryCustomerProfileByCid(long cid, Short type) {
+
+		Criteria query = session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq("cid", cid));
+
+		if (type != null) {
+			query.add(Restrictions.eq("type", type));
+		}
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerProfilePO> queryCustomerProfileByOrderId(String orderId, Short type) {
+
+		Criteria query = session().createCriteria(CustomerProfilePO.class).add(Restrictions.eq("orderId", orderId));
+
+		if (type != null) {
+			query.add(Restrictions.eq("type", type));
+		}
+
+		return query.list();
+	}
+
+	@Override
+	public int updateCustomerProfile(String orderId, long cid, long csid) {
+
+		String sql = "update customer.customerprofile set orderId = :orderId, cid = :cid where csid = :csid";
+
+		session().createSQLQuery(sql).setString("orderId", orderId).setLong("cid", cid).setLong("csid", csid).executeUpdate();
+
+		return 0;
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {

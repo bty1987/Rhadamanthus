@@ -5,35 +5,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
-import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
-import com.fanglin.data.common.vo.ConstructionNodeVO;
-import com.fanglin.decoration.dao.DecorationMeasureDao;
-import com.fanglin.decoration.po.DecorationMeasurePO;
-import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.service.DecorationMeasureService;
-import com.fanglin.customer.service.DecorationService;
-import com.fanglin.decoration.vo.DecorationMeasureVO;
-import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.Paging;
-import com.fanglin.decoration.dao.DecorationDao;
-import com.fanglin.information.po.MessagePO;
-import com.fanglin.information.service.MessageService;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
-import com.fanglin.construction.dao.ConstructionInfoDao;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.dao.DecorationMeasureDao;
+import com.fanglin.decoration.po.DecorationMeasurePO;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationMeasureService;
+import com.fanglin.decoration.vo.DecorationMeasureVO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.Arith;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.Paging;
 
 @Service("decorationMeasureService")
 @Transactional(readOnly = true)
@@ -41,34 +44,33 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 	@Autowired
 	private DecorationMeasureDao decorationMeasureDao;
-	
+
 	@Autowired
 	private DecorationService decorationService;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private MessageService messageService;
-	
+
 	@Autowired
 	private ConstructionDao constructionDao;
-	
+
 	@Autowired
 	private ConstructionInfoDao constructionInfoDao;
-	
+
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
 
 	@Override
-	public void pageDecorationMeasure(Paging paging, List<Filter> filters,DecorationMeasureVO decorationMeasure, int company) throws FLException{
-		
+	public void pageDecorationMeasure(Paging paging, List<Filter> filters, DecorationMeasureVO decorationMeasure, int company) throws FLException {
+
 		if (filters.size() == 0) return;
-		
+
 		List<DecorationMeasureVO> decorationMeasureVOs = new ArrayList<DecorationMeasureVO>();
-		
+
 		List<DecorationMeasurePO> decorationMeasurePOs = decorationMeasureDao.pageDecorationMeasure(paging, filters, company);
-		
 
 		for (DecorationMeasurePO decorationMeasurePO : decorationMeasurePOs) {
 
@@ -78,18 +80,17 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		paging.setData(decorationMeasureVOs);
 	}
-	
+
 	@Override
-	public void pageDecorationMeasureForApplay(Paging paging, List<Filter> filters,DecorationMeasureVO decorationMeasure, int company) throws FLException{
-		
+	public void pageDecorationMeasureForApplay(Paging paging, List<Filter> filters, DecorationMeasureVO decorationMeasure, int company) throws FLException {
+
 		if (decorationMeasure != null && decorationMeasure.getStatus() != null) {
 			filters.add(new Filter("status", String.valueOf(decorationMeasure.getStatus()), "eq"));
 		}
-		
+
 		List<DecorationMeasureVO> decorationMeasureVOs = new ArrayList<DecorationMeasureVO>();
-		
+
 		List<DecorationMeasurePO> decorationMeasurePOs = decorationMeasureDao.pageDecorationMeasure(paging, filters, company);
-		
 
 		for (DecorationMeasurePO decorationMeasurePO : decorationMeasurePOs) {
 
@@ -97,25 +98,24 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		}
 
-
 		paging.setData(decorationMeasureVOs);
 	}
-	
+
 	@Override
 	public void sendDecorationMeasure(DecorationMeasureVO decorationMeasureVO) throws FLException {
 
 		String orderId = decorationMeasureVO.getDecoration().getOrderId();
 		DecorationMeasurePO decorationMeasure = decorationMeasureDao.queryDecorationMeasure(orderId);
-		
+
 		if (decorationMeasure == null) {
 			throw new FLException(140081, "装修量尺信息不存在");
 		}
-		
+
 		System.out.println(String.format("pages/decoration/measure/measure?orderId=%s", orderId));
 
 		decorationService.sendMessage(orderId, "装修单", "请您及时确认量尺信息", String.format("pages/decoration/measure/measure?orderId=%s", orderId));
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void confirmDecorationMeasure(DecorationVO decorationVO, DecorationMeasureVO decorationMeasureVO) throws FLException {
@@ -174,7 +174,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		decorationDao.update(decorationPO);
 
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int successDecorationMeasure(DecorationMeasureVO decorationMeasureVO, List<ConstructionNodeVO> constructionNodes, String userId) throws FLException {
@@ -211,10 +211,10 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
 
-			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit));
-			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit + constructionNodeVO.getTimeLimit()));
+			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), Arith.div(timelimit, 1000000)));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), Arith.div((timelimit + constructionNodeVO.getTimeLimit()), 1000000)));
 
-			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid()));
+			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid(), constructionNodeVO.getTimeLimit()));
 
 			timelimit = timelimit + constructionNodeVO.getTimeLimit();
 		}
@@ -232,7 +232,6 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 		return 0;
 	}
 
-	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int failureDecorationMeasure(DecorationMeasureVO decorationMeasureVO, String userId) throws FLException {
@@ -251,7 +250,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateDecorationMeasure(DecorationMeasureVO decorationMeasureVO) throws FLException {
@@ -267,7 +266,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int applayDecorationMeasure(DecorationMeasureVO decorationMeasureVO) throws FLException {
@@ -293,7 +292,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		return 1;
 	}
-	
+
 	public DecorationMeasureVO convertBean(DecorationMeasurePO decorationMeasurePO) {
 
 		DecorationMeasureVO decorationMeasureVO = new DecorationMeasureVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());

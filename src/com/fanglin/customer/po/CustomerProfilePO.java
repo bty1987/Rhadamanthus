@@ -36,9 +36,15 @@ public class CustomerProfilePO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0;
 
+	public static final short TYPE_BUSI_INT = 1;
+
+	public static final short TYPE_DESI_INT = 2;
+
 	private long cpid;
 
 	private long tid;
+
+	private long csid;
 
 	private long cid;
 
@@ -49,6 +55,8 @@ public class CustomerProfilePO implements Serializable {
 	private UserPO creater;
 
 	private Timestamp createTime;
+
+	private short type;
 
 	private short status;
 
@@ -94,6 +102,15 @@ public class CustomerProfilePO implements Serializable {
 		this.cid = cid;
 	}
 
+	@Column(name = "csid")
+	public long getCsid() {
+		return csid;
+	}
+
+	public void setCsid(long csid) {
+		this.csid = csid;
+	}
+
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -129,6 +146,15 @@ public class CustomerProfilePO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "status")

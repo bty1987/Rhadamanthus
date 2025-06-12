@@ -50,7 +50,7 @@ public class GoodsRecordServiceImpl implements GoodsRecordService {
 
 		for (GoodsRecordPO goodsRecordPO : goodsRecordPOs) {
 
-			GoodsRecordVO goodsRecordVO = new GoodsRecordVO(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO()), new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
+			GoodsRecordVO goodsRecordVO = new GoodsRecordVO(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO()), new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
 
 			goodsRecordVO = goodsRecordPO.ptv(goodsRecordVO);
 

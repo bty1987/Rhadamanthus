@@ -58,6 +58,8 @@ public interface DecorationService {
 
 	public List<DecorationVO> queryDecorationByCustomerId(DecorationVO decorationVO, Authentication authentication) throws FLException;
 
+	public List<DecorationVO> queryDecorationForReferByOrderId(DecorationVO decorationVO, Authentication authentication) throws FLException;
+
 	public DecorationVO queryDecorationByOrderId(String orderId) throws FLException;
 
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException;

@@ -66,6 +66,12 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 				query.add(query.getCriterion("village.no", String.valueOf(data), op));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
+			} else if ("source".equals(field)) {
+				query.add(query.getCriterion("source", data, op));
+			} else if ("contact".equals(field)) {
+				query.add(query.getCriterion("contact", data, op));
+			} else if ("referOrderId".equals(field)) {
+				query.add(query.getCriterion("referOrderId", data, op));
 			}
 		}
 	}

@@ -302,14 +302,6 @@ var protationPart = (function() {
 
             com.focusPage('#sumquoSumMoney').text(total);
 
-            if (quo.basicParams["protation.advanceProfit"] != 0) {
-                com.focusPage('#advanceProfitShow').show();
-                com.focusPage('#preferAdvanceShow').show();
-            } else {
-                com.focusPage('#advanceProfitShow').hide();
-                com.focusPage('#preferAdvanceShow').hide();
-            }
-
             return true;
         },
 
@@ -1581,14 +1573,6 @@ var protationPart = (function() {
 
             if (quo.protation.manageDiscount == 10)
                 com.focusPage('#preferManage').attr("disabled", "disabled");
-
-            if (quo.basicParams["protation.advanceProfit"] != 0) {
-                com.focusPage('#advanceProfitShow').show();
-                com.focusPage('#preferAdvanceShow').show();
-            } else {
-                com.focusPage('#advanceProfitShow').hide();
-                com.focusPage('#preferAdvanceShow').hide();
-            }
 
             quo.init();
             domain.init();

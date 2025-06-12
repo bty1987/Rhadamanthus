@@ -23,6 +23,7 @@ import com.fanglin.customer.vo.CustomerUserRuleVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -39,6 +40,9 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Autowired
 	private CustomerSourceRecordDao customerSourceRecordDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public void pageCustomerUserRule(Paging paging, List<Filter> filters, CustomerUserRuleVO customerUserRule, int company) {
@@ -153,6 +157,10 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		}
 
 		if (customerUserRuleVO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT && customerUserRuleVO.getStatus() < customerUserRulePO.getStatus()) {
+			throw new FLException(330082, "规则不可操作");
+		}
+
+		if (customerUserRuleVO.getStatus() == CustomerUserRulePO.STATUS_USER_INVALID_INT && systemConfigDao.querySystemConfig("CUSTOMER_USER_RULE_CONTROL", customerUserRulePO.getCompany()) != null) {
 			throw new FLException(330082, "规则不可操作");
 		}
 

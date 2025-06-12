@@ -18,7 +18,11 @@ jQuery(function($) {
         "decoration.orderId": accessories.orderId
     }, function(res) {
 
-        orderInfo('orderInfo', res.decoration);
+//        orderInfo('orderInfo', res.decoration);
+        
+        drawdecoration(res.decoration);
+        customerItems(res.decoration);
+        
     }, null, false);
 
     com.post(api.inventory.queryStorehouseForSelf, {}, function(res) {
@@ -75,8 +79,10 @@ jQuery(function($) {
 
             com.focusPage('#list').empty();
 
-            kingdeeUtils.accessories(accessories.aid, 7, "SalesOutStock");
+            setTimeout(function() {
 
+                kingdeeUtils.accessories(accessories.aid, 7, "SalesOutStock");
+            }, 3000);
         });
     });
 
@@ -92,34 +98,33 @@ jQuery(function($) {
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col8');
 
-        var _lineInfoSet = [
-            {
-                cellClass: "no blue"
-            },// 编号
-            {
-                cellClass: "name grey"
-            },// 名称
-            {
-                cellClass: "color",
-                hasSelect: true
-            },// 颜色
-            {
-                cellClass: "format",
-                hasSelect: true
-            },// 规格
-            {
-                cellClass: "measurementUnit grey"
-            },// 单位
-            {
-                cellClass: "storehouse grey",
-                hasSelect: true
-            },// 仓库
-            {
-                cellClass: "outprice blue",
-                hasInput: true
-            }, {
-                cellClass: "number blue"
-            } // 数量
+        var _lineInfoSet = [{
+            cellClass: "no blue"
+        },// 编号
+        {
+            cellClass: "name grey"
+        },// 名称
+        {
+            cellClass: "color",
+            hasSelect: true
+        },// 颜色
+        {
+            cellClass: "format",
+            hasSelect: true
+        },// 规格
+        {
+            cellClass: "measurementUnit grey"
+        },// 单位
+        {
+            cellClass: "storehouse grey",
+            hasSelect: true
+        },// 仓库
+        {
+            cellClass: "outprice blue",
+            hasInput: true
+        }, {
+            cellClass: "number blue"
+        } // 数量
         ];
 
         $.each(_lineInfoSet, function(i, v) {
@@ -188,6 +193,45 @@ jQuery(function($) {
         });
 
         $ulProperty.appendTo($tableWrap);
+    }
+
+    function drawdecoration(decoration) {
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").appendTo(com.focusPage('#orderInfo'));
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-blue").appendTo($box);
+
+        var name = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header);
+
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('装修单号: ' + decoration.orderId)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('楼盘地址: ' + decoration.house.village.name + " " + decoration.house.houseNumber)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
+    }
+    
+    function customerItems(decoration) {
+
+        var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").appendTo(com.focusPage('#orderInfo'));
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-green").appendTo($box);
+
+        var name = $('<h4></h4>').attr('id', 'h4name_').text("客户").appendTo($header);
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('姓名: ' + decoration.customer.name)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" || decoration.customer.phone == null ? "暂无" : [3, 6, 8].indexOf(decoration.status) == -1 ? decoration.customer.phone.replace(/^(\d{3})\d+(\d{4})$/, "$1****$2") : decoration.customer.phone))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('地址: ' + (decoration.customer.address == "" ? "暂无" : decoration.customer.address))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType));
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" || decoration.customer.identity == null ? "暂无" : decoration.customer.identity.replace(/(.{6}).*(.{4})/, '$1********$2')))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').addClass("red").text('认证: ' + (decorationContract.authFlag ? "已认证" : "未认证"))).appendTo($info);
+
     }
 
 });

@@ -112,16 +112,17 @@ public class BrandServiceImpl implements BrandService {
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 
 		for (BrandPO brandPO : brandPOs) {
-			BrandVO _brandVO = new BrandVO();
 
-			BeanUtil.copyProperties(brandPO, _brandVO, Arrays.asList("category", "supplier"));
+			brandVO = new BrandVO();
+
+			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 
 			CategoryPO categoryPO = brandPO.getCategory();
 
-			_brandVO.setCategoryId(categoryPO.getNo());
-			_brandVO.setCategoryName(categoryPO.getName());
+			brandVO.setCategoryId(categoryPO.getNo());
+			brandVO.setCategoryName(categoryPO.getName());
 
-			brandVOs.add(_brandVO);
+			brandVOs.add(brandVO);
 		}
 
 		return brandVOs;

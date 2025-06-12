@@ -28,6 +28,10 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Integer money;
 
+	private Integer expendPrice;
+
+	private Integer discountPrice;
+
 	private UserBaseVO receiver;
 
 	private UserBaseVO refunder;
@@ -132,6 +136,22 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setMoney(Integer money) {
 		this.money = money;
+	}
+
+	public Integer getExpendPrice() {
+		return expendPrice;
+	}
+
+	public void setExpendPrice(Integer expendPrice) {
+		this.expendPrice = expendPrice;
+	}
+
+	public Integer getDiscountPrice() {
+		return discountPrice;
+	}
+
+	public void setDiscountPrice(Integer discountPrice) {
+		this.discountPrice = discountPrice;
 	}
 
 	public UserBaseVO getReceiver() {

@@ -346,6 +346,20 @@ Condition.addupRule("quotation", {
         }
     },
 
+    // 报价-报退单
+    "quotationRefund-decoration-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+
     // 报价-拓展单
     "extension-decoration-orderId": {
         label: "装修单号",

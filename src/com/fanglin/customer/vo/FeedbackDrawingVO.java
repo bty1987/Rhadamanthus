@@ -11,11 +11,17 @@ public class FeedbackDrawingVO implements Serializable {
 
 	private Long fid;
 
+	private Long sid;
+
 	private String path;
 
 	private Timestamp createTime;
 
+	private Short type;
+
 	private Short status;
+	
+	private String fdids;
 
 	public FeedbackDrawingVO() {
 		super();
@@ -37,6 +43,14 @@ public class FeedbackDrawingVO implements Serializable {
 		this.fid = fid;
 	}
 
+	public Long getSid() {
+		return sid;
+	}
+
+	public void setSid(Long sid) {
+		this.sid = sid;
+	}
+
 	public String getPath() {
 		return path;
 	}
@@ -53,6 +67,14 @@ public class FeedbackDrawingVO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -61,4 +83,13 @@ public class FeedbackDrawingVO implements Serializable {
 		this.status = status;
 	}
 
+	public String getFdids() {
+		return fdids;
+	}
+
+	public void setFdids(String fdids) {
+		this.fdids = fdids;
+	}
+
+	
 }

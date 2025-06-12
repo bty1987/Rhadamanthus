@@ -44,6 +44,8 @@ public class SalesActivityItemPO implements Serializable {
 
 	public static final short STATUS_DISCOUNT_INT = 8;// 抵现
 
+	public static final short STATUS_PURCHER_INT = 9; // 采购
+
 	public static final short ISSTOCK_COUNTIN_INT = 0;// 计入库存
 
 	public static final short ISAFFIRM_UNSUBMIT_INT = 0;
@@ -69,6 +71,10 @@ public class SalesActivityItemPO implements Serializable {
 	private int money;
 
 	private int integral;
+
+	private int expendPrice;
+
+	private int discountPrice;
 
 	private UserPO creater;
 
@@ -183,6 +189,24 @@ public class SalesActivityItemPO implements Serializable {
 
 	public void setIntegral(int integral) {
 		this.integral = integral;
+	}
+
+	@Column(name = "expendPrice")
+	public int getExpendPrice() {
+		return expendPrice;
+	}
+
+	public void setExpendPrice(int expendPrice) {
+		this.expendPrice = expendPrice;
+	}
+
+	@Column(name = "discountPrice")
+	public int getDiscountPrice() {
+		return discountPrice;
+	}
+
+	public void setDiscountPrice(int discountPrice) {
+		this.discountPrice = discountPrice;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -15,6 +15,8 @@ public class CustomerProfileItemVO implements Serializable {
 
 	private Short type;
 
+	private Short require;
+
 	private String content;
 
 	private List<CustomerProfileOptionVO> options;
@@ -58,6 +60,14 @@ public class CustomerProfileItemVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getRequire() {
+		return require;
+	}
+
+	public void setRequire(Short require) {
+		this.require = require;
 	}
 
 	public String getContent() {

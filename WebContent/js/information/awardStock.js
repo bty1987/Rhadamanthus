@@ -121,11 +121,16 @@ $(function() {
         prop: "format",
         clazz: "grey"
     }, {
+        "field": "unitPrice",
+        "name": "价格",
+        prop: "unitPrice",
+        clazz: "blue"
+    }, {
         "field": "status",
         "name": "状态",
         prop: "status",
         dataset: constant.information().awardStock.status.keys,
-        clazz: "grey"
+        clazz: "red"
     }, {
         "field": "isStock",
         "name": "库存标识",

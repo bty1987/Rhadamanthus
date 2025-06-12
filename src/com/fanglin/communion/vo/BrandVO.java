@@ -8,6 +8,8 @@ public class BrandVO implements java.io.Serializable {
 
 	private Long bid;
 
+	private Long bpid;
+
 	private String no;
 
 	private String name;
@@ -55,6 +57,14 @@ public class BrandVO implements java.io.Serializable {
 
 	public void setBid(Long bid) {
 		this.bid = bid;
+	}
+
+	public Long getBpid() {
+		return bpid;
+	}
+
+	public void setBpid(Long bpid) {
+		this.bpid = bpid;
 	}
 
 	public String getNo() {

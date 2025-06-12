@@ -34,6 +34,8 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 	private int cvalue; // 结算值
 
 	private int breakpay; // 违约金
+	
+	private String servicePrice; // 服务费 , Json结构 , {"TL": "2016-01-01", "UV": 0, "DV": 0, "SR": 0}
 
 	public SupplierContractBrandPO() {
 		super();
@@ -94,6 +96,16 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 
 	public void setBreakpay(int breakpay) {
 		this.breakpay = breakpay;
+	}
+	
+	
+	@Column(name = "servicePrice")
+	public String getServicePrice() {
+		return servicePrice;
+	}
+
+	public void setServicePrice(String servicePrice) {
+		this.servicePrice = servicePrice;
 	}
 
 	public SupplierContractBrandVO ptv(SupplierContractBrandVO supplierBrandVO) {

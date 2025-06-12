@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DataDrawingPO;
 import com.fanglin.customer.dao.FeedbackDrawingDao;
 import com.fanglin.customer.po.FeedbackDrawingPO;
 import com.fanglin.customer.service.FeedbackDrawingService;
@@ -43,8 +44,26 @@ public class FeedbackDrawingServiceImpl implements FeedbackDrawingService {
 	}
 
 	@Override
+	public List<FeedbackDrawingVO> queryFeedbackDrawingBySid(FeedbackDrawingVO feedbackDrawingVO) {
+
+		List<FeedbackDrawingPO> feedbackDrawingPOs = feedbackDrawingDao.queryFeedbackDrawing(feedbackDrawingVO.getSid(), feedbackDrawingVO.getType());
+		List<FeedbackDrawingVO> feedbackDrawingVOs = new ArrayList<FeedbackDrawingVO>();
+
+		for (FeedbackDrawingPO feedbackDrawingPO : feedbackDrawingPOs) {
+
+			feedbackDrawingVO = new FeedbackDrawingVO();
+
+			BeanUtil.copyProperties(feedbackDrawingPO, feedbackDrawingVO);
+
+			feedbackDrawingVOs.add(feedbackDrawingVO);
+		}
+
+		return feedbackDrawingVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addFeedbackDrawing(FeedbackDrawingVO feedbackDrawing) {
+	public long addFeedbackDrawing(FeedbackDrawingVO feedbackDrawing) {
 
 		FeedbackDrawingPO feedbackDrawingPO = new FeedbackDrawingPO();
 
@@ -53,6 +72,32 @@ public class FeedbackDrawingServiceImpl implements FeedbackDrawingService {
 		feedbackDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
 		feedbackDrawingDao.save(feedbackDrawingPO);
+
+		return feedbackDrawingPO.getFdid();
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteFeedbackDrawing(FeedbackDrawingVO feedbackDrawing) {
+
+		FeedbackDrawingPO feedbackDrawingPO = feedbackDrawingDao.get(feedbackDrawing.getFdid());
+
+		if (feedbackDrawingPO != null) {
+
+			feedbackDrawingPO.setStatus(DataDrawingPO.STATUS_DISABLE_INT);
+
+			feedbackDrawingDao.update(feedbackDrawingPO);
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateFeedbackDrawingByFdids(FeedbackDrawingVO feedbackDrawingVO) {
+
+		if (feedbackDrawingVO.getFdids() != null) {
+
+			feedbackDrawingDao.updateFeedbackDrawingByFdids(feedbackDrawingVO.getFdids(), feedbackDrawingVO.getSid());
+		}
 	}
 
 }

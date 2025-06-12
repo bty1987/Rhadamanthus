@@ -406,12 +406,13 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationPO.setQuotationPrice(quotationPO.getTotalPrice());
 			decorationPO.setDiscount(quotationPO.getDiscount());
 
+			decorationDao.update(decorationPO);
+
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
 
 			quotationDao.clearQuotationForDefaultByOrderId(quotationVO.getOrderId());
 
 			quotationDao.update(quotationPO);
-			decorationDao.update(decorationPO);
 		}
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater", "version"));
@@ -548,8 +549,8 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 
-		quotationPO.setWorkTime(quotationVO.getWorkTime());
-		quotationPO.setAudiTime(quotationVO.getAudiTime());
+		if (quotationVO.getWorkTime() != null) quotationPO.setWorkTime(quotationVO.getWorkTime());
+		if (quotationVO.getAudiTime() != null) quotationPO.setAudiTime(quotationVO.getAudiTime());
 
 		quotationDao.update(quotationPO);
 

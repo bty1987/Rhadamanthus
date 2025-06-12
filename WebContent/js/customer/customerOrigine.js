@@ -1053,6 +1053,15 @@ $(function() {
                 case "status":
                     propertyArr.push(["状态: ", constant.customer().customerOrigine.status.keys[v.status], "red"]);
                     break;
+                case "source":
+                    propertyArr.push(["来源方: ", v.source, "grey"]);
+                    break;
+                case "contact":
+                    propertyArr.push(["对接人: ", v.contact, "grey"]);
+                    break;
+                case "referOrderId":
+                    propertyArr.push(["推荐单号: ", v.referOrderId, "blue"]);
+                    break;
                 case "comment":
                     propertyArr.push(["备注: ", com.checkNull(v.comment, '无'), "grey"]);
                     break;

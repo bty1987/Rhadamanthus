@@ -45,6 +45,10 @@ $.extend(api.index, {
     decorationServiceIndex: {
         url: "/views/decoration/decorationService.html"
     },
+    
+    decorationReferIndex: {
+        url: "/views/decoration/decoration4refer.html"
+    },
 
     decorationFinalSettlementIndex: {
         url: "/views/decoration/decoration4account.html"
@@ -156,6 +160,19 @@ $.extend(api, {
         },
         affirmDecorationActivityItem: {
             url: "affirmDecorationActivityItem.do"
+        },
+
+        queryDecorationActivityRecord: {
+            url: "queryDecorationActivityRecord.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "decorationActivityRecords-decorationActivityItem",
+                args: ["num", "money"]
+            }]
+        },
+        addDecorationActivityRecord: {
+            url: "addDecorationActivityRecord.do"
         },
 
         queryDecorationContractByOrderId: {
@@ -481,6 +498,14 @@ $.extend(api, {
                 args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }]
         },
+        queryDecorationForReferByOrderId: {
+            url: "queryDecorationForReferByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "decorations",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }]
+        },
         queryDecorationByOrderId: {
             url: "queryDecorationByOrderId.do",
             demo: true,
@@ -583,6 +608,9 @@ $.extend(api, {
 
         queryDecorationInfoByOrderId: {
             url: "queryDecorationInfoByOrderId.do"
+        },
+        queryDecorationInfoForCustomer: {
+            url: "queryDecorationInfoForCustomer.do"
         },
         sendDecorationInfoForConfirm: {
             url: "sendDecorationInfoForConfirm.do"

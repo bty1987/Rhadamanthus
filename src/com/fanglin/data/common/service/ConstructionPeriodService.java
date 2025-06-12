@@ -9,7 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionPeriodService {
 
-	public void pageConstructionPeriod(Paging paging, List<Filter> filters, int queryCompany) throws FLException;
+	public void pageConstructionPeriod(Paging paging, List<Filter> filters, int company) throws FLException;
+
+	public ConstructionPeriodVO queryConstructionPeriod(ConstructionPeriodVO constructionPeriodVO, int company);
 
 	public int addConstructionPeriod(ConstructionPeriodVO constructionPeriod, int company);
 

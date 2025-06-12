@@ -28,10 +28,12 @@ import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.DepartmentDao;
+import com.fanglin.communion.dao.DepartmentPartnerDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -126,6 +128,9 @@ public class DecorationServiceImpl implements DecorationService {
 	private DepartmentDao departmentDao;
 
 	@Autowired
+	private DepartmentPartnerDao departmentPartnerDao;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
@@ -208,9 +213,10 @@ public class DecorationServiceImpl implements DecorationService {
 		for (DecorationPO decorationPO : decorationPOs) {
 			DecorationVO decorationVO = new DecorationVO();
 
-			decorationVO.setSupervisor(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
 			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
+			decorationVO.setSupervisor(new UserBaseVO());
 
 			decorationPO.ptvcascade(decorationVO);
 
@@ -235,11 +241,13 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
-			decorationVO.setSupervisor(new UserBaseVO());
-			decorationVO.setEscorter(new UserBaseVO());
 			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
+			decorationVO.setSupervisor(new UserBaseVO());
 
 			decorationPO.ptvcascade(decorationVO);
 
@@ -298,7 +306,13 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
+
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
+			decorationVO.setSupervisor(new UserBaseVO());
 
 			decorationPO.ptvcascade(decorationVO);
 
@@ -352,7 +366,11 @@ public class DecorationServiceImpl implements DecorationService {
 		for (DecorationPO decorationPO : decorationPOs) {
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
@@ -380,9 +398,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
@@ -411,9 +434,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setDiscount(decorationPO.getDiscount());
@@ -450,9 +478,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
@@ -469,6 +502,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	public void pageDecorationForDesignerManager(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 
@@ -513,9 +547,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
@@ -546,6 +585,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
@@ -584,9 +624,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
@@ -602,6 +647,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication) throws FLException {
+
 		if (filters.size() == 0) return;
 
 		String userId = authentication.getUserId();
@@ -648,9 +694,14 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setMaterialer(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
+
 			decorationPO.ptvcascade(decorationVO);
 
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
@@ -683,6 +734,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
@@ -722,6 +774,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
@@ -756,6 +809,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
@@ -786,6 +840,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
+
 			DecorationVO decorationVO = new DecorationVO();
 
 			decorationPO.ptvcascade(decorationVO);
@@ -809,6 +864,28 @@ public class DecorationServiceImpl implements DecorationService {
 		for (DecorationPO decorationPO : decorationPOs) {
 
 			decorationVO = new DecorationVO();
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setSupervisor(new UserBaseVO());
+
+			decorationPO.ptvcascade(decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		return decorationVOs;
+	}
+
+	@Override
+	public List<DecorationVO> queryDecorationForReferByOrderId(DecorationVO decorationVO, Authentication authentication) {
+
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationForRefer(decorationVO.getOrderId());
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+
+			decorationVO = new DecorationVO();
+
 			decorationVO.setEscorter(new UserBaseVO());
 			decorationVO.setQuoter(new UserBaseVO());
 			decorationVO.setSupervisor(new UserBaseVO());
@@ -953,6 +1030,12 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationVO.getQuoter() != null) {
 			UserPO quoter = userDao.queryUserByUserId(decorationVO.getQuoter().getUserId());
 			decorationPO.setQuoter(quoter);
+		}
+
+		DepartmentPartnerPO departmentPartnerPO = departmentPartnerDao.queryDepartmentPartner(designer.getDept().getDid(), DepartmentPartnerPO.TYPE_DECO_INT);
+
+		if (departmentPartnerPO != null && departmentPartnerPO.getPartner() != null) {
+			decorationPO.setEscorter(departmentPartnerPO.getPartner());
 		}
 
 		if (decorationVO.getEscorter() != null) {

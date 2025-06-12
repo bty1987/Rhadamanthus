@@ -445,7 +445,7 @@ $.extend(api, {
             url: "addSalesActivityItem.do",
             type: "update",
             tranargs: {
-                args: ["salesActivityItems.money", "salesActivityItems.num", "salesActivityItems.integral", "salesActivity.amount"]
+                args: ["salesActivityItems.money", "salesActivityItems.num", "salesActivityItems.integral", "salesActivityItems.expendPrice", "salesActivityItems.discountPrice", "salesActivity.amount"]
             }
         },
 
@@ -454,7 +454,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesActivityItems",
-                args: ["money", "num", "integral"]
+                args: ["money", "num", "integral", "expendPrice", "discountPrice"]
             }]
         },
         amountSalesActivity: {
@@ -501,10 +501,18 @@ $.extend(api, {
             url: "refundSalesActivityItem.do"
         },
         expendSalesActivityItem: {
-            url: "expendSalesActivityItem.do"
+            url: "expendSalesActivityItem.do",
+            type: "update",
+            tranargs: {
+                args: ["salesActivityItem.expendPrice"]
+            }
         },
         discountSalesActivityItem: {
-            url: "discountSalesActivityItem.do"
+            url: "discountSalesActivityItem.do",
+            type: "update",
+            tranargs: {
+                args: ["salesActivityItem.discountPrice"]
+            }
         },
         sendSalesActivityItem: {
             url: "sendSalesActivityItem.do"
@@ -512,6 +520,20 @@ $.extend(api, {
         affirmSalesActivityItem: {
             url: "affirmSalesActivityItem.do"
         },
+
+        querySalesActivityRecord: {
+            url: "querySalesActivityRecord.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "salesActivityRecords-salesActivityItem",
+                args: ["money", "num", "integral", "expendPrice", "discountPrice"]
+            }]
+        },
+        addSalesActivityRecord: {
+            url: "addSalesActivityRecord.do"
+        },
+
         pageSalesForPompany: {
             url: "pageSalesForPompany.do",
             type: "query",

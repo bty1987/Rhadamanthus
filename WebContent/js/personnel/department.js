@@ -81,6 +81,7 @@
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            var $btnPartner = $('<a></a>').addClass('btn btn-minier btn-warning').html('合作');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $updateDD = $('<a></a>').addClass('btn btn-minier btn-success').html('同步钉钉');
 
@@ -106,7 +107,7 @@
             if (type == 'dutment') {
                 $divBtnWrap.append($btnDutment).appendTo($h3);
             } else {
-                $divBtnWrap.append($btnEdit).append($updateDD).append($btnStatus).appendTo($h3);
+                $divBtnWrap.append($btnPartner).append($btnEdit).append($updateDD).append($btnStatus).appendTo($h3);
             }
 
             $liLine.append($h3).append($ulProperty);
@@ -114,6 +115,13 @@
             $btnEdit.click(function() {
 
                 edit(v);
+            });
+
+            $btnPartner.click(function() {
+
+                params.personel.did = v.did;
+
+                com.popup4page("#departmentPartnerPopUp", api.index.departmentPartnerIndex.url, "合作");
             });
 
             v.status && $statusSwitch.prop("checked", true);

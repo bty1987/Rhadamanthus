@@ -59,7 +59,7 @@ jQuery(function($) {
             decorationCommon = data.decoration;
 
             com.post(api.system.queryCompanyByCid, {
-                "company.cid": data.decoration.bompany
+                "company.cid": params.payment.profit == null ? res.decoration.dompany : res.decoration.bompany
             }, function(data) {
 
                 drganization = data.company.drganization;

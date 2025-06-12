@@ -36,10 +36,18 @@ public class CustomerProfileAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryCustomerProfileByCsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerProfileByCsid() throws FLException {
+
+		customerProfiles = customerProfileService.queryCustomerProfileByCsid(customerProfile);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryCustomerProfileByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerProfileByCid() throws FLException {
 
-		customerProfile = customerProfileService.queryCustomerProfileByCid(customerProfile);
+		customerProfiles = customerProfileService.queryCustomerProfileByCid(customerProfile);
 
 		return SUCCESS;
 	}
@@ -47,7 +55,7 @@ public class CustomerProfileAction extends BaseListAction {
 	@Action(value = "queryCustomerProfileByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCustomerProfileByOrderId() throws FLException {
 
-		customerProfile = customerProfileService.queryCustomerProfileByOrderId(customerProfile);
+		customerProfiles = customerProfileService.queryCustomerProfileByOrderId(customerProfile);
 
 		return SUCCESS;
 	}
@@ -56,6 +64,14 @@ public class CustomerProfileAction extends BaseListAction {
 	public String queryCustomerProfileBySid() throws FLException {
 
 		customerProfile = customerProfileService.queryCustomerProfileByCpid(customerProfile);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addCustomerProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomerProfile() throws FLException {
+
+		customerProfileService.addCustomerProfile(customerProfile, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

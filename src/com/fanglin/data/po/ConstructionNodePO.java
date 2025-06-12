@@ -3,6 +3,7 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "constructionNode", catalog = "data")
@@ -25,6 +29,12 @@ public class ConstructionNodePO implements Serializable {
 
 	public static final short STATUS_INIT_SHORT = 0;
 
+	public static final short PROCESS_INIT_INT = 0;
+
+	public static final short MARK_START_INT = 1;
+
+	public static final short MARK_FINISH_INT = 2;
+
 	private long cnid;
 
 	private String name;
@@ -37,8 +47,6 @@ public class ConstructionNodePO implements Serializable {
 
 	private int fincheck;
 
-	private short status;
-
 	private String startalk;
 
 	private String endtalk;
@@ -49,11 +57,17 @@ public class ConstructionNodePO implements Serializable {
 
 	private int timeLimit;
 
+	private short process;
+
 	private short sort;
 
 	private String kino;
 
 	private String kiname;
+
+	private short mark;
+
+	private short status;
 
 	private int company;
 
@@ -126,15 +140,6 @@ public class ConstructionNodePO implements Serializable {
 		this.fincheck = fincheck;
 	}
 
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
-
 	@Column(name = "startalk")
 	public String getStartalk() {
 		return startalk;
@@ -182,6 +187,15 @@ public class ConstructionNodePO implements Serializable {
 		this.timeLimit = timeLimit;
 	}
 
+	@Column(name = "process")
+	public short getProcess() {
+		return process;
+	}
+
+	public void setProcess(short process) {
+		this.process = process;
+	}
+
 	@Column(name = "sort")
 	public short getSort() {
 		return sort;
@@ -209,6 +223,24 @@ public class ConstructionNodePO implements Serializable {
 		this.kiname = kiname;
 	}
 
+	@Column(name = "mark")
+	public short getMark() {
+		return mark;
+	}
+
+	public void setMark(short mark) {
+		this.mark = mark;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -216,6 +248,16 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public ConstructionNodeVO ptv(ConstructionNodeVO constructionNodeVO) {
+
+		BeanUtil.copyProperties(this, constructionNodeVO, Arrays.asList("startSurvey", "endSurvey"));
+
+		if (constructionNodeVO.getStartSurvey() != null && getStartSurvey() != null) constructionNodeVO.getStartSurvey().setBaseInfo(getStartSurvey());
+		if (constructionNodeVO.getEndSurvey() != null && getEndSurvey() != null) constructionNodeVO.getEndSurvey().setBaseInfo(getEndSurvey());
+
+		return constructionNodeVO;
 	}
 
 }

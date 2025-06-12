@@ -67,6 +67,18 @@ public class SupplierContractBrandAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "updateSupplierContractBrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSupplierContractBrand() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		supplierBrandService.updateSupplierContractBrand(supplierContractBrand);
+
+		return SUCCESS;
+	}
 
 	public SupplierContractBrandVO getSupplierContractBrand() {
 		return supplierContractBrand;

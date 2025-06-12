@@ -17,7 +17,8 @@ $(function() {
             couponsNum: com.focusPage("#couponsNum"),
             activity: com.focusPage("#activity"),
             commentName: com.focusPage("#commentName"),
-            salesActivityComment: com.focusPage("#salesActivityComment")
+            salesActivityComment: com.focusPage("#salesActivityComment"),
+            price: com.focusPage("#price", "#salesActivityCommentModal")
         },
         modal: {
             salesActivityCommentModal: com.focusPage("#salesActivityCommentModal"),
@@ -498,9 +499,11 @@ $(function() {
         var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px");
         // 抵现
         var discountBtn = $("<span></span").addClass("btn btn-minier btn-pink").html("抵现").css("margin", "3px");
+        // 记录
+        var recordBtn = $("<span></span").addClass("btn btn-minier btn-info").html("记录").css("margin", "3px");
 
         if (salesActivityItem.pagetype == "advance" || salesActivityItem.pagetype == "activity") {
-            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn).append(discountBtn);
+            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn).append(discountBtn).append(recordBtn);
         }
         if (salesActivityItem.pagetype == "dompany") {
             uiPgDiv.append(abateBtn);
@@ -508,6 +511,8 @@ $(function() {
 
         // 失效按钮
         abateBtn.on("click", function() {
+
+            com.focusPage(".price", "#salesActivityCommentModal").hide();
 
             salesActivityItem.items.commentName.html("失效");
             salesActivityItem.saiid = activityItem.saiid;
@@ -518,6 +523,8 @@ $(function() {
 
         // 领取按钮
         receiveBtn.on("click", function() {
+
+            com.focusPage(".price", "#salesActivityCommentModal").hide();
 
             if (activityItem.state == 0) {
                 salesActivityItem.items.commentName.html("领取");
@@ -533,6 +540,8 @@ $(function() {
         // 点击退货按钮
         refundBtn.click(function() {
 
+            com.focusPage(".price", "#salesActivityCommentModal").hide();
+
             salesActivityItem.items.commentName.html("退货");
             salesActivityItem.saiid = activityItem.saiid;
             salesActivityItem.url = api.sales.refundSalesActivityItem;
@@ -542,6 +551,8 @@ $(function() {
 
         // 点击配送按钮
         deliveBtn.click(function() {
+
+            com.focusPage(".price", "#salesActivityCommentModal").hide();
 
             salesActivityItem.items.commentName.html("配送");
             salesActivityItem.saiid = activityItem.saiid;
@@ -559,6 +570,8 @@ $(function() {
         // 点击补款按钮
         expendBtn.click(function() {
 
+            com.focusPage(".price", "#salesActivityCommentModal").show();
+
             salesActivityItem.items.commentName.html("补款");
             salesActivityItem.saiid = activityItem.saiid;
             salesActivityItem.url = api.sales.expendSalesActivityItem;
@@ -570,12 +583,28 @@ $(function() {
         // 点击抵现按钮
         discountBtn.click(function() {
 
+            com.focusPage(".price", "#salesActivityCommentModal").show();
+
             salesActivityItem.items.commentName.html("抵现");
             salesActivityItem.saiid = activityItem.saiid;
             salesActivityItem.url = api.sales.discountSalesActivityItem;
             salesActivityItem.info = "抵现成功!";
             salesActivityItem.modal.salesActivityCommentModal.modal("show");
 
+        });
+
+        // 点击记录按钮
+        recordBtn.click(function() {
+
+            params.sales.salesActivityItem = activityItem;
+
+            com.popup4page("#layerPopUp", "/views/sales/salesActivityRecord.html", "记录", null, function() {
+
+                com.popup4page("#layerPopUp", api.index.salesActivityIndex.url, "销售活动");
+            }, function() {
+
+                com.closePopup();
+            });
         });
 
     }
@@ -831,6 +860,10 @@ $(function() {
             "salesActivityItem.saiid": salesActivityItem.saiid,
             "salesActivityItem.content": salesActivityItem.items.salesActivityComment.val()
         };
+
+        if (salesActivityItem.url == api.sales.expendSalesActivityItem) ops["salesActivityItem.expendPrice"] = salesActivityItem.items.price.val();
+
+        if (salesActivityItem.url == api.sales.discountSalesActivityItem) ops["salesActivityItem.discountPrice"] = salesActivityItem.items.price.val();
 
         com.post(salesActivityItem.url, ops, function(res) {
 

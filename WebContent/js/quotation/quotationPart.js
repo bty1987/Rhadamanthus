@@ -21,6 +21,8 @@ var QuotationDetail = (function() {
         machingType: {},
         typeness: {},
         oldPrefer: {},
+        workTypes: null,
+        defaults: null,
 
         initSettingBtns: function() {
 
@@ -1725,7 +1727,6 @@ var QuotationDetail = (function() {
 
                 com.post(api.quotation.updateQuotationPrefer, params, function(res) {
 
-                    com.focusPage('#innerArea').text(quoteArea);
                     com.focusPage('#presentPrefer').val(presignProduce ? presignProduce.name : '无');
                     com.focusPage('#square').val(quoteArea);
 
@@ -1739,7 +1740,18 @@ var QuotationDetail = (function() {
                     quo.oldQuotationPreferData();
 
                     quo.quoModals.$domainPreferModal.modal("hide");
+
+                    quoteArea = quo.oldPrefer.quoteArea;
                 });
+
+                if (quo.defaults == constant.quotation().quotation.DEFAULTS_DEFAULT_INT) {
+                    com.post(api.data.updateHouse, {
+                        "house.hid": quo.decoration.house.hid,
+                        "house.innerArea": quoteArea
+                    }, function(res) {
+                        com.focusPage('#innerArea').text(quoteArea);
+                    });
+                }
             });
         },
 
@@ -1898,6 +1910,45 @@ var QuotationDetail = (function() {
             }, "pagenation", postData, extraParams);
         },
 
+        sortFunctionAreaItem: function($domain) {
+
+            var quoteFunctionAreaItem = {};
+            var $itemlist = $domain.find("li.fl-quo-item.item");
+
+            // 重新排序功能区下的项目
+            $itemlist.sort(function(a, b) {
+
+                var itemA = $(a).find(".worktype .cell-wrap").text();
+                var itemB = $(b).find(".worktype .cell-wrap").text();
+
+                function getID(text) {
+                    return quo.workTypes.find(function(item) {
+                        return item.name === text;
+                    }).id;
+                }
+
+                return getID(itemA) - getID(itemB);
+            });
+
+            // 重新将项目添加回功能区下
+            $itemlist.each(function(i, li) {
+                $(li).find(".line .cell-wrap").text(i + 1);
+                $(li).appendTo($domain.find(".fl-quo-list.list"));
+
+                quoteFunctionAreaItem["quotationFunctionAreaItems[" + i + "].qfaiId"] = $(li).attr('data-qfaiId');
+                quoteFunctionAreaItem["quotationFunctionAreaItems[" + i + "].index"] = (i + 1);
+            });
+
+            var quoteFunctionArea = {
+                "quotationFunctionArea.qfaId": $domain.attr('data-qfaId')
+            };
+
+            var params = $.extend({}, quoteFunctionAreaItem, quoteFunctionArea);
+
+            com.post(api.quotation.updateQuotationFunctionAreaItemForIndex, params);
+
+        },
+
         // 绑定各种关于报价的操作
         init: function() {
 
@@ -1912,7 +1963,7 @@ var QuotationDetail = (function() {
             this.deleteQuotesToDomain();
             this.showDiscountBasePrice();
             this.saveQuotationPrefer();
-            this.handleInput();
+            if (quo.decorationType != constant.decoration().decoration.TYPE_MIDPACK_INT) this.handleInput();
             this.handlechange();
             this.submitApprovalPrefer();
         }
@@ -2975,6 +3026,7 @@ var QuotationDetail = (function() {
             var btnShow = [constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT, constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT].indexOf(dv.type) == -1;
 
             var _btnSet = {
+                "$btnSort": ["根据工种排序", '<i class="bigger-125 icon-sort orange"></i>', dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT],
                 "$btnEdit": ["编辑功能区", '<i class="bigger-125 icon-pencil blue"></i>', btnShow],
                 "$btnAdd": ["添加工程项", '<i class="bigger-125 icon-plus purple"></i>', dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT],
                 "$btnSet": ["自定义报价项", '<i class="bigger-125  icon-plus-sign purple"></i>', btnShow],
@@ -3182,6 +3234,10 @@ var QuotationDetail = (function() {
                     quo.quoModals.$quoteModal.modal("show");
                     com.focusPage('#addItemFunctionAreaIndex').val(dv.qfaId);
                 });
+                $btns.$btnSort.click(function() {// 功能区按照工种排序
+
+                    domain.sortFunctionAreaItem($domain);
+                });
             }
 
             if (dv.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT && dv.type != constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) { // 管理区类型之外
@@ -3357,7 +3413,8 @@ var QuotationDetail = (function() {
                 $btnInfo = $('<a></a>').attr({
                     "href": "javascript:void(0)"
                 }).css({
-                    "padding-left": "5px"
+                    "padding-left": "5px",
+                    'pointer-events': 'auto'
                 }).append('<i class="bigger-125 icon-search"></i>').mouseenter(function() {
 
                     com.showTip(this, "报价信息", "top");
@@ -3693,6 +3750,8 @@ var QuotationDetail = (function() {
 
                 var quotation = data.quotation;
 
+                quo.defaults =  quotation.defaults;
+
                 // 将报价数据获取到全局变量中
                 quo.basicParams = {
                     "quotation.qid": quotation.qid,// 报价Id
@@ -3716,6 +3775,12 @@ var QuotationDetail = (function() {
                 com.focusPage('#quotationName').text(quotation.quotationName); // 左上角显示报价名称
                 com.focusPage('#basePrice').text(quotation.basePrice);
                 com.focusPage('#sumLabDiscount').text(quotation.discount); // 左上角显示的折扣
+
+                if (params.urlLoadParams.type != null && quotation.attstatus == constant.quotation().quotation.ATTSTATUS_FINISH_INT) {
+                    com.focusPage('#preferBtn').css('pointer-events','none');
+                    com.focusPage('#quotationFnBtn').css('pointer-events','none');
+                    com.focusPage('#functionAreaDetailList').css('pointer-events','none');
+                }
             }, null, false);
 
             com.post(api.quotation.queryQuotationPrefer, {
@@ -3801,6 +3866,12 @@ var QuotationDetail = (function() {
 
                     var $comment = $('<span></span>').addClass("lbl").text(comment).attr("style", "margin-left:15px").appendTo($approvaler);
                 });
+            }, null, false);
+
+            // 获取工种
+            com.post(api.common.queryWorkType, {}, function(res) {
+
+                quo.workTypes = res.workTypes;
             }, null, false);
 
             // 通过报价ID获取报价项中的功能区
@@ -3983,7 +4054,18 @@ var QuotationDetail = (function() {
                         com.focusPage('#preferBtn').hide();
                         com.focusPage('#quotePriceShow').hide();
                         com.focusPage('#presentPreferShow').hide();
-                        com.focusPage('#calculate').hide();
+                        com.focusPage('#squareShow').hide();
+                        com.focusPage('#countQuotePriceShow').hide();
+                        com.focusPage('#countTotalPriceShow').hide();
+                    }
+
+                    if (quo.decorationType == constant.decoration().decoration.TYPE_MIDPACK_INT) {
+                        com.focusPage('#innerAreaShow').show();
+                        com.focusPage('#preferBtn').show();
+                        com.focusPage('#preferShow').hide();
+                        com.focusPage('#manageShow').hide();
+                        com.focusPage('#advanceShow').hide();
+                        com.focusPage('#squareShow').show();
                     }
 
                     if (advancePrefer != 0) {
@@ -4024,6 +4106,14 @@ var QuotationDetail = (function() {
             if (params.urlLoadParams.type == null && params.quotation.attpages == null) {
                 com.focusPage('#pauseTimerBtn', '#quotationPart').hide();
             }
+
+            com.focusPage('#openFunctionAreasBtn').css('pointer-events','auto');
+            com.focusPage('#closeFunctionAreasBtn').css('pointer-events','auto');
+            com.focusPage('#calculateTotalBtn').css('pointer-events','auto');
+            com.focusPage('#viewStatisticalBtn').css('pointer-events','auto');
+            com.focusPage('#detailBckBtn').css('pointer-events','auto');
+            com.focusPage('.icon-chevron-up').css('pointer-events','auto');
+            com.focusPage('.icon-chevron-down').css('pointer-events','auto');
 
             quo.init();
             domain.init();

@@ -257,14 +257,14 @@ $(function() {
         }
     }, {
         name: "出库-金蝶",
-        clazz: "btn-inverse hide",
+        clazz: "btn-inverse",
         handle: function (v) {
             kingdeeUtils.accessories(v.aid, 7, "SalesOutStock");
             return false;
         }
     }, {
         name: "入库-金蝶",
-        clazz: "btn-purple hide",
+        clazz: "btn-purple",
         handle: function (v) {
             kingdeeUtils.accessories(v.aid, 8, "SalesReturnStock");
             return false;

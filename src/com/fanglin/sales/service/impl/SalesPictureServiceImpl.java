@@ -44,7 +44,7 @@ public class SalesPictureServiceImpl implements SalesPictureService {
 		List<SalesPictureVO> salesPictureVOs = new ArrayList<SalesPictureVO>();
 
 		for (SalesPicturePO salesPicturePO : salesPicturePOs) {
-			salesPictureVOs.add(ptv(salesPicturePO));
+			salesPictureVOs.add(salesPicturePO.ptv(new SalesPictureVO(new UserBaseVO(new DutyVO(), new DepartmentVO()))));
 		}
 
 		return salesPictureVOs;
@@ -87,16 +87,6 @@ public class SalesPictureServiceImpl implements SalesPictureService {
 		salesPictureDao.update(salesPicturePO);
 
 		return 0;
-	}
-
-	public SalesPictureVO ptv(SalesPicturePO salesPicturePO) {
-
-		SalesPictureVO salesPictureVO = new SalesPictureVO(new UserBaseVO(new DutyVO(), new DepartmentVO()));
-
-		BeanUtil.copyProperties(salesPicturePO, salesPictureVO, Arrays.asList("creater"));
-		BeanUtil.copyProperties(salesPicturePO.getCreater(), salesPictureVO.getCreater(), Arrays.asList("dept", "duty"));
-
-		return salesPictureVO;
 	}
 
 }

@@ -45,7 +45,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 		query.add(Restrictions.eq("company", company));
 
 		if (status != null) {
-			query.add(Restrictions.eq("status", BalanceSelectionBO.STATUS_ENABLE_CHECK_INT));
+			query.add(Restrictions.eq("status", status));
 		}
 
 		queryFilterExcute(query, filters);
@@ -59,6 +59,11 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	@SuppressWarnings("unchecked")
 	public List<BalanceSelectionPO> queryBalanceSelection(String name, int company) {
 		return session().createCriteria(BalanceSelectionPO.class).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).add(Restrictions.eq("status", BalanceSelectionPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("bsid")).setMaxResults(10).list();
+	}
+
+	@Override
+	public BalanceSelectionPO queryBalanceSelection(long bid, String grade, int company) {
+		return (BalanceSelectionPO) session().createCriteria(BalanceSelectionPO.class).createAlias("brand", "brand").add(Restrictions.eq("brand.bid", bid)).add(Restrictions.eq("status", BalanceSelectionPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
