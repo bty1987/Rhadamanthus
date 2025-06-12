@@ -1,5 +1,6 @@
 package com.fanglin.data.common.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Order;
@@ -42,6 +43,24 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 	@Override
 	public ConstructionNodePO queryConstructionNodeBySort(short sort, int company) {
 		return (ConstructionNodePO) session().createCriteria(ConstructionNodePO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(ConstructionNodePO.COLUMN_SORT_STR, sort)).uniqueResult();
+	}
+
+	@Override
+	public int countConstructionNode(short process, int company) {
+
+		String sql = "select count(*) from data.constructionnode cn where cn.process = :process and cn.company = :company";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setShort("process", process).setInteger("company", company).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int countConstructionNodeForMark(short mark, int company) {
+
+		String sql = "select count(*) from data.constructionnode cn where cn.mark = :mark and cn.company = :company";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setShort("mark", mark).setInteger("company", company).uniqueResult();
+
+		return count.intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

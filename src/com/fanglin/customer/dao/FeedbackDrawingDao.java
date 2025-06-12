@@ -9,4 +9,8 @@ public interface FeedbackDrawingDao extends Dao<FeedbackDrawingPO> {
 
 	public List<FeedbackDrawingPO> queryFeedbackDrawing(long fid);
 
+	public List<FeedbackDrawingPO> queryFeedbackDrawing(long sid, short type);
+	
+	public void updateFeedbackDrawingByFdids(String fdids,long sid);
+
 }

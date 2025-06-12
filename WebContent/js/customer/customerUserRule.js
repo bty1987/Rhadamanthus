@@ -330,7 +330,7 @@ $(function() {
                 return false;
             }
 
-            var status = customerUserRule.depage == "dept" ? 2 : customerUserRule.depage == "fatherDept" ? 3 : 1;
+            var status = customerUserRule.depage == "dept" ? 2 : (customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company") ? 3 : 1;
 
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
@@ -359,7 +359,7 @@ $(function() {
                 return false;
             }
 
-            var status = customerUserRule.depage == "dept" ? 2 : customerUserRule.depage == "fatherDept" ? 3 : 1;
+            var status = customerUserRule.depage == "dept" ? 2 : (customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company") ? 3 : 1;
 
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
@@ -385,7 +385,7 @@ $(function() {
                 return false;
             }
 
-            var status = customerUserRule.depage == "dept" ? 2 : customerUserRule.depage == "fatherDept" ? 3 : 1;
+            var status = customerUserRule.depage == "dept" ? 2 : (customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company") ? 3 : 1;
 
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,

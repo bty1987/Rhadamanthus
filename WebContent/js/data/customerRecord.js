@@ -11,34 +11,34 @@ jQuery(function($) {
     });
 
     var lineprops = [{
-        fieId: "comment",
-        name: "记录信息",
-        prop: "comment",
+        fieId: "operater.userId",
+        name: "工号",
+        prop: "operater.userId",
         clazz: "grey"
     }, {
         fieId: "operater.currentName",
         name: "操作人",
         prop: "operater.currentName",
-        clazz: "red"
+        clazz: "grey"
     }, {
         fieId: "operateTime",
         name: "记录时间",
         prop: "operateTime",
         clazz: "grey"
     }, {
-        fieId: "operater.userId",
-        name: "工号",
-        prop: "operater.userId",
-        clazz: "grey"
-    }, {
         fieId: "operater.duty.name",
         name: "职位",
         prop: "operater.duty.name",
         clazz: "grey"
-    }];
+    }, {
+        fieId: "comment",
+        name: "记录信息",
+        prop: "comment",
+        clazz: "grey"
+    }, ];
 
     var linebtns = [];
 
-    searcher.line("comment", lineprops, linebtns).render();
+    searcher.line("operater.currentName", lineprops, linebtns).render();
 
 });

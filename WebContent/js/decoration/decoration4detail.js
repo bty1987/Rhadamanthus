@@ -186,6 +186,7 @@ jQuery(function($) {
 
         return value;
     });
+
     decorationDetail.houseItems.built = com.focusPage("#built").on("blur", function(e) {
 
         deleteVillageData("built", decorationDetail.houseItems);
@@ -456,11 +457,35 @@ jQuery(function($) {
         }, function(res) {
 
             decorationDetail.customer = res.customer;
-            com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ :' + decorationDetail.customer.qq + '<br /> 微信 :' + decorationDetail.customer.wechat + '<br />  电话 : <span id = customerInfosPhone>客户电话</span> <br />  客户类型 :' + decorationDetail.customer.relationshipType + '<br />');
 
-            $('#customerInfosPhone').one("click", function() {
+            var customerPhone = "客户电话";
+
+            if ([3, 7].contains(params.decoration.decoration.status)) {
+                com.post(api.decoration.queryDecorationInfoForCustomer, {
+                    "decorationInfo.orderId": decorationDetail.orderId
+                }, function(res) {
+
+                    customerPhone = res.decorationInfo.customerPhone;
+                }, function(res) {
+
+                }, false);
+
+                com.post(api.communion.addCustomerRecord, {
+                    "customerRecord.cid": decorationDetail.customer.cid,
+                    "customerRecord.type": 0
+                }, function(res) {
+
+                }, function(res) {
+
+                });
+            }
+
+            com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ :' + decorationDetail.customer.qq + '<br /> 微信 :' + decorationDetail.customer.wechat + '<br />  电话 : <span id = customerInfosPhone>' + customerPhone + '</span> <br />  客户类型 :' + decorationDetail.customer.relationshipType + '<br />');
+
+            $('#customerInfosPhone').on("click", function() {
 
                 var phoneInfo = $(this);
+
                 com.post(api.data.queryCustomerForPhone, {
                     "customerPhone.cid": decorationDetail.customer.cid,
                 }, function(res) {
@@ -1339,7 +1364,7 @@ jQuery(function($) {
         }
 
         com.post(api.decoration.queryDecorationInfoByOrderId, {
-            "orderId": decorationDetail.orderId
+            "decorationInfo.orderId": decorationDetail.orderId
         }, function(res) {
 
             res = res.decorationInfo;
@@ -1373,7 +1398,6 @@ jQuery(function($) {
         if ([0, 1, 4].indexOf(decoration.status) == -1) {
             decorationDetail.items.orderType.prop("disabled", true);
             com.focusPage("#typeChangeBtn").hide();
-
         }
 
         if ([2, 3, 4, 6, 7].indexOf(decoration.status) == -1) {
@@ -1602,7 +1626,7 @@ jQuery(function($) {
                 decorationUtils.initPresignPrint();
                 break;
             case "picture":
-                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles","designContractPicture", decorationDetail.orderId);
+                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", "designContractPicture", decorationDetail.orderId);
                 break;
             case "material":
                 decorationUtils.initMaterial(decorationDetail);
@@ -1996,7 +2020,7 @@ jQuery(function($) {
 
     function binding(idName) {
 
-        com.focusPage("#" + idName).bindData(constant.decoration().decorationActivityItem.stateType.datas, "key", "value", false);
+        com.focusPage("#" + idName).bindData(constant.decoration().decorationActivityItem.stateTypeCommon.datas, "key", "value", false);
     }
 
     function queryPaymentType(options) {

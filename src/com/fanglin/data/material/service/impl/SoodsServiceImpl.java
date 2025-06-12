@@ -49,13 +49,7 @@ public class SoodsServiceImpl implements SoodsService {
 		List<SoodsVO> soodsVOs = new ArrayList<SoodsVO>();
 
 		for (SoodsPO soodsPO : soodsPOs) {
-
-			soodsVO = new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO()));
-
-			BeanUtil.copyProperties(soodsPO, soodsVO, Arrays.asList("goods"));
-			BeanUtil.copyProperties(soodsPO.getGoods(), soodsVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			soodsVOs.add(soodsVO);
+			soodsVOs.add(soodsPO.ptv(new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO()))));
 		}
 
 		paging.setData(soodsVOs);
@@ -68,13 +62,7 @@ public class SoodsServiceImpl implements SoodsService {
 		List<SoodsVO> soodsVOs = new ArrayList<SoodsVO>();
 
 		for (SoodsPO soodsPO : soodsPOs) {
-
-			soodsVO = new SoodsVO(new GoodsVO(), new QuotationItemVO());
-
-			BeanUtil.copyProperties(soodsPO, soodsVO, Arrays.asList("goods"));
-			BeanUtil.copyProperties(soodsPO.getGoods(), soodsVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			soodsVOs.add(soodsVO);
+			soodsVOs.add(soodsPO.ptv(new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO()))));
 		}
 
 		return soodsVOs;
@@ -85,11 +73,7 @@ public class SoodsServiceImpl implements SoodsService {
 
 		SoodsPO soodsPO = soodsDao.get(soodsVO.getSid());
 
-		soodsVO = new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO()));
-
-		BeanUtil.copyProperties(soodsPO, soodsVO, Arrays.asList("goods", "quotationItem"));
-
-		BeanUtil.copyProperties(soodsPO.getGoods(), soodsVO.getGoods(), Arrays.asList("accessoriesType"));
+		if (soodsPO != null) soodsVO = soodsPO.ptv(new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO())));
 
 		return soodsVO;
 	}
@@ -99,7 +83,6 @@ public class SoodsServiceImpl implements SoodsService {
 	public int addSoods(SoodsVO soodsVO, int company) throws FLException {
 
 		GoodsPO goodsPO = goodsDao.get(soodsVO.getGoods().getGid());
-		SoodsPO soodsPO = new SoodsPO();
 
 		if (goodsPO == null) {
 			throw new FLException(260004, "商品不存在");
@@ -111,13 +94,12 @@ public class SoodsServiceImpl implements SoodsService {
 			throw new FLException(130036, "商品无关联厂商");
 		}
 
-		soodsPO.setName(soodsVO.getName());
+		SoodsPO soodsPO = new SoodsPO();
+
+		BeanUtil.copyProperties(soodsVO, soodsPO, Arrays.asList("goods"));
+
 		soodsPO.setGoods(new GoodsBO(goodsPO.getGid()));
-		soodsPO.setNum(soodsVO.getNum());
 		soodsPO.setStatus(SoodsPO.STATUS_INVALID_INT);
-		soodsPO.setSelling(soodsVO.getSelling());
-		soodsPO.setCost(soodsVO.getCost());
-		soodsPO.setBalance(soodsVO.getBalance());
 		soodsPO.setCompany(company);
 
 		soodsDao.save(soodsPO);

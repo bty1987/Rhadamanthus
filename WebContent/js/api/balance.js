@@ -451,6 +451,13 @@ $.extend(api, {
                 args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
             }
         },
+        batchBalanceSelection: {
+            url: "batchBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+            }
+        },
         unbindBalanceSelection: {
             url: "unbindBalanceSelection.do",
             type: "update",
@@ -476,6 +483,14 @@ $.extend(api, {
             tranargs: {
                 args: ["balanceSelection.income", "balanceSelection.payment"]
             }
+        },
+        auditBalanceSelection: {
+            url: "auditBalanceSelection.do",
+            demo: true
+        },
+        unauditBalanceSelection: {
+            url: "unauditBalanceSelection.do",
+            demo: true
         },
         deleteBalanceSelection: {
             url: "deleteBalanceSelection.do"

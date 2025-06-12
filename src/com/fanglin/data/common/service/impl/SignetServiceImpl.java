@@ -267,21 +267,21 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130046, "签章已存在");
 		}
 
-		SignetPO newSignetPO = new SignetPO();
+		SignetPO signetCO = new SignetPO();
 
-		newSignetPO.setNo(signetVO.getNo());
-		newSignetPO.setName(signetVO.getName());
-		newSignetPO.setKeyword(signetPO.getKeyword());
-		newSignetPO.setType(signetPO.getType());
-		newSignetPO.setPath(signetPO.getPath());
-		newSignetPO.setAuthurl(signetPO.getAuthurl());
-		newSignetPO.setSignno(signetPO.getSignno());
-		newSignetPO.setToken(signetPO.getToken());
-		newSignetPO.setCompany(signetPO.getCompany());
-		newSignetPO.setSignid(signetPO.getSignid());
-		newSignetPO.setStatus(signetPO.getStatus());
+		signetCO.setNo(signetVO.getNo());
+		signetCO.setName(signetVO.getName());
+		signetCO.setKeyword(signetPO.getKeyword());
+		signetCO.setType(signetPO.getType());
+		signetCO.setPath(signetPO.getPath());
+		signetCO.setAuthurl(signetPO.getAuthurl());
+		signetCO.setSignno(signetPO.getSignno());
+		signetCO.setToken(signetPO.getToken());
+		signetCO.setCompany(signetPO.getCompany());
+		signetCO.setSignid(signetPO.getSignid());
+		signetCO.setStatus(signetPO.getStatus());
 
-		signetDao.save(newSignetPO);
+		signetDao.save(signetCO);
 
 		return 0;
 	}

@@ -41,12 +41,10 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
 
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
-
-			constructionNodeVOs.add(ptv(constructionNodePO));
+			constructionNodeVOs.add(constructionNodePO.ptv(new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO())));
 		}
 
 		paging.setData(constructionNodeVOs);
-
 	}
 
 	@Override
@@ -56,8 +54,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		List<ConstructionNodeVO> constructionNodeVOs = new ArrayList<ConstructionNodeVO>();
 
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
-
-			constructionNodeVOs.add(ptv(constructionNodePO));
+			constructionNodeVOs.add(constructionNodePO.ptv(new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO())));
 		}
 
 		return constructionNodeVOs;
@@ -69,7 +66,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
 
 		if (constructionNodePO != null) {
-			constructionNodeVO = ptv(constructionNodePO);
+			constructionNodeVO = constructionNodePO.ptv(new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO()));
 		}
 
 		return constructionNodeVO;
@@ -90,6 +87,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		ConstructionNodeVO constructionNodeVO;
 
 		for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
+
 			constructionNodeVO = new ConstructionNodeVO();
 
 			BeanUtil.copyProperties(constructionNodePO, constructionNodeVO, Arrays.asList("startSurvey", "endSurvey"));
@@ -140,6 +138,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
 
 		constructionNodePO.setKino(constructionNodeVO.getKino());
+		constructionNodePO.setProcess(constructionNodeVO.getProcess());
 		constructionNodePO.setKiname(constructionNodeVO.getKiname());
 
 		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
@@ -160,25 +159,17 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNodeVO) {
+	public void updateConstructionNodeForStatus(ConstructionNodeVO constructionNodeVO) throws FLException {
 
 		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
+
+		if (constructionNodePO == null) {
+			throw new FLException(130026, "工程节点不存在");
+		}
 
 		constructionNodePO.setStatus(constructionNodeVO.getStatus());
 
 		constructionNodeDao.update(constructionNodePO);
-	}
-
-	public ConstructionNodeVO ptv(ConstructionNodePO constructionNodePO) {
-
-		ConstructionNodeVO constructionNodeVO = new ConstructionNodeVO(new SurveyTemplateVO(), new SurveyTemplateVO());
-
-		BeanUtil.copyProperties(constructionNodePO, constructionNodeVO, Arrays.asList("startSurvey", "endSurvey"));
-
-		constructionNodeVO.getStartSurvey().setBaseInfo(constructionNodePO.getStartSurvey());
-		constructionNodeVO.getEndSurvey().setBaseInfo(constructionNodePO.getEndSurvey());
-
-		return constructionNodeVO;
 	}
 
 }

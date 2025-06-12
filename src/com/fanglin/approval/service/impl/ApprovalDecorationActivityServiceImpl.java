@@ -33,9 +33,11 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
+import com.fanglin.decoration.dao.DecorationActivityRecordDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
+import com.fanglin.decoration.po.DecorationActivityRecordPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardStockPO;
@@ -60,6 +62,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
+
+	@Autowired
+	private DecorationActivityRecordDao decorationActivityRecordDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -116,7 +121,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		approvalDecorationActivityDao.save(approvalDecorationActivityPO);
 
 		for (ApprovalDecorationActivityItemVO approvalDecorationActivityItemVO : approvalDecorationActivityItemVOs) {
+
 			ApprovalDecorationActivityItemPO approvalDecorationActivityItemPO = new ApprovalDecorationActivityItemPO();
+
 			BeanUtil.copyProperties(approvalDecorationActivityItemVO, approvalDecorationActivityItemPO);
 
 			approvalDecorationActivityItemPO.setAdaId(approvalDecorationActivityPO.getAdaId());
@@ -173,6 +180,10 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationActivityItemDao.save(decorationActivityItemPO);
+
+			DecorationActivityRecordPO decorationActivityRecordPO = new DecorationActivityRecordPO().init(decorationActivityItemPO.getAid(), decorationActivityItemPO, DecorationActivityItemPO.STATUS_INIT_INT, approvalPO.getSender(), "");
+
+			decorationActivityRecordDao.save(decorationActivityRecordPO);
 		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(decorationPO.getOrderId());

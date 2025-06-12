@@ -68,19 +68,21 @@ public class ConstructionPO implements Serializable {
 
 	public static final short ACCESSORY_LOCK_SHORT = 1;
 
+	public static final short PROCESS_INIT_INT = 0;
+
+	public static final short PROCESS_FINISH_INT = 0;
+
 	private long cid;
 
 	private DecorationPO decoration;
-
-	private UserPO supervisor;
 
 	private long cnid;
 
 	private int schedule;
 
-	private Timestamp startTime;
+	private int process;
 
-	private Timestamp endTime;
+	private int period;
 
 	private short accessory;
 
@@ -92,44 +94,48 @@ public class ConstructionPO implements Serializable {
 
 	private long salaryTotal;
 
-	private Timestamp createTime;
-
-	private Timestamp finishTime;
+	private UserPO supervisor;
 
 	private UserPO locker;
 
+	private Timestamp createTime;
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
+	private Timestamp finishTime;
+
 	private Timestamp lockTime;
+
+	private Timestamp processTime;
 
 	public ConstructionPO() {
 		super();
 	}
 
 	public ConstructionPO(DecorationPO decoration) {
+
 		super();
+
 		this.decoration = decoration;
 	}
 
 	public ConstructionPO(DecorationPO decoration, UserPO supervisor) {
+
 		super();
+
 		this.decoration = decoration;
 		this.supervisor = supervisor;
 	}
 
 	public ConstructionPO(DecorationPO decoration, UserPO supervisor, UserPO locker) {
+
 		super();
+
 		this.decoration = decoration;
 		this.supervisor = supervisor;
 		this.locker = locker;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "suid", referencedColumnName = "uid")
-	public UserPO getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(UserPO supervisor) {
-		this.supervisor = supervisor;
 	}
 
 	@Id
@@ -171,22 +177,22 @@ public class ConstructionPO implements Serializable {
 		this.schedule = schedule;
 	}
 
-	@Column(name = "startTime")
-	public Timestamp getStartTime() {
-		return startTime;
+	@Column(name = "process")
+	public int getProcess() {
+		return process;
 	}
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
+	public void setProcess(int process) {
+		this.process = process;
 	}
 
-	@Column(name = "endTime")
-	public Timestamp getEndTime() {
-		return endTime;
+	@Column(name = "period")
+	public int getPeriod() {
+		return period;
 	}
 
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
+	public void setPeriod(int period) {
+		this.period = period;
 	}
 
 	@Column(name = "accessory")
@@ -225,6 +231,26 @@ public class ConstructionPO implements Serializable {
 		this.accessoryTotal = accessoryTotal;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	public UserPO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserPO supervisor) {
+		this.supervisor = supervisor;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "luid", referencedColumnName = "uid")
+	public UserPO getLocker() {
+		return locker;
+	}
+
+	public void setLocker(UserPO locker) {
+		this.locker = locker;
+	}
+
 	@Column(name = "salaryTotal")
 	public long getSalaryTotal() {
 		return salaryTotal;
@@ -243,6 +269,24 @@ public class ConstructionPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "startTime")
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@Column(name = "endTime")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
 	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -252,16 +296,6 @@ public class ConstructionPO implements Serializable {
 		this.finishTime = finishTime;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "luid", referencedColumnName = "uid")
-	public UserPO getLocker() {
-		return locker;
-	}
-
-	public void setLocker(UserPO locker) {
-		this.locker = locker;
-	}
-
 	@Column(name = "lockTime")
 	public Timestamp getLockTime() {
 		return lockTime;
@@ -269,6 +303,15 @@ public class ConstructionPO implements Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	@Column(name = "processTime")
+	public Timestamp getProcessTime() {
+		return processTime;
+	}
+
+	public void setProcessTime(Timestamp processTime) {
+		this.processTime = processTime;
 	}
 
 }

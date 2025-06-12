@@ -24,6 +24,8 @@ public class DecorationBusitypePO implements Serializable {
 
 	public static final short STATUS_DISABLE_INT = 1;
 
+	public static final short ISAWARD_AWARD_INT = 1;
+
 	private long dbid;
 
 	private String name;
@@ -35,6 +37,12 @@ public class DecorationBusitypePO implements Serializable {
 	private int company;
 
 	private long no;
+
+	private short isRefer;
+
+	private short isAward;
+
+	private int notSalesmanRate;
 
 	public DecorationBusitypePO() {
 		super();
@@ -107,6 +115,33 @@ public class DecorationBusitypePO implements Serializable {
 
 	public void setNo(long no) {
 		this.no = no;
+	}
+
+	@Column(name = "isRefer")
+	public short getIsRefer() {
+		return isRefer;
+	}
+
+	public void setIsRefer(short isRefer) {
+		this.isRefer = isRefer;
+	}
+
+	@Column(name = "isAward")
+	public short getIsAward() {
+		return isAward;
+	}
+
+	public void setIsAward(short isAward) {
+		this.isAward = isAward;
+	}
+
+	@Column(name = "notSalesmanRate")
+	public int getNotSalesmanRate() {
+		return notSalesmanRate;
+	}
+
+	public void setNotSalesmanRate(int notSalesmanRate) {
+		this.notSalesmanRate = notSalesmanRate;
 	}
 
 }

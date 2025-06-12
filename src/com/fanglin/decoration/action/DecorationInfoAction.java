@@ -19,8 +19,6 @@ public class DecorationInfoAction extends BaseListAction {
 
 	private static final long serialVersionUID = 4776041931383364604L;
 
-	private String orderId;
-
 	@Autowired
 	private DecorationInfoService decorationInfoService;
 
@@ -29,7 +27,15 @@ public class DecorationInfoAction extends BaseListAction {
 	@Action(value = "queryDecorationInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationInfoByOrderId() throws FLException {
 
-		decorationInfo = decorationInfoService.queryDecorationInfoByOrderId(orderId);
+		decorationInfo = decorationInfoService.queryDecorationInfoByOrderId(decorationInfo);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryDecorationInfoForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationInfoForCustomer() throws FLException {
+
+		decorationInfo = decorationInfoService.queryDecorationInfoForCustomer(decorationInfo);
 
 		return SUCCESS;
 	}
@@ -40,15 +46,6 @@ public class DecorationInfoAction extends BaseListAction {
 		decorationInfoService.sendDecorationInfoForConfirm(decorationInfo);
 
 		return SUCCESS;
-	}
-	
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
 
 	public DecorationInfoVO getDecorationInfo() {

@@ -60,14 +60,6 @@ public class OccessoriesCostAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public OccessoriesCostService getOccessoriesCostService() {
-		return occessoriesCostService;
-	}
-
-	public void setOccessoriesCostService(OccessoriesCostService occessoriesCostService) {
-		this.occessoriesCostService = occessoriesCostService;
-	}
-
 	public OccessoriesCostVO getOccessoriesCost() {
 		return occessoriesCost;
 	}

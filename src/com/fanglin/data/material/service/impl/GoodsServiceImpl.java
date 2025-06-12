@@ -114,6 +114,7 @@ public class GoodsServiceImpl implements GoodsService {
 		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
 
 		if (brandUserRightPOs.size() > 0) {
+
 			List<Long> bids = new ArrayList<Long>();
 
 			for (BrandUserRightPO brandUserRightPO : brandUserRightPOs) {
@@ -122,16 +123,10 @@ public class GoodsServiceImpl implements GoodsService {
 			}
 
 			List<GoodsPO> goodsPOs = goodsDao.pageGoods(paging, filters, bids, company);
-
 			List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
-			GoodsVO goodsVO;
-
 			for (GoodsPO goodsPO : goodsPOs) {
-
-				goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
-
-				goodsVOs.add(goodsPO.ptv(goodsVO));
+				goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 			}
 
 			paging.setData(goodsVOs);
@@ -144,17 +139,11 @@ public class GoodsServiceImpl implements GoodsService {
 		List<GoodsPO> goodsPOs = goodsDao.pageGoodsForAdvance(paging, filters, company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
-		GoodsVO goodsVO;
-
 		for (GoodsPO goodsPO : goodsPOs) {
-
-			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
-
-			goodsVOs.add(goodsPO.ptv(goodsVO));
+			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 		}
 
 		paging.setData(goodsVOs);
-
 	}
 
 	@Override
@@ -163,13 +152,8 @@ public class GoodsServiceImpl implements GoodsService {
 		List<GoodsPO> goodsPOs = goodsDao.queryGoods(filters, company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
-		GoodsVO goodsVO;
-
 		for (GoodsPO goodsPO : goodsPOs) {
-
-			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
-
-			goodsVOs.add(goodsPO.ptv(goodsVO));
+			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 		}
 
 		return goodsVOs;
@@ -182,10 +166,7 @@ public class GoodsServiceImpl implements GoodsService {
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
 		for (GoodsPO goodsPO : goodsPOs) {
-
-			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
-
-			goodsVOs.add(goodsPO.ptv(goodsVO));
+			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 		}
 
 		return goodsVOs;
@@ -198,10 +179,7 @@ public class GoodsServiceImpl implements GoodsService {
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
 		for (GoodsPO goodsPO : goodsPOs) {
-
-			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
-
-			goodsVOs.add(goodsPO.ptv(goodsVO));
+			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 		}
 
 		return goodsVOs;
@@ -214,11 +192,7 @@ public class GoodsServiceImpl implements GoodsService {
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
 
 		for (GoodsPO goodsPO : goodsPOs) {
-
-			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
-
-			goodsVOs.add(goodsPO.ptv(goodsVO));
-
+			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));
 		}
 
 		return goodsVOs;
@@ -229,7 +203,7 @@ public class GoodsServiceImpl implements GoodsService {
 
 		GoodsPO goodsPO = goodsDao.queryGoodsByBarcode(goodsVO.getBarcode(), company);
 
-		goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+		goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 		return goodsPO.ptv(goodsVO);
 	}
@@ -239,7 +213,7 @@ public class GoodsServiceImpl implements GoodsService {
 
 		GoodsPO goodsPO = goodsDao.get(goodsVO.getGid());
 
-		goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+		goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 		return goodsPO.ptv(goodsVO);
 	}
@@ -252,7 +226,7 @@ public class GoodsServiceImpl implements GoodsService {
 
 		for (GoodsPO goodsPO : goodsPOs) {
 
-			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+			goodsVO = new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 			goodsVO = goodsPO.ptv(goodsVO);
 
@@ -261,7 +235,6 @@ public class GoodsServiceImpl implements GoodsService {
 			goodsVO.setCompany(company.getName());
 
 			goodsVOs.add(goodsVO);
-
 		}
 
 		return goodsVOs;
@@ -283,9 +256,11 @@ public class GoodsServiceImpl implements GoodsService {
 
 		GoodsPO goodsPO = new GoodsPO();
 
-		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
 
 		if (goodsVO.getAccessoriesType() != null && goodsVO.getAccessoriesType().getAtid() != null) goodsPO.setAccessoriesType(new AccessoriesTypePO(goodsVO.getAccessoriesType().getAtid()));
+
+		if (goodsVO.getZerokind() != null && goodsVO.getZerokind().getGkid() != null) goodsPO.setZerokind(new GoodsKindPO(goodsVO.getZerokind().getGkid()));
 		if (goodsVO.getOnekind() != null && goodsVO.getOnekind().getGkid() != null) goodsPO.setOnekind(new GoodsKindPO(goodsVO.getOnekind().getGkid()));
 		if (goodsVO.getTwokind() != null && goodsVO.getTwokind().getGkid() != null) goodsPO.setTwokind(new GoodsKindPO(goodsVO.getTwokind().getGkid()));
 		if (goodsVO.getThrkind() != null && goodsVO.getThrkind().getGkid() != null) goodsPO.setThrkind(new GoodsKindPO(goodsVO.getThrkind().getGkid()));
@@ -360,9 +335,11 @@ public class GoodsServiceImpl implements GoodsService {
 			throw new FLException(260004, "商品不存在");
 		}
 
-		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+		BeanUtil.copyProperties(goodsVO, goodsPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
 
 		if (goodsVO.getAccessoriesType() != null && goodsVO.getAccessoriesType().getAtid() != null) goodsPO.setAccessoriesType(new AccessoriesTypePO(goodsVO.getAccessoriesType().getAtid()));
+
+		if (goodsVO.getZerokind() != null && goodsVO.getZerokind().getGkid() != null) goodsPO.setZerokind(new GoodsKindPO(goodsVO.getZerokind().getGkid()));
 		if (goodsVO.getOnekind() != null && goodsVO.getOnekind().getGkid() != null) goodsPO.setOnekind(new GoodsKindPO(goodsVO.getOnekind().getGkid()));
 		if (goodsVO.getTwokind() != null && goodsVO.getTwokind().getGkid() != null) goodsPO.setTwokind(new GoodsKindPO(goodsVO.getTwokind().getGkid()));
 		if (goodsVO.getThrkind() != null && goodsVO.getThrkind().getGkid() != null) goodsPO.setThrkind(new GoodsKindPO(goodsVO.getThrkind().getGkid()));
@@ -413,6 +390,8 @@ public class GoodsServiceImpl implements GoodsService {
 		GoodsPO goodsPO = new GoodsPO();
 
 		if (goodsVO.getAccessoriesType() != null && goodsVO.getAccessoriesType().getAtid() != null) goodsPO.setAccessoriesType(new AccessoriesTypePO(goodsVO.getAccessoriesType().getAtid()));
+
+		if (goodsVO.getZerokind() != null && goodsVO.getZerokind().getGkid() != null) goodsPO.setZerokind(new GoodsKindPO(goodsVO.getZerokind().getGkid()));
 		if (goodsVO.getOnekind() != null && goodsVO.getOnekind().getGkid() != null) goodsPO.setOnekind(new GoodsKindPO(goodsVO.getOnekind().getGkid()));
 		if (goodsVO.getTwokind() != null && goodsVO.getTwokind().getGkid() != null) goodsPO.setTwokind(new GoodsKindPO(goodsVO.getTwokind().getGkid()));
 		if (goodsVO.getThrkind() != null && goodsVO.getThrkind().getGkid() != null) goodsPO.setThrkind(new GoodsKindPO(goodsVO.getThrkind().getGkid()));
@@ -462,14 +441,13 @@ public class GoodsServiceImpl implements GoodsService {
 			}
 
 			BeanUtil.copyProperties(goodsPackageVO, goodsPackagePO, Arrays.asList("pid", "goods", "color", "format"));
-			BeanUtil.copyProperties(goodsPackageVO.getGoods(), goodsPackagePO.getGoods(), Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+			BeanUtil.copyProperties(goodsPackageVO.getGoods(), goodsPackagePO.getGoods(), Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
 			BeanUtil.copyProperties(goodsPackageVO.getColor(), goodsPackagePO.getColor());
 			BeanUtil.copyProperties(goodsPackageVO.getFormat(), goodsPackagePO.getFormat());
 
 			goodsPackagePO.setPid(goodsPO.getGid());
 
 			goodsPackageDao.save(goodsPackagePO);
-
 		}
 
 		return 0;

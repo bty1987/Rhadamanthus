@@ -336,7 +336,13 @@ public class UserServiceImpl implements UserService {
 			did = userVO.getDept().getDid();
 		}
 
-		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did);
+		Integer rid = null;
+
+		if (userVO.getDept() != null && userVO.getDept().getFatherDept() != null && userVO.getDept().getFatherDept().getDid() != null) {
+			rid = userVO.getDept().getFatherDept().getDid();
+		}
+
+		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid, did, rid);
 
 		for (UserPO userPO : userPOs) {
 			userBaseVOs.add(new UserBaseVO(new DutyVO(), new DepartmentVO()).ptv(userPO));
@@ -1130,7 +1136,7 @@ public class UserServiceImpl implements UserService {
 
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("调职");
-
+		userExperiencePO.setIsPrefor(userVO.getIsPrefor());
 		userExperiencePO.setOperator(operator);
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));

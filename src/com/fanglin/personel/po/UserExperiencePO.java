@@ -35,6 +35,8 @@ public class UserExperiencePO implements Serializable {
 
 	private String type;
 
+	private short isPrefor;
+
 	private Timestamp createTime;
 
 	private String comment;
@@ -77,6 +79,15 @@ public class UserExperiencePO implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Column(name = "isPrefor")
+	public short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(short isPrefor) {
+		this.isPrefor = isPrefor;
 	}
 
 	@Column(name = "createTime")

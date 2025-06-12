@@ -23,16 +23,15 @@ jQuery(function($) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+            if (!listData || listData.length == 0)
+                return false;
+            
+            $.each(listData, function(i, v) {
 
-                    var $liLine = creatLine(v);
+                creatLine(v).appendTo($ul);
+            });
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
+            $ul.appendTo($tableWrap);
         };
 
         var creatLine = function(v) {
@@ -89,8 +88,6 @@ jQuery(function($) {
 
     // 保存
     com.focusPage("#saveBtn", "#vrecordModal").click(function() {
-        
-        console.log(111)
 
         if (com.validate("form")) {
             return false;

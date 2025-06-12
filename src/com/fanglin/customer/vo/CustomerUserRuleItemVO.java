@@ -1,7 +1,11 @@
 package com.fanglin.customer.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 
 public class CustomerUserRuleItemVO implements Serializable {
@@ -10,9 +14,11 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	private Long curiid;
 
-	private DepartmentVO department;
-
 	private Long curid;
+
+	private DepartmentTypeVO departmentType;
+
+	private DepartmentVO department;
 
 	private String name;
 
@@ -30,12 +36,20 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	private Short status;
 
+	private Timestamp handleTime;
+
 	public CustomerUserRuleItemVO() {
 		super();
 	}
 
 	public CustomerUserRuleItemVO(DepartmentVO department) {
 		super();
+		this.department = department;
+	}
+
+	public CustomerUserRuleItemVO(DepartmentTypeVO departmentType, DepartmentVO department) {
+		super();
+		this.departmentType = departmentType;
 		this.department = department;
 	}
 
@@ -47,20 +61,28 @@ public class CustomerUserRuleItemVO implements Serializable {
 		this.curiid = curiid;
 	}
 
-	public DepartmentVO getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(DepartmentVO department) {
-		this.department = department;
-	}
-
 	public Long getCurid() {
 		return curid;
 	}
 
 	public void setCurid(Long curid) {
 		this.curid = curid;
+	}
+
+	public DepartmentTypeVO getDepartmentType() {
+		return departmentType;
+	}
+
+	public void setDepartmentType(DepartmentTypeVO departmentType) {
+		this.departmentType = departmentType;
+	}
+
+	public DepartmentVO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentVO department) {
+		this.department = department;
 	}
 
 	public String getName() {
@@ -125,5 +147,14 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getHandleTime() {
+		return handleTime;
+	}
+
+	public void setHandleTime(Timestamp handleTime) {
+		this.handleTime = handleTime;
 	}
 }

@@ -21,6 +21,8 @@ public class DecorationInfoVO implements Serializable {
 
 	private String orderId;
 
+	private String customerPhone;
+
 	private String notSalesmanName;
 
 	private String notSalesmanPhone;
@@ -32,7 +34,7 @@ public class DecorationInfoVO implements Serializable {
 	private String backOrderPhone;
 
 	private String backOrderContent;
-	
+
 	private Short sourceStatus;
 
 	public Long getDiid() {
@@ -49,6 +51,14 @@ public class DecorationInfoVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getCustomerPhone() {
+		return customerPhone;
+	}
+
+	public void setCustomerPhone(String customerPhone) {
+		this.customerPhone = customerPhone;
 	}
 
 	public String getNotSalesmanName() {

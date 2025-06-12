@@ -15,7 +15,7 @@ import com.fanglin.data.common.service.SupplierSignetService;
 import com.fanglin.data.common.vo.SupplierSignetVO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.data.po.SupplierSignetPO;
-import com.fanglin.fadada.signature.SupplierSignature;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -123,9 +123,14 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		SupplierSignature.register(supplierSignetPO);
+		SignetPO signetPO = new SignetPO();
+
+		signetPO.setNo(supplierSignetPO.getNo());
+
+		Signature.register(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_REGIST_INT);
+		supplierSignetPO.setSignno(signetPO.getSignno());
 
 		supplierSignetDao.update(supplierSignetPO);
 
@@ -146,9 +151,16 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		String path = SupplierSignature.authenticate(supplierSignetPO);
+		SignetPO signetPO = new SignetPO();
+
+		signetPO.setSignno(supplierSignetPO.getSignno());
+		signetPO.setName(supplierSignetPO.getName());
+
+		String path = Signature.authenticate(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_AUTH_INT);
+		supplierSignetPO.setToken(signetPO.getToken());
+		supplierSignetPO.setAuthurl(signetPO.getAuthurl());
 
 		supplierSignetDao.update(supplierSignetPO);
 
@@ -171,7 +183,11 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		SupplierSignature.company(supplierSignetPO);
+		SignetPO signetPO = new SignetPO();
+
+		signetPO.setToken(supplierSignetPO.getToken());
+
+		Signature.company(signetPO);
 
 		supplierSignetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
@@ -193,7 +209,7 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		SupplierSignature.signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
+		Signature.signature(supplierSignetPO.getSignno(), supplierSignetVO.getData());
 
 		return 0;
 	}
@@ -211,7 +227,13 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
-		String path = SupplierSignature.beforeauto(supplierSignetPO);
+		SignetPO signetPO = new SignetPO();
+
+		signetPO.setSid(supplierSignetPO.getSsid());
+		signetPO.setToken(supplierSignetPO.getToken());
+		signetPO.setSignno(supplierSignetPO.getSignno());
+
+		String path = Signature.beforeauto(signetPO);
 
 		supplierSignetVO.setPath(path);
 
@@ -270,22 +292,22 @@ public class SupplierSignetServiceImpl implements SupplierSignetService {
 			throw new FLException(130046, "签章已存在");
 		}
 
-		SupplierSignetPO newSignetPO = new SupplierSignetPO();
+		SupplierSignetPO supplierSignetCO = new SupplierSignetPO();
 
-		newSignetPO.setNo(supplierSignetVO.getNo());
-		newSignetPO.setName(supplierSignetVO.getName());
-		newSignetPO.setSuid(supplierSignetVO.getSuid());
-		newSignetPO.setKeyword(supplierSignetPO.getKeyword());
-		newSignetPO.setType(supplierSignetPO.getType());
-		newSignetPO.setPath(supplierSignetPO.getPath());
-		newSignetPO.setAuthurl(supplierSignetPO.getAuthurl());
-		newSignetPO.setSignno(supplierSignetPO.getSignno());
-		newSignetPO.setToken(supplierSignetPO.getToken());
-		newSignetPO.setCompany(supplierSignetPO.getCompany());
-		newSignetPO.setSignid(supplierSignetPO.getSignid());
-		newSignetPO.setStatus(supplierSignetPO.getStatus());
+		supplierSignetCO.setNo(supplierSignetVO.getNo());
+		supplierSignetCO.setName(supplierSignetVO.getName());
+		supplierSignetCO.setSuid(supplierSignetVO.getSuid());
+		supplierSignetCO.setKeyword(supplierSignetPO.getKeyword());
+		supplierSignetCO.setType(supplierSignetPO.getType());
+		supplierSignetCO.setPath(supplierSignetPO.getPath());
+		supplierSignetCO.setAuthurl(supplierSignetPO.getAuthurl());
+		supplierSignetCO.setSignno(supplierSignetPO.getSignno());
+		supplierSignetCO.setToken(supplierSignetPO.getToken());
+		supplierSignetCO.setCompany(supplierSignetPO.getCompany());
+		supplierSignetCO.setSignid(supplierSignetPO.getSignid());
+		supplierSignetCO.setStatus(supplierSignetPO.getStatus());
 
-		supplierSignetDao.save(newSignetPO);
+		supplierSignetDao.save(supplierSignetCO);
 
 		return 0;
 	}

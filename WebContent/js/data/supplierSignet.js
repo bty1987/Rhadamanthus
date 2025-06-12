@@ -65,7 +65,6 @@ jQuery(function($) {
     }, 1, function(data) {
 
         signet.items.path.val(data.resUrl);
-        signet.items.filesize.val(data.filesize);
 
         com.showImg(signet.items.signetImg, data.resUrl, 150, 150, '', null, 0);
     });
@@ -278,8 +277,6 @@ jQuery(function($) {
 
             signet.modals.createSignetModal.modal("show");
 
-            // com.popup4page("#layerPopUpA", "/views/data/signature.html", "印章");
-
             return false;
         },
         show: function(v) {
@@ -363,8 +360,8 @@ jQuery(function($) {
 
     function saveData() {
 
-        // if (com.validate('signetModal'))
-        // return false;
+        if (com.validate('signetModal'))
+            return false;
 
         var url = api.data.addSupplierSignet;
         var options = {

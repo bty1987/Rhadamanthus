@@ -120,4 +120,19 @@ public class SupplierContractBrandServiceImpl implements SupplierContractBrandSe
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateSupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException {
+		
+		SupplierContractBrandPO supplierBrandPO = supplierBrandDao.get(supplierBrand.getScbid());
+
+		if (supplierBrandPO == null) {
+			throw new FLException(130077, "厂商品牌不存在");
+		}
+		
+		supplierBrandPO.setServicePrice(supplierBrand.getServicePrice());
+		
+		supplierBrandDao.update(supplierBrandPO);
+	}
+
 }

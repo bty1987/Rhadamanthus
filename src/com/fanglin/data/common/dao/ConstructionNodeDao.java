@@ -2,9 +2,9 @@ package com.fanglin.data.common.dao;
 
 import java.util.List;
 
-import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.utils.Paging;
 
 public interface ConstructionNodeDao extends Dao<ConstructionNodePO> {
@@ -14,5 +14,9 @@ public interface ConstructionNodeDao extends Dao<ConstructionNodePO> {
 	public List<ConstructionNodePO> queryConstructionNode(int company);
 
 	public ConstructionNodePO queryConstructionNodeBySort(short sort, int company);
+
+	public int countConstructionNode(short process, int company);
+
+	public int countConstructionNodeForMark(short mark, int company);
 
 }

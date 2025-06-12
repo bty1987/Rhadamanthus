@@ -553,6 +553,33 @@
             valuePath: "value"
         }
     },
+    "customerOrigine-contact": {
+        label: "对接人",
+        type: "text",
+        submitConfig: {
+            name: "contact",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerOrigine-source": {
+        label: "来源方",
+        type: "text",
+        submitConfig: {
+            name: "source",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerOrigine-referOrderId": {
+        label: "推荐单号",
+        type: "text",
+        submitConfig: {
+            name: "referOrderId",
+            op: "eq",
+            validate: null
+        }
+    },
     "customerSource-phone": {
         label: "电话",
         type: "text",
@@ -563,6 +590,15 @@
                 "reg": /^[0-9]*$/,
                 "msg": "电话格式不正确"
             }
+        }
+    },
+    "customerSource-name": {
+        label: "客户名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
         }
     },
     "customerSource-village": {
@@ -590,15 +626,6 @@
             validate: null
         }
     },
-    "customerSource-name": {
-        label: "客户名称",
-        type: "text",
-        submitConfig: {
-            name: "name",
-            op: "eq",
-            validate: null
-        }
-    },
     "customerSource-contact": {
         label: "对接人",
         type: "text",
@@ -616,7 +643,8 @@
             op: "eq",
             validate: null
         }
-    },"customerSource-referOrderId": {
+    },
+    "customerSource-referOrderId": {
         label: "推荐单号",
         type: "text",
         submitConfig: {
@@ -914,7 +942,6 @@
         }
     },
 
-
     "member-no": {
         label: "会员编号",
         type: "text",
@@ -1189,7 +1216,9 @@
         },
         dataSource: {
             url: api.ds.customer,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "companyType",
             keyPath: "key",
             valuePath: "value"

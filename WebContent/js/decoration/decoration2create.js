@@ -189,6 +189,24 @@ jQuery(function($) {
         });
         orderEntry.orderItems.orderType.bindData(orderEntry.decorationAtttypes, 'key', 'name', "请选择");
     });
+    
+    com.post(api.system.querySystemConfigByKey, {
+        "systemConfig.key": "notSalesmanRate"
+    }, function(res) {
+
+        if (!res.systemConfig.value) return false;
+        
+        var data = [];
+        
+        $.each(res.systemConfig.value.split(","), function(i, v){
+            data.push({"k": v, "v": v});
+        });
+        
+        var item = com.focusPage("#notSalesmanRate");
+        var tmp = $('<select id="notSalesmanRate" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual">').bindData(data, "k", "v").insertAfter(item);
+        
+        item.remove();
+    });
 
     orderEntry.orderItems.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
     orderEntry.orderItems.status.bindData(constant.decoration().decoration.resourceType.datas, 'key', 'value');

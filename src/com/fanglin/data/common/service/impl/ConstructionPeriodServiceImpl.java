@@ -24,9 +24,9 @@ public class ConstructionPeriodServiceImpl implements ConstructionPeriodService 
 	private ConstructionPeriodDao constructionPeriodDao;
 
 	@Override
-	public void pageConstructionPeriod(Paging paging, List<Filter> filters, int queryCompany) throws FLException {
+	public void pageConstructionPeriod(Paging paging, List<Filter> filters, int company) throws FLException {
 
-		List<ConstructionPeriodPO> constructionPeriodPOs = constructionPeriodDao.pageConstructionPeriod(paging, filters);
+		List<ConstructionPeriodPO> constructionPeriodPOs = constructionPeriodDao.pageConstructionPeriod(paging, filters, company);
 		List<ConstructionPeriodVO> constructionPeriodVOs = new ArrayList<ConstructionPeriodVO>();
 
 		for (ConstructionPeriodPO constructionPeriodPO : constructionPeriodPOs) {
@@ -42,6 +42,16 @@ public class ConstructionPeriodServiceImpl implements ConstructionPeriodService 
 	}
 
 	@Override
+	public ConstructionPeriodVO queryConstructionPeriod(ConstructionPeriodVO constructionPeriodVO, int company) {
+
+		ConstructionPeriodPO constructionPeriodPO = constructionPeriodDao.queryConstructionPeriod(constructionPeriodVO.getLowerArea(), company);
+
+		if (constructionPeriodPO != null) constructionPeriodPO.ptv(constructionPeriodVO);
+
+		return constructionPeriodVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addConstructionPeriod(ConstructionPeriodVO constructionPeriod, int company) {
 
@@ -54,7 +64,6 @@ public class ConstructionPeriodServiceImpl implements ConstructionPeriodService 
 		constructionPeriodDao.save(constructionPeriodPO);
 
 		return 0;
-
 	}
 
 	@Override

@@ -5,19 +5,12 @@ jQuery(function($) {
         uid: params.personel.uid,
         scid: null,
         ucid: null,
-        editFlag: false,
         user: null,
 
         btns: {
-            registUser: com.focusPage("#registUser"), // 注册按钮
-            resetUser: com.focusPage("#resetUser"), // 重置
-            authUser: com.focusPage("#authUser"), // 认证按钮
-            confirmUser: com.focusPage("#confirmUser"), // 确认按钮
-            signateUser: com.focusPage("#signateUser"), // 签名
+            signUser: com.focusPage("#signUser"),
             addContractBtn: com.focusPage('#addContractBtn'), // 添加合同
             backBtn: com.focusPage("#backBtn"), // 返回
-            addBrand: com.focusPage("#addBrand"), // 添加品牌
-            addBtn: com.focusPage("#addBtn"), // 添加
             saveBtn: com.focusPage("#saveBtn"),// 保存
 
             signBtn: com.focusPage("#signBtn", "#userContractModal"),
@@ -34,10 +27,6 @@ jQuery(function($) {
         items: {
             name: com.focusPage("#name"),
             contractTemplate: com.focusPage("#contractTemplate"),
-            signTime: com.focusPage("#signTime"),
-            startTime: com.focusPage("#startTime"),
-            endTime: com.focusPage("#endTime"),
-            status: com.focusPage("#status"),
             comment: com.focusPage("#comment"),
 
             signet: com.focusPage("#signet"),
@@ -62,8 +51,6 @@ jQuery(function($) {
         "clazz": "qrcode"
     }], []);
     supplierContracts.items.qrcode = com.focusPage("#qrcode");
-
-    supplierContracts.items.status.bindData(constant.personel().userInfo.status.datas, "key", "value");
 
     com.focusPage('#fl-statement').statement("厂商", "合同");
     com.focusPage('#fl-statement2').statement("合同", "列表");
@@ -90,7 +77,7 @@ jQuery(function($) {
     });
 
     com.post(api.data.queryContract, {
-        "contract.atttype": constant.data().contract.ATTTYPE_SUPPLIER_BASIC_INT
+        "contract.atttype": constant.data().contract.ATTTYPE_SUPPLIER_INT
     }, function(res) {
 
         supplierContracts.items.contractTemplate.bindData(res.contracts, "cid", "name", " ");
@@ -135,7 +122,6 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (user.identity == "" || user.identity == null ? "暂无" : user.identity.replace(/(.{6}).*(.{4})/, '$1********$2')))).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('职位: ' + user.duty.name)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('角色: ' + user.role.name)).appendTo($info);
-
     }
 
     var searcher = new Searcher();
@@ -182,21 +168,14 @@ jQuery(function($) {
         clazz: "blue",
     }];
 
-    // 字段上的功能按钮
     var linebtns = [{
         name: "修改",
         clazz: "btn-yellow",
         handle: function(v) {
 
-            supplierContracts.editFlag = true;
-
             supplierContracts.scid = v.scid;
 
             supplierContracts.items.name.val(v.name);
-            supplierContracts.items.signTime.val(v.signTime);
-            supplierContracts.items.startTime.val(v.startTime);
-            supplierContracts.items.endTime.val(v.endTime);
-            supplierContracts.items.status.val(v.status);
             supplierContracts.items.comment.val(v.comment);
 
             supplierContracts.modals.addContractModal.modal("show");
@@ -223,11 +202,11 @@ jQuery(function($) {
         clazz: "btn-warning",
         handle: function(v) {
 
-            generateContract(v.cid);
+            generateContract(v.cid, v.scid);
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == 0 && (!v.download || !v.viewpdf);
         }
     }, {
         name: "查看",
@@ -278,47 +257,21 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == 0 && (v.download && v.viewpdf);
         }
     }, {
         name: "厂商签",
         clazz: "btn-yellow",
         handle: function(v) {
 
-            userSign(v.scid);
+            supplierSign(v.scid);
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == 0 && (v.download && v.viewpdf);
         }
     }, {
         type: "newline"
-    }, {
-        name: "二维签名",
-        clazz: "btn-inverse",
-        handle: function(v) {
-
-            var url = "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.ucid + "&type=1&module=personel";
-            console.log(url)
-            showQRCode(url);
-        },
-        show: function(v) {
-
-            return v.status == 0;
-        }
-    }, {
-        name: "二维员工签",
-        clazz: "btn-danger",
-        handle: function(v) {
-
-            var url = "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.ucid + "&type=2&module=personel";
-            console.log(url)
-            showQRCode(url);
-        },
-        show: function(v) {
-
-            return v.status == 0;
-        }
     }, {
         name: "查看通知",
         clazz: "btn-pink",
@@ -368,18 +321,16 @@ jQuery(function($) {
         }
     }, ];
 
-    searcher.card("no", lineprops, linebtns).render();
+    searcher.card("name", lineprops, linebtns).render();
 
     supplierContracts.btns.backBtn.on("click", function() {
 
         com.switchPage(params.historyPage);
     });
 
-    com.datetime(com.focusPage("#signTime"));
-    com.datetime(com.focusPage("#startTime"));
-    com.datetime(com.focusPage("#endTime"));
-
     supplierContracts.modals.addContractModal.on("hide.bs.modal", function() {
+
+        supplierContracts.scid = null;
 
         com.clearValidator();
         com.cleanItems(supplierContracts.items);
@@ -397,12 +348,15 @@ jQuery(function($) {
 
     supplierContracts.btns.supplierSignBtn.on('click', function() {
 
-        com.post(api.personel.signSupplierContractForCompany, {
+        com.post(api.personel.signSupplierContractForSupplier, {
             "supplierContract.scid": supplierContracts.scid,
-            "signet.sid": supplierContracts.items.signet.val()
-        });
+            "supplierSignet.ssid": supplierContracts.items.supplierSignet.val()
+        }, function(res) {
 
-        supplierContracts.modals.supplierContractModal.modal("hide");
+            com.popup4frame("客户签", res.redirect);
+
+            supplierContracts.modals.supplierContractModal.modal("hide");
+        });
     });
 
     // 保存
@@ -411,24 +365,17 @@ jQuery(function($) {
         if (com.validate("addContractModal")) {
             return false;
         }
-        var cid = supplierContracts.items.contractTemplate.val();
 
         var url = api.personel.addSupplierContract;
         var options = {
             "supplierContract.uid": supplierContracts.uid,
             "supplierContract.name": supplierContracts.items.name.val(),
+            "supplierContract.cid": supplierContracts.items.contractTemplate.val(),
             "contract.cid": supplierContracts.items.contractTemplate.val(),
-            "contract.no": supplierContracts.no[cid],
-            "contract.name": supplierContracts.name[cid],
-            "contract.title": supplierContracts.title[cid],
-            "supplierContract.signTime": supplierContracts.items.signTime.val(),
-            "supplierContract.startTime": supplierContracts.items.startTime.val(),
-            "supplierContract.endTime": supplierContracts.items.endTime.val(),
-            "supplierContract.status": supplierContracts.items.status.val(),
             "supplierContract.comment": supplierContracts.items.comment.val()
         };
 
-        if (supplierContracts.editFlag) {
+        if (supplierContracts.scid) {
             url = api.personel.updateSupplierContract;
 
             options['supplierContract.scid'] = supplierContracts.scid;
@@ -448,76 +395,15 @@ jQuery(function($) {
     // 创建合同
     supplierContracts.btns.addContractBtn.on("click", function() {
 
-        if (supplierContracts.user.authStatus == 0) {
-            com.showAlert(com.warning, "人员未认证");
-            return false;
-        }
-
-        supplierContracts.editFlag = false;
-
         supplierContracts.modals.addContractModal.modal("show");
     });
 
     // 签章
-    supplierContracts.btns.registUser.on("click", function() {
+    supplierContracts.btns.signUser.on("click", function() {
 
         params["suid"] = supplierContracts.uid;
-        console.log(supplierContracts.uid);
+
         com.popup4page('#layerPopUp', api.index.supplierSignet.url, "厂商签章");
-    });
-
-    // 认证
-    supplierContracts.btns.authUser.on("click", function() {
-
-        com.post(api.personel.authUser, {
-            "user.uid": params.personel.uid
-        }, function(res) {
-
-            showQRCode(res.redirect);
-        });
-    });
-
-    // 签名
-    supplierContracts.btns.signateUser.on("click", function() {
-
-        com.post(api.personel.signateUser, {
-            "user.uid": params.personel.uid
-        }, function(res) {
-
-            com.popup4frame("签名", res.redirect);
-        });
-    });
-
-    // 确认
-    supplierContracts.btns.confirmUser.on("click", function() {
-
-        com.post(api.personel.confirmUser, {
-            "user.uid": params.personel.uid
-        }, function(res) {
-
-            searcher.doSearch();
-        });
-    });
-
-    // 添加品牌
-    supplierContracts.btns.addBrand.on("click", function() {
-
-        com.popup4page("#layerPopUp", api.index.supplierAddBrand.url, "添加品牌", null, function() {
-
-            searcher.doSearch();
-        });
-    });
-
-    // 重置
-    supplierContracts.btns.resetUser.on('click', function() {
-
-        com.showConfirm("是否重置厂商认证", function() {
-
-            com.post(api.personel.resetUser, {
-                "user.uid": params.personel.uid
-            });
-        });
-
     });
 
     function showQRCode(url) {
@@ -546,43 +432,27 @@ jQuery(function($) {
 
     }
 
-    // 公司签按钮
     function companySign(scid) {
 
         supplierContracts.scid = scid;
         supplierContracts.modals.userContractModal.modal("show");
     }
 
-    // 员工签按钮
-    function userSign(scid) {
+    function supplierSign(scid) {
 
-        console.log(scid);
         supplierContracts.scid = scid;
         supplierContracts.modals.supplierContractModal.modal("show");
-
-        // com.post(api.personel.signSupplierContractForUser, {
-        // "supplierContract.scid": scid
-        // }, function(res) {
-        //
-        // com.popup4frame("员工签", res.redirect);
-        // });
     }
 
     // 生成合同
-    function generateContract(cid) {
+    function generateContract(cid, scid) {
 
         var page = supplierContracts.contracts[cid];
 
-        var no = supplierContracts.no[cid];
-        var name = supplierContracts.name[cid];
-        var title = supplierContracts.title[cid];
-
         params.personel.contractargs = com.splitUrl(page);
         params.personel.contractargs.cid = cid;
-        params.personel.contractargs.no = no;
-        params.personel.contractargs.name = name;
-        params.personel.contractargs.title = title;
         params.personel.contractargs.html = page;
+        params.personel.contractargs.scid = scid;
 
         com.popup4page("#layerPopUp", "/views/personnel/supplierContract4create.html", "生成合同", null, function() {
 
@@ -604,7 +474,7 @@ jQuery(function($) {
     // 合同已签按钮
     function signContract(scid) {
 
-        com.showConfirm("是否已签合同?", function() {
+        com.showConfirm("是否已签合同", function() {
 
             com.post(api.personel.affixSupplierContract, {
                 "supplierContract.scid": scid
@@ -618,7 +488,7 @@ jQuery(function($) {
     // 合同失效按钮
     function expireContract(scid) {
 
-        com.showConfirm("是否失效合同?", function() {
+        com.showConfirm("是否失效合同", function() {
 
             com.post(api.personel.expireSupplierContract, {
                 "supplierContract.scid": scid
@@ -632,7 +502,7 @@ jQuery(function($) {
     // 合同归档按钮
     function filingContract(scid) {
 
-        com.showConfirm("是否归档?", function() {
+        com.showConfirm("是否归档", function() {
 
             com.post(api.personel.filingSupplierContract, {
                 "supplierContract.scid": scid
@@ -647,7 +517,7 @@ jQuery(function($) {
     function brandContract(scid) {
 
         params["scid"] = scid;
-        console.log(scid);
+
         com.popup4page('#layerPopUp', api.index.supplierContractBrand.url, "厂商品牌");
     }
 

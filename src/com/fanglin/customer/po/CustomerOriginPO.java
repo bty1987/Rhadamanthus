@@ -67,6 +67,12 @@ public class CustomerOriginPO implements Serializable {
 
 	private String grade;
 
+	private String referOrderId;
+
+	private String source;
+
+	private String contact;
+
 	private VillagePO village;
 
 	private String houseNumber;
@@ -200,6 +206,33 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+
+	@Column(name = "referOrderId")
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
+	}
+
+	@Column(name = "source")
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	@Column(name = "contact")
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 	@ManyToOne

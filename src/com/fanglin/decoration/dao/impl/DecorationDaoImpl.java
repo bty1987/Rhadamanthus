@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -249,6 +250,17 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationForRefer(String orderId) {
+
+		String sql = "select d.* from decoration.decoration d, customer.customersource cs, customer.customerchance cc where cs.referOrderId = :orderId and cs.csid = cc.csid and cc.orderId = d.orderId";
+
+		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
+
+		return query.setString("orderId", orderId).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomerId(Long customerId) {
 		return session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("customer.cid", customerId)).list();
 	}
@@ -262,8 +274,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public DecorationPO queryDecorationByOrderId(String OrderId) {
-		return (DecorationPO) session().createCriteria(DecorationPO.class).add(Restrictions.eq("orderId", OrderId)).uniqueResult();
+	public DecorationPO queryDecorationByOrderId(String orderId) {
+		return (DecorationPO) session().createCriteria(DecorationPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
 	}
 
 	@Override
@@ -295,10 +307,10 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	public void changeDecorationForOrderId(String newOrderId, String oldOrderId) {
+
 		String sql = "update decoration.decoration set orderId = :newOrderId where orderId = :oldOrderId";
 
 		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
-
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
@@ -337,11 +349,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.alias(String.format("%sdesigner", prefix), "designer");
 
 				if (field.contains("department")) {
-					query.alias("designer.dept", "designerDept");
+					query.alias("designDept", "designerDept");
 				}
 
 				if (field.contains("region")) {
-					query.alias("designer.dept", "designerDept");
+					query.alias("designDept", "designerDept");
 					query.alias("designerDept.fatherDept", "designerRegion");
 				}
 			} else if ((field.contains("business") || field.contains("salesman"))) {
@@ -349,11 +361,11 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.alias(String.format("%ssalesman", prefix), "salesman");
 
 				if (field.contains("department")) {
-					query.alias("salesman.dept", "salesmanDept");
+					query.alias("salesDept", "salesmanDept");
 				}
 
 				if (field.contains("region")) {
-					query.alias("salesman.dept", "salesmanDept");
+					query.alias("salesDept", "salesmanDept");
 					query.alias("salesmanDept.fatherDept", "salesmanRegion");
 				}
 			} else if (field.contains("supervisor")) {
@@ -365,6 +377,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if (field.contains("escorter")) {
 
 				query.alias(String.format("%sescorter", prefix), "escorter");
+			} else if (field.contains("materialer")) {
+
+				query.alias(String.format("%smaterialer", prefix), "materialer");
 			} else if (field.contains("busitype")) {
 
 				query.alias(String.format("%sbusitype", prefix), "busitype");
@@ -414,6 +429,10 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.add(query.getCriterion("escorter.userId", data, op));
 			} else if ("decoration.escorter.name".equals(field)) {
 				query.add(query.getCriterion("escorter.currentName", data, op));
+			} else if ("decoration.materialer.userId".equals(field)) {
+				query.add(query.getCriterion("materialer.userId", data, op));
+			} else if ("decoration.materialer.name".equals(field)) {
+				query.add(query.getCriterion("materialer.currentName", data, op));
 			} else if ("decoration.village.name".equals(field)) {
 				query.add(query.getCriterion("village.name", data, op));
 			} else if ("decoration.company".equals(field)) {

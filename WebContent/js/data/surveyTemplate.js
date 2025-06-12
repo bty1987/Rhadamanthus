@@ -81,7 +81,7 @@ jQuery(function($) {
     var linebtns = [{
         name: "推送标识",
         type: "switch",
-        clazz: "autoble-lbl",
+        clazz: "send-lbl",
         handle: function(v, check) {
 
             com.post(api.data.updateSurveyTemplateForStatus, {
@@ -152,16 +152,32 @@ jQuery(function($) {
 
     com.focusPage('#addSurveyTemplate', '#pagenation').on("click", function() {
 
+        surveyTemplate.stid = null;
+
         surveyTemplate.modals.surveyTemplateModal.modal("show");
     });
 
     function drawtext(v) {
 
         var group = $('<div class="form-group typetext typeitem"></div>').appendTo(surveyTemplate.items.itemlist);
-        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("文本内容").appendTo(group);
-        var item = $('<div class="col-sm-8"></div>').appendTo(group);
+
+        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("文本内容").appendTo(titleDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(titleDiv);
         var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required"></div>').val(v.content).appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function() {
+        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(titleDiv);
+        
+        var requireDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("是否必填").appendTo(requireDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(requireDiv);
+        var require = $('<input type="checkbox" name="require" class=" ace ace-switch ace-switch-5" />').appendTo(item);
+        var span = $('<span class="lbl isOrNot"></span>').appendTo(item);
+        
+        if (v != null && v.require == 0) {
+            require.prop('checked', true);
+        }
+
+        deleteBtn.click(function() {
 
             var _group = $(this).parents(".typetext");
             var _hr = _group.next("hr");
@@ -179,19 +195,34 @@ jQuery(function($) {
 
         var group = $('<div class="form-group typeitem"></div>').addClass("type" + type).appendTo(surveyTemplate.items.itemlist);
 
-        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("题目").appendTo(group);
-        var item = $('<div class="col-sm-8"></div>').appendTo(group);
+        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("题目").appendTo(titleDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(titleDiv);
         var input = $('<input type="text" class="col-xs-8 m-wrap title v_required"></div>').val(v ? v.name : "").appendTo(item);
+        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(titleDiv);
 
-        var radioDiv = $('<div lass="col-sm-12" style="margin-top: 40px"></div>').appendTo(group);
+        var requireDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("是否必填").appendTo(requireDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(requireDiv);
+        var require = $('<input type="checkbox" name="require" class=" ace ace-switch ace-switch-5" />').appendTo(item);
+        var span = $('<span class="lbl isOrNot"></span>').appendTo(item);
+        
+        if (v != null && v.require == 0) {
+            require.prop('checked', true);
+        }
+
+        var radioDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("选项内容").appendTo(radioDiv);
-        var item = $('<div class="col-sm-8"></div>').appendTo(radioDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(radioDiv);
+
         var input = $('<input type="text" class="col-xs-8 m-wrap" id="event"></div>').appendTo(item);
         var btn = $('<button class="btn btn-minier btn-yellow"></button>').text("添项").appendTo(item);
 
-        var label = $('<label class="col-md-3 control-label no-padding-right option" style="margin-top: 10px" for="name"></label>').html("所有选项").appendTo(group);
-        var items = $('<div class="col-sm-8 items" style="margin-top: 10px" id="seleted"></div>').appendTo(group);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function() {
+        var optionDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right option" style="margin-top: 10px" for="name"></label>').html("所有选项").appendTo(optionDiv);
+        var items = $('<div class="col-md-8 items" style="margin-top: 10px" id="seleted"></div>').appendTo(optionDiv);
+
+        deleteBtn.click(function() {
 
             var _group = $(this).parents("." + "type" + type);
             var _hr = _group.next("hr");
@@ -236,17 +267,38 @@ jQuery(function($) {
                 var item = $('<span class="label label-xlg label-primary option" style="margin-right: 5px;"></span>').text(v.title).appendTo(items);
                 var itemdel = $('<i class="icon-remove red"></i>').appendTo(item);
 
-            })
+                itemdel.click(function() {
+
+                    var that = $(this);
+                    var span = that.parent();
+
+                    span.remove();
+                });
+            });
         }
     }
 
     function drawinput(v) {
 
         var group = $('<div class="form-group typeinput typeitem"></div>').appendTo(surveyTemplate.items.itemlist);
-        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("输入内容").appendTo(group);
-        var item = $('<div class="col-sm-8"></div>').appendTo(group);
+
+        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("输入内容").appendTo(titleDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(titleDiv);
         var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required"></div>').val(v ? v.name : "").appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(group).click(function() {
+        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(titleDiv);
+
+        var requireDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("是否必填").appendTo(requireDiv);
+        var item = $('<div class="col-md-8"></div>').appendTo(requireDiv);
+        var require = $('<input type="checkbox" name="require" class=" ace ace-switch ace-switch-5" />').appendTo(item);
+        var span = $('<span class="lbl isOrNot"></span>').appendTo(item);
+        
+        if (v != null && v.require == 0) {
+            require.prop('checked', true);
+        }
+
+        deleteBtn.click(function() {
 
             var _group = $(this).parents(".typeinput");
             var _hr = _group.next("hr");
@@ -311,6 +363,7 @@ jQuery(function($) {
                 args["surveyTemplate.items[" + i + "].name"] = "";
                 args["surveyTemplate.items[" + i + "].type"] = 0;
                 args["surveyTemplate.items[" + i + "].content"] = item.find("textarea").val();
+                args["surveyTemplate.items[" + i + "].require"] = 1;
 
             } else if (item.hasClass("typeradio") || item.hasClass("typecheck")) {
 
@@ -319,6 +372,7 @@ jQuery(function($) {
                 args["surveyTemplate.items[" + i + "].name"] = item.find("input").val();
                 args["surveyTemplate.items[" + i + "].type"] = type;
                 args["surveyTemplate.items[" + i + "].content"] = "";
+                args["surveyTemplate.items[" + i + "].require"] = item.find('input[name="require"]').prop("checked") ? 0 : 1;
 
                 var options = item.find("span.option");
 
@@ -334,6 +388,7 @@ jQuery(function($) {
                 args["surveyTemplate.items[" + i + "].name"] = item.find("textarea").val();
                 args["surveyTemplate.items[" + i + "].type"] = 1;
                 args["surveyTemplate.items[" + i + "].content"] = "";
+                args["surveyTemplate.items[" + i + "].require"] = item.find('input[name="require"]').prop("checked") ? 0 : 1;
             }
         });
 
@@ -341,7 +396,6 @@ jQuery(function($) {
 
             args["surveyTemplate.stid"] = surveyTemplate.stid;
             url = api.data.updateSurveyTemplate;
-
         }
 
         com.post(url, args, function() {

@@ -19,7 +19,9 @@ jQuery(function($) {
             updateName: com.focusPage("#updata")
         },
 
-        status: {}
+        status: {},
+
+        depage: params['urlLoadParams'].depage
     };
 
     com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
@@ -28,16 +30,20 @@ jQuery(function($) {
 
     seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSelection);
 
-    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelection-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
 
     seacher.button([{
         id: "createBalanceSelection",
         name: "创建",
         clazz: "btn-yellow",
-        icon: "icon-plus"
+        icon: "icon-plus",
+        show: function(v) {
+
+            return (balanceSelection.depage == "material");
+        }
     }]);
 
-    seacher.history("balanceSelectionPostData");
+    seacher.history(balanceSelection.depage + "balanceSelectionPostData");
 
     var lineprops = [{
         fieId: "brand.name",
@@ -49,7 +55,7 @@ jQuery(function($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: constant.balance().balanceSales.status.keys
+        dataset: constant.balance().balanceSelection.status.keys
     }, {
         fieId: "grade",
         name: "等级",
@@ -90,8 +96,27 @@ jQuery(function($) {
         prop: "createTime",
         clazz: "green"
     }, {
+        field: "lockTime",
+        name: "锁定时间",
+        prop: "lockTime",
+        clazz: "green"
+    }, {
+        field: "auditer",
+        name: "待审人",
+        prop: "auditer.userName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.auditer.userId);
+        }
+    }, {
+        field: "auditTime",
+        name: "待审时间",
+        prop: "auditTime",
+        clazz: "green"
+    }, {
         field: "balancer",
-        name: "结算人",
+        name: "审核人",
         prop: "balancer.userName",
         clazz: "grey",
         click: function(btn, v) {
@@ -100,13 +125,8 @@ jQuery(function($) {
         }
     }, {
         field: "balanceTime",
-        name: "结算时间",
+        name: "审核时间",
         prop: "balanceTime",
-        clazz: "green"
-    }, {
-        field: "lockTime",
-        name: "锁定时间",
-        prop: "lockTime",
         clazz: "green"
     }];
 
@@ -127,7 +147,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != constant.balance().balanceSales.STATUS_UNLOCK_INT);
+            return (v.status != constant.balance().balanceSelection.STATUS_UNLOCK_INT);
         }
     }, {
         name: "明细",
@@ -154,10 +174,31 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
+            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT) && balanceSelection.depage == "material";
         }
     }, {
-        name: "结算",
+        name: "待审",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            var options = {
+                "balanceSelection.bsid": v.bsid
+            };
+
+            com.post(api.balance.auditBalanceSelection, options, function() {
+
+                com.showAlert(com.info, "操作成功");
+                seacher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.status == constant.balance().balanceSelection.STATUS_UNLOCK_INT) && (balanceSelection.depage == "supplyChain" || !balanceSelection.depage);
+        }
+    }, {
+        name: "审核",
         clazz: "btn-danger",
         handle: function(v) {
 
@@ -168,7 +209,7 @@ jQuery(function($) {
 
             com.post(api.balance.balanceBalanceSelection, options, function() {
 
-                com.showAlert(com.info, "结算成功");
+                com.showAlert(com.info, "审核成功");
                 seacher.doSearch();
             });
 
@@ -176,7 +217,29 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_UNLOCK_INT);
+            return (v.status == constant.balance().balanceSelection.STATUS_WAIT_INT) && (balanceSelection.depage == "audit" || !balanceSelection.depage);
+        }
+    }, {
+        name: "驳回",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            var options = {
+                "balanceSelection.bsid": v.bsid,
+                "balanceSelection.status": v.status -1
+            };
+
+            com.post(api.balance.unauditBalanceSelection, options, function() {
+
+                com.showAlert(com.info, "操作成功");
+                seacher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return v.status == constant.balance().balanceSelection.STATUS_WAIT_INT && balanceSelection.depage == "audit";
         }
     }, {
         name: "删除",
@@ -195,7 +258,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
+            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT);
         }
     }, {
         name: "锁定",
@@ -214,7 +277,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
+            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT) && (balanceSelection.depage == "material" || !balanceSelection.depage);
         }
     }, {
         name: "解锁",
@@ -233,7 +296,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_UNLOCK_INT);
+            return (v.status == constant.balance().balanceSelection.STATUS_UNLOCK_INT) && (balanceSelection.depage == "supplyChain" || !balanceSelection.depage);
         }
     }, {
         name: "打印",
@@ -249,7 +312,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != constant.balance().balanceSales.STATUS_INIT_INT);
+            return (v.status != constant.balance().balanceSelection.STATUS_INIT_INT);
         }
     }];
 

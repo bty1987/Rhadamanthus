@@ -9,6 +9,12 @@ public interface FeedbackDrawingService {
 
 	public List<FeedbackDrawingVO> queryFeedbackDrawing(FeedbackVO feedbackVO);
 
-	public void addFeedbackDrawing(FeedbackDrawingVO feedbackDrawingVO);
+	public List<FeedbackDrawingVO> queryFeedbackDrawingBySid(FeedbackDrawingVO feedbackDrawingVO);
 
+	public long addFeedbackDrawing(FeedbackDrawingVO feedbackDrawingVO);
+	
+	public void deleteFeedbackDrawing(FeedbackDrawingVO feedbackDrawingVO);
+	
+	public void updateFeedbackDrawingByFdids(FeedbackDrawingVO feedbackDrawingVO);
+	
 }

@@ -6,6 +6,7 @@ jQuery(function($) {
         htmlName: "",
 
         type: params['urlLoadParams'].paytype,
+        profit: params['urlLoadParams'].profit,
 
         paytypes: [],
         paymentStatusArray: constant.payment().decorationPayment.paymentStatus.keys,
@@ -268,6 +269,7 @@ jQuery(function($) {
 
                 if (value[3]) {
                     $b.click(function() {
+
                         value[3]($b);
                     });
                 }
@@ -728,6 +730,9 @@ jQuery(function($) {
         }, function(res) {
 
             decorationPayment.decoration = res.decoration;
+
+            if (!decorationPayment.profit)
+                decorationPayment.decoration.bompany = null;
         }, null, false);
 
         // 绑定收款单位的基础信息
@@ -920,9 +925,17 @@ jQuery(function($) {
                     params.payment.orderId = orderId;
                     params.payment.drId = drId;
                     params.payment.cid = payment.decoration.customer.cid;
+                    params.payment.profit = decorationPayment.profit;
+
                     com.popup("专用收款收据__装修单号:" + orderId, api.index.decorationPaymentReceiptIndex.url, null, null, true);
                 });
             }
+        }, null, false);
+
+        com.post(api.payment.confirmDecorationPayment, {
+            "paymentIds[0]": payment.dpid
+        }, function(res) {
+
         });
     }
 

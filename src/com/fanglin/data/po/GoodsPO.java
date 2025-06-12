@@ -88,6 +88,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	private short type;
 
+	private GoodsKindPO zerokind;
+
 	private GoodsKindPO onekind;
 
 	private GoodsKindPO twokind;
@@ -281,6 +283,16 @@ public class GoodsPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "zerokind", referencedColumnName = "gkid")
+	public GoodsKindPO getZerokind() {
+		return zerokind;
+	}
+
+	public void setZerokind(GoodsKindPO zerokind) {
+		this.zerokind = zerokind;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "onekind", referencedColumnName = "gkid")
 	public GoodsKindPO getOnekind() {
 		return onekind;
@@ -351,6 +363,8 @@ public class GoodsPO implements java.io.Serializable {
 		BeanUtil.copyProperties(this, goodsVO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
 
 		if (goodsVO.getAccessoriesType() != null && getAccessoriesType() != null) BeanUtil.copyProperties(getAccessoriesType(), goodsVO.getAccessoriesType(), Arrays.asList("workType"));
+
+		if (goodsVO.getZerokind() != null && getZerokind() != null) BeanUtil.copyProperties(getZerokind(), goodsVO.getZerokind());
 		if (goodsVO.getOnekind() != null && getOnekind() != null) BeanUtil.copyProperties(getOnekind(), goodsVO.getOnekind());
 		if (goodsVO.getTwokind() != null && getTwokind() != null) BeanUtil.copyProperties(getTwokind(), goodsVO.getTwokind());
 		if (goodsVO.getThrkind() != null && getThrkind() != null) BeanUtil.copyProperties(getThrkind(), goodsVO.getThrkind());

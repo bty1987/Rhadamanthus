@@ -75,7 +75,9 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 				query.alias("creater.dept", "dept");
 			}
 
-			if ("phone".equals(field)) {
+			if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
+			} else if ("phone".equals(field)) {
 				query.add(query.getCriterion("phone", data, op));
 			} else if ("creater".equals(field)) {
 				query.add(Restrictions.eq(CustomerSourcePO.COLUMN_CREATER_STR, Integer.valueOf(data)));

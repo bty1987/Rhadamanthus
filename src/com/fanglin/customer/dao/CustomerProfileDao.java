@@ -11,8 +11,12 @@ public interface CustomerProfileDao extends Dao<CustomerProfilePO> {
 
 	public List<CustomerProfilePO> pageCustomerProfile(Paging paging, List<Filter> filters, int company);
 
-	public CustomerProfilePO queryCustomerProfileByCid(long cid);
+	public List<CustomerProfilePO> queryCustomerProfileByCsid(long csid, Short type);
 
-	public CustomerProfilePO queryCustomerProfileByOrderId(String orderId);
+	public List<CustomerProfilePO> queryCustomerProfileByCid(long cid, Short type);
+
+	public List<CustomerProfilePO> queryCustomerProfileByOrderId(String orderId, Short type);
+
+	public int updateCustomerProfile(String orderId, long cid, long csid);
 
 }

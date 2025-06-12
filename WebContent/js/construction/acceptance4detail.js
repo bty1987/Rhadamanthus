@@ -27,7 +27,7 @@ jQuery(function($) {
         for ( var i = 1; i <= acceptance4detail.ratyLength; i++) {
             com.focusPage('#raty' + i).raty({
                 path: './assets/altogether/images/',
-                number: 4,
+                number: 5,
                 start: acceptanceInfo[acceptance4detail.ratyIds[i - 1]]
             });
         }

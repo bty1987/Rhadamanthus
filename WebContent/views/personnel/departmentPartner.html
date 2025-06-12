@@ -1,0 +1,52 @@
+<div id="departmentPartner">
+	<div class="row">
+		<div class="col-md-12">
+			<div id="partnerCondList" class="fl_search clearfix"></div>
+			<!-- 查询条件-->
+			<div id="partnerResultList" class="clearfix tab-pane active"></div>
+			<!--查询结果-->
+			<div id="partnerPagenation" class="fl-page-wrap clearfix"></div>
+			<!--分页-->
+		</div>
+	</div>
+
+	<div class="modal fade" id="addDepartmentPartnerModal" tabindex="-1"
+		data-backdrop="static">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">合作部门</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="partner">合作人</label>
+							<div class="col-sm-9">
+								<input type="text" id="partner" class="col-xs-10 col-sm-5 v_required v_name" maxlength='15' />
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="type" data-toggle="popover" data-trigger='manual'>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveDepartmentPartnerBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/personnel/departmentPartner.js']);
+</script>

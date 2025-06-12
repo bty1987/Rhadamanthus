@@ -1,0 +1,196 @@
+<div id="customerContent" class="widget-container-span col-md-12">
+	<div id="fl-statement"></div>
+
+	<div class="widget-container-span col-xs-6 col-md-3" id="decorationInfo"></div>
+	<div class="widget-container-span col-xs-6 col-md-3" id="customerInfo"></div>
+
+	<div id="add" class="widget-container-span col-xs-6 col-md-3">
+
+		<a href="#" id="returnBtn" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
+			<i class="icon-mail-forward bigger-230"></i> 
+			<span>返回</span> 
+		</a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="widget-box">
+			<div id="fl-statement2"></div>
+			<div id="addFeedbackBackVisitModal">
+				<form class="form-horizontal" id="from">
+					<div class="widget-main">
+						<div class="col-xs-12">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="pleased" class="col-sm-3 control-label no-padding-right orange">维修满意度</label>
+									<div class="col-sm-9" id="pleased"></div>
+								</div>
+
+								<div class="form-group">
+									<label for="praiser" class="col-sm-3 control-label no-padding-right orange">受表扬工人</label>
+									<div class="col-md-9">
+										<input type="text" id="praiser" maxlength="20" class="col-xs-10 col-sm-5 v_required" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="praiseTime" class="col-sm-3 control-label no-padding-right orange">表扬日期</label>
+									<div class="col-md-9">
+										<input type="text" id="praiseTime" class="col-xs-10 col-sm-5 date-picker-date v_required" data-date-format="yyyy-mm-dd">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="complaint" class="col-sm-3 control-label no-padding-right orange">回访内容</label>
+									<div class="col-md-9">
+										<textarea id="complaint" class="col-xs-10 col-sm-5 v_required" maxlength="128" rows="3"></textarea>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="praise" class="col-sm-3 control-label no-padding-right orange">表扬内容</label>
+									<div class="col-md-9">
+										<textarea id="praise" class="col-xs-10 col-sm-5 v_required" maxlength="128" rows="3"></textarea>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="openWords" class="col-sm-3 control-label no-padding-right orange">开头语</label>
+									<div class="col-sm-9" id="openWords"></div>
+								</div>
+
+								<div class="form-group">
+									<label for="contactSoonFlag" class="col-sm-3 control-label no-padding-right orange">请问您报修后24小时内相关人员是否与您联系？</label>
+									<div class="col-sm-9" id="contactSoonFlag"></div>
+								</div>
+
+								<div class="form-group">
+									<label for="refuseComment" class="col-sm-3 control-label no-padding-right orange">拒绝评价原因描述</label>
+									<div class="col-md-9">
+										<textarea id="refuseComment" class="col-xs-10 col-sm-5 v_required" maxlength="128" rows="3"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label for="result" class="col-sm-3 control-label no-padding-right orange">维修结果</label>
+									<div class="col-sm-9" id="result"></div>
+								</div>
+
+								<div class="form-group">
+									<label for="praiseType" class="col-sm-3 control-label no-padding-right orange">表扬形式</label>
+									<div class="col-md-9">
+										<select id="praiseType" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="finishTime" class="col-sm-3 control-label no-padding-right orange">整体完工日期</label>
+									<div class="col-md-9">
+										<input type="text" id="finishTime" class="col-xs-10 col-sm-5 date-picker-date v_required" data-date-format="yyyy-mm-dd">
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="workDays" class="col-sm-3 control-label no-padding-right orange">维修周期</label>
+									<div class="col-md-9">
+										<input type="text" id="workDays" maxlength="20" class="col-xs-10 col-sm-5 v_required v_number" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="perforFlag" class="col-sm-3 control-label no-padding-right orange">请问维修师傅是否按照约定时间上门服务？</label>
+									<div class="col-sm-9" id="perforFlag"></div>
+								</div>
+
+								<div class="form-group">
+									<label for="resultFlag" class="col-sm-3 control-label no-padding-right orange">请问您所报修的问题是否已经解决？</label>
+									<div class="col-sm-9" id="resultFlag"></div>
+								</div>
+
+								<div class="form-group">
+									<label for="resultComment" class="col-sm-3 control-label no-padding-right orange">记录未解决的问题内容</label>
+									<div class="col-md-9">
+										<textarea id="resultComment" class="col-xs-10 col-sm-5 v_required" maxlength="128" rows="3"></textarea>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="contactFlag" class="col-sm-3 control-label no-padding-right orange">请问您****（当时记录的问题）,相关人员是否已与您联系？</label>
+									<div class="col-sm-9" id="contactFlag"></div>
+								</div>
+
+								<div class="form-group col-sm-6">
+                                    <label class="col-sm-3 control-label no-padding-right orange">上传图片</label>
+                                    <div class="col-sm-9">
+                                    	<a id="infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement v_required" target="_blank"></a>
+                                        <div id="path"></div>
+                                     </div>
+                                </div>
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="row-fluid wizard-actions" id="btnDisplay">
+					<button class="btn btn-xs btn-warning" type="button" id="saveItemBtn" data-loading-text="保存中...">
+						<i class="icon-ok bigger-110"></i> <span>保存</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="drawingModal" tabindex="-1">
+            <div class="modal-dialog" style="width:60%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span><span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">回访图片</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="row-fluid">
+                                    <ul class="ace-thumbnails" id="feedbackDrawing"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                            <a class="form-group" id="feedbackDrawingUpload"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="widget-container-span col-md-12">
+	<div class="widget-box transparent">
+		<div id="fl-statement4">
+		 <div id="recordCondList" class="fl_search clearfix"></div>
+	     <div id="recordResultList" class="clearfix tab-pane action"></div>
+	     <div id="recordPagenation" class="fl-page-wrap clearfix"></div>
+		</div>
+    </div>
+
+</div>
+<div class="widget-container-span col-md-12">
+	<div id="fl-statement3"></div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condListas" class="fl_search clearfix"></div>
+			<div id="resultListas" class="clearfix tab-pane active"></div>
+			<div id="pagenationFeedbackBackVisit" class="fl-page-wrap clearfix"></div>
+		</div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/feedbackBackVisit.js']);
+</script>

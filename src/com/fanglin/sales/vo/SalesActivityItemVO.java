@@ -29,6 +29,10 @@ public class SalesActivityItemVO implements Serializable {
 
 	private Integer integral;
 
+	private Integer expendPrice;
+
+	private Integer discountPrice;
+
 	private UserBaseVO creater;
 
 	private UserBaseVO operater;
@@ -131,6 +135,22 @@ public class SalesActivityItemVO implements Serializable {
 
 	public void setIntegral(Integer integral) {
 		this.integral = integral;
+	}
+
+	public Integer getExpendPrice() {
+		return expendPrice;
+	}
+
+	public void setExpendPrice(Integer expendPrice) {
+		this.expendPrice = expendPrice;
+	}
+
+	public Integer getDiscountPrice() {
+		return discountPrice;
+	}
+
+	public void setDiscountPrice(Integer discountPrice) {
+		this.discountPrice = discountPrice;
 	}
 
 	public UserBaseVO getCreater() {

@@ -40,16 +40,27 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 	private MessageService messageService;
 
 	@Override
-	public DecorationInfoVO queryDecorationInfoByOrderId(String orderId) {
+	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO) {
 
-		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(orderId);
-		DecorationInfoVO decorationInfoVO = new DecorationInfoVO();
-
-		if (decorationInfoPO == null) {
-			decorationInfoPO = new DecorationInfoPO();
-		}
+		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getOrderId());
 
 		BeanUtil.copyPropertie(decorationInfoPO, decorationInfoVO);
+
+		return decorationInfoVO;
+	}
+
+	@Override
+	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO) {
+
+		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getOrderId());
+
+		BeanUtil.copyPropertie(decorationInfoPO, decorationInfoVO);
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationInfoVO.getOrderId());
+
+		if (decorationPO != null && decorationPO.getCustomer() != null) {
+			decorationInfoVO.setCustomerPhone(decorationPO.getCustomer().getPhone());
+		}
 
 		return decorationInfoVO;
 	}
@@ -128,6 +139,5 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		}
 
 		decorationDao.update(decorationPO);
-
 	}
 }

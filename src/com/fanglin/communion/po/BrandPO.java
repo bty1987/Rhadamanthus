@@ -41,6 +41,8 @@ public class BrandPO implements java.io.Serializable {
 
 	private long bid;
 
+	private long bpid;
+
 	private String no;
 
 	private String name;
@@ -76,6 +78,12 @@ public class BrandPO implements java.io.Serializable {
 		this.bid = bid;
 	}
 
+	public BrandPO(long bid, String name) {
+		super();
+		this.bid = bid;
+		this.name = name;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "bid")
@@ -85,6 +93,15 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setBid(long bid) {
 		this.bid = bid;
+	}
+
+	@Column(name = "bpid")
+	public long getBpid() {
+		return bpid;
+	}
+
+	public void setBpid(long bpid) {
+		this.bpid = bpid;
 	}
 
 	@Column(name = "no")

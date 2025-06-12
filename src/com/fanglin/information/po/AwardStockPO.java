@@ -2,11 +2,16 @@ package com.fanglin.information.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.information.vo.AwardStockVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "awardstock", catalog = "information")
@@ -87,6 +92,8 @@ public class AwardStockPO implements java.io.Serializable {
 	private short storeroom;
 
 	private String format;
+
+	private int unitPrice;
 
 	private short isPrefor; // 是否计算业绩
 
@@ -172,6 +179,24 @@ public class AwardStockPO implements java.io.Serializable {
 		this.storeroom = storeroom;
 	}
 
+	@Column(name = "format")
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	@Column(name = "unitPrice")
+	public int getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(int unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
 	@Column(name = "isPrefor")
 	public short getIsPrefor() {
 		return isPrefor;
@@ -217,13 +242,11 @@ public class AwardStockPO implements java.io.Serializable {
 		this.company = company;
 	}
 
-	@Column(name = "format")
-	public String getFormat() {
-		return format;
-	}
+	public AwardStockVO ptv(AwardStockVO awardStockVO) {
 
-	public void setFormat(String format) {
-		this.format = format;
+		BeanUtil.copyProperties(this, awardStockVO, Arrays.asList(""));
+
+		return awardStockVO;
 	}
 
 }

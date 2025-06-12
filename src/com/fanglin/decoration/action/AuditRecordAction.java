@@ -14,7 +14,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.AuditRecordService;
 import com.fanglin.decoration.vo.AuditRecordVO;
 
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
@@ -24,41 +23,33 @@ public class AuditRecordAction extends BaseListAction {
 
 	@Autowired
 	AuditRecordService auditRecordService;
-	
+
 	private AuditRecordVO auditRecord;
-	
+
 	private List<AuditRecordVO> auditRecords;
 
-	@Action(value = "queryAuditRecordByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAuditRecordByOrderId() throws FLException{
+	@Action(value = "queryAuditRecordByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAuditRecordByOrderId() throws FLException {
 
 		auditRecords = auditRecordService.queryAuditRecordByOrderId(auditRecord);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "addAuditRecord", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addAuditRecord() throws FLException{
 
-		auditRecordService.addAuditRecord(auditRecord,queryUserId());
+	@Action(value = "addAuditRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addAuditRecord() throws FLException {
+
+		auditRecordService.addAuditRecord(auditRecord, queryUserId());
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateAuditRecord", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAuditRecord() throws FLException{
-		
+
+	@Action(value = "updateAuditRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAuditRecord() throws FLException {
+
 		auditRecordService.updateAuditRecord(auditRecord);
 
 		return SUCCESS;
-	}
-
-	public AuditRecordService getAuditRecordService() {
-		return auditRecordService;
-	}
-
-	public void setAuditRecordService(AuditRecordService auditRecordService) {
-		this.auditRecordService = auditRecordService;
 	}
 
 	public AuditRecordVO getAuditRecord() {
@@ -77,5 +68,4 @@ public class AuditRecordAction extends BaseListAction {
 		this.auditRecords = auditRecords;
 	}
 
-	
 }

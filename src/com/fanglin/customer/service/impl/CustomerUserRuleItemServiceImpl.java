@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.po.DepartmentPO;
+import com.fanglin.communion.po.DepartmentTypePO;
+import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerUserRuleItemDao;
@@ -32,11 +34,12 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 
 		for (CustomerUserRuleItemPO customerUserRuleItemPO : customerUserRuleItemPOs) {
 
-			CustomerUserRuleItemVO customerUserRuleItemVO = new CustomerUserRuleItemVO(new DepartmentVO());
+			CustomerUserRuleItemVO customerUserRuleItemVO = new CustomerUserRuleItemVO(new DepartmentTypeVO(), new DepartmentVO());
 
-			BeanUtil.copyProperties(customerUserRuleItemPO, customerUserRuleItemVO, Arrays.asList("department"));
+			BeanUtil.copyProperties(customerUserRuleItemPO, customerUserRuleItemVO, Arrays.asList("departmentType", "department"));
 
 			BeanUtil.copyProperties(customerUserRuleItemPO.getDepartment(), customerUserRuleItemVO.getDepartment());
+			BeanUtil.copyProperties(customerUserRuleItemPO.getDepartmentType(), customerUserRuleItemVO.getDepartmentType());
 
 			customerUserRuleItemVOs.add(customerUserRuleItemVO);
 		}
@@ -50,10 +53,14 @@ public class CustomerUserRuleItemServiceImpl implements CustomerUserRuleItemServ
 
 		CustomerUserRuleItemPO customerUserRuleItemPO = new CustomerUserRuleItemPO();
 
-		BeanUtil.copyProperties(customerUserRuleItemVO, customerUserRuleItemPO, Arrays.asList("department"));
+		BeanUtil.copyProperties(customerUserRuleItemVO, customerUserRuleItemPO, Arrays.asList("departmentType", "department"));
 
 		if (customerUserRuleItemVO.getDepartment() != null && customerUserRuleItemVO.getDepartment().getDid() != null) {
 			customerUserRuleItemPO.setDepartment(new DepartmentPO(customerUserRuleItemVO.getDepartment().getDid()));
+		}
+
+		if (customerUserRuleItemVO.getDepartmentType() != null && customerUserRuleItemVO.getDepartmentType().getDtid() != null) {
+			customerUserRuleItemPO.setDepartmentType(new DepartmentTypePO(customerUserRuleItemVO.getDepartmentType().getDtid()));
 		}
 
 		customerUserRuleItemDao.save(customerUserRuleItemPO);

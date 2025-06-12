@@ -16,6 +16,8 @@ public class CustomerProfileVO implements Serializable {
 
 	private Long tid;
 
+	private Long csid;
+
 	private Long cid;
 
 	private String orderId;
@@ -25,6 +27,8 @@ public class CustomerProfileVO implements Serializable {
 	private UserBaseVO creater;
 
 	private Timestamp createTime;
+
+	private Short type;
 
 	private Short status;
 
@@ -69,6 +73,14 @@ public class CustomerProfileVO implements Serializable {
 		this.tid = tid;
 	}
 
+	public Long getCsid() {
+		return csid;
+	}
+
+	public void setCsid(Long csid) {
+		this.csid = csid;
+	}
+
 	public Long getCid() {
 		return cid;
 	}
@@ -108,6 +120,14 @@ public class CustomerProfileVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getStatus() {

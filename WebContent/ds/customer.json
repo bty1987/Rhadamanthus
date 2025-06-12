@@ -122,6 +122,68 @@
     {"key":"1","value":"特殊"},
     {"key":"2","value":"部门"}
   ],
+  "deptType": [
+    {"key":"0","value":"监理"},
+    {"key":"1","value":"售后"},
+    {"key":"2","value":"质检"},
+    {"key":"3","value":"值班"}
+  ],
+  "complaintDeptType": [
+    {"key":"0","value":"设计"},
+    {"key":"1","value":"主材"},
+    {"key":"2","value":"尺源"},
+    {"key":"3","value":"工程"},
+    {"key":"4","value":"职能"},
+    {"key":"5","value":"未知"}
+  ],
+  "plumber‌Type": [
+    {"key":"0","value":"卫生间漏水"},
+    {"key":"1","value":"下水堵塞/返水"},
+    {"key":"2","value":"卫生间反味"},
+    {"key":"3","value":"厨房反味"},
+    {"key":"4","value":"主管道漏水"},
+    {"key":"5","value":"厨房漏水"},
+    {"key":"6","value":"下水漏水"},
+    {"key":"7","value":"上水管漏水"},
+    {"key":"8","value":"软连接漏水"},
+    {"key":"9","value":"角阀漏水"},
+    {"key":"10","value":"打胶处理"},
+    {"key":"11","value":"水流小/水压问题"},
+    {"key":"12","value":"更换水件（角阀/软连接/水龙头等）"},
+    {"key":"13","value":"质检"}
+  ],
+  "electrician‌Type": [
+    {"key":"0","value":"空开跳闸"},
+    {"key":"1","value":"灯具不亮/频率闪"},
+    {"key":"2","value":"插座/开关不能正常使用"},
+    {"key":"3","value":"更换灯具"},
+    {"key":"4","value":"更换开关"},
+    {"key":"5","value":"更换空开"},
+    {"key":"6","value":"网线不通"},
+    {"key":"7","value":"网线升级"}
+  ],
+  "tiler‌‌Type": [
+    {"key":"0","value":"瓷砖空鼓"},
+    {"key":"1","value":"瓷砖开裂"},
+    {"key":"2","value":"瓷砖脱落"},
+    {"key":"3","value":"瓷砖崩瓷"},
+    {"key":"4","value":"勾缝剂脱落"}
+  ],
+  "carpenter‌Type‌": [
+    {"key":"0","value":"吊棚石膏板开裂"},
+    {"key":"1","value":"窗帘杆/滑道脱落"},
+    {"key":"2","value":"窗帘盒脱落"},
+    {"key":"3","value":"造型棚下沉"},
+    {"key":"4","value":"木作造成脱落"}
+  ],
+  "painter‌‌Type": [
+    {"key":"0","value":"墙面/棚面大白起皮开裂"},
+    {"key":"1","value":"第三方漏水大白修复"},
+    {"key":"2","value":"人为剐蹭污损维修"},
+    {"key":"3","value":"大白返潮/长霉"},
+    {"key":"4","value":"壁纸更换，基层维修"},
+    {"key":"4","value":"油工收尾"}
+  ],
   "errorCode": 0,
   "errorMsg": ""
 }

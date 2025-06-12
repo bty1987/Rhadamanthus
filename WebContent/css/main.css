@@ -72,6 +72,10 @@ input.ace.ace-switch.ace-switch-5[type="checkbox"]+.lbl.gender:before {
     content: "\a0显\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否" !important;
 }
 
+.send-lbl:before {
+    content: "\a0推\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0否" !important;
+}
+
 .fl_search {
     margin: 10px 0 12px;
 }

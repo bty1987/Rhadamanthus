@@ -26,9 +26,13 @@ public class FeedbackDrawingPO implements Serializable {
 
 	private long fid;
 
+	private long sid;
+
 	private String path;
 
 	private Timestamp createTime;
+
+	private short type;
 
 	private short status;
 
@@ -37,6 +41,7 @@ public class FeedbackDrawingPO implements Serializable {
 	}
 
 	public FeedbackDrawingPO(long fid, String path) {
+
 		super();
 
 		this.fid = fid;
@@ -66,6 +71,15 @@ public class FeedbackDrawingPO implements Serializable {
 		this.fid = fid;
 	}
 
+	@Column(name = "sid")
+	public long getSid() {
+		return sid;
+	}
+
+	public void setSid(long sid) {
+		this.sid = sid;
+	}
+
 	@Column(name = "path")
 	public String getPath() {
 		return path;
@@ -82,6 +96,15 @@ public class FeedbackDrawingPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "status")

@@ -41,12 +41,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
 
 		for (AwardStockPO awardStockPO : awardStockPOs) {
-
-			AwardStockVO awardStockVO = new AwardStockVO();
-
-			BeanUtil.copyProperties(awardStockPO, awardStockVO);
-
-			awardStockVOs.add(awardStockVO);
+			awardStockVOs.add(awardStockPO.ptv(new AwardStockVO()));
 		}
 
 		paging.setData(awardStockVOs);
@@ -59,12 +54,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
 
 		for (AwardStockPO awardStockPO : awardStockPOs) {
-
-			AwardStockVO awardStockVO = new AwardStockVO();
-
-			BeanUtil.copyProperties(awardStockPO, awardStockVO);
-
-			awardStockVOs.add(awardStockVO);
+			awardStockVOs.add(awardStockPO.ptv(new AwardStockVO()));
 		}
 
 		return awardStockVOs;
@@ -77,12 +67,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
 
 		for (AwardStockPO awardStockPO : awardStockPOs) {
-
-			awardStock = new AwardStockVO();
-
-			BeanUtil.copyProperties(awardStockPO, awardStock);
-
-			awardStockVOs.add(awardStock);
+			awardStockVOs.add(awardStockPO.ptv(new AwardStockVO()));
 		}
 
 		return awardStockVOs;
@@ -97,11 +82,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		AwardStockPO awardStockPO = awardStockDao.get(awardStockVO.getAsId());
 
-		AwardStockVO awardStock = new AwardStockVO();
-
-		BeanUtil.copyProperties(awardStockPO, awardStock);
-
-		return awardStock;
+		return awardStockPO.ptv(awardStockVO);
 	}
 
 	@Override
@@ -112,6 +93,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		BeanUtil.copyProperties(awardStockVO, awardStockPO);
 
+		awardStockPO.setUnitPrice(awardStockVO.getPrice());
 		awardStockPO.setStatus(AwardStockPO.STATUS_ABLE_SHORT);
 		awardStockPO.setCompany(company);
 
@@ -134,13 +116,15 @@ public class AwardStockServiceImpl implements AwardStockService {
 			throw new FLException(160043, "物品不存在");
 		}
 
-		awardStockPO.setIsPrefor(awardStockVO.getIsPrefor());
-		awardStockPO.setIsStock(awardStockVO.getIsStock());
-		awardStockPO.setContent(awardStockVO.getContent());
+		awardStockPO.setSubtype(awardStockVO.getSubtype());
 		awardStockPO.setFormat(awardStockVO.getFormat());
 		awardStockPO.setStoreroom(awardStockVO.getStoreroom());
+
+		awardStockPO.setIsPrefor(awardStockVO.getIsPrefor());
+		awardStockPO.setIsStock(awardStockVO.getIsStock());
 		awardStockPO.setIsPayment(awardStockVO.getIsPayment());
-		awardStockPO.setSubtype(awardStockVO.getSubtype());
+
+		awardStockPO.setContent(awardStockVO.getContent());
 
 		awardStockDao.update(awardStockPO);
 	}
@@ -165,13 +149,15 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		int num = awardStockVO.getNum();
 
+		awardStockPO.setUnitPrice(awardStockVO.getPrice());
 		awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), num));
+
+		awardStockDao.update(awardStockPO);
 
 		UserPO creater = userdDao.queryUserByUserId(userId);
 
 		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, null, AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_XG_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardStockVO.getPrice(), num, awardStockVO.getContent());
 
-		awardStockDao.update(awardStockPO);
 		awardRecordDao.save(awardRecordPO);
 	}
 
@@ -191,6 +177,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		int num = awardStockVO.getNum();
 
+		awardStockPO.setUnitPrice(awardStockVO.getPrice());
 		awardStockPO.setNum(Arith.add(awardStockPO.getNum(), num));
 
 		awardStockDao.update(awardStockPO);
@@ -220,6 +207,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		int num = awardStockVO.getNum();
 
+		awardStockPO.setUnitPrice(awardStockVO.getPrice());
 		awardStockVO.setNum(Math.abs(Arith.sub(awardStockPO.getNum(), awardStockVO.getNum())));
 		awardStockPO.setNum(num);
 

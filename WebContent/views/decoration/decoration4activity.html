@@ -8,15 +8,15 @@
                 </h1>
             </div>
             <div class="col-md-12">
-                <button id="joinActivityBtn" class="btn btn-info" type="button">
+                <button id="joinActivityBtn" class="btn btn-xs btn-info" type="button">
                     <i class="icon-cog bigger-110"></i>
                     <span>参加活动</span>
                 </button>
-                <button id="applyActivityItemBtn" class="btn btn-info" type="button">
+                <button id="applyActivityItemBtn" class="btn btn-xs btn-info" type="button">
                     <i class="icon-cog bigger-110"></i>
                     <span>申领活动物品</span>
                 </button>
-                <button id="addActivityItemBtn" class="btn btn-info" type="button">
+                <button id="addActivityItemBtn" class="btn btn-xs btn-info" type="button">
                     <i class="icon-cog bigger-110"></i>
                     <span>添加活动物品</span>
                 </button>
@@ -174,7 +174,7 @@
                     <span>&times;</span>
                     <span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="agreementDialog">申领活动物品</h4>
+                <h4 class="modal-title" id="agreementDialog">添加活动物品</h4>
             </div>
 
             <div class="modal-body">
@@ -201,7 +201,7 @@
 
 
                     <div class="form-group">
-                        <label for="things" class="col-sm-3 control-label no-padding-right">状态类型</label>
+                        <label for="things" class="col-sm-3 control-label no-padding-right">办理类型</label>
                         <div class="col-sm-9">
                             <select class='col-xs-10 col-sm-5 v_required' id='receiveType1' data-trigger="manual"></select>
                         </div>
@@ -248,6 +248,14 @@
 
             <div class="modal-body">
                 <form class="form-horizontal">
+                
+                	<div class="form-group price">
+                        <label for="activity" class="col-sm-3 control-label no-padding-right">价格</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="price" class="col-xs-10 col-sm-5 v_float_3 v_required" placeholder="请输入价格">
+                        </div>
+                    </div>
+                
                     <div class="form-group">
                         <label for="activity" class="col-sm-3 control-label no-padding-right">说明:</label>
                         <div class="col-sm-9">

@@ -1,0 +1,132 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+
+                            <div class="col-md-12">
+
+                                <div class="form-group col-sm-6">
+                                    <label for="customer_name" class="col-sm-3 control-label no-padding-right orange">甲方</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6 customer">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-customer-phone1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6 company">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">甲方联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-customer-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                            </div>
+                            
+                            <div class="col-md-12 agent" id="agentor">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="agentName" class="col-sm-3 control-label no-padding-right orange">甲方代理人</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-agent-name" type="text" maxlength="32" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="agentPhone" class="col-sm-3 control-label no-padding-right orange">代理人联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-agent-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6 customer">
+                                    <label for="agentId" class="col-sm-3 control-label no-padding-right orange">代理人身份证号</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="con-work-model" class="col-sm-3 control-label no-padding-right orange">订单类型</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-work-model" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 company">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="companyName" class="col-sm-3 control-label no-padding-right orange">公司名称</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="companyNo" class="col-sm-3 control-label no-padding-right orange">统一社会信用代码</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-no" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <hr>
+
+                            <div class="col-md-12">
+                                <div class="form-group col-sm-6">
+                                    <label class="col-md-3 control-label no-padding-right orange">施工地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-province-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">省</span>
+                                        <input id="con-city-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">市</span>
+                                        <input id="con-proper-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">区</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <div class="col-sm-9">
+                                        <input id="con-village-name" type="text" class="col-sm-4 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-2 orange">楼号</span>
+                                        <input id="con-housenumber" type="text" class="col-sm-6 conitem v_required" data-placement="top" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/contract/C-001-D-8-0001.js']);
+</script>

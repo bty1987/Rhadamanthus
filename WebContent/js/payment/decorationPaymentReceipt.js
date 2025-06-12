@@ -42,7 +42,7 @@ jQuery(function($) {
         receipt.order = res.decoration;
 
         com.post(api.system.queryCompanyByCid, {
-            "company.cid": res.decoration.bompany
+            "company.cid": params.payment.profit == null ? res.decoration.dompany : res.decoration.bompany
         }, function(data) {
 
             receipt.organization = data.company.drganization.name;

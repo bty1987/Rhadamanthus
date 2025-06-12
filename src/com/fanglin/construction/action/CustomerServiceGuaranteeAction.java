@@ -27,62 +27,54 @@ import com.fanglin.core.action.BaseListAction;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class CustomerServiceGuaranteeAction extends BaseListAction{
+public class CustomerServiceGuaranteeAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1360606310923789774L;
-	
+
 	@Autowired
 	private CustomerServiceGuaranteeService customerServiceGuaranteeService;
-	
+
 	private CustomerServiceGuaranteeVO customerServiceGuarantee;
-	
+
 	private List<String> csgIds;
-	
+
 	@Action(value = "pageCustomerServiceGuarantee", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCustomerServiceGuarantee(){
-		
+	public String pageCustomerServiceGuarantee() {
+
 		customerServiceGuaranteeService.pageCustomerServiceGuaranteeByOrderId(getPaging(), getFilters(), customerServiceGuarantee);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addCustomerServiceGuarantee", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addCustomerServiceGuarantee(){
-		
+	public String addCustomerServiceGuarantee() {
+
 		customerServiceGuaranteeService.saveOrUpdateCustomerServiceGuarantee(customerServiceGuarantee);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateCustomerServiceGuarantee", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateCustomerServiceGuarantee(){
-		
+	public String updateCustomerServiceGuarantee() {
+
 		customerServiceGuaranteeService.updateCustomerServiceGuarantee(customerServiceGuarantee);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteCustomerServiceGuarantee", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCustomerServiceGuarantee(){
-		
+	public String deleteCustomerServiceGuarantee() {
+
 		customerServiceGuaranteeService.deleteCustomerServiceGuarantees(csgIds);
-		
+
 		return SUCCESS;
 	}
 
-	public CustomerServiceGuaranteeVO getCustomerServiceGuarantee(){
-		return customerServiceGuarantee;
-	}
-
-	public void setCustomerServiceGuarantee(CustomerServiceGuaranteeVO customerServiceGuarantee){
-		this.customerServiceGuarantee = customerServiceGuarantee;
-	}
-
-	public List<String> getCsgIds(){
+	public List<String> getCsgIds() {
 		return csgIds;
 	}
 
-	public void setCsgIds(List<String> csgIds){
+	public void setCsgIds(List<String> csgIds) {
 		this.csgIds = csgIds;
 	}
 

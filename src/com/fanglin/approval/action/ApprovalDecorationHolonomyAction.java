@@ -19,29 +19,20 @@ import com.fanglin.core.interceptor.FLException;
 public class ApprovalDecorationHolonomyAction extends BaseListAction {
 
 	private static final long serialVersionUID = -549271005174823538L;
-	
+
 	@Autowired
 	private ApprovalDecorationHolonomyService approvalDecorationHolonomyService;
-	
+
 	private ApprovalVO approval;
-	
+
 	private ApprovalDecorationHolonomyVO approvalDecorationHolonomy;
-	
+
 	@Action(value = "submitApprovalForDecorationHolonomy", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForDecorationHolonomy() throws FLException {
 
 		approvalDecorationHolonomyService.submitApprovalForDecorationHolonomy(approval, approvalDecorationHolonomy, queryUserId(), queryCompany());
 
 		return SUCCESS;
-	}
-
-	public ApprovalDecorationHolonomyService getApprovalDecorationHolonomyService() {
-		return approvalDecorationHolonomyService;
-	}
-
-	public void setApprovalDecorationHolonomyService(
-			ApprovalDecorationHolonomyService approvalDecorationHolonomyService) {
-		this.approvalDecorationHolonomyService = approvalDecorationHolonomyService;
 	}
 
 	public ApprovalVO getApproval() {
@@ -56,9 +47,8 @@ public class ApprovalDecorationHolonomyAction extends BaseListAction {
 		return approvalDecorationHolonomy;
 	}
 
-	public void setApprovalDecorationHolonomy(
-			ApprovalDecorationHolonomyVO approvalDecorationHolonomy) {
+	public void setApprovalDecorationHolonomy(ApprovalDecorationHolonomyVO approvalDecorationHolonomy) {
 		this.approvalDecorationHolonomy = approvalDecorationHolonomy;
 	}
-	
+
 }

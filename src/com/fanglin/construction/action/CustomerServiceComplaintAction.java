@@ -28,80 +28,72 @@ import com.fanglin.core.interceptor.FLException;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class CustomerServiceComplaintAction extends BaseListAction{
+public class CustomerServiceComplaintAction extends BaseListAction {
 
 	private static final long serialVersionUID = 5321396095604251114L;
-	
+
 	@Autowired
 	private CustomerServiceComplaintService customerServiceComplaintService;
-	
+
 	private CustomerServiceComplaintVO customerServiceComplaint;
-	
+
 	private List<String> cscIds;
-	
+
 	@Action(value = "pageCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCustomerServiceComplaint(){
-		
+	public String pageCustomerServiceComplaint() {
+
 		customerServiceComplaintService.pageCustomerServiceComplaintByOrderId(getPaging(), getFilters(), customerServiceComplaint);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addCustomerServiceComplaint() throws FLException{
-		
+	public String addCustomerServiceComplaint() throws FLException {
+
 		customerServiceComplaint.setCreaterId(queryUserId());
 		customerServiceComplaint.setCreaterName(queryUserName());
-		
+
 		customerServiceComplaintService.saveOrUpdateCustomerServiceComplaint(customerServiceComplaint);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateCustomerServiceComplaint() throws FLException{
-		
+	public String updateCustomerServiceComplaint() throws FLException {
+
 		customerServiceComplaint.setOperaterId(queryUserId());
 		customerServiceComplaint.setOperaterName(queryUserName());
-		
+
 		customerServiceComplaintService.updateCustomerServiceComplaint(customerServiceComplaint);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "handleCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String handleCustomerServiceComplaint() throws FLException{
-		
+	public String handleCustomerServiceComplaint() throws FLException {
+
 		customerServiceComplaint.setOperaterId(queryUserId());
 		customerServiceComplaint.setOperaterName(queryUserName());
-		
+
 		customerServiceComplaintService.handleCustomerServiceComplaint(customerServiceComplaint);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteCustomerServiceComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCustomerServiceComplaint(){
-		
+	public String deleteCustomerServiceComplaint() {
+
 		customerServiceComplaintService.deleteCustomerServiceComplaints(cscIds);
-		
+
 		return SUCCESS;
 	}
 
-	public CustomerServiceComplaintVO getCustomerServiceComplaint(){
-		return customerServiceComplaint;
-	}
-
-	public void setCustomerServiceComplaint(CustomerServiceComplaintVO customerServiceComplaint){
-		this.customerServiceComplaint = customerServiceComplaint;
-	}
-
-	public List<String> getCscIds(){
+	public List<String> getCscIds() {
 		return cscIds;
 	}
 
-	public void setCscIds(List<String> cscIds){
+	public void setCscIds(List<String> cscIds) {
 		this.cscIds = cscIds;
 	}
-	
+
 }

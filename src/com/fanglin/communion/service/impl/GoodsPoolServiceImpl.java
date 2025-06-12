@@ -45,7 +45,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		for (GoodsPoolPO goodsPoolPO : goodsPoolPOs) {
 
-			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 			goodsPoolVOs.add(goodsPoolPO.ptv(goodsPoolVO));
 		}
@@ -63,7 +63,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		for (GoodsPoolPO goodsPoolPO : goodsPoolPOs) {
 
-			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 			goodsPoolVOs.add(goodsPoolPO.ptv(goodsPoolVO));
 		}
@@ -79,7 +79,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		for (GoodsPoolPO goodsPoolPO : goodsPoolPOs) {
 
-			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 			goodsPoolVOs.add(goodsPoolPO.ptv(goodsPoolVO));
 		}
@@ -95,7 +95,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		for (GoodsPoolPO goodsPoolPO : goodsPoolPOs) {
 
-			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 			goodsPoolVOs.add(goodsPoolPO.ptv(goodsPoolVO));
 		}
@@ -111,7 +111,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		for (GoodsPoolPO goodsPoolPO : goodsPoolPOs) {
 
-			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+			goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 			goodsPoolVOs.add(goodsPoolPO.ptv(goodsPoolVO));
 
@@ -125,7 +125,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		GoodsPoolPO goodsPoolPO = goodsPoolDao.queryGoodsPoolByBarcode(goodsPoolVO.getBarcode());
 
-		goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+		goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 		return goodsPoolPO.ptv(goodsPoolVO);
 	}
@@ -135,7 +135,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		GoodsPoolPO goodsPoolPO = goodsPoolDao.get(goodsPoolVO.getGpid());
 
-		goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
+		goodsPoolVO = new GoodsPoolVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO());
 
 		return goodsPoolPO.ptv(goodsPoolVO);
 	}
@@ -152,9 +152,11 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 		GoodsPoolPO goodsPoolPO = new GoodsPoolPO();
 
-		BeanUtil.copyProperties(goodsPoolVO, goodsPoolPO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+		BeanUtil.copyProperties(goodsPoolVO, goodsPoolPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
 
 		if (goodsPoolVO.getAccessoriesType() != null && goodsPoolVO.getAccessoriesType().getAtid() != null) goodsPoolPO.setAccessoriesType(new AccessoriesTypePO(goodsPoolVO.getAccessoriesType().getAtid()));
+
+		if (goodsPoolVO.getZerokind() != null && goodsPoolVO.getZerokind().getGkid() != null) goodsPoolPO.setZerokind(new GoodsKindPO(goodsPoolVO.getZerokind().getGkid()));
 		if (goodsPoolVO.getOnekind() != null && goodsPoolVO.getOnekind().getGkid() != null) goodsPoolPO.setOnekind(new GoodsKindPO(goodsPoolVO.getOnekind().getGkid()));
 		if (goodsPoolVO.getTwokind() != null && goodsPoolVO.getTwokind().getGkid() != null) goodsPoolPO.setTwokind(new GoodsKindPO(goodsPoolVO.getTwokind().getGkid()));
 		if (goodsPoolVO.getThrkind() != null && goodsPoolVO.getThrkind().getGkid() != null) goodsPoolPO.setThrkind(new GoodsKindPO(goodsPoolVO.getThrkind().getGkid()));
@@ -188,9 +190,11 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 			throw new FLException(260004, "商品不存在");
 		}
 
-		BeanUtil.copyProperties(goodsPoolVO, goodsPoolPO, Arrays.asList("accessoriesType", "onekind", "twokind", "thrkind"));
+		BeanUtil.copyProperties(goodsPoolVO, goodsPoolPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
 
 		if (goodsPoolVO.getAccessoriesType() != null && goodsPoolVO.getAccessoriesType().getAtid() != null) goodsPoolPO.setAccessoriesType(new AccessoriesTypePO(goodsPoolVO.getAccessoriesType().getAtid()));
+
+		if (goodsPoolVO.getZerokind() != null && goodsPoolVO.getZerokind().getGkid() != null) goodsPoolPO.setZerokind(new GoodsKindPO(goodsPoolVO.getZerokind().getGkid()));
 		if (goodsPoolVO.getOnekind() != null && goodsPoolVO.getOnekind().getGkid() != null) goodsPoolPO.setOnekind(new GoodsKindPO(goodsPoolVO.getOnekind().getGkid()));
 		if (goodsPoolVO.getTwokind() != null && goodsPoolVO.getTwokind().getGkid() != null) goodsPoolPO.setTwokind(new GoodsKindPO(goodsPoolVO.getTwokind().getGkid()));
 		if (goodsPoolVO.getThrkind() != null && goodsPoolVO.getThrkind().getGkid() != null) goodsPoolPO.setThrkind(new GoodsKindPO(goodsPoolVO.getThrkind().getGkid()));

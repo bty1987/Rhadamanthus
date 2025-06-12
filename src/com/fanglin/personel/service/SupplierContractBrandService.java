@@ -16,5 +16,7 @@ public interface SupplierContractBrandService {
 	public void addSupplierContractBrand(SupplierContractBrandVO supplierBrand, int company) throws FLException;
 
 	public int deleteSupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException;
+	
+	public void updateSupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException;
 
 }

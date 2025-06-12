@@ -3,18 +3,24 @@ jQuery(function($) {
     var drawline = {
 
         dlid: null,
+        orderId: null,
 
         btns: {
             saveInfoBtn: com.focusPage("#saveInfoBtn"),
             saveBtn: com.focusPage("#saveBtn"),
             updateBtn: com.focusPage("#updateBtn"),
+
+            seveSuccessBtn: com.focusPage("#seveSuccess"),
         },
 
         modals: {
-            constructionInfoModal: com.focusPage("#constructionInfoModal"),
+
             applyModal: com.focusPage("#applyModal"),
             editModal: com.focusPage("#editModal"),
-            updateModal: com.focusPage("#updateModal")
+            updateModal: com.focusPage("#updateModal"),
+
+            constructionInfoModal: com.focusPage("#constructionInfoModal"),
+            contructionNodeModal: com.focusPage("#contructionNodeModal"),
         },
 
         items: {
@@ -35,13 +41,16 @@ jQuery(function($) {
             drawlineTime: com.focusPage("#drawlineTime"),
             designTime: com.focusPage("#designTime"),
             isCeremony: com.focusPage("#isCeremony"),
-            comment: com.focusPage("#comment")
+            comment: com.focusPage("#comment"),
+
+            contructionNodes: com.focusPage("#contructionNodes", "#contructionNodeModal"),
         }
     };
 
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.updateBtn.bindClick(updateData);
+    drawline.btns.seveSuccessBtn.bindClick(seveSuccess);
 
     drawline.modals.constructionInfoModal.on("hide.bs.modal", function() {
 
@@ -109,6 +118,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
+            var $pretreatBtn = $('<a></a>').addClass('btn btn-minier btn-info').html('预放线');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-purple').html("更新");
             var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-success').html('放线');
             var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
@@ -149,13 +159,18 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnUpdate).append($btnDraw).append($btnReset).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($pretreatBtn).append($btnUpdate).append($btnDraw).append($btnReset).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnInfo.click(function() {
 
                 viewConstructionInfo(v.decoration.orderId);
+            });
+
+            $pretreatBtn.click(function() {
+
+                pretreat(v);
             });
 
             $btnUpdate.click(function() {
@@ -193,7 +208,9 @@ jQuery(function($) {
     searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'construction-drawLine-status', 'construction-drawLine-applayTime', 'construction-drawLine-actualDate'], "condList", api.construction.pageDrawLine, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", "drawLineApplyPostData", {"drawLine.status": constant.construction.drawLine.STATUS_QUEUE_INT});
+    }, "pagenation", "drawLineApplyPostData", {
+        "drawLine.status": constant.construction.drawLine.STATUS_QUEUE_INT
+    });
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 
@@ -264,7 +281,7 @@ jQuery(function($) {
 
         if (start == NaN || end == NaN || start >= end) {
             com.showAlert(com.info, "起始时间和结束时间非法");
-            return;
+            return false;
         }
 
         var options = {
@@ -272,7 +289,6 @@ jQuery(function($) {
             "drawLine.startTime": drawline.items.actualDate.val() + " " + drawline.items.startTime.val(),
             "drawLine.endTime": drawline.items.actualDate.val() + " " + drawline.items.endTime.val(),
             "drawLine.group.gid": drawline.items.drawLineGroup.val()
-
         };
 
         com.post(api.construction.resetDrawLine, options, function(res) {
@@ -335,6 +351,106 @@ jQuery(function($) {
         }));
     }
 
+    function pretreat(v) {
+
+        // var option = {"drawLine.dlid": v.dlid};
+
+        drawline.dlid = v.dlid;
+        drawline.orderId = v.decoration.orderId;
+
+        drawline.modals.contructionNodeModal.modal("show");
+        drawline.items.contructionNodes.html("");
+
+        var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+        var constructionNodes = {};
+
+        com.post(api.data.queryConstructionNode, {}, function(res) {
+
+            constructionNodes = res.constructionNodes.sort(function(a, b) {
+
+                return a.sort - b.sort;
+            });
+        }, null, false);
+
+        $.each(constructionNodes, function(index, value) {
+
+            var $liLi = $('<li></li>').addClass('item-blue clearfix');
+            var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '6px');
+
+            var propertyArr = [["工期: ", null, "grey"]];
+
+            var $label = $('<label></label>').addClass('control-label').css({
+                'color': 'grey',
+                'font-size': '20px',
+                "font-weight": "bold"
+            });
+
+            var _label = $('<label></label>');
+
+            var $input = $('<input>').attr({
+                "type": "checkbox",
+                "name": "sorts",
+                "sort": value.sort,
+                "cnid": value.cnid,
+            }).addClass('ace ace-checkbox-2');
+
+            var $text = $('<input>').attr({
+                "type": "text",
+                "name": "timeLimits",
+                "text_sort": value.sort,
+                "value": value.timeLimit,
+                "cnid": value.cnid,
+            }).addClass('timeLimits ace ace-checkbox-2 v_required');
+
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'normal').html(value.name);
+
+            _label.append($input).append(_span).appendTo($label);
+
+            $.each(propertyArr, function(index, value) {
+
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').attr('style', 'font-weight:normal;font-size:20px').html(value[0]).append($text).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                $liProperty.appendTo($divBtnWrap);
+
+                $label.appendTo($h3);
+
+                $divBtnWrap.appendTo($h3);
+
+                $liLi.append($h3).append($ulPro);
+            });
+
+            $liLi.append($h3).append($ulPro).appendTo($uli);
+        });
+
+        $uli.appendTo(drawline.items.contructionNodes);
+
+        var period = null;
+
+        com.post(api.data.queryConstructionPeriod, {
+            "constructionPeriod.lowerArea": v.decoration.house.innerArea
+        }, function(res) {
+
+            period = res.constructionPeriod;
+        }, null, false);
+        
+        if (!period || !period.cpid)
+            return false;
+
+        com.post(api.data.queryConstructionPeriodNodeByCpid, {
+            "constructionPeriodNode.cpid": period.cpid
+        }, function(res) {
+
+            $.each(res.constructionPeriodNodes, function(i, v) {
+
+                com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#contructionNodes").val(v.period);
+            });
+        });
+    }
+
     function viewConstructionInfo(orderId) {
 
         com.post(api.construction.queryConstructionInfoByOrderId, {
@@ -349,22 +465,27 @@ jQuery(function($) {
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);
             drawline.items.timeLimit.val(data.timeLimit);
+
             if (data.finishTime != null) {
                 drawline.items.finishTime.val(data.finishTime.substr(0, 10));
             }
+
             if (data.keyTime != null) {
                 drawline.items.keyTime.val(data.keyTime.substr(0, 10));
             }
+
             if (data.drawlineTime != null) {
                 drawline.items.drawlineTime.val(data.drawlineTime.substr(0, 10));
             }
+
             if (data.designTime != null) {
                 drawline.items.designTime.val(data.designTime.substr(0, 10));
             }
+
             drawline.items.comment.val(data.comment);
         });
-        drawline.modals.constructionInfoModal.modal("show");
 
+        drawline.modals.constructionInfoModal.modal("show");
     }
 
     function saveInfoData() {
@@ -388,7 +509,35 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
 
             drawline.modals.constructionInfoModal.modal("hide");
+        });
+    }
 
+    function seveSuccess() {
+
+        if (com.validate("contructionNodeModal")) {
+            return false;
+        }
+
+        var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+
+        var option = {
+            "drawLine.decoration.orderId": drawline.orderId
+        };
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            option["constructionNodes[" + i + "].cnid"] = $input.attr('cnid');
+            option["constructionNodes[" + i + "].sort"] = $input.attr('sort');
+            option["constructionNodes[" + i + "].timeLimit"] = $("input[text_sort=" + $input.attr('sort') + "]").val();
+        });
+
+        com.post(api.construction.pretreatDrawLine, option, function(res) {
+
+            com.showAlert(com.info, "放线成功");
+            drawline.modals.contructionNodeModal.modal("hide");
+            searcher.doSearch();
         });
     }
 

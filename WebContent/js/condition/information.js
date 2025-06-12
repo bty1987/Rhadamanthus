@@ -142,7 +142,7 @@ Condition.addupRule("information", {
         type: "text",
         submitConfig: {
             name: "no",
-            op: "eq",
+            op: "cn",
             validate: null
         }
     },

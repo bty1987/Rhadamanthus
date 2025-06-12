@@ -322,16 +322,24 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["purchase", "selling", "num"]
+                args: ["unitPrice", "purchase", "selling", "num"]
             }]
         },// 分页
         queryAwardStockByAsid: {
             url: "queryAwardStockByAsid.do",
-            demo: true
+            demo: true,
+            tranargs: [{
+                result: "paging-data",
+                args: ["unitPrice", "purchase", "selling", "num"]
+            }]
         }, // 根据asid查
         queryAwardStockByType: {
             url: "queryAwardStockByType.do",
-            demo: true
+            demo: true,
+            tranargs: [{
+                result: "paging-data",
+                args: ["unitPrice", "purchase", "selling", "num"]
+            }]
         }, // 根据type查
         queryAwardStockByName: {
             url: "queryAwardStockByName.do"
@@ -341,7 +349,7 @@ $.extend(api, {
             demo: true,
             type: "update",
             tranargs: {
-                args: ["awardStock.price", "awardStock.purchase", "awardStock.selling", "awardStock.num"]
+                args: ["awardStock.price", "awardStock.unitPrice", "awardStock.purchase", "awardStock.selling", "awardStock.num"]
             }
         },// 添加
         updateAwardStock: {
@@ -349,7 +357,7 @@ $.extend(api, {
             demo: true,
             type: "update",
             tranargs: {
-                args: ["awardStock.num", "awardStock.purchase", "awardStock.selling"]
+                args: ["awardStock.price", "awardStock.unitPrice", "awardStock.purchase", "awardStock.selling", "awardStock.num"]
             }
         },// 编辑
         updateAwardStockForXG: {
@@ -357,7 +365,7 @@ $.extend(api, {
             demo: true,
             type: "update",
             tranargs: {
-                args: ["awardStock.num", "awardStock.purchase", "awardStock.selling", "awardStock.price"]
+                args: ["awardStock.price", "awardStock.unitPrice", "awardStock.purchase", "awardStock.selling", "awardStock.num"]
             }
         },// 出库
         updateAwardStockForCG: {
@@ -365,7 +373,7 @@ $.extend(api, {
             demo: true,
             type: "update",
             tranargs: {
-                args: ["awardStock.price", "awardStock.num", "awardStock.purchase", "awardStock.selling"]
+                args: ["awardStock.price", "awardStock.unitPrice", "awardStock.purchase", "awardStock.selling", "awardStock.num"]
             }
         },// 入库
         checkAwardStock: {
@@ -373,7 +381,7 @@ $.extend(api, {
             demo: true,
             type: "update",
             tranargs: {
-                args: ["awardStock.num", "awardStock.purchase", "awardStock.selling"]
+                args: ["awardStock.price", "awardStock.unitPrice", "awardStock.purchase", "awardStock.selling", "awardStock.num"]
             }
         },// 盘点
         updateAwardStockForStatus: {

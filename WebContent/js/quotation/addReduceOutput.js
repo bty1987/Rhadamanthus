@@ -147,6 +147,14 @@ var printAddReduceDetail = (function() {
                         "type": v.type,
                     }, ];
 
+                    v.addReduceItems.sort(function(a, b) {
+                        if (a.index == null || b.index == null) {
+                            return b.index - a.index;
+                        } else {
+                            return a.index - b.index;
+                        }
+                    });
+
                     disposeAddReduceItemData(v.addReduceItems, v.discount);
 
                     addReduceIds["addReduceIds[" + i + "]"] = v.arId;

@@ -3,6 +3,7 @@ package com.fanglin.balance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceSelectionVO;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "balanceselection", catalog = "balance")
@@ -56,19 +59,23 @@ public class BalanceSelectionBO implements java.io.Serializable {
 
 	private long profit;
 
-	private short status;
-
-	private int company;
-
 	private UserPO creater;
+
+	private UserPO auditer;
 
 	private UserPO balancer;
 
 	private Timestamp createTime;
 
+	private Timestamp lockTime;
+
+	private Timestamp auditTime;
+
 	private Timestamp balanceTime;
 
-	private Timestamp lockTime;
+	private short status;
+
+	private int company;
 
 	public BalanceSelectionBO() {
 		super();
@@ -129,15 +136,6 @@ public class BalanceSelectionBO implements java.io.Serializable {
 		this.grade = grade;
 	}
 
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
-
 	@Column(name = "income")
 	public long getIncome() {
 		return income;
@@ -174,15 +172,6 @@ public class BalanceSelectionBO implements java.io.Serializable {
 		this.profit = profit;
 	}
 
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -193,13 +182,14 @@ public class BalanceSelectionBO implements java.io.Serializable {
 		this.creater = creater;
 	}
 
-	@Column(name = "createTime")
-	public Timestamp getCreateTime() {
-		return createTime;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "auid", referencedColumnName = "uid")
+	public UserPO getAuditer() {
+		return auditer;
 	}
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+	public void setAuditer(UserPO auditer) {
+		this.auditer = auditer;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -212,13 +202,22 @@ public class BalanceSelectionBO implements java.io.Serializable {
 		this.balancer = balancer;
 	}
 
-	@Column(name = "balanceTime")
-	public Timestamp getBalanceTime() {
-		return balanceTime;
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setBalanceTime(Timestamp balanceTime) {
-		this.balanceTime = balanceTime;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "auditTime")
+	public Timestamp getAuditTime() {
+		return auditTime;
+	}
+
+	public void setAuditTime(Timestamp auditTime) {
+		this.auditTime = auditTime;
 	}
 
 	@Column(name = "lockTime")
@@ -228,6 +227,48 @@ public class BalanceSelectionBO implements java.io.Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	public BalanceSelectionVO ptv(BalanceSelectionVO balanceSelectionVO) {
+
+		BeanUtil.copyPropertie(this, balanceSelectionVO, Arrays.asList("brand", "balance", "creater", "auditer", "balancer"));
+
+		if (balanceSelectionVO.getBrand() != null && getBrand() != null) getBrand().ptv(balanceSelectionVO.getBrand());
+
+		if (balanceSelectionVO.getBalance() != null && getBalance() != null) getBalance().ptv(balanceSelectionVO.getBalance());
+
+		if (balanceSelectionVO.getCreater() != null && getCreater() != null) balanceSelectionVO.getCreater().setBaseInfo(getCreater());
+		if (balanceSelectionVO.getAuditer() != null && getAuditer() != null) balanceSelectionVO.getAuditer().setBaseInfo(getAuditer());
+		if (balanceSelectionVO.getBalancer() != null && getBalancer() != null) balanceSelectionVO.getBalancer().setBaseInfo(getBalancer());
+
+		return balanceSelectionVO;
 	}
 
 }

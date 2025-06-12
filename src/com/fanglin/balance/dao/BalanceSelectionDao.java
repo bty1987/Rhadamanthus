@@ -14,6 +14,8 @@ public interface BalanceSelectionDao extends Dao<BalanceSelectionPO> {
 
 	public List<BalanceSelectionPO> queryBalanceSelection(String name, int company);
 
+	public BalanceSelectionPO queryBalanceSelection(long bid, String grade, int company);
+
 	public List<BalanceSelectionBO> pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, Short status, int company);
 
 	public long amountBalaceSelection(long bsid);

@@ -619,7 +619,11 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200038, "选材项不存在");
 		}
 
-		if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT).contains(selectionItemPO.getStatus())) {
+		if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT).contains(selectionItemPO.getStatus())) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_INIT_INT) {
 			throw new FLException(200039, "选材项状态不可操作");
 		}
 
@@ -640,6 +644,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 			selectionItemVO.getDecoration().setSupervisor(new UserBaseVO());
 			selectionItemVO.getDecoration().setEscorter(new UserBaseVO());
+			selectionItemVO.getDecoration().setMaterialer(new UserBaseVO());
 
 			selectionItemVOs.add(selectionItemPD.ptv(selectionItemVO));
 		}

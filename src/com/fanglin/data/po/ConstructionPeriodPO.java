@@ -3,12 +3,16 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import com.fanglin.data.common.vo.ConstructionPeriodVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "ConstructionPeriod", catalog = "data")
@@ -99,6 +103,13 @@ public class ConstructionPeriodPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public ConstructionPeriodVO ptv(ConstructionPeriodVO constructionPeriodVO) {
+
+		BeanUtil.copyProperties(this, constructionPeriodVO, Arrays.asList(""));
+
+		return constructionPeriodVO;
 	}
 
 }

@@ -64,9 +64,6 @@ jQuery(function ($) {
 
     searcher.line("goods.name", lineprops, linebtns).render();
     
-    
-
-    
     goodsContract.modals.addSupplierAddBrandModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
@@ -74,7 +71,6 @@ jQuery(function ($) {
         com.closeTip();
         com.cleanItems(goodsContract.items);
     });
-
     
     com.focusPage('#addGoodsInfo', '#pagenation').on("click", function() {
 
@@ -86,10 +82,7 @@ jQuery(function ($) {
     }, 'goodsPools', 'gpid', 'name', function(list, k, v) {
 
         $.each(list, function(index, val) {
-
-            if (val.gid == k) {
-            	console.log(val.name);
-            	console.log(val.gpid);
+            if (val.gpid == k) {
             	goodsContract.gid = val.gpid;
             	goodsContract.items.goodsName.val(val.name);
             }
@@ -97,27 +90,19 @@ jQuery(function ($) {
         return v
     });
     
-
-    
-    
     com.focusPage('#submitBtn').on("click", function() {
-
-        console.log(goodsContract.gid);
-        
         var options = {
         		"supplierContractGoods.scid":goodsContract.scid,
         		"supplierContractGoods.price": goodsContract.items.price.val(),
         		"supplierContractGoods.balance": goodsContract.items.balance.val(),
-        		"supplierContractGoods.goods.gid": goodsContract.gid,
+        		"supplierContractGoods.goods.gid": com.typeahead("goodsName"),
             };
         
        com.post(api.personel.addSupplierContractGoods, options, function(res){  
     	   goodsContract.modals.addSupplierAddBrandModal.modal("hide");
     	   com.closePopup();
        });
-       
-       
-
+           
     });
     
     function delBrand(scgid) {

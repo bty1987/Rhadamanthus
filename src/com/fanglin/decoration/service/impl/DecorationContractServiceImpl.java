@@ -15,17 +15,22 @@ import com.alibaba.fastjson.JSONObject;
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.DepartmentTypePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
+import com.fanglin.customer.dao.CustomerUserRuleDao;
+import com.fanglin.customer.po.CustomerUserRuleItemPO;
+import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.ContractDao;
 import com.fanglin.data.common.dao.SignetDao;
 import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.ContractPO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
@@ -123,6 +128,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	@Autowired
 	private DecorationActivityItemDao decorationActivityItemDao;
 
+	@Autowired
+	private CustomerUserRuleDao customerUserRuleDao;
+
 	@Override
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException {
 
@@ -130,14 +138,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<DecorationContractVO> decorationContractVOs = new ArrayList<DecorationContractVO>();
 
 		for (DecorationContractPO decorationContractPO : decorationContractPOs) {
-			DecorationContractVO decorationContractVO = new DecorationContractVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(decorationContractPO, decorationContractVO, Arrays.asList("contract", "creater", "signner", "filinner"));
-			BeanUtil.copyProperties(decorationContractPO.getCreater(), decorationContractVO.getCreater(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(decorationContractPO.getSignner(), decorationContractVO.getSignner(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(decorationContractPO.getFilinner(), decorationContractVO.getFilinner(), Arrays.asList("dept", "duty"));
-
-			decorationContractVOs.add(decorationContractVO);
+			decorationContractVOs.add(decorationContractPO.ptv(new DecorationContractVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return decorationContractVOs;
@@ -487,6 +488,18 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_LOCK_INT);
+
+		DecorationBusitypePO decorationBusitypePO = decorationPO.getBusitype();
+		CustomerUserRulePO customerUserRulePO = null;
+
+		if (decorationBusitypePO.getIsAward() == DecorationBusitypePO.ISAWARD_AWARD_INT) {
+
+			customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(decorationPO.getDesigner().getUid());
+		}
+
+		if (customerUserRulePO != null) {
+			customerUserRuleDao.save(new CustomerUserRuleItemPO().award(customerUserRulePO.getCurid(), "工程部", new DepartmentTypePO(DepartmentTypePO.DEPARTMENT_TYPE_CONSTRUCTION_DEPT_INT)));
+		}
 
 		if (DecorationPO.STATUS_RESIGNED_INT == decorationPO.getStatus()) {
 			resignFlag = true;

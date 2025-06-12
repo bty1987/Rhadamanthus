@@ -249,7 +249,16 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
 		for (QuotationFunctionAreaItemVO quotationFunctionAreaItemVO : QuotationFunctionAreaItemVOs) {
-			quotationFunctionAreaItemDao.updateQuotationFunctionAreaItemForIndex(table, quotationFunctionAreaItemVO);
+
+			Long qfaiid = quotationFunctionAreaItemVO.getQfaiId();
+
+			if (qfaiid == null) continue;
+
+			Integer index = quotationFunctionAreaItemVO.getIndex();
+
+			if (index == null) continue;
+
+			quotationFunctionAreaItemDao.updateQuotationFunctionAreaItemForIndex(table, qfaiid, index);
 		}
 
 		return 0;

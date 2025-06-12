@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
@@ -56,6 +57,7 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Service("addReduceService")
 @Transactional(readOnly = true)
@@ -273,7 +275,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setComsPrice(0);
 		addReducePO.setAccountDiscount(addReducePO.getDiscount());
 
-		if(decorationPO.getType() == DecorationPO.TYPE_HOLONOMY_INT){
+		if (decorationPO.getType() == DecorationPO.TYPE_HOLONOMY_INT) {
 			addReducePO.setDiscount(decorationPO.getDiscount());
 		}
 
@@ -530,7 +532,15 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs) throws FLException {
+	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs, String securityCode, String verifyCode) throws FLException {
+
+		try {
+			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
+				throw new FLException(330010, "绑定订单失败,验证码错误");
+			}
+		} catch (Exception e) {
+			throw new FLException(330010, "绑定订单失败,验证码错误");
+		}
 
 		String orderId = decorationVO.getOrderId();
 
@@ -540,27 +550,13 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationVO.getCustomer() == null) {
-			throw new FLException(130002, "客户不存在");
-		}
-
-		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
-
-		cusDecorationVO.setOrderId(orderId);
-		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
-
-		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
-			throw new FLException(330017, "装修单未绑定");
-		}
-
 		for (AddReduceVO addReduce : addReduceVOs) {
 
 			AddReducePO addReducePO = addReduceDao.get(addReduce.getArId());
 
 			if (addReducePO == null) continue;
 
-			addReducePO.setIsAffirm(addReducePO.ISAFFIRM_CONFIRMED_INT);
-
+			addReducePO.setIsAffirm(AddReducePO.ISAFFIRM_CONFIRMED_INT);
 			addReducePO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 			addReduceDao.update(addReducePO);

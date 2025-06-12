@@ -278,7 +278,7 @@ var kingdeeUtils = {
         var decoration = payment.decoration;
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
-            "decoration.orderId": decoration.orderId
+            "decoration.orderId": (decoration && decoration.orderId) ? decoration.orderId : payment.sales.orderId
         }, function(res) {
 
             decoration = res.decoration;

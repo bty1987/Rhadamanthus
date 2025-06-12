@@ -424,7 +424,7 @@ $(function() {
             soods.addSoodsModal.modal("hide");
         });
     }
-    
+
     // 显示图片
     function managedrawing(sid) {
 

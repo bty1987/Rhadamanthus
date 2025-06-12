@@ -45,12 +45,14 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 	@Override
 	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid) {
-		pageUserByPinyin(paging, pinyin, status, company, dtid, null);
+
+		pageUserByPinyin(paging, pinyin, status, company, dtid, null, null);
+
 		return null;
 	}
 
 	@Override
-	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did) {
+	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid, Integer did, Integer rid) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
@@ -83,6 +85,10 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		if (did != null) {
 			query.add(Restrictions.eq("dept.did", did));
+		}
+
+		if (rid != null) {
+			query.alias("dept.fatherDept", "fatherDept").add(Restrictions.eq("fatherDept.did", rid));
 		}
 
 		if (status != 3) {

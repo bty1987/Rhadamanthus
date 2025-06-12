@@ -39,6 +39,8 @@ public class GoodsPoolVO implements java.io.Serializable {
 
 	private Short type;
 
+	private GoodsKindVO zerokind;
+
 	private GoodsKindVO onekind;
 
 	private GoodsKindVO twokind;
@@ -71,9 +73,13 @@ public class GoodsPoolVO implements java.io.Serializable {
 		this.accessoriesType = accessoriesType;
 	}
 
-	public GoodsPoolVO(AccessoriesTypeVO accessoriesType, GoodsKindVO onekind, GoodsKindVO twokind, GoodsKindVO thrkind) {
+	public GoodsPoolVO(AccessoriesTypeVO accessoriesType, GoodsKindVO zerokind, GoodsKindVO onekind, GoodsKindVO twokind, GoodsKindVO thrkind) {
+
 		super();
+
 		this.accessoriesType = accessoriesType;
+
+		this.zerokind = zerokind;
 		this.onekind = onekind;
 		this.twokind = twokind;
 		this.thrkind = thrkind;
@@ -205,6 +211,14 @@ public class GoodsPoolVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public GoodsKindVO getZerokind() {
+		return zerokind;
+	}
+
+	public void setZerokind(GoodsKindVO zerokind) {
+		this.zerokind = zerokind;
 	}
 
 	public GoodsKindVO getOnekind() {

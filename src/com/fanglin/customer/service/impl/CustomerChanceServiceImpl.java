@@ -22,11 +22,14 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerProfileDao;
 import com.fanglin.customer.dao.CustomerSourceDao;
 import com.fanglin.customer.dao.CustomerSourceRecordDao;
+import com.fanglin.customer.dao.CustomerUserRuleDao;
 import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
+import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
@@ -58,6 +61,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	private CustomerSourceDao customerSourceDao;
 
 	@Autowired
+	private CustomerProfileDao customerProfileDao;
+
+	@Autowired
+	private CustomerUserRuleDao customerUserRuleDao;
+
+	@Autowired
 	private CustomerSourceRecordDao customerSourceRecordDao;
 
 	@Autowired
@@ -79,6 +88,9 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, Integer company) {
 
 		if (customerChanceVO.getBelonger() != null && customerChanceVO.getBelonger().getUserId() != null) {
+
+			company = null;
+
 			filters.add(new Filter("user.userId", customerChanceVO.getBelonger().getUserId(), "eq"));
 		}
 
@@ -330,6 +342,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (belonger != null) {
 
+			CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(belonger.getUid());
+
+			if (customerUserRulePO != null && customerUserRulePO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT) {
+				throw new FLException(330082, "规则不可操作");
+			}
+
 			customerChancePO.setRegion(belonger.getDept().getFatherDept());
 			customerChancePO.setDepartment(belonger.getDept());
 			customerChancePO.setBelonger(belonger);
@@ -401,7 +419,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationVO.setDesigner(new UserBaseVO(customerChancePO.getBelonger().getUserId()));
 		decorationVO.setSalesman(new UserBaseVO(customerSourcePO.getCreater().getUserId()));
 		decorationVO.setGrade("C");
-		decorationVO.setNotSalesmanRate(customerChancePO.getRate());
+		decorationVO.setNotSalesmanRate(customerChancePO.getBusitype().getNotSalesmanRate());
 		decorationVO.setBusitype(customerChancePO.getBusitype().getDbid());
 
 		decorationService.tranDecoration(decorationVO, company);
@@ -412,6 +430,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerChanceDao.update(customerChancePO);
 
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("客户资源转装修单,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
+
+		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
 	}
 
 	@Override

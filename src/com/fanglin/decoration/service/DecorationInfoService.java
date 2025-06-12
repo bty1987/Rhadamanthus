@@ -6,7 +6,9 @@ import com.fanglin.decoration.vo.DecorationVO;
 
 public interface DecorationInfoService {
 
-	public DecorationInfoVO queryDecorationInfoByOrderId(String orderId);
+	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO);
+
+	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO);
 
 	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO);
 

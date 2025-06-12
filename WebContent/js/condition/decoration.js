@@ -125,10 +125,29 @@ Condition.addupRule("decoration", {
         }
     },
     "escorter": {
-        label: "跟单员",
+        label: "方案设计",
         type: "autofill",
         submitConfig: {
             name: "decoration.escorter.userId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "materialer": {
+        label: "跟单员",
+        type: "autofill",
+        submitConfig: {
+            name: "decoration.materialer.userId",
             op: "eq",
             validate: null
         },

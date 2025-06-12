@@ -81,13 +81,13 @@
         <!--左下角按钮-->
         <div class="col-xs-12 col-md-3" style="position:fixed; bottom:10px; background-color: white;">
              <div class="ui-pg-div">
-                 <button id="saveMaterialBtn" class="btn btn-minier btn-yellow col-md-3">选材项</button>
-                 <button id="saveConfigBtn" class="btn btn-minier btn-purple col-md-3" style="margin-left: 2px;">配置</button>
+                 <button id="saveMaterialBtn" class="btn btn-minier btn-yellow col-md-3" style="display: none;">选材项</button>
+                 <button id="saveConfigBtn" class="btn btn-minier btn-purple col-md-3" style="margin-left: 2px; display: none;">配置</button>
              </div>
              <div class="col-md-12 space-6"></div>
              <div class="ui-pg-div">
-                 <button id="sendSelectionBtn" class="btn btn-minier col-md-3">推送</button>
-                 <button id="QRCodeBtn" class="btn btn-minier icon-qrcode" style="margin-left: 1px;"></button>
+                 <button id="sendSelectionBtn" class="btn btn-minier col-md-3" style="display: none;">推送</button>
+                 <button id="QRCodeBtn" class="btn btn-minier icon-qrcode" style="margin-left: 1px; display: none;"></button>
              </div>
             <div class="col-md-12 space-6"></div>
             <div class="ui-pg-div">
@@ -163,19 +163,19 @@
                         <div class="modal-body">
                             <form class="form-horizontal">
                                 <div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="splitter">拆单员</label>
-									<div class="col-sm-9">
-										<input type="text" id="splitter" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'  maxlength='15'/>
-									</div>
-								</div>
-								<div class="space-4"></div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="traner">下单员</label>
-									<div class="col-sm-9">
-										<input type="text" id="traner" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'  maxlength='15'/>
-									</div>
-								</div>
-								<div class="space-4"></div>
+                                    <label class="col-sm-3 control-label no-padding-right" for="splitter">拆单员</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="splitter" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'  maxlength='15'/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="traner">下单员</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="traner" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'  maxlength='15'/>
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
                             </form>
                         </div>
 
@@ -188,24 +188,58 @@
             </div>
 
         <div class="modal fade" id="QRcodeModal" tabindex="-1">
-        	<div class="modal-dialog">
-            	<div class="modal-content col-md-12">
-	                <div class="modal-header">
-	                    <button type="button" class="close" data-dismiss="modal">
-	                        <span class="sr-only">Close</span>
-	                    </button>
-	                    <h4 class="modal-title">二维码</h4>
-	                </div>
-	                <div class="modal-body">
-	                    <div class="qrcode" id="QRcode" style="border: 0px;">
-	                    </div>
-	                </div>
-	                <div class="modal-footer">
-	                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
+            <div class="modal-dialog">
+                <div class="modal-content col-md-12">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">二维码</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="qrcode" id="QRcode" style="border: 0px;">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="updateSelectionItemModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span><span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">编辑数量</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right orange" for="num">数量</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_afloat_3" data-toggle="popover" data-trigger='manual'/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="comment">备注</label>
+                                <div class="col-sm-9">
+                                    <textarea id="comment" maxlength="256" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual' rows="3" cols="3"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="updateSelectionItemBtn" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </div>

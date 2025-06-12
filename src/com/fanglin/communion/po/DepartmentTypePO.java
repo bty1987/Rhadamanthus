@@ -3,6 +3,7 @@ package com.fanglin.communion.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,9 +16,20 @@ public class DepartmentTypePO implements Serializable {
 
 	private static final long serialVersionUID = -6761713384057901062L;
 
+	public static final int DEPARTMENT_TYPE_CONSTRUCTION_DEPT_INT = 8;
+
 	private int dtid;
 
 	private String name;
+
+	public DepartmentTypePO() {
+		super();
+	}
+
+	public DepartmentTypePO(int dtid) {
+		super();
+		this.dtid = dtid;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

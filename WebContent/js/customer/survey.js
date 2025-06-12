@@ -321,6 +321,7 @@ jQuery(function($) {
         var ridioDiv = $('<div class="col-md-12"></div>').appendTo(contentDiv);
         var div = $('<div></div>').addClass("checkbox").appendTo(ridioDiv);
         var label = $('<label class="col-md-5"></label>').appendTo(div);
+        
         if (status != constant.customer().survey.STATUS_SEND_INT) {
             var input = $('<input class="ace check" disabled>').attr({
                 'name': 'form-field-checkbox' + option.siid
@@ -342,6 +343,7 @@ jQuery(function($) {
 
         if (option.checked == 0) {
             input.attr('checked', true);
+            label.addClass("red");
         } else {
             input.attr('checked', false);
         }

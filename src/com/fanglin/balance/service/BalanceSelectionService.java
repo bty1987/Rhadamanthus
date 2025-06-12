@@ -22,6 +22,8 @@ public interface BalanceSelectionService {
 
 	public int submitBalanceSelection(BalanceSelectionVO balanceSelectionVO, List<BalanceSelectionItemVO> balanceSelectionItems, String userId, int company) throws FLException;
 
+	public int batchBalanceSelection(BalanceSelectionVO balanceSelectionVO, List<BalanceSelectionItemVO> balanceSelectionItems, String userId, int company) throws FLException;
+
 	public int unbindBalanceSelection(BalanceSelectionVO balanceSelectionVO, List<BalanceSelectionItemVO> balanceSelectionItems, String userId, int company) throws FLException;
 
 	public int lockBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException;
@@ -31,6 +33,10 @@ public interface BalanceSelectionService {
 	public int updateBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 
 	public int balanceBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
+
+	public int auditBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
+
+	public int unauditBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException;
 
 	public int deleteBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 

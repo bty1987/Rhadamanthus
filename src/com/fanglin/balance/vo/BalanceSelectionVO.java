@@ -31,10 +31,6 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	private Long profit;
 
-	private Short status;
-
-	private Integer company;
-
 	private String alias;
 
 	private String categoryId;
@@ -43,37 +39,56 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	private UserBaseVO creater;
 
+	private UserBaseVO auditer;
+
 	private UserBaseVO balancer;
 
 	private Timestamp createTime;
 
+	private Timestamp auditTime;
+
 	private Timestamp balanceTime;
 
 	private Timestamp lockTime;
+
+	private Short status;
+
+	private Integer company;
 
 	public BalanceSelectionVO() {
 		super();
 	}
 
 	public BalanceSelectionVO(BrandVO brand, UserBaseVO creater) {
+
 		super();
+
 		this.brand = brand;
 		this.creater = creater;
 	}
 
-	public BalanceSelectionVO(BrandVO brand, UserBaseVO creater, UserBaseVO balancer) {
+	public BalanceSelectionVO(BrandVO brand, UserBaseVO creater, UserBaseVO auditer, UserBaseVO balancer) {
+
 		super();
+
 		this.brand = brand;
+
 		this.creater = creater;
+		this.auditer = auditer;
 		this.balancer = balancer;
 	}
 
-	public BalanceSelectionVO(BrandVO brand, BalanceVO balance, UserBaseVO creater, UserBaseVO balancer) {
+	public BalanceSelectionVO(BrandVO brand, BalanceVO balance, UserBaseVO creater, UserBaseVO auditer, UserBaseVO balancer) {
+
 		super();
+
 		this.brand = brand;
-		this.creater = creater;
-		this.balancer = balancer;
+
 		this.balance = balance;
+
+		this.creater = creater;
+		this.auditer = auditer;
+		this.balancer = balancer;
 	}
 
 	public Long getBsid() {
@@ -122,14 +137,6 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
-	}
-
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
 	}
 
 	public String getAlias() {
@@ -188,20 +195,28 @@ public class BalanceSelectionVO implements java.io.Serializable {
 		this.profit = profit;
 	}
 
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
-	}
-
 	public UserBaseVO getCreater() {
 		return creater;
 	}
 
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
+	}
+
+	public UserBaseVO getAuditer() {
+		return auditer;
+	}
+
+	public void setAuditer(UserBaseVO auditer) {
+		this.auditer = auditer;
+	}
+
+	public UserBaseVO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserBaseVO balancer) {
+		this.balancer = balancer;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -213,12 +228,13 @@ public class BalanceSelectionVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	public UserBaseVO getBalancer() {
-		return balancer;
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getAuditTime() {
+		return auditTime;
 	}
 
-	public void setBalancer(UserBaseVO balancer) {
-		this.balancer = balancer;
+	public void setAuditTime(Timestamp auditTime) {
+		this.auditTime = auditTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -237,6 +253,22 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

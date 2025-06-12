@@ -19,6 +19,8 @@ public class SupplierContractBrandVO implements Serializable {
 	private Integer cvalue;// 结算值
 
 	private Integer breakpay;// 违约金
+	
+	private String servicePrice; // 服务费 , Json结构 , {"TL": "2016-01-01", "UV": 0, "DV": 0, "SR": 0}
 
 	public SupplierContractBrandVO() {
 		super();
@@ -76,5 +78,15 @@ public class SupplierContractBrandVO implements Serializable {
 	public void setBreakpay(Integer breakpay) {
 		this.breakpay = breakpay;
 	}
+
+	public String getServicePrice() {
+		return servicePrice;
+	}
+
+	public void setServicePrice(String servicePrice) {
+		this.servicePrice = servicePrice;
+	}
+	
+	
 
 }

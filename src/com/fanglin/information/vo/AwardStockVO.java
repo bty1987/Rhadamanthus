@@ -22,6 +22,10 @@ public class AwardStockVO implements java.io.Serializable {
 
 	private Short storeroom;
 
+	private String format;
+
+	private Integer unitPrice;
+
 	private Short isPrefor; // 是否计算业绩
 
 	private Short isStock; // 是否计算库存
@@ -31,8 +35,6 @@ public class AwardStockVO implements java.io.Serializable {
 	private String content;
 
 	private Integer company;
-
-	private String format;
 
 	public Long getAsId() {
 		return asId;
@@ -98,6 +100,22 @@ public class AwardStockVO implements java.io.Serializable {
 		this.subtype = subtype;
 	}
 
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public Integer getUnitPrice() {
+		return unitPrice;
+	}
+
+	public void setUnitPrice(Integer unitPrice) {
+		this.unitPrice = unitPrice;
+	}
+
 	public Short getIsPrefor() {
 		return isPrefor;
 	}
@@ -144,14 +162,6 @@ public class AwardStockVO implements java.io.Serializable {
 
 	public void setStoreroom(Short storeroom) {
 		this.storeroom = storeroom;
-	}
-
-	public String getFormat() {
-		return format;
-	}
-
-	public void setFormat(String format) {
-		this.format = format;
 	}
 
 }

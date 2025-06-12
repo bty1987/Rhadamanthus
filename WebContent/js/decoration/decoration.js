@@ -38,6 +38,9 @@
         repairItems: {
             status: com.focusPage("#repairStatus"),
         },
+        nodeItems: {
+            contructionNodes: com.focusPage("#contructionNodes", "#contructionNodeModal"),
+        },
 
         projectStatusArr: {},
         designStatusArr: {}
@@ -50,6 +53,7 @@
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
     order.drawLineModal = com.focusPage("#drawLineModal");
+    order.contructionNodeModal = com.focusPage("#contructionNodeModal");
     order.refundContractModal = com.focusPage("#refundContractModal");
     order.customerInfoModal = com.focusPage("#customerInfoModal");
     order.drawContractModal = com.focusPage("#drawContractModal");
@@ -90,6 +94,11 @@
         com.cleanItems(order.infoItems);
         com.closeTip();
     });
+
+    com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {
+        "departmentType.name": "工程部",
+        "user.status": 0
+    }, "autoFillKeyValue", "key", "value", null);
 
     order.infoItems.conpanyName = com.focusPage("#conpanyName");
     order.infoItems.timeLimit = com.focusPage("#timeLimit");
@@ -154,6 +163,36 @@
             com.post(api.construction.applayDrawLine, options);
 
             order.drawLineModal.modal("hide");
+        });
+    });
+
+    com.focusPage("#seveSuccess").on("click", function() {
+
+        if (com.validate("contructionNodeModal")) {
+            return false;
+        }
+
+        var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+
+        var option = {
+            "drawLine.decoration.orderId": params.decoration.orderId,
+            "drawLine.decoration.supervisor.userId": com.typeahead("supervisor"),
+        };
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            option["constructionNodes[" + i + "].cnid"] = $input.attr('cnid');
+            option["constructionNodes[" + i + "].sort"] = $input.attr('sort');
+            option["constructionNodes[" + i + "].timeLimit"] = $("input[text_sort=" + $input.attr('sort') + "]").val();
+        });
+
+        com.post(api.construction.pretreatDrawLine, option, function(res) {
+
+            com.showAlert(com.info, "放线成功");
+
+            order.contructionNodeModa.modal("hide");
         });
     });
 
@@ -522,11 +561,13 @@
                     var btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
 
                     var btnService = $('<a></a>').addClass('btn btn-minier btn-success').html('服务');
+                    var btnRefer = $('<a></a>').addClass('btn btn-minier btn-success').html('推荐');
                     var btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
                     var btnInfo = $('<a></a>').addClass('btn btn-minier btn-success').html('详情');
                     var btnScal = $('<a></a>').addClass('btn btn-minier btn-success').html('扣款');
 
                     var btnLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('放线');
+                    var btnProLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('预放线');
                     var btnContract = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
                     var btnContractc = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
 
@@ -575,17 +616,26 @@
                             case "designerName":
                                 propertyArr.push(["设计师:", v.designer.currentName, "grey", tools.decoration.belong, v.orderId]);
                                 break;
+                            case "escorterName":
+                                propertyArr.push(["方案设计:", v.escorter ? v.escorter.currentName : '', "grey", tools.personel.info, v.escorter ? v.escorter.userId : '']);
+                                break;
                             case "salesmanDepartment":
                                 propertyArr.push(["业务部:", v.salesman.dept.name, "grey", tools.department.info, v.salesman.dept.did]);
                                 break;
                             case "salesmanName":
                                 propertyArr.push(["业务员:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
                                 break;
+                            case "materialerName":
+                                propertyArr.push(["跟单员:", v.materialer ? v.materialer.currentName : '', "grey", tools.personel.info, v.materialer ? v.materialer.userId : '']);
+                                break;
+                            case "supervisorName":
+                                propertyArr.push(["监理:", v.supervisor.currentName, "grey", tools.personel.info, v.supervisor.userId]);
+                                break;
                             case "houseArea":
-                                propertyArr.push(["面积:", v.house.buildArea, "blue"]);
+                                propertyArr.push(["派尺面积:", v.house.buildArea, "blue"]);
                                 break;
                             case "quoteArea":
-                                propertyArr.push(["计价面积:", v.house.quoteArea, "blue"]);
+                                propertyArr.push(["计价面积:", v.house.innerArea, "blue"]);
                                 break;
                             case "discount":
                                 propertyArr.push(["折扣:", com.checkNull(v.discount, 10), "blue"]);
@@ -675,6 +725,9 @@
                                 break;
                             case "decorationType":
                                 propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
+                                break;
+                            case "decorationBusitype":
+                                propertyArr.push(["业务类型:", order.busitype[v.busitype], "red"]);
                                 break;
                             case "decorationStatus":
                                 var _text = $("<text>状态:</text>");
@@ -798,6 +851,10 @@
 
                         modalDrawLineModal(v);
                     });
+                    btnProLine.click(function() {
+
+                        pretreat(v);
+                    });
 
                     btnContract.click(function() {
 
@@ -847,6 +904,11 @@
                     btnService.click(function() {
 
                         viewDecorationService(v.orderId);
+                    });
+
+                    btnRefer.click(function() {
+
+                        viewDecorationRefer(v.orderId);
                     });
 
                     btnDctivity.click(function() {
@@ -933,6 +995,9 @@
                             case "revie":// 回访
                                 $divBtnWrap.append(btnRevie);
                                 break;
+                            case "proline":// 放线
+                                $divBtnWrap.append(btnProLine);
+                                break;
                             case "line":// 放线
                                 $divBtnWrap.append(btnLine);
                                 break;
@@ -990,6 +1055,9 @@
                                 break;
                             case "services":// 服务
                                 $divBtnWrap.append(btnService);
+                                break;
+                            case "refer":// 推荐
+                                $divBtnWrap.append(btnRefer);
                                 break;
                             case "activity":// 活动物品
                                 $divBtnWrap.append(btnDctivity);
@@ -1149,6 +1217,105 @@
             order.drawLineModal.modal("show");
         };
 
+        var pretreat = function(v) {
+
+            com.cleanTypeahead("supervisor");
+
+            params.decoration.orderId = v.orderId;
+
+            order.contructionNodeModal.modal("show");
+            order.nodeItems.contructionNodes.html("");
+
+            var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            var constructionNodes = {};
+
+            com.post(api.data.queryConstructionNode, {}, function(res) {
+
+                constructionNodes = res.constructionNodes.sort(function(a, b) {
+
+                    return a.sort - b.sort;
+                });
+            }, null, false);
+
+            $.each(constructionNodes, function(index, value) {
+
+                var $liLi = $('<li></li>').addClass('item-blue clearfix');
+                var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
+                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '6px');
+
+                var propertyArr = [["工期: ", null, "grey"]];
+
+                var $label = $('<label></label>').addClass('control-label').css({
+                    'color': 'grey',
+                    'font-size': '20px',
+                    "font-weight": "bold"
+                });
+
+                var _label = $('<label></label>');
+
+                var $input = $('<input>').attr({
+                    "type": "checkbox",
+                    "name": "sorts",
+                    "sort": value.sort,
+                    "cnid": value.cnid,
+                }).addClass('ace ace-checkbox-2');
+
+                var $text = $('<input>').attr({
+                    "type": "text",
+                    "name": "timeLimits",
+                    "text_sort": value.sort,
+                    "value": value.timeLimit,
+                    "cnid": value.cnid,
+                }).addClass('timeLimits ace ace-checkbox-2 v_required');
+
+                var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'normal').html(value.name);
+
+                _label.append($input).append(_span).appendTo($label);
+
+                $.each(propertyArr, function(index, value) {
+
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').attr('style', 'font-weight:normal;font-size:20px').html(value[0]).append($text).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                    $liProperty.appendTo($divBtnWrap);
+
+                    $label.appendTo($h3);
+
+                    $divBtnWrap.appendTo($h3);
+
+                    $liLi.append($h3).append($ulPro);
+                });
+
+                $liLi.append($h3).append($ulPro).appendTo($uli);
+            });
+
+            $uli.appendTo(order.nodeItems.contructionNodes);
+
+            var period = null;
+
+            com.post(api.data.queryConstructionPeriod, {
+                "constructionPeriod.lowerArea": v.house.innerArea
+            }, function(res) {
+
+                period = res.constructionPeriod;
+            }, null, false);
+
+            if (!period || !period.cpid)
+                return false;
+
+            com.post(api.data.queryConstructionPeriodNodeByCpid, {
+                "constructionPeriodNode.cpid": period.cpid
+            }, function(res) {
+
+                $.each(res.constructionPeriodNodes, function(i, v) {
+
+                    com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#contructionNodes").val(v.period);
+                });
+            });
+        }
+
         // 合同
         var modalAgreementModal = function(orderId, cid, data, pagetype) {
 
@@ -1272,7 +1439,7 @@
 
             var couponCut = 0;
             var thingCut = 0;
-            
+
             com.post(api.decoration.queryDecorationActivityItem, {
                 "decoration.orderId": decoration.orderId
             }, function(res) {
@@ -1282,7 +1449,7 @@
                 for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
 
                     var item = decorationActivityItems[i];
-                    
+
                     if ([constant.decoration().decorationActivityItem.STATUS_INIT_INT, constant.decoration().decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration().decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration().decorationActivityItem.STATUS_WAIT_INT, constant.decoration().decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) == -1)
                         continue;
 
@@ -1382,6 +1549,18 @@
             // com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + orderId);
         }
 
+        // 推荐
+        function viewDecorationRefer(orderId) {
+
+            // params.decoration.orderId = orderId;
+            // params.historyPage = api.index.decorationIndex.url;
+            // com.switchPage(api.index.decorationServiceIndex.url);
+
+            params.decoration.orderId = orderId;
+
+            com.popup4page("#layerPopUp", api.index.decorationReferIndex.url, "装修推荐: " + orderId);
+        }
+
         // 活动物品
         function viewDecorationActivity(orderId) {
 
@@ -1395,7 +1574,6 @@
             if (activity != null && activity.wizard != null) {
                 params.decoration.decorationActivityBtnSend = pageConfig.nodes.activity.wizard.btnSendD;
                 params.decoration.decorationActivityContent = pageConfig.nodes.activity.wizard.content;
-
             }
 
             com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修活动");
@@ -1406,7 +1584,7 @@
             params.sales.type = "advance";
             params.sales.sales = {
                 "orderId": orderId
-            };
+            }
 
             com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "销售活动");
         }
@@ -1718,7 +1896,7 @@
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['面积', 'house.buildArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['预签时间', 'precontractTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype']],
+                column: [["装修单号", "orderId"], ['楼盘', 'house.village.name'], ['楼号', 'house.houseNumber'], ['客户名', 'customer.name'], ['设计部', 'designer.dept.name'], ['设计师编号', 'designer.userId'], ['设计师', 'designer.currentName'], ['业务部', 'salesman.dept.name'], ['业务员编号', 'salesman.userId'], ['业务员', 'salesman.currentName'], ['建筑面积', 'house.buildArea'], ['计价面积', 'house.innerArea'], ['实收额', 'factPrice'], ['预签额', 'precontractPrice'], ['合同报价', 'orderTotalPrice'], ['量房时间', 'measureTime'], ['预签时间', 'precontractTime'], ['签单时间', 'contractTime'], ['状态', 'status'], ['工程状态', 'projectStatus'], ['订单类型', 'typeness'], ['业务类型', 'busitype']],
                 list: res.paging.data
             }, function(v) {
 

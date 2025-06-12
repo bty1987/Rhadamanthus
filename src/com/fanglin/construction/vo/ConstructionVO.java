@@ -29,11 +29,13 @@ public class ConstructionVO implements Serializable {
 
 	private DecorationVO decoration;
 
-	private UserBaseVO supervisor;
-
 	private Long cnid;
 
 	private Integer schedule;
+
+	private Integer process;
+
+	private Integer period;
 
 	private Short accessory;
 
@@ -45,9 +47,21 @@ public class ConstructionVO implements Serializable {
 
 	private Long salaryTotal;
 
+	private UserBaseVO supervisor;
+
 	private UserBaseVO locker;
 
+	private Timestamp createTime;
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
+	private Timestamp finishTime;
+
 	private Timestamp lockTime;
+
+	private Timestamp processTime;
 
 	public ConstructionVO() {
 		super();
@@ -69,14 +83,6 @@ public class ConstructionVO implements Serializable {
 		this.decoration = decoration;
 		this.supervisor = supervisor;
 		this.locker = locker;
-	}
-
-	public UserBaseVO getSupervisor() {
-		return supervisor;
-	}
-
-	public void setSupervisor(UserBaseVO supervisor) {
-		this.supervisor = supervisor;
 	}
 
 	public Long getCid() {
@@ -117,6 +123,22 @@ public class ConstructionVO implements Serializable {
 
 	public void setSchedule(Integer schedule) {
 		this.schedule = schedule;
+	}
+
+	public Integer getProcess() {
+		return process;
+	}
+
+	public void setProcess(Integer process) {
+		this.process = process;
+	}
+
+	public Integer getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Integer period) {
+		this.period = period;
 	}
 
 	public Short getAccessory() {
@@ -167,6 +189,50 @@ public class ConstructionVO implements Serializable {
 		this.locker = locker;
 	}
 
+	public UserBaseVO getSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(UserBaseVO supervisor) {
+		this.supervisor = supervisor;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getLockTime() {
 		return lockTime;
@@ -174,5 +240,14 @@ public class ConstructionVO implements Serializable {
 
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getProcessTime() {
+		return processTime;
+	}
+
+	public void setProcessTime(Timestamp processTime) {
+		this.processTime = processTime;
 	}
 }

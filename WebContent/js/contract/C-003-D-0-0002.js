@@ -124,7 +124,7 @@ jQuery(function($) {
         com.focusPage("#con-proper-name", "#form").val(proper.name);
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
-        com.focusPage("#cov-buildarea", "#form").val(house.buildArea);
+        com.focusPage("#cov-buildarea", "#form").val(house.innerArea);
         com.focusPage("#con-housetype", "#form").val(data.houseClass);
 
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);

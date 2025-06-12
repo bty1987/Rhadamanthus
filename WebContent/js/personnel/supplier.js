@@ -40,7 +40,6 @@
         statusType: {},
 
         roleList: {},
-
         userId: null,
         company: null,
         supplierUid: null,
@@ -128,7 +127,7 @@
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
-                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-yellow').html('合同');
+                    var $btnContract = $('<a></a>').addClass('btn btn-minier btn-success').html('合同');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
                     var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');

@@ -39,6 +39,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short STATUS_DISCOUNT_INT = 8; // 抵现
 
+	public static final short STATUS_PURCHER_INT = 9; // 采购
+
 	public static final short TYPE_COUPON_INT = 0; // 卷
 
 	public static final short TYPE_THING_INT = 1; // 物品
@@ -86,6 +88,10 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private int num;
 
 	private int money;
+
+	private int expendPrice;
+
+	private int discountPrice;
 
 	private UserPO creater;
 
@@ -204,6 +210,24 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setMoney(int money) {
 		this.money = money;
+	}
+
+	@Column(name = "expendPrice")
+	public int getExpendPrice() {
+		return expendPrice;
+	}
+
+	public void setExpendPrice(int expendPrice) {
+		this.expendPrice = expendPrice;
+	}
+
+	@Column(name = "discountPrice")
+	public int getDiscountPrice() {
+		return discountPrice;
+	}
+
+	public void setDiscountPrice(int discountPrice) {
+		this.discountPrice = discountPrice;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

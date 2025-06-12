@@ -4,6 +4,7 @@ jQuery(function($) {
 		htmlName: "payment",
 		depage: params['urlLoadParams'].depage,
 		type: params['urlLoadParams'].paytype,
+		profit: params['urlLoadParams'].profit,
 		paytypes: [],
 		payment: null,
 		items: {
@@ -337,9 +338,12 @@ jQuery(function($) {
 
 			//打印
 			$btnPrint.click(function(){
+			    
 				params.payment.pid = v.pid;
 				params.payment.orderId = v.decoration.orderId;
 				params.payment.cid = v.customer.cid;
+				params.payment.profit = payment.profit;
+				
 				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.paymentReceiptIndex.url, function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true)
@@ -502,6 +506,8 @@ jQuery(function($) {
 		}, function(res) {
 
 			payment.decoration = res.decoration;
+			
+			if(!payment.profit) payment.decoration.bompany = null;
 		}, null, false);
 
 		//info信息是分页显示信息的, util是下拉框信息

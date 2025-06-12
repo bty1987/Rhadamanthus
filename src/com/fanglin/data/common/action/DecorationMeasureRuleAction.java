@@ -38,8 +38,7 @@ public class DecorationMeasureRuleAction extends BaseListAction {
 		return decorationMeasures;
 	}
 
-	public void setDecorationMeasures(
-			List<DecorationMeasureRuleVO> decorationMeasures) {
+	public void setDecorationMeasures(List<DecorationMeasureRuleVO> decorationMeasures) {
 		this.decorationMeasures = decorationMeasures;
 	}
 

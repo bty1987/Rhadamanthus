@@ -16,7 +16,6 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
-import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 
 public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaItemPO> {
 
@@ -28,7 +27,7 @@ public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaI
 
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz, Long quotationFunctionAreaId, Short type);
 
-	public int updateQuotationFunctionAreaItemForIndex(String table, QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO) throws FLException;
+	public int updateQuotationFunctionAreaItemForIndex(String table, long qfaiid, int index) throws FLException;
 
 	public int deleteQuotationFunctionAreaItemByFunctionAreaId(String clazz, long functionAreaId);
 

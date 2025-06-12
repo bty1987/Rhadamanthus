@@ -69,14 +69,6 @@ public class RevisitAction extends BaseListAction implements Serializable {
 		return SUCCESS;
 	}
 
-	public RevisitService getRevisitService() {
-		return revisitService;
-	}
-
-	public void setRevisitService(RevisitService revisitService) {
-		this.revisitService = revisitService;
-	}
-
 	public List<RevisitVO> getRevisits() {
 		return revisits;
 	}

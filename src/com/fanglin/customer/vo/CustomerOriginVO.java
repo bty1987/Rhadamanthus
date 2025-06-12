@@ -32,6 +32,12 @@ public class CustomerOriginVO implements Serializable {
 
 	private String grade;
 
+	private String referOrderId;
+
+	private String source;
+
+	private String contact;
+
 	private VillageVO village;
 
 	private String houseNumber;
@@ -150,6 +156,30 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setGrade(String grade) {
 		this.grade = grade;
+	}
+
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
+	}
+
+	public String getSource() {
+		return source;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 
 	public VillageVO getVillage() {

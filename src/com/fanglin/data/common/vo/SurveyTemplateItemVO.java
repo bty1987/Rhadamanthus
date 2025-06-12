@@ -14,6 +14,8 @@ public class SurveyTemplateItemVO implements java.io.Serializable {
 
 	private Short type;
 
+	private Short require;
+
 	private String content;
 
 	private List<SurveyTemplateOptionVO> options;
@@ -57,6 +59,14 @@ public class SurveyTemplateItemVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getRequire() {
+		return require;
+	}
+
+	public void setRequire(Short require) {
+		this.require = require;
 	}
 
 	public String getContent() {

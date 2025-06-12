@@ -60,6 +60,8 @@ public class UserVO implements Serializable {
 
 	private Short isLogin;
 
+	private Short isPrefor;
+
 	private Short extranet;
 
 	private Short freedom;
@@ -243,6 +245,14 @@ public class UserVO implements Serializable {
 
 	public void setIsLogin(Short isLogin) {
 		this.isLogin = isLogin;
+	}
+
+	public Short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(Short isPrefor) {
+		this.isPrefor = isPrefor;
 	}
 
 	public Short getExtranet() {

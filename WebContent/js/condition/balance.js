@@ -349,6 +349,22 @@ Condition.addupRule("balance", {
             valuePath: "name",
         }
     },
+    "balanceSelection-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.balance().balanceSelection.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "balanceOales-balance-no": {
         label: "结算单号",
         type: "text",

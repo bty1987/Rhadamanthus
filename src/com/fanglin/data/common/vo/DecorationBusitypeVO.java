@@ -15,6 +15,12 @@ public class DecorationBusitypeVO implements Serializable {
 	private Short status;
 
 	private Integer company;
+	
+	private Short isRefer;
+
+	private Short isAward;
+
+	private Integer notSalesmanRate;
 
 	public DecorationBusitypeVO() {
 		super();
@@ -66,6 +72,30 @@ public class DecorationBusitypeVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Short getIsRefer() {
+		return isRefer;
+	}
+
+	public void setIsRefer(Short isRefer) {
+		this.isRefer = isRefer;
+	}
+
+	public Short getIsAward() {
+		return isAward;
+	}
+
+	public void setIsAward(Short isAward) {
+		this.isAward = isAward;
+	}
+
+	public Integer getNotSalesmanRate() {
+		return notSalesmanRate;
+	}
+
+	public void setNotSalesmanRate(Integer notSalesmanRate) {
+		this.notSalesmanRate = notSalesmanRate;
 	}
 
 }

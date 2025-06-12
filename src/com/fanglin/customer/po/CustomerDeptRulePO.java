@@ -39,6 +39,8 @@ public class CustomerDeptRulePO implements Serializable {
 
 	public static final short FOCUS_DEPT_INT = 2;
 
+	public static final short FOCUS_DEPT_TYPE_INT = 3;
+
 	private long cdrid;
 
 	private String name;

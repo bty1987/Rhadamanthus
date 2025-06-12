@@ -1,5 +1,6 @@
 package com.fanglin.construction.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -62,6 +63,15 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 	@Override
 	public ConstructionSchedulePO queryConstructionScheduleByCid(long cid, long cnid) {
 		return (ConstructionSchedulePO) session().createCriteria(ConstructionSchedulePO.class).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CID_STR, cid)).add(Restrictions.eq(ConstructionSchedulePO.COLUMN_CNID_STR, cnid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public int countConstructionSchedule(long cid, short status, short process) {
+
+		String sql = "select count(*) from construction.constructionschedule cs, data.constructionnode cn where cs.cid = :cid and cs.cnid = cn.cnid and cs.status = :status and cn.process = :process";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("cid", cid).setShort("status", status).setShort("process", process).uniqueResult();
+
+		return count.intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

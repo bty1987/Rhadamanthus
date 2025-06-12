@@ -24,6 +24,8 @@ public class UserExperienceVO implements Serializable {
 
 	private String type;
 
+	private Short isPrefor;
+
 	private Timestamp createTime;
 
 	private String comment;
@@ -56,6 +58,14 @@ public class UserExperienceVO implements Serializable {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Short getIsPrefor() {
+		return isPrefor;
+	}
+
+	public void setIsPrefor(Short isPrefor) {
+		this.isPrefor = isPrefor;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

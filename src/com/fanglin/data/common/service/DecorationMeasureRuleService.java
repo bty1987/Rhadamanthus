@@ -7,4 +7,5 @@ import com.fanglin.data.common.vo.DecorationMeasureRuleVO;
 public interface DecorationMeasureRuleService {
 
 	public List<DecorationMeasureRuleVO> queryDecorationMeasureRule();
+
 }

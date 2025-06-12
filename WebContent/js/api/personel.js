@@ -67,13 +67,23 @@ $.extend(api.index, {
     },
     supplierContract4create: {
         url: "/views/personnel/supplierContract4create.html"
-    },supplierContractBrand: {
+    },
+    supplierContractBrand: {
         url: "/views/personnel/supplierContractBrand.html"
-    },supplierContractGoods: {
+    },
+    supplierContractGoods: {
         url: "/views/personnel/supplierContractGoods.html"
-    },supplierSignet: {
+    },
+    supplierSignet: {
         url: "/views/data/supplierSignet.html"
+    },
+    userPartnerIndex: {
+        url: '/views/personnel/userPartner.html'
+    },
+    departmentPartnerIndex: {
+        url: '/views/personnel/departmentPartner.html'
     }
+    
 });
 
 $.extend(api, {
@@ -162,6 +172,30 @@ $.extend(api, {
             server: "communion"
         },
 
+        queryUserPartner: {
+            url: "queryUserPartner.do",
+        },
+        addUserPartner: {
+            url: "addUserPartner.do",
+            server: "communion"
+        },
+        deleteUserPartner: {
+            url: "deleteUserPartner.do",
+            server: "communion"
+        },
+        
+        queryDepartmentPartner: {
+            url: "queryDepartmentPartner.do",
+        },
+        addDepartmentPartner: {
+            url: "addDepartmentPartner.do",
+            server: "communion"
+        },
+        deleteDepartmentPartner: {
+            url: "deleteDepartmentPartner.do",
+            server: "communion"
+        },
+
         pageUserContractByUserId: {
             url: "pageUserContractByUserId.do"
         },
@@ -181,7 +215,6 @@ $.extend(api, {
             url: "queryUserContract.do"
         },
 
-        
         querySupplierContract: {
             url: "querySupplierContract.do"
         },
@@ -189,22 +222,31 @@ $.extend(api, {
             url: "viewSupplierContract.do"
         },
         signSupplierContractForCompany: {
-            url: "signSupplierContractForCompany.do"
+            url: "signSupplierContractForCompany.do",
+            server: "communion"
         },
-        signSupplierContractForUser: {
-            url: "signSupplierContractForUser.do"
+        signSupplierContractForSupplier: {
+            url: "signSupplierContractForSupplier.do",
+            server: "communion"
         },
         affixSupplierContract: {
-            url: "affixSupplierContract.do"
+            url: "affixSupplierContract.do",
+            server: "communion"
         },
         expireSupplierContract: {
-            url: "expireSupplierContract.do"
+            url: "expireSupplierContract.do",
+            server: "communion"
         },
         filingSupplierContract: {
-            url: "filingSupplierContract.do"
+            url: "filingSupplierContract.do",
+            server: "communion"
         },
         addSupplierContract: {
             url: "addSupplierContract.do",
+            server: "communion"
+        },
+        makeSupplierContract: {
+            url: "makeSupplierContract.do",
             server: "communion"
         },
         updateSupplierContract: {
@@ -215,7 +257,7 @@ $.extend(api, {
             url: "deleteSupplierContract.do",
             server: "communion"
         },
-        
+
         queryUserEducation: {
             url: "queryUserEducation.do"
         },
@@ -536,8 +578,11 @@ $.extend(api, {
         deleteSupplierContractBrand: {
             url: "deleteSupplierContractBrand.do"
         },
+        updateSupplierContractBrand: {
+            url: "updateSupplierContractBrand.do"
+        },
         pageSupplierContractGoods: {
-            url: "pageSupplierContractGoods.do"     
+            url: "pageSupplierContractGoods.do"
         },
         querySupplierContractGoods: {
             url: "querySupplierContractGoods.do"

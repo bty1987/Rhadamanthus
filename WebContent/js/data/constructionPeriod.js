@@ -5,13 +5,11 @@ jQuery(function($) {
         cpid: null,
 
         btns: {
-            saveBtn: com.focusPage("#saveBtn"),
-            updateBtn: com.focusPage("#updateBtn")
+            saveBtn: com.focusPage("#saveBtn").bindClick(saveData),
         },
 
         modals: {
-            addModal: com.focusPage("#addPeriodModal"),
-            updateModal: com.focusPage("#updateModal")
+            updatePeriodModal: com.focusPage("#updatePeriodModal"),
         },
 
         items: {
@@ -21,46 +19,13 @@ jQuery(function($) {
             upperArea: com.focusPage("#upperArea"),
             lowerArea: com.focusPage("#lowerArea"),
             period: com.focusPage("#period"),
-            company: com.focusPage("#company"),
-
-            uName: com.focusPage("#uName"),
-            uTypeness: com.focusPage("#uTypeness"),
-            uUpperArea: com.focusPage("#uUpperArea"),
-            uLowerArea: com.focusPage("#uLowerArea"),
-            uPeriod: com.focusPage("#uPeriod"),
-            uCompany: com.focusPage("#uCompany"),
         },
 
-        editFlg: false,
     };
 
-    var periodList = [];
-    var tem = {
-        "key": -1,
-        "value": ""
-    };
-    periodList.push(tem);
+    constructionPeriod.items.typeness.bindData(constant.decoration().decoration.typeness.datas, "key", "value").prop("-1", false);
 
-    $.each(constant.decoration().decoration.typeness.datas, function(i, val) {
-
-        periodList.push(val);
-    });
-
-    constructionPeriod.items.typeness.bindData(periodList, "key", "value").prop("-1", false);
-
-    constructionPeriod.items.uTypeness.bindData(periodList, "key", "value");
-
-    constructionPeriod.btns.saveBtn.bindClick(saveData);
-    constructionPeriod.btns.updateBtn.bindClick(update);
-
-    constructionPeriod.modals.addModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(constructionPeriod.items);
-        com.clearValidator();
-        com.closeTip();
-    });
-
-    constructionPeriod.modals.updateModal.on("hide.bs.modal", function() {
+    constructionPeriod.modals.updatePeriodModal.on("hide.bs.modal", function() {
 
         com.cleanItems(constructionPeriod.items);
         com.clearValidator();
@@ -74,16 +39,15 @@ jQuery(function($) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+            if (!listData || listData.length == 0)
+                return false;
 
-                    var $liLine = creatLine(v);
+            $.each(listData, function(i, v) {
 
-                    $liLine.appendTo($ul);
-                });
+                creatLine(v).appendTo($ul);
+            });
 
-                $ul.appendTo($tableWrap);
-            }
+            $ul.appendTo($tableWrap);
         };
 
         var creatLine = function(v) {
@@ -100,8 +64,8 @@ jQuery(function($) {
             });
             var $span = $('<span></span>').addClass('lbl status-lbl');
             var $btnUpdate = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
-
-            var propertyArr = [["工程名称: ", v.name, "blue"], ["类型: ", constant.decoration().decoration.typeness.keys[v.typeness], "red"], ["上面积: ", v.upperArea, "blue"], ["下面积: ", v.lowerArea, "blue"], ["工期: ", v.period, "blue"], ["公司: ", v.company, "blue"], ];
+            var $btnNode = $("<a></a>").addClass("btn btn-minier btn-yellow").html("节点");
+            var propertyArr = [["工程名称: ", v.name, "grey"], ["上面积: ", v.upperArea, "blue"], ["下面积: ", v.lowerArea, "blue"], ["工期: ", v.period, "blue"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -114,18 +78,27 @@ jQuery(function($) {
             $invalid.append($statusSwitch).append($span);
             $liLine.append($h3).append($ulProperty);
             $btnDiv.append($invalid).append($btnUpdate);
+            $btnDiv.append($btnUpdate).append($btnNode);
             $h3.append($title).append($btnDiv);
 
             $btnUpdate.click(function() {
 
                 constructionPeriod.cpid = v.cpid;
-                constructionPeriod.items.uName.val(v.name);
-                constructionPeriod.items.uTypeness.val(v.typeness);
-                constructionPeriod.items.uUpperArea.val(v.upperArea);
-                constructionPeriod.items.uLowerArea.val(v.lowerArea);
-                constructionPeriod.items.uPeriod.val(v.period);
-                constructionPeriod.items.uCompany.val(v.company);
-                constructionPeriod.modals.updateModal.modal("show");
+
+                constructionPeriod.items.name.val(v.name);
+                constructionPeriod.items.typeness.val(v.typeness);
+                constructionPeriod.items.upperArea.val(v.upperArea);
+                constructionPeriod.items.lowerArea.val(v.lowerArea);
+                constructionPeriod.items.period.val(v.period);
+
+                constructionPeriod.modals.updatePeriodModal.modal("show");
+            });
+
+            $btnNode.click(function() {
+
+                params.data.constructionPeriod = v;
+
+                com.popup4page("#periodPopUp", api.index.constructionNodeIndex.url, "工程节点工期 ");
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -148,10 +121,10 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-constructionPeriod-name"], "condList", api.data.pageConstructionPeriod, function(data) {
+    searcher.init(["data-constructionPeriod-name"], "periodCondList", api.data.pageConstructionPeriod, function(data) {
 
-        displayFunc.init('resultList', data);
-    }, "pagenation", "ConstructionPeriodPostData", null, false, null, function() {
+        displayFunc.init('periodResultList', data);
+    }, "periodPagenation", "constructionPeriodPostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addConstructionPeriod').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -162,42 +135,18 @@ jQuery(function($) {
 
     com.focusPage('#addConstructionPeriod').click(function() {
 
-        constructionPeriod.modals.addModal.modal("show");
+        constructionPeriod.cpid = null;
+
+        constructionPeriod.modals.updatePeriodModal.modal("show");
     });
-
-    function update() {
-
-        if (com.validate('updateModal')) {
-            return false;
-        }
-        ;
-
-        var options = {
-            "constructionPeriod.cpid": constructionPeriod.cpid,
-            "constructionPeriod.name": constructionPeriod.items.uName.val(),
-            "constructionPeriod.typeness": constructionPeriod.items.uTypeness.val(),
-            "constructionPeriod.upperArea": constructionPeriod.items.uUpperArea.val(),
-            "constructionPeriod.lowerArea": constructionPeriod.items.uLowerArea.val(),
-            "constructionPeriod.period": constructionPeriod.items.uPeriod.val(),
-            "constructionPeriod.company": constructionPeriod.items.uCompany.val()
-        }
-
-        com.post(api.data.updateConstructionPeriod, options, function(res) {
-
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-        });
-        constructionPeriod.modals.updateModal.modal("hide");
-    }
-    ;
 
     function saveData() {
 
-        if (com.validate('addPeriodModal')) {
+        if (com.validate('updatePeriodModal')) {
             return false;
         }
-        ;
+
+        var url = api.data.addConstructionPeriod;
 
         var options = {
             'constructionPeriod.name': constructionPeriod.items.name.val(),
@@ -205,17 +154,21 @@ jQuery(function($) {
             "constructionPeriod.upperArea": constructionPeriod.items.upperArea.val(),
             "constructionPeriod.lowerArea": constructionPeriod.items.lowerArea.val(),
             "constructionPeriod.period": constructionPeriod.items.period.val(),
-            "constructionPeriod.company": constructionPeriod.items.company.val()
         };
 
-        com.post(api.data.addConstructionPeriod, options, function(res) {
+        if (constructionPeriod.cpid) {
+            url = api.data.updateConstructionPeriod;
+            options["constructionPeriod.cpid"] = constructionPeriod.cpid;
+        }
+
+        com.post(url, options, function(res) {
 
             com.closePopup();
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-        });
 
-        constructionPeriod.modals.addModal.modal("hide");
+            constructionPeriod.modals.updatePeriodModal.modal("hide");
+        });
     }
 
 });

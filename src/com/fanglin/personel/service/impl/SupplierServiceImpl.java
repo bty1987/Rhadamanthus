@@ -160,6 +160,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 		supplierPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
 		supplierPO.setType(UserPO.TYPE_SUPPLIER_INT);
+		supplierPO.setExtranet((short) (UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
 
 		supplierDao.save(supplierPO);
 

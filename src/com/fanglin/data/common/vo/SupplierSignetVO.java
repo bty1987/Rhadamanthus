@@ -6,9 +6,9 @@ public class SupplierSignetVO implements Serializable {
 
 	private static final long serialVersionUID = 7539031381907707882L;
 
-	private long ssid;
-	
-	private long suid;//厂商ID
+	private Long ssid;
+
+	private Long suid;// 厂商ID
 
 	private String no;
 
@@ -16,7 +16,7 @@ public class SupplierSignetVO implements Serializable {
 
 	private String keyword;
 
-	private short status;
+	private Short status;
 
 	private String path;
 
@@ -26,7 +26,7 @@ public class SupplierSignetVO implements Serializable {
 
 	private String signno;
 
-	private short type;
+	private Short type;
 
 	private String company;
 
@@ -34,22 +34,21 @@ public class SupplierSignetVO implements Serializable {
 		super();
 	}
 
-	public long getSsid() {
+	public Long getSsid() {
 		return ssid;
 	}
 
-	public void setSsid(long ssid) {
+	public void setSsid(Long ssid) {
 		this.ssid = ssid;
 	}
 
-	public long getSuid() {
+	public Long getSuid() {
 		return suid;
 	}
 
-	public void setSuid(long suid) {
+	public void setSuid(Long suid) {
 		this.suid = suid;
 	}
-
 
 	public String getNo() {
 		return no;
@@ -75,11 +74,11 @@ public class SupplierSignetVO implements Serializable {
 		this.keyword = keyword;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
@@ -123,11 +122,11 @@ public class SupplierSignetVO implements Serializable {
 		this.company = company;
 	}
 
-	public short getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(short type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 

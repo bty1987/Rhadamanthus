@@ -27,62 +27,54 @@ import com.fanglin.core.action.BaseListAction;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class CustomerServiceBackVisitAction extends BaseListAction{
+public class CustomerServiceBackVisitAction extends BaseListAction {
 
 	private static final long serialVersionUID = -7891221344594615581L;
-	
+
 	@Autowired
 	private CustomerServiceBackVisitService customerServiceBackVisitService;
-	
+
 	private CustomerServiceBackVisitVO customerServiceBackVisit;
-	
+
 	private List<String> csbvIds;
-	
+
 	@Action(value = "pageCustomerServiceBackVisit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCustomerServiceBackVisit(){
-		
+	public String pageCustomerServiceBackVisit() {
+
 		customerServiceBackVisitService.pageCustomerServiceBackVisitByOrderId(getPaging(), getFilters(), customerServiceBackVisit);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addCustomerServiceBackVisit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addCustomerServiceBackVisit(){
-		
+	public String addCustomerServiceBackVisit() {
+
 		customerServiceBackVisitService.saveOrderUpdateCustomerServiceBackVisit(customerServiceBackVisit);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateCustomerServiceBackVisit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateCustomerServiceBackVisit(){
-		
+	public String updateCustomerServiceBackVisit() {
+
 		customerServiceBackVisitService.updateCustomerServiceBackVisit(customerServiceBackVisit);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteCustomerServiceBackVisit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCustomerServiceBackVisit(){
-		
+	public String deleteCustomerServiceBackVisit() {
+
 		customerServiceBackVisitService.deleteCustomerServiceBackVisits(csbvIds);
-		
+
 		return SUCCESS;
 	}
 
-	public CustomerServiceBackVisitVO getCustomerServiceBackVisit(){
-		return customerServiceBackVisit;
-	}
-
-	public void setCustomerServiceBackVisit(CustomerServiceBackVisitVO customerServiceBackVisit){
-		this.customerServiceBackVisit = customerServiceBackVisit;
-	}
-
-	public List<String> getCsbvIds(){
+	public List<String> getCsbvIds() {
 		return csbvIds;
 	}
 
-	public void setCsbvIds(List<String> csbvIds){
+	public void setCsbvIds(List<String> csbvIds) {
 		this.csbvIds = csbvIds;
 	}
 

@@ -1,0 +1,255 @@
+<div id="customerContent" class="widget-container-span col-md-12">
+	<div id="fl-statement" class=""></div>
+
+    <div class="widget-container-span col-xs-6 col-md-3" id="decorationInfo"></div>
+
+    <div class="widget-container-span col-xs-6 col-md-3" id="customerInfo"></div>
+
+   	<div id="add" class="widget-container-span col-xs-6 col-md-3">
+
+	    <a href="#" id="returnBtn" class="btn btn-info btn-app btn-sm radius-4"
+			style="padding: 5px 0;"> <i class="icon-mail-forward bigger-230"></i>
+			<span>返回</span>
+		</a>
+
+	</div>
+</div>
+
+<div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                    <div id="fl-statement2" class=""></div>
+                        <div class="" id="addFeedbackComplaint">
+                            <form class="form-horizontal" id="from">
+                                <div class="widget-main">
+						            <div class="col-xs-12">
+								
+                                        <div class="form-group col-sm-6">
+                                            <label for="orderId" class="col-sm-3 control-label no-padding-right orange">装修单号</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="orderId" type="text" maxlength="20" class="col-xs-10 col-sm-6 v_required" />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group col-sm-6">
+                                            <label for="source" class="col-sm-3 control-label no-padding-right orange">渠道</label>
+                                            <div class="col-sm-9">
+                                                <select id="source" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger="manual"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="phone" class="col-sm-3 control-label no-padding-right orange">电话</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="phone" maxlength="20" class="col-xs-10 col-sm-6 v_required"/>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="form-group col-sm-6">
+                                            <label for="upgrade" class="col-sm-3 control-label no-padding-right orange">是否升级</label>
+                                            <div class="col-md-9">
+                                                <select class="col-xs-10 col-sm-6 v_required" id="upgrade" ></select>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="form-group col-sm-6">
+                                            <label for="urgency" class="col-sm-3 control-label no-padding-right orange">紧急程度</label>
+                                            <div class="col-md-9">
+                                                <select class="col-xs-10 col-sm-6 v_required" id="urgency" ></select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-3 control-label no-padding-right orange" for="xzdeptType">部门类型</label>
+                                            <div class="col-sm-9" id="‌choiceDeptType">
+                                            
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="content" class="col-sm-3 control-label no-padding-right orange">问题总述</label>
+                                            <div class="col-md-9">
+                                                <textarea id="content" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3"></textarea>
+                                            </div>
+                                        </div> 
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="appeal" class="col-sm-3 control-label no-padding-right orange">客户诉求</label>
+                                            <div class="col-md-9">
+                                                <textarea id="appeal" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3"></textarea>
+                                            </div>
+                                        </div> 
+                                        
+                                        <div class="form-group col-sm-6">
+                                            <label for="results" class="col-sm-3 control-label no-padding-right orange">处理结果</label>
+                                            <div class="col-md-9">
+                                                <select class="col-xs-10 col-sm-6 v_required" id="results" ></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-3 control-label no-padding-right orange">上传图片</label>
+                                            <div class="col-sm-9">
+                                                <a id="infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement v_required" target="_blank">
+                                                </a>
+                                                <div id="path"></div>
+                                            </div>
+                                        </div>
+						            </div>
+					            </div>
+				            </div>
+                        </form>
+                        <div class="row-fluid wizard-actions" id="btnDisplay">
+                            <button class="btn btn-xs btn-warning" type="button" id="saveItemBtn" data-loading-text="保存中...">
+                                <i class="icon-ok bigger-110"></i>
+                                <span>保存</span>
+                            </button>       
+                        </div>
+				    </div>
+			    </div>
+            </div>    
+		</div>
+        <div class="modal fade" id="drawingModal" tabindex="-1">
+            <div class="modal-dialog" style="width:60%">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span>&times;</span><span class="sr-only">Close</span>
+                        </button>
+                        <h4 class="modal-title">投诉图片</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="row-fluid">
+                                    <ul class="ace-thumbnails" id="feedbackDrawing"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                            <a class="form-group" id="feedbackDrawingUpload"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+<div class="modal fade" id="updateFeedbackComplaintModal" tabindex="-1">
+     <div class="modal-dialog">
+        <div class="modal-content" style="width:1400px;margin-left:-80%">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">编辑投诉</h4>
+            </div>
+                <div class="modal-body">
+                            <form class="form-horizontal" id="from">
+                                <div class="widget-main">
+						            <div class="col-xs-12">
+								
+                                        <div class="form-group col-sm-6">
+                                            <label for="orderId1" class="col-sm-3 control-label no-padding-right orange">装修单号</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="orderId1" type="text" maxlength="20" class="col-xs-10 col-sm-6 v_required" />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group col-sm-6">
+                                            <label for="source1" class="col-sm-3 control-label no-padding-right orange">渠道</label>
+                                            <div class="col-sm-9">
+                                                <select id="source1" class="col-xs-10 col-sm-6 v_required"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="phone1" class="col-sm-3 control-label no-padding-right orange">电话</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="phone1" maxlength="20" class="col-xs-10 col-sm-6 v_required"/>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="form-group col-sm-6">
+                                            <label for="upgrade1" class="col-sm-3 control-label no-padding-right orange">是否升级</label>
+                                            <div class="col-md-9">
+                                                <select class="col-xs-10 col-sm-6 v_required" id="upgrade1" ></select>
+                                            </div>
+                                        </div>
+                    
+                                        <div class="form-group col-sm-6">
+                                            <label for="urgency1" class="col-sm-3 control-label no-padding-right orange">紧急程度</label>
+                                            <div class="col-md-9">
+                                                <select class="col-xs-10 col-sm-6 v_required" id="urgency1" ></select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group col-sm-6">
+                                            <label class="col-sm-3 control-label no-padding-right orange" for="xzdeptType1">部门类型</label>
+                                            <div class="col-sm-9" id="‌choiceDeptType1">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="content1" class="col-sm-3 control-label no-padding-right orange">问题总述</label>
+                                            <div class="col-md-9">
+                                                <textarea id="content1" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3"></textarea>
+                                            </div>
+                                        </div> 
+
+                                        <div class="form-group col-sm-6">
+                                            <label for="appeal1" class="col-sm-3 control-label no-padding-right orange">客户诉求</label>
+                                            <div class="col-md-9">
+                                                <textarea id="appeal1" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3"></textarea>
+                                            </div>
+                                        </div> 
+                                        
+                                        <div class="form-group col-sm-6">
+                                            <label for="results1" class="col-sm-3 control-label no-padding-right orange">处理结果</label>
+                                            <div class="col-md-9">
+                                                <select class="col-xs-10 col-sm-6 v_required" id="results1" ></select>
+                                            </div>
+                                        </div>
+						            </div>
+					            </div>
+                            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveItemBtn1" class="btn btn-primary">保存</button>
+                <button type="button" id="canceItemlBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="widget-container-span col-md-12">
+        <div id="fl-statement3" class=""></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="condListas1" class="fl_search clearfix"></div> <!-- 查询条件-->
+                <div id="resultListas1" class="clearfix tab-pane active"></div> <!--查询结果-->
+                <div id="pagenationFeedbackComplaint1" class="fl-page-wrap clearfix"></div> <!--分页-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="widget-container-span col-md-12">
+        <div id="fl-statement4" class=""></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="condListas" class="fl_search clearfix"></div> <!-- 查询条件-->
+                <div id="resultListas" class="clearfix tab-pane active"></div> <!--查询结果-->
+                <div id="pagenationFeedbackComplaint" class="fl-page-wrap clearfix"></div> <!--分页-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="feedbackComplaintPopUp" class="portlet box page-content"></div>
+
+<script type="text/javascript">
+	$.loadScript(['js/customer/feedbackComplaint.js']);
+</script>

@@ -18,8 +18,6 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Integer fincheck;
 
-	private Short status;
-
 	private Short checkout;
 
 	private String startalk;
@@ -32,17 +30,22 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Integer timeLimit;
 
+	private Short process;
+
 	private Short sort;
 
 	private String kino;
 
 	private String kiname;
 
+	private Short mark;
+
+	private Short status;
+
 	private Integer company;
 
 	public ConstructionNodeVO() {
 		super();
-
 	}
 
 	public ConstructionNodeVO(SurveyTemplateVO startSurvey, SurveyTemplateVO endSurvey) {
@@ -99,14 +102,6 @@ public class ConstructionNodeVO implements Serializable {
 		this.fincheck = fincheck;
 	}
 
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-
 	public Short getCheckout() {
 		return checkout;
 	}
@@ -155,6 +150,14 @@ public class ConstructionNodeVO implements Serializable {
 		this.timeLimit = timeLimit;
 	}
 
+	public Short getProcess() {
+		return process;
+	}
+
+	public void setProcess(Short process) {
+		this.process = process;
+	}
+
 	public Short getSort() {
 		return sort;
 	}
@@ -177,6 +180,22 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Short getMark() {
+		return mark;
+	}
+
+	public void setMark(Short mark) {
+		this.mark = mark;
 	}
 
 	public Integer getCompany() {

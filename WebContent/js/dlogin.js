@@ -1,7 +1,7 @@
 jQuery(function (a) {
 
     if (!parent.window.isPC) {
-        $('body').css('display', 'block')
+        $('body').css('display', 'block');
     }
 
     var count = 0;

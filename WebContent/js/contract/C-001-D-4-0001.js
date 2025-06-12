@@ -268,6 +268,7 @@ jQuery(function($) {
             com.post(url, options, function(res) {
 
                 com.closePopup();
+                mask.remove();
             }, function(res) {
 
                 com.showAlert(com.error, res.errorMsg);

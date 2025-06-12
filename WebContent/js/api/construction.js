@@ -175,8 +175,11 @@ $.extend(api, {
             demo: true,
             type: "query",
             tranargs: [{
+                result: "paging-data",
+                args: ["period"]
+            }, {
                 result: "paging-data-construction",
-                args: ["salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice"]
@@ -186,13 +189,25 @@ $.extend(api, {
             }]
         },
         queryConstructionScheduleByOrderId: {
-            url: "queryConstructionScheduleByOrderId.do"
+            url: "queryConstructionScheduleByOrderId.do",
+            tranargs: [{
+                result: "constructionSchedules",
+                args: ["period"]
+            }]
         },
         queryConstructionScheduleByCid: {
-            url: "queryConstructionScheduleByCid.do"
+            url: "queryConstructionScheduleByCid.do",
+            tranargs: [{
+                result: "constructionSchedules",
+                args: ["period"]
+            }]
         },
         queryConstructionScheduleByOrderIdASchedule: {
-            url: "queryConstructionScheduleByOrderIdASchedule.do"
+            url: "queryConstructionScheduleByOrderIdASchedule.do",
+            tranargs: [{
+                result: "constructionSchedules",
+                args: ["period"]
+            }]
         },
         beginConstructionSchedule: {
             url: "beginConstructionSchedule.do"
@@ -389,7 +404,18 @@ $.extend(api, {
             url: "applayDrawLine.do"
         },
         successDrawLine: {
-            url: "successDrawLine.do"
+            url: "successDrawLine.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionNodes.timeLimit"]
+            }
+        },
+        pretreatDrawLine: {
+            url: "pretreatDrawLine.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionNodes.timeLimit"]
+            }
         },
         failureDrawLine: {
             url: "failureDrawLine.do"

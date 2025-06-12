@@ -45,6 +45,8 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public List<DecorationPO> queryDecoration(List<Filter> filters) throws FLException;
 
+	public List<DecorationPO> queryDecorationForRefer(String orderId);
+
 	public List<DecorationPO> queryDecorationByCustomerId(Long customerId);
 
 	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys);

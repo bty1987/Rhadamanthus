@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.dao.HouseDao;
-import com.fanglin.communion.po.HousePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.PresignProducePO;
 import com.fanglin.data.quotation.vo.PresignProduceVO;
@@ -35,9 +33,6 @@ public class QuotationPreferServiceImpl implements QuotationPreferService {
 
 	@Autowired
 	private DecorationDao decorationDao;
-
-	@Autowired
-	private HouseDao houseDao;
 
 	@Override
 	public QuotationPreferVO queryQuotationPrefer(QuotationPreferVO quotationPreferVO) throws FLException {
@@ -80,15 +75,6 @@ public class QuotationPreferServiceImpl implements QuotationPreferService {
 
 		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(200005, "报价不能修改");
-		}
-
-		if (decorationPO.getHouse() != null && quotationPreferVO.getQuoteArea() != null) {
-
-			HousePO housePO = decorationPO.getHouse();
-
-			housePO.setInnerArea(quotationPreferVO.getQuoteArea());
-
-			houseDao.update(housePO);
 		}
 
 		QuotationPreferPO quotationPreferPO = quotationPreferDao.queryQuotationPreferByQid(quotationPreferVO.getQid());

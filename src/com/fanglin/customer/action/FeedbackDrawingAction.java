@@ -39,13 +39,39 @@ public class FeedbackDrawingAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "addFeedbackDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addFeedbackDrawing() throws FLException {
+	@Action(value = "queryFeedbackDrawingBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryFeedbackDrawingBySid() throws FLException {
 
-		feedbackDrawingService.addFeedbackDrawing(feedbackDrawing);
+		feedbackDrawings = feedbackDrawingService.queryFeedbackDrawingBySid(feedbackDrawing);
 
 		return SUCCESS;
 	}
+
+	@Action(value = "addFeedbackDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addFeedbackDrawing() throws FLException {
+
+		long fdid=feedbackDrawingService.addFeedbackDrawing(feedbackDrawing);
+		feedbackDrawing.setFdid(fdid);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "deleteFeedbackDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteFeedbackDrawing() throws FLException {
+
+		feedbackDrawingService.deleteFeedbackDrawing(feedbackDrawing);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateFeedbackDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateFeedbackDrawing() throws FLException {
+
+		feedbackDrawingService.updateFeedbackDrawingByFdids(feedbackDrawing);
+
+		return SUCCESS;
+	}
+	
 
 	public FeedbackVO getFeedback() {
 		return feedback;
