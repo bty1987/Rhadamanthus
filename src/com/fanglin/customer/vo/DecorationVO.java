@@ -31,6 +31,8 @@ public class DecorationVO implements Serializable {
 
 	private UserBaseVO supervisor;
 
+	private UserBaseVO materialer;
+
 	private Long customerId;
 
 	private String customerPhone;
@@ -53,11 +55,12 @@ public class DecorationVO implements Serializable {
 		super();
 	}
 
-	public DecorationVO(UserBaseVO designer, UserBaseVO salesman, UserBaseVO supervisor) {
+	public DecorationVO(UserBaseVO designer, UserBaseVO salesman, UserBaseVO supervisor, UserBaseVO materialer) {
 		super();
 		this.designer = designer;
 		this.salesman = salesman;
 		this.supervisor = supervisor;
+		this.materialer = materialer;
 	}
 
 	public String getOrderId() {
@@ -138,6 +141,14 @@ public class DecorationVO implements Serializable {
 
 	public void setSupervisor(UserBaseVO supervisor) {
 		this.supervisor = supervisor;
+	}
+
+	public UserBaseVO getMaterialer() {
+		return materialer;
+	}
+
+	public void setMaterialer(UserBaseVO materialer) {
+		this.materialer = materialer;
 	}
 
 	public Long getCustomerId() {

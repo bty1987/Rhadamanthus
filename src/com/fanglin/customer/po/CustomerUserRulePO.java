@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 import com.fanglin.customer.vo.CustomerUserRuleVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "customerUserRule", catalog = "customer")
@@ -46,6 +48,8 @@ public class CustomerUserRulePO implements Serializable {
 	public static final short STATUS_REGION_INVALID_INT = 3; // 分区失效
 
 	public static final short STATUS_DISABLE_INT = 4; // 禁用
+
+	public static final short STATUS_ADVANCE_INVALID_INT = 5; // 管理实效
 
 	private long curid;
 
@@ -279,6 +283,20 @@ public class CustomerUserRulePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public CustomerUserRulePO init(UserPO belonger, UserPO creater, int company) {
+
+		setPeriod(DateUtil.current("yyMM"));
+
+		setUser(belonger);
+		setCreater(creater);
+
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		setCompany(company);
+
+		return this;
 	}
 
 	public CustomerUserRuleVO ptv(CustomerUserRuleVO customerUserRuleVO) {

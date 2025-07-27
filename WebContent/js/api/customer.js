@@ -116,6 +116,14 @@ $.extend(api, {
                 args: ["buildArea", "freeArea", "totalArea", "innerArea"]
             }]
         },
+        queryCustomerOriginByCsid: {
+            url: "queryCustomerOriginByCsid.do",
+            type: "query",
+            tranargs: [{
+                result: "customerOrigin",
+                args: ["buildArea", "freeArea", "totalArea", "innerArea"]
+            }]
+        },
         addCustomerOrigin: {
             url: "addCustomerOrigin.do",
             type: "update",
@@ -602,6 +610,9 @@ $.extend(api, {
         addFeedbackRecord: {
             url: "addFeedbackRecord.do"
         },
+        queryFeedbackComplaintProblem: {
+            url: "queryFeedbackComplaintProblem.do"
+        },
         queryFeedbackComplaint: {
             url: "queryFeedbackComplaint.do"
         },
@@ -830,12 +841,20 @@ $.extend(api, {
             url: "deleteRepairpay.do"
         },
 
+        pageCppoint: {
+            url: "pageCppoint.do",
+            type: "query",
+            tranargs: [{
+                result: "cppoint",
+                args: ["dpoint", "spoint", "opoint"]
+            }]
+        },
         queryCppoint: {
             url: "queryCppoint.do",
             type: "query",
             tranargs: [{
                 result: "cppoint",
-                args: ["dpoint", "spoint"]
+                args: ["dpoint", "spoint", "opoint"]
             }]
         },
         queryCppointRecord: {
@@ -853,14 +872,14 @@ $.extend(api, {
             url: "addupCppoint.do",
             type: "update",
             tranargs: {
-                args: ["cppoint.dpoint", "cppoint.spoint"]
+                args: ["cppoint.dpoint", "cppoint.spoint", "cppoint.opoint"]
             }
         },
         useupCppoint: {
             url: "useupCppoint.do",
             type: "update",
             tranargs: {
-                args: ["cppoint.dpoint", "cppoint.spoint"]
+                args: ["cppoint.dpoint", "cppoint.spoint", "cppoint.opoint"]
             }
         },
 
@@ -892,6 +911,7 @@ $.extend(api, {
         deleteConversation: {
             url: "deleteConversation.do"
         }
+
 
     }
 });

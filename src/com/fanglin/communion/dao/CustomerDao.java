@@ -18,8 +18,10 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerDao extends Dao<CustomerPO> {
 
-	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, List<Long> cids, Integer company);
+	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, Integer company);
 
 	public List<CustomerPO> queryCustomerByPinyin(String pinyinName, int limit, Integer company);
+
+	public List<CustomerPO> queryCustomer(String phone);
 
 }

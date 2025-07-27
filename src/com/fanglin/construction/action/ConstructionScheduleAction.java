@@ -111,6 +111,14 @@ public class ConstructionScheduleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "resetConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetConstructionSchedule() throws FLException {
+
+		constructionScheduleService.resetConstructionSchedule(constructionSchedule);
+
+		return SUCCESS;
+	}
+
 	public ConstructionScheduleVO getConstructionSchedule() {
 		return constructionSchedule;
 	}

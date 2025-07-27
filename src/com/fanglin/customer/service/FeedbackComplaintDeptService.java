@@ -10,10 +10,10 @@ public interface FeedbackComplaintDeptService {
 
 	public List<FeedbackComplaintDeptVO> queryFeedbackComplaintDept(FeedbackComplaintDeptVO feedbackComplaintDept);
 
-	public long addFeedbackComplaintDept(FeedbackComplaintDeptVO feedbackComplaintDept, Authentication authentication) throws FLException;
+	public int addFeedbackComplaintDept(FeedbackComplaintDeptVO feedbackComplaintDept, Authentication authentication) throws FLException;
 
 	public int updateFeedbackComplaintDept(FeedbackComplaintDeptVO feedbackComplaintDept);
 
-	public void deleteFeedbackComplaintDept(FeedbackComplaintDeptVO feedbackComplaintDept) throws FLException;
+	public int deleteFeedbackComplaintDept(FeedbackComplaintDeptVO feedbackComplaintDept) throws FLException;
 
 }

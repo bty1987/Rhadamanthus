@@ -502,6 +502,11 @@ jQuery(function($) {
             return (customerChance.depage == null || customerChance.depage == "manage");
         }
     }, {
+        field: "source.comment",
+        name: "备注",
+        prop: "source.comment",
+        clazz: "grey"
+    }, {
         field: "comment",
         name: "备注",
         prop: "comment",

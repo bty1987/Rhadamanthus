@@ -2,7 +2,6 @@ package com.fanglin.salary.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,9 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.quotation.dao.NormriceItemDao;
+import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.salary.dao.WorkerBalanceDao;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerBalancePO;
@@ -32,7 +34,6 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -44,10 +45,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private WorkerSalaryDao workerSalaryDao;
 
 	@Autowired
-	private UserDao userDao;
-
-	@Autowired
-	private DecorationDao decorationDao;
+	private WorkerBalanceDao workerBalanceDao;
 
 	@Autowired
 	private ConstructionDao constructionDao;
@@ -56,7 +54,16 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private ConstructionScheduleDao constructionScheduleDao;
 
 	@Autowired
-	private WorkerBalanceDao workerBalanceDao;
+	private DecorationDao decorationDao;
+
+	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
+	private NormriceItemDao normriceItemDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -81,30 +88,12 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		}
 
 		List<WorkerSalaryPO> WorkerSalaryPOs = workerSalaryDao.pageWorkerSalary(paging, filters, company);
-
 		List<WorkerSalaryVO> WorkerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 
 		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs) {
-
-			workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-			if (workerSalaryPO.getDecoration() != null) {
-
-				workerSalaryVO.setDecoration(new DecorationVO());
-				workerSalaryVO.getDecoration().setSupervisor(new UserBaseVO());
-
-				workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
-			}
-
-			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO.getChecker(), workerSalaryVO.getChecker(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(), Arrays.asList("departmentType"));
-
-			WorkerSalaryVOs.add(workerSalaryVO);
+			WorkerSalaryVOs.add(workerSalaryPO.ptv(new WorkerSalaryVO(new DecorationVO(new UserBaseVO()), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
+
 		paging.setData(WorkerSalaryVOs);
 	}
 
@@ -115,50 +104,36 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		List<WorkerSalaryVO> workerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
-
-			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-			if (workerSalaryPO.getDecoration() != null) {
-
-				workerSalaryVO.setDecoration(new DecorationVO());
-				workerSalaryVO.getDecoration().setSupervisor(new UserBaseVO());
-
-				workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
-			}
-
-			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO.getChecker(), workerSalaryVO.getChecker(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(), Arrays.asList("departmentType"));
-
-			workerSalaryVOs.add(workerSalaryVO);
+			workerSalaryVOs.add(workerSalaryPO.ptv(new WorkerSalaryVO(new DecorationVO(new UserBaseVO()), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(workerSalaryVOs);
 	}
 
 	@Override
-	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
+	public List<WorkerSalaryVO> queryWorkerSalaryByOrderId(WorkerSalaryVO workerSalaryVO) {
 
-		List<WorkerSalaryPO> workerSalaryPOs = new ArrayList<WorkerSalaryPO>();
-
-		workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(), workerSalaryVO.getCsid());
-
-		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getDecoration().getOrderId());
+		List<WorkerSalaryVO> workerSalaryVOs = new ArrayList<WorkerSalaryVO>();
 
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
-
-			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo, Arrays.asList("user", "decoration", "creater", "approver", "checker"));
-			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryvo.getUser(), Arrays.asList("dept", "role", "duty"));
-
-			workerSalarys.add(workerSalaryvo);
+			workerSalaryVOs.add(workerSalaryPO.ptv(new WorkerSalaryVO(new DecorationVO(new UserBaseVO()), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
-		return workerSalarys;
+		return workerSalaryVOs;
+	}
+
+	@Override
+	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
+
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(), workerSalaryVO.getCsid());
+		List<WorkerSalaryVO> workerSalaryVOs = new ArrayList<WorkerSalaryVO>();
+
+		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
+			workerSalaryVOs.add(workerSalaryPO.ptv(new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+		}
+
+		return workerSalaryVOs;
 	}
 
 	@Override
@@ -168,27 +143,14 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		if (workerSalaryPO == null) return workerSalaryVO;
 
-		if (workerSalaryPO.getDecoration() != null) {
+		workerSalaryVO.setDecoration(new DecorationVO(new UserBaseVO()));
 
-			workerSalaryVO.setDecoration(new DecorationVO());
-			workerSalaryVO.getDecoration().setSupervisor(new UserBaseVO());
-
-			workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
-		}
-
-		workerSalaryVO.setApprover(new UserBaseVO());
-		workerSalaryVO.setCreater(new UserBaseVO());
-		workerSalaryVO.setChecker(new UserBaseVO());
 		workerSalaryVO.setUser(new UserBaseVO(new DutyVO()));
+		workerSalaryVO.setCreater(new UserBaseVO());
+		workerSalaryVO.setApprover(new UserBaseVO());
+		workerSalaryVO.setChecker(new UserBaseVO());
 
-		BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
-
-		BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
-		BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-		BeanUtil.copyProperties(workerSalaryPO.getChecker(), workerSalaryVO.getChecker(), Arrays.asList("dept", "role", "duty"));
-		BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(), Arrays.asList("dept", "role", "duty"));
-
-		BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(), Arrays.asList("departmentType"));
+		workerSalaryPO.ptv(workerSalaryVO);
 
 		workerSalaryVO.getDecoration().setDompany(CompanyServiceImpl.encode(workerSalaryPO.getDecoration().getCompany()));
 		workerSalaryVO.getDecoration().setConpany(CompanyServiceImpl.encode(workerSalaryPO.getDecoration().getConpany()));
@@ -238,6 +200,12 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			long salaryTotal = Arith.add(constructionPO.getSalaryTotal(), workerSalaryVO.getMoney());
 
 			if (salaryTotal > constructionPO.getSalaryLimit()) {
+				throw new FLException(280007, "工费已达上限");
+			}
+
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(constructionPO.getDecoration().getOrderId());
+
+			if (Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getCnid()), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getCnid()), constructionSchedulePO.getSalaryLimit())) {
 				throw new FLException(280007, "工费已达上限");
 			}
 
@@ -855,4 +823,20 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryVO.setType(workerSalaryPO.getType());
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsid());
+
+		if (workerSalaryPO == null) {
+			throw new FLException(280001, "薪资信息不存在");
+		}
+
+		workerSalaryPO.setAnnotate(workerSalaryVO.getAnnotate());
+
+		workerSalaryDao.update(workerSalaryPO);
+
+		return 0;
+	}
 }

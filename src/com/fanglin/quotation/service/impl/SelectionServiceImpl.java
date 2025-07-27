@@ -27,6 +27,7 @@ import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.SelectionVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("selectionService")
@@ -178,7 +179,11 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO) throws FLException {
+	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode) throws FLException {
+
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
 
 		String orderId = decorationVO.getOrderId();
 
@@ -192,12 +197,16 @@ public class SelectionServiceImpl implements SelectionService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
 
-		cusDecorationVO.setOrderId(orderId);
-		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
 
-		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO).getOrderId() == null) {
 			throw new FLException(330017, "装修单未绑定");
 		}
 
@@ -218,7 +227,7 @@ public class SelectionServiceImpl implements SelectionService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int sendSelection(SelectionVO selectionVO) throws FLException {
-		
+
 		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
 
 		String orderId = selectionPO.getOrderId();

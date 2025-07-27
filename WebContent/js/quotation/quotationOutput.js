@@ -487,7 +487,11 @@ function printWorkTable(workType) {
 
     $.each(quotationFunctionAreas, function(i, v) {
 
-        if (!workType || workType != i.split('-')[1]) {
+        if ((!workType || workType != i.split('-')[1]) && workType != "") {
+            return true;
+        }
+
+        if (workType == "" && i.split('-')[1] == "其他") {
             return true;
         }
 

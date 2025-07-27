@@ -98,6 +98,16 @@ jQuery(function($) {
             return v.isSend;
         }
     }, {
+        name: "复制",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            surveyTemplate.stid = v.stid;
+
+            copySurveyTemplate(v.stid);
+            return false;
+        }
+    }, {
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -161,21 +171,37 @@ jQuery(function($) {
 
         var group = $('<div class="form-group typetext typeitem"></div>').appendTo(surveyTemplate.items.itemlist);
 
-        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px; display: flex; align-items: center;"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("文本内容").appendTo(titleDiv);
-        var item = $('<div class="col-md-8"></div>').appendTo(titleDiv);
-        var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required"></div>').val(v.content).appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(titleDiv);
-        
+        var item = $('<div class="col-md-6"></div>').appendTo(titleDiv);
+        var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required">').val(v.content).appendTo(item);
+        var btnGroup = $('<div style="display: flex; margin-left: auto;"></div>').appendTo(titleDiv);
+
+        var moveUpBtn = $('<button class="btn btn-minier btn-info move-up" style="margin-left:5px"><i class="icon-arrow-up"></i></button>').appendTo(btnGroup);
+        var moveDownBtn = $('<button class="btn btn-minier btn-info move-down" style="margin-left:5px"><i class="icon-arrow-down"></i></button>').appendTo(btnGroup);
+        var deleteBtn = $('<button class="btn btn-minier btn-danger" style="margin-left:5px">删除</button>').appendTo(btnGroup);
+
         var requireDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("是否必填").appendTo(requireDiv);
         var item = $('<div class="col-md-8"></div>').appendTo(requireDiv);
         var require = $('<input type="checkbox" name="require" class=" ace ace-switch ace-switch-5" />').appendTo(item);
         var span = $('<span class="lbl isOrNot"></span>').appendTo(item);
-        
+
         if (v != null && v.require == 0) {
             require.prop('checked', true);
         }
+
+        moveUpBtn.click(function() {
+            var $group = $(this).parents(".typeitem");
+            moveItem($group, 'up');
+            return false;
+        });
+
+        moveDownBtn.click(function() {
+            var $group = $(this).parents(".typeitem");
+            moveItem($group, 'down');
+            return false;
+        });
 
         deleteBtn.click(function() {
 
@@ -195,11 +221,15 @@ jQuery(function($) {
 
         var group = $('<div class="form-group typeitem"></div>').addClass("type" + type).appendTo(surveyTemplate.items.itemlist);
 
-        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
+        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px; display: flex; align-items: center;"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("题目").appendTo(titleDiv);
-        var item = $('<div class="col-md-8"></div>').appendTo(titleDiv);
+        var item = $('<div class="col-md-6"></div>').appendTo(titleDiv);
         var input = $('<input type="text" class="col-xs-8 m-wrap title v_required"></div>').val(v ? v.name : "").appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(titleDiv);
+        var btnGroup = $('<div style="display: flex; margin-left: auto;"></div>').appendTo(titleDiv);
+
+        var moveUpBtn = $('<button class="btn btn-minier btn-info move-up" style="margin-left:5px"><i class="icon-arrow-up"></i></button>').appendTo(btnGroup);
+        var moveDownBtn = $('<button class="btn btn-minier btn-info move-down" style="margin-left:5px"><i class="icon-arrow-down"></i></button>').appendTo(btnGroup);
+        var deleteBtn = $('<button class="btn btn-minier btn-danger" style="margin-left:5px">删除</button>').appendTo(btnGroup);
 
         var requireDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("是否必填").appendTo(requireDiv);
@@ -207,10 +237,6 @@ jQuery(function($) {
         var require = $('<input type="checkbox" name="require" class=" ace ace-switch ace-switch-5" />').appendTo(item);
         var span = $('<span class="lbl isOrNot"></span>').appendTo(item);
         
-        if (v != null && v.require == 0) {
-            require.prop('checked', true);
-        }
-
         var radioDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("选项内容").appendTo(radioDiv);
         var item = $('<div class="col-md-8"></div>').appendTo(radioDiv);
@@ -221,6 +247,22 @@ jQuery(function($) {
         var optionDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right option" style="margin-top: 10px" for="name"></label>').html("所有选项").appendTo(optionDiv);
         var items = $('<div class="col-md-8 items" style="margin-top: 10px" id="seleted"></div>').appendTo(optionDiv);
+
+        if (v != null && v.require == 0) {
+            require.prop('checked', true);
+        }
+
+         moveUpBtn.click(function() {
+            var $group = $(this).parents(".typeitem");
+            moveItem($group, 'up');
+            return false;
+        });
+
+        moveDownBtn.click(function() {
+            var $group = $(this).parents(".typeitem");
+            moveItem($group, 'down');
+            return false;
+        });
 
         deleteBtn.click(function() {
 
@@ -280,23 +322,39 @@ jQuery(function($) {
 
     function drawinput(v) {
 
-        var group = $('<div class="form-group typeinput typeitem"></div>').appendTo(surveyTemplate.items.itemlist);
+        var group = $('<div class="form-group typeinput typeitem"></div>').attr({'data-stiid': v.stiid || '','data-sort': v.sort || $(".typeitem").length + 1}).appendTo(surveyTemplate.items.itemlist);
 
-        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
-        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("输入内容").appendTo(titleDiv);
-        var item = $('<div class="col-md-8"></div>').appendTo(titleDiv);
-        var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required"></div>').val(v ? v.name : "").appendTo(item);
-        var deleteBtn = $('<button class="btn btn-minier btn-danger"></button>').text("删除").appendTo(titleDiv);
+        var titleDiv = $('<div class="col-md-12" style="margin-top: 10px; display: flex; align-items: center;"></div>').appendTo(group);
+        var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("文本内容").appendTo(titleDiv);
+        var item = $('<div class="col-md-6"></div>').appendTo(titleDiv);
+        var input = $('<textarea type="text" style="height: 100px;" class="col-xs-8 m-wrap v_required">').val(v.name).appendTo(item);
+        var btnGroup = $('<div style="display: flex; margin-left: auto;"></div>').appendTo(titleDiv);
+
+        var moveUpBtn = $('<button class="btn btn-minier btn-info move-up" style="margin-left:5px"><i class="icon-arrow-up"></i></button>').appendTo(btnGroup);
+        var moveDownBtn = $('<button class="btn btn-minier btn-info move-down" style="margin-left:5px"><i class="icon-arrow-down"></i></button>').appendTo(btnGroup);
+        var deleteBtn = $('<button class="btn btn-minier btn-danger" style="margin-left:5px">删除</button>').appendTo(btnGroup);
 
         var requireDiv = $('<div class="col-md-12" style="margin-top: 10px"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("是否必填").appendTo(requireDiv);
         var item = $('<div class="col-md-8"></div>').appendTo(requireDiv);
         var require = $('<input type="checkbox" name="require" class=" ace ace-switch ace-switch-5" />').appendTo(item);
         var span = $('<span class="lbl isOrNot"></span>').appendTo(item);
-        
+
         if (v != null && v.require == 0) {
             require.prop('checked', true);
         }
+
+        moveUpBtn.click(function() {
+            var $group = $(this).parents(".typeitem");
+            moveItem($group, 'up');
+            return false;
+        });
+
+        moveDownBtn.click(function() {
+            var $group = $(this).parents(".typeitem");
+            moveItem($group, 'down');
+            return false;
+        });
 
         deleteBtn.click(function() {
 
@@ -312,6 +370,53 @@ jQuery(function($) {
         $('<hr/>').appendTo(surveyTemplate.items.itemlist);
     }
 
+    function checkedStyle($item) {
+        com.focusPage('.typeitem').removeClass('current');
+        $item.addClass('current');
+    }
+
+    function moveItem($item, direction) {
+        var $allItems = $(".typeitem");
+        var currentIndex = $allItems.index($item);
+
+        if ((direction === 'up' && currentIndex === 0) || (direction === 'down' && currentIndex === $allItems.length - 1)) {
+            return;
+        }
+
+        var $targetItem = direction === 'up' ? $allItems.eq(currentIndex - 1) : $allItems.eq(currentIndex + 1);
+
+        var tempSort = $item.attr('data-sort');
+        $item.attr('data-sort', $targetItem.attr('data-sort'));
+        $targetItem.attr('data-sort', tempSort);
+
+        var $currentHr = $item.next('hr');
+        var $targetHr = $targetItem.next('hr');
+
+        if (direction === 'up') {
+            var $movingGroup = $item.add($currentHr);
+            $movingGroup.insertBefore($targetItem);
+        } else {
+            $currentHr.detach();
+            $item.insertAfter($targetHr);
+            $currentHr.insertAfter($item);
+        }
+
+        checkedStyle($item);
+    }
+
+    function copySurveyTemplate(stid) {
+
+        var options = {
+             "surveyTemplate.stid": stid,
+        };
+
+        com.post(api.data.copySurveyTemplate, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+    }
+
     function editSurveyTemplate() {
 
         com.post(api.data.querySurveyTemplateByStid, {
@@ -322,6 +427,7 @@ jQuery(function($) {
 
             $.each(res.surveyTemplate.items, function(i, v) {
 
+                v.sort = v.sort || i + 1;
                 if (v.type == 0) {
                     drawtext(v);
                 } else if (v.type == 1) {
@@ -357,6 +463,9 @@ jQuery(function($) {
         com.focusPage("#itemlist").find(".typeitem").each(function(i, v) {
 
             var item = $(v);
+            var sort = i + 1;
+
+            args["surveyTemplate.items[" + i + "].sort"] = sort;
 
             if (item.hasClass("typetext")) {
 

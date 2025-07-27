@@ -470,13 +470,12 @@
         order.infoItems.dlmConpany.bindData(res.companys, "cid", "name", true);
         order.signItems.conpany.bindData(res.companys, "cid", "name", true);
     });
-
+    
     com.post(api.data.queryDecorationBusitype, {}, function(res) {
 
         $.each(res.decorationBusitypes, function(i, v) {
 
             order.busitype[v.dbid] = v.name;
-
         });
     });
 
@@ -560,6 +559,7 @@
 
                     var btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
 
+                    var btnProfile = $('<a></a>').addClass('btn btn-minier btn-success').html('画像');
                     var btnService = $('<a></a>').addClass('btn btn-minier btn-success').html('服务');
                     var btnRefer = $('<a></a>').addClass('btn btn-minier btn-success').html('推荐');
                     var btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
@@ -624,6 +624,9 @@
                                 break;
                             case "salesmanName":
                                 propertyArr.push(["业务员:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
+                                break;
+                            case "decorationBusitype":
+                                propertyArr.push(["业务类型:", order.busitype[v.busitype], "red"]);
                                 break;
                             case "materialerName":
                                 propertyArr.push(["跟单员:", v.materialer ? v.materialer.currentName : '', "grey", tools.personel.info, v.materialer ? v.materialer.userId : '']);
@@ -726,9 +729,6 @@
                             case "decorationType":
                                 propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
                                 break;
-                            case "decorationBusitype":
-                                propertyArr.push(["业务类型:", order.busitype[v.busitype], "red"]);
-                                break;
                             case "decorationStatus":
                                 var _text = $("<text>状态:</text>");
                                 var _info = $('<i class="icon-question-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
@@ -746,7 +746,12 @@
                                 propertyArr.push([_text, order.sourceStatus[v.sourceStatus], "red", _info]);
                                 break;
                             case "projectStatus":
-                                propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
+                            	 var _text = $("<text>工程状态:</text>");
+                                 var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
+//                                	 projectInfo(_text, v.orderId);‌
+                                     projectInfo(_text, v.orderId);
+                                 });
+                                propertyArr.push([_text, order.projectStatusArr[v.projectStatus], "red", _info]);
                                 break;
                             case "repairStatus":
                                 propertyArr.push(["保修状态:", order.repairStatus[v.repairStatus], "red"]);
@@ -901,6 +906,11 @@
                         viewDecorationFinalSettlement(v.orderId, v.typeness, v.status);
                     });
 
+                    btnProfile.click(function() {
+
+                        viewDecorationProfile(v.orderId);
+                    });
+
                     btnService.click(function() {
 
                         viewDecorationService(v.orderId);
@@ -1053,6 +1063,9 @@
                                     $divBtnWrap.append(btnCal);
                                 }
                                 break;
+                            case "profile":// 画像
+                                $divBtnWrap.append(btnProfile);
+                                break;
                             case "services":// 服务
                                 $divBtnWrap.append(btnService);
                                 break;
@@ -1162,6 +1175,57 @@
             com.switchPage(api.index.backVisitIndex.url);
             // com.popup4page("#layerPopUp", api.index.backVisitIndex.url, "装修单回访: " + orderId);
         };
+
+        function initPlan() {
+
+            com.focusPage('#calendar').fullCalendar('destroy');
+            com.focusPage('#calendar').fullCalendar('today');
+
+            com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
+                dayClick: function() { return false; },
+                eventClick: function() { return false; },
+                eventRender: function(event, element) {
+                    element.off('click');
+                },
+                viewRender: function(view, element) {
+                    $('.fc-day').off('click').css('pointer-events', 'none');
+                    $('.fc-event').off('click').css('pointer-events', 'none');
+                },
+                events: function(start, end, callback) {
+
+                    var startTime = com.dateFormat(new Date(start));
+                    var endTime = com.dateFormat(new Date(end));
+
+                    var options = {
+                        "constructionInfo.startTime": startTime,
+                        "constructionInfo.endTime": endTime
+                    };
+
+                    com.post(api.construction.countConstructionInfo, options, function(res) {
+
+                        var counts = res.count;
+                        var events = [];
+
+                        for ( var i in counts) {
+
+                            var _ = counts[i];
+                            var _date = _[0] + "";
+
+                            var event = {
+                                title: "已放线" + _[1] + "户",
+                                start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
+                                allDay: true
+                            };
+
+                            events.push(event);
+                        }
+
+                        callback(events);
+                    });
+                }
+            }));
+            $('.fc-day').off('click').css('pointer-events', 'none');  
+           }
         // 放线
         var modalDrawLineModal = function(v) {
 
@@ -1215,6 +1279,11 @@
             com.focusPage("#dischargeLineOrderId").val(v.orderId);
 
             order.drawLineModal.modal("show");
+
+            order.drawLineModal.on('shown.bs.modal', function(e) {
+
+                initPlan();
+            });
         };
 
         var pretreat = function(v) {
@@ -1417,6 +1486,19 @@
                 com.showTip(btn, "券优惠:" + couponCut1 + "<br\>物品优惠:" + thingCut + "<br\>优惠总额:" + utils.accAdd(couponCut1, thingCut) + "<br\>计入金额类型:" + couponCut2 + "<br\>不计入金额类型:" + couponCut3 + "<br\>计入业绩类型:" + couponCut1 + "<br\>不计入业绩类型:" + couponCut4);
             });
         };
+        
+     // 工程信息
+        var projectInfo = function(btn, orderId) {
+
+            com.post(api.construction.queryConstructionInfoByOrderId, {
+                "constructionInfo.orderId": orderId
+            }, function(res) {
+
+                var constructionInfo = res.constructionInfo;
+
+                com.showTip(btn, " 预计交钥匙时间:" + com.checkNull(constructionInfo.keyTime, "") + "<br\>预计放线时间:" + com.checkNull(constructionInfo.drawlineTime, "") + "<br\>预计完工时间:" + com.checkNull(constructionInfo.finishTime, "") + "<br\>预计设计完成时间:" + com.checkNull(constructionInfo.designTime, ""));
+            });
+        };
 
         // 签单额净业绩
         var netPerformanceo = function(btn, decoration) {
@@ -1536,6 +1618,18 @@
 
             com.switchPage(api.index.decorationFinalSettlementIndex.url);
             // com.popup4page("#layerPopUp", api.index.decorationFinalSettlementIndex.url, "装修单决算: " + orderId);
+        }
+
+        // 画像
+        function viewDecorationProfile(orderId) {
+
+            params.customer.orderId = orderId;
+            params.customer.profile = {
+                "orderId": orderId
+            }
+
+//            com.switchPage(api.index.customerProfile4detailIndex.url);
+             com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
         }
 
         // 服务
@@ -1904,6 +1998,7 @@
                 v.projectStatus = order.projectStatusArr[v.projectStatus];
                 v.typeness = order.typeness[v.typeness];
                 v.busitype = order.busitype[v.busitype];
+                
                 if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].indexOf(v.status) == -1)
                     v.house.houseNumber = '';
             });

@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "customer", catalog = "communion")
 public class CustomerPO implements Serializable {
@@ -398,5 +401,14 @@ public class CustomerPO implements Serializable {
 
 	public void setCompanyBankno(String companyBankno) {
 		this.companyBankno = companyBankno;
+	}
+
+	public CustomerVO ptv(CustomerVO customerVO) {
+
+		BeanUtil.copyProperties(this, customerVO, "phone");
+
+		customerVO.setConfidentialInfo();
+
+		return customerVO;
 	}
 }

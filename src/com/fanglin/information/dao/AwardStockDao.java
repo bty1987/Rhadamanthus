@@ -15,4 +15,6 @@ public interface AwardStockDao extends Dao<AwardStockPO> {
 
 	public List<AwardStockPO> queryAwardStockByName(String name, int limit, int company);
 
+	public AwardStockPO queryAwardStockByNo(String no, int company);
+
 }

@@ -21,19 +21,75 @@ jQuery(function($) {
 
         editFlag: false,
         fcdid: null,
-        fcid: params.customer.fcid
+        fcid: params.customer.fcid,
+        deptType: params.customer.deptType,
+
     };
-    
-    complaintDept.items.firstLevel.bindData(constant.customer().feedbackComplaintDept.firstLevel.datas, "key", "value");
-    complaintDept.items.secondary.bindData(constant.customer().feedbackComplaintDept.secondary.datas, "key", "value");
-    complaintDept.items.problemType.bindData(constant.customer().feedbackComplaintDept.problemType.datas, "key", "value");
+
+    var options = {};
+
+    if (params.customer.deptType.includes(",")) {
+        
+        var deptTypeList = complaintDept.deptType.split(',');
+        
+        $.each(deptTypeList, function(i, t) {
+
+            if (t == "设计") {
+                options["deptTypes[" + i + "]"] = 1;
+                return true;
+            }
+            if (t == "工程") {
+                options["deptTypes[" + i + "]"] = 2;
+                return true;
+            }
+            if (t == "主材") {
+                options["deptTypes[" + i + "]"] = 3;
+                return true;
+            }
+            if (t == "尺源") {
+                options["deptTypes[" + i + "]"] = 4;
+                return true;
+            }
+            if (t == "未知") {
+                options["deptTypes[" + i + "]"] = 5;
+                return true;
+            }
+        });
+    }
+
+    com.post(api.customer.queryFeedbackComplaintProblem, options, function(res) {
+
+        complaintDept.items.firstLevel.bindData(res.feedbackComplaintProblems, "fcpid", "name", "请选择");
+    });
+
+    var options = {};
+
+    complaintDept.items.firstLevel.on("change", function(b, d) {
+
+        options["deptTypes[" + i + "]"] = complaintDept.items.firstLevel.val();
+        com.post(api.customer.queryFeedbackComplaintProblem, options, function(res) {
+
+            complaintDept.items.secondary.bindData(res.feedbackComplaintProblems, "fcpid", "name", "请选择");
+        });
+    }).trigger("change");
+
+    var options = {};
+
+    complaintDept.items.secondary.on("change", function(b, d) {
+
+        options["deptTypes[" + i + "]"] = complaintDept.items.secondary.val();
+        com.post(api.customer.queryFeedbackComplaintProblem, options, function(res) {
+
+            complaintDept.items.problemType.bindData(res.feedbackComplaintProblems, "fcpid", "name", "请选择");
+        });
+    }).trigger("change");
 
     com.post(api.communion.queryDepartmentType, {}, function(res) {
 
         complaintDept.items.deptTypeSel.bindData(res.departmentTypes, "dtid", "name", true);
     });
 
-     complaintDept.items.deptTypeSel.on("change", function(b, d) {
+    complaintDept.items.deptTypeSel.on("change", function(b, d) {
 
         com.post(api.system.queryDutyByDtid, {
             "duty.departmentType.dtid": $(this).val()
@@ -42,7 +98,7 @@ jQuery(function($) {
             complaintDept.items.duty.bindData(res.dutys, "did", "name");
         });
 
-         com.post(api.communion.queryDepartmentByDtid, {
+        com.post(api.communion.queryDepartmentByDtid, {
             "dept.type.dtid": $(this).val()
         }, function(res) {
 
@@ -50,15 +106,14 @@ jQuery(function($) {
         });
     }).trigger("change");
 
-
-     com.initTypeahead(complaintDept.items.dutyUser, api.personel.queryUserByPinyin, "pinyinName", {
+    com.initTypeahead(complaintDept.items.dutyUser, api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
 
     var searcher = new Searcher();
 
-    var linebtns = [ {
+    var linebtns = [{
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
@@ -100,23 +155,20 @@ jQuery(function($) {
         prop: "dutyUser.userName",
         clazz: "green"
     }, {
-        fieId: "firstLevel",
+        fieId: "firstLevel.name",
         name: "一级分类",
-        prop: "firstLevel",
-        clazz: "red",
-        dataset:constant.customer().feedbackComplaintDept.firstLevel.keys
+        prop: "firstLevel.name",
+        clazz: "red"
     }, {
-        fieId: "secondary",
+        fieId: "secondary.name",
         name: "二级分类",
-        prop: "secondary",
-        clazz: "red",
-        dataset:constant.customer().feedbackComplaintDept.secondary.keys
+        prop: "secondary.name",
+        clazz: "red"
     }, {
-        fieId: "problemType",
+        fieId: "problemType.name",
         name: "问题类型",
-        prop: "problemType",
-        clazz: "red",
-        dataset:constant.customer().feedbackComplaintDept.problemType.keys
+        prop: "problemType.name",
+        clazz: "red"
     }];
 
     searcher.line("dept.name", lineprops, linebtns).render();
@@ -134,18 +186,16 @@ jQuery(function($) {
         if (com.validate('addFeedbackComplaintDeptModal')) {
             return false;
         }
+        
         var url = api.customer.addFeedbackComplaintDept;
-
         var options = {
-
             "feedbackComplaintDept.fcid": complaintDept.fcid,
             "feedbackComplaintDept.dept.did": complaintDept.items.deptType.val(),
             "feedbackComplaintDept.duty.did": complaintDept.items.duty.val(),
             "feedbackComplaintDept.dutyUser.userId": com.typeahead(complaintDept.items.dutyUser),
-            "feedbackComplaintDept.firstLevel": complaintDept.items.firstLevel.val(),
-            "feedbackComplaintDept.secondary": complaintDept.items.secondary.val(),
-            "feedbackComplaintDept.problemType": complaintDept.items.problemType.val(),
-
+            "feedbackComplaintDept.firstLevel.fcpid": complaintDept.items.firstLevel.val(),
+            "feedbackComplaintDept.secondary.fcpid": complaintDept.items.secondary.val(),
+            "feedbackComplaintDept.problemType.fcpid": complaintDept.items.problemType.val(),
         };
 
         if (complaintDept.editFlag) {

@@ -15,12 +15,14 @@ jQuery(function($) {
 
             signBtn: com.focusPage("#signBtn", "#userContractModal"),
             supplierSignBtn: com.focusPage("#supplierSignBtn", "#supplierContractModal"),
+            QRCodeSignBtn: com.focusPage("#QRCodeSignBtn", "#QRCodeContractModal"),
         },
 
         modals: {
             addContractModal: com.focusPage("#addContractModal"),
             userContractModal: com.focusPage("#userContractModal"),
             supplierContractModal: com.focusPage("#supplierContractModal"),
+            QRCodeContractModal: com.focusPage("#QRCodeContractModal"),
             qrcodeModal: null,
         },
 
@@ -31,6 +33,7 @@ jQuery(function($) {
 
             signet: com.focusPage("#signet"),
             supplierSignet: com.focusPage("#supplierSignet"),
+            QRCodeSignet: com.focusPage("#QRCodeSignet"),
         },
         htmls: {
             contractPopUp: com.focusPage("#contractPopUp")
@@ -69,6 +72,7 @@ jQuery(function($) {
     }, function(res) {
 
         supplierContracts.items.supplierSignet.bindData(res.signets, "ssid", "name", false);
+        supplierContracts.items.QRCodeSignet.bindData(res.signets, "ssid", "name", false);
     });
 
     com.post(api.data.querySignet, {}, function(res) {
@@ -271,6 +275,17 @@ jQuery(function($) {
             return v.status == 0 && (v.download && v.viewpdf);
         }
     }, {
+        name: "二维签",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            QRCodeSignet(v.scid);
+        },
+        show: function(v) {
+
+            return v.status == 0 && (v.download && v.viewpdf);
+        }
+    }, {
         type: "newline"
     }, {
         name: "查看通知",
@@ -359,6 +374,18 @@ jQuery(function($) {
         });
     });
 
+     supplierContracts.btns.QRCodeSignBtn.on('click', function() {
+
+        com.post(api.personel.signSupplierContractForSupplier, {
+            "supplierContract.scid": supplierContracts.scid,
+            "supplierSignet.ssid": supplierContracts.items.QRCodeSignet.val()
+        }, function(res) {
+
+            showQRCode(res.redirect);
+            supplierContracts.modals.QRCodeContractModal.modal("hide");
+        });
+    });
+
     // 保存
     supplierContracts.btns.saveBtn.on("click", function() {
 
@@ -410,8 +437,8 @@ jQuery(function($) {
 
         supplierContracts.items.qrcode.html("").qrcode({
             render: "canvas",
-            width: 150,
-            height: 150,
+            width: 300,
+            height: 300,
             text: url
         });
 
@@ -442,6 +469,12 @@ jQuery(function($) {
 
         supplierContracts.scid = scid;
         supplierContracts.modals.supplierContractModal.modal("show");
+    }
+
+    function QRCodeSignet(scid) {
+
+        supplierContracts.scid = scid;
+        supplierContracts.modals.QRCodeContractModal.modal("show");
     }
 
     // 生成合同

@@ -18,6 +18,8 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
@@ -50,6 +52,7 @@ import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("salesPaymentService")
@@ -67,6 +70,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Autowired
 	private SalesDao salesDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -857,7 +863,36 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSalesPayment(SalesPaymentVO salesPayment) throws FLException {
+	public int affirmSalesPayment(SalesPaymentVO salesPayment, String securityCode, String verifyCode) throws FLException {
+
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
+
+		String orderId = salesPayment.getSales().getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (salesPayment.getSales().getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (salesPayment.getSales().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(salesPayment.getSales().getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(salesPayment.getSales().getCustomer().getNo());
+
+		if (salesPayment.getSales().getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
+		}
 
 		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPayment.getSpid());
 

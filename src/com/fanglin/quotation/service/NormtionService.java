@@ -54,11 +54,11 @@ public interface NormtionService {
 
 	public NormtionVO queryNormtion(NormtionVO normtionVO) throws FLException;
 
-	public int makeNormtionForQuotation(NormtionVO normtionVO, Short schedule, String userId) throws FLException;
+	public int makeNormtion(NormtionVO normtionVO, Short schedule, String userId) throws FLException;
 
-	public int makeNormtionForExtension(NormtionVO normtionVO, ExtensionVO extensionVO, Short schedule, String userId) throws FLException;
+	public int makeNormtion(NormtionVO normtionVO, ExtensionVO extensionVO, Short schedule, String userId) throws FLException;
 
-	public int makeNormtionForAddReduce(NormtionVO normtionVO, AddReduceVO addReduceVO, Short schedule, String userId) throws FLException;
+	public int makeNormtion(NormtionVO normtionVO, AddReduceVO addReduceVO, Short schedule, String userId) throws FLException;
 
 	public int printNormtion(NormtionVO normtionVO) throws FLException;
 

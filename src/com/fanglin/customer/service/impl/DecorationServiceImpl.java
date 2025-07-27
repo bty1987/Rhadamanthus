@@ -10,12 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.CustomerDao;
-import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.DecorationDao;
 import com.fanglin.customer.po.DecorationPO;
@@ -32,25 +29,22 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("decorationServiceC")
 @Transactional(readOnly = true)
 public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
-	private DecorationDao cusDecorationDao;
+	private DecorationDao cecorationDao;
 
 	@Autowired
 	private com.fanglin.decoration.dao.DecorationDao decorationDao;
 
 	@Autowired
 	private DecorationUserDao decorationUserDao;
-
-	@Autowired
-	private CustomerPhoneDao customerPhoneDao;
 
 	@Autowired
 	private CustomerDao customerDao;
@@ -93,12 +87,12 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (decorationVO == null) {
 
-			List<DecorationPO> decorationPOs = cusDecorationDao.queryCusDecoration(unionId);
+			List<DecorationPO> decorationPOs = cecorationDao.queryCusDecoration(unionId);
 			List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 			for (DecorationPO decorationPO : decorationPOs) {
 
-				decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+				decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 				decorationPO.ptv(decorationVO, decorationDao.queryDecorationByOrderId(decorationPO.getOrderId()));
 
@@ -108,9 +102,9 @@ public class DecorationServiceImpl implements DecorationService {
 			return decorationVOs;
 		} else {
 
-			DecorationPO decorationPO = cusDecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId);
+			DecorationPO decorationPO = cecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId);
 
-			decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			if (decorationPO != null) {
 				decorationPO.ptv(decorationVO, decorationDao.queryDecorationByOrderId(decorationPO.getOrderId()));
@@ -123,9 +117,9 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public DecorationVO queryDecoration(DecorationVO decorationVO) {
 
-		DecorationPO decorationPO = cusDecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), decorationVO.getUnionId());
+		DecorationPO decorationPO = cecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), decorationVO.getUnionId());
 
-		decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		if (decorationPO != null) {
 			decorationPO.ptv(decorationVO, decorationDao.queryDecorationByOrderId(decorationPO.getOrderId()));
@@ -139,7 +133,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
-		decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		if (decorationPO != null) {
 
@@ -169,9 +163,9 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public DecorationVO queryCusDecorationForDefault(String unionId) throws FLException {
 
-		DecorationPO decorationPO = cusDecorationDao.queryCusDecorationForDefault(unionId);
+		DecorationPO decorationPO = cecorationDao.queryCusDecorationForDefault(unionId);
 
-		DecorationVO decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+		DecorationVO decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		if (decorationPO != null) {
 			decorationPO.ptv(decorationVO, decorationDao.queryDecorationByOrderId(decorationPO.getOrderId()));
@@ -211,50 +205,36 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException {
 
-		try {
-			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
-				throw new FLException(330010, "绑定订单失败,验证码错误");
-			}
-		} catch (Exception e) {
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
 		}
 
-		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(decorationVO.getCustomerPhone(), CustomerPhonePO.STATUS_ENABLE_INT, 0);
+		List<CustomerPO> customerPOs = customerDao.queryCustomer(decorationVO.getCustomerPhone());
 
-		if (customerPhonePOs == null || customerPhonePOs.size() == 0) {
+		if (customerPOs == null || customerPOs.size() == 0) {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		CustomerPO customerPO = customerDao.get(customerPhonePOs.get(0).getCid());
+		CustomerPO customerPO = customerPOs.get(0);
 
 		if (customerPO == null) {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		List<com.fanglin.decoration.po.DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerId(customerPO.getCid());
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), decorationVO.getCustomerPhone());
 
-		if (decorationPOs.size() == 0 || decorationPOs == null) {
+		if (decorationPO == null) {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		DecorationPO _decoration = cusDecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId);
+		DecorationPO _decorationPO = new DecorationPO();
 
-		if (_decoration != null) return 0;
+		_decorationPO.setOrderId(decorationPO.getOrderId());
+		_decorationPO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+		_decorationPO.setUnionId(unionId);
+		_decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
 
-		for (com.fanglin.decoration.po.DecorationPO decorationPO : decorationPOs) {
-
-			if (decorationVO.getOrderId().equals(decorationPO.getOrderId())) {
-
-				DecorationPO _decorationPO = new DecorationPO();
-
-				_decorationPO.setOrderId(decorationPO.getOrderId());
-				_decorationPO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
-				_decorationPO.setUnionId(unionId);
-				_decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
-
-				cusDecorationDao.save(_decorationPO);
-			}
-		}
+		cecorationDao.save(_decorationPO);
 
 		return 0;
 	}
@@ -263,25 +243,24 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateCusDecorationForDefault(DecorationVO decorationVO, String unionId) throws FLException {
 
-		DecorationPO decorationPO = cusDecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId);
+		DecorationPO decorationPO = cecorationDao.queryCusDecorationByOrderId(decorationVO.getOrderId(), unionId);
 
-		if (decorationPO != null) {
+		if (decorationPO == null) return 0;
 
-			DecorationPO _decorationPO = cusDecorationDao.queryCusDecorationForDefault(unionId);
+		DecorationPO decorationDO = cecorationDao.queryCusDecorationForDefault(unionId);
 
-			if (_decorationPO != null) {
+		if (decorationDO != null) {
 
-				_decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
-				decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_DEFAULT_SHORT);
+			decorationDO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
+			decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_DEFAULT_SHORT);
 
-				cusDecorationDao.update(_decorationPO);
-				cusDecorationDao.update(decorationPO);
-			} else {
+			cecorationDao.update(decorationDO);
+			cecorationDao.update(decorationPO);
+		} else {
 
-				decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_DEFAULT_SHORT);
+			decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_DEFAULT_SHORT);
 
-				cusDecorationDao.update(decorationPO);
-			}
+			cecorationDao.update(decorationPO);
 		}
 
 		return 0;
@@ -298,7 +277,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public int sendMessage(String orderId, String name, String content, String path) {
 
-		List<DecorationPO> decorationPOs = cusDecorationDao.queryCusDecorationByOrderId(orderId);
+		List<DecorationPO> decorationPOs = cecorationDao.queryCusDecorationByOrderId(orderId);
 
 		for (DecorationPO decorationPO : decorationPOs) {
 			messageService.sendMessage(decorationPO.getUnionId(), name, orderId, content, path);

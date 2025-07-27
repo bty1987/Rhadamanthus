@@ -20,4 +20,8 @@ public interface ConstructionPlanDao extends Dao<ConstructionPlanPO> {
 
 	public List<ConstructionPlanPO> queryConstructionPlanByOrderId(String orderId);
 
+	public ConstructionPlanPO queryConstructionPlan(String orderId, int sort);
+
+	public int countConstructionPlan(String orderId);
+
 }

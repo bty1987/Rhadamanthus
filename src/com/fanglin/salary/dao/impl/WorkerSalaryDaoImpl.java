@@ -1,5 +1,6 @@
 package com.fanglin.salary.dao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Arrays;
@@ -41,8 +42,14 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 		return query.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<WorkerSalaryPO> queryWorkerSalary(String orderId) {
+		return session().createCriteria(WorkerSalaryPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long csid) {
 		return session().createCriteria(WorkerSalaryPO.class).createAlias("user", "user").add(Restrictions.eq(WorkerSalaryPO.COLUMN_USERID_STR, userId)).add(Restrictions.eq(WorkerSalaryPO.COLUMN_CSID_STR, csid)).list();
 	}
@@ -57,6 +64,15 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	@SuppressWarnings("unchecked")
 	public List<WorkerSalaryPO> queryWorkerSalaryByCwsid(Long wsid) {
 		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.or(Restrictions.eq("wsid", wsid), Restrictions.eq("cwsid", wsid))).list();
+	}
+
+	@Override
+	public int amountWorkerSalary(long cid, long cnid) {
+
+		String sql = "select sum(if(type = 0, money, -money)) from salary.workersalary where cid =:cid and cnid = :cnid";
+		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("cid", cid).setLong("cnid", cnid).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
 	}
 
 	@Override

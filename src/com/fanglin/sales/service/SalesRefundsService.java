@@ -20,6 +20,6 @@ public interface SalesRefundsService {
 
 	public int sendSalesRefunds(SalesRefundsVO refundsVO) throws FLException;
 
-	public int affirmSalesRefunds(SalesRefundsVO refundsVO) throws FLException;
+	public int affirmSalesRefunds(SalesRefundsVO refundsVO, String securityCode, String verifyCode) throws FLException;
 
 }

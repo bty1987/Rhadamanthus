@@ -33,24 +33,6 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private static final long serialVersionUID = -4715729970075470712L;
 
-	public static final String COLUMN_CSID_STR = "csId";
-
-	public static final String COLUMN_CID_STR = "cid";
-
-	public static final String COLUMN_ORDERID_STR = "orderId";
-
-	public static final String COLUMN_SCHEDULE_STR = "schedule";
-
-	public static final short STATUS_INIT_INT = 0;
-
-	public static final short STATUS_BEGIN_INT = 1;
-
-	public static final short STATUS_FINISH_INT = 2;
-
-	public static final short CHECKOUT_VALID_INT = 0;
-
-	public static final short CHECKOUT_PASS_INT = 1;
-
 	public static final String COLUMN_CREATETIME_STR = "decoration.createTime";
 
 	public static final String COLUMN_FINISHTIME_STR = "endTime";
@@ -69,6 +51,12 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private long cnid;
 
+	private int period;
+
+	private Timestamp preStartTime;
+
+	private Timestamp preEndTime;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -84,6 +72,24 @@ public class ConstructionScheduleDO implements Serializable {
 	private short checkout;
 
 	private short schedule;
+
+	private short scheduleStatus;
+
+	private int accessoryLimit;
+
+	private int salaryLimit;
+
+	private int accessoryTotal;
+
+	private int salaryTotal;
+
+	private int precheck;
+
+	private int postcheck;
+
+	private int stacheck;
+
+	private int fincheck;
 
 	public ConstructionScheduleDO() {
 		super();
@@ -136,6 +142,33 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setCnid(long cnid) {
 		this.cnid = cnid;
+	}
+
+	@Column(name = "period")
+	public int getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(int period) {
+		this.period = period;
+	}
+
+	@Column(name = "preStartTime")
+	public Timestamp getPreStartTime() {
+		return preStartTime;
+	}
+
+	public void setPreStartTime(Timestamp preStartTime) {
+		this.preStartTime = preStartTime;
+	}
+
+	@Column(name = "preEndTime")
+	public Timestamp getPreEndTime() {
+		return preEndTime;
+	}
+
+	public void setPreEndTime(Timestamp preEndTime) {
+		this.preEndTime = preEndTime;
 	}
 
 	@Column(name = "startTime")
@@ -208,6 +241,78 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
+	}
+
+	public short getScheduleStatus() {
+		return scheduleStatus;
+	}
+
+	public void setScheduleStatus(short scheduleStatus) {
+		this.scheduleStatus = scheduleStatus;
+	}
+
+	public int getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(int accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
+	}
+
+	public int getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(int salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	public int getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(int accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
+	public int getSalaryTotal() {
+		return salaryTotal;
+	}
+
+	public void setSalaryTotal(int salaryTotal) {
+		this.salaryTotal = salaryTotal;
+	}
+
+	public int getPrecheck() {
+		return precheck;
+	}
+
+	public void setPrecheck(int precheck) {
+		this.precheck = precheck;
+	}
+
+	public int getPostcheck() {
+		return postcheck;
+	}
+
+	public void setPostcheck(int postcheck) {
+		this.postcheck = postcheck;
+	}
+
+	public int getStacheck() {
+		return stacheck;
+	}
+
+	public void setStacheck(int stacheck) {
+		this.stacheck = stacheck;
+	}
+
+	public int getFincheck() {
+		return fincheck;
+	}
+
+	public void setFincheck(int fincheck) {
+		this.fincheck = fincheck;
 	}
 
 }

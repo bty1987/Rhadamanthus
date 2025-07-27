@@ -32,6 +32,8 @@ public class SoodsVO implements Serializable {
 
 	private Short status;
 
+	private Short type;
+
 	private Integer company;
 
 	public SoodsVO() {
@@ -146,6 +148,14 @@ public class SoodsVO implements Serializable {
 
 	public void setBalance(Integer balance) {
 		this.balance = balance;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }

@@ -27,7 +27,7 @@ public class CppointRecordServiceImpl implements CppointRecordService {
 
 	public List<CppointRecordVO> queryCppointRecord(CppointVO cppointVO) {
 
-		List<CppointRecordPO> cppointRecordPOs = cppointRecordDao.queryCppointRecord(cppointVO.getCid());
+		List<CppointRecordPO> cppointRecordPOs = cppointRecordDao.queryCppointRecord(cppointVO.getCustomer().getCid());
 		List<CppointRecordVO> cppointRecordVOs = new ArrayList<CppointRecordVO>();
 
 		for (CppointRecordPO cppointRecordPO : cppointRecordPOs) {

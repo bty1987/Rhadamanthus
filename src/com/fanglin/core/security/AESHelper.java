@@ -77,7 +77,9 @@ public class AESHelper {
 	public static void main(String[] args) throws Exception {
 
 		System.out.println(AESHelper.decrypt("tTrLMQT/Z1omMHDuD4v1VQ==", "844dd1be967b6e9e", "cdb421d038104126"));
-		System.out.println(AESHelper.encrypt("fanglincommon", "844dd1be967b6e9e", "cdb421d038104126"));
+
+		System.out.println(AESHelper.encrypt("13840085846", "844dd1be967b6e9e", "cdb421d038104126"));
+		System.out.println(AESHelper.decrypt("4vi3KIIonEAImn58EfBhGQ==", "844dd1be967b6e9e", "cdb421d038104126"));
 
 		System.out.println(AESHelper.decrypt("zmL/NgmvG3wVuBeKeyozyzKCrctm5y5bZ2Xz2J1vqrUlDt6JQYJFhLrJNFMkYjMJHaJzxGaTeXj0vuBbwEL0fdIxamZpMXz3s1KoGejnMmTSEPVQRaTNbd43UQc/TJK8kf3U7FgT/TmlGDMIfZ8o+g==", "b4d617b336124c63", "b4d1a58a416957a5"));
 	}

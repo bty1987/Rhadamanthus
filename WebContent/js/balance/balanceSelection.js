@@ -23,14 +23,21 @@ jQuery(function($) {
 
         depage: params['urlLoadParams'].depage
     };
+    
+    var url = api.balance.pageBalanceSelection;
+    
+    if(balanceSelection.depage == "supplier"){
+        url = api.balance.pageBalanceSelectionForSupplier;
+    }
 
     com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
 
     var seacher = new Searcher();
+    var history = balanceSelection.depage + "balanceSelectionPostData";
 
-    seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSelection);
+    seacher.base("bscondList", "bspagenation", "bsresultList", url);
 
-    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelection-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelection-status", "balance-balanceSelse-brand", "balance-balanceSelection-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
 
     seacher.button([{
         id: "createBalanceSelection",
@@ -41,9 +48,14 @@ jQuery(function($) {
 
             return (balanceSelection.depage == "material");
         }
+    }, {
+        id: "export",
+        name: "导出",
+        clazz: "btn-success",
+        icon: "icon-plus"
     }]);
 
-    seacher.history(balanceSelection.depage + "balanceSelectionPostData");
+    seacher.history(history);
 
     var lineprops = [{
         fieId: "brand.name",
@@ -174,7 +186,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT) && balanceSelection.depage == "material";
+            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT) && (balanceSelection.depage == "material" || balanceSelection.depage == "supplier");
         }
     }, {
         name: "待审",
@@ -277,7 +289,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT) && (balanceSelection.depage == "material" || !balanceSelection.depage);
+            return (v.status == constant.balance().balanceSelection.STATUS_INIT_INT) && (balanceSelection.depage == "material" || balanceSelection.depage == "supplier" || !balanceSelection.depage);
         }
     }, {
         name: "解锁",
@@ -296,7 +308,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSelection.STATUS_UNLOCK_INT) && (balanceSelection.depage == "supplyChain" || !balanceSelection.depage);
+            return (v.status == constant.balance().balanceSelection.STATUS_UNLOCK_INT) && (balanceSelection.depage != "supplier");
         }
     }, {
         name: "打印",
@@ -314,6 +326,17 @@ jQuery(function($) {
 
             return (v.status != constant.balance().balanceSelection.STATUS_INIT_INT);
         }
+    },{
+        name: "记录",
+        clazz: "btn-inverse",
+        handle: function(v) {
+            console.log(v.bsid);
+            params.balance.bsid = v.bsid;
+            params.balance.type = 1;
+            com.popup4page("#stockRecordPopUp",  api.index.balanceSelectionRecordIndex.url, "结算选材记录");
+            
+            return false;
+        }
     }];
 
     seacher.line("name", lineprops, linebtus).render();
@@ -321,6 +344,39 @@ jQuery(function($) {
     com.focusPage('#createBalanceSelection').on("click", function() {
 
         balanceSelection.modals.createBalanceSelectionModal.modal("show");
+    });
+
+    com.focusPage('#export', '#bspagenation').on("click", function() {
+
+        var total = com.focusPage('span[name="totalRecords"]', "#bspagenation").text();
+
+        if (total == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (total > 2000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
+            return false;
+        }
+
+        com.post(url, $.extend({}, params[history], {
+            "paging.noPage": 1
+        }), function(res) {
+
+            $.exceler({
+                column: [['名称', 'name'], ['品牌名', 'brand.name'], ['状态', 'status'], ['等级', 'grade'], ['收入', 'income'], ['成本', 'cost'], ['应付', 'payment'], ['利润', 'profit'], ['创建人', 'creater.userName'], ['创建时间', 'createTime'], ['锁定时间', 'lockTime'], ['待审人', 'auditer.userName'], ['待审时间', 'auditTime'], ['审核人', 'balancer.userName'], ['审核时间', 'balanceTime']],
+                list: res.paging.data
+            }, function(v) {
+
+                v.status = constant.balance().balanceSelection.status.keys[v.status];
+                v.lockTime = v.lockTime == null ? "" : v.lockTime;
+                v.balancer.userName = v.balancer.userName == null ? "" : v.balancer.userName;
+                v.auditer.userName = v.auditer.userName == null ? "" : v.auditer.userName;
+                v.auditTime = v.auditTime == null ? "" : v.auditTime;
+                v.balanceTime = v.balanceTime ==  null ? "" : v.balanceTime;
+            });
+        });
     });
 
     function saveData() {

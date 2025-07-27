@@ -13,13 +13,12 @@
         label: "客户电话",
         type: "text",
         submitConfig: {
-            name: "customer.phone",
+            name: "phone",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,
                 "msg": "格式不正确A-Z,0-9"
-            },
-            alone: true
+            }
         },
     },
     "relationship": {

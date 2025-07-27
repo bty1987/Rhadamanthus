@@ -5,29 +5,48 @@
         construction: params.construction,
 
         modals: {
-            constructionPlanModal: com.focusPage("#constructionPlanModal")
+            constructionPlanModal: com.focusPage("#constructionPlanModal"),
+            editconstructionPlanModal: com.focusPage("#editConstructionPlanModal")
         },
 
         btns: {
             createConstructionPlanBtn: com.focusPage("#constructionPlanBtn"),
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+            editBtn: com.focusPage("#editBtn"),
             printBtn: com.focusPage("#printBtn")
         },
 
         items: {
-            name: com.focusPage("#name"),
-            startTime: com.focusPage("#startTime"),
-            endTime: com.focusPage("#endTime"),
-            comment: com.focusPage("#comment")
-        }
+            name: com.focusPage("#name", "#constructionPlanModal"),
+            comment: com.focusPage("#comment", "#constructionPlanModal"),
+            connum: com.focusPage("#connum", "#editConstructionPlanModal"),
+            comnum: com.focusPage("#comnum", "#editConstructionPlanModal"),
+            content: com.focusPage("#content", "#editConstructionPlanModal"),
+            editcomment: com.focusPage("#editcomment", "#editConstructionPlanModal")
+        },
+
+        startTime: new Date(params.construction.drawlineTime),
+        timenum: 0,
+
+        pace: {
+            "cpid": 0
+        },
     };
 
-    com.datetime(constructionPlan.items.startTime);
-    com.datetime(constructionPlan.items.endTime);
+    com.post(api.data.queryConstructionPace, {
+        "constructionPace.lowerArea": constructionPlan.construction.decoration.house.innerArea
+    }, function(res) {
 
-    com.post(api.data.queryConstructionPace, {}, function(res) {
+        if(res.constructionPlan.cpid) constructionPlan.pace = res.constructionPlan;
 
         constructionPlan.items.name.bindData(res.constructionPaces, "cpid", "name");
+    }, null, false);
+
+    com.post(api.data.queryConstructionPaceNode, {
+        "constructionPaceNode.cpid": constructionPlan.pace.cpid
+    }, function(res) {
+
+        constructionPlan.items.name.bindData(res.constructionPaceNodes, "cpid", "name");
     });
 
     var searcher = new Searcher();
@@ -46,28 +65,136 @@
             tools.decoration.info(btn, v.orderId);
         }
     }, {
+        field: "connum",
+        name: "工程天数",
+        prop: "connum",
+        clazz: "blue"
+    }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
         clazz: "green"
     }, {
-        field: "startTime",
-        name: "开始时间",
-        prop: "startTime",
+        field: "conStartTime",
+        name: "工程开始时间",
+        prop: function(v) {
+
+            var conStartTime = constructionPlan.startTime;
+
+            conStartTime.setDate(constructionPlan.startTime.getDate());
+
+            return com.dateFormat(conStartTime, "yyyy-MM-dd");
+        },
         clazz: "green"
     }, {
-        field: "endTime",
-        name: "结束时间",
-        prop: "endTime",
+        field: "conEndTime",
+        name: "工程结束时间",
+        prop: function(v) {
+
+            var conStartTime = constructionPlan.startTime;
+
+            conStartTime.setDate(constructionPlan.startTime.getDate() + v.connum);
+
+            return com.dateFormat(conStartTime, "yyyy-MM-dd");
+        },
         clazz: "green"
+    }, {
+        field: "comnum",
+        name: "主材天数",
+        prop: "comnum",
+        clazz: "blue"
+    }, {
+        field: "comStartTime",
+        name: "主材开始时间",
+        prop: function(v) {
+
+            var conStartTime = constructionPlan.startTime;
+
+            conStartTime.setDate(constructionPlan.startTime.getDate());
+
+            return com.dateFormat(conStartTime, "yyyy-MM-dd");
+        },
+        clazz: "green"
+    }, {
+        field: "comEndTime",
+        name: "主材结束时间",
+        prop: function(v) {
+
+            var conStartTime = constructionPlan.startTime;
+
+            conStartTime.setDate(constructionPlan.startTime.getDate() + v.comnum);
+
+            return com.dateFormat(conStartTime, "yyyy-MM-dd");
+        },
+        clazz: "green"
+    }, {
+        field: "phase",
+        name: "施工节点",
+        prop: "phase",
+        clazz: "blue"
+    }, {
+        field: "material",
+        name: "配套主材",
+        prop: "material",
+        clazz: "blue"
+    }, {
+        field: "period",
+        name: "进场周期",
+        prop: "period",
+        clazz: "blue"
     }, {
         field: "comment",
         name: "说明",
         prop: "comment",
         clazz: "grey"
+    }, {
+        field: "content",
+        name: "注释",
+        prop: "content",
+        clazz: "grey"
     }];
 
     var linebtus = [{
+        name: "编辑",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            com.cleanItems(constructionPlan.items);
+            constructionPlan.cpid = v.cpid;
+            constructionPlan.items.comnum.val(v.comnum), constructionPlan.items.connum.val(v.connum), constructionPlan.items.content.val(v.content), constructionPlan.items.editcomment.val(v.comment), constructionPlan.modals.editconstructionPlanModal.modal("show");
+
+            return false;
+        }
+    }, {
+        name: "上移",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            com.post(api.construction.moveConstructionPlan, {
+                "constructionPlan.cpid": v.cpid,
+                "constructionPlan.sort": v.sort - 1,
+            }, function() {
+
+                searcher.doSearch();
+            });
+            return false;
+        }
+    }, {
+        name: "下移",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            com.post(api.construction.moveConstructionPlan, {
+                "constructionPlan.cpid": v.cpid,
+                "constructionPlan.sort": v.sort + 1,
+            }, function() {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        }
+    }, {
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
@@ -82,9 +209,19 @@
 
             return false;
         }
-    }];
+    }, ];
 
-    searcher.line("pace.name", lineprops, linebtus).render();
+    searcher.line("node.name", lineprops, linebtus).render();
+
+    com.focusPage('#makeBtn').on("click", function() {
+
+        com.post(api.construction.makeConstructionPlan, {
+            "constructionPlan.orderId": constructionPlan.construction.decoration.orderId
+        }, function() {
+
+            searcher.doSearch();
+        });
+    });
 
     constructionPlan.btns.createConstructionPlanBtn.on("click", function() {
 
@@ -98,16 +235,37 @@
         com.popup("工程施工进度计划表", api.index.constructionPlan2print.url, null, null, true);
     });
 
+    constructionPlan.btns.editBtn.on("click", function() {
+
+        if (com.validate('editConstructionPlanModal'))
+            return false;
+
+        var options = {
+            "constructionPlan.cpid": constructionPlan.cpid,
+            "constructionPlan.comnum": constructionPlan.items.comnum.val(),
+            "constructionPlan.connum": constructionPlan.items.connum.val(),
+            "constructionPlan.content": constructionPlan.items.content.val(),
+            "constructionPlan.comment": constructionPlan.items.editcomment.val(),
+        };
+
+        com.post(api.construction.updateConstructionPlan, options, function() {
+
+            com.showAlert(com.info, "操作成功");
+            constructionPlan.modals.editconstructionPlanModal.modal("hide");
+            searcher.doSearch();
+        });
+
+    });
+
     function saveData() {
 
         if (com.validate('constructionPlanModal'))
             return false;
 
         var options = {
-            "constructionPlan.pace.cpid": constructionPlan.items.name.val(),
+            "constructionPlan.node.cpnid": constructionPlan.items.name.val(),
             "constructionPlan.orderId": constructionPlan.construction.decoration.orderId,
-            "constructionPlan.startTime": constructionPlan.items.startTime.val(),
-            "constructionPlan.endTime": constructionPlan.items.endTime.val(),
+            "constructionPlan.connumStartTime": constructionPlan.construction.drawlineTime,
             "constructionPlan.comment": constructionPlan.items.comment.val(),
         };
 

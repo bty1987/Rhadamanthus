@@ -40,9 +40,11 @@ public class QuotationVO implements Serializable {
 
 	private Timestamp lockTime;
 
+	private Timestamp finishTime;
+
 	private Integer workTime;
 
-	private Integer audiTime;
+	private Integer auditTime;
 
 	private UserBaseVO creater;
 
@@ -159,7 +161,7 @@ public class QuotationVO implements Serializable {
 		this.style = style;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd hh:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -186,6 +188,15 @@ public class QuotationVO implements Serializable {
 		this.lockTime = lockTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd hh:mm:ss")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
 	public Integer getWorkTime() {
 		return workTime;
 	}
@@ -194,12 +205,12 @@ public class QuotationVO implements Serializable {
 		this.workTime = workTime;
 	}
 
-	public Integer getAudiTime() {
-		return audiTime;
+	public Integer getAuditTime() {
+		return auditTime;
 	}
 
-	public void setAudiTime(Integer audiTime) {
-		this.audiTime = audiTime;
+	public void setAuditTime(Integer auditTime) {
+		this.auditTime = auditTime;
 	}
 
 	public UserBaseVO getCreater() {

@@ -12,8 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -53,10 +51,6 @@ public class OalesPayPO implements Serializable {
 	private int company;
 
 	public OalesPayPO() {
-		super();
-	}
-
-	public OalesPayPO(HousePO house, CustomerPO customer, UserPO supplier) {
 		super();
 	}
 

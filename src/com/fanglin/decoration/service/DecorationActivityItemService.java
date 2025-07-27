@@ -41,6 +41,6 @@ public interface DecorationActivityItemService {
 
 	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
 
-	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems) throws FLException;
+	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems, String securityCode, String verifyCode) throws FLException;
 
 }

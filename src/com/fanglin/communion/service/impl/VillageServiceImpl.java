@@ -108,8 +108,10 @@ public class VillageServiceImpl implements VillageService {
 		if (villageVO.getParentVillage() != null) villagePO.setParentVillage(villageDao.get(villageVO.getParentVillage().getNo()));
 
 		villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
+
 		villagePO.setPinyinAB((String) PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
 		villagePO.setPinyinAll((String) PinYin4Util.getPinyin(villageVO.getName()).get(0));
+
 		villagePO.setCompany(company);
 
 		villageDao.save(villagePO);
@@ -149,6 +151,7 @@ public class VillageServiceImpl implements VillageService {
 		villagePO.setCityProper(new CityProperPO(villageVO.getCityProper().getCpid()));
 		villagePO.setPinyinAB((String) PinYin4Util.getPinYinHeadChar(villageVO.getName()).get(0));
 		villagePO.setPinyinAll((String) PinYin4Util.getPinyin(villageVO.getName()).get(0));
+		villagePO.setMileage(villageVO.getMileage());
 
 		if (villageVO.getParentVillage() != null) villagePO.setParentVillage(villageDao.get(villageVO.getParentVillage().getNo()));
 

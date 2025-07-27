@@ -35,11 +35,11 @@ public class FeedbackComplaintDeptPO implements Serializable {
 
 	private UserPO dutyUser;
 
-	private short firstLevel;
+	private FeedbackComplaintProblemPO firstLevel;
 
-	private short secondary;
+	private FeedbackComplaintProblemPO secondary;
 
-	private short problemType;
+	private FeedbackComplaintProblemPO problemType;
 
 	private Timestamp createTime;
 
@@ -93,30 +93,33 @@ public class FeedbackComplaintDeptPO implements Serializable {
 		this.dutyUser = dutyUser;
 	}
 
-	@Column(name = "firstLevel")
-	public short getFirstLevel() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "firstLevel", referencedColumnName = "fcpid")
+	public FeedbackComplaintProblemPO getFirstLevel() {
 		return firstLevel;
 	}
 
-	public void setFirstLevel(short firstLevel) {
+	public void setFirstLevel(FeedbackComplaintProblemPO firstLevel) {
 		this.firstLevel = firstLevel;
 	}
 
-	@Column(name = "secondary")
-	public short getSecondary() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "secondary", referencedColumnName = "fcpid")
+	public FeedbackComplaintProblemPO getSecondary() {
 		return secondary;
 	}
 
-	public void setSecondary(short secondary) {
+	public void setSecondary(FeedbackComplaintProblemPO secondary) {
 		this.secondary = secondary;
 	}
 
-	@Column(name = "problemType")
-	public short getProblemType() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "problemType", referencedColumnName = "fcpid")
+	public FeedbackComplaintProblemPO getProblemType() {
 		return problemType;
 	}
 
-	public void setProblemType(short problemType) {
+	public void setProblemType(FeedbackComplaintProblemPO problemType) {
 		this.problemType = problemType;
 	}
 
@@ -131,11 +134,14 @@ public class FeedbackComplaintDeptPO implements Serializable {
 
 	public FeedbackComplaintDeptVO ptv(FeedbackComplaintDeptVO feedbackComplaintDeptVO) {
 
-		BeanUtil.copyPropertie(this, feedbackComplaintDeptVO, Arrays.asList("dept", "duty", "dutyUser"));
+		BeanUtil.copyPropertie(this, feedbackComplaintDeptVO, Arrays.asList("dept", "duty", "dutyUser", "firstLevel", "secondary", "problemType"));
 
 		if (feedbackComplaintDeptVO.getDept() != null && getDept() != null) BeanUtil.copyProperties(getDept(), feedbackComplaintDeptVO.getDept());
 		if (feedbackComplaintDeptVO.getDuty() != null && getDuty() != null) BeanUtil.copyProperties(getDuty(), feedbackComplaintDeptVO.getDuty());
 		if (feedbackComplaintDeptVO.getDutyUser() != null && getDutyUser() != null) feedbackComplaintDeptVO.getDutyUser().ptv(getDutyUser());
+		if (feedbackComplaintDeptVO.getFirstLevel() != null && getFirstLevel() != null) BeanUtil.copyProperties(getFirstLevel(), feedbackComplaintDeptVO.getFirstLevel());
+		if (feedbackComplaintDeptVO.getSecondary() != null && getSecondary() != null) BeanUtil.copyProperties(getSecondary(), feedbackComplaintDeptVO.getSecondary());
+		if (feedbackComplaintDeptVO.getProblemType() != null && getProblemType() != null) BeanUtil.copyProperties(getProblemType(), feedbackComplaintDeptVO.getProblemType());
 
 		return feedbackComplaintDeptVO;
 	}

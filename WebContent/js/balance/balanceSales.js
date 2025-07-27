@@ -28,6 +28,7 @@ jQuery(function($) {
     com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
 
     var seacher = new Searcher();
+    var history = "balanceSalesPostData";
 
     seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSales);
 
@@ -38,9 +39,14 @@ jQuery(function($) {
         name: "创建",
         clazz: "btn-yellow",
         icon: "icon-plus"
+    }, {
+        id: "export",
+        name: "导出",
+        clazz: "btn-success",
+        icon: "icon-plus"
     }]);
 
-    seacher.history("balanceSalesPostData");
+    seacher.history(history);
 
     var lineprops = [{
         fieId: "balance.no",
@@ -296,6 +302,37 @@ jQuery(function($) {
     com.focusPage('#createBalanceSales').on("click", function() {
 
         balanceSales.modals.createBalanceSalesModal.modal("show");
+    });
+
+    com.focusPage('#export', '#bspagenation').on("click", function() {
+
+        var total = com.focusPage('span[name="totalRecords"]', "#bspagenation").text();
+
+        if (total == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (total > 2000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
+            return false;
+        }
+
+        com.post(api.balance.pageBalanceSales, $.extend({}, params[history], {
+            "paging.noPage": 1
+        }), function(res) {
+
+            $.exceler({
+                column: [['名称', 'name'], ['结算单号', 'balance.no'], ['品牌名', 'brand.name'], ['状态', 'status'], ['等级', 'grade'], ['收入', 'income'], ['成本', 'cost'], ['应付', 'payment'], ['利润', 'profit'], ['创建人', 'creater.userName'], ['创建时间', 'createTime'], ['结算人', 'balancer.userName'], ['结算时间', 'balanceTime'], ['锁定时间', 'lockTime']],
+                list: res.paging.data
+            }, function(v) {
+
+                v.status = constant.balance().balanceSales.status.keys[v.status];
+                v.lockTime = v.lockTime == null ? "" : v.lockTime;
+                v.balancer.userName = v.balancer.userName == null ? "" : v.balancer.userName;
+                v.balanceTime = v.balanceTime ==  null ? "" : v.balanceTime;
+            });
+        });
     });
 
     function saveData() {

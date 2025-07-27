@@ -69,6 +69,8 @@ public class BrandPO implements java.io.Serializable {
 
 	private short status;
 
+	private short numtype;
+
 	public BrandPO() {
 		super();
 	}
@@ -76,12 +78,6 @@ public class BrandPO implements java.io.Serializable {
 	public BrandPO(long bid) {
 		super();
 		this.bid = bid;
-	}
-
-	public BrandPO(long bid, String name) {
-		super();
-		this.bid = bid;
-		this.name = name;
 	}
 
 	@Id
@@ -221,6 +217,15 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "numtype")
+	public short getNumtype() {
+		return numtype;
+	}
+
+	public void setNumtype(short numtype) {
+		this.numtype = numtype;
 	}
 
 	public BrandVO ptv(BrandVO brandVO) {

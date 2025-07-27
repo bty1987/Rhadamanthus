@@ -45,23 +45,28 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 
 	}
 
+	@Override
+	public AwardStockPO queryAwardStockByNo(String no, int company) {
+		return (AwardStockPO) session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq("no", no)).setMaxResults(1).uniqueResult();
+	}
+
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if (AwardStockPO.COLUMN_NO_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				} else if (AwardStockPO.COLUMN_NAME_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				} else if (AwardStockPO.STATUS_TYPE_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				} else if (AwardStockPO.STATUS_STOREROOM_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				} else if (AwardStockPO.COLUMN_SUBTYPE_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				} else if (AwardStockPO.COLUMN_STATUS_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-				}
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+			if (AwardStockPO.COLUMN_NO_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+			} else if (AwardStockPO.COLUMN_NAME_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+			} else if (AwardStockPO.STATUS_TYPE_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+			} else if (AwardStockPO.STATUS_STOREROOM_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+			} else if (AwardStockPO.COLUMN_SUBTYPE_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
+			} else if (AwardStockPO.COLUMN_STATUS_STR.equals(filter.getField())) {
+				query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 			}
 		}
 	}

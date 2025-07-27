@@ -1,0 +1,90 @@
+<div id="salesProfileDetailModal" class="page-content">
+
+	<div id="particulars">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-md-12">
+					<h3 class="blue center" id="name"></h3>
+					<p id="title" style="text-indent: 20px;"></p>
+				</div>
+			</div>
+			<div class="form-group" id="itemlist"></div>
+		</form>
+	</div>
+
+	<div class="modal fade" id="makeProfileModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">调研</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-md-3 control-label no-padding-right" for="orderId">装修单号</label>
+							<div class="col-sm-8">
+								<input type="text" class="col-xs-8 m-wrap v_required" id="orderId"> <span
+									class="required"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-3 control-label no-padding-right" for="surveyTemplate">调研模板</label>
+							<div class="col-sm-8">
+								<input type="text" class="col-xs-8 m-wrap" maxlength="11" id="surveyTemplate"> <span
+									class="required"></span>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveSurvey" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addBrandModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="villageDialog">添加品牌</h4>
+				</div>
+
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+								<div class="form-group default">
+									<label class="col-sm-3 control-label no-padding-right" for="brandName">品牌</label>
+									<div class="col-sm-9">
+										<input type="text" id="brandName" maxlength="12"
+											class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
+											data-trigger='manual' />
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="saveBrandBtn" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+</div>
+
+<script>
+	$.loadScript(['js/sales/salesProfile4detail.js']);
+</script>

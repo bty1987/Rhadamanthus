@@ -19,6 +19,8 @@ public class ExtensionVO implements Serializable {
 
 	private DecorationVO decoration;
 
+	private QuotationVO quotation;
+
 	private Short type;
 
 	private Short atttype;
@@ -62,9 +64,10 @@ public class ExtensionVO implements Serializable {
 		this.eid = eid;
 	}
 
-	public ExtensionVO(DecorationVO decoration, UserBaseVO creater) {
+	public ExtensionVO(DecorationVO decoration, QuotationVO quotation, UserBaseVO creater) {
 		super();
 		this.decoration = decoration;
+		this.quotation = quotation;
 		this.creater = creater;
 	}
 
@@ -90,6 +93,14 @@ public class ExtensionVO implements Serializable {
 
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
+	}
+
+	public QuotationVO getQuotation() {
+		return quotation;
+	}
+
+	public void setQuotation(QuotationVO quotation) {
+		this.quotation = quotation;
 	}
 
 	public Short getType() {

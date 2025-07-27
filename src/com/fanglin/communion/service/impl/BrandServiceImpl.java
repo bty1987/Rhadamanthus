@@ -204,6 +204,7 @@ public class BrandServiceImpl implements BrandService {
 		brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		brandPO.setAtttype(brandVO.getAtttype());
 		brandPO.setStatus(BrandPO.STATUS_ENABLE_INT);
+		brandPO.setNumtype(brandVO.getNumtype());
 		brandPO.setCompany(company);
 
 		brandDao.save(brandPO);

@@ -22,8 +22,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.dao.ConstructionRecordDao;
 import com.fanglin.construction.dao.QualiterDao;
 import com.fanglin.construction.po.ConstructionPO;
+import com.fanglin.construction.po.ConstructionRecordPO;
 import com.fanglin.construction.po.QualiterPO;
 import com.fanglin.construction.service.ConstructionService;
 import com.fanglin.construction.vo.ConstructionVO;
@@ -49,6 +51,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Autowired
 	private ConstructionDao constructionDao;
+
+	@Autowired
+	private ConstructionRecordDao constructionRecordDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -174,7 +179,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateConstructionByOrderId(ConstructionVO constructionVO, List<QualiterVO> qualiters) throws FLException {
+	public void updateConstructionByOrderId(ConstructionVO constructionVO, List<QualiterVO> qualiters, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionVO.getOrderId());
 
@@ -192,7 +197,11 @@ public class ConstructionServiceImpl implements ConstructionService {
 			decorationPO.setConpany(CompanyServiceImpl.decode(constructionVO.getDecoration().getConpany()));
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		UserPO supervisor = userDao.queryUserByUserId(constructionVO.getSupervisor().getUserId());
+
+		constructionRecordDao.save(new ConstructionRecordPO().init(constructionPO.getDecoration().getOrderId(), constructionPO.getCid(), operater, ConstructionRecordPO.TYPE_COMMON_INT, String.format("更换监理, 原监理: %s(%s), 现监理: %s(%s)", decorationPO.getSupervisor() != null ? decorationPO.getSupervisor().getCurrentName() : "-", decorationPO.getSupervisor() != null ? decorationPO.getSupervisor().getUserId() : "-", supervisor.getCurrentName(), supervisor.getUserId())));
 
 		constructionPO.setSupervisor(supervisor);
 

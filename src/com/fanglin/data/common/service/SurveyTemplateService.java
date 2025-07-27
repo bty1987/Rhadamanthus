@@ -23,4 +23,5 @@ public interface SurveyTemplateService {
 
 	public int deleteSurveyTemplate(SurveyTemplateVO surveyTemplate) throws FLException;
 
+	public int copySurveyTemplate(SurveyTemplateVO surveyTemplate, int company) throws FLException;
 }

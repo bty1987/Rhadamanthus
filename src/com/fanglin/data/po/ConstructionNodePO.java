@@ -57,6 +57,10 @@ public class ConstructionNodePO implements Serializable {
 
 	private int timeLimit;
 
+	private int salaryLimit;
+
+	private int accessoryLimit;
+
 	private short process;
 
 	private short sort;
@@ -248,6 +252,24 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "salaryLimit")
+	public int getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(int salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	@Column(name = "accessoryLimit")
+	public int getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(int accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
 	}
 
 	public ConstructionNodeVO ptv(ConstructionNodeVO constructionNodeVO) {

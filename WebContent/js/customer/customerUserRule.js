@@ -303,7 +303,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 4 && customerUserRule.depage == null;
+            return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
         }
     }, {
         name: "项目",
@@ -318,19 +318,31 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status != 4 && customerUserRule.depage == null;
+            return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
         }
     }, {
         name: "开始接单",
         clazz: "btn-success",
         handle: function(v, check) {
 
-            if (v.status == 4) {
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
                 com.showAlert(com.warning, "状态不可操作.");
                 return false;
             }
 
             var status = customerUserRule.depage == "dept" ? 2 : (customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company") ? 3 : 1;
+            
+            if(customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company"){
+                status = constant.customer().customerUserRule.STATUS_REGION_INVALID_INT;
+            }
+            
+            if(customerUserRule.depage == "dept"){
+                status = constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT;
+            }
+            
+            if(customerUserRule.depage == null){
+                status = constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT;
+            }
 
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
@@ -347,19 +359,31 @@ $(function() {
         },
         show: function(v) {
 
-            return (v.status == 1 || v.status == 2 || v.status == 3);
+            return (v.status == 1 || v.status == 2 || v.status == 3 || v.status == 5);
         }
     }, {
         name: "停止接单",
         clazz: "btn-danger",
         handle: function(v, check) {
 
-            if (v.status == 4) {
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
                 com.showAlert(com.warning, "状态不可操作.");
                 return false;
             }
 
             var status = customerUserRule.depage == "dept" ? 2 : (customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company") ? 3 : 1;
+            
+            if(customerUserRule.depage == "fatherDept" || customerUserRule.depage == "company"){
+                status = constant.customer().customerUserRule.STATUS_REGION_INVALID_INT;
+            }
+            
+            if(customerUserRule.depage == "dept"){
+                status = constant.customer().customerUserRule.STATUS_DEPT_INVALID_INT;
+            }
+            
+            if(customerUserRule.depage == null){
+                status = constant.customer().customerUserRule.STATUS_ADVANCE_INVALID_INT;
+            }
 
             com.post(api.customer.updateCustomerUserRuleForStatus, {
                 "customerUserRule.curid": v.curid,
@@ -372,7 +396,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.customer().customerUserRule.STATUS_ENABLE_INT;
         }
     }, {
         name: "状态",
@@ -380,7 +404,7 @@ $(function() {
         clazz: "status-lbl",
         handle: function(v, check) {
 
-            if (v.status == 4) {
+            if (v.status == constant.customer().customerUserRule.STATUS_DISABLE_INT) {
                 com.showAlert(com.warning, "状态不可操作.");
                 return false;
             }

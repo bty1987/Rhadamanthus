@@ -13,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.construction.vo.ConstructionInfoVO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "ConstructIoninfo", catalog = "construction")
@@ -192,6 +194,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public ConstructionInfoVO ptv(ConstructionInfoVO constructionInfoVO) {
+
+		BeanUtil.copyProperties(this, constructionInfoVO, "decoration");
+
+		if (constructionInfoVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(constructionInfoVO.getDecoration());
+
+		return constructionInfoVO;
 	}
 
 }

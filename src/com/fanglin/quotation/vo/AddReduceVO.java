@@ -57,6 +57,10 @@ public class AddReduceVO implements Serializable {
 
 	private Integer accountDiscount;
 
+	private Integer accountManageDiscount;
+
+	private Integer accountTaxDiscount;
+
 	private Long undisPrice;
 
 	private Long disPrice;
@@ -93,6 +97,11 @@ public class AddReduceVO implements Serializable {
 
 	public AddReduceVO() {
 		super();
+	}
+
+	public AddReduceVO(Long arId) {
+		super();
+		this.arId = arId;
 	}
 
 	public AddReduceVO(DecorationVO decoration, UserBaseVO creater, ConstructionNodeVO constructionNode) {
@@ -228,6 +237,22 @@ public class AddReduceVO implements Serializable {
 
 	public void setAccountDiscount(Integer accountDiscount) {
 		this.accountDiscount = accountDiscount;
+	}
+
+	public Integer getAccountManageDiscount() {
+		return accountManageDiscount;
+	}
+
+	public void setAccountManageDiscount(Integer accountManageDiscount) {
+		this.accountManageDiscount = accountManageDiscount;
+	}
+
+	public Integer getAccountTaxDiscount() {
+		return accountTaxDiscount;
+	}
+
+	public void setAccountTaxDiscount(Integer accountTaxDiscount) {
+		this.accountTaxDiscount = accountTaxDiscount;
 	}
 
 	public Long getUndisPrice() {

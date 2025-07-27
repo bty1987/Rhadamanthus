@@ -22,6 +22,8 @@ public class CategoryPO implements java.io.Serializable {
 
 	public static final String COLUMN_ISCOUNT_STR = "isCount";
 
+	public static final short ISLIMIT_LIMIT_INT = 0;
+
 	private long cid;
 
 	private String no;
@@ -33,6 +35,8 @@ public class CategoryPO implements java.io.Serializable {
 	private short isCoupon;
 
 	private short isCount;
+
+	private short isLimit;
 
 	private String kino;
 
@@ -101,6 +105,15 @@ public class CategoryPO implements java.io.Serializable {
 
 	public void setIsCount(short isCount) {
 		this.isCount = isCount;
+	}
+
+	@Column(name = "isLimit")
+	public short getIsLimit() {
+		return isLimit;
+	}
+
+	public void setIsLimit(short isLimit) {
+		this.isLimit = isLimit;
 	}
 
 	@Column(name = "kino")

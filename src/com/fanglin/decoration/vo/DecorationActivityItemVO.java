@@ -14,6 +14,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Long aid;
 
+	private String no;
+
 	private String orderId;
 
 	private String activityName;
@@ -80,6 +82,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setAid(Long aid) {
 		this.aid = aid;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public String getOrderId() {

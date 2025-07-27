@@ -46,6 +46,8 @@ public class FeedbackGuaranteeVO implements Serializable {
 	private Short svUserStatus;
 
 	private Short repairResult;
+	
+	private Short upgradeSource;
 
 	public FeedbackGuaranteeVO() {
 		super();
@@ -203,4 +205,13 @@ public class FeedbackGuaranteeVO implements Serializable {
 		this.repairResult = repairResult;
 	}
 
+	public Short getUpgradeSource() {
+		return upgradeSource;
+	}
+
+	public void setUpgradeSource(Short upgradeSource) {
+		this.upgradeSource = upgradeSource;
+	}
+
+	
 }

@@ -12,6 +12,8 @@ public interface DecorationInfoService {
 
 	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO);
 
-	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
+	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String securityCode, String verifyCode) throws FLException;
+
+	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
 
 }

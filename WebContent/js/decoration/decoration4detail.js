@@ -460,38 +460,38 @@ jQuery(function($) {
 
             var customerPhone = "客户电话";
 
-            if ([3, 7].contains(params.decoration.decoration.status)) {
-                com.post(api.decoration.queryDecorationInfoForCustomer, {
-                    "decorationInfo.orderId": decorationDetail.orderId
-                }, function(res) {
-
-                    customerPhone = res.decorationInfo.customerPhone;
-                }, function(res) {
-
-                }, false);
-
-                com.post(api.communion.addCustomerRecord, {
-                    "customerRecord.cid": decorationDetail.customer.cid,
-                    "customerRecord.type": 0
-                }, function(res) {
-
-                }, function(res) {
-
-                });
-            }
-
             com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ :' + decorationDetail.customer.qq + '<br /> 微信 :' + decorationDetail.customer.wechat + '<br />  电话 : <span id = customerInfosPhone>' + customerPhone + '</span> <br />  客户类型 :' + decorationDetail.customer.relationshipType + '<br />');
 
             $('#customerInfosPhone').on("click", function() {
 
                 var phoneInfo = $(this);
 
-                com.post(api.data.queryCustomerForPhone, {
-                    "customerPhone.cid": decorationDetail.customer.cid,
-                }, function(res) {
+                if (![3, 7].contains(params.decoration.decoration.status)) {
 
-                    phoneInfo.html(res.customer.phone);
-                });
+                    com.post(api.decoration.queryDecorationInfoForCustomer, {
+                        "decorationInfo.orderId": decorationDetail.orderId
+                    }, function(res) {
+
+                        customerPhone = res.decorationInfo.customerPhone;
+                    }, null, false);
+
+                    com.post(api.communion.addCustomerRecord, {
+                        "customerRecord.cid": decorationDetail.customer.cid,
+                        "customerRecord.type": 0
+                    }, function(res) {
+
+                    }, function(res) {
+
+                    });
+                } else {
+                    com.post(api.data.queryCustomerForPhone, {
+                        "customerPhone.cid": decorationDetail.customer.cid,
+                    }, function(res) {
+
+                        phoneInfo.html(res.customer.phone);
+                    });
+                }
+
             });
         });
 
@@ -1823,15 +1823,45 @@ jQuery(function($) {
             $small.one('click', function() {
 
                 var phoneInfo = $(this);
-                com.post(api.data.queryCustomerForPhone, {
-                    "customerPhone.cid": v.cid,
-                    "customerPhone.cpid": v.cpid
-                }, function(res) {
 
-                    phoneInfo.html(res.customer.phone);
-                });
+                if (![3, 7].contains(params.decoration.decoration.status)) {
 
-                $btnStauts.prop("disabled", false);
+                    var resp = false;
+
+                    com.post(api.decoration.queryDecorationInfoForCustomer, {
+                        "decorationInfo.orderId": decorationDetail.orderId
+                    }, function(res) {
+
+                        customerPhone = res.decorationInfo.customerPhone;
+
+                        phoneInfo.html(res.decorationInfo.customerPhone);
+
+                        resp = true;
+                    }, null, false);
+
+                    if (!resp)
+                        return false;
+
+                    com.post(api.communion.addCustomerRecord, {
+                        "customerRecord.cid": decorationDetail.customer.cid,
+                        "customerRecord.type": 0
+                    }, function(res) {
+
+                    }, function(res) {
+
+                    });
+                } else {
+
+                    com.post(api.data.queryCustomerForPhone, {
+                        "customerPhone.cid": v.cid,
+                        "customerPhone.cpid": v.cpid
+                    }, function(res) {
+
+                        phoneInfo.html(res.customer.phone);
+                    });
+                }
+
+                // $btnStauts.prop("disabled", false);
             });
         }
 

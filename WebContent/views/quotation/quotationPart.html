@@ -32,7 +32,10 @@
 								</div>
 								<div class="form-group" id="innerAreaShow">
 									<label class=" col-md-4 no-padding-right">计价面积</label>
-									<label id="innerArea" class="col-md-8 no-padding-left">0.00</label>
+									<label id="innerArea" class="col-md-6 no-padding-left">0.00</label>
+									<a href="javascript:void(0)" class="col-md-2" id="innerAreaBtn">
+										<i class="bigger-125 icon-pencil blue"></i>
+									</a>
 								</div>
 							</div>
 							<div class="col-md-12 hr hr-14"></div>
@@ -705,7 +708,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="prefer">优惠价</label>
 									<div class="col-sm-9">
-										<input type="text" id="prefer" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+										<input type="text" id="prefer" class="col-xs-10 col-sm-5 v_float_3 v_required" maxlength='15'/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -715,7 +718,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="manage">管理优惠</label>
 									<div class="col-sm-9">
-										<input type="text" id="manage" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+										<input type="text" id="manage" class="col-xs-10 col-sm-5 v_float_3 v_required" maxlength='15'/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -725,7 +728,7 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="advance">特殊优惠</label>
 									<div class="col-sm-9">
-										<input type="text" id="advance" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+										<input type="text" id="advance" class="col-xs-10 col-sm-5 v_float_3 v_required" maxlength='15'/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -735,11 +738,27 @@
 								<div class="form-group">
 									<label class="col-sm-3 control-label no-padding-right" for="square">面积</label>
 									<div class="col-sm-9">
-										<input type="text" id="square" class="col-xs-10 col-sm-5 v_float_3 v_required"  maxlength='15'/>
+										<input type="text" id="square" class="col-xs-10 col-sm-5 v_float_3 v_required" maxlength='15'/>
 									</div>
 								</div>
 								<div class="space-4"></div>
 							</div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="innerFloor">计价楼层</label>
+								<div class="col-sm-9">
+									<input type="text" id="innerFloor" class="col-xs-10 col-sm-5 v_number v_required" maxlength='15'/>
+								</div>
+							</div>
+							<div class="space-4"></div>
+
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="isLift">有无电梯</label>
+								<div class="col-sm-9">
+									<select class="col-xs-10 col-sm-5 v_required" id="isLift" data-toggle="popover" data-trigger='manual'></select>
+								</div>
+							</div>
+							<div class="space-4"></div>
 
 							<div id="countQuotePriceShow">
 								<div class="form-group">

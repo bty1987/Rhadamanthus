@@ -109,6 +109,12 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				throw new FLException(200013, "报价项不存在");
 			}
 
+			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
+			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
+			quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
+
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+
 			if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
 
 				long qfaiid = quotationFunctionAreaItemPO.getQfaiId();
@@ -116,18 +122,18 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(orderId, areaId, qfaiid, SelectionItemPO.TYPE_QUOTATION_SHORT);
 
 				if (selectionItemPO != null) {
-					selectionItemPO.setNum(quotationFunctionAreaItemPO.getNum());
+
 					selectionItemPO.setInitNum(quotationFunctionAreaItemPO.getInitNum());
+
+					if (SelectionItemPO.STATUS_INIT_SHORT != selectionItemPO.getStatus()) {
+						selectionItemPO.setNum(quotationFunctionAreaItemPO.getNum());
+					}
 
 					selectionItemDao.update(selectionItemPO);
 				}
+
 			}
 
-			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
-			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
-			quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
-
-			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		} else {
 
 			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = QuotationFunctionAreaItemPO.factoryToInstance(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());

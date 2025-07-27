@@ -47,10 +47,34 @@ public class ConstructionPlanAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "makeConstructionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeConstructionPlan() throws FLException {
+
+		constructionPlanService.makeConstructionPlan(constructionPlan);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addConstructionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionPlan() throws FLException {
 
 		constructionPlanService.addConstructionPlan(constructionPlan);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateConstructionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionPlan() throws FLException {
+
+		constructionPlanService.updateConstructionPlan(constructionPlan);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "moveConstructionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String moveConstructionPlan() throws FLException {
+
+		constructionPlanService.moveConstructionPlan(constructionPlan);
 
 		return SUCCESS;
 	}

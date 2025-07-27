@@ -23,7 +23,7 @@ jQuery(function($) {
     searcher.base("periodnodeCondLists", "periodnodePagenations", "periodnodeResultLists", api.data.queryConstructionPeriodNodeByCpid);
     searcher.isPage(true).result("constructionPeriodNodes");
     searcher.param({
-        "constructionPeriodNode.cpid": params.data.constructionNode.cpid
+        "constructionPeriodNode.cpid": params.data.constructionPeriod.cpid
     });
 
     searcher.button([{

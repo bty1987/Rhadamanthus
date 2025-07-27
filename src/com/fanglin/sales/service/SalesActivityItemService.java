@@ -29,5 +29,5 @@ public interface SalesActivityItemService {
 
 	public void sendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
 
-	public int affirmSalesActivityItem(SalesVO salesVO, List<SalesActivityItemVO> salesActivityItems) throws FLException;
+	public int affirmSalesActivityItem(SalesVO salesVO, List<SalesActivityItemVO> salesActivityItems, String securityCode, String verifyCode) throws FLException;
 }

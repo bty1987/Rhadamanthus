@@ -879,8 +879,26 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public List<DecorationVO> queryDecorationForReferByOrderId(DecorationVO decorationVO, Authentication authentication) {
 
-		List<DecorationPO> decorationPOs = decorationDao.queryDecorationForRefer(decorationVO.getOrderId());
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationForChanceRefer(decorationVO.getOrderId());
+		
+		decorationPOs.addAll(decorationDao.queryDecorationForDecorationInfoRefer(decorationVO.getOrderId()));
+		
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+
+			decorationVO = new DecorationVO();
+
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setQuoter(new UserBaseVO());
+			decorationVO.setSupervisor(new UserBaseVO());
+
+			decorationPO.ptvcascade(decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		decorationPOs = decorationDao.queryDecorationForOriginRefer(decorationVO.getOrderId());
 
 		for (DecorationPO decorationPO : decorationPOs) {
 
@@ -919,6 +937,8 @@ public class DecorationServiceImpl implements DecorationService {
 		if (decorationVO.getOrderTotalPrice() == null || decorationVO.getOrderTotalPrice() == 0) {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		}
+
+		decorationVO.getCustomer().setPhone(decorationPO.getCustomer().getPhone());
 
 		addition(decorationPO.getAddition(), decorationVO);
 

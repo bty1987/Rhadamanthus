@@ -24,6 +24,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationBelongService;
 import com.fanglin.decoration.vo.DecorationBelongVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -38,6 +39,12 @@ public class DecorationBelongAction extends BaseListAction {
 	private DecorationBelongVO decorationBelong;
 
 	private List<DecorationBelongVO> decorationBelongs;
+
+	private DecorationVO decoration;
+
+	private String securityCode;
+
+	private String verifyCode;
 
 	@Action(value = "queryDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationBelong() {
@@ -58,7 +65,7 @@ public class DecorationBelongAction extends BaseListAction {
 	@Action(value = "confirmDecorationBelong", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmDecorationBelong() throws FLException {
 
-		decorationBelongService.confirmDecorationBelong(decorationBelong);
+		decorationBelongService.confirmDecorationBelong(decoration, decorationBelong, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -85,6 +92,30 @@ public class DecorationBelongAction extends BaseListAction {
 
 	public void setDecorationBelongs(List<DecorationBelongVO> decorationBelongs) {
 		this.decorationBelongs = decorationBelongs;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

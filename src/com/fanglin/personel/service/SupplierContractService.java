@@ -12,6 +12,8 @@ public interface SupplierContractService {
 
 	public List<SupplierContractVO> querySupplierContract(SupplierContractVO supplierContractVO);
 
+	public SupplierContractVO querySupplierContractById(SupplierContractVO supplierContractVO);
+
 	public int addSupplierContract(SupplierContractVO supplierContractVO, ContractVO contractVO, String userId) throws FLException;
 
 	public int makeSupplierContract(SupplierContractVO supplierContractVO, String data, String table) throws FLException;

@@ -26,7 +26,7 @@ Condition.addupRule("balance", {
         }
     },
     "balance-no": {
-        label: "结算单编号",
+        label: "结算单号",
         type: "text",
         submitConfig: {
             name: "no",
@@ -275,6 +275,22 @@ Condition.addupRule("balance", {
             valuePath: "value"
         }
     },
+    "balanceSelection-grade": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
+            name: "grade",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.balance().balanceSelection.grade.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "balanceSelection-balance-no": {
         label: "结算单号",
         type: "text",
@@ -365,6 +381,20 @@ Condition.addupRule("balance", {
             valuePath: "value"
         }
     },
+    
+    "selection-item-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "decoration-orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    
     "balanceOales-balance-no": {
         label: "结算单号",
         type: "text",

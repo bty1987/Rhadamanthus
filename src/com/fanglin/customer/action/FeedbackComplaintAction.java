@@ -46,7 +46,7 @@ public class FeedbackComplaintAction extends BaseListAction {
 		feedbackComplaint.setFcid(fcid);
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishFeedbackComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishFeedbackComplaint() throws FLException {
 
@@ -86,4 +86,5 @@ public class FeedbackComplaintAction extends BaseListAction {
 	public void setFeedback(FeedbackVO feedback) {
 		this.feedback = feedback;
 	}
+
 }

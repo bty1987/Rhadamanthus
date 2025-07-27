@@ -52,6 +52,14 @@ public class SupplierContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "querySupplierContractById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySupplierContractById() {
+
+		supplierContract = supplierContractService.querySupplierContractById(supplierContract);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "viewSupplierContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String viewSupplierContract() throws FLException {
 

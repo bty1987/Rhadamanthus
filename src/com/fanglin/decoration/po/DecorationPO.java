@@ -92,6 +92,8 @@ public class DecorationPO implements Serializable {
 
 	public static final short TYPE_HOLONOMY_INT = 2;
 
+	public static final short BALANCESTATUS_INIT_INT = 0;// 结算
+
 	public static final short BALANCESTATUS_CONDUCT_INT = 1;// 结算
 
 	public static final String CONFIG_KEY_HOLONOMY_STR = "fullsub%s";
@@ -703,10 +705,7 @@ public class DecorationPO implements Serializable {
 
 		getHouse().ptv(decorationVO.getHouse());
 
-		CustomerVO customerVO = new CustomerVO();
-		BeanUtil.copyProperties(this.getCustomer(), customerVO);
-
-		decorationVO.setCustomer(customerVO);
+		if (getCustomer() != null) decorationVO.setCustomer(getCustomer().ptv(new CustomerVO()));
 
 		decorationVO.setBusitype(this.getBusitype().getDbid());
 

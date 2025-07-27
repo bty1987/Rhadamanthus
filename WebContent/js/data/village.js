@@ -64,6 +64,7 @@ $(function() {
             developer: com.focusPage("#developer"),
             salesPhone: com.focusPage("#salesPhone"),
             deliveryTime: com.focusPage("#deliveryTime"),
+            mileage: com.focusPage("#mileage"),
             content: com.focusPage("#content")
         },
         validator: {
@@ -159,7 +160,7 @@ $(function() {
             });
             var $span = $('<span></span>').addClass('lbl status-lbl');
 
-            var propertyArr = [["上级楼盘:", com.checkNull(v.parentVillage && v.parentVillage.name, "暂无"), "grey"], ["楼盘编号:", v.no, "grey"], ["所在城市:", v.cityProper.city.name, "grey"], ["所在城区:", v.cityProper.name, "grey"], ["开发商:", v.developer ? v.developer : "-", "grey"], ["售楼电话:", v.salesPhone ? v.salesPhone : "-", "grey"], ["交房时间:", v.deliveryTime, "green"], ["说明:", v.content, "grey"]];
+            var propertyArr = [["上级楼盘:", com.checkNull(v.parentVillage && v.parentVillage.name, "暂无"), "grey"], ["楼盘编号:", v.no, "grey"], ["所在城市:", v.cityProper.city.name, "grey"], ["所在城区:", v.cityProper.name, "grey"], ["开发商:", v.developer ? v.developer : "-", "grey"], ["售楼电话:", v.salesPhone ? v.salesPhone : "-", "grey"], ["交房时间:", v.deliveryTime, "green"], ["公里数:", v.mileage, "grey"], ["说明:", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -299,7 +300,8 @@ $(function() {
             "village.salesPhone": village.items.salesPhone.val(),
             "village.deliveryTime": "" == village.items.deliveryTime.val() ? void 0 : village.items.deliveryTime.val(),
             "village.content": village.items.content.val(),
-            "village.rule": village.items.nameRuleSel.val()
+            "village.rule": village.items.nameRuleSel.val(),
+            "village.mileage": village.items.mileage.val()
         };
 
         if (village.editFlg) {
@@ -336,6 +338,7 @@ $(function() {
         village.items.deliveryTime.val(b.deliveryTime);
         village.items.content.val(b.content);
         village.items.nameRuleSel.val(b.rule);
+        village.items.mileage.val(b.mileage);
 
         village.items.parentVillage.addClass("v_required");
 

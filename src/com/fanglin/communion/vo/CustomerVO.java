@@ -28,6 +28,8 @@ public class CustomerVO implements Serializable {
 
 	private String email;
 
+	private String phone;
+
 	private String career;
 
 	private String address;
@@ -45,8 +47,6 @@ public class CustomerVO implements Serializable {
 	private String identityPathF;
 
 	private String identityPathB;
-
-	private String phone;
 
 	private Integer company;
 
@@ -296,10 +296,16 @@ public class CustomerVO implements Serializable {
 	}
 
 	public void setConfidentialInfo() {
+
 		this.email = "-";
 		this.qq = "-";
 		this.phone = "-";
 		this.wechat = "-";
-	}
 
+		this.address = "-";
+		this.identity = "-";
+		this.photoPath = "-";
+		this.identityPathF = "-";
+		this.identityPathB = "-";
+	}
 }

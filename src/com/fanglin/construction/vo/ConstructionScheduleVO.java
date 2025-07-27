@@ -37,6 +37,10 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Integer period;
 
+	private Timestamp preStartTime;
+
+	private Timestamp preEndTime;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -53,7 +57,25 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Short schedule;
 
+	private Short scheduleStatus;
+
 	private ConstructionNodeVO node;
+
+	private Integer accessoryLimit;
+
+	private Integer salaryLimit;
+
+	private Integer accessoryTotal;
+
+	private Integer salaryTotal;
+
+	private Integer precheck;
+
+	private Integer postcheck;
+
+	private Integer stacheck;
+
+	private Integer fincheck;
 
 	public ConstructionScheduleVO() {
 		super();
@@ -120,6 +142,24 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setPeriod(Integer period) {
 		this.period = period;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPreStartTime() {
+		return preStartTime;
+	}
+
+	public void setPreStartTime(Timestamp preStartTime) {
+		this.preStartTime = preStartTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPreEndTime() {
+		return preEndTime;
+	}
+
+	public void setPreEndTime(Timestamp preEndTime) {
+		this.preEndTime = preEndTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -190,12 +230,84 @@ public class ConstructionScheduleVO implements Serializable {
 		this.schedule = schedule;
 	}
 
+	public Short getScheduleStatus() {
+		return scheduleStatus;
+	}
+
+	public void setScheduleStatus(Short scheduleStatus) {
+		this.scheduleStatus = scheduleStatus;
+	}
+
 	public ConstructionNodeVO getNode() {
 		return node;
 	}
 
 	public void setNode(ConstructionNodeVO node) {
 		this.node = node;
+	}
+
+	public Integer getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(Integer accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
+	}
+
+	public Integer getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(Integer salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	public Integer getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(Integer accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
+	public Integer getSalaryTotal() {
+		return salaryTotal;
+	}
+
+	public void setSalaryTotal(Integer salaryTotal) {
+		this.salaryTotal = salaryTotal;
+	}
+
+	public Integer getPrecheck() {
+		return precheck;
+	}
+
+	public void setPrecheck(Integer precheck) {
+		this.precheck = precheck;
+	}
+
+	public Integer getPostcheck() {
+		return postcheck;
+	}
+
+	public void setPostcheck(Integer postcheck) {
+		this.postcheck = postcheck;
+	}
+
+	public Integer getStacheck() {
+		return stacheck;
+	}
+
+	public void setStacheck(Integer stacheck) {
+		this.stacheck = stacheck;
+	}
+
+	public Integer getFincheck() {
+		return fincheck;
+	}
+
+	public void setFincheck(Integer fincheck) {
+		this.fincheck = fincheck;
 	}
 
 }

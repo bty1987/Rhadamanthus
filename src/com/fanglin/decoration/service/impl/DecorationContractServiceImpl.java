@@ -489,16 +489,35 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		quotationDao.updateQuotationForStatusByOrderId(orderId, QuotationPO.STATUS_LOCK_INT);
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		DecorationBusitypePO decorationBusitypePO = decorationPO.getBusitype();
 		CustomerUserRulePO customerUserRulePO = null;
 
 		if (decorationBusitypePO.getIsAward() == DecorationBusitypePO.ISAWARD_AWARD_INT) {
 
 			customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(decorationPO.getDesigner().getUid());
+
+			if (customerUserRulePO == null) {
+				customerUserRulePO = new CustomerUserRulePO(decorationPO.getDesigner(), operater);
+
+				customerUserRuleDao.save(customerUserRulePO);
+			}
+		}
+
+		if (decorationBusitypePO.getIsAward() == DecorationBusitypePO.ISAWARD_AWARD_DEPT_INT) {
+
+			customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(decorationPO.getDesigner().getDept().getManager().getUid());
+
+			if (customerUserRulePO == null && decorationPO.getDesigner().getDept().getManager() != null) {
+				customerUserRulePO = new CustomerUserRulePO(decorationPO.getDesigner().getDept().getManager(), operater);
+
+				customerUserRuleDao.save(customerUserRulePO);
+			}
 		}
 
 		if (customerUserRulePO != null) {
-			customerUserRuleDao.save(new CustomerUserRuleItemPO().award(customerUserRulePO.getCurid(), "工程部", new DepartmentTypePO(DepartmentTypePO.DEPARTMENT_TYPE_CONSTRUCTION_DEPT_INT)));
+			customerUserRuleDao.save(new CustomerUserRuleItemPO().award(decorationPO.getOrderId(), customerUserRulePO.getCurid(), "工程部", new DepartmentTypePO(DepartmentTypePO.DEPARTMENT_TYPE_CONSTRUCTION_DEPT_INT)));
 		}
 
 		if (DecorationPO.STATUS_RESIGNED_INT == decorationPO.getStatus()) {
@@ -508,8 +527,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		if (DecorationPO.STATUS_PROSIGN_INT == decorationPO.getStatus()) {
 			prosignFlag = true;
 		}
-
-		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContracter(operater);

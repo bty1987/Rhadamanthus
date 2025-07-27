@@ -60,7 +60,8 @@ jQuery(function($) {
         var proper = village.cityProper;
         var customer = res.decoration.customer;
 
-        com.focusPage("#con-work-status", "#form").val(constant.decoration().decoration.projectStatus.keys[data.projectStatus]);
+        contractEdit.item.decorationType.val(data.typeness);
+        
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#sin-customer-phone1", "#form").val(customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(customer.identity);
@@ -71,6 +72,15 @@ jQuery(function($) {
         contractEdit.cover["sin-customer-name"] = customer.name;
         contractEdit.cover["sin-customer-phone1"] = customer.phone;
         contractEdit.cover["sin-customer-ident"] = customer.identity;
+
+        contractEdit.cover["sin-company-name"] = customer.companyName;
+
+        if (contractEdit.contractArgs.company == "1") {
+
+            com.focusPage("#sin-agent-name", "#form").val(customer.name);
+            com.focusPage("#sin-agent-phone", "#form").val(customer.phone);
+            com.focusPage("#sin-agent-ident", "#form").val(customer.identity);
+        }
 
         com.focusPage("#con-company-no", "#form").val(customer.companyNo);
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
@@ -116,11 +126,15 @@ jQuery(function($) {
             data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
             data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-            if (contractEdit.contractArgs.company == "1") {
-                data["sin-company-name"] = data["con-company-name"];
+            if (contractEdit.contractArgs.company != "1") {
 
-                delete data["con-customer-ident"];
-                delete data["con-company-name"];
+                delete data["sin-company-name"];
+            }
+
+            if (contractEdit.contractArgs.company == "1") {
+
+                delete data["sin-customer-name"];
+                delete data["sin-customer-ident"];
             }
 
             var options = {

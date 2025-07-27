@@ -75,6 +75,14 @@ $.extend(api, {
                 args: ["money", "deposit", "salary"]
             }]
         },
+        queryWorkerSalaryByOrderId: {
+            url: "queryWorkerSalaryByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "workerSalarys",
+                args: ["money", "deposit", "salary"]
+            }]
+        },
         addWorkerSalary: {
             url: "addWorkerSalary.do",
             type: "update",

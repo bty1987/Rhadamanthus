@@ -771,7 +771,7 @@ var quotationUtils = {
 
         var serviceMoneyBody = $("<div></div>").addClass('widget-body');
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", false), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", false), this.createDivForHolonomy("col-md-2", "折扣", "discount", false), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", false), this.createDivForHolonomy("col-md-2", "管理优惠", "managePrefer", false), this.createDivForHolonomy("col-md-2", "特殊优惠", "advancePrefer", false), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", false), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", false), this.createDivForHolonomy("col-md-2", "计价面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", false), this.createDivForHolonomy("col-md-2", "折扣", "discount", false), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", false), this.createDivForHolonomy("col-md-2", "管理优惠", "managePrefer", false), this.createDivForHolonomy("col-md-2", "特殊优惠", "advancePrefer", false), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", false), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
         serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
         inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);
@@ -793,11 +793,12 @@ var quotationUtils = {
         com.focusPage('#managePrice', '#quotationSummary').html($managePrices);
         com.focusPage('#taxPrice', '#quotationSummary').html($taxPrices);
         com.focusPage('#totalPrice', '#quotationSummary').html($totalPrices);
-
+        
         com.focusPage('#preferPrice', '#quotationSummary').html(com.checkNull($quotationPrefer.preferPrice, 0));
         com.focusPage('#managePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.managePrefer, 0));
         com.focusPage('#advancePrefer', '#quotationSummary').html(com.checkNull($quotationPrefer.advancePrefer, 0));
         com.focusPage('#quotePrice', '#quotationSummary').html(com.checkNull($quotationPrefer.quotePrice, 0));
+        com.focusPage('#quoteArea', "#quotationSummary").html(com.checkNull($quotation.decoration.house.innerArea, 0));
 
         com.focusPage('#quotationVersion').html(quotationUtils.quotationDetail.quotation.version.name);
 
@@ -1331,7 +1332,7 @@ var quotationUtils = {
 
         var serviceMoneyBody = $("<div></div>").addClass('widget-body');
 
-        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费比例", "manageRate", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "管理折扣", "manageDiscount", false), this.createDivForHolonomy("col-md-2", "税金比例", "taxRate", true), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
+        inclusiveBody.append($("<div></div>").addClass('widget-body-inner').append(inclusiveTable.append(this.createDivForHolonomy("col-md-2", "起报价", "quotePrice", true), this.createDivForHolonomy("col-md-2", "计价面积", "quoteArea", true), this.createDivForHolonomy("col-md-2", "优惠价", "preferPrice", true), this.createDivForHolonomy("col-md-2", "折扣", "discount", true), this.createDivForHolonomy("col-md-2", "管理费比例", "manageRate", true), this.createDivForHolonomy("col-md-2", "管理费", "managePrice", true), this.createDivForHolonomy("col-md-2", "管理优惠", "manageProfit", true), this.createDivForHolonomy("col-md-2", "特殊优惠", "advanceProfit", true), this.createDivForHolonomy("col-md-2", "管理折扣", "manageDiscount", false), this.createDivForHolonomy("col-md-2", "税金比例", "taxRate", true), this.createDivForHolonomy("col-md-2", "税金", "taxPrice", true), this.createDivForHolonomy("col-md-2", "总价", "totalPrice", false))));
         serviceMoneyBody.append($("<div></div>").addClass('widget-body-inner').attr('id', 'hoServiceMoney'));
         inclusiveDiv.append($("<div></div>").addClass('widget-container-span').append($("<div></div>").addClass('widget-box transparent').append(inclusiveBody))).append($("<div></div>").addClass('widget-container-span col-md-6').append($("<div></div>").addClass('widget-box transparent').append(serviceMoneyBody)));
         $('<div></div>').addClass('hr col-md-12').appendTo(inclusiveDiv);

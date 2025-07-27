@@ -21,7 +21,7 @@ public interface CustomerService {
 
 	public void pageCustomer(Paging paging, List<Filter> filters, CustomerVO customerVO, Integer company);
 
-	public CustomerVO queryCustomerById(CustomerVO customerVO);
+	public CustomerVO queryCustomerById(CustomerVO customerVO) throws FLException;
 
 	public List<CustomerVO> queryCustomerForName(String pinyinName, Integer company);
 

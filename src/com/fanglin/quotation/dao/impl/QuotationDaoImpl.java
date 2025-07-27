@@ -53,12 +53,6 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<QuotationPO> queryQuotationForDefaultByOrderIds(List<String> orderIds) {
-		return session().createCriteria(QuotationPO.class).add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_INT)).add(Restrictions.in("orderId", orderIds)).list();
-	}
-
-	@Override
 	public QuotationPO queryQuotationForDefaultByOrderId(String orderId) {
 		return (QuotationPO) createCriteria(QuotationPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_INT)).uniqueResult();
 	}

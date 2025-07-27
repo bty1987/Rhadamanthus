@@ -47,8 +47,7 @@ public class FeedbackGuaranteeAction extends BaseListAction {
 	@Action(value = "addFeedbackGuarantee", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addFeedbackGuarantee() throws FLException {
 
-		long fgid = feedbackGuaranteeService.addFeedbackGuarantee(feedbackGuarantee, queryUserId());
-		feedbackGuarantee.setFgid(fgid);
+		feedbackGuaranteeService.addFeedbackGuarantee(feedbackGuarantee, queryUserId());
 
 		return SUCCESS;
 	}

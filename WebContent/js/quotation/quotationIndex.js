@@ -55,11 +55,12 @@
         orderId: params.quotation.orderId,
         type: params.orderType,
         pageType: params.urlLoadParams.type,
-        audiTime: 0,
+        auditTime: 0,
         auditTimeId: null,
 
         editFlg: 0,
         defaultsQid: null,
+        auditTimeStatus: false,
 
         compareType: [{
             "key": "0",
@@ -78,7 +79,7 @@
         }
     };
 
-    var pageConfig = drawNode.getConfig("customerService");
+    var pageConfig = drawNode.getConfig("quoter");
 
     quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
     quotation.items.replicaOrderId.on("blur", function() {
@@ -375,6 +376,21 @@
 
     var searcher = new Searcher();
 
+    var btnPrint = {
+        name: "打印",
+        clazz: "btn-primary",
+        handle: function(v) {
+
+            params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
+            params.quotation.quotation = v;
+            quotation.quotation = v;
+
+            quotation.auditTimeStatus = false;
+
+            quotation.modals.printQuotationAuditModal.modal("show");
+        }
+    };
+
     var btnRecord = {
         name: "记录",
         clazz: "btn-primary",
@@ -389,9 +405,10 @@
     };
 
     var btnAudit = {
-        name: "审核",
+        name: "提交",
         clazz: "btn-warning",
         handle: function(v) {
+
             com.post(api.quotation.auditQuotation, {
                 "quotation.qid": v.qid
             });
@@ -399,7 +416,7 @@
         },
         show: function(v) {
 
-            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT,constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
+            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT, constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
         }
     };
 
@@ -407,10 +424,13 @@
         name: "完成",
         clazz: "btn-warning",
         handle: function(v) {
-            com.post(api.quotation.finishQuotation, {
-                "quotation.qid": v.qid
+
+            com.showConfirm("是否进行当前操作", function() {
+                com.post(api.quotation.finishQuotation, {
+                    "quotation.qid": v.qid
+                });
+                searcher.doSearch();
             });
-            searcher.doSearch();
         },
         show: function(v) {
 
@@ -433,6 +453,9 @@
 
             quotation.items.qid.val(v.qid);
             quotation.items.style.get(0).selectedIndex = 0;
+
+            quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
+
             com.post(api.quotation.queryQuotationById, {
                 "quotation.qid": v.qid
             }, function(res) {
@@ -495,7 +518,9 @@
             params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
             params.quotation.quotation = v;
             quotation.quotation = v;
-            quotation.audiTime = v.audiTime;
+            quotation.auditTime = v.auditTime;
+
+            quotation.auditTimeStatus = true;
 
             quotation.modals.printQuotationAuditModal.modal("show");
 
@@ -519,7 +544,7 @@
         },
         show: function(v) {
 
-            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT,constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
+            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT, constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
         }
     };
 
@@ -530,15 +555,13 @@
 
             params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
             params.quotation.quotation = v;
-            quotation.pageType != null ? params.quotation.attpaging = null : params.quotation.attpages = null;
+            //quotation.pageType != null ? params.quotation.attpaging = null : params.quotation.attpages = null;
 
             com.switchPage(api.index.quotationPartIndex.url);
         },
         show: function(v) {
 
-            if (v.attstatus == constant.quotation().quotation.ATTSTATUS_FINISH_INT) {
-                return true;
-            } else if (quotation.pageType == null && [constant.quotation().quotation.ATTSTATUS_PRIMARY_INT,constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) == -1){
+            if ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT, constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) == -1) {
                 return true;
             } else {
                 return false;
@@ -603,11 +626,13 @@
                     prefer = res.quotationPrefer;
                 }, null, false);
 
-                if (prefer) {
+                if (prefer && prefer.quoteArea != null) {
                     com.post(api.data.updateHouse, {
                         "house.innerArea": prefer.quoteArea,
-                        "house.hid": quotation.decoration.house.hid
-                    }, function(res) {});
+                        "house.hid": quotation.pageType == null ? quotation.decoration.house.hid : v.decoration.house.hid
+                    }, function(res) {
+
+                    });
                 }
             }
         },
@@ -763,7 +788,7 @@
         handle: function(v) {
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
-                "decoration.orderId": v.decoration.orderId
+                "decoration.orderId": quotation.pageType == null ? v.orderId : v.decoration.orderId
             }, function(res) {
 
                 var decoration = res.decoration;
@@ -776,7 +801,7 @@
 
                 params.decoration.viewNode = Object.values(pageConfig.nodes);
 
-                params.quotation.orderId = v.orderId;
+                params.quotation.orderId = decoration.orderId;
 
                 com.popup4page("#layerPopUp", api.index.decorationDetailIndex.url, "装修单详情: " + v.orderId);
             });
@@ -787,9 +812,11 @@
 
     if (quotation.pageType == null) {
 
-        var cardbtns = [btnFinish, btnCopy, btnUpdate, btnView, btnWork, btnDelete, btnDefault, btnLock, btnUnlock, {
+        var cardbtns = [btnCopy, btnUpdate, btnWork, btnView, btnAudiOutput, {
             type: "newline"
-        }, btnSelection, btnNormtion, btnRecord, btnRefund];
+        }, btnFinish, btnAudit, btnDefault, btnLock, btnUnlock, btnDelete, {
+            type: "newline"
+        }, btnSelection, btnNormtion, btnRecord, btnPrint];
 
         com.focusPage('#fl-statement').statement("报价", "报价").show();
         com.focusPage('#decorationInfo').show();
@@ -844,6 +871,9 @@
         quotation.pageConfig = getConfig(params['urlLoadParams'].depage, 3);
 
         var cardbtns = [];
+
+        if (quotation.pageConfig.pageBtn.contains("print"))
+            cardbtns.push(btnPrint);
 
         if (quotation.pageConfig.pageBtn.contains("record"))
             cardbtns.push(btnRecord);
@@ -1045,6 +1075,15 @@
                 return quotation.pageConfig.propertyArr.contains("createTime");
             }
         }, {
+            field: "finishTime",
+            name: "提交时间",
+            prop: "finishTime",
+            clazz: "green",
+            show: function(v) {
+
+                return quotation.pageConfig.propertyArr.contains("finishTime");
+            }
+        }, {
             field: "updateTime",
             name: "保价时间",
             prop: "updateTime",
@@ -1145,6 +1184,7 @@
             field: "workTime",
             name: "制作时长",
             prop: function(v) {
+
                 return v.workTime + 's';
             },
             clazz: "blue",
@@ -1153,15 +1193,31 @@
                 return quotation.pageConfig.propertyArr.contains("workTime");
             }
         }, {
-            field: "audiTime",
+            field: "auditTime",
             name: "审核时长",
             prop: function(v) {
-                return v.audiTime + 's';
+
+                return v.auditTime + 's';
             },
             clazz: "blue",
             show: function(v) {
 
-                return quotation.pageConfig.propertyArr.contains("audiTime");
+                return quotation.pageConfig.propertyArr.contains("auditTime");
+            }
+        }, {
+            field: "totalTime",
+            name: "总时长",
+            prop: function(v) {
+
+                var finishTime = new Date(v.finishTime).getTime();
+                var createTime = new Date(v.createTime).getTime();
+
+                return (v.finishTime ? Math.floor((finishTime - createTime) / 1000) : 0) + 's';
+            },
+            clazz: "blue",
+            show: function(v) {
+
+                return quotation.pageConfig.propertyArr.contains("totalTime");
             }
         }, {
             field: "content",
@@ -1496,7 +1552,8 @@
             "layout": com.focusPage('input[name="layout"]:checked', '#printQuotationAuditModal').val(),
             "type": 0,
             "itemtype": [],
-            "calType": com.focusPage('input[name="calType"]:checked', '#printQuotationAuditModal').val()
+            "calType": com.focusPage('input[name="calType"]:checked', '#printQuotationAuditModal').val(),
+            "workType": ""
         };
 
         var $types = com.focusPage('input[name="type"]:checked', '#printQuotationAuditModal #types');
@@ -1517,24 +1574,30 @@
             "printConf": printConf
         };
 
-        com.popup("打印报价", api.index.quotationOutputIndex.url, function() {
+        if (quotation.auditTimeStatus) {
 
-            quotation.auditTimeId = setInterval(function() {
+            com.popup("打印报价", api.index.quotationOutputIndex.url, function() {
 
-                quotation.audiTime += 1;
+                quotation.auditTimeId = setInterval(function() {
 
-            }, 1000);
-        }, function() {
+                    quotation.auditTime += 1;
 
-            clearInterval(quotation.auditTimeId);
-            quotation.auditTimeId = null;
-
-            com.post(api.quotation.updateQuotationForTime, {
-                "quotation.qid": quotation.quotation.qid,
-                "quotation.audiTime": quotation.audiTime
+                }, 1000);
             }, function() {
-                searcher.doSearch();
-            });
-        }, false);
+
+                clearInterval(quotation.auditTimeId);
+                quotation.auditTimeId = null;
+
+                com.post(api.quotation.updateQuotationForTime, {
+                    "quotation.qid": quotation.quotation.qid,
+                    "quotation.auditTime": quotation.auditTime
+                }, function() {
+
+                    searcher.doSearch();
+                });
+            }, false);
+        } else {
+            com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, false);
+        }
     });
 });

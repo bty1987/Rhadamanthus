@@ -727,7 +727,7 @@ $(function() {
 
         var formula = quotationItem.items.formula.val();
 
-        if (formula.replace(/(\u5468\u957f|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u9762|\u53c2\u6570|\u7a97\u9762|\u53d8\u91cf|\u6881\u957f|\u6881\u9ad8)|\u8f66\u8fd0\u8d39|\u7a0e\u91d1|\u7ba1\u7406\u8d39|\u4e0d\u6253\u6298\u603b\u989d|\u6253\u6298\u603b\u989d|\u697c\u5c42|\u7535\u68af/g, "").replace(/[\+\-\*\/\(\)\|\!]/g, "").replace(/[0-9]/g, "") != "") {
+        if (formula.replace(/(\u5468\u957f|\u8ba1\u4ef7\u9762\u79ef|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u9762|\u53c2\u6570|\u7a97\u9762|\u53d8\u91cf|\u6881\u957f|\u6881\u9ad8)|\u8f66\u8fd0\u8d39|\u7a0e\u91d1|\u7ba1\u7406\u8d39|\u4e0d\u6253\u6298\u603b\u989d|\u6253\u6298\u603b\u989d|\u697c\u5c42|\u7535\u68af/g, "").replace(/[\+\-\*\/\(\)\|\!]/g, "").replace(/[0-9]/g, "") != "") {
 
             com.showAlert(com.warning, "公式存在无效参数");
 
@@ -759,18 +759,19 @@ $(function() {
 
     function formulaToParam(formula) {
 
-        return formula.replace(/\u5468\u957f/g, "{a}").replace(/\u9762\u79ef/g, "{b}").replace(/\u4e3e\u67b6/g, "{c}").replace(/\u6d1e\u9762/g, "{d}").replace(/\u7a97\u9762/g, "{f}").replace(/\u6881\u957f/g, "{h}").replace(/\u6881\u9ad8/g, "{i}").replace(/\u53c2\u6570/g, "{e}").replace(/\u53d8\u91cf/g, "{g}").replace(/\u697c\u5c42/g, "{o}").replace(/\u7535\u68af/g, "{of}").replace(/\u7a0e\u91d1/g, "{u}").replace(/\u7ba1\u7406\u8d39/g, "{v}").replace(/\u4e0d\u6253\u6298\u603b\u989d/g, "{x}").replace(/\u6253\u6298\u603b\u989d/g, "{y}").replace(/\u8f66\u8fd0\u8d39/g, "{z}");
+        return formula.replace(/\u5468\u957f/g, "{a}").replace(/\u8ba1\u4ef7\u9762\u79ef/g, "{k}").replace(/\u9762\u79ef/g, "{b}").replace(/\u4e3e\u67b6/g, "{c}").replace(/\u6d1e\u9762/g, "{d}").replace(/\u7a97\u9762/g, "{f}").replace(/\u6881\u957f/g, "{h}").replace(/\u6881\u9ad8/g, "{i}").replace(/\u53c2\u6570/g, "{e}").replace(/\u53d8\u91cf/g, "{g}").replace(/\u697c\u5c42/g, "{o}").replace(/\u7535\u68af/g, "{of}").replace(/\u7a0e\u91d1/g, "{u}").replace(/\u7ba1\u7406\u8d39/g, "{v}").replace(/\u4e0d\u6253\u6298\u603b\u989d/g, "{x}").replace(/\u6253\u6298\u603b\u989d/g, "{y}").replace(/\u8f66\u8fd0\u8d39/g, "{z}");
     }
 
     function paramToFormula(param) {
 
-        return param.replace(/\{a\}/g, "\u5468\u957f").replace(/\{b\}/g, "\u9762\u79ef").replace(/\{c\}/g, "\u4e3e\u67b6").replace(/\{d\}/g, "\u6d1e\u9762").replace(/\{f\}/g, "\u7a97\u9762").replace(/\{h\}/g, "\u6881\u957f").replace(/\{i\}/g, "\u6881\u9ad8").replace(/\{e\}/g, "\u53c2\u6570").replace(/\{g\}/g, "\u53d8\u91cf").replace(/{o}/g, "\u697c\u5c42").replace(/{of}/g, "\u7535\u68af").replace(/{u}/g, "\u7a0e\u91d1").replace(/{v}/g, "\u7ba1\u7406\u8d39").replace(/{x}/g, "\u4e0d\u6253\u6298\u603b\u989d").replace(/{y}/g, "\u6253\u6298\u603b\u989d").replace(/{z}/g, "\u8f66\u8fd0\u8d39");
+        return param.replace(/\{a\}/g, "\u5468\u957f").replace(/{k\}/g, "\u8ba1\u4ef7\u9762\u79ef").replace(/\{b\}/g, "\u9762\u79ef").replace(/\{c\}/g, "\u4e3e\u67b6").replace(/\{d\}/g, "\u6d1e\u9762").replace(/\{f\}/g, "\u7a97\u9762").replace(/\{h\}/g, "\u6881\u957f").replace(/\{i\}/g, "\u6881\u9ad8").replace(/\{e\}/g, "\u53c2\u6570").replace(/\{g\}/g, "\u53d8\u91cf").replace(/{o\}/g, "\u697c\u5c42").replace(/{of\}/g, "\u7535\u68af").replace(/{u\}/g, "\u7a0e\u91d1").replace(/{v\}/g, "\u7ba1\u7406\u8d39").replace(/{x\}/g, "\u4e0d\u6253\u6298\u603b\u989d").replace(/{y\}/g, "\u6253\u6298\u603b\u989d").replace(/{z\}/g, "\u8f66\u8fd0\u8d39");
     }
 
     function evals(formula) {
 
         formula = com.format(formula, {
             "a": 1,
+            "k": 1,
             "b": 1,
             "c": 1,
             "d": 1,

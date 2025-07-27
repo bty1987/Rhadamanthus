@@ -30,6 +30,10 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Integer timeLimit;
 
+	private Integer salaryLimit;
+
+	private Integer accessoryLimit;
+
 	private Short process;
 
 	private Short sort;
@@ -204,6 +208,22 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Integer getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(Integer salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	public Integer getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(Integer accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
 	}
 
 }

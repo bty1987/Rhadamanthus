@@ -4,11 +4,10 @@ jQuery(function($) {
         saveBtn: null,
         cancelBtn: null,
         modal: null,
-        categoryItems: {},
+        items: {},
         type: {},
         isCoupon: {},
         isCount: {},
-        editFlg: false,
         repeatFlg: false,
 
         validator: {
@@ -17,7 +16,9 @@ jQuery(function($) {
                 regex: /^C_\d{3}$/g,
                 errorMsg: "请以C_作为前缀 , 之后以三位数字组成(如C_001)."
             }
-        }
+        },
+        
+        cid: null,
     };
 
     category.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
@@ -29,22 +30,25 @@ jQuery(function($) {
         com.clearValidator("#no", true);
     });
 
-    category.categoryItems.cId = com.focusPage("#cId");
-    category.categoryItems.no = com.focusPage("#no");
-    category.categoryItems.categoryName = com.focusPage("#categoryName");
-    category.categoryItems.kino = com.focusPage("#kino");
-    category.categoryItems.kiname = com.focusPage("#kiname");
-    category.categoryItems.type = com.focusPage("#type");
-    category.categoryItems.isCoupon = com.focusPage("#isCoupon");
-    category.categoryItems.isCount = com.focusPage("#isCount");
+    category.items.cId = com.focusPage("#cId");
+    category.items.no = com.focusPage("#no");
+    category.items.categoryName = com.focusPage("#categoryName");
+    category.items.kino = com.focusPage("#kino");
+    category.items.kiname = com.focusPage("#kiname");
+    category.items.type = com.focusPage("#type");
+    category.items.isCoupon = com.focusPage("#isCoupon");
+    category.items.isCount = com.focusPage("#isCount");
+    category.items.isLimit = com.focusPage("#isLimit");
 
     // com.post(api.ds.data, {}, function(res) {
     //
-    //     category.categoryItems.type.bindData(res.categoryType, "key", "value");
+    // category.items.type.bindData(res.categoryType, "key", "value");
     // });
-    category.categoryItems.type.bindData(constant.data.category.type.datas, 'key', 'value');
-    category.categoryItems.isCoupon.bindData(constant.data.category.isCoupon.datas, 'key', 'value');
-    category.categoryItems.isCount.bindData(constant.data.category.isCount.datas, 'key', 'value');
+
+    category.items.type.bindData(constant.data.category.type.datas, 'key', 'value');
+    category.items.isCoupon.bindData(constant.data.category.isCoupon.datas, 'key', 'value');
+    category.items.isCount.bindData(constant.data.category.isCount.datas, 'key', 'value');
+    category.items.isLimit.bindData(constant.data.category.isLimit.datas, 'key', 'value');
 
     $.extend(com.validator, category.validator);
 
@@ -55,16 +59,15 @@ jQuery(function($) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+            if (!listData || listData.length == 0)
+                return false;
+            
+            $.each(listData, function(i, v) {
 
-                    var $liLine = creatLine(v);
+                creatLine(v).appendTo($ul);
+            });
 
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
+            $ul.appendTo($tableWrap);
         };
 
         var creatLine = function(v) {
@@ -76,7 +79,7 @@ jQuery(function($) {
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 
-            var propertyArr = [["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"], ["类型: ", constant.data().category.type.keys[v.type], "red"], ["券标识: ", constant.data().category.isCoupon.keys[v.isCoupon], "red"], ["统计标识: ", constant.data().category.isCount.keys[v.isCount], "red"]];
+            var propertyArr = [["类型: ", constant.data().category.type.keys[v.type], "red"], ["券标识: ", constant.data().category.isCoupon.keys[v.isCoupon], "red"], ["统计标识: ", constant.data().category.isCount.keys[v.isCount], "red"], ["选材控制: ", constant.data().category.isLimit.keys[v.isLimit], "red"], ["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"], ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"], ];
 
             $.each(propertyArr, function(index, value) {
 
@@ -127,27 +130,28 @@ jQuery(function($) {
 
     com.focusPage('a[name="add"]', '#pagenation').click(function() {
 
-        editFlg = false;
+        category.cid = null;
 
-        com.cleanItems(category.categoryItems);
+        com.cleanItems(category.items);
 
-        category.categoryItems.no.css("display", "none");
+        category.items.no.css("display", "none");
 
         category.modal.modal("show");
     });
 
     function editCategory(v) {
 
-        editFlg = true;
+        category.cid = v.cid;
 
-        category.categoryItems.cId.val(v.cid);
-        category.categoryItems.no.val(v.no).attr("disabled", "true").css("display", "block");
-        category.categoryItems.categoryName.val(v.name);
-        category.categoryItems.kino.val(v.kino);
-        category.categoryItems.kiname.val(v.kiname);
-        category.categoryItems.type.val(v.type);
-        category.categoryItems.isCoupon.val(v.isCoupon);
-        category.categoryItems.isCount.val(v.isCount);
+        category.items.cId.val(v.cid);
+        category.items.no.val(v.no).attr("disabled", "true").css("display", "block");
+        category.items.categoryName.val(v.name);
+        category.items.kino.val(v.kino);
+        category.items.kiname.val(v.kiname);
+        category.items.type.val(v.type);
+        category.items.isCoupon.val(v.isCoupon);
+        category.items.isCount.val(v.isCount);
+        category.items.isLimit.val(v.isLimit);
 
         category.modal.modal("show");
     }
@@ -158,22 +162,21 @@ jQuery(function($) {
             return false;
         }
 
-        var url;
+        var url = api.data.addCategory;
         var options = {
-            'category.no': category.categoryItems.no.val(),
-            'category.name': category.categoryItems.categoryName.val(),
-            'category.kino': category.categoryItems.kino.val(),
-            'category.kiname': category.categoryItems.kiname.val(),
-            'category.type': category.categoryItems.type.val(),
-            'category.isCoupon': category.categoryItems.isCoupon.val(),
-            'category.isCount': category.categoryItems.isCount.val()
+            'category.no': category.items.no.val(),
+            'category.name': category.items.categoryName.val(),
+            'category.kino': category.items.kino.val(),
+            'category.kiname': category.items.kiname.val(),
+            'category.type': category.items.type.val(),
+            'category.isCoupon': category.items.isCoupon.val(),
+            'category.isCount': category.items.isCount.val(),
+            'category.isLimit': category.items.isLimit.val(),
         };
 
-        if (editFlg) {
+        if (category.cid) {
             url = api.data.updateCategory;
-            options['category.cid'] = category.categoryItems.cId.val();
-        } else {
-            url = api.data.addCategory;
+            options['category.cid'] = category.items.cId.val();
         }
 
         com.post(url, options, function(res) {
@@ -182,11 +185,12 @@ jQuery(function($) {
 
             var no = res.category.no;
 
-            if(editFlg) no = category.categoryItems.no.val();
+            if (category.cid)
+                no = category.items.no.val();
 
             var categoryData = {
                 "no": no,
-                "name": category.categoryItems.categoryName.val(),
+                "name": category.items.categoryName.val(),
                 "companyName": "方林集团"
             };
 

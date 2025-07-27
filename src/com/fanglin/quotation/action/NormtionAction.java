@@ -184,7 +184,7 @@ public class NormtionAction extends BaseListAction {
 	@Action(value = "makeNormtionForQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeNormtionForQuotation() throws FLException {
 
-		normtionService.makeNormtionForQuotation(normtion, schedule, queryUserId());
+		normtionService.makeNormtion(normtion, schedule, queryUserId());
 
 		return SUCCESS;
 	}
@@ -192,7 +192,7 @@ public class NormtionAction extends BaseListAction {
 	@Action(value = "makeNormtionForExtension", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeNormtionForExtension() throws FLException {
 
-		normtionService.makeNormtionForExtension(normtion, extension, schedule, queryUserId());
+		normtionService.makeNormtion(normtion, extension, schedule, queryUserId());
 
 		return SUCCESS;
 	}
@@ -200,7 +200,7 @@ public class NormtionAction extends BaseListAction {
 	@Action(value = "makeNormtionForAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeNormtionForAddReduce() throws FLException {
 
-		normtionService.makeNormtionForAddReduce(normtion, addReduce, schedule, queryUserId());
+		normtionService.makeNormtion(normtion, addReduce, schedule, queryUserId());
 
 		return SUCCESS;
 	}

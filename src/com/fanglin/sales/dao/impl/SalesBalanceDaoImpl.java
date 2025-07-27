@@ -113,7 +113,11 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<SalesBalancePO> query, List<Filter> filters) throws FLException {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
+		queryFilterExcute(query, filters, "");
+	}
+
+	private static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
 
 		if (filters == null) return;
 

@@ -20,6 +20,8 @@ $(function() {
         "balanceSelection.bsid": balanceSelectionItem.bsid
     });
 
+    seacher.condition(["balance-selection-item-orderId", "balance-balanceSelection-status", "balance-balanceSelse-brand", "balance-balanceSelection-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+
     seacher.history(history);
 
     seacher.button([{

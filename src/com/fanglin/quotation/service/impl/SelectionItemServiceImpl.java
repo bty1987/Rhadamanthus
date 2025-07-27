@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.GoodsDao;
@@ -194,16 +195,17 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		}
 
 		GoodsPO goodsPO = goodsDao.get(selectionItemVO.getGoods().getGid());
-
 		BrandPO brandPO = brandDao.get(goodsPO.getBid());
+
+		UserPO operater = userDao.queryUserByUserId(userId);
 
 		long suid = brandPO.getSupplier().getUid();
 
-		SelectionItemPO _selectionItemPO = selectionItemDao.querySelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
+		SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
 
 		List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(brandPO.getBid());
 
-		if (_selectionItemPO == null) {
+		if (selectionItemPO == null) {
 
 			QuotationItemPO quotationItemPO = quotationItemDao.get(selectionItemVO.getQiid());
 
@@ -211,66 +213,66 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200013, "报价项不存在");
 			}
 
-			SelectionItemPO selectionItemPO = new SelectionItemPO();
+			SelectionItemPO selectionItemNO = new SelectionItemPO();
 
-			BeanUtil.copyProperties(selectionItemVO, selectionItemPO, Arrays.asList("goods"));
+			BeanUtil.copyProperties(selectionItemVO, selectionItemNO, Arrays.asList("goods"));
 
-			selectionItemPO.setGoods(goodsPO);
-			selectionItemPO.setSuid(suid);
-			selectionItemPO.setSid(selectionVO.getSid());
-			selectionItemPO.setOrderId(selectionPO.getOrderId());
-			selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
-			selectionItemPO.setCompany(company);
-			selectionItemPO.setCreater(userDao.queryUserByUserId(userId));
-			selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			selectionItemNO.setGoods(goodsPO);
+			selectionItemNO.setSuid(suid);
+			selectionItemNO.setSid(selectionVO.getSid());
+			selectionItemNO.setOrderId(selectionPO.getOrderId());
+			selectionItemNO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
+			selectionItemNO.setCompany(company);
+			selectionItemNO.setCreater(operater);
+			selectionItemNO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			selectionItemNO.setSgid(selectionItemVO.getSoods().getSid());
+			selectionItemNO.setQiid(selectionItemVO.getQiid());
+
+			selectionItemNO.setPreprice(quotationItemPO.getUnitPrice());
+
+			if (rights != null && rights.size() != 0) {
+				checkSelectionItem(selectionItemNO, rights, SelectionItemPO.STATUS_INIT_SHORT, operater);
+			}
+
+			selectionItemDao.save(selectionItemNO);
+
+			selectionItemPO = selectionItemNO;
+
+		} else if (selectionItemPO.getType() == SelectionItemPO.TYPE_ALONE_SHORT) {
+
+			selectionItemPO.setQuoteId(selectionItemVO.getQuoteId());
 			selectionItemPO.setSgid(selectionItemVO.getSoods().getSid());
 			selectionItemPO.setQiid(selectionItemVO.getQiid());
 
-			selectionItemPO.setPreprice(quotationItemPO.getUnitPrice());
-
-			if (rights != null && rights.size() != 0) {
-				checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_INIT_SHORT, userDao.queryUserByUserId(userId));
-			}
-
-			selectionItemDao.save(selectionItemPO);
-
-			_selectionItemPO = selectionItemPO;
-
-		} else if (_selectionItemPO.getType() == SelectionItemPO.TYPE_ALONE_SHORT) {
-
-			_selectionItemPO.setQuoteId(selectionItemVO.getQuoteId());
-			_selectionItemPO.setSgid(selectionItemVO.getSoods().getSid());
-			_selectionItemPO.setQiid(selectionItemVO.getQiid());
-
-			selectionItemDao.update(_selectionItemPO);
+			selectionItemDao.update(selectionItemPO);
 		} else {
 
-			if (_selectionItemPO.getStatus() != SelectionItemPO.STATUS_INIT_SHORT) {
+			if (selectionItemPO.getStatus() != SelectionItemPO.STATUS_INIT_SHORT) {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
-			if (_selectionItemPO.getGoods().getGid() != goodsPO.getGid()) {
+			if (selectionItemPO.getGoods().getGid() != goodsPO.getGid()) {
 
-				_selectionItemPO.setSuid(suid);
-				_selectionItemPO.setGoods(goodsPO);
-				_selectionItemPO.setPostprice(selectionItemVO.getPostprice());
+				selectionItemPO.setSuid(suid);
+				selectionItemPO.setGoods(goodsPO);
+				selectionItemPO.setPostprice(selectionItemVO.getPostprice());
 
 				if (rights != null && rights.size() != 0) {
-					checkSelectionItem(_selectionItemPO, rights, SelectionItemPO.STATUS_INIT_SHORT, userDao.queryUserByUserId(userId));
+					checkSelectionItem(selectionItemPO, rights, SelectionItemPO.STATUS_INIT_SHORT, operater);
 				}
-			} else if (_selectionItemPO.getGoods().getGid() == goodsPO.getGid()) {
+			} else if (selectionItemPO.getGoods().getGid() == goodsPO.getGid()) {
 
-				_selectionItemPO.setPostprice(selectionItemVO.getPostprice());
+				selectionItemPO.setPostprice(selectionItemVO.getPostprice());
 			}
 
-			selectionItemDao.update(_selectionItemPO);
+			selectionItemDao.update(selectionItemPO);
 		}
 
 		BeanUtil.copyProperties(selectionVO, selectionPO, Arrays.asList("decoration", "creater", "splitter", "traner"));
 
 		selectionDao.update(selectionPO);
 
-		_selectionItemPO.ptv(selectionItemVO);
+		selectionItemPO.ptv(selectionItemVO);
 
 		return 0;
 	}
@@ -297,6 +299,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
 			throw new FLException(140035, "增减项状态不可操作");
+		}
+
+		BrandPO brandPO = brandDao.queryBrandByBid(selectionItemPO.getGoods().getBid());
+
+		if (brandPO.getCategory().getIsLimit() == CategoryPO.ISLIMIT_LIMIT_INT && selectionItemVO.getNum() > selectionItemPO.getInitNum()) {
+			throw new FLException(200044, "拆单量不足");
 		}
 
 		updateSelectionTotal(selectionItemPO, selectionItemVO.getNum());
@@ -374,6 +382,16 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
+			AddReducePO addReducePO = null;
+
+			if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+				addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+			}
+
+			if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+				throw new FLException(140035, "增减项状态不可操作");
+			}
+
 			if (selectionItemVO.getChecker() != null) {
 				checker = userDao.get(selectionItemVO.getChecker().getUid());
 			}
@@ -412,6 +430,16 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
+			AddReducePO addReducePO = null;
+
+			if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+				addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+			}
+
+			if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+				throw new FLException(140035, "增减项状态不可操作");
+			}
+
 			selectionItemPO.setConfirmer(confirmer);
 			selectionItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_CONFIRM_SHORT);
@@ -446,9 +474,31 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
+			AddReducePO addReducePO = null;
+
+			if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+				addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+			}
+
+			if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+				throw new FLException(140035, "增减项状态不可操作");
+			}
+
 			selectionItemPO.setFinish(finish);
 			selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
+
+			if (selectionItemVO.getRefnum() != null && selectionItemVO.getRefnum() < 0) {
+				throw new FLException(200044, "拆单量不足");
+			}
+
+			if (selectionItemVO.getRefnum() != null && selectionItemVO.getRefnum() > selectionItemPO.getNum()) {
+				throw new FLException(200044, "拆单量不足");
+			}
+
+			if (selectionItemVO.getRefnum() != null) {
+				selectionItemPO.setRefnum(selectionItemVO.getRefnum());
+			}
 
 			List<SelectionItemStatusRightPO> rights = selectionItemStatusRightDao.querySelectionItemStatusRight(selectionItemPO.getGoods().getBid());
 
@@ -478,6 +528,16 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 			if (SelectionItemPO.STATUS_FINISH_SHORT != selectionItemPO.getStatus()) {
 				throw new FLException(200039, "选材项状态不可操作");
+			}
+
+			AddReducePO addReducePO = null;
+
+			if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+				addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+			}
+
+			if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+				throw new FLException(140035, "增减项状态不可操作");
 			}
 
 			selectionItemPO.setReviewer(reviewer);
@@ -514,6 +574,16 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
+			AddReducePO addReducePO = null;
+
+			if (selectionItemPO.getType() == SelectionItemPO.TYPE_ADDITEM_SHORT) {
+				addReducePO = addReduceDao.get(selectionItemPO.getAreaId());
+			}
+
+			if (addReducePO != null && AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype() && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus())) {
+				throw new FLException(140035, "增减项状态不可操作");
+			}
+
 			selectionItemPO.setBalancer(balancer);
 			selectionItemPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
@@ -546,6 +616,18 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		if (Arrays.asList(SelectionItemPO.TYPE_EXTENSIONMINUS_SHORT, SelectionItemPO.TYPE_MINUSITEM_SHORT).contains(selectionItemPO.getType())) {
 			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		if (selectionItemVO.getRefnum() != null && selectionItemVO.getRefnum() < 0) {
+			throw new FLException(200044, "拆单量不足");
+		}
+
+		if (selectionItemVO.getRefnum() != null && selectionItemVO.getRefnum() > selectionItemPO.getNum()) {
+			throw new FLException(200044, "拆单量不足");
+		}
+
+		if (selectionItemVO.getRefnum() != null) {
+			selectionItemPO.setRefnum(selectionItemVO.getRefnum());
 		}
 
 		selectionItemPO.setRefnum(selectionItemVO.getRefnum());

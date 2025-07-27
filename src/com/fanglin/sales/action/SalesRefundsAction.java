@@ -31,6 +31,10 @@ public class SalesRefundsAction extends BaseListAction {
 
 	private List<SalesRefundsItemVO> refundsItems;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "pageSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesRefunds() throws FLException {
 
@@ -74,7 +78,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "affirmSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSalesRefunds() throws FLException {
 
-		salesRefundsService.affirmSalesRefunds(refunds);
+		salesRefundsService.affirmSalesRefunds(refunds, securityCode, verifyCode);
 
 		return SUCCESS;
 	}

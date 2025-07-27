@@ -76,7 +76,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		List<AdvancePaymentVO> advancePaymentVOs = new ArrayList<AdvancePaymentVO>();
 
 		for (AdvancePaymentPO advancePaymentPO : advancePaymentPOs) {
-			advancePaymentVOs.add(advancePaymentPOToVO(advancePaymentPO));
+			advancePaymentVOs.add(advancePaymentPO.ptv(new AdvancePaymentVO(new DecorationVO())));
 		}
 
 		paging.setData(advancePaymentVOs);
@@ -246,16 +246,6 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		} else if (type == CustomerPO.BALANCE_TYPE_ZHENGLIN_INT) {
 			advancePaymentPO.setZhenglinBalance(value);
 		}
-	}
-
-	public AdvancePaymentVO advancePaymentPOToVO(AdvancePaymentPO advancePaymentPO) {
-
-		AdvancePaymentVO advancePaymentVO = new AdvancePaymentVO(new DecorationVO());
-
-		BeanUtil.copyProperties(advancePaymentPO, advancePaymentVO, Arrays.asList("decoration"));
-		advancePaymentPO.getDecoration().ptvcascade(advancePaymentVO.getDecoration());
-
-		return advancePaymentVO;
 	}
 
 }

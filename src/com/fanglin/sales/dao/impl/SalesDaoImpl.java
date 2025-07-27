@@ -233,7 +233,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				query.alias(String.format("%sdept", prefix), "dept");
 			} else if (field.contains("department")) {
 				query.alias(String.format("%sdept", prefix), "dept");
-			}else if (field.contains("brand")) {
+			} else if (field.contains("brand")) {
 				query.alias(String.format("%sbrand", prefix), "brand");
 			}
 

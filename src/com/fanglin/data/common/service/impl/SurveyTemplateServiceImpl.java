@@ -234,4 +234,35 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int copySurveyTemplate(SurveyTemplateVO surveyTemplate, int company) throws FLException {
+		
+		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyTemplate.getStid());
+		
+		if (surveyTemplatePO == null) {
+			throw new FLException(130096, "调研模版不存在");
+		}
+		SurveyTemplatePO newTemplate = new SurveyTemplatePO();
+		
+		BeanUtil.copyProperties(surveyTemplatePO, newTemplate, Arrays.asList("items"));
+
+		surveyTemplateDao.save(newTemplate);
+
+		List<SurveyTemplateItemPO> items = surveyTemplatePO.getItems();
+		
+		for (SurveyTemplateItemPO itemPO : items) {
+			
+			SurveyTemplateItemPO newTemplateItem = new SurveyTemplateItemPO();
+			
+			BeanUtil.copyPropertie(itemPO, newTemplateItem, Arrays.asList("options"));
+			
+			newTemplateItem.setStid(newTemplate.getStid());
+
+			surveyTemplateItemDao.save(newTemplateItem);
+		}
+		
+		return 0;
+	}
+
 }

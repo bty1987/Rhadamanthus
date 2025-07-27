@@ -73,6 +73,10 @@ public class CustomerUserRuleItemPO implements Serializable {
 
 	private Timestamp handleTime;
 
+	private Timestamp deleteTime;
+
+	private String comment;
+
 	public CustomerUserRuleItemPO() {
 		super();
 	}
@@ -207,23 +211,45 @@ public class CustomerUserRuleItemPO implements Serializable {
 		this.handleTime = handleTime;
 	}
 
-	public CustomerUserRuleItemPO award(long curid, String name, DepartmentTypePO departmentType) {
+	@Column(name = "deleteTime")
+	public Timestamp getDeleteTime() {
+		return deleteTime;
+	}
 
-		this.curid = curid;
-		this.name = name;
+	public void setDeleteTime(Timestamp deleteTime) {
+		this.deleteTime = deleteTime;
+	}
 
-		this.departmentType = departmentType;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
 
-		this.type = TYPE_DEPT_TYPE_INT;
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 
-		this.isSurplus = ISSURPLUS_NONE_INT;
-		this.isDelete = ISDELETE_ENABLE_INT;
-		this.status = STATUS_INIT_INT;
+	public CustomerUserRuleItemPO award(String orderId, long curid, String name, DepartmentTypePO departmentType) {
 
-		this.priority = 3;
+		setCurid(curid);
+		setName(name);
 
-		this.createTime = DateUtil.getDateToTimestamp(new Date());
-		this.handleTime = DateUtil.getDateToTimestamp(new Date());
+		setDepartmentType(departmentType);
+		setType(TYPE_DEPT_TYPE_INT);
+
+		setUppval(1000);
+		setLowval(10000000);
+
+		setIsSurplus(ISSURPLUS_NONE_INT);
+		setIsDelete(ISDELETE_ENABLE_INT);
+		setStatus(STATUS_INIT_INT);
+
+		setPriority((short) 3);
+
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		setHandleTime(DateUtil.getDateToTimestamp(new Date()));
+
+		setComment(orderId);
 
 		return this;
 	}

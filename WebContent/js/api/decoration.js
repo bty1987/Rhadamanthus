@@ -45,7 +45,7 @@ $.extend(api.index, {
     decorationServiceIndex: {
         url: "/views/decoration/decorationService.html"
     },
-    
+
     decorationReferIndex: {
         url: "/views/decoration/decoration4refer.html"
     },
@@ -61,7 +61,7 @@ $.extend(api.index, {
     decorationPictureIndex: {
         url: "/views/decoration/decorationPicture.html"
     },
-    
+
     decorationSales2print: {
         url: "/views/decoration/decorationSales2print.html"
     },
@@ -187,7 +187,7 @@ $.extend(api, {
         sendDecorationContractForAuth: {
             url: "sendDecorationContractForAuth.do"
         },
-        
+
         queryDecorationMeasure: {
             url: "queryDecorationMeasure.do"
         },
@@ -224,7 +224,7 @@ $.extend(api, {
         showDecorationContract: {
             url: "showDecorationContract.do"
         },
-       
+
         failureDecorationMeasure: {
             url: "failureDecorationMeasure.do"
         },
@@ -273,7 +273,7 @@ $.extend(api, {
         updateDecorationMeasure: {
             url: "updateDecorationMeasure.do"
         },
-        
+
         pageDecoration: {
             url: "pageDecoration.do",
             demo: true,
@@ -618,6 +618,10 @@ $.extend(api, {
         confirmDecorationInfo: {
             url: "confirmDecorationInfo.do"
         },
+        referDecorationInfo: {
+            url: "referDecorationInfo.do"
+        },
+
         exportDecorationByContractTime: {
             url: "exportDecorationByContractTime.do"
         },

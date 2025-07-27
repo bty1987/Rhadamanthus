@@ -550,6 +550,7 @@ jQuery(function($) {
 
         var url = api.quotation.addExtension;
         var options = {
+            "extension.qid": 0,
             "extension.content": extension.items.addExtensionDes.val(),
             "extension.type": extension.items.addExtensionType.val(),
             "extension.orderId": extension.orderId,

@@ -171,6 +171,15 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(200037, "存在关联选材项");
 		}
 
+		if (extensionItemPO.getType() == ExtensionItemPO.TYPE_SUB_QUOTE_INT) {
+
+			QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(extensionItemPO.getQuotationFunctionArea().getQfaId());
+
+			handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemPO.getQuoteItemId(), 0, extensionItemPO.getNum());
+		}
+
+		extensionItemDao.delete(extensionItemPO);
+
 		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
 		extensionPO.setManageRate(extensionVO.getManageRate());
@@ -182,7 +191,6 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 		extensionPO.setConsPrice(extensionVO.getConsPrice());
 
 		extensionDao.update(extensionPO);
-		extensionItemDao.delete(extensionItemPO);
 	}
 
 	private List<ExtensionItemVO> handleExtensionItem(List<ExtensionItemPO> extensionItemPOs) {

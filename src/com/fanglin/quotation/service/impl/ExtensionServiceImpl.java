@@ -27,6 +27,7 @@ import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionService;
 import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
+import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -67,12 +68,13 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		for (ExtensionDO extensionDO : extensionDOs) {
 
-			ExtensionVO extensionVO = new ExtensionVO(new DecorationVO(), new UserBaseVO());
+			ExtensionVO extensionVO = new ExtensionVO(new DecorationVO(), new QuotationVO(), new UserBaseVO());
 
 			extensionVO.getDecoration().setSupervisor(new UserBaseVO());
 
-			BeanUtil.copyPropertie(extensionDO, extensionVO, Arrays.asList("decoration", "creater"));
+			BeanUtil.copyPropertie(extensionDO, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
 			BeanUtil.copyProperties(extensionDO.getCreater(), extensionVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+			BeanUtil.copyProperties(extensionDO.getQuotation(), extensionVO.getQuotation(), Arrays.asList("creater", "version"));
 
 			extensionDO.getDecoration().ptvcascade(extensionVO.getDecoration());
 

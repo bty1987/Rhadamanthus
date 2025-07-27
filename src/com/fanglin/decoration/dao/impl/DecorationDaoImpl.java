@@ -61,9 +61,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		}
 
 		if (designDepartmentIds != null && designDepartmentIds.size() > 0) {
-			query.alias("designer", "designer");
-			query.alias("designer.dept", "designerDept");
-			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
+			query.alias("designDept", "designDept").add(Restrictions.in("designDept.did", designDepartmentIds));
 		}
 
 		if (statuses != null && statuses.size() > 0) {
@@ -117,7 +115,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
 		query.add(query.getCriterion("company", company, "eq"));
-		query.add(query.getCriterion("grade", "A", "eq"));// 默认 等级条件 A
+		query.add(query.getCriterion("grade", "A", "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -148,8 +146,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		query.add(query.getCriterion("company", company, "eq"));
 
 		if (dids != null && dids.size() > 0) {
-			query.alias("designDept", "designDept");
-			query.add(Restrictions.in("designDept.did", dids));
+			query.alias("designer", "designer").alias("designer.dept", "designerDept").add(Restrictions.in("designerDept.did", dids));
 		}
 
 		queryFilterExcute(query, filters);
@@ -167,9 +164,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		query.add(query.getCriterion("company", company, "eq"));
 
 		if (dids != null && dids.size() > 0) {
-			query.alias("designer", "designer");
-			query.alias("designer.dept", "designerDept");
-			query.add(Restrictions.in("designerDept.did", dids));
+			query.alias("designer", "designer").alias("designer.dept", "designerDept").add(Restrictions.in("designerDept.did", dids));
 		}
 
 		if (statuses != null && statuses.size() > 0) {
@@ -203,8 +198,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
 		if (dids != null && dids.size() > 0) {
-			query.alias("salesDept", "salesDept");
-			query.add(Restrictions.in("salesDept.did", dids));
+			query.alias("salesDept", "salesDept").add(Restrictions.in("salesDept.did", dids));
 		}
 
 		queryFilterExcute(query, filters);
@@ -220,9 +214,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
 		if (salesmanDepartmentIds != null && salesmanDepartmentIds.size() > 0) {
-			query.alias("salesman", "salesman");
-			query.alias("salesman.dept", "salesmanDept");
-			query.add(Restrictions.in("salesmanDept.did", salesmanDepartmentIds));
+			query.alias("salesman", "salesman").alias("salesman.dept", "salesmanDept").add(Restrictions.in("salesmanDept.did", salesmanDepartmentIds));
 		}
 
 		if (statuses != null && statuses.size() > 0) {
@@ -250,9 +242,31 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPO> queryDecorationForRefer(String orderId) {
+	public List<DecorationPO> queryDecorationForChanceRefer(String orderId) {
 
-		String sql = "select d.* from decoration.decoration d, customer.customersource cs, customer.customerchance cc where cs.referOrderId = :orderId and cs.csid = cc.csid and cc.orderId = d.orderId";
+		String sql = "select d.* from decoration.decoration d, customer.customersource cs, customer.customerchance cc where cc.orderId = :orderId and cs.csid = cc.csid and cs.referOrderId = d.orderId";
+
+		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
+
+		return query.setString("orderId", orderId).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationForOriginRefer(String orderId) {
+
+		String sql = "select d.* from decoration.decoration d, customer.customerorigin co where co.referOrderId = :orderId and co.orderId = d.orderId";
+
+		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
+
+		return query.setString("orderId", orderId).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationForDecorationInfoRefer(String orderId) {
+
+		String sql = "select d.* from decoration.decorationInfo f,decoration.decoration d where f.referOrderId=:orderId and d.orderId=f.orderId";
 
 		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
 
@@ -269,8 +283,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys) {
 
 		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT);
+		List<Short> balances = Arrays.asList(DecorationPO.BALANCESTATUS_INIT_INT);
 
-		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.not(Restrictions.in("status", statuss))).add(Restrictions.in("company", companys)).uniqueResult();
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.and(Restrictions.not(Restrictions.in("status", statuss)), Restrictions.in("balanceStatus", balances))).add(Restrictions.in("company", companys)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -279,12 +294,18 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
+	public DecorationPO queryDecoration(String orderId, String phone) {
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("customer.phone", phone)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys) {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT });
+		List<Short> balances = Arrays.asList(DecorationPO.BALANCESTATUS_INIT_INT);
 
-		Criteria criteria = session().createCriteria(DecorationPO.class).add(Restrictions.in("company", companys)).createAlias("customer", "customer").add(Restrictions.not(Restrictions.in("status", status)));
+		Criteria criteria = session().createCriteria(DecorationPO.class).add(Restrictions.in("company", companys)).createAlias("customer", "customer").add(Restrictions.and(Restrictions.not(Restrictions.in("status", status)), Restrictions.in("balanceStatus", balances)));
 
 		if (cid != null) {
 			criteria.add(Restrictions.eq("customer.cid", cid));
@@ -349,24 +370,24 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.alias(String.format("%sdesigner", prefix), "designer");
 
 				if (field.contains("department")) {
-					query.alias("designDept", "designerDept");
+					query.alias("designDept", "designDept");
 				}
 
 				if (field.contains("region")) {
-					query.alias("designDept", "designerDept");
-					query.alias("designerDept.fatherDept", "designerRegion");
+					query.alias("designDept", "designDept");
+					query.alias("designDept.fatherDept", "designerRegion");
 				}
 			} else if ((field.contains("business") || field.contains("salesman"))) {
 
 				query.alias(String.format("%ssalesman", prefix), "salesman");
 
 				if (field.contains("department")) {
-					query.alias("salesDept", "salesmanDept");
+					query.alias("salesDept", "salesDept");
 				}
 
 				if (field.contains("region")) {
-					query.alias("salesDept", "salesmanDept");
-					query.alias("salesmanDept.fatherDept", "salesmanRegion");
+					query.alias("salesDept", "salesDept");
+					query.alias("salesDept.fatherDept", "salesmanRegion");
 				}
 			} else if (field.contains("supervisor")) {
 
@@ -410,9 +431,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.village.no".equals(field)) {
 				query.add(query.getCriterion("village.no", data, op));
 			} else if ("decoration.designer.department.no".equals(field)) {
-				query.add(query.getCriterion("designerDept.no", data, op));
+				query.add(query.getCriterion("designDept.no", data, op));
 			} else if ("decoration.salesman.department.no".equals(field)) {
-				query.add(query.getCriterion("salesmanDept.no", data, op));
+				query.add(query.getCriterion("salesDept.no", data, op));
 			} else if ("decoration.designer.name".equals(field)) {
 				query.add(query.getCriterion("designer.currentName", data, op));
 			} else if ("decoration.salesman.name".equals(field)) {
@@ -438,9 +459,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.company".equals(field)) {
 				query.add(query.getCriterion(String.format("%scompany", prefix), CompanyServiceImpl.decode(filter.getData()), op));
 			} else if ("decoration.salesman.department.name".equals(field)) {
-				query.add(query.getCriterion("salesmanDept.name", data, op));
+				query.add(query.getCriterion("salesDept.name", data, op));
 			} else if ("decoration.designer.department.name".equals(field)) {
-				query.add(query.getCriterion("designerDept.name", data, op));
+				query.add(query.getCriterion("designDept.name", data, op));
 			} else if ("decoration.designer.region.no".equals(field)) {
 				query.add(query.getCriterion("designerRegion.no", data, op));
 			} else if ("decoration.salesman.region.no".equals(field)) {
@@ -448,7 +469,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if ("decoration.orderType".equals(field)) {
 				query.add(query.getCriterion(String.format("%stypeness", prefix), Short.valueOf(data), op));
 			} else if ("decoration.busitype.no".equals(field)) {
-				query.add(query.getCriterion("busitype.no", Long.valueOf(data), op));
+				query.add(query.getCriterion("busitype.no", Integer.valueOf(data), op));
 			} else if ("decoration.houseArea".equals(field)) {
 				int dataF = Integer.parseInt(data);
 				query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
@@ -487,4 +508,5 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			}
 		}
 	}
+
 }

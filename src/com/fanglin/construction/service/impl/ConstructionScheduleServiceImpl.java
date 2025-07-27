@@ -1,5 +1,6 @@
 package com.fanglin.construction.service.impl;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -184,11 +185,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(130026, "工程节点不存在");
 		}
 
-		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPrecheck(), 1000.0)) {
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionSchedulePO.getPrecheck(), 1000.0)) {
 			throw new FLException(120018, "装修款比例不足");
 		}
 
-		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getSaleScale() < Arith.div(constructionNodePO.getStacheck(), 1000.0)) {
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getSaleScale() < Arith.div(constructionSchedulePO.getStacheck(), 1000.0)) {
 			throw new FLException(120033, "销售比例不足");
 		}
 
@@ -215,6 +216,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		if (constructionNodePO.getMark() == ConstructionNodePO.MARK_START_INT) {
 			constructionPO.setStartTime(DateUtil.getDateToTimestamp(new Date()));
+
+			resetConstructionSchedule(constructionScheduleVO);
 		}
 
 		constructionPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
@@ -222,6 +225,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionDao.update(constructionPO);
 
 		decorationService.sendMessage(decorationPO.getOrderId(), "工程", String.format("%s准备进场. %s", constructionNodePO.getName(), constructionNodePO.getStartalk()));
+
+		constructionScheduleVO.setStartTime(constructionSchedulePO.getStartTime());
 
 		return 0;
 	}
@@ -254,11 +259,11 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(130026, "工程节点不存在");
 		}
 
-		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPostcheck(), 1000.0)) {
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionSchedulePO.getPostcheck(), 1000.0)) {
 			throw new FLException(120018, "装修款比例不足");
 		}
 
-		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getSaleScale() < Arith.div(constructionNodePO.getFincheck(), 1000.0)) {
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getSaleScale() < Arith.div(constructionSchedulePO.getFincheck(), 1000.0)) {
 			throw new FLException(120033, "销售比例不足");
 		}
 
@@ -297,6 +302,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		String content = String.format("装修单: %s, 地址: %s %s, 预计完工时间: %s , 还剩%s日 , 请及时对接完工安排 ", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber(), finishTime, finishDay + 1);
 
 		messageService.sendMessage(constructionPO.getSupervisor().getUserId(), decorationPO.getCreater().getUserId(), content, MessagePO.TYPE_SEND_CONSTRUCTION_INT, decorationPO.getCompany());
+
+		constructionScheduleVO.setEndTime(constructionSchedulePO.getEndTime());
 
 		return 0;
 	}
@@ -357,6 +364,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionScheduleDao.update(constructionSchedulePO);
 	}
 
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void leaveConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
 
@@ -374,6 +382,64 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		constructionSchedulePO.setLeaveTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionScheduleDao.update(constructionSchedulePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int resetConstructionSchedule(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		ConstructionPO constructionPO = constructionDao.get(constructionSchedulePO.getCid());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		boolean flag = false;
+		int timelimit = 0;
+		Timestamp startTime = constructionSchedulePO.getStartTime();
+
+		List<ConstructionSchedulePO> constructionSchedulePOs = constructionScheduleDao.queryConstructionScheduleByCid(constructionPO.getCid());
+		List<ConstructionSchedulePO> constructionScheduleWOs = new ArrayList<ConstructionSchedulePO>();
+
+		for (ConstructionSchedulePO constructionSchedule : constructionSchedulePOs) {
+
+			if (!flag) constructionScheduleWOs.add(0, constructionSchedule);
+
+			if (constructionSchedule.getCsid() == constructionSchedulePO.getCsid()) flag = true;
+
+			Timestamp preStartTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(startTime), Arith.div(timelimit, 1000000)));
+			Timestamp preEndTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(startTime), Arith.div((timelimit + constructionSchedule.getPeriod()), 1000000)));
+
+			constructionSchedule.setPreStartTime(preStartTime);
+			constructionSchedule.setPreEndTime(preEndTime);
+
+			constructionScheduleDao.update(constructionSchedule);
+
+			timelimit = timelimit + constructionSchedule.getPeriod();
+		}
+
+		timelimit = 0;
+
+		for (ConstructionSchedulePO constructionSchedule : constructionScheduleWOs) {
+
+			Timestamp preStartTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(startTime), Arith.div(timelimit, -1000000)));
+			Timestamp preEndTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(startTime), Arith.div((timelimit + constructionSchedule.getPeriod()), -1000000)));
+
+			constructionSchedule.setPreStartTime(preStartTime);
+			constructionSchedule.setPreEndTime(preEndTime);
+
+			constructionScheduleDao.update(constructionSchedule);
+
+			timelimit = timelimit + constructionSchedule.getPeriod();
+		}
+
+		return 0;
 	}
 
 	private DecorationVO ptv(DecorationPO decorationPO) {

@@ -84,6 +84,14 @@ public class SurveyTemplateAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "copySurveyTemplate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String copySurveyTemplate() throws FLException {
+
+		surveyTemplateService.copySurveyTemplate(surveyTemplate, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public SurveyTemplateVO getSurveyTemplate() {
 		return surveyTemplate;
 	}

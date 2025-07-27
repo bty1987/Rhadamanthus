@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.quotation.service.AddReduceService;
 import com.fanglin.quotation.vo.AddReduceVO;
 
@@ -37,9 +38,15 @@ public class AddReduceAction extends BaseListAction {
 
 	private List<AddReduceVO> addReduces;
 
+	private DecorationVO decoration;
+
 	private AddReduceVO addReduce;
 
 	private List<Short> statuses;
+
+	private String securityCode;
+
+	private String verifyCode;
 
 	@Action(value = "pageAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduce() throws FLException {
@@ -53,6 +60,14 @@ public class AddReduceAction extends BaseListAction {
 	public String pageAddReduceByOrderId() throws FLException {
 
 		addReduceService.pageAddReduceByOrderId(getPaging(), getFilters(), addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddReduceByOrderId() throws FLException {
+
+		addReduces = addReduceService.queryAddReduceByOrderId(addReduce);
 
 		return SUCCESS;
 	}
@@ -132,7 +147,7 @@ public class AddReduceAction extends BaseListAction {
 	@Action(value = "unpayAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String unpayAddReduce() throws FLException {
 
-		addReduceService.unpayAddReduce(addReduce);
+		addReduceService.unpayAddReduce(addReduce, queryUserId());
 
 		return SUCCESS;
 	}
@@ -141,6 +156,22 @@ public class AddReduceAction extends BaseListAction {
 	public String confirmAddReduce() throws FLException {
 
 		addReduceService.confirmAddReduce(addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendAddReduce() throws FLException {
+
+		addReduceService.sendAddReduce(addReduce, addReduces);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmAddReduce() throws FLException {
+
+		addReduceService.affirmAddReduce(decoration, addReduces, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -169,12 +200,36 @@ public class AddReduceAction extends BaseListAction {
 		this.addReduces = addReduces;
 	}
 
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
 	public List<Short> getStatuses() {
 		return statuses;
 	}
 
 	public void setStatuses(List<Short> statuses) {
 		this.statuses = statuses;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

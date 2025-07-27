@@ -9,7 +9,9 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.balance.dao.BalanceSelectionItemDao;
 import com.fanglin.balance.po.BalanceSelectionItemPO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("balanceSelectionItemDao")
@@ -20,13 +22,15 @@ public class BalanceSelectionItemDaoImpl extends DaoImpl<BalanceSelectionItemPO>
 	}
 
 	@Override
-	public List<BalanceSelectionItemPO> pageBalanceSelectionItem(Paging paging, List<Filter> filters, long bsid) {
+	public List<BalanceSelectionItemPO> pageBalanceSelectionItem(Paging paging, List<Filter> filters, long bsid) throws FLException {
 
 		PagingQuery<BalanceSelectionItemPO> query = pagingQuery(paging, BalanceSelectionItemPO.class);
 
-		query.add(Restrictions.eq("bsid", bsid));
+		query.alias("selectionItem", "selectionItem").alias("selectionItem.decoration", "sidecoration").add(Restrictions.eq("bsid", bsid));
 
-		query.asc("bsid");
+		queryFilterExcute(query, filters);
+
+		query.desc("sidecoration.orderId");
 
 		return query.list();
 	}
@@ -44,9 +48,18 @@ public class BalanceSelectionItemDaoImpl extends DaoImpl<BalanceSelectionItemPO>
 
 	@Override
 	public int countBalanceSelectionItem(long bsid) {
+
 		String sql = "select count(*) from balance.balanceselectionitem where bsid = :bsid";
 		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("bsid", bsid).uniqueResult();
+
 		return num.intValue();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
+
+		if (filters == null) return;
+
+		DecorationDaoImpl.queryFilterExcute(query, filters, "selectionItem.decoration");
 	}
 
 }

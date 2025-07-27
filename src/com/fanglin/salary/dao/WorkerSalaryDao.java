@@ -14,6 +14,8 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO> {
 
 	public List<WorkerSalaryPO> pageWorkerSalary(Paging paging, List<Filter> filters);
 
+	public List<WorkerSalaryPO> queryWorkerSalary(String orderId);
+
 	public List<WorkerSalaryPO> queryWorkerSalary(String userId, Long csid);
 
 	public List<WorkerSalaryPO> queryWorkerSalary(int wuid);
@@ -23,6 +25,8 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO> {
 	public int countWorkerSalary(Long cid, Integer wuid);
 
 	public int countWorkerSalary(String orderId, Long csid);
+
+	public int amountWorkerSalary(long cid, long cnid);
 
 	public int updateWorkerSalary(String orderId, Long csid);
 

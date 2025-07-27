@@ -70,6 +70,8 @@ public class WorkerSalaryVO implements Serializable {
 
 	private String comment;
 
+	private String annotate;
+
 	public WorkerSalaryVO() {
 		super();
 	}
@@ -318,6 +320,14 @@ public class WorkerSalaryVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getAnnotate() {
+		return annotate;
+	}
+
+	public void setAnnotate(String annotate) {
+		this.annotate = annotate;
 	}
 
 }

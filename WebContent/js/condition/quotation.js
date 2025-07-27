@@ -719,6 +719,23 @@ Condition.addupRule("quotation", {
         }
     },
 
+    "selection-item-accountStatus": {
+        label: "对账状态",
+        type: "select",
+        submitConfig: {
+            name: "accountStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.quotation().selectionItem.accountStatus.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "selection-affirmTime": {
         label: "确认时间",
         type: "dateRangePicker",

@@ -13,7 +13,6 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.sales.service.SalesActivityItemService;
 import com.fanglin.sales.vo.SalesActivityItemVO;
-import com.fanglin.sales.vo.SalesActivityVO;
 import com.fanglin.sales.vo.SalesVO;
 
 @ParentPackage("common")
@@ -26,15 +25,17 @@ public class SalesCommonAction extends BaseListAction {
 	@Autowired
 	private SalesActivityItemService salesActivityItemService;
 
-	private List<SalesActivityItemVO> salesActivityItems;
-
 	private SalesVO sales;
+
+	private List<SalesActivityItemVO> salesActivityItems;
 
 	private SalesActivityItemVO salesActivityItem;
 
-	private SalesActivityVO salesActivity;
-
 	private String orderId;
+
+	private String securityCode;
+
+	private String verifyCode;
 
 	@Action(value = "querySalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesActivityItem() throws FLException {
@@ -44,18 +45,18 @@ public class SalesCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "affirmSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String affirmSalesActivityItem() throws FLException {
-
-		salesActivityItemService.affirmSalesActivityItem(sales, salesActivityItems);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "sendSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSalesActivityItem() throws FLException {
 
 		salesActivityItemService.sendSalesActivityItem(salesActivityItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmSalesActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSalesActivityItem() throws FLException {
+
+		salesActivityItemService.affirmSalesActivityItem(sales, salesActivityItems, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -84,20 +85,28 @@ public class SalesCommonAction extends BaseListAction {
 		this.orderId = orderId;
 	}
 
-	public SalesActivityVO getSalesActivity() {
-		return salesActivity;
-	}
-
-	public void setSalesActivity(SalesActivityVO salesActivity) {
-		this.salesActivity = salesActivity;
-	}
-
 	public List<SalesActivityItemVO> getSalesActivityItems() {
 		return salesActivityItems;
 	}
 
 	public void setSalesActivityItems(List<SalesActivityItemVO> salesActivityItems) {
 		this.salesActivityItems = salesActivityItems;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

@@ -29,6 +29,8 @@ public class DecorationInfoPO implements Serializable {
 
 	private String orderId;
 
+	private String referOrderId;
+
 	private String notSalesmanName;
 
 	private String notSalesmanPhone;
@@ -68,6 +70,15 @@ public class DecorationInfoPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@Column(name = "referOrderId")
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
 	}
 
 	@Column(name = "notSalesmanName")

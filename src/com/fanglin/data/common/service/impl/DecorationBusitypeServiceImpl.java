@@ -31,11 +31,7 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 		List<DecorationBusitypeVO> decorationBusitypeVOs = new ArrayList<DecorationBusitypeVO>();
 
 		for (DecorationBusitypePO decorationBusitypePO : decorationBusitypePOs) {
-			DecorationBusitypeVO decorationBusitypeVO = new DecorationBusitypeVO();
-
-			BeanUtil.copyPropertie(decorationBusitypePO, decorationBusitypeVO);
-
-			decorationBusitypeVOs.add(decorationBusitypeVO);
+			decorationBusitypeVOs.add(decorationBusitypePO.ptv(new DecorationBusitypeVO(new DecorationBusitypeVO())));
 		}
 
 		paging.setData(decorationBusitypeVOs);
@@ -48,12 +44,9 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 		List<DecorationBusitypeVO> decorationBusitypeVOs = new ArrayList<DecorationBusitypeVO>();
 
 		for (DecorationBusitypePO decorationBusitypePO : decorationBusitypePOs) {
-			DecorationBusitypeVO decorationBusitypeVO = new DecorationBusitypeVO();
-
-			BeanUtil.copyPropertie(decorationBusitypePO, decorationBusitypeVO);
-
-			decorationBusitypeVOs.add(decorationBusitypeVO);
+			decorationBusitypeVOs.add(decorationBusitypePO.ptv(new DecorationBusitypeVO(new DecorationBusitypeVO())));
 		}
+
 		return decorationBusitypeVOs;
 	}
 
@@ -63,10 +56,10 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 
 		DecorationBusitypePO decorationBusitypePO = new DecorationBusitypePO();
 
-		BeanUtil.copyPropertie(decorationBusitypeVO, decorationBusitypePO);
+		BeanUtil.copyPropertie(decorationBusitypeVO, decorationBusitypePO, Arrays.asList("cascade"));
 
-		decorationBusitypePO.setCompany(company);
 		decorationBusitypePO.setStatus(DecorationBusitypePO.STATUS_ENABLE_INT);
+		decorationBusitypePO.setCompany(company);
 
 		decorationBusitypeDao.save(decorationBusitypePO);
 		return 0;

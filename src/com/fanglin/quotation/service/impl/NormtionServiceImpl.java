@@ -632,7 +632,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int makeNormtionForQuotation(NormtionVO normtionVO, Short schedule, String userId) throws FLException {
+	public int makeNormtion(NormtionVO normtionVO, Short schedule, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
 
@@ -723,7 +723,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int makeNormtionForExtension(NormtionVO normtionVO, ExtensionVO extensionVO, Short schedule, String userId) throws FLException {
+	public int makeNormtion(NormtionVO normtionVO, ExtensionVO extensionVO, Short schedule, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
 
@@ -819,7 +819,7 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int makeNormtionForAddReduce(NormtionVO normtionVO, AddReduceVO addReduceVO, Short schedule, String userId) throws FLException {
+	public int makeNormtion(NormtionVO normtionVO, AddReduceVO addReduceVO, Short schedule, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
 
@@ -837,6 +837,8 @@ public class NormtionServiceImpl implements NormtionService {
 		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
 
 		List<?> addReduceItemAOs = quotationNormoodDao.queryAddReduceItem(addReduceVO.getArId());
+
+		if (addReduceItemAOs == null || addReduceItemAOs.size() == 0) return 0;
 
 		for (Object addReduceItemAO : addReduceItemAOs) {
 

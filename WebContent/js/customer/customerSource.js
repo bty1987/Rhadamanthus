@@ -206,7 +206,7 @@ $(function() {
         }
 
         if (isRefer == 0) {
-            com.focusPage("#referCustomer", "#createsource").prop("checked", null).removeAttr("disabled", "disabled");
+            com.focusPage("#referCustomer", "#createsource").prop("checked", "checked").attr("disabled", "disabled");
             com.focusPage(".referCustomerInfo", "#createsource").hide();
         } else {
             com.focusPage("#referCustomer", "#createsource").prop("checked", "checked").attr("disabled", "disabled");
@@ -254,7 +254,7 @@ $(function() {
 
             if (decoration.orderId) {
                 customerSource.items.referOrderId.val(decoration.orderId);
-                customerSource.items.referPhone.val(decoration.customer.phone);
+                customerSource.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
                 customerSource.items.referVillage.val(decoration.house.village.name);
                 customerSource.items.referHouseNumber.val(decoration.house.houseNumber);
 
@@ -302,7 +302,7 @@ $(function() {
 
                 if (decoration.orderId) {
                     customerSource.items.referOrderId.val(decoration.orderId);
-                    customerSource.items.referPhone.val(decoration.customer.phone);
+                    customerSource.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
                     customerSource.items.referVillage.val(decoration.house.village.name);
                     customerSource.items.referHouseNumber.val(decoration.house.houseNumber);
 
@@ -719,8 +719,6 @@ $(function() {
                 com.updateTypeahead(customerSource.items.villageName, v.village.no, v.village.name);
             }
 
-            com.focusPage(".referCustomerInfo", "#createsource").hide();
-
             customerSource.items.gender.prop('checked', com.genderType[v.gender]);
             customerSource.items.comment.val(v.comment);
             customerSource.items.price.val(v.price);
@@ -730,6 +728,9 @@ $(function() {
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
             customerSource.items.businessType.val(v.busitype.dbid);
+            
+            com.focusPage(".referCustomerInfo", "#createsource").show();
+            com.focusPage("#referCustomer", "#createsource").prop("checked", "checked");
 
             customerSource.modals.createSourceModal.modal("show");
 
@@ -879,8 +880,6 @@ $(function() {
 
     com.focusPage('#createCustomerSource').on("click", function() {
 
-        com.focusPage(".referCustomerInfo", "#createsource").hide();
-
         customerSource.type = "create";
 
         deleteDate();
@@ -902,6 +901,9 @@ $(function() {
                 display(res.surveyTemplate);
             }, null, false);
         }
+        
+        com.focusPage("#referCustomer", "#createsource").prop("checked", "checked");
+        com.focusPage(".referCustomerInfo", "#createsource").show();
 
         customerSource.modals.createSourceModal.modal("show");
     });
@@ -993,7 +995,7 @@ $(function() {
         var isRefer = $("#businessType option:selected").attr("other").split('-')[1];
 
         if (isRefer == 1 && !customerSource.refer.orderId) {
-            com.showAlert("请填写推荐客户信息");
+            com.showAlert(com.error, "请填写推荐客户信息");
             return false;
         }
 
@@ -1317,8 +1319,11 @@ $(function() {
                 var titleSpan = $('<label class="col-sm-3 control-label no-padding-right"></span>').html(v.name).appendTo(contentDiv);
                 var groupDiv = $('<div class="col-sm-9"></div>').appendTo(contentDiv);
 
-                if (v.require == 0)
+                if (v.require == 0){
                     titleSpan.addClass("orange");
+                    contentDiv.addClass("require");
+                }
+                
             }
 
             var type = v.type;
@@ -1386,6 +1391,7 @@ $(function() {
                 options["customerProfile.items[" + i + "].name"] = item.find("label").html();
                 options["customerProfile.items[" + i + "].content"] = item.find("textarea").val();
                 options["customerProfile.items[" + i + "].type"] = type;
+                options["customerProfile.items[" + i + "].require"] = item.hasClass("require") ? 0 : 1;
             }
 
             if (type == constant.customer().survey.TYPE_SINGLE_INT) {
@@ -1394,6 +1400,7 @@ $(function() {
 
                 options["customerProfile.items[" + i + "].name"] = item.find("label").html();
                 options["customerProfile.items[" + i + "].type"] = type;
+                options["customerProfile.items[" + i + "].require"] = item.hasClass("require") ? 0 : 1;
 
                 $.each(soptions, function(k, n) {
 
@@ -1416,6 +1423,7 @@ $(function() {
 
                 options["customerProfile.items[" + i + "].name"] = item.find("label").html();
                 options["customerProfile.items[" + i + "].type"] = type;
+                options["customerProfile.items[" + i + "].require"] = item.hasClass("require") ? 0 : 1;
 
                 $.each(soptions, function(k, n) {
 

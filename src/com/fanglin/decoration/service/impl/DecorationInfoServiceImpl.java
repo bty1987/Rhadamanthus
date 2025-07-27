@@ -9,6 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.dao.CustomerChanceDao;
+import com.fanglin.customer.dao.CustomerOriginDao;
+import com.fanglin.customer.dao.CustomerSourceDao;
+import com.fanglin.customer.po.CustomerChancePO;
+import com.fanglin.customer.po.CustomerOriginPO;
+import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
@@ -22,6 +28,7 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 
 @Service("decorationInfoService")
 @Transactional(readOnly = true)
@@ -38,6 +45,15 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private CustomerSourceDao customerSourceDao;
+
+	@Autowired
+	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private CustomerOriginDao customerOriginDao;
 
 	@Override
 	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO) {
@@ -59,7 +75,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationInfoVO.getOrderId());
 
 		if (decorationPO != null && decorationPO.getCustomer() != null) {
-			decorationInfoVO.setCustomerPhone(decorationPO.getCustomer().getPhone());
+			decorationInfoVO.setCustomerPhone(decorationPO.getCustomer().getPhone().replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1******$2"));
 		}
 
 		return decorationInfoVO;
@@ -85,7 +101,11 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException {
+	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String securityCode, String verifyCode) throws FLException {
+
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
 
 		String orderId = decorationInfoVO.getOrderId();
 
@@ -99,12 +119,12 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			throw new FLException(130002, "客户不存在");
 		}
 
-		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
 
-		cusDecorationVO.setOrderId(orderId);
-		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
 
-		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO).getOrderId() == null) {
 			throw new FLException(330017, "装修单未绑定");
 		}
 
@@ -139,5 +159,81 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		}
 
 		decorationDao.update(decorationPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		DecorationPO referationPO = decorationDao.queryDecorationByOrderId(decorationInfoVO.getReferOrderId());
+
+		if (referationPO == null) {
+			throw new FLException(140086, "推荐订单不存在");
+		}
+
+		referationPO = null;// 如果不初始化 当customerChancePO，customerOriginPO，decorationInfoPO都为空 不会产生数据
+
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(decorationVO.getOrderId());
+
+		if (customerChancePO != null) {
+			referationPO = decorationDao.queryDecorationByOrderId(customerChancePO.getSource().getReferOrderId());
+		}
+
+		if (referationPO == null && customerChancePO != null) {
+
+			CustomerSourcePO customerSourcePO = customerChancePO.getSource();
+
+			if (customerSourcePO != null) {
+
+				customerSourcePO.setReferOrderId(decorationInfoVO.getReferOrderId());
+				customerSourceDao.update(customerSourcePO);
+
+				return 0;
+			}
+		}
+
+		CustomerOriginPO customerOriginPO = customerOriginDao.queryCustomerOrigin(decorationVO.getOrderId());
+
+		if (customerOriginPO != null) {
+			referationPO = decorationDao.queryDecorationByOrderId(customerOriginPO.getReferOrderId());
+		}
+
+		if (referationPO == null) {
+
+			if (customerOriginPO != null && referationPO == null) {
+
+				customerOriginPO.setReferOrderId(decorationInfoVO.getReferOrderId());
+
+				customerOriginDao.update(customerOriginPO);
+
+				return 0;
+			}
+		}
+
+		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getReferOrderId());
+
+		if (decorationInfoPO == null) {
+			decorationInfoPO = new DecorationInfoPO(decorationVO.getOrderId());
+			decorationInfoDao.save(decorationInfoPO);
+		} else {
+			referationPO = decorationDao.queryDecorationByOrderId(decorationInfoPO.getReferOrderId());
+		}
+
+		if (referationPO == null) {
+
+			decorationInfoPO.setReferOrderId(decorationVO.getOrderId());
+
+			decorationInfoDao.update(decorationInfoPO);
+		} else {
+			throw new FLException(140086, "当前订单已存在推荐单");
+		}
+
+		return 0;
 	}
 }

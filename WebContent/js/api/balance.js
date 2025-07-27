@@ -46,6 +46,9 @@ $.extend(api.index, {
     },
     balanceOalesItemIndex: {
         url: "/views/balance/balanceOalesItem.html"
+    },
+    balanceSelectionRecordIndex: {
+        url: "/views/balance/balanceSelectionRecord.html"
     }
 });
 
@@ -415,6 +418,18 @@ $.extend(api, {
                 args: ["amount", "surplus", "cutpay"]
             }]
         },
+        pageBalanceSelectionForSupplier: {
+            url: "pageBalanceSelectionForSupplier.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
         queryBalanceSelection: {
             url: "queryBalanceSelection.do",
             demo: true,
@@ -623,6 +638,10 @@ $.extend(api, {
                 result: "paging-data-oales",
                 args: ["total", "award", "profit", "cost", "threshold"]
             }]
+        },
+        queryBalanceSelectionRecord: {
+            url: "queryBalanceSelectionRecord.do",
+            demo: true
         },
 
     }

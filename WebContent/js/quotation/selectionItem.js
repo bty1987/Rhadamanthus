@@ -6,6 +6,7 @@ $(function() {
             updateSelectionItemModal: com.focusPage('#updateSelectionItemModal'),
             refundSelectionItemModal: com.focusPage('#refundSelectionItemModal'),
             balanceSelectionItemModal: com.focusPage('#balanceSelectionItemModal'),
+            pictureModal: com.focusPage('#pictureModal')
         },
         btns: {
             updateBtn: com.focusPage('#updateBtn'),
@@ -17,7 +18,9 @@ $(function() {
             comment: com.focusPage('#comment'),
             refnum: com.focusPage('#refnum'),
             utilitynum: com.focusPage('#utilitynum'),
-            balanceSales: com.focusPage('#balanceSales')
+            balanceSales: com.focusPage('#balanceSales'),
+
+            picture: com.focusPage('#picture', '#pictureModal'),
         },
         title: com.focusPage("#myModalLabel"),
         dcomment: com.focusPage("#dcomment"),
@@ -157,6 +160,7 @@ $(function() {
             var $btnSelect = $('<a></a>').addClass('btn btn-minier btn-pink').html('选材单');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-success').html('打印');
+            var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-success').html('图片');
 
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.goods.name);
             var $label = $('<label></label>');
@@ -250,6 +254,9 @@ $(function() {
 
             if (selectionItem.pageConfig.pageBtn.contains("print"))
                 $divBtnWrap.append($btnPrint);
+
+            if (selectionItem.pageConfig.pageBtn.contains("picture"))
+                $divBtnWrap.append($btnPicture);
 
             (v.status == constant.quotation().selectionItem.STATUS_INIT_INT && v.decoration.paySacle >= 65) || v.status == constant.quotation().selectionItem.STATUS_TRAN_INT || selectionItem.pageType == "expert" ? $btnCompile.show() : $btnCompile.hide();
             [constant.quotation().selectionItem.STATUS_REVIEW_INT, constant.quotation().selectionItem.STATUS_BALANCE_INT, constant.quotation().selectionItem.STATUS_DISABLE_SHORT].indexOf(v.status) != -1 ? $btnRefnum.hide() : $btnRefnum.show();
@@ -402,6 +409,13 @@ $(function() {
 
                     com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
                 }, null, false);
+            });
+
+            $btnPicture.click(function(e) {
+
+                managedrawing(v);
+                initUploadBtn(v);
+                selectionItem.modals.pictureModal.modal('show');
             });
 
             return $liLine;
@@ -595,12 +609,19 @@ $(function() {
             var postprice = input.attr("data-postprice");
             var refnum = input.attr("data-refnum");
             var bid = input.attr("data-brand");
+
+            var status = input.attr("data-status");
             var accountStatus = input.attr("data-accountStatus");
-            
-            if(accountStatus != 0) return true;
-            
+
+            if ([constant.quotation().selectionItem.STATUS_INIT_INT, constant.quotation().selectionItem.STATUS_TRAN_INT, constant.quotation().selectionItem.STATUS_CHECK_INT, constant.quotation().selectionItem.STATUS_CONFIRM_INT, constant.quotation().selectionItem.STATUS_FINISH_INT].indexOf(status) != -1)
+                return true;
+
+            if (accountStatus != 0)
+                return true;
+
             if (brand == null)
                 brand = bid;
+
             if (brand != bid) {
 
                 brand = -1;
@@ -609,15 +630,15 @@ $(function() {
             }
 
             postTotal = utils.accAdd(postTotal, utils.accMul(utils.accSub(num, refnum), postprice));
-            
+
             options["balanceSelectionItems[" + i + "].selectionItem.siid"] = v;
         });
-        
-        if(brand == -1 || brand == null){
+
+        if (brand == -1 || brand == null) {
             com.showAlert(com.warning, "选材项品牌不一致");
             return false;
         }
-        
+
         options["balanceSelection.brand.bid"] = brand;
         options["balanceSelection.income"] = 0;
         options["balanceSelection.cost"] = 0;
@@ -797,6 +818,87 @@ $(function() {
             com.showAlert(com.info, "操作成功");
             selectionItem.selectList = [];
             selectionItem.modals.balanceSelectionItemModal.modal("hide");
+        });
+    }
+
+    function managedrawing(v) {
+
+        selectionItem.items.picture.html("");
+
+        com.post(api.quotation.queryQuotationPicture, {
+            "quotationPicture.qid": v.siid,
+            "quotationPicture.atttype": constant.quotation().quotationPicture.TYPE_SELECT_INT
+        }, function(data) {
+
+            var quotationPictures = data.quotationPictures;
+
+            if (quotationPictures && quotationPictures.length) {
+
+                $.each(quotationPictures, function(i, res) {
+
+                    appendGalleryElement(res);
+
+                });
+
+                com.popup4photos(selectionItem.items.picture);
+            }
+        }, null, false);
+    }
+
+    function appendGalleryElement(v) {
+
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + v.qpid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px");
+        var img = $('<img/>');
+        var imgHref = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, v.path, 200, 200, '200x200')).attr('target', '_blank');
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px");
+
+        selectionItem.items.picture.append(imgLi);
+        imgHref.append(img).appendTo(imgLi);
+        imgA.append(img).appendTo(imgLi);
+
+        com.showImg(img, v.path, 150, 150, v.name, null, 0);
+
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").appendTo(toolsDiv);
+        var toolsI = $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+
+        toolsA.click(function() {
+
+            com.post(api.quotation.deleteQuotationPicture, {
+                "quotationPicture.qpid": v.qpid
+            }, function(res) {
+
+                com.focusPage("#gallery_li" + v.qpid).remove();
+            });
+        });
+    }
+
+    function initUploadBtn(v) {
+
+        com.uploadify("#savePicture", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 5, function(data) {
+
+            var options = {
+                "quotationPicture[0].orderId": v.decoration.orderId,
+                "quotationPicture[0].qid": v.siid,
+                "quotationPicture[0].areaId": v.areaId,
+                "quotationPicture[0].areaName": v.areaName,
+                "quotationPicture[0].qiid": v.qiid,
+                "quotationPicture[0].name": data.strutsUploadsFileName,
+                "quotationPicture[0].path": data.resUrl,
+                "quotationPicture[0].filesize": data.filesize,
+                "quotationPicture[0].atttype": constant.quotation().quotationPicture.TYPE_SELECT_INT
+            };
+
+            com.post(api.quotation.addQuotationPicture, options, function(res) {
+
+                appendGalleryElement(res.quotationPicture);
+                
+                com.popup4photos(selectionItem.items.picture);
+
+                searcher.doSearch();
+            });
         });
     }
 

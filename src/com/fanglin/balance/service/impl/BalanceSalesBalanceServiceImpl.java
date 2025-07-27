@@ -18,6 +18,7 @@ import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.vo.SalesBalanceVO;
@@ -34,7 +35,7 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 	private BalanceSalesBalanceDao balanceSalesBalanceDao;
 
 	@Override
-	public void pageBalanceSalesBalance(Paging paging, List<Filter> filters, long bsid) {
+	public void pageBalanceSalesBalance(Paging paging, List<Filter> filters, long bsid) throws FLException {
 
 		paging.setData(ptv(balanceSalesBalanceDao.pageBalanceSalesBalance(paging, filters, bsid)));
 	}
@@ -58,7 +59,7 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 
 		for (BalanceSalesBalancePO balanceSalesBalancePO : balanceSalesBalancePOs) {
 
-			balanceSalesBalanceVO = new BalanceSalesBalanceVO(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(),new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO()));
+			balanceSalesBalanceVO = new BalanceSalesBalanceVO(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO()));
 
 			BeanUtil.copyProperties(balanceSalesBalancePO, balanceSalesBalanceVO, Arrays.asList("salesBalance"));
 			BeanUtil.copyProperties(balanceSalesBalancePO.getSalesBalance(), balanceSalesBalanceVO.getSalesBalance(), Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));

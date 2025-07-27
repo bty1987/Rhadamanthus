@@ -13,16 +13,20 @@ package com.fanglin.construction.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.data.po.ConstructionPacePO;
+import com.fanglin.construction.vo.ConstructionPlanVO;
+import com.fanglin.data.po.ConstructionPaceNodePO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "constructionplan", catalog = "construction")
@@ -40,13 +44,27 @@ public class ConstructionPlanPO implements Serializable {
 
 	private String name;
 
-	private ConstructionPacePO pace;
+	private ConstructionPaceNodePO node;
+
+	private int connum;
+
+	private int comnum;
+
+	private String phase;
+
+	private String material;
+
+	private String period;
 
 	private Timestamp createTime;
 
 	private Timestamp startTime;
 
 	private Timestamp endTime;
+
+	private int sort;
+
+	private String content;
 
 	private String comment;
 
@@ -55,6 +73,7 @@ public class ConstructionPlanPO implements Serializable {
 	}
 
 	@Id
+	@GeneratedValue
 	@Column(name = "cpid")
 	public long getCpid() {
 		return cpid;
@@ -92,13 +111,58 @@ public class ConstructionPlanPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cppid", referencedColumnName = "cpid")
-	public ConstructionPacePO getPace() {
-		return pace;
+	@JoinColumn(name = "cpnid", referencedColumnName = "cpnid")
+	public ConstructionPaceNodePO getNode() {
+		return node;
 	}
 
-	public void setPace(ConstructionPacePO pace) {
-		this.pace = pace;
+	public void setNode(ConstructionPaceNodePO node) {
+		this.node = node;
+	}
+
+	@Column(name = "connum")
+	public int getConnum() {
+		return connum;
+	}
+
+	public void setConnum(int connum) {
+		this.connum = connum;
+	}
+
+	@Column(name = "comnum")
+	public int getComnum() {
+		return comnum;
+	}
+
+	public void setComnum(int comnum) {
+		this.comnum = comnum;
+	}
+
+	@Column(name = "phase")
+	public String getPhase() {
+		return phase;
+	}
+
+	public void setPhase(String phase) {
+		this.phase = phase;
+	}
+
+	@Column(name = "material")
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	@Column(name = "period")
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 
 	@Column(name = "createTime")
@@ -128,6 +192,24 @@ public class ConstructionPlanPO implements Serializable {
 		this.endTime = endTime;
 	}
 
+	@Column(name = "sort")
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
+	@Column(name = "content")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -137,4 +219,12 @@ public class ConstructionPlanPO implements Serializable {
 		this.comment = comment;
 	}
 
+	public ConstructionPlanVO ptv(ConstructionPlanVO constructionPlanVO) {
+
+		BeanUtil.copyProperties(this, constructionPlanVO, Arrays.asList("node"));
+
+		if (constructionPlanVO.getNode() != null && getNode() != null) getNode().ptv(constructionPlanVO.getNode());
+
+		return constructionPlanVO;
+	}
 }

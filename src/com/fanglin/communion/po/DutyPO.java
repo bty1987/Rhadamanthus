@@ -3,6 +3,7 @@ package com.fanglin.communion.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "duty", catalog = "communion")
@@ -125,6 +129,15 @@ public class DutyPO implements Serializable {
 
 	public void setPinYin(String pinYin) {
 		this.pinYin = pinYin;
+	}
+
+	public DutyVO ptv(DutyVO dutyVO) {
+
+		BeanUtil.copyPropertie(this, dutyVO, Arrays.asList("departmentType"));
+
+		if (dutyVO.getDepartmentType() != null && getDepartmentType() != null) getDepartmentType().ptv(dutyVO.getDepartmentType());
+
+		return dutyVO;
 	}
 
 }

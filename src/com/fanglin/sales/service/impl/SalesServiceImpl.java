@@ -108,12 +108,7 @@ public class SalesServiceImpl implements SalesService {
 		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
 
 		for (SalesPO salesPO : salesPOs) {
-
-			SalesVO salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO());
-
-			salesPO.ptv(salesVO);
-
-			salesVOs.add(salesVO);
+			salesVOs.add(salesPO.ptv(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO())));
 		}
 
 		return salesVOs;

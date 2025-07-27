@@ -43,6 +43,10 @@ public class SalesPaymentAction extends BaseListAction {
 
 	private Long amount;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "pageSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesPayment() throws FLException {
 
@@ -167,22 +171,6 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "confirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmSalesPayment() throws FLException {
-
-		salesPaymentService.confirmSalesPayment(spids, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "affirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String affirmSalesPayment() throws FLException, Exception {
-
-		salesPaymentService.affirmSalesPayment(salesPayment);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "sendSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSalesPayment() throws FLException {
 
@@ -195,6 +183,22 @@ public class SalesPaymentAction extends BaseListAction {
 	public String pushSalesPayment() throws FLException {
 
 		salesPaymentService.pushSalesPayment(salesPayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmSalesPayment() throws FLException {
+
+		salesPaymentService.confirmSalesPayment(spids, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSalesPayment() throws FLException, Exception {
+
+		salesPaymentService.affirmSalesPayment(salesPayment, securityCode, verifyCode);
 
 		return SUCCESS;
 	}

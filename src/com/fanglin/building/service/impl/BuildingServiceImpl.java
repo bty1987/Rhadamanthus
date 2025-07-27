@@ -257,7 +257,7 @@ public class BuildingServiceImpl implements BuildingService {
 		BuildingCustomerPO buildingCustomerPO = buildingPO.getBuildingCustomer();
 		BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
 		BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
-		BeanUtil.copyProperties(buildingCustomerPO.getCreate(), buildingCustomerVO.getCreate(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(buildingCustomerPO.getCreater(), buildingCustomerVO.getCreater(), Arrays.asList("dept", "duty"));
 
 		BuildingVO buildingVO = new BuildingVO(buildingHouseVO, buildingCustomerVO, new CustomerVO(), new CustomerVO(), new UserBaseVO(), new BuildingNodeVO());
 		BeanUtil.copyProperties(buildingPO, buildingVO, Arrays.asList("buildingHouse", "buildingCustomer", "buildingHouseAgent", "buildingCustomerAgent", "creater", "buildingNode"));

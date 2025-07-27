@@ -53,6 +53,8 @@ public class SoodsPO implements Serializable {
 
 	private short status;
 
+	private short type;
+
 	private int company;
 
 	public SoodsPO() {
@@ -164,6 +166,15 @@ public class SoodsPO implements Serializable {
 
 	public void setBalance(int balance) {
 		this.balance = balance;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	public SoodsVO ptv(SoodsVO soodsVO) {

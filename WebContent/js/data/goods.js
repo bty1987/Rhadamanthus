@@ -79,7 +79,7 @@ $(function() {
 
             if (v.status != 0)
                 return true;
-            
+
             switch (v.level) {
                 case 1:
                     oneKinds.push({
@@ -101,7 +101,7 @@ $(function() {
                     break;
             }
         });
-        
+
         goods.items.onekind.bindData(oneKinds, 'key', 'value', '无');
         goods.items.twokind.bindData(twoKinds, 'key', 'value', '无');
         goods.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
@@ -355,6 +355,26 @@ $(function() {
             goods.gid = v.gid;
             goods.bid = v.bid;
 
+            var zerokinds = [];
+
+            if (v.onekind.gkid)
+                zerokinds.push({
+                    "key": v.onekind.gkid,
+                    "value": v.onekind.name
+                });
+            if (v.twokind.gkid)
+                zerokinds.push({
+                    "key": v.twokind.gkid,
+                    "value": v.twokind.name
+                });
+            if (v.thrkind.gkid)
+                zerokinds.push({
+                    "key": v.thrkind.gkid,
+                    "value": v.thrkind.name
+                });
+
+            goods.items.zerokind.bindData(zerokinds, 'key', 'value', '无');
+
             goods.items.no.val(v.no);
             goods.items.type.val(v.type);
             goods.items.name.val(v.name);
@@ -369,12 +389,11 @@ $(function() {
             goods.items.confine.val(v.confine);
             goods.items.pieceNum.val(v.pieceNum);
             goods.items.accessoriesType.val(v.accessoriesType.atid);
+
             goods.items.zerokind.val(v.zerokind.gkid);
             goods.items.onekind.val(v.onekind.gkid);
             goods.items.twokind.val(v.twokind.gkid);
             goods.items.thrkind.val(v.thrkind.gkid);
-            
-            updateZerokind();
 
             com.popup4model("#addLayer", "编辑");
         },

@@ -32,7 +32,7 @@ jQuery(function($) {
         var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(constant.data().construction.node.keys[v.cnid]));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -70,7 +70,17 @@ jQuery(function($) {
                 ["工程进度:", constant.data().construction.node.keys[v.cnid], "red"],
                 ["开工时间: ", v.startTime, "green"],
                 ["完工时间: ", v.endTime, "green"],
-                ["环节状态:", constant.data().construction.node.keys[v.status], "red"]
+                ["环节状态:", constant.data().construction.node.keys[v.status], "red"],
+                
+                ["材料浮动限额: ", v.accessoryLimit, "blue"],
+                ["工费浮动限额: ", v.salaryLimit, "blue"],
+                ["材料总额限额: ", v.accessoryTotal, "blue"],
+                ["工费总额限额: ", v.salaryTotal, "blue"],
+                
+                ["开工装修比例: ", v.precheck, "blue"],
+                ["完工装修比例: ", v.postcheck, "blue"],
+                ["开工主材比例: ", v.stacheck, "blue"],
+                ["完工主材比例: ", v.fincheck, "blue"],
             ];
 
             $.each(propertyArr, function(index, value) {
