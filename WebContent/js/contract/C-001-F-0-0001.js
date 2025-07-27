@@ -22,16 +22,24 @@ jQuery(function($) {
 
         item: {},
 
-        contractArgs: params.personel.contractargs,
-        uid: params.personel.uid,
+        contractArgs:params.personel.contractargs,
+        uid:params.personel.uid,
         ucid:params.ucid,
         scid:null,
+        no:null,
+        brandNameList: "",
+        goodNameList: "",
 
         current: new Date(),
     };
 
     console.log(params.personel.contractargs);
     console.log(params.personel.uid);
+
+    var currentDate = new Date(); 
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth() + 1;
+    var day = currentDate.getDate();
 
     if (contractEdit.contractArgs.type == "1") {
         com.focusPage(".undispatch", "#form").hide();
@@ -52,6 +60,17 @@ jQuery(function($) {
     com.datetime(com.focusPage("#con-term-start-date"));
     com.datetime(com.focusPage("#con-term-end-date"));
 
+    var supplierContract = [];
+
+    com.post(api.personel.querySupplierContractById, {
+
+        "supplierContract.scid": params.personel.contractargs.scid
+    }, function(res) {
+
+        supplierContract = res.supplierContract;
+        contractEdit.no = supplierContract.no;
+    }, null, false);
+
     var supplierContractBrands = [];
 
     com.post(api.personel.pageSupplierContractBrand, {
@@ -63,68 +82,92 @@ jQuery(function($) {
         supplierContractBrands = res.paging.data;
     }, null, false);
 
-    console.log(supplierContractBrands);
-
     var supplierContractGoods = [];
 
     com.post(api.personel.pageSupplierContractGoods, {
         "paging.page": 1,
         "paging.rows": 10,
         "supplierContractGoods.scid": params.personel.contractargs.scid
-        
+
     }, function(res) {
 
         supplierContractGoods = res.paging.data;
     }, null, false);
 
-    console.log(supplierContractGoods);
+    var table1 = {
+        "insertWay": 1,
+        "keyword": "厂商品牌列表",
+        "pageBegin": 1,
+        "headers": ["品类", "品牌", "产品名称", "质保期"],
+        "colWidthPercent": [2, 2, 4, 2],
+        "headersAlignment": 1,
+        "cellHorizontalAlignment": 0,
+        "cellVerticalAlignment": 5,
+        "datas": []
+    };
 
-   var table1 = {
-       "insertWay": 1,
-       "keyword": "厂商商品列表",
-       "pageBegin": 1,
-       "headers": ["序号", "商品名称", "价格", "结算价"],
-       "colWidthPercent": [1, 3, 3],
-       "headersAlignment": 1,
-       "cellHorizontalAlignment": 0,
-       "cellVerticalAlignment": 5,
-       "datas": []
-   };
-
-   var table2 = {
-       "insertWay": 1,
-       "keyword": "厂商品牌列表",
-       "pageBegin": 1,
-       "headers": ["品牌名称", "结算类型", "结算值", "违约金"],
-       "colWidthPercent": [1, 3, 1, 3],
-       "headersAlignment": 1,
-       "cellHorizontalAlignment": 0,
-       "cellVerticalAlignment": 5,
-       "datas": []
-   };
-
+    var table2 = {
+        "insertWay": 1,
+        "keyword": "超额服务费列表",
+        "pageBegin": 1,
+        "headers": ["品类名称", "品牌名称", "时间限期", "取档", "超额服务费"],
+        "colWidthPercent": [2, 2, 2, 3, 1],
+        "headersAlignment": 1,
+        "cellHorizontalAlignment": 0,
+        "cellVerticalAlignment": 5,
+        "datas": []
+    };
+    
     var index = 0;
-
-    index = 0;
-
-    if (supplierContractGoods && supplierContractGoods.length) {
-
-        $.each(supplierContractGoods, function(i, v) {
-
-            table1.datas.push([(index++ + 1), v.goods.name, v.balance, v.price]);
-        });
-    }
 
     if (supplierContractBrands && supplierContractBrands.length) {
 
         $.each(supplierContractBrands, function(i, v) {
+
+            if (i > 0) {
+                contractEdit.brandNameList += ',';
+            }
             
-            table2.datas.push([(index++ + 1), v.brand.name, v.ctype, v.breakpay, v.cvalue ]);
+            contractEdit.brandNameList += v.brand.name;
+
+            if (v.name != null) {
+                if (i > 0) {
+                    contractEdit.goodNameList += ',';
+                }
+                contractEdit.goodNameList += v.name;
+            }
+            
+            table1.datas.push(["", v.brand.name, v.name, v.warranTime]);
         });
     }
 
-   contractEdit.table.push(table1);
-   contractEdit.table.push(table2);
+    index = 0;
+    if (supplierContractBrands && supplierContractBrands.length) {
+
+        $.each(supplierContractBrands, function(i, v) {
+
+            if (v.servicePrice == null || v.servicePrice == "")
+                return true;
+
+            var servicePrices = JSON.parse(v.servicePrice);
+
+            $.each(servicePrices, function(i, t) {
+
+                if (t.UV == 0 && t.DV != 0) {
+                    table2.datas.push([ "", v.brand.name, t.TL, "销售总金额" + t.DV + "万元（含）以下", "对应应结款总额的" + t.SR + "%；"]);
+                }
+                if (t.DV == 0 && t.UV != 0) {
+                    table2.datas.push([ "", v.brand.name, t.TL, "销售总金额" + t.UV + "万元以上", "对应应结款总额的" + t.SR + "%；"]);
+                }
+                if (t.UV != 0 && t.DV != 0) {
+                    table2.datas.push([ "", v.brand.name, t.TL, "销售总金额" + t.DV + "万元-" + t.UV + "万元（含）", "对应应结款总额的" + t.SR + "%；"]);
+                }
+            });
+        });
+    }
+    console.log("table1.table2:"+table2.datas)
+    contractEdit.table.push(table1);
+    contractEdit.table.push(table2);
 
     com.focusPage("#preservation").unbind().on('click', function() {
 
@@ -146,7 +189,7 @@ jQuery(function($) {
             data = $.extend({}, data, contractEdit.cover);
 
             console.log(data);
-            
+
             var termStartDate = com.focusPage("#con-term-start-date").val();
             var termEndDate = com.focusPage("#con-term-start-date").val();
 
@@ -156,15 +199,131 @@ jQuery(function($) {
             data["con-tern-end-year"] = termEndDate.substr(0, 4);
             data["con-tern-end-month"] = termEndDate.substr(5, 2);
             data["con-tern-end-day"] = termEndDate.substr(8, 2);
+
+            data["cov-company-name"] = data["con-company-name"];
+            data["cov-company-name-11"] = data["con-company-name"];
+            data["sin-company-name"] = data["con-company-name"];
+            data["con-company-name-1"] = data["con-company-name"];
+            data["con-company-name-2"] = data["con-company-name"];
+            data["con-company-name-3"] = data["con-company-name"];
+            data["con-company-name-4"] = data["con-company-name"];
+            data["con-company-name-5"] = data["con-company-name"];
+            data["con-company-name-6"] = data["con-company-name"];
+            data["con-company-name-7"] = data["con-company-name"];
+            data["con-company-name-11"] = data["con-company-name"];
+            data["con-company-addr-11"] = data["con-company-addr"];
+            data["con-company-legal-11"] = data["con-company-legal"];
+            data["con-company-phone-11"] = data["con-company-phone"];
+            data["con-company-email-11"] = data["con-company-email"];
+            data["con-company-name-21"] = data["con-company-name"];
+            data["con-company-addr-21"] = data["con-company-addr"];
+            data["con-company-legal-21"] = data["con-company-legal"];
+            data["con-company-phone-21"] = data["con-company-phone"];
+            data["con-company-bank-name-21"] = data["con-company-bank-name"];
+            data["con-company-bank-21"] = data["con-company-bank"];
+            data["con-company-bank-no-21"] = data["con-company-bank-no"];
+            data["con-company-abank-name-21"] = data["con-company-bank-name"];
+            data["con-company-abank-21"] = data["con-company-bank"];
+            data["con-company-abank-no-21"] = data["con-company-bank-no"];
+            data["con-company-name-22"] = data["con-company-name"];
+
+            data["cov-supplier-name"] = data["con-supplier-name"];
+            data["cov-supplier-name-1"] = data["con-supplier-name"];
+            data["sin-supplier-name"] = data["con-supplier-name"];
+            data["con-supplier-addr1"] = data["con-supplier-addr"];
+            data["con-supplier-phone1"] = data["con-supplier-phone"];
+            data["con-supplier-name-11"] = data["con-supplier-name"];
+            data["con-supplier-addr-11"] = data["con-supplier-addr"];
+            data["con-supplier-legal-11"] = data["con-supplier-legal"];
+            data["con-supplier-phone-11"] = data["con-supplier-phone"];
+            data["con-supplier-email-11"] = data["con-supplier-email"];
+            data["con-supplier-name-21"] = data["con-supplier-name"];
+            data["con-supplier-addr-21"] = data["con-supplier-addr"];
+            data["con-supplier-legal-21"] = data["con-supplier-legal"];
+            data["con--supplier-phone-21"] = data["con-supplier-phone"];
+            data["con-supplier-bank-name-21"] = data["con-supplier-bank-name"];
+            data["con-supplier-bank-21"] = data["con-supplier-bank"];
+            data["con-supplier-bank-no-21"] = data["con-supplier-bank-no"];
+            data["con-supplier-name-22"] = data["con-supplier-name"];
+
+            data["con-regular-product-service-fee1"] = data["con-regular-product-service-fee"];
+
+            data["sin-company-addr"] = data["con-company-addr"];
+            data["sin-company-legal"] = data["con-company-legal"];
+            data["sin-company-phone"] = data["con-company-phone"];
+            data["sin-communion-email"] = data["con-company-email"];
+            data["sin-company-addr-11"] = data["con-company-addr"];
+            data["sin-company-name-11"] = data["con-company-name"];
+            data["sin-company-legal-11"] = data["con-company-legal"];
+            data["sin-company-phone-11"] = data["con-company-phone"];
+            data["sin-company-email-11"] = data["con-company-email"];
+
+            data["sin-supplier-addr"] = data["con-supplier-addr"];
+            data["sin-supplier-legal"] = data["con-supplier-legal"];
+            data["sin-supplier-phone"] = data["con-supplier-phone"];
+            data["sin-supplier-email"] = data["con-supplier-email"];
+            data["sin-supplier-bank-no"] = data["con-supplier-bank-no"];
+            data["sin-supplier-bank"] = data["con-supplier-bank"];
+            data["sin-supplier-name-11"] = data["con-supplier-name"];
+            data["sin-supplier-addr-11"] = data["con-supplier-addr"];
+            data["sin-supplier-legal-11"] = data["con-supplier-legal"];
+            data["sin-supplier-phone-11"] = data["con-supplier-phone"];
+            data["sin-supplier-email-11"] = data["con-supplier-email"];
+            data["sin-supplier-bank-no-11"] = data["con-supplier-bank-no"];
+            data["sin-supplier-bank-11"] = data["con-supplier-bank"];
+
+            data["con-cooperation-amount-undis-cn"] = utils.getCNMoney(parseFloat(data["con-cooperation-amount-undis"]));
+            data["con-venue-rental-fee-cn"] = utils.getCNMoney(parseFloat(data["con-venue-rental-fee"]));
+
+            data["con-brand-list"] = contractEdit.brandNameList;
+            data["con-brand-list-1"] = contractEdit.brandNameList;
+            data["con-goods-list"] = contractEdit.goodNameList;
+            data["con-goods-list-1"] = contractEdit.goodNameList;
+            data["con-goods-list-1"] = contractEdit.goodNameList;
+            data["cov-contract-no"] = contractEdit.no;
+            data["cov-contract-no-1"] = contractEdit.no;
+            data["cov-contract-no-2"] = contractEdit.no;
+            data["cov-contract-no-3"] = contractEdit.no;
+            data["con-contract-no"] = contractEdit.no;
+            data["con-contract-no-1"] = contractEdit.no;
+            data["con-contract-no-2"] = contractEdit.no;
+
+            data["con-regular-settlement-amount-1"] = data["con-regular-settlement-amount"];
+            data["con-regular-product-service-fee2"] = data["con-regular-product-service-fee"];
+            data["con-settlement-amount-1"] = data["con-settlement-amount"];
+            data["con-experience-hall1-1"] = data["con-experience-hall-1"];
+            data["con-experience-hall1-2"] = data["con-experience-hall-2"];
+            data["con-experience-hall1-3"] = data["con-experience-hall-3"];
+            data["con-experience-hall-sum-1"] = data["con-experience-hall-sum"];
+
+            data["sin-company-time"] = year+"-"+month+"-"+day;
+            data["sin-company-time-1"] = year+"-"+month+"-"+day;
+            data["sin-supplier-time"] = year+"-"+month+"-"+day;
+            data["sin-supplier-time-1"] = year+"-"+month+"-"+day;
             
+            data["con-sign-date-year"] = year;
+            data["con-sign-date-month"] = month;
+            data["con-sign-date-day"] = day;
+            data["con-sign-date-year-1"] = year;
+            data["con-sign-date-month-1"] = month;
+            data["con-sign-date-day-1"] = day;
+            data["con-sign-date-year-2"] = year;
+            data["con-sign-date-month-2"] = month;
+            data["con-sign-date-day-2"] = day;
+            data["con-sign-date-year-3"] = year;
+            data["con-sign-date-month-3"] = month;
+            data["con-sign-date-day-3"] = day; 
+
+           
+
             var options = {
                 "supplierContract.scid": params.personel.contractargs.scid,
                 "data": JSON.stringify(data),
-                //"table": JSON.stringify(contractEdit.table)
+                "table": JSON.stringify(contractEdit.table)
             };
 
             console.log(options);
-            
+
             var popup = com.focusPage("#popup-page");
             var target = com.focusPage("#layerPopUp");
 

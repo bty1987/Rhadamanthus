@@ -66,7 +66,11 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 		List<String> orderIds = new ArrayList<String>();
 		Map<String, DecorationPO> decorationMap = new HashMap<String, DecorationPO>();
 		Map<String, DecorationExportVO> decorationExportMap = new HashMap<String, DecorationExportVO>();
+
 		String orderId;
+
+		List<QuotationPO> quotationPOs = new ArrayList<QuotationPO>();
+
 		for (DecorationPO decorationPO : decorationPOs) {
 			orderId = decorationPO.getOrderId();
 
@@ -86,6 +90,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 			}
 
 			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(decorationPO.getOrderId());
+
 			if (advancePaymentPO != null) {
 				decorationExportVO.setAdvancePayment(advancePaymentPO.getBalance());
 			} else {
@@ -101,9 +106,9 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 			orderIds.add(orderId);
 			decorationMap.put(orderId, decorationPO);
 			decorationExportMap.put(orderId, decorationExportVO);
-		}
 
-		List<QuotationPO> quotationPOs = quotationDao.queryQuotationForDefaultByOrderIds(orderIds);
+			quotationPOs.add(quotationDao.queryQuotationForDefaultByOrderId(orderId));
+		}
 
 		for (QuotationPO quotationPO : quotationPOs) {
 
@@ -171,5 +176,4 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 
 		return decorationExportVOs;
 	}
-
 }

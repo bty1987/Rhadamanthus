@@ -2,6 +2,7 @@ package com.fanglin.building.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,8 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.building.vo.BuildingCustomerVO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "buildingCustomer", catalog = "building")
@@ -23,7 +26,7 @@ public class BuildingCustomerPO implements Serializable {
 
 	public static final String COLUMN_CID_STR = "customer.cid";
 
-	public static final String COLUMN_UID_STR = "create.uid";
+	public static final String COLUMN_UID_STR = "creater.uid";
 
 	public static final String COLUMN_NO_STR = "no";
 
@@ -61,7 +64,7 @@ public class BuildingCustomerPO implements Serializable {
 
 	private String grade;
 
-	private UserPO create;
+	private UserPO creater;
 
 	private Timestamp createTime;
 
@@ -73,10 +76,10 @@ public class BuildingCustomerPO implements Serializable {
 		super();
 	}
 
-	public BuildingCustomerPO(CustomerPO customer, UserPO create) {
+	public BuildingCustomerPO(CustomerPO customer, UserPO creater) {
 		super();
 		this.customer = customer;
-		this.create = create;
+		this.creater = creater;
 	}
 
 	@Id
@@ -192,12 +195,12 @@ public class BuildingCustomerPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cuid", referencedColumnName = "uid")
-	public UserPO getCreate() {
-		return create;
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setCreate(UserPO create) {
-		this.create = create;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@Column(name = "createTime")
@@ -225,6 +228,17 @@ public class BuildingCustomerPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public BuildingCustomerVO ptv(BuildingCustomerVO buildingCustomerVO) {
+
+		BeanUtil.copyProperties(this, buildingCustomerVO, Arrays.asList("customer", "creater"));
+
+		if (buildingCustomerVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(buildingCustomerVO.getCustomer());
+
+		if (buildingCustomerVO.getCreater() != null && getCreater() != null) buildingCustomerVO.getCreater().setBaseInfo(getCreater());
+
+		return buildingCustomerVO;
 	}
 
 }

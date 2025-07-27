@@ -2,6 +2,8 @@ package com.fanglin.balance.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceSelectionItemVO;
 import com.fanglin.quotation.po.SelectionItemPD;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "balanceselectionitem", catalog = "balance")
@@ -23,7 +27,7 @@ public class BalanceSelectionItemPO implements java.io.Serializable {
 
 	public static final String COLUMN_BSID_STR = "bsid";
 
-	private long bsiid;	
+	private long bsiid;
 
 	private long bsid;
 
@@ -66,6 +70,16 @@ public class BalanceSelectionItemPO implements java.io.Serializable {
 
 	public void setSelectionItem(SelectionItemPD selectionItem) {
 		this.selectionItem = selectionItem;
+	}
+
+	public BalanceSelectionItemVO ptv(BalanceSelectionItemVO balanceSelectionItemVO) {
+
+		BeanUtil.copyProperties(this, balanceSelectionItemVO, Arrays.asList("selectionItem"));
+
+		if (balanceSelectionItemVO.getSelectionItem() != null && getSelectionItem() != null) getSelectionItem().ptv(balanceSelectionItemVO.getSelectionItem());
+		if (balanceSelectionItemVO.getSelectionItem() != null && balanceSelectionItemVO.getSelectionItem().getDecoration() != null && getSelectionItem() != null && getSelectionItem().getDecoration() != null) getSelectionItem().getDecoration().ptvcascade(balanceSelectionItemVO.getSelectionItem().getDecoration());
+
+		return balanceSelectionItemVO;
 	}
 
 }

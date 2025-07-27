@@ -38,6 +38,8 @@ public class ExtensionDO implements Serializable {
 
 	private DecorationPO decoration;
 
+	private QuotationPO quotation;
+
 	private short type;
 
 	private short atttype;
@@ -89,6 +91,16 @@ public class ExtensionDO implements Serializable {
 
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "qid", referencedColumnName = "qid")
+	public QuotationPO getQuotation() {
+		return quotation;
+	}
+
+	public void setQuotation(QuotationPO quotation) {
+		this.quotation = quotation;
 	}
 
 	@Column(name = "type")

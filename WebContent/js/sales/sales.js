@@ -166,7 +166,8 @@ $(function() {
                     var $terminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
                     var $btnUnpay = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算');
                     var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
-
+                    var $satisfaction = $('<a></a>').addClass('btn btn-minier btn-purple').html('满意度');
+                    
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
 
@@ -297,6 +298,7 @@ $(function() {
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
                     $small.appendTo($h3);
+
                     $.each(pageConfig.pageBtn, function(k, b) {
 
                         switch (b) {
@@ -376,6 +378,9 @@ $(function() {
                             case "picture":
                                 $btnDiv.append($picture);
                                 break;
+                            case "satisfaction":
+                                $btnDiv.append($satisfaction);
+                                break;     
                         }
                     });
                     $btnDiv.appendTo($h3);
@@ -624,6 +629,15 @@ $(function() {
                     $picture.click(function() {
                         managedrawing(v);
                         initUploadBtn(v);
+                    });
+                    
+                    //满意度
+                    $satisfaction.click(function() {
+
+                        params.sales.orderId = v.orderId;
+                        params.sales.sid = v.sid;
+                        params.sales.type= v.type;
+                        com.popup4page("#layerPopUp", "views/sales/salesProfile4detail.html", "满意度")
                     });
                 });
 
@@ -1484,7 +1498,6 @@ $(function() {
         com.post(api.sales.querySalesPicture, {
             "salesPicture.siid": v.sid
         }, function(data) {
-
             var salesPictures = data.salesPictures;
             if (salesPictures && salesPictures.length) {
                 $.each(salesPictures, function(i, value) {

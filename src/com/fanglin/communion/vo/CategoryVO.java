@@ -16,6 +16,8 @@ public class CategoryVO implements java.io.Serializable {
 
 	private Short isCount;
 
+	private Short isLimit;
+
 	private String kino;
 
 	private String kiname;
@@ -66,6 +68,14 @@ public class CategoryVO implements java.io.Serializable {
 
 	public void setIsCount(Short isCount) {
 		this.isCount = isCount;
+	}
+
+	public Short getIsLimit() {
+		return isLimit;
+	}
+
+	public void setIsLimit(Short isLimit) {
+		this.isLimit = isLimit;
 	}
 
 	public String getKino() {

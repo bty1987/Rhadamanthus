@@ -13,6 +13,7 @@ $(function() {
             name: com.focusPage("#name"),
             quote: com.focusPage("#quote"),
             num: com.focusPage("#num"),
+            type: com.focusPage("#type"),
             soodsnum: com.focusPage("#soodsnum"),
 
             executeTimes: com.focusPage("#executeTimes"),
@@ -26,6 +27,7 @@ $(function() {
             uFormat: com.focusPage("#uFormat"),
             uSelling: com.focusPage("#uSelling"),
             uCost: com.focusPage("#uCost"),
+            uType: com.focusPage("#uType"),
             uBalance: com.focusPage("#uBalance")
         },
 
@@ -50,6 +52,9 @@ $(function() {
 
     com.datetime(soods.items.executeDates, "date", false);
     com.datetime(soods.items.executeTimes, "time", false);
+
+    soods.items.type.bindData(constant.data.soods.type.datas, 'key', 'value');
+    soods.uitems.uType.bindData(constant.data.soods.type.datas, 'key', 'value');
 
     soods.withdrawBtn.bindClick(saveData);
     soods.updateSoodsItemBtn.bindClick(updateData);
@@ -132,7 +137,7 @@ $(function() {
                 $divBtnWrap.append($invalid).appendTo($h3);
             }
 
-            var propertyArr = [["名称: ", v.name, "grey"], ["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "red"], ["售价: ", v.selling, "blue"], ["成本: ", v.cost, "blue"], ["结算价: ", v.balance, "blue"], ["数量: ", v.num, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ];
+            var propertyArr = [["名称: ", v.name, "grey"], ["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "red"], ["售价: ", v.selling, "blue"], ["成本: ", v.cost, "blue"], ["结算价: ", v.balance, "blue"], ["数量: ", v.num, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ["类型: ", constant.data.soods.type.keys[v.type], "red"]];
             var $label = $('<label></label>');
             var $input = $('<input>').attr({
                 "type": "checkbox",
@@ -381,6 +386,7 @@ $(function() {
             "soods.format": soods.uitems.uFormat.val(),
             "soods.selling": soods.uitems.uSelling.val(),
             "soods.cost": soods.uitems.uCost.val(),
+            "soods.type": soods.uitems.uType.val(),
             "soods.balance": soods.uitems.uBalance.val()
         };
 
@@ -414,6 +420,7 @@ $(function() {
             "soods.num": soods.items.soodsnum.val(),
             "soods.selling": soods.items.selling.val(),
             "soods.cost": soods.items.cost.val(),
+            "soods.type": soods.items.type.val(),
             "soods.balance": soods.items.balance.val()
         };
 

@@ -22,6 +22,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "constructionschedule", catalog = "construction")
 public class ConstructionSchedulePO implements Serializable {
@@ -64,6 +67,10 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private int period;
 
+	private Timestamp preStartTime;
+
+	private Timestamp preEndTime;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -80,8 +87,40 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private short workStatus;
 
+	private short scheduleStatus;
+
+	private int accessoryLimit;
+
+	private int salaryLimit;
+
+	private int accessoryTotal;
+
+	private int salaryTotal;
+
+	private int precheck;
+
+	private int postcheck;
+
+	private int stacheck;
+
+	private int fincheck;
+
 	public ConstructionSchedulePO() {
 		super();
+	}
+
+	public ConstructionSchedulePO(long cid, String orderId) {
+		super();
+		this.cid = cid;
+		this.orderId = orderId;
+	}
+
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime) {
+		super();
+		this.cid = cid;
+		this.orderId = orderId;
+		this.startTime = startTime;
+		this.endTime = endTime;
 	}
 
 	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, long cnid, int period) {
@@ -144,6 +183,24 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setPeriod(int period) {
 		this.period = period;
+	}
+
+	@Column(name = "preStartTime")
+	public Timestamp getPreStartTime() {
+		return preStartTime;
+	}
+
+	public void setPreStartTime(Timestamp preStartTime) {
+		this.preStartTime = preStartTime;
+	}
+
+	@Column(name = "preEndTime")
+	public Timestamp getPreEndTime() {
+		return preEndTime;
+	}
+
+	public void setPreEndTime(Timestamp preEndTime) {
+		this.preEndTime = preEndTime;
 	}
 
 	@Column(name = "startTime")
@@ -218,4 +275,86 @@ public class ConstructionSchedulePO implements Serializable {
 		this.schedule = schedule;
 	}
 
+	public short getScheduleStatus() {
+		return scheduleStatus;
+	}
+
+	public void setScheduleStatus(short scheduleStatus) {
+		this.scheduleStatus = scheduleStatus;
+	}
+
+	@Column(name = "accessoryLimit")
+	public int getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(int accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
+	}
+
+	@Column(name = "salaryLimit")
+	public int getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(int salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	@Column(name = "accessoryTotal")
+	public int getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(int accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
+	@Column(name = "salaryTotal")
+	public int getSalaryTotal() {
+		return salaryTotal;
+	}
+
+	public void setSalaryTotal(int salaryTotal) {
+		this.salaryTotal = salaryTotal;
+	}
+
+	public int getPrecheck() {
+		return precheck;
+	}
+
+	public void setPrecheck(int precheck) {
+		this.precheck = precheck;
+	}
+
+	public int getPostcheck() {
+		return postcheck;
+	}
+
+	public void setPostcheck(int postcheck) {
+		this.postcheck = postcheck;
+	}
+
+	public int getStacheck() {
+		return stacheck;
+	}
+
+	public void setStacheck(int stacheck) {
+		this.stacheck = stacheck;
+	}
+
+	public int getFincheck() {
+		return fincheck;
+	}
+
+	public void setFincheck(int fincheck) {
+		this.fincheck = fincheck;
+	}
+
+	public ConstructionSchedulePO init(ConstructionNodeVO constructionNodeVO) {
+
+		BeanUtil.copyProperties(constructionNodeVO, this, "");
+
+		return this;
+	}
 }

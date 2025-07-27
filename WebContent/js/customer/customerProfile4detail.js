@@ -54,18 +54,16 @@ jQuery(function($) {
             url = api.customer.queryCustomerProfileByCid;
             args = {
                 "customerProfile.cid": params.customer.cid,
-                "customerProfile.type": params.customer.type,
             }
         }
 
-        if (params.decoration.orderId) {
+        if (params.customer.orderId) {
             url = api.customer.queryCustomerProfileByOrderId;
             args = {
-                "customerProfile.orderId": params.decoration.orderId,
-                "customerProfile.type": params.customer.type,
+                "customerProfile.orderId": params.customer.orderId,
             }
         }
-
+        
         if (!url)
             return false
 

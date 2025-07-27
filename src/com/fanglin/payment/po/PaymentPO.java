@@ -234,12 +234,11 @@ public class PaymentPO implements Serializable {
 		this.uniqueid = uniqueid;
 	}
 
-	public void ptv(PaymentVO paymentVO) {
+	public PaymentVO ptv(PaymentVO paymentVO) {
 
 		BeanUtil.copyProperties(this, paymentVO, Arrays.asList("decoration", "customer", "collectUser", "confirmUser", "company"));
 
-		paymentVO.setCustomer(new CustomerVO());
-		BeanUtil.copyProperties(this.getCustomer(), paymentVO.getCustomer());
+		if (getCustomer() != null) paymentVO.setCustomer(getCustomer().ptv(new CustomerVO()));
 
 		AdvanceReceiptPO advanceReceiptPO = this.getAdvanceReceipt();
 
@@ -255,5 +254,7 @@ public class PaymentPO implements Serializable {
 				BeanUtil.copyProperties(advanceReceiptPO.getConfirmer(), paymentVO.getConfirmUser(), Arrays.asList("dept", "duty"));
 			}
 		}
+
+		return paymentVO;
 	}
 }

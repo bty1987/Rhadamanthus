@@ -20,6 +20,8 @@ public class HouseVO implements Serializable {
 
 	private Integer door;
 
+	private Integer innerFloor;
+
 	private Short type;
 
 	private Integer buildArea;
@@ -122,6 +124,14 @@ public class HouseVO implements Serializable {
 
 	public void setDoor(Integer door) {
 		this.door = door;
+	}
+
+	public Integer getInnerFloor() {
+		return innerFloor;
+	}
+
+	public void setInnerFloor(Integer innerFloor) {
+		this.innerFloor = innerFloor;
 	}
 
 	public Short getType() {

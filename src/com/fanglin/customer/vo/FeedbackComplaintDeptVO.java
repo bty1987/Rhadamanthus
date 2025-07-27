@@ -23,11 +23,11 @@ public class FeedbackComplaintDeptVO implements Serializable {
 
 	private UserVO dutyUser;
 
-	private Short firstLevel;
+	private FeedbackComplaintProblemVO firstLevel;
 
-	private Short secondary;
+	private FeedbackComplaintProblemVO secondary;
 
-	private Short problemType;
+	private FeedbackComplaintProblemVO problemType;
 
 	private Timestamp createTime;
 
@@ -35,11 +35,14 @@ public class FeedbackComplaintDeptVO implements Serializable {
 		super();
 	}
 
-	public FeedbackComplaintDeptVO(DepartmentVO dept, DutyVO duty, UserVO dutyUser) {
+	public FeedbackComplaintDeptVO(DepartmentVO dept, DutyVO duty, UserVO dutyUser, FeedbackComplaintProblemVO firstLevel, FeedbackComplaintProblemVO secondary, FeedbackComplaintProblemVO problemType) {
 		super();
 		this.dept = dept;
 		this.duty = duty;
 		this.dutyUser = dutyUser;
+		this.firstLevel = firstLevel;
+		this.secondary = secondary;
+		this.problemType = problemType;
 	}
 
 	public Long getFcdid() {
@@ -82,27 +85,27 @@ public class FeedbackComplaintDeptVO implements Serializable {
 		this.dutyUser = dutyUser;
 	}
 
-	public Short getFirstLevel() {
+	public FeedbackComplaintProblemVO getFirstLevel() {
 		return firstLevel;
 	}
 
-	public void setFirstLevel(Short firstLevel) {
+	public void setFirstLevel(FeedbackComplaintProblemVO firstLevel) {
 		this.firstLevel = firstLevel;
 	}
 
-	public Short getSecondary() {
+	public FeedbackComplaintProblemVO getSecondary() {
 		return secondary;
 	}
 
-	public void setSecondary(Short secondary) {
+	public void setSecondary(FeedbackComplaintProblemVO secondary) {
 		this.secondary = secondary;
 	}
 
-	public Short getProblemType() {
+	public FeedbackComplaintProblemVO getProblemType() {
 		return problemType;
 	}
 
-	public void setProblemType(Short problemType) {
+	public void setProblemType(FeedbackComplaintProblemVO problemType) {
 		this.problemType = problemType;
 	}
 

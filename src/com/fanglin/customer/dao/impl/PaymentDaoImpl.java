@@ -1,7 +1,9 @@
 package com.fanglin.customer.dao.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -22,7 +24,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 
 		PagingQuery<PaymentPO> query = pagingQuery(paging, PaymentPO.class);
 
-		query.add(query.getCriterion("orderId", orderId, "eq"));
+		query.add(query.getCriterion("orderId", orderId, "eq")).add(Restrictions.in("status", Arrays.asList(PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT)));
 
 		query.desc("createTime");
 

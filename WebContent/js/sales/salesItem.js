@@ -10,6 +10,7 @@ $(function() {
 
         items: {
             refundTotal: com.focusPage("#refundTotal"),
+            designDept: com.focusPage("#designDept"),
             loose: com.focusPage("#loose"),
             ruond: com.focusPage("#ruond"),
             approver: com.focusPage('#salesItemDetialapprover'),
@@ -256,6 +257,7 @@ $(function() {
             refundTotal = salesItem.items.refundTotal.val();
 
             salesItem.items.refundTotal.attr("data-refund-total", refundTotal).val(parseInt(refundTotal));
+            salesItem.items.designDept.val(salesItem.sales.dept.name);
 
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
@@ -286,6 +288,7 @@ $(function() {
             refundTotal = utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.type == constant.sales().sales.TYPE_STA_INT ? salesItem.sales.coupon : 0), salesItem.sales.venderMaling);
 
             salesItem.items.refundTotal.attr("data-refund-total", refundTotal).val(parseInt(refundTotal));
+            salesItem.items.designDept.val(salesItem.sales.dept.name);
 
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
@@ -312,6 +315,8 @@ $(function() {
         }, function() {
 
             salesItem.items.refundTotal.val(parseInt(utils.accSub(utils.accSub(salesItem.items.refundTotal.val(), salesItem.sales.type == constant.sales().sales.TYPE_STA_INT ? salesItem.sales.coupon : 0), salesItem.sales.venderMaling)));
+            salesItem.items.designDept.val(salesItem.sales.dept.name);
+            
             approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 10);
         });
     });
@@ -379,13 +384,13 @@ $(function() {
             com.showAlert(com.warning, "请选择审批人");
             return false;
         }
-
+        
         var args = [{
             "name": "订单号",
             "value": salesItem.sales.orderId
         }, {
             "name": "设计部",
-            "value": salesItem.sales.dept.name
+            "value": com.focusPage("#designDept").val()
         }, {
             "name": "品牌",
             "value": salesItem.sales.brand.name
@@ -416,7 +421,7 @@ $(function() {
             options["code"] = "PROC-EF6YJDXRN2-2EQFBYULQQ5CPGGVZAUU1-ME75EHVI-9"; // product
             options["forms"] = JSON.stringify(args);
         }
-
+        
         com.post(api.approval.submitApprovalForSalesRefund, $.extend(options, salesItem.options), function() {
 
             salesItem.btns.refundCancelBtn.trigger('click');

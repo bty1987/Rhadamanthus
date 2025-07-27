@@ -580,9 +580,9 @@ $(function() {
             "customerOrigin.comment": customerOrigine.items.comment.val(),
             "customerOrigin.village.no": com.typeahead("villageNo"),
             "customerOrigin.buildArea": customerOrigine.items.buildArea.val(),
-            "customerOrigin.freeArea": customerOrigine.items.freeArea.val(),
-            "customerOrigin.totalArea": customerOrigine.items.totalArea.val(),
-            "customerOrigin.innerArea": customerOrigine.items.innerArea.val()
+            "customerOrigin.freeArea": 0,
+            "customerOrigin.totalArea": 0,
+            "customerOrigin.innerArea": customerOrigine.items.buildArea.val()
         };
 
         com.post(api.customer.updateCustomerOrigin, options, function(res) {
@@ -855,9 +855,9 @@ $(function() {
             "customerOrigin.village.no": com.typeahead("villageNoCreate"),
             "customerOrigin.houseNumber": customerOrigine.items.houseNumber1.val(),
             "customerOrigin.buildArea": customerOrigine.items.buildArea1.val(),
-            "customerOrigin.freeArea": customerOrigine.items.freeArea1.val(),
-            "customerOrigin.totalArea": customerOrigine.items.totalArea1.val(),
-            "customerOrigin.innerArea": customerOrigine.items.innerArea1.val(),
+            "customerOrigin.freeArea": 0,
+            "customerOrigin.totalArea": 0,
+            "customerOrigin.innerArea": customerOrigine.items.buildArea1.val(),
             "customerOrigin.designer.userId": com.typeahead("designer1"),
             "customerOrigin.salesman.userId": com.typeahead("salesman1"),
             "customerOrigin.decorationBusitype.dbid": customerOrigine.items.decorationBusitype1.val()

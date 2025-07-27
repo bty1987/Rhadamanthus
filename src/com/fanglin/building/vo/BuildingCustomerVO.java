@@ -36,7 +36,7 @@ public class BuildingCustomerVO implements Serializable {
 
 	private String grade;
 
-	private UserBaseVO create;
+	private UserBaseVO creater;
 
 	private Timestamp createTime;
 
@@ -48,10 +48,10 @@ public class BuildingCustomerVO implements Serializable {
 		super();
 	}
 
-	public BuildingCustomerVO(CustomerVO customer, UserBaseVO create) {
+	public BuildingCustomerVO(CustomerVO customer, UserBaseVO creater) {
 		super();
 		this.customer = customer;
-		this.create = create;
+		this.creater = creater;
 	}
 
 	public Long getCsid() {
@@ -158,12 +158,12 @@ public class BuildingCustomerVO implements Serializable {
 		this.grade = grade;
 	}
 
-	public UserBaseVO getCreate() {
-		return create;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setCreate(UserBaseVO create) {
-		this.create = create;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 	public Timestamp getCreateTime() {

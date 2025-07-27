@@ -293,25 +293,53 @@ $.extend(api, {
 
         pageVillage: {
             url: "pageVillage.do",
-            demo: true
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["mileage"]
+            }]
         },
         queryVillage: {
-            url: "queryVillage.do"
+            url: "queryVillage.do",
+            type: "query",
+            tranargs: [{
+                result: "villages",
+                args: ["mileage"]
+            }]
         },
         queryVillageByVid: {
-            url: "queryVillageByVid.do"
+            url: "queryVillageByVid.do",
+            type: "query",
+            tranargs: [{
+                result: "villages",
+                args: ["mileage"]
+            }]
         },
         queryVillageForNameByPinyin: {
             url: "queryVillageForNameByPinyin.do",
-            demo: true
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "villages",
+                args: ["mileage"]
+            }]
         },
         addVillage: {
             url: "addVillage.do",
-            server: "communion"
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["village.mileage"]
+            }
         },
         updateVillage: {
             url: "updateVillage.do",
-            server: "communion"
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["village.mileage"]
+            }
         },
         updateVillageForStatus: {
             url: "updateVillageForStatus.do",
@@ -394,20 +422,75 @@ $.extend(api, {
                 args: ["house.buildArea", "house.freeArea", "house.innerArea", "house.totalArea"]
             }
         },
-
+        
         pageConstructionPace: {
-            url: "pageConstructionPace.do"
+            url: "pageConstructionPace.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["upperArea", "lowerArea", "period"]
+            }]
         },
         queryConstructionPace: {
-            url: "queryConstructionPace.do"
+            url: "queryConstructionPace.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period"],
+                query: [{
+                    result: "constructionPaces",
+                    args: ["upperArea", "lowerArea", "period"]
+                }]
+            }
         },
         addConstructionPace: {
-            url: "addConstructionPace.do"
+            url: "addConstructionPace.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period"]
+            }
         },
         updateConstructionPace: {
-            url: "updateConstructionPace.do"
+            url: "updateConstructionPace.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period"]
+            }
         },
-        updateConstructionPaceForStatus: {
+        deleteConstructionPace: {
+            url: "deleteConstructionPace.do"
+        },
+
+        pageConstructionPaceNode: {
+            url: "pageConstructionPaceNode.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["connum", "comnum"]
+            }]
+        },
+        queryConstructionPaceNode: {
+            url: "queryConstructionPaceNode.do",
+            type: "query",
+            tranargs: [{
+                result: "constructionPaceNodes",
+                args: ["connum", "comnum"]
+            }]
+        },
+        addConstructionPaceNode: {
+            url: "addConstructionPaceNode.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPaceNode.connum", "constructionPaceNode.comnum"]
+            }
+        },
+        updateConstructionPaceNode: {
+            url: "updateConstructionPaceNode.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPaceNode.connum", "constructionPaceNode.comnum"]
+            }
+        },
+        updateConstructionPaceNodeForStatus: {
             url: "updateConstructionPaceForStatus.do"
         },
 
@@ -503,45 +586,45 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
             }]
         },
         queryConstructionNode: {
             url: "queryConstructionNode.do",
             type: "query",
             tranargs: [{
-                result: "contructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
+                result: "constructionNodes",
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
             }]
         },
         queryConstructionNodeByCnid: {
             url: "queryConstructionNodeByCnid.do",
             type: "query",
             tranargs: [{
-                result: "contructionNode",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
+                result: "constructionNodes",
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
             }]
         },
         queryConstructionNodeByOrderId: {
             url: "queryConstructionNodeByOrderId.do",
             type: "query",
             tranargs: [{
-                result: "contructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit"]
+                result: "constructionNodes",
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
             }]
         },
         addConstructionNode: {
             url: "addConstructionNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit", "constructionNode.salaryLimit", "constructionNode.accessoryLimit"]
             }
         },
         updateConstructionNode: {
             url: "updateConstructionNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck", "constructionNode.timeLimit", "constructionNode.salaryLimit", "constructionNode.accessoryLimit"]
             }
         },
         updateConstructionNodeForStatus: {
@@ -669,6 +752,9 @@ $.extend(api, {
         },
         deleteSurveyTemplate: {
             url: "deleteSurveyTemplate.do"
+        },
+        copySurveyTemplate: {
+            url: "copySurveyTemplate.do"
         },
 
         pageChating: {
@@ -1380,6 +1466,7 @@ $.extend(api, {
         queryDecorationBusitype: {
             url: "queryDecorationBusitype.do",
             type: "query",
+            intercept: true,
             tranargs: [{
                 result: "decorationBusitypes",
                 args: ["notSalesmanRate"]

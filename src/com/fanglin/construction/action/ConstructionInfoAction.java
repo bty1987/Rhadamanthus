@@ -1,5 +1,7 @@
 package com.fanglin.construction.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -23,7 +25,9 @@ public class ConstructionInfoAction extends BaseListAction {
 	private ConstructionInfoService constructionInfoService;
 
 	private ConstructionInfoVO constructionInfo;
-	
+
+	private List<?> count;
+
 	@Action(value = "pageConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstructionInfo() throws FLException {
 
@@ -40,18 +44,26 @@ public class ConstructionInfoAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateConstructionInfo() throws FLException {
-
-		constructionInfoService.updateConstructionInfo(constructionInfo);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "queryConstructionInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionInfoByOrderId() throws FLException {
 
 		constructionInfo = constructionInfoService.queryConstructionInfoByOrderId(constructionInfo);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "countConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countConstructionInfo() throws FLException {
+
+		count = constructionInfoService.countConstructionInfo(constructionInfo, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionInfo() throws FLException {
+
+		constructionInfoService.updateConstructionInfo(constructionInfo);
 
 		return SUCCESS;
 	}
@@ -63,12 +75,20 @@ public class ConstructionInfoAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	public ConstructionInfoVO getConstructionInfo() {
 		return constructionInfo;
 	}
 
 	public void setConstructionInfo(ConstructionInfoVO constructionInfo) {
 		this.constructionInfo = constructionInfo;
+	}
+
+	public List<?> getCount() {
+		return count;
+	}
+
+	public void setCount(List<?> count) {
+		this.count = count;
 	}
 }

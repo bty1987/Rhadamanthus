@@ -38,4 +38,6 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public int countSelectionItem(String orderId, List<Short> statuses);
 
+	public int updateSelectionItem(long areaId, short type, short newtype);
+
 }

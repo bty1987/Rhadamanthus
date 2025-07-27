@@ -417,16 +417,16 @@ public class CustomerChancePO implements Serializable {
 		BeanUtil.copyProperties(this, customerChanceVO, Arrays.asList("customer", "house", "source", "busitype", "creater", "issuer", "finer", "belonger", "department", "region"));
 
 		if (customerChanceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerChanceVO.getHouse());
-		if (customerChanceVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerChanceVO.getCustomer());
+		if (customerChanceVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(customerChanceVO.getCustomer());
 
-		if (customerChanceVO.getSource() != null) getSource().ptv(customerChanceVO.getSource());
+		if (customerChanceVO.getSource() != null && getSource() != null) getSource().ptv(customerChanceVO.getSource());
 
-		if (customerChanceVO.getBusitype() != null) BeanUtil.copyProperties(getBusitype(), customerChanceVO.getBusitype());
+		if (customerChanceVO.getBusitype() != null && getBusitype() != null) BeanUtil.copyProperties(getBusitype(), customerChanceVO.getBusitype());
 
-		if (customerChanceVO.getCreater() != null) customerChanceVO.getCreater().setBaseInfo(getCreater());
-		if (customerChanceVO.getIssuer() != null) customerChanceVO.getIssuer().setBaseInfo(getIssuer());
-		if (customerChanceVO.getFiner() != null) customerChanceVO.getFiner().setBaseInfo(getFiner());
-		if (customerChanceVO.getBelonger() != null) customerChanceVO.getBelonger().setBaseInfo(getBelonger());
+		if (customerChanceVO.getCreater() != null && getCreater() != null) customerChanceVO.getCreater().setBaseInfo(getCreater());
+		if (customerChanceVO.getIssuer() != null && getIssuer() != null) customerChanceVO.getIssuer().setBaseInfo(getIssuer());
+		if (customerChanceVO.getFiner() != null && getFiner() != null) customerChanceVO.getFiner().setBaseInfo(getFiner());
+		if (customerChanceVO.getBelonger() != null && getBelonger() != null) customerChanceVO.getBelonger().setBaseInfo(getBelonger());
 
 		if (customerChanceVO.getDepartment() != null && getDepartment() != null) customerChanceVO.setDepartment(getDepartment().ptv());
 		if (customerChanceVO.getRegion() != null && getRegion() != null) customerChanceVO.setRegion(getRegion().ptv());

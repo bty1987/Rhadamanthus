@@ -648,13 +648,13 @@ public class SalesPO implements Serializable {
 		this.cvalue = cvalue;
 	}
 
-	public void ptv(SalesVO salesVO) {
+	public SalesVO ptv(SalesVO salesVO) {
 
 		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher", "creater", "brand"));
 
 		if (salesVO.getHouse() != null && getHouse() != null) getHouse().ptv(salesVO.getHouse());
 
-		if (salesVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), salesVO.getCustomer());
+		if (salesVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(salesVO.getCustomer());
 
 		if (salesVO.getDept() != null) BeanUtil.copyProperties(getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		if (salesVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
@@ -673,6 +673,7 @@ public class SalesPO implements Serializable {
 
 		if (salesVO.getBrand() != null && getBrand() != null) getBrand().ptv(salesVO.getBrand());
 
+		return salesVO;
 	}
 
 }

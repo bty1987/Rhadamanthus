@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.DepartmentTypeVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "departmenttype", catalog = "communion")
 public class DepartmentTypePO implements Serializable {
@@ -49,6 +52,13 @@ public class DepartmentTypePO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public DepartmentTypeVO ptv(DepartmentTypeVO departmentTypeVO) {
+
+		BeanUtil.copyPropertie(this, departmentTypeVO);
+
+		return departmentTypeVO;
 	}
 
 }

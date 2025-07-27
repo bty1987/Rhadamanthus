@@ -90,6 +90,22 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAcceptance(AcceptanceVO acceptanceVO) throws FLException {
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationPO.getPaySacle() < 100) {
+			throw new FLException(120018, "装修款比例不足");
+		}
+
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
 		AcceptancePO acceptancePO = acceptanceDao.queryAcceptanceByOrderId(acceptanceVO.getOrderId());
 
 		if (acceptancePO == null) {
@@ -105,20 +121,9 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 
 		acceptanceDao.saveOrUpdate(acceptancePO);
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(acceptanceVO.getOrderId());
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
-		}
-
 		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_FINISH_INT);
+
 		decorationDao.update(decorationPO);
-
-		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(acceptanceVO.getOrderId());
-
-		if (constructionPO == null) {
-			throw new FLException(120020, "工程信息不存在");
-		}
 
 		if (constructionPO.getEndTime() == null) {
 			constructionPO.setEndTime(DateUtil.getDateToTimestamp(new Date()));

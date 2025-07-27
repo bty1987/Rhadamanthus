@@ -9,7 +9,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.customer.dao.FeedbackGuaranteeDao;
 import com.fanglin.customer.po.FeedbackGuaranteePO;
 
-
 @Repository("feedbackGuaranteeDao")
 public class FeedbackGuaranteeDaoImpl extends DaoImpl<FeedbackGuaranteePO> implements FeedbackGuaranteeDao {
 
@@ -17,14 +16,10 @@ public class FeedbackGuaranteeDaoImpl extends DaoImpl<FeedbackGuaranteePO> imple
 		super(FeedbackGuaranteePO.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<FeedbackGuaranteePO> queryFeedbackGuarantee(long fid) {
-		
 		return session().createCriteria(FeedbackGuaranteePO.class).add(Restrictions.eq("fid", fid)).list();
-
 	}
-
-
 
 }

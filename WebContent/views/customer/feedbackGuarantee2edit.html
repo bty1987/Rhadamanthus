@@ -1,127 +1,133 @@
 <div class="widget-container-span col-md-12">
-	<div class="widget-box transparent">
-		<div id="fl-statement2">
-			<div id="editFeedbackGuarantee">
-
-				<div class="row">
-					<form class="form-horizontal" id="from">
-						<div class="col-xs-12 col-sm-6">
-							<div class="control-group">
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="orderId">装修单号</label>
-									<div class="col-sm-9">
-										<input id="e_orderId" type="text" class="col-xs-10 col-sm-5" value="" readonly="readonly">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="source">信息来源</label>
-									<div class="col-sm-9">
-										<select id="e_source" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
-									</div>
-								</div>
-					            <div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange orange" for="workType">工种</label>
-									<div class="col-sm-9">
-									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="echange_workType" value="1"><span class="lbl blue">水工</span></label>
-									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="echange_workType" value="2"><span class="lbl blue">电工</span></label>
-									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="echange_workType" value="3"><span class="lbl blue">瓦工</span></label>
-									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="echange_workType" value="4"><span class="lbl blue">木工</span></label>
-									<label style="margin-right: 10px;"><input type="checkbox" class="ace" id="0" name="echange_workType" value="5"><span class="lbl blue">油工</span></label>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="source">装修年份</label>
-									<div class="col-sm-9">
-										<input id="e_renovationYear" type="text" class="col-xs-10 col-sm-5" value="" >
-									</div>
-								</div>
-					  	        <div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange orange" for="workType">维修结果</label>
-									<div class="col-sm-9">
-										<select id="e_repairResult" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
-									</div>
-								</div>
-<!-- 							<div class="form-group">
-									<label for="designerId" class="col-sm-3 control-label no-padding-right orange">施工监理</label>
-									<div class="col-md-9">
-										<input type="text" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="svuid" placeholder="请输入施工监理">
-									</div>
-								</div> -->
-								
+    <div class="widget-box transparent">
+        <div id="fl-statement2">
+            <div id="editFeedbackGuarantee">
+                <div class="row">
+                    <form class="form-horizontal" id="from">
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="control-group">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="orderId">装修单号</label>
+                                    <div class="col-sm-9">
+                                        <input id="e_orderId" type="text" class="col-xs-10 col-sm-5" value="" readonly="readonly">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="source">信息来源</label>
+                                    <div class="col-sm-9">
+                                        <select id="e_source" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="es_upgradeSource" style="display: none;">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="e_upgradeSource">升级来源</label>
+                                    <div class="col-sm-9">
+                                        <select id="e_upgradeSource" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange orange" for="workType">工种</label>
+                                    <div class="col-sm-9">
+                                        <label style="margin-right: 10px;">
+                                            <input type="checkbox" class="ace" id="0" name="echange_workType" value="1">
+                                            <span class="lbl blue">水工</span>
+                                        </label>
+                                        <label style="margin-right: 10px;">
+                                            <input type="checkbox" class="ace" id="0" name="echange_workType" value="2">
+                                            <span class="lbl blue">电工</span>
+                                        </label>
+                                        <label style="margin-right: 10px;">
+                                            <input type="checkbox" class="ace" id="0" name="echange_workType" value="3">
+                                            <span class="lbl blue">瓦工</span>
+                                        </label>
+                                        <label style="margin-right: 10px;">
+                                            <input type="checkbox" class="ace" id="0" name="echange_workType" value="4">
+                                            <span class="lbl blue"> 木工</span>
+                                        </label>
+                                        <label style="margin-right: 10px;">
+                                            <input type="checkbox" class="ace" id="0" name="echange_workType" value="5">
+                                            <span class="lbl blue"> 油工</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="source">装修年份</label>
+                                    <div class="col-sm-9">
+                                        <input id="e_renovationYear" type="text" class="col-xs-10 col-sm-5" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange orange" for="workType"> 维修结果</label>
+                                    <div class="col-sm-9">
+                                        <select id="e_repairResult" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right orange">上传图片</label>
                                     <div class="col-sm-9">
-                                        <a id="e_infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement v_required" target="_blank">
-                                        </a>
+                                        <a id="e_infoPicture" data-rel="colorbox" href="javascript:void(0)" class="cboxElement v_required" target="_blank"></a>
                                         <div id="e_path"></div>
                                     </div>
                                 </div>
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-6">
-							<div class="control-group">
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="phone">客户电话</label>
-									<div class="col-sm-9">
-										<input id="e_phone" type="text" class="col-xs-10 col-sm-5 v_required v_phones" value="">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="cutomerType">保修状态</label>
-									<div class="col-sm-9">
-										<select id="e_cutomerType" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="xzdeptType">维修部门</label>
-									<div class="col-sm-9" id="e_‌choiceDeptType"></div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="supplier">品牌</label>
-									<div class="col-sm-9">
-										<input type="text" id="e_brandName" maxlength="12" class="col-xs-10 col-sm-5 " data-toggle="popover" data-trigger='manual' />
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="reportedDate">报修日期</label>
-									<div class="col-sm-9">
-									    <input type="text" id="e_reportedDate" class="col-xs-10 col-sm-5 date-picker-date v_required" data-date-format="yyyy-mm-dd">									
-									</div>
-								</div>
-<!-- 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange orange" for="workType">监理状态</label>
-									<div class="col-sm-9">
-										<select id="svUserStatus" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
-									</div>
-								</div> -->
-					 		    <div class="form-group">
-									<label for="contact" class="col-sm-3 control-label no-padding-right orange">问题简述说明</label>
-									<div class="col-sm-9">
-										<textarea id="e_content" class=" col-xs-10 col-sm-6 v_required" maxlength="128" rows="3"></textarea>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div id="checkboxs">
-						    <div id="eplumber‌" style="display: none;">水工选项：</div>
-							<div id="eelectrician‌" style="display: none;margin-top: 20px;">电工选项：</div>
-							<div id="etiler‌Type" style="display: none;margin-top: 20px;">瓦工选项：</div>
-							<div id="ecarpenter‌Type‌" style="display: none;margin-top: 20px;">木工选项：</div>							         
-							<div id="epainter‌‌Type" style="display: none;margin-top: 20px;">油工选项：</div>
-						</div>
-
-					</form>
-
-					<div class="row-fluid wizard-actions" id="btnDisplay">
-						<button class="btn btn-xs btn-warning" type="button" id="editSaveBtn" data-loading-text="保存中...">
-							<i class="icon-ok bigger-110"></i> <span>保存</span>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="control-group">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="phone"> 客户电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="e_phone" type="text" class="col-xs-10 col-sm-5 v_required v_phones" value="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="cutomerType">保修状态</label>
+                                    <div class="col-sm-9">
+                                        <select id="e_cutomerType" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="xzdeptType">维修部门</label>
+                                    <div class="col-sm-9" id="e_choiceDeptType"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right" for="supplier">品牌</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="e_brandName" maxlength="12" class="col-xs-10 col-sm-5 " data-toggle="popover" data-trigger='manual' />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="reportedDate">报修日期</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="e_reportedDate" class="col-xs-10 col-sm-5 date-picker-date v_required" data-date-format="yyyy-mm-dd">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact" class="col-sm-3 control-label no-padding-right orange">问题简述说明</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="e_content" class=" col-xs-10 col-sm-6 v_required" maxlength="128" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="checkboxs">
+                            <div id="eplumber" style="display: none;"> 水工选项: </div>
+                            <div id="e_electrician" style="display: none;margin-top: 20px;">电工选项: </div>
+                            <div id="etilerType" style="display: none;margin-top: 20px;">瓦工选项: </div>
+                            <div id="ecarpenterType" style="display: none;margin-top: 20px;">木工选项: </div>
+                            <div id="epainterType" style="display: none;margin-top: 20px;">油工选项: </div>
+                        </div>
+                    </form>
+                    
+                    <div class="row-fluid wizard-actions" id="btnDisplay">
+                        <button class="btn btn-xs btn-warning" type="button" id="editSaveBtn" data-loading-text="保存中...">
+                            <i class="icon-ok bigger-110"></i>
+                            <span>保存</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">

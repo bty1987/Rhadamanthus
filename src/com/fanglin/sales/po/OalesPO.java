@@ -488,12 +488,16 @@ public class OalesPO implements Serializable {
 
 		if (oalesVO.getDecoration() != null) getDecoration().ptvcascade(oalesVO.getDecoration());
 
+		if (oalesVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(oalesVO.getCustomer());
+
 		if (oalesVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "duty"));
 		if (oalesVO.getSupplier() != null) BeanUtil.copyProperties(getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "duty"));
 		if (oalesVO.getServicer() != null) BeanUtil.copyProperties(getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "duty"));
 		if (oalesVO.getChanner() != null) BeanUtil.copyProperties(getChanner(), oalesVO.getChanner(), Arrays.asList("dept", "duty"));
+
 		if (oalesVO.getDept() != null) BeanUtil.copyProperties(getDept(), oalesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		if (oalesVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), oalesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+
 		if (oalesVO.getChecker() != null) BeanUtil.copyProperties(getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "duty"));
 		if (oalesVO.getMaterialer() != null) BeanUtil.copyProperties(getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
 		if (oalesVO.getAccounter() != null) BeanUtil.copyProperties(getAccounter(), oalesVO.getAccounter(), Arrays.asList("dept", "duty"));

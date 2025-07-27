@@ -27,7 +27,7 @@ import javax.persistence.Table;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -266,7 +266,7 @@ public class DepartmentPO implements Serializable {
 
 	public DepartmentVO ptv() {
 
-		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO());
+		DepartmentVO departmentVO = new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO());
 
 		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager"));
 
@@ -278,11 +278,8 @@ public class DepartmentPO implements Serializable {
 			BeanUtil.copyProperties(getFatherDept(), departmentVO.getFatherDept(), Arrays.asList("fatherDept", "cityProper", "type", "manager"));
 		}
 
-		if (getManager() != null && getManager().getUid() != 0) {
-			BeanUtil.copyProperties(getManager(), departmentVO.getManager(), Arrays.asList("role", "dept", "duty"));
-		}
+		if (departmentVO.getManager() != null && getManager() != null && getManager().getUid() != 0) departmentVO.getManager().setBaseInfo(getManager());
 
 		return departmentVO;
 	}
-
 }

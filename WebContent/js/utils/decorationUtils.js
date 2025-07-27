@@ -2359,7 +2359,8 @@ var decorationUtils = {
                 "layout": com.focusPage('input[name="layout"]:checked', '#printQuotationModal').val(),
                 "type": 0,
                 "itemtype": [],
-                "calType": com.focusPage('input[name="calType"]:checked', '#printQuotationModal').val()
+                "calType": com.focusPage('input[name="calType"]:checked', '#printQuotationModal').val(),
+                "workType": ""
             };
 
             var $types = com.focusPage('input[name="type"]:checked', '#printQuotationModal #types');

@@ -13,11 +13,15 @@ public interface WorkerSalaryService {
 
 	public void pageWorkerSalaryByUserId(Paging paging, List<Filter> filters);
 
-	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalary);
+	public List<WorkerSalaryVO> queryWorkerSalaryByOrderId(WorkerSalaryVO workerSalaryVO);
+
+	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO);
 
 	public WorkerSalaryVO queryWorkerSalaryByWsid(WorkerSalaryVO workerSalaryVO) throws FLException;
 
 	public int addWorkerSalary(WorkerSalaryVO workerSalaryVO, String userId, int company) throws FLException;
+
+	public int updateWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException;
 
 	public int adoptWorkerSalary(List<WorkerSalaryVO> workerSalarys, String userId, int company) throws FLException;
 

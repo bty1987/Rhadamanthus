@@ -283,7 +283,13 @@ var selectionDetail = (function() {
                     case constant.quotation().selectionItem.TYPE_ADDITEM_INT:
                         addReduceAddTotal = utils.accAdd($(this).attr('data-total'), addReduceAddTotal);
                         break;
+                    case constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT:
+                        addReduceAddTotal = utils.accAdd($(this).attr('data-total'), addReduceAddTotal);
+                        break;
                     case constant.quotation().selectionItem.TYPE_MINUSITEM_INT:
+                        addReduceMinusTotal = utils.accAdd($(this).attr('data-total'), addReduceMinusTotal);
+                        break;
+                    case constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT:
                         addReduceMinusTotal = utils.accAdd($(this).attr('data-total'), addReduceMinusTotal);
                         break;
                 }
@@ -715,7 +721,7 @@ var selectionDetail = (function() {
 
             var $btnSelection = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('选材').css('visibility', 'hidden');
 
-            if (data.quotationItemId != null && data.quotationItemId != 0 && data.type != constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
+            if (data.quotationItemId != null && data.quotationItemId != 0 && [constant.quotation().selectionItem.TYPE_MINUSITEM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT].indexOf(data.type) == -1) {
                 $btnSelection.css('visibility', 'visible');
             }
 
@@ -755,7 +761,7 @@ var selectionDetail = (function() {
             var $input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength', '16'));
             $input.appendTo($selectionItemLi);
 
-            var lineSet = [['name green', data.goods.name], ['num blue', [constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_INT].indexOf(data.type) != -1 ? -data.num : data.num]];
+            var lineSet = [['name green', data.goods.name], ['num blue', [constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT].indexOf(data.type) != -1 ? -data.num : data.num]];
 
             $.each(lineSet, function(i, v) {
 
@@ -937,7 +943,20 @@ var selectionDetail = (function() {
                         if (res.addReduces && res.addReduces.length) {
                             $.each(res.addReduces, function(i, v) {
 
-                                selectionItemType = v.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT ? constant.quotation().selectionItem.TYPE_ADDITEM_INT : constant.quotation().selectionItem.TYPE_MINUSITEM_INT;
+                                if (v.type == constant.quotation().addreduce.TYPE_ADD_INT) {
+                                    selectionItemType = constant.quotation().selectionItem.TYPE_ADDITEM_INT;
+                                } else {
+                                    selectionItemType = constant.quotation().selectionItem.TYPE_MINUSITEM_INT;
+                                }
+
+                                if (v.type == constant.quotation().addreduce.TYPE_ADD_INT && v.paytype == constant.quotation().addreduce.PAYTYPE_COM_INT) {
+                                    selectionItemType = constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT;
+                                }
+
+                                if (v.type == constant.quotation().addreduce.TYPE_REDUCE_INT && v.paytype == constant.quotation().addreduce.PAYTYPE_NORETURN_INT) {
+                                    selectionItemType = constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT;
+                                }
+
                                 createItem(v, selectionItemType);
                             });
                         }
@@ -1000,7 +1019,7 @@ var selectionDetail = (function() {
                             }
                         });
                     }, null, false);
-                } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
+                } else if ([constant.quotation().selectionItem.TYPE_ADDITEM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_INT, constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT].indexOf(type) != -1) {
                     com.post(api.addReduce.queryAddReduceItemByAddReduceId, {
                         'addReduce.arId': functionArea.arId
                     }, function(res) {
@@ -1057,7 +1076,7 @@ var selectionDetail = (function() {
                         "quotationFunctionAreaName": rawData.quotationFunctionAreaName,
                         "preprice": rawData.unitPrice,
                     }
-                } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
+                } else if ([constant.quotation().selectionItem.TYPE_ADDITEM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_INT, constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT].indexOf(type) != -1) {
 
                     if (functionArea.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
                         quotationItemId = rawData.quoteItemId;

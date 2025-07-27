@@ -418,21 +418,21 @@ public class CustomerOriginPO implements Serializable {
 
 	public CustomerOriginVO ptv(CustomerOriginVO customerOriginVO) {
 
-		BeanUtil.copyProperties(this, customerOriginVO, Arrays.asList("village", "creater", "belonger", "region", "customer", "house", "designer", "salesman", "department", "decorationBusitype"));
+		BeanUtil.copyProperties(this, customerOriginVO, Arrays.asList("customer", "village", "house", "creater", "belonger", "designer", "salesman", "region", "department", "decorationBusitype"));
 
+		if (customerOriginVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(customerOriginVO.getCustomer());
+		if (customerOriginVO.getVillage() != null && getVillage() != null) getVillage().ptv(customerOriginVO.getVillage());
 		if (customerOriginVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerOriginVO.getHouse());
-		if (customerOriginVO.getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerOriginVO.getCustomer());
 
-		if (customerOriginVO.getCreater() != null) customerOriginVO.getCreater().setBaseInfo(getCreater());
-		if (customerOriginVO.getCreater() != null && customerOriginVO.getCreater().getDept() != null) BeanUtil.copyProperties(getCreater().getDept(), customerOriginVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
+		if (customerOriginVO.getCreater() != null && getCreater() != null) customerOriginVO.getCreater().setBaseInfo(getCreater());
+		if (customerOriginVO.getBelonger() != null && getBelonger() != null) customerOriginVO.getBelonger().setBaseInfo(getBelonger());
 		if (customerOriginVO.getDesigner() != null) customerOriginVO.getDesigner().setBaseInfo(getDesigner());
 		if (customerOriginVO.getSalesman() != null) customerOriginVO.getSalesman().setBaseInfo(getSalesman());
 
-		if (customerOriginVO.getDepartment() != null) BeanUtil.copyProperties(getDepartment(), customerOriginVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-		if (customerOriginVO.getDepartment() != null && customerOriginVO.getDepartment().getType() != null && getDepartment() != null) BeanUtil.copyProperties(getDepartment().getType(), customerOriginVO.getDepartment().getType(), Arrays.asList("type"));
-		if (customerOriginVO.getDepartment() != null && customerOriginVO.getDepartment().getFatherDept() != null && getDepartment() != null) BeanUtil.copyProperties(getDepartment().getFatherDept(), customerOriginVO.getDepartment().getFatherDept(), Arrays.asList("fatherDept"));
-		if (customerOriginVO.getDepartment() != null && customerOriginVO.getDepartment().getManager() != null && getDepartment() != null) customerOriginVO.getDepartment().getManager().setBaseInfo(getDepartment().getManager());
+		if (customerOriginVO.getDepartment() != null && getDepartment() != null) customerOriginVO.setDepartment(getDepartment().ptv());
+		if (customerOriginVO.getRegion() != null && getRegion() != null) customerOriginVO.setRegion(getRegion().ptv());
+
+		if (customerOriginVO.getDecorationBusitype() != null && getDecorationBusitype() != null) getDecorationBusitype().ptv(customerOriginVO.getDecorationBusitype());
 
 		return customerOriginVO;
 	}

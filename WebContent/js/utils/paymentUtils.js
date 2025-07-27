@@ -861,10 +861,16 @@ var paymentUtils = {
                     propertyArr.push(["确认时间:", obj.confirmTime, "green"]);
                     break;
                 case "isAffirm":
-                    propertyArr.push(["客户确认状态:", payment.isAffirms[v.isAffirm], "red"]);
+                    propertyArr.push(["客户确认:", payment.isAffirms[v.isAffirm], "red"]);
                     break;
                 case "affirmTime":
                     propertyArr.push(["客户确认时间:", com.checkNull(v.affirmTime, "暂无"), "green"]);
+                    break;
+                case "sales-isAffirm":
+                    propertyArr.push(["销售确认:", payment.isAffirms[v.sales.isAffirm], "red"]);
+                    break;
+                case "sales-affirmTime":
+                    propertyArr.push(["销售确认时间:", com.checkNull(v.sales.affirmTime, "暂无"), "green"]);
                     break;
                 case "status":
                     var status = ["payment", "sales", "service", "activity", "proxy"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];

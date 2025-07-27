@@ -142,6 +142,35 @@
     </div>
 </div>
 
+<div class="modal fade" id="QRCodeContractModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span> <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">印章</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">选择印章:</label>
+                        <div class="col-sm-9">
+                            <select id='QRCodeSignet' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="QRCodeSignBtn" class="btn btn-primary">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="layerPopUp" class="portlet box page-content"></div>
 
 <div id="qrcodeModal"></div>

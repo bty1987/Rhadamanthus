@@ -91,9 +91,10 @@ public class DecorationPO implements Serializable {
 
 	public void ptv(DecorationVO decorationVO, com.fanglin.decoration.po.DecorationPO decorationPO) {
 
-		BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("dept", "duty"));
-		BeanUtil.copyPropertie(decorationPO.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("dept", "duty"));
+		if (decorationPO.getDesigner() != null && decorationVO.getDesigner() != null) BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("dept", "duty"));
+		if (decorationPO.getSalesman() != null && decorationVO.getSalesman() != null) BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("dept", "duty"));
+		if (decorationPO.getSupervisor() != null && decorationVO.getSupervisor() != null) BeanUtil.copyPropertie(decorationPO.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("dept", "duty"));
+		if (decorationPO.getMaterialer() != null && decorationVO.getMaterialer() != null) BeanUtil.copyPropertie(decorationPO.getMaterialer(), decorationVO.getMaterialer(), Arrays.asList("dept", "duty"));
 
 		decorationVO.setType(decorationPO.getType());
 		decorationVO.setTypeness(decorationPO.getTypeness());
@@ -102,11 +103,11 @@ public class DecorationPO implements Serializable {
 		decorationVO.setContractTime(decorationPO.getContractTime());
 		decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
 		decorationVO.setCreateTime(decorationPO.getCreateTime());
-		decorationVO.setDefaultFlag(this.getDefaultFlag());
+		decorationVO.setDefaultFlag(getDefaultFlag());
 		decorationVO.setDepositTime(decorationPO.getDepositTime());
 		decorationVO.setHouseArea(decorationPO.getHouse().getBuildArea());
 		decorationVO.setMeasureTime(decorationPO.getMeasureTime());
-		decorationVO.setOrderId(this.getOrderId());
+		decorationVO.setOrderId(getOrderId());
 		decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		decorationVO.setFactPrice(decorationPO.getFactPrice());
 

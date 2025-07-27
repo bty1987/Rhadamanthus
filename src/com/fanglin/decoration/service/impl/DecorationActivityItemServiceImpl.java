@@ -43,6 +43,7 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 
 @Service("decorationActivityItemService")
 @Transactional(readOnly = true)
@@ -502,7 +503,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems) throws FLException {
+	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems, String securityCode, String verifyCode) throws FLException {
+
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
 
 		String orderId = decorationVO.getOrderId();
 
@@ -516,12 +521,16 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(130002, "客户不存在");
 		}
 
+		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
 		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();
 
 		cusDecorationVO.setOrderId(orderId);
 		cusDecorationVO.setUnionId(decorationVO.getCustomer().getNo());
 
-		if (decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
+		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cusDecorationVO).getOrderId() == null) {
 			throw new FLException(330017, "装修单未绑定");
 		}
 

@@ -121,7 +121,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-constructionPeriod-name"], "periodCondList", api.data.pageConstructionPeriod, function(data) {
+    searcher.init(["data-construction-period-name"], "periodCondList", api.data.pageConstructionPeriod, function(data) {
 
         displayFunc.init('periodResultList', data);
     }, "periodPagenation", "constructionPeriodPostData", null, false, null, function() {

@@ -76,6 +76,10 @@
                                 <i class="icon-calculator"></i>
                                 <span>计算总价</span>
                             </button>
+                            <button class="btn btn-minier btn-danger col-md-4" id="calculateConsBtn" style="margin-left: 2px;">
+                                <i class="icon-calculator"></i>
+                                <span>计算工程</span>
+                            </button>
                         </div>
                     </div>
                     <div class="col-md-12 space-8"></div>
@@ -429,6 +433,57 @@
                 </div>
             </div>
 
+            <div class="modal fade " id="calculateConsModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content col-md-12">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span>&times;</span>
+                            </button>
+                            <h4 class="modal-title">计算</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group clear-both">
+                                        <label class="col-sm-2 control-label no-padding" for="conStartTime" style="line-height:34px;">日期时间</label>
+                                        <div class="col-sm-10 no-padding">
+                                            <div class="input-group col-sm-10 col-xs-10 no-padding">
+                                                <input class="form-control date-picker-date v_required" id="conStartTime" type="text" data-date-format="yyyy-mm-dd" readonly="readonly">
+                                                <span class="input-group-addon"><i class="icon-calendar bigger-110"></i></span>
+                                                <div class="action-buttons">
+                                                    <a id="calculateConsBtns" class="btn btn-primary btn-xs" style="line-height:26px;">查询</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <h4 style="color: #2679b5;"><strong>部署信息</strong></h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div>
+
+                            <hr>
+                            <h4 style="color: #2679b5;"><strong>施工计划节点</strong></h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div id="consPaceNode">
+                                        <div id="nodeCondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+                                        <div id="nodeResultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+                                        <div id="nodePagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!--管理费比例设置弹窗-->
             <div class="modal fade" id="manageRateModal" tabindex="-1" data-backdrop="static">
                 <div class="modal-dialog">
@@ -522,9 +577,9 @@
                         <div class="modal-body">
                             <form class="form-horizontal">
                                 <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="manageRate">装修单号</label>
+                                    <label class="col-md-3 control-label no-padding-right" for="orderIds">装修单号</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="orderIds" class="col-xs-10 col-md-6 v_required v_manageRate"  data-toggle="popover" data-trigger='manual' maxlength='15'/>
+                                        <input type="text" id="orderIds" class="col-xs-10 col-md-6 v_required"  data-toggle="popover" data-trigger='manual' maxlength='15'/>
                                     </div>
                                 </div>
 

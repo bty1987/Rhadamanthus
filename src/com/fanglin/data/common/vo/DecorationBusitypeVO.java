@@ -8,22 +8,35 @@ public class DecorationBusitypeVO implements Serializable {
 
 	private Long dbid;
 
+	private DecorationBusitypeVO cascade;
+
+	private Integer no;
+
 	private String name;
+
+	private String alias;
+
+	private Integer notSalesmanRate;
 
 	private Short outside;
 
-	private Short status;
-
-	private Integer company;
-	
 	private Short isRefer;
 
 	private Short isAward;
 
-	private Integer notSalesmanRate;
+	private Short type;
+
+	private Short status;
+
+	private Integer company;
 
 	public DecorationBusitypeVO() {
 		super();
+	}
+
+	public DecorationBusitypeVO(DecorationBusitypeVO cascade) {
+		super();
+		this.cascade = cascade;
 	}
 
 	public DecorationBusitypeVO(Long dbid, String name, Short status, Integer company) {
@@ -42,6 +55,22 @@ public class DecorationBusitypeVO implements Serializable {
 		this.dbid = dbid;
 	}
 
+	public DecorationBusitypeVO getCascade() {
+		return cascade;
+	}
+
+	public void setCascade(DecorationBusitypeVO cascade) {
+		this.cascade = cascade;
+	}
+
+	public Integer getNo() {
+		return no;
+	}
+
+	public void setNo(Integer no) {
+		this.no = no;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -50,28 +79,28 @@ public class DecorationBusitypeVO implements Serializable {
 		this.name = name;
 	}
 
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+	public Integer getNotSalesmanRate() {
+		return notSalesmanRate;
+	}
+
+	public void setNotSalesmanRate(Integer notSalesmanRate) {
+		this.notSalesmanRate = notSalesmanRate;
+	}
+
 	public Short getOutside() {
 		return outside;
 	}
 
 	public void setOutside(Short outside) {
 		this.outside = outside;
-	}
-
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-
-	public Integer getCompany() {
-		return company;
-	}
-
-	public void setCompany(Integer company) {
-		this.company = company;
 	}
 
 	public Short getIsRefer() {
@@ -90,12 +119,28 @@ public class DecorationBusitypeVO implements Serializable {
 		this.isAward = isAward;
 	}
 
-	public Integer getNotSalesmanRate() {
-		return notSalesmanRate;
+	public Short getType() {
+		return type;
 	}
 
-	public void setNotSalesmanRate(Integer notSalesmanRate) {
-		this.notSalesmanRate = notSalesmanRate;
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

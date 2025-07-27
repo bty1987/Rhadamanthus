@@ -72,6 +72,16 @@ public class SupplierContractServiceImpl implements SupplierContractService {
 	}
 
 	@Override
+	public SupplierContractVO querySupplierContractById(SupplierContractVO supplierContractVO) {
+
+		SupplierContractPO supplierContractPO = supplierContractDao.get(supplierContractVO.getScid());
+
+		BeanUtil.copyPropertie(supplierContractPO, supplierContractVO, Arrays.asList("creater", "signner"));
+
+		return supplierContractVO;
+	}
+
+	@Override
 	public String viewSupplierContract(SupplierContractVO supplierContractVO) throws FLException {
 
 		SupplierContractPO supplierContractPO = supplierContractDao.get(supplierContractVO.getScid());

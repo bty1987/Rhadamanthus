@@ -26,8 +26,12 @@ import com.fanglin.construction.service.ConstructionPlanService;
 import com.fanglin.construction.vo.ConstructionPlanVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionPaceDao;
-import com.fanglin.data.common.vo.ConstructionPaceVO;
+import com.fanglin.data.common.dao.ConstructionPaceNodeDao;
+import com.fanglin.data.common.vo.ConstructionPaceNodeVO;
+import com.fanglin.data.po.ConstructionPaceNodePO;
 import com.fanglin.data.po.ConstructionPacePO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -41,6 +45,12 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 	@Autowired
 	private ConstructionPaceDao constructionPaceDao;
 
+	@Autowired
+	private ConstructionPaceNodeDao constructionPaceNodeDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
+
 	@Override
 	public List<ConstructionPlanVO> queryConstructionPlanByOrderId(ConstructionPlanVO constructionPlanVO) throws FLException {
 
@@ -48,13 +58,7 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 		List<ConstructionPlanVO> constructionPlanVOs = new ArrayList<ConstructionPlanVO>();
 
 		for (ConstructionPlanPO constructionPlanPO : constructionPlanPOs) {
-
-			constructionPlanVO = new ConstructionPlanVO(new ConstructionPaceVO());
-
-			BeanUtil.copyProperties(constructionPlanPO, constructionPlanVO, Arrays.asList("pace"));
-			BeanUtil.copyProperties(constructionPlanPO.getPace(), constructionPlanVO.getPace(), Arrays.asList("pace"));
-
-			constructionPlanVOs.add(constructionPlanVO);
+			constructionPlanVOs.add(constructionPlanPO.ptv(new ConstructionPlanVO(new ConstructionPaceNodeVO())));
 		}
 
 		return constructionPlanVOs;
@@ -62,28 +66,131 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void makeConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionPlanVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (constructionPlanDao.countConstructionPlan(constructionPlanVO.getOrderId()) > 0) return;
+
+		ConstructionPacePO constructionPacePO = constructionPaceDao.queryConstructionPace(decorationPO.getHouse().getInnerArea(), decorationPO.getCompany());
+
+		if (constructionPacePO == null) return;
+
+		int sort = 0;
+
+		List<ConstructionPaceNodePO> constructionPaceNodePOs = constructionPaceNodeDao.queryConstructionPaceNode(constructionPacePO.getCpid());
+
+		for (ConstructionPaceNodePO constructionPaceNodePO : constructionPaceNodePOs) {
+
+			ConstructionPlanPO constructionPlanPO = new ConstructionPlanPO();
+
+			BeanUtil.copyProperties(constructionPlanVO, constructionPlanPO, Arrays.asList("pace"));
+
+			constructionPlanPO.setOrderId(constructionPlanVO.getOrderId());
+			constructionPlanPO.setName(constructionPaceNodePO.getName());
+			constructionPlanPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			constructionPlanPO.setNode(constructionPaceNodePO);
+
+			constructionPlanPO.setConnum(constructionPaceNodePO.getConnum());
+			constructionPlanPO.setComnum(constructionPaceNodePO.getComnum());
+
+			constructionPlanPO.setContent(constructionPaceNodePO.getContent());
+			constructionPlanPO.setComment(constructionPaceNodePO.getComment());
+
+			constructionPlanPO.setSort(sort);
+
+			constructionPlanDao.save(constructionPlanPO);
+
+			sort++;
+		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
 
-		ConstructionPacePO constructionPacePO = constructionPaceDao.get(constructionPlanVO.getPace().getCpid());
+		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPlanVO.getNode().getCpid());
 
-		if (constructionPacePO == null) {
-			throw new FLException(130123, "工程计划不存在");
+		if (constructionPaceNodePO == null) {
+			throw new FLException(120037, "工程计划不存在");
 		}
+
+		int sort = constructionPlanDao.countConstructionPlan(constructionPlanVO.getOrderId());
 
 		ConstructionPlanPO constructionPlanPO = new ConstructionPlanPO();
 
-		constructionPlanPO.setOrderId(constructionPlanVO.getOrderId());
-		constructionPlanPO.setName(constructionPacePO.getName());
-		constructionPlanPO.setStartTime(constructionPlanVO.getStartTime());
-		constructionPlanPO.setEndTime(constructionPlanVO.getEndTime());
-		constructionPlanPO.setComment(constructionPlanVO.getComment());
-
 		BeanUtil.copyProperties(constructionPlanVO, constructionPlanPO, Arrays.asList("pace"));
 
+		constructionPlanPO.setOrderId(constructionPlanVO.getOrderId());
+		constructionPlanPO.setName(constructionPaceNodePO.getName());
 		constructionPlanPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		constructionPlanPO.setPace(constructionPacePO);
+
+		constructionPlanPO.setNode(constructionPaceNodePO);
+
+		constructionPlanPO.setConnum(constructionPaceNodePO.getConnum());
+		constructionPlanPO.setComnum(constructionPaceNodePO.getComnum());
+		constructionPlanPO.setPhase(constructionPaceNodePO.getPhase());
+		constructionPlanPO.setMaterial(constructionPaceNodePO.getMaterial());
+		constructionPlanPO.setPeriod(constructionPaceNodePO.getPeriod());
+
+		constructionPlanPO.setContent(constructionPaceNodePO.getContent());
+		constructionPlanPO.setComment(constructionPlanVO.getComment());
+
+		constructionPlanPO.setSort(sort);
 
 		constructionPlanDao.save(constructionPlanPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
+
+		ConstructionPlanPO constructionPlanPO = constructionPlanDao.get(constructionPlanVO.getCpid());
+
+		if (constructionPlanPO == null) {
+			throw new FLException(120037, "工程计划不存在");
+		}
+
+		constructionPlanPO.setConnum(constructionPlanVO.getConnum());
+		constructionPlanPO.setComnum(constructionPlanVO.getComnum());
+		constructionPlanPO.setContent(constructionPlanVO.getContent());
+		constructionPlanPO.setComment(constructionPlanVO.getComment());
+
+		constructionPlanDao.update(constructionPlanPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void moveConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
+
+		ConstructionPlanPO constructionPlanPO = constructionPlanDao.get(constructionPlanVO.getCpid());
+
+		if (constructionPlanPO == null) {
+			throw new FLException(120037, "工程计划不存在");
+		}
+
+		int sort = constructionPlanVO.getSort();
+
+		if (sort <= 0) return;
+		if (sort > constructionPlanDao.countConstructionPlan(constructionPlanPO.getOrderId())) return;
+
+		ConstructionPlanPO constructionPlanOO = constructionPlanDao.queryConstructionPlan(constructionPlanPO.getOrderId(), sort);
+
+		if (constructionPlanOO != null) {
+
+			constructionPlanOO.setSort(constructionPlanPO.getSort());
+
+			constructionPlanDao.update(constructionPlanOO);
+		}
+
+		constructionPlanPO.setSort(constructionPlanVO.getSort());
+
+		constructionPlanDao.update(constructionPlanPO);
 	}
 
 	@Override

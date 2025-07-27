@@ -136,7 +136,7 @@
     {"key":"4","value":"职能"},
     {"key":"5","value":"未知"}
   ],
-  "plumber‌Type": [
+  "plumberType": [
     {"key":"0","value":"卫生间漏水"},
     {"key":"1","value":"下水堵塞/返水"},
     {"key":"2","value":"卫生间反味"},
@@ -149,10 +149,9 @@
     {"key":"9","value":"角阀漏水"},
     {"key":"10","value":"打胶处理"},
     {"key":"11","value":"水流小/水压问题"},
-    {"key":"12","value":"更换水件（角阀/软连接/水龙头等）"},
-    {"key":"13","value":"质检"}
+    {"key":"12","value":"更换水件（角阀/软连接/水龙头等）"}
   ],
-  "electrician‌Type": [
+  "electricianType": [
     {"key":"0","value":"空开跳闸"},
     {"key":"1","value":"灯具不亮/频率闪"},
     {"key":"2","value":"插座/开关不能正常使用"},
@@ -162,21 +161,21 @@
     {"key":"6","value":"网线不通"},
     {"key":"7","value":"网线升级"}
   ],
-  "tiler‌‌Type": [
+  "tilerType": [
     {"key":"0","value":"瓷砖空鼓"},
     {"key":"1","value":"瓷砖开裂"},
     {"key":"2","value":"瓷砖脱落"},
     {"key":"3","value":"瓷砖崩瓷"},
     {"key":"4","value":"勾缝剂脱落"}
   ],
-  "carpenter‌Type‌": [
+  "carpenterType": [
     {"key":"0","value":"吊棚石膏板开裂"},
     {"key":"1","value":"窗帘杆/滑道脱落"},
     {"key":"2","value":"窗帘盒脱落"},
     {"key":"3","value":"造型棚下沉"},
     {"key":"4","value":"木作造成脱落"}
   ],
-  "painter‌‌Type": [
+  "painterType": [
     {"key":"0","value":"墙面/棚面大白起皮开裂"},
     {"key":"1","value":"第三方漏水大白修复"},
     {"key":"2","value":"人为剐蹭污损维修"},

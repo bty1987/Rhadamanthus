@@ -88,6 +88,13 @@
 									</div>
 
 									<div class="form-group">
+										<label class="col-md-3 control-label no-padding-right">公里数</label>
+										<div class="col-md-9">
+											<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="mileage" name="mileage" data-required="1" data-toggle="popover" data-trigger='manual'>
+										</div>
+									</div>
+
+									<div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="content">说明</label>
 										<div class="col-sm-9">
 											<textarea id="content" maxlength="512" class="col-xs-10 col-sm-6" rows="3" ></textarea>
@@ -150,8 +157,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-				    <button type="button" name="resetPositionBtn" class="btn btn-warning">重选位置</button>
-				    <button type="button" name="resetMapBtn" class="btn btn-success">重新加载地图</button>
+					<button type="button" name="resetPositionBtn" class="btn btn-warning">重选位置</button>
+					<button type="button" name="resetMapBtn" class="btn btn-success">重新加载地图</button>
 					<button type="button" id="saveMapBtn" class="btn btn-primary">保存</button>
 					<button type="button" id="cancelMapBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
@@ -192,8 +199,8 @@
 <div id="villagePopUp" class="portlet box page-content"></div>
 <script type="text/javascript">
 	$(function(){
-        $.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx', function(){
+		$.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx', function(){
 			$.loadScript(['js/data/village.js']);
-        });
+		});
     });
 </script>

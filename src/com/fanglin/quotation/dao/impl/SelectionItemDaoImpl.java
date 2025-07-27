@@ -61,10 +61,10 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		queryFilterExcute(query, filters);
 
 		query.alias("decoration", "decoration");
-		query.alias("decoration.escorter", "decorationEscorter");
+		query.alias("decoration.escorter", "escorter");
 
-		query.add(Restrictions.eq("decorationEscorter.userId", userId));
-		query.add(Restrictions.eq(SelectionItemPO.COLUMN_STATUS_STR, (short) 1));
+		query.add(Restrictions.eq("escorter.userId", userId));
+		query.add(Restrictions.eq(SelectionItemPO.COLUMN_STATUS_STR, SelectionItemPO.STATUS_TRAN_SHORT));
 
 		query.desc("siid");
 
@@ -163,6 +163,15 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		return count == null ? 0 : count.intValue();
 	}
 
+	@Override
+	public int updateSelectionItem(long areaId, short type, short newtype) {
+
+		String sql = "update SelectionItemPO set type = :newtype where areaId = :areaId and type = :type";
+		session().createQuery(sql).setLong("areaId", areaId).setShort("type", type).setShort("newtype", newtype).executeUpdate();
+
+		return 0;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
@@ -188,6 +197,8 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_CATEGORY_STR, data, op));
 			} else if (SelectionItemPD.COLUMN_GOODS_BRAND_STR.equals(field)) {
 				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_BRAND_STR, data, op));
+			} else if ("accountStatus".equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
 			} else if ("tranTime".equals(field)) {

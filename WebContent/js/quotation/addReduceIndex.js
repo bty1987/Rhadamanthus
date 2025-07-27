@@ -14,7 +14,10 @@
             addReduceType: com.focusPage("#addReduceType"),
             atttype: com.focusPage("#addReduceAtttype"),
             paytype: com.focusPage("#paytype"),
+            
             accountDiscount: com.focusPage("#accountDiscount"),
+            accountManageDiscount: com.focusPage("#accountManageDiscount"),
+            accountTaxDiscount: com.focusPage("#accountTaxDiscount"),
         },
 
         modals: {
@@ -1132,6 +1135,8 @@
             "addReduce.arId": addReduce.arid,
             "addReduce.orderId": addReduce.orderId,
             "addReduce.accountDiscount": addReduce.items.accountDiscount.val(),
+            "addReduce.accountManageDiscount": addReduce.items.accountManageDiscount.val() ? 0 : 1,
+            "addReduce.accountTaxDiscount": addReduce.items.accountTaxDiscount.val() ? 0 : 1,
         };
 
         com.post(api.addReduce.updateAddReduceForAccount, options, function(res) {

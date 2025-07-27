@@ -344,7 +344,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 			CustomerUserRulePO customerUserRulePO = customerUserRuleDao.queryCustomerUserRule(belonger.getUid());
 
-			if (customerUserRulePO != null && customerUserRulePO.getStatus() != CustomerUserRulePO.STATUS_ENABLE_INT) {
+			if (customerUserRulePO != null && customerUserRulePO.getStatus() == CustomerUserRulePO.STATUS_ADVANCE_INVALID_INT) {
 				throw new FLException(330082, "规则不可操作");
 			}
 
@@ -372,9 +372,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (belonger != null) messageService.sendMessage(belonger.getUserId(), null, "您有新的客源信息, 请尽快到方林办公小程序或钉钉信息平台查看.", MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
 
-		if (dept != null && dept.getManager() != null) messageService.sendMessage(dept.getManager().getUserId(), null, String.format("部门成员%s(%s)有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
-		if (region != null && region.getManager() != null) messageService.sendMessage(region.getManager().getUserId(), null, String.format("部门成员%s(%s)有一条新的客源信息, 请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId()), MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
+		String message = String.format("设计:%s(%s),新分配客源,业务员:%s(%s),%s %s,请提醒他到方林办公小程序或钉钉信息平台查看.", belonger.getCurrentName(), belonger.getUserId(), customerChancePO.getCreater().getCurrentName(), customerChancePO.getCreater().getUserId(), customerChancePO.getSource().getVillage().getName(), customerChancePO.getSource().getHouseNumber());
 
+		if (dept != null && dept.getManager() != null) messageService.sendMessage(dept.getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getDepartment().getManager().getCompany());
+		if (region != null && region.getManager() != null) messageService.sendMessage(region.getManager().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getRegion().getManager().getCompany());
 	}
 
 	@Override
@@ -432,6 +433,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("客户资源转装修单,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, operater));
 
 		customerProfileDao.updateCustomerProfile(decorationVO.getOrderId(), customerChancePO.getCustomer().getCid(), customerSourcePO.getCsid());
+
+		String message = String.format("设计:%s(%s),装修单:%s转单成功,%s %s.", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), decorationVO.getOrderId(), customerChancePO.getHouse().getVillage().getName(), customerChancePO.getHouse().getHouseNumber());
+
+		messageService.sendMessage(customerChancePO.getCreater().getUserId(), null, message, MessagePO.TYPE_SEND_CUSTOMER_INT, customerChancePO.getCreater().getCompany());
 	}
 
 	@Override

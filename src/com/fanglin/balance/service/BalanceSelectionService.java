@@ -14,6 +14,8 @@ public interface BalanceSelectionService {
 
 	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, BalanceSelectionVO balanceSelectionVO, int company);
 
+	public void pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company);
+
 	public List<BalanceSelectionVO> queryBalanceSelection(BalanceSelectionVO balanceSelectionVO, int company);
 
 	public BalanceSelectionVO queryBalanceSelectionByBsid(BalanceSelectionVO balanceSelectionVO);
@@ -26,9 +28,9 @@ public interface BalanceSelectionService {
 
 	public int unbindBalanceSelection(BalanceSelectionVO balanceSelectionVO, List<BalanceSelectionItemVO> balanceSelectionItems, String userId, int company) throws FLException;
 
-	public int lockBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException;
+	public int lockBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
 
-	public int unlockBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException;
+	public int unlockBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
 
 	public int updateBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 
@@ -36,7 +38,7 @@ public interface BalanceSelectionService {
 
 	public int auditBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
 
-	public int unauditBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException;
+	public int unauditBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException;
 
 	public int deleteBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 

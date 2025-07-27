@@ -45,6 +45,8 @@ public class ExtensionPO implements Serializable {
 
 	private String orderId;
 
+	private long qid;
+
 	private short type;
 
 	private short atttype;
@@ -95,6 +97,15 @@ public class ExtensionPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@Column(name = "qid")
+	public long getQid() {
+		return qid;
+	}
+
+	public void setQid(long qid) {
+		this.qid = qid;
 	}
 
 	@Column(name = "type")

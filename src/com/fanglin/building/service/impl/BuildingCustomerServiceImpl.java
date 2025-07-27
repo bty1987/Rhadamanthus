@@ -18,9 +18,7 @@ import com.fanglin.building.vo.BuildingCustomerVO;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
-import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -48,9 +46,6 @@ public class BuildingCustomerServiceImpl implements BuildingCustomerService {
 	private CustomerDao customerDao;
 
 	@Autowired
-	private CustomerPhoneDao customerPhoneDao;
-
-	@Autowired
 	private CountingService countingService;
 
 	@Autowired
@@ -68,7 +63,7 @@ public class BuildingCustomerServiceImpl implements BuildingCustomerService {
 		List<BuildingCustomerVO> buildingCustomerVOs = new ArrayList<BuildingCustomerVO>();
 
 		for (BuildingCustomerPO buildingCustomerPO : buildingCustomerPOs) {
-			buildingCustomerVOs.add(buildingCustomerPOToVO(buildingCustomerPO));
+			buildingCustomerVOs.add(buildingCustomerPO.ptv(new BuildingCustomerVO(new CustomerVO(), new UserBaseVO())));
 		}
 
 		paging.setData(buildingCustomerVOs);
@@ -79,7 +74,7 @@ public class BuildingCustomerServiceImpl implements BuildingCustomerService {
 
 		BuildingCustomerPO buildingCustomerPO = buildingCustomerDao.get(buildingCustomer.getCsid());
 
-		BuildingCustomerVO buildingCustomerVO = buildingCustomerPOToVO(buildingCustomerPO);
+		BuildingCustomerVO buildingCustomerVO = buildingCustomerPO.ptv(new BuildingCustomerVO(new CustomerVO(), new UserBaseVO()));
 
 		return buildingCustomerVO;
 	}
@@ -93,7 +88,7 @@ public class BuildingCustomerServiceImpl implements BuildingCustomerService {
 			throw new FLException(320008, "客源不存在");
 		}
 
-		BuildingCustomerVO buildingCustomerVO = buildingCustomerPOToVO(buildingCustomerPO);
+		BuildingCustomerVO buildingCustomerVO = buildingCustomerPO.ptv(new BuildingCustomerVO(new CustomerVO(), new UserBaseVO()));
 
 		return buildingCustomerVO;
 	}
@@ -107,7 +102,7 @@ public class BuildingCustomerServiceImpl implements BuildingCustomerService {
 			throw new FLException(320008, "客源不存在");
 		}
 
-		BuildingCustomerVO buildingCustomerVO = buildingCustomerPOToVO(buildingCustomerPO);
+		BuildingCustomerVO buildingCustomerVO = buildingCustomerPO.ptv(new BuildingCustomerVO(new CustomerVO(), new UserBaseVO()));
 
 		return buildingCustomerVO;
 	}
@@ -195,24 +190,6 @@ public class BuildingCustomerServiceImpl implements BuildingCustomerService {
 
 		buildingCustomerDao.update(buildingCustomerPO);
 
-	}
-
-	public BuildingCustomerVO buildingCustomerPOToVO(BuildingCustomerPO buildingCustomerPO) {
-
-		BuildingCustomerVO buildingCustomerVO = new BuildingCustomerVO(new CustomerVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(buildingCustomerPO, buildingCustomerVO, Arrays.asList("customer", "create"));
-		BeanUtil.copyProperties(buildingCustomerPO.getCustomer(), buildingCustomerVO.getCustomer());
-
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByCid(buildingCustomerPO.getCustomer().getCid(), BuildingCustomerPO.STATUS_INIT_SHORT);
-
-		if (customerPhones.size() > 0) {
-			buildingCustomerVO.getCustomer().setPhone(customerPhones.get(0).getPhone());
-		}
-
-		BeanUtil.copyProperties(buildingCustomerPO.getCreate(), buildingCustomerVO.getCreate(), Arrays.asList("dept", "duty"));
-
-		return buildingCustomerVO;
 	}
 
 }

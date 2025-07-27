@@ -15,6 +15,8 @@ public interface ConstructionInfoService {
 
 	public ConstructionInfoVO queryConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO);
 
+	public List<?> countConstructionInfo(ConstructionInfoVO constructionInfoVO, int company);
+
 	public void updateConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException;
 
 	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) throws FLException;

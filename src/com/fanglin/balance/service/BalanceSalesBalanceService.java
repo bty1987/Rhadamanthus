@@ -4,12 +4,13 @@ import java.util.List;
 
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.balance.vo.BalanceSalesVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface BalanceSalesBalanceService {
 
-	public void pageBalanceSalesBalance(Paging paging, List<Filter> filters, long bsid);
+	public void pageBalanceSalesBalance(Paging paging, List<Filter> filters, long bsid) throws FLException;
 
 	public List<BalanceSalesBalanceVO> queryBalanceSalesBalance(BalanceSalesBalanceVO balanceSalesBalance);
 

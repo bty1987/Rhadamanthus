@@ -60,4 +60,12 @@ public class DecorationServiceAction extends BaseListAction {
 		this.decorationServices = decorationServices;
 	}
 
+	public DecorationServiceVO getDecorationService() {
+		return decorationService;
+	}
+
+	public void setDecorationService(DecorationServiceVO decorationService) {
+		this.decorationService = decorationService;
+	}
+
 }

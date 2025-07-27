@@ -21,6 +21,8 @@ public class DecorationInfoVO implements Serializable {
 
 	private String orderId;
 
+	private String referOrderId;
+
 	private String customerPhone;
 
 	private String notSalesmanName;
@@ -51,6 +53,14 @@ public class DecorationInfoVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getReferOrderId() {
+		return referOrderId;
+	}
+
+	public void setReferOrderId(String referOrderId) {
+		this.referOrderId = referOrderId;
 	}
 
 	public String getCustomerPhone() {

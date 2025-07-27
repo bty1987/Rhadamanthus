@@ -26,6 +26,8 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 	private long scbid;
 
 	private long scid; // 合同ID
+	
+	private String name;
 
 	private BrandPO brand;
 
@@ -34,6 +36,8 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 	private int cvalue; // 结算值
 
 	private int breakpay; // 违约金
+	
+	private int warranTime; // 质保期
 	
 	private String servicePrice; // 服务费 , Json结构 , {"TL": "2016-01-01", "UV": 0, "DV": 0, "SR": 0}
 
@@ -106,6 +110,25 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 
 	public void setServicePrice(String servicePrice) {
 		this.servicePrice = servicePrice;
+	}
+	
+	
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "warranTime")
+	public int getWarranTime() {
+		return warranTime;
+	}
+
+	public void setWarranTime(int warranTime) {
+		this.warranTime = warranTime;
 	}
 
 	public SupplierContractBrandVO ptv(SupplierContractBrandVO supplierBrandVO) {

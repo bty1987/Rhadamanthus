@@ -15,7 +15,7 @@ public interface CustomerOriginService {
 
 	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin);
 
-	public void addCustomerOrigin(CustomerOriginVO customerOriginVO, String userId);
+	public void addCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
 
 	public void updateCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
 

@@ -32,10 +32,12 @@ import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationBelongService;
 import com.fanglin.decoration.vo.DecorationBelongVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 
 @Service("orderBelongInfoService")
 @Transactional(readOnly = true)
@@ -89,9 +91,36 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int confirmDecorationBelong(DecorationBelongVO decorationBelongVO) {
+	public int confirmDecorationBelong(DecorationVO decorationVO, DecorationBelongVO decorationBelongVO, String securityCode, String verifyCode) throws FLException {
 
-		String orderId = decorationBelongVO.getOrderId();
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationVO.getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
+		}
 
 		if (decorationBelongDao.countDecorationBelong(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_CONFIRM_INT) > 0) {
 			decorationBelongDao.updateDecorationBelong(orderId, DecorationBelongPO.STATUS_INVALID_INT, DecorationBelongPO.BELONGTYPE_DESIGN_INT, DecorationBelongPO.STATUS_EFFCTIVE_INT);

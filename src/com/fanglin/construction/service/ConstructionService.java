@@ -33,7 +33,7 @@ public interface ConstructionService {
 
 	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO) throws FLException;
 
-	public void updateConstructionByOrderId(ConstructionVO constructionVO, List<QualiterVO> qualiters) throws FLException;
+	public void updateConstructionByOrderId(ConstructionVO constructionVO, List<QualiterVO> qualiters, String userId) throws FLException;
 
 	public int updateConstructionForAdvance(ConstructionVO constructionVO) throws FLException;
 

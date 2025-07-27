@@ -11,6 +11,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationInfoService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -24,8 +25,19 @@ public class DecorationInfoAction extends BaseListAction {
 
 	private DecorationInfoVO decorationInfo;
 
+	private DecorationVO decoration;
+
+	private String orderId;
+
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "queryDecorationInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationInfoByOrderId() throws FLException {
+
+		if (decorationInfo == null) decorationInfo = new DecorationInfoVO();
+		if (decorationInfo.getOrderId() == null && orderId != null) decorationInfo.setOrderId(orderId);
 
 		decorationInfo = decorationInfoService.queryDecorationInfoByOrderId(decorationInfo);
 
@@ -48,12 +60,60 @@ public class DecorationInfoAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmDecorationInfo() throws FLException {
+
+		decorationInfoService.confirmDecorationInfo(decoration, decorationInfo, securityCode, verifyCode);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "referDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String referDecorationInfo() throws FLException {
+
+		decorationInfoService.referDecorationInfo(decoration, decorationInfo);
+
+		return SUCCESS;
+	}
+
 	public DecorationInfoVO getDecorationInfo() {
 		return decorationInfo;
 	}
 
 	public void setDecorationInfo(DecorationInfoVO decorationInfo) {
 		this.decorationInfo = decorationInfo;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

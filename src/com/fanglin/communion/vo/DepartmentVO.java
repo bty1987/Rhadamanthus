@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.po.DepartmentPO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class DepartmentVO implements Serializable {
 
@@ -43,7 +43,7 @@ public class DepartmentVO implements Serializable {
 
 	private Integer limit;
 
-	private UserVO manager;
+	private UserBaseVO manager;
 
 	private String comment;
 
@@ -61,7 +61,7 @@ public class DepartmentVO implements Serializable {
 		this.fatherDept = fatherDept;
 	}
 
-	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept, UserVO manager) {
+	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept, UserBaseVO manager) {
 		super();
 		this.type = type;
 		this.fatherDept = fatherDept;
@@ -165,11 +165,11 @@ public class DepartmentVO implements Serializable {
 		this.limit = limit;
 	}
 
-	public UserVO getManager() {
+	public UserBaseVO getManager() {
 		return manager;
 	}
 
-	public void setManager(UserVO manager) {
+	public void setManager(UserBaseVO manager) {
 		this.manager = manager;
 	}
 

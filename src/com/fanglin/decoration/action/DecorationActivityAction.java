@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.service.DecorationActivityService;
 import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationActivityVO;
@@ -27,9 +26,6 @@ public class DecorationActivityAction extends BaseListAction {
 	@Autowired
 	private DecorationActivityService decorationActivityService;
 
-	@Autowired
-	private DecorationActivityItemService decorationActivityItemService;
-
 	private DecorationVO decoration;
 
 	private DecorationActivityVO decorationActivity;
@@ -37,8 +33,6 @@ public class DecorationActivityAction extends BaseListAction {
 	private List<DecorationActivityVO> decorationActivitys;
 
 	private DecorationActivityItemVO decorationActivityItem;
-
-	private List<DecorationActivityItemVO> decorationActivityItems;
 
 	@Action(value = "queryDecorationActivityByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationActivityByOrderId() {
@@ -88,78 +82,6 @@ public class DecorationActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "addDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.addDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "receiveDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String receiveDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.receiveDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "abateDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String abateDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.abateDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "deliveDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deliveDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.deliveDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "unrefundDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String unrefundDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.unrefundDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "refundDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String refundDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.refundDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "expendDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String expendDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.expendDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "discountDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String discountDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.discountDecorationActivityItem(decorationActivityItem, queryUserId());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "amountDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String amountDecorationActivityItem() throws FLException {
-
-		decorationActivityItemService.amountDecorationActivityItem(decoration, queryUserId());
-
-		return SUCCESS;
-	}
-
 	public DecorationVO getDecoration() {
 		return decoration;
 	}
@@ -174,14 +96,6 @@ public class DecorationActivityAction extends BaseListAction {
 
 	public void setDecorationActivityItem(DecorationActivityItemVO decorationActivityItem) {
 		this.decorationActivityItem = decorationActivityItem;
-	}
-
-	public List<DecorationActivityItemVO> getDecorationActivityItems() {
-		return decorationActivityItems;
-	}
-
-	public void setDecorationActivityItems(List<DecorationActivityItemVO> decorationActivityItems) {
-		this.decorationActivityItems = decorationActivityItems;
 	}
 
 	public DecorationActivityVO getDecorationActivity() {

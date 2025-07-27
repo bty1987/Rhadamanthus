@@ -167,7 +167,10 @@ $(function() {
         fieId: "freeArea",
         name: "赠送面积",
         prop: "freeArea",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(res){
+            return false;
+        }
     }, {
         fieId: "innerArea",
         name: "计价面积",
@@ -177,7 +180,10 @@ $(function() {
         field: "totalArea",
         name: "总面积",
         prop: "totalArea",
-        clazz: "blue"
+        clazz: "blue",
+        show: function(res){
+            return false;
+        }
     }, {
         fieId: "maxFloor",
         name: "最高楼层",
@@ -260,7 +266,6 @@ $(function() {
             house.items.oldhouseNumber.val(b.houseNumber);
             house.items.type.val(b.type);
             house.items.buildArea.val(b.buildArea);
-            house.items.freeArea.val(b.freeArea);
             house.items.innerArea.val(b.innerArea);
             house.items.maxFloor.val(b.maxFloor);
             house.items.through.val(b.through);
@@ -323,10 +328,10 @@ $(function() {
         options["house.floor"] = house.items.floor.val().trim();
         options["house.door"] = house.items.door.val().trim();
         options["house.type"] = house.items.type.val();
-        options["house.buildArea"] = utils.changeThrDecimal(house.items.buildArea.val());
-        options["house.freeArea"] = utils.changeThrDecimal(house.items.freeArea.val());
+        options["house.buildArea"] = utils.changeThrDecimal(house.items.innerArea.val());
+        options["house.freeArea"] = 0;
         options["house.innerArea"] = utils.changeThrDecimal(house.items.innerArea.val());
-        options["house.totalArea"] = utils.changeThrDecimal(utils.accAdd(house.items.buildArea.val(), house.items.freeArea.val()));
+        options["house.totalArea"] = 0;
         options["house.maxFloor"] = house.items.maxFloor.val();
         options["house.through"] = house.items.through.val();
         options["house.orientation"] = house.items.orientation.val();

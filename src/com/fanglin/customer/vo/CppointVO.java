@@ -2,22 +2,35 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.CustomerVO;
+
 public class CppointVO implements Serializable {
 
 	private static final long serialVersionUID = 3516842388789272716L;
 
 	private Long cpid;
 
-	private Long cid;
+	private CustomerVO customer;
+
+	private String orderId;
 
 	private Long dpoint;
 
 	private Long spoint;
 
+	private Long opoint;
+
+	private Long point;
+
 	private Integer company;
 
 	public CppointVO() {
 		super();
+	}
+
+	public CppointVO(CustomerVO customer) {
+		super();
+		this.customer = customer;
 	}
 
 	public Long getCpid() {
@@ -28,12 +41,20 @@ public class CppointVO implements Serializable {
 		this.cpid = cpid;
 	}
 
-	public Long getCid() {
-		return cid;
+	public CustomerVO getCustomer() {
+		return customer;
 	}
 
-	public void setCid(Long cid) {
-		this.cid = cid;
+	public void setCustomer(CustomerVO customer) {
+		this.customer = customer;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public Long getDpoint() {
@@ -60,4 +81,19 @@ public class CppointVO implements Serializable {
 		this.company = company;
 	}
 
+	public Long getOpoint() {
+		return opoint;
+	}
+
+	public void setOpoint(Long opoint) {
+		this.opoint = opoint;
+	}
+
+	public Long getPoint() {
+		return point;
+	}
+
+	public void setPoint(Long point) {
+		this.point = point;
+	}
 }

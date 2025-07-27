@@ -27,6 +27,8 @@ public class DecorationPaymentVO implements Serializable {
 
 	private Short onetype;
 
+	private Short twotype;
+
 	private Short sort;
 
 	private String platform;
@@ -102,6 +104,14 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setOnetype(Short onetype) {
 		this.onetype = onetype;
+	}
+
+	public Short getTwotype() {
+		return twotype;
+	}
+
+	public void setTwotype(Short twotype) {
+		this.twotype = twotype;
 	}
 
 	public Short getSort() {

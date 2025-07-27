@@ -6,6 +6,7 @@ jQuery(function($) {
             workersalaryModal: com.focusPage("#workersalaryModal"),
             importModal: com.focusPage("#importModal"),
             batchSendModal: com.focusPage("#batchSendModal"),
+            annotateModal: com.focusPage("#annotateModal")
         },
         items: {
             workersalary: com.focusPage("#workersalary", "#workersalaryModal"),
@@ -15,6 +16,7 @@ jQuery(function($) {
 
             beginTime: com.focusPage("#beginTime", "#batchSendModal"),
             finishTime: com.focusPage("#finishTime", "#batchSendModal"),
+            annotate: com.focusPage("#annotate", "#annotateModal")
         },
 
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
@@ -24,10 +26,11 @@ jQuery(function($) {
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
-
             batchSendBtn: com.focusPage("#batchSendBtn"),
+            annotateBtn: com.focusPage("#annotateBtn")
         },
 
+        wsid: null,
         salaryStatus: {},
         type: {},
         oneType: {},
@@ -45,6 +48,7 @@ jQuery(function($) {
 
     salary.btns.saveBtn.bindClick(saveData);
     salary.btns.batchSendBtn.bindClick(batchSend);
+    salary.btns.annotateBtn.bindClick(saveAnnotate);
 
     salary.modals.workersalaryModal.on('hide.bs.modal', function(e) {
 
@@ -282,6 +286,11 @@ jQuery(function($) {
         name: "总面积 ",
         prop: "decoration.house.totalArea",
         clazz: "green"
+    }, {
+        field: "annotate",
+        name: "备注",
+        prop: "annotate",
+        clazz: "grey"
     }];
 
     var linebtns = [{
@@ -344,6 +353,14 @@ jQuery(function($) {
         show: function(v) {
 
             return salary.pageType != "checker" && v.isSend == 1;
+        }
+    }, {
+        name: "备注",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            salary.wsid = v.wsid;
+            salary.modals.annotateModal.modal("show");
         }
     }, {
         name: "图片",
@@ -429,7 +446,7 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "decoration.orderId"], ['楼盘地址', "decoration.address"], ['总面积', "decoration.house.totalArea"], ["等级", "decoration.grade"], ['监理编号', 'decoration.supervisorId'], ['监理', 'decoration.supervisor'], ["工费Id", "wsid"], ["工人姓名", "user.userName"], ["工人工号", "user.userId"], ["工种", "user.duty.name"], ["创建人", "creater.userName"], ["创建时间", "createTime"], ["审批人", 'approver.userName'], ["审批时间", "approveTime"], ["质检时间", "checkTime"], ['操作金额', 'money'], ['工费', 'salary'], ['质保金', 'deposit'], ['施工节点', 'schedule'], ['工种', 'user.duty.name'], ['类型', 'type'], ['一类', 'onetype'], ['二类', 'twotype'], ['计数', 'count'], ['备注', 'comment'], ['状态', "status"]],
+                column: [["装修单号", "decoration.orderId"], ['楼盘地址', "decoration.address"], ['总面积', "decoration.house.totalArea"], ["等级", "decoration.grade"], ['监理编号', 'decoration.supervisorId'], ['监理', 'decoration.supervisor'], ["工费Id", "wsid"], ["工人姓名", "user.userName"], ["工人工号", "user.userId"], ["工种", "user.duty.name"], ["创建人", "creater.userName"], ["创建时间", "createTime"], ["审批人", 'approver.userName'], ["审批时间", "approveTime"], ["质检时间", "checkTime"], ['操作金额', 'money'], ['工费', 'salary'], ['质保金', 'deposit'], ['施工节点', 'schedule'], ['工种', 'user.duty.name'], ['类型', 'type'], ['一类', 'onetype'], ['二类', 'twotype'], ['计数', 'count'], ['备注', 'comment'], ['状态', "status"], ['工费备注', "annotate"]],
                 list: res.paging.data
 
             }, function(v) {
@@ -679,4 +696,21 @@ jQuery(function($) {
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
     }
 
+    function saveAnnotate() {
+
+        if (com.validate("annotateModal"))
+            return false;
+
+        var options = {
+            "workerSalary.wsid": salary.wsid,
+            "workerSalary.annotate": salary.items.annotate.val()
+        }
+
+        com.post(api.salary.updateWorkerSalary, options, function(res) {
+
+            searcher.doSearch();
+
+            salary.modals.annotateModal.modal("hide");
+        });
+    }
 });

@@ -11,4 +11,6 @@ public interface CustomerOriginDao extends Dao<CustomerOriginPO> {
 
 	public List<CustomerOriginPO> pageCustomerOrigin(Paging paging, List<Filter> filters, List<Integer> dids);
 
+	public CustomerOriginPO queryCustomerOrigin(String orderId);
+
 }

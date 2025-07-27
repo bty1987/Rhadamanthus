@@ -25,8 +25,6 @@ public interface QuotationDao extends Dao<QuotationPO> {
 
 	public List<QuotationPO> queryQuotationByOrderId(String orderId);
 
-	public List<QuotationPO> queryQuotationForDefaultByOrderIds(List<String> orderIds);
-
 	public QuotationPO queryQuotationForDefaultByOrderId(String orderId);
 
 	public int countQuotationByOrderId(String orderId);

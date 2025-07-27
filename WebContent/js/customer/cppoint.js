@@ -15,6 +15,7 @@ jQuery(function($) {
         items : {
             cppoint4decoration: com.focusPage("#cppoint4decoration"),
             cppoint4sales: com.focusPage("#cppoint4sales"),
+            cppoint4operate: com.focusPage("#cppoint4operate"),
             
             type: com.focusPage("#type"),
             pointType: com.focusPage("#pointType"),
@@ -45,7 +46,7 @@ jQuery(function($) {
                 $.each(listData, function(i, v) {
                     
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.customer.name));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                     
@@ -55,15 +56,19 @@ jQuery(function($) {
                     var $btnRecord = $('<a></a>').addClass('btn btn-minier btn-inverse').html('积分记录');
 
                     var propertyArr = [
-                        [ "姓名:", v.name, "grey" ], 
-                        [ "性别:", v.gender, "grey" ], 
-                        [ "身份证号:", v.identity, "grey" ], 
-                        [ "军官证:", v.officer, "grey" ], 
-                        [ "护照:", v.passport, "grey" ], 
-                        [ "客户关系:", v.relationshipType, "grey" ], 
-                        [ "邮箱:", v.email, "grey" ], 
-                        [ "QQ:", v.qq, "grey" ], 
-                        [ "微信:", v.wechat, "grey" ] 
+                        [ "姓名:", v.customer.name, "grey" ], 
+                        [ "性别:", v.customer.gender, "grey" ], 
+                        [ "身份证号:", v.customer.identity, "grey" ], 
+                        [ "军官证:", v.customer.officer, "grey" ], 
+                        [ "护照:", v.customer.passport, "grey" ], 
+                        [ "客户关系:", v.customer.relationshipType, "grey" ], 
+                        [ "邮箱:", v.customer.email, "grey" ], 
+                        [ "QQ:", v.customer.qq, "grey" ], 
+                        [ "微信:", v.wechat, "grey" ],
+                        [ "装修积分:", v.dpoint, "grey" ],
+                        [ "主材积分:", v.spoint, "grey" ],
+                        [ "运营积分:", v.opoint, "grey" ],
+                        [ "装修单号:", v.orderId, "grey" ],
                     ];
 
                     $.each(propertyArr, function(index, value) {
@@ -107,7 +112,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(['customer-v-name'], "condList", api.data.pageCustomer, function(data) {
+    searcher.init(['customer-v-name'], "condList", api.customer.pageCppoint, function(data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "cppointPostData", null, false, null, null);
 
@@ -115,12 +120,15 @@ jQuery(function($) {
         
         com.post(api.customer.queryCppoint, {"cppoint.cid" : v.cid}, function(res) {
             var cppointValue = res.cppoint;     
-            if(cppointValue.dpoint==null||cppointValue.spoint==null){	
+            if(cppointValue.dpoint==null||cppointValue.spoint==null||cppointValue.opoint==null){	
             	cppoint.items.cppoint4decoration.text("该用户尚未创建积分");
             	cppoint.items.cppoint4sales.text("该用户尚未创建积分");
+                cppoint.items.cppoint4operate.text("该用户尚未创建积分");
             }else{
             	cppoint.items.cppoint4decoration.text(cppointValue.dpoint);
-            	cppoint.items.cppoint4sales.text(cppointValue.spoint);}
+            	cppoint.items.cppoint4sales.text(cppointValue.spoint);
+                cppoint.items.cppoint4operate.text(cppointValue.opoint);
+            }
         });
 
         cppoint.modals.cppointModal.modal("show");
@@ -152,11 +160,21 @@ jQuery(function($) {
         
         var type = cppoint.items.type.val();
         var pointType = cppoint.items.pointType.val();
+
+        var url = pointType == 0 ? api.customer.addupCppoint : api.customer.useupCppoint;
         
-        var url = type == "TYPE_RENOVARION_INT" ? api.customer.addupCppoint : api.customer.useupCppoint;
-        
-        options[pointType == "TYPE_ACCUMULATION_INT" ? "cppoint.dpoint" : "cppoint.spoint"] = cppoint.items.point.val();      
-        
+        if (type == 0) {
+            options["cppoint.dpoint"] = cppoint.items.point.val();
+        }
+
+        if (type == 1) {
+            options["cppoint.spoint"] = cppoint.items.point.val();
+        }
+
+        if (type == 2) {
+            options["cppoint.opoint"] = cppoint.items.point.val();
+        }
+
         com.post(url, options, function(res) {
             com.showAlert(com.info, "操作成功");
             cppoint.modals.handleCppointModal.modal("hide");

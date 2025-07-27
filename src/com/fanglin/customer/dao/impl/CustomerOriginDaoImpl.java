@@ -36,6 +36,11 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 		return query.list();
 	}
 
+	@Override
+	public CustomerOriginPO queryCustomerOrigin(String orderId) {
+		return (CustomerOriginPO) session().createCriteria(CustomerOriginPO.class).add(Restrictions.eq("orderId", orderId)).setMaxResults(1).uniqueResult();
+	}
+
 	@SuppressWarnings("deprecation")
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 

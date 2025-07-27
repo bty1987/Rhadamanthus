@@ -2,7 +2,6 @@ package com.fanglin.construction.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,9 @@ import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoDO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.service.ConstructionInfoService;
+import com.fanglin.construction.service.ConstructionPlanService;
 import com.fanglin.construction.vo.ConstructionInfoVO;
+import com.fanglin.construction.vo.ConstructionPlanVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -38,6 +39,9 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	private ConstructionInfoDao constructionInfoDao;
 
 	@Autowired
+	private ConstructionPlanService constructionPlanService;
+
+	@Autowired
 	private DecorationDao decorationDao;
 
 	@Autowired
@@ -50,32 +54,21 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	public void pageConstructionInfo(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		List<ConstructionInfoDO> constructionInfoDOs = constructionInfoDao.pageConstructionInfo(paging, filters, company);
-		List<ConstructionInfoVO> constructionVOs = new ArrayList<ConstructionInfoVO>();
-
-		ConstructionInfoVO constructionInfoVO;
+		List<ConstructionInfoVO> constructionInfoVOs = new ArrayList<ConstructionInfoVO>();
 
 		for (ConstructionInfoDO constructionInfoDO : constructionInfoDOs) {
-
-			constructionInfoVO = new ConstructionInfoVO(new DecorationVO());
-
-			constructionInfoVO.getDecoration().setSupervisor(new UserBaseVO());
-
-			BeanUtil.copyProperties(constructionInfoDO, constructionInfoVO, Arrays.asList("decoration", "constructionPace"));
-
-			constructionInfoDO.getDecoration().ptvcascade(constructionInfoVO.getDecoration());
-
-			constructionVOs.add(constructionInfoVO);
+			constructionInfoVOs.add(constructionInfoDO.ptv(new ConstructionInfoVO(new DecorationVO(new UserBaseVO()))));
 		}
 
-		paging.setData(constructionVOs);
+		paging.setData(constructionInfoVOs);
 	}
 
 	@Override
 	public ConstructionInfoVO queryConstructionInfo(ConstructionInfoVO constructionInfoVO) {
 
-		ConstructionInfoPO constructIoninfoPO = constructionInfoDao.queryConstructionInfo(constructionInfoVO.getCid());
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfo(constructionInfoVO.getCid());
 
-		BeanUtil.copyPropertie(constructIoninfoPO, constructionInfoVO);
+		if (constructionInfoPO != null) constructionInfoPO.ptv(constructionInfoVO);
 
 		return constructionInfoVO;
 	}
@@ -83,11 +76,23 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	@Override
 	public ConstructionInfoVO queryConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) {
 
-		ConstructionInfoPO constructIoninfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
 
-		BeanUtil.copyPropertie(constructIoninfoPO, constructionInfoVO);
+		if (constructionInfoPO != null) constructionInfoPO.ptv(constructionInfoVO);
 
 		return constructionInfoVO;
+	}
+
+	@Override
+	public List<?> countConstructionInfo(ConstructionInfoVO constructionInfoVO, int company) {
+
+		Timestamp startTime = constructionInfoVO.getStartTime();
+		Timestamp endTime = constructionInfoVO.getEndTime();
+
+		long start = Long.parseLong(DateUtil.getDateToDateString(startTime, "yyyyMMdd"));
+		long end = Long.parseLong(DateUtil.getDateToDateString(endTime, "yyyyMMdd"));
+
+		return constructionInfoDao.countConstructionInfo(start, end, company);
 	}
 
 	@Override
@@ -101,21 +106,23 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	@Transactional(rollbackFor = Exception.class)
 	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) throws FLException {
 
-		ConstructionInfoPO constructIoninfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
-
-		if (constructIoninfoPO == null) {
-			constructIoninfoPO = new ConstructionInfoPO();
-		}
-
-		BeanUtil.copyPropertie(constructionInfoVO, constructIoninfoPO);
-
-		constructionInfoDao.saveOrUpdate(constructIoninfoPO);
-
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionInfoVO.getOrderId());
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "装修单不存在");
 		}
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
+
+		if (constructionInfoPO == null) {
+			constructionInfoPO = new ConstructionInfoPO();
+		}
+
+		BeanUtil.copyPropertie(constructionInfoVO, constructionInfoPO);
+
+		constructionInfoDao.saveOrUpdate(constructionInfoPO);
+
+		constructionPlanService.makeConstructionPlan(new ConstructionPlanVO(constructionInfoVO.getOrderId()));
 
 		if (decorationPO != null && constructionInfoVO.getDecoration() != null && constructionInfoVO.getDecoration().getConpany() != null) {
 
@@ -154,7 +161,6 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(drawlineTime, -(int) day), "yyyyMMdd")));
 				eventsDao.save(eventsPO);
 			}
-
 		}
 
 		if (constructionInfoVO.getKeyTime() != null) {

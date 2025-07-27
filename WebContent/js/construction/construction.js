@@ -302,6 +302,17 @@ jQuery(function($) {
             return false;
         }
     }, {
+        name: "记录",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+        	params.orderId = v.decoration.orderId;
+
+            com.popup4page("#stockRecordPopUp", api.index.constructionRecordIndex.url, "记录");
+
+            return false;
+        }
+    }, {
         name: "增减项",
         clazz: "btn-warning",
         handle: function(v) {
@@ -323,6 +334,28 @@ jQuery(function($) {
             params.construction.orderId = v.decoration.orderId;
 
             com.popup4page("#stockRecordPopUp", "/views/construction/supervision4rework.html", "返工");
+
+            return false;
+        }
+    }, {
+        name: "工程节点",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+        	params.construction = v;
+
+            com.popup("工程节点", api.index.constructionNode2printIndex.url, null, null, true);
+
+            return false;
+        }
+    }, {
+        name: "工人工费",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+        	params.construction = v;
+
+            com.popup("工人工费", api.index.workerSalary2printIndex.url, null, null, true);
 
             return false;
         }

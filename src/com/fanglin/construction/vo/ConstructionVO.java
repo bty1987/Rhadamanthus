@@ -33,7 +33,7 @@ public class ConstructionVO implements Serializable {
 
 	private Integer schedule;
 
-	private Integer process;
+	private Short process;
 
 	private Integer period;
 
@@ -62,6 +62,10 @@ public class ConstructionVO implements Serializable {
 	private Timestamp lockTime;
 
 	private Timestamp processTime;
+
+	private Short workStatus;
+
+	private Short scheduleStatus;
 
 	public ConstructionVO() {
 		super();
@@ -125,11 +129,11 @@ public class ConstructionVO implements Serializable {
 		this.schedule = schedule;
 	}
 
-	public Integer getProcess() {
+	public Short getProcess() {
 		return process;
 	}
 
-	public void setProcess(Integer process) {
+	public void setProcess(Short process) {
 		this.process = process;
 	}
 
@@ -249,5 +253,21 @@ public class ConstructionVO implements Serializable {
 
 	public void setProcessTime(Timestamp processTime) {
 		this.processTime = processTime;
+	}
+
+	public Short getWorkStatus() {
+		return workStatus;
+	}
+
+	public void setWorkStatus(Short workStatus) {
+		this.workStatus = workStatus;
+	}
+
+	public Short getScheduleStatus() {
+		return scheduleStatus;
+	}
+
+	public void setScheduleStatus(Short scheduleStatus) {
+		this.scheduleStatus = scheduleStatus;
 	}
 }

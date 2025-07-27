@@ -59,13 +59,17 @@ public class FeedbackGuaranteePO implements Serializable {
 	private short svUserStatus;
 
 	private short repairResult;
+	
+	private short upgradeSource;
 
 	public FeedbackGuaranteePO() {
 		super();
 
 	}
 
-	public FeedbackGuaranteePO(long fgid, long fid, String orderId, short source, String phone, short cutomerType, String deptType, String workType, String bids, String brands, UserPO creater, Timestamp createTime, String content, Timestamp reportedDate, String renovationYear, UserPO supervisor, short svUserStatus, short repairResult) {
+
+
+	public FeedbackGuaranteePO(long fgid, long fid, String orderId, short source, String phone, short cutomerType, String deptType, String workType, String bids, String brands, UserPO creater, Timestamp createTime, String content, Timestamp reportedDate, String renovationYear, UserPO supervisor, short svUserStatus, short repairResult, short upgradeSource) {
 		super();
 		this.fgid = fgid;
 		this.fid = fid;
@@ -85,7 +89,10 @@ public class FeedbackGuaranteePO implements Serializable {
 		this.supervisor = supervisor;
 		this.svUserStatus = svUserStatus;
 		this.repairResult = repairResult;
+		this.upgradeSource = upgradeSource;
 	}
+
+
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -252,6 +259,18 @@ public class FeedbackGuaranteePO implements Serializable {
 	public void setRepairResult(short repairResult) {
 		this.repairResult = repairResult;
 	}
+	
+	
+	@Column(name = "upgradeSource")
+	public short getUpgradeSource() {
+		return upgradeSource;
+	}
+
+	public void setUpgradeSource(short upgradeSource) {
+		this.upgradeSource = upgradeSource;
+	}
+
+
 
 	public FeedbackGuaranteeVO ptv(FeedbackGuaranteeVO feedbackGuaranteeVO) {
 

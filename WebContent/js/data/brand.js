@@ -17,12 +17,12 @@ jQuery(function($) {
             comment: com.focusPage("#comment", "#brandModal"),
             category: com.focusPage("#category", "#brandModal"),
             atttype: com.focusPage("#atttype", "#brandModal"),
+            numtype: com.focusPage("#numtype", "#brandModal"),
             agentName: com.focusPage("#agentName", "#brandModal"),
             agentPhone: com.focusPage("#agentPhone", "#brandModal"),
             supplier: com.focusPage("#supplier", "#brandModal"),
             kino: com.focusPage("#kino", "#brandModal"),
             kiname: com.focusPage("#kiname", "#brandModal")
-
         },
 
         modals: {
@@ -44,6 +44,7 @@ jQuery(function($) {
     com.focusPage('#fl-statement').statement("主材品牌", "主材品牌信息列表");
 
     brand.items.atttype.bindData(constant.data.brand.atttype.datas, 'key', 'value');
+    brand.items.numtype.bindData(constant.data.brand.numtype.datas, 'key', 'value');
 
     brand.modals.brandModal.on('show.bs.modal', function(e) {
 
@@ -157,6 +158,12 @@ jQuery(function($) {
         clazz: "red",
         dataset: constant.data().common.status.keys
     }, {
+        fieId: "numtype",
+        name: "选材量类型",
+        prop: "numtype",
+        clazz: "red",
+        dataset: constant.data().brand.numtype.keys
+    }, {
         field: "comment",
         name: "说明",
         prop: "comment",
@@ -176,7 +183,7 @@ jQuery(function($) {
         }
     }, {
         name: "选材状态 ",
-        clazz: "btn-success",
+        clazz: "btn-blue",
         handle: function(v) {
 
             editItem(v);
@@ -187,7 +194,7 @@ jQuery(function($) {
         }
     }, {
         name: "编辑",
-        clazz: "btn-yellow",
+        clazz: "btn-info",
         handle: function(v) {
 
             brand.brand = v;
@@ -197,6 +204,7 @@ jQuery(function($) {
             brand.items.kino.val(v.kino);
             brand.items.kiname.val(v.kiname);
             brand.items.atttype.val(v.atttype);
+            brand.items.numtype.val(v.numtype);
             brand.items.agentName.val(v.agentName);
             brand.items.agentPhone.val(v.agentPhone);
             brand.items.comment.val(v.comment);
@@ -217,43 +225,43 @@ jQuery(function($) {
         }
     }, {
         name: "生产",
-        clazz: "btn-danger",
+        clazz: "btn-yellow",
         handle: function(v) {
-        	
-        	params.data.brand = v;
-        	
-        	com.popup4page("#brandProductPopUp", "/views/data/brandProduct.html", "生产");
+
+            params.data.brand = v;
+
+            com.popup4page("#brandProductPopUp", "/views/data/brandProduct.html", "生产");
         }
     }, {
         name: "交付",
-        clazz: "btn-danger",
+        clazz: "btn-warning",
         handle: function(v) {
-        	
-        	params.data.brand = v;
-        	
-        	com.popup4page("#brandDeliverPopUp", "/views/data/brandDeliver.html", "交付");
+
+            params.data.brand = v;
+
+            com.popup4page("#brandDeliverPopUp", "/views/data/brandDeliver.html", "交付");
         }
     }, {
         name: "安装",
-        clazz: "btn-danger",
+        clazz: "btn-inverse",
         handle: function(v) {
-        	
-        	params.data.brand = v;
-        	
-        	com.popup4page("#brandInstallPopUp", "/views/data/brandInstall.html", "安装");
+
+            params.data.brand = v;
+
+            com.popup4page("#brandInstallPopUp", "/views/data/brandInstall.html", "安装");
         }
     }, {
         name: "服务",
         clazz: "btn-danger",
         handle: function(v) {
-        	
-        	params.data.brand = v;
-        	
-        	com.popup4page("#brandServerPopUp", "/views/data/brandServer.html", "服务");
+
+            params.data.brand = v;
+
+            com.popup4page("#brandServerPopUp", "/views/data/brandServer.html", "服务");
         }
     }, {
         name: "结算",
-        clazz: "btn-danger",
+        clazz: "btn-yellow",
         handle: function(v) {
 
             params.data.brand = v;
@@ -266,7 +274,7 @@ jQuery(function($) {
         }
     }, {
         name: "编辑",
-        clazz: "btn-yellow",
+        clazz: "btn-blue",
         handle: function(v) {
 
             brand.brand = v;
@@ -513,6 +521,7 @@ jQuery(function($) {
             'brand.kino': brand.items.kino.val(),
             'brand.kiname': brand.items.kiname.val(),
             'brand.atttype': brand.items.atttype.val(),
+            'brand.numtype': brand.items.numtype.val(),
             'brand.agentName': brand.items.agentName.val(),
             'brand.agentPhone': brand.items.agentPhone.val()
         };

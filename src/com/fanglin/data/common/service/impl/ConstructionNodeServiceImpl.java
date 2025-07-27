@@ -116,7 +116,9 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setKino(constructionNodeVO.getKino());
 		constructionNodePO.setKiname(constructionNodeVO.getKiname());
 		constructionNodePO.setTimeLimit(0);
-
+		constructionNodePO.setMark(constructionNodeVO.getMark());
+		constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
+		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
 		constructionNodeDao.save(constructionNodePO);
 	}
 
@@ -142,6 +144,7 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setKiname(constructionNodeVO.getKiname());
 
 		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
+		constructionNodePO.setMark(constructionNodeVO.getMark());
 
 		constructionNodePO.setStartSurvey(null);
 		constructionNodePO.setEndSurvey(null);
@@ -153,7 +156,8 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		if (constructionNodeVO.getEndSurvey() != null && constructionNodeVO.getEndSurvey().getStid() != null) {
 			constructionNodePO.setEndSurvey(surveyTemplateDao.get(constructionNodeVO.getEndSurvey().getStid()));
 		}
-
+		constructionNodePO.setAccessoryLimit(constructionNodeVO.getAccessoryLimit());
+		constructionNodePO.setSalaryLimit(constructionNodeVO.getSalaryLimit());
 		constructionNodeDao.update(constructionNodePO);
 	}
 

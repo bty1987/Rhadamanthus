@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,6 +18,8 @@ import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.salary.vo.WorkerSalaryVO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -146,6 +149,8 @@ public class WorkerSalaryPO implements Serializable {
 	private Timestamp checkTime;
 
 	private String comment;
+
+	private String annotate;
 
 	private int company;
 
@@ -485,4 +490,26 @@ public class WorkerSalaryPO implements Serializable {
 		this.comment = comment;
 	}
 
+	@Column(name = "annotate")
+	public String getAnnotate() {
+		return annotate;
+	}
+
+	public void setAnnotate(String annotate) {
+		this.annotate = annotate;
+	}
+
+	public WorkerSalaryVO ptv(WorkerSalaryVO workerSalaryVO) {
+
+		BeanUtil.copyProperties(this, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
+
+		if (workerSalaryVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(workerSalaryVO.getDecoration());
+
+		if (workerSalaryVO.getUser() != null && getUser() != null) workerSalaryVO.getUser().setBaseInfo(getUser());
+		if (workerSalaryVO.getCreater() != null && getCreater() != null) workerSalaryVO.getCreater().setBaseInfo(getCreater());
+		if (workerSalaryVO.getApprover() != null && getApprover() != null) workerSalaryVO.getApprover().setBaseInfo(getApprover());
+		if (workerSalaryVO.getChecker() != null && getChecker() != null) workerSalaryVO.getChecker().setBaseInfo(getChecker());
+
+		return workerSalaryVO;
+	}
 }

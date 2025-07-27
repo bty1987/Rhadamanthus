@@ -111,6 +111,7 @@ public class HouseServiceImpl implements HouseService {
 
 			housePO.setVillage(villagePO);
 			housePO.setCompany(company);
+			housePO.setInnerArea(0);
 
 			houseDao.save(housePO);
 

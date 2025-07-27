@@ -74,6 +74,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());
 				decorationPaymentVO.setPaymentType(decorationPaymentPO.getPaymentType());
 				decorationPaymentVO.setOnetype(decorationPaymentPO.getOneType());
+				decorationPaymentVO.setTwotype(decorationPaymentPO.getTwoType());
 				decorationPaymentVO.setSort(decorationPaymentPO.getSort());
 
 				decorationPaymentVO.setPlatform(platform);

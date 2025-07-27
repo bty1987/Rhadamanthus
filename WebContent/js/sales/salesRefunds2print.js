@@ -5,12 +5,14 @@ $(function() {
     utils = parent.utils;
     params = parent.params;
     printer = parent.printer;
+    
     var options = {
         amountInTotal: 0,
         numberOfCases: 0,
         salesman: null,// 渠道
         supervisor: null,
     };
+    
     var data = params.sales.sales;
     var refunds = params.sales.refunds;
 
@@ -146,9 +148,9 @@ $(function() {
 
         var tr8 = $('<tr style="border: 1px solid;height: 25px; text-align: center; font-size:13px; "></tr>').appendTo(table);
         var td27 = $('<td style="border: 1px solid;"></td>').text("退款金额").appendTo(tr8);
-        var td28 = $('<td colspan="1" style="border: 1px solid;"></td>').text("大写: " + utils.getCNMoney(Math.round(utils.changeThrDecimal(total)))).appendTo(tr8);
+        var td28 = $('<td colspan="1" style="border: 1px solid;"></td>').text("大写: " + utils.getCNMoney(Math.round(utils.changeThrDecimal(refunds.total)))).appendTo(tr8);
         var td25 = $('<td style="border: 1px solid;"></td>').text("退款金额").appendTo(tr8);
-        var td26 = $('<td colspan="1" style="border: 1px solid;"></td>').text(Math.round(utils.changeThrDecimal(total))).appendTo(tr8);
+        var td26 = $('<td colspan="1" style="border: 1px solid;"></td>').text(Math.round(utils.changeThrDecimal(refunds.total))).appendTo(tr8);
 
         var tr15 = $('<tr style="border: 1px solid;height: 25px; text-align: center; font-size:13px; "></tr>').appendTo(table);
         var td42 = $('<td style="border: 1px solid;"></td>').text("备注: ").appendTo(tr15);

@@ -16,21 +16,31 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.data.common.vo.ConstructionPaceVO;
+import com.fanglin.data.common.vo.ConstructionPaceNodeVO;
 
 public class ConstructionPlanVO implements Serializable {
 
 	private static final long serialVersionUID = 4826596660979940757L;
 
-	private long cpid;
+	private Long cpid;
 
-	private long cid;
+	private Long cid;
 
 	private String orderId;
 
 	private String name;
 
-	private ConstructionPaceVO pace;
+	private ConstructionPaceNodeVO node;
+
+	private Integer connum;
+
+	private Integer comnum;
+
+	private String phase;
+
+	private String material;
+
+	private String period;
 
 	private Timestamp createTime;
 
@@ -38,32 +48,39 @@ public class ConstructionPlanVO implements Serializable {
 
 	private Timestamp endTime;
 
+	private Integer sort;
+
+	private String content;
+
 	private String comment;
 
 	public ConstructionPlanVO() {
 		super();
 	}
 
-	public ConstructionPlanVO(ConstructionPaceVO pace) {
-
+	public ConstructionPlanVO(String orderId) {
 		super();
-
-		this.pace = pace;
+		this.orderId = orderId;
 	}
 
-	public long getCpid() {
+	public ConstructionPlanVO(ConstructionPaceNodeVO node) {
+		super();
+		this.node = node;
+	}
+
+	public Long getCpid() {
 		return cpid;
 	}
 
-	public void setCpid(long cpid) {
+	public void setCpid(Long cpid) {
 		this.cpid = cpid;
 	}
 
-	public long getCid() {
+	public Long getCid() {
 		return cid;
 	}
 
-	public void setCid(long cid) {
+	public void setCid(Long cid) {
 		this.cid = cid;
 	}
 
@@ -83,12 +100,52 @@ public class ConstructionPlanVO implements Serializable {
 		this.name = name;
 	}
 
-	public ConstructionPaceVO getPace() {
-		return pace;
+	public ConstructionPaceNodeVO getNode() {
+		return node;
 	}
 
-	public void setPace(ConstructionPaceVO pace) {
-		this.pace = pace;
+	public void setNode(ConstructionPaceNodeVO node) {
+		this.node = node;
+	}
+
+	public Integer getConnum() {
+		return connum;
+	}
+
+	public void setConnum(Integer connum) {
+		this.connum = connum;
+	}
+
+	public Integer getComnum() {
+		return comnum;
+	}
+
+	public void setComnum(Integer comnum) {
+		this.comnum = comnum;
+	}
+
+	public String getPhase() {
+		return phase;
+	}
+
+	public void setPhase(String phase) {
+		this.phase = phase;
+	}
+
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -116,6 +173,22 @@ public class ConstructionPlanVO implements Serializable {
 
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
+	}
+
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public String getComment() {

@@ -68,24 +68,18 @@ jQuery(function($) {
         }
     });
 
-    com.post(api.data.queryDecorationBusitype, {}, function(res) {
-
-        var decorationBusitypes = [];
-
-        $.each(res.decorationBusitypes, function(index, value) {
-
-            if (value.status == 0) {
-                value.other = value.outside + "-" + value.isRefer;
-                decorationBusitypes.push(value);
-            }
-        });
-
-        customerOrigine.items.decorationBusitype.bindData(decorationBusitypes, 'dbid', 'name', false, null, "other").trigger("change");
-    });
-
     customerOrigine.items.decorationBusitype.change(function(e) {
-        var outside = $("#decorationBusitype option:selected").attr("other").split('-')[0];
-        var isRefer = $("#decorationBusitype option:selected").attr("other").split('-')[1];
+        
+        var other = com.focusPage("#decorationBusitype option:selected").attr("other");
+        
+        if (!other)
+            return false;
+
+        if (other.indexOf('-') == -1)
+            return false;
+
+        var outside = other.split('-')[0];
+        var isRefer = other.split('-')[1];
 
         if (outside == 0) {
             com.focusPage(".source", "#addcustomerorigine").hide();
@@ -94,15 +88,14 @@ jQuery(function($) {
             com.focusPage(".source", "#addcustomerorigine").show();
             com.focusPage(".contact", "#addcustomerorigine").show();
         }
-
+        
         if (isRefer == 0) {
-            com.focusPage("#referCustomer", "#addcustomerorigine").prop("checked", null).removeAttr("disabled", "disabled");
+            com.focusPage("#referCustomer", "#addcustomerorigine").prop("checked", "checked").attr("disabled", "disabled");
             com.focusPage(".referCustomerInfo", "#addcustomerorigine").hide();
         } else {
             com.focusPage("#referCustomer", "#addcustomerorigine").prop("checked", "checked").attr("disabled", "disabled");
             com.focusPage(".referCustomerInfo", "#addcustomerorigine").show();
         }
-
     });
 
     customerOrigine.saveBtn.bindClick(addcustomerOrigin);
@@ -113,7 +106,37 @@ jQuery(function($) {
     }, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0
-    }, 'autoFillKeyValue', 'key', 'value', null);
+    }, 'autoFillKeyValue', 'key', 'value', function(list, key, value){
+        
+        var user = null;
+        
+        com.post(api.personel.queryUserByUserId, {"user.userId": key}, function(res){
+            
+            user = res.user;
+            
+        }, null, false);
+        
+        if(user == null) return value;
+        
+        com.post(api.customer.queryCustomerDeptRuleByDid, {
+
+            "customerDeptRule.department.did": user.dept.did,
+        }, function(res) {
+
+            var busitypes = [];
+
+            $.each(res.customerDeptRules, function(i, v) {
+
+                v.busitype.other = v.busitype.outside + "-" + v.busitype.isRefer;
+
+                busitypes.push(v.busitype);
+            });
+
+            customerOrigine.items.decorationBusitype.bindData(busitypes, "dbid", "name", '请选择', null, "other").trigger("change");
+        });
+        
+        return value;
+    });
 
     customerOrigine.items.grade.bindData(customerOrigine.grade, "key", "value", false);
     customerOrigine.items.gender.switchBtn("gender");
@@ -145,7 +168,7 @@ jQuery(function($) {
 
             if (decoration.orderId) {
                 customerOrigine.items.referOrderId.val(decoration.orderId);
-                customerOrigine.items.referPhone.val(decoration.customer.phone);
+                customerOrigine.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
 
                 customerOrigine.refer.orderId = decoration.orderId;
             }
@@ -197,7 +220,7 @@ jQuery(function($) {
 
                 if (decoration.orderId) {
                     customerOrigine.items.referOrderId.val(decoration.orderId);
-                    customerOrigine.items.referPhone.val(decoration.customer.phone);
+                    customerOrigine.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
 
                     customerOrigine.refer.orderId = decoration.orderId;
                 }
@@ -257,7 +280,7 @@ jQuery(function($) {
 
             if (decoration.orderId) {
                 customerOrigine.items.referOrderId.val(decoration.orderId);
-                customerOrigine.items.referPhone.val(decoration.customer.phone);
+                customerOrigine.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
 
                 customerOrigine.refer.orderId = decoration.orderId;
             }
@@ -308,7 +331,7 @@ jQuery(function($) {
 
             if (decoration.orderId) {
                 customerOrigine.items.referOrderId.val(decoration.orderId);
-                customerOrigine.items.referPhone.val(decoration.customer.phone);
+                customerOrigine.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
 
                 customerOrigine.refer.orderId = decoration.orderId;
             }
@@ -347,9 +370,9 @@ jQuery(function($) {
             "customerOrigin.village.no": com.typeahead("villageNoCreate"),
             "customerOrigin.houseNumber": customerOrigine.items.houseNumber.val(),
             "customerOrigin.buildArea": customerOrigine.items.buildArea.val(),
-            "customerOrigin.freeArea": customerOrigine.items.freeArea.val(),
-            "customerOrigin.totalArea": customerOrigine.items.totalArea.val(),
-            "customerOrigin.innerArea": customerOrigine.items.innerArea.val(),
+            "customerOrigin.freeArea": 0,
+            "customerOrigin.totalArea": 0,
+            "customerOrigin.innerArea": customerOrigine.items.buildArea.val(),
             "customerOrigin.designer.userId": com.typeahead("designer"),
             "customerOrigin.salesman.userId": com.typeahead("salesman"),
             "customerOrigin.decorationBusitype.dbid": customerOrigine.items.decorationBusitype.val(),

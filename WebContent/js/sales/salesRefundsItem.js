@@ -29,7 +29,8 @@ $(function() {
             var $small = $('<small></small>').addClass('blue').html(refund.sales.no);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-            var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id", v.rid).attr("type", constant.sales().refunds.type.keys[v.type]).attr("createTime", v.createTime).attr('total', v.total).html('打印').appendTo($btnDiv);
+            var $print = $('<a></a>').addClass('btn btn-minier btn-success').attr("id", v.rid).attr("type", constant.sales().refunds.type.keys[v.type]).attr("createTime", v.createTime).attr('total', v.total).html('打印').appendTo($btnDiv);
+            var $send = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id", v.rid).attr("type", constant.sales().refunds.type.keys[v.type]).attr("createTime", v.createTime).attr('total', v.total).html('推送').appendTo($btnDiv);
 
             var propertyArr = [["商品品类:", refund.sales.category, "grey"], ["商品品牌:", refund.sales.brand.name, "grey", tools.brand.info, refund.sales.bid], ["退款总额:", v.total, "blue"], ["类型:", constant.sales().refunds.type.keys[v.type], "red"], ["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId], ["创建时间:", v.createTime, "green"], ["备注:", v.comment, "grey"]];
 
@@ -65,6 +66,18 @@ $(function() {
 
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);
+            });
+            
+            $send.click(function() {
+
+                var options = {
+                    "refunds.rid": v.rid,
+                };
+
+                com.post(api.sales.sendSalesRefunds, options, function() {
+
+                    com.showAlert(com.info, "推送成功");
+                });
             });
         });
 

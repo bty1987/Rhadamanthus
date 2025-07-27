@@ -27,7 +27,10 @@ jQuery(function($) {
             process: com.focusPage("#process", "#updateModal"),
             timeLimit: com.focusPage("#timeLimit", "#updateModal"),
             kino: com.focusPage("#kino", "#updateModal"),
-            kiname: com.focusPage("#kiname", "#updateModal")
+            kiname: com.focusPage("#kiname", "#updateModal"),
+            mark: com.focusPage("#mark", "#updateModal"),
+            accessoryLimit: com.focusPage("#accessoryLimit", "#updateModal"),
+            salaryLimit: com.focusPage("#salaryLimit", "#updateModal"),
         },
 
         status: {
@@ -39,6 +42,8 @@ jQuery(function($) {
     };
 
     constructionNode.items.process.bindData(constant.data().constructionNode.process.datas, "key", "value");
+    
+    constructionNode.items.mark.bindData(constant.data().constructionNode.mark.datas, "key", "value");
 
     constructionNode.modals.updateModal.on('show.bs.hide', function(e) {
 
@@ -93,6 +98,16 @@ jQuery(function($) {
         name: "完工销售比例",
         prop: "fincheck",
         clazz: "blue"
+    },{
+        fieId: "accessoryLimit",
+        name: "辅料总额限制",
+        prop: "accessoryLimit",
+        clazz: "blue"
+    },{
+        fieId: "salaryLimit",
+        name: "工费总额限制",
+        prop: "salaryLimit",
+        clazz: "blue"
     }, {
         fieId: "startalk",
         name: "开工话术",
@@ -135,11 +150,7 @@ jQuery(function($) {
         name: "工程标识",
         prop: "mark",
         clazz: "red",
-        dataset: {
-            0: '无',
-            1: '开工标识',
-            2: '完工标识'
-        }
+        dataset: constant.data().constructionNode.mark.keys
     }, {
         fieId: "kino",
         name: "金蝶编号",
@@ -176,6 +187,9 @@ jQuery(function($) {
             constructionNode.items.timeLimit.val(v.timeLimit);
             constructionNode.items.kino.val(v.kino);
             constructionNode.items.kiname.val(v.kiname);
+            constructionNode.items.mark.val(v.mark);
+            constructionNode.items.accessoryLimit.val(v.accessoryLimit);
+            constructionNode.items.salaryLimit.val(v.salaryLimit);
             constructionNode.modals.updateModal.modal("show");
 
             return false;
@@ -211,6 +225,9 @@ jQuery(function($) {
             "constructionNode.kino": constructionNode.items.kino.val(),
             "constructionNode.kiname": constructionNode.items.kiname.val(),
             "constructionNode.process": constructionNode.items.process.val(),
+            "constructionNode.mark": constructionNode.items.mark.val(),
+            "constructionNode.accessoryLimit": constructionNode.items.accessoryLimit.val(),
+            "constructionNode.salaryLimit": constructionNode.items.salaryLimit.val(),
             "constructionNode.timeLimit": constructionNode.items.timeLimit.val()
         }
 

@@ -11,6 +11,9 @@ $.extend(api.index, {
     constructionIndex: {
         url: "/views/construction/construction.html"
     },
+    constructionDiaryIndex: {
+        url: "/views/construction/constructionDiary.html"
+    },
     reworkIndex: {
         url: "/views/construction/rework.html"
     },
@@ -79,6 +82,15 @@ $.extend(api.index, {
     constructionPlan2print: {
         url: "/views/construction/constructionPlan2print.html"
     },
+    constructionNode2printIndex: {
+        url: "/views/construction/constructionNode2print.html"
+    },
+    workerSalary2printIndex: {
+        url: "/views/construction/workerSalary2print.html"
+    },
+    constructionRecordIndex: {
+        url: "/views/construction/constructionRecord.html"
+    },
 });
 
 $.extend(api, {
@@ -124,6 +136,7 @@ $.extend(api, {
             url: "pageConstructionForSupervision.do",
             demo: true
         },
+
         pageConstructionForQualiter: {
             url: "pageConstructionForQualiter.do",
             demo: true,
@@ -179,7 +192,7 @@ $.extend(api, {
                 args: ["period"]
             }, {
                 result: "paging-data-construction",
-                args: ["period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice"]
@@ -192,21 +205,21 @@ $.extend(api, {
             url: "queryConstructionScheduleByOrderId.do",
             tranargs: [{
                 result: "constructionSchedules",
-                args: ["period"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }]
         },
         queryConstructionScheduleByCid: {
             url: "queryConstructionScheduleByCid.do",
             tranargs: [{
                 result: "constructionSchedules",
-                args: ["period"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }]
         },
         queryConstructionScheduleByOrderIdASchedule: {
             url: "queryConstructionScheduleByOrderIdASchedule.do",
             tranargs: [{
                 result: "constructionSchedules",
-                args: ["period"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }]
         },
         beginConstructionSchedule: {
@@ -433,7 +446,6 @@ $.extend(api, {
                 args: ["buildArea"]
             }]
         },
-
         queryConstructionInfo: {
             url: "queryConstructionInfo.do",
             type: "query",
@@ -441,6 +453,10 @@ $.extend(api, {
                 result: "constructionInfo",
                 args: ["timeLimit"]
             }]
+        },
+        countConstructionInfo: {
+            url: "countConstructionInfo.do",
+            type: "query"
         },
         updateConstructionInfo: {
             url: "updateConstructionInfo.do",
@@ -487,15 +503,60 @@ $.extend(api, {
                 args: ["constructionAccessory.numLimit"]
             }
         },
+
         queryConstructionPlanByOrderId: {
-            url: "queryConstructionPlanByOrderId.do"
+            url: "queryConstructionPlanByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "constructionPlans",
+                args: ["connum", "comnum"]
+            }]
+        },
+        makeConstructionPlan: {
+            url: "makeConstructionPlan.do",
+            type: "update"
         },
         addConstructionPlan: {
-            url: "addConstructionPlan.do"
+            url: "addConstructionPlan.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPlan.connum", "constructionPlan.comnum"]
+            }
+        },
+        updateConstructionPlan: {
+            url: "updateConstructionPlan.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionPlan.connum", "constructionPlan.comnum"]
+            }
+        },
+        moveConstructionPlan: {
+            url: "moveConstructionPlan.do"
         },
         deleteConstructionPlan: {
             url: "deleteConstructionPlan.do"
         },
+
+        pageConstructionDiary: {
+            url: "pageConstructionDiary.do",
+            demo: true
+        },
+        addConstructionDiary: {
+            url: "addConstructionDiary.do",
+            intercept: true
+        },
+
+        queryConstructionDiaryDrawingByCdid: {
+            url: "queryConstructionDiaryDrawingByCdid.do"
+        },
+        addConstructionDiaryDrawing: {
+            url: "addConstructionDiaryDrawing.do",
+            intercept: true
+        },
+        deleteConstructionDiaryDrawing: {
+            url: "deleteConstructionDiaryDrawing.do"
+        },
+
         queryQualiter: {
             url: "queryQualiter.do"
         },
@@ -504,6 +565,9 @@ $.extend(api, {
         },
         deleteQualiter: {
             url: "deleteQualiter.do"
+        },
+        queryConstructionRecordByOrderId: {
+            url: "queryConstructionRecordByOrderId.do"
         }
 
     }

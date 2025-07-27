@@ -42,6 +42,8 @@ public class BrandVO implements java.io.Serializable {
 
 	private Short status;
 
+	private Short numtype;
+
 	public BrandVO() {
 		super();
 	}
@@ -193,6 +195,14 @@ public class BrandVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getNumtype() {
+		return numtype;
+	}
+
+	public void setNumtype(Short numtype) {
+		this.numtype = numtype;
 	}
 
 }

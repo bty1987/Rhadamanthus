@@ -434,9 +434,9 @@ public class CustomerSourcePO implements Serializable {
 		if (customerSourceVO.getHouse() != null && getHouse() != null) getHouse().ptv(customerSourceVO.getHouse());
 		if (customerSourceVO.getVillage() != null && getVillage() != null) getVillage().ptv(customerSourceVO.getVillage());
 
-		if (customerSourceVO.getBusitype() != null && getBusitype() != null) BeanUtil.copyProperties(getBusitype(), customerSourceVO.getBusitype());
+		if (customerSourceVO.getBusitype() != null && getBusitype() != null) getBusitype().ptv(customerSourceVO.getBusitype());
 
-		if (customerSourceVO.getCustomer() != null && getCustomer() != null) BeanUtil.copyProperties(getCustomer(), customerSourceVO.getCustomer());
+		if (customerSourceVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(customerSourceVO.getCustomer());
 
 		if (customerSourceVO.getCreater() != null && getCreater() != null) customerSourceVO.getCreater().setBaseInfo(getCreater());
 		if (customerSourceVO.getCreater() != null && customerSourceVO.getCreater().getDept() != null) BeanUtil.copyProperties(getCreater().getDept(), customerSourceVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));

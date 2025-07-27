@@ -304,7 +304,7 @@ jQuery(function($) {
 
             customer.modals.customerModal.modal("show");
 
-        } else if (v.status == constant.customer().customer.STATUS_AUTHENTICATION_INT) {
+        } else if (v.status == constant.customer().customer.STATUS_AUTHENTICATION_INT || v.status == 2) {
             $("#customerhide").hide();
 
             customer.items.customerName.val(v.name).prop("disabled", true);

@@ -31,6 +31,10 @@ public class DecorationAccountAction extends BaseListAction {
 
 	private String approve;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "queryDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationAccountAction() throws FLException {
 
@@ -59,7 +63,7 @@ public class DecorationAccountAction extends BaseListAction {
 	}
 
 	@Action(value = "sendDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendAddReduce() throws FLException {
+	public String sendDecorationAccount() throws FLException {
 
 		decorationAccountService.sendDecorationAccount(decorationAccount);
 
@@ -69,7 +73,7 @@ public class DecorationAccountAction extends BaseListAction {
 	@Action(value = "affirmDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmAddReduce() throws FLException {
 
-		decorationAccountService.affirmDecorationAccount(decoration, decorationAccount);
+		decorationAccountService.affirmDecorationAccount(decoration, decorationAccount, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -104,6 +108,22 @@ public class DecorationAccountAction extends BaseListAction {
 
 	public void setApprove(String approve) {
 		this.approve = approve;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

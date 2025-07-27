@@ -2,6 +2,8 @@ package com.fanglin.payment.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.payment.vo.AdvancePaymentVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "advancepayment", catalog = "payment")
@@ -95,6 +99,15 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	public void setZhenglinBalance(long zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
+	}
+
+	public AdvancePaymentVO ptv(AdvancePaymentVO advancePaymentVO) {
+
+		BeanUtil.copyProperties(this, advancePaymentVO, Arrays.asList("decoration"));
+
+		if (getDecoration() != null && advancePaymentVO.getDecoration() != null) getDecoration().ptvcascade(advancePaymentVO.getDecoration());
+
+		return advancePaymentVO;
 	}
 
 }

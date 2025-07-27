@@ -47,6 +47,8 @@ public class HousePO implements Serializable {
 
 	private int door;
 
+	private int innerFloor;
+
 	private short type;
 
 	private int buildArea;
@@ -159,6 +161,15 @@ public class HousePO implements Serializable {
 
 	public void setDoor(int door) {
 		this.door = door;
+	}
+
+	@Column(name = "innerFloor")
+	public int getInnerFloor() {
+		return innerFloor;
+	}
+
+	public void setInnerFloor(int innerFloor) {
+		this.innerFloor = innerFloor;
 	}
 
 	@Column(name = "type")

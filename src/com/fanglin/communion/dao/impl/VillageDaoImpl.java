@@ -56,6 +56,8 @@ public class VillageDaoImpl extends DaoImpl<VillagePO> implements VillageDao {
 			query.add(Restrictions.eq("company", company));
 		}
 
+		query.add(Restrictions.sqlRestriction(String.format("1=1 ORDER BY CASE WHEN company = %s THEN 1 ELSE 2 END", company)));
+
 		return query.list();
 	}
 

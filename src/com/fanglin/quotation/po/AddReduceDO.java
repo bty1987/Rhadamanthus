@@ -98,6 +98,10 @@ public class AddReduceDO implements Serializable {
 
 	private int accountDiscount;
 
+	private int accountManageDiscount;
+
+	private int accountTaxDiscount;
+
 	private long consPrice;
 
 	private long comsPrice;
@@ -368,6 +372,24 @@ public class AddReduceDO implements Serializable {
 
 	public void setAccountDiscount(int accountDiscount) {
 		this.accountDiscount = accountDiscount;
+	}
+
+	@Column(name = "accountManageDiscount")
+	public int getAccountManageDiscount() {
+		return accountManageDiscount;
+	}
+
+	public void setAccountManageDiscount(int accountManageDiscount) {
+		this.accountManageDiscount = accountManageDiscount;
+	}
+
+	@Column(name = "accountTaxDiscount")
+	public int getAccountTaxDiscount() {
+		return accountTaxDiscount;
+	}
+
+	public void setAccountTaxDiscount(int accountTaxDiscount) {
+		this.accountTaxDiscount = accountTaxDiscount;
 	}
 
 	@Column(name = "confirmTime")

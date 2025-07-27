@@ -1,17 +1,20 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div id="condList2" class="fl_search clearfix"></div> <!-- 查询条件-->
-        <div id="resultLists2" class="clearfix tab-pane active"></div> <!--查询结果-->
-        <div id="pagenationFeedbackComplaintDept2" class="fl-page-wrap clearfix"></div> 
-   </div>
+        <div id="condList2" class="fl_search clearfix"></div> 
+        <div id="resultLists2" class="clearfix tab-pane active"></div>
+        <div id="pagenationFeedbackComplaintDept2" class="fl-page-wrap clearfix"></div>
+    </div>
 </div>
 
 <div class="modal fade" id="addFeedbackComplaintDeptModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
                 <h4 class="modal-title">投诉部门</h4>
             </div>
             <div class="modal-body">
@@ -19,24 +22,24 @@
                     <div class="form-group">
                         <label for="deptTypeSel" class="col-sm-3 control-label no-padding-right orange">部门类型</label>
                         <div class="col-md-9">
-                            <select class="col-xs-10 col-sm-6 v_required" id="deptTypeSel" ></select>
+                            <select class="col-xs-10 col-sm-6 v_required" id="deptTypeSel"></select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="deptType" class="col-sm-3 control-label no-padding-right orange">部门</label>
                         <div class="col-md-9">
-                            <select class="col-xs-10 col-sm-6 v_required" id="deptType" ></select>
+                            <select class="col-xs-10 col-sm-6 v_required" id="deptType"></select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="duty" class="col-sm-3 control-label no-padding-right orange">职务</label>
                         <div class="col-md-9">
-                            <select class="col-xs-10 col-sm-6 v_required" id="duty" ></select>
+                            <select class="col-xs-10 col-sm-6 v_required" id="duty"></select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="dutyUser" class="col-sm-3 control-label no-padding-right orange">责任人</label>
                         <div class="col-md-9">
@@ -47,28 +50,28 @@
                     <div class="form-group">
                         <label for="firstLevel" class="col-sm-3 control-label no-padding-right orange">一级分类</label>
                         <div class="col-md-9">
-                            <select class="col-xs-10 col-sm-6 v_required" id="firstLevel" ></select>
+                            <select class="col-xs-10 col-sm-6 v_required" id="firstLevel"></select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="secondary" class="col-sm-3 control-label no-padding-right orange">二级分类</label>
                         <div class="col-md-9">
-                            <select class="col-xs-10 col-sm-6 v_required" id="secondary" ></select>
+                            <select class="col-xs-10 col-sm-6 v_required" id="secondary"></select>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="problemType" class="col-sm-3 control-label no-padding-right orange">问题类型</label>
                         <div class="col-md-9">
-                            <select class="col-xs-10 col-sm-6 v_required" id="problemType" ></select>
+                            <select class="col-xs-10 col-sm-6 v_required" id="problemType"></select>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" id="addConfirmBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="canceItemlBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

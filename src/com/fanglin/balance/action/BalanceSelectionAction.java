@@ -47,6 +47,14 @@ public class BalanceSelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageBalanceSelectionForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageBalanceSelectionForSupplier() throws FLException {
+
+		balanceSelectionService.pageBalanceSelectionForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBalanceSelection() throws FLException {
 
@@ -98,7 +106,7 @@ public class BalanceSelectionAction extends BaseListAction {
 	@Action(value = "lockBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String lockBalanceSelection() throws FLException {
 
-		balanceSelectionService.lockBalanceSelection(balanceSelection);
+		balanceSelectionService.lockBalanceSelection(balanceSelection, queryUserId());
 
 		return SUCCESS;
 	}
@@ -106,7 +114,7 @@ public class BalanceSelectionAction extends BaseListAction {
 	@Action(value = "unlockBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String unlockBalanceSelection() throws FLException {
 
-		balanceSelectionService.unlockBalanceSelection(balanceSelection);
+		balanceSelectionService.unlockBalanceSelection(balanceSelection, queryUserId());
 
 		return SUCCESS;
 	}
@@ -137,7 +145,7 @@ public class BalanceSelectionAction extends BaseListAction {
 	@Action(value = "unauditBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String unauditBalanceSelection() throws FLException {
 
-		balanceSelectionService.unauditBalanceSelection(balanceSelection);
+		balanceSelectionService.unauditBalanceSelection(balanceSelection, queryUserId());
 
 		return SUCCESS;
 	}

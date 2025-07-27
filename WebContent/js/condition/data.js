@@ -1565,7 +1565,7 @@ Condition.addupRule("data", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: constant.data().constructionPace.status.datas,
+            listPath: constant.data().constructionPaceNode.status.datas,
             keyPath: "key",
             valuePath: "value"
         }
@@ -1604,7 +1604,8 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    "constructionPeriod-name": {
+    
+    "construction-period-name": {
         label: "名称",
         type: "text",
         submitConfig: {

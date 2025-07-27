@@ -36,6 +36,8 @@ public class VillageVO implements Serializable {
 
 	private String url;
 
+	private Long mileage;
+
 	private Integer company;
 
 	public VillageVO() {
@@ -168,6 +170,14 @@ public class VillageVO implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public Long getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(Long mileage) {
+		this.mileage = mileage;
 	}
 
 	public Integer getCompany() {

@@ -32,6 +32,8 @@ public class CppointRecordPO implements Serializable {
 
 	public static final short POINTTYPE_SALES_INT = 1;
 
+	public static final short POINTTYPE_OPOINT_INT = 2;
+
 	private long cprid;
 
 	private long cid;

@@ -107,13 +107,7 @@ public class PaymentServiceImpl implements PaymentService {
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
 		for (PaymentDO paymentDO : paymentDOs) {
-
-			PaymentVO paymentVO = new PaymentVO();
-
-			paymentDO.dtv(paymentVO);
-
-			paymentVOs.add(paymentVO);
-
+			paymentVOs.add(paymentDO.dtv(new PaymentVO()));
 		}
 
 		paging.setData(paymentVOs);
@@ -127,13 +121,7 @@ public class PaymentServiceImpl implements PaymentService {
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
 		for (PaymentPO paymentPO : paymentPOs) {
-
-			PaymentVO payment = new PaymentVO();
-
-			paymentPO.ptv(payment);
-
-			paymentVOs.add(payment);
-
+			paymentVOs.add(paymentPO.ptv(new PaymentVO()));
 		}
 
 		return paymentVOs;

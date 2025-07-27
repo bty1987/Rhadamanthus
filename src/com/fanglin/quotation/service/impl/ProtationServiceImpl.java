@@ -422,6 +422,8 @@ public class ProtationServiceImpl implements ProtationService {
 			decorationDao.update(decorationPO);
 		}
 
+		BeanUtil.copyPropertie(protationPO, protationVO, Arrays.asList("creater", "version"));
+
 		return 0;
 	}
 

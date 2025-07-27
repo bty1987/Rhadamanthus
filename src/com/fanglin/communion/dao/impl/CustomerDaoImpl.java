@@ -31,15 +31,11 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 	}
 
 	@Override
-	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, List<Long> cids, Integer company) {
+	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, Integer company) {
 
 		PagingQuery<CustomerPO> query = pagingQuery(paging, CustomerPO.class);
 
 		queryFilterExcute(query, filters);
-
-		if (cids != null) {
-			query.add(Restrictions.in("cid", cids));
-		}
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.add(Restrictions.eq("company", company));
@@ -77,6 +73,12 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		}
 
 		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerPO> queryCustomer(String phone) {
+		return session().createCriteria(CustomerPO.class).add(Restrictions.eq("phone", phone)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

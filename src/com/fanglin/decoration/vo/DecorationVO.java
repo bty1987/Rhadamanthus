@@ -149,6 +149,11 @@ public class DecorationVO implements Serializable {
 		this.house = house;
 	}
 
+	public DecorationVO(UserBaseVO supervisor) {
+		super();
+		this.supervisor = supervisor;
+	}
+
 	public Long getDoid() {
 		return doid;
 	}

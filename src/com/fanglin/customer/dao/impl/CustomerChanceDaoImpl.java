@@ -1,5 +1,6 @@
 package com.fanglin.customer.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -44,6 +45,20 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	@Override
 	public CustomerChancePO queryCustomerChance(long csid, int company) {
 		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).createAlias("source", "source").add(Restrictions.eq("source.csid", csid)).add(Restrictions.eq("company", company)).add(Restrictions.ne("status", CustomerChancePO.STATUS_DISABLE_INT)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public CustomerChancePO queryCustomerChance(String orderId) {
+		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).add(Restrictions.eq("orderId", orderId)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public int countCustomerSchance(long csid) {
+
+		String sql = "select count(*) from customer.customerchance cc where cc.csid = :csid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("csid", csid).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

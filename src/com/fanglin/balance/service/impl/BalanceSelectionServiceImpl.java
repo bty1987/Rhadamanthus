@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceSelectionDao;
 import com.fanglin.balance.dao.BalanceSelectionItemDao;
+import com.fanglin.balance.dao.BalanceSelectionRecordDao;
 import com.fanglin.balance.po.BalancePO;
 import com.fanglin.balance.po.BalanceSalesPO;
 import com.fanglin.balance.po.BalanceSelectionBO;
 import com.fanglin.balance.po.BalanceSelectionItemPO;
 import com.fanglin.balance.po.BalanceSelectionPO;
+import com.fanglin.balance.po.BalanceSelectionRecordPO;
 import com.fanglin.balance.service.BalanceSelectionService;
 import com.fanglin.balance.vo.BalanceSelectionItemVO;
 import com.fanglin.balance.vo.BalanceSelectionVO;
@@ -50,6 +52,9 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 	@Autowired
 	private BalanceSelectionItemDao balanceSelectionItemDao;
+
+	@Autowired
+	private BalanceSelectionRecordDao balanceSelectionRecordDao;
 
 	@Autowired
 	private SelectionItemDao selectionItemDao;
@@ -90,6 +95,19 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		for (BalanceSelectionBO balanceSelectionBO : balanceSelectionBOs) {
 			balanceSelectionVOs.add(balanceSelectionBO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+		}
+
+		paging.setData(balanceSelectionVOs);
+	}
+
+	@Override
+	public void pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+
+		List<BalanceSelectionPO> balanceSelectionPOs = balanceSelectionDao.pageBalanceSelectionForSupplier(paging, filters, userId, company);
+		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
+
+		for (BalanceSelectionPO balanceSelectionPO : balanceSelectionPOs) {
+			balanceSelectionVOs.add(balanceSelectionPO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSelectionVOs);
@@ -142,6 +160,10 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		balanceSelectionDao.save(balanceSelectionPO);
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_INIT_INT, ""));
+
 		return 0;
 	}
 
@@ -180,6 +202,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			if (selectionItemPO == null) continue;
 
+			if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT, SelectionItemPO.STATUS_DISABLE_SHORT).contains(selectionItemPO.getStatus())) continue;
 			if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_INIT_INT) continue;
 
 			BalanceSelectionItemPO balanceSelectionItemPO = new BalanceSelectionItemPO();
@@ -208,6 +231,8 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionPO.setProfit(balanceSelectionVO.getProfit());
 
 		balanceSelectionDao.update(balanceSelectionPO);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_INIT_INT, "提交"));
 
 		return 0;
 	}
@@ -239,6 +264,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 			if (selectionItemPO == null) continue;
 
+			if (!Arrays.asList(SelectionItemPO.STATUS_REVIEW_SHORT, SelectionItemPO.STATUS_BALANCE_SHORT, SelectionItemPO.STATUS_DISABLE_SHORT).contains(selectionItemPO.getStatus())) continue;
 			if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_INIT_INT) continue;
 
 			if (balanceSelectionPO == null) {
@@ -282,6 +308,8 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionPO.setProfit(balanceSelectionVO.getProfit());
 
 		balanceSelectionDao.update(balanceSelectionPO);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_INIT_INT, "批量"));
 
 		return 0;
 	}
@@ -356,7 +384,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int lockBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException {
+	public int lockBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException {
 
 		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
 
@@ -378,12 +406,16 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		balanceSelectionDao.update(balanceSelectionPO);
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_UNLOCK_INT, "锁定"));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int unlockBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException {
+	public int unlockBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException {
 
 		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
 
@@ -398,6 +430,10 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionPO.setStatus(BalanceSelectionPO.STATUS_INIT_INT);
 
 		balanceSelectionDao.update(balanceSelectionPO);
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_INIT_INT, "解锁"));
 
 		return 0;
 	}
@@ -422,12 +458,16 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		balanceSelectionDao.update(balanceSelectionPO);
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_WAIT_INT, "待审"));
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int unauditBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException {
+	public int unauditBalanceSelection(BalanceSelectionVO balanceSelectionVO, String userId) throws FLException {
 
 		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
 
@@ -442,6 +482,10 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionPO.setStatus(BalanceSelectionPO.STATUS_UNLOCK_INT);
 
 		balanceSelectionDao.update(balanceSelectionPO);
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		balanceSelectionRecordDao.save(new BalanceSelectionRecordPO().init(balanceSelectionPO, operater, BalanceSelectionPO.STATUS_UNLOCK_INT, "驳回"));
 
 		return 0;
 	}

@@ -33,6 +33,14 @@ public class CppointAction extends BaseListAction {
 
 	private List<CppointRecordVO> cppointRecords;
 
+	@Action(value = "pageCppoint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageCppoint() throws FLException {
+
+		cppointService.pageCppoint(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryCppoint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCppoint() throws FLException {
 

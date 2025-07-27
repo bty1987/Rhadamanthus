@@ -140,6 +140,9 @@ public class UserBaseVO implements Serializable {
 		setUserPhoto(userPO.getUserPhoto());
 		setPhone(userPO.getPhone());
 
+		if (getDept() != null && userPO.getDept() != null) setDept(userPO.getDept().ptv());
+		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
+
 		return this;
 	}
 
@@ -148,6 +151,7 @@ public class UserBaseVO implements Serializable {
 	}
 
 	public void vtpcascade(UserPO userPO) {
+
 		vtp(userPO);
 
 		if (userPO.getDuty() != null && this.getDuty() != null) {

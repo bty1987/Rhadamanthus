@@ -11,11 +11,19 @@
 
 package com.fanglin.customer.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.po.CppointPO;
+import com.fanglin.utils.Paging;
 
 public interface CppointDao extends Dao<CppointPO> {
 
-	public CppointPO queryCppoint(Long cid);
+	public CppointPO queryCppoint(long cid);
+
+	public CppointPO queryCppointByOrderId(String orderId);
+
+	public List<CppointPO> pageCppoint(Paging paging, List<Filter> filters);
 
 }

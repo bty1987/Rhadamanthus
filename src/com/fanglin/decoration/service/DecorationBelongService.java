@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.vo.DecorationBelongVO;
+import com.fanglin.decoration.vo.DecorationVO;
 
 public interface DecorationBelongService {
 
@@ -22,7 +23,7 @@ public interface DecorationBelongService {
 
 	public int sendDecorationBelong(DecorationBelongVO decorationBelongVO) throws FLException;
 
-	public int confirmDecorationBelong(DecorationBelongVO decorationBelongVO) throws FLException;
+	public int confirmDecorationBelong(DecorationVO decorationVO, DecorationBelongVO decorationBelongVO, String securityCode, String verifyCode) throws FLException;
 
 	public int tranDecorationBelong(DecorationBelongVO decorationBelongVO, List<DecorationBelongVO> decorationBelongVOs) throws FLException;
 

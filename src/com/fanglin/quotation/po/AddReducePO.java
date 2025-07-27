@@ -64,6 +64,8 @@ public class AddReducePO implements Serializable {
 
 	public static final short PAYTYPE_ARO_INT = 2;
 
+	public static final short PAYTYPE_REF_INT = 3;
+
 	public static final short STATUS_UNSUBMIT_INT = 0;
 
 	public static final short STATUS_SUBMIT_INT = 1;
@@ -105,6 +107,10 @@ public class AddReducePO implements Serializable {
 	private short taxDiscount;
 
 	private int accountDiscount;
+
+	private int accountManageDiscount;
+
+	private int accountTaxDiscount;
 
 	private long undisPrice;
 
@@ -275,6 +281,24 @@ public class AddReducePO implements Serializable {
 		this.accountDiscount = accountDiscount;
 	}
 
+	@Column(name = "accountManageDiscount")
+	public int getAccountManageDiscount() {
+		return accountManageDiscount;
+	}
+
+	public void setAccountManageDiscount(int accountManageDiscount) {
+		this.accountManageDiscount = accountManageDiscount;
+	}
+
+	@Column(name = "accountTaxDiscount")
+	public int getAccountTaxDiscount() {
+		return accountTaxDiscount;
+	}
+
+	public void setAccountTaxDiscount(int accountTaxDiscount) {
+		this.accountTaxDiscount = accountTaxDiscount;
+	}
+
 	@Column(name = "undisPrice")
 	public long getUndisPrice() {
 		return undisPrice;
@@ -422,19 +446,29 @@ public class AddReducePO implements Serializable {
 
 	public AddReducePO ptvadvance(AddReduceVO addReduceVO) {
 
-		setManageRate(addReduceVO.getManageRate());
-		setManagePrice(addReduceVO.getManagePrice());
-		setManageDiscount(addReduceVO.getManageDiscount());
-		setTaxRate(addReduceVO.getTaxRate());
-		setTaxPrice(addReduceVO.getTaxPrice());
-		setTaxDiscount(addReduceVO.getTaxDiscount());
-		setUndisPrice(addReduceVO.getUndisPrice());
-		setDisPrice(addReduceVO.getDisPrice());
-		setUncalPrice(addReduceVO.getUncalPrice());
-		setCalPrice(addReduceVO.getCalPrice());
-		setConsPrice(addReduceVO.getConsPrice());
-		setComsPrice(addReduceVO.getComsPrice());
-		setTotal(addReduceVO.getTotal());
+		if (addReduceVO.getDiscount() != null) setDiscount(addReduceVO.getDiscount());
+
+		if (addReduceVO.getManageRate() != null) setManageRate(addReduceVO.getManageRate());
+		if (addReduceVO.getManagePrice() != null) setManagePrice(addReduceVO.getManagePrice());
+		if (addReduceVO.getManageDiscount() != null) setManageDiscount(addReduceVO.getManageDiscount());
+
+		if (addReduceVO.getTaxRate() != null) setTaxRate(addReduceVO.getTaxRate());
+		if (addReduceVO.getTaxPrice() != null) setTaxPrice(addReduceVO.getTaxPrice());
+		if (addReduceVO.getTaxDiscount() != null) setTaxDiscount(addReduceVO.getTaxDiscount());
+
+		if (addReduceVO.getUndisPrice() != null) setUndisPrice(addReduceVO.getUndisPrice());
+		if (addReduceVO.getDisPrice() != null) setDisPrice(addReduceVO.getDisPrice());
+		if (addReduceVO.getUncalPrice() != null) setUncalPrice(addReduceVO.getUncalPrice());
+		if (addReduceVO.getCalPrice() != null) setCalPrice(addReduceVO.getCalPrice());
+
+		if (addReduceVO.getConsPrice() != null) setConsPrice(addReduceVO.getConsPrice());
+		if (addReduceVO.getComsPrice() != null) setComsPrice(addReduceVO.getComsPrice());
+
+		if (addReduceVO.getTotal() != null) setTotal(addReduceVO.getTotal());
+
+		if (addReduceVO.getDiscount() != null) setAccountDiscount(addReduceVO.getDiscount());
+		if (addReduceVO.getManageDiscount() != null) setAccountManageDiscount(addReduceVO.getManageDiscount());
+		if (addReduceVO.getTaxDiscount() != null) setAccountTaxDiscount(addReduceVO.getTaxDiscount());
 
 		return this;
 	}

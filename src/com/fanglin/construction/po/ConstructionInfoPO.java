@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.construction.vo.ConstructionInfoVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "ConstructIoninfo", catalog = "construction")
 public class ConstructionInfoPO implements Serializable {
@@ -47,6 +50,8 @@ public class ConstructionInfoPO implements Serializable {
 	private Timestamp drawlineTime;
 
 	private Timestamp designTime;
+
+	private long actuaTime;
 
 	private String comment;
 
@@ -168,6 +173,15 @@ public class ConstructionInfoPO implements Serializable {
 		this.designTime = designTime;
 	}
 
+	@Column(name = "actuaTime")
+	public long getActuaTime() {
+		return actuaTime;
+	}
+
+	public void setActuaTime(long actuaTime) {
+		this.actuaTime = actuaTime;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -175,6 +189,13 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public ConstructionInfoVO ptv(ConstructionInfoVO constructionInfoVO) {
+
+		BeanUtil.copyProperties(this, constructionInfoVO, "");
+
+		return constructionInfoVO;
 	}
 
 }

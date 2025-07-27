@@ -28,7 +28,6 @@ public class FeedbackComplaintDeptAction extends BaseListAction {
 
 	private List<FeedbackComplaintDeptVO> feedbackComplaintDepts;
 
-
 	@Action(value = "queryFeedbackComplaintDept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFeedbackComplaintDept() throws FLException {
 
@@ -40,8 +39,8 @@ public class FeedbackComplaintDeptAction extends BaseListAction {
 	@Action(value = "addFeedbackComplaintDept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addFeedbackComplaintDept() throws FLException {
 
-		long fcdid = feedbackComplaintDeptService.addFeedbackComplaintDept(feedbackComplaintDept, authentication());
-		feedbackComplaintDept.setFcdid(fcdid);
+		feedbackComplaintDeptService.addFeedbackComplaintDept(feedbackComplaintDept, authentication());
+
 		return SUCCESS;
 	}
 
@@ -59,13 +58,6 @@ public class FeedbackComplaintDeptAction extends BaseListAction {
 		feedbackComplaintDeptService.deleteFeedbackComplaintDept(feedbackComplaintDept);
 
 		return SUCCESS;
-	}
-	public FeedbackComplaintDeptService getFeedbackComplaintDeptService() {
-		return feedbackComplaintDeptService;
-	}
-
-	public void setFeedbackComplaintDeptService(FeedbackComplaintDeptService feedbackComplaintDeptService) {
-		this.feedbackComplaintDeptService = feedbackComplaintDeptService;
 	}
 
 	public FeedbackComplaintDeptVO getFeedbackComplaintDept() {

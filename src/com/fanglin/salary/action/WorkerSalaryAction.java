@@ -48,6 +48,14 @@ public class WorkerSalaryAction extends BaseListAction {
 		return "success";
 	}
 
+	@Action(value = "queryWorkerSalaryByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryWorkerSalaryByOrderId() throws FLException {
+
+		workerSalarys = workerSalaryService.queryWorkerSalaryByOrderId(workerSalary);
+
+		return "success";
+	}
+
 	@Action(value = "queryWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryWorkerSalary() throws FLException {
 
@@ -70,6 +78,14 @@ public class WorkerSalaryAction extends BaseListAction {
 		workerSalaryService.addWorkerSalary(workerSalary, queryUserId(), queryCompany());
 
 		return "success";
+	}
+
+	@Action(value = "updateWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateWorkerSalary() throws FLException {
+
+		workerSalaryService.updateWorkerSalary(workerSalary);
+
+		return SUCCESS;
 	}
 
 	@Action(value = "adoptWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })

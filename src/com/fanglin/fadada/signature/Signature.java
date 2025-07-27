@@ -64,8 +64,10 @@ public class Signature {
 	private static String VERSION = "2.0";
 	private static String HOST = "https://testapi.fadada.com:8443/api/";
 
-	private static String NOTIFY_URL_STR = "http://www.fanglin.vip/";
-	private static String RETURN_URL_STR = "http://www.fanglin.vip/"; // http://fanglin.vip:30080/communion/signatureCallback.do
+	private static String NOTIFY_URL_STR = "http://www.fanglin.vip/site/index.html";
+	private static String RETURN_URL_STR = "http://www.fanglin.vip/site/index.html"; // http://fanglin.vip:30080/communion/signatureCallback.do
+
+	// https://open.fadada.com/index.html#/portal/documentCenter/66RZRDRHPD/LA5RUYXPDXPVZVCE
 
 	private static String configFilePathName = "/fadada.properties";
 
@@ -452,7 +454,7 @@ public class Signature {
 
 		if (!"2".equals(person.getString("status"))) {
 			System.out.println(result);
-			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("status")));
+			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("auditFailReason")));
 		}
 
 		return data;

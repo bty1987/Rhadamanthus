@@ -46,6 +46,14 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
 	}
 
+	@Override
+	public List<?> countConstructionInfo(long startTime, long endTime, int company) {
+
+		String sql = "select ci.actuaTime, count(*) as count from construction.constructioninfo ci, decoration.decoration d where ci.actuaTime between :start and :end and ci.orderId = d.orderId and d.company = :company group by ci.actuaTime";
+
+		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;

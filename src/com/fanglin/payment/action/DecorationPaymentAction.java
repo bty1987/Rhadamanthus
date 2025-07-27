@@ -57,6 +57,10 @@ public class DecorationPaymentAction extends BaseListAction {
 
 	private List<Long> ptids;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "pageDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationPayment() throws FLException {
 
@@ -156,7 +160,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	@Action(value = "affirmDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmDecorationPayment() throws FLException, Exception {
 
-		decorationPaymentService.affirmDecorationPayment(decorationPayment);
+		decorationPaymentService.affirmDecorationPayment(decorationPayment, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -255,6 +259,22 @@ public class DecorationPaymentAction extends BaseListAction {
 
 	public void setPtids(List<Long> ptids) {
 		this.ptids = ptids;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

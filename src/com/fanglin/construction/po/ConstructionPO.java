@@ -36,33 +36,11 @@ public class ConstructionPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 
-	public static final String COLUMN_SCHEDULE_STR = "schedule";
-
-	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisor";
-
-	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
-
-	public static final String COLUMN_ACCEPTANCEFLAG_STR = "acceptanceFlag";
-
 	public static final String COLUMN_CID_STR = "cid";
-
-	public static final int SCHEDULE_TYPE_CHAN_INT = 1;
 
 	public static final int SCHEDULE_TYPE_PUTLINE_INT = 2;
 
 	public static final int SCHEDULE_TYPE_WATERWAYCIRCUIT_INT = 3;
-
-	public static final int SCHEDULE_TYPE_BRICKLAY_INT = 4;
-
-	public static final int SCHEDULE_TYPE_GROUNDLEVELING_INT = 5;
-
-	public static final int SCHEDULE_TYPE_CARPENT_INT = 6;
-
-	public static final int SCHEDULE_TYPE_OIL_INT = 7;
-
-	public static final int SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT = 8;
-
-	public static final int SCHEDULE_TYPE_CLEANING_INT = 9;
 
 	public static final short ACCESSORY_OPEN_SHORT = 0;
 
@@ -80,7 +58,7 @@ public class ConstructionPO implements Serializable {
 
 	private int schedule;
 
-	private int process;
+	private short process;
 
 	private int period;
 
@@ -109,6 +87,10 @@ public class ConstructionPO implements Serializable {
 	private Timestamp lockTime;
 
 	private Timestamp processTime;
+
+	private short workStatus;
+
+	private short scheduleStatus;
 
 	public ConstructionPO() {
 		super();
@@ -178,11 +160,11 @@ public class ConstructionPO implements Serializable {
 	}
 
 	@Column(name = "process")
-	public int getProcess() {
+	public short getProcess() {
 		return process;
 	}
 
-	public void setProcess(int process) {
+	public void setProcess(short process) {
 		this.process = process;
 	}
 
@@ -312,6 +294,22 @@ public class ConstructionPO implements Serializable {
 
 	public void setProcessTime(Timestamp processTime) {
 		this.processTime = processTime;
+	}
+
+	public short getWorkStatus() {
+		return workStatus;
+	}
+
+	public void setWorkStatus(short workStatus) {
+		this.workStatus = workStatus;
+	}
+
+	public short getScheduleStatus() {
+		return scheduleStatus;
+	}
+
+	public void setScheduleStatus(short scheduleStatus) {
+		this.scheduleStatus = scheduleStatus;
 	}
 
 }

@@ -14,6 +14,6 @@ public interface DecorationAccountService {
 
 	public void sendDecorationAccount(DecorationAccountVO decorationAccountVO) throws FLException;
 
-	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO) throws FLException;
+	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO, String securityCode, String verifyCode) throws FLException;
 
 }

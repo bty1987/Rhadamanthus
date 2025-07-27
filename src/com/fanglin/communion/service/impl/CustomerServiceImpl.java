@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,29 +63,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public void pageCustomer(Paging paging, List<Filter> filters, CustomerVO customerVO, Integer company) {
 
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
-		List<CustomerPO> customerPOs;
-
-		List<Long> cids = null;
-
-		if (customerVO != null && customerVO.getPhone() != null) {
-
-			cids = new ArrayList<Long>(Arrays.asList(-1L));
-
-			List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(), null, company);
-
-			for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
-				cids.add(customerPhonePO.getCid());
-			}
-		}
-
-		customerPOs = customerDao.pageCustomer(paging, filters, cids, company);
+		List<CustomerPO> customerPOs = customerDao.pageCustomer(paging, filters, company);
 
 		for (CustomerPO customerPO : customerPOs) {
-			customerVO = new CustomerVO();
 
-			BeanUtil.copyProperties(customerPO, customerVO, "phone");
-
-			customerVO.setPhone(customerPO.getPhone() == null ? "" : customerPO.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+			customerVO = customerPO.ptv(new CustomerVO());
 
 			customerVOs.add(customerVO);
 		}
@@ -95,28 +76,21 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public CustomerVO queryCustomerById(CustomerVO customerVO) {
+	public CustomerVO queryCustomerById(CustomerVO customerVO) throws FLException {
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
-		if (customerPO != null) {
-			customerVO = new CustomerVO();
-
-			BeanUtil.copyProperties(customerPO, customerVO);
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
 		}
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByCid(customerVO.getCid(), CustomerPhonePO.STATUS_ENABLE_INT);
+		customerPO.ptv(customerVO);
 
-		if (!customerPhones.isEmpty()) {
-
-			List<String> phones = new ArrayList<String>();
-
-			for (CustomerPhonePO customerphone : customerPhones) {
-				phones.add(customerphone.getPhone() == null ? "" : customerphone.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
-			}
-
-			customerVO.setPhone(StringUtils.join(phones, ","));
-		}
+		customerVO.setAddress(customerPO.getAddress());
+		customerVO.setIdentity(customerPO.getIdentity());
+		customerVO.setWechat(customerPO.getWechat());
+		customerVO.setQq(customerPO.getQq());
+		customerVO.setEmail(customerPO.getEmail());
 
 		return customerVO;
 	}
@@ -129,12 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
 		List<CustomerPO> customerPOs = customerDao.queryCustomerByPinyin(pinyinName, 10, company);
 
 		for (CustomerPO customerPO : customerPOs) {
-
-			CustomerVO customerVO = new CustomerVO();
-
-			BeanUtil.copyProperties(customerPO, customerVO, "phone");
-
-			customerVOs.add(customerVO);
+			customerVOs.add(customerPO.ptv(new CustomerVO()));
 		}
 
 		return customerVOs;
@@ -150,19 +119,17 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		CustomerVO customerVO = new CustomerVO();
-
-		BeanUtil.copyProperties(customerPO, customerVO, "phone");
+		CustomerVO customerVO = customerPO.ptv(new CustomerVO());
 
 		if (customerPhoneVO.getCpid() != null) {
 
 			CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
 
 			customerPhoneVO.setCpid(customerPhonePO.getCpid());
-			customerVO.setPhone(customerPhonePO == null ? "" : customerPhonePO.getPhone());
+			customerVO.setPhone(customerPhonePO == null ? "" : FormatUtil.decodePhone(customerPhonePO.getPhone()));
 		} else {
 			customerPhoneVO.setCpid(customerPO.getCid());
-			customerVO.setPhone(customerPO.getPhone());
+			customerVO.setPhone(FormatUtil.decodePhone(customerPO.getPhone()));
 		}
 
 		customerRecordDao.save(new CustomerRecordPO(customerPO.getCid(), customerPhoneVO.getCpid(), CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
@@ -174,7 +141,6 @@ public class CustomerServiceImpl implements CustomerService {
 	public List<CustomerPhoneVO> queryCustomerPhoneByCid(CustomerPhoneVO customerPhone) throws FLException {
 
 		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByCid(customerPhone.getCid(), customerPhone.getStatus());
-
 		List<CustomerPhoneVO> customerPhoneVOs = new ArrayList<CustomerPhoneVO>();
 
 		if (customerPhonePOs.size() == 0) {
@@ -185,9 +151,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 			CustomerPhoneVO customerPhoneVO = new CustomerPhoneVO();
 
-			BeanUtil.copyProperties(customerPhonePO, customerPhoneVO, "phone");
-
-			customerPhoneVO.setPhone(customerPhonePO.getPhone() == null ? "" : customerPhonePO.getPhone().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2"));
+			BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
 
 			customerPhoneVOs.add(customerPhoneVO);
 		}
@@ -196,9 +160,11 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public int checkCustomerForPhone(CustomerPhoneVO customerPhone, Integer company) throws FLException {
+	public int checkCustomerForPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
-		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone.getPhone(), customerPhone.getStatus(), company);
+		String phone = FormatUtil.encodePhone(customerPhoneVO.getPhone());
+
+		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(phone, customerPhoneVO.getStatus(), company);
 
 		if (customerPhonePOs == null || customerPhonePOs.size() == 0) {
 			return 0;
@@ -206,13 +172,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 		for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
 
-			if (customerPhone.getCid() != null && customerPhonePO.getCid() == customerPhone.getCid()) {
-				customerPhone.setCid(customerPhonePO.getCid());
+			if (customerPhoneVO.getCid() != null && customerPhonePO.getCid() == customerPhoneVO.getCid()) {
+				customerPhoneVO.setCid(customerPhonePO.getCid());
 				throw new FLException(130006, "客户电话已存在");
 			}
 
 			if (customerPhonePO.getStatus() == CustomerPhonePO.STATUS_ENABLE_INT) {
-				customerPhone.setCid(customerPhonePO.getCid());
+				customerPhoneVO.setCid(customerPhonePO.getCid());
 				throw new FLException(130006, "客户电话已存在");
 			}
 		}
@@ -224,7 +190,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomer(CustomerVO customerVO, Integer company) throws FLException {
 
-		if (customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(), CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
+		String phone = FormatUtil.encodePhone(customerVO.getPhone());
+
+		if (customerPhoneDao.queryCustomerPhoneByPhone(phone, CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
 			throw new FLException(130006, "客户电话已存在");
 		}
 
@@ -243,14 +211,17 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 		customerPO.setCompany(company);
 
+		customerPO.setPhone(phone);
+
 		customerDao.save(customerPO);
 
 		CustomerPhonePO customerPhonePO = new CustomerPhonePO();
 
 		customerPhonePO.setCid(customerPO.getCid());
-		customerPhonePO.setPhone(customerVO.getPhone());
 		customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
 		customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+
+		customerPhonePO.setPhone(phone);
 
 		customerPhoneDao.save(customerPhonePO);
 
@@ -263,7 +234,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int existCustomer(CustomerVO customerVO, Integer company) {
 
-		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(customerVO.getPhone(), company);
+		String phone = FormatUtil.encodePhone(customerVO.getPhone());
+
+		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(phone, company);
 
 		if (customerPhonePO == null) {
 
@@ -287,9 +260,10 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPhonePO = new CustomerPhonePO();
 
 			customerPhonePO.setCid(customerPO.getCid());
-			customerPhonePO.setPhone(customerVO.getPhone());
 			customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
 			customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+
+			customerPhonePO.setPhone(phone);
 
 			customerPhoneDao.save(customerPhonePO);
 		}
@@ -303,7 +277,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
-		if (customerPhoneDao.queryCustomerPhoneByPhone(customerPhoneVO.getPhone(), CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
+		String phone = FormatUtil.encodePhone(customerPhoneVO.getPhone());
+
+		if (customerPhoneDao.queryCustomerPhoneByPhone(phone, CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
 			throw new FLException(130006, "客户电话已存在");
 		}
 
@@ -316,9 +292,10 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerPhonePO customerPhonePO = new CustomerPhonePO();
 
 		customerPhonePO.setCid(customerPhoneVO.getCid());
-		customerPhonePO.setPhone(customerPhoneVO.getPhone());
 		customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
 		customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+
+		customerPhonePO.setPhone(phone);
 
 		customerPhoneDao.clearCustomerPhoneForDefault(customerPhoneVO.getCid());
 
@@ -345,6 +322,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
 		customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
+
+		if (customerVO.getPhone() != null) customerPO.setPhone(FormatUtil.encodePhone(customerVO.getPhone()));
 
 		customerDao.update(customerPO);
 
@@ -430,7 +409,8 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPhonePO.setDefaults(customerPhoneVO.getDefaults());
 			customerPhoneDao.update(customerPhonePO);
 
-			customerPO.setPhone(customerPhonePO.getPhone());
+			customerPO.setPhone(FormatUtil.encodePhone(customerPhonePO.getPhone()));
+
 			customerDao.update(customerPO);
 		}
 
@@ -514,7 +494,7 @@ public class CustomerServiceImpl implements CustomerService {
 			type = 1;
 		}
 
-		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), customerPO.getPhone(), authno, type);
+		JSONObject info = Signature.authenticate(customerPO.getSignno(), customerPO.getName(), FormatUtil.decodePhone(customerPO.getPhone()), authno, type);
 
 		String redirect = Signature.decode(info.getString("url"));
 
@@ -545,8 +525,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerPO.setName(person.getString("personName"));
 		customerPO.setIdentity(person.getString("idCard"));
-		customerPO.setPhone(person.getString("mobile"));
 		customerPO.setAddress(person.getString("address"));
+
+		customerPO.setPhone(FormatUtil.encodePhone(person.getString("mobile")));
 
 		customerPO.setPhotoPath(person.getString("photoUuid"));
 		customerPO.setIdentityPathF(person.getString("headPhotoPath"));
@@ -555,6 +536,30 @@ public class CustomerServiceImpl implements CustomerService {
 		customerPO.setStatus(CustomerPO.STATUS_AUTH_INT);
 
 		customerDao.update(customerPO);
+
+		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhone(customerPO.getCid(), customerPO.getPhone());
+
+		if (customerPhonePO == null) {
+
+			customerPhoneDao.clearCustomerPhoneForDefault(customerPO.getCid());
+
+			customerPhonePO = new CustomerPhonePO();
+
+			customerPhonePO.setCid(customerPO.getCid());
+			customerPhonePO.setPhone(customerPO.getPhone());
+			customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
+			customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+		}
+
+		if (customerPhonePO != null && customerPhonePO.getDefaults() != CustomerPhonePO.DEFAULTS_ENABLE_INT) {
+
+			customerPhoneDao.clearCustomerPhoneForDefault(customerPO.getCid());
+
+			customerPhonePO.setDefaults(CustomerPhonePO.DEFAULTS_ENABLE_INT);
+			customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
+
+			customerPhoneDao.update(customerPhonePO);
+		}
 
 		customerVO.setName(customerPO.getName());
 		customerVO.setGender(customerPO.getGender());

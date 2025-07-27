@@ -58,12 +58,18 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
+import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.AddReducePO;
+import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.service.NormtionService;
+import com.fanglin.quotation.vo.AddReduceVO;
+import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("decorationPaymentService")
@@ -89,7 +95,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	private AdvancePaymentService advancePaymentService;
 
 	@Autowired
+	private QuotationDao quotationDao;
+
+	@Autowired
 	private AddReduceDao addReduceDao;
+
+	@Autowired
+	private NormtionService normtionService;
 
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
@@ -630,17 +642,28 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			advancePaymentService.updateAdvancePayment(paymentVO, decorationPO.getCompany());
 		}
 
-		if (DecorationPaymentPO.PAYMENTTYPE_ADD_STR.equals(paymentType)) {
+		if (DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT == decorationPaymentPO.getTwoType()) {
+
+			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
+
+			if (quotationPO == null) {
+				throw new FLException(200003, "报价不存在");
+			}
 
 			List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
 
 			StringBuffer arids = new StringBuffer();
 
 			for (AddReducePO addReducePO : addReducePOs) {
+
 				arids.append(addReducePO.getArId()).append(",");
+
 				addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 				addReducePO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
+
 				addReduceDao.update(addReducePO);
+
+				normtionService.makeNormtion(new NormtionVO(orderId, quotationPO.getQid()), new AddReduceVO(addReducePO.getArId()), addReducePO.getSchedule(), userId);
 			}
 
 			// 增项款发送群通知
@@ -884,7 +907,36 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException {
+	public int affirmDecorationPayment(DecorationPaymentVO decorationPaymentVO, String securityCode, String verifyCode) throws FLException {
+
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
+
+		String orderId = decorationPaymentVO.getDecoration().getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationPaymentVO.getDecoration().getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (decorationPaymentVO.getDecoration().getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationPaymentVO.getDecoration().getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(decorationPaymentVO.getDecoration().getCustomer().getNo());
+
+		if (decorationPaymentVO.getDecoration().getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
+		}
 
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
 

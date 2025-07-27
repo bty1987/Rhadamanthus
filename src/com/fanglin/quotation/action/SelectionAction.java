@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.SelectionVO;
 
@@ -23,6 +24,12 @@ public class SelectionAction extends BaseListAction {
 	private SelectionService selectionService;
 
 	private SelectionVO selection;
+
+	private DecorationVO decoration;
+
+	private String securityCode;
+
+	private String verifyCode;
 
 	@Action(value = "pageSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelection() throws FLException {
@@ -48,6 +55,14 @@ public class SelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "addSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addSelection() throws FLException {
+
+		selection = selectionService.addSelection(selection, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSelection() throws FLException {
 
@@ -64,18 +79,18 @@ public class SelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "addSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addSelection() throws FLException {
-
-		selection = selectionService.addSelection(selection, queryUserId());
-
-		return SUCCESS;
-	}
-
 	@Action(value = "sendSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSelection() throws FLException {
 
 		selectionService.sendSelection(selection);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSelection() throws FLException {
+
+		selectionService.affirmSelection(decoration, selection, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -86,6 +101,30 @@ public class SelectionAction extends BaseListAction {
 
 	public void setSelection(SelectionVO selection) {
 		this.selection = selection;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 
 }

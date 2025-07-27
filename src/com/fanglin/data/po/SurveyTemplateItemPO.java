@@ -27,6 +27,8 @@ public class SurveyTemplateItemPO implements Serializable {
 
 	public static final short TYPE_CHECK_INT = 3;
 
+	public static final short REQUIRE_REQUIRE_INT = 1;
+
 	private long stiid;
 
 	private long stid;
@@ -40,6 +42,8 @@ public class SurveyTemplateItemPO implements Serializable {
 	private String content;
 
 	private List<SurveyTemplateOptionPO> options;
+
+	private long sort;
 
 	public SurveyTemplateItemPO() {
 		super();
@@ -113,6 +117,15 @@ public class SurveyTemplateItemPO implements Serializable {
 
 	public void setOptions(List<SurveyTemplateOptionPO> options) {
 		this.options = options;
+	}
+
+	@Column(name = "sort")
+	public long getSort() {
+		return sort;
+	}
+
+	public void setSort(long sort) {
+		this.sort = sort;
 	}
 
 }

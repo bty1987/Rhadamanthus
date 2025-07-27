@@ -20,7 +20,14 @@ public interface ConstructionPlanService {
 
 	public List<ConstructionPlanVO> queryConstructionPlanByOrderId(ConstructionPlanVO constructionPlanVO) throws FLException;
 
+	public void makeConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
+
 	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
 
+	public void updateConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
+
+	public void moveConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
+
 	public void deleteConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException;
+
 }

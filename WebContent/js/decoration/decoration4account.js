@@ -176,6 +176,8 @@ $(function() {
         addManagePrice: 0,
         addCalPrice: 0,
         addUncalPrice: 0,
+        addDisCalPrice: 0,
+        addUndisCalPrice: 0,
         addTotalPrice: 0,
         addDone: 0,
         addOwing: 0,
@@ -189,6 +191,8 @@ $(function() {
         reduceManagePrice: 0,
         reduceCalPrice: 0,
         reduceUncalPrice: 0,
+        reduceDisCalPrice: 0,
+        reduceUndisCalPrice: 0,
         reduceTotalPrice: 0,
         reduceDone: 0,
         reduceOwing: 0,
@@ -912,6 +916,8 @@ $(function() {
         accountBasic.addMaterialPredisPrice = 0, accountBasic.addMaterialPredisManagePrice = 0, accountBasic.addMaterialManagePrice = 0, accountBasic.addMaterialCalPrice = 0, accountBasic.addMaterialUncalPrice = 0, accountBasic.addMaterialTotalPrice = 0, accountBasic.addMaterialDone = 0, accountBasic.addMaterialOwing = 0, accountBasic.addMaterialDisPrice = 0, accountBasic.addMaterialUndisPrice = 0, accountBasic.addMaterialPredisTaxPrice = 0, accountBasic.addMaterialTaxPrice = 0,
 
         accountBasic.reduceMaterialPredisPrice = 0, accountBasic.reduceMaterialPredisManagePrice = 0, accountBasic.reduceMaterialManagePrice = 0, accountBasic.reduceMaterialCalPrice = 0, accountBasic.reduceMaterialUncalPrice = 0, accountBasic.reduceMaterialTotalPrice = 0, accountBasic.reduceMaterialDone = 0, accountBasic.reduceMaterialOwing = 0, accountBasic.reduceMaterialDisPrice = 0, accountBasic.reduceMaterialUndisPrice = 0, accountBasic.reduceMaterialPredisTaxPrice = 0, accountBasic.reduceMaterialTaxPrice = 0, accountBasic.materialAsDifference = 0,
+        
+        accountBasic.addDisCalPrice = 0, accountBasic.addUndisCalPrice = 0, accountBasic.reduceDisCalPrice = 0, accountBasic.reduceUndisCalPrice = 0,
 
         com.post(api.addReduce.queryAddReduceByOrderId, {
             "addReduce.orderId": decorationDetail.orderId
@@ -927,13 +933,12 @@ $(function() {
                 if ([2, 3].indexOf(v.status) == -1) // 状态验证
                     return true;
 
-                if ([3].indexOf(v.schedule) == -1) // 工程状态验证
-                    return true;
-
                 var accountDiscount = v.accountDiscount == 0 ? (v.discount == 0 ? accountBasic.discount : v.discount) : v.accountDiscount;
+                var accountManageDiscount = v.accountManageDiscount == 0 ? (v.manageDiscount == 0 ? accountBasic.manageDiscount : v.manageDiscount) : v.accountManageDiscount;
+                var accountTaxDiscount = v.accountTaxDiscount == 0 ? (v.taxDiscount == 0 ? accountBasic.taxDiscount : v.taxDiscount) : v.accountTaxDiscount;
 
-                var managePrice = v.manageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(accountDiscount, 10)) : v.managePrice;
-                var taxPrice = v.manageDiscount == 1 ? utils.accMul(v.taxPrice, utils.accDiv(accountDiscount, 10)) : v.taxPrice;
+                var managePrice = accountManageDiscount == 1 ? utils.accMul(v.managePrice, utils.accDiv(accountDiscount, 10)) : v.managePrice;
+                var taxPrice = accountTaxDiscount == 1 ? utils.accMul(v.taxPrice, utils.accDiv(accountDiscount, 10)) : v.taxPrice;
                 var totalPrice = utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(v.calPrice, utils.accDiv(accountDiscount, 10)), v.uncalPrice), managePrice), taxPrice);
 
                 if (v.type == 0) { // 增项
@@ -943,7 +948,7 @@ $(function() {
                     accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, managePrice);// 增项管理费
                     accountBasic.addCalPrice = utils.accAdd(accountBasic.addCalPrice, v.calPrice);
                     accountBasic.addUncalPrice = utils.accAdd(accountBasic.addUncalPrice, v.uncalPrice);
-                    accountBasic.addTotalPrice = utils.accAdd(accountBasic.addTotalPrice, totalPrice);
+                    accountBasic.addTotalPrice = utils.accAdd(accountBasic.addTotalPrice, v.total);
                     accountBasic.addDisPrice = utils.accAdd(accountBasic.addDisPrice, v.disPrice);
                     accountBasic.addUndisPrice = utils.accAdd(accountBasic.addUndisPrice, v.undisPrice);
                     accountBasic.addPredisTaxPrice = utils.accAdd(accountBasic.addPredisTaxPrice, v.taxPrice);
@@ -994,7 +999,7 @@ $(function() {
                     accountBasic.reduceManagePrice = utils.accAdd(accountBasic.reduceManagePrice, managePrice);// 减项管理费
                     accountBasic.reduceCalPrice = utils.accAdd(accountBasic.reduceCalPrice, v.calPrice);
                     accountBasic.reduceUncalPrice = utils.accAdd(accountBasic.reduceUncalPrice, v.uncalPrice);
-                    accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, totalPrice);
+                    accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, v.total);
                     accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
                     accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
                     accountBasic.reducePredisTaxPrice = utils.accAdd(accountBasic.reducePredisTaxPrice, v.taxPrice);
@@ -1038,6 +1043,19 @@ $(function() {
 
                     }
                 }
+
+                $.each(v.addReduceItems, function(i, aritem){
+
+                    if(v.type == 0 && aritem.discount == 1){
+                        accountBasic.addDisCalPrice = utils.accAdd(accountBasic.addDisCalPrice, utils.accMul(aritem.unitPrice, aritem.num));
+                    }else if(v.type == 0 && aritem.discount == 0){
+                        accountBasic.addUndisCalPrice = utils.accAdd(accountBasic.addUndisCalPrice, utils.accMul(aritem.unitPrice, aritem.num));
+                    }else if(v.type == 1 && aritem.discount == 1){
+                        accountBasic.reduceDisCalPrice = utils.accAdd(accountBasic.reduceDisCalPrice, utils.accMul(aritem.unitPrice, aritem.num));
+                    }else if(v.type == 1 && aritem.discount == 0){
+                        accountBasic.reduceUndisCalPrice = utils.accAdd(accountBasic.reduceUndisCalPrice, utils.accMul(aritem.unitPrice, aritem.num));
+                    }
+                })
 
             });
 
@@ -1159,10 +1177,10 @@ $(function() {
         if (accountBasic.taxDiscount == 2) {
             _taxPrice = accountBasic.taxPrice;
         }
-
+        
         if ([0, 1].indexOf(accountBasic.type) != -1) { // 半包/整装
-            contartval = accountBasic.disPrice * accountBasic.dd / 10 + accountBasic.undisPrice + accountBasic.trafficPrice + _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag + _taxPrice + accountBasic.addTaxPrice * flag - accountBasic.reduceTaxPrice * flag;
-            console.log(contartval + "=" + accountBasic.disPrice + "*(" + accountBasic.dd + "/" + 10 + ")+" + accountBasic.undisPrice + "+" + accountBasic.trafficPrice + "+" + _managePrice + "+" + (accountBasic.addManagePrice * flag) + "-" + (accountBasic.reduceManagePrice * flag) + "+" + _taxPrice + "+" + (accountBasic.addTaxPrice * flag) + "-" + (accountBasic.reduceTaxPrice * flag));
+            contartval = (accountBasic.disPrice + accountBasic.addDisCalPrice * flag - accountBasic.reduceDisCalPrice * flag) * accountBasic.dd / 10 + (accountBasic.undisPrice + accountBasic.addUndisCalPrice * flag - accountBasic.reduceUndisCalPrice * flag) + accountBasic.trafficPrice + _managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag + _taxPrice + accountBasic.addTaxPrice * flag - accountBasic.reduceTaxPrice * flag;
+            console.log(contartval + "=(" + accountBasic.disPrice + "+" + accountBasic.addDisCalPrice * flag + "-" + accountBasic.reduceDisCalPrice * flag + ")*(" + accountBasic.dd + "/" + 10 + ")+(" + accountBasic.undisPrice + "+" + accountBasic.addUndisCalPrice * flag + "-" + accountBasic.reduceUndisCalPrice * flag + ")+" + accountBasic.trafficPrice + "+" + _managePrice + "+" + (accountBasic.addManagePrice * flag) + "-" + (accountBasic.reduceManagePrice * flag) + "+" + _taxPrice + "+" + (accountBasic.addTaxPrice * flag) + "-" + (accountBasic.reduceTaxPrice * flag));
         }
 
         if (accountBasic.type == 2) { // 满减

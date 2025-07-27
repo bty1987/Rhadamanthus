@@ -674,7 +674,7 @@ $.extend(api, {
                 args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         queryProtationByOrderId: {
@@ -708,7 +708,11 @@ $.extend(api, {
             url: "addProtation.do",
             type: "update",
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.preferPrice", "protation.managePrice", "protation.manageDiscount", "protation.taxPrice", "protation.costPrice", "protation.mostPrice", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.manageRate", "protation.taxRate", "protation.profitRate", "protation.discount", "protation.unitPrice", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.subcPrice", "protation.accdPrice", "protation.accmPrice", "protation.totalPrice", "protation.manageProfit", "protation.advanceProfit"],
+                query: [{
+                    result: "protation",
+                    args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
+                }]
             }
         },
         updateProtation: {
@@ -736,7 +740,15 @@ $.extend(api, {
             url: "updateProtationForStatus.do"
         },
         changeProtationForDefault: {
-            url: "changeProtationForDefault.do"
+            url: "changeProtationForDefault.do",
+            type: "update",
+            tranargs: {
+                args: [],
+                query: [{
+                    result: "protation",
+                    args: ["quotePrice", "quoteArea", "preferPrice", "managePrice", "manageDiscount", "taxPrice", "costPrice", "mostPrice", "totalCost", "totalProfit", "costRate", "mostRate", "manageRate", "taxRate", "profitRate", "discount", "unitPrice", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "subcPrice", "accdPrice", "accmPrice", "totalPrice", "manageProfit", "advanceProfit"]
+                }]
+            }
         },
         deleteProtation: {
             url: "deleteProtation.do"
@@ -795,7 +807,7 @@ $.extend(api, {
                 args: ["notSalesmanRate"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         queryQuotationByOrderId: {
@@ -1029,7 +1041,7 @@ $.extend(api, {
                 args: ["notSalesmanRate"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         queryQuotationRefundById: {
@@ -1092,6 +1104,16 @@ $.extend(api, {
             }
         },
 
+        queryQuotationPicture: {
+            url: "queryQuotationPicture.do"
+        },
+        addQuotationPicture: {
+            url: "addQuotationPicture.do"
+        },
+        deleteQuotationPicture: {
+            url: "deleteQuotationPicture.do"
+        },
+
         pageExtension: {
             url: "pageExtension.do",
             type: "query",
@@ -1100,7 +1122,7 @@ $.extend(api, {
                 args: ["undisPrice", "disPrice", "consPrice", "comsPrice", "total", "managePrice", "manageRate", "taxPrice", "taxRate"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         pageExtensionByOrderId: {
@@ -1331,7 +1353,7 @@ $.extend(api, {
                 args: ["total", "quotationTotal", "extensionAddTotal", "extensionReduceTotal", "addReduceAddTotal", "addReduceMinusTotal"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         querySelectionByOrderId: {
@@ -1382,7 +1404,7 @@ $.extend(api, {
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         pageSelectionItemForSupplier: {
@@ -1394,7 +1416,7 @@ $.extend(api, {
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         pageSelectionItemForEscorter: {
@@ -1406,7 +1428,7 @@ $.extend(api, {
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         pageSelectionItemForAccount: {
@@ -1418,7 +1440,7 @@ $.extend(api, {
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         querySelectionItemByOrderId: {
@@ -1529,7 +1551,7 @@ $.extend(api, {
                 args: ["moodTotal"]
             }, {
                 result: "paging-data-decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         queryNormtion: {
@@ -1819,7 +1841,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "taxRate", "taxPrice", "accountDiscount", "accountManageDiscount", "accountTaxDiscount"]
             }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
@@ -1834,7 +1856,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "taxRate", "taxPrice", "accountDiscount", "accountManageDiscount", "accountTaxDiscount"]
             }]
         },
         queryAddReduceByOrderId: {
@@ -1843,7 +1865,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduces",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "taxRate", "taxPrice", "accountDiscount", "accountManageDiscount", "accountTaxDiscount"]
             }, {
                 result: "addReduces-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1855,7 +1877,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduces",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "taxRate", "taxPrice", "accountDiscount", "accountManageDiscount", "accountTaxDiscount"]
             }, {
                 result: "addReduces-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1867,7 +1889,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduce",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "taxRate", "taxPrice", "accountDiscount", "accountManageDiscount", "accountTaxDiscount"]
             }, {
                 result: "addReduce-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1879,7 +1901,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "addReduce",
-                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "accountDiscount", "taxRate", "taxPrice"]
+                args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "consPrice", "comsPrice", "discount", "taxRate", "taxPrice", "accountDiscount", "accountManageDiscount", "accountTaxDiscount"]
             }, {
                 result: "addReduce-addReduceItems",
                 args: ["addPrice", "unitPrice", "subPrice", "num"]
@@ -1890,14 +1912,14 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["addReduce.taxRate", "addReduce.taxPrice"],
+                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice", "addReduce.accountDiscount", "addReduce.accountManageDiscount", "addReduce.accountTaxDiscount"],
             }
         },
         updateAddReduce: {
             url: "updateAddReduce.do",
             type: "update",
             tranargs: {
-                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.accountDiscount", "addReduce.taxRate", "addReduce.taxPrice"],
+                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice", "addReduce.accountDiscount", "addReduce.accountManageDiscount", "addReduce.accountTaxDiscount"],
             }
         },
         updateAddReduceForAdvance: {
@@ -1905,14 +1927,14 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.accountDiscount", "addReduce.taxRate", "addReduce.taxPrice"],
+                args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice", "addReduce.accountDiscount", "addReduce.accountManageDiscount", "addReduce.accountTaxDiscount"],
             }
         },
         updateAddReduceForAccount: {
             url: "updateAddReduceForAccount.do",
             type: "update",
             tranargs: {
-                args: ["addReduce.accountDiscount"],
+                args: ["addReduce.accountDiscount", "addReduce.accountManageDiscount", "addReduce.accountTaxDiscount"],
             }
         },
         submitAddReduce: {

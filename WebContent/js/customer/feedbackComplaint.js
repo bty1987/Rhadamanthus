@@ -7,13 +7,14 @@ jQuery(function($) {
             updateFeedbackComplaintModal: com.focusPage("#updateFeedbackComplaintModal")
         },
         btns: {
-            returnBtn: com.focusPage("#returnBtn"), 
+            returnBtn: com.focusPage("#returnBtn"),
             saveItemBtn: com.focusPage("#saveItemBtn"),
             saveItemBtn1: com.focusPage("#saveItemBtn1"),
-       },
+        },
         items: {
             orderId: com.focusPage('#orderId'),
             source: com.focusPage("#source"),
+            upgradeSource: com.focusPage("#upgradeSource"),
             phone: com.focusPage("#phone"),
             upgrade: com.focusPage("#upgrade"),
             urgency: com.focusPage("#urgency"),
@@ -21,8 +22,10 @@ jQuery(function($) {
             results: com.focusPage("#results"),
             content: com.focusPage("#content"),
             appeal: com.focusPage("#appeal"),
+
             orderId1: com.focusPage('#orderId1'),
             source1: com.focusPage("#source1"),
+            upgradeSource1: com.focusPage("#upgradeSource1"),
             phone1: com.focusPage("#phone1"),
             upgrade1: com.focusPage("#upgrade1"),
             urgency1: com.focusPage("#urgency1"),
@@ -35,24 +38,18 @@ jQuery(function($) {
 
             com.clearValidator();
         }),
-        decorationInfo: com.focusPage("#decorationInfo"),
+
         customerInfo: com.focusPage("#customerInfo"),
-        decorationStatus: {},//订单状态
-        type: {},//订单类型
-        projectStatus: {},// 工程类型
-        repairStatus:{},// 保修类型      
+        decorationInfo: com.focusPage("#decorationInfo"),
+        decorationInfo1: com.focusPage("#decorationInfo1"),
+        decorationInfo2: com.focusPage("#decorationInfo2"),
+
         vid: params.customer.vid,
-        fcid:null,
-        fdid:null,
-        resUrl:null,
+        fcid: null,
+        fdid: null,
+        resUrl: null,
 
-        authFlag: false,
     };
-
-    complaint.decorationStatus = constant.decoration().decoration.status.keys;
-    complaint.type  = constant.decoration().decoration.type.keys;
-    complaint.projectStatus = constant.decoration().decoration.projectStatus.keys;
-    complaint.repairStatus = constant.decoration().decoration.repairStatus.keys;
 
     com.focusPage('#fl-statement').statement("反馈", "投诉");
     com.focusPage('#fl-statement2').statement("投诉", "添加");
@@ -60,26 +57,32 @@ jQuery(function($) {
     com.focusPage('#fl-statement4').statement("投诉", "列表");
 
     complaint.items.source.bindData(constant.customer().feedbackComplaint.source.datas, "key", "value");
+    complaint.items.upgradeSource.bindData(constant.customer().feedbackGuarantee.upgradeSource.datas, "key", "value");
     complaint.items.upgrade.bindData(constant.customer().feedbackComplaint.upgrade.datas, "key", "value");
     complaint.items.urgency.bindData(constant.customer().feedbackComplaint.urgency.datas, "key", "value");
     complaint.items.results.bindData(constant.customer().feedbackComplaint.results.datas, "key", "value");
+
     complaint.items.source1.bindData(constant.customer().feedbackComplaint.source.datas, "key", "value");
+    complaint.items.upgradeSource1.bindData(constant.customer().feedbackGuarantee.upgradeSource.datas, "key", "value");
     complaint.items.upgrade1.bindData(constant.customer().feedbackComplaint.upgrade.datas, "key", "value");
     complaint.items.urgency1.bindData(constant.customer().feedbackComplaint.urgency.datas, "key", "value");
     complaint.items.results1.bindData(constant.customer().feedbackComplaint.results.datas, "key", "value");
-    
+
+    complaint.items.upgradeSource.val(0);
 
     com.post(api.ds.customer, {}, function(res) {
 
         $.each(res.complaintDeptType, function(i, v) {
-           var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">'+v.value+'</span>').appendTo(label);
+
+            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType"));
+            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
 
         });
 
         $.each(res.complaintDeptType, function(i, v) {
-           var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType1"));
-            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">'+v.value+'</span>').appendTo(label);
+
+            var label = $('<label style="margin-right: 10px;"></label>').appendTo(com.focusPage("#‌choiceDeptType1"));
+            var inputs = $('<input type="checkbox" class="ace" id="' + v.key + '"  name="complaintDeptType" value="' + v.value + '"><span class="lbl blue">' + v.value + '</span>').appendTo(label);
 
         });
     });
@@ -90,6 +93,31 @@ jQuery(function($) {
 
         var decoration = res.decoration;
         customerItems(decoration);
+    });
+
+    // 信息来源
+    com.focusPage('#source').change(function() {
+
+        var selectedValue = $(this).val();
+
+        if (selectedValue == 0 || selectedValue == 9) {
+            com.focusPage('#upgradeSourceGroup').show("");
+        } else {
+            complaint.items.upgradeSource.val(0);
+            com.focusPage('#upgradeSourceGroup').hide("");
+        }
+    });
+
+    // 信息来源
+    com.focusPage('#source1').change(function() {
+
+        var selectedValue = $(this).val();
+
+        if (selectedValue == 0 || selectedValue == 9) {
+            com.focusPage('#upgradeSource1Group').show("");
+        } else {
+            com.focusPage('#upgradeSource1Group').hide("");
+        }
     });
 
     function customerItems(decoration) {
@@ -109,6 +137,37 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" || decoration.customer.identity == null ? "暂无" : decoration.customer.identity.replace(/(.{6}).*(.{4})/, '$1********$2')))).appendTo($info);
 
+        var $widget2 = $('<div></div>').addClass("").prependTo(complaint.decorationInfo2);
+        var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);
+        var $header2 = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box2);
+
+        var name2 = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header2);
+
+        var $body2 = $('<div></div>').addClass("widget-body").appendTo($box2);
+        var $main2 = $('<div></div>').addClass("widget-main").appendTo($body2);
+        var $info2 = $('<div></div>').css("padding", "5px").appendTo($main2);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('预签时间: ' + decoration.precontractTime)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('签单时间: ' + decoration.contractTime)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('工程状态: ' + constant.decoration().decoration.projectStatus.keys[decoration.projectStatus])).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('保修状态: ' + constant.decoration().decoration.repairStatus.keys[decoration.repairStatus])).appendTo($info2);
+
+        var $widget2 = $('<div></div>').addClass("").prependTo(complaint.decorationInfo1);
+        var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);
+        var $header2 = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box2);
+
+        var name2 = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header2);
+
+        var $body2 = $('<div></div>').addClass("widget-body").appendTo($box2);
+        var $main2 = $('<div></div>').addClass("widget-main").appendTo($body2);
+        var $info2 = $('<div></div>').css("padding", "5px").appendTo($main2);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计部: ' + decoration.designer.dept.name)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计分区: ' + decoration.designer.dept.fatherDept.name)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('监理: ' + decoration.supervisor.currentName)).appendTo($info2);
+
         var $widget2 = $('<div></div>').addClass("").prependTo(complaint.decorationInfo);
         var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);
         var $header2 = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box2);
@@ -120,19 +179,11 @@ jQuery(function($) {
         var $info2 = $('<div></div>').css("padding", "5px").appendTo($main2);
 
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('装修单号: ' + decoration.orderId)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('楼盘地址: ' + (decoration.house.village.cityProper.city.name == null ? " " : decoration.house.village.cityProper.city.name) + " " + (decoration.house.village.cityProper == null ? " " : decoration.house.village.cityProper.name) +" "+decoration.house.village.name + " " + decoration.house.houseNumber)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('楼盘地址: ' + (decoration.house.village.cityProper.city.name == null ? " " : decoration.house.village.cityProper.city.name) + " " + (decoration.house.village.cityProper == null ? " " : decoration.house.village.cityProper.name) + " " + decoration.house.village.name + " " + decoration.house.houseNumber)).appendTo($info2);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('订单类型: ' + complaint.type[decoration.type])).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('订单状态: ' + complaint.decorationStatus[decoration.status])).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计部: ' + decoration.designer.dept.name)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计分区: ' + decoration.designer.dept.fatherDept.name)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('监理: ' + decoration.supervisor.currentName)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('预签时间: ' + decoration.precontractTime)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('签单时间: ' + decoration.contractTime)).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('工程状态: ' + complaint.projectStatus[decoration.projectStatus])).appendTo($info2);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('保修状态: ' + complaint.repairStatus[decoration.repairStatus])).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('订单类型: ' + constant.decoration().decoration.type.keys[decoration.type])).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('订单状态: ' + constant.decoration().decoration.status.keys[decoration.status])).appendTo($info2);
+
     }
 
     function managedrawing(v) {
@@ -184,18 +235,18 @@ jQuery(function($) {
 
     function finishFeedback(fcid) {
 
+        var options = {
+            "feedbackComplaint.fcid": fcid
+        };
+        com.post(api.customer.finishFeedbackComplaint, options, function() {
 
-            var options = {
-                "feedbackComplaint.fcid": fcid
-            };
-            com.post(api.customer.finishFeedbackComplaint, options, function() {
-
-                com.showAlert(com.info, "完成成功");
-            });
+            com.showAlert(com.info, "完成成功");
+        });
 
     }
 
     complaint.btns.returnBtn.click(function() {
+
         com.switchPage(params.historyPage);
     });
 
@@ -219,11 +270,12 @@ jQuery(function($) {
         };
 
         var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.feedback.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-               
+
             var propertyArr = [["装修单号:", v.feedback.orderId, "grey"], ["处理人:", v.handler.userName, "grey"], ["状态:", v.feedback.status = "2" ? "处理" : v.feedback.status = "3" ? "完成" : v.feedback.status = "1" ? "接收" : "初始", "grey"], ["处理时间:", v.operateTime, "grey"], ["备注:", v.comment, "grey"]];
 
             $.each(propertyArr, function(index, value) {
@@ -265,25 +317,31 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    var linebtns = [
-    {
+    var linebtns = [{
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
-        var checkArray = v.deptType.split(","); 
 
-        $('#‌choiceDeptType1 input[type="checkbox"]').each(function() {
-            var checkboxValue = $(this).val();
+            var checkArray = v.deptType.split(",");
 
-            if ($.inArray(checkboxValue, checkArray) !== -1) {
-                $(this).prop('checked', true);
+            $('#‌choiceDeptType1 input[type="checkbox"]').each(function() {
+
+                var checkboxValue = $(this).val();
+
+                if ($.inArray(checkboxValue, checkArray) !== -1) {
+                    $(this).prop('checked', true);
+                }
+            });
+
+            if (v.source == 0 || v.source == 9) {
+                com.focusPage('#upgradeSource1Group').show("");
             }
-        });
 
-            complaint.fcid = v.fcid,
+            complaint.fcid = v.fcid;
+
             complaint.items.orderId1.val(v.orderId);
-
             complaint.items.source1.val(v.source);
+            complaint.items.upgradeSource1.val(v.upgradeSource);
             complaint.items.phone1.val(v.phone);
             complaint.items.upgrade1.val(v.upgrade);
             complaint.items.urgency1.val(v.urgency);
@@ -300,12 +358,13 @@ jQuery(function($) {
         clazz: "btn-danger",
         handle: function(v) {
 
-        	complaint.fcid = v.fcid;
+            complaint.fcid = v.fcid;
             params.customer.fcid = v.fcid;
-        	
-        	com.popup4page("#feedbackComplaintPopUp", "/views/customer/feedbackComplaintDept.html", "投诉部门");
+            params.customer.deptType = v.deptType;
+
+            com.popup4page("#feedbackComplaintPopUp", "/views/customer/feedbackComplaintDept.html", "投诉部门");
         }
-    },{
+    }, {
         name: "完成",
         clazz: "btn-success",
         handle: function(v) {
@@ -314,7 +373,7 @@ jQuery(function($) {
             finishFeedback(v.fcid);
             return false;
         }
-    },{
+    }, {
         name: "图片",
         clazz: "btn-warning",
         handle: function(v) {
@@ -340,7 +399,13 @@ jQuery(function($) {
         name: "渠道",
         prop: "source",
         clazz: "grey",
-        dataset:constant.customer().feedbackComplaint.source.keys
+        dataset: constant.customer().feedbackComplaint.source.keys
+    }, {
+        fieId: "upgradeSource",
+        name: "升级渠道",
+        prop: "upgradeSource",
+        clazz: "blue",
+        dataset: constant.customer().feedbackGuarantee.upgradeSource.keys
     }, {
         fieId: "phone",
         name: "电话",
@@ -351,13 +416,13 @@ jQuery(function($) {
         name: "是否升级",
         prop: "upgrade",
         clazz: "red",
-        dataset:constant.customer().feedbackComplaint.upgrade.keys
+        dataset: constant.customer().feedbackComplaint.upgrade.keys
     }, {
         fieId: "urgency",
         name: "紧急程度",
         prop: "urgency",
         clazz: "green",
-        dataset:constant.customer().feedbackComplaint.urgency.keys
+        dataset: constant.customer().feedbackComplaint.urgency.keys
     }, {
         fieId: "deptType",
         name: "部门类型",
@@ -378,16 +443,16 @@ jQuery(function($) {
         name: "处理结果",
         prop: "results",
         clazz: "red",
-        dataset:constant.customer().feedbackComplaint.results.keys
+        dataset: constant.customer().feedbackComplaint.results.keys
     }];
 
     searcher.line("appeal", lineprops, linebtns).render();
-     
+
     com.uploadify("#path", "图片", api.common.uploadOther, 'btn btn-success blue ', '*.jpg;*.jpeg;*.gif;*.png', {
         'uploadType': 0
     }, 1, function(data) {
 
-        complaint.resUrl=data.resUrl;
+        complaint.resUrl = data.resUrl;
         com.focusPage("#path").val(data.resUrl);
         com.focusPage("#infoPicture").attr("href", com.showImg(com.focusPage("#showImg"), data.resUrl, 150, 150, ''));
 
@@ -395,8 +460,9 @@ jQuery(function($) {
     });
 
     function uploadDrawing(v) {
+
         com.uploadify("#feedbackDrawingUpload", "上传图片", api.common.uploadOther, 'btn btn-success blue ', '*.jpg;*.jpeg;*.gif;*.png', {
-        'uploadType': 0
+            'uploadType': 0
         }, 1, function(data) {
 
             var options1 = {};
@@ -416,10 +482,9 @@ jQuery(function($) {
 
             });
 
-        searcher.doSearch();
+            searcher.doSearch();
         });
     }
-
 
     complaint.btns.saveItemBtn.click(function() {
 
@@ -428,8 +493,9 @@ jQuery(function($) {
         }
 
         var selectedValues = $('input[name="complaintDeptType"]:checked').map(function() {
+
             return $(this).val();
-          }).get();
+        }).get();
 
         var url = api.customer.addFeedbackComplaint;
 
@@ -437,6 +503,7 @@ jQuery(function($) {
             "feedbackComplaint.fid": complaint.vid,
             "feedbackComplaint.orderId": complaint.items.orderId.val(),
             "feedbackComplaint.source": complaint.items.source.val(),
+            "feedbackComplaint.upgradeSource": complaint.items.upgradeSource.val(),
             "feedbackComplaint.phone": complaint.items.phone.val(),
             "feedbackComplaint.upgrade": complaint.items.upgrade.val(),
             "feedbackComplaint.urgency": complaint.items.urgency.val(),
@@ -447,34 +514,35 @@ jQuery(function($) {
         };
 
         com.post(url, option, function(res) {
-            complaint.fcid=res.feedbackComplaint.fcid
 
-             var options1 = {};
+            complaint.fcid = res.feedbackComplaint.fcid
+
+            var options1 = {};
             options1["feedbackDrawing.fid"] = complaint.vid
             options1["feedbackDrawing.sid"] = complaint.fcid
             options1["feedbackDrawing.path"] = complaint.resUrl
             options1["feedbackDrawing.type"] = 2;
 
-            if(complaint.fcid != null) {
+            if (complaint.fcid != null) {
                 com.post(api.customer.addFeedbackDrawing, options1, function(res) {
 
-                var feedbackDrawing = res.feedbackDrawing;
-                complaint.fdid = res.feedbackDrawing.fdid;
+                    var feedbackDrawing = res.feedbackDrawing;
+                    complaint.fdid = res.feedbackDrawing.fdid;
 
-                appendGalleryElement("feedbackDrawing", feedbackDrawing);
+                    appendGalleryElement("feedbackDrawing", feedbackDrawing);
 
-                com.popup4photos("#feedbackDrawing");
+                    com.popup4photos("#feedbackDrawing");
 
                 });
             }
-                com.showAlert(com.info, "操作成功");
-                searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
 
-                complaint.modals.addFeedbackComplaintModal.modal("hide");
+            complaint.modals.addFeedbackComplaintModal.modal("hide");
         });
     });
 
-     complaint.btns.saveItemBtn1.click(function() {
+    complaint.btns.saveItemBtn1.click(function() {
 
         if (com.validate('updateFeedbackComplaintModal')) {
             return false;
@@ -483,13 +551,15 @@ jQuery(function($) {
         var url = api.customer.updateFeedbackComplaint;
 
         var selectedValues1 = $('input[name="complaintDeptType"]:checked').map(function() {
+
             return $(this).val();
-          }).get();
+        }).get();
 
         var option = {
             "feedbackComplaint.fcid": complaint.fcid,
             "feedbackComplaint.orderId": complaint.items.orderId1.val(),
             "feedbackComplaint.source": complaint.items.source1.val(),
+            "feedbackComplaint.upgradeSource": complaint.items.upgradeSource1.val(),
             "feedbackComplaint.phone": complaint.items.phone1.val(),
             "feedbackComplaint.upgrade": complaint.items.upgrade1.val(),
             "feedbackComplaint.urgency": complaint.items.urgency1.val(),

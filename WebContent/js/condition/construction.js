@@ -387,7 +387,7 @@ Condition.addupRule("construction", {
         }
     },
     "info-keyTime": {
-        label: "预计交钥匙时间",
+        label: "预交钥匙",
         type: "dateRangePicker",
         submitConfig: {
             name: "keyTime",
@@ -396,7 +396,7 @@ Condition.addupRule("construction", {
         }
     },
     "info-drawlineTime": {
-        label: "预计放线时间",
+        label: "预计放线",
         type: "dateRangePicker",
         submitConfig: {
             name: "drawlineTime",
@@ -405,7 +405,7 @@ Condition.addupRule("construction", {
         }
     },
     "info-finishTime": {
-        label: "预计完工时间",
+        label: "预计完工",
         type: "dateRangePicker",
         submitConfig: {
             name: "finishTime",
@@ -414,7 +414,7 @@ Condition.addupRule("construction", {
         }
     },
     "info-designTime": {
-        label: "预计设计完成时间",
+        label: "预完设计",
         type: "dateRangePicker",
         submitConfig: {
             name: "designTime",
@@ -423,7 +423,7 @@ Condition.addupRule("construction", {
         }
     },
     "info-sdesignTimeRange": {
-        label: "合同方案确认时间",
+        label: "合同方案确认",
         type: "dateRangePicker",
         submitConfig: {
             name: "sdesignTimeRange",
@@ -432,7 +432,7 @@ Condition.addupRule("construction", {
         }
     },
     "info-edesignTimeRange": {
-        label: "放线方案确认时间",
+        label: "放线方案确认",
         type: "dateRangePicker",
         submitConfig: {
             name: "edesignTimeRange",

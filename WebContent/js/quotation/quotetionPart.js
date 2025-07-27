@@ -10,6 +10,7 @@
         notSalesmanRate: null,
         decoration: null,
         paymentType: null,
+        startTime: null,
 
         modals: {},
         btns: {},
@@ -68,9 +69,18 @@
 
                     quo.calculateTotalFee(10);
 
+                    quo.servePriceShow();
+
                     that.modals.calculateModal.find('.machingInfos').hide();
 
                     that.modals.calculateModal.modal("show");
+                }),
+                $btnCalculate: com.focusPage('#calculateConsBtn').on('click', function() {
+
+                    com.focusPage("#conStartTime", "#calculateConsModal").val("");
+                    com.datetime(com.focusPage("#conStartTime", "#calculateConsModal"));
+                    quo.constructionPaceNode();
+                    that.modals.calculateConsModal.modal("show");
                 }),
                 $btnMachingMore: com.focusPage('#machingMoreBtn').on('click', function() {
 
@@ -136,6 +146,10 @@
 
                 discountModal: com.focusPage("#discountModal"), // 编辑折扣
                 calculateModal: com.focusPage('#calculateModal'), // 计算总价
+                calculateConsModal: com.focusPage('#calculateConsModal').on('shown.bs.modal', function(e) {
+
+                    quo.initPlan();
+                }),
                 functionAreaModal: com.focusPage("#functionAreaModal"), // 编辑功能区
 
                 // 添加默认报价项
@@ -579,17 +593,17 @@
 
             divItem1.append(createCalItem("基础", 'normal border-right alert-info'));
             divItem1.append(createCalItem("", 'normal border-left-right alert-info'));
+            divItem1.append(createCalItem("", 'small border-left-right alert-info'));
             divItem1.append(createCalItem("", 'normal border-left-right alert-info'));
-            divItem1.append(createCalItem("", 'normal border-left-right alert-info'));
-            divItem1.append(createCalItem("", 'normal border-left-right alert-info'));
-            divItem1.append(createCalItem("", 'normal border-left-right alert-info'));
-            divItem1.append(createCalItem("", 'normal border-left-right alert-info'));
-            divItem1.append(createCalItem("", 'normal border-left alert-info').addClass("hide"));
-            divItem1.append(createCalItem("装修", ' small border-left-right alert-success'));
-            divItem1.append(createCalItem("", 'normal border-left alert-success'));
-            divItem1.append(createCalItem("主材", 'small border-left-right alert-danger'));
-            divItem1.append(createCalItem("", 'normal border-left-right alert-danger'));
-            divItem1.append(createCalItem("综合", 'normal border-left-right alert-warning'));
+            divItem1.append(createCalItem("", 'normal border-left alert-info'));
+            divItem1.append(createCalItem("", 'normal').addClass("hide"));
+            divItem1.append(createCalItem("", 'normal').addClass("hide"));
+            divItem1.append(createCalItem("", 'normal').addClass("hide"));
+            divItem1.append(createCalItem("", 'normal').addClass("hide"));
+            divItem1.append(createCalItem("装修", 'normal alert-success'));
+            divItem1.append(createCalItem("主材", 'small border-right alert-danger'));
+            divItem1.append(createCalItem("", 'normal border-left alert-danger'));
+            divItem1.append(createCalItem("综合", 'normal border-left-right alert-warning cmpreh'));
             divItem1.append(createCalItem("", 'normal border-left-right alert-warning'));
             divItem1.append(createCalItem("", 'normal border-left alert-warning'));
 
@@ -599,18 +613,18 @@
 
             divItem2.append(createCalItem("版本", 'normal'));
             divItem2.append(createCalItem("折前总价", 'normal'));
+            divItem2.append(createCalItem("折扣", 'small'));
             divItem2.append(createCalItem("打折总额", 'normal'));
             divItem2.append(createCalItem("非打折总额", 'normal'));
             divItem2.append(createCalItem("非业绩", 'normal').addClass("hide"));
-            divItem2.append(createCalItem("管理费", 'normal'));
-            divItem2.append(createCalItem("税金", 'normal'));
+            divItem2.append(createCalItem("管理费", 'normal').addClass("hide"));
+            divItem2.append(createCalItem("税金", 'normal').addClass("hide"));
             divItem2.append(createCalItem("优惠", 'normal').addClass("hide"));
-            divItem2.append(createCalItem("折扣", 'small'));
             divItem2.append(createCalItem("折后总价", 'normal'));
             divItem2.append(createCalItem("配比", 'small'));
             divItem2.append(createCalItem("主材额", 'normal'));
-            divItem2.append(createCalItem("服务费", 'normal'));
-            divItem2.append(createCalItem("团队服务费", 'normal'));
+            divItem2.append(createCalItem("服务费", 'normal servicePrice'));
+            divItem2.append(createCalItem("团队服务费", 'normal servePayment'));
             divItem2.append(createCalItem("实花总额", ' normal alert-warning'));
 
             divItem2.appendTo(table);
@@ -639,9 +653,17 @@
 
                     var info = com.focusPage('#calculateModal').find('.dmid' + v.dmid);
 
-                    $(this).is(":checked") == false ? info.hide() : info.show();
+                    if ($(this).is(":checked") == false) {
+                        info.attr("data-show", 1);
+                        info.hide();
+                    } else {
+                        info.attr("data-show", 0);
+                        info.show();
+                    }
 
                     v.isShow = $(this).is(":checked") == false ? constant.data().decorationMatching.ISSHOW_HIDE_INT : constant.data().decorationMatching.ISSHOW_SHOW_INT;
+
+                    quo.servePriceShow();
                 });
 
                 var _dtaxfee = 0;
@@ -680,21 +702,21 @@
 
                     halfPriceDiv.append(createCalItem(v.name, 'normal'));
                     halfPriceDiv.append(createCalItem(_ddtotal, 'normal'));
+                    halfPriceDiv.append(createCalItem(v.discount, 'small'));
                     halfPriceDiv.append(createCalItem(_cdiscount, 'normal'));
                     halfPriceDiv.append(createCalItem(_ndiscount, 'normal'));
                     halfPriceDiv.append(createCalItem(_unachefee, 'normal').addClass("hide"));
-                    halfPriceDiv.append(createCalItem(_ddmanagefee, 'normal'));
-                    halfPriceDiv.append(createCalItem(_ddtaxfee, 'normal'));
+                    halfPriceDiv.append(createCalItem(_ddmanagefee, 'normal').addClass("hide"));
+                    halfPriceDiv.append(createCalItem(_ddtaxfee, 'normal').addClass("hide"));
                     halfPriceDiv.append(createCalItem(_costfee, 'normal').addClass("hide"));
-                    halfPriceDiv.append(createCalItem(v.discount, 'small'));
                     halfPriceDiv.append(createCalItem(_projectPrice, 'normal'));
                     halfPriceDiv.append(createCalItem(utils.accMul(v.material, 100) + "%", 'small'));
                     halfPriceDiv.append(createCalItem(materialPrice, 'normal'));
-                    halfPriceDiv.append(createCalItem(servicePrice, 'normal'));
-                    halfPriceDiv.append(createCalItem(servePayment, 'normal'));
+                    halfPriceDiv.append(createCalItem(servicePrice, 'normal servicePrice'));
+                    halfPriceDiv.append(createCalItem(servePayment, 'normal servePayment'));
                     halfPriceDiv.append(createCalItem($_total, 'normal alert-warning'));
 
-                    halfPriceDiv.addClass('dmid' + v.dmid).appendTo(table);
+                    halfPriceDiv.addClass('dmid' + v.dmid).attr("data-show", v.isShow).appendTo(table);
 
                     v.isShow != constant.data().decorationMatching.ISSHOW_SHOW_INT ? halfPriceDiv.hide() : halfPriceDiv.show();
                 } else {
@@ -717,21 +739,21 @@
 
                     halfPacksDiv.append(createCalItem(v.name, 'normal'));
                     halfPacksDiv.append(createCalItem(_ddtotal, 'normal'));
+                    halfPacksDiv.append(createCalItem(discount, 'small'));
                     halfPacksDiv.append(createCalItem(_cdiscount, 'normal'));
                     halfPacksDiv.append(createCalItem(_ndiscount, 'normal'));
                     halfPacksDiv.append(createCalItem(_unachefee, 'normal').addClass("hide"));
-                    halfPacksDiv.append(createCalItem(_ddmanagefee, 'normal'));
-                    halfPacksDiv.append(createCalItem(_ddtaxfee, 'normal'));
+                    halfPacksDiv.append(createCalItem(_ddmanagefee, 'normal').addClass("hide"));
+                    halfPacksDiv.append(createCalItem(_ddtaxfee, 'normal').addClass("hide"));
                     halfPacksDiv.append(createCalItem(_costfee, 'normal').addClass("hide"));
-                    halfPacksDiv.append(createCalItem(discount, 'small'));
                     halfPacksDiv.append(createCalItem(_projectPrice, 'normal'));
                     halfPacksDiv.append(createCalItem(utils.accMul(v.material, 100) + "%", 'small'));
                     halfPacksDiv.append(createCalItem(materialPrice, 'normal'));
-                    halfPacksDiv.append(createCalItem(servicePrice, 'normal'));
-                    halfPacksDiv.append(createCalItem(servePayment, 'normal'));
+                    halfPacksDiv.append(createCalItem(servicePrice, 'normal servicePrice'));
+                    halfPacksDiv.append(createCalItem(servePayment, 'normal servePayment'));
                     halfPacksDiv.append(createCalItem($_total, 'normal alert-warning'));
 
-                    halfPacksDiv.addClass('dmid' + v.dmid).appendTo(table);
+                    halfPacksDiv.addClass('dmid' + v.dmid).attr("data-show", v.isShow).appendTo(table);
 
                     v.isShow != constant.data().decorationMatching.ISSHOW_SHOW_INT ? halfPacksDiv.hide() : halfPacksDiv.show();
                 }
@@ -745,6 +767,214 @@
                     "white-space": "nowrap"
                 }).addClass('cell').addClass(inclass);
             }
+        },
+
+        servePriceShow: function() {
+            var $cal = com.focusPage('#calculateModal').find('.fl-quo-cal');
+
+            $cal.find('.fl-quo-cal-item .cmpreh').next('.cell.normal').hide();
+            $cal.find('.fl-quo-cal-item .cmpreh').next('.cell.normal').next('.cell.normal').hide();
+            $cal.find('.fl-quo-cal-item .servicePrice').hide();
+            $cal.find('.fl-quo-cal-item .servePayment').hide();
+
+            $cal.each(function() {
+                var serviceItem = $(this).find('.fl-quo-cal-item:not([data-show="1"])');
+
+                serviceItem.each(function() {
+
+                    var servePrice =  $(this).find('.servicePrice').text();
+                    var servePayment =  $(this).find('.servePayment').text();
+
+                    servePrice = parseFloat(servePrice) ? parseFloat(servePrice) : 0;
+                    servePayment = parseFloat(servePayment) ? parseFloat(servePayment) : 0;
+
+                    if (servePrice != 0) {
+                        $cal.find('.fl-quo-cal-item .cmpreh').next('.cell.normal').show();
+                        $cal.find('.fl-quo-cal-item .servicePrice').show();
+                    }
+
+                    if (servePayment != 0) {
+                        $cal.find('.fl-quo-cal-item .cmpreh').next('.cell.normal').next('.cell.normal').show();
+                        $cal.find('.fl-quo-cal-item .servePayment').show();
+                    }
+                })
+            });
+        },
+
+        constructionPaceNode: function() {
+
+            var cpid = 0;
+
+            if (quo.decoration) {
+                com.post(api.data.queryConstructionPace, {
+                    "constructionPace.lowerArea": quo.decoration.house.innerArea
+                }, function(res) {
+
+                    if (res.constructionPace.cpid != null)
+                    	cpid = res.constructionPace.cpid;
+                }, null, false);
+            }
+
+            var searcher = new Searcher();
+
+            searcher.set("nodeCondList", "nodePagenation", "nodeResultList", api.data.queryConstructionPaceNode, {
+                "constructionPaceNode.cpid": cpid
+            }, null, null, "constructionPaceNodes", true);
+
+            var lineprops = [{
+                fieId: "name",
+                name: "名称",
+                prop: "name",
+                clazz: "grey"
+            }, {
+                fieId: "connum",
+                name: "工程天数",
+                prop: "connum",
+                clazz: "blue"
+            }, {
+                field: "conStartTime",
+                name: "工程开始时间",
+                prop: function(v) {
+
+                    if (com.focusPage("#conStartTime").val() == "")
+                        return "";
+
+                    var conStartTime = quo.startTime;
+
+                    conStartTime.setDate(quo.startTime.getDate());
+
+                    return com.dateFormat(conStartTime, "yyyy-MM-dd");
+                },
+                clazz: "green"
+            }, {
+                field: "conEndTime",
+                name: "工程结束时间",
+                prop: function(v) {
+
+                    if (com.focusPage("#conStartTime").val() == "")
+                        return "";
+
+                    var conStartTime = quo.startTime;
+
+                    conStartTime.setDate(quo.startTime.getDate() + v.connum);
+
+                    return com.dateFormat(conStartTime, "yyyy-MM-dd");
+                },
+                clazz: "green"
+            }, {
+                fieId: "comnum",
+                name: "主材天数",
+                prop: "comnum",
+                clazz: "blue"
+            }, {
+                field: "comStartTime",
+                name: "主材开始时间",
+                prop: function(v) {
+
+                    if (com.focusPage("#conStartTime").val() == "")
+                        return "";
+
+                    var conStartTime = quo.startTime;
+
+                    conStartTime.setDate(quo.startTime.getDate());
+
+                    return com.dateFormat(conStartTime, "yyyy-MM-dd");
+                },
+                clazz: "green"
+            }, {
+                field: "comEndTime",
+                name: "主材结束时间",
+                prop: function(v) {
+
+                    if (com.focusPage("#conStartTime").val() == "")
+                        return "";
+
+                    var conStartTime = quo.startTime;
+
+                    conStartTime.setDate(quo.startTime.getDate() + v.comnum);
+
+                    return com.dateFormat(conStartTime, "yyyy-MM-dd");
+                },
+                clazz: "green"
+            }, {
+                fieId: "phase",
+                name: "施工节点",
+                prop: "phase",
+                clazz: "blue",
+            }, {
+                fieId: "material",
+                name: "配套主材",
+                prop: "material",
+                clazz: "blue",
+            }, {
+                fieId: "period",
+                name: "进场周期",
+                prop: "period",
+                clazz: "blue",
+            }, {
+                fieId: "content",
+                name: "说明",
+                prop: "content",
+                clazz: "grey"
+            }, {
+                fieId: "comment",
+                name: "注释",
+                prop: "comment",
+                clazz: "grey"
+            }];
+
+            searcher.line("name", lineprops, []).render();
+        },
+
+        initPlan: function() {
+
+            com.focusPage('#calendar').fullCalendar('destroy');
+            com.focusPage('#calendar').fullCalendar('today');
+
+            com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
+                dayClick: function() { return false; },
+                eventClick: function() { return false; },
+                eventRender: function(event, element) {
+                    element.off('click');
+                },
+                viewRender: function(view, element) {
+                    $('.fc-day').off('click').css('pointer-events', 'none');
+                    $('.fc-event').off('click').css('pointer-events', 'none');
+                },
+                events: function(start, end, callback) {
+
+                    var startTime = com.dateFormat(new Date(start));
+                    var endTime = com.dateFormat(new Date(end));
+
+                    var options = {
+                        "constructionInfo.startTime": startTime,
+                        "constructionInfo.endTime": endTime
+                    };
+
+                    com.post(api.construction.countConstructionInfo, options, function(res) {
+
+                        var counts = res.count;
+                        var events = [];
+
+                        for ( var i in counts) {
+
+                            var _ = counts[i];
+                            var _date = _[0] + "";
+
+                            var event = {
+                                title: "已放线" + _[1] + "户",
+                                start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
+                                allDay: true
+                            };
+
+                            events.push(event);
+                        }
+
+                        callback(events);
+                    });
+                }
+            }));
+            $('.fc-day').off('click').css('pointer-events', 'none');
         },
 
         calculateNowQuoteItem: function(num, areaType, $nowLine) {
@@ -901,6 +1131,20 @@
             com.focusPage('#calculateBtns').on('click', function() {
 
                 com.focusPage('#calculateBtn').click();
+            });
+        },
+
+        calculateCons: function() {
+
+            com.focusPage('#calculateConsBtns').on('click', function() {
+
+                if (com.validate("calculateConsModal")) {
+                    return false;
+                }
+
+                quo.startTime = new Date(com.focusPage("#conStartTime").val());
+
+                quo.constructionPaceNode();
             });
         },
 
@@ -1198,6 +1442,10 @@
 
             com.focusPage('#saveOrderIdBtn').click(function() {
 
+                if (com.validate("orderIdModal")) {
+                    return false;
+                }
+
                 com.post(api.decoration.queryDecorationForCommonByOrderId, {
                     "decoration.orderId": quo.items.orderIds.val()
                 }, function(res) {
@@ -1238,6 +1486,7 @@
 
             this.saveDomainEdit();
             this.calculateTotal();
+            this.calculateCons();
             this.saveDiscountEdit();
             this.saveDomainTemplete();
             this.saveQuotesToDomain();

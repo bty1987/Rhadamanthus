@@ -39,17 +39,10 @@ public class FeedbackGuaranteeServiceImpl implements FeedbackGuaranteeService {
 	public List<FeedbackGuaranteeVO> queryFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuarantee) {
 
 		List<FeedbackGuaranteePO> feedbackGuaranteePOs = feedbackGuaranteeDao.queryFeedbackGuarantee(feedbackGuarantee.getFid());
-
 		List<FeedbackGuaranteeVO> feedbackGuaranteeVOs = new ArrayList<FeedbackGuaranteeVO>();
 
 		for (FeedbackGuaranteePO feedbackGuaranteePO : feedbackGuaranteePOs) {
-
-			FeedbackGuaranteeVO feedbackGuaranteeVO = new FeedbackGuaranteeVO(new UserVO(), new UserVO());
-
-			feedbackGuaranteePO.ptv(feedbackGuaranteeVO);
-
-			feedbackGuaranteeVOs.add(feedbackGuaranteeVO);
-
+			feedbackGuaranteeVOs.add(feedbackGuaranteePO.ptv(new FeedbackGuaranteeVO(new UserVO(), new UserVO())));
 		}
 
 		return feedbackGuaranteeVOs;
@@ -59,32 +52,25 @@ public class FeedbackGuaranteeServiceImpl implements FeedbackGuaranteeService {
 	public FeedbackGuaranteeVO queryFeedbackGuaranteeByFgid(FeedbackGuaranteeVO feedbackGuarantee) {
 
 		FeedbackGuaranteePO feedbackGuaranteePO = feedbackGuaranteeDao.get(feedbackGuarantee.getFgid());
-
 		FeedbackGuaranteeVO feedbackGuaranteeVO = new FeedbackGuaranteeVO(new UserVO(), new UserVO());
 
-		feedbackGuaranteePO.ptv(feedbackGuaranteeVO);
+		if (feedbackGuaranteePO != null) feedbackGuaranteePO.ptv(feedbackGuaranteeVO);
 
 		return feedbackGuaranteeVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public long addFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuaranteeVO, String userId) throws FLException {
+	public int addFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuaranteeVO, String userId) throws FLException {
 
-		FeedbackGuaranteePO feedbackGuaranteePO = new FeedbackGuaranteePO();
+		if (feedbackGuaranteeVO.getOrderId() == null) {
+			throw new FLException(140013, "订单不存在");
+		}
 
-		BeanUtil.copyPropertie(feedbackGuaranteeVO, feedbackGuaranteePO, Arrays.asList("creater", "supervisor"));
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackGuaranteeVO.getOrderId());
 
-		feedbackGuaranteePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-
-		if (feedbackGuaranteeVO.getOrderId() != null) {
-
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackGuaranteeVO.getOrderId());
-
-			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
-			}
-
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
 		}
 
 		UserPO creater = userDao.queryUserByUserId(userId);
@@ -93,42 +79,40 @@ public class FeedbackGuaranteeServiceImpl implements FeedbackGuaranteeService {
 			throw new FLException(190005, "人员不存在");
 		}
 
+		FeedbackGuaranteePO feedbackGuaranteePO = new FeedbackGuaranteePO();
+
+		BeanUtil.copyPropertie(feedbackGuaranteeVO, feedbackGuaranteePO, Arrays.asList("creater", "supervisor"));
+
+		feedbackGuaranteePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		feedbackGuaranteePO.setCreater(creater);
 
 		feedbackGuaranteeDao.save(feedbackGuaranteePO);
 
-		return feedbackGuaranteePO.getFgid();
+		feedbackGuaranteeVO.setFgid(feedbackGuaranteePO.getFgid());
+
+		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuaranteeVO) throws FLException {
+	public int updateFeedbackGuarantee(FeedbackGuaranteeVO feedbackGuaranteeVO) throws FLException {
+
+		if (feedbackGuaranteeVO.getOrderId() == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackGuaranteeVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
 
 		FeedbackGuaranteePO feedbackGuaranteePO = feedbackGuaranteeDao.get(feedbackGuaranteeVO.getFgid());
 
-		feedbackGuaranteePO.setBids(feedbackGuaranteeVO.getBids());
-		feedbackGuaranteePO.setBrands(feedbackGuaranteeVO.getBrands());
-		feedbackGuaranteePO.setDeptType(feedbackGuaranteeVO.getDeptType());
-		feedbackGuaranteePO.setPhone(feedbackGuaranteeVO.getPhone());
-		feedbackGuaranteePO.setSource(feedbackGuaranteeVO.getSource());
-		feedbackGuaranteePO.setCutomerType(feedbackGuaranteeVO.getCutomerType());
-		feedbackGuaranteePO.setContent(feedbackGuaranteeVO.getContent());
-		feedbackGuaranteePO.setWorkType(feedbackGuaranteeVO.getWorkType());
-		feedbackGuaranteePO.setRenovationYear(feedbackGuaranteeVO.getRenovationYear());
-		feedbackGuaranteePO.setReportedDate(feedbackGuaranteeVO.getReportedDate());
-		feedbackGuaranteePO.setRepairResult(feedbackGuaranteeVO.getRepairResult());
-
-		if (feedbackGuaranteeVO.getOrderId() != null) {
-
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackGuaranteeVO.getOrderId());
-
-			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
-			}
-
-		}
+		BeanUtil.copyPropertie(feedbackGuaranteeVO, feedbackGuaranteePO, Arrays.asList("creater", "supervisor"));
 
 		feedbackGuaranteeDao.update(feedbackGuaranteePO);
 
+		return 0;
 	}
 }

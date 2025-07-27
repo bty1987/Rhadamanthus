@@ -47,7 +47,7 @@ public interface AddReduceService {
 
 	public int cancelAddReduce(AddReduceVO addReduceVO) throws FLException;
 
-	public int unpayAddReduce(AddReduceVO addReduceVO) throws FLException;
+	public int unpayAddReduce(AddReduceVO addReduceVO, String userId) throws FLException;
 
 	public int confirmAddReduce(AddReduceVO addReduceVO) throws FLException;
 

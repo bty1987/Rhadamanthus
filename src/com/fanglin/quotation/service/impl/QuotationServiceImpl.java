@@ -550,7 +550,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		if (quotationVO.getWorkTime() != null) quotationPO.setWorkTime(quotationVO.getWorkTime());
-		if (quotationVO.getAudiTime() != null) quotationPO.setAudiTime(quotationVO.getAudiTime());
+		if (quotationVO.getAuditTime() != null) quotationPO.setAuditTime(quotationVO.getAuditTime());
 
 		quotationDao.update(quotationPO);
 
@@ -639,6 +639,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_FINISH_INT);
+		quotationPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationDao.update(quotationPO);
 
@@ -913,7 +914,7 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setDisComPrice(quotationVO.getDisComPrice());
 
 		if (quotationVO.getWorkTime() != null) quotationPO.setWorkTime(quotationVO.getWorkTime());
-		if (quotationVO.getAudiTime() != null) quotationPO.setAudiTime(quotationVO.getAudiTime());
+		if (quotationVO.getAuditTime() != null) quotationPO.setAuditTime(quotationVO.getAuditTime());
 		if (quotationVO.getTrafficDiscount() != null) quotationPO.setTrafficDiscount(quotationVO.getTrafficDiscount());
 		if (quotationVO.getManageDiscount() != null) quotationPO.setManageDiscount(quotationVO.getManageDiscount());
 		if (quotationVO.getTaxDiscount() != null) quotationPO.setTaxDiscount(quotationVO.getTaxDiscount());

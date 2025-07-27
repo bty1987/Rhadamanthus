@@ -490,6 +490,8 @@ public class OalesBO implements Serializable {
 
 		if (oalesVO.getDecoration() != null) getDecoration().ptvcascade(oalesVO.getDecoration());
 
+		if (oalesVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(oalesVO.getCustomer());
+
 		if (oalesVO.getBranding() != null) BeanUtil.copyPropertie(getBranding(), oalesVO.getBranding(), Arrays.asList("category", "supplier"));
 
 		if (oalesVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "duty"));

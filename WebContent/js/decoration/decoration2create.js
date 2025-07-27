@@ -498,9 +498,9 @@ jQuery(function($) {
         houseOptions["house.door"] = orderEntry.houseItems.door.val();
         houseOptions["house.type"] = orderEntry.houseItems.type.val();
         houseOptions["house.buildArea"] = utils.changeThrDecimal(orderEntry.houseItems.buildArea.val());
-        houseOptions["house.freeArea"] = utils.changeThrDecimal(orderEntry.houseItems.freeArea.val());
-        houseOptions["house.innerArea"] = utils.changeThrDecimal(orderEntry.houseItems.innerArea.val());
-        houseOptions["house.totalArea"] = utils.changeThrDecimal(orderEntry.houseItems.totalArea.val());
+        houseOptions["house.freeArea"] = 0;
+        houseOptions["house.innerArea"] = 0;
+        houseOptions["house.totalArea"] = 0;
         houseOptions["house.maxFloor"] = orderEntry.houseItems.maxFloor.val();
         houseOptions["house.through"] = orderEntry.houseItems.through.val();
         houseOptions["house.roomNum"] = orderEntry.houseItems.houseTypeOne.val();

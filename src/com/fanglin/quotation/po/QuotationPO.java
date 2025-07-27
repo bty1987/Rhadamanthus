@@ -73,9 +73,11 @@ public class QuotationPO implements Serializable {
 
 	private Timestamp lockTime;
 
+	private Timestamp finishTime;
+
 	private int workTime;
 
-	private int audiTime;
+	private int auditTime;
 
 	private UserPO creater;
 
@@ -204,6 +206,15 @@ public class QuotationPO implements Serializable {
 		this.lockTime = lockTime;
 	}
 
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
 	@Column(name = "workTime")
 	public int getWorkTime() {
 		return workTime;
@@ -213,13 +224,13 @@ public class QuotationPO implements Serializable {
 		this.workTime = workTime;
 	}
 
-	@Column(name = "audiTime")
-	public int getAudiTime() {
-		return audiTime;
+	@Column(name = "auditTime")
+	public int getAuditTime() {
+		return auditTime;
 	}
 
-	public void setAudiTime(int audiTime) {
-		this.audiTime = audiTime;
+	public void setAuditTime(int auditTime) {
+		this.auditTime = auditTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

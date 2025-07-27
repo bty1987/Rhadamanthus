@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
@@ -50,14 +49,17 @@ import com.fanglin.quotation.po.NormoodItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.quotation.service.AddReduceService;
+import com.fanglin.quotation.service.NormtionService;
 import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
+import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("addReduceService")
 @Transactional(readOnly = true)
@@ -95,6 +97,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private AddReduceItemServiceImpl addReduceItemService;
+
+	@Autowired
+	private NormtionService normtionService;
 
 	@Autowired
 	private NormoodItemDao normoodItemDao;
@@ -273,7 +278,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setCalPrice(0);
 		addReducePO.setConsPrice(0);
 		addReducePO.setComsPrice(0);
+
 		addReducePO.setAccountDiscount(addReducePO.getDiscount());
+		addReducePO.setAccountManageDiscount(addReducePO.getManageDiscount());
+		addReducePO.setAccountTaxDiscount(addReducePO.getTaxDiscount());
 
 		if (decorationPO.getType() == DecorationPO.TYPE_HOLONOMY_INT) {
 			addReducePO.setDiscount(decorationPO.getDiscount());
@@ -323,7 +331,6 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		addReducePO.setDiscount(addReduceVO.getDiscount());
-		addReducePO.setAccountDiscount(addReduceVO.getDiscount());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		addReducePO.setManageRate(addReduceVO.getManageRate());
 		addReducePO.setManageDiscount(addReduceVO.getManageDiscount());
@@ -337,6 +344,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setConsPrice(addReduceVO.getConsPrice());
 		addReducePO.setComsPrice(addReduceVO.getComsPrice());
 		addReducePO.setTotal(addReduceVO.getTotal());
+
+		addReducePO.setAccountDiscount(addReduceVO.getDiscount());
+		addReducePO.setAccountManageDiscount(addReduceVO.getManageDiscount());
+		addReducePO.setAccountTaxDiscount(addReduceVO.getTaxDiscount());
 
 		addReduceDao.update(addReducePO);
 
@@ -364,6 +375,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		addReducePO.setAccountDiscount(addReduceVO.getAccountDiscount());
+		addReducePO.setAccountManageDiscount(addReduceVO.getAccountManageDiscount());
+		addReducePO.setAccountTaxDiscount(addReduceVO.getAccountTaxDiscount());
 
 		addReduceDao.update(addReducePO);
 
@@ -497,7 +510,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int unpayAddReduce(AddReduceVO addReduceVO) throws FLException {
+	public int unpayAddReduce(AddReduceVO addReduceVO, String userId) throws FLException {
 
 		long arId = addReduceVO.getArId();
 
@@ -521,11 +534,33 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200061, "增减单状态不可操作");
 		}
 
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(addReducePO.getOrderId());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
 		decorationPaymentDao.deleteById(addReducePO.getDpId());
 
 		addReducePO.setPaytype(addReduceVO.getPaytype());
 
 		addReduceDao.update(addReducePO);
+
+		normtionService.makeNormtion(new NormtionVO(addReducePO.getOrderId(), quotationPO.getQid()), new AddReduceVO(addReducePO.getArId()), addReducePO.getSchedule(), userId);
+
+		// 1: 下拨(增项) , 2: 特批(增项) , 3: 不退(减项)
+
+		if (addReduceVO.getPaytype() == AddReducePO.PAYTYPE_COM_INT) {
+			selectionItemDao.updateSelectionItem(addReducePO.getArId(), SelectionItemPO.TYPE_ADDITEM_SHORT, SelectionItemPO.TYPE_ADDITEM_DOWN_SHORT);
+		}
+
+		if (addReduceVO.getPaytype() == AddReducePO.PAYTYPE_ARO_INT) {
+			selectionItemDao.updateSelectionItem(addReducePO.getArId(), SelectionItemPO.TYPE_ADDITEM_SHORT, SelectionItemPO.TYPE_ADDITEM_ADVANCE_SHORT);
+		}
+
+		if (addReduceVO.getPaytype() == AddReducePO.PAYTYPE_REF_INT) {
+			selectionItemDao.updateSelectionItem(addReducePO.getArId(), SelectionItemPO.TYPE_MINUSITEM_SHORT, SelectionItemPO.TYPE_MINUSITEM_UNREF_SHORT);
+		}
 
 		return 0;
 	}
@@ -534,12 +569,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int affirmAddReduce(DecorationVO decorationVO, List<AddReduceVO> addReduceVOs, String securityCode, String verifyCode) throws FLException {
 
-		try {
-			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
-				throw new FLException(330010, "绑定订单失败,验证码错误");
-			}
-		} catch (Exception e) {
-			throw new FLException(330010, "绑定订单失败,验证码错误");
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
 		}
 
 		String orderId = decorationVO.getOrderId();
@@ -548,6 +579,23 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationVO.getCustomer() == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
+		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
+
+		cecorationVO.setOrderId(orderId);
+		cecorationVO.setUnionId(decorationVO.getCustomer().getNo());
+
+		if (decorationVO.getCustomer().getNo() != null && decorationService.queryDecoration(cecorationVO).getOrderId() == null) {
+			throw new FLException(330017, "装修单未绑定");
 		}
 
 		for (AddReduceVO addReduce : addReduceVOs) {

@@ -2,6 +2,7 @@ $(function() {
 
     var protation = {
 
+        decoration: null,
         protation: null,
         presignProduce: null,
 
@@ -235,12 +236,25 @@ $(function() {
                 "protation.quoteArea": protation.items.quoteArea.val(),
                 "protation.comment": protation.items.comment.val(),
             };
+
+            var protationData = null;
+
             com.post(api.quotation.addProtation, options, function(res) {
+
+                protationData = res.protation;
 
                 protation.modals.protationModal.modal("hide");
 
                 searcher.doSearch();
-            });
+
+            }, null, false);
+
+            if (protationData && protationData.defaults == constant.quotation().protation.DEFAULT_DEFAULT_INT) {
+                com.post(api.data.updateHouse, {
+                    "house.innerArea": protationData.quoteArea,
+                    "house.hid": protation.decoration.house.hid
+                }, function(res) {});
+            }
         } else {
 
             var options = {
@@ -309,6 +323,8 @@ $(function() {
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": protation.orderId
         }, function(res) {
+
+            protation.decoration = res.decoration;
 
             drawquotation(res.decoration);
             drawdecoration(res.decoration);
@@ -452,18 +468,29 @@ $(function() {
         handle: function(v) {
 
             if (v.defaults == constant.quotation().protation.DEFAULT_COMMON_INT) {
-                var that = $(this)
+                var that = $(this);
                 var options = {
                     "protation.pid": v.pid,
                     "protation.orderId": protation.pageType != null ? v.decoration.orderId : protation.orderId,
-                }
+                };
+
+                var protationData = null;
 
                 com.post(api.quotation.changeProtationForDefault, options, function(res) {
+
+                    protationData = res.protation;
 
                     that.addClass("hide");
                     searcher.doSearch();
                     com.focusPage("#presignQuotation_" + that.attr("data-pid")).removeClass("hide");
-                });
+                }, null, false);
+
+                if (protationData) {
+                    com.post(api.data.updateHouse, {
+                        "house.innerArea": protationData.quoteArea,
+                        "house.hid": protation.decoration.house.hid
+                    }, function(res) {});
+                }
             }
         },
         show: function(v) {

@@ -36,7 +36,13 @@ public class CustomerUserRuleItemVO implements Serializable {
 
 	private Short status;
 
+	private Timestamp createTime;
+
 	private Timestamp handleTime;
+
+	private Timestamp deleteTime;
+
+	private String comment;
 
 	public CustomerUserRuleItemVO() {
 		super();
@@ -149,12 +155,38 @@ public class CustomerUserRuleItemVO implements Serializable {
 		this.status = status;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd hh:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd hh:mm:ss")
 	public Timestamp getHandleTime() {
 		return handleTime;
 	}
 
 	public void setHandleTime(Timestamp handleTime) {
 		this.handleTime = handleTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd hh:mm:ss")
+	public Timestamp getDeleteTime() {
+		return deleteTime;
+	}
+
+	public void setDeleteTime(Timestamp deleteTime) {
+		this.deleteTime = deleteTime;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

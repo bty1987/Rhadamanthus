@@ -63,6 +63,8 @@ public class VillagePO implements Serializable {
 
 	private String url;
 
+	private long mileage;
+
 	private int company;
 
 	public VillagePO() {
@@ -231,6 +233,15 @@ public class VillagePO implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	@Column(name = "mileage")
+	public long getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(long mileage) {
+		this.mileage = mileage;
 	}
 
 	@Column(name = "company")

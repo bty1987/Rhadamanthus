@@ -20,6 +20,8 @@ public class SurveyTemplateItemVO implements java.io.Serializable {
 
 	private List<SurveyTemplateOptionVO> options;
 
+	private Long sort;
+
 	public SurveyTemplateItemVO() {
 		super();
 	}
@@ -83,6 +85,14 @@ public class SurveyTemplateItemVO implements java.io.Serializable {
 
 	public void setOptions(List<SurveyTemplateOptionVO> options) {
 		this.options = options;
+	}
+
+	public Long getSort() {
+		return sort;
+	}
+
+	public void setSort(Long sort) {
+		this.sort = sort;
 	}
 
 }

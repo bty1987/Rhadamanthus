@@ -28,6 +28,9 @@ $.extend(api.index, {
     },
     salesSupplement: {
         url: "views/sales/sales2supple.html"
+    },
+    salesProfile2print: {
+        url: "/views/sales/salesProfile2print.html"
     }
 });
 
@@ -690,6 +693,21 @@ $.extend(api, {
         },
         deleteSalesPicture: {
             url: "deleteSalesPicture.do"
+        },
+        querySalesProfileByOrderId: {
+            url: "querySalesProfileByOrderId.do"
+        },
+        handleSalesProfile: {
+            url: "handleSalesProfile.do"
+        },
+        makeSalesProfile: {
+            url: "makeSalesProfile.do"
+        },
+        addSalesProfileBrand: {
+            url: "addSalesProfileBrand.do"
+        },
+        updateSalesProfileBrand: {
+            url: "updateSalesProfileBrand.do"
         },
     }
 });

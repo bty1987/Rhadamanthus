@@ -27,6 +27,10 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Short isCeremony;
 
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -34,6 +38,8 @@ public class ConstructionInfoVO implements Serializable {
 	private Timestamp drawlineTime;
 
 	private Timestamp designTime;
+
+	private Long actuaTime;
 
 	private String comment;
 
@@ -112,6 +118,22 @@ public class ConstructionInfoVO implements Serializable {
 		this.isCeremony = isCeremony;
 	}
 
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -146,6 +168,14 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setDesignTime(Timestamp designTime) {
 		this.designTime = designTime;
+	}
+
+	public Long getActuaTime() {
+		return actuaTime;
+	}
+
+	public void setActuaTime(Long actuaTime) {
+		this.actuaTime = actuaTime;
 	}
 
 	public String getComment() {

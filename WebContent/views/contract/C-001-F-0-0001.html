@@ -12,6 +12,12 @@
                         <div class="row">
 
                             <div class="col-md-12">
+                                <div class="form-group col-sm-6" style="display: none;">
+                                    <label for="company-no" class="col-sm-3 control-label no-padding-right orange">协议编号</label>
+                                    <div class="col-sm-9">
+                                        <input id="cov-company-no" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'>
+                                    </div>
+                                </div>
 
                                 <div class="form-group col-sm-6 customer">
                                     <label for="customer_name" class="col-sm-3 control-label no-padding-right orange">甲方</label>
@@ -174,12 +180,11 @@
                                 </div>
 
                                 <div class="form-group col-sm-6 thridPaymentGroup">
-                                    <label for="regular-settlement-amount" class="col-sm-3 control-label no-padding-right orange">正价产品结款额</label>
+                                    <label for="regular-settlement-amount" class="col-sm-3 control-label no-padding-right orange">年度正价产品总结款额</label>
                                     <div class="col-sm-9">
                                         <input id="con-regular-settlement-amount" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'>
                                     </div>
                                 </div>
-
 
                                 <div class="form-group col-sm-6 thridPaymentGroup">
                                     <label for="settlement-amount" class="col-sm-3 control-label no-padding-right orange">收取总结款额</label>
@@ -192,6 +197,69 @@
                                     <label for="regular-product-service-fee" class="col-sm-3 control-label no-padding-right orange">正价服务费</label>
                                     <div class="col-sm-9">
                                         <input id="con-regular-product-service-fee" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="annual-sales-below" class="col-sm-3 control-label no-padding-right orange">年度销售额低于</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-annual-sales-below" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="excess-service-fee" class="col-sm-3 control-label no-padding-right orange">超额服务费</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-excess-service-fee" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="finished-excess-portion" class="col-sm-3 control-label no-padding-right orange">未完成超额部分</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-unfinished-excess-portion" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="regular-price-proportion" class="col-sm-3 control-label no-padding-right orange">正价占比</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-regular-price-proportion" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="special-proportion" class="col-sm-3 control-label no-padding-right orange">特价占比</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-special-proportion" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="experience-hall-1" class="col-sm-3 control-label no-padding-right orange">商家一</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-experience-hall-1" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="experience-hall-2" class="col-sm-3 control-label no-padding-right orange">商家二</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-experience-hall-2" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="experience-hall-3" class="col-sm-3 control-label no-padding-right orange">商家三</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-experience-hall-3" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="experience-hall-sum" class="col-sm-3 control-label no-padding-right orange">几家体验馆</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="con-experience-hall-sum" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
                                     </div>
                                 </div>
                             </div>
@@ -249,8 +317,9 @@
                             </div>
 
                             <div class="col-md-12 company">
-
-                                <hr>
+                                <div class="modal-header">
+                                    <h6 class="modal-title">甲方收款账户</h6>
+                                </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group col-sm-6">
@@ -273,6 +342,12 @@
                                             <input type="text" id="con-company-bank-no" class="col-sm-7 col-xs-10 conitem v_required" rows="3" data-toggle="popover" data-placement="bottom" data-trigger="manual" value='111'></input>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 company">
+                                <div class="modal-header">
+                                    <h6 class="modal-title">甲方收款账户-代收代付</h6>
                                 </div>
 
                                 <div class="form-group col-sm-6">
@@ -298,8 +373,9 @@
                             </div>
 
                             <div class="col-md-12 company">
-
-                                <hr>
+                                <div class="modal-header">
+                                    <h6 class="modal-title">乙方收款账户信息</h6>
+                                </div>
 
                                 <div class="col-md-12">
                                     <div class="form-group col-sm-6">

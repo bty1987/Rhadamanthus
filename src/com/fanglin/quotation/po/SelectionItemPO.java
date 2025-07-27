@@ -48,7 +48,13 @@ public class SelectionItemPO implements Serializable {
 
 	public static final short TYPE_ADDITEM_SHORT = 3;// 类型, 增项
 
+	public static final short TYPE_ADDITEM_DOWN_SHORT = 13;// 类型, 增项(下拨)
+
+	public static final short TYPE_ADDITEM_ADVANCE_SHORT = 23;// 类型, 增项(特批)
+
 	public static final short TYPE_MINUSITEM_SHORT = 4;// 类型, 减项
+
+	public static final short TYPE_MINUSITEM_UNREF_SHORT = 14;// 类型, 减项
 
 	public static final short TYPE_ALONE_SHORT = 5; // 类型 , 未匹配
 

@@ -11,6 +11,8 @@ public class SupplierContractBrandVO implements Serializable {
 	private Long scbid;
 
 	private Long scid;// 合同ID
+	
+	private String name;
 
 	private BrandPO brand;
 
@@ -19,6 +21,8 @@ public class SupplierContractBrandVO implements Serializable {
 	private Integer cvalue;// 结算值
 
 	private Integer breakpay;// 违约金
+	
+	private int warranTime; // 质保期
 	
 	private String servicePrice; // 服务费 , Json结构 , {"TL": "2016-01-01", "UV": 0, "DV": 0, "SR": 0}
 
@@ -85,6 +89,22 @@ public class SupplierContractBrandVO implements Serializable {
 
 	public void setServicePrice(String servicePrice) {
 		this.servicePrice = servicePrice;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getWarranTime() {
+		return warranTime;
+	}
+
+	public void setWarranTime(int warranTime) {
+		this.warranTime = warranTime;
 	}
 	
 	

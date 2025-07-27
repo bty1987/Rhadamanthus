@@ -56,6 +56,20 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	}
 
 	@Override
+	public List<BalanceSelectionPO> pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+
+		PagingQuery<BalanceSelectionPO> query = pagingQuery(paging, BalanceSelectionPO.class);
+
+		query.alias("brand", "brand").alias("brand.supplier", "supplier").add(Restrictions.eq("supplier.userId", userId)).add(Restrictions.eq("company", company));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("bsid");
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<BalanceSelectionPO> queryBalanceSelection(String name, int company) {
 		return session().createCriteria(BalanceSelectionPO.class).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).add(Restrictions.eq("status", BalanceSelectionPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("bsid")).setMaxResults(10).list();

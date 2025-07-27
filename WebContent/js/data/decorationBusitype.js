@@ -9,21 +9,19 @@ jQuery(function($) {
         },
 
         modals: {
-            DecorationBusitypeModal: com.focusPage("#DecorationBusitypeModal")
+            decorationBusitypeModal: com.focusPage("#decorationBusitypeModal")
         },
 
         items: {
-            name: com.focusPage("#decorationBusitypeName"),
-            outside: com.focusPage("#outside"),
-            isRefer: com.focusPage("#isRefer"),
-            notSalesmanRate: com.focusPage("#notSalesmanRate"),
-            isAward: com.focusPage("#isAward")
+            name: com.focusPage("#name", "#decorationBusitypeModal"),
+            alias: com.focusPage("#alias", "#decorationBusitypeModal"),
+            outside: com.focusPage("#outside", "#decorationBusitypeModal"),
+            isRefer: com.focusPage("#isRefer", "#decorationBusitypeModal"),
+            isAward: com.focusPage("#isAward", "#decorationBusitypeModal"),
+            type: com.focusPage("#type", "#decorationBusitypeModal"),
+            notSalesmanRate: com.focusPage("#notSalesmanRate", "#decorationBusitypeModal"),
         },
 
-        status: constant.data().decorationBusitype.status.keys,
-        isRefer: constant.data().decorationBusitype.isRefer.keys,
-        outsides: constant.data().decorationBusitype.outside.keys,
-        isAward: constant.data().decorationBusitype.isAward.keys
     };
 
     decorationBusitype.items.outside.bindData(constant.data().decorationBusitype.outside.datas, "key", "value");
@@ -44,51 +42,64 @@ jQuery(function($) {
     seacher.history("decorationBusitypePostData");
 
     var lineprops = [{
+        field: "alias",
+        name: "上级",
+        prop: "alias",
+        clazz: "grey"
+    }, {
         field: "outside",
         name: "三方标识",
         prop: "outside",
         clazz: "grey",
         dataset: constant.data().decorationBusitype.outside.keys
     }, {
-        field: "status",
-        name: "状态",
-        prop: "status",
-        clazz: "red",
-        dataset: decorationBusitype.status
-    }, {
         field: "isRefer",
         name: "推荐标识",
         prop: "isRefer",
         clazz: "red",
-        dataset: decorationBusitype.isRefer
-    }, {
-        field: "notSalesmanRate",
-        name: "非提比例",
-        prop: "notSalesmanRate",
-        clazz: "red"
+        dataset: constant.data().decorationBusitype.isRefer.keys
     }, {
         field: "isAward",
         name: "奖励标识",
         prop: "isAward",
         clazz: "red",
-        dataset: decorationBusitype.isAward
-    }];
+        dataset: constant.data().decorationBusitype.isAward.keys
+    }, {
+        field: "type",
+        name: "类型",
+        prop: "type",
+        clazz: "red",
+        dataset: constant.data().decorationBusitype.type.keys
+    }, {
+        field: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: constant.data().decorationBusitype.status.keys
+    }, {
+        field: "notSalesmanRate",
+        name: "非提比例",
+        prop: "notSalesmanRate",
+        clazz: "red"
+    }, ];
 
     var linebtus = [{
         name: "编辑",
         clazz: "btn-yellow",
         handle: function(v) {
 
-            decorationBusitype.editFlg = false;
             decorationBusitype.dbid = v.dbid;
 
             decorationBusitype.items.name.val(v.name);
+            decorationBusitype.items.alias.val(v.alias);
             decorationBusitype.items.outside.val(v.outside);
             decorationBusitype.items.isRefer.val(v.isRefer);
-            decorationBusitype.items.notSalesmanRate.val(v.notSalesmanRate);
             decorationBusitype.items.isAward.val(v.isAward);
+            decorationBusitype.items.type.val(v.type);
+            decorationBusitype.items.notSalesmanRate.val(v.notSalesmanRate);
 
-            decorationBusitype.modals.DecorationBusitypeModal.modal("show");
+            decorationBusitype.modals.decorationBusitypeModal.modal("show");
+
             return false;
         }
     }, {
@@ -101,7 +112,9 @@ jQuery(function($) {
                 "decorationBusitype.dbid": v.dbid,
                 "decorationBusitype.status": check ? 0 : 1
             });
+
             seacher.doSearch();
+
             return false;
         },
         init: function(v) {
@@ -114,28 +127,29 @@ jQuery(function($) {
 
     com.focusPage('#addDecorationBusitype', '#pagenation').on("click", function() {
 
-        decorationBusitype.editFlg = true;
         decorationBusitype.dbid = null;
 
         decorationBusitype.items.name.val(null);
-        decorationBusitype.modals.DecorationBusitypeModal.modal("show");
+        decorationBusitype.modals.decorationBusitypeModal.modal("show");
     });
 
     function saveData() {
 
-        if (com.validate('DecorationBusitypeModal'))
+        if (com.validate('decorationBusitypeModal'))
             return false;
 
         var url = api.data.addDecorationBusitype;
         var options = {
             "decorationBusitype.name": decorationBusitype.items.name.val(),
+            "decorationBusitype.alias": decorationBusitype.items.alias.val(),
             "decorationBusitype.outside": decorationBusitype.items.outside.val(),
             "decorationBusitype.isRefer": decorationBusitype.items.isRefer.val(),
+            "decorationBusitype.isAward": decorationBusitype.items.isAward.val(),
+            "decorationBusitype.type": decorationBusitype.items.type.val(),
             "decorationBusitype.notSalesmanRate": decorationBusitype.items.notSalesmanRate.val(),
-            "decorationBusitype.isAward": decorationBusitype.items.isAward.val()
         };
 
-        if (!decorationBusitype.editFlg) {
+        if (decorationBusitype.dbid) {
             url = api.data.updateDecorationBusitype;
             options["decorationBusitype.dbid"] = decorationBusitype.dbid;
         }
@@ -145,7 +159,8 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
             seacher.doSearch();
         });
-        decorationBusitype.modals.DecorationBusitypeModal.modal("hide")
+
+        decorationBusitype.modals.decorationBusitypeModal.modal("hide")
     }
 
 });
