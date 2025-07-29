@@ -173,6 +173,20 @@ $.extend(api, {
                 args: ["construction.accessoryLimit", "construction.salaryLimit"]
             }
         },
+        updateConstructionScheduleForNorm: {
+            url: "updateConstructionScheduleForNorm.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionSchedule.accessoryLimit", "constructionSchedule.salaryLimit", "constructionSchedule.accessoryTotal", "constructionSchedule.salaryTotal"]
+            }
+        },
+        updateConstructionScheduleForScal: {
+            url: "updateConstructionScheduleForScal.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionSchedule.precheck", "constructionSchedule.postcheck", "constructionSchedule.stacheck", "constructionSchedule.fincheck"]
+            }
+        },
         nextConstructionByOrderId: {
             url: "nextConstructionByOrderId.do"
         },
@@ -189,7 +203,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["period"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }, {
                 result: "paging-data-construction",
                 args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
@@ -215,10 +229,21 @@ $.extend(api, {
                 args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }]
         },
+        queryConstructionScheduleByCsid: {
+            url: "queryConstructionScheduleByCsid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "constructionSchedule",
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+            }]
+        },
         queryConstructionScheduleByOrderIdASchedule: {
             url: "queryConstructionScheduleByOrderIdASchedule.do",
+            demo: true,
+            type: "query",
             tranargs: [{
-                result: "constructionSchedules",
+                result: "constructionSchedule",
                 args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
             }]
         },

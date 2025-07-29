@@ -22,6 +22,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationMeasureDao;
 import com.fanglin.decoration.po.DecorationMeasurePO;
@@ -214,7 +215,11 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), Arith.div(timelimit, 1000000)));
 			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), Arith.div((timelimit + constructionNodeVO.getTimeLimit()), 1000000)));
 
-			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid(), constructionNodeVO.getTimeLimit()));
+			ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getTimeLimit());
+
+			constructionSchedulePO.setNode(new ConstructionNodePO(constructionNodeVO.getCnid()));
+
+			constructionScheduleDao.save(constructionSchedulePO);
 
 			timelimit = timelimit + constructionNodeVO.getTimeLimit();
 		}

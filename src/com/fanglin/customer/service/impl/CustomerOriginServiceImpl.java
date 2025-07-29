@@ -22,7 +22,6 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.dao.CustomerOriginRecordDao;
@@ -43,8 +42,8 @@ import com.fanglin.right.dao.CustomerSourceRightDao;
 import com.fanglin.right.po.CustomerSourceRightPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("customerOriginService")
 @Transactional(readOnly = true)
@@ -190,7 +189,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.save(customerOriginPO);
 
-		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
+		customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s", customerOriginPO.getVillage().getName(), customerOriginPO.getHouseNumber(), FormatUtil.encodePhone(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade()), CustomerOriginRecordPO.TYPE_DEFINE_INT, userDao.queryUserByUserId(userId)));
 	}
 
 	@Override
@@ -216,7 +215,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 				oldVillageName = customerOriginPO.getVillage().getName();
 			}
 
-			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), customerOriginVO.getPhone(), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
+			customerOrginRecordDao.save(new CustomerOriginRecordPO().init(customerOriginPO.getCsid(), String.format("原楼盘:%s,原楼牌号:%s,原电话:%s,原目的:%s,原风格意向:%s,原价格:%s,原等级:%s,新楼盘:%s,新楼牌号:%s,新电话:%s,新目的:%s,新风格意向:%s,新价格:%s,新等级:%s", oldVillageName, customerOriginPO.getHouseNumber(), FormatUtil.encodePhone(customerOriginPO.getPhone()), customerOriginPO.getPurpose(), customerOriginPO.getIntention(), customerOriginPO.getPrice(), customerOriginPO.getGrade(), villagePO.getName(), customerOriginVO.getHouseNumber(), FormatUtil.encodePhone(customerOriginVO.getPhone()), customerOriginVO.getPurpose(), customerOriginVO.getIntention(), customerOriginVO.getPrice(), customerOriginVO.getGrade()), CustomerOriginRecordPO.TYPE_UPDATE_INT, userDao.queryUserByUserId(userId)));
 			customerOriginPO.setVillage(villagePO);
 		}
 
@@ -387,12 +386,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	@Transactional(rollbackFor = Exception.class)
 	public void confirmCustomerOrigin(CustomerOriginVO customerOriginVO, String securityCode, String verifyCode) throws FLException {
 
-		try {
-			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
-				throw new FLException(330010, "客源确认失败,验证码错误");
-			}
-		} catch (Exception e) {
-			throw new FLException(330010, "客源确认失败,验证码错误");
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
 		}
 
 		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
@@ -405,11 +400,15 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330014, "客源状态不可操作");
 		}
 
+		if (customerOriginVO.getPhone() != null && !customerOriginVO.getPhone().equals(customerOriginPO.getPhone())) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_CONFIRM_INT);
 
 		customerOriginDao.update(customerOriginPO);
 
-		String content = String.format("客源确认,客户名:%s,楼盘:%s,电话:%s", customerOriginPO.getName(), customerOriginPO.getHouse().getVillage().getName(), customerOriginPO.getPhone());
+		String content = String.format("客源确认,客户名:%s,楼盘:%s,电话:%s", customerOriginPO.getName(), customerOriginPO.getHouse().getVillage().getName(), customerOriginPO.getPhone().replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1******$2"));
 
 		UserPO designer = customerOriginPO.getDesigner();
 

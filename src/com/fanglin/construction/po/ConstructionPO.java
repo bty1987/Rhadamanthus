@@ -15,6 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,8 +26,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "construction", catalog = "construction")
@@ -312,4 +315,15 @@ public class ConstructionPO implements Serializable {
 		this.scheduleStatus = scheduleStatus;
 	}
 
+	public ConstructionVO ptv(ConstructionVO constructionVO) {
+
+		BeanUtil.copyProperties(this, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
+
+		if (constructionVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(constructionVO.getDecoration());
+
+		if (constructionVO.getSupervisor() != null && getSupervisor() != null) constructionVO.getSupervisor().setBaseInfo(getSupervisor());
+		if (constructionVO.getLocker() != null && getLocker() != null) constructionVO.getLocker().setBaseInfo(getLocker());
+
+		return constructionVO;
+	}
 }

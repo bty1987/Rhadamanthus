@@ -62,6 +62,14 @@ public class ConstructionScheduleAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "queryConstructionScheduleByCsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryConstructionScheduleByCsid() throws FLException {
+
+		constructionSchedule = constructionScheduleService.queryConstructionScheduleByCsid(constructionSchedule);
+
+		return SUCCESS;
+	}
 
 	@Action(value = "queryConstructionScheduleByOrderIdASchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionScheduleByOrderIdASchedule() throws FLException {
@@ -71,6 +79,22 @@ public class ConstructionScheduleAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateConstructionScheduleForNorm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionScheduleForNorm() throws FLException {
+
+		constructionScheduleService.updateConstructionScheduleForNorm(constructionSchedule);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateConstructionScheduleForScal", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionScheduleForScal() throws FLException {
+
+		constructionScheduleService.updateConstructionScheduleForScal(constructionSchedule);
+
+		return SUCCESS;
+	}
+	
 	@Action(value = "beginConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String beginConstructionSchedule() throws FLException {
 

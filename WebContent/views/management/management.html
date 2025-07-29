@@ -1,27 +1,6 @@
 <div id="managementPageContent" class="page-content">
     <div id="fl-statement"></div>
 
-    <h4>平台</h4>
-    <hr />
-    <div class="row">
-        <div class="col-xs-12">
-            <button id="zentao" class="btn btn-inverse btn-margin col-xs-2" style="margin: 2px;">
-                <i class="icon-edit"></i>
-                <span>项目管理(禅道)</span>
-            </button>
-
-            <button id="platformdocument" class="btn btn-inverse btn-margin col-xs-2" style="margin: 2px;">
-                <i class="icon-edit"></i>
-                <span>方林信息平台文档</span>
-            </button>
-
-            <button id="tomcatlog" class="btn btn-inverse btn-margin col-xs-2" style="margin: 2px;">
-                <i class="icon-edit"></i>
-                <span>Tomcat日志</span>
-            </button>
-        </div>
-    </div>
-
     <h4>装修</h4>
     <hr />
     <div class="row">
@@ -61,6 +40,11 @@
                 <span>装修活动项汇总</span>
             </button>
 
+            <button id="updateDecorationMidpack" class="btn btn-success col-xs-2" style="margin: 2px;">
+                <i class="icon-edit"></i>
+                <span>装修半包信息更新</span>
+            </button>
+            
             <button id="updateDecorationHolonomy" class="btn btn-success col-xs-2" style="margin: 2px;">
                 <i class="icon-edit"></i>
                 <span>装修满减信息更新</span>
@@ -468,6 +452,39 @@
                             <label class="col-sm-3 control-label no-padding-right" for="refundOrderId">装修单号</label>
                             <div class="col-sm-9">
                                 <input type="text" id="orderId4decorationActivityItem" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="updateDecorationMidpackModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">装修满减信息更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="refundOrderId">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="orderId4decorationMidpack" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="refundOrderId">主材配额</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="materialPrice" class="col-xs-10 col-sm-5 v_float_3"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
                     </form>

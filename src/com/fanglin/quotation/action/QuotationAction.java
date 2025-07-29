@@ -188,6 +188,14 @@ public class QuotationAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "submitQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitQuotation() throws FLException {
+
+		quotationService.submitQuotation(quotation, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "auditQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String auditQuotation() throws FLException {
 

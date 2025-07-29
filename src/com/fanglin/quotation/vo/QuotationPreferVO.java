@@ -30,6 +30,12 @@ public class QuotationPreferVO implements Serializable {
 
 	private Integer quoteArea;
 
+	private Short redo;
+
+	private Short urgent;
+
+	private Short drawing;
+
 	public QuotationPreferVO() {
 		super();
 	}
@@ -125,5 +131,29 @@ public class QuotationPreferVO implements Serializable {
 
 	public void setQuoteArea(Integer quoteArea) {
 		this.quoteArea = quoteArea;
+	}
+
+	public Short getRedo() {
+		return redo;
+	}
+
+	public void setRedo(Short redo) {
+		this.redo = redo;
+	}
+
+	public Short getUrgent() {
+		return urgent;
+	}
+
+	public void setUrgent(Short urgent) {
+		this.urgent = urgent;
+	}
+
+	public Short getDrawing() {
+		return drawing;
+	}
+
+	public void setDrawing(Short drawing) {
+		this.drawing = drawing;
 	}
 }

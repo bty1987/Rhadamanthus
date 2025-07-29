@@ -99,4 +99,41 @@ public class QuotationPreferServiceImpl implements QuotationPreferService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateQuotationForInfo(QuotationPreferVO quotationPreferVO, QuotationVO quotationVO) throws FLException {
+
+		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		if (quotationPO.getStatus() != QuotationPO.STATUS_INIT_INT) {
+			throw new FLException(200030, "报价不可操作");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (!status.contains(decorationPO.getStatus())) {
+			throw new FLException(200005, "报价不能修改");
+		}
+
+		QuotationPreferPO quotationPreferPO = quotationPreferDao.queryQuotationPreferByQid(quotationPreferVO.getQid());
+
+		quotationPreferPO.setRedo(quotationPreferVO.getRedo());
+		quotationPreferPO.setUrgent(quotationPreferVO.getUrgent());
+		quotationPreferPO.setDrawing(quotationPreferVO.getDrawing());
+
+		quotationPreferDao.update(quotationPreferPO);
+
+		return 0;
+	}
+
 }

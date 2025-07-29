@@ -4,9 +4,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionDiaryDrawingDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
@@ -71,7 +73,7 @@ public class ConstructionDiaryDrawingServiceImpl implements ConstructionDiaryDra
 	public List<ConstructionDiaryDrawingVO> queryConstructionDiaryDrawingByCdid(ConstructionDiaryDrawingVO constructionDiaryDrawingVO) {
 
 		Long cdid = constructionDiaryDrawingVO.getCdid();
-		
+
 		List<ConstructionDiaryDrawingPO> constructionDiaryDrawingPOs = constructionDiaryDrawingDao.queryConstructionDiaryDrawingByCdid(cdid);
 		List<ConstructionDiaryDrawingVO> constructionDiaryDrawingVOs = new ArrayList<ConstructionDiaryDrawingVO>();
 
@@ -89,7 +91,7 @@ public class ConstructionDiaryDrawingServiceImpl implements ConstructionDiaryDra
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public long addConstructionDiaryDrawing(ConstructionDiaryDrawingVO constructionDiaryDrawingVO,String userId, int company) throws FLException {
+	public long addConstructionDiaryDrawing(ConstructionDiaryDrawingVO constructionDiaryDrawingVO, String userId, int company) throws FLException {
 
 		long cdid = constructionDiaryDrawingVO.getCdid();
 
@@ -121,10 +123,10 @@ public class ConstructionDiaryDrawingServiceImpl implements ConstructionDiaryDra
 		}
 
 		constructionDiaryDrawingPO.setCsid(constructionSchedulePO.getCsid());
-		constructionDiaryDrawingPO.setCnid(constructionSchedulePO.getCnid());
+		constructionDiaryDrawingPO.setCnid(constructionSchedulePO.getNode().getCnid());
 
 		constructionDiaryDrawingDao.save(constructionDiaryDrawingPO);
-		
+
 		return constructionDiaryDrawingPO.getCddid();
 	}
 

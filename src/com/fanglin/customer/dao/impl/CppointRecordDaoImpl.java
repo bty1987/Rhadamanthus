@@ -18,8 +18,8 @@ public class CppointRecordDaoImpl extends DaoImpl<CppointRecordPO> implements Cp
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<CppointRecordPO> queryCppointRecord(Long cid) {
-		return session().createCriteria(CppointRecordPO.class).add(Restrictions.eq(CppointRecordPO.COLUMN_CID_STR, cid)).list();
+	public List<CppointRecordPO> queryCppointRecord(Long cpid) {
+		return session().createCriteria(CppointRecordPO.class).add(Restrictions.eq(CppointRecordPO.COLUMN_CPID_STR, cpid)).list();
 	}
 
 }

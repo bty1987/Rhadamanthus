@@ -35,7 +35,11 @@
             produce: com.focusPage('#produce', "#quotationPreferModal"),
 
             changeReason: com.focusPage("#changeReason", "#approveModal"),
-            approveManSel: com.focusPage("#approveManSel", "#approveModal")
+            approveManSel: com.focusPage("#approveManSel", "#approveModal"),
+
+            redo: com.focusPage("#redo", "#quotationForInfoModal"),
+            urgent: com.focusPage("#urgent", "#quotationForInfoModal"),
+            drawing: com.focusPage("#drawing", "#quotationForInfoModal")
         },
 
         modals: {
@@ -43,7 +47,8 @@
             replicaQuotationModal: com.focusPage("#replicaQuotationModal"),
             quotationPreferModal: com.focusPage("#quotationPreferModal"),
             approveModal: com.focusPage('#approveModal'),
-            printQuotationAuditModal: com.focusPage('#printQuotationAuditModal')
+            printQuotationAuditModal: com.focusPage('#printQuotationAuditModal'),
+            quotationForInfoModal: com.focusPage('#quotationForInfoModal')
         },
 
         decoration: null,
@@ -82,6 +87,10 @@
     var pageConfig = drawNode.getConfig("quoter");
 
     quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
+    quotation.items.redo.bindData(constant.quotation().quotationPrefer.redo.datas, "key", "value");
+    quotation.items.urgent.bindData(constant.quotation().quotationPrefer.urgent.datas, "key", "value");
+    quotation.items.drawing.bindData(constant.quotation().quotationPrefer.drawing.datas, "key", "value");
+
     quotation.items.replicaOrderId.on("blur", function() {
 
         var options = {
@@ -404,8 +413,24 @@
         }
     };
 
-    var btnAudit = {
+    var btnSubmit = {
         name: "提交",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            com.post(api.quotation.submitQuotation, {
+                "quotation.qid": v.qid
+            });
+            searcher.doSearch();
+        },
+        show: function(v) {
+
+            return v.attstatus == constant.quotation().quotation.ATTSTATUS_PRIMARY_INT;
+        }
+    };
+
+    var btnAudit = {
+        name: "审核",
         clazz: "btn-warning",
         handle: function(v) {
 
@@ -416,7 +441,7 @@
         },
         show: function(v) {
 
-            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT, constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
+            return v.attstatus == constant.quotation().quotation.ATTSTATUS_SUBMIT_INT;
         }
     };
 
@@ -544,7 +569,7 @@
         },
         show: function(v) {
 
-            return ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT, constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) != -1);
+            return v.attstatus == constant.quotation().quotation.ATTSTATUS_PRIMARY_INT;
         }
     };
 
@@ -782,6 +807,28 @@
         }
     };
 
+    var btnInfo = {
+        name: "信息",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            quotation.quotation = v;
+
+            com.post(api.quotation.queryQuotationPrefer, {
+                "quotationPrefer.qid": v.qid
+            }, function(res) {
+
+                quotationPrefer = res.quotationPrefer;
+
+                quotation.items.redo.val(quotationPrefer.redo);
+                quotation.items.urgent.val(quotationPrefer.urgent);
+                quotation.items.drawing.val(quotationPrefer.drawing);
+
+                quotation.modals.quotationForInfoModal.modal("show");
+            }, null, false);
+        }
+    };
+
     var btnDecoration = {
         name: "装修单",
         clazz: "btn-info",
@@ -814,7 +861,7 @@
 
         var cardbtns = [btnCopy, btnUpdate, btnWork, btnView, btnAudiOutput, {
             type: "newline"
-        }, btnFinish, btnAudit, btnDefault, btnLock, btnUnlock, btnDelete, {
+        }, btnFinish, btnAudit, btnSubmit, btnDefault, btnLock, btnUnlock, btnDelete, {
             type: "newline"
         }, btnSelection, btnNormtion, btnRecord, btnPrint];
 
@@ -878,6 +925,9 @@
         if (quotation.pageConfig.pageBtn.contains("record"))
             cardbtns.push(btnRecord);
 
+        if (quotation.pageConfig.pageBtn.contains("submit"))
+            cardbtns.push(btnSubmit);
+
         if (quotation.pageConfig.pageBtn.contains("audit"))
             cardbtns.push(btnAudit);
 
@@ -919,6 +969,9 @@
 
         if (quotation.pageConfig.pageBtn.contains("btnPrefer"))
             cardbtns.push(btnPrefer);
+
+        if (quotation.pageConfig.pageBtn.contains("btnInfo"))
+            cardbtns.push(btnInfo);
 
         com.focusPage("#quotationIndexPageContent").removeClass("page-content");
 
@@ -1076,7 +1129,7 @@
             }
         }, {
             field: "finishTime",
-            name: "提交时间",
+            name: "完成时间",
             prop: "finishTime",
             clazz: "green",
             show: function(v) {
@@ -1482,6 +1535,29 @@
         });
     });
 
+    com.focusPage('#saveForInfoBtn').bindClick(function() {
+
+        if (com.validate("quotationForInfoModal")) {
+            return false;
+        }
+
+        var params = {
+            "quotation.qid": quotation.quotation.qid,
+            "quotationPrefer.qid": quotation.quotation.qid,
+            "quotationPrefer.redo": quotation.items.redo.val(),
+            "quotationPrefer.urgent": quotation.items.urgent.val(),
+            "quotationPrefer.drawing": quotation.items.drawing.val(),
+        };
+
+        com.post(api.quotation.updateQuotationForInfo, params, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+            quotation.modals.quotationForInfoModal.modal("hide");
+        });
+    });
+    
     com.focusPage('#submitApproveBtn').bindClick(function() {
 
         if (com.validate("approveModal")) {

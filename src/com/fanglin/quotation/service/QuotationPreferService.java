@@ -9,4 +9,6 @@ public interface QuotationPreferService {
 	public QuotationPreferVO queryQuotationPrefer(QuotationPreferVO quotationPreferVO) throws FLException;
 
 	public int updateQuotationPrefer(QuotationPreferVO quotationPreferVO, QuotationVO quotationVO) throws FLException;
+
+	public int updateQuotationForInfo(QuotationPreferVO quotationPreferVO, QuotationVO quotationVO) throws FLException;
 }

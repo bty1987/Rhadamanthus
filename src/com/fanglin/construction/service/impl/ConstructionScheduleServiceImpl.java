@@ -2,7 +2,6 @@ package com.fanglin.construction.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +32,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -75,21 +72,8 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		List<ConstructionScheduleDO> constructionScheduleDOs = constructionScheduleDao.pageConstructionSchedule(paging, filters, company);
 		List<ConstructionScheduleVO> constructionVOs = new ArrayList<ConstructionScheduleVO>();
 
-		ConstructionScheduleVO constructionScheduleVO;
-
 		for (ConstructionScheduleDO constructionScheduleDO : constructionScheduleDOs) {
-
-			constructionScheduleVO = new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO());
-
-			BeanUtil.copyProperties(constructionScheduleDO, constructionScheduleVO, Arrays.asList("decoration", "construction"));
-
-			BeanUtil.copyProperties(ptv(constructionScheduleDO.getDecoration()), constructionScheduleVO.getDecoration());
-			BeanUtil.copyProperties(constructionScheduleDO.getConstruction(), constructionScheduleVO.getConstruction(), Arrays.asList("decoration", "supervisor", "locker"));
-
-			constructionScheduleVO.setCid(constructionScheduleDO.getConstruction().getCid());
-			constructionScheduleVO.setOrderId(constructionScheduleDO.getDecoration().getOrderId());
-
-			constructionVOs.add(constructionScheduleVO);
+			constructionVOs.add(constructionScheduleDO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO())));
 		}
 
 		paging.setData(constructionVOs);
@@ -102,16 +86,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		List<ConstructionScheduleVO> constructionScheduleVOs = new ArrayList<ConstructionScheduleVO>();
 
 		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {
-
-			constructionScheduleVO = new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO());
-
-			BeanUtil.copyProperties(constructionSchedulePO, constructionScheduleVO, Arrays.asList("decoration", "construction"));
-
-			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
-
-			BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode(), Arrays.asList("startSurvey", "endSurvey"));
-
-			constructionScheduleVOs.add(constructionScheduleVO);
+			constructionScheduleVOs.add(constructionSchedulePO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO())));
 		}
 
 		return constructionScheduleVOs;
@@ -124,19 +99,18 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		List<ConstructionScheduleVO> constructionScheduleVOs = new ArrayList<ConstructionScheduleVO>();
 
 		for (ConstructionSchedulePO constructionSchedulePO : constructionSchedulePOs) {
-
-			constructionScheduleVO = new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO());
-
-			BeanUtil.copyProperties(constructionSchedulePO, constructionScheduleVO, Arrays.asList("decoration", "construction"));
-
-			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
-
-			BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode(), Arrays.asList("startSurvey", "endSurvey"));
-
-			constructionScheduleVOs.add(constructionScheduleVO);
+			constructionScheduleVOs.add(constructionSchedulePO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO())));
 		}
 
 		return constructionScheduleVOs;
+	}
+
+	@Override
+	public ConstructionScheduleVO queryConstructionScheduleByCsid(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		return constructionSchedulePO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO()));
 	}
 
 	@Override
@@ -148,13 +122,43 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(120024, "工程环节不存在");
 		}
 
-		BeanUtil.copyProperties(constructionSchedulePO, constructionScheduleVO, Arrays.asList("decoration", "construction"));
+		return constructionSchedulePO.ptv(constructionScheduleVO);
+	}
 
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateConstructionScheduleForNorm(ConstructionScheduleVO constructionScheduleVO) throws FLException {
 
-		BeanUtil.copyPropertie(constructionNodePO, constructionScheduleVO.getNode(), Arrays.asList("startSurvey", "endSurvey"));
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
 
-		return constructionScheduleVO;
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		constructionSchedulePO.setAccessoryLimit(constructionScheduleVO.getAccessoryLimit());
+		constructionSchedulePO.setSalaryLimit(constructionScheduleVO.getSalaryLimit());
+		constructionSchedulePO.setAccessoryTotal(constructionScheduleVO.getAccessoryTotal());
+		constructionSchedulePO.setSalaryTotal(constructionScheduleVO.getSalaryTotal());
+
+		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateConstructionScheduleForScal(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		constructionSchedulePO.setPrecheck(constructionScheduleVO.getPrecheck());
+		constructionSchedulePO.setPostcheck(constructionScheduleVO.getPostcheck());
+		constructionSchedulePO.setStacheck(constructionScheduleVO.getStacheck());
+		constructionSchedulePO.setFincheck(constructionScheduleVO.getFincheck());
+
+		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
 	}
 
 	@Override
@@ -179,7 +183,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		DecorationPO decorationPO = constructionPO.getDecoration();
 
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
+		ConstructionNodePO constructionNodePO = constructionSchedulePO.getNode();
 
 		if (constructionNodePO == null) {
 			throw new FLException(130026, "工程节点不存在");
@@ -206,7 +210,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		if (projectStatus != null && projectStatus.getSort() < constructionNodePO.getSort() && projectStatus.getSort() != DecorationPO.PROJECTSTATUS_FINISH_INT) {
 
-			decorationPO.setProjectStatus(constructionSchedulePO.getCnid());
+			decorationPO.setProjectStatus(constructionSchedulePO.getNode().getCnid());
 
 			decorationDao.update(decorationPO);
 
@@ -253,7 +257,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		DecorationPO decorationPO = constructionPO.getDecoration();
 
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionSchedulePO.getCnid());
+		ConstructionNodePO constructionNodePO = constructionSchedulePO.getNode();
 
 		if (constructionNodePO == null) {
 			throw new FLException(130026, "工程节点不存在");
@@ -327,12 +331,9 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 				throw new FLException(120020, "工程信息不存在");
 			}
 
-			long cnid = constructionSchedulePO.getCnid();
-
 			DecorationPO decorationPO = constructionPO.getDecoration();
-			ConstructionNodePO constructionNodePO = constructionNodeDao.get(cnid);
 
-			if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPostcheck(), 1000.0)) {
+			if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionSchedulePO.getPostcheck(), 1000.0)) {
 				throw new FLException(120018, "装修款比例不足");
 			}
 
@@ -440,17 +441,6 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		}
 
 		return 0;
-	}
-
-	private DecorationVO ptv(DecorationPO decorationPO) {
-
-		DecorationVO decorationVO = new DecorationVO();
-
-		decorationVO.setSupervisor(new UserBaseVO());
-
-		decorationPO.ptvcascade(decorationVO);
-
-		return decorationVO;
 	}
 
 }

@@ -133,7 +133,7 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 		}
 
 		constructionDrawingPO.setCsid(constructionSchedulePO.getCsid());
-		constructionDrawingPO.setCnid(constructionSchedulePO.getCnid());
+		constructionDrawingPO.setCnid(constructionSchedulePO.getNode().getCnid());
 
 		constructionDrawingDao.save(constructionDrawingPO);
 
@@ -172,7 +172,7 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 			if (constructionSchedulePO == null) continue;
 
 			constructionDrawingPO.setCsid(constructionSchedulePO.getCsid());
-			constructionDrawingPO.setCnid(constructionSchedulePO.getCnid());
+			constructionDrawingPO.setCnid(constructionSchedulePO.getNode().getCnid());
 
 			constructionDrawingDao.save(constructionDrawingPO);
 

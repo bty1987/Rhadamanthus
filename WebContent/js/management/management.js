@@ -109,6 +109,9 @@ jQuery(function($) {
     management.items.orderId4decorationHolonomy = com.focusPage("#orderId4decorationHolonomy");
     management.items.materialPrice = com.focusPage("#materialPrice");
 
+    management.items.orderId4decorationMidpack = com.focusPage("#orderId4decorationMidpack");
+    management.items.decorationMidpackMaterialPrice = com.focusPage("#decorationMidpackMaterialPrice");
+
     management.items.orderId4constructionschedule = com.focusPage("#orderId4constructionschedule");
     management.items.csid4constructionschedule = com.focusPage("#csid4constructionschedule");
     management.items.check4constructionschedule = com.focusPage("#check4constructionschedule");
@@ -151,6 +154,12 @@ jQuery(function($) {
     });
 
     management.updateDecorationHolonomyModal = com.focusPage("#updateDecorationHolonomyModal").on('hide.bs.modal', function(e) {
+
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+
+    management.updateDecorationMidpackModal = com.focusPage("#updateDecorationMidpackModal").on('hide.bs.modal', function(e) {
 
         com.cleanItems(management.items);
         com.clearValidator();
@@ -281,15 +290,6 @@ jQuery(function($) {
 
         var orderId = $(this).val();
 
-        var constructionNodes = [];
-
-        com.post(api.data.queryConstructionNodeByOrderId, {
-            "orderId": orderId
-        }, function(res) {
-
-            constructionNodes = res.constructionNodes.split("sort", "name");
-        }, null, false);
-
         com.post(api.construction.queryConstructionScheduleByOrderId, {
             "constructionSchedule.orderId": orderId
         }, function(res) {
@@ -298,7 +298,7 @@ jQuery(function($) {
 
             $.each(constructionSchedules, function(i, v) {
 
-                v["name"] = constructionNodes[v["schedule"]];
+                v["name"] = v.node.name;
             });
 
             management.items.csid4constructionschedule.bindData(constructionSchedules, 'csid', 'name');
@@ -344,7 +344,7 @@ jQuery(function($) {
 
     management.items.quotationFunctionArea.on("change", function() {
 
-        management.items.quotationFunctionAreaName.val($(this).find("option:selected").text())
+        management.items.quotationFunctionAreaName.val($(this).find("option:selected").text());
     });
 
     com.focusPage("#changeDecorationForOrderId").click(function() {
@@ -396,6 +396,11 @@ jQuery(function($) {
     com.focusPage("#updateDecorationHolonomy").click(function() {
 
         management.updateDecorationHolonomyModal.modal("show");
+    });
+
+    com.focusPage("#updateDecorationMidpack").click(function() {
+
+        management.updateDecorationMidpackModal.modal("show");
     });
 
     com.focusPage("#changeDecorationForPayScale").click(function() {
@@ -658,6 +663,25 @@ jQuery(function($) {
         });
 
         management.updateDecorationHolonomyModal.modal("hide");
+    });
+
+    com.focusPage("#saveDecorationMidpackMaterialPriceBtn").click(function() {
+
+        if (com.validate("updateDecorationMidpackModal")) {
+            return false;
+        }
+
+        var options = {
+            "decorationMidpack.decoration.orderId": com.focusPage("#orderId4decorationMidpack").val(),
+            "decorationMidpack.materialPrice": com.focusPage("#decorationMidpackMaterialPrice").val()
+        };
+
+        com.post(api.decoration.updateDecorationMidpack, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+        });
+
+        management.updateDecorationMidpackModal.modal("hide");
     });
 
     com.focusPage("#saveStatusBtn").click(function() {

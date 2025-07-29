@@ -38,7 +38,6 @@ import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DecorationMeasureRuleDao;
@@ -97,7 +96,6 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("decorationServiceO")
 @Transactional(readOnly = true)
@@ -880,9 +878,9 @@ public class DecorationServiceImpl implements DecorationService {
 	public List<DecorationVO> queryDecorationForReferByOrderId(DecorationVO decorationVO, Authentication authentication) {
 
 		List<DecorationPO> decorationPOs = decorationDao.queryDecorationForChanceRefer(decorationVO.getOrderId());
-		
+
 		decorationPOs.addAll(decorationDao.queryDecorationForDecorationInfoRefer(decorationVO.getOrderId()));
-		
+
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -938,15 +936,9 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		}
 
-		decorationVO.getCustomer().setPhone(decorationPO.getCustomer().getPhone());
+		decorationVO.getCustomer().setPhone(FormatUtil.decodePhone(decorationPO.getCustomer().getPhone()));
 
 		addition(decorationPO.getAddition(), decorationVO);
-
-		try {
-			decorationVO.setDompany(AESHelper.encrypt(FormatUtil.encodeCompany(decorationPO.getCompany()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-		} catch (Exception e) {
-			throw new FLException(230015, "公司不存在");
-		}
 
 		decorationVO.setDompany(CompanyServiceImpl.encode(decorationPO.getCompany()));
 		decorationVO.setConpany(CompanyServiceImpl.encode(decorationPO.getConpany()));
