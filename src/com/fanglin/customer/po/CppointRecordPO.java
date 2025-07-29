@@ -24,6 +24,8 @@ public class CppointRecordPO implements Serializable {
 
 	public static final String COLUMN_CID_STR = "cid";
 
+	public static final String COLUMN_CPID_STR = "cpid";
+
 	public static final short TYPE_ADDUP_INT = 0;
 
 	public static final short TYPE_USERUP_INT = 1;

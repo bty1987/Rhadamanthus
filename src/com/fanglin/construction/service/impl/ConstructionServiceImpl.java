@@ -13,7 +13,6 @@ package com.fanglin.construction.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +40,6 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.po.UserPartnerPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -118,18 +116,8 @@ public class ConstructionServiceImpl implements ConstructionService {
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstruction(paging, filters, company);
 		List<ConstructionVO> constructionVOs = new ArrayList<ConstructionVO>();
 
-		ConstructionVO constructionVO;
-
 		for (ConstructionPO constructionPO : constructionPOs) {
-
-			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
-			BeanUtil.copyProperties(ptv(constructionPO.getDecoration()), constructionVO.getDecoration());
-			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
-
-			constructionVOs.add(constructionVO);
+			constructionVOs.add(constructionPO.ptv(new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(constructionVOs);
@@ -144,11 +132,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		ConstructionVO constructionVO = new ConstructionVO(new UserBaseVO());
-
-		BeanUtil.copyProperties(constructionPO, constructionVO);
-
-		return constructionVO;
+		return constructionPO.ptv(new ConstructionVO(new UserBaseVO()));
 	}
 
 	@Override
@@ -160,21 +144,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
-
-		constructionVO.setSupervisor(new UserBaseVO());
-
-		constructionVO.setLocker(new UserBaseVO());
-
-		if (constructionPO.getSupervisor() != null) {
-			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
-		}
-
-		if (constructionPO.getLocker() != null) {
-			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
-		}
-
-		return constructionVO;
+		return constructionPO.ptv(new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO()));
 	}
 
 	@Override
@@ -297,13 +267,9 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	private DecorationVO ptv(DecorationPO decorationPO) {
 
-		DecorationVO decorationVO = new DecorationVO();
-
-		decorationVO.setSupervisor(new UserBaseVO());
-
+		DecorationVO decorationVO = new DecorationVO(new UserBaseVO());
 		decorationPO.ptvcascade(decorationVO);
 
 		return decorationVO;
 	}
-
 }

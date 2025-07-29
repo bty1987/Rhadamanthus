@@ -19,7 +19,6 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerProfileDao;
@@ -47,8 +46,8 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("CustomerChanceService")
 @Transactional(readOnly = true)
@@ -242,13 +241,8 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException {
 
-		try {
-
-			if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
-				throw new FLException(330010, "客机确认失败,验证码错误");
-			}
-		} catch (Exception e) {
-			throw new FLException(330010, "客机确认失败,验证码错误");
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
 		}
 
 		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
@@ -267,6 +261,10 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		if (housePO == null) {
 			throw new FLException(130017, "房产不存在");
+		}
+
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null && !customerChanceVO.getCustomer().getPhone().equals(customerPO.getPhone())) {
+			throw new FLException(130115, "客户电话不匹配");
 		}
 
 		CustomerSourcePO customerSourcePO = customerChancePO.getSource();

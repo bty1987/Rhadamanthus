@@ -412,6 +412,9 @@ $.extend(api, {
                 args: ["quotationPrefer.preferPrice", "quotationPrefer.managePrefer", "quotationPrefer.advancePrefer", "quotationPrefer.discount", "quotationPrefer.manageDiscount", "quotationPrefer.quotePrice", "quotationPrefer.quoteArea", "quotation.totalPrice", "quotation.taxPrice"]
             }
         },
+        updateQuotationForInfo: {
+            url: "updateQuotationForInfo.do",
+        },
 
         pageQuotationLabel: {
             url: "pageQuotationLabel.do"
@@ -901,6 +904,9 @@ $.extend(api, {
         },
         unlockQuotation: {
             url: "unlockQuotation.do"
+        },
+        submitQuotation: {
+            url: "submitQuotation.do"
         },
         auditQuotation: {
             url: "auditQuotation.do"

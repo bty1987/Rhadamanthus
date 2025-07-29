@@ -47,8 +47,6 @@ public class CppointServiceImpl implements CppointService {
 
 				CppointVO cppointVO = new CppointVO(new CustomerVO());
 
-//				BeanUtil.copyPropertie(cppointPO, cppointVO, Arrays.asList("customer"));
-
 				cppointVOs.add(cppointPO.ptv(cppointVO));
 			}
 		}

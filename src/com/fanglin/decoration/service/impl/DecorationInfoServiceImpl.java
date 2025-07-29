@@ -75,7 +75,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationInfoVO.getOrderId());
 
 		if (decorationPO != null && decorationPO.getCustomer() != null) {
-			decorationInfoVO.setCustomerPhone(decorationPO.getCustomer().getPhone().replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1******$2"));
+			decorationInfoVO.setCustomerPhone(decorationPO.getCustomer().getPhone());
 		}
 
 		return decorationInfoVO;

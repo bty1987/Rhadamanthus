@@ -49,6 +49,8 @@ public interface QuotationService {
 
 	public int unlockQuotation(QuotationVO quotationVO, String userId) throws FLException;
 
+	public int submitQuotation(QuotationVO quotationVO, String userId) throws FLException;
+
 	public int auditQuotation(QuotationVO quotationVO, String userId) throws FLException;
 
 	public int finishQuotation(QuotationVO quotationVO, String userId) throws FLException;

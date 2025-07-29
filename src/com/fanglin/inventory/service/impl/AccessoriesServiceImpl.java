@@ -202,7 +202,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		UserPO createrPO = userDao.queryUserByUserId(userId);
 
-		AccessoriesPO accessoriesPO = new AccessoriesPO().init(no, orderId, constructionSchedulePO.getCsid(), constructionSchedulePO.getCnid(), decorationPO.getHouse(), createrPO, fetchTime, constructionSchedulePO.getSchedule(), comment, company);
+		AccessoriesPO accessoriesPO = new AccessoriesPO().init(no, orderId, constructionSchedulePO.getCsid(), constructionSchedulePO.getNode().getCnid(), decorationPO.getHouse(), createrPO, fetchTime, constructionSchedulePO.getSchedule(), comment, company);
 
 		if (accessoriesVO.getSupervisor() != null) {
 			accessoriesPO.setSupervisor(userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId()));

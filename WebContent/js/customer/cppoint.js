@@ -190,7 +190,7 @@ jQuery(function($) {
         
         var cppointRecords = [];
 
-        com.post(api.customer.queryCppointRecord, {"cppoint.cid" : v.cid}, function(res) {
+        com.post(api.customer.queryCppointRecord, {"cppoint.cpid" : v.cpid}, function(res) {
             cppointRecords = res.cppointRecords;
         }, null, false);
 

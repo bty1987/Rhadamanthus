@@ -227,14 +227,14 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		DecorationPO _decorationPO = new DecorationPO();
+		DecorationPO cecorationPO = new DecorationPO();
 
-		_decorationPO.setOrderId(decorationPO.getOrderId());
-		_decorationPO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
-		_decorationPO.setUnionId(unionId);
-		_decorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
+		cecorationPO.setOrderId(decorationPO.getOrderId());
+		cecorationPO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
+		cecorationPO.setUnionId(unionId);
+		cecorationPO.setDefaultFlag(DecorationPO.DEFAULTFLAG_INIT_SHORT);
 
-		cecorationDao.save(_decorationPO);
+		cecorationDao.save(cecorationPO);
 
 		return 0;
 	}

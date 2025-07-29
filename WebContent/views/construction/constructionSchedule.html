@@ -8,6 +8,100 @@
 	</div>
 </div>
 
+<div class="modal fade" id="updateNormModal" tabindex="-1" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">更新定额</h4>
+			</div>
+			<div class="modal-body" >
+				<form class="form-horizontal">
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right">材料浮动限额</label>
+						<div class="col-sm-9">
+							<input type="text" id='accessoryLimit' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right ">工费浮动限额</label>
+						<div class="col-md-9">
+						<input type="text" id='salaryLimit' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right ">材料总额限额</label>
+						<div class="col-sm-9">
+							<input type="text" id='accessoryTotal' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right ">工费总额限额</label>
+						<div class="col-sm-9">
+							<input type="text" id='salaryTotal' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="updateNormBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="updateCaleModal" tabindex="-1" >
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title" id="myModalLabel">更新比例</h4>
+			</div>
+			<div class="modal-body" >
+				<form class="form-horizontal">
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right">开工装修比例</label>
+						<div class="col-sm-9">
+							<input type="text" id='precheck' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right ">完工装修比例</label>
+						<div class="col-md-9">
+							<input type="text" id='postcheck' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right ">开工主材比例</label>
+						<div class="col-sm-9">
+							<input type="text" id='stacheck' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right ">完工主材比例</label>
+						<div class="col-sm-9">
+							<input type="text" id='fincheck' class='col-xs-10 col-sm-6' />
+						</div>
+					</div>
+					<div class="space-4"></div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="upProportionBtn" class="btn btn-primary">保存</button>
+				<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	$.loadScript(['js/construction/constructionSchedule.js']);
 </script>

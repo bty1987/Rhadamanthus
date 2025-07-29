@@ -28,8 +28,6 @@ public class CustomerVO implements Serializable {
 
 	private String email;
 
-	private String phone;
-
 	private String career;
 
 	private String address;
@@ -47,6 +45,8 @@ public class CustomerVO implements Serializable {
 	private String identityPathF;
 
 	private String identityPathB;
+
+	private String phone;
 
 	private Integer company;
 

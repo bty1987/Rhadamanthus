@@ -18,6 +18,6 @@ import com.fanglin.customer.po.CppointRecordPO;
 
 public interface CppointRecordDao extends Dao<CppointRecordPO> {
 
-	public List<CppointRecordPO> queryCppointRecord(Long cid);
+	public List<CppointRecordPO> queryCppointRecord(Long cpid);
 
 }

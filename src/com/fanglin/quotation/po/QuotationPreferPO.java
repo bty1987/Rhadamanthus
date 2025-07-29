@@ -42,6 +42,12 @@ public class QuotationPreferPO implements Serializable {
 
 	private int quoteArea;
 
+	private short redo;
+
+	private short urgent;
+
+	private short drawing;
+
 	public QuotationPreferPO() {
 		super();
 	}
@@ -157,6 +163,33 @@ public class QuotationPreferPO implements Serializable {
 
 	public void setQuoteArea(int quoteArea) {
 		this.quoteArea = quoteArea;
+	}
+
+	@Column(name = "redo")
+	public short getRedo() {
+		return redo;
+	}
+
+	public void setRedo(short redo) {
+		this.redo = redo;
+	}
+
+	@Column(name = "urgent")
+	public short getUrgent() {
+		return urgent;
+	}
+
+	public void setUrgent(short urgent) {
+		this.urgent = urgent;
+	}
+
+	@Column(name = "drawing")
+	public short getDrawing() {
+		return drawing;
+	}
+
+	public void setDrawing(short drawing) {
+		this.drawing = drawing;
 	}
 
 	public void convert(QuotationPreferVO quotationPreferVO) {

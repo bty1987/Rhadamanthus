@@ -47,6 +47,14 @@ public class QuotationPreferAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateQuotationForInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationForInfo() throws FLException {
+
+		quotationPreferService.updateQuotationForInfo(quotationPrefer, quotation);
+
+		return SUCCESS;
+	}
+
 	public List<QuotationPreferVO> getQuotationPrefers() {
 		return quotationPrefers;
 	}

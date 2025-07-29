@@ -15,14 +15,20 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.construction.vo.ConstructionScheduleVO;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -63,7 +69,7 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private String orderId;
 
-	private long cnid;
+	private ConstructionNodePO node;
 
 	private int period;
 
@@ -123,14 +129,13 @@ public class ConstructionSchedulePO implements Serializable {
 		this.endTime = endTime;
 	}
 
-	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, long cnid, int period) {
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, int period) {
 
 		super();
 
 		this.cid = cid;
 		this.orderId = orderId;
 
-		this.cnid = cnid;
 		this.period = period;
 		this.schedule = schedule;
 
@@ -167,13 +172,14 @@ public class ConstructionSchedulePO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	@Column(name = "cnid")
-	public long getCnid() {
-		return cnid;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getNode() {
+		return node;
 	}
 
-	public void setCnid(long cnid) {
-		this.cnid = cnid;
+	public void setNode(ConstructionNodePO node) {
+		this.node = node;
 	}
 
 	@Column(name = "period")
@@ -356,5 +362,14 @@ public class ConstructionSchedulePO implements Serializable {
 		BeanUtil.copyProperties(constructionNodeVO, this, "");
 
 		return this;
+	}
+
+	public ConstructionScheduleVO ptv(ConstructionScheduleVO constructionScheduleVO) {
+
+		BeanUtil.copyProperties(this, constructionScheduleVO, Arrays.asList("decoration", "construction", "node"));
+
+		if (constructionScheduleVO.getNode() != null && getNode() != null) getNode().ptv(constructionScheduleVO.getNode());
+
+		return constructionScheduleVO;
 	}
 }

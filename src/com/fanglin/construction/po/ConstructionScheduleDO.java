@@ -15,6 +15,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.construction.vo.ConstructionScheduleVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "constructionschedule", catalog = "construction")
@@ -49,7 +53,7 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private DecorationPO decoration;
 
-	private long cnid;
+	private ConstructionNodePO node;
 
 	private int period;
 
@@ -135,13 +139,14 @@ public class ConstructionScheduleDO implements Serializable {
 		this.construction = construction;
 	}
 
-	@Column(name = "cnid")
-	public long getCnid() {
-		return cnid;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getNode() {
+		return node;
 	}
 
-	public void setCnid(long cnid) {
-		this.cnid = cnid;
+	public void setNode(ConstructionNodePO node) {
+		this.node = node;
 	}
 
 	@Column(name = "period")
@@ -313,6 +318,27 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setFincheck(int fincheck) {
 		this.fincheck = fincheck;
+	}
+
+	public ConstructionScheduleVO ptv(ConstructionScheduleVO constructionScheduleVO) {
+
+		BeanUtil.copyProperties(this, constructionScheduleVO, Arrays.asList("decoration", "construction", "node"));
+
+		if (constructionScheduleVO.getDecoration() != null && getDecoration() != null) {
+			getDecoration().ptvcascade(constructionScheduleVO.getDecoration());
+
+			constructionScheduleVO.setOrderId(getDecoration().getOrderId());
+		}
+
+		if (constructionScheduleVO.getConstruction() != null && getConstruction() != null) {
+			getConstruction().ptv(constructionScheduleVO.getConstruction());
+
+			constructionScheduleVO.setCid(getConstruction().getCid());
+		}
+
+		if (constructionScheduleVO.getNode() != null && getNode() != null) getNode().ptv(constructionScheduleVO.getNode());
+
+		return constructionScheduleVO;
 	}
 
 }

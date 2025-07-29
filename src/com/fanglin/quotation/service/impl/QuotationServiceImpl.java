@@ -40,6 +40,8 @@ import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -150,6 +152,9 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private NormtionService normtionService;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Override
 	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -613,6 +618,38 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int submitQuotation(QuotationVO quotationVO, String userId) throws FLException {
+
+		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
+
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_SUBMIT_INT);
+
+		quotationDao.update(quotationPO);
+
+		UserPO creater = quotationPO.getCreater();
+		UserPO designer = decorationPO.getDesigner();
+
+		String content = String.format("装修单号：%s,报价单:%s,已提交", decorationPO.getOrderId(), quotationPO.getName());
+
+		messageService.sendMessage(creater.getDept().getManager().getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, creater.getCompany());
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int auditQuotation(QuotationVO quotationVO, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.get(quotationVO.getQid());
@@ -621,9 +658,21 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
 		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_AUDI_INT);
 
 		quotationDao.update(quotationPO);
+
+		UserPO designer = decorationPO.getDesigner();
+
+		String content = String.format("装修单号：%s,报价单:%s,已审核", decorationPO.getOrderId(), quotationPO.getName());
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 
 		return 0;
 	}
@@ -638,10 +687,22 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200003, "报价不存在");
 		}
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
 		quotationPO.setAttstatus(QuotationPO.ATTSTATUS_FINISH_INT);
 		quotationPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationDao.update(quotationPO);
+
+		UserPO designer = decorationPO.getDesigner();
+
+		String content = String.format("装修单号：%s,报价单:%s,已完成", decorationPO.getOrderId(), quotationPO.getName());
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 
 		return 0;
 	}

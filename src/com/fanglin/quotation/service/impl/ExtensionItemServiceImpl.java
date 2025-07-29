@@ -259,14 +259,18 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(200013, "报价项不存在");
 		}
 
-		int quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+		int num = quotationFunctionAreaItemPO.getNum();
 		int _diff = Arith.sub(vonum, ponum);
 
-		if (_diff > 0 && quotationFunctionAreaItemNum < _diff) {
+		if (quotationFunctionAreaItemPO.getInitNum() < vonum) {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
-		quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, Arith.sub(ponum, vonum)));
+		if (_diff >= 0 && num < vonum) {
+			throw new FLException(140039, "减项工程量大于引用项目");
+		}
+
+		quotationFunctionAreaItemPO.setNum(Arith.add(num, Arith.sub(ponum, vonum)));
 
 		quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 

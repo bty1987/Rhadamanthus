@@ -205,7 +205,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(constructionPO.getDecoration().getOrderId());
 
-			if (Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getCnid()), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getCnid()), constructionSchedulePO.getSalaryLimit())) {
+			if (Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid()), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
 				throw new FLException(280007, "工费已达上限");
 			}
 
@@ -222,7 +222,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryPO.setSchedule(constructionSchedulePO.getSchedule());
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
-			workerSalaryPO.setCnid(constructionSchedulePO.getCnid());
+			workerSalaryPO.setCnid(constructionSchedulePO.getNode().getCnid());
 
 			workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(decorationPO.getOrderId(), workerSalaryPO.getCsid()) + 1);
 		}
@@ -573,7 +573,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setDecoration(constructionPO.getDecoration());
 			workerSalaryPO.setCid(cid);
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
-			workerSalaryPO.setCnid(constructionSchedulePO.getCnid());
+			workerSalaryPO.setCnid(constructionSchedulePO.getNode().getCnid());
 
 			company = constructionPO.getDecoration().getCompany();
 		} else {

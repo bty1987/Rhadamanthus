@@ -46,7 +46,9 @@ public class QuotationPO implements Serializable {
 	public static final short STATUS_LOCK_INT = 1;
 
 	public static final short STATUS_APPROVE_INT = 2;
-	
+
+	public static final short ATTSTATUS_SUBMIT_INT = 1;
+
 	public static final short ATTSTATUS_AUDI_INT = 2;
 	
 	public static final short ATTSTATUS_FINISH_INT = 3;

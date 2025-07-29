@@ -156,7 +156,7 @@ public class ConstructerServiceImpl implements ConstructerService {
 		constructerPO.setCsid(csid);
 
 		constructerPO.setOrderId(constructionPO.getDecoration().getOrderId());
-		constructerPO.setCnid(constructionSchedulePO.getCnid());
+		constructerPO.setCnid(constructionSchedulePO.getNode().getCnid());
 		constructerPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 		constructerPO.setStatus(ConstructerPO.STATUS_INIT_INT);
 

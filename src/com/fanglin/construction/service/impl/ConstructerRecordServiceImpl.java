@@ -95,7 +95,7 @@ public class ConstructerRecordServiceImpl implements ConstructerRecordService {
 
 		constructerRecordPO.setCid(constructionPO.getCid());
 		constructerRecordPO.setOrderId(constructionPO.getDecoration().getOrderId());
-		constructerRecordPO.setCnid(constructionSchedulePO.getCnid());
+		constructerRecordPO.setCnid(constructionSchedulePO.getNode().getCnid());
 		constructerRecordPO.setSchedule(constructionSchedulePO.getSchedule());
 
 		constructerRecordPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
