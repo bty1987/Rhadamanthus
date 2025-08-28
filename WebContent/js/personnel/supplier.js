@@ -129,6 +129,7 @@
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
                     var $btnContract = $('<a></a>').addClass('btn btn-minier btn-success').html('合同');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+                    var $btnContractservice = $('<a></a>').addClass('btn btn-minier btn-success').html('服务费');
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
                     var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
                     var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认密码');
@@ -169,7 +170,10 @@
 
                         com.switchPage("/views/personnel/supplierContract.html");
                     });
-
+                    $btnContractservice.click(function() {
+                         params.personel.uid = v.uid;
+                         com.popup4page('#layerPopUp', api.index.supplierContractService.url, "厂商服务费");
+                    });
                     // 编辑
                     $btnEdit.click(function() {
 
@@ -199,9 +203,9 @@
                     });
 
                     if (supplier.pageType == 'manage') {
-                        $divBtnWrap.append($btnEdit).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
+                        $divBtnWrap.append($btnEdit).append($btnContractservice).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
                     } else {
-                        $divBtnWrap.append($btnContract).append($btnEdit).appendTo($h3);
+                        $divBtnWrap.append($btnContract).append($btnEdit).append($btnContractservice).appendTo($h3);
                     }
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);

@@ -48,6 +48,11 @@ public class BrandVO implements java.io.Serializable {
 		super();
 	}
 
+	public BrandVO(Long bid) {
+		super();
+		this.bid = bid;
+	}
+
 	public BrandVO(UserBaseVO supplier) {
 		super();
 		this.supplier = supplier;

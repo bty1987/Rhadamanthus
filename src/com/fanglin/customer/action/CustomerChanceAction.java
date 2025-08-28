@@ -14,6 +14,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.CustomerChanceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -30,6 +31,8 @@ public class CustomerChanceAction extends BaseListAction {
 	private CustomerChanceVO customerChance;
 
 	private DecorationVO decoration;
+
+	private String company;
 
 	private String securityCode;
 
@@ -55,6 +58,14 @@ public class CustomerChanceAction extends BaseListAction {
 	public String queryCustomerChanceByCcid() throws FLException {
 
 		customerChance = customerChanceService.queryCustomerChanceByCcid(customerChance);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomerChance() throws FLException {
+
+		customerChanceService.addCustomerChance(customerChance, queryUserId(), company != null ? CompanyServiceImpl.decode(company) : queryCompany());
 
 		return SUCCESS;
 	}
@@ -87,6 +98,14 @@ public class CustomerChanceAction extends BaseListAction {
 	public String sendCustomerChance() throws FLException {
 
 		customerChanceService.sendCustomerChance(customerChance, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "vodeCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String vodeCustomerChance() throws FLException {
+
+		securityCode = customerChanceService.vodeCustomerChance(customerChance, queryUserId());
 
 		return SUCCESS;
 	}
@@ -161,6 +180,14 @@ public class CustomerChanceAction extends BaseListAction {
 
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 	public String getSecurityCode() {

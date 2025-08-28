@@ -159,6 +159,8 @@
 
     function uploadimg(base64) {
     
+    	if(!base64.startsWith("data:image/png;base64")) return false;
+    
         var args = {
             "imgbase": base64.replace("data:image/png;base64,", ""),
             "authentication": authentication

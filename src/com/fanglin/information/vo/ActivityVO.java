@@ -24,6 +24,8 @@ public class ActivityVO implements java.io.Serializable {
 
 	private Short defaults;
 
+	private Short atttype;
+
 	private Integer multiple;
 
 	private Timestamp createTime;
@@ -95,6 +97,14 @@ public class ActivityVO implements java.io.Serializable {
 
 	public Short getDefaults() {
 		return defaults;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public void setDefaults(Short defaults) {

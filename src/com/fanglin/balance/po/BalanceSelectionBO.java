@@ -75,6 +75,8 @@ public class BalanceSelectionBO implements java.io.Serializable {
 
 	private short status;
 
+	private short atttype;
+
 	private int company;
 
 	public BalanceSelectionBO() {
@@ -245,6 +247,15 @@ public class BalanceSelectionBO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "company")

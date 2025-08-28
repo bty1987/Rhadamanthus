@@ -12,7 +12,7 @@ public interface DecorationAccountService {
 
 	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, String userId) throws FLException;
 
-	public void sendDecorationAccount(DecorationAccountVO decorationAccountVO) throws FLException;
+	public void sendDecorationAccount(DecorationAccountVO decorationAccountVO, String userId) throws FLException;
 
 	public int affirmDecorationAccount(DecorationVO decorationVO, DecorationAccountVO decorationAccountVO, String securityCode, String verifyCode) throws FLException;
 

@@ -325,6 +325,7 @@ jQuery(function($) {
         clazz: "btn-success",
         handle: function(v) {
 
+            params.personel.uid = v.uid;
             brandContract(v.scid);
         }
     }, {
@@ -339,7 +340,7 @@ jQuery(function($) {
     searcher.card("name", lineprops, linebtns).render();
 
     supplierContracts.btns.backBtn.on("click", function() {
-
+        params.historyPage = "/views/personnel/supplier.html";
         com.switchPage(params.historyPage);
     });
 
@@ -551,7 +552,11 @@ jQuery(function($) {
 
         params["scid"] = scid;
 
-        com.popup4page('#layerPopUp', api.index.supplierContractBrand.url, "厂商品牌");
+//        com.popup4page('#layerPopUp', api.index.supplierContractBrand.url, "厂商品牌");
+        
+        params.historyPage = "/views/personnel/supplierContract.html";
+ 
+        com.switchPage("/views/personnel/supplierContractBrand.html");
     }
 
     // 商品

@@ -3,6 +3,7 @@ package com.fanglin.balance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceSalesVO;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "balancesales", catalog = "balance")
@@ -57,6 +60,8 @@ public class BalanceSalesBO implements java.io.Serializable {
 	private long profit;
 
 	private short status;
+
+	private short atttype;
 
 	private int company;
 
@@ -136,6 +141,15 @@ public class BalanceSalesBO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "income")
@@ -230,4 +244,17 @@ public class BalanceSalesBO implements java.io.Serializable {
 		this.lockTime = lockTime;
 	}
 
+	public BalanceSalesVO ptv(BalanceSalesVO balanceSalesVO) {
+
+		BeanUtil.copyPropertie(this, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
+
+		if (balanceSalesVO.getCreater() != null && getCreater() != null) balanceSalesVO.getCreater().setBaseInfo(getCreater());
+		if (balanceSalesVO.getBalancer() != null && getBalancer() != null) balanceSalesVO.getBalancer().setBaseInfo(getBalancer());
+
+		if (balanceSalesVO.getBrand() != null && getBrand() != null) getBrand().ptv(balanceSalesVO.getBrand());
+
+		if (balanceSalesVO.getBalance() != null && getBalance() != null) getBalance().ptv(balanceSalesVO.getBalance());
+
+		return balanceSalesVO;
+	}
 }

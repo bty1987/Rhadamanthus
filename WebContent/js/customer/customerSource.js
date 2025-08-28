@@ -591,7 +591,7 @@ $(function() {
         name: "三方标识",
         prop: "busitype.outside",
         clazz: "red",
-        dataset: constant.data.decorationBusitype.outside.keys
+        dataset: constant.data().decorationBusitype.outside.keys
     }, {
         type: "newline"
     }, {

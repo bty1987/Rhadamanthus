@@ -157,6 +157,7 @@ $(function() {
             var $btnReview = $('<a></a>').addClass('btn btn-minier btn-pink').html('核对');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-pink').html('申请');
             var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('驳回');
+            var $btnAccount = $('<a></a>').addClass('btn btn-minier btn-pink').html('对账');
             var $btnSelect = $('<a></a>').addClass('btn btn-minier btn-pink').html('选材单');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-success').html('打印');
@@ -245,6 +246,9 @@ $(function() {
 
             if (selectionItem.pageConfig.pageBtn.contains("reject"))
                 $divBtnWrap.append($btnReject);
+
+            if (selectionItem.pageConfig.pageBtn.contains("account"))
+                $divBtnWrap.append($btnAccount);
 
             if (selectionItem.pageConfig.pageBtn.contains("select"))
                 $divBtnWrap.append($btnSelect);
@@ -390,6 +394,17 @@ $(function() {
             $btnReject.click(function(e) {
 
                 com.post(api.quotation.rejectSelectionItem, {
+                    "selectionItem.siid": v.siid
+                }, function(e) {
+
+                    searcher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                });
+            });
+
+            $btnAccount.click(function(e) {
+
+                com.post(api.quotation.accountSelectionItem, {
                     "selectionItem.siid": v.siid
                 }, function(e) {
 
@@ -894,7 +909,6 @@ $(function() {
             com.post(api.quotation.addQuotationPicture, options, function(res) {
 
                 appendGalleryElement(res.quotationPicture);
-                
                 com.popup4photos(selectionItem.items.picture);
 
                 searcher.doSearch();

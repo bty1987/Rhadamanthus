@@ -32,6 +32,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
@@ -220,13 +221,21 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int sendAddReduce(AddReduceVO addReduceVO, List<AddReduceVO> addReduceVOs) throws FLException {
+	public int sendAddReduce(AddReduceVO addReduceVO, List<AddReduceVO> addReduceVOs, String userId) throws FLException {
 
 		String orderId = addReduceVO.getOrderId();
 
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO sender = userDao.queryUserByUserId(userId);
+
 		System.out.println(String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认增减项, 如未付款请付款。", String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认增减项, 如未付款请付款. ", String.format("pages/quotation/addReduce/addReduce?orderId=%s&arids=%s", orderId, addReduceVO.getContent()), sender);
 
 		for (AddReduceVO addReduce : addReduceVOs) {
 

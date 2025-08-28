@@ -381,6 +381,10 @@ $.extend(api, {
             url: "queryCustomerSourceRecord.do"
         },
 
+        pageCustomerNotice: {
+            url: "pageCustomerNotice.do"
+        },
+
         pageCustomerChance: {
             url: "pageCustomerChance.do",
             type: "query",

@@ -72,6 +72,7 @@ public class DecorationBelongServiceImpl implements DecorationBelongService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendDecorationBelong(DecorationBelongVO decorationBelongVO) throws FLException {
 
 		String orderId = decorationBelongVO.getOrderId();

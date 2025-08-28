@@ -205,7 +205,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(constructionPO.getDecoration().getOrderId());
 
-			if (Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid()), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
+			if (workerSalaryVO.getType() == WorkerSalaryPO.TWOTYPE_SALARY_INT && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid()), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
 				throw new FLException(280007, "工费已达上限");
 			}
 

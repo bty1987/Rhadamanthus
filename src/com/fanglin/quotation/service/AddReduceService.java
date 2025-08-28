@@ -33,7 +33,7 @@ public interface AddReduceService {
 
 	public List<AddReduceVO> queryAddReduceByDpid(AddReduceVO addReduceVO) throws FLException;
 
-	public int sendAddReduce(AddReduceVO addReduceVO, List<AddReduceVO> addReduceVOs) throws FLException;
+	public int sendAddReduce(AddReduceVO addReduceVO, List<AddReduceVO> addReduceVOs, String userId) throws FLException;
 
 	public int addAddReduce(AddReduceVO addReduceVO, String userId) throws FLException;
 

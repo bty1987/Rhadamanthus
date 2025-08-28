@@ -71,6 +71,10 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short ISAFFIRM_CHECKED_INT = 2;
 
+	public static final short ATTTYPE_OFFLINE_INT = 0;// 线下
+
+	public static final short ATTTYPE_ONLINE_INT = 1;// 线上
+
 	private long daiId;
 
 	private long aid;
@@ -86,6 +90,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private short type;
 
 	private short state;
+
+	private short atttype;
 
 	private int num;
 
@@ -203,6 +209,15 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setState(short state) {
 		this.state = state;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "num")

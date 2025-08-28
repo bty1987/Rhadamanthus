@@ -23,18 +23,18 @@ $(function() {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b) {
 
-            return a.schedule - b.schedule;
+            return a.node.sort - b.node.sort;
         });
         var constructionSchedule = newSchedules;
         allocation4detail.constructionSchedules = newSchedules;
         $.each(constructionSchedule, function(i, v) {
 
             constructionNode[v.node.sort] = v.node.name;
-            constructerNode("#stepId1", v.schedule);
-            constructerPane("#step-container1", v.schedule, v.schedule);
+            constructerNode("#stepId1", v.node.sort);
+            constructerPane("#step-container1", v.node.sort, v.node.sort);
         });
 
-        var stepnum = constructionSchedule[0].schedule;
+        var stepnum = constructionSchedule[0].node.sort;
         initWizardSept(stepnum, stepnum);
 
         com.focusPage('#fuelux-wizard').ace_wizard({

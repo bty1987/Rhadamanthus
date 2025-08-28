@@ -74,9 +74,11 @@ public class SelectionItemPO implements Serializable {
 
 	public static final short STATUS_DISABLE_SHORT = 7;// 失效
 
+	public static final short ACCOUNT_STATUS_INIT_INT = 0;
+
 	public static final short ACCOUNT_STATUS_ACCOUNT_INT = 1;
 
-	public static final short ACCOUNT_STATUS_INIT_INT = 0;
+	public static final short ACCOUNT_STATUS_PENDING_INT = 2;
 
 	private long siid;// 选材项ID
 

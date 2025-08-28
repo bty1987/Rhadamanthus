@@ -118,7 +118,7 @@ public class DecorationActivityItemAction extends BaseListAction {
 	@Action(value = "sendDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendDecorationActivityItem() throws FLException {
 
-		decorationActivityItemService.sendDecorationActivityItem(decorationActivityItem);
+		decorationActivityItemService.sendDecorationActivityItem(decorationActivityItem, queryUserId());
 
 		return SUCCESS;
 	}

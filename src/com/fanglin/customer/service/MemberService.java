@@ -16,7 +16,7 @@ public interface MemberService {
 
 	public List<MemberPointVO> queryMemberPoint(List<MemberPointVO> memberPointVOs);
 
-	public int addMemberActivity(MemberActivityVO memberActivityVO, String userId);
+	public int addMemberActivity(MemberActivityVO memberActivityVO, List<String> companys, String userId)  throws FLException;
 
 	public int makeMemberOrder(MemberOrderVO memberOrderVO, List<MemberOrderItemVO> memberOrderItemVOs, String userId) throws FLException;
 

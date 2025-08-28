@@ -6,6 +6,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.vo.DecorationVO;
 import com.fanglin.data.common.vo.TalkingVO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationService {
@@ -30,7 +31,9 @@ public interface DecorationService {
 
 	public int sendMessage(String orderId, String name, String content, String path);
 
-	public int sendMessage(String key, String orderId, String name, String content, String path);
+	public int sendMessage(String orderId, String name, String content, String path, UserPO creater);
+
+	public int sendMessage(String key, String orderId, String name, String content, String path, UserPO creater);
 
 	public List<TalkingVO> queryTalking(DecorationVO decorationVO, TalkingVO talkingVO);
 

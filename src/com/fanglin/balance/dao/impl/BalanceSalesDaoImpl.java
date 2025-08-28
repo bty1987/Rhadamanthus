@@ -59,6 +59,11 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
+	public BalanceSalesPO queryBalanceSales(long bid, String grade, short status, short atttype, int company) {
+		return (BalanceSalesPO) session().createCriteria(BalanceSalesPO.class).add(Restrictions.eq("status", status)).add(Restrictions.eq("atttype", atttype)).createCriteria("brand", "brand").add(Restrictions.eq("brand.bid", bid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public Object[] amountBalanceSales(long bsid) {
 
 		String sql = "select sum(if(sb.onetype = 0, if(sb.type = 3, s.depositpay, s.depositpay+s.fullpay), if(sb.onetype = 1, sb.total, if(onetype in (2, 3), sb.total, 0)))) as 'income',sum(pbalance) as 'cost',sum(if(sb.onetype = 0, sb.pbalance - round(s.venderMaling, 0), if(sb.onetype = 1, sb.pbalance, if(onetype in (2, 3), sb.pbalance + round(s.venderMaling, 0), 0)))) as 'payment' from balance.balancesalesbalance bsb, sales.salesbalance sb, sales.sales s where bsb.bsid = :bsid and bsb.sbid = sb.sbid and sb.sid = s.sid";

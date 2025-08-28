@@ -24,7 +24,7 @@ public interface SelectionService {
 
 	public int updateSelectionForAdvance(SelectionVO selectionVO) throws FLException;
 
-	public int sendSelection(SelectionVO selectionVO) throws FLException;
+	public int sendSelection(SelectionVO selectionVO, String userId) throws FLException;
 
 	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode) throws FLException;
 

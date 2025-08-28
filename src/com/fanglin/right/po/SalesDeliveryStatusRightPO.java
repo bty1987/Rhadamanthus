@@ -22,13 +22,19 @@ public class SalesDeliveryStatusRightPO {
 
 	public static final short STATUS_END_INT = 4;// 完结
 
+	public static final short CHECKED_CHECK_INT = 0;
+
 	private long sdsrid;
 
 	private String name;
 
 	private long bid;
 
+	private int crate;
+
 	private short status;
+
+	private short checked;
 
 	private int company;
 
@@ -77,6 +83,15 @@ public class SalesDeliveryStatusRightPO {
 		this.bid = bid;
 	}
 
+	@Column(name = "crate")
+	public int getCrate() {
+		return crate;
+	}
+
+	public void setCrate(int crate) {
+		this.crate = crate;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -84,6 +99,15 @@ public class SalesDeliveryStatusRightPO {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "checked")
+	public short getChecked() {
+		return checked;
+	}
+
+	public void setChecked(short checked) {
+		this.checked = checked;
 	}
 
 	@Column(name = "company")

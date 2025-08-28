@@ -17,41 +17,48 @@ import com.fanglin.market.vo.EpictureVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class EpictureAction extends BaseListAction{
-	
+public class EpictureAction extends BaseListAction {
+
 	private static final long serialVersionUID = -3810784029009229248L;
 
 	@Autowired
 	private EpictureService epictureService;
-	
+
 	private List<EpictureVO> epictures;
-	
+
 	private EpictureVO epicture;
-	
+
 	@Action(value = "queryEpictureByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryEpictureByCid() throws FLException{
-		
+	public String queryEpictureByCid() throws FLException {
+
 		epictures = epictureService.queryEpictureByCid(epicture);
-	
-		return SUCCESS;
-	}
-	
-	@Action(value = "addEpicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addEpicture() throws FLException{
-		
-		epictureService.addEpicture(epicture);
-	
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteEpicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteEpicture() throws FLException{
-		
-		epictureService.deleteEpicture(epicture);
-	
+
 		return SUCCESS;
 	}
 
+	@Action(value = "queryEpicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryEpicture() throws FLException {
+
+		epictures = epictureService.queryEpictureByCid(epicture);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addEpicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addEpicture() throws FLException {
+
+		epictureService.addEpicture(epicture);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteEpicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteEpicture() throws FLException {
+
+		epictureService.deleteEpicture(epicture);
+
+		return SUCCESS;
+	}
 
 	public List<EpictureVO> getEpictures() {
 		return epictures;
@@ -68,5 +75,5 @@ public class EpictureAction extends BaseListAction{
 	public void setEpicture(EpictureVO epicture) {
 		this.epicture = epicture;
 	}
-	
+
 }

@@ -23,6 +23,8 @@ import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.sales.dao.SalesDao;
@@ -59,6 +61,9 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 	@Autowired
 	private SalesDao salesDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void pageSalesRefunds(Paging paging, List<Filter> filters) throws FLException {
@@ -147,7 +152,8 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 	}
 
 	@Override
-	public int sendSalesRefunds(SalesRefundsVO refundsVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public int sendSalesRefunds(SalesRefundsVO refundsVO, String userId) throws FLException {
 
 		SalesRefundsPO salesRefundsPO = salesRefundsDao.get(refundsVO.getRid());
 
@@ -163,9 +169,11 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 
 		String orderId = salesPO.getOrderId();
 
+		UserPO sender = userDao.queryUserByUserId(userId);
+
 		System.out.println(String.format("pages/sales/refunds/refunds?sid=%s&rid=%s&orderId=%s", salesPO.getSid(), refundsVO.getRid(), orderId));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 退货单信息确认. ", orderId), String.format("pages/sales/refunds/refunds?sid=%s&rid=%s&orderId=%s", salesPO.getSid(), refundsVO.getRid(), orderId));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 退货单信息确认. ", orderId), String.format("pages/sales/refunds/refunds?sid=%s&rid=%s&orderId=%s", salesPO.getSid(), refundsVO.getRid(), orderId), sender);
 
 		return 0;
 	}

@@ -2,6 +2,7 @@ package com.fanglin.customer.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -13,7 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.customer.vo.CppointRecordVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -42,13 +45,17 @@ public class CppointRecordPO implements Serializable {
 
 	private long cpid;
 
-	private long type;
+	private short type;
 
-	private long pointType;
+	private short pointType;
 
 	private long balance;
 
 	private long point;
+
+	private String no;
+
+	private String orderId;
 
 	private UserPO operater;
 
@@ -97,7 +104,7 @@ public class CppointRecordPO implements Serializable {
 		return type;
 	}
 
-	public void setType(long type) {
+	public void setType(short type) {
 		this.type = type;
 	}
 
@@ -106,7 +113,7 @@ public class CppointRecordPO implements Serializable {
 		return pointType;
 	}
 
-	public void setPointType(long pointType) {
+	public void setPointType(short pointType) {
 		this.pointType = pointType;
 	}
 
@@ -128,6 +135,24 @@ public class CppointRecordPO implements Serializable {
 		this.point = point;
 	}
 
+	@Column(name = "no")
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getOperater() {
@@ -147,7 +172,7 @@ public class CppointRecordPO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
-	public CppointRecordPO init(long cid, long cpid, short type, short pointType, long balance, long point, UserPO operater) {
+	public CppointRecordPO init(long cid, long cpid, short type, short pointType, long balance, long point, String no, String orderId, UserPO operater) {
 
 		this.setCid(cid);
 		this.setCpid(cpid);
@@ -157,10 +182,22 @@ public class CppointRecordPO implements Serializable {
 
 		this.setBalance(balance);
 		this.setPoint(point);
+		
+		this.setNo(no);
+		this.setOrderId(orderId);
 
 		this.setOperater(operater);
 		this.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		return this;
+	}
+
+	public CppointRecordVO ptv(CppointRecordVO cppointRecordVO) {
+
+		BeanUtil.copyPropertie(this, cppointRecordVO, Arrays.asList("operater"));
+
+		if (cppointRecordVO.getOperater() != null && getOperater() != null) cppointRecordVO.getOperater().setBaseInfo(getOperater());
+
+		return cppointRecordVO;
 	}
 }

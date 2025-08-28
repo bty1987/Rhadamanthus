@@ -32,6 +32,11 @@ $.extend(api, {market: {
     deleteCard: {url: "deleteCard.do"},
     queryCardPhotoByCaid: {url: "queryCardPhotoByCaid.do"},
     addCardPhoto: {url: "addCardPhoto.do"},
-    deleteCardPhoto: {url: "deleteCardPhoto.do"}
+    deleteCardPhoto: {url: "deleteCardPhoto.do"},
 
+    pageEopinions: {url: "pageEopinions.do"},
+    queryEopinionsByType: {url: "queryEopinionsByType.do"},
+    addEopinion: {url: "addEopinion.do"},
+    updateEopinion: {url: "updateEopinion.do"},
+    deleteEopinion: {url: "deleteEopinion.do"}
 }});

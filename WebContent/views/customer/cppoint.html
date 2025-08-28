@@ -6,14 +6,14 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="cppointModal" tabindex="-1">
+	<div class="modal fade" id="addCppointModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">
 						<span>&times;</span><span class="sr-only">Close</span>
 					</button>
-					<h4 class="modal-title" id="cppointDialog">客户积分</h4>
+					<h4 class="modal-title" id="cppointDialog">创建订单积分</h4>
 				</div>
 				<div class="modal-body">
 					<div class="row">
@@ -22,23 +22,9 @@
 								<div class="col-md-12">
 
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="cppoint4decoration">装修积分</label>
+										<label class="col-sm-3 control-label no-padding-right" for="cppoint4orderId">装修单号</label>
 										<div class="col-sm-9">
-											<span id="cppoint4decoration"></span>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="cppoint4sales">销售积分</label>
-										<div class="col-sm-9">
-											<span id="cppoint4sales"></span>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="cppoint4operate">运营积分</label>
-										<div class="col-sm-9">
-											<span id="cppoint4operate"></span>
+											<input type="text" class="col-xs-10 col-sm-6 v_required" maxlength="32" id="cppoint4orderId" />
 										</div>
 									</div>
 								</div>
@@ -48,6 +34,7 @@
 				</div>
 
 				<div class="modal-footer">
+					<button type="button" id="addCppointBtn" class="btn btn-primary">保存</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 
@@ -127,6 +114,8 @@
 			</div>
 		</div>
 	</div>
+
+<div id="cppointRecordPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
 	$.loadScript([ 'js/customer/cppoint.js' ]);

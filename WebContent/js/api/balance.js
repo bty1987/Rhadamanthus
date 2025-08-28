@@ -448,10 +448,7 @@ $.extend(api, {
                 args: ["income", "cost", "payment", "profit"]
             }]
         },
-        countBalanceSelectionItem: {
-            url: "countBalanceSelectionItem.do",
-            demo: true
-        },
+
         createBalanceSelection: {
             url: "createBalanceSelection.do",
             type: "update",
@@ -534,6 +531,17 @@ $.extend(api, {
                 result: "paging-data-selectionItem",
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
             }]
+        },
+        countBalanceSelectionItem: {
+            url: "countBalanceSelectionItem.do",
+            demo: true
+        },
+        pendingBalanceSelectionItem: {
+            url: "pendingBalanceSelectionItem.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+            }
         },
 
         pageBalanceOales: {

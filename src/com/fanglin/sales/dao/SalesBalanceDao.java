@@ -20,6 +20,12 @@ public interface SalesBalanceDao extends Dao<SalesBalancePO> {
 
 	public List<SalesBalancePO> pageSalesBalanceForCheck(Paging paging, List<Filter> filter, Short type, int pompany) throws FLException;
 
+	public List<SalesBalancePO> querySalesBalance(long sid, short checkStatus);
+
 	public SalesBalancePO querySalesBalance(long sid, short type, short onetype);
+
+	public int countSalesBalance(long sid, short type, short onetype, short checkStatus) throws FLException;
+
+	public int updateSalesBalance(long sid, short onetype, String field, short status);
 
 }

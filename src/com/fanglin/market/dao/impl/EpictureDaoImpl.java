@@ -11,16 +11,16 @@ import com.fanglin.market.po.EpicturePO;
 
 @Repository("epictureDao")
 public class EpictureDaoImpl extends DaoImpl<EpicturePO> implements EpictureDao{
-	
+
 	public EpictureDaoImpl(){
 		super(EpicturePO.class);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<EpicturePO> queryEpictureByCid(long cid) {
-		
-		return session().createCriteria(EpicturePO.class).add(Restrictions.eq(EpicturePO.EPICTURE_CID_STR,cid)).list();
+	public List<EpicturePO> queryEpictureByCid(long cid, short type) {
+
+		return session().createCriteria(EpicturePO.class).add(Restrictions.eq(EpicturePO.EPICTURE_CID_STR,cid)).add(Restrictions.eq(EpicturePO.COLUMN_TYPE_STR, type)).list();
 	}
 
 }

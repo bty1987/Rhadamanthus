@@ -380,7 +380,8 @@ public class HttpUtil {
 	}
 
 	public static void main(String[] args) {
-		// HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg",
-		// "test.jpg", "d:\\");
+		// HttpUtil.download("http://static.dingtalk.com/media/lADOHx5W480FAM0C0A_720_1280.jpg","test.jpg", "d:\\");
+
+		httpGet("http://114.215.183.148/queryVode.do?phone=15683798379");
 	}
 }

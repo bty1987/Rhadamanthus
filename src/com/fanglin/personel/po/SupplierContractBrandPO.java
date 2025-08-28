@@ -26,7 +26,9 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 	private long scbid;
 
 	private long scid; // 合同ID
-	
+
+	private long sid;
+
 	private String name;
 
 	private BrandPO brand;
@@ -73,6 +75,15 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 
 	public void setScid(long scid) {
 		this.scid = scid;
+	}
+	
+	@Column(name = "sid")
+	public long getSid() {
+		return sid;
+	}
+
+	public void setSid(long sid) {
+		this.sid = sid;
 	}
 
 	@Column(name = "ctype")

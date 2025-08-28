@@ -71,6 +71,9 @@ $.extend(api.index, {
     supplierContractBrand: {
         url: "/views/personnel/supplierContractBrand.html"
     },
+    supplierContractService: {
+        url: "/views/personnel/supplierContractService.html"
+    },
     supplierContractGoods: {
         url: "/views/personnel/supplierContractGoods.html"
     },
@@ -80,9 +83,12 @@ $.extend(api.index, {
     userPartnerIndex: {
         url: '/views/personnel/userPartner.html'
     },
+    supplierContractBrand4detailIndex: {
+        url: '/views/personnel/supplierContractBrand4detail.html'
+    },
     departmentPartnerIndex: {
         url: '/views/personnel/departmentPartner.html'
-    }
+    },
 
 });
 
@@ -269,11 +275,22 @@ $.extend(api, {
                 args: ["cvalue", "breakpay"]
             }]
         },
+        querySupplierContractServiceBySid: {
+            url: "querySupplierContractServiceBySid.do",
+        },
         querySupplierContractBrand: {
             url: "querySupplierContractBrand.do",
             type: "query",
             tranargs: [{
                 result: "supplierContractBrand",
+                args: ["cvalue", "breakpay"]
+            }]
+        },
+        querySupplierBrandProduct: {
+            url: "querySupplierBrandProduct.do",
+            type: "query",
+            tranargs: [{
+                result: "supplierBrandProducts",
                 args: ["cvalue", "breakpay"]
             }]
         },
@@ -286,6 +303,7 @@ $.extend(api, {
         },
         updateSupplierContractBrand: {
             url: "updateSupplierContractBrand.do",
+            type: "update",
             tranargs: {
                 args: ["supplierContractBrand.cvalue","supplierContractBrand.breakpay"]
             }
@@ -305,6 +323,12 @@ $.extend(api, {
         },
         deleteSupplierContractGoods: {
             url: "deleteSupplierContractGoods.do"
+        },
+        addSupplierContractGoods: {
+            url: "addSupplierContractGoods.do"
+        },
+        addSupplierContractService: {
+            url: "addSupplierContractService.do"
         },
 
         queryUserEducation: {
@@ -540,7 +564,9 @@ $.extend(api, {
         deleteRecruitmentOperation: {
             url: "deleteRecruitmentOperation.do"
         },
-
+        deleteSupplierContractService: {
+            url: "deleteSupplierContractService.do"
+        },
         queryUserRole: {
             url: "queryUserRole.do"
         },
@@ -605,7 +631,16 @@ $.extend(api, {
         queryUserFunction: {
             url: "queryUserFunction.do"
         },
-
+        deleteSupplierBrandProduct: {
+            url: "deleteSupplierBrandProduct.do"
+        },
+        addSupplierBrandProduct: {
+            url: "addSupplierBrandProduct.do",
+            type: "update",
+            tranargs: {
+                args: ["supplierBrandProduct.cvalue","supplierBrandProduct.breakpay"]
+            }
+        },
     }
 });
 

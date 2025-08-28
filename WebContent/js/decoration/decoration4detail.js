@@ -486,6 +486,7 @@ jQuery(function($) {
                 } else {
                     com.post(api.data.queryCustomerForPhone, {
                         "customerPhone.cid": decorationDetail.customer.cid,
+                        "customerPhone.cpid": 0,
                     }, function(res) {
 
                         phoneInfo.html(res.customer.phone);
@@ -1857,7 +1858,7 @@ jQuery(function($) {
                         "customerPhone.cpid": v.cpid
                     }, function(res) {
 
-                        phoneInfo.html(res.customer.phone);
+                        phoneInfo.html(res.customerPhone.phone);
                     });
                 }
 

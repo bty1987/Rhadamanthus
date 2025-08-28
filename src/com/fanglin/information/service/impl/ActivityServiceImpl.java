@@ -49,16 +49,8 @@ public class ActivityServiceImpl implements ActivityService {
 		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters, company);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 
-		ActivityVO activityVO;
-
 		for (ActivityPO activityPO : activityPOs) {
-
-			activityVO = new ActivityVO(new UserBaseVO());
-
-			BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
-
-			activityVOs.add(activityVO);
+			activityVOs.add(activityPO.ptv(new ActivityVO(new UserBaseVO())));
 		}
 
 		paging.setData(activityVOs);
@@ -71,13 +63,7 @@ public class ActivityServiceImpl implements ActivityService {
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 
 		for (ActivityPO activityPO : activityPOs) {
-
-			activityVO = new ActivityVO(new UserBaseVO());
-
-			BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
-
-			activityVOs.add(activityVO);
+			activityVOs.add(activityPO.ptv(new ActivityVO(new UserBaseVO())));
 		}
 
 		return activityVOs;
@@ -95,8 +81,10 @@ public class ActivityServiceImpl implements ActivityService {
 
 		activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		activityPO.setCreater(creater);
-		activityPO.setCompany(company);
+
 		activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);// 普通状态
+
+		activityPO.setCompany(company);
 
 		activityDao.save(activityPO);
 	}

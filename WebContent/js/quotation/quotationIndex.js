@@ -451,6 +451,7 @@
         handle: function(v) {
 
             com.showConfirm("是否进行当前操作", function() {
+
                 com.post(api.quotation.finishQuotation, {
                     "quotation.qid": v.qid
                 });
@@ -530,7 +531,7 @@
         },
         show: function(v) {
 
-            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_AUDI_INT);
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_SUBMIT_INT);
         }
     };
 
@@ -552,7 +553,7 @@
         },
         show: function(v) {
 
-            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_AUDI_INT);
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_SUBMIT_INT);
         }
     };
 
@@ -580,17 +581,13 @@
 
             params.quotation.orderId = quotation.pageType != null ? v.decoration.orderId : v.orderId;
             params.quotation.quotation = v;
-            //quotation.pageType != null ? params.quotation.attpaging = null : params.quotation.attpages = null;
+            // quotation.pageType != null ? params.quotation.attpaging = null : params.quotation.attpages = null;
 
             com.switchPage(api.index.quotationPartIndex.url);
         },
         show: function(v) {
 
-            if ([constant.quotation().quotation.ATTSTATUS_PRIMARY_INT, constant.quotation().quotation.ATTSTATUS_WORK_INT].indexOf(v.attstatus) == -1) {
-                return true;
-            } else {
-                return false;
-            }
+            return [constant.quotation().quotation.ATTSTATUS_AUDI_INT, constant.quotation().quotation.ATTSTATUS_FINISH_INT].indexOf(v.attstatus) != -1;
         }
     };
 
@@ -1557,7 +1554,7 @@
             quotation.modals.quotationForInfoModal.modal("hide");
         });
     });
-    
+
     com.focusPage('#submitApproveBtn').bindClick(function() {
 
         if (com.validate("approveModal")) {

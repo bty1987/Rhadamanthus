@@ -48,7 +48,7 @@ $(function() {
         var option = {
             "paging.page": page,
             "paging.rows": rows,
-            "balanceSales.bsid": params.balance.bsid
+            "balanceSalesBalance.bsid": params.balance.bsid
         };
 
         com.post(api.balance.pageBalanceSalesBalance, option, function(res) {

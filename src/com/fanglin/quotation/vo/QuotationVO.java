@@ -161,7 +161,7 @@ public class QuotationVO implements Serializable {
 		this.style = style;
 	}
 
-	@JSON(format = "yyyy-MM-dd hh:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -188,7 +188,7 @@ public class QuotationVO implements Serializable {
 		this.lockTime = lockTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd hh:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}

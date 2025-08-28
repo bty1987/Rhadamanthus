@@ -34,7 +34,7 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 			query.add(Restrictions.in("status", statuses));
 		}
 
-		queryFilterExcute(query, filters);
+		queryFilterExecute(query, filters);
 
 		query.desc("oid");
 
@@ -50,7 +50,7 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 		query.add(query.getCriterion("status", OalesPO.STATUS_CHECK_INT, "eq"));
 		query.add(query.getCriterion("accountStatus", OalesPO.ACCOUNT_STATUS_INIT_INT, "eq"));
 
-		queryFilterExcute(query, filters);
+		queryFilterExecute(query, filters);
 
 		return query.list();
 	}
@@ -61,7 +61,7 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 		return session().createCriteria(OalesBO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 
-	private void queryFilterExcute(PagingQuery<OalesPO> query, List<Filter> filters) throws FLException {
+	private void queryFilterExecute(PagingQuery<OalesPO> query, List<Filter> filters) throws FLException {
 		queryFilterExecute(query, filters, "");
 	}
 

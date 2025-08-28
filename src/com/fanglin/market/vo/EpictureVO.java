@@ -10,6 +10,8 @@ public class EpictureVO implements Serializable{
 	
 	private Long cid;
 	
+	private Short type;
+
 	private String url;
 
 	public Long getEpid() {
@@ -26,6 +28,14 @@ public class EpictureVO implements Serializable{
 
 	public void setCid(Long cid) {
 		this.cid = cid;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public String getUrl() {

@@ -14,7 +14,9 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.dao.CustomerNoticeDao;
 import com.fanglin.customer.dao.DecorationDao;
+import com.fanglin.customer.po.CustomerNoticePO;
 import com.fanglin.customer.po.DecorationPO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.customer.vo.DecorationVO;
@@ -25,6 +27,7 @@ import com.fanglin.decoration.dao.DecorationUserDao;
 import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.vo.DecorationUserVO;
 import com.fanglin.dingding.service.MessageService;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
@@ -48,6 +51,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private CustomerDao customerDao;
+
+	@Autowired
+	private CustomerNoticeDao customerNoticeDao;
 
 	@Autowired
 	private MessageService messageService;
@@ -183,9 +189,15 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
+		CustomerPO customerPO = decorationPO.getCustomer();
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
 		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 
-		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), decorationPO.getCustomer().getPhone());
+		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), decorationVO.getCustomerPhone() != null ? decorationVO.getCustomerPhone() : FormatUtil.decodePhone(decorationPO.getCustomer().getPhone()));
 
 		JSONObject json = HttpUtil.httpGet(url);
 
@@ -209,7 +221,9 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
 		}
 
-		List<CustomerPO> customerPOs = customerDao.queryCustomer(decorationVO.getCustomerPhone());
+		String phone = decorationVO.getCustomerPhone() != null ? FormatUtil.encodePhone(decorationVO.getCustomerPhone()) : "";
+
+		List<CustomerPO> customerPOs = customerDao.queryCustomer(phone);
 
 		if (customerPOs == null || customerPOs.size() == 0) {
 			throw new FLException(330009, "无可绑定订单");
@@ -221,7 +235,7 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(330009, "无可绑定订单");
 		}
 
-		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), decorationVO.getCustomerPhone());
+		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecoration(decorationVO.getOrderId(), phone);
 
 		if (decorationPO == null) {
 			throw new FLException(330009, "无可绑定订单");
@@ -269,7 +283,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public int sendMessage(String orderId, String name, String content) {
 
-		sendMessage(orderId, name, content, null);
+		sendMessage(orderId, name, content, null, null);
 
 		return 0;
 	}
@@ -277,17 +291,27 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public int sendMessage(String orderId, String name, String content, String path) {
 
+		sendMessage(orderId, name, content, path, null);
+
+		return 0;
+	}
+
+	@Override
+	public int sendMessage(String orderId, String name, String content, String path, UserPO creater) {
+
 		List<DecorationPO> decorationPOs = cecorationDao.queryCusDecorationByOrderId(orderId);
 
 		for (DecorationPO decorationPO : decorationPOs) {
 			messageService.sendMessage(decorationPO.getUnionId(), name, orderId, content, path);
 		}
 
+		customerNoticeDao.save(new CustomerNoticePO().init(orderId, name, content, path, creater));
+
 		return 0;
 	}
 
 	@Override
-	public int sendMessage(String key, String orderId, String name, String content, String path) {
+	public int sendMessage(String key, String orderId, String name, String content, String path, UserPO creater) {
 
 		com.fanglin.decoration.po.DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
@@ -297,7 +321,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (systemConfigPO != null && !"SEND".equals(systemConfigPO.getValue())) return 0;
 
-		sendMessage(orderId, name, content, path);
+		sendMessage(orderId, name, content, path, creater);
 
 		return 0;
 	}

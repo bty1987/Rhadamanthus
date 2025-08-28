@@ -183,6 +183,14 @@ public class SelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "accountSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String accountSelectionItem() throws FLException {
+
+		selectionItemService.accountSelectionItem(selectionItem);
+
+		return SUCCESS;
+	}
+
 	public SelectionVO getSelection() {
 		return selection;
 	}

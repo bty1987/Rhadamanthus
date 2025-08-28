@@ -52,7 +52,7 @@ public class CppointAction extends BaseListAction {
 	@Action(value = "queryCppointRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCppointRecord() throws FLException {
 
-		cppointRecords = cppointRecordService.queryCppointRecord(cppoint);
+		cppointRecordService.queryCppointRecord(cppoint, getPaging(), getFilters());
 
 		return SUCCESS;
 	}
@@ -60,7 +60,7 @@ public class CppointAction extends BaseListAction {
 	@Action(value = "createCppoint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createCppoint() throws FLException {
 
-		cppoint = cppointService.createCppoint(cppoint, queryCompany());
+		cppoint = cppointService.createCppoint(cppoint, queryCompany(), queryUserId());
 
 		return SUCCESS;
 	}

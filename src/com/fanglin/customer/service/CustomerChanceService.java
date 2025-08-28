@@ -16,13 +16,17 @@ public interface CustomerChanceService {
 
 	public CustomerChanceVO queryCustomerChanceByCcid(CustomerChanceVO customerChanceVO) throws FLException;
 
+	public void addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
+
 	public void updateCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 
-	public void disableCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
+	public void disableCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException;
 
-	public void sendCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
+	public void sendCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException;
 
-	public void confirmCustomerChance(CustomerChanceVO customerChance, String securityCode, String verifyCode) throws FLException;
+	public String vodeCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException;
+
+	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException;
 
 	public void issueCustomerChance(CustomerChanceVO customerChangeVO, String userId) throws FLException;
 
@@ -30,9 +34,10 @@ public interface CustomerChanceService {
 
 	public void readCustomerChance(CustomerChanceVO customerChangeVO) throws FLException;
 
-	public void configCustomerChance(CustomerChanceVO customerChance) throws FLException;
+	public void configCustomerChance(CustomerChanceVO customerChanceVO) throws FLException;
 
-	public void fineCustomerChance(CustomerChanceVO customerChance, String userId) throws FLException;
+	public void fineCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException;
 
 	public void finishCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;
+
 }

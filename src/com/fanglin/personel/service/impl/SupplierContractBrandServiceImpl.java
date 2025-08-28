@@ -61,7 +61,7 @@ public class SupplierContractBrandServiceImpl implements SupplierContractBrandSe
 	@Override
 	public List<SupplierContractBrandVO> querySupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException {
 
-		List<SupplierContractBrandPO> supplierBrandPOs = supplierBrandDao.querySupplierBrand(supplierBrand.getScbid());
+		List<SupplierContractBrandPO> supplierBrandPOs = supplierBrandDao.querySupplierBrand(supplierBrand.getScid());
 		List<SupplierContractBrandVO> supplierBrandVOs = new ArrayList<SupplierContractBrandVO>();
 
 		for (SupplierContractBrandPO supplierBrandPO : supplierBrandPOs) {
@@ -123,13 +123,13 @@ public class SupplierContractBrandServiceImpl implements SupplierContractBrandSe
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateSupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException {
-		
+
 		SupplierContractBrandPO supplierBrandPO = supplierBrandDao.get(supplierBrand.getScbid());
 
 		if (supplierBrandPO == null) {
 			throw new FLException(130077, "厂商品牌不存在");
 		}
-		
+
 		supplierBrandPO.setServicePrice(supplierBrand.getServicePrice());
 		
 		supplierBrandDao.update(supplierBrandPO);

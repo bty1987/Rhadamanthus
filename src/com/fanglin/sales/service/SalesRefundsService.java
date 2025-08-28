@@ -18,7 +18,7 @@ public interface SalesRefundsService {
 
 	public List<SalesRefundsItemVO> querySalesRefundsItemByRid(SalesRefundsVO refundsVO);
 
-	public int sendSalesRefunds(SalesRefundsVO refundsVO) throws FLException;
+	public int sendSalesRefunds(SalesRefundsVO refundsVO, String userId) throws FLException;
 
 	public int affirmSalesRefunds(SalesRefundsVO refundsVO, String securityCode, String verifyCode) throws FLException;
 

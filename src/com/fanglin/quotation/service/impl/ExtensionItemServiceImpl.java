@@ -2,6 +2,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -29,6 +31,7 @@ import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("extensionItemService")
 @Transactional(readOnly = true)
@@ -57,6 +60,9 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
+
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
@@ -129,20 +135,56 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		extensionItemDao.saveOrUpdate(extensionItemPO);
 
-		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
-		extensionPO.setDisPrice(extensionVO.getDisPrice());
-		extensionPO.setManageRate(extensionVO.getManageRate());
-		extensionPO.setManagePrice(extensionVO.getManagePrice());
-		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
-		extensionPO.setTaxRate(extensionVO.getTaxRate());
-		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
-		extensionPO.setTotal(extensionVO.getTotal());
-		extensionPO.setConsPrice(extensionVO.getConsPrice());
-		extensionPO.setComsPrice(extensionVO.getComsPrice());
+		extensionPO.advance(extensionVO);
 
 		extensionDao.update(extensionPO);
 
 		extensionItemVO.setEiid(extensionItemPO.getEiid());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int upgradeExtensionItem(ExtensionItemVO extensionItemVO, ExtensionVO extensionVO, String userId) throws FLException {
+
+		ExtensionPO extensionPO = extensionDao.queryExtension(extensionVO.getQid(), ExtensionPO.TYPE_ADD_INT, ExtensionPO.ATTTYPE_QUOTATION_INT);
+
+		if (extensionPO == null) {
+			extensionPO = new ExtensionPO();
+
+			BeanUtil.copyProperties(extensionVO, extensionPO, Arrays.asList("decoration", "quotation", "creater"));
+
+			extensionPO.setQid(extensionVO.getQid());
+
+			extensionPO.setCreater(userDao.queryUserByUserId(userId));
+			extensionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			extensionPO.setType(ExtensionPO.TYPE_ADD_INT);
+			extensionPO.setAtttype(ExtensionPO.ATTTYPE_QUOTATION_INT);
+
+			extensionPO.setStatus(ExtensionPO.STATUS_INIT_SHORT);
+
+			extensionDao.save(extensionPO);
+		}
+
+		checkExtension(extensionPO);
+
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(extensionItemVO.getQuotationFunctionAreaId());
+
+		ExtensionItemPO extensionItemPO = new ExtensionItemPO();
+
+		BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
+
+		extensionItemPO.setEid(extensionPO.getEid());
+		extensionItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
+
+		extensionItemPO.setNum(extensionItemVO.getNum());
+		extensionItemPO.setInitnum(extensionItemVO.getNum());
+
+		extensionItemDao.saveOrUpdate(extensionItemPO);
+
+		BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
 
 		return 0;
 	}
@@ -180,15 +222,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		extensionItemDao.delete(extensionItemPO);
 
-		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
-		extensionPO.setDisPrice(extensionVO.getDisPrice());
-		extensionPO.setManageRate(extensionVO.getManageRate());
-		extensionPO.setManagePrice(extensionVO.getManagePrice());
-		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
-		extensionPO.setTaxRate(extensionVO.getTaxRate());
-		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
-		extensionPO.setTotal(extensionVO.getTotal());
-		extensionPO.setConsPrice(extensionVO.getConsPrice());
+		extensionPO.advance(extensionVO);
 
 		extensionDao.update(extensionPO);
 	}

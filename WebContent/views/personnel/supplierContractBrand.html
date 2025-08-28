@@ -1,145 +1,115 @@
 <div>
-	<div class="row">
-		<div class="col-xs-12">
-			<div id="condList" class="fl_search clearfix"></div>
-			<div id="resultList" class="clearfix tab-pane active"></div>
-			<div id="pagenation" class="fl-page-wrap clearfix"></div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div>
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="addSupplierAddBrandModal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span>&times;</span><span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title" id="villageDialog">添加品牌</h4>
-			</div>
-
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-xs-12">
-						<form class="form-horizontal">
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right"
-									for="scname">名称</label>
-								<div class="col-sm-9">
-									<input type="text" id="scname" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
-								</div>
-							</div>
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="brandName">品牌</label>
-								<div class="col-sm-9">
-									<input type="text" id="brandName" maxlength="12" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
-								</div>
-							</div>
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="ctype">结算类型</label>
-								<div class="col-sm-9">
-									<select id="ctype" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
-								</div>
-							</div>
-							<div class="space-4"></div>
-
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="cvalue">结算值</label>
-								<div class="col-sm-9">
-									<input type="text" id="cvalue" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' placeholder="例：0.21"/>
-								</div>
-							</div>
-						    <div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="warranTime">质保期</label>
-								<div class="col-sm-9">
-									<input type="text" id="warranTime" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' placeholder="天"/>
-								</div>
-							</div>
-							<div class="space-4"></div>
-
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="category">违约金</label>
-								<div class="col-sm-9">
-									<input type="text" id="breakpay" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' placeholder="例：5% 输入：5"/>
-								</div>
-							</div>
-
-						</form>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" id="submitBtn" class="btn btn-primary">保存</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="villageDialog">添加品牌</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right" for="brandName">品牌</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="brandName" maxlength="12" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="addServicePriceModal" tabindex="-1">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">
-					<span>&times;</span><span class="sr-only">Close</span>
-				</button>
-				<h4 class="modal-title" id="villageDialog">添加服务费</h4>
-			</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="villageDialog">添加服务费</h4>
+            </div>
 
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-xs-12">
-						<form class="form-horizontal">
-						
-							<div class="form-group default">
-								<div class="col-xs-12" id="servicePriceList" ></div>
-							</div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
 
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="supplier">开始时间</label>
-								<div class="col-sm-9">
-									<input type="text" id="startDate" class="col-xs-10 col-sm-6 date-picker-date v_required" data-date-format="yyyy-mm-dd">									
-								</div>
-							</div>
+                            <div class="form-group default">
+                                <div class="col-xs-12" id="servicePriceList" ></div>
+                            </div>
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right" for="ctype">历史选择</label>
+                                <div class="col-sm-9">
+                                    <select id="chooseHistory" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'></select>
+                                </div>
+                            </div>
+                            <div class="form-group default" style="display: none;>
+                                <label class="col-sm-3 control-label no-padding-right" for="supplier">开始时间</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="startDate" class="col-xs-10 col-sm-6 date-picker-date v_required" data-date-format="yyyy-mm-dd">                                    
+                                </div>
+                            </div>
 
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="supplier">结束时间</label>
-								<div class="col-sm-9">
-									<input type="text" id="reportedDate" class="col-xs-10 col-sm-6 date-picker-date v_required" data-date-format="yyyy-mm-dd">									
-								</div>
-							</div>
+                            <div class="form-group default" style="display: none;>
+                                <label class="col-sm-3 control-label no-padding-right" for="supplier">结束时间</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="reportedDate" class="col-xs-10 col-sm-6 date-picker-date" data-date-format="yyyy-mm-dd">                                    
+                                </div>
+                            </div>
 
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="supplier">最大金额</label>
-								<div class="col-sm-9">
-									<input type="text" id="maxAmount" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
-								</div>
-							</div>
-							<div class="space-4"></div>
+                            <div class="form-group default" style="display: none;>
+                                <label class="col-sm-3 control-label no-padding-right" for="supplier">最大金额</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="maxAmount" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
 
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="category">最小金额</label>
-								<div class="col-sm-9">
-									<input type="text" id="minAmount" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
-								</div>
-							</div>
-							<div class="space-4"></div>
-							
-							<div class="form-group default">
-								<label class="col-sm-3 control-label no-padding-right" for="category">超额服务费</label>
-								<div class="col-sm-9">
-									<input type="text" id="serviceCharge" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual' />
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" id="servicePriceSubmitBtn" class="btn btn-primary">保存</button>
-			</div>
-		</div>
-	</div>
+                            <div class="form-group default" style="display: none;>
+                                <label class="col-sm-3 control-label no-padding-right" for="category">最小金额</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="minAmount" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
+                            <div class="form-group default" style="display: none;>
+                                <label class="col-sm-3 control-label no-padding-right" for="category">超额服务费</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="serviceCharge" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual' />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="servicePriceSubmitBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div id="layerPopUp" class="portlet box page-content"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/personnel/supplierContractBrand.js']);

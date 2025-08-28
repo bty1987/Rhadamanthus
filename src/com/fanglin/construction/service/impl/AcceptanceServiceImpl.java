@@ -26,6 +26,8 @@ import com.fanglin.construction.vo.AcceptanceVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -41,6 +43,9 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 
 	@Autowired
 	private ConstructionDao constructionDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Override
 	public AcceptanceVO queryAcceptanceById(AcceptanceVO acceptanceVO) {
@@ -96,7 +101,9 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationPO.getPaySacle() < 100) {
+		SystemConfigPO limit = systemConfigDao.querySystemConfig("CONSTRUCTION_ACCEPTANCE_LIMIT_INT", decorationPO.getCompany());
+
+		if (decorationPO.getPaySacle() < (limit != null ? Integer.parseInt(limit.getValue()) : 80)) {
 			throw new FLException(120018, "装修款比例不足");
 		}
 
@@ -140,5 +147,4 @@ public class AcceptanceServiceImpl implements AcceptanceService {
 
 		return 0;
 	}
-
 }

@@ -654,7 +654,7 @@ jQuery(function($) {
 
         var options = {
             "decorationHolonomy.decoration.orderId": com.focusPage("#orderId4decorationHolonomy").val(),
-            "decorationHolonomy.materialPrice": com.focusPage("#materialPrice").val()
+            "decorationHolonomy.materialPrice": com.focusPage("#materialPrice", "#updateDecorationHolonomyModal").val()
         };
 
         com.post(api.decoration.updateDecorationHolonomy, options, function(res) {
@@ -665,7 +665,7 @@ jQuery(function($) {
         management.updateDecorationHolonomyModal.modal("hide");
     });
 
-    com.focusPage("#saveDecorationMidpackMaterialPriceBtn").click(function() {
+    com.focusPage("#saveBtn", "#updateDecorationMidpackModal").click(function() {
 
         if (com.validate("updateDecorationMidpackModal")) {
             return false;
@@ -673,7 +673,7 @@ jQuery(function($) {
 
         var options = {
             "decorationMidpack.decoration.orderId": com.focusPage("#orderId4decorationMidpack").val(),
-            "decorationMidpack.materialPrice": com.focusPage("#decorationMidpackMaterialPrice").val()
+            "decorationMidpack.materialPrice": com.focusPage("#materialPrice", "#updateDecorationMidpackModal").val()
         };
 
         com.post(api.decoration.updateDecorationMidpack, options, function(res) {

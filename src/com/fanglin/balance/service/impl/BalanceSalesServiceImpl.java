@@ -16,6 +16,7 @@ import com.fanglin.balance.po.BalancePO;
 import com.fanglin.balance.po.BalanceSalesBO;
 import com.fanglin.balance.po.BalanceSalesBalancePO;
 import com.fanglin.balance.po.BalanceSalesPO;
+import com.fanglin.balance.service.BalanceSalesBalanceService;
 import com.fanglin.balance.service.BalanceSalesService;
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.balance.vo.BalanceSalesVO;
@@ -27,8 +28,6 @@ import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.payment.dao.SalesPaymentDao;
-import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -65,13 +64,13 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	private SalesBalanceDao salesBalanceDao;
 
 	@Autowired
-	private SalesPaymentDao salesPaymentDao;
-
-	@Autowired
 	private UserDao userDao;
 
 	@Autowired
 	private BrandDao brandDao;
+
+	@Autowired
+	private BalanceSalesBalanceService balanceSalesBalanceService;
 
 	@Override
 	public void pageBalanceSales(Paging paging, List<Filter> filters, int company) {
@@ -79,24 +78,8 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSales(paging, filters, company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
-		BalanceSalesVO balanceSalesVO;
-
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-
-			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceSalesBO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-
-			BeanUtil.copyPropertie(balanceSalesBO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
-
-			BeanUtil.copyPropertie(balanceSalesBO.getBalance(), balanceSalesVO.getBalance(), Arrays.asList("belonger", "creater"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getBelonger(), balanceSalesVO.getBalance().getBelonger(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getCreater(), balanceSalesVO.getBalance().getCreater(), Arrays.asList("duty", "dept"));
-
-			balanceSalesVOs.add(balanceSalesVO);
-
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);
@@ -109,20 +92,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-
-			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceSalesBO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-
-			BeanUtil.copyPropertie(balanceSalesBO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
-
-			BeanUtil.copyPropertie(balanceSalesBO.getBalance(), balanceSalesVO.getBalance(), Arrays.asList("belonger", "creater"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getBelonger(), balanceSalesVO.getBalance().getBelonger(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceSalesBO.getBalance().getCreater(), balanceSalesVO.getBalance().getCreater(), Arrays.asList("duty", "dept"));
-
-			balanceSalesVOs.add(balanceSalesVO);
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);
@@ -135,13 +105,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		List<BalanceSalesPO> balanceSalesPOs = balanceSalesDao.queryBalanceSales(balanceSalesVO.getName(), company);
 
 		for (BalanceSalesPO balanceSalesPO : balanceSalesPOs) {
-
-			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("supplier"));
-
-			balanceSalesVOs.add(balanceSalesVO);
+			balanceSalesVOs.add(balanceSalesPO.ptv(new BalanceSalesVO(new BrandVO(), new UserBaseVO())));
 		}
 
 		return balanceSalesVOs;
@@ -152,13 +116,9 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 
-		balanceSalesVO = new BalanceSalesVO(new BrandVO(new UserBaseVO()), new UserBaseVO());
-
-		BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
-		BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("supplier"));
-		BeanUtil.copyPropertie(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("dept", "duty"));
-
-		BeanUtil.copyProperties(balanceSalesPO.getBrand().getSupplier(), balanceSalesVO.getBrand().getSupplier(), Arrays.asList("dept", "duty"));
+		if (balanceSalesPO != null) {
+			return balanceSalesPO.ptv(new BalanceSalesVO(new BrandVO(new UserBaseVO()), new UserBaseVO()));
+		}
 
 		return balanceSalesVO;
 	}
@@ -167,10 +127,15 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	@Transactional(rollbackFor = Exception.class)
 	public int createBalanceSales(BalanceSalesVO balanceSalesVO, String userId, int company) throws FLException {
 
-		BrandPO brand = brandDao.queryBrandByBid(balanceSalesVO.getBrand().getBid());
+		BrandPO brandPO = brandDao.queryBrandByBid(balanceSalesVO.getBrand().getBid());
+
+		if (brandPO == null) {
+			throw new FLException(130077, "品牌不存在");
+		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		BalanceSalesPO balanceSalesPO = new BalanceSalesPO(brand);
+
+		BalanceSalesPO balanceSalesPO = new BalanceSalesPO(brandPO);
 
 		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "balance", "creater", "balancer"));
 
@@ -179,6 +144,37 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		balanceSalesPO.setGrade(balanceSalesVO.getGrade());
 		balanceSalesPO.setName(balanceSalesVO.getName());
 		balanceSalesPO.setCompany(company);
+
+		String currentDate = DateUtil.current("yyMMdd").toString();
+
+		if (balanceSalesVO.getName() == null) {
+			balanceSalesPO.setName(String.format("%s-%s-%s", currentDate, brandPO.getName(), "A"));
+		}
+
+		if (balanceSalesVO.getGrade() == null) {
+			balanceSalesPO.setGrade("A");
+		}
+
+		BalancePO balancePO = new BalancePO(new UserPO(), new UserPO());
+
+		CompanyPO companyPO = companyDao.get(company);
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, balanceSalesPO.getCompany());
+
+		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+		balancePO.setNo(no);
+		balancePO.setType(BalanceSalesPO.STATUS_INIT_INT);
+		balancePO.setBelonger(balanceSalesPO.getCreater());
+		balancePO.setCreater(balanceSalesPO.getCreater());
+		balancePO.setCompany(balanceSalesPO.getCompany());
+		balancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		balancePO.setAmount(balanceSalesPO.getPayment());
+		balancePO.setSurplus(balanceSalesPO.getPayment());
+
+		balanceDao.save(balancePO);
+
+		balanceSalesPO.setBid(balancePO.getBid());
 
 		balanceSalesDao.save(balanceSalesPO);
 
@@ -199,62 +195,14 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 			throw new FLException(350018, "结算销售不可操作");
 		}
 
-		UserPO operater = userDao.queryUserByUserId(userId);
-
 		for (BalanceSalesBalanceVO balanceSalesBalanceVO : balanceSalesBalance) {
 
-			SalesBalancePO salesBalancePO = salesBalanceDao.get(balanceSalesBalanceVO.getSalesBalance().getSbid());
-
-			if (salesBalancePO == null) continue;
-
-			BalanceSalesBalancePO balanceSalesBanlancePO = new BalanceSalesBalancePO();
-
-			balanceSalesBanlancePO.setBsid(balanceSalesVO.getBsid());
-			balanceSalesBanlancePO.setSalesBalance(salesBalancePO);
-
-			balanceSalesBalanceDao.save(balanceSalesBanlancePO);
-
-			salesBalancePO.setChecker(operater);
-			salesBalancePO.setCheckStatus(SalesBalancePO.CHECKSTATUS_CHECK_INT);
-			salesBalancePO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
-
-			if (salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
-
-				SalesPaymentPO deposit = salesPaymentDao.querySalesPayment(salesBalancePO.getSales().getSid(), Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT));
-				if (deposit != null && deposit.getSalesReceipt() != null) salesBalancePO.setCoupon(Arith.add(salesBalancePO.getCoupon(), deposit.getSalesReceipt().getCoupon()));
-
-				SalesPaymentPO fullpay = salesPaymentDao.querySalesPayment(salesBalancePO.getSales().getSid(), Arrays.asList(SalesPaymentPO.TYPE_REPLENISHMENT_INT));
-				if (fullpay != null && fullpay.getSalesReceipt() != null) salesBalancePO.setCoupon(Arith.add(salesBalancePO.getCoupon(), fullpay.getSalesReceipt().getCoupon()));
-
-				SalesPaymentPO refpay = salesPaymentDao.querySalesPayment(salesBalancePO.getSales().getSid(), Arrays.asList(SalesPaymentPO.TYPE_MAKEAREFUND_INT));
-				if (refpay != null && refpay.getSalesReceipt() != null) salesBalancePO.setCoupon(Arith.sub(salesBalancePO.getCoupon(), refpay.getSalesReceipt().getCoupon()));
-
-			} else if (salesBalancePO.getType() == SalesBalancePO.TYPE_DEPOSITPAY_INT && salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT) {
-
-				SalesPaymentPO deposit = salesPaymentDao.querySalesPayment(salesBalancePO.getSales().getSid(), Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT));
-				if (deposit != null && deposit.getSalesReceipt() != null) salesBalancePO.setCoupon(deposit.getSalesReceipt().getCoupon());
-			} else if (salesBalancePO.getRefunds() != null) {
-				SalesPaymentPO refpay = salesPaymentDao.get(salesBalancePO.getRefunds().getSpid());
-				if (refpay != null && refpay.getSalesReceipt() != null) salesBalancePO.setCoupon(refpay.getSalesReceipt().getCoupon());
-			}
-
-			salesBalanceDao.update(salesBalancePO);
+			balanceSalesBalanceService.submitBalanceSalesBalance(balanceSalesVO, balanceSalesBalanceVO, userId, company);
 		}
 
 		balanceSalesBalanceDao.flush();
 
-		Object[] amount = balanceSalesDao.amountBalanceSales(balanceSalesVO.getBsid());
-
-		long income = (Long) amount[0] == null ? 0 : (Long) amount[0];
-		long cost = (Long) amount[1] == null ? 0 : (Long) amount[1];
-		long payment = (Long) amount[2] == null ? 0 : (Long) amount[2];
-
-		balanceSalesPO.setIncome(income);
-		balanceSalesPO.setCost(cost);
-		balanceSalesPO.setPayment(payment);
-		balanceSalesPO.setProfit(Arith.sub(income, payment));
-
-		balanceSalesDao.update(balanceSalesPO);
+		totalBalanceSales(balanceSalesPO);
 
 		return 0;
 	}
@@ -292,18 +240,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		balanceSalesBalanceDao.flush();
 
-		Object[] amount = balanceSalesDao.amountBalanceSales(balanceSalesVO.getBsid());
-
-		long income = (Long) amount[0] == null ? 0 : (Long) amount[0];
-		long cost = (Long) amount[1] == null ? 0 : (Long) amount[1];
-		long payment = (Long) amount[2] == null ? 0 : (Long) amount[2];
-
-		balanceSalesPO.setIncome(income);
-		balanceSalesPO.setCost(cost);
-		balanceSalesPO.setPayment(payment);
-		balanceSalesPO.setProfit(Arith.sub(income, payment));
-
-		balanceSalesDao.update(balanceSalesPO);
+		totalBalanceSales(balanceSalesPO);
 
 		return 0;
 	}
@@ -331,6 +268,21 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int amountBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException {
+
+		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
+
+		if (balanceSalesPO == null) {
+			throw new FLException(350017, "结算销售不存在");
+		}
+
+		totalBalanceSales(balanceSalesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException {
 
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
@@ -351,7 +303,11 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		balanceSalesDao.update(balanceSalesPO);
 
-		BalancePO balancePO = new BalancePO(new UserPO(), new UserPO());
+		BalancePO balancePO = balanceDao.get(balanceSalesPO.getBid());
+
+		if (balancePO != null && balancePO.getBid() != 0) return 0;
+
+		balancePO = new BalancePO(new UserPO(), new UserPO());
 
 		CompanyPO companyPO = companyDao.get(balanceSalesPO.getCompany());
 
@@ -456,17 +412,10 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		return 0;
 	}
 
-	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int amountBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException {
+	public int totalBalanceSales(BalanceSalesPO balanceSalesPO) {
 
-		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
-
-		if (balanceSalesPO == null) {
-			throw new FLException(350017, "结算销售不存在");
-		}
-
-		Object[] amount = balanceSalesDao.amountBalanceSales(balanceSalesVO.getBsid());
+		Object[] amount = balanceSalesDao.amountBalanceSales(balanceSalesPO.getBsid());
 
 		long income = (Long) amount[0] == null ? 0 : (Long) amount[0];
 		long cost = (Long) amount[1] == null ? 0 : (Long) amount[1];

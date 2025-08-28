@@ -74,7 +74,7 @@ jQuery(function($) {
     brand.modals.deliveryModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
-        com.focusPage("input[type='checkbox']").removeAttr("checked");
+        com.focusPage("input[type='checkbox']", "#deliveryModal").removeAttr("checked");
         com.closeTip();
     });
 
@@ -374,21 +374,28 @@ jQuery(function($) {
 
     function line(i, v) {
 
-        var $div = $('<div></div>').addClass('dd-handle clearfix').text(v).appendTo(contentDiv);
+        var $div = $('<div></div>').addClass('dd-handle clearfix deviveryItem').appendTo(contentDiv);
 
-        var $input = $('<input name="checkbox">').attr({
+        var $span = $('<span></span>').addClass('col-md-2').text(v);
+
+        var $crateDiv = $('<div></div>').addClass('ace-spinner pull-right');
+        var $crateInput = $('<input name="crate">').attr({
+            type: 'text',
+            name: i
+        }).addClass('ace input-mini spinner-input form-control').val(0).appendTo($crateDiv);
+
+        var $checkInput = $('<input name="checkbox">').attr({
             type: 'checkbox',
-            name: v
-        }).addClass('ace').val(i);
+            name: i,
+        }).css("margin-left", "0px").prop("checked", null).addClass('ace');
+        var $checkDiv = $('<div></div>').addClass('col-md-1 pull-right1').append($checkInput).append($('<span class="lbl"></span>'));
 
-        var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
+        var $groupDiv = $('<div></div>').addClass('checkbox pull-right1').css({
             'margin-bottom': '0',
             'margin-top': '-5px'
         });
 
-        var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
-
-        $indexCheck.append($label).appendTo($div);
+        $groupDiv.append($checkDiv).append($span).append($crateDiv).appendTo($div);
     }
 
     function line1(i, v) {
@@ -419,12 +426,14 @@ jQuery(function($) {
         }, function(res) {
 
             $.each(res.salesDeliveryStatusRights, function(i, v) {
+                
+                if (v.checked == 0)
+                    com.focusPage("input[type='checkbox'][name='" + v.status + "']", "#deliveryModal").prop({
+                        "checked": "checked"
+                    });
 
-                com.focusPage("input[type='checkbox'][value='" + v.status + "']", "#deliveryModal").prop({
-                    "checked": "checked"
-                });
+                com.focusPage("input[type='text'][name='" + v.status + "']", "#deliveryModal").val(v.crate ? v.crate : 0);
             });
-
         });
 
         brand.modals.deliveryModal.modal("show");
@@ -444,7 +453,6 @@ jQuery(function($) {
                     "checked": "checked"
                 });
             });
-
         });
 
         brand.modals.selectionModal.modal("show");
@@ -456,13 +464,21 @@ jQuery(function($) {
             "salesDeliveryStatusRight.bid": brand.brand.bid
         };
 
-        com.focusPage("input[type='checkbox']:checked", "#deliveryModal").each(function(i, v) {
+        var items = com.focusPage(".deviveryItem", "#deliveryModal");
 
-            var that = $(this);
+        items.each(function(i, e) {
 
-            options["salesDeliveryStatusRights[" + i + "].name"] = that.attr("name");
+            var item = $(e);
+
+            var status = item.find("input[type='checkbox']");
+            var create = item.find("input[type='text']");
+            
+            options["salesDeliveryStatusRights[" + i + "].name"] = item.find("span").text();
             options["salesDeliveryStatusRights[" + i + "].bid"] = brand.brand.bid;
-            options["salesDeliveryStatusRights[" + i + "].status"] = that.val();
+
+            options["salesDeliveryStatusRights[" + i + "].status"] = status.attr("name");
+            options["salesDeliveryStatusRights[" + i + "].checked"] = status.prop("checked") ? 0 : 1;
+            options["salesDeliveryStatusRights[" + i + "].crate"] = create.val();
         });
 
         com.post(api.right.updateSalesDeliveryStatusRight, options, function(res) {
@@ -491,22 +507,21 @@ jQuery(function($) {
             brand.modals.selectionModal.modal("hide");
         });
     }
-    
+
     function supplier(v) {
-        console.log('Hello, World!');
-        console.log(v);
+
         params.data.brand = v;
 
         com.popup4page("#supplierPopUp", "/views/data/brandSupplier.html", "厂商");
-
     }
+    
     function instorer(v) {
 
         params.data.brand = v;
 
         com.popup4page("#instorerPopUp", "/views/data/brandInstorer.html", "厂商");
-
     }
+    
     function saveData() {
 
         if (com.validate('brandModal'))
@@ -538,7 +553,8 @@ jQuery(function($) {
 
             var no = res.brand.no;
 
-            if (brand.brand) no = brand.brand.no;
+            if (brand.brand)
+                no = brand.brand.no;
 
             var brandData = {
                 "no": no,

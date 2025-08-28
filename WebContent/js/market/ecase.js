@@ -173,7 +173,8 @@ jQuery(function($) {
 
                 com.focusPage("#epicture").html("");
                 com.post(api.market.queryEpictureByCid, {
-                    "epicture.cid": v.cid
+                    "epicture.cid": v.cid,
+                    "epicture.type": 0
                 }, function(data) {
 
                     var pictures = data.epictures;
@@ -319,6 +320,7 @@ jQuery(function($) {
             var options = {};
 
             options["epicture.cid"] = cid;
+            options["epicture.type"] = 0;
             options["epicture.url"] = data.resUrl;
             options["epicture.filesize"] = data.filesize;
 

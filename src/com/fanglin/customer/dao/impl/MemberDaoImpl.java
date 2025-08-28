@@ -18,7 +18,7 @@ public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
 	@Override
 	public long totalMemberPointForDecoration(String orderId) {
 
-		String sql = "SELECT SUM(referMoney) from payment.decorationpayment where orderId = :orderId AND onetype = 1 AND twotype = 1";
+		String sql = "SELECT SUM(dp.referMoney*a.multiple/1000) from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId AND dp.onetype = 0 AND dp.twotype = 1 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
@@ -27,7 +27,7 @@ public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
 	@Override
 	public long amountMemberPointForDecoration(String orderId) {
 
-		String sql = "SELECT SUM(referMoney) from payment.decorationpayment where orderId = :orderId AND paymentStatus IN (1, 2) AND onetype = 1 AND twotype = 1";
+		String sql = "SELECT SUM(dp.referMoney*a.multiple/1000) from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId AND dp.paymentStatus IN (1, 2) AND dp.onetype = 0 AND dp.twotype = 1 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
@@ -36,7 +36,7 @@ public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
 	@Override
 	public long totalMemberPointForMaterial(String orderId) {
 
-		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2)";
+		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney)*a.multiple/1000) from payment.salespayment sp, sales.sales s, information.activity a where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.activityid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
@@ -45,10 +45,11 @@ public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
 	@Override
 	public long amountMemberPointForMaterial(String orderId) {
 
-		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney)) * min(if(sdi.status = 4, 1, 0)) from payment.salespayment sp, sales.sales s, sales.salesdeliveryitem sdi where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.sid = sdi.sid";
+		String sql = "select sum(if(sp.type in (2, 3, 8), sp.referMoney, -sp.refermoney))*min(if(sdi.status = 4, 1, 0)*a.multiple/1000) from payment.salespayment sp, sales.sales s, sales.salesdeliveryitem sdi, information.activity a where s.orderId = :orderId and s.sid = sp.sid and sp.status in (1, 2) and s.sid = sdi.sid and s.activityid = a.aid and a.atttype = 1";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
 	}
 
 }
+

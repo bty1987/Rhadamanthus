@@ -13,10 +13,14 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.payment.dao.OalesPaymentDao;
+import com.fanglin.payment.po.OalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.dao.OalesDao;
 import com.fanglin.sales.dao.OalesPayDao;
+import com.fanglin.sales.po.OalesPO;
 import com.fanglin.sales.po.OalesPayOO;
 import com.fanglin.sales.po.OalesPayPO;
 import com.fanglin.sales.service.OalesPayService;
@@ -35,6 +39,12 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private OalesDao oalesDao;
+
+	@Autowired
+	private OalesPaymentDao oalesPaymentDao;
 
 	@Override
 	public void pageOalesPay(Paging paging, List<Filter> filters, int company) throws FLException {
@@ -81,6 +91,16 @@ public class OalesPayServiceImpl implements OalesPayService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addOalesPay(OalesPayVO oalesPayVO, String userId, int company) throws FLException {
 
+		OalesPO oales = oalesDao.get(oalesPayVO.getOid());
+
+		if (oales == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		if (oalesPayVO.getMoney() < 0) {
+			throw new FLException(150025, "款项金额不正确");
+		}
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		OalesPayPO oalesPayPO = new OalesPayPO();
@@ -92,6 +112,21 @@ public class OalesPayServiceImpl implements OalesPayService {
 		oalesPayPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesPayDao.save(oalesPayPO);
+
+		OalesPaymentPO oalesPaymentPO = new OalesPaymentPO(new UserPO(), new OalesPO());
+
+		oalesPaymentPO.setOales(oales);
+		oalesPaymentPO.setOrderId(oales.getDecoration().getOrderId());
+		oalesPaymentPO.setType(OalesPaymentPO.TYPE_PAYMENT_INT);
+		oalesPaymentPO.setStatus(OalesPaymentPO.STATUS_INITIAL_INT);
+		oalesPaymentPO.setCategory(oales.getCategory());
+		oalesPaymentPO.setBrand(oales.getBrand());
+		oalesPaymentPO.setReferMoney(oalesPayVO.getMoney());
+		oalesPaymentPO.setCreater(creater);
+		oalesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		oalesPaymentPO.setCompany(company);
+
+		oalesPaymentDao.save(oalesPaymentPO);
 
 		return 0;
 	}

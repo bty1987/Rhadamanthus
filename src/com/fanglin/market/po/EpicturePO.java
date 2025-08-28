@@ -13,15 +13,19 @@ import javax.persistence.Table;
 public class EpicturePO implements Serializable{
 
 	private static final long serialVersionUID = 444275735585633980L;
-	
+
 	public static final String EPICTURE_CID_STR = "cid"; 
 
+	public static final String COLUMN_TYPE_STR = "type";
+
 	private long epid;
-	
+
 	private long cid;
-	
+
+	private short type;
+
 	private String url;
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name = "epid")
@@ -32,7 +36,7 @@ public class EpicturePO implements Serializable{
 	public void setEpid(long epid) {
 		this.epid = epid;
 	}
-	
+
 	@Column(name = "cid")
 	public long getCid() {
 		return cid;
@@ -40,6 +44,15 @@ public class EpicturePO implements Serializable{
 
 	public void setCid(long cid) {
 		this.cid = cid;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "url")
@@ -50,5 +63,5 @@ public class EpicturePO implements Serializable{
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 }

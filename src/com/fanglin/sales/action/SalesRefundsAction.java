@@ -70,7 +70,7 @@ public class SalesRefundsAction extends BaseListAction {
 	@Action(value = "sendSalesRefunds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSalesRefunds() throws FLException {
 
-		salesRefundsService.sendSalesRefunds(refunds);
+		salesRefundsService.sendSalesRefunds(refunds, queryUserId());
 
 		return SUCCESS;
 	}

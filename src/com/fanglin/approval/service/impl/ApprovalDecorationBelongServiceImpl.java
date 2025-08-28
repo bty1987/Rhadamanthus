@@ -300,6 +300,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int confirmForDecorationBelong(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalDecorationBelongPO approvalDecorationBelongPO = approvalDecorationBelongDao.queryApprovalDecorationBelongByAId(approvalPO.getAid());

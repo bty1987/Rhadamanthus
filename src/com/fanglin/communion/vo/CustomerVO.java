@@ -2,6 +2,8 @@ package com.fanglin.communion.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.po.CustomerPO;
+
 public class CustomerVO implements Serializable {
 
 	private static final long serialVersionUID = -7469004001329405496L;
@@ -297,15 +299,32 @@ public class CustomerVO implements Serializable {
 
 	public void setConfidentialInfo() {
 
-		this.email = "-";
-		this.qq = "-";
-		this.phone = "-";
-		this.wechat = "-";
+		setPhone("");
+		setCompanyPhone("");
 
-		this.address = "-";
-		this.identity = "-";
-		this.photoPath = "-";
-		this.identityPathF = "-";
-		this.identityPathB = "-";
+		setEmail("");
+		setQq("");
+		setWechat("");
+
+		setAddress("");
+		setIdentity("");
+		setPhotoPath("");
+		setIdentityPathF("");
+		setIdentityPathB("");
+
+		setCompanyAddr("");
+		setCompanyBank("");
+		setCompanyBankno("");
+		setCompanyName("");
+		setCompanyNo("");
+	}
+
+	public CustomerVO initBank(CustomerPO customerPO) {
+
+		setCompanyName(customerPO.getCompanyName());
+		setCompanyBank(customerPO.getCompanyBank());
+		setCompanyBankno(customerPO.getCompanyBankno());
+
+		return this;
 	}
 }

@@ -1,5 +1,6 @@
 package com.fanglin.right.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -11,6 +12,7 @@ import com.fanglin.right.po.SalesDeliveryStatusRightPO;
 
 @Repository("salesDeliveryStatusRightDao")
 public class SalesDeliveryStatusRightDaoImpl extends DaoImpl<SalesDeliveryStatusRightPO> implements SalesDeliveryStatusRightDao {
+
 	public SalesDeliveryStatusRightDaoImpl() {
 		super(SalesDeliveryStatusRightPO.class);
 	}
@@ -22,12 +24,20 @@ public class SalesDeliveryStatusRightDaoImpl extends DaoImpl<SalesDeliveryStatus
 	}
 
 	@Override
+	public int countSalesDeliveryStatusRight(long bid) {
+
+		String sql = "select count(*) from platform.salesdeliverystatusright where bid = :bid and crate != 0";
+		BigInteger num = (BigInteger) session().createSQLQuery(sql).setLong("bid", bid).uniqueResult();
+
+		return num.intValue();
+	}
+
+	@Override
 	public void deleteSalesDeliveryStatus(Long bid) {
 
 		String sql = "delete from platform.salesdeliverystatusright where bid = :bid";
 
 		session().createSQLQuery(sql).setLong("bid", bid).executeUpdate();
-
 	}
 
 }

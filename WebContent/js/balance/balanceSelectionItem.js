@@ -194,6 +194,39 @@ $(function() {
 
             return (balanceSelectionItem.balance.status == constant.balance().balanceSales.STATUS_INIT_INT);
         }
+    }, {
+        name: "挂起",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            com.showConfirm("确定挂起", function() {
+
+                var options = {};
+                var bsiid = v.bsiid;
+                var cost = balanceSelectionItem.balance.cost - (v.selectionItem.num - v.selectionItem.refnum) * v.selectionItem.postprice;
+                var payment = balanceSelectionItem.balance.payment - (v.selectionItem.num - v.selectionItem.refnum) * v.selectionItem.postprice;
+
+                options["balanceSelection.bsid"] = balanceSelectionItem.bsid;
+                options["balanceSelection.income"] = balanceSelectionItem.balance.income;
+                options["balanceSelection.cost"] = cost;
+                options["balanceSelection.payment"] = payment;
+                options["balanceSelection.profit"] = balanceSelectionItem.balance.profit;
+
+                options["balanceSelectionItem.bsiid"] = bsiid;
+
+                com.post(api.balance.pendingBalanceSelectionItem, options, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    seacher.doSearch();
+                });
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (balanceSelectionItem.balance.status == constant.balance().balanceSales.STATUS_INIT_INT);
+        }
     }];
 
     seacher.line("selectionItem.goods.name", lineprops, linebtus).render();

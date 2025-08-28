@@ -351,9 +351,11 @@ public class NormtionServiceImpl implements NormtionService {
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
 
+		Short status = addReduceVO.getStatus();
+
 		for (AddReducePO addReducePO : addReducePOs) {
 
-			if (!Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus()) && addReducePO.getType() == AddReducePO.TYPE_ADD_INT && addReducePO.getPaytype() == AddReducePO.PAYTYPE_PAY_INT) continue;
+			if (status == null && !Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT).contains(addReducePO.getStatus()) && addReducePO.getType() == AddReducePO.TYPE_ADD_INT && addReducePO.getPaytype() == AddReducePO.PAYTYPE_PAY_INT) continue;
 
 			addReduceVO = new AddReduceVO();
 

@@ -10,7 +10,7 @@ public interface DecorationInfoService {
 
 	public DecorationInfoVO queryDecorationInfoForCustomer(DecorationInfoVO decorationInfoVO);
 
-	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO);
+	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO, String userId);
 
 	public void confirmDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String securityCode, String verifyCode) throws FLException;
 

@@ -130,14 +130,17 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	}
 
 	@Override
-	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin) {
+	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOriginVO) throws FLException {
 
-		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOrigin.getCsid());
-		CustomerOriginVO customerOriginVO = null;
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
 
-		if (customerOriginPO != null) {
-			customerOriginVO = customerOriginPO.ptv(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new DecorationBusitypeVO()));
+		if (customerOriginPO == null) {
+			throw new FLException(330001, "客源不存在");
 		}
+
+		customerOriginVO = customerOriginPO.ptv(new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserBaseVO())), new DecorationBusitypeVO()));
+
+		customerOriginVO.setPhone(FormatUtil.decodePhone(customerOriginPO.getCustomer().getPhone()));
 
 		return customerOriginVO;
 	}
@@ -163,6 +166,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		CustomerOriginPO customerOriginPO = new CustomerOriginPO();
 
 		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
+
+		customerOriginPO.setPhone(FormatUtil.encodePhone(customerOriginVO.getPhone()));
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -219,7 +224,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			customerOriginPO.setVillage(villagePO);
 		}
 
-		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
+		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype", "phone"));
 
 		customerOriginDao.update(customerOriginPO);
 	}
@@ -334,7 +339,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		customerOriginPO.setCustomer(customerPO);
-		customerOriginPO.setPhone(customerOriginVO.getPhone());
+		customerOriginPO.setPhone(customerPO.getPhone());
 
 		HousePO housePO = houseDao.get(customerOriginVO.getHouse().getHid());
 
@@ -408,7 +413,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginDao.update(customerOriginPO);
 
-		String content = String.format("客源确认,客户名:%s,楼盘:%s,电话:%s", customerOriginPO.getName(), customerOriginPO.getHouse().getVillage().getName(), customerOriginPO.getPhone().replaceAll("(\\d{3})\\d{6}(\\d{2})", "$1******$2"));
+		String content = String.format("客源确认,客户名:%s,楼盘:%s.", customerOriginPO.getName(), customerOriginPO.getHouse().getVillage().getName());
 
 		UserPO designer = customerOriginPO.getDesigner();
 

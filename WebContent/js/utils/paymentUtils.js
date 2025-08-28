@@ -837,7 +837,7 @@ var paymentUtils = {
                     propertyArr.push(["管理费:", v.managePrice, "blue"]);
                     break;
                 case "collectUser":
-                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var collecter = ["payment"].contains(payment.htmlName) ? obj.collectUser : obj.collecter;
                     propertyArr.push(["收款人:", collecter != null ? collecter.currentName : "暂无", "grey", function(btn) {
 
@@ -845,11 +845,11 @@ var paymentUtils = {
                     }]);
                     break;
                 case "collectTime":
-                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["收款时间:", obj.collectTime, "green"]);
                     break;
                 case "confirmUser":
-                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     var confirmer = ["payment"].contains(payment.htmlName) ? obj.confirmUser : obj.confirmer;
                     propertyArr.push(["确认人:", confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无", "grey", function(btn) {
 
@@ -857,7 +857,7 @@ var paymentUtils = {
                     }]);
                     break;
                 case "confirmTime":
-                    var obj = ["sales", "service", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["确认时间:", obj.confirmTime, "green"]);
                     break;
                 case "isAffirm":
@@ -873,11 +873,11 @@ var paymentUtils = {
                     propertyArr.push(["销售确认时间:", com.checkNull(v.sales.affirmTime, "暂无"), "green"]);
                     break;
                 case "status":
-                    var status = ["payment", "sales", "service", "activity", "proxy"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
+                    var status = ["payment", "sales", "service", "activity", "proxy", "oales"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
                     propertyArr.push(["状态:", status, "red"]);
                     break;
                 case "comment":
-                    var obj = ["sales", "proxy"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "proxy", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["备注:", obj.comment, "grey"]);
                     break;
                 case "salesDept":
@@ -896,7 +896,7 @@ var paymentUtils = {
                     propertyArr.push(["电话:", v.phone.substring(0, 3) + "****" + v.phone.substr(v.phone.length - 4), "grey"]);
                     break;
                 case "realMoney":
-                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
+                    var obj = ["sales", "service", "oales"].contains(payment.htmlName) ? v[payment.htmlName + "Receipt"] : v;
                     propertyArr.push(["实收额:", obj.realMoney, "blue"]);
                     break;
                 case "isexpire":

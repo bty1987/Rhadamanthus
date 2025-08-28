@@ -693,7 +693,7 @@ public class DecorationPO implements Serializable {
 		this.bompany = bompany;
 	}
 
-	private void ptv(DecorationVO decorationVO) {
+	private DecorationVO ptv(DecorationVO decorationVO) {
 
 		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "materialer", "conpany", "busitype", "bompany"));
 
@@ -733,9 +733,11 @@ public class DecorationPO implements Serializable {
 		decorationVO.setVersion(new QuotationVersionVO());
 
 		BeanUtil.copyPropertie(this.getVersion(), decorationVO.getVersion());
+
+		return decorationVO;
 	}
 
-	public void ptvcascade(DecorationVO decorationVO) {
+	public DecorationVO ptvcascade(DecorationVO decorationVO) {
 
 		ptv(decorationVO);
 
@@ -774,6 +776,8 @@ public class DecorationPO implements Serializable {
 		if (decorationVO.getMaterialer() != null && this.getMaterialer() != null) {
 			BeanUtil.copyPropertie(this.getMaterialer(), decorationVO.getMaterialer(), Arrays.asList("duty", "dept"));
 		}
+
+		return decorationVO;
 	}
 
 }

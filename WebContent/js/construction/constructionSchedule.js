@@ -5,11 +5,13 @@ jQuery(function($) {
         modals: {
             updateNormModal: com.focusPage("#updateNormModal"),
             updateCaleModal: com.focusPage("#updateCaleModal"),
+            updatePeriodModal: com.focusPage("#updatePeriodModal"),
         },
 
         btns: {
             updateCaleBtn: com.focusPage("#updateCaleBtn"),
             updateNormBtn: com.focusPage("#updateNormBtn"),
+            updatePeriodBtn: com.focusPage("#updatePeriodBtn"),
         },
 
         items: {
@@ -22,7 +24,9 @@ jQuery(function($) {
             precheck: com.focusPage("#precheck", "#updateCaleModal"),
             postcheck: com.focusPage("#postcheck", "#updateCaleModal"),
             stacheck: com.focusPage("#stacheck", "#updateCaleModal"),
-            fincheck: com.focusPage("#fincheck", "#updateCaleModal")
+            fincheck: com.focusPage("#fincheck", "#updateCaleModal"),
+
+            period: com.focusPage("#period", "#updatePeriodModal")
         },
 
         decorationStatus: {},
@@ -33,6 +37,7 @@ jQuery(function($) {
 
     constructionSchedule.btns.updateCaleBtn.bindClick(updateCaleBtn);
     constructionSchedule.btns.updateNormBtn.bindClick(updateNormBtn);
+    constructionSchedule.btns.updatePeriodBtn.bindClick(updatePeriodBtn);
 
     constructionSchedule.modals.updateNormModal.on("hide.bs.modal", function() {
 
@@ -41,6 +46,12 @@ jQuery(function($) {
     });
 
     constructionSchedule.modals.updateCaleModal.on("hide.bs.modal", function() {
+
+        com.cleanItems(constructionSchedule.items);
+        com.closeTip();
+    });
+
+    constructionSchedule.modals.updatePeriodModal.on("hide.bs.modal", function() {
 
         com.cleanItems(constructionSchedule.items);
         com.closeTip();
@@ -235,7 +246,20 @@ jQuery(function($) {
 
             return false;
         }
-    }, ];
+    },{
+        name: "更新工期",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            constructionSchedule.schedule = v;
+
+            constructionSchedule.items.period.val(v.period);
+
+            constructionSchedule.modals.updatePeriodModal.modal("show");
+
+            return false;
+        }
+    } ];
 
     searcher.line("node.name", lineprops, linebtns).render();
 
@@ -274,6 +298,23 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
 
             constructionSchedule.modals.updateNormModal.modal("hide");
+
+            searcher.doSearch();
+        });
+    }
+
+    function updatePeriodBtn() {
+
+        var options = {
+            "constructionSchedule.csid": constructionSchedule.schedule.csid,
+            "constructionSchedule.period": constructionSchedule.items.period.val(),
+        };
+
+        com.post(api.construction.updateConstructionScheduleForPeriod, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            constructionSchedule.modals.updatePeriodModal.modal("hide");
 
             searcher.doSearch();
         });

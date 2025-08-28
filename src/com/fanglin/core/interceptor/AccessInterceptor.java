@@ -76,8 +76,13 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 				Authentication authentication = new Authentication(decryptString);
 
-				if (authentication.getUserId() == null && !"fanglincommon".equals(decryptString)) {
-					throw new FLException(-2, "无操作权限");
+				if (authentication.getUserId() == null) {
+
+					UserVO userVO = userService.queryUserByUserId(new UserVO(decryptString));
+
+					authentication.setUserId(userVO.getUserId());
+					authentication.setCompany(CompanyServiceImpl.decode(userVO.getCompanyNo()));
+					authentication.setRoleId(userVO.getRole().getRid());
 				}
 
 				invocation.invoke();

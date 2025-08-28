@@ -716,6 +716,27 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int accountSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (selectionItemPO.getAccountStatus() != SelectionItemPO.ACCOUNT_STATUS_PENDING_INT) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		selectionItemPO.setAccountStatus(SelectionItemPO.ACCOUNT_STATUS_INIT_INT);
+
+		selectionItemDao.update(selectionItemPO);
+
+		return 0;
+	}
+
 	private List<SelectionItemVO> ptv(List<SelectionItemPD> selectionItemPDs) throws FLException {
 
 		List<SelectionItemVO> selectionItemVOs = new ArrayList<SelectionItemVO>();

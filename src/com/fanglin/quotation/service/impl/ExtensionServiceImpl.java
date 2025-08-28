@@ -67,18 +67,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
 
 		for (ExtensionDO extensionDO : extensionDOs) {
-
-			ExtensionVO extensionVO = new ExtensionVO(new DecorationVO(), new QuotationVO(), new UserBaseVO());
-
-			extensionVO.getDecoration().setSupervisor(new UserBaseVO());
-
-			BeanUtil.copyPropertie(extensionDO, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
-			BeanUtil.copyProperties(extensionDO.getCreater(), extensionVO.getCreater(), Arrays.asList("duty", "dept", "role"));
-			BeanUtil.copyProperties(extensionDO.getQuotation(), extensionVO.getQuotation(), Arrays.asList("creater", "version"));
-
-			extensionDO.getDecoration().ptvcascade(extensionVO.getDecoration());
-
-			extensionVOs.add(extensionVO);
+			extensionVOs.add(extensionDO.ptv(new ExtensionVO(new DecorationVO(new UserBaseVO()), new QuotationVO(), new UserBaseVO())));
 		}
 
 		paging.setData(extensionVOs);
@@ -93,11 +82,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
 
 		for (ExtensionPO extensionPO : extensionPOs) {
-			extensionVO = new ExtensionVO();
-
-			BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("creater"));
-
-			extensionVOs.add(extensionVO);
+			extensionVOs.add(extensionPO.ptv(new ExtensionVO()));
 		}
 
 		paging.setData(extensionVOs);
@@ -128,7 +113,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 			throw new FLException(200027, "扩展项不存在");
 		}
 
-		BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
 
 		extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
 
@@ -141,7 +126,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		ExtensionPO extensionPO = new ExtensionPO();
 
-		BeanUtil.copyProperties(extensionVO, extensionPO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(extensionVO, extensionPO, Arrays.asList("decoration", "quotation", "creater"));
 
 		checkExtension(extensionPO);
 
@@ -173,16 +158,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 		checkExtension(extensionPO);
 
-		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
-		extensionPO.setDisPrice(extensionVO.getDisPrice());
-		extensionPO.setManageRate(extensionVO.getManageRate());
-		extensionPO.setManagePrice(extensionVO.getManagePrice());
-		extensionPO.setManageDiscount(extensionVO.getManageDiscount());
-		extensionPO.setTaxRate(extensionVO.getTaxRate());
-		extensionPO.setTaxPrice(extensionVO.getTaxPrice());
-		extensionPO.setTotal(extensionVO.getTotal());
-		extensionPO.setConsPrice(extensionVO.getConsPrice());
-		extensionPO.setComsPrice(extensionVO.getComsPrice());
+		extensionPO.advance(extensionVO);
 
 		extensionDao.update(extensionPO);
 	}
@@ -216,7 +192,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 		for (ExtensionPO extensionPO : extensionPOs) {
 			extensionVO = new ExtensionVO();
 
-			BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
 
 			extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
 

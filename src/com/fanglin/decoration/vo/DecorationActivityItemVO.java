@@ -26,6 +26,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Short state;
 
+	private Short atttype;
+
 	private Integer num;
 
 	private Integer money;
@@ -130,6 +132,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setState(Short state) {
 		this.state = state;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Integer getNum() {

@@ -23,6 +23,8 @@ public interface ConstructionScheduleService {
 
 	public void updateConstructionScheduleForScal(ConstructionScheduleVO constructionScheduleVO) throws FLException;
 
+	public void updateConstructionScheduleForPeriod(ConstructionScheduleVO constructionScheduleVO) throws FLException;
+
 	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;
 
 	public int finishConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException;

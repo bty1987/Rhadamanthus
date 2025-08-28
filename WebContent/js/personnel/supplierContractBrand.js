@@ -2,6 +2,8 @@ jQuery(function($) {
 
     var brandContract = {
 
+        uid: params.personel.uid,
+
         btns: {
 
         },
@@ -13,22 +15,19 @@ jQuery(function($) {
         },
 
         items: {
-            ctype: com.focusPage("#ctype", "#addSupplierAddBrandModal"),
-            cvalue: com.focusPage("#cvalue", "#addSupplierAddBrandModal"),
-            breakpay: com.focusPage("#breakpay", "#addSupplierAddBrandModal"),
+
             brandName: com.focusPage("#brandName", "#addSupplierAddBrandModal"),
             startDate: com.focusPage("#startDate"),
             reportedDate: com.focusPage("#reportedDate"),
             maxAmount: com.focusPage("#maxAmount"),
             minAmount: com.focusPage("#minAmount"),
             serviceCharge: com.focusPage("#serviceCharge"),
-            scname: com.focusPage("#scname"),
-            warranTime: com.focusPage("#warranTime"),
 
         },
         bid: null,
         ucid: params.ucid,
         scid: params.scid,
+        scsid: params.scsid,
         scbid: null,
         data: null,
     };
@@ -46,42 +45,31 @@ jQuery(function($) {
         name: "添加",
         clazz: "btn btn-minier btn-primary pull-left",
         icon: "icon-plus bigger-110"
+    }, {
+        id: "backBtn",
+        name: "返回",
+        clazz: "btn btn-minier btn-primary pull-left",
+        icon: "icon-mail-forward bigger-110"
     }])
 
-    var lineprops = [{
-        field: "name",
-        name: "名称",
-        prop: "name",
-        clazz: "grey",
-    }, {
-        field: "ctype",
-        name: "结算类型",
-        prop: "ctype",
-        clazz: "grey",
-        dataset: constant.personel().supplierContractBrand.ctype.keys,
-    }, {
-        field: "cvalue",
-        name: "结算值",
-        prop: "cvalue",
-        clazz: "red",
-    }, {
-        field: "breakpay",
-        name: "违约金",
-        prop: "breakpay",
-        clazz: "red",
-    }, {
-        field: "warranTime",
-        name: "质保期",
-        prop: "warranTime",
-        clazz: "red",
-    }];
+    var lineprops = [];
 
     var linebtns = [{
+        name: "产品",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            params.personel.scbid = v.scbid;
+            com.popup4page('#layerPopUp', "/views/personnel/supplierContractBrand4detail.html", "产品");
+
+        },
+    }, {
         name: "服务费",
         clazz: "btn-success",
         handle: function(v) {
 
-            servicePrice(v);
+            com.focusPage('#chooseHistory').empty();
+            servicePrice(v, 0);
 
             brandContract.modals.addServicePriceModal.modal("show");
         },
@@ -95,9 +83,6 @@ jQuery(function($) {
     }, ];
 
     searcher.line("brand.name", lineprops, linebtns).render();
-
-    com.datetime(brandContract.items.startDate);
-    com.datetime(brandContract.items.reportedDate);
 
     brandContract.modals.addSupplierAddBrandModal.on('hide.bs.modal', function(e) {
 
@@ -127,8 +112,6 @@ jQuery(function($) {
         return v;
     });
 
-    com.focusPage("#ctype").bindData(constant.personel().supplierContractBrand.ctype.datas, "key", "value");
-
     com.focusPage('#submitBtn').on("click", function() {
 
         if (com.validate('addSupplierAddBrandModal')) {
@@ -137,12 +120,8 @@ jQuery(function($) {
 
         var options = {
             "supplierContractBrand.scid": brandContract.scid,
-            "supplierContractBrand.ctype": brandContract.items.ctype.val(),
-            "supplierContractBrand.cvalue": brandContract.items.cvalue.val(),
-            "supplierContractBrand.breakpay": brandContract.items.breakpay.val(),
             "supplierContractBrand.brand.bid": brandContract.bid,
-            "supplierContractBrand.name": brandContract.items.scname.val(),
-            "supplierContractBrand.warranTime": brandContract.items.warranTime.val(),
+            "supplierContractBrand.sid": brandContract.uid,
         };
 
         com.post(api.personel.addSupplierContractBrand, options, function(res) {
@@ -184,7 +163,7 @@ jQuery(function($) {
 
         com.post(api.personel.updateSupplierContractBrand, options, function(res) {
 
-            servicePrice(res.supplierContractBrand);
+            servicePrice(res.supplierContractBrand, 1);
 
             com.cleanItems(brandContract.items);
 
@@ -206,17 +185,88 @@ jQuery(function($) {
         });
     }
 
-    function servicePrice(v) {
+    com.focusPage('#backBtn', '#pagenation').on("click", function() {
+
+        params.historyPage = "/views/personnel/supplierContract.html";
+        com.switchPage(params.historyPage);
+    });
+
+    function servicePrice(v, value) {
 
         com.focusPage('#servicePriceList').empty();
-
+        com.cleanItems(brandContract.items);
         brandContract.scbid = v.scbid;
 
-        brandContract.data=null;//初始化其他调用残留数据
+        brandContract.data = null;// 初始化其他调用残留数据
 
-        if (!v.servicePrice || v.servicePrice.trim().length === 0||v.servicePrice==="[]") {
+        var options = {
+            "supplierContractServiceVO.sid": v.sid,
+        };
 
-        	return false;
+        com.post(api.personel.querySupplierContractServiceBySid, options, function(res) {
+
+            var jsonArray = new Array();
+
+            $.each(res.supplierContractServices, function(index, item) {
+
+                if (item.servicePrice && item.servicePrice.length > 0 && item.servicePrice != '[]') {
+
+                    jsonArray = jsonArray.concat(JSON.parse(item.servicePrice));
+
+                }
+            });
+
+            var select = com.focusPage('#chooseHistory');
+
+            if (value == 0) {
+                select.prepend($('<option></option>').val('').text('-- 请选择 --'));
+            }
+
+            $.each(jsonArray, function(index, item) {
+
+                var svalue = "";
+                if (item.UV == 0 && item.DV > 0) {
+                    svalue = "销售总金额" + item.DV + "万元（含）以下";
+                }
+
+                if (item.UV > 0 && item.DV > 0) {
+                    svalue = "销售总金额" + item.DV + " 万元-  " + item.UV + "万元（含）";
+                }
+
+                if (item.UV > 0 && item.DV == 0) {
+                    svalue = "销售总金额  " + item.UV + "万元以上";
+                }
+
+                select.append($('<option></option>').val(JSON.stringify(item)).text(svalue));
+
+            });
+            searcher.doSearch();
+        });
+
+        com.focusPage('#chooseHistory').on("change", function() {
+
+            com.cleanItems(brandContract.items);
+
+            if ($(this).val()) {
+
+                var selectedData = JSON.parse($(this).val());
+                var dates = $.map(selectedData.TL.split(" - "), $.trim);
+
+                brandContract.items.startDate.val(dates[0]);
+
+                if (dates[1] != null) {
+                    brandContract.items.reportedDate.val(dates[1]);
+                }
+
+                brandContract.items.maxAmount.val(selectedData.DV);
+                brandContract.items.minAmount.val(selectedData.UV);
+                brandContract.items.serviceCharge.val(selectedData.SR);
+            }
+        });
+
+        if (!v.servicePrice || v.servicePrice.trim().length === 0 || v.servicePrice === "[]") {
+
+            return false;
 
         }
 
@@ -258,6 +308,7 @@ jQuery(function($) {
                 };
 
                 com.post(api.personel.updateSupplierContractBrand, options, function(res) {
+
                     brandContract.data = JSON.stringify(data);
                     searcher.doSearch();
                 });

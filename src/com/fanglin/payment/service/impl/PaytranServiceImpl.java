@@ -29,6 +29,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
+import com.fanglin.payment.dao.OalesPaymentDao;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.dao.PaytranDao;
 import com.fanglin.payment.dao.ProxyPaymentDao;
@@ -42,12 +43,15 @@ import com.fanglin.payment.po.ProxyPaymentPO;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.payment.po.ServicePaymentPO;
 import com.fanglin.payment.service.DecorationPaymentService;
+import com.fanglin.payment.service.OalesPaymentService;
 import com.fanglin.payment.service.PaymentService;
 import com.fanglin.payment.service.PaytranService;
 import com.fanglin.payment.service.ProxyPaymentService;
 import com.fanglin.payment.service.SalesPaymentService;
 import com.fanglin.payment.service.ServicePaymentService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
+import com.fanglin.payment.vo.OalesPaymentVO;
+import com.fanglin.payment.vo.OalesReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.payment.vo.PaytranVO;
 import com.fanglin.payment.vo.ProxyPaymentVO;
@@ -130,6 +134,12 @@ public class PaytranServiceImpl implements PaytranService {
 
 	@Autowired
 	private PaymentTypeDao paymentTypeDao;
+
+	@Autowired
+	private OalesPaymentDao oalesPaymentDao;
+
+	@Autowired
+	private OalesPaymentService oalesPaymentService;
 
 	@Override
 	public void pagePaytran(Paging paging, List<Filter> filters) {
@@ -936,7 +946,7 @@ public class PaytranServiceImpl implements PaytranService {
 
 		String comment = String.format("wechat:金额%s元", Arith.div(paidMoney, 1000.0));
 
-		// 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款
+		// 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款, 8: 外销款
 		switch (type) {
 			case 0:
 
@@ -1053,6 +1063,24 @@ public class PaytranServiceImpl implements PaytranService {
 				proxyReceiptVO.setComment(comment);
 
 				proxyPaymentService.collectProxyPayment(proxyPaymentVO, proxyReceiptVO, ptids, userId, company);
+
+				break;
+
+			case 8:
+
+				long oalesReferMoney = oalesPaymentDao.get(pid).getReferMoney();
+
+				if (paidMoney != oalesReferMoney) return;
+
+				OalesPaymentVO oalesPaymentVO = new OalesPaymentVO(paytranPO.getPid());
+				OalesReceiptVO oalesReceiptVO = new OalesReceiptVO();
+
+				oalesReceiptVO.setBank(paidMoney);
+				oalesReceiptVO.setBankInfo(bankInfo);
+				oalesReceiptVO.setRealMoney(paidMoney);
+				oalesReceiptVO.setComment(comment);
+
+				oalesPaymentService.collectOalesPayment(oalesPaymentVO, oalesReceiptVO, ptids, userId, company);
 
 				break;
 		}

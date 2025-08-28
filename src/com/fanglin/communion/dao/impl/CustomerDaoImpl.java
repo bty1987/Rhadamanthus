@@ -20,6 +20,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
 
@@ -56,7 +57,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 
 		sql.append("select c.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone like :phone and cp.status = :status) ");
+		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone = :phone and cp.status = :status) ");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append("and c.company =:company ");
@@ -66,7 +67,13 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 		sql.append("limit :limit ");
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPO.class);
-		query.setString("pinyinAll", likestr).setString("pinyinAB", likestr).setString("name", likestr).setString("phone", likestr).setShort("status", CustomerPhonePO.STATUS_ENABLE_INT).setInteger("limit", limit);
+		query.setString("pinyinAll", likestr).setString("pinyinAB", likestr).setString("name", likestr).setShort("status", CustomerPhonePO.STATUS_ENABLE_INT).setInteger("limit", limit);
+
+		if (pinyinName != null && pinyinName.matches("1[3-9]\\d{9}")) {
+			query.setString("phone", FormatUtil.encodePhone(pinyinName));
+		} else {
+			query.setString("phone", pinyinName);
+		}
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.setInteger("company", company);
@@ -97,7 +104,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 			} else if ("type".equals(field)) {
 				query.add(Restrictions.eq("type", Short.valueOf(data)));
 			} else if ("phone".equals(field)) {
-				query.add(Restrictions.like("phone", data));
+				query.add(Restrictions.eq("phone", FormatUtil.encodePhone(data)));
 			}
 		}
 	}

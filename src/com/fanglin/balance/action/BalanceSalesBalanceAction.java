@@ -38,7 +38,7 @@ public class BalanceSalesBalanceAction extends BaseListAction {
 	@Action(value = "pageBalanceSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalanceSalesBalance() throws FLException {
 
-		balanceSalesBalanceService.pageBalanceSalesBalance(getPaging(), getFilters(), balanceSales.getBsid());
+		balanceSalesBalanceService.pageBalanceSalesBalance(getPaging(), getFilters(), balanceSalesBalance);
 
 		return SUCCESS;
 	}

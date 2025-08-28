@@ -416,10 +416,10 @@ jQuery(function($) {
 
                     com.post(api.data.queryCustomerForPhone, {
                         "customerPhone.cid": v.cid,
-                        "customerPhone.cpid": v.cpid
+                        "customerPhone.cpid": v.cpid,
                     }, function(res) {
 
-                        phoneInfo.html(addspan('0', '电话号码  : ', res.customer.phone));
+                        phoneInfo.html(addspan('0', '电话号码  : ', res.customerPhone.phone));
                     })
                 }));
 

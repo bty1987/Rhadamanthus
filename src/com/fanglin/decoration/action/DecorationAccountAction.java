@@ -65,7 +65,7 @@ public class DecorationAccountAction extends BaseListAction {
 	@Action(value = "sendDecorationAccount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendDecorationAccount() throws FLException {
 
-		decorationAccountService.sendDecorationAccount(decorationAccount);
+		decorationAccountService.sendDecorationAccount(decorationAccount, queryUserId());
 
 		return SUCCESS;
 	}

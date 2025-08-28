@@ -27,7 +27,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.construction.vo.ConstructionScheduleVO;
-import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.utils.BeanUtil;
 
@@ -45,7 +44,7 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
 
-	public static final String COLUMN_CNID_STR = "cnid";
+	public static final String COLUMN_CNID_STR = "node.cnid";
 
 	public static final short STATUS_INIT_INT = 0;
 
@@ -68,6 +67,8 @@ public class ConstructionSchedulePO implements Serializable {
 	private long cid;
 
 	private String orderId;
+
+	private String name;
 
 	private ConstructionNodePO node;
 
@@ -129,6 +130,15 @@ public class ConstructionSchedulePO implements Serializable {
 		this.endTime = endTime;
 	}
 
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, int period) {
+		super();
+		this.cid = cid;
+		this.orderId = orderId;
+		this.period = period;
+		this.startTime = startTime;
+		this.endTime = endTime;
+	}
+
 	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, int period) {
 
 		super();
@@ -170,6 +180,15 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -357,9 +376,24 @@ public class ConstructionSchedulePO implements Serializable {
 		this.fincheck = fincheck;
 	}
 
-	public ConstructionSchedulePO init(ConstructionNodeVO constructionNodeVO) {
+	public ConstructionSchedulePO init(ConstructionNodePO constructionNodePO) {
 
-		BeanUtil.copyProperties(constructionNodeVO, this, "");
+		setName(constructionNodePO.getName());
+
+		setAccessoryLimit(constructionNodePO.getAccessoryLimit());
+		setSalaryLimit(constructionNodePO.getSalaryLimit());
+
+		setPrecheck(constructionNodePO.getPrecheck());
+		setPostcheck(constructionNodePO.getPostcheck());
+
+		setStacheck(constructionNodePO.getStacheck());
+		setFincheck(constructionNodePO.getFincheck());
+
+		setNode(constructionNodePO);
+
+		setSchedule(constructionNodePO.getSort());
+
+		if (getPeriod() != 0) setPeriod(constructionNodePO.getTimeLimit());
 
 		return this;
 	}
@@ -368,7 +402,12 @@ public class ConstructionSchedulePO implements Serializable {
 
 		BeanUtil.copyProperties(this, constructionScheduleVO, Arrays.asList("decoration", "construction", "node"));
 
-		if (constructionScheduleVO.getNode() != null && getNode() != null) getNode().ptv(constructionScheduleVO.getNode());
+		if (constructionScheduleVO.getNode() != null && getNode() != null) {
+			getNode().ptv(constructionScheduleVO.getNode());
+
+			constructionScheduleVO.setCnid(constructionScheduleVO.getNode().getCnid());
+			constructionScheduleVO.setSchedule(constructionScheduleVO.getSchedule());
+		}
 
 		return constructionScheduleVO;
 	}

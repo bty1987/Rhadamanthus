@@ -41,7 +41,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		sql.append("select cp.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where cp.phone =:phone ");
+		sql.append("where (cp.phone =:cphone or c.phone = :phone) ");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append("and c.company =:company ");
@@ -55,7 +55,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);
 
-		query.setString("phone", phone);
+		query.setString("phone", phone).setString("cphone", phone);
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.setInteger("company", company);

@@ -55,7 +55,7 @@ public interface SalesService {
 
 	public int unpaySales(SalesVO salesVO, String userId) throws FLException;
 
-	public int sendSales(SalesVO salesVO) throws FLException;
+	public int sendSales(SalesVO salesVO, String userId) throws FLException;
 
 	public int affirmSales(SalesVO salesVO) throws FLException;
 

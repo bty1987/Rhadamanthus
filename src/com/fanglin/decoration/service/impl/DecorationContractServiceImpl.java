@@ -157,6 +157,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException {
 
 		String orderId = decorationContractVO.getOrderId();
@@ -171,6 +172,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void sendDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());

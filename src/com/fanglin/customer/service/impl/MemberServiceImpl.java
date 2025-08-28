@@ -3,7 +3,9 @@ package com.fanglin.customer.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,10 +43,13 @@ import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("memberservice")
@@ -87,10 +92,15 @@ public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private CppointRecordDao cppointRecordDao;
 
+	@Autowired
+	private CompanyDao companyDao;
+
 	@Override
 	public List<MemberVO> queryMember(MemberVO memberVO) throws FLException {
 
 		List<MemberVO> memberVOs = new ArrayList<MemberVO>();
+
+		List<Integer> companyIds = new ArrayList<Integer>();
 
 		if (memberVO.getPhone() == null) {
 			return memberVOs;
@@ -99,21 +109,36 @@ public class MemberServiceImpl implements MemberService {
 		Paging paging = new Paging(0, 10);
 		List<Filter> filters = new ArrayList<Filter>();
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(memberVO.getPhone(), CustomerPhonePO.STATUS_ENABLE_INT, null);
+		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(FormatUtil.encodePhone(memberVO.getPhone()), CustomerPhonePO.STATUS_ENABLE_INT, null);
+
+		if (customerPhones == null || customerPhones.size() == 0) {
+			throw new FLException(130006, "客户电话不存在");
+		}
 
 		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, null);
 
 		for (DecorationPO decorationPO : decorationPOs) {
-			memberVOs.add(new MemberVO().init(decorationPO));
+
+			companyIds.add(decorationPO.getCompany());
 		}
 
+		Map<Integer, String> companyMap = new HashMap<Integer, String>();
+
+		List<CompanyPO> companyPOs = companyDao.queryCompanyByIds(companyIds);
+
+		for (CompanyPO companyPO : companyPOs) {
+			companyMap.put(companyPO.getCid(), companyPO.getName());
+		}
+
+		for (DecorationPO decorationPO : decorationPOs) {
+			memberVOs.add(new MemberVO().init(decorationPO, companyMap.get(decorationPO.getCompany())));
+		}
 		return memberVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public List<MemberPointVO> queryMemberPoint(List<MemberPointVO> memberPointVOs) {
 
 		List<MemberPointVO> memberPointFOs = memberPointVOs.subList(0, Math.min(10, memberPointVOs.size()));
@@ -126,33 +151,32 @@ public class MemberServiceImpl implements MemberService {
 
 			if (decorationPO == null) continue;
 
-			CppointPO cppointPO = cppointDao.queryCppointByOrderId(orderId);
+			long amount = cppointDao.amountCppoint(orderId);
 
-			if (cppointPO == null) {
+			long dpoint = 0l;
+			long spoint = 0l;
+			long point = 0l;
 
-				cppointPO = new CppointPO();
+			dpoint = memberDao.amountMemberPointForDecoration(orderId);
+			spoint = memberDao.amountMemberPointForMaterial(orderId);
 
-				cppointPO.getCustomer().setCid(decorationPO.getCustomer().getCid());
-				cppointPO.setOrderId(orderId);
-				cppointPO.setCompany(decorationPO.getCompany());
-
-				cppointPO.setDpoint(memberDao.amountMemberPointForDecoration(orderId));
-				cppointPO.setSpoint(memberDao.amountMemberPointForMaterial(orderId));
-
-				cppointPO.setPoint(Arith.add(cppointPO.getDpoint(), cppointPO.getSpoint()));
-
-				cppointDao.saveOrUpdate(cppointPO);
-			}
-
-			memberPointVO.setDecorationPoint(cppointPO.getDpoint());
-			memberPointVO.setMaterialPoint(cppointPO.getSpoint());
+			memberPointVO.setDecorationPoint(Arith.mul(Arith.sub(dpoint, amount), 1l));
+			memberPointVO.setMaterialPoint(Arith.mul(Arith.sub(spoint, 0), 1l));
 
 			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
 
-			memberPointVO.setFreezeDecorationPoint(Arith.add(advancePaymentPO != null ? advancePaymentPO.getBalance() : 0, Arith.sub(memberDao.totalMemberPointForDecoration(orderId), memberPointVO.getDecorationPoint())));
-			memberPointVO.setFreezeMaterialPoint(Arith.add(advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0, Arith.sub(memberDao.totalMemberPointForMaterial(orderId), memberPointVO.getMaterialPoint())));
+			memberPointVO.setFreezeDecorationPoint(Arith.mul(Arith.add(advancePaymentPO != null ? advancePaymentPO.getBalance() : 0, Arith.sub(memberDao.totalMemberPointForDecoration(orderId), dpoint)), 1l));
+			memberPointVO.setFreezeMaterialPoint(Arith.mul(Arith.add(advancePaymentPO != null ? advancePaymentPO.getMaterialBalance() : 0, Arith.sub(memberDao.totalMemberPointForMaterial(orderId), spoint)), 1l));
 
-			memberPointVO.setOperatePoint(Arith.add(memberPointVO.getDecorationPoint(), memberPointVO.getMaterialPoint()));
+			CppointPO cppointPO = cppointDao.queryCppointByOrderId(orderId);
+
+			if (cppointPO != null) {
+				point = Arith.mul(cppointPO.getPoint(), 1l);
+			} else {
+				point = Arith.add(memberPointVO.getDecorationPoint(), memberPointVO.getMaterialPoint());
+			}
+
+			memberPointVO.setOperatePoint(point);
 		}
 
 		return memberPointVOs;
@@ -166,7 +190,7 @@ public class MemberServiceImpl implements MemberService {
 
 		for (MemberVO memberVO : memberFOs) {
 
-			CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(memberVO.getPhone(), company);
+			CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(FormatUtil.encodePhone(memberVO.getPhone()), company);
 
 			if (customerPhonePO == null) continue;
 
@@ -192,65 +216,70 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addMemberActivity(MemberActivityVO memberActivityVO, String userId) {
-
-		ActivityPO activityPO = null;
-
-		short decotype = 0;
-		short saletype = 0;
-
-		if (memberActivityVO.getType() == 0) {
-			decotype = 1;
-		}
-
-		if (memberActivityVO.getType() == 1) {
-			saletype = 1;
-		}
-
-		if (memberActivityVO.getType() == 2) {
-			decotype = 1;
-			saletype = 1;
-		}
+	public int addMemberActivity(MemberActivityVO memberActivityVO, List<String> companys, String userId) throws FLException {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		if (decotype == 1) {
+		if (companys == null) companys = Arrays.asList(CompanyServiceImpl.encode(CompanyPO.TYPE_HEADQUARTER_INT));
 
-			activityPO = new ActivityPO();
+		for (String company : companys) {
 
-			BeanUtil.copyProperties(memberActivityVO, activityPO, Arrays.asList("creater"));
+			ActivityPO activityPO = null;
 
-			activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			activityPO.setCreater(creater);
-			activityPO.setCompany(CompanyPO.TYPE_HEADQUARTER_INT);
+			short decotype = 0;
+			short saletype = 0;
 
-			activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);
+			if (memberActivityVO.getType() == 0) {
+				decotype = 1;
+			}
 
-			activityPO.setDefaults(ActivityPO.TYPE_DECORATION_INT);
-			activityPO.setMultiple(memberActivityVO.getMultiple());
+			if (memberActivityVO.getType() == 1) {
+				saletype = 1;
+			}
 
-			activityDao.save(activityPO);
+			if (memberActivityVO.getType() == 2) {
+				decotype = 1;
+				saletype = 1;
+			}
+
+			if (decotype == 1) {
+
+				activityPO = new ActivityPO();
+
+				BeanUtil.copyProperties(memberActivityVO, activityPO, Arrays.asList("creater"));
+
+				activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				activityPO.setCreater(creater);
+
+				activityPO.setCompany(CompanyServiceImpl.decode(company));
+				activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);
+
+				activityPO.setDefaults(ActivityPO.TYPE_DECORATION_INT);
+				activityPO.setMultiple(memberActivityVO.getMultiple());
+				activityPO.setAtttype(ActivityPO.ATTTYPE_ONLINE_INT);
+
+				activityDao.save(activityPO);
+			}
+
+			if (saletype == 1) {
+
+				activityPO = new ActivityPO();
+
+				BeanUtil.copyProperties(memberActivityVO, activityPO, Arrays.asList("creater"));
+
+				activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				activityPO.setCreater(creater);
+				activityPO.setCompany(CompanyServiceImpl.decode(company));
+
+				activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);
+
+				activityPO.setDefaults(ActivityPO.TYPE_SALES_INT);
+				activityPO.setMultiple(memberActivityVO.getMultiple());
+				activityPO.setAtttype(ActivityPO.ATTTYPE_ONLINE_INT);
+
+				activityDao.save(activityPO);
+			}
 		}
-
-		if (saletype == 1) {
-
-			activityPO = new ActivityPO();
-
-			BeanUtil.copyProperties(memberActivityVO, activityPO, Arrays.asList("creater"));
-
-			activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			activityPO.setCreater(creater);
-			activityPO.setCompany(CompanyPO.TYPE_HEADQUARTER_INT);
-
-			activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);
-
-			activityPO.setDefaults(ActivityPO.TYPE_SALES_INT);
-			activityPO.setMultiple(memberActivityVO.getMultiple());
-
-			activityDao.save(activityPO);
-		}
-
-		activityDao.save(activityPO);
 
 		return 0;
 	}
@@ -265,6 +294,16 @@ public class MemberServiceImpl implements MemberService {
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
+		}
+
+		long amount = cppointDao.amountCppoint(orderId);
+
+		long totald = memberDao.amountMemberPointForDecoration(orderId);
+		long totals = memberDao.amountMemberPointForMaterial(orderId);
+		long totalo = Arith.mul(memberOrderVO.getSurplusPoint(), 1000000l);
+
+		if (Arith.add(Arith.sub(totald, amount), Arith.sub(totals, 0)) < Arith.mul(memberOrderVO.getPoint(), 1000000l)) {
+			throw new FLException(330049, "积分不足");
 		}
 
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(orderId);
@@ -285,13 +324,15 @@ public class MemberServiceImpl implements MemberService {
 			if (awardStockPO != null) decorationActivityItemPO.setAsid(awardStockPO.getAsId());
 
 			decorationActivityItemPO.setActivityItemName(memberOrderItemVO.getName());
-			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_INIT_INT);
+			decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
 
 			decorationActivityItemPO.setIsPrefor(DecorationActivityItemPO.ISPREFOR_UNCAL_INT);
 			decorationActivityItemPO.setIsPayment(DecorationActivityItemPO.ISPAYMENT_UNCAL_INT);
 
-			decorationActivityItemPO.setNum(memberOrderItemVO.getNum());
 			decorationActivityItemPO.setNo(memberOrderVO.getPointOrderId());
+			decorationActivityItemPO.setAtttype(DecorationActivityItemPO.ATTTYPE_ONLINE_INT);
+			decorationActivityItemPO.setNum((int) Arith.mul(memberOrderItemVO.getNum(), 1000000l));
+			decorationActivityItemPO.setMoney((int) Arith.mul(memberOrderItemVO.getPoint(), 1000000l));
 			decorationActivityItemPO.setCreater(creater);
 			decorationActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -304,22 +345,20 @@ public class MemberServiceImpl implements MemberService {
 
 			cppointPO = new CppointPO();
 
-			cppointPO.getCustomer().setCid(decorationPO.getCustomer().getCid());
+			cppointPO.setCustomer(decorationPO.getCustomer());
 			cppointPO.setOrderId(orderId);
 			cppointPO.setCompany(decorationPO.getCompany());
-
-			cppointPO.setDpoint(memberDao.amountMemberPointForDecoration(orderId));
-			cppointPO.setSpoint(memberDao.amountMemberPointForMaterial(orderId));
 		}
 
-		cppointPO.setDpoint(Arith.sub(cppointPO.getDpoint(), memberOrderVO.getPoint()));
-		cppointPO.setOpoint(memberOrderVO.getSurplusPoint());
-		cppointPO.setPoint(Arith.sub(cppointPO.getPoint(), memberOrderVO.getPoint()));
+		cppointPO.setDpoint(Arith.sub(totald, amount));
+		cppointPO.setSpoint(Arith.sub(totals, 0));
+		cppointPO.setOpoint(totalo);
 
+		cppointPO.setPoint(Arith.sub(Arith.add(cppointPO.getDpoint(), cppointPO.getSpoint()), Arith.mul(memberOrderVO.getPoint(), 1000000l)));
 		cppointDao.saveOrUpdate(cppointPO);
 
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getPoint(), memberOrderVO.getPoint(), creater));
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), memberOrderVO.getOperatePoint(), creater));
+		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getPoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
 
 		return 0;
 	}
@@ -336,9 +375,15 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(140013, "订单不存在");
 		}
 
+		CppointPO cppointPO = cppointDao.queryCppointByOrderId(orderId);
+
+		if (cppointPO == null) {
+			throw new FLException(330047, "积分不存在");
+		}
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemByOrderId(orderId);
+		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItem(orderId, memberOrderVO.getPointOrderId());
 
 		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
 
@@ -348,28 +393,18 @@ public class MemberServiceImpl implements MemberService {
 			decorationActivityItemDao.update(decorationActivityItemPO);
 		}
 
-		CppointPO cppointPO = cppointDao.queryCppointByOrderId(orderId);
+		decorationActivityItemDao.flush();
 
-		if (cppointPO == null) {
+		long totalo = Arith.mul(memberOrderVO.getSurplusPoint(), 1000000l);
 
-			cppointPO = new CppointPO();
+		cppointPO.setOpoint(totalo);
 
-			cppointPO.setOrderId(orderId);
-			cppointPO.getCustomer().setCid(decorationPO.getCustomer().getCid());
-			cppointPO.setCompany(decorationPO.getCompany());
-
-			cppointPO.setDpoint(memberDao.amountMemberPointForDecoration(orderId));
-			cppointPO.setSpoint(memberDao.amountMemberPointForMaterial(orderId));
-		}
-
-		cppointPO.setDpoint(Arith.add(cppointPO.getDpoint(), memberOrderVO.getPoint()));
-		cppointPO.setOpoint(memberOrderVO.getSurplusPoint());
-		cppointPO.setPoint(Arith.add(cppointPO.getPoint(), memberOrderVO.getPoint()));
+		cppointPO.setPoint(Arith.add(cppointPO.getPoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l)));
 
 		cppointDao.saveOrUpdate(cppointPO);
 
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getDpoint(), memberOrderVO.getPoint(), creater));
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), memberOrderVO.getOperatePoint(), creater));
+		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, cppointPO.getPoint(), Arith.mul(memberOrderVO.getPoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
+		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, cppointPO.getOpoint(), Arith.mul(memberOrderVO.getOperatePoint(), 1000000l), memberOrderVO.getPointOrderId(), memberOrderVO.getOrderId(), creater));
 
 		return 0;
 	}

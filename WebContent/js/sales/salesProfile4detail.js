@@ -110,7 +110,7 @@ jQuery(function($) {
 
             com.post(api.sales.makeSalesProfile, options, function(res) {
 
-                com.closePopup();
+                show();
             });
         });
     }

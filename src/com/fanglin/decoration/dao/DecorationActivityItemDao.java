@@ -22,6 +22,8 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	public List<DecorationActivityItemPO> queryDecorationActivityItemByOrderId(String orderId, short type, short status);
 
+	public List<DecorationActivityItemPO> queryDecorationActivityItem(String orderId, String no);
+
 	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment);
 
 	public long amountDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment);

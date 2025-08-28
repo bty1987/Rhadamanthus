@@ -16,6 +16,12 @@ public class BalanceSalesBalanceVO implements java.io.Serializable {
 		super();
 	}
 
+	public BalanceSalesBalanceVO(Long bsid, SalesBalanceVO salesBalance) {
+		super();
+		this.bsid = bsid;
+		this.salesBalance = salesBalance;
+	}
+
 	public BalanceSalesBalanceVO(SalesBalanceVO salesBalance) {
 		super();
 		this.salesBalance = salesBalance;

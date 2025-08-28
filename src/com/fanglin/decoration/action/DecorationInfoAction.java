@@ -55,7 +55,7 @@ public class DecorationInfoAction extends BaseListAction {
 	@Action(value = "sendDecorationInfoForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendDecorationInfoForConfirm() throws FLException {
 
-		decorationInfoService.sendDecorationInfoForConfirm(decorationInfo);
+		decorationInfoService.sendDecorationInfoForConfirm(decorationInfo, queryUserId());
 
 		return SUCCESS;
 	}

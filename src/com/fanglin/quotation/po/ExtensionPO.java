@@ -2,6 +2,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.ExtensionVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "extension", catalog = "quotation")
@@ -36,6 +39,8 @@ public class ExtensionPO implements Serializable {
 	public static final short ATTTYPE_COMMON_INT = 0;
 
 	public static final short ATTTYPE_MET_INT = 1;
+
+	public static final short ATTTYPE_QUOTATION_INT = 3;
 
 	public static final short MANAGE_DISCOUNT_NONE_INT = 0;
 
@@ -251,6 +256,31 @@ public class ExtensionPO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	public ExtensionVO advance(ExtensionVO extensionVO) {
+
+		setUndisPrice(extensionVO.getUndisPrice());
+		setDisPrice(extensionVO.getDisPrice());
+		setManageRate(extensionVO.getManageRate());
+		setManagePrice(extensionVO.getManagePrice());
+		setManageDiscount(extensionVO.getManageDiscount());
+		setTaxRate(extensionVO.getTaxRate());
+		setTaxPrice(extensionVO.getTaxPrice());
+		setTotal(extensionVO.getTotal());
+		setConsPrice(extensionVO.getConsPrice());
+		setComsPrice(extensionVO.getComsPrice());
+
+		return extensionVO;
+	}
+
+	public ExtensionVO ptv(ExtensionVO extensionVO) {
+
+		BeanUtil.copyPropertie(this, extensionVO, Arrays.asList("creater"));
+
+		if (extensionVO.getCreater() != null && getCreater() != null) extensionVO.getCreater().setBaseInfo(getCreater());
+
+		return extensionVO;
 	}
 
 }

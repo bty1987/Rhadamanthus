@@ -26,4 +26,5 @@ public interface CppointDao extends Dao<CppointPO> {
 
 	public List<CppointPO> pageCppoint(Paging paging, List<Filter> filters);
 
+	public long amountCppoint(String orderId);
 }
