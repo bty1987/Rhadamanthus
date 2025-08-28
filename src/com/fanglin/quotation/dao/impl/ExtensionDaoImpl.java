@@ -60,6 +60,11 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 	}
 
 	@Override
+	public ExtensionPO queryExtension(long qid, short type, short atttype) {
+		return (ExtensionPO) session().createCriteria(ExtensionPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("type", type)).add(Restrictions.eq("atttype", atttype)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public int deleteExtension(String orderId) {
 		String sql = "delete from quotation.extension where orderId = :orderId";
 		session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();

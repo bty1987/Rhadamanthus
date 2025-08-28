@@ -33,6 +33,8 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private String orderId;
 
+	private String name;
+
 	private Long cnid;
 
 	private Integer period;
@@ -126,6 +128,14 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public Long getCnid() {

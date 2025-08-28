@@ -12,7 +12,11 @@ public class SalesDeliveryStatusRightVO implements Serializable {
 
 	private Long bid;
 
+	private Integer crate;
+
 	private Short status;
+
+	private Short checked;
 
 	private Integer company;
 
@@ -44,6 +48,14 @@ public class SalesDeliveryStatusRightVO implements Serializable {
 		this.bid = bid;
 	}
 
+	public Integer getCrate() {
+		return crate;
+	}
+
+	public void setCrate(Integer crate) {
+		this.crate = crate;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -52,11 +64,19 @@ public class SalesDeliveryStatusRightVO implements Serializable {
 		this.status = status;
 	}
 
+	public Short getChecked() {
+		return checked;
+	}
+
+	public void setChecked(Short checked) {
+		this.checked = checked;
+	}
+
 	public Integer getCompany() {
 		return company;
 	}
 
-	public void setCompany(int company) {
+	public void setCompany(Integer company) {
 		this.company = company;
 	}
 }

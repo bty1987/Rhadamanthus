@@ -96,22 +96,17 @@ jQuery(function($) {
         var village = house.village;
         var proper = village.cityProper;
         var customer = res.decoration.customer;
+        
+        contractEdit.customer = customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
         com.focusPage("#con-bank-man", "#form").val(customer.name);
         com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
         com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
-        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
-
-        contractEdit.customer = customer;
 
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
-        contractEdit.cover["cov-customer-phone"] = customer.phone;
         contractEdit.cover["sin-customer-name"] = customer.name;
-        contractEdit.cover["sin-customer-ident"] = customer.identity;
 
         com.focusPage("#con-company-no", "#form").val(customer.companyNo);
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
@@ -145,6 +140,33 @@ jQuery(function($) {
 
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
+    }, null, false);
+
+    com.post(api.data.queryCustomerForPhone, {
+        "customerPhone.cid": contractEdit.customer.cid,
+        "customerPhone.cpid": 0
+    }, function(res) {
+
+        contractEdit.customer = res.customer;
+
+        com.focusPage("#con-customer-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(contractEdit.customer.identity);
+
+        com.focusPage("#con-bank-no", "#form").val(contractEdit.customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(contractEdit.customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(contractEdit.customer.phone);
+
+        com.focusPage("#con-company-no", "#form").val(contractEdit.customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(contractEdit.customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(contractEdit.customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(contractEdit.customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(contractEdit.customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(contractEdit.customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(contractEdit.customer.companyBankno);
+
+        contractEdit.cover["cov-customer-phone"] = contractEdit.customer.phone;
+        contractEdit.cover["sin-customer-ident"] = contractEdit.customer.identity;
+
     }, null, false);
 
     com.post(api.construction.queryConstructionInfoByOrderId, {
@@ -214,7 +236,7 @@ jQuery(function($) {
 
         presignProduce = res.presignProduce;
     }, null, false);
-    
+
     var table1 = {
         "insertWay": 1,
         "keyword": "家装项目预签列表",
@@ -422,10 +444,12 @@ jQuery(function($) {
     if (decorationActivityItems && decorationActivityItems.length) {
 
         $.each(decorationActivityItems, function(i, v) {
-            
-            if(v.type != 1) return true;
-            if([0,2,4,6].indexOf(v.state) == -1) return true;
-            
+
+            if (v.type != 1)
+                return true;
+            if ([0, 2, 4, 6].indexOf(v.state) == -1)
+                return true;
+
             table2.datas.push([(index++ + 1), v.activityItemName, v.num]);
         });
     }
@@ -441,7 +465,8 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    };
+    }
+    ;
 
     var displayFunc = (function() {
 
@@ -569,8 +594,8 @@ jQuery(function($) {
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };
-            
-            if(params.decoration.contract && params.decoration.contract.dcid){
+
+            if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid
             }

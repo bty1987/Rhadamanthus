@@ -31,6 +31,8 @@ public class DecorationVO implements Serializable {
 
 	private UserBaseVO supervisor;
 
+	private UserBaseVO escorter;
+
 	private UserBaseVO materialer;
 
 	private Long customerId;
@@ -141,6 +143,14 @@ public class DecorationVO implements Serializable {
 
 	public void setSupervisor(UserBaseVO supervisor) {
 		this.supervisor = supervisor;
+	}
+
+	public UserBaseVO getEscorter() {
+		return escorter;
+	}
+
+	public void setEscorter(UserBaseVO escorter) {
+		this.escorter = escorter;
 	}
 
 	public UserBaseVO getMaterialer() {

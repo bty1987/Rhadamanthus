@@ -51,6 +51,12 @@ public class CompanyDaoImpl extends DaoImpl<CompanyPO> implements CompanyDao {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<CompanyPO> queryCompanyByIds(List<Integer> ids) {
+		return session().createCriteria(CompanyPO.class).add(Restrictions.in("cid", ids)).list();
+	}
+
+	@Override
 	public CompanyPO queryCompanyByName(String name) {
 		return (CompanyPO) session().createCriteria(CompanyPO.class).add(Restrictions.eq(CompanyPO.COLUMN_NAME_STR, name)).uniqueResult();
 	}

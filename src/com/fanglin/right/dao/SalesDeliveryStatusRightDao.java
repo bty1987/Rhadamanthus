@@ -9,5 +9,7 @@ public interface SalesDeliveryStatusRightDao extends Dao<SalesDeliveryStatusRigh
 
 	public List<SalesDeliveryStatusRightPO> querySalesDeliveryStatusRight(long bid);
 
+	public int countSalesDeliveryStatusRight(long bid);
+
 	public void deleteSalesDeliveryStatus(Long bid);
 }

@@ -170,6 +170,24 @@ jQuery(function($) {
             return false;
         }
     }, {
+        name: "扣款",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            params.balance.bsid = v.bsid;
+            
+            params.balance = v.balance;
+            params.balance.bid = v.balance.bid;
+            params.balance.uid = v.balance.belonger.uid;
+            
+            com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
+
+            return false;
+        },
+        show: function(v){
+            return (v.balance.no != "0000000000");
+        }
+    }, {
         name: "更新",
         clazz: "btn-info",
         handle: function(v) {
@@ -414,7 +432,7 @@ jQuery(function($) {
 
         com.post(api.balance.pageBalanceSalesBalance, {
             "paging.noPage": 1,
-            "balanceSales.bsid": v.bsid
+            "balanceSalesBalance.bsid": v.bsid
         }, function(res) {
 
             $.each(res.paging.data, function(i, v) {

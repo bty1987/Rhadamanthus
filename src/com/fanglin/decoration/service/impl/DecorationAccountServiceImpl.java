@@ -131,7 +131,8 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 	}
 
 	@Override
-	public void sendDecorationAccount(DecorationAccountVO decorationAccountVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public void sendDecorationAccount(DecorationAccountVO decorationAccountVO, String userId) throws FLException {
 
 		String orderId = decorationAccountVO.getOrderId();
 
@@ -141,9 +142,11 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			throw new FLException(140081, "决算信息不存在");
 		}
 
+		UserPO creater = userDao.queryUserByUserId(userId);
+
 		System.out.println(String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()));
 
-		decorationService.sendMessage(orderId, "装修单", "请您及时确认决算信息.", String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()));
+		decorationService.sendMessage(orderId, "装修单", "请您及时确认决算信息.", String.format("pages/decoration/account/account?orderId=%s&daid=%s", orderId, decorationAccountPO.getDaid()), creater);
 	}
 
 	@Override

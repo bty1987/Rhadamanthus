@@ -60,27 +60,16 @@ jQuery(function($) {
         var proper = village.cityProper;
         var customer = res.decoration.customer;
 
-        contractEdit.item.decorationType.val(data.typeness);
-        
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#sin-customer-phone1", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
-
         contractEdit.customer = customer;
+
+        contractEdit.item.decorationType.val(data.typeness);
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
 
         contractEdit.cover["con-orderId"] = data.orderId;
         contractEdit.cover["sin-customer-name"] = customer.name;
-        contractEdit.cover["sin-customer-phone1"] = customer.phone;
-        contractEdit.cover["sin-customer-ident"] = customer.identity;
 
         contractEdit.cover["sin-company-name"] = customer.companyName;
-
-        if (contractEdit.contractArgs.company == "1") {
-
-            com.focusPage("#sin-agent-name", "#form").val(customer.name);
-            com.focusPage("#sin-agent-phone", "#form").val(customer.phone);
-            com.focusPage("#sin-agent-ident", "#form").val(customer.identity);
-        }
 
         com.focusPage("#con-company-no", "#form").val(customer.companyNo);
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
@@ -93,6 +82,26 @@ jQuery(function($) {
         com.focusPage("#con-decoration-type", "#form").val(data.typeness);
     }, null, false);
 
+    com.post(api.data.queryCustomerForPhone, {
+        "customerPhone.cid": contractEdit.customer.cid,
+        "customerPhone.cpid": 0
+    }, function(res) {
+
+        contractEdit.customer = res.customer;
+
+        com.focusPage("#sin-customer-phone1", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(contractEdit.customer.identity);
+
+        com.focusPage("#con-company-no", "#form").val(contractEdit.customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(contractEdit.customer.companyName);
+
+        contractEdit.cover["sin-customer-phone1"] = contractEdit.customer.phone;
+        contractEdit.cover["sin-customer-ident"] = contractEdit.customer.identity;
+
+        contractEdit.cover["sin-company-name"] = contractEdit.customer.companyName;
+
+    }, null, false);
+
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
 
         com.showAlert(com.warning, "客户类型为个人");
@@ -100,6 +109,13 @@ jQuery(function($) {
         com.focusPage("#contractPopUp").empty();
 
         return false;
+    }
+
+    if (contractEdit.contractArgs.company == "1") {
+
+        com.focusPage("#sin-agent-name", "#form").val(contractEdit.customer.name);
+        com.focusPage("#sin-agent-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#sin-agent-ident", "#form").val(contractEdit.customer.identity);
     }
 
     com.focusPage("#preservation").unbind().on('click', function() {

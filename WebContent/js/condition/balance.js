@@ -386,7 +386,7 @@ Condition.addupRule("balance", {
         label: "装修单号",
         type: "text",
         submitConfig: {
-            name: "decoration-orderId",
+            name: "decoration.orderId",
             op: "eq",
             validate: {
                 "reg": /^[A-Z0-9]*$/,

@@ -1,7 +1,6 @@
 package com.fanglin.sales.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.balance.service.BalanceSalesBalanceService;
+import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -25,6 +26,7 @@ import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.right.dao.SalesDeliveryStatusRightDao;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesBalanceItemDao;
 import com.fanglin.sales.dao.SalesDao;
@@ -62,39 +64,26 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	private SalesPaymentDao salesPaymentDao;
 
 	@Autowired
+	private SalesDeliveryStatusRightDao salesDeliveryStatusRightDao;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
 	private ApprovalDao approvalDao;
 
 	@Autowired
+	private BalanceSalesBalanceService balanceSalesBalanceService;
+
+	@Autowired
 	private DecorationAdditionService decorationAdditionService;
 
-	@Override
 	public List<SalesBalanceVO> pageSalesBalance(List<SalesBalancePO> salesBalancePOs) {
 
 		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
-
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
-
-			BeanUtil.copyProperties(salesBalancePO.getSalesman(), salesBalanceVO.getSalesman(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesBalancePO.getDept(), salesBalanceVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesBalancePO.getRegion(), salesBalanceVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-
-			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("sales", "creater"));
-			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyPropertie(salesBalancePO.getChecker(), salesBalanceVO.getChecker(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyPropertie(salesBalancePO.getVoster(), salesBalanceVO.getVoster(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
-
-			salesBalancePO.getSales().ptv(salesBalanceVO.getSales());
-
-			salesBalanceVOs.add(salesBalanceVO);
+			salesBalanceVOs.add(salesBalancePO.ptv(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return salesBalanceVOs;
@@ -502,6 +491,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
 			salesBalancePO.setBalance(balance);
 
+			if (salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(salesPO.getBrand().getBid()) > 0) salesBalancePO.setType(SalesBalancePO.TYPE_BALANCE_INT);
+
 			long vbalance = Arith.sub(Arith.round(salesPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
 
 			salesBalancePO.setVbalance(vbalance);
@@ -551,7 +542,24 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT && salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 
 				salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
+
 				salesDao.update(salesPO);
+
+				List<SalesBalancePO> salesBalancePOs = salesBalanceDao.querySalesBalance(salesBalancePO.getSales().getSid(), SalesBalancePO.CHECKSTATUS_INIT_INT);
+
+				for (SalesBalancePO salesBalanceBO : salesBalancePOs) {
+
+					if (salesBalanceBO.getStatus() == SalesBalancePO.STATUS_PREBALANCE_INT) continue;
+
+					balanceSalesBalanceService.submitBalanceSalesBalance(null, new BalanceSalesBalanceVO(new SalesBalanceVO(salesBalanceBO.getSbid())), userId, salesBalanceBO.getSales().getCompany());
+				}
+			} else {
+
+				int count = salesBalanceDao.countSalesBalance(salesBalancePO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT, SalesBalancePO.CHECKSTATUS_CHECK_INT);
+
+				if (count > 0) {
+					balanceSalesBalanceService.submitBalanceSalesBalance(null, new BalanceSalesBalanceVO(new SalesBalanceVO(salesBalancePO.getSbid())), userId, salesBalancePO.getSales().getCompany());
+				}
 			}
 		}
 

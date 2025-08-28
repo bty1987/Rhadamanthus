@@ -16,4 +16,6 @@ public interface BalanceSelectionItemService {
 
 	public int countBalanceSelectionItem(BalanceSelectionVO balanceSelection);
 
+	public int pendingBalanceSelectionItem(BalanceSelectionVO balanceSelectionVO, BalanceSelectionItemVO balanceSelectionItemVO, String userId, int company) throws FLException;
+
 }

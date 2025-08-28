@@ -74,6 +74,11 @@ public class SalesBalanceVO implements Serializable {
 		super();
 	}
 
+	public SalesBalanceVO(Long sbid) {
+		super();
+		this.sbid = sbid;
+	}
+
 	public SalesBalanceVO(SalesVO sales, SalesRefundsVO refunds, UserBaseVO creater, UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO checker) {
 		super();
 		this.sales = sales;

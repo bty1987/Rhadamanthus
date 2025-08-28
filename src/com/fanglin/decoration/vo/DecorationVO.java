@@ -68,6 +68,8 @@ public class DecorationVO implements Serializable {
 
 	private Short resourceType;
 
+	private Short referType;
+
 	private Timestamp contractTime;
 
 	private Timestamp measureTime;
@@ -467,6 +469,14 @@ public class DecorationVO implements Serializable {
 		this.resourceType = resourceType;
 	}
 
+	public Short getReferType() {
+		return referType;
+	}
+
+	public void setReferType(Short referType) {
+		this.referType = referType;
+	}
+
 	public Integer getDiscount() {
 		return discount;
 	}
@@ -586,6 +596,11 @@ public class DecorationVO implements Serializable {
 
 	public void setBompany(String bompany) {
 		this.bompany = bompany;
+	}
+
+	public DecorationVO refer(short referType) {
+		setReferType(referType);
+		return this;
 	}
 
 	public void vtp(DecorationPO decorationPO) {

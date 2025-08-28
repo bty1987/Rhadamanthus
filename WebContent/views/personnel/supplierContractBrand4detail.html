@@ -1,0 +1,89 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="productCondList" class="fl_search clearfix"></div>
+            <div id="productResultList" class="clearfix tab-pane active">
+            </div>
+            <div id="productPagenation" class="fl-page-wrap clearfix">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row" style="margin-left:10px;margin-right:10px">
+            <div id="constructionPlans"></div>
+            <div>
+                <div>
+                    <a class="btn btn-minier btn-info pull-left" id="addBrandProduct" style="margin-top: 7px;margin-left: 2px">
+                        <i class="icon-plus bigger-110"></i>
+                        <span>添加</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="addBrandProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="villageDialog">添加产品</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right"
+                                    for="scname">名称</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="scname" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
+                                </div>
+                            </div>
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right" for="ctype">结算类型</label>
+                                <div class="col-sm-9">
+                                    <select id="ctype" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right" for="cvalue">结算值</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="cvalue" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' placeholder="例：0.21"/>
+                                </div>
+                            </div>
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right" for="warranTime">质保期</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="warranTime" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' placeholder="天"/>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+
+                            <div class="form-group default">
+                                <label class="col-sm-3 control-label no-padding-right" for="category">违约金</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="breakpay" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' placeholder="例：5% 输入：5"/>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="submitBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $.loadScript(['js/personnel/supplierContractBrand4detail.js']);
+</script>

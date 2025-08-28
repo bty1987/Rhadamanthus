@@ -2,7 +2,9 @@ $.extend(api.index, {
     salesPaymentReceiptIndex: {
         url: "/views/payment/salesPaymentReceipt.html"
     },
-
+    oalesPaymentReceiptIndex: {
+        url: "/views/payment/oalesPaymentReceipt.html"
+    },
     decorationPaymentIndex: {
         url: "/views/payment/decorationPayment.html"
     },
@@ -986,8 +988,110 @@ $.extend(api, {
                 result: "paging-data",
                 args: ["price", "fee", "rate"]
             }]
-        }
+        },
 
+        pageOalesPayment: {
+            url: "pageOalesPayment.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["referMoney"]
+            }, {
+                result: "paging-data-oalesReceipt",
+                args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "paging-data-oales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+        queryOalesPaymentByOrderId: {
+            url: "queryOalesPaymentByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "oalesPayments",
+                args: ["referMoney"]
+            }, {
+                result: "oalesPayments-oalesReceipt",
+                args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "oalesPayments-oales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+        queryOalesPaymentByOid: {
+            url: "queryOalesPaymentByOid.do",
+            type: "query",
+            tranargs: [{
+                result: "oalesPayments",
+                args: ["referMoney"]
+            }, {
+                result: "oalesPayments-oalesReceipt",
+                args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "oalesPayments-oales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+        queryOalesReceiptByOrId: {
+            url: "queryOalesReceiptByOrId.do",
+            type: "query",
+            tranargs: [{
+                result: "oalesReceipt",
+                args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }]
+        },
+        queryOalesPaymentForNotInitByOrid: {
+            url: "queryOalesPaymentForNotInitByOrid.do",
+            type: "query",
+            tranargs: [{
+                result: "oalesPayments",
+                args: ["referMoney"]
+            }, {
+                result: "oalesPayments-oalesReceipt",
+                args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
+            }, {
+                result: "oalesPayments-oales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+        addOalesPayment: {
+            url: "addOalesPayment.do",
+            type: "update",
+            tranargs: {
+                args: ["oalesPayments.referMoney"],
+                query: [{
+                    result: "oalesPayments",
+                    args: ["referMoney"]
+                }]
+            }
+        },
+        cancelOalesPayment: {
+            url: "cancelOalesPayment.do"
+        },
+        collectOalesPayment: {
+            url: "collectOalesPayment.do",
+            type: "update",
+            tranargs: {
+                args: ["oalesReceipt.realMoney", "oalesReceipt.cash", "oalesReceipt.bank", "oalesReceipt.checkv", "oalesReceipt.advance", "oalesReceipt.coupon"]
+            }
+        },
+        refundOalesPayment: {
+            url: "refundOalesPayment.do",
+            type: "update",
+            tranargs: {
+                args: ["oalesReceipt.realMoney", "oalesReceipt.cash", "oalesReceipt.bank", "oalesReceipt.checkv", "oalesReceipt.advance", "oalesReceipt.coupon"]
+            }
+        },
+        updateOalesPayment: {
+            url: "updateOalesPayment.do",
+            type: "update",
+            tranargs: {
+                args: ["oalesReceipt.realMoney", "oalesReceipt.cash", "oalesReceipt.bank", "oalesReceipt.checkv", "oalesReceipt.advance", "oalesReceipt.coupon"]
+            }
+        },
+        confirmOalesPayment: {
+            url: "confirmOalesPayment.do"
+        }
     }
 });
 

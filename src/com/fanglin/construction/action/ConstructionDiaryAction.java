@@ -8,6 +8,7 @@ import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.fanglin.construction.service.ConstructionDiaryService;
 import com.fanglin.construction.vo.ConstructionDiaryDrawingVO;
 import com.fanglin.construction.vo.ConstructionDiaryVO;
@@ -25,11 +26,11 @@ public class ConstructionDiaryAction extends BaseListAction {
 	private ConstructionDiaryService constructionDiaryService;
 
 	private ConstructionDiaryVO constructionDiary;
-	
+
 	private List<ConstructionDiaryVO> constructionDiarys;
 
 	private ConstructionDiaryDrawingVO constructionDiaryDrawing;
-	
+
 	@Action(value = "pageConstructionDiary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstructionDiary() throws FLException {
 
@@ -37,7 +38,7 @@ public class ConstructionDiaryAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryConstructionDiary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionDiary() throws FLException {
 
@@ -45,11 +46,11 @@ public class ConstructionDiaryAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addConstructionDiary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionDiary() throws FLException {
 
-		constructionDiaryService.addConstructionDiary(constructionDiary,constructionDiaryDrawing, queryUserId(), queryCompany());
+		constructionDiaryService.addConstructionDiary(constructionDiary, constructionDiaryDrawing, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -61,7 +62,7 @@ public class ConstructionDiaryAction extends BaseListAction {
 	public void setConstructionDiary(ConstructionDiaryVO constructionDiary) {
 		this.constructionDiary = constructionDiary;
 	}
-	
+
 	public ConstructionDiaryDrawingVO getConstructionDiaryDrawing() {
 		return constructionDiaryDrawing;
 	}

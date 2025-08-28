@@ -1,5 +1,6 @@
 package com.fanglin.sales.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -109,8 +110,34 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesBalancePO> querySalesBalance(long sid, short checkStatus) {
+		return session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("checkStatus", checkStatus)).list();
+	}
+
+	@Override
 	public SalesBalancePO querySalesBalance(long sid, short type, short onetype) {
-		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).uniqueResult();
+		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).add(Restrictions.eq("sales.sid", sid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public int countSalesBalance(long sid, short type, short onetype, short checkStatus) throws FLException {
+
+		String sql = "SELECT count(*) FROM sales.salesbalance where sid = :sid AND type = :type AND onetype = :onetype AND checkstatus = :checkStatus";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("sid", sid).setShort("type", type).setShort("onetype", onetype).setShort("checkStatus", checkStatus).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int updateSalesBalance(long sid, short onetype, String field, short status) {
+
+		String sql = "UPDATE sales.salesbalance SET %s = :status WHERE sid = :sid AND onetype = :onetype";
+
+		session().createSQLQuery(String.format(sql, field)).setLong("sid", sid).setLong("sid", sid).setShort("onetype", onetype).setShort("status", status).executeUpdate();
+
+		return 0;
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {

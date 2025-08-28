@@ -3,6 +3,8 @@ package com.fanglin.customer.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class CppointRecordVO implements Serializable {
@@ -15,9 +17,9 @@ public class CppointRecordVO implements Serializable {
 
 	private Long cpid;
 
-	private Long type;
+	private Short type;
 
-	private Long pointType;
+	private Short pointType;
 
 	private Long balance;
 
@@ -60,19 +62,19 @@ public class CppointRecordVO implements Serializable {
 		this.cpid = cpid;
 	}
 
-	public Long getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(Long type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 
-	public Long getPointType() {
+	public Short getPointType() {
 		return pointType;
 	}
 
-	public void setPointType(Long pointType) {
+	public void setPointType(Short pointType) {
 		this.pointType = pointType;
 	}
 
@@ -100,6 +102,7 @@ public class CppointRecordVO implements Serializable {
 		this.operater = operater;
 	}
 
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}

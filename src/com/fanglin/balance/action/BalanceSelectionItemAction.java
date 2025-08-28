@@ -57,6 +57,14 @@ public class BalanceSelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pendingBalanceSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pendingBalanceSelectionItem() throws FLException {
+
+		balanceSelectionItemService.pendingBalanceSelectionItem(balanceSelection, balanceSelectionItem, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	public BalanceSelectionVO getBalanceSelection() {
 		return balanceSelection;
 	}

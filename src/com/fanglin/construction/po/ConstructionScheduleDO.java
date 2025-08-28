@@ -57,6 +57,8 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private int period;
 
+	private String name;
+
 	private Timestamp preStartTime;
 
 	private Timestamp preEndTime;
@@ -156,6 +158,15 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setPeriod(int period) {
 		this.period = period;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Column(name = "preStartTime")
@@ -336,7 +347,12 @@ public class ConstructionScheduleDO implements Serializable {
 			constructionScheduleVO.setCid(getConstruction().getCid());
 		}
 
-		if (constructionScheduleVO.getNode() != null && getNode() != null) getNode().ptv(constructionScheduleVO.getNode());
+		if (constructionScheduleVO.getNode() != null && getNode() != null) {
+			getNode().ptv(constructionScheduleVO.getNode());
+
+			constructionScheduleVO.setCnid(constructionScheduleVO.getNode().getCnid());
+			constructionScheduleVO.setSchedule(constructionScheduleVO.getSchedule());
+		}
 
 		return constructionScheduleVO;
 	}

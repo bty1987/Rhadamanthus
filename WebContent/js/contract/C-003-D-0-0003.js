@@ -99,15 +99,12 @@ jQuery(function($) {
         var village = house.village;
         var proper = village.cityProper;
         var customer = res.decoration.customer;
-
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
-
+        
         contractEdit.customer = customer;
 
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
-        contractEdit.cover["sin-customer-ident"] = customer.identity;
         contractEdit.cover["sin-customer-name"] = customer.name;
 
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
@@ -125,6 +122,23 @@ jQuery(function($) {
         contractEdit.decoration = data;
 
         contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
+
+    }, null, false);
+
+    com.post(api.data.queryCustomerForPhone, {
+        "customerPhone.cid": contractEdit.customer.cid,
+        "customerPhone.cpid": 0
+    }, function(res) {
+
+        contractEdit.customer = res.customer;
+
+        com.focusPage("#con-customer-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(contractEdit.customer.identity);
+
+        com.focusPage("#con-company-name", "#form").val(contractEdit.customer.companyName);
+
+        contractEdit.cover["cov-company-name"] = contractEdit.customer.companyName;
+        contractEdit.cover["sin-customer-ident"] = contractEdit.customer.identity;
 
     }, null, false);
 
@@ -268,8 +282,8 @@ jQuery(function($) {
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data),
             };
-            
-            if(params.decoration.contract && params.decoration.contract.dcid){
+
+            if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid
             }

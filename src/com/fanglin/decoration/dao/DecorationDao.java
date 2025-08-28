@@ -45,13 +45,9 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public List<DecorationPO> queryDecoration(List<Filter> filters) throws FLException;
 
-	public List<DecorationPO> queryDecorationForChanceRefer(String orderId);
-
-	public List<DecorationPO> queryDecorationForOriginRefer(String orderId);
-
-	public List<DecorationPO> queryDecorationForDecorationInfoRefer(String orderId);
-
 	public List<DecorationPO> queryDecorationByCustomerId(Long customerId);
+
+	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys);
 
 	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys);
 
@@ -59,10 +55,6 @@ public interface DecorationDao extends Dao<DecorationPO> {
 
 	public DecorationPO queryDecoration(String orderId, String phone);
 
-	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys);
-
-	public double countDecorationForTotalPrice(List<Filter> filters) throws FLException;
-
-	public void changeDecorationForOrderId(String newOrderId, String oldOrderId);
+	public void changeDecorationForOrderId(String nrderId, String orderId);
 
 }

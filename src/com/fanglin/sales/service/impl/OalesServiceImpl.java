@@ -20,6 +20,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.payment.dao.OalesPaymentDao;
+import com.fanglin.payment.po.OalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -60,6 +62,9 @@ public class OalesServiceImpl implements OalesService {
 
 	@Autowired
 	private OalesPayDao oalesPayDao;
+
+	@Autowired
+	private OalesPaymentDao oalesPaymentDao;
 
 	@Override
 	public void pageOales(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException {
@@ -168,6 +173,7 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setHouse(decorationPO.getHouse());
 
 		oalesDao.save(oalesPO);
+
 	}
 
 	@Override
@@ -398,6 +404,21 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesDao.save(oalesPO);
+
+		OalesPaymentPO oalesPaymentPO = new OalesPaymentPO(new UserPO(), new OalesPO());
+
+		oalesPaymentPO.setOales(oales);
+		oalesPaymentPO.setOrderId(oales.getDecoration().getOrderId());
+		oalesPaymentPO.setType(OalesPaymentPO.TYPE_REFUNDS_INT);
+		oalesPaymentPO.setStatus(OalesPaymentPO.STATUS_INITIAL_INT);
+		oalesPaymentPO.setCategory(oales.getCategory());
+		oalesPaymentPO.setBrand(oales.getBrand());
+		oalesPaymentPO.setReferMoney(oalesVO.getTotal());
+		oalesPaymentPO.setCreater(creater);
+		oalesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		oalesPaymentPO.setCompany(oales.getCompany());
+
+		oalesPaymentDao.save(oalesPaymentPO);
 	}
 
 	@Override

@@ -635,7 +635,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand.name'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值:", 'sales.coupon'], ["券信息:", 'sales.couponInfo'], ["驻店:", 'sales.instorer.currentName'], ["预结值:", 'balance'], ["预结时间:", 'createTime'], ["预结人:", 'creater.currentName'], ["厂结:", 'vbalance'], ["厂结人:", 'voster.currentName'], ["厂结时间:", 'venderTime'], ["结算值:", 'pbalance'], ["结算时间:", 'postTime'], ["结算人:", 'poster.currentName'], ["抹零:", 'sales.maling'], ["厂商抹零:", 'sales.venderMaling'], ["状态:", 'status'], ["类型:", 'type'], ["等级:", 'sales.grade'], ],
+                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand.name'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值", 'sales.coupon'], ["券信息", 'sales.couponInfo'], ["驻店", 'sales.instorer.currentName'], ["预结值", 'balance'], ["预结时间", 'createTime'], ["预结人", 'creater.currentName'], ["厂结", 'vbalance'], ["厂结人", 'voster.currentName'], ["厂结时间", 'venderTime'], ["结算值", 'pbalance'], ["结算时间", 'postTime'], ["结算人", 'poster.currentName'], ["抹零", 'sales.maling'], ["厂商抹零", 'sales.venderMaling'], ["补贴", 'allowance'], ["状态", 'status'], ["类型", 'type'], ["等级", 'sales.grade'], ],
                 list: res.paging.data
 
             }, function(v) {

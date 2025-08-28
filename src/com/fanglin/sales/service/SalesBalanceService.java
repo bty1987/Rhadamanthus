@@ -4,15 +4,12 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.vo.SalesBalanceVO;
 import com.fanglin.utils.Paging;
 
 public interface SalesBalanceService {
 
 	public void pageSalesBalance(Paging paging, List<Filter> filter, SalesBalanceVO salesBalanceVO, int company) throws FLException;
-
-	public List<SalesBalanceVO> pageSalesBalance(List<SalesBalancePO> salesBalancePOs);
 
 	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filter, SalesBalanceVO salesBalanceVO, int dompany) throws FLException;
 

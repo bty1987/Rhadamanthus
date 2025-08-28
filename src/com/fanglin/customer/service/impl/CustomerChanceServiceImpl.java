@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
@@ -30,6 +31,7 @@ import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.po.CustomerSourceRecordPO;
 import com.fanglin.customer.po.CustomerUserRulePO;
 import com.fanglin.customer.service.CustomerChanceService;
+import com.fanglin.customer.service.CustomerSourceService;
 import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
@@ -43,10 +45,13 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
 
 @Service("CustomerChanceService")
@@ -81,7 +86,13 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	private DecorationService decorationService;
 
 	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	@Autowired
 	private MessageService messageService;
+
+	@Autowired
+	private CustomerSourceService customerSourceService;
 
 	@Override
 	public void pageCustomerChance(Paging paging, List<Filter> filters, CustomerChanceVO customerChanceVO, String userId, Integer company) {
@@ -164,6 +175,22 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	}
 
 	@Override
+	public void addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
+
+		if (customerChanceVO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		if (customerChanceVO.getSource() == null) {
+			throw new FLException(330071, "客户资源不存在");
+		}
+
+		customerSourceService.addCustomerSource(customerChanceVO.getSource(), userId, company);
+
+		customerSourceService.issueCustomerSource(customerChanceVO.getSource(), customerChanceVO, userId, company);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateCustomerChance(CustomerChanceVO customerChanceVO) throws FLException {
 
@@ -235,6 +262,39 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		UserPO designer = customerChancePO.getBelonger();
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_CUSTOMER_INT, designer.getCompany());
+	}
+
+	@Override
+	public String vodeCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException {
+
+		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());
+
+		if (customerChancePO == null) {
+			throw new FLException(330075, "客户机会不存在");
+		}
+
+		CustomerPO customerPO = customerChancePO.getCustomer();
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
+
+		String url = String.format("%s/queryVode.do?phone=%s", isv.getValue(), (customerChanceVO.getCustomer() != null) ? customerChanceVO.getCustomer().getPhone() : FormatUtil.decodePhone(customerPO.getPhone()));
+
+		JSONObject json = HttpUtil.httpGet(url);
+
+		if (json != null && json.getInteger("errorCode") != null && json.getInteger("errorCode") == 0) {
+			return json.getString("securityCode");
+		}
+
+		if (json == null || json.getInteger("errorCode") == null || json.getInteger("errorCode") != 0) {
+			System.out.println(url);
+			System.out.println(json);
+		}
+
+		return null;
 	}
 
 	@Override

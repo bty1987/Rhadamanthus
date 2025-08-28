@@ -198,7 +198,7 @@ $(function() {
 
         displayFunc.init('bsbresultList', data);
     }, "bsbpagenation", "balanceSalesBalancePostData", {
-        "balanceSales.bsid": balanceSalesBalance.bsid
+        "balanceSalesBalance.bsid": balanceSalesBalance.bsid
     }, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addBalance').css("margin", "0px 3px");

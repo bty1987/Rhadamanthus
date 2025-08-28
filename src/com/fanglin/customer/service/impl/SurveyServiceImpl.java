@@ -121,9 +121,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 		surveyDao.save(surveyPO);
 
-		System.out.println(String.format("pages/customer/survery/survery?sid=%s", surveyPO.getSid()));
-
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s", orderId, surveyPO.getName()), String.format("pages/customer/survey/survey?sid=%s", surveyPO.getSid()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s", orderId, surveyPO.getName()), String.format("pages/customer/survey/survey?sid=%s", surveyPO.getSid()), sender);
 
 		return 0;
 	}

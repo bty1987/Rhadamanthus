@@ -19,42 +19,42 @@ public class EpictureServiceImpl implements EpictureService{
 
 	@Autowired
 	private EpictureDao epictureDao;
-	
+
 	@Override
 	public List<EpictureVO> queryEpictureByCid(EpictureVO epictureVO) {
-		
-		List<EpicturePO> epicturePOs = epictureDao.queryEpictureByCid(epictureVO.getCid());
+
+		List<EpicturePO> epicturePOs = epictureDao.queryEpictureByCid(epictureVO.getCid(), epictureVO.getType());
 		List<EpictureVO> epictureVOs = new ArrayList<EpictureVO>();
 		for (EpicturePO epicturePO : epicturePOs) {
 			EpictureVO epicture = new EpictureVO();
 			BeanUtil.copyProperties(epicturePO,epicture);
-			epictureVOs.add(epicture);		
+			epictureVOs.add(epicture);
 		}
-		
+
 		return epictureVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int addEpicture(EpictureVO epictureVO) {
-		
+
 		EpicturePO epicturePO = new EpicturePO();
-		
+
 		BeanUtil.copyProperties(epictureVO, epicturePO);
-		
+
 		epictureDao.save(epicturePO);
-		
+
 		epictureVO.setEpid(epicturePO.getEpid());
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int deleteEpicture(EpictureVO epictureVO) {
-		
+
 		this.epictureDao.deleteById(epictureVO.getEpid());
-		
+
 		return 0;
 	}
 

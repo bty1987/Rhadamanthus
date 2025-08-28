@@ -13,7 +13,7 @@ public interface CustomerOriginService {
 
 	public void pageCustomerOriginForAdvance(Paging paging, List<Filter> filters, String userId);
 
-	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin);
+	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin) throws FLException;
 
 	public void addCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
 

@@ -555,6 +555,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			}
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
+			customerChanceVO.setBelonger(new UserBaseVO(belonger.getUserId()));
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("自动分配,归属:%s(%s),部门:%s(%s),分区:%s(%s),机会数:%s,剩余数:%s,轮询数:%s", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo(), Arith.div(customerUserRulePO.getChance(), 1000.0), Arith.div(customerUserRulePO.getSurplus(), 1000.0), customerUserRulePO.getPolling()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("分配规则,%s,%s", customerDeptRulePO.getFocus(), customerUserRuleItemPO.getCuriid()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
@@ -656,6 +657,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerChanceDao.save(customerChancePO);
 
 			customerChanceVO.setCcid(customerChancePO.getCcid());
+			customerChanceVO.setBelonger(new UserBaseVO(belonger.getUserId()));
 
 			customerSourceRecordDao.save(new CustomerSourceRecordPO().init(customerSourcePO.getCsid(), customerChancePO.getCcid(), String.format("手动人员分配,归属:%s(%s),部门:%s(%s),分区:%s(%s)", customerChancePO.getBelonger().getCurrentName(), customerChancePO.getBelonger().getUserId(), customerChancePO.getDepartment().getName(), customerChancePO.getDepartment().getNo(), customerChancePO.getRegion().getName(), customerChancePO.getRegion().getNo()), CustomerSourceRecordPO.TYPE_SPECIAL_INT, issuer));
 

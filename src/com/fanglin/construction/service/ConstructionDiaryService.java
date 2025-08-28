@@ -25,7 +25,7 @@ public interface ConstructionDiaryService {
 
 	public List<ConstructionDiaryVO> queryConstructionDiary(ConstructionDiaryVO constructionDiaryVO) throws FLException;
 
-	public void addConstructionDiary(ConstructionDiaryVO constructionDiaryVO,ConstructionDiaryDrawingVO constructionDiaryDrawing, String userId, Integer company) throws FLException;
+	public void addConstructionDiary(ConstructionDiaryVO constructionDiaryVO, ConstructionDiaryDrawingVO constructionDiaryDrawing, String userId, Integer company) throws FLException;
 
 	public void enterConstructionDiary(Long csid) throws FLException;
 

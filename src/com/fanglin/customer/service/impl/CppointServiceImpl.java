@@ -16,6 +16,8 @@ import com.fanglin.customer.po.CppointPO;
 import com.fanglin.customer.po.CppointRecordPO;
 import com.fanglin.customer.service.CppointService;
 import com.fanglin.customer.vo.CppointVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Arith;
@@ -34,6 +36,9 @@ public class CppointServiceImpl implements CppointService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Override
 	public void pageCppoint(Paging paging, List<Filter> filters) {
@@ -60,7 +65,7 @@ public class CppointServiceImpl implements CppointService {
 		CppointPO cppointPO = cppointDao.queryCppoint(cppointVO.getCustomer().getCid());
 
 		if (cppointPO != null) {
-			BeanUtil.copyProperties(cppointPO, cppointVO);
+			BeanUtil.copyProperties(cppointPO, cppointVO, "customer");
 		}
 
 		return cppointVO;
@@ -68,21 +73,32 @@ public class CppointServiceImpl implements CppointService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public CppointVO createCppoint(CppointVO cppointVO, int company) throws FLException {
+	public CppointVO createCppoint(CppointVO cppointVO, int company, String userId) throws FLException {
 
-		CppointPO cppointPO = cppointDao.queryCppoint(cppointVO.getCustomer().getCid());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(cppointVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		CppointPO cppointPO = cppointDao.queryCppointByOrderId(cppointVO.getOrderId());
 
 		if (cppointPO != null) {
 			throw new FLException(330048, "积分已存在");
 		}
 
+		UserPO operater = userDao.queryUserByUserId(userId);
+
 		cppointPO = new CppointPO();
 
-		BeanUtil.copyProperties(cppointVO, cppointPO);
+		BeanUtil.copyProperties(cppointVO, cppointPO, "customer");
 
+		cppointPO.setCustomer(decorationPO.getCustomer());
 		cppointPO.setCompany(company);
 
 		cppointDao.save(cppointPO);
+
+		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, null, decorationPO.getOrderId(), operater));
 
 		return cppointVO;
 	}
@@ -91,7 +107,7 @@ public class CppointServiceImpl implements CppointService {
 	@Transactional(rollbackFor = Exception.class)
 	public CppointVO addupCppoint(CppointVO cppointVO, String userId) throws FLException {
 
-		CppointPO cppointPO = cppointDao.queryCppoint(cppointVO.getCustomer().getCid());
+		CppointPO cppointPO = cppointDao.queryCppointByOrderId(cppointVO.getOrderId());
 
 		if (cppointPO == null) {
 			throw new FLException(330047, "积分不存在");
@@ -110,7 +126,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setDpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, null, null, operater));
 		}
 
 		if (spoint != null && spoint != 0) {
@@ -120,7 +136,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setSpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, null, null, operater));
 		}
 
 		if (opoint != null && opoint != 0) {
@@ -130,7 +146,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setOpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, null, null, operater));
 		}
 
 		return cppointVO;
@@ -140,7 +156,7 @@ public class CppointServiceImpl implements CppointService {
 	@Transactional(rollbackFor = Exception.class)
 	public CppointVO useupCppoint(CppointVO cppointVO, String userId) throws FLException {
 
-		CppointPO cppointPO = cppointDao.queryCppoint(cppointVO.getCustomer().getCid());
+		CppointPO cppointPO = cppointDao.queryCppointByOrderId(cppointVO.getOrderId());
 
 		if (cppointPO == null) {
 			throw new FLException(330047, "积分不存在");
@@ -163,7 +179,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setDpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, null, null, operater));
 		}
 
 		if (spoint != null && spoint != 0) {
@@ -177,7 +193,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setSpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, null, null, operater));
 		}
 
 		if (opoint != null && opoint != 0) {
@@ -187,7 +203,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setOpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, null, null, operater));
 		}
 
 		return cppointVO;

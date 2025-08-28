@@ -53,6 +53,8 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	private Short status;
 
+	private Short atttype;
+
 	private Integer company;
 
 	public BalanceSelectionVO() {
@@ -261,6 +263,14 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Integer getCompany() {

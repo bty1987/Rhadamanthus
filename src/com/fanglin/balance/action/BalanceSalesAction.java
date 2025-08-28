@@ -75,6 +75,15 @@ public class BalanceSalesAction extends BaseListAction {
 	public String updateBalanceSales() throws FLException {
 
 		balanceSalesService.updateBalanceSales(balanceSales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountBalanceSales() throws FLException {
+
+		balanceSalesService.amountBalanceSales(balanceSales);
+
 		return SUCCESS;
 	}
 
@@ -122,13 +131,7 @@ public class BalanceSalesAction extends BaseListAction {
 	public String deleteBalanceSales() throws FLException {
 
 		balanceSalesService.deleteBalanceSales(balanceSales);
-		return SUCCESS;
-	}
 
-	@Action(value = "amountBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String amountBalanceSales() throws FLException {
-
-		balanceSalesService.amountBalanceSales(balanceSales);
 		return SUCCESS;
 	}
 

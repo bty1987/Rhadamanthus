@@ -163,6 +163,21 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateConstructionScheduleForPeriod(ConstructionScheduleVO constructionScheduleVO) throws FLException {
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());
+
+		if (constructionSchedulePO == null) {
+			throw new FLException(120024, "工程环节不存在");
+		}
+
+		constructionSchedulePO.setPeriod(constructionScheduleVO.getPeriod());
+
+		constructionScheduleDao.saveOrUpdate(constructionSchedulePO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int beginConstructionSchedule(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException {
 
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionScheduleVO.getCsid());

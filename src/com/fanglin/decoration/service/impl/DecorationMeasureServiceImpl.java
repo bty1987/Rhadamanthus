@@ -21,6 +21,7 @@ import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.common.dao.ConstructionNodeDao;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -64,6 +65,9 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 	@Autowired
 	private ConstructionScheduleDao constructionScheduleDao;
 
+	@Autowired
+	private ConstructionNodeDao constructionNodeDao;
+
 	@Override
 	public void pageDecorationMeasure(Paging paging, List<Filter> filters, DecorationMeasureVO decorationMeasure, int company) throws FLException {
 
@@ -103,6 +107,7 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void sendDecorationMeasure(DecorationMeasureVO decorationMeasureVO) throws FLException {
 
 		String orderId = decorationMeasureVO.getDecoration().getOrderId();
@@ -212,12 +217,16 @@ public class DecorationMeasureServiceImpl implements DecorationMeasureService {
 
 		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
 
+			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
+
+			if (constructionNodePO == null) continue;
+
 			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), Arith.div(timelimit, 1000000)));
 			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), Arith.div((timelimit + constructionNodeVO.getTimeLimit()), 1000000)));
 
-			ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getTimeLimit());
+			ConstructionSchedulePO constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime).init(constructionNodePO);
 
-			constructionSchedulePO.setNode(new ConstructionNodePO(constructionNodeVO.getCnid()));
+			constructionSchedulePO.setNode(constructionNodePO);
 
 			constructionScheduleDao.save(constructionSchedulePO);
 

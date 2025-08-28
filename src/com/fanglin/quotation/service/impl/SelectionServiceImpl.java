@@ -226,15 +226,21 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int sendSelection(SelectionVO selectionVO) throws FLException {
+	public int sendSelection(SelectionVO selectionVO, String userId) throws FLException {
 
 		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
 
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
 		String orderId = selectionPO.getOrderId();
+
+		UserPO sender = userDao.queryUserByUserId(userId);
 
 		System.out.println(String.format("pages/quotation/selection/selection?orderId=%s", orderId));
 
-		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认选材信息。", String.format("pages/quotation/selection/selection?orderId=%s", orderId));
+		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认选材信息。", String.format("pages/quotation/selection/selection?orderId=%s", orderId), sender);
 
 		selectionPO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
 

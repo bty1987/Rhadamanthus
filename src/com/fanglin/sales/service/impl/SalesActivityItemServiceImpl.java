@@ -375,6 +375,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void sendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
 
 		String orderId = salesActivityItemVO.getOrderId();

@@ -3,6 +3,7 @@ package com.fanglin.information.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.information.vo.ActivityVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "activity", catalog = "information")
@@ -45,11 +48,13 @@ public class ActivityPO implements java.io.Serializable {
 
 	public static final short TYPE_SALES_INT = 3;// 销售
 
+	public static final short ATTTYPE_OFFLINE_INT = 0;// 线下
+
+	public static final short ATTTYPE_ONLINE_INT = 1;// 线上
+
 	private long aid;
 
 	private String name;
-
-	private UserPO creater;
 
 	private short status;
 
@@ -59,7 +64,11 @@ public class ActivityPO implements java.io.Serializable {
 
 	private short defaults;
 
+	private short atttype;
+
 	private int multiple;
+
+	private UserPO creater;
 
 	private Timestamp createTime;
 
@@ -137,6 +146,15 @@ public class ActivityPO implements java.io.Serializable {
 		this.defaults = defaults;
 	}
 
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
+	}
+
 	@Column(name = "multiple")
 	public int getMultiple() {
 		return multiple;
@@ -189,6 +207,15 @@ public class ActivityPO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public ActivityVO ptv(ActivityVO activityVO) {
+
+		BeanUtil.copyProperties(this, activityVO, Arrays.asList("creater"));
+
+		if (activityVO.getCreater() != null && getCreater() != null) activityVO.getCreater().setBaseInfo(getCreater());
+
+		return activityVO;
 	}
 
 }

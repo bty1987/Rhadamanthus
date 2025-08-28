@@ -112,7 +112,7 @@ public class SalesProfileServiceImpl implements SalesProfileService {
 
 		for (SalesPO salesPO : salesPOs) {
 
-			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT || salesPO.getStatus() != SalesPO.STATUS_END_SHORT) continue;
+			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT && salesPO.getStatus() != SalesPO.STATUS_END_SHORT) continue;
 			if (bids.contains(salesPO.getBrand().getBid())) continue;
 
 			SalesProfileItemPO salesProfileItemPO = new SalesProfileItemPO();
@@ -269,7 +269,7 @@ public class SalesProfileServiceImpl implements SalesProfileService {
 		List<Long> bids = new ArrayList<Long>();
 		for (SalesPO salesPO : salesPOs) {
 
-			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT || salesPO.getStatus() != SalesPO.STATUS_END_SHORT) continue;
+			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT && salesPO.getStatus() != SalesPO.STATUS_END_SHORT) continue;
 			if (bids.contains(salesPO.getBrand().getBid())) continue;
 
 			SalesProfileItemPO salesProfileItemPO = new SalesProfileItemPO();

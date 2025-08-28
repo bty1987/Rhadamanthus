@@ -43,6 +43,8 @@ public class MemberAction extends BaseListAction {
 
 	private MemberGoodsVO memberGoods;
 
+	private List<String> companys;
+
 	@Action(value = "queryMemberByPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryMemberByPhone() throws FLException {
 
@@ -62,7 +64,7 @@ public class MemberAction extends BaseListAction {
 	@Action(value = "addMemberActivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addMemberActivity() throws FLException {
 
-		memberService.addMemberActivity(memberActivity, queryUserId());
+		memberService.addMemberActivity(memberActivity, companys, queryUserId());
 
 		return SUCCESS;
 	}
@@ -153,6 +155,14 @@ public class MemberAction extends BaseListAction {
 
 	public void setMemberGoods(MemberGoodsVO memberGoods) {
 		this.memberGoods = memberGoods;
+	}
+
+	public List<String> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<String> companys) {
+		this.companys = companys;
 	}
 
 }

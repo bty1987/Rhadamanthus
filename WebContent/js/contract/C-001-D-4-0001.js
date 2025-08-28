@@ -70,16 +70,12 @@ jQuery(function($) {
         var proper = village.cityProper;
         var customer = res.decoration.customer;
 
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
-
         contractEdit.customer = customer;
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
 
         contractEdit.cover["con-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["sin-customer-name"] = customer.name;
-        contractEdit.cover["sin-customer-phone"] = customer.phone;
-        contractEdit.cover["sin-customer-ident"] = customer.identity;
 
         com.focusPage("#con-company-no", "#form").val(customer.companyNo);
         com.focusPage("#con-company-name", "#form").val(customer.companyName);
@@ -91,6 +87,24 @@ jQuery(function($) {
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
         com.focusPage("#con-project-status", "#form").val(contractEdit.projectStatus[data.projectStatus]);
         com.focusPage("#con-decoration-type", "#form").val(data.typeness);
+    }, null, false);
+
+    com.post(api.data.queryCustomerForPhone, {
+        "customerPhone.cid": contractEdit.customer.cid,
+        "customerPhone.cpid": 0
+    }, function(res) {
+
+        contractEdit.customer = res.customer;
+
+        com.focusPage("#con-customer-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(contractEdit.customer.identity);
+
+        com.focusPage("#con-company-no", "#form").val(contractEdit.customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(contractEdit.customer.companyName);
+
+        contractEdit.cover["sin-customer-phone"] = contractEdit.customer.phone;
+        contractEdit.cover["sin-customer-ident"] = contractEdit.customer.identity;
+
     }, null, false);
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
@@ -236,8 +250,8 @@ jQuery(function($) {
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };
-            
-            if(params.decoration.contract && params.decoration.contract.dcid){
+
+            if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid
             }

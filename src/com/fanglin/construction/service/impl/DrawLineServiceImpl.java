@@ -289,19 +289,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 				ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
 
-				if (constructionNodePO != null) {
+				if (constructionNodePO == null) continue;
 
-					constructionNodeVO.setAccessoryLimit(constructionNodePO.getAccessoryLimit());
-					constructionNodeVO.setSalaryLimit(constructionNodePO.getSalaryLimit());
-
-					constructionNodeVO.setPrecheck(constructionNodePO.getPrecheck());
-					constructionNodeVO.setPostcheck(constructionNodePO.getPostcheck());
-
-					constructionNodeVO.setStacheck(constructionNodePO.getStacheck());
-					constructionNodeVO.setFincheck(constructionNodePO.getFincheck());
-				}
-
-				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime).init(constructionNodeVO));
+				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodeVO.getTimeLimit()).init(constructionNodePO));
 			}
 
 			timelimit = timelimit + constructionNodeVO.getTimeLimit();
@@ -505,19 +495,9 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 				ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionNodeVO.getCnid());
 
-				if (constructionNodePO != null) {
+				if (constructionNodePO == null) continue;
 
-					constructionNodeVO.setAccessoryLimit(constructionNodePO.getAccessoryLimit());
-					constructionNodeVO.setSalaryLimit(constructionNodePO.getSalaryLimit());
-
-					constructionNodeVO.setPrecheck(constructionNodePO.getPrecheck());
-					constructionNodeVO.setPostcheck(constructionNodePO.getPostcheck());
-
-					constructionNodeVO.setStacheck(constructionNodePO.getStacheck());
-					constructionNodeVO.setFincheck(constructionNodePO.getFincheck());
-				}
-
-				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime).init(constructionNodeVO));
+				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getTimeLimit()).init(constructionNodePO));
 			}
 
 			timelimit = timelimit + constructionNodeVO.getTimeLimit();

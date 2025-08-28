@@ -25,6 +25,7 @@ import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -55,6 +56,9 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 	@Autowired
 	private CustomerOriginDao customerOriginDao;
 
+	@Autowired
+	private UserDao userDao;
+
 	@Override
 	public DecorationInfoVO queryDecorationInfoByOrderId(DecorationInfoVO decorationInfoVO) {
 
@@ -82,7 +86,8 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 	}
 
 	@Override
-	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO) {
+	@Transactional(rollbackFor = Exception.class)
+	public void sendDecorationInfoForConfirm(DecorationInfoVO decorationInfoVO, String userId) {
 
 		String orderId = decorationInfoVO.getOrderId();
 
@@ -90,12 +95,14 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		if (decorationPO.getSourceStatus() == decorationInfoVO.getSourceStatus()) return;
 
+		UserPO creater = userDao.queryUserByUserId(userId);
+
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT && decorationPO.getSourceStatus() == DecorationPO.STATUS_INITIA_INT) {
-			decorationService.sendMessage(orderId, "装修单", "初稿方案请查收确认, 如有修改可以调整.", String.format("pages/construction/drawLine/drawLine?orderId=%s&type=1", orderId));
+			decorationService.sendMessage(orderId, "装修单", "初稿方案请查收确认, 如有修改可以调整.", String.format("pages/construction/drawLine/drawLine?orderId=%s&type=1", orderId), creater);
 		}
 
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT && decorationPO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
-			decorationService.sendMessage(orderId, "装修单", "施工方案请查收确认, 已便安排放线进场.", String.format("pages/construction/drawLine/drawLine?orderId=%s&type=2", orderId));
+			decorationService.sendMessage(orderId, "装修单", "施工方案请查收确认, 已便安排放线进场.", String.format("pages/construction/drawLine/drawLine?orderId=%s&type=2", orderId), creater);
 		}
 	}
 

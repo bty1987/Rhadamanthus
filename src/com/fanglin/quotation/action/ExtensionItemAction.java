@@ -57,6 +57,14 @@ public class ExtensionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "upgradeExtensionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String upgradeExtensionItem() throws FLException {
+
+		extensionItemService.upgradeExtensionItem(extensionItem, extension, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteExtensionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteExtensionItem() throws FLException {
 

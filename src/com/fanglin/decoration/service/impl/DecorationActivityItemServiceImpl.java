@@ -492,13 +492,16 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	}
 
 	@Override
-	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
 
 		String orderId = decorationActivityItemVO.getOrderId();
 
+		UserPO creater = userDao.queryUserByUserId(userId);
+
 		System.out.println(String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认礼品领取信息.", String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", "请您及时查收点确认礼品领取信息.", String.format("pages/decoration/activityItem/activityItem?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()), creater);
 	}
 
 	@Override

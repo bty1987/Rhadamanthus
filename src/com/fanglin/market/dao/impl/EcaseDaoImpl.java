@@ -27,41 +27,43 @@ public class EcaseDaoImpl extends DaoImpl<EcasePO> implements EcaseDao {
 
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<EcasePO> queryEcaseByTypeAndStatus(long cityId, short status, short type) {
-		return createCriteria(EcasePO.class).add(Restrictions.eq(EcasePO.COLUMN_CITYID_STR, cityId)).add(Restrictions.eq(EcasePO.COLUMN_STATUS_STR, status)).add(Restrictions.eq(EcasePO.COLUMN_TYPE_STR, type)).list();
+	public List<EcasePO> queryEcase(long cityId, short status, short type) {
+		return createCriteria(EcasePO.class).add(Restrictions.eq(EcasePO.COLUMN_CITYID_STR, cityId)).add(Restrictions.eq(EcasePO.COLUMN_STATUS_STR, status)).add(Restrictions.eq(EcasePO.COLUMN_TYPE_STR, type)).setMaxResults(10).list();
 	}
-	
-	
-	private void queryFilterExcute(PagingQuery<EcasePO> query,List<Filter> filters) {
-		
-		if (filters != null) {
-			for (Filter filter : filters) {
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				
-				if(field.equals("type")){
-					query.add(query.getCriterion("type", Short.valueOf(data), op));
-				}else if(field.equals("designer")){
-					query.alias("designer", "designer");
-					query.add(query.getCriterion("designer.euid", Long.valueOf(data), op));
-				}else if(field.equals("supervisor")){
-					query.alias("supervisor", "supervisor");
-					query.add(query.getCriterion("supervisor.euid", Long.valueOf(data), op));
-				}else if(field.equals("style")){
-					query.add(query.getCriterion("style", data, op));
-				}else if(field.equals("houseType")){
-					query.add(query.getCriterion("houseType", data, op));
-				}else if(field.equals("area")){
-					String area[] = filter.getData().split("-");
-					query.add(Restrictions.ge("area",Float.valueOf(area[0])));
-					query.add(Restrictions.le("area",Float.valueOf(area[1])));
-				}else if(field.equals("cityId")){
-					query.add(query.getCriterion(field, Long.valueOf(data), op));
-				}
+
+	private void queryFilterExcute(PagingQuery<EcasePO> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (field.equals("type")) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
+			} else if (field.equals("status")) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if (field.equals("designer")) {
+				query.alias("designer", "designer");
+				query.add(query.getCriterion("designer.euid", Long.valueOf(data), op));
+			} else if (field.equals("supervisor")) {
+				query.alias("supervisor", "supervisor");
+				query.add(query.getCriterion("supervisor.euid", Long.valueOf(data), op));
+			} else if (field.equals("style")) {
+				query.add(query.getCriterion("style", data, op));
+			} else if (field.equals("houseType")) {
+				query.add(query.getCriterion("houseType", data, op));
+			} else if (field.equals("area")) {
+				String area[] = filter.getData().split("-");
+				query.add(Restrictions.ge("area", Float.valueOf(area[0])));
+				query.add(Restrictions.le("area", Float.valueOf(area[1])));
+			} else if (field.equals("cityId")) {
+				query.add(query.getCriterion(field, Long.valueOf(data), op));
 			}
 		}
 	}

@@ -505,11 +505,6 @@ jQuery(function($) {
 
         decorationContract.items.qrcodeCustomer.html("");
 
-        if (decorationContract.identity == "" || decorationContract.identity == null) {
-            com.showAlert(com.warning, "无身份证号信息");
-            return false;
-        }
-
         com.post(api.data.authCustomer, {
             "customer.cid": params.decoration.cid,
             "customer.identity": decorationContract.identity
@@ -525,11 +520,6 @@ jQuery(function($) {
 
         decorationContract.items.qrcodeCustomer.html("");
 
-        if (decorationContract.passport == "" || decorationContract.passport == null) {
-            com.showAlert(com.warning, "无护照号信息");
-            return false;
-        }
-
         com.post(api.data.authCustomer, {
             "customer.cid": params.decoration.cid,
             "customer.passport": decorationContract.passport
@@ -544,11 +534,6 @@ jQuery(function($) {
     decorationContract.btns.passhkmBtn.on("click", function() {
 
         decorationContract.items.qrcodeCustomer.html("");
-
-        if (decorationContract.passhkm == "" || decorationContract.passhkm == null) {
-            com.showAlert(com.warning, "无港澳通行证号信息");
-            return false;
-        }
 
         com.post(api.data.authCustomer, {
             "customer.cid": params.decoration.cid,

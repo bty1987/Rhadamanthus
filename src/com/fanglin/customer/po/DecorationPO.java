@@ -1,7 +1,6 @@
 package com.fanglin.customer.po;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.customer.vo.DecorationVO;
-import com.fanglin.utils.BeanUtil;
 
 @Entity(name = "com.fanglin.customer.po.DecorationPO")
 @Table(name = "decoration", catalog = "customer")
@@ -91,10 +89,11 @@ public class DecorationPO implements Serializable {
 
 	public void ptv(DecorationVO decorationVO, com.fanglin.decoration.po.DecorationPO decorationPO) {
 
-		if (decorationPO.getDesigner() != null && decorationVO.getDesigner() != null) BeanUtil.copyPropertie(decorationPO.getDesigner(), decorationVO.getDesigner(), Arrays.asList("dept", "duty"));
-		if (decorationPO.getSalesman() != null && decorationVO.getSalesman() != null) BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("dept", "duty"));
-		if (decorationPO.getSupervisor() != null && decorationVO.getSupervisor() != null) BeanUtil.copyPropertie(decorationPO.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("dept", "duty"));
-		if (decorationPO.getMaterialer() != null && decorationVO.getMaterialer() != null) BeanUtil.copyPropertie(decorationPO.getMaterialer(), decorationVO.getMaterialer(), Arrays.asList("dept", "duty"));
+		if (decorationPO.getDesigner() != null && decorationVO.getDesigner() != null) decorationVO.getDesigner().setBaseInfo(decorationPO.getDesigner());
+		if (decorationPO.getSalesman() != null && decorationVO.getSalesman() != null) decorationVO.getSalesman().setBaseInfo(decorationPO.getSalesman());
+		if (decorationPO.getSupervisor() != null && decorationVO.getSupervisor() != null) decorationVO.getSupervisor().setBaseInfo(decorationPO.getSupervisor());
+		if (decorationPO.getEscorter() != null && decorationVO.getEscorter() != null) decorationVO.getEscorter().setBaseInfo(decorationPO.getEscorter());
+		if (decorationPO.getMaterialer() != null && decorationVO.getMaterialer() != null) decorationVO.getMaterialer().setBaseInfo(decorationPO.getMaterialer());
 
 		decorationVO.setType(decorationPO.getType());
 		decorationVO.setTypeness(decorationPO.getTypeness());

@@ -258,7 +258,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "sendSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSales() throws FLException {
 
-		salesService.sendSales(sales);
+		salesService.sendSales(sales, queryUserId());
 
 		return SUCCESS;
 	}

@@ -181,7 +181,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
+            return !v.piid && [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
         }
     }, {
         name: "拒绝",
@@ -193,7 +193,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
+            return !v.piid && [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
         }
     }, ];
 

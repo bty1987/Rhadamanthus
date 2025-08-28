@@ -26,7 +26,8 @@
             comment: com.focusPage("#comment")
         },
         constructionNode: com.focusPage("#constructionNode"),
-        quotationDetail: {}
+        quotationDetail: {},
+        pageType: params.urlLoadParams.type,
 
     };
 
@@ -185,6 +186,7 @@
                 params.quotation.showType = {
                     itemtype: 4
                 };
+                params.quotation.pageType = constructionNodes.pageType;
 
                 constructionNodes.modals.printQuotationCNModal.modal("show");
             });

@@ -43,6 +43,12 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationActivityItemPO> queryDecorationActivityItem(String orderId, String no) {
+		return session().createCriteria(DecorationActivityItemPO.class).add(Restrictions.eq(DecorationActivityItemPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq("no", no)).list();
+	}
+
+	@Override
 	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
 		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and state = 0";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("isPayment", isPayment).uniqueResult();

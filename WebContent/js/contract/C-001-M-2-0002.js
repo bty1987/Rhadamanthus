@@ -51,12 +51,10 @@ jQuery(function($) {
     }, function(res) {
 
         var customer = res.decoration.customer;
+        
+        contractEdit.customer = customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#sin-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#sin-customer-ident", "#form").val(customer.identity);
-
-        contractEdit.customer = customer;
 
         contractEdit.cover["sin-customer-name"] = customer.name;
 
@@ -64,6 +62,23 @@ jQuery(function($) {
         com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
 
         contractEdit.cover["sin-company-phone"] = customer.companyPhone;
+    }, null, false);
+
+    com.post(api.data.queryCustomerForPhone, {
+        "customerPhone.cid": contractEdit.customer.cid,
+        "customerPhone.cpid": 0
+    }, function(res) {
+
+        contractEdit.customer = res.customer;
+
+        com.focusPage("#sin-customer-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#sin-customer-ident", "#form").val(contractEdit.customer.identity);
+
+        com.focusPage("#con-company-name", "#form").val(contractEdit.customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(contractEdit.customer.companyPhone);
+
+        contractEdit.cover["sin-company-phone"] = contractEdit.customer.companyPhone;
+
     }, null, false);
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
@@ -116,8 +131,8 @@ jQuery(function($) {
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data)
             };
-            
-            if(params.decoration.contract && params.decoration.contract.dcid){
+
+            if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid
             }

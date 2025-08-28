@@ -82,7 +82,7 @@ public class SelectionAction extends BaseListAction {
 	@Action(value = "sendSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendSelection() throws FLException {
 
-		selectionService.sendSelection(selection);
+		selectionService.sendSelection(selection, queryUserId());
 
 		return SUCCESS;
 	}

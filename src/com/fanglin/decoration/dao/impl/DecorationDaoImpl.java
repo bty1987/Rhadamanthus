@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -242,60 +241,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPO> queryDecorationForChanceRefer(String orderId) {
-
-		String sql = "select d.* from decoration.decoration d, customer.customersource cs, customer.customerchance cc where cc.orderId = :orderId and cs.csid = cc.csid and cs.referOrderId = d.orderId";
-
-		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
-
-		return query.setString("orderId", orderId).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPO> queryDecorationForOriginRefer(String orderId) {
-
-		String sql = "select d.* from decoration.decoration d, customer.customerorigin co where co.referOrderId = :orderId and co.orderId = d.orderId";
-
-		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
-
-		return query.setString("orderId", orderId).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPO> queryDecorationForDecorationInfoRefer(String orderId) {
-
-		String sql = "select d.* from decoration.decorationInfo f,decoration.decoration d where f.referOrderId=:orderId and d.orderId=f.orderId";
-
-		SQLQuery query = session().createSQLQuery(sql).addEntity(DecorationPO.class);
-
-		return query.setString("orderId", orderId).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomerId(Long customerId) {
 		return session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("customer.cid", customerId)).list();
-	}
-
-	@Override
-	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys) {
-
-		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT);
-		List<Short> balances = Arrays.asList(DecorationPO.BALANCESTATUS_INIT_INT);
-
-		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.and(Restrictions.not(Restrictions.in("status", statuss)), Restrictions.in("balanceStatus", balances))).add(Restrictions.in("company", companys)).setMaxResults(1).uniqueResult();
-	}
-
-	@Override
-	public DecorationPO queryDecorationByOrderId(String orderId) {
-		return (DecorationPO) session().createCriteria(DecorationPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
-	}
-
-	@Override
-	public DecorationPO queryDecoration(String orderId, String phone) {
-		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("customer.phone", phone)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -317,13 +264,22 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public double countDecorationForTotalPrice(List<Filter> filters) throws FLException {
+	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys) {
 
-		PagingQuery<DecorationPO> query = pagingQuery(new Paging(), DecorationPO.class);
+		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT);
+		List<Short> balances = Arrays.asList(DecorationPO.BALANCESTATUS_INIT_INT);
 
-		queryFilterExcute(query, filters);
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.and(Restrictions.not(Restrictions.in("status", statuss)), Restrictions.in("balanceStatus", balances))).add(Restrictions.in("company", companys)).setMaxResults(1).uniqueResult();
+	}
 
-		return query.sumForField("orderTotalPrice");
+	@Override
+	public DecorationPO queryDecorationByOrderId(String orderId) {
+		return (DecorationPO) session().createCriteria(DecorationPO.class).add(Restrictions.eq("orderId", orderId)).uniqueResult();
+	}
+
+	@Override
+	public DecorationPO queryDecoration(String orderId, String phone) {
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("customer.phone", phone)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

@@ -378,16 +378,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		UserPO userPO = userDao.queryUserByUserId(userId);
+		UserPO collecter = userDao.queryUserByUserId(userId);
 
-		if (userPO == null) {
+		if (collecter == null) {
 			throw new FLException(190005, "人员不存在");
 		}
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
 
-		salesReceiptPO.setCollecter(userPO);
-		salesReceiptPO.setCollecterName(userPO.getUserName());
+		salesReceiptPO.setCollecter(collecter);
+		salesReceiptPO.setCollecterName(collecter.getUserName());
 		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
 
 		if (salesReceiptVO.getCash() != null && salesReceiptVO.getCash() != 0) {
@@ -496,7 +496,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
-		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
+		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
 		return 0;
 	}
@@ -507,16 +507,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		SalesPO sales = salesDao.get(salesPaymentVO.getSales().getSid());
 
-		UserPO userPO = userDao.queryUserByUserId(userId);
+		UserPO collecter = userDao.queryUserByUserId(userId);
 
-		if (userPO == null) {
+		if (collecter == null) {
 			throw new FLException(190005, "人员不存在");
 		}
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
 
-		salesReceiptPO.setCollecter(userPO);
-		salesReceiptPO.setCollecterName(userPO.getUserName());
+		salesReceiptPO.setCollecter(collecter);
+		salesReceiptPO.setCollecterName(collecter.getUserName());
 		salesReceiptPO.setCollectTime(new Timestamp(System.currentTimeMillis()));
 
 		if (salesReceiptVO.getCash() != null && salesReceiptVO.getCash() != 0) {
@@ -580,7 +580,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<SalesPaymentPO> salesPaymentPOs = new ArrayList<SalesPaymentPO>();
 
 		for (Long spid : spids) {
+
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
+
 			salesPaymentPOs.add(salesPayment);
 
 			if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
@@ -601,6 +603,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		long totalMoney = 0;
 
 		for (Long spid : spids) {
+
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
 
 			if (salesPayment == null) {
@@ -622,20 +625,18 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			salesPayment.setSalesReceipt(salesReceiptPO);
 			salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
+
 			salesPaymentDao.update(salesPayment);
 
 			if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
 
 				salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
-
 				salesDao.update(salesPO);
-
 			} else if (salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT) {
 
 				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_PAYED_SHORT);
 				salesPO.setFullpayTime(new Timestamp(System.currentTimeMillis()));
 				salesDao.update(salesPO);
-
 			}
 
 			totalMoney = Arith.add(totalMoney, salesPayment.getReferMoney());
@@ -644,9 +645,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if (salesReceiptVO.getAdvanceType() != null) {
 
 			PaymentVO paymentVO = getPaymentVO(salesReceiptVO, salesReceiptPO, sales);
-
 			paymentService.payPayment(paymentVO, userId);
-
 		}
 
 		// 更新pos使用的销售点信息的状态
@@ -656,7 +655,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		decorationAdditionService.updateDecorationForSaleScale(new DecorationVO(sales.getOrderId())); // 更新装修单上的销售比例
 
-		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()));
+		decorationService.sendMessage("PAYMENT_SALES_MESSAGE_FLAG", sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)), String.format("pages/payment/receipt/receipt?orderId=%s&rid=%s&paymentType=3", sales.getOrderId(), salesReceiptPO.getSrId()), collecter);
 
 		return 0;
 	}
@@ -786,6 +785,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		List<Long> salesIds = new ArrayList<Long>();
 		List<Long> salesIds4NotRefundDeposit = new ArrayList<Long>();
 
+		UserPO user = userDao.queryUserByUserId(userId);
+
 		for (Long spid : spids) {
 
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
@@ -820,9 +821,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			SalesReceiptPO salesReceiptPO = salesPayment.getSalesReceipt();
 			salesReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
-			UserPO user = userDao.queryUserByUserId(userId);
+
 			salesReceiptPO.setConfirmer(user);
 			salesReceiptPO.setConfirmerName(user.getUserName());
+
 			salesReceiptDao.update(salesReceiptPO);
 
 			SalesPO salesPO = salesPayment.getSales();
@@ -830,23 +832,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
 
 				salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_CONFIRM_SHORT);
-
 				salesDao.update(salesPO);
-
 			} else if (salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT) {
 
 				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_CONFIRM_SHORT);
-
 				salesDao.update(salesPO);
-
 			} else if (salesPayment.getType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT) {
 
 				salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_CONFIRM_SHORT);
-
 				salesDao.update(salesPO);
-
 			}
-
 		}
 
 		if (salesIds4NotRefundDeposit.size() > 0) {

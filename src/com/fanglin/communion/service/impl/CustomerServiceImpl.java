@@ -92,6 +92,13 @@ public class CustomerServiceImpl implements CustomerService {
 		customerVO.setQq(customerPO.getQq());
 		customerVO.setEmail(customerPO.getEmail());
 
+		customerVO.setCompanyAddr(customerPO.getCompanyAddr());
+		customerVO.setCompanyBank(customerPO.getCompanyBank());
+		customerVO.setCompanyBankno(customerPO.getCompanyBankno());
+		customerVO.setCompanyName(customerPO.getCompanyName());
+		customerVO.setCompanyNo(customerPO.getCompanyNo());
+		customerVO.setCompanyPhone(customerPO.getCompanyPhone());
+
 		return customerVO;
 	}
 
@@ -119,17 +126,15 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		CustomerVO customerVO = customerPO.ptv(new CustomerVO());
+		CustomerVO customerVO = customerPO.ptv(new CustomerVO(), CustomerPO.PRIVACY_OPENESS_INT);
 
 		if (customerPhoneVO.getCpid() != null) {
 
 			CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
 
-			customerPhoneVO.setCpid(customerPhonePO.getCpid());
-			customerVO.setPhone(customerPhonePO == null ? "" : FormatUtil.decodePhone(customerPhonePO.getPhone()));
+			if (customerPhonePO != null) customerPhonePO.ptv(customerPhoneVO, CustomerPO.PRIVACY_OPENESS_INT);
 		} else {
-			customerPhoneVO.setCpid(customerPO.getCid());
-			customerVO.setPhone(FormatUtil.decodePhone(customerPO.getPhone()));
+			customerPhoneVO.setCpid(0l);
 		}
 
 		customerRecordDao.save(new CustomerRecordPO(customerPO.getCid(), customerPhoneVO.getCpid(), CustomerRecordPO.TYPE_QUERY_INT, userDao.queryUserByUserId(userId), DateUtil.getDateToTimestamp(new Date())));
@@ -255,6 +260,8 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
 			customerPO.setCompany(company);
 
+			customerPO.setPhone(phone);
+
 			customerDao.save(customerPO);
 
 			customerPhonePO = new CustomerPhonePO();
@@ -318,7 +325,7 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
-		BeanUtil.copyProperties(customerVO, customerPO);
+		BeanUtil.copyProperties(customerVO, customerPO, "phone");
 
 		customerPO.setPinyinAB(PinYin4Util.getPinYinHeadChar(customerVO.getName()).get(0));
 		customerPO.setPinyinAll(PinYin4Util.getPinyin(customerVO.getName()).get(0));
@@ -409,7 +416,7 @@ public class CustomerServiceImpl implements CustomerService {
 			customerPhonePO.setDefaults(customerPhoneVO.getDefaults());
 			customerPhoneDao.update(customerPhonePO);
 
-			customerPO.setPhone(FormatUtil.encodePhone(customerPhonePO.getPhone()));
+			customerPO.setPhone(customerPhonePO.getPhone());
 
 			customerDao.update(customerPO);
 		}
@@ -452,12 +459,10 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
-			throw new FLException(130028, "客户状态不可操作");
-		}
-
 		customerPO.setToken(null);
 		customerPO.setSignno(null);
+
+		customerPO.setStatus(CustomerPO.STATUS_INIT_INT);
 
 		customerDao.update(customerPO);
 

@@ -20,7 +20,7 @@
     };
 
     var typeName = params['urlLoadParams'].depage;
-    
+
     approvalCustomerSource.pageConfig = getConfig(params['urlLoadParams'].depage);
 
     var displayFunc = (function() {
@@ -43,7 +43,6 @@
 
             typeName = "customerOrigin";
         }
-       
 
         var creatLine = function(v) {
 
@@ -72,7 +71,7 @@
                 $liProperty.appendTo($ulProperty);
             });
 
-            if ([constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.approval.status) != -1 && params.urlLoadParams.type != 'send') {
+            if (!v.piid && [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.approval.status) != -1 && params.urlLoadParams.type != 'send') {
                 if (approvalCustomerSource.pageConfig.pageBtn.contains("pass")) {
                     $divBtnWrap.append($pass);
                 }
@@ -131,7 +130,7 @@
     }, false, null);
 
     approvalCustomerSource.btns.submitBtn.on("click", approve);
-    
+
     function getConfig(page) {
 
         var pageConfig = {
@@ -230,7 +229,7 @@
     function getPropertyArr(v) {
 
         var propertyArr = [];
-        
+
         $.each(approvalCustomerSource.pageConfig.propertyArr, function(pi, pv) {
 
             switch (pv) {
@@ -349,59 +348,59 @@
                     break;
                 case "sales.customer.name":
                     propertyArr.push(["姓名: ", v.sales.customer.name, "blue"]);
-                    break;   
+                    break;
                 case "sales.customer.gender":
                     propertyArr.push(["性别: ", v.sales.customer.gender, "grey"]);
-                    break;  
+                    break;
                 case "sales.customer.phone":
                     propertyArr.push(["客户电话: ", v.sales.customer.phone, "grey"]);
-                    break;    
+                    break;
                 case "sales.orderId":
                     propertyArr.push(["装修单号: ", v.sales.orderId, "grey"]);
-                    break; 
+                    break;
                 case "sales.category":
                     propertyArr.push(["商品品类: ", v.sales.category, "grey"]);
-                    break; 
+                    break;
                 case "sales.brand":
                     propertyArr.push(["商品品牌: ", v.sales.brand.name, "grey"]);
-                    break; 
+                    break;
                 case "sales.salesman.currentName":
                     propertyArr.push(["渠道: ", v.sales.salesman.currentName, "grey"]);
-                    break; 
+                    break;
                 case "sales.dept.name":
                     propertyArr.push(["部门: ", v.sales.dept.name, "grey"]);
-                    break;  
+                    break;
                 case "sales.region.name":
                     propertyArr.push(["分区: ", v.sales.region.name, "grey"]);
-                    break;  
+                    break;
                 case "sales.house.village.name":
                     propertyArr.push(["楼盘: ", v.sales.house.village.name, "grey"]);
-                    break;  
+                    break;
                 case "sales.house.houseNumber":
                     propertyArr.push(["楼号: ", v.sales.house.houseNumber, "grey"]);
-                    break;  
+                    break;
                 case "sales.total":
                     propertyArr.push(["总额: ", v.sales.total, "grey"]);
-                    break;  
+                    break;
                 case "sales.amount":
                     propertyArr.push(["当前总额: ", v.sales.amount, "grey"]);
-                    break;  
+                    break;
                 case "sales.maling":
                     propertyArr.push(["抹零: ", v.sales.maling, "grey"]);
-                    break;  
+                    break;
                 case "refund":
                     propertyArr.push(["退款: ", v.refund, "grey"]);
-                    break; 
+                    break;
                 case "type":
                     propertyArr.push(["类型: ", constant.sales().refunds.type.keys[v.type], "red"]);
-                    break; 
+                    break;
                 case "sales.status":
                     propertyArr.push(["状态: ", constant.sales().refunds.status.keys[v.sales.status], "red"]);
-                    break; 
+                    break;
 
             }
         });
-        
+
         return propertyArr;
     }
 

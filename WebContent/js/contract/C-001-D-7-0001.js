@@ -84,8 +84,8 @@ jQuery(function($) {
                 "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data)
             };
-            
-            if(params.decoration.contract && params.decoration.contract.dcid){
+
+            if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid
             }

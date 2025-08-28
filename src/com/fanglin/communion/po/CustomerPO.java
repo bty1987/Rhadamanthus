@@ -10,6 +10,7 @@ import javax.persistence.Table;
 
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
 
 @Entity
 @Table(name = "customer", catalog = "communion")
@@ -30,6 +31,10 @@ public class CustomerPO implements Serializable {
 	public static final short STATUS_AUTH_INT = 1;
 
 	public static final short STATUS_AUTHED_INT = 2;
+
+	public static final short PRIVACY_PROTECT_INT = 0;
+
+	public static final short PRIVACY_OPENESS_INT = 0;
 
 	private long cid;
 
@@ -408,6 +413,16 @@ public class CustomerPO implements Serializable {
 		BeanUtil.copyProperties(this, customerVO, "phone");
 
 		customerVO.setConfidentialInfo();
+
+		return customerVO;
+	}
+
+	public CustomerVO ptv(CustomerVO customerVO, Short privacy) {
+
+		BeanUtil.copyProperties(this, customerVO, "phone");
+
+		if (privacy == PRIVACY_OPENESS_INT) customerVO.setPhone(FormatUtil.decodePhone(getPhone()));
+		if (privacy != PRIVACY_OPENESS_INT) customerVO.setConfidentialInfo();
 
 		return customerVO;
 	}

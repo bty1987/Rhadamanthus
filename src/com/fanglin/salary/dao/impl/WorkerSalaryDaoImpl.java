@@ -69,7 +69,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	@Override
 	public int amountWorkerSalary(long cid, long cnid) {
 
-		String sql = "select sum(if(type = 0, money, -money)) from salary.workersalary where cid =:cid and cnid = :cnid";
+		String sql = "select sum(if(type = 0, money, -money)) from salary.workersalary where cid =:cid and cnid = :cnid and twotype = 1";
 		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("cid", cid).setLong("cnid", cnid).uniqueResult();
 
 		return count == null ? 0 : count.intValue();

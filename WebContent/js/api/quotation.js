@@ -1205,6 +1205,14 @@ $.extend(api, {
                 args: ["extension.undisPrice", "extension.disPrice", "extension.consPrice", "extension.comsPrice", "extension.total", "extension.managePrice", "extension.manageRate", "extension.taxPrice", "extension.taxRate", "extensionItem.addPrice", "extensionItem.unitPrice", "extensionItem.subPrice", "extensionItem.num", "extensionItem.initnum"]
             }
         },
+        upgradeExtensionItem: {
+            url: "upgradeExtensionItem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["extensionItem.addPrice", "extensionItem.unitPrice", "extensionItem.subPrice", "extensionItem.num", "extensionItem.initnum"]
+            }
+        },
         deleteExtensionItem: {
             url: "deleteExtensionItem.do",
             intercept: true,
@@ -1546,6 +1554,9 @@ $.extend(api, {
         },
         rejectSelectionItem: {
             url: "rejectSelectionItem.do"
+        },
+        accountSelectionItem: {
+            url: "accountSelectionItem.do"
         },
 
         // -------- 定额 -------------------------

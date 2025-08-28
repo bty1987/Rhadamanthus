@@ -336,7 +336,8 @@ jQuery(function ($) {
     searcher.line("orderId", lineprops, []).render();
 
     com.focusPage('#supplement').on("click", function () {
-
+    	
+    	com.cleanItems(referDecoration.items);
         referDecoration.modals.addReferDecorationModal.modal("show");
     });
 

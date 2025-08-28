@@ -388,7 +388,7 @@ public class DecorationServiceImpl implements DecorationService {
 			return;
 		}
 
-		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone, CustomerPhonePO.STATUS_ENABLE_INT, null);
+		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(FormatUtil.encodePhone(customerPhone), CustomerPhonePO.STATUS_ENABLE_INT, null);
 
 		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
 
@@ -877,38 +877,42 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public List<DecorationVO> queryDecorationForReferByOrderId(DecorationVO decorationVO, Authentication authentication) {
 
-		List<DecorationPO> decorationPOs = decorationDao.queryDecorationForChanceRefer(decorationVO.getOrderId());
-
-		decorationPOs.addAll(decorationDao.queryDecorationForDecorationInfoRefer(decorationVO.getOrderId()));
-
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
-		for (DecorationPO decorationPO : decorationPOs) {
+		List<DecorationPO> refers = decorationInfoDao.queryDecorationForChanceRefer(decorationVO.getOrderId());
 
-			decorationVO = new DecorationVO();
-
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
-
-			decorationPO.ptvcascade(decorationVO);
-
-			decorationVOs.add(decorationVO);
+		for (DecorationPO decorationPO : refers) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO()).refer(DecorationInfoPO.REFERTYPE_REFER_INT));
 		}
 
-		decorationPOs = decorationDao.queryDecorationForOriginRefer(decorationVO.getOrderId());
+		refers = decorationInfoDao.queryDecorationForOriginRefer(decorationVO.getOrderId());
 
-		for (DecorationPO decorationPO : decorationPOs) {
+		for (DecorationPO decorationPO : refers) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO()).refer(DecorationInfoPO.REFERTYPE_REFER_INT));
+		}
 
-			decorationVO = new DecorationVO();
+		refers = decorationInfoDao.queryDecorationForOrderRefer(decorationVO.getOrderId());
 
-			decorationVO.setEscorter(new UserBaseVO());
-			decorationVO.setQuoter(new UserBaseVO());
-			decorationVO.setSupervisor(new UserBaseVO());
+		for (DecorationPO decorationPO : refers) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO()).refer(DecorationInfoPO.REFERTYPE_REFER_INT));
+		}
 
-			decorationPO.ptvcascade(decorationVO);
+		refers = decorationInfoDao.queryDecorationForChanceReferd(decorationVO.getOrderId());
 
-			decorationVOs.add(decorationVO);
+		for (DecorationPO decorationPO : refers) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO()).refer(DecorationInfoPO.REFERTYPE_REFERD_INT));
+		}
+
+		refers = decorationInfoDao.queryDecorationForOriginReferd(decorationVO.getOrderId());
+
+		for (DecorationPO decorationPO : refers) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO()).refer(DecorationInfoPO.REFERTYPE_REFERD_INT));
+		}
+
+		refers = decorationInfoDao.queryDecorationForOrderReferd(decorationVO.getOrderId());
+
+		for (DecorationPO decorationPO : refers) {
+			decorationVOs.add(decorationPO.ptvcascade(new DecorationVO()).refer(DecorationInfoPO.REFERTYPE_REFERD_INT));
 		}
 
 		return decorationVOs;
@@ -932,11 +936,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.ptvcascade(decorationVO);
 
+		if (decorationPO.getCustomer() != null && decorationVO.getCustomer() != null) decorationVO.getCustomer().initBank(decorationPO.getCustomer());
+
 		if (decorationVO.getOrderTotalPrice() == null || decorationVO.getOrderTotalPrice() == 0) {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		}
-
-		decorationVO.getCustomer().setPhone(FormatUtil.decodePhone(decorationPO.getCustomer().getPhone()));
 
 		addition(decorationPO.getAddition(), decorationVO);
 

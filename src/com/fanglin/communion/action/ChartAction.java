@@ -58,6 +58,14 @@ public class ChartAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryChart", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryChart() throws FLException {
+
+		charts = chartService.queryChart(chart);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateRoleChartByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRoleChartByRid() throws FLException {
 

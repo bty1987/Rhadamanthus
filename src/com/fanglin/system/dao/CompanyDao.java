@@ -13,6 +13,8 @@ public interface CompanyDao extends Dao<CompanyPO> {
 
 	public List<CompanyPO> queryCompany(Short atttype, String code);
 
+	public List<CompanyPO> queryCompanyByIds(List<Integer> ids);
+
 	public CompanyPO queryCompanyByName(String name);
 
 	public CompanyPO queryCompanyByNo(int no);

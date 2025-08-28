@@ -253,9 +253,7 @@ public class ConversationServiceImpl implements ConversationService {
 
 		groupService.send(group, message, decorationPO.getCompany());
 
-		String content = String.format("装修单号:%s, 有一条新消息, 请查收.", orderId);
-
-		decorationService.sendMessage(orderId, "消息提醒", content, String.format("pages/customer/conversation/conversation?orderId=%s", orderId));
+		decorationService.sendMessage(orderId, "消息提醒", String.format("装修单号:%s, 有一条新消息, 请查收.", orderId), String.format("pages/customer/conversation/conversation?orderId=%s", orderId), creater);
 	}
 
 	@Override

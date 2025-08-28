@@ -187,6 +187,13 @@ $.extend(api, {
                 args: ["constructionSchedule.precheck", "constructionSchedule.postcheck", "constructionSchedule.stacheck", "constructionSchedule.fincheck"]
             }
         },
+        updateConstructionScheduleForPeriod: {
+            url: "updateConstructionScheduleForPeriod.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionSchedule.period"]
+            }
+        },
         nextConstructionByOrderId: {
             url: "nextConstructionByOrderId.do"
         },

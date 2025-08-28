@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import com.fanglin.balance.dao.BalanceSalesBalanceDao;
 import com.fanglin.balance.po.BalanceSalesBalancePO;
@@ -13,6 +14,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.impl.SalesDaoImpl;
 import com.fanglin.utils.Paging;
 
+@Repository("balanceSalesBalanceDao")
 public class BalanceSalesBalanceDaoImpl extends DaoImpl<BalanceSalesBalancePO> implements BalanceSalesBalanceDao {
 
 	public BalanceSalesBalanceDaoImpl() {

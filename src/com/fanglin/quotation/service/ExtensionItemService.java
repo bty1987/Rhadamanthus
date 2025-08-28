@@ -14,6 +14,8 @@ public interface ExtensionItemService {
 
 	public int updateExtensionItem(ExtensionItemVO extensionItemVO, ExtensionVO extensionVO) throws FLException;
 
+	public int upgradeExtensionItem(ExtensionItemVO extensionItemVO, ExtensionVO extensionVO, String userId) throws FLException;
+
 	public void deleteExtensionItem(ExtensionItemVO extensionItemVO, ExtensionVO extensionVO) throws FLException;
 
 }

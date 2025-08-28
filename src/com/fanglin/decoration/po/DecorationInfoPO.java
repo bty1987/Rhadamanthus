@@ -25,6 +25,10 @@ public class DecorationInfoPO implements Serializable {
 
 	private static final long serialVersionUID = -7484137001624425538L;
 
+	public static final short REFERTYPE_REFER_INT = 1;
+
+	public static final short REFERTYPE_REFERD_INT = 2;
+
 	private long diid;
 
 	private String orderId;

@@ -36,6 +36,8 @@ public interface SelectionItemService {
 
 	public int rejectSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
+	public int accountSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
+
 	public int tranSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
 	public int checkSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;

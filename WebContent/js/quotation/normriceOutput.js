@@ -373,9 +373,16 @@ jQuery(function($) {
     var addreduces = [];
 
     if ((params.quotation.subtype & 4) == 4) {
-        com.post(api.quotation.queryAddReduceNormrice, {
+
+        var options = {
             "addReduce.orderId": params.quotation.orderId
-        }, function(res) {
+        };
+
+        if (params.quotation.pageType != null) {
+            options["addReduce.status"] = 0;
+        };
+
+        com.post(api.quotation.queryAddReduceNormrice, options, function(res) {
 
             addreduces = res.addReduces;
         }, null, false);

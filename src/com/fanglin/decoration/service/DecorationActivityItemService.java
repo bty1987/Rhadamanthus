@@ -39,7 +39,7 @@ public interface DecorationActivityItemService {
 
 	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException;
 
-	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
+	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 
 	public int affirmDecorationActivityItem(DecorationVO decorationVO, List<DecorationActivityItemVO> decorationActivityItems, String securityCode, String verifyCode) throws FLException;
 

@@ -1,7 +1,9 @@
 package com.fanglin.customer.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -9,10 +11,19 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CppointDao;
 import com.fanglin.customer.po.CppointPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
 
 @Repository("cppointDao")
 public class CppointDaoImpl extends DaoImpl<CppointPO> implements CppointDao {
+
+	@Override
+	public List<CppointPO> pageCppoint(Paging paging, List<Filter> filters) {
+
+		PagingQuery<CppointPO> query = pagingQuery(paging, CppointPO.class);
+
+		return query.list();
+	}
 
 	@Override
 	public CppointPO queryCppoint(long cid) {
@@ -25,10 +36,12 @@ public class CppointDaoImpl extends DaoImpl<CppointPO> implements CppointDao {
 	}
 
 	@Override
-	public List<CppointPO> pageCppoint(Paging paging, List<Filter> filters) {
-		PagingQuery<CppointPO> query = pagingQuery(paging, CppointPO.class);
+	public long amountCppoint(String orderId) {
 
-		return query.list();
+		SQLQuery query = session().createSQLQuery("SELECT COALESCE(SUM(IF(type = 1, point, -point)), 0) AS priceSum FROM customer.cppointrecord WHERE orderId =:orderId and pointtype = 0");
+
+		BigDecimal amount = (BigDecimal) query.setString("orderId", orderId).uniqueResult();
+
+		return Arith.div(amount.longValue(), 1000);
 	}
-
 }

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>收据</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="../../assets/ace/css/bootstrap.min.css" />
+    <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="../../assets/ace/js/jquery.mobile.custom.min.js"></script>
+    <script src="../../assets/ace/js/bootstrap.min.js"></script>
+    <script src="../../assets/ace/js/jquery.gritter.min.js"></script>
+    <script src="../../assets/ace/js/ace-elements.js"></script>
+    <script src="../../assets/ace/js/ace.js"></script>
+    <script src="../../assets/altogether/js/jquery.qrcode.min.js"></script>
+    <style type="text/css">
+        .PageNext{page-break-after: always;}
+    </style>
+
+</head>
+<body>
+    <div id="oalesPaymentReceipt"></div>
+
+    <div id="oalessignBtns" style="margin-top: 5px;">
+        <button class="btn-primary" id="oalescreateSign">生成电子收据</button>
+        <button class="btn-warning" id="oalescustomerSign">客户签</button>
+        <button class="btn-success" id="oalescompanySign">公司签</button>
+        <button class="btn-info" id="oalescustomerSignCode">二维客签</button>
+        <button class="btn-danger" id="oalescustomerSignSend">客签通知</button>
+    </div>
+
+    <div class="modal fade" id="oalespaymentContractModal" tabindex="-1"></div>
+
+    <div id="oalespaymentContractQrcodeModal"></div>
+
+    <script>
+        parent.$.loadScript(['js/utils/paymentUtils.js', 'js/payment/oalesPaymentReceipt.js'], "../../", window.frameElement, $);
+    </script>
+
+</body>
+</html>

@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.CustomerPhoneVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.FormatUtil;
+
 @Entity
 @Table(name = "customerPhone", catalog = "communion")
 public class CustomerPhonePO implements Serializable {
@@ -90,6 +94,15 @@ public class CustomerPhonePO implements Serializable {
 
 	public void setDefaults(short defaults) {
 		this.defaults = defaults;
+	}
+
+	public CustomerPhoneVO ptv(CustomerPhoneVO customerPhoneVO, Short privacy) {
+
+		BeanUtil.copyProperties(this, customerPhoneVO);
+
+		if (privacy == CustomerPO.PRIVACY_OPENESS_INT) customerPhoneVO.setPhone(FormatUtil.decodePhone(getPhone()));
+
+		return customerPhoneVO;
 	}
 
 }

@@ -598,7 +598,8 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public int sendSales(SalesVO salesVO) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public int sendSales(SalesVO salesVO, String userId) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 
@@ -608,9 +609,11 @@ public class SalesServiceImpl implements SalesService {
 
 		String orderId = salesPO.getOrderId();
 
+		UserPO sender = userDao.queryUserByUserId(userId);
+
 		System.out.println(String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 销售单信息确认. ", orderId), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 销售单信息确认. ", orderId), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()), sender);
 
 		return 0;
 	}

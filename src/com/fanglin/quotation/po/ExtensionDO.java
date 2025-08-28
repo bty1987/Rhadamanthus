@@ -2,6 +2,7 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,8 @@ import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.ExtensionVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "extension", catalog = "quotation")
@@ -246,6 +249,17 @@ public class ExtensionDO implements Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	public ExtensionVO ptv(ExtensionVO extensionVO) {
+
+		BeanUtil.copyPropertie(this, extensionVO, Arrays.asList("decoration", "quotation", "creater"));
+
+		if (extensionVO.getCreater() != null && getCreater() != null) extensionVO.getCreater().setBaseInfo(getCreater());
+		if (extensionVO.getQuotation() != null && getQuotation() != null) getQuotation().ptv(extensionVO.getQuotation());
+		if (extensionVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(extensionVO.getDecoration());
+
+		return extensionVO;
 	}
 
 }

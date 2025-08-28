@@ -17,6 +17,8 @@ public class ExtensionVO implements Serializable {
 
 	private String orderId;
 
+	private Long qid;
+
 	private DecorationVO decoration;
 
 	private QuotationVO quotation;
@@ -85,6 +87,14 @@ public class ExtensionVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public Long getQid() {
+		return qid;
+	}
+
+	public void setQid(Long qid) {
+		this.qid = qid;
 	}
 
 	public DecorationVO getDecoration() {

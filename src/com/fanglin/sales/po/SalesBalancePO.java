@@ -62,6 +62,8 @@ public class SalesBalancePO implements Serializable {
 
 	public static final short TYPE_DEPOSITPAY_INT = 3;
 
+	public static final short TYPE_BALANCE_INT = 4;
+
 	public static final short ONETYPE_INIT_INT = 0;
 
 	public static final short ONETYPE_REFUND_INT = 1;

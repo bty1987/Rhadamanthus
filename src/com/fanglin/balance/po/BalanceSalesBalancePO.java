@@ -2,6 +2,8 @@ package com.fanglin.balance.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.sales.po.SalesBalancePO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "balancesalesbalance", catalog = "balance")
@@ -23,7 +27,7 @@ public class BalanceSalesBalancePO implements java.io.Serializable {
 
 	public static final String COLUMN_BSID_STR = "bsid";
 
-	private long bsbid;	
+	private long bsbid;
 
 	private long bsid;
 
@@ -68,5 +72,14 @@ public class BalanceSalesBalancePO implements java.io.Serializable {
 		this.salesBalance = salesBalance;
 	}
 
-	
+	public BalanceSalesBalanceVO ptv(BalanceSalesBalanceVO balanceSalesBalanceVO) {
+
+		BeanUtil.copyProperties(this, balanceSalesBalanceVO, Arrays.asList("salesBalance"));
+
+		if (balanceSalesBalanceVO.getSalesBalance() != null && getSalesBalance() != null) getSalesBalance().ptv(balanceSalesBalanceVO.getSalesBalance());
+		if (balanceSalesBalanceVO.getSalesBalance() != null && getSalesBalance() != null && balanceSalesBalanceVO.getSalesBalance().getSales() != null && getSalesBalance().getSales() != null) getSalesBalance().getSales().ptv(balanceSalesBalanceVO.getSalesBalance().getSales());
+
+		return balanceSalesBalanceVO;
+	}
+
 }

@@ -389,6 +389,9 @@ $(function() {
             "name": "订单号",
             "value": salesItem.sales.orderId
         }, {
+            "name": "销售单号",
+            "value": salesItem.sales.no
+        }, {
             "name": "设计部",
             "value": com.focusPage("#designDept").val()
         }, {
@@ -400,6 +403,9 @@ $(function() {
         }, {
             "name": "办理状态",
             "value": constant.sales().refunds.type.keys[salesItem.approvalType]
+        }, {
+            "name": "结算状态",
+            "value": constant.sales().sales.balanceStatus.keys[salesItem.sales.balanceStatus]
         }, {
             "name": "退货原因",
             "value": com.focusPage("#refundDes").val()
