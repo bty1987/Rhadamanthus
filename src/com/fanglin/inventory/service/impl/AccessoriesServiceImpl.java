@@ -38,7 +38,6 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -83,21 +82,8 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		List<AccessoriesPO> accessoriesPOs = accessoriesDao.pageAccessories(paging, filters, company);
 		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
 
-		AccessoriesVO accessoriesVO;
-
 		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
-
-			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
-
-			accessoriesPO.getHouse().ptv(accessoriesVO.getHouse());
-
-			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
-			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
-			accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
-
-			accessoriesVOs.add(accessoriesVO);
+			accessoriesVOs.add(accessoriesPO.ptv(new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(accessoriesVOs);
@@ -110,40 +96,20 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
 
 		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
-
-			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
-
-			accessoriesPO.getHouse().ptv(accessoriesVO.getHouse());
-
-			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
-			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
-			accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
-
-			accessoriesVOs.add(accessoriesVO);
+			accessoriesVOs.add(accessoriesPO.ptv(new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return accessoriesVOs;
 	}
 
 	@Override
-	public AccessoriesVO queryAccessoriesByAid(AccessoriesVO accessories) {
+	public AccessoriesVO queryAccessoriesByAid(AccessoriesVO accessoriesVO) {
 
-		AccessoriesPO accessoriesPO = accessoriesDao.get(accessories.getAid());
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 
-		AccessoriesVO accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-
-		BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "supervisor", "creater", "approver", "deliver"));
-
-		accessoriesPO.getHouse().ptv(accessoriesVO.getHouse());
-
-		accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
-		accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
-		accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
+		if (accessoriesPO != null) return accessoriesPO.ptv(new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()));
 
 		return accessoriesVO;
-
 	}
 
 	@Override
@@ -221,7 +187,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 				accessoriesItemService.checkAccessoriesItem(accessoriesVO, accessoriesItemVO);
 			}
 
-			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO.getCaid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getNid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum()));
+			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO));
 		}
 
 		if (accessoriesVO.getType() == AccessoriesPO.TYPE_POST_INT) { // 售后类型辅料单不需要处理工程单和工程辅料

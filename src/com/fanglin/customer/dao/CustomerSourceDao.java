@@ -15,6 +15,8 @@ public interface CustomerSourceDao extends Dao<CustomerSourcePO> {
 
 	public CustomerSourcePO queryCustomerSource(int uid, String houseNumber, long vid, int company);
 
+	public CustomerSourcePO queryCustomerSourceByNo(String no);
+
 	public Integer countCustomerSource(int uid, String phone, int company);
 
 }

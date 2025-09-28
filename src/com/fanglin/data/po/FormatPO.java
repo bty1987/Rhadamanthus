@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "format", catalog = "data")
 public class FormatPO implements Serializable {
@@ -79,6 +82,13 @@ public class FormatPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	public FormatVO ptv(FormatVO formatVO) {
+
+		BeanUtil.copyProperties(this, formatVO);
+
+		return formatVO;
 	}
 
 }

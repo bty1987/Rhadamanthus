@@ -299,6 +299,8 @@ $(function() {
             $.each(decorations, function(i, v) {
 
                 decoration = v;
+                
+                if(decoration.status != 3 && decoration.status != 7) return true;
 
                 if (decoration.orderId) {
                     customerSource.items.referOrderId.val(decoration.orderId);

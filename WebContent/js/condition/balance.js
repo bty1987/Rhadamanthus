@@ -451,5 +451,30 @@ Condition.addupRule("balance", {
             keyPath: "key",
             valuePath: "value"
         }
-    }
+    },
+    "balanceCutpay-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null,
+        }
+    },
+    "balanceCutpay-operater": {
+        label: "操作人",
+        type: "autofill",
+        submitConfig: {
+            name: "operaterId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":"0" },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

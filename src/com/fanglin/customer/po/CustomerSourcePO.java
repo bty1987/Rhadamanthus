@@ -119,6 +119,8 @@ public class CustomerSourcePO implements Serializable {
 	private UserPO salesman;
 
 	private String orderId;
+	
+	private String no;
 
 	public CustomerSourcePO() {
 		super();
@@ -425,6 +427,15 @@ public class CustomerSourcePO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+	
+	@Column(name = "no")
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 	public CustomerSourceVO ptv(CustomerSourceVO customerSourceVO) {

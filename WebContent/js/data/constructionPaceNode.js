@@ -3,7 +3,7 @@ $(function() {
     var constructionPaceNode = {
 
         btns: {
-            saveBtn: com.focusPage("#saveBtn").on("click", saveData)
+            saveBtn: com.focusPage("#saveBtn", '#addConstructionPaceNodeModal').bindClick(saveData)
         },
 
         modals: {
@@ -12,8 +12,11 @@ $(function() {
 
         items: {
             name: com.focusPage("#name", "#constructionPaceNode"),
+            nodes: com.focusPage("#nodes", "#constructionPaceNode"),
             connum: com.focusPage("#connum", "#constructionPaceNode"),
             comnum: com.focusPage("#comnum", "#constructionPaceNode"),
+            prenum: com.focusPage("#prenum", "#constructionPaceNode"),
+            postnum: com.focusPage("#postnum", "#constructionPaceNode"),
             content: com.focusPage("#content", "#constructionPaceNode"),
             comment: com.focusPage("#comment", "#constructionPaceNode"),
             phase: com.focusPage("#phase", "#constructionPaceNode"),
@@ -32,10 +35,19 @@ $(function() {
 
         constructionPaceNode.currentCpid = null;
     });
+    
+    com.post(api.data.queryConstructionNode, {}, function(res) {
+
+        constructionPaceNode.items.nodes.bindData(res.constructionNodes, "cnid", "name");
+    });
 
     var searcher = new Searcher();
 
     searcher.base("nodeCondList", "nodePagenation", "nodeResultList", api.data.pageConstructionPaceNode);
+
+    searcher.param({
+        "constructionPaceNode.cpid": params.data.constructionPace.cpid
+    });
 
     searcher.button([{
         id: "addConstructionPaceNode",
@@ -60,6 +72,16 @@ $(function() {
         fieId: "comnum",
         name: "主材天数",
         prop: "comnum",
+        clazz: "blue"
+    }, {
+        fieId: "prenum",
+        name: "前置间隔天数",
+        prop: "prenum",
+        clazz: "blue"
+    }, {
+        fieId: "postnum",
+        name: "后置间隔天数",
+        prop: "postnum",
         clazz: "blue"
     }, {
         fieId: "status",
@@ -99,11 +121,13 @@ $(function() {
         clazz: "btn-yellow",
         handle: function(v) {
 
-            constructionPaceNode.currentCpid = v.cpid;
+            constructionPaceNode.currentCpid = v.cpnid;
 
             constructionPaceNode.items.name.val(v.name);
             constructionPaceNode.items.connum.val(v.connum);
             constructionPaceNode.items.comnum.val(v.comnum);
+            constructionPaceNode.items.prenum.val(v.prenum);
+            constructionPaceNode.items.postnum.val(v.postnum);
             constructionPaceNode.items.content.val(v.content);
             constructionPaceNode.items.comment.val(v.comment);
             constructionPaceNode.items.phase.val(v.phase);
@@ -120,7 +144,7 @@ $(function() {
         handle: function(v, check) {
 
             com.post(api.data.updateConstructionPaceNodeForStatus, {
-                "constructionPaceNode.cpid": v.cpid,
+                "constructionPaceNode.cpnid": v.cpnid,
                 "constructionPaceNode.status": check ? 0 : 1
             }, function(res) {
 
@@ -152,18 +176,22 @@ $(function() {
         var url = api.data.addConstructionPaceNode;
         var options = {
             "constructionPaceNode.name": constructionPaceNode.items.name.val(),
+            "constructionPaceNode.node.cnid": constructionPaceNode.items.nodes.val(),
             "constructionPaceNode.connum": constructionPaceNode.items.connum.val(),
             "constructionPaceNode.comnum": constructionPaceNode.items.comnum.val(),
+            "constructionPaceNode.prenum": constructionPaceNode.items.prenum.val(),
+            "constructionPaceNode.postnum": constructionPaceNode.items.postnum.val(),
             "constructionPaceNode.content": constructionPaceNode.items.content.val(),
             "constructionPaceNode.comment": constructionPaceNode.items.comment.val(),
             "constructionPaceNode.phase": constructionPaceNode.items.phase.val(),
             "constructionPaceNode.material": constructionPaceNode.items.material.val(),
-            "constructionPaceNode.period": constructionPaceNode.items.period.val()
+            "constructionPaceNode.period": constructionPaceNode.items.period.val(),
+            "constructionPaceNode.cpid" : params.data.constructionPace.cpid 
         };
 
         if (constructionPaceNode.currentCpid != null) {
             url = api.data.updateConstructionPaceNode;
-            options["constructionPaceNode.cpid"] = constructionPaceNode.currentCpid;
+            options["constructionPaceNode.cpnid"] = constructionPaceNode.currentCpid;
         }
 
         com.post(url, options, function() {

@@ -161,7 +161,7 @@ public class OalesPaymentServiceImpl implements OalesPaymentService {
 		BeanUtil.copyProperties(oalesPaymentVO, oalesPaymentPO, Arrays.asList("oales", "collecter", "confirmer"));
 
 		oalesPaymentPO.setOales(oales);
-		oalesPaymentPO.setType(oalesPaymentVO.getType());
+		oalesPaymentPO.setType(oales.getType());
 		oalesPaymentPO.setStatus(OalesPaymentPO.STATUS_INITIAL_INT);
 		oalesPaymentPO.setCategory(oales.getCategory());
 		oalesPaymentPO.setBrand(oales.getBrand());
@@ -258,6 +258,10 @@ public class OalesPaymentServiceImpl implements OalesPaymentService {
 		oalesPayment.setStatus(OalesPaymentPO.STATUS_PAIDFOR_INT);
 
 		oalesPaymentDao.update(oalesPayment);
+
+		oales.setStatus(OalesPO.STATUS_CHECK_INT);
+
+		oalesDao.update(oales);
 
 		return 0;
 	}

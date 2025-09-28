@@ -30,6 +30,10 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Integer timeLimit;
 
+	private Integer prenum;
+
+	private Integer postnum;
+
 	private Integer salaryLimit;
 
 	private Integer accessoryLimit;
@@ -152,6 +156,22 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setTimeLimit(Integer timeLimit) {
 		this.timeLimit = timeLimit;
+	}
+
+	public Integer getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(Integer prenum) {
+		this.prenum = prenum;
+	}
+
+	public Integer getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(Integer postnum) {
+		this.postnum = postnum;
 	}
 
 	public Short getProcess() {

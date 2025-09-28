@@ -818,12 +818,15 @@ var paymentUtils = {
                     propertyArr.push(["操作金额:", v.recharge, "blue"]);
                     break;
                 case "balance":
+                    if(v.status == 0) break;
                     propertyArr.push(["余额:", v.balance, "blue"]);
                     break;
                 case "materialPrice":
+                    if(v.status == 0) break;
                     propertyArr.push(["主材金额:", v.materialPrice, "blue"]);
                     break;
                 case "advanceMoney":
+                    if(v.status == 0) break;
                     propertyArr.push(["预付款金额:", v.advanceMoney, "blue"]);
                     break;
                 case "servicePrice":
@@ -871,6 +874,12 @@ var paymentUtils = {
                     break;
                 case "sales-affirmTime":
                     propertyArr.push(["销售确认时间:", com.checkNull(v.sales.affirmTime, "暂无"), "green"]);
+                    break;
+                case "sales-isAffirm":
+                    propertyArr.push(["退货确认:", payment.isAffirms[v.refunds.isAffirm], "red"]);
+                    break;
+                case "sales-affirmTime":
+                    propertyArr.push(["退货确认时间:", com.checkNull(v.refunds.affirmTime, "暂无"), "green"]);
                     break;
                 case "status":
                     var status = ["payment", "sales", "service", "activity", "proxy", "oales"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];

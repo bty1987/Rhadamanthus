@@ -250,9 +250,7 @@ public class CustomerServiceImpl implements CustomerService {
 			BeanUtil.copyProperties(customerVO, customerPO);
 
 			String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-
 			int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate, company);
-
 			String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 			customerPO.setNo(no);
@@ -459,6 +457,11 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
+		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_CUSTOMER_INT, currentDate, customerPO.getCompany());
+		String no = currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+		customerPO.setNo(no);
 		customerPO.setToken(null);
 		customerPO.setSignno(null);
 

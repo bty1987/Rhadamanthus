@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionPaceNodeService {
 
-	public void pageConstructionPaceNode(Paging paging, List<Filter> filters, int company);
+	public void pageConstructionPaceNode(Paging paging, List<Filter> filters, int company, ConstructionPaceNodeVO constructionPaceNode);
 
 	public List<ConstructionPaceNodeVO> queryConstructionPaceNode(ConstructionPaceNodeVO constructionPaceNode);
 

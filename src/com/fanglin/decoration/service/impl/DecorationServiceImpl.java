@@ -1093,11 +1093,11 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationDao.save(decorationPO);
 		decorationDao.flush();
 
-		DecorationInfoPO decorationInfo = new DecorationInfoPO(orderId);
+		DecorationInfoPO decorationInfoPO = new DecorationInfoPO(orderId);
 
-		if (decorationInfoVO != null) BeanUtil.copyPropertie(decorationInfoVO, decorationInfo);
+		if (decorationInfoVO != null) BeanUtil.copyPropertie(decorationInfoVO, decorationInfoPO);
 
-		decorationInfoDao.save(decorationInfo);
+		decorationInfoDao.save(decorationInfoPO);
 
 		// 创建订单归属信息
 		decorationBelongDao.save(new DecorationBelongPO().designer(orderId, designer, operater));
@@ -1109,6 +1109,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		additionInfo.setDesign(decorationPO.getDesigner().getCurrentName(), decorationPO.getDesigner().getDept().getName(), decorationPO.getDesigner().getDept().getName());
 		additionInfo.setSales(decorationPO.getSalesman().getCurrentName(), decorationPO.getSalesman().getDept().getName(), decorationPO.getSalesman().getDept().getFatherDept().getName());
+
+		additionInfo.setIssueTime(decorationInfoVO.getIssueTime());
+		additionInfo.setMeetTime(decorationInfoVO.getMeetTime());
 
 		decorationAdditionDao.save(additionInfo); // 辅助信息
 
@@ -1612,11 +1615,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void tranDecoration(DecorationVO decorationVO, int company) throws FLException {
+	public void tranDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, int company) throws FLException {
 
 		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid(), company);
 
-		makeDecoration(decorationVO, null, decorationVO.getCreater().getUserId(), company);
+		makeDecoration(decorationVO, decorationInfoVO, decorationVO.getCreater().getUserId(), company);
 
 		UserPO creater = null;
 		HousePO housePO = null;

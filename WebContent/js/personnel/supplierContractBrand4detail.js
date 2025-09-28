@@ -2,23 +2,20 @@ jQuery(function($) {
 
     var productBrand = {
 
-    	scbid: params.personel.scbid,
         btns: {
 
         },
 
         modals: {
-        	addBrandProductModal: com.focusPage("#addBrandProductModal"),
+            addBrandProductModal: com.focusPage("#addBrandProductModal"),
         },
 
         items: {
-        	ctype: com.focusPage("#ctype", "#addBrandProductModal"),
-            cvalue: com.focusPage("#cvalue", "#addBrandProductModal"),
-            breakpay: com.focusPage("#breakpay", "#addBrandProductModal"),
-            scname: com.focusPage("#scname", "#addBrandProductModal"),
-            warranTime: com.focusPage("#warranTime", "#addBrandProductModal"),
+            warranty: com.focusPage("#warranty", "#addBrandProductModal"),
         },
         data: null,
+        type: null,
+        scid: params.scid,
     };
 
     productBrand.modals.addBrandProductModal.on('hide.bs.modal', function(e) {
@@ -30,34 +27,28 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("productCondList", "productCondList", "productPagenation", api.personel.querySupplierBrandProduct);
+    searcher.base("productCondList", "productCondList", "productPagenation", api.personel.querySupplierContractProduct);
 
     searcher.param({
-        "supplierBrandProduct.scbid": productBrand.scbid
+        "supplierContractProduct.scid": productBrand.scid
     });
 
-    searcher.result("supplierBrandProducts").isPage(true);
+    searcher.result("supplierContractProducts").isPage(true);
 
     var lineprops = [{
+        field: "category",
+        name: "品类",
+        prop: "category",
+        clazz: "grey",
+    }, {
+        field: "brand",
+        name: "品牌",
+        prop: "brand",
+        clazz: "grey",
+    }, {
         field: "name",
         name: "名称",
         prop: "name",
-        clazz: "grey",
-    }, {
-        field: "ctype",
-        name: "结算类型",
-        prop: "ctype",
-        clazz: "grey",
-        dataset: constant.personel().supplierContractService.type.keys,
-    }, {
-        field: "cvalue",
-        name: "结算值",
-        prop: "cvalue",
-        clazz: "grey",
-    }, {
-        field: "breakpay",
-        name: "违约金",
-        prop: "breakpay",
         clazz: "grey",
     }, {
         field: "warranTime",
@@ -66,12 +57,12 @@ jQuery(function($) {
         clazz: "grey",
     }];
 
-    var linebtns = [ {
+    var linebtns = [{
         name: "删除",
         clazz: "btn-danger",
         handle: function(v) {
 
-            delBrandProduct(v.sbpid);
+            delBrandProduct(v.scpid);
 
         },
     }];
@@ -80,10 +71,8 @@ jQuery(function($) {
 
     com.focusPage('#addBrandProduct').on("click", function() {
 
-    	productBrand.modals.addBrandProductModal.modal("show");
+        productBrand.modals.addBrandProductModal.modal("show");
     });
-
-    productBrand.items.ctype.bindData(constant.personel().supplierContractBrand.ctype.datas, "key", "value");
 
     com.focusPage('#submitBtn', "#addBrandProductModal").on("click", function() {
 
@@ -91,29 +80,59 @@ jQuery(function($) {
             return false;
         }
 
-        var options = {
-            "supplierBrandProduct.scbid": productBrand.scbid,
-            "supplierBrandProduct.ctype": productBrand.items.ctype.val(),
-            "supplierBrandProduct.cvalue": productBrand.items.cvalue.val(),
-            "supplierBrandProduct.breakpay": productBrand.items.breakpay.val(),
-            "supplierBrandProduct.name": productBrand.items.scname.val(),
-            "supplierBrandProduct.warranTime": productBrand.items.warranTime.val(),
-        };
+        var products = productBrand.items.warranty.val();
+        var lines = products.split(/\r?\n/);
 
-        com.post(api.personel.addSupplierBrandProduct, options, function(res) {
+        var supplierContractProduct = {};
+        var validData = true;
+
+        $.each(lines, function(index, item) {
+
+            var item = item.trim();
+
+            var parts = item.split(/[，,\t '']+/);
+
+            if (parts.length != 4) {
+                com.showAlert(com.warning, "第" + (index + 1) + "行数据格式错误");
+                validData = false;
+                return false;
+            }
+
+            var category = parts[0].trim();
+            var brand = parts[1].trim();
+            var name = parts[2].trim();
+            var warranTime = parts[3].trim();
+
+            if (!category || !brand || !name || !warranTime) {
+                com.showAlert(com.warning, "第" + (index + 1) + "行必填字段为空");
+                validData = false;
+                return false;
+            }
+
+            supplierContractProduct["supplierContractProducts[" + index + "].scid"] = productBrand.scid;
+            supplierContractProduct["supplierContractProducts[" + index + "].category"] = category;
+            supplierContractProduct["supplierContractProducts[" + index + "].name"] = name;
+            supplierContractProduct["supplierContractProducts[" + index + "].warranTime"] = warranTime;
+            supplierContractProduct["supplierContractProducts[" + index + "].brand"] = brand;
+        });
+
+        if (!validData)
+            return false;
+        
+        com.post(api.personel.addSupplierContractProduct, supplierContractProduct, function(res) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             productBrand.modals.addBrandProductModal.modal("hide");
         });
     });
-    
-    function delBrandProduct(sbpid) {
+
+    function delBrandProduct(scpid) {
 
         var options = {
-            "supplierBrandProduct.sbpid": sbpid
+            "supplierContractProduct.scpid": scpid
         };
-        com.post(api.personel.deleteSupplierBrandProduct, options, function(res) {
+        com.post(api.personel.deleteSupplierContractProduct, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
@@ -121,4 +140,5 @@ jQuery(function($) {
         });
 
     }
+
 });

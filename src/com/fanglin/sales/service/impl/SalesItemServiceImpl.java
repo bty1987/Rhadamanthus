@@ -39,19 +39,10 @@ public class SalesItemServiceImpl implements SalesItemService {
 	public List<SalesItemVO> querySalesItemBySid(SalesVO salesVO) {
 
 		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesVO.getSid());
-
 		List<SalesItemVO> salesItemVOs = new ArrayList<SalesItemVO>();
 
 		for (SalesItemPO salesItemPO : salesItemPOs) {
-
-			SalesItemVO salesItemVO = new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO());
-
-			BeanUtil.copyProperties(salesItemPO, salesItemVO, Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(salesItemPO.getGoods(), salesItemVO.getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(salesItemPO.getColor(), salesItemVO.getColor());
-			BeanUtil.copyProperties(salesItemPO.getFormat(), salesItemVO.getFormat());
-
-			salesItemVOs.add(salesItemVO);
+			salesItemVOs.add(salesItemPO.ptv(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO())));
 		}
 
 		return salesItemVOs;
@@ -64,15 +55,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		List<SalesItemVO> salesItemVOs = new ArrayList<SalesItemVO>();
 
 		for (SalesItemPO salesItemPO : salesItemPOs) {
-
-			SalesItemVO salesItemVO = new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO());
-
-			BeanUtil.copyProperties(salesItemPO, salesItemVO, Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(salesItemPO.getGoods(), salesItemVO.getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(salesItemPO.getColor(), salesItemVO.getColor());
-			BeanUtil.copyProperties(salesItemPO.getFormat(), salesItemVO.getFormat());
-
-			salesItemVOs.add(salesItemVO);
+			salesItemVOs.add(salesItemPO.ptv(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO())));
 		}
 
 		return salesItemVOs;

@@ -16,6 +16,11 @@ $(function() {
             selling: com.focusPage("#selling", "#addLayer"),
             constructionNode: com.focusPage("#constructionNode", "#addLayer"),
 
+            normunit: com.focusPage('#normunit', "#addLayer"),
+            normnum: com.focusPage('#normnum', "#addLayer"),
+            storeunit: com.focusPage('#storeunit', "#addLayer"),
+            storenum: com.focusPage('#storenum', "#addLayer"),
+
             editName: com.focusPage("#editName", "#editLayer"),
             editAccessoriesType: com.focusPage("#editAccessoriesType", "#editLayer"),
             editNood: com.focusPage("#editNood", "#editLayer"),
@@ -25,6 +30,11 @@ $(function() {
             editBalance: com.focusPage("#editBalance", "#editLayer"),
             editSelling: com.focusPage("#editSelling", "#editLayer"),
             editConstructionNode: com.focusPage("#editConstructionNode", "#editLayer"),
+
+            editNormunit: com.focusPage('#normunit', "#editLayer"),
+            editNormnum: com.focusPage('#normnum', "#editLayer"),
+            editStoreunit: com.focusPage('#storeunit', "#editLayer"),
+            editStorenum: com.focusPage('#storenum', "#editLayer"),
 
             ccompany: com.focusPage("#ccompany", "#copyLayer"),
             quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal"),
@@ -83,6 +93,15 @@ $(function() {
 
         aoods.items.atttype.bindData(res.aoodsAtttype, "key", "value", false);
         aoods.items.editAtttype.bindData(res.aoodsAtttype, "key", "value", false);
+    });
+    
+    com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
+        aoods.items.normunit.bindData(res.measurementUnits, "name", "name");
+        aoods.items.storeunit.bindData(res.measurementUnits, "name", "name");
+        
+        aoods.items.editNormunit.bindData(res.measurementUnits, "name", "name");
+        aoods.items.editStoreunit.bindData(res.measurementUnits, "name", "name");
     });
 
     aoods.btns.submitBtn.click(function() {
@@ -194,6 +213,31 @@ $(function() {
         name: "施工节点 ",
         prop: "constructionNode.name",
         clazz: "grey"
+    }, {
+        fieId: "normunit",
+        name: "定额单位",
+        prop: "normunit",
+        clazz: "grey"
+    }, {
+        fieId: "quotationUnit",
+        name: "报价单位",
+        prop: "quotationItem.unit.name",
+        clazz: "grey"
+    }, {
+        fieId: "normnum",
+        name: "定额数量",
+        prop: "normnum",
+        clazz: "blue"
+    }, {
+        fieId: "storeunit",
+        name: "库房单位",
+        prop: "storeunit",
+        clazz: "grey"
+    }, {
+        fieId: "storenum",
+        name: "库房数量",
+        prop: "storenum",
+        clazz: "blue"
     }, ];
 
     var linebtns = [{
@@ -286,7 +330,12 @@ $(function() {
             "aoods.atttype": aoods.items.atttype.val(),
             "aoods.balance": aoods.items.balance.val(),
             "aoods.selling": aoods.items.selling.val(),
-            "aoods.constructionNode.cnid": aoods.items.constructionNode.val()
+            "aoods.constructionNode.cnid": aoods.items.constructionNode.val(),
+
+            "aoods.normunit": aoods.items.normunit.val(),
+            "aoods.normnum": aoods.items.normnum.val(),
+            "aoods.storeunit": aoods.items.storeunit.val(),
+            "aoods.storenum": aoods.items.storenum.val(),
         };
 
         com.post(api.data.addAoods, options, function(res) {
@@ -313,7 +362,12 @@ $(function() {
             "aoods.atttype": aoods.items.editAtttype.val(),
             "aoods.balance": aoods.items.editBalance.val(),
             "aoods.selling": aoods.items.editSelling.val(),
-            "aoods.constructionNode.cnid": aoods.items.editConstructionNode.val()
+            "aoods.constructionNode.cnid": aoods.items.editConstructionNode.val(),
+
+            "aoods.normunit": aoods.items.editNormunit.val(),
+            "aoods.normnum": aoods.items.editNormnum.val(),
+            "aoods.storeunit": aoods.items.editStoreunit.val(),
+            "aoods.storenum": aoods.items.editStorenum.val(),
         };
 
         com.post(api.data.updateAoods, options, function(res) {

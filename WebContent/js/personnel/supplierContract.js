@@ -335,11 +335,20 @@ jQuery(function($) {
 
             goodsContract(v.scid);
         }
+    }, {
+        name: "质保",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            params["scid"] = v.scid;
+            com.popup4page('#layerPopUp', "/views/personnel/supplierContractBrand4detail.html", "质保");
+        },
     }, ];
 
     searcher.card("name", lineprops, linebtns).render();
 
     supplierContracts.btns.backBtn.on("click", function() {
+
         params.historyPage = "/views/personnel/supplier.html";
         com.switchPage(params.historyPage);
     });
@@ -353,10 +362,26 @@ jQuery(function($) {
     });
 
     supplierContracts.btns.signBtn.on('click', function() {
+        
+        var signet = null;
+
+        com.post(api.data.querySignetBySid, {
+            "signet.sid": supplierContracts.items.signet.val()
+        }, function(res) {
+
+            signet = res.signet;
+        }, null, false);
+        
+        if (!signet || !signet.no) {
+            com.showAlert(com.error, "签章不存在");
+            return false;
+        }
 
         com.post(api.personel.signSupplierContractForCompany, {
             "supplierContract.scid": supplierContracts.scid,
-            "signet.sid": supplierContracts.items.signet.val()
+            "signet.signno": signet.signno,
+            "signet.keyword": signet.keyword,
+            "signet.signid": signet.signid,
         });
 
         supplierContracts.modals.userContractModal.modal("hide");
@@ -364,9 +389,23 @@ jQuery(function($) {
 
     supplierContracts.btns.supplierSignBtn.on('click', function() {
 
+        var supplierSignet = null;
+
+        com.post(api.data.querySupplierSignetBySid, {
+            "signet.ssid": supplierContracts.items.supplierSignet.val()
+        }, function(res) {
+
+            supplierSignet = res.signet;
+        }, null, false);
+
+        if (!supplierSignet || !supplierSignet.no) {
+            com.showAlert(com.error, "签章不存在");
+            return false;
+        }
+
         com.post(api.personel.signSupplierContractForSupplier, {
             "supplierContract.scid": supplierContracts.scid,
-            "supplierSignet.ssid": supplierContracts.items.supplierSignet.val()
+            "supplierSignet.signno": supplierSignet.signno
         }, function(res) {
 
             com.popup4frame("客户签", res.redirect);
@@ -375,11 +414,27 @@ jQuery(function($) {
         });
     });
 
-     supplierContracts.btns.QRCodeSignBtn.on('click', function() {
+    supplierContracts.btns.QRCodeSignBtn.on('click', function() {
+
+        var supplierSignet = null;
+
+        com.post(api.data.querySupplierSignetBySid, {
+            "signet.ssid": supplierContracts.items.supplierSignet.val()
+        }, function(res) {
+
+            supplierSignet = res.signet;
+        }, null, false);
+
+        if (!supplierSignet || !supplierSignet.no) {
+
+            com.showAlert(com.error, "签章不存在");
+
+            return false;
+        }
 
         com.post(api.personel.signSupplierContractForSupplier, {
             "supplierContract.scid": supplierContracts.scid,
-            "supplierSignet.ssid": supplierContracts.items.QRCodeSignet.val()
+            "supplierSignet.signno": supplierSignet.signno
         }, function(res) {
 
             showQRCode(res.redirect);
@@ -394,18 +449,37 @@ jQuery(function($) {
             return false;
         }
 
+        var contract = null;
+
+        com.post(api.data.queryContractByCid, {
+            "contract.cid": supplierContracts.items.contractTemplate.val()
+        }, function(res) {
+
+            contract = res.contract;
+        }, null, false);
+
+        if (!contract || !contract.no) {
+
+            com.showAlert(com.error, "合同模板不存在");
+
+            return false;
+        }
+
         var url = api.personel.addSupplierContract;
         var options = {
             "supplierContract.uid": supplierContracts.uid,
             "supplierContract.name": supplierContracts.items.name.val(),
             "supplierContract.cid": supplierContracts.items.contractTemplate.val(),
-            "contract.cid": supplierContracts.items.contractTemplate.val(),
-            "supplierContract.comment": supplierContracts.items.comment.val()
+            "supplierContract.comment": supplierContracts.items.comment.val(),
+
+            "contract.no": contract.no,
+            "contract.name": contract.name,
+            "contract.cid": contract.cid,
+            "contract.title": contract.title,
         };
 
         if (supplierContracts.scid) {
             url = api.personel.updateSupplierContract;
-
             options['supplierContract.scid'] = supplierContracts.scid;
         }
 
@@ -416,8 +490,8 @@ jQuery(function($) {
             supplierContracts.modals.addContractModal.modal("hide");
 
             searcher.doSearch();
-
         }, null, false);
+
     });
 
     // 创建合同
@@ -552,10 +626,10 @@ jQuery(function($) {
 
         params["scid"] = scid;
 
-//        com.popup4page('#layerPopUp', api.index.supplierContractBrand.url, "厂商品牌");
-        
+        // com.popup4page('#layerPopUp', api.index.supplierContractBrand.url, "厂商品牌");
+
         params.historyPage = "/views/personnel/supplierContract.html";
- 
+
         com.switchPage("/views/personnel/supplierContractBrand.html");
     }
 

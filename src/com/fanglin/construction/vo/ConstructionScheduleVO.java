@@ -39,6 +39,10 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Integer period;
 
+	private Integer prenum;
+
+	private Integer postnum;
+
 	private Timestamp preStartTime;
 
 	private Timestamp preEndTime;
@@ -318,6 +322,22 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setFincheck(Integer fincheck) {
 		this.fincheck = fincheck;
+	}
+
+	public Integer getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(Integer prenum) {
+		this.prenum = prenum;
+	}
+
+	public Integer getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(Integer postnum) {
+		this.postnum = postnum;
 	}
 
 }

@@ -53,6 +53,8 @@ public class DecorationVO implements Serializable {
 
 	private Long factPrice;
 
+	private Short memberFlag;
+
 	public DecorationVO() {
 		super();
 	}
@@ -235,6 +237,14 @@ public class DecorationVO implements Serializable {
 
 	public void setFactPrice(Long factPrice) {
 		this.factPrice = factPrice;
+	}
+
+	public Short getMemberFlag() {
+		return memberFlag;
+	}
+
+	public void setMemberFlag(Short memberFlag) {
+		this.memberFlag = memberFlag;
 	}
 
 }

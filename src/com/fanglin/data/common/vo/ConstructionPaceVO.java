@@ -18,6 +18,8 @@ public class ConstructionPaceVO implements Serializable {
 
 	private Integer period;
 
+	private Integer designPeriod;
+
 	private Integer company;
 
 	public ConstructionPaceVO() {
@@ -70,6 +72,14 @@ public class ConstructionPaceVO implements Serializable {
 
 	public void setPeriod(Integer period) {
 		this.period = period;
+	}
+
+	public Integer getDesignPeriod() {
+		return designPeriod;
+	}
+
+	public void setDesignPeriod(Integer designPeriod) {
+		this.designPeriod = designPeriod;
 	}
 
 	public Integer getCompany() {

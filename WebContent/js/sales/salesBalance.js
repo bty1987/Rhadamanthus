@@ -309,7 +309,9 @@ $(function() {
                         }
                     });
                     $label.appendTo($h3);
-                    $btnDiv.appendTo($h3);
+
+                    if (v.type != 4) // 多次结算类型数据不显示操作功能按钮
+                        $btnDiv.appendTo($h3);
 
                     // 装修单显示详情
                     $btnDecoration.click(function() {
@@ -486,7 +488,7 @@ $(function() {
     var salesBalanceSearcher = new Searcher();
 
     var salesBalanceParams = {}
-    
+
     if (salesBalance.pageType.indexOf("allowance") != -1) {
         salesBalanceParams["salesBalance.sales.type"] = 1;
     }

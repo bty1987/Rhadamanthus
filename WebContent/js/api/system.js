@@ -46,7 +46,11 @@ $.extend(api.index, {
     },
     userModule: {
         url: "/views/system/module4user.html"
-    }
+    },
+    cityProperPartnerIndex: {
+        url: '/views/system/cityProperPartner.html'
+    },
+    
 });
 
 $.extend(api, {
@@ -112,6 +116,17 @@ $.extend(api, {
         },
         deleteCityProper: {
             url: "deleteCityProper.do",
+            server: "communion"
+        },
+        queryCityProperPartner: {
+            url: "queryCityProperPartner.do",
+        },
+        addCityProperPartner: {
+            url: "addCityProperPartner.do",
+            server: "communion"
+        },
+        deleteCityProperPartner: {
+            url: "deleteCityProperPartner.do",
             server: "communion"
         },
 

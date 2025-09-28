@@ -489,14 +489,14 @@ $.extend(api, {
             url: "collectSalesPayment.do",
             type: "update",
             tranargs: {
-                args: ["salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
+                args: ["salesPayment.referMoney", "salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
             }
         },
         collectSalesPayments: {
             url: "collectSalesPayments.do",
             type: "update",
             tranargs: {
-                args: ["salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
+                args: ["salesReceipt.referMoney", "salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
             }
         },
         confirmSalesPayment: {
@@ -512,7 +512,7 @@ $.extend(api, {
             url: "refundSalesPayment.do",
             type: "update",
             tranargs: {
-                args: ["salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
+                args: ["salesPayment.referMoney", "salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
             }
         },
         refundSalesPaymentForDeposit: {
@@ -529,7 +529,7 @@ $.extend(api, {
             url: "updateSalesPayment.do",
             type: "update",
             tranargs: {
-                args: ["salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
+                args: ["salesPayment.referMoney", "salesReceipt.realMoney", "salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
             }
         },
         sendSalesPayment: {

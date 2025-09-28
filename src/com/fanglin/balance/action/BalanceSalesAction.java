@@ -127,6 +127,14 @@ public class BalanceSalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "affirmBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmBalanceSales() throws FLException {
+
+		balanceSalesService.affirmBalanceSales(balanceSales);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteBalanceSales() throws FLException {
 

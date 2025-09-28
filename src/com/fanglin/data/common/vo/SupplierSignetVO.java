@@ -16,8 +16,6 @@ public class SupplierSignetVO implements Serializable {
 
 	private String keyword;
 
-	private Short status;
-
 	private String path;
 
 	private String data;
@@ -26,7 +24,21 @@ public class SupplierSignetVO implements Serializable {
 
 	private String signno;
 
+	private String corporation;
+
+	private String taxNo;
+
+	private String address;
+
+	private String phone;
+
+	private String bankName;
+
+	private String bankNo;
+
 	private Short type;
+
+	private Short status;
 
 	private String company;
 
@@ -130,4 +142,51 @@ public class SupplierSignetVO implements Serializable {
 		this.type = type;
 	}
 
+	public String getCorporation() {
+		return corporation;
+	}
+
+	public void setCorporation(String corporation) {
+		this.corporation = corporation;
+	}
+
+	public String getTaxNo() {
+		return taxNo;
+	}
+
+	public void setTaxNo(String taxNo) {
+		this.taxNo = taxNo;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getBankNo() {
+		return bankNo;
+	}
+
+	public void setBankNo(String bankNo) {
+		this.bankNo = bankNo;
+	}
 }

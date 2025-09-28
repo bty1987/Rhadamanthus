@@ -850,6 +850,8 @@ var quotationUtils = {
 
                 $dcpts = utils.accAdd($dcpts, qv.quotationTotalPrice);
 
+                $dcpts = qv.type != constant.quotation().quotationFunctionAreaItem.TYPE_CMPREH_INT ? utils.changeTwoDecimal($dcpts) : utils.changeThrDecimal($dcpts);
+
                 var _total = (qv.suptype == 1 && qv.type == constant.quotation().quotationFunctionAreaItem.TYPE_IGNORE_INT) ? 0 : qv.total;
                 var _unitPrice = (qv.suptype == 1 && qv.type == constant.quotation().quotationFunctionAreaItem.TYPE_IGNORE_INT) ? 0 : qv.unitPrice;
 
@@ -870,7 +872,7 @@ var quotationUtils = {
                 qv.type == 7 ? $item.appendTo($list).hide() : $item.appendTo($list);
             });
 
-            var $totalInner = $("<span></span>").addClass('fl-quo-total').text("总额:" + utils.changeTwoDecimal($dcpts));
+            var $totalInner = $("<span></span>").addClass('fl-quo-total').text("总额:" + $dcpts);
             var $total = $('<div></div>').addClass("pull-right inline").append($totalInner);
             var $item = $('<li></li>');
 

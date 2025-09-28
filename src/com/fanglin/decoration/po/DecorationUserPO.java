@@ -1,6 +1,7 @@
 package com.fanglin.decoration.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.decoration.vo.DecorationUserVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "decorationUser", catalog = "decoration")
@@ -88,6 +91,15 @@ public class DecorationUserPO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public DecorationUserVO ptv(DecorationUserVO decorationUserVO) {
+
+		BeanUtil.copyPropertie(this, decorationUserVO, Arrays.asList("user"));
+
+		if (decorationUserVO.getUser() != null && getUser() != null) decorationUserVO.getUser().setBaseInfo(getUser());
+
+		return decorationUserVO;
 	}
 
 }

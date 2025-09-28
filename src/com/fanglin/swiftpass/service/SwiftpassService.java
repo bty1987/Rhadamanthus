@@ -7,4 +7,6 @@ public interface SwiftpassService {
 
 	public void callbackSwiftpass(JSONObject params) throws FLException;
 
+	public void registSwiftpass(String company) throws FLException;
+
 }

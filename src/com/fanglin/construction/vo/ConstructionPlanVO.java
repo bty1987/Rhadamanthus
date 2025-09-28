@@ -15,7 +15,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
-
 import com.fanglin.data.common.vo.ConstructionPaceNodeVO;
 
 public class ConstructionPlanVO implements Serializable {
@@ -32,9 +31,15 @@ public class ConstructionPlanVO implements Serializable {
 
 	private ConstructionPaceNodeVO node;
 
+	private Long cnid;
+
 	private Integer connum;
 
 	private Integer comnum;
+
+	private Integer prenum;
+
+	private Integer postnum;
 
 	private String phase;
 
@@ -84,6 +89,14 @@ public class ConstructionPlanVO implements Serializable {
 		this.cid = cid;
 	}
 
+	public Long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(Long cnid) {
+		this.cnid = cnid;
+	}
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -122,6 +135,22 @@ public class ConstructionPlanVO implements Serializable {
 
 	public void setComnum(Integer comnum) {
 		this.comnum = comnum;
+	}
+
+	public Integer getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(Integer prenum) {
+		this.prenum = prenum;
+	}
+
+	public Integer getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(Integer postnum) {
+		this.postnum = postnum;
 	}
 
 	public String getPhase() {

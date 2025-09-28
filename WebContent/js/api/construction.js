@@ -166,6 +166,9 @@ $.extend(api, {
         updateConstructionByOrderId: {
             url: "updateConstructionByOrderId.do"
         },
+        updateConstructionByCid: {
+            url: "updateConstructionByCid.do"
+        },
         updateConstructionForAdvance: {
             url: "updateConstructionForAdvance.do",
             type: "update",
@@ -197,11 +200,14 @@ $.extend(api, {
         nextConstructionByOrderId: {
             url: "nextConstructionByOrderId.do"
         },
-        openAccessory: {
-            url: "openAccessory.do"
+        openConstruction: {
+            url: "openConstruction.do"
         },
-        lockAccessory: {
-            url: "lockAccessory.do"
+        lockConstruction: {
+            url: "lockConstruction.do"
+        },
+        balanceConstruction: {
+            url: "balanceConstruction.do"
         },
 
         pageConstructionSchedule: {
@@ -210,7 +216,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal", "prenum", "postnum"]
             }, {
                 result: "paging-data-construction",
                 args: ["precheck", "postcheck", "stacheck", "fincheck", "period", "salaryLimit", "accessoryLimit", "salaryTotal", "accessoryTotal"]
@@ -452,14 +458,14 @@ $.extend(api, {
             url: "successDrawLine.do",
             type: "update",
             tranargs: {
-                args: ["constructionNodes.timeLimit"]
+                args: ["constructionNodes.timeLimit","constructionNodes.prenum","constructionNodes.postnum"]
             }
         },
         pretreatDrawLine: {
             url: "pretreatDrawLine.do",
             type: "update",
             tranargs: {
-                args: ["constructionNodes.timeLimit"]
+                args: ["constructionNodes.timeLimit","constructionNodes.prenum","constructionNodes.postnum"]
             }
         },
         failureDrawLine: {
@@ -541,12 +547,15 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionPlans",
-                args: ["connum", "comnum"]
+                args: ["connum", "comnum", "prenum", "postnum"]
             }]
         },
         makeConstructionPlan: {
             url: "makeConstructionPlan.do",
-            type: "update"
+            type: "update",
+            tranargs: {
+                args: ["constructionPlan.connum", "constructionPlan.comnum"]
+            }
         },
         addConstructionPlan: {
             url: "addConstructionPlan.do",

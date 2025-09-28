@@ -25,8 +25,6 @@ public interface DecorationPaymentService {
 
 	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) throws FLException;
 
-	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
-
 	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO, List<Filter> filters, Integer company) throws FLException;
 
 	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO);

@@ -31,49 +31,19 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title" id="villageDialog">添加产品</h4>
+                <h4 class="modal-title" id="villageDialog">质保</h4>
             </div>
 
             <div class="modal-body">
                 <div class="row">
                     <div class="col-xs-12">
                         <form class="form-horizontal">
-                            <div class="form-group default">
-                                <label class="col-sm-3 control-label no-padding-right"
-                                    for="scname">名称</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="scname" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
+                            <div class="form-group" style="margin-right: 0">
+                                <label class="col-xs-3 control-label " for="title">质保</label>
+                                <div class="col-xs-9">
+                                    <textarea class="col-md-9" id="warranty" rows="13" style="margin-left: 0%" placeholder="品类，品牌，名称，质保"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group default">
-                                <label class="col-sm-3 control-label no-padding-right" for="ctype">结算类型</label>
-                                <div class="col-sm-9">
-                                    <select id="ctype" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
-                                </div>
-                            </div>
-                            <div class="space-4"></div>
-
-                            <div class="form-group default">
-                                <label class="col-sm-3 control-label no-padding-right" for="cvalue">结算值</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="cvalue" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' placeholder="例：0.21"/>
-                                </div>
-                            </div>
-                            <div class="form-group default">
-                                <label class="col-sm-3 control-label no-padding-right" for="warranTime">质保期</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="warranTime" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' placeholder="天"/>
-                                </div>
-                            </div>
-                            <div class="space-4"></div>
-
-                            <div class="form-group default">
-                                <label class="col-sm-3 control-label no-padding-right" for="category">违约金</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="breakpay" class="col-xs-10 col-sm-6 v_required v_number" data-toggle="popover" data-trigger='manual' placeholder="例：5% 输入：5"/>
-                                </div>
-                            </div>
-
                         </form>
                     </div>
                 </div>

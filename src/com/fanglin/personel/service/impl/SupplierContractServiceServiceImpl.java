@@ -2,6 +2,7 @@ package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,15 +28,15 @@ public class SupplierContractServiceServiceImpl implements SupplierContractServi
 		List<SupplierContractServiceVO> supplierServiceVOs = new ArrayList<SupplierContractServiceVO>();
 
 		for (SupplierContractServicePO supplierServicePO : supplierServicePOs) {
-			
+
 			SupplierContractServiceVO supplierContractService = new SupplierContractServiceVO();
-			BeanUtil.copyPropertie(supplierServicePO,supplierContractService);
+			BeanUtil.copyPropertie(supplierServicePO, supplierContractService);
 			supplierServiceVOs.add(supplierContractService);
 		}
 
 		return supplierServiceVOs;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addSupplierContractService(SupplierContractServiceVO supplierContractService) throws FLException {
@@ -46,7 +47,7 @@ public class SupplierContractServiceServiceImpl implements SupplierContractServi
 
 		supplierContractServiceDao.save(supplierContractServicePO);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteSupplierContractService(SupplierContractServiceVO supplierContractService) throws FLException {
@@ -54,7 +55,7 @@ public class SupplierContractServiceServiceImpl implements SupplierContractServi
 		SupplierContractServicePO supplierServicePO = supplierContractServiceDao.get(supplierContractService.getScsid());
 
 		if (supplierServicePO == null) {
-			throw new FLException(130077, "厂商服务费不存在");
+			throw new FLException(130156, "厂商服务费不存在");
 		}
 
 		supplierContractServiceDao.delete(supplierServicePO);

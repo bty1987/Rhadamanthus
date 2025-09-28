@@ -1,7 +1,6 @@
 package com.fanglin.sales.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +37,6 @@ import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesRefundsItemVO;
 import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -72,15 +70,7 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 		List<SalesRefundsPO> refundsPOs = salesRefundsDao.pageSalesRefunds(paging, filters);
 
 		for (SalesRefundsPO refundsPO : refundsPOs) {
-
-			SalesRefundsVO refundsVO = new SalesRefundsVO(new UserVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()));
-
-			BeanUtil.copyProperties(refundsPO, refundsVO, Arrays.asList("creater", "sales"));
-			BeanUtil.copyProperties(refundsPO.getCreater(), refundsVO.getCreater(), Arrays.asList("role", "dept", "duty"));
-
-			refundsPO.getSales().ptv(refundsVO.getSales());
-
-			refundsVOs.add(refundsVO);
+			refundsVOs.add(refundsPO.ptv(new SalesRefundsVO(new UserVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()))));
 		}
 
 		paging.setData(refundsVOs);
@@ -93,15 +83,7 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 		List<SalesRefundsPO> refundsPOs = salesRefundsDao.querySalesRefundsBySid(refundsVO.getSales().getSid());
 
 		for (SalesRefundsPO refundsPO : refundsPOs) {
-
-			SalesRefundsVO refunds = new SalesRefundsVO(new UserVO(), new SalesVO());
-
-			BeanUtil.copyProperties(refundsPO, refunds, Arrays.asList("creater", "sales"));
-			BeanUtil.copyProperties(refundsPO.getCreater(), refunds.getCreater(), Arrays.asList("role", "dept", "duty"));
-
-			refundsPO.getSales().ptv(refundsVO.getSales());
-
-			refundsVOs.add(refunds);
+			refundsVOs.add(refundsPO.ptv(new SalesRefundsVO(new UserVO(), new SalesVO())));
 		}
 
 		return refundsVOs;
@@ -110,45 +92,27 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 	@Override
 	public List<SalesRefundsItemVO> querySalesRefundsItemBySid(SalesRefundsVO refundsVO) {
 
-		List<SalesRefundsItemPO> RefundsItemPOs = salesRefundsItemDao.querySalesRefundsItemBySid(refundsVO.getSales().getSid());
-		List<SalesRefundsItemVO> RefundsItemVOs = new ArrayList<SalesRefundsItemVO>();
+		List<SalesRefundsItemPO> refundsItemPOs = salesRefundsItemDao.querySalesRefundsItemBySid(refundsVO.getSales().getSid());
+		List<SalesRefundsItemVO> refundsItemVOs = new ArrayList<SalesRefundsItemVO>();
 
-		for (SalesRefundsItemPO refundsItemPO : RefundsItemPOs) {
-
-			SalesRefundsItemVO refundItemVO = new SalesRefundsItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()));
-
-			BeanUtil.copyProperties(refundsItemPO, refundItemVO, Arrays.asList("salesItem"));
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem(), refundItemVO.getSalesItem(), Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getGoods(), refundItemVO.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getColor(), refundItemVO.getSalesItem().getColor());
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getFormat(), refundItemVO.getSalesItem().getFormat());
-
-			RefundsItemVOs.add(refundItemVO);
+		for (SalesRefundsItemPO refundsItemPO : refundsItemPOs) {
+			refundsItemVOs.add(refundsItemPO.ptv(new SalesRefundsItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()))));
 		}
 
-		return RefundsItemVOs;
+		return refundsItemVOs;
 	}
 
 	@Override
 	public List<SalesRefundsItemVO> querySalesRefundsItemByRid(SalesRefundsVO refundsVO) {
 
-		List<SalesRefundsItemPO> RefundsItemPOs = salesRefundsItemDao.querySalesRefundsItemByRid(refundsVO.getRid());
-		List<SalesRefundsItemVO> RefundsItemVOs = new ArrayList<SalesRefundsItemVO>();
+		List<SalesRefundsItemPO> refundsItemPOs = salesRefundsItemDao.querySalesRefundsItemByRid(refundsVO.getRid());
+		List<SalesRefundsItemVO> refundsItemVOs = new ArrayList<SalesRefundsItemVO>();
 
-		for (SalesRefundsItemPO refundsItemPO : RefundsItemPOs) {
-
-			SalesRefundsItemVO refundItemVO = new SalesRefundsItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()));
-
-			BeanUtil.copyProperties(refundsItemPO, refundItemVO, Arrays.asList("salesItem"));
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem(), refundItemVO.getSalesItem(), Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getGoods(), refundItemVO.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getColor(), refundItemVO.getSalesItem().getColor());
-			BeanUtil.copyProperties(refundsItemPO.getSalesItem().getFormat(), refundItemVO.getSalesItem().getFormat());
-
-			RefundsItemVOs.add(refundItemVO);
+		for (SalesRefundsItemPO refundsItemPO : refundsItemPOs) {
+			refundsItemVOs.add(refundsItemPO.ptv(new SalesRefundsItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()))));
 		}
 
-		return RefundsItemVOs;
+		return refundsItemVOs;
 	}
 
 	@Override

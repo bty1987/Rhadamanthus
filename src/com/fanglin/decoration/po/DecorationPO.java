@@ -156,23 +156,25 @@ public class DecorationPO implements Serializable {
 
 	private long precontractPrice;
 
-	private Timestamp contractTime;
+	private Timestamp createTime;
 
 	private Timestamp measureTime;
 
 	private Timestamp depositTime;
-
-	private Timestamp createTime;
-
-	private Timestamp balanceTime;
-
-	private Timestamp accountTime;
 
 	private Timestamp sdesignTime;
 
 	private Timestamp edesignTime;
 
 	private Timestamp precontractTime;
+
+	private Timestamp contractTime;
+
+	private Timestamp recontractTime;
+
+	private Timestamp balanceTime;
+
+	private Timestamp accountTime;
 
 	private Timestamp terminalTime;
 
@@ -396,6 +398,14 @@ public class DecorationPO implements Serializable {
 
 	public void setPrecontractTime(Timestamp precontractTime) {
 		this.precontractTime = precontractTime;
+	}
+
+	public Timestamp getRecontractTime() {
+		return recontractTime;
+	}
+
+	public void setRecontractTime(Timestamp recontractTime) {
+		this.recontractTime = recontractTime;
 	}
 
 	public Timestamp getTerminalTime() {
@@ -775,6 +785,12 @@ public class DecorationPO implements Serializable {
 
 		if (decorationVO.getMaterialer() != null && this.getMaterialer() != null) {
 			BeanUtil.copyPropertie(this.getMaterialer(), decorationVO.getMaterialer(), Arrays.asList("duty", "dept"));
+		}
+
+		if (getAddition() != null) {
+			decorationVO.setIssueTime(getAddition().getIssueTime());
+			decorationVO.setMeetTime(getAddition().getMeetTime());
+			decorationVO.setBelongTime(getAddition().getBelongTime());
 		}
 
 		return decorationVO;

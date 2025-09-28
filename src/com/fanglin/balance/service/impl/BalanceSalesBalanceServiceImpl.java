@@ -114,15 +114,21 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 			balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 		}
 
+		if (balanceSalesVO == null) {
+			balanceSalesVO = new BalanceSalesVO();
+		}
+
 		if (balanceSalesPO == null) {
 			balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, company);
 		}
 
 		if (balanceSalesPO == null) {
 			balanceSalesService.createBalanceSales(new BalanceSalesVO(new BrandVO(salesBalancePO.getSales().getBrand().getBid()), new UserBaseVO(userId)), userId, salesBalancePO.getSales().getCompany());
-		}
 
-		balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, company);
+			balanceSalesDao.flush();
+
+			balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, company);
+		}
 
 		if (balanceSalesPO == null) {
 			throw new FLException(350017, "结算销售不存在");
@@ -145,6 +151,9 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 		salesBalancePO.setChecker(operater);
 		salesBalancePO.setCheckStatus(SalesBalancePO.CHECKSTATUS_CHECK_INT);
 		salesBalancePO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+
+		salesBalancePO.setVenderTime(DateUtil.getDateToTimestamp(new Date()));
+		salesBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
 
 		if (salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 

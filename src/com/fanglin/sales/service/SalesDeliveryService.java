@@ -5,6 +5,7 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.vo.SalesDeliveryItemVO;
+import com.fanglin.sales.vo.SalesDeliveryVO;
 import com.fanglin.utils.Paging;
 
 public interface SalesDeliveryService {
@@ -25,8 +26,10 @@ public interface SalesDeliveryService {
 
 	public void finishSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException;
 
-	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String queryUserId) throws FLException;
+	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
 
 	public void updateSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) throws FLException;
+
+	public void deliveSalesDelivery(SalesDeliveryVO salesDelivery, String userId) throws FLException;
 
 }

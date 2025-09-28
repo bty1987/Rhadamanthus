@@ -453,6 +453,9 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 		customerChancePO.setCreater(issuer);
 		customerChancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getCid() != null) customerChancePO.setCustomer(new CustomerPO(customerChanceVO.getCustomer().getCid()));
+		if (customerChanceVO.getHouse() != null && customerChanceVO.getHouse().getHid() != null) customerChancePO.setHouse(new HousePO(customerChanceVO.getHouse().getHid()));
+
 		CustomerDeptRulePO customerDeptRulePO = customerDeptRuleDao.queryCustomerDeptRule(customerSourcePO.getCreater().getDept().getDid(), customerChanceVO.getBusitype().getDbid());
 
 		if (customerDeptRulePO == null) {

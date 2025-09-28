@@ -420,6 +420,9 @@ jQuery(function($) {
     function editDelivery(v) {
 
         brand.brand = v;
+        
+        com.focusPage("input[type='checkbox']", "#deliveryModal").prop("checked", null);
+        com.focusPage("input[type='text']", "#deliveryModal").val(0);
 
         com.post(api.right.querySalesDeliveryStatusRight, {
             "salesDeliveryStatusRight.bid": brand.brand.bid

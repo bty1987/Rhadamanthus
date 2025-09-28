@@ -109,29 +109,32 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				throw new FLException(200013, "报价项不存在");
 			}
 
-			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
-			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
-			quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
+			if (extensionItemDao.countExtensionItem(quotationFunctionAreaPO.getQfaId(), qfaiId) == 0) {
 
-			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+				quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
+				quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
+				quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
 
-			if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 
-				long qfaiid = quotationFunctionAreaItemPO.getQfaiId();
+				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
 
-				SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(orderId, areaId, qfaiid, SelectionItemPO.TYPE_QUOTATION_SHORT);
+					long qfaiid = quotationFunctionAreaItemPO.getQfaiId();
 
-				if (selectionItemPO != null) {
+					SelectionItemPO selectionItemPO = selectionItemDao.querySelectionItem(orderId, areaId, qfaiid, SelectionItemPO.TYPE_QUOTATION_SHORT);
 
-					selectionItemPO.setInitNum(quotationFunctionAreaItemPO.getInitNum());
+					if (selectionItemPO != null) {
 
-					if (SelectionItemPO.STATUS_INIT_SHORT != selectionItemPO.getStatus()) {
-						selectionItemPO.setNum(quotationFunctionAreaItemPO.getNum());
+						selectionItemPO.setInitNum(quotationFunctionAreaItemPO.getInitNum());
+
+						if (SelectionItemPO.STATUS_INIT_SHORT != selectionItemPO.getStatus()) {
+							selectionItemPO.setNum(quotationFunctionAreaItemPO.getNum());
+						}
+
+						selectionItemDao.update(selectionItemPO);
 					}
 
-					selectionItemDao.update(selectionItemPO);
 				}
-
 			}
 
 		} else {

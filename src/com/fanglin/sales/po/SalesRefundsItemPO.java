@@ -2,6 +2,8 @@ package com.fanglin.sales.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Arrays;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.sales.vo.SalesRefundsItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesrefundsitem", catalog = "sales")
@@ -110,6 +115,15 @@ public class SalesRefundsItemPO implements java.io.Serializable {
 
 	public void setCreater(SalesItemPO salesitem) {
 		this.salesItem = salesitem;
+	}
+
+	public SalesRefundsItemVO ptv(SalesRefundsItemVO salesRefundsItemVO) {
+
+		BeanUtil.copyProperties(this, salesRefundsItemVO, Arrays.asList("salesItem"));
+
+		if (salesRefundsItemVO.getSalesItem() != null && getSalesItem() != null) getSalesItem().ptv(salesRefundsItemVO.getSalesItem());
+
+		return salesRefundsItemVO;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.fanglin.sales.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.sales.vo.SalesRefundsVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesrefunds", catalog = "sales")
@@ -188,6 +191,17 @@ public class SalesRefundsPO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public SalesRefundsVO ptv(SalesRefundsVO salesRefundsVO) {
+
+		BeanUtil.copyProperties(this, salesRefundsVO, Arrays.asList("creater", "sales"));
+
+		if (salesRefundsVO.getSales() != null && getSales() != null) getSales().ptv(salesRefundsVO.getSales());
+
+		if (salesRefundsVO.getCreater() != null && getCreater() != null) salesRefundsVO.getCreater().setBaseInfo(getCreater());
+
+		return salesRefundsVO;
 	}
 
 }

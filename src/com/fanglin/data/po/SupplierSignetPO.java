@@ -44,8 +44,6 @@ public class SupplierSignetPO implements Serializable, Signet {
 
 	private String path;
 
-	private short status;
-
 	private String signid;
 
 	private String signno;
@@ -54,7 +52,21 @@ public class SupplierSignetPO implements Serializable, Signet {
 
 	private String authurl;
 
+	private String corporation;
+
+	private String taxNo;
+
+	private String address;
+
+	private String phone;
+
+	private String bankName;
+
+	private String bankNo;
+
 	private short type;
+
+	private short status;
 
 	private int company;
 
@@ -189,6 +201,60 @@ public class SupplierSignetPO implements Serializable, Signet {
 	@Override
 	public String keyword() {
 		return keyword;
+	}
+
+	@Column(name = "corporation")
+	public String getCorporation() {
+		return corporation;
+	}
+
+	public void setCorporation(String corporation) {
+		this.corporation = corporation;
+	}
+
+	@Column(name = "taxNo")
+	public String getTaxNo() {
+		return taxNo;
+	}
+
+	public void setTaxNo(String taxNo) {
+		this.taxNo = taxNo;
+	}
+
+	@Column(name = "address")
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	@Column(name = "phone")
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	@Column(name = "bankName")
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	@Column(name = "bankNo")
+	public String getBankNo() {
+		return bankNo;
+	}
+
+	public void setBankNo(String bankNo) {
+		this.bankNo = bankNo;
 	}
 
 }

@@ -22,21 +22,20 @@ jQuery(function($) {
 
         item: {},
 
-        contractArgs:params.personel.contractargs,
-        uid:params.personel.uid,
-        ucid:params.ucid,
-        scid:null,
-        no:null,
+        contractArgs: params.personel.contractargs,
+        uid: params.personel.uid,
+        ucid: params.ucid,
+        scid: null,
+        no: null,
         brandNameList: "",
         goodNameList: "",
-
+        concentionTem: "",
+        specialTem: "",
+        oemTem: "",
         current: new Date(),
     };
 
-    console.log(params.personel.contractargs);
-    console.log(params.personel.uid);
-
-    var currentDate = new Date(); 
+    var currentDate = new Date();
     var year = currentDate.getFullYear();
     var month = currentDate.getMonth() + 1;
     var day = currentDate.getDate();
@@ -82,6 +81,24 @@ jQuery(function($) {
         supplierContractBrands = res.paging.data;
     }, null, false);
 
+    var supplierContractProduct = [];
+    com.post(api.personel.querySupplierContractProduct, {
+        "supplierContractProduct.scid": params.personel.contractargs.scid
+    }, function(res) {
+
+        supplierContractProduct = res.supplierContractProducts;
+    }, null, false);
+
+    var supplierSignets = [];
+    com.post(api.data.pageSupplierSignet, {
+        "paging.page": 1,
+        "paging.rows": 10,
+        "signet.suid": contractEdit.uid
+    }, function(res) {
+
+        supplierSignets = res.paging.data;
+    }, null, false);
+
     var supplierContractGoods = [];
 
     com.post(api.personel.pageSupplierContractGoods, {
@@ -96,7 +113,7 @@ jQuery(function($) {
 
     var table1 = {
         "insertWay": 1,
-        "keyword": "厂商品牌列表",
+        "keyword": "厂商产品列表",
         "pageBegin": 1,
         "headers": ["品类", "品牌", "产品名称", "质保期"],
         "colWidthPercent": [2, 2, 4, 2],
@@ -110,25 +127,31 @@ jQuery(function($) {
         "insertWay": 1,
         "keyword": "超额服务费列表",
         "pageBegin": 1,
-        "headers": ["品类名称", "品牌名称", "时间限期", "取档", "超额服务费"],
-        "colWidthPercent": [2, 2, 2, 3, 1],
+        "headers": ["品牌名称", "时间限期", "取档", "超额服务费"],
+        "colWidthPercent": [2, 2, 3, 3],
         "headersAlignment": 1,
         "cellHorizontalAlignment": 0,
         "cellVerticalAlignment": 5,
         "datas": []
     };
-    
+
+    var table3 = {
+        "insertWay": 1,
+        "keyword": "附件十一乙方主体名单",
+        "pageBegin": 1,
+        "headers": ["公司名称", "法人", "纳税人识别号", "地址", "电话", "开户行", "账号"],
+        "colWidthPercent": [1, 1, 1, 2, 1, 2, 2],
+        "headersAlignment": 1,
+        "cellHorizontalAlignment": 0,
+        "cellVerticalAlignment": 5,
+        "datas": []
+    };
+
     var index = 0;
 
     if (supplierContractBrands && supplierContractBrands.length) {
 
         $.each(supplierContractBrands, function(i, v) {
-
-            if (i > 0) {
-                contractEdit.brandNameList += ',';
-            }
-            
-            contractEdit.brandNameList += v.brand.name;
 
             if (v.name != null) {
                 if (i > 0) {
@@ -136,12 +159,59 @@ jQuery(function($) {
                 }
                 contractEdit.goodNameList += v.name;
             }
-            
-            table1.datas.push(["", v.brand.name, v.name, v.warranTime]);
+
+            contractEdit.brandNameList += v.brand.name;
+
+            if (v.supplierContractCategorys && v.supplierContractCategorys.length) {
+                var mySet = new Set();
+                $.each(v.supplierContractCategorys, function(t, item) {
+
+                    if (item.ctype === 2) {
+                        contractEdit.concentionTem += item.name + " " + item.cvalue + "%" + "  ";
+                    }
+                    if (item.ctype === 3) {
+                        contractEdit.specialTem += item.name + " " + item.cvalue + "%" + "  ";
+                    }
+                    if (item.ctype === 4) {
+                        contractEdit.oemTem += item.name + " " + item.cvalue + "%" + "  ";
+                    }
+                    if (t == 0) {
+                        contractEdit.brandNameList += "(";
+                    }
+                    var isAInSet = mySet.has(item.name);
+
+                    if (!isAInSet) {
+                        contractEdit.brandNameList += item.name;
+                        mySet.add(item.name);
+                        if (t != v.supplierContractCategorys.length - 1) {
+                            contractEdit.brandNameList += "  ";
+                        }
+                    }
+
+                    if (t == v.supplierContractCategorys.length - 1) {
+                        contractEdit.brandNameList += ")";
+                    }
+
+                });
+            }
+            if (i != supplierContractBrands.length - 1) {
+                contractEdit.brandNameList += ",";
+            }
+
+        });
+    }
+
+    if (supplierContractProduct && supplierContractProduct.length) {
+
+        $.each(supplierContractProduct, function(i, v) {
+
+            table1.datas.push([v.category, v.brand, v.name, v.warranTime]);
+
         });
     }
 
     index = 0;
+    var service = [];
     if (supplierContractBrands && supplierContractBrands.length) {
 
         $.each(supplierContractBrands, function(i, v) {
@@ -153,21 +223,82 @@ jQuery(function($) {
 
             $.each(servicePrices, function(i, t) {
 
-                if (t.UV == 0 && t.DV != 0) {
-                    table2.datas.push([ "", v.brand.name, t.TL, "销售总金额" + t.DV + "万元（含）以下", "对应应结款总额的" + t.SR + "%；"]);
+                if (t.UV != 0 && t.DV == 0) {
+
+                    service.push({
+                        name: v.brand.name,
+                        time: t.TL,
+                        sale: "销售总金额" + t.UV + "万元（含）以下",
+                        money: "对应应结款总额的" + t.SR + "%；"
+                    });
+
                 }
-                if (t.DV == 0 && t.UV != 0) {
-                    table2.datas.push([ "", v.brand.name, t.TL, "销售总金额" + t.UV + "万元以上", "对应应结款总额的" + t.SR + "%；"]);
+                if (t.DV != 0 && t.UV == 0) {
+                    service.push({
+                        name: v.brand.name,
+                        time: t.TL,
+                        sale: "销售总金额" + t.DV + "万元以上",
+                        money: "对应应结款总额的" + t.SR + "%；"
+                    });
+
                 }
                 if (t.UV != 0 && t.DV != 0) {
-                    table2.datas.push([ "", v.brand.name, t.TL, "销售总金额" + t.DV + "万元-" + t.UV + "万元（含）", "对应应结款总额的" + t.SR + "%；"]);
+                    service.push({
+                        name: v.brand.name,
+                        time: t.TL,
+                        sale: "销售总金额" + t.DV + "万元-" + t.UV + "万元（含）",
+                        money: "对应应结款总额的" + t.SR + "%；"
+                    });
                 }
             });
         });
+
+        var result = [];
+        if (service && service.length > 0) {
+
+            $.each(service, function(index, item) {
+
+                var found = false;
+
+                $.each(result, function(i, r) {
+
+                    if (r.sale === item.sale) {
+                        r.name += ',' + item.name;
+                        found = true;
+                        return false;
+                    }
+                });
+
+                if (!found) {
+                    result.push($.extend({}, item));
+                }
+            });
+        }
+        $.each(service, function(index, item) {
+
+            console.log(item);
+        });
+        $.each(result, function(index, item) {
+
+            console.log(item);
+            table2.datas.push([item.name, item.time, item.sale, item.money]);
+
+        });
     }
-    console.log("table1.table2:"+table2.datas)
+
+    index = 0;
+    if (supplierSignets && supplierSignets.length) {
+
+        $.each(supplierSignets, function(i, v) {
+
+            table3.datas.push([v.name, v.corporation, v.taxNo, v.address, v.phone, v.bankName, v.bankNo]);
+
+        });
+    }
+
     contractEdit.table.push(table1);
     contractEdit.table.push(table2);
+    contractEdit.table.push(table3);
 
     com.focusPage("#preservation").unbind().on('click', function() {
 
@@ -188,10 +319,8 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            console.log(data);
-
             var termStartDate = com.focusPage("#con-term-start-date").val();
-            var termEndDate = com.focusPage("#con-term-start-date").val();
+            var termEndDate = com.focusPage("#con-term-end-date").val();
 
             data["con-tern-start-year"] = termStartDate.substr(0, 4);
             data["con-tern-start-month"] = termStartDate.substr(5, 2);
@@ -199,6 +328,14 @@ jQuery(function($) {
             data["con-tern-end-year"] = termEndDate.substr(0, 4);
             data["con-tern-end-month"] = termEndDate.substr(5, 2);
             data["con-tern-end-day"] = termEndDate.substr(8, 2);
+
+            data["con-special-product-service-fee"] = contractEdit.specialTem;
+            data["con-exclusive-product-service-fee"] = contractEdit.oemTem;
+            data["con-brand-liquidated-damages"] = data["con-brand-liquidated-damages"];
+            data["con-experience-hall-notes"] = data["con-experience-hall-notes"];
+            data["con-experience-oem-notes"] = data["con-experience-oem-notes"];
+            data["con-experience-special-notes"] = data["con-experience-special-notes"];
+            data["con-experience-hall-breakpay"] = data["con-experience-hall-breakpay"];
 
             data["cov-company-name"] = data["con-company-name"];
             data["cov-company-name-11"] = data["con-company-name"];
@@ -246,7 +383,7 @@ jQuery(function($) {
             data["con-supplier-bank-no-21"] = data["con-supplier-bank-no"];
             data["con-supplier-name-22"] = data["con-supplier-name"];
 
-            data["con-regular-product-service-fee1"] = data["con-regular-product-service-fee"];
+            data["con-regular-product-service-fee"] = contractEdit.concentionTem;
 
             data["sin-company-addr"] = data["con-company-addr"];
             data["sin-company-legal"] = data["con-company-legal"];
@@ -275,11 +412,8 @@ jQuery(function($) {
             data["con-cooperation-amount-undis-cn"] = utils.getCNMoney(parseFloat(data["con-cooperation-amount-undis"]));
             data["con-venue-rental-fee-cn"] = utils.getCNMoney(parseFloat(data["con-venue-rental-fee"]));
 
-            data["con-brand-list"] = contractEdit.brandNameList;
+            data["con-brand-lists"] = contractEdit.brandNameList;
             data["con-brand-list-1"] = contractEdit.brandNameList;
-            data["con-goods-list"] = contractEdit.goodNameList;
-            data["con-goods-list-1"] = contractEdit.goodNameList;
-            data["con-goods-list-1"] = contractEdit.goodNameList;
             data["cov-contract-no"] = contractEdit.no;
             data["cov-contract-no-1"] = contractEdit.no;
             data["cov-contract-no-2"] = contractEdit.no;
@@ -289,18 +423,16 @@ jQuery(function($) {
             data["con-contract-no-2"] = contractEdit.no;
 
             data["con-regular-settlement-amount-1"] = data["con-regular-settlement-amount"];
-            data["con-regular-product-service-fee2"] = data["con-regular-product-service-fee"];
+            data["con-regular-product-service-fee1"] = data["con-regular-product-service-fee2"];
+            data["con-regular-product-service-fee2"] = data["con-regular-product-service-fee2"];
             data["con-settlement-amount-1"] = data["con-settlement-amount"];
             data["con-experience-hall1-1"] = data["con-experience-hall-1"];
             data["con-experience-hall1-2"] = data["con-experience-hall-2"];
             data["con-experience-hall1-3"] = data["con-experience-hall-3"];
             data["con-experience-hall-sum-1"] = data["con-experience-hall-sum"];
 
-            data["sin-company-time"] = year+"-"+month+"-"+day;
-            data["sin-company-time-1"] = year+"-"+month+"-"+day;
-            data["sin-supplier-time"] = year+"-"+month+"-"+day;
-            data["sin-supplier-time-1"] = year+"-"+month+"-"+day;
-            
+            data["sin-company-time"] = year + "-" + month + "-" + day;
+            data["sin-supplier-time"] = year + "-" + month + "-" + day;
             data["con-sign-date-year"] = year;
             data["con-sign-date-month"] = month;
             data["con-sign-date-day"] = day;
@@ -312,17 +444,26 @@ jQuery(function($) {
             data["con-sign-date-day-2"] = day;
             data["con-sign-date-year-3"] = year;
             data["con-sign-date-month-3"] = month;
-            data["con-sign-date-day-3"] = day; 
+            data["con-sign-date-day-3"] = day;
 
-           
+            data["con-supplier-name-1"] = data["con-supplier-name"];
+            data["con-supplier-name-2"] = data["con-supplier-name"];
+            data["con-supplier-name-3"] = data["con-supplier-name"];
+            data["con-supplier-name-4"] = data["con-supplier-name"];
+            data["con-supplier-name-5"] = data["con-supplier-name"];
+            data["con-supplier-name-6"] = data["con-supplier-name"];
+            data["con-sign-date-year-4"] = year;
+            data["con-sign-date-month-4"] = month;
+            data["con-sign-date-day-4"] = day;
+            data["con-sign-date-year-5"] = year;
+            data["con-sign-date-month-5"] = month;
+            data["con-sign-date-day-5"] = day;
 
             var options = {
                 "supplierContract.scid": params.personel.contractargs.scid,
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };
-
-            console.log(options);
 
             var popup = com.focusPage("#popup-page");
             var target = com.focusPage("#layerPopUp");

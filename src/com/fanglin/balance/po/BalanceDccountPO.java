@@ -4,6 +4,7 @@ package com.fanglin.balance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceDccountVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 
 @Entity
@@ -182,4 +185,10 @@ public class BalanceDccountPO implements java.io.Serializable {
 		this.comment = comment;
 	}
 
+	public BalanceDccountVO ptv(BalanceDccountVO balanceDccountVO) {
+
+		BeanUtil.copyPropertie(this, balanceDccountVO, Arrays.asList("creater", "belonger"));
+
+		return balanceDccountVO;
+	}
 }

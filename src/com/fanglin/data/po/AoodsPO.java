@@ -3,6 +3,7 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.data.material.vo.AoodsVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "aoods", catalog = "data")
@@ -55,6 +59,20 @@ public class AoodsPO implements Serializable {
 
 	private ConstructionNodePO constructionNode;
 
+	private String normunit; // 定额单位
+
+	private int normnum; // 定额数量
+
+	private String storeunit; // 库房单位
+
+	private int storenum; // 库房数量
+
+	private int balance;
+
+	private int selling;
+
+	private short atttype;
+
 	private short checkup;
 
 	private short status;
@@ -62,12 +80,6 @@ public class AoodsPO implements Serializable {
 	private int company;
 
 	private int bompany;
-
-	private int balance;
-
-	private int selling;
-
-	private short atttype;
 
 	public AoodsPO() {
 		super();
@@ -157,6 +169,42 @@ public class AoodsPO implements Serializable {
 		this.constructionNode = constructionNode;
 	}
 
+	@Column(name = "normunit")
+	public String getNormunit() {
+		return normunit;
+	}
+
+	public void setNormunit(String normunit) {
+		this.normunit = normunit;
+	}
+
+	@Column(name = "normnum")
+	public int getNormnum() {
+		return normnum;
+	}
+
+	public void setNormnum(int normnum) {
+		this.normnum = normnum;
+	}
+
+	@Column(name = "storeunit")
+	public String getStoreunit() {
+		return storeunit;
+	}
+
+	public void setStoreunit(String storeunit) {
+		this.storeunit = storeunit;
+	}
+
+	@Column(name = "storenum")
+	public int getStorenum() {
+		return storenum;
+	}
+
+	public void setStorenum(int storenum) {
+		this.storenum = storenum;
+	}
+
 	@Column(name = "checkup")
 	public short getCheckup() {
 		return checkup;
@@ -218,6 +266,24 @@ public class AoodsPO implements Serializable {
 
 	public void setAtttype(short atttype) {
 		this.atttype = atttype;
+	}
+
+	public AoodsVO ptv(AoodsVO aoodsVO) {
+
+		BeanUtil.copyProperties(this, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
+
+		if (aoodsVO.getGoods() != null && getGoods() != null) {
+			getGoods().ptv(aoodsVO.getGoods());
+
+			aoodsVO.setGid(getGoods().getGid());
+			aoodsVO.setName(getGoods().getName());
+		}
+
+		if (aoodsVO.getAccessoriesType() != null && getAccessoriesType() != null) getAccessoriesType().ptv(aoodsVO.getAccessoriesType());
+		if (aoodsVO.getNoods() != null && getNoods() != null) getNoods().ptv(aoodsVO.getNoods());
+		if (aoodsVO.getConstructionNode() != null && getConstructionNode() != null) getConstructionNode().ptv(aoodsVO.getConstructionNode());
+
+		return aoodsVO;
 	}
 
 }

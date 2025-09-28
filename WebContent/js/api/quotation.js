@@ -2018,7 +2018,8 @@ $.extend(api, {
             }
         },
         updateAddReduceItemForIndex: {
-            url: "updateAddReduceItemForIndex.do"
+            url: "updateAddReduceItemForIndex.do",
+            intercept: true
         },
         deleteAddReduceItem: {
             url: "deleteAddReduceItem.do",

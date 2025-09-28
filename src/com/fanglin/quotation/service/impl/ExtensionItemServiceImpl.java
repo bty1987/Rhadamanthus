@@ -148,7 +148,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int upgradeExtensionItem(ExtensionItemVO extensionItemVO, ExtensionVO extensionVO, String userId) throws FLException {
 
-		ExtensionPO extensionPO = extensionDao.queryExtension(extensionVO.getQid(), ExtensionPO.TYPE_ADD_INT, ExtensionPO.ATTTYPE_QUOTATION_INT);
+		ExtensionPO extensionPO = extensionDao.queryExtension(extensionVO.getQid(), extensionVO.getType(), ExtensionPO.ATTTYPE_QUOTATION_INT);
 
 		if (extensionPO == null) {
 			extensionPO = new ExtensionPO();
@@ -160,7 +160,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			extensionPO.setCreater(userDao.queryUserByUserId(userId));
 			extensionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
-			extensionPO.setType(ExtensionPO.TYPE_ADD_INT);
+			extensionPO.setType(extensionVO.getType());
 			extensionPO.setAtttype(ExtensionPO.ATTTYPE_QUOTATION_INT);
 
 			extensionPO.setStatus(ExtensionPO.STATUS_INIT_SHORT);

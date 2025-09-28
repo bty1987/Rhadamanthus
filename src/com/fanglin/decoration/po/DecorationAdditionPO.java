@@ -13,32 +13,38 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "decorationaddition", catalog = "decoration")
-public class DecorationAdditionPO implements Serializable{
+public class DecorationAdditionPO implements Serializable {
 
 	private static final long serialVersionUID = -8541537240982313346L;
-	
+
 	public static final String DECORATION_ORDERID_STR = "orderId";
-	
+
 	private long daid;
-	
+
 	private String orderId;
-	
+
 	private String designer;
-	
+
 	private String designDepartment;
-	
+
 	private String designRegion;
-	
+
 	private String salesman;
-	
+
 	private String salesDepartment;
-	
+
 	private String salesRegion;
-	
+
 	private Timestamp designProtectTime;
-	
+
 	private Timestamp salesProtectTime;
-	
+
+	private Timestamp issueTime;
+
+	private Timestamp meetTime;
+
+	private Timestamp belongTime;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "daid")
@@ -112,7 +118,7 @@ public class DecorationAdditionPO implements Serializable{
 	public void setSalesRegion(String salesRegion) {
 		this.salesRegion = salesRegion;
 	}
-	
+
 	@Column(name = "designProtectTime")
 	public Timestamp getDesignProtectTime() {
 		return designProtectTime;
@@ -121,6 +127,7 @@ public class DecorationAdditionPO implements Serializable{
 	public void setDesignProtectTime(Timestamp designProtectTime) {
 		this.designProtectTime = designProtectTime;
 	}
+
 	@Column(name = "salesProtectTime")
 	public Timestamp getSalesProtectTime() {
 		return salesProtectTime;
@@ -130,39 +137,63 @@ public class DecorationAdditionPO implements Serializable{
 		this.salesProtectTime = salesProtectTime;
 	}
 
-	public void clearDesign(){
+	public Timestamp getIssueTime() {
+		return issueTime;
+	}
+
+	public void setIssueTime(Timestamp issueTime) {
+		this.issueTime = issueTime;
+	}
+
+	public Timestamp getMeetTime() {
+		return meetTime;
+	}
+
+	public void setMeetTime(Timestamp meetTime) {
+		this.meetTime = meetTime;
+	}
+
+	public Timestamp getBelongTime() {
+		return belongTime;
+	}
+
+	public void setBelongTime(Timestamp belongTime) {
+		this.belongTime = belongTime;
+	}
+
+	public void clearDesign() {
 		this.designer = "";
 		this.designDepartment = "";
 		this.designRegion = "";
 	}
 
-	public void clearSales(){
+	public void clearSales() {
 		this.salesman = "";
 		this.salesDepartment = "";
 		this.salesRegion = "";
 	}
-	
-	public void setDesign(String designer, String designDepartment, String designRegion){
-		
-		if(this.designer == null || "".equals(this.designer))this.designer = designer;
+
+	public void setDesign(String designer, String designDepartment, String designRegion) {
+
+		if (this.designer == null || "".equals(this.designer)) this.designer = designer;
 		else this.designer = String.format("%s/%s", this.designer, designer);
-		
-		if(this.designDepartment == null || "".equals(this.designDepartment)) this.designDepartment = designDepartment;
+
+		if (this.designDepartment == null || "".equals(this.designDepartment)) this.designDepartment = designDepartment;
 		else this.designDepartment = String.format("%s/%s", this.designDepartment, designDepartment);
-		
-		if(this.designRegion == null || "".equals(this.designRegion)) this.designRegion = designRegion;
+
+		if (this.designRegion == null || "".equals(this.designRegion)) this.designRegion = designRegion;
 		else this.designRegion = String.format("%s/%s", this.designRegion, designRegion);
 	}
-	
-	public void setSales(String salesman, String salesDepartment, String salesRegion){
-		
-		if(this.salesman == null || "".equals(this.salesman))this.salesman = salesman;
+
+	public void setSales(String salesman, String salesDepartment, String salesRegion) {
+
+		if (this.salesman == null || "".equals(this.salesman)) this.salesman = salesman;
 		else this.salesman = String.format("%s/%s", this.salesman, salesman);
-		
-		if(this.salesDepartment == null || "".equals(this.salesDepartment)) this.salesDepartment = salesDepartment;
+
+		if (this.salesDepartment == null || "".equals(this.salesDepartment)) this.salesDepartment = salesDepartment;
 		else this.salesDepartment = String.format("%s/%s", this.salesDepartment, salesDepartment);
-		
-		if(this.salesRegion == null || "".equals(this.salesRegion)) this.salesRegion = salesRegion;
+
+		if (this.salesRegion == null || "".equals(this.salesRegion)) this.salesRegion = salesRegion;
 		else this.salesRegion = String.format("%s/%s", this.salesRegion, salesRegion);
 	}
 

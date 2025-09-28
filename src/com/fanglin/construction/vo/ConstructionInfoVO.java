@@ -27,6 +27,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Short isCeremony;
 
+	private Short isIssue;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -116,6 +118,14 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setIsCeremony(Short isCeremony) {
 		this.isCeremony = isCeremony;
+	}
+
+	public Short getIsIssue() {
+		return isIssue;
+	}
+
+	public void setIsIssue(Short isIssue) {
+		this.isIssue = isIssue;
 	}
 
 	public Timestamp getStartTime() {

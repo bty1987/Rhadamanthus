@@ -112,17 +112,21 @@ public class OalesPayServiceImpl implements OalesPayService {
 		oalesPayPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesPayDao.save(oalesPayPO);
+		oalesPayDao.flush();
 
 		OalesPaymentPO oalesPaymentPO = new OalesPaymentPO(new UserPO(), new OalesPO());
 
 		oalesPaymentPO.setOales(oales);
-		oalesPaymentPO.setOrderId(oales.getDecoration().getOrderId());
-		oalesPaymentPO.setType(OalesPaymentPO.TYPE_PAYMENT_INT);
-		oalesPaymentPO.setStatus(OalesPaymentPO.STATUS_INITIAL_INT);
-		oalesPaymentPO.setCategory(oales.getCategory());
-		oalesPaymentPO.setBrand(oales.getBrand());
-		oalesPaymentPO.setReferMoney(oalesPayVO.getMoney());
 		oalesPaymentPO.setCreater(creater);
+
+		oalesPaymentPO.setBrand(oales.getBrand());
+		oalesPaymentPO.setCategory(oales.getCategory());
+
+		oalesPaymentPO.setOsid(oalesPayPO.getOpid());
+		oalesPaymentPO.setOrderId(oales.getDecoration().getOrderId());
+		oalesPaymentPO.setType(oalesPayVO.getType());
+		oalesPaymentPO.setStatus(OalesPaymentPO.STATUS_INITIAL_INT);
+		oalesPaymentPO.setReferMoney(oalesPayVO.getMoney());
 		oalesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		oalesPaymentPO.setCompany(company);
 
@@ -151,7 +155,7 @@ public class OalesPayServiceImpl implements OalesPayService {
 		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
 
 		if (oalesPayPO == null) {
-			throw new FLException(000000, "销售付款不存在");
+			throw new FLException(370026, "外销付款不存在");
 		}
 
 		oalesPayPO.setCreateTime(oalesPayVO.getCreateTime());
@@ -167,9 +171,22 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 		OalesPayPO oalesPayPO = oalesPayDao.get(oalesPayVO.getOpid());
 
+		if (oalesPayPO == null) {
+			throw new FLException(370026, "外销付款不存在");
+		}
+
+		OalesPaymentPO oalesPaymentPO = oalesPaymentDao.queryOalesPayment(oalesPayPO.getOpid());
+
+		if (oalesPaymentPO != null && oalesPaymentPO.getStatus() != OalesPaymentPO.STATUS_INITIAL_INT) {
+			throw new FLException(150088, "外销款不可操作");
+		}
+
 		oalesPayDao.delete(oalesPayPO);
+
+		if (oalesPaymentPO != null) {
+			oalesPaymentDao.delete(oalesPaymentPO);
+		}
 
 		return 0;
 	}
-
 }

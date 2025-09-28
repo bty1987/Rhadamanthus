@@ -9,17 +9,6 @@
 
 package com.fanglin.personel.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -39,29 +28,10 @@ import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.po.MessagePO;
-import com.fanglin.personel.dao.DutmentDao;
-import com.fanglin.personel.dao.UserCompanyDao;
-import com.fanglin.personel.dao.UserContractDao;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.dao.UserEducationDao;
-import com.fanglin.personel.dao.UserInfoDao;
-import com.fanglin.personel.dao.UserOperationDao;
-import com.fanglin.personel.dao.UserRoleDao;
-import com.fanglin.personel.po.DutmentPO;
-import com.fanglin.personel.po.UserContractPO;
-import com.fanglin.personel.po.UserEducationPO;
-import com.fanglin.personel.po.UserExperiencePO;
-import com.fanglin.personel.po.UserInfoPO;
-import com.fanglin.personel.po.UserOperationPO;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.po.UserRolePO;
+import com.fanglin.personel.dao.*;
+import com.fanglin.personel.po.*;
 import com.fanglin.personel.service.UserService;
-import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.personel.vo.UserContractVO;
-import com.fanglin.personel.vo.UserEducationVO;
-import com.fanglin.personel.vo.UserInfoVO;
-import com.fanglin.personel.vo.UserOperationVO;
-import com.fanglin.personel.vo.UserVO;
+import com.fanglin.personel.vo.*;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -71,14 +41,17 @@ import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
-import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.HttpUtil;
-import com.fanglin.utils.LogUtils;
-import com.fanglin.utils.Paging;
-import com.fanglin.utils.PinYin4Util;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.utils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 @Service("userService")
 @Transactional(readOnly = true)
@@ -468,7 +441,8 @@ public class UserServiceImpl implements UserService {
 		userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
 		userPO.setLoginId(userVO.getLoginId());
 
-		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
+		RolePO rolePO = new RolePO(Integer.valueOf(visitor.getValue()));
+		userPO.setRole(rolePO);
 
 		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
 		userPO.setExtranet((short) (UserPO.EXTRANET_QCODE_INT + UserPO.EXTRANET_WEB_INT + UserPO.EXTRANET_PC_INT));
@@ -514,6 +488,10 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setComment(String.format("公司:%s, 部门:%s, 职位:%s. ", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
 		userExperiencePO.setOperator(operator);
+
+		userExperiencePO.setTcid(companyPO.getCid());
+		userExperiencePO.setTdid(userPO.getDept().getDid());
+		userExperiencePO.setTrid(rolePO.getRid());
 
 		userExperienceDao.save(userExperiencePO);
 
@@ -579,6 +557,12 @@ public class UserServiceImpl implements UserService {
 
 		if (departmentPO.getFatherDept() == null) {
 			throw new FLException(310002, "部门不可添加人员");
+		}
+
+		CompanyPO companyPO = companyDao.get(userPO.getCompany());
+		RolePO rolePO = null;
+		if (userPO.getRole() != null) {
+			rolePO = roleDao.get(userPO.getRole().getRid());
 		}
 
 		short newstatus = userInfoVO.getUser().getStatus();
@@ -668,6 +652,16 @@ public class UserServiceImpl implements UserService {
 
 			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", olddept.getName(), oldduty.getName(), newdept.getName(), newduty.getName()));
 			userExperiencePO.setOperator(operator);
+			if (companyPO != null) {
+				userExperiencePO.setOcid(companyPO.getCid());
+				userExperiencePO.setTcid(companyPO.getCid());
+			}
+			userExperiencePO.setOdid(olddept.getDid());
+			userExperiencePO.setTdid(newdept.getDid());
+			if (rolePO != null) {
+				userExperiencePO.setOrid(rolePO.getRid());
+				userExperiencePO.setTrid(rolePO.getRid());
+			}
 
 			userExperienceDao.save(userExperiencePO);
 		}
@@ -767,28 +761,40 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		RolePO rolePO = null;
-
+		RolePO oldRolePO = userPO.getRole();
+		RolePO newRolePO = null;
 		if (userVO.getRole() != null && userVO.getRole().getRid() != null) {
 
-			rolePO = roleDao.get(userVO.getRole().getRid());
+			newRolePO = roleDao.get(userVO.getRole().getRid());
 
-			if (rolePO == null) {
-				throw new FLException(230010, "角色不存在");
+			if (newRolePO == null) {
+				throw new FLException(230010, "目标角色不存在");
 			}
 
-			if (roleCO.getRid() == rolePO.getRid()) {
+			if (roleCO.getRid() == newRolePO.getRid()) {
 				throw new FLException(-1, "无操作权限");
 			}
 
-			if (roleCO.getLevel() <= rolePO.getLevel()) {
+			if (roleCO.getLevel() <= newRolePO.getLevel()) {
 				throw new FLException(-1, "无操作权限");
 			}
 
-			userPO.setRole(rolePO);
+			userPO.setRole(newRolePO);
 		}
 
-		if (rolePO != null && roleCO.getRid() != rolePO.getRid()) {
+		CompanyPO newCompanyPO = null;
+		CompanyPO oldCompanyPO = companyDao.get(userPO.getCompany());
+		if (userVO.getCompanys() != null) {
+			oldCompanyPO = companyDao.get(userPO.getCompany());
+			Integer newCompany = FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
+			newCompanyPO = companyDao.get(newCompany);
+
+			userPO.setCompany(newCompany);
+		}
+
+		DepartmentPO deptPO = userPO.getDept();
+
+		if ( oldRolePO != null && newRolePO != null && oldRolePO.getRid() != newRolePO.getRid()) {
 
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 
@@ -797,35 +803,47 @@ public class UserServiceImpl implements UserService {
 			userExperiencePO.setUid(userPO.getUid());
 			userExperiencePO.setType("调角色");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			userExperiencePO.setComment(String.format("原角色:%s,现角色:%s", rolePO.getName(), roleCO.getName()));
+			userExperiencePO.setComment(String.format("原角色:%s,现角色:%s", oldRolePO.getName(), newRolePO.getName()));
 			userExperiencePO.setOperator(operator);
+
+			if (oldCompanyPO != null) {
+				userExperiencePO.setOcid(oldCompanyPO.getCid());
+			}
+			if (newCompanyPO != null) {
+				userExperiencePO.setTcid(newCompanyPO.getCid());
+			}
+			if (deptPO != null) {
+				userExperiencePO.setOdid(deptPO.getDid());
+				userExperiencePO.setTdid(deptPO.getDid());
+			}
+			userExperiencePO.setOrid(oldRolePO.getRid());
+			userExperiencePO.setTrid(newRolePO.getRid());
 
 			userExperienceDao.save(userExperiencePO);
 		}
 
-		Integer oldCompany = null;
-
-		if (userVO.getCompanys() != null) {
-
-			oldCompany = userPO.getCompany();
-
-			userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
-		}
-
-		if (oldCompany != null && oldCompany != userPO.getCompany()) {
-
-			CompanyPO newCompanyPO = companyDao.get(userPO.getCompany());
-			CompanyPO oldCompanyPO = companyDao.get(oldCompany);
+		if (oldCompanyPO != null && newCompanyPO != null && oldCompanyPO.getCid() != newCompanyPO.getCid()) {
 
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
-
 			UserPO operator = userDao.queryUserByUserId(userId);
-
 			userExperiencePO.setUid(userPO.getUid());
 			userExperiencePO.setType("调公司");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			userExperiencePO.setComment(String.format("原公司:%s,现公司:%s", oldCompanyPO.getName(), newCompanyPO.getName()));
 			userExperiencePO.setOperator(operator);
+
+			userExperiencePO.setOcid(oldCompanyPO.getCid());
+			userExperiencePO.setTcid(newCompanyPO.getCid());
+			if (deptPO != null) {
+				userExperiencePO.setOdid(deptPO.getDid());
+				userExperiencePO.setTdid(deptPO.getDid());
+			}
+			if (oldRolePO != null) {
+				userExperiencePO.setOrid(oldRolePO.getRid());
+			}
+			if (newRolePO != null) {
+				userExperiencePO.setTrid(newRolePO.getRid());
+			}
 
 			userExperienceDao.save(userExperiencePO);
 		}
@@ -997,16 +1015,32 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(230010, "角色不存在");
 		}
 
+		UserExperiencePO userExperiencePO = new UserExperiencePO();
+		CompanyPO companyPO = companyDao.get(userPO.getCompany());
+		if (companyPO != null) {
+			userExperiencePO.setOcid(companyPO.getCid());
+			userExperiencePO.setTcid(companyPO.getCid());
+		}
+		DepartmentPO deptPO = userPO.getDept();
+		if (deptPO != null) {
+			userExperiencePO.setOdid(deptPO.getDid());
+			userExperiencePO.setTdid(deptPO.getDid());
+		}
+		RolePO rolePO = userPO.getRole();
+		if (rolePO != null) {
+			userExperiencePO.setOrid(rolePO.getRid());
+		}
+		RolePO newRolePO = new RolePO(Integer.valueOf(visitor.getValue()));
+		userExperiencePO.setTrid(newRolePO.getRid());
+
 		userPO.setStatus(UserPO.STATUS_OFFJOB_INT);
-		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
+		userPO.setRole(newRolePO);
 
 		userRoleDao.deleteUserRole(userPO.getUid());
 		userCompanyDao.deleteUserCompany(userPO.getUid());
 
 		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
 		userPO.setExtranet(UserPO.EXTRANET_NONE_INT);
-
-		UserExperiencePO userExperiencePO = new UserExperiencePO();
 
 		UserPO operator = userDao.queryUserByUserId(userId);
 
@@ -1015,9 +1049,6 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setOperator(operator);
-
-		CompanyPO companyPO = companyDao.get(userPO.getCompany());
-
 		userExperiencePO.setComment(String.format("原司: %s, 原部: %s, 原职: %s", companyPO.getName(), userPO.getDept().getName(), userPO.getDuty().getName()));
 
 		userExperienceDao.save(userExperiencePO);
@@ -1142,6 +1173,25 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		userExperiencePO.setComment(comment.toString());
+
+		if (oldcompany != null) {
+			userExperiencePO.setOcid(oldcompany.getCid());
+		}
+		if (newcompany != null) {
+			userExperiencePO.setTcid(newcompany.getCid());
+		}
+		if (olddept != null) {
+			userExperiencePO.setOdid(olddept.getDid());
+		}
+		if (newdept != null) {
+			userExperiencePO.setTdid(newdept.getDid());
+		}
+		if (oldrole != null) {
+			userExperiencePO.setOrid(oldrole.getRid());
+		}
+		if (newrole != null) {
+			userExperiencePO.setTrid(newrole.getRid());
+		}
 
 		userExperienceDao.save(userExperiencePO);
 

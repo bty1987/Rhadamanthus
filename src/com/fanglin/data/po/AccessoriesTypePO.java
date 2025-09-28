@@ -3,6 +3,7 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.WorkTypePO;
+import com.fanglin.data.material.vo.AccessoriesTypeVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "accessoriestype", catalog = "data")
@@ -103,6 +106,15 @@ public class AccessoriesTypePO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public AccessoriesTypeVO ptv(AccessoriesTypeVO typeVO) {
+
+		BeanUtil.copyProperties(this, typeVO, Arrays.asList("workType"));
+
+		if (typeVO.getWorkType() != null && getWorkType() != null) getWorkType().ptv(typeVO.getWorkType());
+
+		return typeVO;
 	}
 
 }

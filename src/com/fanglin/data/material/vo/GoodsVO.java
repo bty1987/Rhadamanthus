@@ -40,6 +40,8 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Short type;
 
+	private Short atttype;
+
 	private GoodsKindVO zerokind;
 
 	private GoodsKindVO onekind;
@@ -52,9 +54,23 @@ public class GoodsVO implements java.io.Serializable {
 
 	private Short isShow;
 
-	private Short status;
-
 	private Short checkup;
+
+	private String series;
+
+	private String elevel;
+
+	private String material;
+
+	private String quality;
+
+	private String color;
+
+	private String format;
+
+	private String model;
+
+	private Short status;
 
 	private String company;
 
@@ -290,6 +306,70 @@ public class GoodsVO implements java.io.Serializable {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public String getSeries() {
+		return series;
+	}
+
+	public void setSeries(String series) {
+		this.series = series;
+	}
+
+	public String getElevel() {
+		return elevel;
+	}
+
+	public void setElevel(String elevel) {
+		this.elevel = elevel;
+	}
+
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	public String getQuality() {
+		return quality;
+	}
+
+	public void setQuality(String quality) {
+		this.quality = quality;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 }

@@ -34,6 +34,8 @@ public class ConstructionPacePO implements Serializable {
 
 	private int period;
 
+	private int designPeriod;
+
 	private int company;
 
 	public ConstructionPacePO() {
@@ -94,6 +96,15 @@ public class ConstructionPacePO implements Serializable {
 
 	public void setPeriod(int period) {
 		this.period = period;
+	}
+
+	@Column(name = "designPeriod")
+	public int getDesignPeriod() {
+		return designPeriod;
+	}
+
+	public void setDesignPeriod(int designPeriod) {
+		this.designPeriod = designPeriod;
 	}
 
 	@Column(name = "company")

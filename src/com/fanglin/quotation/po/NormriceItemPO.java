@@ -36,6 +36,10 @@ public class NormriceItemPO implements Serializable {
 
 	public static final short ATTTYPE_SUB_INT = 1;
 
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_DISABLED_INT = 1;
+
 	private long npiid;
 
 	private long qid;
@@ -65,6 +69,8 @@ public class NormriceItemPO implements Serializable {
 	private int salary;
 
 	private int num;
+
+	private short status;
 
 	public NormriceItemPO() {
 		super();
@@ -211,5 +217,13 @@ public class NormriceItemPO implements Serializable {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 }

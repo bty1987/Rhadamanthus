@@ -123,6 +123,8 @@ public class GoodsPoolDaoImpl extends DaoImpl<GoodsPoolPO> implements GoodsPoolD
 					query.add(query.getCriterion(field, data, op));
 				} else if (GoodsPoolPO.COLUMN_STATUS_STR.equals(field)) {
 					query.add(Restrictions.eq(field, Short.valueOf(filter.getData())));
+				} else if("atttype".equals(field)){
+					query.add(Restrictions.eq(field, Short.valueOf(filter.getData())));
 				}
 			}
 		}

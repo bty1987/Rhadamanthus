@@ -29,9 +29,11 @@ public class UserPartnerPO implements Serializable {
 
 	public static final short TYPE_DECO_INT = 1;
 
-	public static final short TYPE_SALES_INT = 2;
+	public static final short TYPE_SERV_INT = 2;
 
 	public static final short TYPE_CONT_INT = 3;
+
+	public static final short TYPE_SALES_INT = 4;
 
 	private long upid;
 

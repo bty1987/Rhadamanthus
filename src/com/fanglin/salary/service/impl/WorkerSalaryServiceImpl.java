@@ -2,6 +2,7 @@ package com.fanglin.salary.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,15 +163,12 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addWorkerSalary(WorkerSalaryVO workerSalaryVO, String userId, int company) throws FLException {
 
-		UserPO worker = userDao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
-
-		UserPO creater = userDao.queryUserByUserId(userId);
-
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO();
 
 		DecorationPO decorationPO = null;
 
 		if (workerSalaryVO.getDecoration() != null) {
+
 			decorationPO = decorationDao.queryDecorationByOrderId(workerSalaryVO.getDecoration().getOrderId());
 
 			workerSalaryPO.setDecoration(decorationPO);
@@ -205,7 +203,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(constructionPO.getDecoration().getOrderId());
 
-			if (workerSalaryVO.getType() == WorkerSalaryPO.TWOTYPE_SALARY_INT && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid()), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
+			List<Short> twotypes = Arrays.asList(WorkerSalaryPO.TWOTYPE_SALARY_INT, WorkerSalaryPO.TWOTYPE_ADDITME_INT, WorkerSalaryPO.TWOTYPE_PROPER_INT);
+
+			if (workerSalaryVO.getType() == WorkerSalaryPO.TWOTYPE_SALARY_INT && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid(), twotypes), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
 				throw new FLException(280007, "工费已达上限");
 			}
 
@@ -226,6 +226,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(decorationPO.getOrderId(), workerSalaryPO.getCsid()) + 1);
 		}
+
+		UserPO worker = userDao.queryUserByUserId(workerSalaryVO.getUser().getUserId());
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		WorkerBalancePO workerBalancePO = workerBalanceDao.queryWorkerBalance(worker.getUid(), company);
 

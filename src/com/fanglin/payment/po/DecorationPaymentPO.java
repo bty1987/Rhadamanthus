@@ -13,6 +13,7 @@ package com.fanglin.payment.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +25,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "decorationPayment", catalog = "payment")
@@ -63,8 +66,6 @@ public class DecorationPaymentPO implements Serializable {
 	public static final short PAYMENTSTATUS_APPLYING_INT = 3;
 
 	public static final short PAYMENTSTATUS_HISTORY_INT = 4;
-
-	public static final short CHARSCALE_COUNT_INT = 0;
 
 	public static final short ONETYPE_ADD_INT = 0;
 
@@ -258,4 +259,24 @@ public class DecorationPaymentPO implements Serializable {
 		this.company = company;
 	}
 
+	public DecorationPaymentVO ptv(DecorationPaymentVO decorationPaymentVO) {
+
+		BeanUtil.copyProperties(this, decorationPaymentVO, Arrays.asList("decoration", "decorationReceipt", "creater", "collecter", "confirmer"));
+
+		if (decorationPaymentVO.getCreater() != null && getCreater() != null) decorationPaymentVO.getCreater().setBaseInfo(getCreater());
+
+		DecorationReceiptPO decorationReceiptPO = getDecorationReceipt();
+
+		if (decorationReceiptPO != null) {
+
+			BeanUtil.copyProperties(decorationReceiptPO, decorationPaymentVO, Arrays.asList("collecter", "confirmer", "creater"));
+
+			if (decorationPaymentVO.getCollecter() != null && decorationReceiptPO.getCollecter() != null) decorationPaymentVO.getCollecter().setBaseInfo(decorationReceiptPO.getCollecter());
+			if (decorationPaymentVO.getConfirmer() != null && decorationReceiptPO.getConfirmer() != null) decorationPaymentVO.getConfirmer().setBaseInfo(decorationReceiptPO.getConfirmer());
+		}
+
+		if (decorationPaymentVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(decorationPaymentVO.getDecoration());
+
+		return decorationPaymentVO;
+	}
 }

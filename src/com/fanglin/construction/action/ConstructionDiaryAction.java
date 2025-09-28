@@ -31,6 +31,8 @@ public class ConstructionDiaryAction extends BaseListAction {
 
 	private ConstructionDiaryDrawingVO constructionDiaryDrawing;
 
+	private List<ConstructionDiaryDrawingVO> constructionDiaryDrawings;
+
 	@Action(value = "pageConstructionDiary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstructionDiary() throws FLException {
 
@@ -50,7 +52,7 @@ public class ConstructionDiaryAction extends BaseListAction {
 	@Action(value = "addConstructionDiary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionDiary() throws FLException {
 
-		constructionDiaryService.addConstructionDiary(constructionDiary, constructionDiaryDrawing, queryUserId(), queryCompany());
+		constructionDiaryService.addConstructionDiary(constructionDiary, constructionDiaryDrawings, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -78,4 +80,14 @@ public class ConstructionDiaryAction extends BaseListAction {
 	public void setConstructionDiarys(List<ConstructionDiaryVO> constructionDiarys) {
 		this.constructionDiarys = constructionDiarys;
 	}
+
+	public List<ConstructionDiaryDrawingVO> getConstructionDiaryDrawings() {
+		return constructionDiaryDrawings;
+	}
+
+	public void setConstructionDiaryDrawings(
+			List<ConstructionDiaryDrawingVO> constructionDiaryDrawings) {
+		this.constructionDiaryDrawings = constructionDiaryDrawings;
+	}
+	
 }

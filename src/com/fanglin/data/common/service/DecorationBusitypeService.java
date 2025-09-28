@@ -18,4 +18,6 @@ public interface DecorationBusitypeService {
 	public void updateDecorationBusitypeForStatus(DecorationBusitypeVO decorationBusitypeVO) throws FLException;
 
 	public void updateDecorationBusitype(DecorationBusitypeVO decorationBusitypeVO) throws FLException;
+	
+	public DecorationBusitypeVO queryDecorationBusitypeByName(DecorationBusitypeVO decorationBusitypeVO,String company) throws FLException;
 }

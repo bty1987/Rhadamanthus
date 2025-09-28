@@ -557,6 +557,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			decorationAdditionPO.clearDesign();
 			decorationAdditionPO.clearSales();
 
+			decorationPO.setDesignDept(decorationPO.getDesigner().getDept());
+			decorationPO.setSalesDept(decorationPO.getSalesman().getDept());
+
 			// 更新归属信息的部门和大区, 更新附加信息
 			for (DecorationBelongPO decorationBelongPO : designers) {
 
@@ -623,6 +626,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		decorationPO.setStatus(DecorationPO.STATUS_RESIGNED_INT);
+		decorationPO.setRecontractTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationDao.update(decorationPO);
 

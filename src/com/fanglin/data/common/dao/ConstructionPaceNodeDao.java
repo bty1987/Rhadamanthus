@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface ConstructionPaceNodeDao extends Dao<ConstructionPaceNodePO> {
 
-	public List<ConstructionPaceNodePO> pageConstructionPaceNode(Paging paging, List<Filter> filters, int company);
+	public List<ConstructionPaceNodePO> pageConstructionPaceNode(Paging paging, List<Filter> filters, int company, Long cpid);
 
 	public List<ConstructionPaceNodePO> queryConstructionPaceNode(long cpid);
 

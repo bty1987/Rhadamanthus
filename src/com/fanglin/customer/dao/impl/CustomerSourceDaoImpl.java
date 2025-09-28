@@ -46,6 +46,11 @@ public class CustomerSourceDaoImpl extends DaoImpl<CustomerSourcePO> implements 
 	}
 
 	@Override
+	public CustomerSourcePO queryCustomerSourceByNo(String no) {
+		return (CustomerSourcePO) session().createCriteria(CustomerSourcePO.class).add(Restrictions.eq("no", no)).add(Restrictions.ne("status", CustomerSourcePO.STATUS_DISABLE_INT)).addOrder(Order.desc("createTime")).setMaxResults(1).uniqueResult();
+	}
+	
+	@Override
 	public Integer countCustomerSource(int uid, String phone, int company) {
 
 		String sql = "SELECT count(1) as count FROM customer.customersource sc, customer.customerchance cc WHERE sc.csid = cc.csid AND cc.buid = :buid AND sc.company = :company AND sc.phone = :phone limit 1";

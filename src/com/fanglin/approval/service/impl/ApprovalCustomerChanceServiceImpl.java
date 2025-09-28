@@ -41,6 +41,7 @@ import com.fanglin.customer.vo.CustomerChanceVO;
 import com.fanglin.customer.vo.CustomerSourceVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
+import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -196,7 +197,12 @@ public class ApprovalCustomerChanceServiceImpl implements ApprovalCustomerChance
 		decorationVO.setNotSalesmanRate(customerChancePO.getBusitype().getNotSalesmanRate());
 		decorationVO.setBusitype(approvalCustomerChancePO.getBusitype().getDbid());
 
-		decorationService.tranDecoration(decorationVO, approvalPO.getSender().getCompany());
+		DecorationInfoVO decorationInfoVO = new DecorationInfoVO();
+
+		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
+		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+
+		decorationService.tranDecoration(decorationVO, decorationInfoVO, approvalPO.getSender().getCompany());
 
 		customerSourcePO.setOrderId(decorationVO.getOrderId());
 		customerSourcePO.setDesigner(customerChancePO.getBelonger());

@@ -201,7 +201,9 @@ $.extend(api, {
             url: "deleteDepartmentPartner.do",
             server: "communion"
         },
-
+        deleteSupplierContractGoods: {
+            url: "deleteSupplierContractGoods.do"
+        },
         pageUserContractByUserId: {
             url: "pageUserContractByUserId.do"
         },
@@ -232,51 +234,51 @@ $.extend(api, {
         },
         signSupplierContractForCompany: {
             url: "signSupplierContractForCompany.do",
-            server: "communion"
+            server: "communion",
         },
         signSupplierContractForSupplier: {
             url: "signSupplierContractForSupplier.do",
-            server: "communion"
+            server: "communion",
         },
         affixSupplierContract: {
             url: "affixSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
         expireSupplierContract: {
             url: "expireSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
         filingSupplierContract: {
             url: "filingSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
         addSupplierContract: {
             url: "addSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
         makeSupplierContract: {
             url: "makeSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
         updateSupplierContract: {
             url: "updateSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
         deleteSupplierContract: {
             url: "deleteSupplierContract.do",
-            server: "communion"
+            server: "communion",
         },
-        
+
         pageSupplierContractBrand: {
             url: "pageSupplierContractBrand.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
                 args: ["cvalue", "breakpay"]
+            }, {
+                result: "paging-data-supplierContractCategorys",
+                args: ["cva lue", "breakpay"]
             }]
-        },
-        querySupplierContractServiceBySid: {
-            url: "querySupplierContractServiceBySid.do",
         },
         querySupplierContractBrand: {
             url: "querySupplierContractBrand.do",
@@ -286,32 +288,89 @@ $.extend(api, {
                 args: ["cvalue", "breakpay"]
             }]
         },
-        querySupplierBrandProduct: {
-            url: "querySupplierBrandProduct.do",
-            type: "query",
-            tranargs: [{
-                result: "supplierBrandProducts",
-                args: ["cvalue", "breakpay"]
-            }]
-        },
         addSupplierContractBrand: {
             url: "addSupplierContractBrand.do",
+            server: "communion",
             type: "update",
             tranargs: {
-                args: ["supplierContractBrand.cvalue","supplierContractBrand.breakpay"]
+                args: ["supplierContractBrand.cvalue", "supplierContractBrand.breakpay"]
             }
         },
         updateSupplierContractBrand: {
             url: "updateSupplierContractBrand.do",
+            server: "communion",
             type: "update",
             tranargs: {
-                args: ["supplierContractBrand.cvalue","supplierContractBrand.breakpay"]
+                args: ["supplierContractBrand.cvalue", "supplierContractBrand.breakpay"]
             }
         },
         deleteSupplierContractBrand: {
-            url: "deleteSupplierContractBrand.do"
+            url: "deleteSupplierContractBrand.do",
+            server: "communion"
         },
-        
+
+        querySupplierContractServiceBySid: {
+            url: "querySupplierContractServiceBySid.do",
+        },
+        addSupplierContractService: {
+            url: "addSupplierContractService.do",
+            server: "communion"
+        },
+        deleteSupplierContractService: {
+            url: "deleteSupplierContractService.do",
+            server: "communion"
+        },
+
+        querySupplierContractProduct: {
+            url: "querySupplierContractProduct.do",
+            type: "query",
+            tranargs: [{
+                result: "supplierContractProducts",
+                args: ["cvalue", "breakpay"]
+            }]
+        },
+        querySupplierContractProductByScid: {
+            url: "querySupplierContractProductByScid.do",
+            type: "query",
+            tranargs: [{
+                result: "supplierContractProducts",
+                args: ["cvalue", "breakpay"]
+            }]
+        },
+        addSupplierContractProduct: {
+            url: "addSupplierContractProduct.do",
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["supplierContractProduct.cvalue", "supplierContractProduct.breakpay"]
+            }
+        },
+        deleteSupplierContractProduct: {
+            url: "deleteSupplierContractProduct.do",
+            server: "communion"
+        },
+
+        querySupplierContractCategory: {
+            url: "querySupplierContractCategory.do",
+            type: "query",
+            tranargs: [{
+                result: "supplierContractCategorys",
+                args: ["cvalue", "breakpay"]
+            }]
+        },
+        addSupplierContractCategory: {
+            url: "addSupplierContractCategory.do",
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["supplierContractCategory.cvalue", "supplierContractCategory.breakpay"]
+            }
+        },
+        deleteSupplierContractCategory: {
+            url: "deleteSupplierContractCategory.do",
+            server: "communion"
+        },
+
         pageSupplierContractGoods: {
             url: "pageSupplierContractGoods.do"
         },
@@ -319,16 +378,12 @@ $.extend(api, {
             url: "querySupplierContractGoods.do"
         },
         addSupplierContractGoods: {
-            url: "addSupplierContractGoods.do"
-        },
-        deleteSupplierContractGoods: {
-            url: "deleteSupplierContractGoods.do"
+            url: "addSupplierContractGoods.do",
+            server: "communion"
         },
         addSupplierContractGoods: {
-            url: "addSupplierContractGoods.do"
-        },
-        addSupplierContractService: {
-            url: "addSupplierContractService.do"
+            url: "addSupplierContractGoods.do",
+            server: "communion"
         },
 
         queryUserEducation: {
@@ -564,9 +619,7 @@ $.extend(api, {
         deleteRecruitmentOperation: {
             url: "deleteRecruitmentOperation.do"
         },
-        deleteSupplierContractService: {
-            url: "deleteSupplierContractService.do"
-        },
+
         queryUserRole: {
             url: "queryUserRole.do"
         },
@@ -631,16 +684,7 @@ $.extend(api, {
         queryUserFunction: {
             url: "queryUserFunction.do"
         },
-        deleteSupplierBrandProduct: {
-            url: "deleteSupplierBrandProduct.do"
-        },
-        addSupplierBrandProduct: {
-            url: "addSupplierBrandProduct.do",
-            type: "update",
-            tranargs: {
-                args: ["supplierBrandProduct.cvalue","supplierBrandProduct.breakpay"]
-            }
-        },
+
     }
 });
 

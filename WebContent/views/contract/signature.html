@@ -216,6 +216,8 @@
     
     function handleImg(){
     
+    	if(!imgpath || imgpath.length == 0) return false;
+    
         var args = {
             "imgbase": "http://www.fanglinserver.com/" + imgpath,
             "authentication": authentication

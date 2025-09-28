@@ -9,11 +9,17 @@ import com.fanglin.utils.Paging;
 
 public interface BalanceCutpayService {
 
+	public void pageBalanceCutpay(Paging paging, List<Filter> filters);
+
 	public List<BalanceCutpayVO> queryBalanceCutpay(BalanceCutpayVO balanceCutpayVO);
+
+	public List<BalanceCutpayVO> queryBalanceCutpayByOuid(BalanceCutpayVO balanceCutpayVO);
 
 	public int addBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException;
 
-	public void pageBalanceCutpay(Paging paging, List<Filter> filters,BalanceCutpayVO balanceCutpayVO);
+	public int submitBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException;
+
+	public int unbindBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException;
 
 	public int deductBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException;
 }

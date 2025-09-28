@@ -104,6 +104,14 @@ public class DecorationPaymentVO implements Serializable {
 		this.decoration = decoration;
 	}
 
+	public DecorationPaymentVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO collecter, UserBaseVO confirmer) {
+		super();
+		this.decoration = decoration;
+		this.creater = creater;
+		this.collecter = collecter;
+		this.confirmer = confirmer;
+	}
+
 	public Long getDpid() {
 		return dpid;
 	}

@@ -1,8 +1,10 @@
 package com.fanglin.personel.vo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.vo.BrandVO;
 
 public class SupplierContractBrandVO implements Serializable {
 
@@ -16,7 +18,7 @@ public class SupplierContractBrandVO implements Serializable {
 
 	private String name;
 
-	private BrandPO brand;
+	private BrandVO brand;
 
 	private Short ctype;// 结算类型 , 0: 底价 , 1: 点位
 
@@ -27,14 +29,17 @@ public class SupplierContractBrandVO implements Serializable {
 	private Integer warranTime; // 质保期
 	
 	private String servicePrice; // 服务费 , Json结构 , {"TL": "2016-01-01", "UV": 0, "DV": 0, "SR": 0}
-
+	
+	private List<SupplierContractCategoryVO> supplierContractCategorys;
+	
 	public SupplierContractBrandVO() {
 		super();
 	}
 
-	public SupplierContractBrandVO(BrandPO brand) {
+	public SupplierContractBrandVO(BrandVO brand,ArrayList<SupplierContractCategoryVO> supplierContractCategorys) {
 		super();
 		this.brand = brand;
+		this.supplierContractCategorys = supplierContractCategorys;
 	}
 
 	public Long getScbid() {
@@ -61,11 +66,11 @@ public class SupplierContractBrandVO implements Serializable {
 		this.sid = sid;
 	}
 
-	public BrandPO getBrand() {
+	public BrandVO getBrand() {
 		return brand;
 	}
 
-	public void setBrand(BrandPO brand) {
+	public void setBrand(BrandVO brand) {
 		this.brand = brand;
 	}
 
@@ -117,6 +122,12 @@ public class SupplierContractBrandVO implements Serializable {
 		this.warranTime = warranTime;
 	}
 	
-	
+	public List<SupplierContractCategoryVO> getSupplierContractCategorys() {
+		return supplierContractCategorys;
+	}
+
+	public void setSupplierContractCategorys(List<SupplierContractCategoryVO> supplierContractCategorys) {
+		this.supplierContractCategorys = supplierContractCategorys;
+	}
 
 }

@@ -55,12 +55,13 @@ jQuery(function($) {
     var lineprops = [];
 
     var linebtns = [{
-        name: "产品",
+        name: "类别",
         clazz: "btn-success",
         handle: function(v) {
 
             params.personel.scbid = v.scbid;
-            com.popup4page('#layerPopUp', "/views/personnel/supplierContractBrand4detail.html", "产品");
+
+            com.popup4page('#layerPopUp', "/views/personnel/supplierContractCategory.html", "类别");
 
         },
     }, {
@@ -138,7 +139,13 @@ jQuery(function($) {
             return false;
         }
 
+        if (!$('#chooseHistory').val() || $('#chooseHistory').val() === '') {
+
+            return false;
+        }
+
         var input_startDate = brandContract.items.startDate.val();
+
         var input_reportedDate = brandContract.items.reportedDate.val();
         var input_maxAmount = brandContract.items.maxAmount.val() == "" ? 0 : brandContract.items.maxAmount.val();
         var input_minAmount = brandContract.items.minAmount.val() == "" ? 0 : brandContract.items.minAmount.val();
@@ -164,8 +171,6 @@ jQuery(function($) {
         com.post(api.personel.updateSupplierContractBrand, options, function(res) {
 
             servicePrice(res.supplierContractBrand, 1);
-
-            com.cleanItems(brandContract.items);
 
             searcher.doSearch();
         });
@@ -194,7 +199,7 @@ jQuery(function($) {
     function servicePrice(v, value) {
 
         com.focusPage('#servicePriceList').empty();
-        com.cleanItems(brandContract.items);
+
         brandContract.scbid = v.scbid;
 
         brandContract.data = null;// 初始化其他调用残留数据
@@ -225,16 +230,16 @@ jQuery(function($) {
             $.each(jsonArray, function(index, item) {
 
                 var svalue = "";
-                if (item.UV == 0 && item.DV > 0) {
-                    svalue = "销售总金额" + item.DV + "万元（含）以下";
+                if (item.UV > 0 && item.DV == 0) {
+                    svalue = "销售总金额" + item.UV + "万元（含）以下";
                 }
 
                 if (item.UV > 0 && item.DV > 0) {
                     svalue = "销售总金额" + item.DV + " 万元-  " + item.UV + "万元（含）";
                 }
 
-                if (item.UV > 0 && item.DV == 0) {
-                    svalue = "销售总金额  " + item.UV + "万元以上";
+                if (item.UV == 0 && item.DV > 0) {
+                    svalue = "销售总金额  " + item.DV + "万元以上";
                 }
 
                 select.append($('<option></option>').val(JSON.stringify(item)).text(svalue));
@@ -253,13 +258,13 @@ jQuery(function($) {
                 var dates = $.map(selectedData.TL.split(" - "), $.trim);
 
                 brandContract.items.startDate.val(dates[0]);
-
+ 
                 if (dates[1] != null) {
                     brandContract.items.reportedDate.val(dates[1]);
                 }
 
-                brandContract.items.maxAmount.val(selectedData.DV);
-                brandContract.items.minAmount.val(selectedData.UV);
+                brandContract.items.maxAmount.val(selectedData.UV);
+                brandContract.items.minAmount.val(selectedData.DV);
                 brandContract.items.serviceCharge.val(selectedData.SR);
             }
         });
@@ -277,28 +282,30 @@ jQuery(function($) {
         $.each(data, function(index, item) {
 
             var $div = $('<div class="form-group"></div>').attr("data-rate", JSON.stringify(item));
+
             var label1 = $('<label style="margin-right: 20px;">时间期限: ' + item.TL + '</label>').appendTo($div);
 
-            if (item.UV == 0 && item.DV > 0) {
-                var label2 = $('<label style="margin-right: 20px;">销售总金额' + item.DV + '万元（含）以下 </label>').appendTo($div);
+            if (item.UV > 0 && item.DV == 0) {
+                var label2 = $('<label style="margin-right: 20px;">销售总金额' + item.UV + '万元（含）以下 </label>').appendTo($div);
             }
 
             if (item.UV > 0 && item.DV > 0) {
                 var label3 = $('<label style="margin-right: 20px;">销售总金额' + item.DV + ' 万元-  ' + item.UV + '万元（含）</label>').appendTo($div);
             }
 
-            if (item.UV > 0 && item.DV == 0) {
-                var label4 = $('<label style="margin-right: 20px;">销售总金额  ' + item.UV + '万元以上</label>').appendTo($div);
+            if (item.UV == 0 && item.DV > 0) {
+                var label4 = $('<label style="margin-right: 20px;">销售总金额  ' + item.DV + '万元以上</label>').appendTo($div);
             }
 
             var label5 = $('<label style="margin-right: 20px;">超额服务费  ' + item.SR + '%</label>').appendTo($div);
             var delbtn = $('<a class="btn btn-minier btn-danger">删除</a>').appendTo($div);
+            delbtn.data('rowIndex', index);
 
             com.focusPage('#servicePriceList').append($div);
 
             delbtn.click(function() {
 
-                $div.remove(); // 从DOM中移除该行
+                var index = $(this).data('rowIndex'); // 获取预先存储的索引
 
                 data.splice(index, 1); // 从数据数组中删除对应项
 
@@ -308,10 +315,11 @@ jQuery(function($) {
                 };
 
                 com.post(api.personel.updateSupplierContractBrand, options, function(res) {
-
+                    $div.remove(); // 从DOM中移除该行
                     brandContract.data = JSON.stringify(data);
-                    searcher.doSearch();
+
                 });
+                searcher.doSearch();
 
             });
         });

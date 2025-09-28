@@ -32,6 +32,7 @@ import com.fanglin.customer.vo.MemberVO;
 import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.dao.DecorationInfoDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationPO;
@@ -70,6 +71,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private CustomerChanceDao customerChanceDao;
+
+	@Autowired
+	private DecorationInfoDao decorationInfoDao;
 
 	@Autowired
 	private DecorationActivityDao decorationActivityDao;
@@ -122,6 +126,10 @@ public class MemberServiceImpl implements MemberService {
 		for (DecorationPO decorationPO : decorationPOs) {
 
 			companyIds.add(decorationPO.getCompany());
+		}
+
+		if (companyIds == null || companyIds.size() == 0) {
+			throw new FLException(130006, "客户公司不存在");
 		}
 
 		Map<Integer, String> companyMap = new HashMap<Integer, String>();
@@ -183,32 +191,67 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<MemberVO> queryMemberForInfo(List<MemberVO> memberVOs, Integer company) {
+	public List<MemberVO> queryMemberForInfo(MemberVO memberVO, Integer company) throws FLException {
+
+		if (memberVO == null) {
+			throw new FLException(130021, "客户电话不存在");
+		}
+
+		if (memberVO.getPhone() == null) {
+			throw new FLException(130021, "客户电话不存在");
+		}
+
+		CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(FormatUtil.encodePhone(memberVO.getPhone()), company);
+
+		if (customerPhonePO == null) {
+			throw new FLException(130021, "客户电话不存在");
+		}
+
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerId(customerPhonePO.getCid());
+		List<DecorationPO> decorationAOs = new ArrayList<DecorationPO>();
+
+		for (DecorationPO decorationPO : decorationPOs) {
+
+			List<DecorationPO> chanceRefer = decorationInfoDao.queryDecorationForChanceRefer(decorationPO.getOrderId());
+
+			if (chanceRefer != null) {
+				decorationAOs.addAll(chanceRefer);
+			}
+
+			List<DecorationPO> originRefer = decorationInfoDao.queryDecorationForOriginRefer(decorationPO.getOrderId());
+
+			if (originRefer != null) {
+				decorationAOs.addAll(originRefer);
+			}
+
+			List<DecorationPO> orderRefer = decorationInfoDao.queryDecorationForOrderRefer(decorationPO.getOrderId());
+
+			if (orderRefer != null) {
+				decorationAOs.addAll(orderRefer);
+			}
+		}
 
 		List<MemberVO> memberROs = new ArrayList<MemberVO>();
-		List<MemberVO> memberFOs = memberVOs.subList(0, Math.min(10, memberVOs.size()));
 
-		for (MemberVO memberVO : memberFOs) {
+		for (DecorationPO decorationPO : decorationAOs) {
 
-			CustomerPhonePO customerPhonePO = customerPhoneDao.queryCustomerPhoneForDefault(FormatUtil.encodePhone(memberVO.getPhone()), company);
+			MemberVO member = new MemberVO();
 
-			if (customerPhonePO == null) continue;
+			List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByCid(decorationPO.getCustomer().getCid(), CustomerPhonePO.STATUS_ENABLE_INT);
 
-			List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerId(customerPhonePO.getCid());
-
-			for (DecorationPO decorationPO : decorationPOs) {
-
-				MemberVO member = new MemberVO();
-
-				CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(decorationPO.getOrderId());
-
-				if (customerChancePO != null) member.setStoreTime(customerChancePO.getMeetTime());
-
-				member.setContractTime(decorationPO.getContractTime());
-				member.setPhone(memberVO.getPhone());
-
-				memberROs.add(member);
+			if (!customerPhones.isEmpty()) {
+				member.setPhone(FormatUtil.decodePhone(customerPhones.get(0).getPhone()));
 			}
+
+			CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(decorationPO.getOrderId());
+
+			if (customerChancePO != null) member.setStoreTime(customerChancePO.getMeetTime());
+
+			member.setOrderId(decorationPO.getOrderId());
+
+			member.setContractTime(decorationPO.getContractTime());
+
+			memberROs.add(member);
 		}
 
 		return memberROs;
@@ -421,6 +464,7 @@ public class MemberServiceImpl implements MemberService {
 
 			awardStockPO.setNo(memberGoodsVO.getNo());
 			awardStockPO.setName(memberGoodsVO.getName());
+			awardStockPO.setUnitPrice(Arith.mul(memberGoodsVO.getPoint(), 1000000));
 			awardStockPO.setStatus(AwardStockPO.STATUS_ABLE_SHORT);
 			awardStockPO.setCompany(CompanyPO.TYPE_HEADQUARTER_INT);
 			awardStockPO.setFormat(memberGoodsVO.getCategory());
@@ -430,6 +474,7 @@ public class MemberServiceImpl implements MemberService {
 
 			awardStockPO.setNo(memberGoodsVO.getNo());
 			awardStockPO.setName(memberGoodsVO.getName());
+			awardStockPO.setUnitPrice(Arith.mul(memberGoodsVO.getPoint(), 1000000));
 			awardStockPO.setStatus(AwardStockPO.STATUS_ABLE_SHORT);
 
 			awardStockDao.update(awardStockPO);

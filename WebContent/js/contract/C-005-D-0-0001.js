@@ -77,7 +77,7 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
     contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
-    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -131,7 +131,7 @@ jQuery(function($) {
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
         com.focusPage("#con-buildarea", "#form").val(house.innerArea);
-        com.focusPage("#con-housetype", "#form").val(data.houseClass);
+        com.focusPage("#con-housetype", "#form").val(data.houseType);
 
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
         com.focusPage("#con-work-model", "#form").val(contractEdit.decorationType[data.typeness]);
@@ -191,9 +191,9 @@ jQuery(function($) {
 
         com.focusPage("#con-work-number", "#form").val(datas.timeLimit);
 
-        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
-        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
-        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
+        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(0, 4) : ""), "year");
+        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(5, 2) : ""), "month");
+        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(8, 2) : ""), "day");
     });
 
     com.post(api.decoration.queryDecorationActivityByOrderId, {
@@ -458,8 +458,6 @@ jQuery(function($) {
                 url = api.decoration.makeDecorationContract;
                 options["decorationContract.dcid"] = params.decoration.contract.dcid
             }
-
-            console.log(options);
 
             var popup = com.focusPage("#popup-page");
             var target = com.focusPage("#layerPopUp");

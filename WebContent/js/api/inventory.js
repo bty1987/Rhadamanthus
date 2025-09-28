@@ -400,7 +400,7 @@ $.extend(api, {
             url: "addAccessories.do",
             type: "update",
             tranargs: {
-                args: ["accessories.total", "accessoriesItems.selling", "accessoriesItems.num", "accessoriesItems.surplus", "accessoriesItems.total"]
+                args: ["accessories.total", "accessoriesItems.selling", "accessoriesItems.num", "accessoriesItems.surplus", "accessoriesItems.total", "accessoriesItems.normnum", "accessoriesItems.normunit", "accessoriesItems.storenum", "accessoriesItems.storeunit"]
             }
         },
         refundAccessories: {
@@ -430,7 +430,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "accessoriesItems",
-                args: ["selling", "num", "surplus"]
+                args: ["selling", "num", "surplus", "normnum", "storenum"]
             }, {
                 result: "accessoriesItems-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -441,7 +441,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "accessoriesItems",
-                args: ["selling", "num", "surplus"]
+                args: ["selling", "num", "surplus", "normnum", "storenum"]
             }, {
                 result: "accessoriesItems-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -452,7 +452,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "accessoriesItems",
-                args: ["selling", "num", "surplus"]
+                args: ["selling", "num", "surplus", "normnum", "storenum"]
             }, {
                 result: "accessoriesItems-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -462,21 +462,21 @@ $.extend(api, {
             url: "checkAccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["accessoriesItem.num"]
+                args: ["accessoriesItem.num", "accessoriesItem.normnum", "accessoriesItem.storenum"]
             }
         },
         addAccessoriesItem: {
             url: "addAccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["accessoriesItem.selling", "accessoriesItem.num", "accessoriesItem.surplus", "accessoriesItem.total"]
+                args: ["accessoriesItem.selling", "accessoriesItem.num", "accessoriesItem.surplus", "accessoriesItem.total", "accessoriesItem.normnum", "accessoriesItem.storenum"]
             }
         },
         updateAccessoriesItem: {
             url: "updateAccessoriesItem.do",
             type: "update",
             tranargs: {
-                args: ["accessoriesItem.selling", "accessoriesItem.num", "accessoriesItem.surplus", "accessoriesItem.total"]
+                args: ["accessoriesItem.selling", "accessoriesItem.num", "accessoriesItem.surplus", "accessoriesItem.total", "accessoriesItem.normnum", "accessoriesItem.storenum"]
             }
         },
         deleteAccessoriesItem: {

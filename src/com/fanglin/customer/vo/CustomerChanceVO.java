@@ -73,6 +73,8 @@ public class CustomerChanceVO implements Serializable {
 
 	private Integer company;
 
+	private String cno;
+
 	public CustomerChanceVO() {
 		super();
 	}
@@ -329,6 +331,14 @@ public class CustomerChanceVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getCno() {
+		return cno;
+	}
+
+	public void setCno(String cno) {
+		this.cno = cno;
 	}
 
 }

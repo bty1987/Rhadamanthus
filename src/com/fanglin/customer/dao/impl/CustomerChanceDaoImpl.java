@@ -53,6 +53,11 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 	}
 
 	@Override
+	public CustomerChancePO queryCustomerChanceByCno(String cno) {
+		return (CustomerChancePO) session().createCriteria(CustomerChancePO.class).add(Restrictions.eq("cno", cno)).add(Restrictions.ne("status", CustomerChancePO.STATUS_DISABLE_INT)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public int countCustomerSchance(long csid) {
 
 		String sql = "select count(*) from customer.customerchance cc where cc.csid = :csid";

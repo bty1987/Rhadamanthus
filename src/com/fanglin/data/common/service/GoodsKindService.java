@@ -13,7 +13,11 @@ public interface GoodsKindService {
 
 	public List<GoodsKindVO> queryGoodsKind();
 
-	public void addGoodsKind(GoodsKindVO goodsKind, int company);
+	public List<GoodsKindVO> queryGoodsKindByFgkid(GoodsKindVO goodsKind) throws FLException;
+	
+	public GoodsKindVO queryGoodsKindByGkid(GoodsKindVO goodsKind) throws FLException;
+
+	public void addGoodsKind(GoodsKindVO goodsKind, int company) throws FLException;
 
 	public void updateGoodsKind(GoodsKindVO goodsKind) throws FLException;
 

@@ -27,6 +27,8 @@ public class DecorationBusitypeAction extends BaseListAction {
 	private DecorationBusitypeVO decorationBusitype;
 
 	private List<DecorationBusitypeVO> decorationBusitypes;
+	
+	private String company;
 
 	@Action(value = "pageDecorationBusitype", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationBusitype() throws FLException {
@@ -40,6 +42,14 @@ public class DecorationBusitypeAction extends BaseListAction {
 	public String queryDecorationBusitype() throws FLException {
 
 		decorationBusitypes = decorationBusitypeService.queryDecorationBusitype(queryCompany());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryDecorationBusitypeByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationBusitypeByName() throws FLException {
+
+		decorationBusitype = decorationBusitypeService.queryDecorationBusitypeByName(decorationBusitype,company);
 
 		return SUCCESS;
 	}
@@ -84,5 +94,15 @@ public class DecorationBusitypeAction extends BaseListAction {
 	public void setDecorationBusitype(DecorationBusitypeVO decorationBusitype) {
 		this.decorationBusitype = decorationBusitype;
 	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+	
+	
 
 }

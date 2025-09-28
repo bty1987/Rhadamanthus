@@ -238,7 +238,7 @@ $(function() {
 
             com.post(api.balance.pageBalanceSalesBalance, $.extend({}, params[history], {
                 "paging.noPage": 1,
-                "balanceSales.bsid": balanceSalesBalance.bsid
+                "balanceSalesBalance.bsid": balanceSalesBalance.bsid
             }), function(res) {
 
                 $.exceler({

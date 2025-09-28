@@ -33,22 +33,22 @@ public class BalanceDccountDaoImpl extends DaoImpl<BalanceDccountPO> implements 
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 
-			if(filters != null){
-				for (Filter filter : filters) {
+		if(filters != null){
+			for (Filter filter : filters) {
 
-					String field = filter.getField();
-					String data = filter.getData();
-					String op = filter.getOp();
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
 
-					if(field.equals("name")){
-						query.add(query.getCriterion(field, data, op));
-					}else if(field.equals("status")){
-						query.add(query.getCriterion(field, Short.valueOf(data), op));
-					}
+				if(field.equals("name")){
+					query.add(query.getCriterion(field, data, op));
+				}else if(field.equals("status")){
+					query.add(query.getCriterion(field, Short.valueOf(data), op));
 				}
 			}
-			
 		}
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

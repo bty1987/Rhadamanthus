@@ -659,7 +659,6 @@ $.extend(api, {
                 args: ["initnum", "num"]
             }]
         },
-
         tranSalesDeliveryItem: {
             url: "tranSalesDeliveryItem.do"
         },
@@ -675,13 +674,14 @@ $.extend(api, {
         balanceSalesDeliveryItem: {
             url: "balanceSalesDeliveryItem.do"
         },
-
         deliveSalesDeliveryItem: {
             url: "deliveSalesDeliveryItem.do",
         },
-
         updateSalesDeliveryItem: {
             url: "updateSalesDeliveryItem.do",
+        },
+        deliveSalesDelivery: {
+            url: "deliveSalesDelivery.do",
         },
 
         addSalesPicture: {

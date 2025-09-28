@@ -30,6 +30,8 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	private Short type;
 
+	private Short status;
+
 	private String comment;
 
 	public BalanceCutpayVO() {
@@ -118,6 +120,14 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 	public String getComment() {

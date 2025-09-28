@@ -86,6 +86,8 @@ public class GoodsPoolPO implements java.io.Serializable {
 
 	private short type;
 
+	private short atttype;
+
 	private GoodsKindPO zerokind;
 
 	private GoodsKindPO onekind;
@@ -96,6 +98,22 @@ public class GoodsPoolPO implements java.io.Serializable {
 
 	private String path;
 
+	private String series;
+
+	private String elevel;
+
+	private String material;
+
+	private String quality;
+
+	private String color;
+
+	private String format;
+
+	private String model;
+
+	private short status;
+
 	private short colorcascade; // 1:级联 2:不级联 4:控制 8:不控制
 
 	private short formatcascade; // 1:级联 2:不级联 4:控制 8:不控制
@@ -103,8 +121,6 @@ public class GoodsPoolPO implements java.io.Serializable {
 	private short pricecascade; // 1:级联 2:不级联 4:控制 8:不控制 16:价格控制
 
 	private short picturecascade; // 1:级联 2:不级联 4:控制 8:不控制
-
-	private short status;
 
 	public GoodsPoolPO() {
 		super();
@@ -371,6 +387,78 @@ public class GoodsPoolPO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "series")
+	public String getSeries() {
+		return series;
+	}
+
+	public void setSeries(String series) {
+		this.series = series;
+	}
+
+	@Column(name = "elevel")
+	public String getElevel() {
+		return elevel;
+	}
+
+	public void setElevel(String elevel) {
+		this.elevel = elevel;
+	}
+
+	@Column(name = "material")
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	@Column(name = "quality")
+	public String getQuality() {
+		return quality;
+	}
+
+	public void setQuality(String quality) {
+		this.quality = quality;
+	}
+
+	@Column(name = "color")
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	@Column(name = "format")
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	@Column(name = "model")
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	public GoodsPoolVO ptv(GoodsPoolVO goodsPoolVO) {

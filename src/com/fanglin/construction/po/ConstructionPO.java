@@ -51,7 +51,9 @@ public class ConstructionPO implements Serializable {
 
 	public static final short PROCESS_INIT_INT = 0;
 
-	public static final short PROCESS_FINISH_INT = 0;
+	public static final short PROCESS_FINISH_INT = 1;
+
+	public static final short BALANCE_STATUS_BALANCE_INT = 1;
 
 	private long cid;
 
@@ -69,15 +71,19 @@ public class ConstructionPO implements Serializable {
 
 	private long accessoryLimit;
 
+	private long accessoryTotal;
+
 	private long salaryLimit;
 
-	private long accessoryTotal;
+	private long salaryLimitTotal;
 
 	private long salaryTotal;
 
 	private UserPO supervisor;
 
 	private UserPO locker;
+
+	private UserPO balancer;
 
 	private Timestamp createTime;
 
@@ -91,9 +97,15 @@ public class ConstructionPO implements Serializable {
 
 	private Timestamp processTime;
 
+	private Timestamp balanceTime;
+
 	private short workStatus;
 
 	private short scheduleStatus;
+
+	private short balanceStatus;
+
+	private Short terminalStatus;
 
 	public ConstructionPO() {
 		super();
@@ -236,6 +248,16 @@ public class ConstructionPO implements Serializable {
 		this.locker = locker;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "buid", referencedColumnName = "uid")
+	public UserPO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserPO balancer) {
+		this.balancer = balancer;
+	}
+
 	@Column(name = "salaryTotal")
 	public long getSalaryTotal() {
 		return salaryTotal;
@@ -243,6 +265,15 @@ public class ConstructionPO implements Serializable {
 
 	public void setSalaryTotal(long salaryTotal) {
 		this.salaryTotal = salaryTotal;
+	}
+
+	@Column(name = "salaryLimitTotal")
+	public long getSalaryLimitTotal() {
+		return salaryLimitTotal;
+	}
+
+	public void setSalaryLimitTotal(long salaryLimitTotal) {
+		this.salaryLimitTotal = salaryLimitTotal;
 	}
 
 	@Column(name = "createTime")
@@ -299,6 +330,15 @@ public class ConstructionPO implements Serializable {
 		this.processTime = processTime;
 	}
 
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
 	public short getWorkStatus() {
 		return workStatus;
 	}
@@ -315,14 +355,32 @@ public class ConstructionPO implements Serializable {
 		this.scheduleStatus = scheduleStatus;
 	}
 
+	public short getBalanceStatus() {
+		return balanceStatus;
+	}
+
+	public void setBalanceStatus(short balanceStatus) {
+		this.balanceStatus = balanceStatus;
+	}
+
+	@Column(name = "terminalStatus")
+	public Short getTerminalStatus() {
+		return terminalStatus;
+	}
+
+	public void setTerminalStatus(Short terminalStatus) {
+		this.terminalStatus = terminalStatus;
+	}
+
 	public ConstructionVO ptv(ConstructionVO constructionVO) {
 
-		BeanUtil.copyProperties(this, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
+		BeanUtil.copyProperties(this, constructionVO, Arrays.asList("decoration", "supervisor", "locker", "balancer"));
 
 		if (constructionVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(constructionVO.getDecoration());
 
 		if (constructionVO.getSupervisor() != null && getSupervisor() != null) constructionVO.getSupervisor().setBaseInfo(getSupervisor());
 		if (constructionVO.getLocker() != null && getLocker() != null) constructionVO.getLocker().setBaseInfo(getLocker());
+		if (constructionVO.getBalancer() != null && getBalancer() != null) constructionVO.getBalancer().setBaseInfo(getBalancer());
 
 		return constructionVO;
 	}

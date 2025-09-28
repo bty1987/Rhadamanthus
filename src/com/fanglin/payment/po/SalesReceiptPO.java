@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.payment.vo.SalesReceiptVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.Arith;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesreceipt", catalog = "payment")
@@ -32,9 +36,9 @@ public class SalesReceiptPO implements Serializable {
 
 	public static final String COLUMN_COUPONINFO_STR = "";
 
-	public static final short COLUMN_SALESRECEIPT_TYPE_INT = 0;
+	public static final short TYPE_PAYMENT_INT = 0;
 
-	public static final short COLUMN_SALESRECEIPT_REFUND_TYPE_INT = 1;
+	public static final short TYPE_REFUND_INT = 1;
 
 	private long srId;
 
@@ -314,6 +318,73 @@ public class SalesReceiptPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public long fillup(SalesReceiptVO salesReceiptVO) {
+
+		long amount = 0;
+
+		Long cash = salesReceiptVO.getCash();
+
+		if (cash != null && cash != 0) {
+
+			setCash(cash);
+			setCashInfo(salesReceiptVO.getCashInfo());
+
+			amount = Arith.add(cash, amount);
+		}
+
+		Long bank = salesReceiptVO.getBank();
+
+		if (bank != null && bank != 0) {
+
+			setBank(bank);
+			setBankInfo(salesReceiptVO.getBankInfo());
+
+			amount = Arith.add(bank, amount);
+		}
+
+		Long checkv = salesReceiptVO.getCheckv();
+
+		if (checkv != null && checkv != 0) {
+
+			setCheckv(checkv);
+			setCheckvBank(salesReceiptVO.getCheckvBank());
+
+			amount = Arith.add(checkv, amount);
+		}
+
+		Long advance = salesReceiptVO.getAdvance();
+
+		if (advance != null && advance != 0) {
+
+			setAdvance(advance);
+			setAdvanceType(salesReceiptVO.getAdvanceType());
+
+			amount = Arith.add(advance, amount);
+		}
+
+		Long coupon = salesReceiptVO.getCoupon();
+
+		if (coupon != null && coupon != 0) {
+
+			setCoupon(coupon);
+			setCouponInfo(salesReceiptVO.getCouponInfo());
+
+			amount = Arith.add(coupon, amount);
+		}
+
+		return amount;
+	}
+
+	public SalesReceiptVO ptv(SalesReceiptVO salesReceiptVO) {
+
+		BeanUtil.copyProperties(this, salesReceiptVO, Arrays.asList("collecter", "confirmer"));
+
+		if (salesReceiptVO.getCollecter() != null && getCollecter() != null) salesReceiptVO.getCollecter().setBaseInfo(getCollecter());
+		if (salesReceiptVO.getConfirmer() != null && getConfirmer() != null) salesReceiptVO.getConfirmer().setBaseInfo(getConfirmer());
+
+		return salesReceiptVO;
 	}
 
 }

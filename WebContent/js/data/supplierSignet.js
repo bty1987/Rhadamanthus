@@ -16,6 +16,12 @@ jQuery(function($) {
             keyword: com.focusPage("#keyword", "#signetModal"),
             type: com.focusPage("#type", "#signetModal"),
             path: com.focusPage("#path", "#signetModal"),
+            corporation: com.focusPage("#corporation", "#signetModal"),
+            taxNo: com.focusPage("#taxNo", "#signetModal"),
+            address: com.focusPage("#address", "#signetModal"),
+            phone: com.focusPage("#phone", "#signetModal"),
+            bankName: com.focusPage("#bankName", "#signetModal"),
+            bankNo: com.focusPage("#bankNo", "#signetModal"),
 
             signetImg: com.focusPage("#signetImg"),
 
@@ -105,6 +111,36 @@ jQuery(function($) {
         field: "name",
         name: "名称",
         prop: "name",
+        clazz: "grey"
+    }, {
+        field: "corporation",
+        name: "法人",
+        prop: "corporation",
+        clazz: "grey"
+    }, {
+        field: "taxNo",
+        name: "税号",
+        prop: "taxNo",
+        clazz: "grey"
+    }, {
+        field: "address",
+        name: "地址",
+        prop: "address",
+        clazz: "grey"
+    }, {
+        field: "phone",
+        name: "电话",
+        prop: "phone",
+        clazz: "grey"
+    }, {
+        field: "bankName",
+        name: "开户行",
+        prop: "bankName",
+        clazz: "grey"
+    }, {
+        field: "bankNo",
+        name: "账号",
+        prop: "bankNo",
         clazz: "grey"
     }, {
         field: "keyword",
@@ -368,6 +404,12 @@ jQuery(function($) {
             "signet.no": signet.items.no.val(),
             "signet.name": signet.items.name.val(),
             "signet.keyword": signet.items.keyword.val(),
+            "signet.corporation": signet.items.corporation.val(),
+            "signet.taxNo": signet.items.taxNo.val(),
+            "signet.address": signet.items.address.val(),
+            "signet.phone": signet.items.phone.val(),
+            "signet.bankName": signet.items.bankName.val(),
+            "signet.bankNo": signet.items.bankNo.val(),
             "signet.type": signet.items.type.val(),
             "signet.path": signet.items.path.val(),
             "signet.suid": signet.suid,
@@ -438,7 +480,12 @@ jQuery(function($) {
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
         signet.items.path.val(v.path).prop("disabled", false);
-
+        signet.items.corporation.val(v.corporation);
+        signet.items.taxNo.val(v.taxNo);
+        signet.items.address.val(v.address);
+        signet.items.phone.val(v.phone);
+        signet.items.bankName.val(v.bankName);
+        signet.items.bankNo.val(v.bankNo);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }
 
@@ -446,6 +493,12 @@ jQuery(function($) {
 
         signet.items.no.val(v.no).prop("disabled", true);
         signet.items.name.val(v.name);
+        signet.items.corporation.val(v.corporation);
+        signet.items.taxNo.val(v.taxNo);
+        signet.items.address.val(v.address);
+        signet.items.phone.val(v.phone);
+        signet.items.bankName.val(v.bankName);
+        signet.items.bankNo.val(v.bankNo);
         signet.items.keyword.val(v.keyword);
         signet.items.path.val(v.path).prop("disabled", true);
 

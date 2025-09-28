@@ -30,7 +30,6 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.OrganizationDao;
-import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.OrganizationPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
@@ -70,19 +69,10 @@ public class AoodsServiceImpl implements AoodsService {
 
 		for (AoodsPO aoodsPO : AoodsPOs) {
 
-			AoodsVO aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
-			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
-			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
-			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
-			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
+			AoodsVO aoodsVO = aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO()));
 
 			if (aoodsPO.getBompany() != 0) {
-
-				CompanyPO companyPO = companyDao.get(aoodsPO.getBompany());
-
-				aoodsVO.setBompany(companyPO.getName());
+				aoodsVO.setBompany(companyDao.get(aoodsPO.getBompany()).getName());
 			}
 
 			AoodsVOs.add(aoodsVO);
@@ -97,26 +87,13 @@ public class AoodsServiceImpl implements AoodsService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		List<AoodsPO> aoodsPOs = aoodsDao.queryAoods(aoodsVO.getAccessoriesType().getAtid(), aoodsVO.getAtttype(), decorationPO.getCompany());
-		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
+		List<AoodsVO> aoodsVOs = new ArrayList<AoodsVO>();
 
 		for (AoodsPO aoodsPO : aoodsPOs) {
-
-			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
-
-			aoodsVO.setGid(aoodsPO.getGoods().getGid());
-			aoodsVO.setName(aoodsPO.getGoods().getName());
-
-			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
-			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
-			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
-			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
-
-			AoodsVOs.add(aoodsVO);
+			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
 		}
 
-		return AoodsVOs;
+		return aoodsVOs;
 	}
 
 	@Override
@@ -125,57 +102,35 @@ public class AoodsServiceImpl implements AoodsService {
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		List<AoodsPO> aoodsPOs = aoodsDao.queryAoodsByAtid(aoodsVO.getAccessoriesType().getAtid(), decorationPO.getCompany());
-		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
+		List<AoodsVO> aoodsVOs = new ArrayList<AoodsVO>();
 
 		for (AoodsPO aoodsPO : aoodsPOs) {
-
-			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
-
-			aoodsVO.setGid(aoodsPO.getGoods().getGid());
-			aoodsVO.setName(aoodsPO.getGoods().getName());
-
-			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
-			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
-			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
-			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
-
-			AoodsVOs.add(aoodsVO);
+			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
 		}
 
-		return AoodsVOs;
+		return aoodsVOs;
 	}
 
 	@Override
 	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, int company) {
 
-		List<AoodsPO> AoodsPOs = aoodsDao.queryAoodsByName(aoodsVO.getGoods().getName(), 10, company);
-		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
+		List<AoodsPO> aoodsPOs = aoodsDao.queryAoodsByName(aoodsVO.getGoods().getName(), 10, company);
+		List<AoodsVO> aoodsVOs = new ArrayList<AoodsVO>();
 
-		for (AoodsPO aoodsPO : AoodsPOs) {
-
-			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
-
-			aoodsVO.setGid(aoodsPO.getGoods().getGid());
-			aoodsVO.setName(aoodsPO.getGoods().getName());
-
-			aoodsPO.getGoods().ptv(aoodsVO.getGoods());
-			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
-			BeanUtil.copyProperties(aoodsPO.getNoods(), aoodsVO.getNoods());
-			BeanUtil.copyProperties(aoodsPO.getConstructionNode(), aoodsVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
-
-			AoodsVOs.add(aoodsVO);
+		for (AoodsPO aoodsPO : aoodsPOs) {
+			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
 		}
 
-		return AoodsVOs;
+		return aoodsVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addAoods(AoodsVO aoodsVO, int company) throws FLException {
+
+		if (aoodsVO.getGoods() == null) {
+			throw new FLException(260004, "商品不存在");
+		}
 
 		AoodsPO aoodsPO = new AoodsPO();
 
@@ -185,15 +140,15 @@ public class AoodsServiceImpl implements AoodsService {
 			throw new FLException(130029, "辅材已存在");
 		}
 
-		aoodsPO.setName(aoodsVO.getName());
-		aoodsPO.setGoods(new GoodsPO(aoodsVO.getGoods().getGid()));
+		BeanUtil.copyProperties(aoodsVO, aoodsPO, "goods", "accessoriesType", "constructionNode", "noods");
+
 		aoodsPO.setStatus(AoodsPO.STATUS_ENABLE_INT);
 		aoodsPO.setCheckup(AoodsPO.CHECKUP_CHECK_INT);
-		aoodsPO.setAtttype(aoodsVO.getAtttype());
-		aoodsPO.setBalance(aoodsVO.getBalance());
-		aoodsPO.setSelling(aoodsVO.getSelling());
+
 		aoodsPO.setCompany(company);
 		aoodsPO.setBompany(cid);
+
+		aoodsPO.setGoods(new GoodsPO(aoodsVO.getGoods().getGid()));
 
 		if (aoodsVO.getAccessoriesType() != null && aoodsVO.getAccessoriesType().getAtid() != null) aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
 		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() != null) aoodsPO.setConstructionNode(new ConstructionNodePO(aoodsVO.getConstructionNode().getCnid()));
@@ -221,13 +176,19 @@ public class AoodsServiceImpl implements AoodsService {
 		}
 
 		aoodsPO.setName(aoodsVO.getName());
-		aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
 
 		aoodsPO.setAtttype(aoodsVO.getAtttype());
 		aoodsPO.setBalance(aoodsVO.getBalance());
 		aoodsPO.setSelling(aoodsVO.getSelling());
 
+		aoodsPO.setNormnum(aoodsVO.getNormnum());
+		aoodsPO.setNormunit(aoodsVO.getNormunit());
+		aoodsPO.setStorenum(aoodsVO.getStorenum());
+		aoodsPO.setStoreunit(aoodsVO.getStoreunit());
+
 		aoodsPO.setBompany(cid);
+
+		if (aoodsVO.getAccessoriesType() != null && aoodsVO.getAccessoriesType().getAtid() != null) aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
 
 		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() == null) {
 			aoodsPO.setConstructionNode(null);

@@ -1,5 +1,6 @@
 package com.fanglin.postar.service.impl;
 
+import java.util.Date;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +18,7 @@ import com.fanglin.payment.service.impl.PaytranServiceImpl;
 import com.fanglin.postar.airpos.Airpos;
 import com.fanglin.postar.service.PostarService;
 import com.fanglin.utils.Arith;
+import com.fanglin.utils.DateUtil;
 
 @Service("postarService")
 @Transactional(readOnly = true)
@@ -73,6 +75,7 @@ public class PostarServiceImpl implements PostarService {
 
 			paytranPO.setStatus(PaytranPO.STATUS_SUCCESS_INT);
 			paytranPO.setMsgId(args.getString("ORDER_NO"));
+			paytranPO.setCollectTime(DateUtil.getDateToTimestamp(new Date()));
 
 			paytranDao.update(paytranPO);
 			paytranDao.flush();

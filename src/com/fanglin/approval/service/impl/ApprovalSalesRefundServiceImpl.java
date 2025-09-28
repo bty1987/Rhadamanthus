@@ -22,6 +22,8 @@ import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.balance.service.BalanceSalesBalanceService;
+import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -55,8 +57,11 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesRefundsItemPO;
 import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.sales.service.SalesActivityService;
+import com.fanglin.sales.vo.SalesBalanceVO;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Arith;
@@ -105,10 +110,16 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	private SalesBalanceItemDao salesBalanceItemDao;
 
 	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	@Autowired
 	private SalesActivityService salesActivityService;
 
 	@Autowired
 	private ApprovalService approvalService;
+
+	@Autowired
+	private BalanceSalesBalanceService balanceSalesBalanceService;
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
@@ -432,6 +443,14 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			salesBalancePO.setPbalance(vbalance);
 
 			salesBalanceDao.update(salesBalancePO);
+
+			SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_AUTO_BALANCE_INT", salesPO.getCompany());
+
+			int count = salesBalanceDao.countSalesBalance(salesPO.getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT, SalesBalancePO.CHECKSTATUS_CHECK_INT);
+
+			if (taggle != null && taggle.getValue() != null && count > 0) {
+				balanceSalesBalanceService.submitBalanceSalesBalance(null, new BalanceSalesBalanceVO(new SalesBalanceVO(salesBalancePO.getSbid())), approvalPO.getReceiver().getUserId(), salesPO.getCompany());
+			}
 		}
 
 		if (approvalSalesRefundPO.getType() != ApprovalSalesRefundPO.TYPE_REFUND_INT) {

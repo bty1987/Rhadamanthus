@@ -648,8 +648,10 @@ public class NormtionServiceImpl implements NormtionService {
 			addNormtion(normtionVO, userId);
 		}
 
-		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
-		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
+		normoodItemDao.disableNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT);
+		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT);
+
+		normoodItemDao.flush();
 
 		List<QuotationFunctionAreaPO> QuotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(normtionVO.getQid());
 
@@ -665,7 +667,23 @@ public class NormtionServiceImpl implements NormtionService {
 				NormoodPO normoodPO = (NormoodPO) data[1];
 				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				NormoodItemPO normoodItemPO = new NormoodItemPO();
+				NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItemPO(normtionVO.getQid(), itemPO.getQfaiId(), NormoodItemPO.TYPE_OFFER_INT);
+
+				if (normoodItemPO != null) {
+
+					normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
+
+					normoodItemPO.setNormunit(normoodPO.getNormunit());
+					normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+					normoodItemPO.setStoreunit(normoodPO.getStoreunit());
+					normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+
+					normoodItemDao.update(normoodItemPO);
+
+					continue;
+				}
+
+				normoodItemPO = new NormoodItemPO();
 
 				normoodItemPO.setQid(normtionVO.getQid());
 				normoodItemPO.setSid(normtionVO.getQid());
@@ -696,7 +714,23 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[1];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-				NormriceItemPO normriceItemPO = new NormriceItemPO();
+				NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItemPO(normtionVO.getQid(), item.getQfaiid(), NormriceItemPO.TYPE_OFFER_INT);
+
+				if (normriceItemPO != null) {
+
+					normriceItemPO.setStatus(NormriceItemPO.STATUS_INIT_INT);
+
+					normriceItemPO.setName(constructionNodePO.getName());
+					normriceItemPO.setUnit(normricePO.getUnit());
+					normriceItemPO.setTrannum(normricePO.getTrannum());
+					normriceItemPO.setSalary(normricePO.getSalary());
+
+					normriceItemDao.update(normriceItemPO);
+
+					continue;
+				}
+
+				normriceItemPO = new NormriceItemPO();
 
 				normriceItemPO.setQid(normtionVO.getQid());
 				normriceItemPO.setSid(normtionVO.getQid());
@@ -719,6 +753,9 @@ public class NormtionServiceImpl implements NormtionService {
 				normriceItemDao.save(normriceItemPO);
 			}
 		}
+
+		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;
 	}

@@ -6,12 +6,14 @@ jQuery(function($) {
 
         modals: {
             constructionInfoModal: com.focusPage("#constructionInfoModal"),
-            updateConstructionModal: com.focusPage("#updateConstructionModal")
+            updateConstructionModal: com.focusPage("#updateConstructionModal"),
+            updateTerminalStatusModal: com.focusPage("#updateTerminalStatusModal")
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
-            updateConstructionBtn: com.focusPage("#updateConstructionBtn")
+            updateConstructionBtn: com.focusPage("#updateConstructionBtn"),
+            updateTerminalStatusBtn: com.focusPage("#updateTerminalStatusBtn")
         },
 
         items: {
@@ -23,7 +25,8 @@ jQuery(function($) {
             drawlineTime: com.focusPage("#drawlineTime"),
             designTime: com.focusPage("#designTime"),
             isCeremony: com.focusPage("#isCeremony"),
-            comment: com.focusPage("#comment")
+            comment: com.focusPage("#comment"),
+            terminalStatus: com.focusPage("#terminalStatus","#updateTerminalStatusModal")
         },
         updateItems: {
             accessoryLimit: com.focusPage("#accessoryLimit"),
@@ -37,6 +40,8 @@ jQuery(function($) {
 
     construction.btns.saveBtn.bindClick(saveData);
     construction.btns.updateConstructionBtn.bindClick(update);
+    construction.btns.updateTerminalStatusBtn.bindClick(updateTerminalStatus);
+
     construction.modals.constructionInfoModal.on("hide.bs.modal", function() {
 
         com.cleanItems(construction.items);
@@ -49,11 +54,18 @@ jQuery(function($) {
         com.closeTip();
     });
 
+    construction.modals.updateTerminalStatusModal.on("hide.bs.modal", function() {
+
+        com.cleanItems(construction.items);
+        com.closeTip();
+    });
+
     com.datetime(construction.items.finishTime);
     com.datetime(construction.items.keyTime);
     com.datetime(construction.items.drawlineTime);
     com.datetime(construction.items.designTime);
 
+    construction.items.terminalStatus.bindData(constant.construction().construction.terminalStatus.datas, "key", "value");
     construction.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas, "key", "value");
     construction.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value");
     construction.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value");
@@ -138,7 +150,7 @@ jQuery(function($) {
         type: "newline",
     }, {
         field: "projectStatus",
-        name: "进度",
+        name: "工程状态",
         prop: "decoration.projectStatus",
         dataset: constant.decoration().decoration.projectStatus.keys,
         clazz: "red"
@@ -164,7 +176,7 @@ jQuery(function($) {
         prop: function(v) {
 
             var d1 = v.startTime ? new Date(v.startTime) : new Date();
-            
+
             return com.dateFormat(new Date((d1 + (v.period * 24 * 24 * 60 * 60 * 1000))), "yyyy-MM-dd");
         },
         clazz: "green"
@@ -198,7 +210,7 @@ jQuery(function($) {
         clazz: "blue"
     }, {
         field: "processTime",
-        name: "基础完工时间",
+        name: "竣工交付时间",
         prop: "processTime",
         clazz: "green"
     }, {
@@ -209,11 +221,6 @@ jQuery(function($) {
         prop: "accessoryLimit",
         clazz: "blue"
     }, {
-        field: "salaryLimit",
-        name: "工费额上限",
-        prop: "salaryLimit",
-        clazz: "blue"
-    }, {
         field: "accessoryTotal",
         name: "辅料总额",
         prop: "accessoryTotal",
@@ -222,6 +229,16 @@ jQuery(function($) {
 
             return false;
         }
+    }, {
+        field: "salaryLimit",
+        name: "工费上限",
+        prop: "salaryLimit",
+        clazz: "blue"
+    }, {
+        field: "salaryLimitTotal",
+        name: "工费上限总额",
+        prop: "salaryLimitTotal",
+        clazz: "blue"
     }, {
         field: "salaryTotal",
         name: "工费总额",
@@ -251,7 +268,28 @@ jQuery(function($) {
         prop: "accessory",
         dataset: constant.construction().construction.isAccessory.keys,
         clazz: "red"
-    }];
+    }, {
+        field: "currentName",
+        name: "结算人",
+        prop: "balancer.currentName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.locker.userId);
+        }
+    }, {
+        field: "balanceStatus",
+        name: "结算状态",
+        prop: "balanceStatus",
+        dataset: constant.construction().construction.balance.keys,
+        clazz: "red"
+    }, {
+        field: "terminalStatus",
+        name: "终止状态",
+        prop: "terminalStatus",
+        dataset: constant.construction().construction.terminalStatus.keys,
+        clazz: "red"
+    }, ];
 
     var linebtns = [{
         name: "信息",
@@ -306,7 +344,7 @@ jQuery(function($) {
         clazz: "btn-yellow",
         handle: function(v) {
 
-        	params.orderId = v.decoration.orderId;
+            params.orderId = v.decoration.orderId;
 
             com.popup4page("#stockRecordPopUp", api.index.constructionRecordIndex.url, "记录");
 
@@ -342,7 +380,7 @@ jQuery(function($) {
         clazz: "btn-yellow",
         handle: function(v) {
 
-        	params.construction = v;
+            params.construction = v;
 
             com.popup("工程节点", api.index.constructionNode2printIndex.url, null, null, true);
 
@@ -353,7 +391,7 @@ jQuery(function($) {
         clazz: "btn-warning",
         handle: function(v) {
 
-        	params.construction = v;
+            params.construction = v;
 
             com.popup("工人工费", api.index.workerSalary2printIndex.url, null, null, true);
 
@@ -389,7 +427,7 @@ jQuery(function($) {
         clazz: "btn-danger",
         handle: function(v) {
 
-            com.post(api.construction.openAccessory, {
+            com.post(api.construction.openConstruction, {
                 "construction.cid": v.cid
             }, function(res) {
 
@@ -408,7 +446,7 @@ jQuery(function($) {
         clazz: "btn-pink",
         handle: function(v) {
 
-            com.post(api.construction.lockAccessory, {
+            com.post(api.construction.lockConstruction, {
                 "construction.cid": v.cid
             }, function(res) {
 
@@ -421,6 +459,34 @@ jQuery(function($) {
         show: function(v) {
 
             return (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT);
+        }
+    }, {
+        name: "结算",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            com.post(api.construction.balanceConstruction, {
+                "construction.cid": v.cid
+            }, function(res) {
+
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT);
+        }
+    }, {
+        name: "终止",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            construction.cid = v.cid;
+            construction.modals.updateTerminalStatusModal.modal("show");
+
+            return false;
         }
     }];
 
@@ -464,6 +530,22 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
 
             construction.modals.updateConstructionModal.modal("hide");
+        });
+    }
+
+    function updateTerminalStatus() {
+
+        var options = {
+            "construction.cid": construction.cid,
+            "construction.terminalStatus": construction.items.terminalStatus.val(),
+        };
+
+        com.post(api.construction.updateConstructionByCid, options, function(res) {
+
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+
+            construction.modals.updateTerminalStatusModal.modal("hide");
         });
     }
 

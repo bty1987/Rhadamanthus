@@ -22,6 +22,6 @@ public interface OalesPaymentDao extends Dao<OalesPaymentPO> {
 
 	public List<OalesPaymentPO> queryOalesPaymentForNotInitByOrid(long orid);
 
-	public OalesPaymentPO queryOalesPayment(long oid, List<Short> types);
+	public OalesPaymentPO queryOalesPayment(long osid);
 
 }

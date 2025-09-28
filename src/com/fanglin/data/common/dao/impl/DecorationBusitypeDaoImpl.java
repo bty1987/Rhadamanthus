@@ -38,6 +38,11 @@ public class DecorationBusitypeDaoImpl extends DaoImpl<DecorationBusitypePO> imp
 	public List<DecorationBusitypePO> queryDecorationBusitype(int company) {
 		return session().createCriteria(DecorationBusitypePO.class).add(Restrictions.eq("company", company)).list();
 	}
+	
+	@Override
+	public DecorationBusitypePO queryDecorationBusitype(String name,int company) {
+		return (DecorationBusitypePO) session().createCriteria(DecorationBusitypePO.class).add(Restrictions.eq("name", name)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
+	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
@@ -56,4 +61,6 @@ public class DecorationBusitypeDaoImpl extends DaoImpl<DecorationBusitypePO> imp
 			}
 		}
 	}
+
+
 }

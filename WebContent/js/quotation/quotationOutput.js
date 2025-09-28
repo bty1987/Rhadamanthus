@@ -180,6 +180,14 @@ function printFinanceTable(subtype, showType) {
                 sum = sum + qv.total;
                 preSum = preSum + qv.total;
 
+                if (qv.type == constant.quotation().quotationFunctionAreaItem.TYPE_CMPREH_INT) {
+                    preSum = utils.changeThrDecimal(preSum);
+                    sum = utils.changeThrDecimal(sum);
+                } else {
+                    preSum = utils.changeTwoDecimal(preSum);
+                    sum = utils.changeTwoDecimal(sum);
+                }
+
                 discountPrice = discountPrice + qv.total;
                 preDiscountPrice = preDiscountPrice + qv.total;
             }
@@ -192,10 +200,10 @@ function printFinanceTable(subtype, showType) {
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
-        contentHtml += '<td><span class="STYLE2"><strong>' + utils.changeTwoDecimal(preSum) + '</strong></span></td>';
+        contentHtml += '<td><span class="STYLE2"><strong>' + preSum + '</strong></span></td>';
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
-        contentHtml += '<td><span class="STYLE2"><strong>' + utils.changeTwoDecimal(sum) + '</strong></span></td>';
+        contentHtml += '<td><span class="STYLE2"><strong>' + sum + '</strong></span></td>';
         contentHtml += '</tr>';
         contentHtml += '';
         index++;
@@ -273,6 +281,14 @@ function printCostTable(subtype, showType) {
                 sum = sum + qv.quotationTotalPrice;
                 preSum = preSum + qv.dcpt;
 
+                if (qv.type == constant.quotation().quotationFunctionAreaItem.TYPE_CMPREH_INT) {
+                    preSum = utils.changeThrDecimal(preSum);
+                    sum = utils.changeThrDecimal(sum);
+                } else {
+                    preSum = utils.changeTwoDecimal(preSum);
+                    sum = utils.changeTwoDecimal(sum);
+                }
+
                 discountPrice = discountPrice + qv.dcpt;
                 preDiscountPrice = preDiscountPrice + qv.dcpt;
             }
@@ -285,10 +301,10 @@ function printCostTable(subtype, showType) {
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
-        contentHtml += '<td><span class="STYLE2"><strong>' + utils.changeTwoDecimal(preSum) + '</strong></span></td>';
+        contentHtml += '<td><span class="STYLE2"><strong>' + preSum + '</strong></span></td>';
         contentHtml += '<td>&nbsp;</td>';
         contentHtml += '<td>&nbsp;</td>';
-        contentHtml += '<td><span class="STYLE2"><strong>' + utils.changeTwoDecimal(sum) + '</strong></span></td>';
+        contentHtml += '<td><span class="STYLE2"><strong>' + sum + '</strong></span></td>';
         contentHtml += '</tr>';
         contentHtml += '';
         index++;

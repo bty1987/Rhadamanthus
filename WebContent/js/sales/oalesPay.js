@@ -392,7 +392,6 @@ jQuery(function ($) {
         var options = {
             "oalesPay.name": oalesPay.items.name.val(),
             "oalesPay.money": oalesPay.items.money.val(),
-            "oalesPay.type": oalesPay.items.type.val(),
             "oalesPay.payTime": oalesPay.items.payTime.val(),
             "oalesPay.comment": oalesPay.items.comment.val()
         };

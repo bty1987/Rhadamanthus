@@ -36,6 +36,10 @@ public class NormoodItemPO implements Serializable {
 
 	public static final short ATTTYPE_SUB_INT = 1;
 
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_DISABLED_INT = 1;
+
 	private long ngiid;
 
 	private long qid;
@@ -63,6 +67,8 @@ public class NormoodItemPO implements Serializable {
 	private String storeunit;
 
 	private int storenum;
+
+	private short status;
 
 	public NormoodItemPO() {
 		super();
@@ -200,6 +206,14 @@ public class NormoodItemPO implements Serializable {
 
 	public void setStorenum(int storenum) {
 		this.storenum = storenum;
+	}
+
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 }

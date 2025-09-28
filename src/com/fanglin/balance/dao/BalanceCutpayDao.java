@@ -9,7 +9,11 @@ import com.fanglin.utils.Paging;
 
 public interface BalanceCutpayDao extends Dao<BalanceCutpayPO> {
 
+	public List<BalanceCutpayPO> pageBalanceCutpay(Paging paging, List<Filter> filters);
+
 	public List<BalanceCutpayPO> queryBalanceCutpay(long bid);
 
-	public List<BalanceCutpayPO> pageBalanceCutpay(Paging paging, List<Filter> filters, Long bdid);
+	public List<BalanceCutpayPO> queryBalanceCutpayByOuid(int ouid);
+
+	public long amountBalanceCutpay(long bid);
 }

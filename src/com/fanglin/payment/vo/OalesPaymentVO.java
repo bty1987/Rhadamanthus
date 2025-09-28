@@ -16,6 +16,8 @@ public class OalesPaymentVO implements Serializable {
 
 	private Long opid;
 
+	private Long osid;
+
 	private OalesReceiptVO oalesReceipt;
 
 	private OalesVO oales;
@@ -101,6 +103,14 @@ public class OalesPaymentVO implements Serializable {
 
 	public void setOpid(Long opid) {
 		this.opid = opid;
+	}
+
+	public Long getOsid() {
+		return osid;
+	}
+
+	public void setOsid(Long osid) {
+		this.osid = osid;
 	}
 
 	public OalesVO getOales() {

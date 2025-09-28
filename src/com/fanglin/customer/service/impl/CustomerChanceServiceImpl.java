@@ -20,6 +20,7 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.CustomerProfileDao;
@@ -39,6 +40,7 @@ import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationService;
+import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -175,6 +177,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void addCustomerChance(CustomerChanceVO customerChanceVO, String userId, int company) throws FLException {
 
 		if (customerChanceVO == null) {
@@ -185,7 +188,22 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(330071, "客户资源不存在");
 		}
 
+		if (customerSourceDao.queryCustomerSourceByNo(customerChanceVO.getSource().getNo()) != null) {
+			throw new FLException(330072, "客户资源已存在");
+		}
+
+		if (customerChanceDao.queryCustomerChanceByCno(customerChanceVO.getCno()) != null) {
+			throw new FLException(330076, "客户机会已存在");
+		}
+
+		String phone = customerChanceVO.getSource().getPhone();
+
+		customerChanceVO.getSource().setBusitype(customerChanceVO.getBusitype());
+		customerChanceVO.getSource().setPhone(phone.substring(0, 3) + "****" + phone.substring(7));
+
 		customerSourceService.addCustomerSource(customerChanceVO.getSource(), userId, company);
+
+		customerChanceDao.flush();
 
 		customerSourceService.issueCustomerSource(customerChanceVO.getSource(), customerChanceVO, userId, company);
 	}
@@ -207,10 +225,29 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		if (customerChanceVO.getCustomer() != null) customerChancePO.setCustomer(new CustomerPO(customerChanceVO.getCustomer().getCid()));
 		if (customerChanceVO.getHouse() != null) customerChancePO.setHouse(new HousePO(customerChanceVO.getHouse().getHid()));
 		if (customerChanceVO.getBusitype() != null) customerChancePO.setBusitype(new DecorationBusitypePO(customerChanceVO.getBusitype().getDbid()));
+		if (customerChanceVO.getRate() != null) customerChancePO.setRate(customerChanceVO.getRate());
 
 		customerChancePO.setRate(customerChanceVO.getRate());
 
 		customerChanceDao.update(customerChancePO);
+
+		if (customerChanceVO.getSource() == null) return;
+
+		customerChanceVO.getSource().setCsid(customerChancePO.getSource().getCsid());
+		customerChanceVO.getSource().setName(customerChancePO.getSource().getCustomer().getName());
+
+		String phone = FormatUtil.decodePhone(customerChancePO.getSource().getCustomer().getPhone());
+
+		customerChanceVO.getSource().setPhone(phone.substring(0, 3) + "****" + phone.substring(7));
+		customerChanceVO.getSource().setGender(customerChancePO.getSource().getCustomer().getGender());
+		customerChanceVO.getSource().getHouse().setHouseNumber(customerChancePO.getSource().getHouse().getHouseNumber());
+		customerChanceVO.getSource().getVillage().setVid(customerChancePO.getHouse().getVillage().getVid());
+
+		CustomerSourcePO customerSourcePO = customerSourceDao.get(customerChancePO.getSource().getCsid());
+
+		BeanUtil.copyProperties(customerChanceVO.getSource(), customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype"));
+
+		customerSourceDao.update(customerSourcePO);
 	}
 
 	@Override
@@ -344,6 +381,35 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		UserPO belonger = customerChancePO.getBelonger();
 
 		messageService.sendMessage(belonger.getUserId(), creater.getUserId(), content, MessagePO.TYPE_SEND_CUSTOMER_INT, belonger.getCompany());
+
+		if (customerChancePO.getCno() == null) return;
+
+		SystemConfigPO url = systemConfigDao.querySystemConfig("qw_url");// 获取新系统URL
+
+		if (url == null) return;
+
+		SystemConfigPO appkey = systemConfigDao.querySystemConfig("qw_appkey");
+
+		if (appkey == null) return;
+
+		SystemConfigPO appsecret = systemConfigDao.querySystemConfig("qw_appsecret");
+
+		if (appsecret == null) return;
+
+		String timestamp = String.valueOf(System.currentTimeMillis());
+		String sign = MD5Helper.MD5(appkey.value("") + appsecret.value("") + timestamp).toLowerCase();
+
+		String fullUrl = new StringBuilder(url.value("")).append("?appKey=").append(appkey.value("")).append("&timestamp=").append(timestamp).append("&sign=").append(sign).toString();
+
+		JSONObject args = new JSONObject();
+		args.put("adornCode", customerChanceVO.getCno());
+		args.put("erpJhCode", String.valueOf(customerChanceVO.getCcid()));
+		args.put("statusName", "CONFIRM_DESIGNER_FINISHED");
+		args.put("statusTime", DateUtil.current("yyyy-MM-dd HH:mm:ss"));
+
+		JSONObject res = HttpUtil.httpPost(fullUrl, args);
+
+		System.out.println(res);
 	}
 
 	@Override
@@ -481,7 +547,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 		decorationVO.setNotSalesmanRate(customerChancePO.getBusitype().getNotSalesmanRate());
 		decorationVO.setBusitype(customerChancePO.getBusitype().getDbid());
 
-		decorationService.tranDecoration(decorationVO, company);
+		DecorationInfoVO decorationInfoVO = new DecorationInfoVO();
+
+		decorationInfoVO.setIssueTime(customerChancePO.getIssueTime());
+		decorationInfoVO.setMeetTime(customerChancePO.getMeetTime());
+
+		decorationService.tranDecoration(decorationVO, decorationInfoVO, company);
 
 		customerChancePO.setOrderId(decorationVO.getOrderId());
 		customerChancePO.setStatus(CustomerChancePO.STATUS_COMPLETE_INT);

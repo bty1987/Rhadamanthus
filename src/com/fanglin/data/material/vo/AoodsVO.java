@@ -12,6 +12,8 @@ public class AoodsVO implements Serializable {
 
 	private String name;
 
+	private Long gid;
+
 	private GoodsVO goods;
 
 	private AccessoriesTypeVO accessoriesType;
@@ -20,6 +22,20 @@ public class AoodsVO implements Serializable {
 
 	private ConstructionNodeVO constructionNode;
 
+	private String normunit;// 定额单位
+
+	private Integer normnum;// 定额数量
+
+	private String storeunit;// 库房单位
+
+	private Integer storenum;// 库房数量
+
+	private Integer balance;
+
+	private Integer selling;
+
+	private Short atttype;
+
 	private Short checkup;
 
 	private Short status;
@@ -27,14 +43,6 @@ public class AoodsVO implements Serializable {
 	private Integer company;
 
 	private String bompany;
-
-	private Long gid;
-
-	private Integer balance;
-
-	private Integer selling;
-
-	private Short atttype;
 
 	public AoodsVO() {
 		super();
@@ -104,6 +112,38 @@ public class AoodsVO implements Serializable {
 
 	public void setConstructionNode(ConstructionNodeVO constructionNode) {
 		this.constructionNode = constructionNode;
+	}
+
+	public String getNormunit() {
+		return normunit;
+	}
+
+	public void setNormunit(String normunit) {
+		this.normunit = normunit;
+	}
+
+	public Integer getNormnum() {
+		return normnum;
+	}
+
+	public void setNormnum(Integer normnum) {
+		this.normnum = normnum;
+	}
+
+	public String getStoreunit() {
+		return storeunit;
+	}
+
+	public void setStoreunit(String storeunit) {
+		this.storeunit = storeunit;
+	}
+
+	public Integer getStorenum() {
+		return storenum;
+	}
+
+	public void setStorenum(Integer storenum) {
+		this.storenum = storenum;
 	}
 
 	public Short getCheckup() {

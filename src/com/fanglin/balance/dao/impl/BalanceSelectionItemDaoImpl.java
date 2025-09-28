@@ -11,7 +11,6 @@ import com.fanglin.balance.po.BalanceSelectionItemPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("balanceSelectionItemDao")
@@ -26,11 +25,11 @@ public class BalanceSelectionItemDaoImpl extends DaoImpl<BalanceSelectionItemPO>
 
 		PagingQuery<BalanceSelectionItemPO> query = pagingQuery(paging, BalanceSelectionItemPO.class);
 
-		query.alias("selectionItem", "selectionItem").alias("selectionItem.decoration", "sidecoration").add(Restrictions.eq("bsid", bsid));
+		query.alias("selectionItem", "selectionItem").alias("selectionItem.decoration", "decoration").add(Restrictions.eq("bsid", bsid));
 
 		queryFilterExcute(query, filters);
 
-		query.desc("sidecoration.orderId");
+		query.desc("decoration.orderId");
 
 		return query.list();
 	}
@@ -59,7 +58,17 @@ public class BalanceSelectionItemDaoImpl extends DaoImpl<BalanceSelectionItemPO>
 
 		if (filters == null) return;
 
-		DecorationDaoImpl.queryFilterExcute(query, filters, "selectionItem.decoration");
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("decoration.orderId".equals(field)) {
+				query.add(query.getCriterion("decoration.orderId", data, op));
+			}
+		}
+
 	}
 
 }

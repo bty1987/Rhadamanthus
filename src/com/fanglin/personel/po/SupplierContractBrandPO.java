@@ -3,6 +3,7 @@ package com.fanglin.personel.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.personel.vo.SupplierContractBrandVO;
+import com.fanglin.personel.vo.SupplierContractCategoryVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -42,7 +44,9 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 	private int warranTime; // 质保期
 	
 	private String servicePrice; // 服务费 , Json结构 , {"TL": "2016-01-01", "UV": 0, "DV": 0, "SR": 0}
-
+	
+	private List<SupplierContractCategoryPO> supplierContractCategorys;
+	
 	public SupplierContractBrandPO() {
 		super();
 	}
@@ -141,12 +145,28 @@ public class SupplierContractBrandPO implements java.io.Serializable {
 	public void setWarranTime(int warranTime) {
 		this.warranTime = warranTime;
 	}
+	
+	@OneToMany(mappedBy = "scbid", fetch = FetchType.LAZY)
+	public List<SupplierContractCategoryPO> getSupplierContractCategorys() {
+		return supplierContractCategorys;
+	}
+
+	public void setSupplierContractCategorys(List<SupplierContractCategoryPO> supplierContractCategorys) {
+		this.supplierContractCategorys = supplierContractCategorys;
+	}
 
 	public SupplierContractBrandVO ptv(SupplierContractBrandVO supplierBrandVO) {
 
-		BeanUtil.copyProperties(this, supplierBrandVO, Arrays.asList("brand"));
+		BeanUtil.copyProperties(this, supplierBrandVO, Arrays.asList("brand","supplierContractCategorys"));
 
-		if (supplierBrandVO.getBrand() != null) BeanUtil.copyProperties(getBrand(), supplierBrandVO.getBrand(), Arrays.asList("category", "supplier"));
+		if (supplierBrandVO.getBrand() != null && getBrand() != null) getBrand().ptv(supplierBrandVO.getBrand());
+
+		if (getSupplierContractCategorys() == null) return supplierBrandVO;
+
+		for (SupplierContractCategoryPO supplierBrandProducPO : getSupplierContractCategorys()) {
+
+			supplierBrandVO.getSupplierContractCategorys().add((SupplierContractCategoryVO) BeanUtil.copyPropertie(supplierBrandProducPO, new SupplierContractCategoryVO()));
+		}
 
 		return supplierBrandVO;
 	}

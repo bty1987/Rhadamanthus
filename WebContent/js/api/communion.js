@@ -198,7 +198,8 @@ $.extend(api, {
         },
 
         pageCustomerRecord: {
-            url: "pageCustomerRecord.do"
+            url: "pageCustomerRecord.do",
+            server: "communion"
         },
         queryCustomerRecord: {
             url: "queryCustomerRecord.do"
@@ -269,6 +270,10 @@ $.extend(api, {
             tranargs: {
                 args: ["goodsPool.purchase", "goodsPool.selling", "goodsPool.confine", "goodsPool.pieceNum"]
             },
+            server: "communion"
+        },
+        batchAddFromPool: {
+            url: "batchAddFromPool.do",
             server: "communion"
         },
         updateGoodsPool: {

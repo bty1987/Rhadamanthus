@@ -51,7 +51,7 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "pageGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageGoods() throws FLException {
 
-		goodsService.pageGoods(getPaging(), getFilters(), queryUserId(), queryCompany());
+		goodsService.pageGoods(getPaging(), getFilters(), queryUserId(), queryCompany(),goods);
 
 		return SUCCESS;
 	}
@@ -59,7 +59,7 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "pageGoodsForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageGoodsForAdvance() throws FLException {
 
-		goodsService.pageGoodsForAdvance(getPaging(), getFilters(), queryCompany());
+		goodsService.pageGoodsForAdvance(getPaging(), getFilters(), queryCompany(),goods);
 
 		return SUCCESS;
 	}

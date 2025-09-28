@@ -500,6 +500,63 @@ var ExtensionDetail = (function() {
             }
         },
         /**
+         * 选择弹窗中的报价项到扩展项报价项区域
+         */
+        addQuoteFunctionAreaItemModal: function(v) {
+
+            var $arwrap = com.focusPage('#addReduceItemDiv');
+            var _index = $arwrap.find('.fl-quo-item').length;
+
+            var atttype = extensionDetail.basicParams["extension.atttype"];
+            var type = extensionDetail.type == constant.quotation().extension.TYPE_ADD_INT ? constant.quotation().extensionItem.TYPE_QUOTATIONADD_INT : constant.quotation().extensionItem.TYPE_QUOTATIONSUB_INT;
+
+            var discount = v.discount;
+            var unitPrice = v.unitPrice;
+            var subPrice = v.subPrice;
+            var addPrice = v.addPrice;
+
+            if (extensionDetail.type == constant.quotation().extension.TYPE_ADD_INT) {
+                unitPrice = addPrice;
+                discount = constant.quotation().extensionItem.DISCOUMNT_NODISCOUMNT_INT;
+            }
+
+            if (extensionDetail.type == constant.quotation().extension.TYPE_ADD_INT && atttype == constant.quotation().extension.ATTTYPE_CURRENCY_INT) {
+                subPrice = addPrice;
+            }
+
+            if (extensionDetail.type == constant.quotation().extension.TYPE_SUB_INT) {
+                unitPrice = subPrice;
+                discount = constant.quotation().extensionItem.DISCOUMNT_DISCOUMNT_INT;
+            }
+
+            if (atttype == constant.quotation().extension.ATTTYPE_DISPLACE_INT) {
+                unitPrice = achePrice;
+            }
+
+            var _quotval = {
+                "num": 0,
+                "itemName": v.itemName,
+                "quotationFunctionAreaId": modalEventBinding.functionAreaId,
+                "quotationFunctionAreaName": modalEventBinding.functionAreaName,
+                "measurementUnit": v.measurementUnit,
+                "addPrice": addPrice,
+                "unitPrice": unitPrice,
+                "subPrice": subPrice,
+                "content": v.content,
+                "workType": v.workType,
+                "type": type,
+                "subtype": v.subtype,
+                "eid": "",
+                "quoteItemId": v.qfaiId,
+                "discount": discount,
+                "quotationitemid": null,
+                "qiid": v.quotationItemId
+            };
+
+            var $item = painter.createQuote(_index + i + 1, _quotval);
+            $item.appendTo($arwrap.find('.fl-quo-list'));
+        },
+        /**
          * 添加弹窗中的报价项到扩展项报价项区域
          */
         addQuotesFromModal: function(type) {
@@ -898,9 +955,13 @@ var ExtensionDetail = (function() {
 
                 extensionDetail.$modals.addQuotaionItemModal.modal('hide');
 
-                extensionDetail.quotationItemId = v.qfaiId;
+                if (extensionDetail.basicParams["extension.type"] == constant.quotation().extension.TYPE_ADD_INT) {
 
-                extensionDetail.$modals.addNormalItemModal.modal('show');
+                    extensionDetail.quotationItemId = v.qfaiId;
+                    extensionDetail.$modals.addNormalItemModal.modal('show');
+                } else {
+                    quote.addQuoteFunctionAreaItemModal(v);
+                }
             });
 
             return $liLine;

@@ -28,14 +28,17 @@ import com.fanglin.right.dao.SalesDeliveryStatusRightDao;
 import com.fanglin.right.po.SalesDeliveryStatusRightPO;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesDeliveryDao;
 import com.fanglin.sales.dao.SalesDeliveryItemDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesDeliveryItemPO;
+import com.fanglin.sales.po.SalesDeliveryPO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesDeliveryService;
 import com.fanglin.sales.vo.SalesDeliveryItemVO;
+import com.fanglin.sales.vo.SalesDeliveryVO;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
@@ -45,6 +48,9 @@ import com.fanglin.utils.Paging;
 @Service("salesDeliveryService")
 @Transactional(readOnly = true)
 public class SalesDeliveryServiceImpl implements SalesDeliveryService {
+
+	@Autowired
+	private SalesDeliveryDao salesDeliveryDao;
 
 	@Autowired
 	private SalesDeliveryItemDao salesDeliveryItemDao;
@@ -286,9 +292,27 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			throw new FLException(260045, "销售项状态不可操作");
 		}
 
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		SalesDeliveryPO salesDeliveryPO = salesDeliveryDao.querySalesDelivery(salesPO.getSid());
+
+		if (salesDeliveryPO == null) {
+
+			salesDeliveryPO = new SalesDeliveryPO();
+
+			salesDeliveryPO.setSales(salesPO);
+			salesDeliveryPO.setCreater(creater);
+			salesDeliveryPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			salesDeliveryPO.setCompany(salesPO.getCompany());
+
+			salesDeliveryDao.save(salesDeliveryPO);
+		}
+
+		salesDeliveryDao.flush();
+
 		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesDeliveryItem.getSales().getSid());
 
-		UserPO creater = userDao.queryUserByUserId(userId);
+		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesPO.getBrand().getBid());
 
 		for (SalesItemPO salesItemPO : salesItemPOs) {
 
@@ -302,7 +326,16 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setCompany(salesPO.getDompany());
 			salesDeliveryItemPO.setSales(salesPO);
 
+			salesDeliveryItemPO.setProtranTime(salesDeliveryPO.getCreateTime());
+
 			salesDeliveryItemDao.save(salesDeliveryItemPO);
+
+			if (rights != null && rights.size() != 0) {
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, creater);
+			}
+
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
+			salesDeliveryItemDao.flush();
 		}
 	}
 
@@ -325,6 +358,43 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deliveSalesDelivery(SalesDeliveryVO salesDelivery, String userId) throws FLException {
+
+		if (salesDelivery == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		if (salesDelivery.getSales() == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		SalesPO salesPO = salesDao.get(salesDelivery.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		if (salesDeliveryDao.countSalesDelivery(salesPO.getSid()) != 0) return;
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		SalesDeliveryPO salesDeliveryPO = new SalesDeliveryPO();
+
+		salesDeliveryPO.setSales(salesPO);
+		salesDeliveryPO.setCreater(creater);
+		salesDeliveryPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		salesDeliveryPO.setPeliveryTime(DateUtil.getDateToTimestamp(new Date()));
+		salesDeliveryPO.setCompany(salesPO.getCompany());
+
+		if (salesDelivery.getPeliveryTime() != null) {
+			salesDeliveryPO.setPeliveryTime(salesDelivery.getPeliveryTime());
+		}
+
+		salesDeliveryDao.save(salesDeliveryPO);
+	}
+
 	private void checkSalesDeliveryItem(SalesDeliveryItemPO salesDeliveryItemPO, List<SalesDeliveryStatusRightPO> rights, Short status, UserPO userPO) {
 
 		List<Short> statuses = new ArrayList<Short>();
@@ -338,6 +408,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		if (!statuses.contains(status)) return;
 
 		switch (status) {
+			case SalesDeliveryItemPO.STATUS_INIT_INT:
+
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, userPO);
+
+				break;
 			case SalesDeliveryItemPO.STATUS_TRAN_INT:
 
 				salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
@@ -376,8 +451,6 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	}
 
 	private void balanceSalesDeliveryItem(SalesDeliveryItemPO salesDeliveryItemPO, List<SalesDeliveryStatusRightPO> rights, Short status, UserPO userPO) {
-
-		if (salesDeliveryItemDao.countSalesDeliveryItem(salesDeliveryItemPO.getSales().getSid(), status) != 0) return;
 
 		SalesDeliveryStatusRightPO salesDeliveryStatusRightBO = null;
 
