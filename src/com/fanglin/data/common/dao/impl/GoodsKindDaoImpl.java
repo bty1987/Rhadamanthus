@@ -2,6 +2,7 @@ package com.fanglin.data.common.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -31,6 +32,12 @@ public class GoodsKindDaoImpl extends DaoImpl<GoodsKindPO> implements GoodsKindD
 	@SuppressWarnings("unchecked")
 	public List<GoodsKindPO> queryGoodsKind() {
 		return session().createCriteria(GoodsKindPO.class).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<GoodsKindPO> queryGoodsKind(long fgkid) {
+		return session().createCriteria(GoodsKindPO.class).add(Restrictions.eq("parent.gkid", fgkid)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

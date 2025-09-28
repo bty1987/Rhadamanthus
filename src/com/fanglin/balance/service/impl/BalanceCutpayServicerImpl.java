@@ -1,7 +1,6 @@
 package com.fanglin.balance.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
@@ -46,6 +44,20 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 	private BalanceDccountDao balanceDccountDao;
 
 	@Override
+	public void pageBalanceCutpay(Paging paging, List<Filter> filters) {
+
+		List<BalanceCutpayPO> balanceCutpayPOs = balanceCutpayDao.pageBalanceCutpay(paging, filters);
+		List<BalanceCutpayVO> balanceCutpayVOs = new ArrayList<BalanceCutpayVO>();
+
+		for (BalanceCutpayPO balanceCutpayPO : balanceCutpayPOs) {
+
+			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
+		}
+
+		paging.setData(balanceCutpayVOs);
+	}
+
+	@Override
 	public List<BalanceCutpayVO> queryBalanceCutpay(BalanceCutpayVO balanceCutpayVO) {
 
 		List<BalanceCutpayPO> balanceCutpayPOs = balanceCutpayDao.queryBalanceCutpay(balanceCutpayVO.getBalance().getBid());
@@ -53,43 +65,28 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		for (BalanceCutpayPO balanceCutpayPO : balanceCutpayPOs) {
 
-			balanceCutpayVO = new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO());
-
-			BeanUtil.copyPropertie(balanceCutpayPO, balanceCutpayVO,Arrays.asList("operater", "balance", "cutpay", "dccount"));
-			BeanUtil.copyPropertie(balanceCutpayPO.getOperater(),balanceCutpayVO.getOperater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceCutpayPO.getBalance(),balanceCutpayVO.getBalance());
-			BeanUtil.copyPropertie(balanceCutpayPO.getDccount(),balanceCutpayVO.getDccount());
-			BeanUtil.copyPropertie(balanceCutpayPO.getCutpay(),balanceCutpayVO.getCutpay());
-
-			balanceCutpayVOs.add(balanceCutpayVO);
+			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
 		}
 
 		return balanceCutpayVOs;
 	}
 
 	@Override
-	public void pageBalanceCutpay(Paging paging, List<Filter> filters, BalanceCutpayVO balanceCutpayVO) {
+	public List<BalanceCutpayVO> queryBalanceCutpayByOuid(BalanceCutpayVO balanceCutpayVO) {
 
-		List<BalanceCutpayPO> balanceCutpayPOs = balanceCutpayDao.pageBalanceCutpay(paging, filters, balanceCutpayVO.getDccount().getBdid());
+		List<BalanceCutpayPO> balanceCutpayPOs = balanceCutpayDao.queryBalanceCutpayByOuid(balanceCutpayVO.getOperater().getUid());
 		List<BalanceCutpayVO> balanceCutpayVOs = new ArrayList<BalanceCutpayVO>();
 
 		for (BalanceCutpayPO balanceCutpayPO : balanceCutpayPOs) {
 
-			balanceCutpayVO = new BalanceCutpayVO(new BalanceVO(), new UserBaseVO());
-
-			BeanUtil.copyPropertie(balanceCutpayPO, balanceCutpayVO,Arrays.asList("operater", "balance"));
-			BeanUtil.copyPropertie(balanceCutpayPO.getOperater(),balanceCutpayVO.getOperater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(balanceCutpayPO.getBalance(),balanceCutpayVO.getBalance());
-			BeanUtil.copyPropertie(balanceCutpayPO,balanceCutpayVO);
-
-			balanceCutpayVOs.add(balanceCutpayVO);
+			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
 		}
 
-		paging.setData(balanceCutpayVOs);
+		return balanceCutpayVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -113,7 +110,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 			balanceCutpayPO.setDccount(balanceDccountPO);
 
-			if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT){
+			if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT) {
 				balanceDccountPO.setSurplus(Arith.sub(balanceDccountPO.getSurplus(), balanceCutpayPO.getMoney()));
 			} else {
 				balanceDccountPO.setSurplus(Arith.add(balanceDccountPO.getSurplus(), balanceCutpayPO.getMoney()));
@@ -124,60 +121,141 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		balanceCutpayDao.save(balanceCutpayPO);
 
-		if (balanceCutpayVO.getBalance() != null) {
-			BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
-
-			if (balancePO == null) {
-				throw new FLException(350006, "结算单不存在");
-			}
-
-			if (balancePO.getSurplus() < balanceCutpayVO.getMoney()) {
-				throw new FLException(350003, "结算单金额不足");
-			}
-
-			balanceCutpayPO.setBalance(balancePO);
-
-			if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT){
-				balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-			} else {
-				balanceCutpayPO.setTotal(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
-			}
-			
-			balancePO.setCutpay(balanceCutpayPO.getTotal());
-
-			balanceDao.update(balancePO);
-		}
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deductBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
+		if (balanceCutpayVO.getBalance() == null) return 0;
 
 		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
-		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
 
 		if (balancePO == null) {
 			throw new FLException(350006, "结算单不存在");
 		}
 
+		if (balancePO.getSurplus() < balanceCutpayVO.getMoney()) {
+			throw new FLException(350003, "结算单金额不足");
+		}
+
+		balanceCutpayPO.setBalance(balancePO);
+
+		if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT) {
+			balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+		} else {
+			balanceCutpayPO.setTotal(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+		}
+
+		balancePO.setCutpay(balanceCutpayPO.getTotal());
+
+		balanceDao.update(balancePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int submitBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
+
+		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
+
+		if (balanceCutpayPO == null) {
+			throw new FLException(350023, "结算扣款不存在");
+		}
+
+		if (balanceCutpayVO.getBalance() == null) {
+			throw new FLException(350006, "结算单不存在");
+		}
+
+		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
+
+		if (balancePO == null) {
+			throw new FLException(350006, "结算单不存在");
+		}
+
+		if (balancePO.getSurplus() < balanceCutpayPO.getMoney()) {
+			throw new FLException(350003, "结算单金额不足");
+		}
+
+		balanceCutpayPO.setBalance(balancePO);
+		balanceCutpayPO.setStatus(BalanceCutpayPO.STATUS_BIND_INT);
+		balanceCutpayPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+		balanceCutpayPO.setComment(balanceCutpayVO.getComment());
+
+		balanceCutpayDao.update(balanceCutpayPO);
+
+		balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), balanceCutpayPO.getMoney()));
+		balancePO.setCutpay(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+
+		balanceDao.update(balancePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unbindBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
+
+		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
+
+		if (balanceCutpayPO == null) {
+			throw new FLException(350023, "结算扣款不存在");
+		}
+
+		if (balanceCutpayVO.getBalance() == null) {
+			throw new FLException(350006, "结算单不存在");
+		}
+
+		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
+
+		if (balancePO == null) {
+			throw new FLException(350006, "结算单不存在");
+		}
+
+		balanceCutpayPO.setBalance(null);
+		balanceCutpayPO.setStatus(BalanceCutpayPO.STATUS_INIT_INT);
+		balanceCutpayPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		balanceCutpayPO.setTotal(0);
+
+		balanceCutpayDao.update(balanceCutpayPO);
+
+		balancePO.setSurplus(Arith.add(balancePO.getSurplus(), balanceCutpayPO.getMoney()));
+		balancePO.setCutpay(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
+
+		balanceDao.update(balancePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deductBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
+
+		BalancePO balancePO = balanceDao.get(balanceCutpayVO.getBalance().getBid());
+
+		if (balancePO == null) {
+			throw new FLException(350006, "结算单不存在");
+		}
+
+		BalanceCutpayPO balanceCutpayPO = balanceCutpayDao.get(balanceCutpayVO.getBcid());
+
+		if (balanceCutpayPO == null) {
+			throw new FLException(350023, "结算扣款不存在");
+		}
+
 		UserPO operater = userDao.queryUserByUserId(userId);
 
-		BalanceCutpayPO balanceCutpayPO2 = new BalanceCutpayPO();
-		balanceCutpayPO2.setBalance(balancePO);
-		balanceCutpayPO2.setCutpay(balanceCutpayPO);
-		balanceCutpayPO2.setOperater(operater);
-		balanceCutpayPO2.setType(balanceCutpayVO.getType());
-		balanceCutpayPO2.setName(balanceCutpayVO.getName());
-		balanceCutpayPO2.setMoney(balanceCutpayVO.getMoney());
-		balanceCutpayPO2.setComment(balanceCutpayVO.getComment());
+		BalanceCutpayPO balanceCutpayDO = new BalanceCutpayPO();
 
-		balanceCutpayPO2.setTotal(Arith.sub(balanceCutpayPO.getTotal(), balanceCutpayPO2.getMoney()));
+		balanceCutpayDO.setBalance(balancePO);
+		balanceCutpayDO.setCutpay(balanceCutpayPO);
+		balanceCutpayDO.setOperater(operater);
+		balanceCutpayDO.setType(balanceCutpayVO.getType());
+		balanceCutpayDO.setName(balanceCutpayVO.getName());
+		balanceCutpayDO.setMoney(balanceCutpayVO.getMoney());
+		balanceCutpayDO.setComment(balanceCutpayVO.getComment());
 
-		balanceCutpayDao.save(balanceCutpayPO2);
+		balanceCutpayDO.setTotal(Arith.sub(balanceCutpayPO.getTotal(), balanceCutpayDO.getMoney()));
 
-		balancePO.setCutpay(Arith.sub(balancePO.getCutpay(), balanceCutpayPO2.getMoney()));
+		balanceCutpayDao.save(balanceCutpayDO);
+
+		balancePO.setCutpay(Arith.sub(balancePO.getCutpay(), balanceCutpayDO.getMoney()));
 
 		balanceDao.update(balancePO);
 

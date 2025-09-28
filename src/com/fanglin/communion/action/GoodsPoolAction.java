@@ -32,7 +32,7 @@ public class GoodsPoolAction extends BaseListAction {
 	@Action(value = "pageGoodsPool", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageGoodsPool() throws FLException {
 
-		goodsPoolService.pageGoodsPool(getPaging(), getFilters());
+		goodsPoolService.pageGoodsPool(getPaging(), getFilters(),goodsPool);
 
 		return SUCCESS;
 	}
@@ -97,6 +97,18 @@ public class GoodsPoolAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "batchAddFromPool", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String batchAddFromPool() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		goodsPoolService.batchAddFromPool(goodsPools);
+
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateGoodsPool", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateGoodsPool() throws FLException {
 

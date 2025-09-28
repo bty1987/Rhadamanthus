@@ -44,6 +44,22 @@ public class GoodsKindAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryGoodsKindByFgkid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryGoodsKindByFgkid() throws FLException {
+
+		goodsKinds = goodsKindService.queryGoodsKindByFgkid(goodsKind);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryGoodsKindByGkid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryGoodsKindByGkid() throws FLException {
+
+		goodsKind = goodsKindService.queryGoodsKindByGkid(goodsKind);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addGoodsKind", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addGoodsKind() throws FLException {
 

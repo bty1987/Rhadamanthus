@@ -386,6 +386,23 @@ Condition.addupRule("construction", {
             valuePath: "value"
         }
     },
+    
+    "info-isissue": {
+        label: "进度",
+        type: "select",
+        submitConfig: {
+            name: "isIssue",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().construction.isIssue.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "info-keyTime": {
         label: "预交钥匙",
         type: "dateRangePicker",

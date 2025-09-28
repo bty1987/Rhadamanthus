@@ -39,6 +39,8 @@ public class GoodsPoolVO implements java.io.Serializable {
 
 	private Short type;
 
+	private Short atttype;
+
 	private GoodsKindVO zerokind;
 
 	private GoodsKindVO onekind;
@@ -49,6 +51,22 @@ public class GoodsPoolVO implements java.io.Serializable {
 
 	private String path;
 
+	private Short status;
+
+	private String series;
+
+	private String elevel;
+
+	private String material;
+
+	private String quality;
+
+	private String color;
+
+	private String format;
+
+	private String model;
+
 	private Short colorcascade;
 
 	private Short formatcascade;
@@ -56,8 +74,6 @@ public class GoodsPoolVO implements java.io.Serializable {
 	private Short pricecascade;
 
 	private Short picturecascade;
-
-	private Short status;
 
 	public GoodsPoolVO() {
 		super();
@@ -291,6 +307,70 @@ public class GoodsPoolVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getSeries() {
+		return series;
+	}
+
+	public void setSeries(String series) {
+		this.series = series;
+	}
+
+	public String getElevel() {
+		return elevel;
+	}
+
+	public void setElevel(String elevel) {
+		this.elevel = elevel;
+	}
+
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	public String getQuality() {
+		return quality;
+	}
+
+	public void setQuality(String quality) {
+		this.quality = quality;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 }

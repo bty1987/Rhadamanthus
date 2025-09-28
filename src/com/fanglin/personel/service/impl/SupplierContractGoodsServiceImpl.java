@@ -93,7 +93,7 @@ public class SupplierContractGoodsServiceImpl implements SupplierContractGoodsSe
 		SupplierContractGoodsPO supplierContractGoodsPO = supplierContractGoodsDao.get(supplierContractGoods.getScgid());
 
 		if (supplierContractGoodsPO == null) {
-			throw new FLException(260004, "厂商商品不存在");
+			throw new FLException(260004, "商品不存在");
 		}
 
 		supplierContractGoodsDao.delete(supplierContractGoodsPO);

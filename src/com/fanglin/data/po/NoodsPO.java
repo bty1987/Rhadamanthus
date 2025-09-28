@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.material.vo.NoodsVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "noods", catalog = "data")
 public class NoodsPO implements Serializable {
@@ -110,6 +113,13 @@ public class NoodsPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public NoodsVO ptv(NoodsVO noodsVO) {
+
+		BeanUtil.copyProperties(this, noodsVO, "");
+
+		return noodsVO;
 	}
 
 }

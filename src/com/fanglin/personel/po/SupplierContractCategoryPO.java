@@ -1,45 +1,45 @@
 package com.fanglin.personel.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.personel.vo.SupplierContractCategoryVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
-@Table(name = "supplierBrandProduct", catalog = "communion")
-public class SupplierBrandProductPO implements java.io.Serializable {
+@Table(name = "supplierContractCategory", catalog = "communion")
+public class SupplierContractCategoryPO implements java.io.Serializable {
 
-	private static final long serialVersionUID = -9073486016937854510L;
+	private static final long serialVersionUID = -9073486016937854511L;
 
-	private long sbpid;
+	private long sccid;
 
-	private long scbid; 
+	private long scbid;
 
 	private String name;
 
 	private short ctype; // 结算类型 , 0: 底价 , 1: 点位
 
-	private int cvalue; // 结算值
+	private String cvalue; // 结算值
 
-	private int breakpay; // 违约金
-	
-	private int warranTime; // 质保期
-	
-	public SupplierBrandProductPO() {
+	public SupplierContractCategoryPO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "sbpid")
-	public long getSbpid() {
-		return sbpid;
+	@Column(name = "sccid")
+	public long getSccid() {
+		return sccid;
 	}
 
-	public void setSbpid(long sbpid) {
-		this.sbpid = sbpid;
+	public void setSccid(long sccid) {
+		this.sccid = sccid;
 	}
 
 	@Column(name = "scbid")
@@ -61,23 +61,14 @@ public class SupplierBrandProductPO implements java.io.Serializable {
 	}
 
 	@Column(name = "cvalue")
-	public int getCvalue() {
+	public String getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(int cvalue) {
+	public void setCvalue(String cvalue) {
 		this.cvalue = cvalue;
 	}
 
-	@Column(name = "breakpay")
-	public int getBreakpay() {
-		return breakpay;
-	}
-
-	public void setBreakpay(int breakpay) {
-		this.breakpay = breakpay;
-	}
-	
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -87,13 +78,10 @@ public class SupplierBrandProductPO implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "warranTime")
-	public int getWarranTime() {
-		return warranTime;
-	}
+	public SupplierContractCategoryVO ptv(SupplierContractCategoryVO supplierContractCategoryVO) {
 
-	public void setWarranTime(int warranTime) {
-		this.warranTime = warranTime;
-	}
+		BeanUtil.copyPropertie(this, supplierContractCategoryVO, "");
 
+		return supplierContractCategoryVO;
+	}
 }

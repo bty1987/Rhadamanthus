@@ -12,4 +12,6 @@ public interface DecorationBusitypeDao extends Dao<DecorationBusitypePO> {
 	public List<DecorationBusitypePO> pageDecorationBusitype(Paging paging, List<Filter> filters, int company);
 
 	public List<DecorationBusitypePO> queryDecorationBusitype(int company);
+	
+	public DecorationBusitypePO queryDecorationBusitype(String name,int company);
 }

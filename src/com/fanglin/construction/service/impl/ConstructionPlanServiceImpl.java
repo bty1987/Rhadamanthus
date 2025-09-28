@@ -99,8 +99,12 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 			constructionPlanPO.setConnum(constructionPaceNodePO.getConnum());
 			constructionPlanPO.setComnum(constructionPaceNodePO.getComnum());
 
+			constructionPlanPO.setPostnum(constructionPaceNodePO.getPostnum());
+			constructionPlanPO.setPrenum(constructionPaceNodePO.getPrenum());
+
 			constructionPlanPO.setContent(constructionPaceNodePO.getContent());
 			constructionPlanPO.setComment(constructionPaceNodePO.getComment());
+			constructionPlanPO.setCnid(constructionPaceNodePO.getNode().getCnid());
 
 			constructionPlanPO.setSort(sort);
 
@@ -114,7 +118,7 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 	@Transactional(rollbackFor = Exception.class)
 	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
 
-		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPlanVO.getNode().getCpid());
+		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPlanVO.getNode().getCpnid());
 
 		if (constructionPaceNodePO == null) {
 			throw new FLException(120037, "工程计划不存在");
@@ -134,12 +138,15 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 
 		constructionPlanPO.setConnum(constructionPaceNodePO.getConnum());
 		constructionPlanPO.setComnum(constructionPaceNodePO.getComnum());
+		constructionPlanPO.setPostnum(constructionPaceNodePO.getPostnum());
+		constructionPlanPO.setPrenum(constructionPaceNodePO.getPrenum());
 		constructionPlanPO.setPhase(constructionPaceNodePO.getPhase());
 		constructionPlanPO.setMaterial(constructionPaceNodePO.getMaterial());
 		constructionPlanPO.setPeriod(constructionPaceNodePO.getPeriod());
 
 		constructionPlanPO.setContent(constructionPaceNodePO.getContent());
 		constructionPlanPO.setComment(constructionPlanVO.getComment());
+		constructionPlanPO.setCnid(constructionPaceNodePO.getNode().getCnid());
 
 		constructionPlanPO.setSort(sort);
 
@@ -160,6 +167,8 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 		constructionPlanPO.setComnum(constructionPlanVO.getComnum());
 		constructionPlanPO.setContent(constructionPlanVO.getContent());
 		constructionPlanPO.setComment(constructionPlanVO.getComment());
+		constructionPlanPO.setPostnum(constructionPlanVO.getPostnum());
+		constructionPlanPO.setPrenum(constructionPlanVO.getPrenum());
 
 		constructionPlanDao.update(constructionPlanPO);
 	}

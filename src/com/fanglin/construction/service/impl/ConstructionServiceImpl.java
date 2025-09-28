@@ -20,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.CityProperPartnerDao;
+import com.fanglin.communion.dao.DepartmentPartnerDao;
+import com.fanglin.communion.po.CityProperPartnerPO;
+import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionRecordDao;
 import com.fanglin.construction.dao.QualiterDao;
@@ -32,7 +36,9 @@ import com.fanglin.construction.vo.QualiterVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.dao.DecorationUserDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserPartnerDao;
@@ -57,10 +63,19 @@ public class ConstructionServiceImpl implements ConstructionService {
 	private DecorationDao decorationDao;
 
 	@Autowired
+	private DecorationUserDao decorationUserDao;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
 	private UserPartnerDao userPartnerDao;
+
+	@Autowired
+	private DepartmentPartnerDao departmentPartnerDao;
+
+	@Autowired
+	private CityProperPartnerDao cityProperPartnerDao;
 
 	@Autowired
 	private QualiterDao qualiterDao;
@@ -72,7 +87,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (ConstructionPO constructionPO : constructionPOs) {
-			decorationVOs.add(ptv(constructionPO.getDecoration()));
+			decorationVOs.add(constructionPO.getDecoration().ptvcascade(new DecorationVO(new UserBaseVO())));
 		}
 
 		paging.setData(decorationVOs);
@@ -87,11 +102,11 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		List<ConstructionPO> constructionSchedulePOs = constructionDao.pageConstructionForSupervision(paging, filters, userPO.getUid());
+		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForSupervision(paging, filters, userPO.getUid());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
-		for (ConstructionPO constructionSchedulePO : constructionSchedulePOs) {
-			decorationVOs.add(ptv(constructionSchedulePO.getDecoration()));
+		for (ConstructionPO constructionPO : constructionPOs) {
+			decorationVOs.add(constructionPO.getDecoration().ptvcascade(new DecorationVO(new UserBaseVO())));
 		}
 
 		paging.setData(decorationVOs);
@@ -104,7 +119,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (ConstructionPO constructionPO : constructionPOs) {
-			decorationVOs.add(ptv(constructionPO.getDecoration()));
+			decorationVOs.add(constructionPO.getDecoration().ptvcascade(new DecorationVO(new UserBaseVO())));
 		}
 
 		paging.setData(decorationVOs);
@@ -179,13 +194,41 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		decorationPO.setSupervisor(supervisor);
 
-		UserPartnerPO partner = userPartnerDao.queryUserPartner(supervisor.getUid(), UserPartnerPO.TYPE_SALES_INT, decorationPO.getCompany());
+		UserPartnerPO partnerPO = userPartnerDao.queryUserPartner(supervisor.getUid(), UserPartnerPO.TYPE_SERV_INT, decorationPO.getCompany());
 
-		if (partner != null) {
-			decorationPO.setMaterialer(partner.getPartner());
+		if (partnerPO != null) {
+			decorationPO.setMaterialer(partnerPO.getPartner());
+		} else {
+			DepartmentPartnerPO partnerDO = departmentPartnerDao.queryDepartmentPartner(decorationPO.getDesigner().getDept().getDid(), DepartmentPartnerPO.TYPE_SERV_INT);
+
+			if (partnerDO != null) decorationPO.setMaterialer(partnerDO.getPartner());
 		}
 
 		decorationDao.update(decorationPO);
+
+		DepartmentPartnerPO partnerSO = departmentPartnerDao.queryDepartmentPartner(decorationPO.getDesigner().getDept().getDid(), DepartmentPartnerPO.TYPE_SALES_INT);
+
+		if (partnerSO != null) {
+
+			DecorationUserPO decorationUserPO = new DecorationUserPO();
+
+			decorationUserPO.setOrderId(decorationPO.getOrderId());
+			decorationUserPO.setUser(partnerSO.getPartner());
+
+			decorationUserDao.save(decorationUserPO);
+		}
+
+		CityProperPartnerPO partnerCPO = cityProperPartnerDao.queryCityProperPartner(decorationPO.getHouse().getVillage().getCityProper().getCpid(), CityProperPartnerPO.TYPE_SERV_INT);
+
+		if (partnerCPO != null) {
+
+			DecorationUserPO decorationUserPO = new DecorationUserPO();
+
+			decorationUserPO.setOrderId(decorationPO.getOrderId());
+			decorationUserPO.setUser(partnerCPO.getPartner());
+
+			decorationUserDao.save(decorationUserPO);
+		}
 
 		if (qualiters == null || qualiters.size() == 0) return;
 
@@ -209,7 +252,24 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int openAccessory(ConstructionVO constructionVO) throws FLException {
+	public int updateConstructionByCid(ConstructionVO constructionVO) throws FLException {
+
+		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
+
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		constructionPO.setTerminalStatus(constructionVO.getTerminalStatus());
+
+		constructionDao.update(constructionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int openConstruction(ConstructionVO constructionVO) throws FLException {
 
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
 
@@ -226,7 +286,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateConstructionForAdvance(ConstructionVO constructionVO) throws FLException {
+	public int updateConstructionForAdvance(ConstructionVO constructionVO, String userId) throws FLException {
 
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
 
@@ -234,17 +294,25 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
+		if (constructionVO.getSalaryLimit() > constructionPO.getSalaryLimitTotal()) {
+			throw new FLException(120035, "工费浮动已达上限");
+		}
+
 		constructionPO.setAccessoryLimit(constructionVO.getAccessoryLimit());
 		constructionPO.setSalaryLimit(constructionVO.getSalaryLimit());
 
 		constructionDao.update(constructionPO);
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		constructionRecordDao.save(new ConstructionRecordPO().init(constructionPO.getDecoration().getOrderId(), constructionPO.getCid(), operater, ConstructionRecordPO.TYPE_COMMON_INT, String.format("辅料上限: %s, 工费浮动: %s", constructionPO.getAccessoryLimit(), constructionPO.getSalaryLimit())));
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int lockAccessory(ConstructionVO constructionVO, String userId) throws FLException {
+	public int lockConstruction(ConstructionVO constructionVO, String userId) throws FLException {
 
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
 
@@ -255,9 +323,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 		UserPO locker = userDao.queryUserByUserId(userId);
 
 		constructionPO.setAccessory(ConstructionPO.ACCESSORY_LOCK_SHORT);
-
 		constructionPO.setLocker(locker);
-
 		constructionPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionDao.update(constructionPO);
@@ -265,11 +331,25 @@ public class ConstructionServiceImpl implements ConstructionService {
 		return 0;
 	}
 
-	private DecorationVO ptv(DecorationPO decorationPO) {
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int balanceConstruction(ConstructionVO constructionVO, String userId) throws FLException {
 
-		DecorationVO decorationVO = new DecorationVO(new UserBaseVO());
-		decorationPO.ptvcascade(decorationVO);
+		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
 
-		return decorationVO;
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		UserPO balancer = userDao.queryUserByUserId(userId);
+
+		constructionPO.setBalanceStatus(ConstructionPO.BALANCE_STATUS_BALANCE_INT);
+		constructionPO.setBalancer(balancer);
+		constructionPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+
+		constructionDao.update(constructionPO);
+
+		return 0;
 	}
+
 }

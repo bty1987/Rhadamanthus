@@ -53,7 +53,7 @@ jQuery(function() {
 
                 if (val.goods.gid == k) {
 
-                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid);
+                    accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit);
 
                     accessories.leftitems.goodsNo.attr('data-no', val.goods.no).val(val.goods.no);
                     accessories.leftitems.category.attr('data-category', val.goods.category).val(val.goods.category);
@@ -254,6 +254,11 @@ jQuery(function() {
             options["accessoriesItems[" + i + "].num"] = $v.attr('data-num');
             options["accessoriesItems[" + i + "].selling"] = $v.attr('data-selling');
             options["accessoriesItems[" + i + "].caid"] = $v.attr('data-caid');
+            
+            options["accessoriesItems[" + i + "].normnum"] = $v.attr('data-normnum');
+            options["accessoriesItems[" + i + "].normunit"] = $v.attr('data-normunit');
+            options["accessoriesItems[" + i + "].storenum"] = $v.attr('data-storenum');
+            options["accessoriesItems[" + i + "].storeunit"] = $v.attr('data-storeunit');
 
             if ($v.attr('data-nid'))
                 options["accessoriesItems[" + i + "].nid"] = $v.attr('data-nid');

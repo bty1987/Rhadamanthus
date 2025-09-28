@@ -31,7 +31,7 @@ public class ConstructionPaceNodeAction extends BaseListAction {
 	@Action(value = "pageConstructionPaceNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstructionPaceNode() throws FLException {
 
-		constructionPaceNodeService.pageConstructionPaceNode(getPaging(), getFilters(), queryCompany());
+		constructionPaceNodeService.pageConstructionPaceNode(getPaging(), getFilters(), queryCompany(), constructionPaceNode);
 
 		return SUCCESS;
 	}

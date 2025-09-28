@@ -69,11 +69,7 @@ public class DecorationUserServiceImpl implements DecorationUserService {
 		List<DecorationUserVO> decorationUserVOs = new ArrayList<DecorationUserVO>();
 
 		for (DecorationUserPO decorationUserPO : decorationUserPOs) {
-			DecorationUserVO decorationUser = new DecorationUserVO(new UserBaseVO(new DutyVO()));
-			BeanUtil.copyPropertie(decorationUserPO, decorationUser, Arrays.asList("user"));
-			BeanUtil.copyPropertie(decorationUserPO.getUser(), decorationUser.getUser(), Arrays.asList("duty", "dept", "role"));
-			BeanUtil.copyPropertie(decorationUserPO.getUser().getDuty(), decorationUser.getUser().getDuty(), Arrays.asList("departmentType"));
-			decorationUserVOs.add(decorationUser);
+			decorationUserVOs.add(decorationUserPO.ptv(new DecorationUserVO(new UserBaseVO(new DutyVO()))));
 		}
 
 		paging.setData(decorationUserVOs);

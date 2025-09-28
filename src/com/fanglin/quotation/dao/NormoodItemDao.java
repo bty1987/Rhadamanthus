@@ -17,7 +17,11 @@ public interface NormoodItemDao extends Dao<NormoodItemPO> {
 
 	public int countNormoodItem(long sid, long quoteld, short type);
 
+	public int disableNormoodItem(long qid, short type);
+
 	public int deleteNormoodItem(long qid, short type);
+
+	public int deleteNormoodItem(long qid, short type, short status);
 
 	public int deleteNormoodItem(long qid, long sid, short type);
 

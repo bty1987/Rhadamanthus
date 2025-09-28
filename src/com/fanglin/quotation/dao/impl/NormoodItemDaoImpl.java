@@ -26,14 +26,14 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 
 	@Override
 	public NormoodItemPO queryNormoodItemPO(long sid, long quoteId, short type) {
-		return (NormoodItemPO) session().createCriteria(NormoodItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("type", type)).uniqueResult();
+		return (NormoodItemPO) session().createCriteria(NormoodItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public int amountNormoodItem(long qid, long nid) {
 
-		String sql = "select sum(if(atttype = 0, normnum, -normnum)) from quotation.normooditem where qid =:qid and nid = :nid";
-		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("nid", nid).uniqueResult();
+		String sql = "select sum(if(atttype = 0, normnum, -normnum)) from quotation.normooditem where qid =:qid and nid = :nid and status = :status";
+		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("nid", nid).setShort("status", NormoodItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
@@ -57,10 +57,28 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 	}
 
 	@Override
+	public int disableNormoodItem(long qid, short type) {
+
+		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type";
+		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setShort("type", type).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
 	public int deleteNormoodItem(long qid, short type) {
 
 		String sql = "delete from quotation.normooditem where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteNormoodItem(long qid, short type, short status) {
+
+		String sql = "delete from quotation.normooditem where qid = :qid and type = :type and status = :status";
+		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setShort("status", status).executeUpdate();
 
 		return 0;
 	}

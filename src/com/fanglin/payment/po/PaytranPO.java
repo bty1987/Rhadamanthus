@@ -108,6 +108,8 @@ public class PaytranPO implements java.io.Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp collectTime;
+
 	private Timestamp pushTime;
 
 	private UserPO creater;
@@ -265,6 +267,15 @@ public class PaytranPO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "collectTime")
+	public Timestamp getCollectTime() {
+		return collectTime;
+	}
+
+	public void setCollectTime(Timestamp collectTime) {
+		this.collectTime = collectTime;
 	}
 
 	@Column(name = "pushTime")

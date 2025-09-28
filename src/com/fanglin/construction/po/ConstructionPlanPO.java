@@ -46,9 +46,15 @@ public class ConstructionPlanPO implements Serializable {
 
 	private ConstructionPaceNodePO node;
 
+	private Long cnid;
+
 	private int connum;
 
 	private int comnum;
+
+	private int prenum;
+
+	private int postnum;
 
 	private String phase;
 
@@ -90,6 +96,15 @@ public class ConstructionPlanPO implements Serializable {
 
 	public void setCid(long cid) {
 		this.cid = cid;
+	}
+
+	@Column(name = "cnid")
+	public Long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(Long cnid) {
+		this.cnid = cnid;
 	}
 
 	@Column(name = "orderId")
@@ -136,6 +151,24 @@ public class ConstructionPlanPO implements Serializable {
 
 	public void setComnum(int comnum) {
 		this.comnum = comnum;
+	}
+
+	@Column(name = "prenum")
+	public int getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(int prenum) {
+		this.prenum = prenum;
+	}
+
+	@Column(name = "postnum")
+	public int getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(int postnum) {
+		this.postnum = postnum;
 	}
 
 	@Column(name = "phase")

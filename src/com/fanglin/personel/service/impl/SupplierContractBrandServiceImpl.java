@@ -21,12 +21,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.SupplierContractBrandDao;
 import com.fanglin.personel.po.SupplierContractBrandPO;
 import com.fanglin.personel.service.SupplierContractBrandService;
 import com.fanglin.personel.vo.SupplierContractBrandVO;
+import com.fanglin.personel.vo.SupplierContractCategoryVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
@@ -48,37 +50,32 @@ public class SupplierContractBrandServiceImpl implements SupplierContractBrandSe
 	@Override
 	public void pageSupplierContractBrand(Paging paging, List<Filter> filters, int company, SupplierContractBrandVO supplierContractBrand) throws FLException {
 
-		List<SupplierContractBrandPO> supplierBrandPOs = supplierBrandDao.pageSupplierBrand(paging, filters, company, supplierContractBrand.getScid());
-		List<SupplierContractBrandVO> supplierBrandVOs = new ArrayList<SupplierContractBrandVO>();
+		List<SupplierContractBrandPO> supplierContractBrandPOs = supplierBrandDao.pageSupplierBrand(paging, filters, company, supplierContractBrand.getScid());
+		List<SupplierContractBrandVO> supplierContractBrandVOs = new ArrayList<SupplierContractBrandVO>();
 
-		for (SupplierContractBrandPO supplierBrandPO : supplierBrandPOs) {
-			supplierBrandVOs.add(supplierBrandPO.ptv(new SupplierContractBrandVO(new BrandPO())));
+		for (SupplierContractBrandPO supplierContractBrandPO : supplierContractBrandPOs) {
+			supplierContractBrandVOs.add(supplierContractBrandPO.ptv(new SupplierContractBrandVO(new BrandVO(), new ArrayList<SupplierContractCategoryVO>())));
 		}
 
-		paging.setData(supplierBrandVOs);
+		paging.setData(supplierContractBrandVOs);
 	}
 
 	@Override
 	public List<SupplierContractBrandVO> querySupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException {
 
-		List<SupplierContractBrandPO> supplierBrandPOs = supplierBrandDao.querySupplierBrand(supplierBrand.getScid());
-		List<SupplierContractBrandVO> supplierBrandVOs = new ArrayList<SupplierContractBrandVO>();
+		List<SupplierContractBrandPO> supplierContractBrandPOs = supplierBrandDao.querySupplierBrand(supplierBrand.getScid());
+		List<SupplierContractBrandVO> supplierContractBrandVOs = new ArrayList<SupplierContractBrandVO>();
 
-		for (SupplierContractBrandPO supplierBrandPO : supplierBrandPOs) {
-
-			SupplierContractBrandVO supplierBrandVO = new SupplierContractBrandVO();
-
-			supplierBrandPO.ptv(supplierBrandVO);
-
-			supplierBrandVOs.add(supplierBrandVO);
+		for (SupplierContractBrandPO supplierContractBrandPO : supplierContractBrandPOs) {
+			supplierContractBrandVOs.add(supplierContractBrandPO.ptv(new SupplierContractBrandVO()));
 		}
 
-		return supplierBrandVOs;
+		return supplierContractBrandVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addSupplierContractBrand(SupplierContractBrandVO supplierBrand, int company) throws FLException {
+	public void addSupplierContractBrand(SupplierContractBrandVO supplierContractBrandVO, int company) throws FLException {
 
 		CompanyPO companyPO = companyDao.get(company);
 
@@ -86,53 +83,52 @@ public class SupplierContractBrandServiceImpl implements SupplierContractBrandSe
 			throw new FLException(230015, "公司不存在");
 		}
 
-		SupplierContractBrandPO supplierBrandPO = new SupplierContractBrandPO();
+		SupplierContractBrandPO supplierContractBrandPO = new SupplierContractBrandPO();
 
-		BeanUtil.copyProperties(supplierBrand, supplierBrandPO, Arrays.asList("brand"));
+		BeanUtil.copyProperties(supplierContractBrandVO, supplierContractBrandPO, Arrays.asList("brand"));
 
-		if (supplierBrand.getBrand() != null) {
+		if (supplierContractBrandVO.getBrand() != null) {
 
-			BrandPO brand = brandDao.get(supplierBrand.getBrand().getBid());
+			BrandPO brand = brandDao.get(supplierContractBrandVO.getBrand().getBid());
 
 			if (brand == null) {
 				throw new FLException(130077, "品牌不存在");
 			}
 
-			supplierBrandPO.setBrand(brand);
+			supplierContractBrandPO.setBrand(brand);
 		}
 
-		supplierBrandDao.save(supplierBrandPO);
-
+		supplierBrandDao.save(supplierContractBrandPO);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteSupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException {
+	public int deleteSupplierContractBrand(SupplierContractBrandVO supplierContractBrandVO) throws FLException {
 
-		SupplierContractBrandPO supplierBrandPO = supplierBrandDao.get(supplierBrand.getScbid());
+		SupplierContractBrandPO supplierContractBrandPO = supplierBrandDao.get(supplierContractBrandVO.getScbid());
 
-		if (supplierBrandPO == null) {
-			throw new FLException(130077, "厂商品牌不存在");
+		if (supplierContractBrandPO == null) {
+			throw new FLException(130077, "品牌不存在");
 		}
 
-		supplierBrandDao.delete(supplierBrandPO);
+		supplierBrandDao.delete(supplierContractBrandPO);
 
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateSupplierContractBrand(SupplierContractBrandVO supplierBrand) throws FLException {
+	public void updateSupplierContractBrand(SupplierContractBrandVO supplierContractBrandVO) throws FLException {
 
-		SupplierContractBrandPO supplierBrandPO = supplierBrandDao.get(supplierBrand.getScbid());
+		SupplierContractBrandPO supplierContractBrandPO = supplierBrandDao.get(supplierContractBrandVO.getScbid());
 
-		if (supplierBrandPO == null) {
-			throw new FLException(130077, "厂商品牌不存在");
+		if (supplierContractBrandPO == null) {
+			throw new FLException(130077, "品牌不存在");
 		}
 
-		supplierBrandPO.setServicePrice(supplierBrand.getServicePrice());
-		
-		supplierBrandDao.update(supplierBrandPO);
+		supplierContractBrandPO.setServicePrice(supplierContractBrandVO.getServicePrice());
+
+		supplierBrandDao.update(supplierContractBrandPO);
 	}
 
 }

@@ -229,8 +229,34 @@ $.extend(api, {
                 args: ["cutpay", "surplus"]
             }]
         },
+        queryBalanceCutpayByOuid: {
+            url: "queryBalanceCutpayByOuid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceCutpays",
+                args: ["money", "cutpay", "total"]
+            }, {
+                result: "balanceCutpays-dccount",
+                args: ["cutpay", "surplus"]
+            }]
+        },
         addBalanceCutpay: {
             url: "addBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+        submitBalanceCutpay: {
+            url: "submitBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+        unbindBalanceCutpay: {
+            url: "unbindBalanceCutpay.do",
             type: "update",
             tranargs: {
                 args: ["balanceCutpay.money"]
@@ -363,6 +389,10 @@ $.extend(api, {
         },
         unlockBalanceSales: {
             url: "unlockBalanceSales.do",
+            demo: true
+        },
+        affirmBalanceSales: {
+            url: "affirmBalanceSales.do",
             demo: true
         },
         amountBalanceSales: {
@@ -652,5 +682,15 @@ $.extend(api, {
             demo: true
         },
 
+        addBalancePicture: {
+            url: "addBalancePicture.do",
+            intercept: true
+        },
+        queryBalancePicture: {
+            url: "queryBalancePicture.do"
+        },
+        deleteBalancePicture: {
+            url: "deleteBalancePicture.do"
+        }
     }
 });

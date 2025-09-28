@@ -90,6 +90,7 @@
 
                 var _e = $(e);
                 if (_e.children().length == 0) {
+                    console.log(_e)
                     _e.addClass('marksearch');
                 }
             });

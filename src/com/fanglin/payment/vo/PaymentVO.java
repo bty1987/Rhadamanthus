@@ -338,6 +338,19 @@ public class PaymentVO implements Serializable {
 		this.company = company;
 	}
 
+	public PaymentVO trans(String orderId, short type, long transfer, String unique, String comment) {
+
+		setOrderId(orderId);
+		setPaymentType(type);
+
+		setTransfer(transfer);
+		setUniqueid(unique);
+
+		setComment(comment);
+
+		return this;
+	}
+
 	public PaymentVO filter(List<Filter> filters, int company) {
 
 		if (getStatus() != null) {

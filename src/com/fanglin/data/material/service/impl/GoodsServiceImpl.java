@@ -107,11 +107,15 @@ public class GoodsServiceImpl implements GoodsService {
 	private PriceDao priceDao;
 
 	@Override
-	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
+	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company,GoodsVO goods) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
+		
+		if (goods != null && goods.getAtttype() != null) {
+			filters.add(new Filter("atttype", String.valueOf(goods.getAtttype()), "eq"));
+		}
 
 		if (brandUserRightPOs.size() > 0) {
 
@@ -134,10 +138,14 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company) throws FLException {
+	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company,GoodsVO goods) throws FLException {
 
 		List<GoodsPO> goodsPOs = goodsDao.pageGoodsForAdvance(paging, filters, company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
+		
+		if (goods != null && goods.getAtttype() != null) {
+			filters.add(new Filter("atttype", String.valueOf(goods.getAtttype()), "eq"));
+		}
 
 		for (GoodsPO goodsPO : goodsPOs) {
 			goodsVOs.add(goodsPO.ptv(new GoodsVO(new AccessoriesTypeVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO(), new GoodsKindVO())));

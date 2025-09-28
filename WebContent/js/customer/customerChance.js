@@ -880,7 +880,7 @@ jQuery(function($) {
                 "csid": v.source.csid
             }
             
-            com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
+            com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: 设计需求完善");
 
             return false;
         },

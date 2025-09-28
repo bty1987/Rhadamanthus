@@ -66,7 +66,7 @@ public class ConstructionDiaryServiceImpl implements ConstructionDiaryService {
 	@Override
 	public List<ConstructionDiaryVO> queryConstructionDiary(ConstructionDiaryVO constructionDiaryVO) throws FLException {
 
-		List<ConstructionDiaryPO> constructionDiaryPOs = constructionDiaryDao.queryConstructionDiary(constructionDiaryVO);
+		List<ConstructionDiaryPO> constructionDiaryPOs = constructionDiaryDao.queryConstructionDiary(constructionDiaryVO.getDecoration().getOrderId());
 		List<ConstructionDiaryVO> constructionDiaryVOs = new ArrayList<ConstructionDiaryVO>();
 
 		for (ConstructionDiaryPO constructionDiaryPO : constructionDiaryPOs) {
@@ -78,22 +78,26 @@ public class ConstructionDiaryServiceImpl implements ConstructionDiaryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addConstructionDiary(ConstructionDiaryVO constructionDiaryVO, ConstructionDiaryDrawingVO constructionDiaryDrawing, String userId, Integer company) throws FLException {
+	public void addConstructionDiary(ConstructionDiaryVO constructionDiaryVO, List<ConstructionDiaryDrawingVO> constructionDiaryDrawings, String userId, Integer company) throws FLException {
 
-		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(constructionDiaryVO.getCsid());
+		long csid = constructionDiaryVO.getCsid();
+
+		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.get(csid);
 
 		if (constructionSchedulePO == null) {
 			throw new FLException(120024, "工程环节不存在");
 		}
 
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionDiaryVO.getDecoration().getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionSchedulePO.getOrderId());
 
-		if (constructionDiaryVO.getAtttype() == ConstructionDiaryVO.COLUMN_ATTTYPE_ENTER) {
-			constructionDiaryService.enterConstructionDiary(constructionDiaryVO.getCsid());
-		}
+		if (constructionDiaryDao.countConstructionDiary(csid, ConstructionDiaryVO.COLUMN_ATTTYPE_ENTER) == 0) {
+			constructionDiaryService.enterConstructionDiary(csid);
 
-		if (constructionDiaryVO.getAtttype() == ConstructionDiaryVO.COLUMN_ATTTYPE_LEAVE) {
-			constructionDiaryService.leaveConstructionDiary(constructionDiaryVO.getCsid());
+			constructionDiaryVO.setAtttype(ConstructionDiaryVO.COLUMN_ATTTYPE_ENTER);
+		} else {
+			constructionDiaryService.leaveConstructionDiary(csid);
+
+			constructionDiaryVO.setAtttype(ConstructionDiaryVO.COLUMN_ATTTYPE_LEAVE);
 		}
 
 		ConstructionDiaryPO constructionDiaryPO = new ConstructionDiaryPO();
@@ -103,18 +107,20 @@ public class ConstructionDiaryServiceImpl implements ConstructionDiaryService {
 		constructionDiaryPO.setCid(constructionSchedulePO.getCid());
 		constructionDiaryPO.setCsid(constructionSchedulePO.getCsid());
 		constructionDiaryPO.setCnid(constructionSchedulePO.getNode().getCnid());
-
+		constructionDiaryPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		constructionDiaryPO.setCreater(userDao.queryUserByUserId(userId));
 		constructionDiaryPO.setDecoration(decorationPO);
 
 		constructionDiaryDao.save(constructionDiaryPO);
 		constructionDiaryDao.flush();
 
-		if (constructionDiaryDrawing != null) {
+		if (constructionDiaryDrawings == null || constructionDiaryDrawings.size() == 0) return;
+
+		for (ConstructionDiaryDrawingVO constructionDiaryDrawing : constructionDiaryDrawings) {
 
 			constructionDiaryDrawing.setCdid(constructionDiaryPO.getCdid());
 			constructionDiaryDrawing.setCid(constructionDiaryPO.getCid());
-			constructionDiaryDrawing.setCdid(constructionDiaryPO.getCsid());
+			constructionDiaryDrawing.setCsid(constructionDiaryPO.getCsid());
 			constructionDiaryDrawing.setCnid(constructionDiaryPO.getCnid());
 
 			constructionDiaryDrawingService.addConstructionDiaryDrawing(constructionDiaryDrawing, userId, company);

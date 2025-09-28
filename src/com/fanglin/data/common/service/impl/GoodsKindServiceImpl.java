@@ -32,16 +32,14 @@ public class GoodsKindServiceImpl implements GoodsKindService {
 
 		for (GoodsKindPO goodsKindPO : goodsKindPOs) {
 
-			GoodsKindVO goodsKindVO = new GoodsKindVO();
+			GoodsKindVO goodsKindVO = new GoodsKindVO(new GoodsKindVO());
 
-			BeanUtil.copyPropertie(goodsKindPO, goodsKindVO);
+			goodsKindPO.ptv(goodsKindVO);
 
 			goodsKindVOs.add(goodsKindVO);
-
 		}
 
 		paging.setData(goodsKindVOs);
-
 	}
 
 	@Override
@@ -52,9 +50,9 @@ public class GoodsKindServiceImpl implements GoodsKindService {
 
 		for (GoodsKindPO goodsKindPO : goodsKindPOs) {
 
-			GoodsKindVO goodsKindVO = new GoodsKindVO();
+			GoodsKindVO goodsKindVO = new GoodsKindVO(new GoodsKindVO());
 
-			BeanUtil.copyPropertie(goodsKindPO, goodsKindVO);
+			goodsKindPO.ptv(goodsKindVO);
 
 			goodsKindVOs.add(goodsKindVO);
 
@@ -64,12 +62,49 @@ public class GoodsKindServiceImpl implements GoodsKindService {
 	}
 
 	@Override
+	public List<GoodsKindVO> queryGoodsKindByFgkid(GoodsKindVO goodsKind) throws FLException {
+
+		List<GoodsKindPO> goodsKindPOs = goodsKindDao.queryGoodsKind(goodsKind.getParent().getGkid());
+		List<GoodsKindVO> goodsKindVOs = new ArrayList<GoodsKindVO>();
+
+		for (GoodsKindPO goodsKindPO : goodsKindPOs) {
+
+			GoodsKindVO goodsKindVO = new GoodsKindVO(new GoodsKindVO());
+
+			goodsKindPO.ptv(goodsKindVO);
+
+			goodsKindVOs.add(goodsKindVO);
+
+		}
+
+		return goodsKindVOs;
+	}
+
+	@Override
+	public GoodsKindVO queryGoodsKindByGkid(GoodsKindVO goodsKindVO) throws FLException {
+
+		GoodsKindPO goodsKindPO = goodsKindDao.get(goodsKindVO.getGkid());
+
+		if (goodsKindPO == null) {
+			throw new FLException(130127, "类别不存在");
+		}
+
+		goodsKindVO = new GoodsKindVO(new GoodsKindVO());
+
+		goodsKindPO.ptv(goodsKindVO);
+
+		return goodsKindVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addGoodsKind(GoodsKindVO goodsKindVO, int company) {
+	public void addGoodsKind(GoodsKindVO goodsKindVO, int company) throws FLException {
 
 		GoodsKindPO goodsKindPO = new GoodsKindPO();
 
-		BeanUtil.copyPropertie(goodsKindVO, goodsKindPO);
+		BeanUtil.copyPropertie(goodsKindVO, goodsKindPO, Arrays.asList("parent"));
+
+		if (goodsKindVO.getParent() != null && goodsKindVO.getParent().getGkid() != null) goodsKindPO.setParent(new GoodsKindPO(goodsKindVO.getParent().getGkid()));
 
 		goodsKindDao.save(goodsKindPO);
 
@@ -77,15 +112,17 @@ public class GoodsKindServiceImpl implements GoodsKindService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateGoodsKind(GoodsKindVO goodsKind) throws FLException {
+	public void updateGoodsKind(GoodsKindVO goodsKindVO) throws FLException {
 
-		GoodsKindPO goodsKindPO = goodsKindDao.get(goodsKind.getGkid());
+		GoodsKindPO goodsKindPO = goodsKindDao.get(goodsKindVO.getGkid());
 
 		if (goodsKindPO == null) {
 			throw new FLException(130127, "类别不存在");
 		}
 
-		BeanUtil.copyPropertie(goodsKind, goodsKindPO, Arrays.asList("status"));
+		BeanUtil.copyPropertie(goodsKindVO, goodsKindPO, Arrays.asList("status", "parent"));
+
+		if (goodsKindVO.getParent() != null && goodsKindVO.getParent().getGkid() != null) goodsKindPO.setParent(new GoodsKindPO(goodsKindVO.getParent().getGkid()));
 
 		goodsKindDao.update(goodsKindPO);
 
@@ -104,6 +141,6 @@ public class GoodsKindServiceImpl implements GoodsKindService {
 		goodsKindPO.setStatus(goodsKind.getStatus());
 
 		goodsKindDao.update(goodsKindPO);
-
 	}
+
 }

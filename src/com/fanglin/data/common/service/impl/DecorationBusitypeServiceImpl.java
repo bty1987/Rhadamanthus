@@ -14,6 +14,7 @@ import com.fanglin.data.common.dao.DecorationBusitypeDao;
 import com.fanglin.data.common.service.DecorationBusitypeService;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -48,6 +49,20 @@ public class DecorationBusitypeServiceImpl implements DecorationBusitypeService 
 		}
 
 		return decorationBusitypeVOs;
+	}
+
+	@Override
+	public DecorationBusitypeVO queryDecorationBusitypeByName(DecorationBusitypeVO decorationBusitypeVO, String company) throws FLException {
+
+		DecorationBusitypePO decorationBusitypePO = decorationBusitypeDao.queryDecorationBusitype(decorationBusitypeVO.getName(), CompanyServiceImpl.decode(company));
+
+		if (decorationBusitypePO == null) {
+			throw new FLException(130061, "业务类型不存在");
+		}
+
+		decorationBusitypePO.ptv(decorationBusitypeVO);
+
+		return decorationBusitypeVO;
 	}
 
 	@Override

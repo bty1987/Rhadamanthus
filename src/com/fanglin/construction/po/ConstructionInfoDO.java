@@ -55,6 +55,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private short isCeremony;
 
+	private short isIssue;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -149,6 +151,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setIsCeremony(short isCeremony) {
 		this.isCeremony = isCeremony;
+	}
+
+	@Column(name = "isIssue")
+	public short getIsIssue() {
+		return isIssue;
+	}
+
+	public void setIsIssue(short isIssue) {
+		this.isIssue = isIssue;
 	}
 
 	@Column(name = "finishTime")

@@ -1,10 +1,13 @@
 package com.fanglin.construction.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
 import com.fanglin.construction.dao.ConstructionDiaryDao;
 import com.fanglin.construction.po.ConstructionDiaryPO;
-import com.fanglin.construction.vo.ConstructionDiaryVO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -31,11 +34,20 @@ public class ConstructionDiaryDaoImpl extends DaoImpl<ConstructionDiaryPO> imple
 
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ConstructionDiaryPO> queryConstructionDiary(ConstructionDiaryVO constructionDiaryVO) {
-		return session().createCriteria(ConstructionDiaryPO.class).list();
+	public List<ConstructionDiaryPO> queryConstructionDiary(String orderId) {
+		return session().createCriteria(ConstructionDiaryPO.class).createCriteria("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
+	}
+
+	@Override
+	public int countConstructionDiary(long csid, short atttype) {
+
+		String sql = "select count(*) from construction.constructiondiary where csid = :csid and atttype = :atttype";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("csid", csid).setShort("atttype", atttype).uniqueResult();
+
+		return count.intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
@@ -55,6 +67,17 @@ public class ConstructionDiaryDaoImpl extends DaoImpl<ConstructionDiaryPO> imple
 		}
 
 		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getField();
+
+			if ("csid".equals(field)) {
+				query.add(Restrictions.eq("csid", data));
+			}
+
+		}
 
 	}
 }

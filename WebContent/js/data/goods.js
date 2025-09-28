@@ -23,7 +23,14 @@ $(function() {
             onekind: com.focusPage("#onekind"),
             twokind: com.focusPage("#twokind"),
             thrkind: com.focusPage("#thrkind"),
-
+            series: com.focusPage("#series"),
+            elevel: com.focusPage("#elevel"),
+            material: com.focusPage("#material"),
+            color: com.focusPage("#color"),
+            format: com.focusPage("#format"),
+            model: com.focusPage("#model"),
+            quality: com.focusPage("#quality"),
+            atttype: com.focusPage("#atttype"),
             executeTimes: com.focusPage("#executeTimes"),
             executeDates: com.focusPage("#executeDates"),
 
@@ -40,7 +47,8 @@ $(function() {
             drawingGoodsModal: com.focusPage("#drawingGoodsModal")
         },
 
-        pageType: params['urlLoadParams'].type
+        pageType: params['urlLoadParams'].type,
+        pageAtttype: params['urlLoadParams'].atttype
     };
 
     com.datetime(goods.items.executeDates, "date", false);
@@ -53,6 +61,8 @@ $(function() {
         gid: 1,
         goods: "套餐"
     }], "gid", "goods");
+    
+    goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
     com.post(api.data.queryCategory, {}, function(res) {
 
@@ -157,13 +167,16 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.base("gCondList", "gPagenation", "gResultList", api.data.pageGoods);
-
+    
     if (goods.pageType == "basic" || goods.pageType == "senior") {
         searcher.base("gCondList", "gPagenation", "gResultList", api.data.pageGoodsForAdvance);
     }
 
     searcher.condition(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status']);
     searcher.history("goodsPageDataHistory" + goods.pageType);
+    searcher.param({
+        "goods.atttype": goods.pageAtttype
+    });
 
     if (goods.pageType == "senior") {
 
@@ -232,6 +245,11 @@ $(function() {
             name: "导出",
             clazz: "btn-yellow",
             icon: "icon-download-alt"
+        },{
+            id: "claim",
+            name: "申领",
+            clazz: "btn-success",
+            icon: "icon-plus"
         }]);
     }
 
@@ -341,6 +359,47 @@ $(function() {
             return v.status == "0" ? "启用" : "禁用";
         },
         clazz: "red"
+    },{
+        field: "series",
+        name: "系列",
+        prop: "series",
+        clazz: "grey"
+    },{
+        field: "elevel",
+        name: "环保级别",
+        prop: "elevel",
+        clazz: "grey"
+    },{
+        field: "material",
+        name: "材质",
+        prop: "material",
+        clazz: "grey"
+    },{
+        field: "quality",
+        name: "特性",
+        prop: "quality",
+        clazz: "grey"
+    },{
+        field: "color",
+        name: "颜色",
+        prop: "color",
+        clazz: "grey"
+    },{
+        field: "format",
+        name: "规格",
+        prop: "format",
+        clazz: "grey"
+    },{
+        field: "model",
+        name: "型号",
+        prop: "model",
+        clazz: "grey"
+    },{
+        fieId: "atttype",
+        name: "装修类型",
+        prop: "atttype",
+        clazz: "red",
+        dataset: constant.data().goodsPool.atttype.keys
     }];
 
     var linebtns = [{
@@ -394,6 +453,15 @@ $(function() {
             goods.items.onekind.val(v.onekind.gkid);
             goods.items.twokind.val(v.twokind.gkid);
             goods.items.thrkind.val(v.thrkind.gkid);
+            
+            goods.items.series.val(v.series);
+            goods.items.elevel.val(v.elevel);
+            goods.items.material.val(v.material);
+            goods.items.color.val(v.color);
+            goods.items.format.val(v.format);
+            goods.items.model.val(v.model);
+            goods.items.quality.val(v.quality);
+            goods.items.atttype.val(v.atttype);
 
             com.popup4model("#addLayer", "编辑");
         },
@@ -530,6 +598,12 @@ $(function() {
         goods.bid = null;
 
         com.popup4model("#addLayer", "添加");
+    });
+
+    com.focusPage('#claim', '#gPagenation').on("click", function() {
+
+        params.atttype = goods.pageAtttype;
+        com.popup4page('#layerPopUp', api.index.goodsPool3claim.url, "申领商品");
     });
 
     com.focusPage('#export', '#gPagenation').on("click", function() {
@@ -739,6 +813,15 @@ $(function() {
             "goods.purchase": goods.items.purchase.val(),
             "goods.selling": goods.items.selling.val(),
             "goods.confine": goods.items.confine.val(),
+            "goods.series": goods.items.series.val(),
+            "goods.elevel": goods.items.elevel.val(),
+            "goods.material": goods.items.material.val(),
+            "goods.color": goods.items.color.val(),
+            "goods.format": goods.items.format.val(),
+            "goods.model": goods.items.model.val(),
+            "goods.quality": goods.items.quality.val(),
+            "goods.atttype": goods.items.atttype.val(),
+
             "goods.accessoriesType.atid": atid == null || atid == "" ? "" : atid,
             "goods.zerokind.gkid": goods.items.zerokind.val(),
             "goods.onekind.gkid": goods.items.onekind.val(),
@@ -756,6 +839,17 @@ $(function() {
             options["goods.category"] = goods.items.category.val();
             options["goods.measurementUnit"] = goods.items.measurementUnit.val();
             options["goods.pieceNum"] = goods.items.pieceNum.val();
+            
+            options["goods.series"] = goods.items.series.val();
+            options["goods.elevel"] = goods.items.elevel.val();
+            options["goods.material"] = goods.items.material.val();
+            options["goods.color"] = goods.items.color.val();
+            options["goods.format"] = goods.items.format.val();
+            options["goods.model"] = goods.items.model.val();
+            options["goods.quality"] = goods.items.quality.val();
+            options["goods.atttype"] = goods.items.atttype.val();
+
+            
         } else {
             options["goods.gid"] = goods.gid;
         }

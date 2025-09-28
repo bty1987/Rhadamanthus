@@ -74,6 +74,10 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private int period;
 
+	private int prenum;
+
+	private int postnum;
+
 	private Timestamp preStartTime;
 
 	private Timestamp preEndTime;
@@ -130,16 +134,18 @@ public class ConstructionSchedulePO implements Serializable {
 		this.endTime = endTime;
 	}
 
-	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, int period) {
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, int period, int prenum, int postnum) {
 		super();
 		this.cid = cid;
 		this.orderId = orderId;
 		this.period = period;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.prenum = prenum;
+		this.postnum = postnum;
 	}
 
-	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, int period) {
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, int period, int prenum, int postnum) {
 
 		super();
 
@@ -151,6 +157,8 @@ public class ConstructionSchedulePO implements Serializable {
 
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.prenum = prenum;
+		this.postnum = postnum;
 	}
 
 	@Id
@@ -374,6 +382,24 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setFincheck(int fincheck) {
 		this.fincheck = fincheck;
+	}
+
+	@Column(name = "prenum")
+	public int getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(int prenum) {
+		this.prenum = prenum;
+	}
+
+	@Column(name = "postnum")
+	public int getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(int postnum) {
+		this.postnum = postnum;
 	}
 
 	public ConstructionSchedulePO init(ConstructionNodePO constructionNodePO) {

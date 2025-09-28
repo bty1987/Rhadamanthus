@@ -29,6 +29,8 @@ public class ConstructionInfoPO implements Serializable {
 
 	public static final short COLUMN_STAY_SHORT = 1;
 
+	public static final short ISISSUE_ISSUE_INT = 1;
+
 	private long ciid;
 
 	private long cid;
@@ -42,6 +44,8 @@ public class ConstructionInfoPO implements Serializable {
 	private short iskey;
 
 	private short isCeremony;
+
+	private short isIssue;
 
 	private Timestamp finishTime;
 
@@ -135,6 +139,15 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setIsCeremony(short isCeremony) {
 		this.isCeremony = isCeremony;
+	}
+
+	@Column(name = "isIssue")
+	public short getIsIssue() {
+		return isIssue;
+	}
+
+	public void setIsIssue(short isIssue) {
+		this.isIssue = isIssue;
 	}
 
 	@Column(name = "finishTime")

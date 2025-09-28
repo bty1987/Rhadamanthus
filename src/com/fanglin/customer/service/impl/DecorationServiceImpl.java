@@ -75,13 +75,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 			for (DecorationUserPO decorationUserPO : decorationUserPOs) {
 
-				DecorationUserVO decorationUserVO = new DecorationUserVO(new UserBaseVO(new DutyVO()));
-
-				BeanUtil.copyPropertie(decorationUserPO, decorationUserVO, Arrays.asList("user"));
-				BeanUtil.copyPropertie(decorationUserPO.getUser(), decorationUserVO.getUser(), Arrays.asList("dept", "duty"));
-				BeanUtil.copyPropertie(decorationUserPO.getUser().getDuty(), decorationUserVO.getUser().getDuty(), Arrays.asList("departmentType"));
-
-				decorationUserVOs.add(decorationUserVO);
+				decorationUserVOs.add(decorationUserPO.ptv(new DecorationUserVO(new UserBaseVO(new DutyVO()))));
 			}
 		}
 
@@ -100,7 +94,13 @@ public class DecorationServiceImpl implements DecorationService {
 
 				decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-				decorationPO.ptv(decorationVO, decorationDao.queryDecorationByOrderId(decorationPO.getOrderId()));
+				com.fanglin.decoration.po.DecorationPO decorationDO = decorationDao.queryDecorationByOrderId(decorationPO.getOrderId());
+
+				decorationPO.ptv(decorationVO, decorationDO);
+
+				SystemConfigPO memberFlag = systemConfigDao.querySystemConfig("MEMBER_ENABLE_FLAG", decorationDO.getConpany());
+
+				if (memberFlag != null && memberFlag.getValue() != null) decorationVO.setMemberFlag((short) 1);
 
 				decorationVOs.add(decorationVO);
 			}
@@ -113,7 +113,14 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO = new DecorationVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			if (decorationPO != null) {
+
+				com.fanglin.decoration.po.DecorationPO decorationDO = decorationDao.queryDecorationByOrderId(decorationPO.getOrderId());
+
 				decorationPO.ptv(decorationVO, decorationDao.queryDecorationByOrderId(decorationPO.getOrderId()));
+
+				SystemConfigPO memberFlag = systemConfigDao.querySystemConfig("MEMBER_ENABLE_FLAG", decorationDO.getConpany());
+
+				if (memberFlag != null && memberFlag.getValue() != null) decorationVO.setMemberFlag((short) 1);
 			}
 
 			return decorationVO;

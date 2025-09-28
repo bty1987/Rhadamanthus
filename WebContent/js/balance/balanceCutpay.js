@@ -3,11 +3,11 @@ $(function() {
     var balanceCutpay = {
 
         btns: {
-            addBalanceCutpayBtn:com.focusPage("#balanceCutpayBtn"),// 添加
+            balanceCutpayBtn:com.focusPage("#balanceCutpayBtn"),
+            addBalanceCutpayBtn:com.focusPage("#addBalanceCutpayBtn"),
             saveBtn:com.focusPage("#saveBtn"),
             cancelBtn:com.focusPage("#cancelBtn"),
             saveDeductBtn:com.focusPage("#saveDeductBtn"),
-            addBalanceDccountBtn:com.focusPage("#addBalanceCutpayBtn"),
             saveAddBtn:com.focusPage("#saveAddBtn"),
             printBtn:com.focusPage("#printBtn"),
         },
@@ -22,6 +22,7 @@ $(function() {
             money: com.focusPage("#money"),
             comment: com.focusPage("#comment"),
             name: com.focusPage("#name"),
+            balanceCutpayName: com.focusPage("#balanceCutpayName"),
             deductMoney: com.focusPage("#deductMoney"),
             deductComment: com.focusPage("#deductComment"),
             balanceCutpayName: com.focusPage("#balanceCutpayName"),
@@ -32,12 +33,18 @@ $(function() {
             balanceCutpayComment: com.focusPage("#balanceCutpayComment"),
         },
 
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
+
+            com.clearValidator();
+        }),
+
         uid: params.balance.uid,
         bcid: null,
         deductName: null,
         bid: params.balance.bid,
         balance: params.balance,
-        balanceCutpayType: {}
+        balanceCutpayType: {},
+        depage: params['urlLoadParams'].depage
     };
 
     balanceCutpay.modals.balanceCutpayModal.on("hide.bs.modal", function() {
@@ -54,29 +61,13 @@ $(function() {
         com.cleanItems(balanceCutpay.items);
     });
 
-    com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
-
-        var balanceDccountes = [];
-        balanceDccountes.push({name:" "});
-
-        $.each(res.balanceDccountes, function(i, v) {
-
-            if (v.status == 0){
-
-                balanceDccountes.push(v);
-            }
-        });
-
-        com.focusPage("#balanceDccountName").bindData(balanceDccountes, "bdid", "name");
-    }, null, false);
-
     balanceCutpay.items.balanceDccountName.on('change', function() {
 
         com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
 
             $.each(res.balanceDccountes, function(i, v) {
 
-                if(com.focusPage("#balanceDccountName").val() == v.bdid){
+                if (com.focusPage("#balanceDccountName").val() == v.bdid) {
 
                     com.focusPage("#balanceDccountSurplus").val(v.surplus);
                     com.focusPage("#balanceDccountCutpay").val(v.cutpay);
@@ -85,11 +76,85 @@ $(function() {
         });
     });
 
+    balanceCutpay.items.balanceCutpayName.on('change', function() {
+
+
+        com.post(api.balance.queryBalanceCutpayByOuid, {"balanceCutpay.operater.uid": balanceCutpay.uid}, function(res) {
+
+            $.each(res.balanceCutpays, function(i, v) {
+
+                if (com.focusPage("#balanceCutpayName").val() == v.bcid) {
+
+                    com.focusPage("#money").val(v.money);
+                }
+            });
+        });
+    });
+
+    if (balanceCutpay.depage == "cutpay") {
+        com.focusPage(".title").hide();
+        com.focusPage("#balanceCutpayName").hide();
+        com.focusPage("#addBalanceCutpayBtn").hide();
+        com.focusPage("#balanceCutpayBtn").hide();
+        balanceCutpay.btns.printBtn.hide();
+    } else {
+        com.focusPage("#name").hide();
+        com.focusPage("#pagebalanceCutpays").hide();
+        com.focusPage("#money").attr("readOnly", "readOnly");
+
+        com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
+
+            var balanceDccountes = [];
+            balanceDccountes.push({name:" "});
+
+            $.each(res.balanceDccountes, function(i, v) {
+
+                if (v.status == 0){
+
+                    balanceDccountes.push(v);
+                }
+            });
+
+            com.focusPage("#balanceDccountName").bindData(balanceDccountes, "bdid", "name");
+        }, null, false);
+
+        com.post(api.balance.queryBalanceCutpayByOuid, {"balanceCutpay.operater.uid": balanceCutpay.uid}, function(res) {
+
+            var balanceCutpays = [];
+            balanceCutpays.push({name:" "});
+
+            $.each(res.balanceCutpays, function(i, v) {
+
+                if (v.status == 0){
+
+                    balanceCutpays.push(v);
+                }
+            });
+
+            com.focusPage("#balanceCutpayName").bindData(balanceCutpays, "bcid", "name");
+        }, null, false);
+
+    }
+
     var searcher = new Searcher();
 
-    searcher.set("pageltList", "pageltList", "balanceCutpays", api.balance.queryBalanceCutpay, {
-        "balanceCutpay.balance.bid": balanceCutpay.bid
-    }, null, null, "balanceCutpays", true);
+    searcher.history(balanceCutpay.depage + "balanceCutpayPostData");
+
+    if (balanceCutpay.depage == "cutpay") {
+        searcher.base("condList", "pagenation", "resultList", api.balance.pageBalanceCutpay);
+        searcher.condition([ "balance-balanceCutpay-name","balance-balanceCutpay-operater" ]);
+
+        searcher.button([{
+            id: "createBalanceCutpay",
+            name: "创建",
+            clazz: "btn-yellow",
+            icon: "icon-plus"
+        }]);
+    } else {
+        searcher.set("pageltList", "pageltList", "balanceCutpays", api.balance.queryBalanceCutpay, {
+            "balanceCutpay.balance.bid": balanceCutpay.bid
+        }, null, null, "balanceCutpays", true);
+    }
 
     var lineprops = [{
         fieId: "operater.currentName",
@@ -132,6 +197,12 @@ $(function() {
         clazz: "red",
         dataset: constant.balance().balanceCutpay.type.keys,
     }, {
+        fieId: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: constant.balance().balanceCutpay.status.keys,
+    }, {
         fieId: "comment",
         name: "说明",
         prop: "comment",
@@ -147,12 +218,54 @@ $(function() {
             balanceCutpay.bcid = v.bcid;
             deductBalanceCutpay(v);
             return false;
+        },
+        show: function(v) {
+
+            return balanceCutpay.depage != "cutpay";
+        }
+    }, {
+        name: "解绑",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            com.post(api.balance.unbindBalanceCutpay,{
+                "balanceCutpay.bcid" : v.bcid,
+                "balanceCutpay.balance.bid": balanceCutpay.bid,
+            }, function() {
+
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+
+            return balanceCutpay.depage != "cutpay";
+        }
+    }, {
+        name: "图片",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            managedrawing(v);
+            initUploadBtn(v);
+            return false;
+        },
+        show: function(v) {
+
+            return balanceCutpay.depage == "cutpay";
         }
     }];
 
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('#balanceCutpayBtn').on("click", function () {
+
+        balanceCutpay.modals.balanceCutpayModal.modal("show");
+    });
+
+    com.focusPage('#createBalanceCutpay').on("click", function () {
 
         balanceCutpay.modals.balanceCutpayModal.modal("show");
     });
@@ -181,17 +294,36 @@ $(function() {
             return false;
         };
 
-        var options ={
-            "balanceCutpay.balance.bid" : balanceCutpay.bid,
-            "balanceCutpay.name": balanceCutpay.items.name.val(),
-            "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
-            "balanceCutpay.money": balanceCutpay.items.money.val(),
-            "balanceCutpay.comment": balanceCutpay.items.comment.val(),
-        };
+        var url = null;
+        var options = {};
 
-        com.post(api.balance.addBalanceCutpay, options, function(res) {
+        if (balanceCutpay.depage != "cutpay") {
+            url = api.balance.submitBalanceCutpay;
 
-            com.showAlert(com.info, "添加成功");
+            options ={
+                    "balanceCutpay.bcid": balanceCutpay.items.balanceCutpayName.val(),
+                    "balanceCutpay.balance.bid": balanceCutpay.bid,
+                    "balanceCutpay.comment": balanceCutpay.items.comment.val()
+                };
+        } else {
+            url = api.balance.addBalanceCutpay;
+
+            options ={
+                "balanceCutpay.name": balanceCutpay.items.name.val(),
+                "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
+                "balanceCutpay.money": balanceCutpay.items.money.val(),
+                "balanceCutpay.comment": balanceCutpay.items.comment.val(),
+            };
+        }
+
+        com.post(url, options, function(res) {
+
+            if (balanceCutpay.depage != "cutpay") {
+                com.showAlert(com.info, "绑定成功");
+            } else {
+                com.showAlert(com.info, "添加成功");
+            }
+
             searcher.doSearch();
         });
 
@@ -247,4 +379,78 @@ $(function() {
 
         balanceCutpay.modals.addBalanceCutpayModal.modal("hide");
     });
+
+    function managedrawing(v) {
+
+        com.focusPage('#balanceDrawing').html("");
+
+        com.post(api.balance.queryBalancePicture, {
+            "balancePicture.pid": v.bcid,
+            "balancePicture.type": 0
+        }, function(data) {
+
+            var balancePictures = data.balancePictures;
+            if (balancePictures && balancePictures.length) {
+                $.each(balancePictures, function(i, value) {
+
+                    if (value.status == constant.balance().balancePicture.STATUS_YES_SHORT) {
+                        appendGalleryElement("balanceDrawing", value);
+                    }
+
+                });
+                com.popup4photos(com.focusPage("#balanceDrawing"));
+            }
+        }, null, false);
+
+        balanceCutpay.drawingModal.modal("show");
+    }
+
+    function appendGalleryElement(galleryId, value, type) {
+
+        var gallery = com.focusPage("#" + galleryId);
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.bpid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.path, 150, 150, value.name, null, type);
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
+            com.post(api.balance.deleteBalancePicture, {
+                "balancePicture.bpid": value.bpid
+            }, function(res) {
+
+                com.focusPage("#gallery_li" + value.bpid).remove();
+            });
+        }).appendTo(toolsDiv);
+
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+    }
+
+    function initUploadBtn(v) {
+
+        com.uploadify("#balanceUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 5, function(data) {
+
+            var options = {};
+            options["balancePicture.bid"] = v.balance.bid;
+            options["balancePicture.pid"] = v.bcid;
+            options["balancePicture.name"] = data.strutsUploadsFileName;
+            options["balancePicture.path"] = data.resUrl;
+            options["balancePicture.type"] = 0;
+            options["balancePicture.filesize"] = data.filesize;
+            com.post(api.balance.addBalancePicture, options, function(res) {
+
+                var balancePicture = res.balancePicture;
+
+                appendGalleryElement("balanceDrawing", balancePicture);
+
+                com.popup4photos("#balanceDrawing");
+
+            });
+
+            searcher.doSearch();
+        });
+    }
 });

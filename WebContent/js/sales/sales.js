@@ -8,7 +8,8 @@ $(function() {
             decorationInfo: com.focusPage("#decorationInfo"),
             ascription: com.focusPage("#ascription"),
             repositPaymentModal: com.focusPage("#repositPaymentModal"),
-            salesActivitysModal: com.focusPage("#salesActivitysModal")
+            salesActivitysModal: com.focusPage("#salesActivitysModal"),
+            peliveryModal: com.focusPage("#peliveryModal"),
         },
         items: {
             total: com.focusPage('#total'), // 款项中的总价
@@ -38,6 +39,8 @@ $(function() {
             uGuider: com.focusPage('#uGuider'),
 
             activityInfo: com.focusPage("#activityInfo"),
+
+            peliveryTime: com.focusPage("#peliveryTime"),
         },
         btns: {
             saveBtn: com.focusPage("#saveBtn"),// 确认按钮
@@ -61,8 +64,9 @@ $(function() {
             depositPrintBtn: com.focusPage('#depositPrintBtn'),
             repositBtns: com.focusPage('#repositBtns'),// 不退保存
 
-            submitSalesActivityBtn: com.focusPage("#submitSalesActivityBtn")
-        // 保存修改活动
+            submitSalesActivityBtn: com.focusPage("#submitSalesActivityBtn"), // 保存修改活动
+            peliveryBtn: com.focusPage("#peliveryBtn").click(pelivery),
+
         },
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
 
@@ -108,6 +112,8 @@ $(function() {
     com.initTypeahead('uSupplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
         "user.status": 0
     }, "suppliers", "userId", "userName", null);
+    
+    com.datetime(com.focusPage("#peliveryTime"));
 
     // 活动名
     com.post(api.information.queryActivityForValid, {
@@ -158,6 +164,7 @@ $(function() {
                     var $btnAct = $('<a></a>').addClass(' btn btn-minier btn-grey').html('活动');
                     var $btnActivity = $('<a></a>').addClass('btn btn-minier btn-warning').html('活动归属');
                     var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-primary').html('配送');
+                    var $btnPelivery = $('<a></a>').addClass('btn btn-minier btn-primary').html('预配送');
                     var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
                     var $inventory = $('<a></a>').addClass('btn btn-minier btn-blue').html('仓储');
                     var $ascription = $('<a></a>').addClass('btn btn-minier btn-inverse').html('归属');
@@ -167,7 +174,7 @@ $(function() {
                     var $btnUnpay = $('<a></a>').addClass('btn btn-minier btn-primary').html('结算');
                     var $picture = $('<a></a>').addClass('btn btn-minier btn-search').html('图片');
                     var $satisfaction = $('<a></a>').addClass('btn btn-minier btn-purple').html('满意度');
-                    
+
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
 
@@ -315,7 +322,7 @@ $(function() {
                                 $btnDiv.append($btnSub);
                                 break;
                             case "collect":
-                                if(v.type != constant.sales().sales.TYPE_SUB_INT){
+                                if (v.type != constant.sales().sales.TYPE_SUB_INT) {
                                     $btnDiv.append($btnCollect);
                                 }
                                 break;
@@ -370,6 +377,9 @@ $(function() {
                                     $btnDiv.append($btnDelivery);
                                 }
                                 break;
+                            case "prodelivery":
+                                $btnDiv.append($btnPelivery);
+                                break;
                             case "unpay":
                                 if (v.type == constant.sales().sales.TYPE_SUB_INT) {
                                     $btnDiv.append($btnUnpay);
@@ -380,7 +390,7 @@ $(function() {
                                 break;
                             case "satisfaction":
                                 $btnDiv.append($satisfaction);
-                                break;     
+                                break;
                         }
                     });
                     $btnDiv.appendTo($h3);
@@ -458,7 +468,6 @@ $(function() {
 
                         com.popup4page("#layerPopUp", "views/sales/sales4payment.html", "收款");
                     });
-
 
                     $btnUnpay.click(function() {
 
@@ -598,6 +607,13 @@ $(function() {
                         });
                     });
 
+                    $btnPelivery.click(function() {
+
+                        sales.sales = v;
+
+                        sales.modals.peliveryModal.modal("show");
+                    });
+
                     $btnPrint.click(function() {
 
                         printPayment(v.orderId, v.sid, v, "fullPay", "sales");
@@ -627,16 +643,17 @@ $(function() {
                         });
                     });
                     $picture.click(function() {
+
                         managedrawing(v);
                         initUploadBtn(v);
                     });
-                    
-                    //满意度
+
+                    // 满意度
                     $satisfaction.click(function() {
 
                         params.sales.orderId = v.orderId;
                         params.sales.sid = v.sid;
-                        params.sales.type= v.type;
+                        params.sales.type = v.type;
                         com.popup4page("#layerPopUp", "views/sales/salesProfile4detail.html", "满意度")
                     });
                 });
@@ -1498,6 +1515,7 @@ $(function() {
         com.post(api.sales.querySalesPicture, {
             "salesPicture.siid": v.sid
         }, function(data) {
+
             var salesPictures = data.salesPictures;
             if (salesPictures && salesPictures.length) {
                 $.each(salesPictures, function(i, value) {
@@ -1558,6 +1576,25 @@ $(function() {
             });
 
             salesSearcher.doSearch();
+        });
+    }
+
+    function pelivery() {
+
+        if (com.validate("peliveryModal")) {
+            return false;
+        }
+
+        com.post(api.sales.deliveSalesDelivery, {
+            "salesDelivery.sales.sid": sales.sales.sid,
+            "salesDelivery.peliveryTime": sales.items.peliveryTime.val()
+        }, function() {
+
+            com.showAlert(com.info, "操作成功");
+
+            salesSearcher.doSearch();
+
+            sales.modals.peliveryModal.modal("hide");
         });
     }
 });

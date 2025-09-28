@@ -736,6 +736,7 @@ $(function() {
         }
 
         options["salesPayment.spid"] = payment.spid;
+        options["salesPayment.referMoney"] = referPayment;
         options["salesReceipt.realMoney"] = realMoney;
 
         com.post(url, options, function(res) {

@@ -102,26 +102,42 @@ public class ConstructionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateConstructionByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionByCid() throws FLException {
+
+		constructionService.updateConstructionByCid(construction);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateConstructionForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionForAdvance() throws FLException {
 
-		constructionService.updateConstructionForAdvance(construction);
+		constructionService.updateConstructionForAdvance(construction, queryUserId());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "openAccessory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String openAccessory() throws FLException {
+	@Action(value = "openConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String openConstruction() throws FLException {
 
-		constructionService.openAccessory(construction);
+		constructionService.openConstruction(construction);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "lockAccessory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String lockAccessory() throws FLException {
+	@Action(value = "lockConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockConstruction() throws FLException {
 
-		constructionService.lockAccessory(construction, queryUserId());
+		constructionService.lockConstruction(construction, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "balanceConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String balanceConstruction() throws FLException {
+
+		constructionService.balanceConstruction(construction, queryUserId());
 
 		return SUCCESS;
 	}

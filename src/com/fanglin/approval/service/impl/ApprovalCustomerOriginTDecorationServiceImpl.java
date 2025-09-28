@@ -42,6 +42,7 @@ import com.fanglin.customer.vo.CustomerOriginVO;
 import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
+import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -243,7 +244,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		decorationVO.setNotSalesmanRate(0);
 		decorationVO.setBusitype(approvalCustomerOriginTDecorationPO.getDecorationBusitype().getDbid());
 
-		decorationService.tranDecoration(decorationVO, approvalPO.getSender().getCompany());
+		decorationService.tranDecoration(decorationVO, new DecorationInfoVO(), approvalPO.getSender().getCompany());
 
 		customerOriginPO.setOrderId(decorationVO.getOrderId());
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);

@@ -1,6 +1,7 @@
 package com.fanglin.sales.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import javax.persistence.Table;
 import com.fanglin.data.po.ColorPO;
 import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsPO;
+import com.fanglin.sales.vo.SalesItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "salesitem", catalog = "sales")
@@ -285,6 +288,17 @@ public class SalesItemPO implements Serializable {
 
 	public void setPriceType(short priceType) {
 		this.priceType = priceType;
+	}
+
+	public SalesItemVO ptv(SalesItemVO salesItemVO) {
+
+		BeanUtil.copyProperties(this, salesItemVO, Arrays.asList("goods", "color", "format"));
+
+		if (salesItemVO.getGoods() != null && getGoods() != null) getGoods().ptv(salesItemVO.getGoods());
+		if (salesItemVO.getColor() != null && getColor() != null) getColor().ptv(salesItemVO.getColor());
+		if (salesItemVO.getFormat() != null && getFormat() != null) getFormat().ptv(salesItemVO.getFormat());
+
+		return salesItemVO;
 	}
 
 }

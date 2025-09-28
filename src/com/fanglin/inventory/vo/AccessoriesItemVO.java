@@ -42,6 +42,14 @@ public class AccessoriesItemVO implements Serializable {
 
 	private Long total;
 
+	private String normunit;// 定额单位
+
+	private Integer normnum;// 定额数量
+
+	private String storeunit;// 库房单位
+
+	private Integer storenum;// 库房数量
+
 	public AccessoriesItemVO() {
 		super();
 	}
@@ -177,6 +185,38 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+
+	public String getNormunit() {
+		return normunit;
+	}
+
+	public void setNormunit(String normunit) {
+		this.normunit = normunit;
+	}
+
+	public Integer getNormnum() {
+		return normnum;
+	}
+
+	public void setNormnum(Integer normnum) {
+		this.normnum = normnum;
+	}
+
+	public String getStoreunit() {
+		return storeunit;
+	}
+
+	public void setStoreunit(String storeunit) {
+		this.storeunit = storeunit;
+	}
+
+	public Integer getStorenum() {
+		return storenum;
+	}
+
+	public void setStorenum(Integer storenum) {
+		this.storenum = storenum;
 	}
 
 }

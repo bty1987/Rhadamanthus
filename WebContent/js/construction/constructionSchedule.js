@@ -156,6 +156,16 @@ jQuery(function($) {
         prop: "proEndTime",
         clazz: "green"
     }, {
+        field: "prenum",
+        name: "前置间隔天数",
+        prop: "prenum",
+        clazz: "green"
+    }, {
+        field: "postnum",
+        name: "后置间隔天数",
+        prop: "postnum",
+        clazz: "green"
+    }, {
         field: "startTime",
         name: "开工时间",
         prop: "startTime",
@@ -237,16 +247,16 @@ jQuery(function($) {
 
             constructionSchedule.schedule = v;
 
-            constructionSchedule.items.salaryLimit.val(v.salaryLimit);
-            constructionSchedule.items.accessoryLimit.val(v.accessoryLimit);
-            constructionSchedule.items.accessoryTotal.val(v.accessoryTotal);
-            constructionSchedule.items.salaryTotal.val(v.salaryTotal);
+            constructionSchedule.items.precheck.val(v.precheck);
+            constructionSchedule.items.postcheck.val(v.postcheck);
+            constructionSchedule.items.stacheck.val(v.stacheck);
+            constructionSchedule.items.fincheck.val(v.fincheck);
 
-            constructionSchedule.modals.updateNormModal.modal("show");
+            constructionSchedule.modals.updateCaleModal.modal("show");
 
             return false;
         }
-    },{
+    }, {
         name: "更新工期",
         clazz: "btn-yellow",
         handle: function(v) {
@@ -259,7 +269,7 @@ jQuery(function($) {
 
             return false;
         }
-    } ];
+    }];
 
     searcher.line("node.name", lineprops, linebtns).render();
 

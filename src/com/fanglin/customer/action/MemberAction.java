@@ -96,7 +96,7 @@ public class MemberAction extends BaseListAction {
 	@Action(value = "queryMemberForInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryMemberForInfo() throws FLException {
 
-		members = memberService.queryMemberForInfo(members, queryCompany());
+		members = memberService.queryMemberForInfo(member, queryCompany());
 
 		return SUCCESS;
 	}

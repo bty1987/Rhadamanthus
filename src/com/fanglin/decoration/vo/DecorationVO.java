@@ -36,19 +36,19 @@ public class DecorationVO implements Serializable {
 
 	private HouseVO house;
 
+	private UserBaseVO creater;
+
 	private UserBaseVO designer;
 
 	private UserBaseVO salesman;
 
 	private UserBaseVO supervisor;
 
-	private UserBaseVO creater;
-
 	private UserBaseVO quoter;
 
 	private UserBaseVO escorter;
 
-	private UserBaseVO contractUserId;
+	private UserBaseVO contracter;
 
 	private UserBaseVO materialer;
 
@@ -70,23 +70,31 @@ public class DecorationVO implements Serializable {
 
 	private Short referType;
 
-	private Timestamp contractTime;
+	private Timestamp createTime;
+
+	private Timestamp issueTime;
+
+	private Timestamp meetTime;
 
 	private Timestamp measureTime;
 
+	private Timestamp belongTime;
+
 	private Timestamp depositTime;
-
-	private Timestamp createTime;
-
-	private Timestamp balanceTime;
-
-	private Timestamp accountTime;
 
 	private Timestamp sdesignTime;
 
 	private Timestamp edesignTime;
 
+	private Timestamp contractTime;
+
 	private Timestamp precontractTime;
+
+	private Timestamp recontractTime;
+
+	private Timestamp balanceTime;
+
+	private Timestamp accountTime;
 
 	private Timestamp terminalTime;
 
@@ -204,6 +212,14 @@ public class DecorationVO implements Serializable {
 		this.houseClass = houseClass;
 	}
 
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
 	public UserBaseVO getDesigner() {
 		return designer;
 	}
@@ -220,6 +236,22 @@ public class DecorationVO implements Serializable {
 		this.salesman = salesman;
 	}
 
+	public UserBaseVO getQuoter() {
+		return quoter;
+	}
+
+	public void setQuoter(UserBaseVO quoter) {
+		this.quoter = quoter;
+	}
+
+	public UserBaseVO getEscorter() {
+		return escorter;
+	}
+
+	public void setEscorter(UserBaseVO escorter) {
+		this.escorter = escorter;
+	}
+
 	public UserBaseVO getSupervisor() {
 		return supervisor;
 	}
@@ -228,21 +260,12 @@ public class DecorationVO implements Serializable {
 		this.supervisor = supervisor;
 	}
 
-	@JSON(format = "yyyy-MM-dd")
-	public Timestamp getContractTime() {
-		return contractTime;
+	public UserBaseVO getContracter() {
+		return contracter;
 	}
 
-	public void setContractTime(Timestamp contractTime) {
-		this.contractTime = contractTime;
-	}
-
-	public UserBaseVO getContractUserId() {
-		return contractUserId;
-	}
-
-	public void setContractUserId(UserBaseVO contractUserId) {
-		this.contractUserId = contractUserId;
+	public void setContracter(UserBaseVO contracter) {
+		this.contracter = contracter;
 	}
 
 	public UserBaseVO getMaterialer() {
@@ -251,6 +274,33 @@ public class DecorationVO implements Serializable {
 
 	public void setMaterialer(UserBaseVO materialer) {
 		this.materialer = materialer;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getIssueTime() {
+		return issueTime;
+	}
+
+	public void setIssueTime(Timestamp issueTime) {
+		this.issueTime = issueTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getMeetTime() {
+		return meetTime;
+	}
+
+	public void setMeetTime(Timestamp meetTime) {
+		this.meetTime = meetTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -263,21 +313,30 @@ public class DecorationVO implements Serializable {
 	}
 
 	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getBelongTime() {
+		return belongTime;
+	}
+
+	public void setBelongTime(Timestamp belongTime) {
+		this.belongTime = belongTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getContractTime() {
+		return contractTime;
+	}
+
+	public void setContractTime(Timestamp contractTime) {
+		this.contractTime = contractTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDepositTime() {
 		return depositTime;
 	}
 
 	public void setDepositTime(Timestamp depositTime) {
 		this.depositTime = depositTime;
-	}
-
-	@JSON(format = "yyyy-MM-dd")
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -314,6 +373,15 @@ public class DecorationVO implements Serializable {
 
 	public void setPrecontractTime(Timestamp precontractTime) {
 		this.precontractTime = precontractTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getRecontractTime() {
+		return recontractTime;
+	}
+
+	public void setRecontractTime(Timestamp recontractTime) {
+		this.recontractTime = recontractTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -405,14 +473,6 @@ public class DecorationVO implements Serializable {
 		this.version = version;
 	}
 
-	public UserBaseVO getCreater() {
-		return creater;
-	}
-
-	public void setCreater(UserBaseVO creater) {
-		this.creater = creater;
-	}
-
 	public Long getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
@@ -443,22 +503,6 @@ public class DecorationVO implements Serializable {
 
 	public void setBusitype(Long busitype) {
 		this.busitype = busitype;
-	}
-
-	public UserBaseVO getQuoter() {
-		return quoter;
-	}
-
-	public void setQuoter(UserBaseVO quoter) {
-		this.quoter = quoter;
-	}
-
-	public UserBaseVO getEscorter() {
-		return escorter;
-	}
-
-	public void setEscorter(UserBaseVO escorter) {
-		this.escorter = escorter;
 	}
 
 	public Short getResourceType() {

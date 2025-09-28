@@ -39,6 +39,8 @@ import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.vo.SalesBalanceVO;
 import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -71,6 +73,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private BalanceSalesBalanceService balanceSalesBalanceService;
@@ -491,7 +496,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
 			salesBalancePO.setBalance(balance);
 
-			if (salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(salesPO.getBrand().getBid()) > 0) salesBalancePO.setType(SalesBalancePO.TYPE_BALANCE_INT);
+			SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_MUILT_BALANCE_INT", salesPO.getCompany());
+
+			if (taggle != null && taggle.getValue() != null && salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(salesPO.getBrand().getBid()) > 0) salesBalancePO.setType(SalesBalancePO.TYPE_BALANCE_INT);
 
 			long vbalance = Arith.sub(Arith.round(salesPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
 
@@ -539,11 +546,15 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 			salesBalanceDao.update(salesBalancePO);
 
+			SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_AUTO_BALANCE_INT", salesPO.getCompany());
+
 			if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT && salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 
 				salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
 
 				salesDao.update(salesPO);
+
+				if (taggle == null || taggle.getValue() == null) continue;
 
 				List<SalesBalancePO> salesBalancePOs = salesBalanceDao.querySalesBalance(salesBalancePO.getSales().getSid(), SalesBalancePO.CHECKSTATUS_INIT_INT);
 
@@ -552,13 +563,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 					if (salesBalanceBO.getStatus() == SalesBalancePO.STATUS_PREBALANCE_INT) continue;
 
 					balanceSalesBalanceService.submitBalanceSalesBalance(null, new BalanceSalesBalanceVO(new SalesBalanceVO(salesBalanceBO.getSbid())), userId, salesBalanceBO.getSales().getCompany());
-				}
-			} else {
-
-				int count = salesBalanceDao.countSalesBalance(salesBalancePO.getSales().getSid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT, SalesBalancePO.CHECKSTATUS_CHECK_INT);
-
-				if (count > 0) {
-					balanceSalesBalanceService.submitBalanceSalesBalance(null, new BalanceSalesBalanceVO(new SalesBalanceVO(salesBalancePO.getSbid())), userId, salesBalancePO.getSales().getCompany());
 				}
 			}
 		}

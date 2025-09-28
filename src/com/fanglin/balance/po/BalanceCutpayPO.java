@@ -3,6 +3,7 @@ package com.fanglin.balance.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.balance.vo.BalanceCutpayVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "balancecutpay", catalog = "balance")
@@ -23,7 +26,13 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
+	public static final String COLUMN_OPERATER_UID_STR = "operater.uid";
+
 	public final short TYPE_CUTPAY_INT = 0;
+
+	public static final short STATUS_INIT_INT = 0;// 初始
+
+	public static final short STATUS_BIND_INT = 1;// 绑定
 
 	private long bcid;
 
@@ -44,6 +53,8 @@ public class BalanceCutpayPO implements java.io.Serializable {
 	private int money;
 
 	private short type;
+
+	private short status;
 
 	private String comment;
 
@@ -139,6 +150,15 @@ public class BalanceCutpayPO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -167,4 +187,13 @@ public class BalanceCutpayPO implements java.io.Serializable {
 		this.dccount = dccount;
 	}
 
+	public BalanceCutpayVO ptv(BalanceCutpayVO balanceCutpayVO) {
+
+		BeanUtil.copyPropertie(this, balanceCutpayVO, Arrays.asList("balance", "operater", "dccount", "cutpay"));
+
+		if (balanceCutpayVO.getOperater() != null && getOperater() != null) balanceCutpayVO.getOperater().setBaseInfo(getOperater());
+		if (balanceCutpayVO.getDccount() != null && getDccount() != null) getDccount().ptv(balanceCutpayVO.getDccount());
+
+		return balanceCutpayVO;
+	}
 }

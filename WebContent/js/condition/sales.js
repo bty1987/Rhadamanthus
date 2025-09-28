@@ -787,10 +787,10 @@ Condition.addupRule("sales", {
     },
 
     "refunds-status": {
-        label: "状态",
+        label: "退货状态",
         type: "select",
         submitConfig: {
-            name: "status",
+            name: "refunds.status",
             op: "eq",
             validate: null
         },
@@ -802,6 +802,32 @@ Condition.addupRule("sales", {
             valuePath: "value"
         }
     },
+    "refunds-isAffirm": {
+        label: "退货状态",
+        type: "select",
+        submitConfig: {
+            name: "refunds.ifAffirm",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.sales().refunds.status.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "refunds-affirmTime": {
+        label: "退货确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "refunds.affirmTime.range",
+            op: "between",
+            validate: null
+        }
+    },
+    
     "oales-no": {
         label: "外销单号",
         type: "text",

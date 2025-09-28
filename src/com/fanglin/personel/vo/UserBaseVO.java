@@ -134,6 +134,7 @@ public class UserBaseVO implements Serializable {
 		if (userPO == null) return this;
 
 		setUid(userPO.getUid());
+		setOldUserId(userPO.getOldUserId());
 		setUserId(userPO.getUserId());
 		setCurrentName(userPO.getCurrentName());
 		setUserName(userPO.getUserName());

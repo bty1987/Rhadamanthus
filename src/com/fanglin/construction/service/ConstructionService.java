@@ -35,10 +35,14 @@ public interface ConstructionService {
 
 	public void updateConstructionByOrderId(ConstructionVO constructionVO, List<QualiterVO> qualiters, String userId) throws FLException;
 
-	public int updateConstructionForAdvance(ConstructionVO constructionVO) throws FLException;
+	public int updateConstructionByCid(ConstructionVO constructionVO) throws FLException;
 
-	public int openAccessory(ConstructionVO constructionVO) throws FLException;
+	public int updateConstructionForAdvance(ConstructionVO constructionVO, String userId) throws FLException;
 
-	public int lockAccessory(ConstructionVO constructionVO, String userId) throws FLException;
+	public int openConstruction(ConstructionVO constructionVO) throws FLException;
+
+	public int lockConstruction(ConstructionVO constructionVO, String userId) throws FLException;
+
+	public int balanceConstruction(ConstructionVO constructionVO, String userId) throws FLException;
 
 }

@@ -109,6 +109,8 @@ public class CustomerChancePO implements Serializable {
 
 	private String annotate;
 
+	private String cno;
+
 	private int company;
 
 	public CustomerChancePO() {
@@ -170,7 +172,7 @@ public class CustomerChancePO implements Serializable {
 		this.house = house;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(nullable = true, name = "csid", referencedColumnName = "csid")
 	public CustomerSourcePO getSource() {
 		return source;
@@ -410,6 +412,15 @@ public class CustomerChancePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "cno")
+	public String getCno() {
+		return cno;
+	}
+
+	public void setCno(String cno) {
+		this.cno = cno;
 	}
 
 	public CustomerChanceVO ptv(CustomerChanceVO customerChanceVO) {

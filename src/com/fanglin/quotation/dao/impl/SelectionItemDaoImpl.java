@@ -7,7 +7,9 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
@@ -215,5 +217,60 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 				query.timeranges("balanceTime", data);
 			}
 		}
+	}
+
+	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
+
+		if (filters == null) return;
+
+		if (prefix == null) {
+			prefix = "";
+		}
+
+		if (!"".equals(prefix)) {
+
+			query.alias(prefix, prefix);
+			prefix = String.format("%s.", prefix);
+		}
+
+		DecorationDaoImpl.queryFilterExcute(query, filters, "decoration");
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.alias("goods", "goods");
+
+			if ("selectionItem.status".equals(field)) {
+				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+			} else if ("selectionItem.type".equals(field)) {
+				query.add(query.getCriterion(String.format("%stype", prefix), Short.valueOf(data), op));
+			} else if (SelectionItemPD.COLUMN_GOODS_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_NAME_STR, data, op));
+			} else if (SelectionItemPD.COLUMN_GOODS_CATEGORY_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_CATEGORY_STR, data, op));
+			} else if (SelectionItemPD.COLUMN_GOODS_BRAND_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_BRAND_STR, data, op));
+			} else if ("selectionItem.accountStatus".equals(field)) {
+				query.add(query.getCriterion(String.format("%saccountStatus"), Short.parseShort(data), op));
+			} else if ("selectionItem.createTime".equals(field)) {
+				query.timeranges(String.format("%screateTime"), data);
+			} else if ("selectionItem.tranTime".equals(field)) {
+				query.timeranges(String.format("%stranTime"), data);
+			} else if ("selectionItem.checkTime".equals(field)) {
+				query.timeranges(String.format("%scheckTime"), data);
+			} else if ("selectionItem.confirmTime".equals(field)) {
+				query.timeranges(String.format("%sconfirmTime"), data);
+			} else if ("selectionItem.finishTime".equals(field)) {
+				query.timeranges(String.format("%sfinishTime"), data);
+			} else if ("selectionItem.reviewTime".equals(field)) {
+				query.timeranges(String.format("%sreviewTime"), data);
+			} else if ("selectionItem.balanceTime".equals(field)) {
+				query.timeranges(String.format("%sbalanceTime"), data);
+			}
+		}
+
 	}
 }

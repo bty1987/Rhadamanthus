@@ -13,4 +13,6 @@ public interface GoodsKindDao extends Dao<GoodsKindPO> {
 
 	public List<GoodsKindPO> queryGoodsKind();
 
+	public List<GoodsKindPO> queryGoodsKind(long fgkid);
+
 }

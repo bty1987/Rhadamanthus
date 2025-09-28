@@ -338,11 +338,6 @@ jQuery(function($) {
     protationItems[0].item.push(["折后管理费", 1]);
     protationItems[3].item.push(["基础增项", 1]);
     protationItems[3].item.push(["主材增项", 1]);
-    protationItems[0].totals.push(["小计", '', utils.changeThrDecimal(utils.accSub(utils.accSub(utils.accAdd(protation.protation.quotePrice, protation.protation.managePrice), protation.protation.preferPrice), utils.accAdd(protation.protation.subdPrice, protation.protation.submPrice)))]);
-    protationItems[1].totals.push(["小计", '', empowermentTotal]);
-    protationItems[2].totals.push(["小计", '', functionTotal]);
-    protationItems[3].totals.push(["小计", '', utils.changeThrDecimal(utils.accAdd(protation.protation.adddPrice, protation.protation.addmPrice))]);
-    protationItems[4].totals.push(["小计", '', subtractTotal]);
 
     com.focusPage('#talkingList').click(function() {
 

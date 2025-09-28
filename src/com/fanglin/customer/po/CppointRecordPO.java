@@ -109,7 +109,7 @@ public class CppointRecordPO implements Serializable {
 	}
 
 	@Column(name = "pointType")
-	public long getPointType() {
+	public short getPointType() {
 		return pointType;
 	}
 

@@ -181,7 +181,7 @@ jQuery(function($) {
     function handle() {
 
         var $execute = $('<div id="exDiv"></div>').appendTo(customerProfileDetail.items.particulars);
-        var $button = $('<button class="btn btn-primary pull-right" type="button" id="execute">执行</button>').appendTo($execute);
+        var $button = $('<button class="btn btn-primary pull-right" type="button" id="execute">保存</button>').appendTo($execute);
 
         com.focusPage("#execute", "#customerProfileDetailModal").click(function() {
 

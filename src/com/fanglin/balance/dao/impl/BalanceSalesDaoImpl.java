@@ -60,7 +60,7 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 
 	@Override
 	public BalanceSalesPO queryBalanceSales(long bid, String grade, short status, short atttype, int company) {
-		return (BalanceSalesPO) session().createCriteria(BalanceSalesPO.class).add(Restrictions.eq("status", status)).add(Restrictions.eq("atttype", atttype)).createCriteria("brand", "brand").add(Restrictions.eq("brand.bid", bid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
+		return (BalanceSalesPO) session().createCriteria(BalanceSalesPO.class).add(Restrictions.eq("status", status)).add(Restrictions.eq("atttype", atttype)).add(Restrictions.eq("company", company)).createCriteria("brand", "brand").add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

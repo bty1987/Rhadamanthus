@@ -286,32 +286,19 @@ public class SalesDeliveryItemPO implements Serializable {
 		this.company = company;
 	}
 
-	public SalesDeliveryItemVO ptv(SalesDeliveryItemVO vo) {
+	public SalesDeliveryItemVO ptv(SalesDeliveryItemVO salesDeliveryItemVO) {
 
-		BeanUtil.copyPropertie(this, vo, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
+		BeanUtil.copyPropertie(this, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
 
-		if (vo.getCreater() != null) BeanUtil.copyProperties(getCreater(), vo.getCreater(), Arrays.asList("dept", "duty"));
-		if (vo.getCreater() != null && vo.getCreater().getDept() != null && getCreater() != null) BeanUtil.copyProperties(getCreater().getDept(), vo.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesDeliveryItemVO.getCreater() != null && getCreater() != null) salesDeliveryItemVO.getCreater().setBaseInfo(getCreater());
+		if (salesDeliveryItemVO.getTraner() != null && getTraner() != null) salesDeliveryItemVO.getTraner().setBaseInfo(getTraner());
+		if (salesDeliveryItemVO.getChecker() != null && getChecker() != null) salesDeliveryItemVO.getChecker().setBaseInfo(getChecker());
+		if (salesDeliveryItemVO.getConfirmer() != null && getConfirmer() != null) salesDeliveryItemVO.getConfirmer().setBaseInfo(getConfirmer());
+		if (salesDeliveryItemVO.getFinisher() != null && getFinisher() != null) salesDeliveryItemVO.getFinisher().setBaseInfo(getFinisher());
 
-		if (vo.getTraner() != null) BeanUtil.copyProperties(getTraner(), vo.getTraner(), Arrays.asList("dept", "duty"));
-		if (vo.getTraner() != null && vo.getTraner().getDept() != null && getTraner() != null) BeanUtil.copyProperties(getTraner().getDept(), vo.getTraner().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesDeliveryItemVO.getSalesItem() != null && getSalesItem() != null) getSalesItem().ptv(salesDeliveryItemVO.getSalesItem());
+		if (salesDeliveryItemVO.getSales() != null) getSales().ptv(salesDeliveryItemVO.getSales());
 
-		if (vo.getChecker() != null) BeanUtil.copyProperties(getChecker(), vo.getChecker(), Arrays.asList("dept", "duty"));
-		if (vo.getChecker() != null && vo.getChecker().getDept() != null && getChecker() != null) BeanUtil.copyProperties(getChecker().getDept(), vo.getChecker().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		if (vo.getConfirmer() != null) BeanUtil.copyProperties(getConfirmer(), vo.getConfirmer(), Arrays.asList("dept", "duty"));
-		if (vo.getConfirmer() != null && vo.getConfirmer().getDept() != null && getConfirmer() != null) BeanUtil.copyProperties(getConfirmer().getDept(), vo.getConfirmer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		if (vo.getFinisher() != null) BeanUtil.copyProperties(getFinisher(), vo.getFinisher(), Arrays.asList("dept", "duty"));
-		if (vo.getFinisher() != null && vo.getFinisher().getDept() != null && getFinisher() != null) BeanUtil.copyProperties(getFinisher().getDept(), vo.getFinisher().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-
-		if (vo.getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem(), vo.getSalesItem(), Arrays.asList("goods", "color", "format"));
-		if (vo.getSalesItem() != null && vo.getSalesItem().getGoods() != null && getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem().getGoods(), vo.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
-		if (vo.getSalesItem() != null && vo.getSalesItem().getColor() != null && getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem().getColor(), vo.getSalesItem().getColor());
-		if (vo.getSalesItem() != null && vo.getSalesItem().getFormat() != null && getSalesItem() != null) BeanUtil.copyPropertie(getSalesItem().getFormat(), vo.getSalesItem().getFormat());
-
-		if (vo.getSales() != null) getSales().ptv(vo.getSales());
-
-		return vo;
+		return salesDeliveryItemVO;
 	}
 }

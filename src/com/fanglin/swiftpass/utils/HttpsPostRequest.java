@@ -162,6 +162,8 @@ public class HttpsPostRequest extends AbstractTransService {
 			}
 		}
 
+		System.out.println(Configure.getCertPath());
+
 		// 设置HEAD信息
 		if (keyConfigure.getEnterpriseBearer() != null) {
 			authInfo = authInfo + "," + keyConfigure.getEnterpriseBearer();
@@ -203,6 +205,7 @@ public class HttpsPostRequest extends AbstractTransService {
 					case POST:
 						conn.setRequestMethod(ReqMethodEnum.POST.toString());
 						conn.setDoOutput(true);
+						System.out.println(conn);
 						outStream = conn.getOutputStream();
 						outStream.write(bodyParamString.getBytes(Const.CHARSET));
 						outStream.flush();

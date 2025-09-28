@@ -19,6 +19,7 @@ jQuery(function($) {
             upperArea: com.focusPage("#upperArea"),
             lowerArea: com.focusPage("#lowerArea"),
             period: com.focusPage("#period"),
+            designPeriod: com.focusPage("#designPeriod"),
         },
 
     };
@@ -65,7 +66,7 @@ jQuery(function($) {
             var $span = $('<span></span>').addClass('lbl status-lbl');
             var $btnUpdate = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑");
             var $btnNode = $("<a></a>").addClass("btn btn-minier btn-yellow").html("节点");
-            var propertyArr = [["工程名称: ", v.name, "grey"], ["上面积: ", v.upperArea, "blue"], ["下面积: ", v.lowerArea, "blue"], ["工期: ", v.period, "blue"]];
+            var propertyArr = [["工程名称: ", v.name, "grey"], ["上面积: ", v.upperArea, "blue"], ["下面积: ", v.lowerArea, "blue"], ["工期: ", v.period, "blue"], ["设计工期: ", v.designPeriod, "blue"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -90,6 +91,7 @@ jQuery(function($) {
                 constructionPace.items.upperArea.val(v.upperArea);
                 constructionPace.items.lowerArea.val(v.lowerArea);
                 constructionPace.items.period.val(v.period);
+                constructionPace.items.designPeriod.val(v.designPeriod);
 
                 constructionPace.modals.updatePaceModal.modal("show");
             });
@@ -153,6 +155,7 @@ jQuery(function($) {
             "constructionPace.upperArea": constructionPace.items.upperArea.val(),
             "constructionPace.lowerArea": constructionPace.items.lowerArea.val(),
             "constructionPace.period": constructionPace.items.period.val(),
+            "constructionPace.designPeriod": constructionPace.items.designPeriod.val(),
         };
 
         if (constructionPace.cpid) {

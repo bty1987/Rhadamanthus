@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.balance.dao.BalanceCutpayDao;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceSalesBalanceDao;
 import com.fanglin.balance.dao.BalanceSalesDao;
@@ -56,6 +57,9 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Autowired
 	private BalanceDao balanceDao;
+
+	@Autowired
+	private BalanceCutpayDao balanceCutpayDao;
 
 	@Autowired
 	private BalanceSalesBalanceDao balanceSalesBalanceDao;
@@ -283,7 +287,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException {
+	public int affirmBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException {
 
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 
@@ -292,6 +296,27 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		}
 
 		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_UNLOCK_INT) {
+			throw new FLException(350018, "结算销售不可操作");
+		}
+
+		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_AFFIRM_INT);
+
+		balanceSalesDao.update(balanceSalesPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException {
+
+		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
+
+		if (balanceSalesPO == null) {
+			throw new FLException(350017, "结算销售不存在");
+		}
+
+		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_AFFIRM_INT) {
 			throw new FLException(350018, "结算销售不可操作");
 		}
 
@@ -305,7 +330,15 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		BalancePO balancePO = balanceDao.get(balanceSalesPO.getBid());
 
-		if (balancePO != null && balancePO.getBid() != 0) return 0;
+		if (balancePO != null && balancePO.getBid() != 0) {
+
+			balancePO.setAmount(balanceSalesPO.getPayment());
+			balancePO.setSurplus(Arith.sub(balanceSalesPO.getPayment(), balanceCutpayDao.amountBalanceCutpay(balanceSalesPO.getBid())));
+
+			balanceDao.save(balancePO);
+
+			return 0;
+		}
 
 		balancePO = new BalancePO(new UserPO(), new UserPO());
 

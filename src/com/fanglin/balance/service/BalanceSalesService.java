@@ -34,5 +34,7 @@ public interface BalanceSalesService {
 
 	public int unlockBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException;
 
+	public int affirmBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException;
+
 	public int deleteBalanceSales(BalanceSalesVO balanceSales) throws FLException;
 }

@@ -24,6 +24,6 @@ public interface MemberService {
 
 	public int updateMemberGoods(MemberGoodsVO memberGoodsVO);
 
-	public List<MemberVO> queryMemberForInfo(List<MemberVO> members, Integer company);
+	public List<MemberVO> queryMemberForInfo(MemberVO memberVO, Integer company) throws FLException;
 
 }

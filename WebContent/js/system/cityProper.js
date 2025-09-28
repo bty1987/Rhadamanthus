@@ -88,6 +88,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+            var $btnPartner = $('<a></a>').addClass('btn btn-minier btn-warning').html('合作');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
             var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-warning').html('位置');
@@ -105,10 +106,17 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($btnEdit).append($btnDel).append($btnPosition).appendTo($h3);
+            $divBtnWrap.append($btnPartner).append($btnEdit).append($btnDel).append($btnPosition).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
             
+            $btnPartner.click(function() {
+
+                params.system.cpid = v.cpid;
+
+                com.popup4page("#cityProperPartnerPopUp", api.index.cityProperPartnerIndex.url, "合作");
+            });
+
             $btnEdit.click(function(){
             	editCityProper(v.cpid, v.no, v.name, v.city.region.rid, v.city.cid);
             });

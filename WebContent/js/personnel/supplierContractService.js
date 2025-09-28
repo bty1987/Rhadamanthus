@@ -4,22 +4,21 @@ jQuery(function($) {
 
         uid: params.personel.uid,
         btns: {
-        	createSupplierServiceBtn: com.focusPage("#addBtn"),
+            createSupplierServiceBtn: com.focusPage("#addBtn"),
         },
 
         modals: {
-        	addServicePriceModal: com.focusPage("#addServicePriceModal"),
+            addServicePriceModal: com.focusPage("#addServicePriceModal"),
 
         },
 
         items: {
-             startDate: com.focusPage("#startDate","#addServicePriceModal"),
-             reportedDate: com.focusPage("#reportedDate","#addServicePriceModal"),
-             maxAmount: com.focusPage("#maxAmount","#addServicePriceModal"),
-             minAmount: com.focusPage("#minAmount","#addServicePriceModal"),
-             serviceCharge: com.focusPage("#serviceCharge","#addServicePriceModal"),
-             name: com.focusPage("#name","#addServicePriceModal"),
-             type: com.focusPage("#type","#addServicePriceModal"),
+            startDate: com.focusPage("#startDate", "#addServicePriceModal"),
+            reportedDate: com.focusPage("#reportedDate", "#addServicePriceModal"),
+            maxAmount: com.focusPage("#maxAmount", "#addServicePriceModal"),
+            minAmount: com.focusPage("#minAmount", "#addServicePriceModal"),
+            serviceCharge: com.focusPage("#serviceCharge", "#addServicePriceModal"),
+            name: com.focusPage("#name", "#addServicePriceModal"),
         },
         data: null,
     };
@@ -27,7 +26,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.base("serviceCondList", "serviceCondList", "servicePagenation", api.personel.querySupplierContractServiceBySid);
-    
+
     searcher.param({
         "supplierContractServiceVO.sid": serviceContract.uid
     });
@@ -36,42 +35,35 @@ jQuery(function($) {
 
     com.datetime(serviceContract.items.startDate);
     com.datetime(serviceContract.items.reportedDate);
-    serviceContract.items.type.bindData(constant.personel().supplierContractService.type.datas,"key","value");
-    
+
     var lineprops = [{
         field: "name",
         name: "名称",
         prop: "name",
         clazz: "grey",
     }, {
-        field: "type",
-        name: "类型",
-        prop: "type",
-        clazz: "grey",
-        dataset: constant.personel().supplierContractService.type.keys,
-    }, {
         field: "servicePrice",
         name: "服务费",
-        prop: function(v){
+        prop: function(v) {
 
             var reses = "";
             var services = JSON.parse(v.servicePrice);
 
-            $.each(services,function(index,v){
+            $.each(services, function(index, v) {
 
                 reses += "有效期:&nbsp" + v.TL + "&nbsp;&nbsp;&nbsp;&nbsp;";
                 reses += "销售总金额:&nbsp" + v.UV + "-" + v.DV + "(含)" + "&nbsp;&nbsp;&nbsp;&nbsp;";
                 reses += "超额服务费:&nbsp" + v.SR + "%";
                 reses += "<br />";
-                });
+            });
             return reses;
         },
         clazz: "grey",
-    },];
+    }, ];
 
     serviceContract.btns.createSupplierServiceBtn.on("click", function() {
 
-    	serviceContract.modals.addServicePriceModal.modal("show");
+        serviceContract.modals.addServicePriceModal.modal("show");
     });
 
     com.focusPage('#servicePriceSubmitBtn').on("click", function() {
@@ -86,7 +78,6 @@ jQuery(function($) {
         var input_minAmount = serviceContract.items.minAmount.val() == "" ? 0 : serviceContract.items.minAmount.val();
         var input_serviceCharge = serviceContract.items.serviceCharge.val() == "" ? 0 : serviceContract.items.serviceCharge.val();
         var input_name = serviceContract.items.name.val();
-        var input_type = serviceContract.items.type.val();
         var json = '{"TL": "' + input_startDate + " - " + input_reportedDate + '", "UV": ' + input_maxAmount + ', "DV": ' + input_minAmount + ', "SR": ' + input_serviceCharge + '}';
 
         var jsonArray = JSON.parse(serviceContract.data);
@@ -102,16 +93,14 @@ jQuery(function($) {
         var options = {
             "supplierContractServiceVO.sid": serviceContract.uid,
             "supplierContractServiceVO.name": input_name,
-            "supplierContractServiceVO.type": input_type,
             "supplierContractServiceVO.servicePrice": updatedServicePrice,
-            
         };
 
         com.post(api.personel.addSupplierContractService, options, function(res) {
 
             com.cleanItems(serviceContract.items);
 
-        	serviceContract.modals.addServicePriceModal.modal("hide");
+            serviceContract.modals.addServicePriceModal.modal("hide");
 
             searcher.doSearch();
         });
@@ -124,10 +113,10 @@ jQuery(function($) {
 
             remove(v.scsid);
         },
-    },];
+    }, ];
 
     searcher.line("name", lineprops, linebtns).render();
-    
+
     function remove(scsid) {
 
         var options = {

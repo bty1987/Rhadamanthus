@@ -100,7 +100,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 			if ("construction.schedule".equals(field)) {
 				query.add(query.getCriterion("schedule", Integer.parseInt(data), op));
 			} else if ("construction.process".equals(field)) {
-				query.add(query.getCriterion("process", Integer.parseInt(data), op));
+				query.add(query.getCriterion("process", Short.parseShort(data), op));
 			} else if ("construction.status".equals(field)) {
 				query.add(query.getCriterion("status", Short.parseShort(data), op));
 			} else if ("construction.createTime".equals(field)) {

@@ -16,8 +16,15 @@ public class GoodsKindVO implements Serializable {
 
 	private Short status;
 
+	private GoodsKindVO parent;
+
 	public GoodsKindVO() {
 		super();
+	}
+
+	public GoodsKindVO(GoodsKindVO parent) {
+		super();
+		this.parent = parent;
 	}
 
 	public Long getGkid() {
@@ -58,6 +65,14 @@ public class GoodsKindVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public GoodsKindVO getParent() {
+		return parent;
+	}
+
+	public void setParent(GoodsKindVO parent) {
+		this.parent = parent;
 	}
 
 }

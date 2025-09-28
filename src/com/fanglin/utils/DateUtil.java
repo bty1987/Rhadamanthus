@@ -15,10 +15,11 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -40,12 +41,13 @@ public class DateUtil {
 	 * @return Date类型的日期
 	 */
 	public static Date parseDate(String date, String format) {
-		if (StringUtils.isNotEmpty(date)) {
-			try {
-				return new SimpleDateFormat(format).parse(date);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+
+		if (!StringUtils.isNotEmpty(date)) return null;
+
+		try {
+			return new SimpleDateFormat(format).parse(date);
+		} catch (ParseException e) {
+			System.out.println(e.getMessage());
 		}
 		return null;
 	}
@@ -90,9 +92,8 @@ public class DateUtil {
 	 * @return 结果串
 	 */
 	public static String format(String date, String sourceFormat, String transFormat) {
-		if (StringUtils.isEmpty(date)) {
-			return "";
-		}
+
+		if (StringUtils.isEmpty(date)) return "";
 
 		DateFormat _formater1 = new SimpleDateFormat(sourceFormat);
 		DateFormat _formater2 = new SimpleDateFormat(transFormat);
@@ -159,11 +160,7 @@ public class DateUtil {
 		try {
 			int integerHour = Integer.parseInt(df.format(date));
 
-			if (integerHour >= 0 && integerHour <= 12) {
-				isTrue = true;
-			} else {
-				isTrue = false;
-			}
+			return (integerHour >= 0 && integerHour <= 12);
 		} catch (NumberFormatException nfe) {
 			nfe.getStackTrace();
 		}
@@ -194,7 +191,7 @@ public class DateUtil {
 
 		if (start == null) return 0;
 		if (end == null) return 0;
-		
+
 		else return (int) ((end.getTime() - start.getTime()) / 24L / 60L / 60L / 1000L);
 	}
 
@@ -225,97 +222,119 @@ public class DateUtil {
 	}
 
 	/**
-	 * 获得条件的起止时间
+	 * 判断给定日期是否为工作日
+	 * 
+	 * @param date 日期
+	 * @return 如果是工作日返回true，否则返回false
 	 */
-	public static List<Date> calStartAndEndTime(String kind, Date reportDate) {
+	private static boolean isWorkingDay(Date date, Set<String> holidays) {
 
-		Date endDate = new Date();
-		Date startDate = new Date();
-		
-		List<Date> res = new ArrayList<Date>();
-		if (kind.equals("天")) {
-			String temStr = getDateToDateString(reportDate, "yyyy-MM-dd");
-			startDate = DateUtil.parseDate(temStr, "yyyy-MM-dd");
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
-			temStr = getDateToDateString(reportDate, "yyyy-MM-dd") + " 23:59:59";
-			endDate = DateUtil.parseDate(temStr, "yyyy-MM-dd HH:mm:ss");
-		} else if (kind.equals("月")) {
-			startDate = DateUtil.getFirstDay(reportDate);
-			endDate = DateUtil.getLastDay(reportDate);
-		} else if (kind.equals("季度")) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(reportDate);
-			int monthIndex = calendar.get(Calendar.MONTH);
-			int jd = monthIndex / 3;
-			int startMonth = jd * 3;
-			int endMonth = startMonth + 2;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
 
-			calendar.set(Calendar.MONTH, startMonth);
-			Date start = calendar.getTime();
-
-			calendar.set(Calendar.MONTH, endMonth);
-			Date end = calendar.getTime();
-
-			startDate = DateUtil.getFirstDay(start);
-			endDate = DateUtil.getLastDay(end);
-		} else if (kind.equals("半年")) {
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(reportDate);
-			int monthIndex = calendar.get(Calendar.MONTH);
-			int jd = monthIndex / 6;
-			int startMonth = jd * 6;
-			int endMonth = startMonth + 5;
-
-			calendar.set(Calendar.MONTH, startMonth);
-			Date start = calendar.getTime();
-
-			calendar.set(Calendar.MONTH, endMonth);
-			Date end = calendar.getTime();
-
-			startDate = DateUtil.getFirstDay(start);
-			endDate = DateUtil.getLastDay(end);
-		} else {// 一年
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(reportDate);
-			int monthIndex = calendar.get(Calendar.MONTH);
-			int jd = monthIndex / 12;
-			int startMonth = jd * 12;
-			int endMonth = startMonth + 11;
-
-			calendar.set(Calendar.MONTH, startMonth);
-			Date start = calendar.getTime();
-
-			calendar.set(Calendar.MONTH, endMonth);
-			Date end = calendar.getTime();
-
-			startDate = DateUtil.getFirstDay(start);
-			endDate = DateUtil.getLastDay(end);
+		// 排除周六和周日
+		int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+		if (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY) {
+			return false;
 		}
-		res.add(startDate);
-		res.add(endDate);
 
-		return res;
+		// 排除节假日
+		String dateStr = DATE_FORMAT.format(date);
+		return !holidays.contains(dateStr);
+	}
+
+	public static Set<String> initHoliday() {
+
+		Set<String> holidays = new HashSet<String>(Arrays.asList("2025-01-01", // 元旦
+				"2025-01-29", "2025-01-30", "2025-01-31", "2025-02-01", "2025-02-02", "2025-02-03", // 春节
+				"2025-04-04", "2025-04-05", "2025-04-06", // 清明节
+				"2025-05-01", "2025-05-02", "2025-05-03", "2025-05-04", // 劳动节
+				"2025-05-31", "2025-06-01", "2025-06-02", // 端午节
+				"2025-09-29", // 中秋节
+				"2025-10-01", "2025-10-02", "2025-10-03", "2025-10-04", "2025-10-05", "2025-10-06", "2025-10-07") // 国庆节
+		);
+
+		return holidays;
+	}
+
+	/**
+	 * 计算两个日期之间的工作日天数（排除周六、周日和节假日）
+	 * 
+	 * @param startDate 开始日期
+	 * @param endDate 结束日期
+	 * @return 工作日天数
+	 */
+	public static int getWorkDays(Date startDate, Date endDate) {
+
+		Set<String> holidays = initHoliday();
+
+		if (startDate.after(endDate)) {
+			throw new IllegalArgumentException("开始日期不能晚于结束日期");
+		}
+
+		int workingDays = 0;
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(startDate);
+
+		while (!calendar.getTime().after(endDate)) {
+			if (isWorkingDay(calendar.getTime(), holidays)) {
+				workingDays++;
+			}
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+		}
+
+		return workingDays;
+	}
+
+	/**
+	 * 计算两个时间戳之间的工作日天数
+	 * 
+	 * @param startTs 开始时间戳
+	 * @param endTs 结束时间戳
+	 * @return 工作日天数
+	 */
+	public static int getWorkDays(Timestamp startTs, Timestamp endTs) {
+		return getWorkDays(new Date(startTs.getTime()), new Date(endTs.getTime()));
+	}
+
+	/**
+	 * 根据开始日期和工作日天数计算结束日期
+	 * 
+	 * @param startDate 开始日期
+	 * @param workingDays 工作日天数
+	 * @return 结束日期
+	 */
+	public static Date getEndWorkDate(Date startDate, int workingDays) {
+
+		Set<String> holidays = initHoliday();
+
+		if (workingDays <= 0) {
+			return startDate;
+		}
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(startDate);
+
+		int countedDays = 0;
+
+		while (countedDays < workingDays) {
+			// 移动到下一天
+			calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+			// 检查是否为工作日
+			if (isWorkingDay(calendar.getTime(), holidays)) {
+				countedDays++;
+			}
+		}
+
+		return calendar.getTime();
 	}
 
 	public static void main(String args[]) {
+
 		isAM();
-
-		Date theDate = parseDate("2014-6-3 12:56:07", "yyyy-MM-dd HH:mm:ss");
-		// Date start = new Date();
-		// Date end = new Date();
-
-		List<Date> res1 = calStartAndEndTime("天", theDate);
-		System.out.println(res1);
-		List<Date> res2 = calStartAndEndTime("月", theDate);
-
-		List<Date> res3 = calStartAndEndTime("季度", theDate);
-		List<Date> res4 = calStartAndEndTime("半年", theDate);
-		List<Date> res5 = calStartAndEndTime("一年", theDate);
-
-		System.out.println(res2);
-		System.out.println(res3);
-		System.out.println(res4);
-		System.out.println(res5);
 
 		System.out.println(DateUtil.getDateToTimestamp(DateUtil.getFirstDay(new Date())));
 
@@ -327,6 +346,19 @@ public class DateUtil {
 
 		System.out.println(DateUtil.getDateToDateString(DateUtil.getFirstDay(parseDate("2022-02", "yyyy-MM")), "yyyy-MM-dd"));
 		System.out.println(DateUtil.getDateToDateString(DateUtil.getLastDay(parseDate("2022-02", "yyyy-MM")), "yyyy-MM-dd"));
+
+		Date startDate = parseDate("2025-10-01", "yyyy-MM-dd");
+		Date endDate = parseDate("2025-10-31", "yyyy-MM-dd");
+
+		int workingDays = getWorkDays(startDate, endDate);
+
+		System.out.println("开始日期: " + new SimpleDateFormat("yyyy-MM-dd").format(startDate));
+		System.out.println("结束日期: " + new SimpleDateFormat("yyyy-MM-dd").format(endDate));
+		System.out.println("工作日天数: " + workingDays);
+
+		Date endDate1 = getEndWorkDate(startDate, 31);
+
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(endDate1));
 
 	}
 }

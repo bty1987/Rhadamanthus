@@ -39,7 +39,9 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	public static final short STATUS_UNLOCK_INT = 1;// 锁定
 
-	public static final short STATUS_ENABLE_CHECK_INT = 2;// 结算
+	public static final short STATUS_AFFIRM_INT = 2;//确认
+
+	public static final short STATUS_ENABLE_CHECK_INT = 3;// 结算
 
 	private long bsid;
 

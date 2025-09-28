@@ -44,6 +44,9 @@ $.extend(api.index, {
     constructionNodeIndex: {
         url: "/views/data/constructionPeriod4node.html"
     },
+    goodsPool3claim: {
+        url: "/views/data/goodsPool3claim.html"
+    },
 });
 
 $.extend(api, {
@@ -422,23 +425,23 @@ $.extend(api, {
                 args: ["house.buildArea", "house.freeArea", "house.innerArea", "house.totalArea"]
             }
         },
-        
+
         pageConstructionPace: {
             url: "pageConstructionPace.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["upperArea", "lowerArea", "period"]
+                args: ["upperArea", "lowerArea", "period", "designPeriod"]
             }]
         },
         queryConstructionPace: {
             url: "queryConstructionPace.do",
             type: "update",
             tranargs: {
-                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period"],
+                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period", "constructionPace.designPeriod"],
                 query: [{
-                    result: "constructionPaces",
-                    args: ["upperArea", "lowerArea", "period"]
+                    result: "constructionPace",
+                    args: ["upperArea", "lowerArea", "period", "designPeriod"]
                 }]
             }
         },
@@ -446,14 +449,14 @@ $.extend(api, {
             url: "addConstructionPace.do",
             type: "update",
             tranargs: {
-                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period"]
+                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period", "constructionPace.designPeriod"]
             }
         },
         updateConstructionPace: {
             url: "updateConstructionPace.do",
             type: "update",
             tranargs: {
-                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period"]
+                args: ["constructionPace.upperArea", "constructionPace.lowerArea", "constructionPace.period", "constructionPace.designPeriod"]
             }
         },
         deleteConstructionPace: {
@@ -465,7 +468,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["connum", "comnum"]
+                args: ["connum", "comnum", "prenum", "postnum"]
             }]
         },
         queryConstructionPaceNode: {
@@ -473,25 +476,25 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionPaceNodes",
-                args: ["connum", "comnum"]
+                args: ["connum", "comnum", "prenum", "postnum"]
             }]
         },
         addConstructionPaceNode: {
             url: "addConstructionPaceNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionPaceNode.connum", "constructionPaceNode.comnum"]
+                args: ["constructionPaceNode.connum", "constructionPaceNode.comnum", "constructionPaceNode.prenum", "constructionPaceNode.postnum"]
             }
         },
         updateConstructionPaceNode: {
             url: "updateConstructionPaceNode.do",
             type: "update",
             tranargs: {
-                args: ["constructionPaceNode.connum", "constructionPaceNode.comnum"]
+                args: ["constructionPaceNode.connum", "constructionPaceNode.comnum", "constructionPaceNode.prenum", "constructionPaceNode.postnum"]
             }
         },
         updateConstructionPaceNodeForStatus: {
-            url: "updateConstructionPaceForStatus.do"
+            url: "updateConstructionPaceNodeForStatus.do"
         },
 
         pageConstructionPeriod: {
@@ -586,7 +589,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
             }]
         },
         queryConstructionNode: {
@@ -594,7 +597,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
             }]
         },
         queryConstructionNodeByCnid: {
@@ -602,7 +605,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
             }]
         },
         queryConstructionNodeByOrderId: {
@@ -610,7 +613,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionNodes",
-                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit","salaryLimit","accessoryLimit"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck", "timeLimit", "salaryLimit", "accessoryLimit"]
             }]
         },
         addConstructionNode: {
@@ -1058,7 +1061,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["totalimit", "balance", "selling"]
+                args: ["totalimit", "balance", "selling", "normnum", "storenum"]
             }, {
                 result: "paging-data-goods",
                 args: ["purchase", "selling", "pieceNum", "confine"]
@@ -1069,7 +1072,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "aoodes",
-                args: ["totalimit", "balance", "selling"]
+                args: ["totalimit", "balance", "selling", "normnum", "storenum"]
             }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum", "confine"]
@@ -1080,7 +1083,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "aoodes",
-                args: ["totalimit", "balance", "selling"]
+                args: ["totalimit", "balance", "selling", "normnum", "storenum"]
             }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum", "confine"]
@@ -1091,7 +1094,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "aoodes",
-                args: ["totalimit", "balance", "selling"]
+                args: ["totalimit", "balance", "selling", "normnum", "storenum"]
             }, {
                 result: "aoodes-goods",
                 args: ["purchase", "selling", "pieceNum", "confine"]
@@ -1101,14 +1104,14 @@ $.extend(api, {
             url: "addAoods.do",
             type: "update",
             tranargs: {
-                args: ["aoods.totalimit", "aoods.balance", "aoods.selling"]
+                args: ["aoods.totalimit", "aoods.balance", "aoods.selling", "aoods.normnum", "aoods.storenum"]
             }
         },
         updateAoods: {
             url: "updateAoods.do",
             type: "update",
             tranargs: {
-                args: ["aoods.totalimit", "aoods.balance", "aoods.selling"]
+                args: ["aoods.totalimit", "aoods.balance", "aoods.selling", "aoods.normnum", "aoods.storenum"]
             }
         },
         updateAoodsForStatus: {
@@ -2004,6 +2007,12 @@ $.extend(api, {
         },
         queryGoodsKind: {
             url: "queryGoodsKind.do"
+        },
+        queryGoodsKindByFgkid: {
+            url: "queryGoodsKindByFgkid.do"
+        },
+        queryGoodsKindByGkid: {
+            url: "queryGoodsKindByGkid.do"
         },
         addGoodsKind: {
             url: "addGoodsKind.do"

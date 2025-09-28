@@ -56,6 +56,8 @@ public class OalesPaymentPO implements Serializable {
 
 	private long opid;
 
+	private long osid;
+
 	private OalesReceiptPO oalesReceipt;
 
 	private OalesPO oales;
@@ -104,6 +106,14 @@ public class OalesPaymentPO implements Serializable {
 
 	public void setOpid(long opid) {
 		this.opid = opid;
+	}
+
+	public long getOsid() {
+		return osid;
+	}
+
+	public void setOsid(long osid) {
+		this.osid = osid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

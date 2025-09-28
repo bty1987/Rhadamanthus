@@ -88,6 +88,8 @@ public class GoodsPO implements java.io.Serializable {
 
 	private short type;
 
+	private short atttype;
+
 	private GoodsKindPO zerokind;
 
 	private GoodsKindPO onekind;
@@ -99,6 +101,20 @@ public class GoodsPO implements java.io.Serializable {
 	private String path;
 
 	private short isShow;
+
+	private String series;
+
+	private String elevel;
+
+	private String material;
+
+	private String quality;
+
+	private String color;
+
+	private String format;
+
+	private String model;
 
 	private short status;
 
@@ -356,6 +372,78 @@ public class GoodsPO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "series")
+	public String getSeries() {
+		return series;
+	}
+
+	public void setSeries(String series) {
+		this.series = series;
+	}
+
+	@Column(name = "elevel")
+	public String getElevel() {
+		return elevel;
+	}
+
+	public void setElevel(String elevel) {
+		this.elevel = elevel;
+	}
+
+	@Column(name = "material")
+	public String getMaterial() {
+		return material;
+	}
+
+	public void setMaterial(String material) {
+		this.material = material;
+	}
+
+	@Column(name = "quality")
+	public String getQuality() {
+		return quality;
+	}
+
+	public void setQuality(String quality) {
+		this.quality = quality;
+	}
+
+	@Column(name = "color")
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	@Column(name = "format")
+	public String getFormat() {
+		return format;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	@Column(name = "model")
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	public GoodsVO ptv(GoodsVO goodsVO) {

@@ -65,7 +65,7 @@ public class CustomerChanceAction extends BaseListAction {
 	@Action(value = "addCustomerChance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addCustomerChance() throws FLException {
 
-		customerChanceService.addCustomerChance(customerChance, queryUserId(), company != null ? CompanyServiceImpl.decode(company) : queryCompany());
+		customerChanceService.addCustomerChance(customerChance, customerChance.getSource().getCreater().getUserId() , company != null ? CompanyServiceImpl.decode(company) : queryCompany());
 
 		return SUCCESS;
 	}

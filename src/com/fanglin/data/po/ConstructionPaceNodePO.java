@@ -7,8 +7,11 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.data.common.vo.ConstructionPaceNodeVO;
@@ -34,9 +37,15 @@ public class ConstructionPaceNodePO implements Serializable {
 
 	private String name;
 
+	private ConstructionNodePO node;
+
 	private int connum;
 
 	private int comnum;
+
+	private int prenum;
+
+	private int postnum;
 
 	private short status; // 0: 启用, 1: 禁用
 
@@ -85,6 +94,16 @@ public class ConstructionPaceNodePO implements Serializable {
 		this.name = name;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getNode() {
+		return node;
+	}
+
+	public void setNode(ConstructionNodePO node) {
+		this.node = node;
+	}
+
 	@Column(name = "connum")
 	public int getConnum() {
 		return connum;
@@ -101,6 +120,24 @@ public class ConstructionPaceNodePO implements Serializable {
 
 	public void setComnum(int comnum) {
 		this.comnum = comnum;
+	}
+
+	@Column(name = "prenum")
+	public int getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(int prenum) {
+		this.prenum = prenum;
+	}
+
+	@Column(name = "postnum")
+	public int getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(int postnum) {
+		this.postnum = postnum;
 	}
 
 	@Column(name = "status")
@@ -165,11 +202,13 @@ public class ConstructionPaceNodePO implements Serializable {
 		this.company = company;
 	}
 
-	public ConstructionPaceNodeVO ptv(ConstructionPaceNodeVO constructionPaceVO) {
+	public ConstructionPaceNodeVO ptv(ConstructionPaceNodeVO constructionPaceNodeVO) {
 
-		BeanUtil.copyProperties(this, constructionPaceVO, Arrays.asList(""));
+		BeanUtil.copyProperties(this, constructionPaceNodeVO, Arrays.asList("node"));
 
-		return constructionPaceVO;
+		if (constructionPaceNodeVO.getNode() != null && getNode() != null) getNode().ptv(constructionPaceNodeVO.getNode());
+
+		return constructionPaceNodeVO;
 	}
 
 }

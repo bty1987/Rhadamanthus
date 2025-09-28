@@ -26,7 +26,7 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO> {
 
 	public int countWorkerSalary(String orderId, Long csid);
 
-	public int amountWorkerSalary(long cid, long cnid);
+	public int amountWorkerSalary(long cid, long cnid, List<Short> twotypes);
 
 	public int updateWorkerSalary(String orderId, Long csid);
 

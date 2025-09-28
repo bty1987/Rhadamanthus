@@ -19,13 +19,17 @@ public class ConstructionPaceNodeDaoImpl extends DaoImpl<ConstructionPaceNodePO>
 	}
 
 	@Override
-	public List<ConstructionPaceNodePO> pageConstructionPaceNode(Paging paging, List<Filter> filters, int company) {
+	public List<ConstructionPaceNodePO> pageConstructionPaceNode(Paging paging, List<Filter> filters, int company, Long cpid) {
 
 		PagingQuery<ConstructionPaceNodePO> query = pagingQuery(paging, ConstructionPaceNodePO.class);
 
 		query.add(Restrictions.eq("company", company));
 
 		queryFilterExcute(query, filters);
+
+		if (cpid != null) {
+			query.add(Restrictions.eq("cpid", cpid));
+		}
 
 		return query.list();
 	}

@@ -25,8 +25,12 @@ $(function() {
     seacher.base("condList1", "pagenation1", "resultList1",api.balance.pageBalanceCutpay);
 
     seacher.param({
-        "balanceCutpay.dccount.bdid": balanceDccountDetail.bdid
-    });	
+        "paging.page": 1,
+        "paging.rows": 10,
+        "filters[0].data": balanceDccountDetail.bdid,
+        "filters[0].field": "dccountId",
+        "filters[0].op": "eq"
+    });
 
     seacher.button([{
         id : "addBalanceCutpay",

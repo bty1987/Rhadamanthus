@@ -31,7 +31,7 @@ public class BalanceCutpayAction extends BaseListAction {
 	@Action(value = "pageBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalanceCutpay() throws FLException {
 
-		balanceCutpayService.pageBalanceCutpay(getPaging(), getFilters(), balanceCutpay);
+		balanceCutpayService.pageBalanceCutpay(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
@@ -44,10 +44,34 @@ public class BalanceCutpayAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryBalanceCutpayByOuid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBalanceCutpayByUserId() throws FLException {
+
+		balanceCutpays = balanceCutpayService.queryBalanceCutpayByOuid(balanceCutpay);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBalanceCutpay() throws FLException {
 
 		balanceCutpayService.addBalanceCutpay(balanceCutpay, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "submitBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitBalanceCutpay() throws FLException {
+
+		balanceCutpayService.submitBalanceCutpay(balanceCutpay, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "unbindBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unbindBalanceCutpay() throws FLException {
+
+		balanceCutpayService.unbindBalanceCutpay(balanceCutpay, queryUserId());
 
 		return SUCCESS;
 	}

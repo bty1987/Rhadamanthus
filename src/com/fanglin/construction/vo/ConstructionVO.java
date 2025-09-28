@@ -41,15 +41,19 @@ public class ConstructionVO implements Serializable {
 
 	private Long accessoryLimit;
 
+	private Long accessoryTotal;
+
 	private Long salaryLimit;
 
-	private Long accessoryTotal;
+	private Long salaryLimitTotal;
 
 	private Long salaryTotal;
 
 	private UserBaseVO supervisor;
 
 	private UserBaseVO locker;
+
+	private UserBaseVO balancer;
 
 	private Timestamp createTime;
 
@@ -63,9 +67,15 @@ public class ConstructionVO implements Serializable {
 
 	private Timestamp processTime;
 
+	private Timestamp balanceTime;
+
 	private Short workStatus;
 
 	private Short scheduleStatus;
+
+	private Short balanceStatus;
+
+	private Short terminalStatus;
 
 	public ConstructionVO() {
 		super();
@@ -177,6 +187,14 @@ public class ConstructionVO implements Serializable {
 		this.accessoryTotal = accessoryTotal;
 	}
 
+	public Long getSalaryLimitTotal() {
+		return salaryLimitTotal;
+	}
+
+	public void setSalaryLimitTotal(Long salaryLimitTotal) {
+		this.salaryLimitTotal = salaryLimitTotal;
+	}
+
 	public Long getSalaryTotal() {
 		return salaryTotal;
 	}
@@ -199,6 +217,14 @@ public class ConstructionVO implements Serializable {
 
 	public void setSupervisor(UserBaseVO supervisor) {
 		this.supervisor = supervisor;
+	}
+
+	public UserBaseVO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserBaseVO balancer) {
+		this.balancer = balancer;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -255,6 +281,15 @@ public class ConstructionVO implements Serializable {
 		this.processTime = processTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
 	public Short getWorkStatus() {
 		return workStatus;
 	}
@@ -269,5 +304,21 @@ public class ConstructionVO implements Serializable {
 
 	public void setScheduleStatus(Short scheduleStatus) {
 		this.scheduleStatus = scheduleStatus;
+	}
+
+	public Short getBalanceStatus() {
+		return balanceStatus;
+	}
+
+	public void setBalanceStatus(Short balanceStatus) {
+		this.balanceStatus = balanceStatus;
+	}
+
+	public Short getTerminalStatus() {
+		return terminalStatus;
+	}
+
+	public void setTerminalStatus(Short terminalStatus) {
+		this.terminalStatus = terminalStatus;
 	}
 }

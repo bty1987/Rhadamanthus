@@ -36,7 +36,6 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 	@Override
 	public ConstructionInfoPO queryConstructionInfo(long cid) {
-
 		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_CID_STR, cid)).uniqueResult();
 	}
 
@@ -65,7 +64,9 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 			String field = filter.getField();
 			String data = filter.getData();
 
-			if ("keyTime".equals(field)) {
+			if ("isIssue".equals(field)) {
+				query.add(Restrictions.eq("isIssus", data));
+			} else if ("keyTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_KEYTIME_STR, data);
 			} else if ("drawlineTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_DRAWLINETIME_STR, data);

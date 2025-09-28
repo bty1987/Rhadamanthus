@@ -470,7 +470,7 @@
         order.infoItems.dlmConpany.bindData(res.companys, "cid", "name", true);
         order.signItems.conpany.bindData(res.companys, "cid", "name", true);
     });
-    
+
     com.post(api.data.queryDecorationBusitype, {}, function(res) {
 
         $.each(res.decorationBusitypes, function(i, v) {
@@ -701,8 +701,17 @@
                             case "createTime":
                                 propertyArr.push(["创建时间:", v.createTime, "green"]);
                                 break;
+                            case "issueTime":
+                                propertyArr.push(["派尺时间:", v.issueTime, "green"]);
+                                break;
+                            case "meetTime":
+                                propertyArr.push(["到店时间:", v.meetTime, "green"]);
+                                break;
                             case "measureTime":
                                 propertyArr.push(["量房时间:", v.measureTime, "green"]);
+                                break;
+                            case "belongTime":
+                                propertyArr.push(["变更时间:", v.belongTime, "green"]);
                                 break;
                             case "depositTime":
                                 propertyArr.push(["定金时间:", v.depositTime, "green"]);
@@ -712,6 +721,9 @@
                                 break;
                             case "contractTime":
                                 propertyArr.push(["签单时间:", v.contractTime, "green"]);
+                                break;
+                            case "recontractTime":
+                                propertyArr.push(["重签时间:", v.recontractTime, "green"]);
                                 break;
                             case "accountTime":
                                 propertyArr.push(["决算时间:", v.accountTime, "green"]);
@@ -746,11 +758,12 @@
                                 propertyArr.push([_text, order.sourceStatus[v.sourceStatus], "red", _info]);
                                 break;
                             case "projectStatus":
-                            	 var _text = $("<text>工程状态:</text>");
-                                 var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
-//                                	 projectInfo(_text, v.orderId);‌
-                                     projectInfo(_text, v.orderId);
-                                 });
+                                var _text = $("<text>工程状态:</text>");
+                                var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
+
+                                    // projectInfo(_text, v.orderId);‌
+                                    projectInfo(_text, v.orderId);
+                                });
                                 propertyArr.push([_text, order.projectStatusArr[v.projectStatus], "red", _info]);
                                 break;
                             case "repairStatus":
@@ -1178,18 +1191,32 @@
 
         function initPlan() {
 
-            com.focusPage('#calendar').fullCalendar('destroy');
-            com.focusPage('#calendar').fullCalendar('today');
+            com.focusPage('#drawlineCalendar').fullCalendar('destroy');
+            com.focusPage('#drawlineCalendar').fullCalendar('today');
 
-            com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
-                dayClick: function() { return false; },
-                eventClick: function() { return false; },
+            com.focusPage('#drawlineCalendar').fullCalendar($.extend(com.calendardefault, {
+                dayClick: function() {
+
+                    return false;
+                },
+                select: function(start, end, allDay) {
+
+                    var time = $.fullCalendar.formatDate(start, "yyyy-MM-dd").toString();
+
+                    order.infoItems.drawlineTime.val(time);
+
+                    return false;
+                },
+                eventClick: function(calEvent, jsEvent, view) {
+
+                    return false;
+                },
                 eventRender: function(event, element) {
+
                     element.off('click');
                 },
                 viewRender: function(view, element) {
-                    $('.fc-day').off('click').css('pointer-events', 'none');
-                    $('.fc-event').off('click').css('pointer-events', 'none');
+
                 },
                 events: function(start, end, callback) {
 
@@ -1212,7 +1239,7 @@
                             var _date = _[0] + "";
 
                             var event = {
-                                title: "已放线" + _[1] + "户",
+                                title: "剩余" + (20 - _[1] > 0 ? 20 - _[1] : 0) + "户",
                                 start: new Date(_date.substr(0, 4), _date.substr(4, 2) - 1, _date.substr(6, 2)),
                                 allDay: true
                             };
@@ -1224,10 +1251,20 @@
                     });
                 }
             }));
-            $('.fc-day').off('click').css('pointer-events', 'none');  
-           }
+        }
         // 放线
         var modalDrawLineModal = function(v) {
+
+            var designPeriod = 0;
+            var recommendPeriod = 0;
+
+            com.post(api.data.queryConstructionPace, {
+                "constructionPace.lowerArea": v.house.innerArea
+            }, function(res) {
+
+                designPeriod = res.constructionPace.designPeriod;
+                recommendPeriod = res.constructionPace.period;
+            }, null, false);
 
             contract.orderId = v.orderId;
 
@@ -1261,15 +1298,25 @@
 
                 var datas = result.constructionInfo;
 
+                var prePesignTime = new Date();
+
+                prePesignTime.setDate(prePesignTime.getDate() + utils.accDiv(designPeriod, 1000));
+
+                var preFinishTime = datas.drawlineTime ? new Date(datas.drawlineTime) : null;
+
+                if (preFinishTime) {
+                    preFinishTime.setDate(preFinishTime.getDate() + utils.accDiv(recommendPeriod, 1000));
+                }
+
                 order.infoItems.dlmConpany.val(0);
                 order.infoItems.quoteArea.val(decoration.house.quoteArea);
-                order.infoItems.timeLimit.val(datas.timeLimit);
+                order.infoItems.timeLimit.val(utils.accDiv(recommendPeriod, 1000));
                 order.infoItems.ishovel.val(datas.ishovel);
                 order.infoItems.iskey.val(datas.iskey);
                 order.infoItems.isCeremony.val(datas.isCeremony);
-                order.infoItems.finishTime.val(datas.finishTime ? datas.finishTime.substr(0, 10) : "");
+                order.infoItems.finishTime.val(preFinishTime ? com.dateFormat(preFinishTime, "yyyy-MM-dd") : "");
                 order.infoItems.keyTime.val(datas.keyTime ? datas.keyTime.substr(0, 10) : "");
-                order.infoItems.designTime.val(datas.designTime ? datas.designTime.substr(0, 10) : "");
+                order.infoItems.designTime.val(prePesignTime ? com.dateFormat(prePesignTime, "yyyy-MM-dd") : "");
                 order.infoItems.drawlineTime.val(datas.drawlineTime ? datas.drawlineTime.substr(0, 10) : "");
                 order.infoItems.comment.val(datas.comment);
             });
@@ -1486,8 +1533,8 @@
                 com.showTip(btn, "券优惠:" + couponCut1 + "<br\>物品优惠:" + thingCut + "<br\>优惠总额:" + utils.accAdd(couponCut1, thingCut) + "<br\>计入金额类型:" + couponCut2 + "<br\>不计入金额类型:" + couponCut3 + "<br\>计入业绩类型:" + couponCut1 + "<br\>不计入业绩类型:" + couponCut4);
             });
         };
-        
-     // 工程信息
+
+        // 工程信息
         var projectInfo = function(btn, orderId) {
 
             com.post(api.construction.queryConstructionInfoByOrderId, {
@@ -1628,8 +1675,8 @@
                 "orderId": orderId
             }
 
-//            com.switchPage(api.index.customerProfile4detailIndex.url);
-             com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
+            // com.switchPage(api.index.customerProfile4detailIndex.url);
+            com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
         }
 
         // 服务
@@ -1998,7 +2045,7 @@
                 v.projectStatus = order.projectStatusArr[v.projectStatus];
                 v.typeness = order.typeness[v.typeness];
                 v.busitype = order.busitype[v.busitype];
-                
+
                 if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_TERMINATION_INT, constant.decoration().decoration.STATUS_FINAL_INT].indexOf(v.status) == -1)
                     v.house.houseNumber = '';
             });

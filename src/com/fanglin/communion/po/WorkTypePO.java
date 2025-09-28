@@ -7,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.WorkTypeVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "worktype", catalog = "communion")
 public class WorkTypePO implements Serializable {
@@ -53,6 +56,13 @@ public class WorkTypePO implements Serializable {
 
 	public void setWorkTypeDes(String workTypeDes) {
 		this.workTypeDes = workTypeDes;
+	}
+
+	public WorkTypeVO ptv(WorkTypeVO workTypeVO) {
+
+		BeanUtil.copyProperties(this, workTypeVO, "");
+
+		return workTypeVO;
 	}
 
 }

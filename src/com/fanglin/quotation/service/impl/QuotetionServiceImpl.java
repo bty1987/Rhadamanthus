@@ -368,8 +368,6 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		for (QuotationFunctionAreaPO quotationFunctionAreaSO : quotationFunctionAreaPOs) {
 
-			if (quotationFunctionAreaSO.getType() == QuotationFunctionAreaPO.TYPE_CMPREH_INT) continue;
-
 			QuotetionFunctionAreaPO quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
 
 			quotetionFunctionAreaPO.setName(quotationFunctionAreaSO.getFunctionAreaName());

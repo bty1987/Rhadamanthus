@@ -13,9 +13,9 @@ package com.fanglin.personel.dao;
 
 import java.util.List;
 import com.fanglin.core.dao.Dao;
-import com.fanglin.personel.po.SupplierBrandProductPO;
+import com.fanglin.personel.po.SupplierContractCategoryPO;
 
-public interface SupplierBrandProductDao extends Dao<SupplierBrandProductPO> {
+public interface SupplierContractCategoryDao extends Dao<SupplierContractCategoryPO> {
 
-	public List<SupplierBrandProductPO> querySupplierBrandProduct(Long scbid);
+	public List<SupplierContractCategoryPO> querySupplierContractCategory(Long scbid);
 }

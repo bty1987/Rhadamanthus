@@ -360,6 +360,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			} else if (field.contains("busitype")) {
 
 				query.alias(String.format("%sbusitype", prefix), "busitype");
+			} else if (field.contains("addition")) {
+
+				query.alias(String.format("%saddition", prefix), "addition");
 			}
 
 			if ("decoration.orderId".equals(field)) {
@@ -439,16 +442,24 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.add(query.getCriterion(String.format("%srepairStatus", prefix), Short.valueOf(data), op));
 			} else if ("decoration.balanceStatus".equals(field)) {
 				query.add(query.getCriterion(String.format("%sbalanceStatus", prefix), Short.valueOf(data), op));
-			} else if ("decoration.signTime.range".equals(field)) {
-				query.timeranges(String.format("%scontractTime", prefix), String.format("%scontractTime", prefix), data);
 			} else if ("decoration.createTime.range".equals(field)) {
 				query.timeranges(String.format("%screateTime", prefix), String.format("%screateTime", prefix), data);
+			} else if ("decoration.issueTime.range".equals(field)) {
+				query.timeranges(String.format("%saddition.issueTime", prefix), String.format("%sissueTime", prefix), data);
+			} else if ("decoration.meetTime.range".equals(field)) {
+				query.timeranges(String.format("%saddition.meetTime", prefix), String.format("%smeetTime", prefix), data);
 			} else if ("decoration.measureTime.range".equals(field)) {
 				query.timeranges(String.format("%smeasureTime", prefix), String.format("%smeasureTime", prefix), data);
+			} else if ("decoration.belongTime.range".equals(field)) {
+				query.timeranges(String.format("%saddition.belongTime", prefix), String.format("%sbelongTime", prefix), data);
 			} else if ("decoration.depositTime.range".equals(field)) {
 				query.timeranges(String.format("%sdepositTime", prefix), String.format("%sdepositTime", prefix), data);
 			} else if ("decoration.precontractTime.range".equals(field)) {
 				query.timeranges(String.format("%sprecontractTime", prefix), String.format("%sprecontractTime", prefix), data);
+			} else if ("decoration.signTime.range".equals(field)) {
+				query.timeranges(String.format("%scontractTime", prefix), String.format("%scontractTime", prefix), data);
+			} else if ("decoration.recontractTime.range".equals(field)) {
+				query.timeranges(String.format("%srecontractTime", prefix), String.format("%srecontractTime", prefix), data);
 			} else if ("decoration.accountTime.range".equals(field)) {
 				query.timeranges(String.format("%saccountTime", prefix), String.format("%saccountTime", prefix), data);
 			} else if ("decoration.designTime.range".equals(field)) {

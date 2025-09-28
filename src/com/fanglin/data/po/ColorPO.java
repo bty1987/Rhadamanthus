@@ -10,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.utils.BeanUtil;
+
 @Entity
 @Table(name = "color", catalog = "data")
 public class ColorPO implements Serializable {
@@ -81,4 +84,10 @@ public class ColorPO implements Serializable {
 		this.status = status;
 	}
 
+	public ColorVO ptv(ColorVO colorVO) {
+
+		BeanUtil.copyProperties(this, colorVO);
+
+		return colorVO;
+	}
 }

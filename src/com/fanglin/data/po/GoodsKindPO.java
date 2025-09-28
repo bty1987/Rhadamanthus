@@ -3,12 +3,19 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.data.common.vo.GoodsKindVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "goodsKind", catalog = "data")
@@ -38,6 +45,8 @@ public class GoodsKindPO implements Serializable {
 
 	private short status;
 
+	private GoodsKindPO parent;
+
 	public GoodsKindPO() {
 		super();
 	}
@@ -45,6 +54,11 @@ public class GoodsKindPO implements Serializable {
 	public GoodsKindPO(long gkid) {
 		super();
 		this.gkid = gkid;
+	}
+
+	public GoodsKindPO(GoodsKindPO parent) {
+		super();
+		this.parent = parent;
 	}
 
 	@Id
@@ -92,6 +106,25 @@ public class GoodsKindPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fgkid", referencedColumnName = "gkid")
+	public GoodsKindPO getParent() {
+		return parent;
+	}
+
+	public void setParent(GoodsKindPO parent) {
+		this.parent = parent;
+	}
+
+	public GoodsKindVO ptv(GoodsKindVO goodsKindVO) {
+
+		BeanUtil.copyProperties(this, goodsKindVO, Arrays.asList("parent"));
+
+		if (goodsKindVO.getParent() != null && getParent() != null) BeanUtil.copyProperties(getParent(), goodsKindVO.getParent());
+
+		return goodsKindVO;
 	}
 
 }

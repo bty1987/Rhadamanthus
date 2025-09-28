@@ -21,6 +21,8 @@
             comment: com.focusPage("#comment", "#constructionPlanModal"),
             connum: com.focusPage("#connum", "#editConstructionPlanModal"),
             comnum: com.focusPage("#comnum", "#editConstructionPlanModal"),
+            prenum: com.focusPage("#prenum", "#editConstructionPlanModal"),
+            postnum: com.focusPage("#postnum", "#editConstructionPlanModal"),
             content: com.focusPage("#content", "#editConstructionPlanModal"),
             editcomment: com.focusPage("#editcomment", "#editConstructionPlanModal")
         },
@@ -37,16 +39,16 @@
         "constructionPace.lowerArea": constructionPlan.construction.decoration.house.innerArea
     }, function(res) {
 
-        if(res.constructionPlan.cpid) constructionPlan.pace = res.constructionPlan;
+        if(res.constructionPace.cpid) constructionPlan.pace = res.constructionPace;
 
-        constructionPlan.items.name.bindData(res.constructionPaces, "cpid", "name");
+        constructionPlan.items.name.bindData(res.constructionPace, "cpnid", "name");
     }, null, false);
 
     com.post(api.data.queryConstructionPaceNode, {
         "constructionPaceNode.cpid": constructionPlan.pace.cpid
     }, function(res) {
 
-        constructionPlan.items.name.bindData(res.constructionPaceNodes, "cpid", "name");
+        constructionPlan.items.name.bindData(res.constructionPaceNodes, "cpnid", "name");
     });
 
     var searcher = new Searcher();
@@ -70,6 +72,16 @@
         prop: "connum",
         clazz: "blue"
     }, {
+        field: "prenum",
+        name: "前置间隔天数",
+        prop: "prenum",
+        clazz: "blue"
+    }, {
+        field: "postnum",
+        name: "后置间隔天数",
+        prop: "postnum",
+        clazz: "blue"
+    }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
@@ -81,7 +93,7 @@
 
             var conStartTime = constructionPlan.startTime;
 
-            conStartTime.setDate(constructionPlan.startTime.getDate());
+            conStartTime.setDate(constructionPlan.startTime.getDate() + v.prenum);
 
             return com.dateFormat(conStartTime, "yyyy-MM-dd");
         },
@@ -93,7 +105,7 @@
 
             var conStartTime = constructionPlan.startTime;
 
-            conStartTime.setDate(constructionPlan.startTime.getDate() + v.connum);
+            conStartTime.setDate(constructionPlan.startTime.getDate() + v.connum + v.postnum);
 
             return com.dateFormat(conStartTime, "yyyy-MM-dd");
         },
@@ -161,7 +173,7 @@
 
             com.cleanItems(constructionPlan.items);
             constructionPlan.cpid = v.cpid;
-            constructionPlan.items.comnum.val(v.comnum), constructionPlan.items.connum.val(v.connum), constructionPlan.items.content.val(v.content), constructionPlan.items.editcomment.val(v.comment), constructionPlan.modals.editconstructionPlanModal.modal("show");
+            constructionPlan.items.comnum.val(v.comnum), constructionPlan.items.connum.val(v.connum), constructionPlan.items.prenum.val(v.prenum), constructionPlan.items.postnum.val(v.postnum), constructionPlan.items.content.val(v.content), constructionPlan.items.editcomment.val(v.comment), constructionPlan.modals.editconstructionPlanModal.modal("show");
 
             return false;
         }
@@ -218,7 +230,7 @@
         com.post(api.construction.makeConstructionPlan, {
             "constructionPlan.orderId": constructionPlan.construction.decoration.orderId
         }, function() {
-
+            com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
     });
@@ -244,6 +256,8 @@
             "constructionPlan.cpid": constructionPlan.cpid,
             "constructionPlan.comnum": constructionPlan.items.comnum.val(),
             "constructionPlan.connum": constructionPlan.items.connum.val(),
+            "constructionPlan.prenum": constructionPlan.items.prenum.val(),
+            "constructionPlan.postnum": constructionPlan.items.postnum.val(),
             "constructionPlan.content": constructionPlan.items.content.val(),
             "constructionPlan.comment": constructionPlan.items.editcomment.val(),
         };

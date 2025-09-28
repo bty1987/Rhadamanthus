@@ -31,12 +31,10 @@ public class SalesRefundsDaoImpl extends DaoImpl<SalesRefundsPO> implements Sale
 		return query.list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<SalesRefundsPO> querySalesRefundsBySid(Long sid) {
-
 		return createCriteria(SalesRefundsPO.class).add(Restrictions.eq(SalesRefundsPO.COLUMN_SID_STR, sid)).list();
-
 	}
 
 	@Override
@@ -59,8 +57,12 @@ public class SalesRefundsDaoImpl extends DaoImpl<SalesRefundsPO> implements Sale
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("status".equals(field)) {
+			if ("refunds.status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("refunds.isAffirm".equals(field)) {
+				query.add(query.getCriterion("isAffirm", Short.valueOf(data), op));
+			} else if ("refunds.affirmTime.range".equals(field)) {
+				query.timeranges("affirmTime", filter.getData());
 			}
 		}
 	}

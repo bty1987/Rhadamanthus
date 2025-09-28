@@ -12,6 +12,7 @@
 package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class DecorationInfoVO implements Serializable {
 
@@ -38,6 +39,12 @@ public class DecorationInfoVO implements Serializable {
 	private String backOrderContent;
 
 	private Short sourceStatus;
+
+	private Timestamp issueTime;
+
+	private Timestamp meetTime;
+
+	private Timestamp belongTime;
 
 	public Long getDiid() {
 		return diid;
@@ -125,6 +132,30 @@ public class DecorationInfoVO implements Serializable {
 
 	public void setSourceStatus(Short sourceStatus) {
 		this.sourceStatus = sourceStatus;
+	}
+
+	public Timestamp getIssueTime() {
+		return issueTime;
+	}
+
+	public void setIssueTime(Timestamp issueTime) {
+		this.issueTime = issueTime;
+	}
+
+	public Timestamp getMeetTime() {
+		return meetTime;
+	}
+
+	public void setMeetTime(Timestamp meetTime) {
+		this.meetTime = meetTime;
+	}
+
+	public Timestamp getBelongTime() {
+		return belongTime;
+	}
+
+	public void setBelongTime(Timestamp belongTime) {
+		this.belongTime = belongTime;
 	}
 
 }

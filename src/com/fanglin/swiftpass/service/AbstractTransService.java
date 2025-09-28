@@ -78,6 +78,7 @@ public abstract class AbstractTransService {
 			AbstractTransService transService = AbstractTransService.getInstance();
 			resp = transService.send(url, method, authInfo, headParams, bodyParamString, filePath, bodyParamMap, keyConfigure, bodyJson);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			if (e instanceof IOException) {
 				throw new SdkException(SdkExType.CONN_ERR);
 			} else if (e instanceof SdkException) {
@@ -205,6 +206,9 @@ public abstract class AbstractTransService {
 		try {
 			response = txn(urlBuilder.toString(), reqMethod, authInfo, headParams, bodyParamString, filePath, bodyParamMap, keyConfigure, bodyJson);
 		} catch (SdkException ex) {
+
+			System.out.println(ex.getMessage());
+			System.out.println(ex.getCode());
 
 			if (SdkExType.CONN_ERR.getCode().equals(ex.getCode())) {
 				String url = Configure.isDevEnv() ? Configure.getDevUrl() : Configure.PROD_URL;

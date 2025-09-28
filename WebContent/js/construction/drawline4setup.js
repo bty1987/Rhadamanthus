@@ -413,6 +413,8 @@ jQuery(function($) {
                 "name": "sorts",
                 "sort": value.sort,
                 "cnid": value.cnid,
+                "prenum": "",
+                "postnum": "",
                 "checked": "checked"
             }).addClass('ace ace-checkbox-2');
 
@@ -446,26 +448,40 @@ jQuery(function($) {
         });
 
         $uli.appendTo(drawline.items.contructionNodes);
-        
-        var period = null;
 
-        com.post(api.data.queryConstructionPeriod, {
-            "constructionPeriod.lowerArea": v.decoration.house.innerArea
+        var pace = null;
+
+        com.post(api.data.queryConstructionPace, {
+            "constructionPace.lowerArea": v.decoration.house.innerArea
         }, function(res) {
 
-            period = res.constructionPeriod;
+            pace = res.constructionPace;
         }, null, false);
-        
-        if (!period || !period.cpid)
+
+        if (!pace || !pace.cpid)
             return false;
 
-        com.post(api.data.queryConstructionPeriodNodeByCpid, {
-            "constructionPeriodNode.cpid": period.cpid
+        com.post(api.data.queryConstructionPaceNode, {
+            "constructionPaceNode.cpid": pace.cpid
         }, function(res) {
 
-            $.each(res.constructionPeriodNodes, function(i, v) {
+            $.each(res.constructionPaceNodes, function(i, v) {
 
-                com.focusPage("input.timeLimits[cnid='" + v.constructionNode.cnid + "']", "#contructionNodes").val(v.period);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#contructionNodes").attr("prenum", v.prenum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
+
+                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.period);
+            });
+
+        }, null, false);
+
+        com.post(api.construction.queryConstructionPlanByOrderId, {
+            "constructionPlan.orderId": v.decoration.orderId
+        }, function(res) {
+
+            $.each(res.constructionPlans, function(i, v) {
+
+                com.focusPage("input.timeLimits[cnid='" + v.cnode.cnid + "']", "#contructionNodes").val(v.connum);
             });
         });
     }
@@ -494,7 +510,8 @@ jQuery(function($) {
             option["constructionNodes[" + i + "].cnid"] = $input.attr('cnid');
             option["constructionNodes[" + i + "].sort"] = $input.attr('sort');
             option["constructionNodes[" + i + "].timeLimit"] = $("input[text_sort=" + $input.attr('sort') + "]").val();
-
+            option["constructionNodes[" + i + "].prenum"] = $input.attr('prenum');
+            option["constructionNodes[" + i + "].postnum"] = $input.attr('postnum');
         });
 
         com.post(api.construction.successDrawLine, option, function(res) {

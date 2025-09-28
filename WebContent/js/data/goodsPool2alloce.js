@@ -124,6 +124,41 @@ jQuery(function($) {
             return v.status == "0" ? "启用" : "禁用";
         },
         clazz: "red"
+    },{
+        field: "series",
+        name: "系列",
+        prop: "series",
+        clazz: "grey"
+    },{
+        field: "elevel",
+        name: "环保级别",
+        prop: "elevel",
+        clazz: "grey"
+    },{
+        field: "material",
+        name: "材质",
+        prop: "material",
+        clazz: "grey"
+    },{
+        field: "quality",
+        name: "特性",
+        prop: "quality",
+        clazz: "grey"
+    },{
+        field: "color",
+        name: "颜色",
+        prop: "color",
+        clazz: "grey"
+    },{
+        field: "format",
+        name: "规格",
+        prop: "format",
+        clazz: "grey"
+    },{
+        field: "model",
+        name: "型号",
+        prop: "model",
+        clazz: "grey"
     }];
 
     var linebtns = [{

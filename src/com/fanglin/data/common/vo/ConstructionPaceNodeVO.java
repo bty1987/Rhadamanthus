@@ -12,9 +12,15 @@ public class ConstructionPaceNodeVO implements Serializable {
 
 	private String name;
 
+	private ConstructionNodeVO node;
+
 	private Integer connum;
 
 	private Integer comnum;
+
+	private Integer prenum;
+
+	private Integer postnum;
 
 	private Short status; // 0: 启用, 1: 禁用
 
@@ -30,6 +36,11 @@ public class ConstructionPaceNodeVO implements Serializable {
 
 	public ConstructionPaceNodeVO() {
 		super();
+	}
+
+	public ConstructionPaceNodeVO(ConstructionNodeVO node) {
+		super();
+		this.node = node;
 	}
 
 	public Long getCpnid() {
@@ -56,6 +67,14 @@ public class ConstructionPaceNodeVO implements Serializable {
 		this.name = name;
 	}
 
+	public ConstructionNodeVO getNode() {
+		return node;
+	}
+
+	public void setNode(ConstructionNodeVO node) {
+		this.node = node;
+	}
+
 	public Integer getConnum() {
 		return connum;
 	}
@@ -70,6 +89,22 @@ public class ConstructionPaceNodeVO implements Serializable {
 
 	public void setComnum(Integer comnum) {
 		this.comnum = comnum;
+	}
+
+	public Integer getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(Integer prenum) {
+		this.prenum = prenum;
+	}
+
+	public Integer getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(Integer postnum) {
+		this.postnum = postnum;
 	}
 
 	public Short getStatus() {

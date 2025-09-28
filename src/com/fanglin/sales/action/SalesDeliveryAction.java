@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.sales.service.SalesDeliveryService;
 import com.fanglin.sales.vo.SalesDeliveryItemVO;
+import com.fanglin.sales.vo.SalesDeliveryVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -23,6 +24,8 @@ public class SalesDeliveryAction extends BaseListAction {
 
 	@Autowired
 	private SalesDeliveryService salesDeliveryService;
+
+	private SalesDeliveryVO salesDelivery;
 
 	private List<SalesDeliveryItemVO> salesDeliveryItems;
 
@@ -108,6 +111,22 @@ public class SalesDeliveryAction extends BaseListAction {
 		salesDeliveryService.updateSalesDeliveryItem(salesDeliveryItem);
 
 		return SUCCESS;
+	}
+
+	@Action(value = "deliveSalesDelivery", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deliveSalesDelivery() throws FLException {
+
+		salesDeliveryService.deliveSalesDelivery(salesDelivery, queryUserId());
+
+		return SUCCESS;
+	}
+
+	public SalesDeliveryVO getSalesDelivery() {
+		return salesDelivery;
+	}
+
+	public void setSalesDelivery(SalesDeliveryVO salesDelivery) {
+		this.salesDelivery = salesDelivery;
 	}
 
 	public List<SalesDeliveryItemVO> getSalesDeliveryItems() {

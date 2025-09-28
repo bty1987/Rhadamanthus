@@ -237,6 +237,8 @@ public class BrandPO implements java.io.Serializable {
 			brandVO.setCategoryName(getCategory().getName());
 		}
 
+		if (brandVO.getSupplier() != null && getSupplier() != null) brandVO.getSupplier().setBaseInfo(getSupplier());
+
 		return brandVO;
 	}
 }

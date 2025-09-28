@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -16,7 +17,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.HousePO;
+import com.fanglin.inventory.vo.AccessoriesVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Entity
@@ -337,5 +340,18 @@ public class AccessoriesPO implements Serializable {
 		setCompany(company);
 
 		return this;
+	}
+
+	public AccessoriesVO ptv(AccessoriesVO accessoriesVO) {
+
+		BeanUtil.copyProperties(this, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
+
+		if (accessoriesVO.getHouse() != null && getHouse() != null) getHouse().ptv(accessoriesVO.getHouse());
+
+		if (accessoriesVO.getCreater() != null && getCreater() != null) accessoriesVO.getCreater().setBaseInfo(getCreater());
+		if (accessoriesVO.getApprover() != null && getApprover() != null) accessoriesVO.getApprover().setBaseInfo(getApprover());
+		if (accessoriesVO.getSupervisor() != null && getSupervisor() != null) accessoriesVO.getSupervisor().setBaseInfo(getSupervisor());
+
+		return accessoriesVO;
 	}
 }

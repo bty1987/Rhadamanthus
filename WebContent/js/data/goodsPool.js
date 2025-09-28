@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     var goodsPool = {
 
@@ -27,11 +27,17 @@ $(function() {
             formatcascade: com.focusPage("#formatcascade", "#addGoodsPoolLayer"),
             pricecascade: com.focusPage("#pricecascade", "#addGoodsPoolLayer"),
             picturecascade: com.focusPage("#picturecascade", "#addGoodsPoolLayer"),
-
             executeTimes: com.focusPage("#executeTimes", "#uploadGoodsPoolDiv"),
             executeDates: com.focusPage("#executeDates", "#uploadGoodsPoolDiv"),
-
-            filePath: com.focusPage("#filePath", "#uploadGoodsPoolDiv")
+            filePath: com.focusPage("#filePath", "#uploadGoodsPoolDiv"),
+            series: com.focusPage("#series", "#addGoodsPoolLayer"),
+            elevel: com.focusPage("#elevel", "#addGoodsPoolLayer"),
+            material: com.focusPage("#material", "#addGoodsPoolLayer"),
+            color: com.focusPage("#color", "#addGoodsPoolLayer"),
+            format: com.focusPage("#format", "#addGoodsPoolLayer"),
+            model: com.focusPage("#model", "#addGoodsPoolLayer"),
+            quality: com.focusPage("#quality", "#addGoodsPoolLayer"),
+            atttype: com.focusPage("#atttype", "#addGoodsPoolLayer")
         },
 
         btns: {
@@ -42,7 +48,9 @@ $(function() {
 
         modals: {
             drawingGoodsPoolModal: com.focusPage("#drawingGoodsPoolModal")
-        }
+        },
+        pageType: params['urlLoadParams'].atttype
+
     };
 
     com.datetime(goodsPool.items.executeDates, "date", false);
@@ -50,28 +58,30 @@ $(function() {
 
     goodsPool.items.type.bindData(constant.data().goodsPool.type.datas, 'key', 'value');
 
-    com.post(api.data.queryCategory, {}, function(res) {
+    goodsPool.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
+
+    com.post(api.data.queryCategory, {}, function (res) {
 
         goodsPool.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
-    com.post(api.common.queryMeasurementUnit, {}, function(res) {
+    com.post(api.common.queryMeasurementUnit, {}, function (res) {
 
         goodsPool.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
     });
 
-    com.post(api.data.queryAccessoriesType, {}, function(res) {
+    com.post(api.data.queryAccessoriesType, {}, function (res) {
 
         goodsPool.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
-    com.post(api.data.queryGoodsKind, {}, function(res) {
+    com.post(api.data.queryGoodsKind, {}, function (res) {
 
         var oneKinds = [];
         var twoKinds = [];
         var thrKinds = [];
 
-        $.each(res.goodsKinds, function(i, v) {
+        $.each(res.goodsKinds, function (i, v) {
 
             if (v.status != 0)
                 return true;
@@ -103,39 +113,39 @@ $(function() {
         goodsPool.items.thrkind.bindData(thrKinds, 'key', 'value');
     });
 
-    goodsPool.items.onekind.change(function() {
+    goodsPool.items.onekind.change(function () {
 
         updateZerokind();
     });
 
-    goodsPool.items.twokind.change(function() {
+    goodsPool.items.twokind.change(function () {
 
         updateZerokind();
     });
 
-    goodsPool.items.thrkind.change(function() {
+    goodsPool.items.thrkind.change(function () {
 
         updateZerokind();
     });
 
-    goodsPool.btns.importBtn.click(function() {
+    goodsPool.btns.importBtn.click(function () {
 
         importGoods();
     });
 
-    goodsPool.btns.importBtn.click(function() {
+    goodsPool.btns.importBtn.click(function () {
 
         importGoodsPool();
     });
 
-    goodsPool.btns.exportBtn.click(function() {
+    goodsPool.btns.exportBtn.click(function () {
 
         exportGoodsPool();
     });
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", function(list, k, v) {
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", function (list, k, v) {
 
-        $.each(list, function(index, val) {
+        $.each(list, function (index, val) {
 
             if (val.bid == k) {
 
@@ -143,7 +153,7 @@ $(function() {
 
                 com.post(api.data.queryBrandByBid, {
                     "brand.bid": k
-                }, function(res) {
+                }, function (res) {
 
                     goodsPool.items.category.val(res.brand.categoryName);
                 });
@@ -160,8 +170,10 @@ $(function() {
     searcher.base("condListGoodsPool", "pagenationGoodsPool", "resultListGoodsPool", api.communion.pageGoodsPool);
     searcher.condition(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status']);
     searcher.history("goodsPoolPageDataHistory");
-
-    searcher.button(function() {
+    searcher.param({
+        "goodsPool.atttype": goodsPool.pageType
+    });
+    searcher.button(function () {
 
         var $btnGroup = $("<div></div>").addClass("btn-group");
 
@@ -301,10 +313,10 @@ $(function() {
     }, {
         fieId: "colorcascadeStr",
         name: "颜色级联",
-        prop: function(v) {
+        prop: function (v) {
 
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
 
                 if ((v.colorcascade & j.key) > 0)
                     str = str + j.value + " ";
@@ -316,10 +328,10 @@ $(function() {
     }, {
         fieId: "formatcascadeStr",
         name: "规格级联",
-        prop: function(v) {
+        prop: function (v) {
 
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
 
                 if ((v.formatcascade & j.key) > 0)
                     str = str + j.value + " ";
@@ -331,10 +343,10 @@ $(function() {
     }, {
         fieId: "pricecascadeStr",
         name: "价格级联",
-        prop: function(v) {
+        prop: function (v) {
 
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
 
                 if ((v.pricecascade & j.key) > 0)
                     str = str + j.value + " ";
@@ -346,10 +358,10 @@ $(function() {
     }, {
         fieId: "picturecascadeStr",
         name: "图片级联",
-        prop: function(v) {
+        prop: function (v) {
 
             var str = "";
-            $.each(constant.data().goodsPool.cascade.datas, function(i, j) {
+            $.each(constant.data().goodsPool.cascade.datas, function (i, j) {
 
                 if ((v.picturecascade & j.key) > 0)
                     str = str + j.value + " ";
@@ -364,12 +376,53 @@ $(function() {
         prop: "status",
         clazz: "red",
         dataset: constant.data().goods.status.keys
+    }, {
+        field: "series",
+        name: "系列",
+        prop: "series",
+        clazz: "grey"
+    }, {
+        field: "elevel",
+        name: "环保级别",
+        prop: "elevel",
+        clazz: "grey"
+    }, {
+        field: "material",
+        name: "材质",
+        prop: "material",
+        clazz: "grey"
+    }, {
+        field: "quality",
+        name: "特性",
+        prop: "quality",
+        clazz: "grey"
+    }, {
+        field: "color",
+        name: "颜色",
+        prop: "color",
+        clazz: "grey"
+    }, {
+        field: "format",
+        name: "规格",
+        prop: "format",
+        clazz: "grey"
+    }, {
+        field: "model",
+        name: "型号",
+        prop: "model",
+        clazz: "grey"
+    }, {
+        fieId: "atttype",
+        name: "装修类型",
+        prop: "atttype",
+        clazz: "red",
+        dataset: constant.data().goodsPool.atttype.keys
     }];
 
     var linebtns = [{
         name: "编辑",
         clazz: "btn-success",
-        handle: function(v) {
+        handle: function (v) {
 
             readonly("disabled");
 
@@ -394,7 +447,15 @@ $(function() {
             goodsPool.items.onekind.val(v.onekind.gkid);
             goodsPool.items.twokind.val(v.twokind.gkid);
             goodsPool.items.thrkind.val(v.thrkind.gkid);
-            
+
+            goodsPool.items.series.val(v.series);
+            goodsPool.items.elevel.val(v.elevel);
+            goodsPool.items.material.val(v.material);
+            goodsPool.items.color.val(v.color);
+            goodsPool.items.format.val(v.format);
+            goodsPool.items.model.val(v.model);
+            goodsPool.items.quality.val(v.quality);
+            goodsPool.items.atttype.val(v.atttype);
             updateZerokind();
 
             drawRadio(constant.data().goodsPool.cascade.datas, "color", com.focusPage("#colorcascadeDiv"), false, v.colorcascade);
@@ -407,7 +468,7 @@ $(function() {
     }, {
         name: "颜色",
         clazz: "btn-warning",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goodsPool = v;
 
@@ -416,7 +477,7 @@ $(function() {
     }, {
         name: "规格",
         clazz: "btn-primary",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goodsPool = v;
 
@@ -425,7 +486,7 @@ $(function() {
     }, {
         name: "价格",
         clazz: "btn-pink",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goodsPool = v;
 
@@ -434,7 +495,7 @@ $(function() {
     }, {
         name: "图片",
         clazz: "btn-yellow",
-        handle: function(v) {
+        handle: function (v) {
 
             goodsPool.gpid = v.gpid;
 
@@ -443,12 +504,12 @@ $(function() {
             com.post(api.communion.queryDataDrawing, {
                 "dataDrawing.sid": v.gpid,
                 "dataDrawing.type": 5
-            }, function(data) {
+            }, function (data) {
 
                 var dataDrawings = data.dataDrawings;
 
                 if (dataDrawings && dataDrawings.length > 0) {
-                    $.each(dataDrawings, function(i, value) {
+                    $.each(dataDrawings, function (i, value) {
 
                         appendGalleryElement("goodsPoolDrawing", value);
                     });
@@ -461,7 +522,7 @@ $(function() {
     }, {
         name: "分配",
         clazz: "btn-danger",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goodsPool = v;
 
@@ -471,12 +532,12 @@ $(function() {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",
-        handle: function(v, check) {
+        handle: function (v, check) {
 
             com.post(api.communion.updateGoodsPoolForStatus, {
                 "goodsPool.gpid": v.gpid,
                 "goodsPool.status": v.status == 0 ? 1 : 0
-            }, function(res) {
+            }, function (res) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -484,7 +545,7 @@ $(function() {
 
             return false;
         },
-        init: function(v) {
+        init: function (v) {
 
             return !v.status;
         }
@@ -494,7 +555,7 @@ $(function() {
 
     searcher.render();
 
-    com.focusPage('#add', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#add', '#pagenationGoodsPool').on("click", function () {
 
         com.cleanItems(goodsPool.items);
 
@@ -511,7 +572,7 @@ $(function() {
         com.popup4model("#addGoodsPoolLayer", "添加");
     });
 
-    com.focusPage('#export', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#export', '#pagenationGoodsPool').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -527,12 +588,12 @@ $(function() {
 
         com.post(api.communion.pageGoodsPool, $.extend({}, params["goodsPoolPageDataHistory"], {
             "paging.noPage": 1
-        }), function(res) {
+        }), function (res) {
 
             $.exceler({
                 column: [['商品ID', 'gpid'], ['商品编码', 'no'], ['商品名称', 'name'], ['别名', 'alias'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌ID', 'bid'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['辅类', 'accessoriesType.name'], ['类型', 'type'], ['统计类别', 'zerokind.name'], ['一类', 'onekind.name'], ['二类', 'twokind.name'], ['三类', 'thrkind.name']],
                 list: res.paging.data
-            }, function(v) {
+            }, function (v) {
 
                 v.type = v.type == "0" ? "商品" : "套餐";
                 v.accessoriesType = v.accessoriesType == null ? {
@@ -554,7 +615,7 @@ $(function() {
         });
     });
 
-    com.focusPage('#deletePriceGoodsPoolBtn', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#deletePriceGoodsPoolBtn', '#pagenationGoodsPool').on("click", function () {
 
         goodsPool.keyword = "update_delete_price";
 
@@ -569,7 +630,7 @@ $(function() {
         com.popup4model("#deletePriceGoodsPool", "删除价格");
     });
 
-    com.focusPage('#statusGoodsPoolBtn', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#statusGoodsPoolBtn', '#pagenationGoodsPool').on("click", function () {
 
         goodsPool.keyword = "update_status_goods";
 
@@ -584,7 +645,7 @@ $(function() {
         com.popup4model("#statusGoodsPool", "更新商品价格");
     });
 
-    com.focusPage('#exportGoodsPoolBtn', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#exportGoodsPoolBtn', '#pagenationGoodsPool').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -601,7 +662,7 @@ $(function() {
         com.popup4model("#exportGoodsPool", "导出商品");
     });
 
-    com.focusPage('#exportColor', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#exportColor', '#pagenationGoodsPool').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -618,7 +679,7 @@ $(function() {
         com.popup4model("#exportGoodsPoolModal", "导出颜色");
     });
 
-    com.focusPage('#exportFormat', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#exportFormat', '#pagenationGoodsPool').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -635,7 +696,7 @@ $(function() {
         com.popup4model("#exportGoodsPoolModal", "导出规格");
     });
 
-    com.focusPage('#exportPrice', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#exportPrice', '#pagenationGoodsPool').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -652,7 +713,7 @@ $(function() {
         com.popup4model("#exportGoodsPoolModal", "导出价格");
     });
 
-    com.focusPage('#importGoodPoll', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#importGoodPoll', '#pagenationGoodsPool').on("click", function () {
 
         goodsPool.keyword = "import_goods";
 
@@ -667,7 +728,7 @@ $(function() {
         com.popup4model("#importGoodsPool", "导入商品");
     });
 
-    com.focusPage('#importCol', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#importCol', '#pagenationGoodsPool').on("click", function () {
 
         goodsPool.keyword = "import_color";
 
@@ -682,7 +743,7 @@ $(function() {
         com.popup4model("#importColorGoodsPool", "导入颜色");
     });
 
-    com.focusPage('#importFor', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#importFor', '#pagenationGoodsPool').on("click", function () {
 
         goodsPool.keyword = "import_format";
 
@@ -697,7 +758,7 @@ $(function() {
         com.popup4model("#importFormatGoodsPool", "导入规格");
     });
 
-    com.focusPage('#importPri', '#pagenationGoodsPool').on("click", function() {
+    com.focusPage('#importPri', '#pagenationGoodsPool').on("click", function () {
 
         goodsPool.keyword = "import_price";
 
@@ -712,7 +773,7 @@ $(function() {
         com.popup4model("#importPriceGoodsPool", "导入价格");
     });
 
-    goodsPool.btns.submitBtn.click(function() {
+    goodsPool.btns.submitBtn.click(function () {
 
         saveData();
     });
@@ -733,22 +794,22 @@ $(function() {
 
         var colorcascadeVal = 0, formatcascade = 0, pricecascade = 0, picturecascade = 0;
 
-        $.each($colorcascades, function(i, v) {
+        $.each($colorcascades, function (i, v) {
 
             colorcascadeVal = utils.accAdd(parseInt(colorcascadeVal), parseInt($(v).attr('value')));
         });
 
-        $.each($formatcascade, function(i, v) {
+        $.each($formatcascade, function (i, v) {
 
             formatcascade = utils.accAdd(parseInt(formatcascade), parseInt($(v).attr('value')));
         });
 
-        $.each($pricecascade, function(i, v) {
+        $.each($pricecascade, function (i, v) {
 
             pricecascade = utils.accAdd(parseInt(pricecascade), parseInt($(v).attr('value')));
         });
 
-        $.each($picturecascade, function(i, v) {
+        $.each($picturecascade, function (i, v) {
 
             picturecascade = utils.accAdd(parseInt(picturecascade), parseInt($(v).attr('value')));
         });
@@ -768,7 +829,16 @@ $(function() {
             "goodsPool.colorcascade": colorcascadeVal,
             "goodsPool.formatcascade": formatcascade,
             "goodsPool.pricecascade": pricecascade,
-            "goodsPool.picturecascade": picturecascade
+            "goodsPool.picturecascade": picturecascade,
+            "goodsPool.series": goodsPool.items.series.val(),
+            "goodsPool.elevel": goodsPool.items.elevel.val(),
+            "goodsPool.material": goodsPool.items.material.val(),
+            "goodsPool.color": goodsPool.items.color.val(),
+            "goodsPool.format": goodsPool.items.format.val(),
+            "goodsPool.model": goodsPool.items.model.val(),
+            "goodsPool.quality": goodsPool.items.quality.val(),
+            "goodsPool.atttype": goodsPool.items.atttype.val(),
+
         };
 
         if (!gpid) {
@@ -781,11 +851,20 @@ $(function() {
             options["goodsPool.category"] = goodsPool.items.category.val();
             options["goodsPool.measurementUnit"] = goodsPool.items.measurementUnit.val();
             options["goodsPool.pieceNum"] = goodsPool.items.pieceNum.val();
+            options["goodsPool.series"] = goodsPool.items.series.val();
+            options["goodsPool.elevel"] = goodsPool.items.elevel.val();
+            options["goodsPool.material"] = goodsPool.items.material.val();
+            options["goodsPool.color"] = goodsPool.items.color.val();
+            options["goodsPool.format"] = goodsPool.items.format.val();
+            options["goodsPool.model"] = goodsPool.items.model.val();
+            options["goodsPool.quality"] = goodsPool.items.quality.val();
+            options["goodsPool.atttype"] = goodsPool.items.atttype.val();
+
         } else {
             options["goodsPool.gpid"] = goodsPool.gpid;
         }
 
-        com.post(url, options, function(res) {
+        com.post(url, options, function (res) {
 
             com.showAlert(com.info, "操作成功");
 
@@ -871,7 +950,7 @@ $(function() {
             "plan.args": args
         };
 
-        com.post(api.information.createPlan, options, function(res) {
+        com.post(api.information.createPlan, options, function (res) {
 
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
@@ -889,7 +968,7 @@ $(function() {
 
         var args = "";
 
-        $.each(filtersName, function(i, v) {
+        $.each(filtersName, function (i, v) {
 
             var val = com.focusPage("[name='" + v + "']").val();
             var columnName = $("[name='" + v + "']").attr("data-rqs");
@@ -922,7 +1001,7 @@ $(function() {
             "plan.args": args
         };
 
-        com.post(api.information.createPlan, options, function(res) {
+        com.post(api.information.createPlan, options, function (res) {
 
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
@@ -932,7 +1011,7 @@ $(function() {
 
     com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls", {
         'uploadType': 3
-    }, 1, function(data) {
+    }, 1, function (data) {
 
         0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
     });
@@ -942,7 +1021,7 @@ $(function() {
 
         com.uploadify("#goodsPoolUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
-        }, 1, function(data) {
+        }, 1, function (data) {
 
             var options = {};
 
@@ -953,7 +1032,7 @@ $(function() {
             options["dataDrawing.type"] = 5;
             options["dataDrawing.filesize"] = data.filesize;
 
-            com.post(api.communion.addDataDrawing, options, function(res) {
+            com.post(api.communion.addDataDrawing, options, function (res) {
 
                 var drawing = res.dataDrawing;
 
@@ -977,25 +1056,25 @@ $(function() {
 
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
 
             com.post(api.communion.deleteDataDrawing, {
                 "dataDrawing.ddid": value.ddid
-            }, function(res) {
+            }, function (res) {
 
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
 
         }).appendTo(toolsDiv);
 
-        var goodsPoolUrl = $("<a></a>").attr("href", "#").on("click", function() {
+        var goodsPoolUrl = $("<a></a>").attr("href", "#").on("click", function () {
 
             var option = {
                 "goodsPool.gpid": goodsPool.gpid,
                 "goodsPool.path": value.drawingUrl
             };
 
-            com.post(api.communion.updateGoodsPool, option, function(e) {
+            com.post(api.communion.updateGoodsPool, option, function (e) {
 
                 searcher.doSearch();
                 com.showAlert(com.info, "操作成功");
@@ -1009,7 +1088,7 @@ $(function() {
 
     function drawRadio(items, name, div, addFlag, num) {
 
-        $.each(items, function(i, v) {
+        $.each(items, function (i, v) {
 
             var $label = $('<label></label>').addClass('inline').appendTo(div);
             var $input = $('<input />').addClass('ace').attr({

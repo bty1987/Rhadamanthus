@@ -37,6 +37,18 @@ public class UserExperiencePO implements Serializable {
 
 	private short isPrefor;
 
+	private Integer ocid;
+
+	private Integer tcid;
+
+	private Integer odid;
+
+	private Integer tdid;
+
+	private Integer orid;
+
+	private Integer trid;
+
 	private Timestamp createTime;
 
 	private String comment;
@@ -88,6 +100,60 @@ public class UserExperiencePO implements Serializable {
 
 	public void setIsPrefor(short isPrefor) {
 		this.isPrefor = isPrefor;
+	}
+
+	@Column(name = "ocid")
+	public Integer getOcid() {
+		return ocid;
+	}
+
+	public void setOcid(Integer ocid) {
+		this.ocid = ocid;
+	}
+
+	@Column(name = "tcid")
+	public Integer getTcid() {
+		return tcid;
+	}
+
+	public void setTcid(Integer tcid) {
+		this.tcid = tcid;
+	}
+
+	@Column(name = "odid")
+	public Integer getOdid() {
+		return odid;
+	}
+
+	public void setOdid(Integer odid) {
+		this.odid = odid;
+	}
+
+	@Column(name = "tdid")
+	public Integer getTdid() {
+		return tdid;
+	}
+
+	public void setTdid(Integer tdid) {
+		this.tdid = tdid;
+	}
+
+	@Column(name = "orid")
+	public Integer getOrid() {
+		return orid;
+	}
+
+	public void setOrid(Integer orid) {
+		this.orid = orid;
+	}
+
+	@Column(name = "trid")
+	public Integer getTrid() {
+		return trid;
+	}
+
+	public void setTrid(Integer trid) {
+		this.trid = trid;
 	}
 
 	@Column(name = "createTime")

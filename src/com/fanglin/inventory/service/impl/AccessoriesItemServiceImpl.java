@@ -1,7 +1,6 @@
 package com.fanglin.inventory.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,6 @@ import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.NormtionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.BeanUtil;
 
 @Service("accessoriesItemService")
 @Transactional(readOnly = true)
@@ -73,22 +71,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		List<AccessoriesItemVO> accessoriesItemVOs = new ArrayList<AccessoriesItemVO>();
 
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
-
-			accessoriesItemVO = new AccessoriesItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())));
-
-			BeanUtil.copyProperties(accessoriesItemPO, accessoriesItemVO, Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(accessoriesItemPO.getGoods(), accessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			if (accessoriesItemPO.getGoods().getAccessoriesType() != null) {
-
-				BeanUtil.copyProperties(accessoriesItemPO.getGoods().getAccessoriesType(), accessoriesItemVO.getGoods().getAccessoriesType(), Arrays.asList("workType"));
-
-				if (accessoriesItemPO.getGoods().getAccessoriesType().getWorkType() != null) {
-					BeanUtil.copyProperties(accessoriesItemPO.getGoods().getAccessoriesType().getWorkType(), accessoriesItemVO.getGoods().getAccessoriesType().getWorkType());
-				}
-			}
-
-			accessoriesItemVOs.add(accessoriesItemVO);
+			accessoriesItemVOs.add(accessoriesItemPO.ptv(new AccessoriesItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())))));
 		}
 
 		return accessoriesItemVOs;
@@ -101,13 +84,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		List<AccessoriesItemVO> accessoriesItemVOs = new ArrayList<AccessoriesItemVO>();
 
 		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
-
-			AccessoriesItemVO accessoriesItemVO = new AccessoriesItemVO(new GoodsVO());
-
-			BeanUtil.copyProperties(accessoriesItemPO, accessoriesItemVO, Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(accessoriesItemPO.getGoods(), accessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			accessoriesItemVOs.add(accessoriesItemVO);
+			accessoriesItemVOs.add(accessoriesItemPO.ptv(new AccessoriesItemVO(new GoodsVO())));
 		}
 
 		return accessoriesItemVOs;
@@ -119,18 +96,8 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 		List<?> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItem(accessoriesVO.getOrderId());
 		List<AccessoriesItemVO> accessoriesItemVOs = new ArrayList<AccessoriesItemVO>();
 
-		AccessoriesItemVO accessoriesItemVO;
-
 		for (Object item : accessoriesItemPOs) {
-
-			AccessoriesItemPO accessoriesItemPO = (AccessoriesItemPO) item;
-
-			accessoriesItemVO = new AccessoriesItemVO(new GoodsVO());
-
-			BeanUtil.copyProperties(accessoriesItemPO, accessoriesItemVO, Arrays.asList("goods", "color", "format"));
-			BeanUtil.copyProperties(accessoriesItemPO.getGoods(), accessoriesItemVO.getGoods(), Arrays.asList("accessoriesType"));
-
-			accessoriesItemVOs.add(accessoriesItemVO);
+			accessoriesItemVOs.add(((AccessoriesItemPO) item).ptv(new AccessoriesItemVO(new GoodsVO())));
 		}
 
 		return accessoriesItemVOs;
@@ -204,7 +171,7 @@ public class AccessoriesItemServiceImpl implements AccessoriesItemService {
 
 		accessoriesDao.update(accessoriesPO);
 
-		AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO.getCaid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getNid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum());
+		AccessoriesItemPO accessoriesItemPO = new AccessoriesItemPO().init(accessoriesVO.getAid(), accessoriesItemVO);
 
 		accessoriesItemDao.save(accessoriesItemPO);
 

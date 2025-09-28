@@ -97,6 +97,10 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private int fincheck;
 
+	private int prenum;
+
+	private int postnum;
+
 	public ConstructionScheduleDO() {
 		super();
 	}
@@ -329,6 +333,22 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setFincheck(int fincheck) {
 		this.fincheck = fincheck;
+	}
+
+	public int getPrenum() {
+		return prenum;
+	}
+
+	public void setPrenum(int prenum) {
+		this.prenum = prenum;
+	}
+
+	public int getPostnum() {
+		return postnum;
+	}
+
+	public void setPostnum(int postnum) {
+		this.postnum = postnum;
 	}
 
 	public ConstructionScheduleVO ptv(ConstructionScheduleVO constructionScheduleVO) {

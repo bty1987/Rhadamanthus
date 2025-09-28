@@ -77,8 +77,8 @@ public class OalesPaymentDaoImpl extends DaoImpl<OalesPaymentPO> implements Oale
 	}
 
 	@Override
-	public OalesPaymentPO queryOalesPayment(long oid, List<Short> types) {
-		return (OalesPaymentPO) session().createCriteria(OalesPaymentPO.class).createAlias("oales", "oales").add(Restrictions.eq(OalesPaymentPO.COLUMN_OALES_SID_STR, oid)).add(Restrictions.in(OalesPaymentPO.COLUMN_TYPE_STR, types)).uniqueResult();
+	public OalesPaymentPO queryOalesPayment(long osid) {
+		return (OalesPaymentPO) session().createCriteria(OalesPaymentPO.class).add(Restrictions.eq("osid", osid)).setMaxResults(1).uniqueResult();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) throws FLException {

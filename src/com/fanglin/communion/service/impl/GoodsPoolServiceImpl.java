@@ -17,9 +17,11 @@ import com.fanglin.communion.vo.GoodsPoolVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.GoodsKindVO;
+import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.po.AccessoriesTypePO;
 import com.fanglin.data.po.GoodsKindPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.PinYin4Util;
@@ -34,8 +36,15 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 	@Autowired
 	private BrandDao brandDao;
 
+	@Autowired
+	private GoodsDao goodsDao;
+
 	@Override
-	public void pageGoodsPool(Paging paging, List<Filter> filters) throws FLException {
+	public void pageGoodsPool(Paging paging, List<Filter> filters, GoodsPoolVO goodsPool) throws FLException {
+
+		if (goodsPool != null && goodsPool.getAtttype() != null) {
+			filters.add(new Filter("atttype", String.valueOf(goodsPool.getAtttype()), "eq"));
+		}
 
 		List<GoodsPoolPO> goodsPoolPOs = goodsPoolDao.pageGoodsPool(paging, filters);
 
@@ -217,6 +226,38 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 		goodsPoolPO.setStatus(goodsPoolVO.getStatus());
 
 		goodsPoolDao.update(goodsPoolPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int batchAddFromPool(List<GoodsPoolVO> goodsPools) throws FLException {
+
+		if (goodsPools == null) {
+			throw new FLException(260004, "没有选择商品");
+		}
+
+		for (GoodsPoolVO goodsPoolVO : goodsPools) {
+
+			List<GoodsPO> Goodes = goodsDao.queryGoodsByGpid(goodsPoolVO.getGpid());
+
+			if (Goodes != null && Goodes.size() > 0) {
+				throw new FLException(260004, "申领的商品已存在");
+			}
+
+			GoodsPoolPO goodsPoolPO = goodsPoolDao.get(goodsPoolVO.getGpid());
+			GoodsPO goodsPO = new GoodsPO();
+
+			BeanUtil.copyProperties(goodsPoolPO, goodsPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
+			if (goodsPoolPO.getAccessoriesType() != null) goodsPO.setAccessoriesType(new AccessoriesTypePO(goodsPoolPO.getAccessoriesType().getAtid()));
+			if (goodsPoolPO.getZerokind() != null) goodsPO.setZerokind(new GoodsKindPO(goodsPoolPO.getZerokind().getGkid()));
+			if (goodsPoolPO.getOnekind() != null) goodsPO.setOnekind(new GoodsKindPO(goodsPoolPO.getOnekind().getGkid()));
+			if (goodsPoolPO.getTwokind() != null) goodsPO.setTwokind(new GoodsKindPO(goodsPoolPO.getTwokind().getGkid()));
+			if (goodsPoolPO.getThrkind() != null) goodsPO.setThrkind(new GoodsKindPO(goodsPoolPO.getThrkind().getGkid()));
+
+			goodsDao.save(goodsPO);
+		}
 
 		return 0;
 	}
