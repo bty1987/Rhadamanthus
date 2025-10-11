@@ -53,20 +53,34 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
+	public List<BalanceSalesBO> pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+
+		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
+
+		query.alias("brand", "brand").alias("supplier", "supplier").add(Restrictions.eq("supplier.userId", userId)).add(Restrictions.eq("company", company));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("bsid");
+
+		return query.list();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<BalanceSalesPO> queryBalanceSales(String name, int company) {
 		return session().createCriteria(BalanceSalesPO.class).add(Restrictions.ilike("name", name, MatchMode.ANYWHERE)).add(Restrictions.eq("status", BalanceSalesPO.STATUS_INIT_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("bsid")).setMaxResults(10).list();
 	}
 
 	@Override
-	public BalanceSalesPO queryBalanceSales(long bid, String grade, short status, short atttype, int company) {
-		return (BalanceSalesPO) session().createCriteria(BalanceSalesPO.class).add(Restrictions.eq("status", status)).add(Restrictions.eq("atttype", atttype)).add(Restrictions.eq("company", company)).createCriteria("brand", "brand").add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
+	public BalanceSalesPO queryBalanceSales(long bid, int suid, String grade, short status, short atttype, int company) {
+		return (BalanceSalesPO) session().createCriteria(BalanceSalesPO.class).add(Restrictions.eq("status", status)).add(Restrictions.eq("atttype", atttype)).add(Restrictions.eq("company", company)).createAlias("supplier", "supplier").add(Restrictions.eq("supplier.uid", suid)).createCriteria("brand", "brand").add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
 	public Object[] amountBalanceSales(long bsid) {
 
-		String sql = "select sum(if(sb.onetype = 0, if(sb.type = 3, s.depositpay, s.depositpay+s.fullpay), if(sb.onetype = 1, sb.total, if(onetype in (2, 3), sb.total, 0)))) as 'income',sum(pbalance) as 'cost',sum(if(sb.onetype = 0, sb.pbalance - round(s.venderMaling, 0), if(sb.onetype = 1, sb.pbalance, if(onetype in (2, 3), sb.pbalance + round(s.venderMaling, 0), 0)))) as 'payment' from balance.balancesalesbalance bsb, sales.salesbalance sb, sales.sales s where bsb.bsid = :bsid and bsb.sbid = sb.sbid and sb.sid = s.sid";
+		String sql = "select sum(if(sb.onetype = 0, if(sb.type = 3, s.depositpay, s.depositpay+s.fullpay), if(sb.onetype = 1, sb.total, if(onetype in (2, 3), sb.total, 0)))*sb.rate/1000) as 'income',sum(pbalance) as 'cost',sum(if(sb.onetype = 0, sb.pbalance - round(s.venderMaling, 0), if(sb.onetype = 1, sb.pbalance, if(onetype in (2, 3), sb.pbalance + round(s.venderMaling, 0), 0)))) as 'payment' from balance.balancesalesbalance bsb, sales.salesbalance sb, sales.sales s where bsb.bsid = :bsid and bsb.sbid = sb.sbid and sb.sid = s.sid";
 
 		Object[] amount = (Object[]) session().createSQLQuery(sql).addScalar("income", StandardBasicTypes.LONG).addScalar("cost", StandardBasicTypes.LONG).addScalar("payment", StandardBasicTypes.LONG).setLong("bsid", bsid).uniqueResult();
 
@@ -89,11 +103,8 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 				query.add(Restrictions.eq("status", Short.valueOf(data)));
 			} else if ("grade".equals(field)) {
 				query.add(query.getCriterion("grade", data, op));
-			} else if ("createTimeDateRange".equals(field)) {
-				query.timeranges("createTime", "createTime", data);
 			} else if ("createrId".equals(field)) {
-				query.alias("creater", "creater");
-				query.add(query.getCriterion("creater.userId", data, op));
+				query.alias("creater", "creater").add(query.getCriterion("creater.userId", data, op));
 			} else if ("brandId".equals(field)) {
 				query.alias("brand", "brand");
 				query.add(query.getCriterion("brand.bid", Long.valueOf(data), op));
@@ -107,12 +118,14 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 				query.alias("balance", "balance");
 				query.add(query.getCriterion("balance.status", Short.valueOf(data), op));
 			} else if ("balanceIsPay".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.isPay", Short.valueOf(data), op));
-			} else if ("lockTimeDateRange".equals(field)) {
+				query.alias("balance", "balance").add(query.getCriterion("balance.isPay", Short.valueOf(data), op));
+			} else if ("createTimeRange".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("lockTimeRange".equals(field)) {
 				query.timeranges("lockTime", "lockTime", data);
+			} else if ("balanceTimeRange".equals(field)) {
+				query.timeranges("balanceTime", "balanceTime", data);
 			}
 		}
 	}
-
 }

@@ -78,7 +78,7 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final short TWOTYPE_INSURANCE_INT = 9; // 工人家属保险
 
-	public static final short TWOTYPE_PROPER_INT = 10; // 预支
+	public static final short TWOTYPE_PROPER_INT = 11; // 预支
 
 	public static final short ISSEND_UNSEND_INT = 0;
 

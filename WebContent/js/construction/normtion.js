@@ -14,7 +14,9 @@ $(function() {
 
         modals: {
             printNormoodModal: com.focusPage("#printNormoodModal"),
-        }
+        },
+
+        aids: [],
     };
 
     normood.btns.printBtn.click(function() {
@@ -33,20 +35,24 @@ $(function() {
                 'border-bottom': '1px solid #dce8f1'
             });
 
-            var propertyArr = [["商品", "cell col-md-2"], ["领取数量", "cell col-md-1"], ["辅材单位", "cell col-md-1"], ["总额", "cell col-md-1"]];
+            var propertyArr = [["商品", "cell col-md-1"], ["定额数量", "cell col-md-1"], ["定额单位", "cell col-md-1"], ["库房单位", "cell col-md-1"], ["领取数量", "cell col-md-1"], ["总额", "cell col-md-1"]];
 
             $.each(propertyArr, function(i, v) {
 
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css({
+                    'border': 'none',
+                });
                 var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
 
-            var propertyArr = [["名称", "cell col-md-2"], ["定额数量", "cell col-md-1"], ["定额单位", "cell col-md-1"], ["库房数量", "cell col-md-1"], ["库房单位", "cell col-md-1"], ["定额总额", "cell col-md-1"]];
+            var propertyArr = [["名称", "cell col-md-1"], ["定额数量", "cell col-md-1"], ["定额单位", "cell col-md-1"], ["库房数量", "cell col-md-1"], ["库房单位", "cell col-md-1"], ["定额总额", "cell col-md-1"]];
 
             $.each(propertyArr, function(i, v) {
 
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css({
+                    'border': 'none',
+                });
                 var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
@@ -59,7 +65,9 @@ $(function() {
             var id = v ? v.nid : (d ? d.noods.nid : 0);
 
             var onum = v ? v.num : 0;
-            var ototal = v ? utils.changeThrDecimal(utils.accMul(parseFloat(v.selling), parseFloat(v.num))) : 0;
+            var onnum = v ? v.normnum : 0;
+            var osnum = v ? v.storenum : 0;
+            var ototal = v ? utils.changeThrDecimal(utils.accMul(parseFloat(onnum), parseFloat(v.num))) : 0;
 
             var tnnum = d ? d.normnum : 0;
             var tsnum = d ? d.storenum : 0;
@@ -77,20 +85,24 @@ $(function() {
                 "data-tntotal": tntotal,
             });
 
-            var propertyArr = [[v ? v.goods.name : '', 'grey col-md-2', "oname"], [v ? v.num : '', 'blue col-md-1', 'onum'], [v ? v.goods.measurementUnit : '', 'blue col-md-1', "ounit"], [v ? ototal : '', 'blue col-md-1', "ototal"]];
+            var propertyArr = [[v ? v.goods.name : '', 'grey col-md-1', "oname"], [v ? v.normnum : '', 'blue col-md-1', ''], [v ? v.normunit : '', 'blue col-md-1', "tnunit"], [v ? v.storeunit : '', 'blue col-md-1', "tsunit"], [v ? v.num : '', 'blue col-md-1', 'onum'], [v ? ototal : '', 'blue col-md-1', "ototal"]];
 
             $.each(propertyArr, function(i, v) {
 
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css({
+                    'border': 'none',
+                });
                 var $cellWrap = $('<div></div>').addClass('cell-wrap ' + v[2] ? v[2] : '').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
 
-            var propertyArr = [[d ? d.noods.name : '', 'green col-md-2', "tname"], [d ? d.normnum : '', 'blue col-md-1', 'tnnum'], [d ? d.normunit : '', 'blue col-md-1', "tnunit"], [d ? d.storenum : '', 'blue col-md-1', 'tsnum'], [d ? d.storeunit : '', 'blue col-md-1', "tsunit"], [d ? tntotal : '', 'blue col-md-1', "tntotal"]];
+            var propertyArr = [[d ? d.noods.name : '', 'green col-md-1', "tname"], [d ? d.normnum : '', 'blue col-md-1', 'tnnum'], [d ? d.normunit : '', 'blue col-md-1', "tnunit"], [d ? d.storenum : '', 'blue col-md-1', 'tsnum'], [d ? d.storeunit : '', 'blue col-md-1', "tsunit"], [d ? tntotal : '', 'blue col-md-1', "tntotal"]];
 
             $.each(propertyArr, function(i, v) {
 
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css({
+                    'border': 'none',
+                });
                 var $cellWrap = $('<div></div>').addClass('cell-wrap ' + v[2] ? v[2] : '').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
@@ -268,8 +280,10 @@ $(function() {
 
         $.each(res.accessoriess, function(i, v) {
 
-            if (v.status != 2)
+            if ([0, 1, 2, 6, 7].indexOf(v.status) == -1)
                 return true;
+
+            normood.aids.push(v.aid);
 
             lowLeft(v);
         });
@@ -295,7 +309,6 @@ $(function() {
             if (v.cnid == cnid) {
                 cli.find(".aname").text(v.name);
             }
-
         });
 
     }, null, false);
@@ -308,6 +321,9 @@ $(function() {
 
         $.each(data, function(i, v) {
 
+            if (normood.aids.indexOf(v.aid) == -1)
+                return true;
+
             var nid = v.nid;
             var itemli = com.focusPage("#nid" + nid);
 
@@ -317,7 +333,7 @@ $(function() {
                 // itemli.find(".ounit").text(v.goods.measurementUnit);
 
                 var num = utils.accAdd(parseFloat(itemli.attr("data-onum")), parseFloat(v.num));
-                var ototal = utils.accAdd(parseFloat(itemli.attr("data-ototal")), utils.accMul(parseFloat(v.selling), parseFloat(v.num)));
+                var ototal = utils.accAdd(parseFloat(itemli.attr("data-ototal")), utils.accMul(parseFloat(v.normnum), parseFloat(v.num)));
 
                 itemli.attr("data-onum", num);
                 itemli.attr("data-ototal", ototal);
@@ -330,7 +346,7 @@ $(function() {
 
             paint.createItem(v, null, itemli);
 
-            total = utils.accAdd(total, utils.accMul(parseFloat(v.selling), parseFloat(v.num)));
+            total = utils.accAdd(total, utils.accMul(parseFloat(v.normnum), parseFloat(v.num)));
         });
 
         return total;

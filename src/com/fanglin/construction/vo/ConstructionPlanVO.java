@@ -15,6 +15,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.common.vo.ConstructionPaceNodeVO;
 
 public class ConstructionPlanVO implements Serializable {
@@ -29,9 +31,9 @@ public class ConstructionPlanVO implements Serializable {
 
 	private String name;
 
-	private ConstructionPaceNodeVO node;
+	private ConstructionPaceNodeVO pacenode;
 
-	private Long cnid;
+	private ConstructionNodeVO node;
 
 	private Integer connum;
 
@@ -68,8 +70,14 @@ public class ConstructionPlanVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public ConstructionPlanVO(ConstructionPaceNodeVO node) {
+	public ConstructionPlanVO(ConstructionPaceNodeVO pacenode) {
 		super();
+		this.pacenode = pacenode;
+	}
+
+	public ConstructionPlanVO(ConstructionPaceNodeVO pacenode, ConstructionNodeVO node) {
+		super();
+		this.pacenode = pacenode;
 		this.node = node;
 	}
 
@@ -89,14 +97,6 @@ public class ConstructionPlanVO implements Serializable {
 		this.cid = cid;
 	}
 
-	public Long getCnid() {
-		return cnid;
-	}
-
-	public void setCnid(Long cnid) {
-		this.cnid = cnid;
-	}
-
 	public String getOrderId() {
 		return orderId;
 	}
@@ -113,11 +113,19 @@ public class ConstructionPlanVO implements Serializable {
 		this.name = name;
 	}
 
-	public ConstructionPaceNodeVO getNode() {
+	public ConstructionPaceNodeVO getPacenode() {
+		return pacenode;
+	}
+
+	public void setPacenode(ConstructionPaceNodeVO pacenode) {
+		this.pacenode = pacenode;
+	}
+
+	public ConstructionNodeVO getNode() {
 		return node;
 	}
 
-	public void setNode(ConstructionPaceNodeVO node) {
+	public void setNode(ConstructionNodeVO node) {
 		this.node = node;
 	}
 

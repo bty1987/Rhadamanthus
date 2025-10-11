@@ -25,11 +25,13 @@ import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.CityProperPartnerDao;
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.DepartmentDao;
 import com.fanglin.communion.dao.DepartmentPartnerDao;
 import com.fanglin.communion.dao.HouseDao;
+import com.fanglin.communion.po.CityProperPartnerPO;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.po.DepartmentPO;
@@ -54,12 +56,14 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.DecorationServiceDao;
+import com.fanglin.decoration.dao.DecorationUserDao;
 import com.fanglin.decoration.po.AuditPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.po.DecorationUserPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
@@ -129,6 +133,9 @@ public class DecorationServiceImpl implements DecorationService {
 	private DepartmentPartnerDao departmentPartnerDao;
 
 	@Autowired
+	private CityProperPartnerDao cityProperPartnerDao;
+
+	@Autowired
 	private UserDao userDao;
 
 	@Autowired
@@ -166,6 +173,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
+
+	@Autowired
+	private DecorationUserDao decorationUserDao;
 
 	@Autowired
 	private AdvancePaymentDao advancePaymentDao;
@@ -1048,12 +1058,6 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setQuoter(quoter);
 		}
 
-		DepartmentPartnerPO departmentPartnerPO = departmentPartnerDao.queryDepartmentPartner(designer.getDept().getDid(), DepartmentPartnerPO.TYPE_DECO_INT);
-
-		if (departmentPartnerPO != null && departmentPartnerPO.getPartner() != null) {
-			decorationPO.setEscorter(departmentPartnerPO.getPartner());
-		}
-
 		if (decorationVO.getEscorter() != null) {
 			UserPO escorter = userDao.queryUserByUserId(decorationVO.getEscorter().getUserId());
 			decorationPO.setEscorter(escorter);
@@ -1075,6 +1079,40 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setSalesman(salesman);
 		decorationPO.setSalesDept(salesman.getDept());
 
+		DepartmentPartnerPO departmentPartnerPO = departmentPartnerDao.queryDepartmentPartner(designer.getDept().getDid(), DepartmentPartnerPO.TYPE_DECO_INT);
+
+		if (departmentPartnerPO != null && departmentPartnerPO.getPartner() != null) {
+			decorationPO.setEscorter(departmentPartnerPO.getPartner());
+		}
+
+		DepartmentPartnerPO partnerSO = departmentPartnerDao.queryDepartmentPartner(designer.getDept().getDid(), DepartmentPartnerPO.TYPE_SALES_INT);
+
+		if (partnerSO != null) {
+
+			DecorationUserPO decorationUserPO = new DecorationUserPO();
+
+			decorationUserPO.setOrderId(decorationPO.getOrderId());
+			decorationUserPO.setUser(partnerSO.getPartner());
+
+			decorationUserDao.save(decorationUserPO);
+		}
+
+		HousePO housePO = houseDao.get(decorationVO.getHouse().getHid());
+
+		decorationPO.setHouse(housePO);
+
+		CityProperPartnerPO partnerCPO = cityProperPartnerDao.queryCityProperPartner(housePO.getVillage().getCityProper().getCpid(), CityProperPartnerPO.TYPE_SALES_INT);
+
+		if (partnerCPO != null) {
+
+			DecorationUserPO decorationUserPO = new DecorationUserPO();
+
+			decorationUserPO.setOrderId(decorationPO.getOrderId());
+			decorationUserPO.setUser(partnerCPO.getPartner());
+
+			decorationUserDao.save(decorationUserPO);
+		}
+
 		decorationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -1087,8 +1125,6 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setOtherStatus(0);
 		decorationPO.setType(decorationVO.getType());
 		decorationPO.setTypeness(decorationVO.getTypeness());
-
-		decorationPO.setHouse(new HousePO(decorationVO.getHouse().getHid()));
 
 		decorationDao.save(decorationPO);
 		decorationDao.flush();

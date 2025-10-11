@@ -29,7 +29,7 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 		queryFilterExcute(query, filters);
 
-		query.desc("cid");
+		query.asc("drawlineTime");
 
 		return query.list();
 	}
@@ -65,11 +65,15 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 			String data = filter.getData();
 
 			if ("isIssue".equals(field)) {
-				query.add(Restrictions.eq("isIssus", data));
+				query.add(Restrictions.eq("isIssus", Short.parseShort(data)));
+			} else if ("isCheck".equals(field)) {
+				query.add(Restrictions.eq("isCheck", Short.parseShort(data)));
 			} else if ("keyTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_KEYTIME_STR, data);
 			} else if ("drawlineTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_DRAWLINETIME_STR, data);
+			} else if ("drawlineTimeFlag".equals(field)) {
+				query.add(Restrictions.isNotNull(ConstructionInfoDO.COLUMN_DRAWLINETIME_STR));
 			} else if ("finishTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_FINISHTIME_STR, data);
 			} else if ("designTime".equals(field)) {
@@ -77,5 +81,4 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 			}
 		}
 	}
-
 }

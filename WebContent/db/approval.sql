@@ -21,7 +21,8 @@ CREATE TABLE `approval` (
   KEY `indexone` (`ruid`),
   KEY `indextwo` (`suid`),
   KEY `indexthr` (`ident`),
-  KEY `indexfor` (`createTime`)
+  KEY `indexfor` (`createTime`),
+  KEY `indexfiv` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批表';
 
 DROP TABLE IF EXISTS `approvalcustomer`;
@@ -35,6 +36,21 @@ CREATE TABLE `approvalcustomer` (
   `newCustomerPhone` varchar(64) NOT NULL,
   PRIMARY KEY (`acid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户信息修改审批表';
+
+DROP TABLE IF EXISTS `approvalcustomerchance`;
+CREATE TABLE `approvalcustomerchance` (
+  `accid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批id',
+  `ccid` int(11) NOT NULL COMMENT '客源id',
+  `type` tinyint(1) NOT NULL COMMENT '类型 0:半包,1:套餐,2:半价,3:满减',
+  `typeness` tinyint(1) NOT NULL,
+  `dbid` int(11) NOT NULL,
+  `salesmanType` varchar(32) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
+  `houseType` varchar(32) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
+  `houseClass` varchar(32) NOT NULL,
+  `resourceType` tinyint(1) NOT NULL COMMENT '资源类型 0:咨询,1:量房',
+  PRIMARY KEY (`accid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户机会审批';
 
 DROP TABLE IF EXISTS `approvalcustomerorigin`;
 CREATE TABLE `approvalcustomerorigin` (
@@ -52,7 +68,7 @@ CREATE TABLE `approvalcustomerorigintdecoration` (
   `type` tinyint(1) NOT NULL COMMENT '类型 0:半包,1:套餐,2:半价,3:满减',
   `dbid` int(11) NOT NULL,
   `typeness` tinyint(1) NOT NULL,
-  `salesmanType` varchar(32) NOT NULL DEFAULT '' COMMENT '房屋类别 0:期房,1:现房',
+  `salesmanType` varchar(32) DEFAULT '' COMMENT '房屋类别 0:期房,1:现房',
   `houseType` varchar(32) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
   `houseClass` varchar(32) NOT NULL,
   `resourceType` tinyint(1) NOT NULL COMMENT '资源类型 0:咨询,1:量房',
@@ -69,6 +85,19 @@ CREATE TABLE `approvalcustomerorigintdecorationbelong` (
   `csid` int(11) NOT NULL COMMENT '客源id',
   PRIMARY KEY (`acodbid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批客源转装修单归属记录';
+
+DROP TABLE IF EXISTS `approvalcustomersource`;
+CREATE TABLE `approvalcustomersource` (
+  `acsid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批id',
+  `csid` int(11) NOT NULL COMMENT '资源id',
+  `ccid` int(11) DEFAULT NULL,
+  `cid` int(11) DEFAULT NULL,
+  `hid` int(11) DEFAULT NULL COMMENT '房产id',
+  `dbid` int(11) DEFAULT NULL,
+  `rate` int(8) DEFAULT NULL,
+  PRIMARY KEY (`acsid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户资源审批';
 
 DROP TABLE IF EXISTS `approvaldecorationactivity`;
 CREATE TABLE `approvaldecorationactivity` (
@@ -118,6 +147,15 @@ CREATE TABLE `approvaldecorationbelongitem` (
   PRIMARY KEY (`adbiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单归属信息审批项表';
 
+DROP TABLE IF EXISTS `approvaldecorationcontract`;
+CREATE TABLE `approvaldecorationcontract` (
+  `adcid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `aid` int(11) NOT NULL COMMENT '审批ID',
+  `orderId` varchar(15) NOT NULL COMMENT '装修单ID',
+  `cid` int(11) NOT NULL COMMENT '合同模板ID',
+  PRIMARY KEY (`adcid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修合同审批表';
+
 DROP TABLE IF EXISTS `approvaldecorationholonomy`;
 CREATE TABLE `approvaldecorationholonomy` (
   `adhid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -155,16 +193,16 @@ CREATE TABLE `approvaldecorationterminalitem` (
 
 DROP TABLE IF EXISTS `approvalfunction`;
 CREATE TABLE `approvalfunction` (
-  `cfid` INT(11) NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(32) NOT NULL,
-  `key` VARCHAR(64) NOT NULL,
-  `value` VARCHAR(64) NOT NULL,
-  `type` TINYINT(1) NOT NULL,
-  `subType` TINYINT(1) NOT NULL,
-  `status` TINYINT(1) NOT NULL,
-  `sort` INT(4) NOT NULL,
-  `comment` VARCHAR(255) DEFAULT '',
-  `fieldType` VARCHAR(20) NOT NULL COMMENT '分为共享字段和模块独享字段',
+  `cfid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `key` varchar(64) NOT NULL,
+  `value` varchar(64) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `subType` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `sort` int(4) NOT NULL,
+  `comment` varchar(255) DEFAULT '',
+  `fieldType` varchar(20) NOT NULL COMMENT '分为共享字段和模块独享字段',
   PRIMARY KEY (`cfid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批功能配置表';
 
@@ -233,15 +271,15 @@ CREATE TABLE `approvalmaterialrefunditem` (
 
 DROP TABLE IF EXISTS `approvalprotationprefer`;
 CREATE TABLE `approvalprotationprefer` (
-  `appid` INT(11) NOT NULL AUTO_INCREMENT,
-  `aid` INT(11) NOT NULL COMMENT '审批ID',
-  `pid` INT(11) NOT NULL COMMENT '预签报价ID',
-  `ppid` INT(11) NOT NULL COMMENT '预签产品ID',
-  `preferPrice` INT(10) DEFAULT 0 COMMENT '优惠额',
-  `managePrefer` INT(10) DEFAULT 0 COMMENT '管理优惠',
-  `advancePrefer` INT(10) DEFAULT 0 COMMENT '特殊优惠',
-  `taxPrice` INT(10)  DEFAULT 0 COMMENT '税金',
-  `totalPrice` INT(10)  DEFAULT 0 COMMENT '总额',
+  `appid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批ID',
+  `pid` int(11) NOT NULL COMMENT '预签报价ID',
+  `ppid` int(11) NOT NULL COMMENT '预签产品ID',
+  `preferPrice` int(10) DEFAULT '0' COMMENT '优惠额',
+  `managePrefer` int(10) DEFAULT '0' COMMENT '管理优惠',
+  `advancePrefer` int(10) DEFAULT '0' COMMENT '特殊优惠',
+  `taxPrice` int(10) DEFAULT '0' COMMENT '税金',
+  `totalPrice` int(10) DEFAULT '0' COMMENT '总额',
   PRIMARY KEY (`appid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='预签报价优惠审批';
 
@@ -257,6 +295,20 @@ CREATE TABLE `approvalquotationdiscount` (
   PRIMARY KEY (`aqdid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='订单报价折扣修改审批表';
 
+DROP TABLE IF EXISTS `approvalquotationprefer`;
+CREATE TABLE `approvalquotationprefer` (
+  `aqpid` int(11) NOT NULL AUTO_INCREMENT,
+  `aid` int(11) NOT NULL COMMENT '审批ID',
+  `qid` int(11) NOT NULL COMMENT '报价优惠ID',
+  `qpid` int(11) NOT NULL COMMENT '报价优惠ID',
+  `ppid` int(11) NOT NULL COMMENT '预签产品ID',
+  `preferPrice` int(10) DEFAULT '0' COMMENT '优惠额',
+  `managePrefer` int(10) DEFAULT '0' COMMENT '管理优惠额',
+  `advancePrefer` int(10) DEFAULT '0' COMMENT '特批优惠额',
+  `totalPrice` int(10) DEFAULT '0' COMMENT '总额',
+  `taxPrice` int(10) DEFAULT '0' COMMENT '税金',
+  PRIMARY KEY (`aqpid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价优惠审批';
 DROP TABLE IF EXISTS `approvalsalesdayment`;
 CREATE TABLE `approvalsalesdayment` (
   `sadid` int(11) NOT NULL AUTO_INCREMENT,

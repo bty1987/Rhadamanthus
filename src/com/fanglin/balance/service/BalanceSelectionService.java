@@ -43,4 +43,6 @@ public interface BalanceSelectionService {
 	public int deleteBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 
 	public int amountBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
+
+	public int discountBalanceSelection(BalanceSelectionVO balanceSelection) throws FLException;
 }

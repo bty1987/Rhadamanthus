@@ -156,7 +156,7 @@ jQuery(function($) {
         clazz: "red"
     }, {
         field: "process",
-        name: "进度",
+        name: "施工状态",
         prop: "process",
         dataset: constant.construction().construction.process.keys,
         clazz: "red"
@@ -166,19 +166,19 @@ jQuery(function($) {
         prop: "createTime",
         clazz: "green"
     }, {
+        field: "preStartTime",
+        name: "预计开工时间",
+        prop: "preStartTime",
+        clazz: "green"
+    },  {
+        field: "preEndTime",
+        name: "预计完工时间",
+        prop: "preEndTime",
+        clazz: "green"
+    },  {
         field: "startTime",
         name: "开工时间",
         prop: "startTime",
-        clazz: "green"
-    }, {
-        field: "pro-endTime",
-        name: "预计完工时间",
-        prop: function(v) {
-
-            var d1 = v.startTime ? new Date(v.startTime) : new Date();
-
-            return com.dateFormat(new Date((d1 + (v.period * 24 * 24 * 60 * 60 * 1000))), "yyyy-MM-dd");
-        },
         clazz: "green"
     }, {
         field: "endTime",

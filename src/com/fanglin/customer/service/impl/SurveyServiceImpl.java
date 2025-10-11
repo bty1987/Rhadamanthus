@@ -181,7 +181,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 			surveyItemDao.save(surveyItemPO);
 
-			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(surveyTemplateItemPO.getType())) continue;
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT, SurveyTemplateItemPO.TYPE_DATE_INT).contains(surveyTemplateItemPO.getType())) continue;
 
 			List<SurveyTemplateOptionPO> surveyTemplateOptionPOs = surveyTemplateItemPO.getOptions();
 
@@ -228,7 +228,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 			SurveyItemPO itemPO = surveyItemDao.get(itemVO.getSiid());
 
-			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(itemPO.getType())) {
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT, SurveyTemplateItemPO.TYPE_DATE_INT).contains(itemPO.getType())) {
 				itemPO.setContent(itemVO.getContent());
 			}
 

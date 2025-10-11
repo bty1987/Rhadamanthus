@@ -107,12 +107,12 @@ public class GoodsServiceImpl implements GoodsService {
 	private PriceDao priceDao;
 
 	@Override
-	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company,GoodsVO goods) throws FLException {
+	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company, GoodsVO goods) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
-		
+
 		if (goods != null && goods.getAtttype() != null) {
 			filters.add(new Filter("atttype", String.valueOf(goods.getAtttype()), "eq"));
 		}
@@ -138,11 +138,11 @@ public class GoodsServiceImpl implements GoodsService {
 	}
 
 	@Override
-	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company,GoodsVO goods) throws FLException {
+	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company, GoodsVO goods) throws FLException {
 
 		List<GoodsPO> goodsPOs = goodsDao.pageGoodsForAdvance(paging, filters, company);
 		List<GoodsVO> goodsVOs = new ArrayList<GoodsVO>();
-		
+
 		if (goods != null && goods.getAtttype() != null) {
 			filters.add(new Filter("atttype", String.valueOf(goods.getAtttype()), "eq"));
 		}
@@ -293,6 +293,26 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsVO.setGid(gid);
 
 		long gpid = goodsPO.getGpid();
+
+		if (goodsVO.getColor() != null) {
+
+			ColorPO colorPO = new ColorPO();
+			colorPO.setGid(gid);
+			colorPO.setName(goodsVO.getColor());
+			colorPO.setStatus(ColorPO.STATUS_ENABLE_INT);
+
+			colorDao.save(colorPO);
+		}
+
+		if (goodsVO.getFormat() != null) {
+
+			FormatPO formatPO = new FormatPO();
+			formatPO.setGid(gid);
+			formatPO.setInfo(goodsVO.getFormat());
+			formatPO.setStatus(FormatPO.STATUS_ENABLE_INT);
+
+			formatDao.save(formatPO);
+		}
 
 		if (gpid == 0) return 0;
 

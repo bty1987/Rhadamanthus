@@ -27,7 +27,9 @@ import com.fanglin.construction.vo.ConstructionPlanVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionPaceDao;
 import com.fanglin.data.common.dao.ConstructionPaceNodeDao;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.common.vo.ConstructionPaceNodeVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.ConstructionPaceNodePO;
 import com.fanglin.data.po.ConstructionPacePO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -58,7 +60,7 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 		List<ConstructionPlanVO> constructionPlanVOs = new ArrayList<ConstructionPlanVO>();
 
 		for (ConstructionPlanPO constructionPlanPO : constructionPlanPOs) {
-			constructionPlanVOs.add(constructionPlanPO.ptv(new ConstructionPlanVO(new ConstructionPaceNodeVO())));
+			constructionPlanVOs.add(constructionPlanPO.ptv(new ConstructionPlanVO(new ConstructionPaceNodeVO(new ConstructionNodeVO()), new ConstructionNodeVO())));
 		}
 
 		return constructionPlanVOs;
@@ -94,7 +96,7 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 			constructionPlanPO.setName(constructionPaceNodePO.getName());
 			constructionPlanPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
-			constructionPlanPO.setNode(constructionPaceNodePO);
+			constructionPlanPO.setPacenode(constructionPaceNodePO);
 
 			constructionPlanPO.setConnum(constructionPaceNodePO.getConnum());
 			constructionPlanPO.setComnum(constructionPaceNodePO.getComnum());
@@ -104,7 +106,8 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 
 			constructionPlanPO.setContent(constructionPaceNodePO.getContent());
 			constructionPlanPO.setComment(constructionPaceNodePO.getComment());
-			constructionPlanPO.setCnid(constructionPaceNodePO.getNode().getCnid());
+
+			if (constructionPaceNodePO.getNode() != null) constructionPlanPO.setNode(new ConstructionNodePO(constructionPaceNodePO.getNode().getCnid()));
 
 			constructionPlanPO.setSort(sort);
 
@@ -118,7 +121,7 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 	@Transactional(rollbackFor = Exception.class)
 	public void addConstructionPlan(ConstructionPlanVO constructionPlanVO) throws FLException {
 
-		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPlanVO.getNode().getCpnid());
+		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPlanVO.getCpid());
 
 		if (constructionPaceNodePO == null) {
 			throw new FLException(120037, "工程计划不存在");
@@ -134,7 +137,7 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 		constructionPlanPO.setName(constructionPaceNodePO.getName());
 		constructionPlanPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
-		constructionPlanPO.setNode(constructionPaceNodePO);
+		if (constructionPaceNodePO.getNode() != null) constructionPlanPO.setNode(new ConstructionNodePO(constructionPaceNodePO.getNode().getCnid()));
 
 		constructionPlanPO.setConnum(constructionPaceNodePO.getConnum());
 		constructionPlanPO.setComnum(constructionPaceNodePO.getComnum());
@@ -146,7 +149,6 @@ public class ConstructionPlanServiceImpl implements ConstructionPlanService {
 
 		constructionPlanPO.setContent(constructionPaceNodePO.getContent());
 		constructionPlanPO.setComment(constructionPlanVO.getComment());
-		constructionPlanPO.setCnid(constructionPaceNodePO.getNode().getCnid());
 
 		constructionPlanPO.setSort(sort);
 

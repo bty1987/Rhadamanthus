@@ -1298,25 +1298,33 @@
 
                 var datas = result.constructionInfo;
 
-                var prePesignTime = new Date();
+                var designTime = new Date();
 
-                prePesignTime.setDate(prePesignTime.getDate() + utils.accDiv(designPeriod, 1000));
+                designTime.setDate(designTime.getDate() + designPeriod);
 
-                var preFinishTime = datas.drawlineTime ? new Date(datas.drawlineTime) : null;
+                var finishTime = datas.drawlineTime ? new Date(datas.drawlineTime) : null;
 
-                if (preFinishTime) {
-                    preFinishTime.setDate(preFinishTime.getDate() + utils.accDiv(recommendPeriod, 1000));
+                if (finishTime) {
+                    finishTime.setDate(finishTime.getDate() + recommendPeriod);
                 }
-
+                
+                if(datas.designTime){
+                    designTime = new Date(datas.designTime);
+                }
+                
+                if(datas.finishTime){
+                    finishTime = new Date(datas.finishTime);
+                }
+                
                 order.infoItems.dlmConpany.val(0);
                 order.infoItems.quoteArea.val(decoration.house.quoteArea);
-                order.infoItems.timeLimit.val(utils.accDiv(recommendPeriod, 1000));
+                order.infoItems.timeLimit.val(recommendPeriod);
                 order.infoItems.ishovel.val(datas.ishovel);
                 order.infoItems.iskey.val(datas.iskey);
                 order.infoItems.isCeremony.val(datas.isCeremony);
-                order.infoItems.finishTime.val(preFinishTime ? com.dateFormat(preFinishTime, "yyyy-MM-dd") : "");
+                order.infoItems.finishTime.val(finishTime ? com.dateFormat(finishTime, "yyyy-MM-dd") : "");
                 order.infoItems.keyTime.val(datas.keyTime ? datas.keyTime.substr(0, 10) : "");
-                order.infoItems.designTime.val(prePesignTime ? com.dateFormat(prePesignTime, "yyyy-MM-dd") : "");
+                order.infoItems.designTime.val(designTime ? com.dateFormat(designTime, "yyyy-MM-dd") : "");
                 order.infoItems.drawlineTime.val(datas.drawlineTime ? datas.drawlineTime.substr(0, 10) : "");
                 order.infoItems.comment.val(datas.comment);
             });

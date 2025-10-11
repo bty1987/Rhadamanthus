@@ -393,7 +393,8 @@ jQuery(function ($) {
             "oalesPay.name": oalesPay.items.name.val(),
             "oalesPay.money": oalesPay.items.money.val(),
             "oalesPay.payTime": oalesPay.items.payTime.val(),
-            "oalesPay.comment": oalesPay.items.comment.val()
+            "oalesPay.comment": oalesPay.items.comment.val(),
+            "oalesPay.type": params.sales.oales.type,
         };
         if (oalesPay.opid) {
             url = api.sales.updateOalesPay;

@@ -504,7 +504,35 @@
                     <button type="button" id="disableBtn" class="btn btn-primary">保存</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="discountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">折扣</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
 
+                        <div class="form-group hide">
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">比例</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6 v_required v_float_3" id="disoucnt" value="0" />
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="discountBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
             </div>
         </div>
     </div>

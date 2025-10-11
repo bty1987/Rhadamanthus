@@ -71,9 +71,22 @@
 
                     quo.servePriceShow();
 
+                    com.focusPage('#fixedMoney', '#calculateModal').find('input[value="1"]').prop("checked", false);
+                    quo.serveSmartShow();
+                    com.focusPage('#fixedMoney', '#calculateModal').find('input[value="2"]').prop("checked", false);
+                    quo.serveSelectedShow();
+
                     that.modals.calculateModal.find('.machingInfos').hide();
 
                     that.modals.calculateModal.modal("show");
+                }),
+                $btnCalculateSmart: com.focusPage('#fixedMoney', '#calculateModal').find('input[value="1"]').on('click', function() { // 计算总价
+
+                    quo.serveSmartShow();
+                }),
+                $btnCalculateSelected: com.focusPage('#fixedMoney', '#calculateModal').find('input[value="2"]').on('click', function() { // 计算总价
+
+                    quo.serveSelectedShow();
                 }),
                 $btnCalculate: com.focusPage('#calculateConsBtn').on('click', function() {
 
@@ -636,7 +649,9 @@
             divItem1.append(createCalItem("", 'normal').addClass("hide"));
             divItem1.append(createCalItem("", 'normal').addClass("hide"));
             divItem1.append(createCalItem("装修", 'normal alert-success'));
-            divItem1.append(createCalItem("主材", 'small border-right alert-danger'));
+            divItem1.append(createCalItem("主材", 'small border-right alert-danger coms'));
+            divItem1.append(createCalItem("", 'normal border-left-right alert-danger'));
+            divItem1.append(createCalItem("", 'normal border-left-right alert-danger'));
             divItem1.append(createCalItem("", 'normal border-left alert-danger'));
             divItem1.append(createCalItem("综合", 'normal border-left-right alert-warning cmpreh'));
             divItem1.append(createCalItem("", 'normal border-left-right alert-warning'));
@@ -658,6 +673,8 @@
             divItem2.append(createCalItem("折后总价", 'normal'));
             divItem2.append(createCalItem("配比", 'small'));
             divItem2.append(createCalItem("主材额", 'normal'));
+            divItem2.append(createCalItem("智能", 'normal smart'));
+            divItem2.append(createCalItem("严选", 'normal selected'));
             divItem2.append(createCalItem("服务费", 'normal servicePrice'));
             divItem2.append(createCalItem("团队服务费", 'normal servePayment'));
             divItem2.append(createCalItem("实花总额", ' normal alert-warning'));
@@ -747,6 +764,8 @@
                     halfPriceDiv.append(createCalItem(_projectPrice, 'normal'));
                     halfPriceDiv.append(createCalItem(utils.accMul(v.material, 100) + "%", 'small'));
                     halfPriceDiv.append(createCalItem(materialPrice, 'normal'));
+                    halfPriceDiv.append(createCalItem("23100", 'normal smart'));
+                    halfPriceDiv.append(createCalItem("19800", 'normal selected'));
                     halfPriceDiv.append(createCalItem(servicePrice, 'normal servicePrice'));
                     halfPriceDiv.append(createCalItem(servePayment, 'normal servePayment'));
                     halfPriceDiv.append(createCalItem($_total, 'normal alert-warning'));
@@ -784,6 +803,8 @@
                     halfPacksDiv.append(createCalItem(_projectPrice, 'normal'));
                     halfPacksDiv.append(createCalItem(utils.accMul(v.material, 100) + "%", 'small'));
                     halfPacksDiv.append(createCalItem(materialPrice, 'normal'));
+                    halfPacksDiv.append(createCalItem("23100", 'normal smart'));
+                    halfPacksDiv.append(createCalItem("19800", 'normal selected'));
                     halfPacksDiv.append(createCalItem(servicePrice, 'normal servicePrice'));
                     halfPacksDiv.append(createCalItem(servePayment, 'normal servePayment'));
                     halfPacksDiv.append(createCalItem($_total, 'normal alert-warning'));
@@ -834,6 +855,40 @@
                     }
                 })
             });
+        },
+
+        serveSmartShow: function() {
+
+            var $fixedMoney = com.focusPage('#fixedMoney', '#calculateModal');
+            var $cal = com.focusPage('#calculateModal').find('.fl-quo-cal');
+
+            if ($fixedMoney.find('input[value="1"]').is(":checked") == false) {
+                $cal.find('.fl-quo-cal-item .coms').nextAll('.cell.normal').eq(1).hide();
+                $cal.find('.fl-quo-cal-item .smart').hide();
+            } else {
+                $cal.find('.fl-quo-cal-item .coms').nextAll('.cell.normal').eq(1).show();
+                $cal.find('.fl-quo-cal-item .smart').show();
+                $fixedMoney.find('input[value="2"]').prop("checked", false);
+                $cal.find('.fl-quo-cal-item .coms').nextAll('.cell.normal').eq(2).hide();
+                $cal.find('.fl-quo-cal-item .selected').hide();
+            }
+        },
+
+        serveSelectedShow: function() {
+
+            var $fixedMoney = com.focusPage('#fixedMoney', '#calculateModal');
+            var $cal = com.focusPage('#calculateModal').find('.fl-quo-cal');
+
+            if ($fixedMoney.find('input[value="2"]').is(":checked") == false) {
+                $cal.find('.fl-quo-cal-item .coms').nextAll('.cell.normal').eq(2).hide();
+                $cal.find('.fl-quo-cal-item .selected').hide();
+            } else {
+                $cal.find('.fl-quo-cal-item .coms').nextAll('.cell.normal').eq(2).show();
+                $cal.find('.fl-quo-cal-item .selected').show();
+                $fixedMoney.find('input[value="1"]').prop("checked", false);
+                $cal.find('.fl-quo-cal-item .coms').nextAll('.cell.normal').eq(1).hide();
+                $cal.find('.fl-quo-cal-item .smart').hide();
+            }
         },
 
         constructionPaceNode: function() {
@@ -1033,7 +1088,7 @@
             $nowLine.attr('data-consPrice', subtype == constant.quotation().quotetionFunctionAreaItem.SUBTYPE_PROJECT_INT ? utils.changeThrDecimal(utils.accMul(num, price)) : 0);
             $nowLine.attr('data-comsPrice', subtype != constant.quotation().quotetionFunctionAreaItem.SUBTYPE_PROJECT_INT ? utils.changeThrDecimal(utils.accMul(num, price)) : 0);
 
-            var _fee = quo.calculateDomainFees(domain.nowEditDomain);
+            var _fee = quo.calculateDomainFees($nowLine.parents('.widget-box'));
 
             quo.calculateQuoFees();
 
@@ -1121,6 +1176,17 @@
         deletDomain: function($domain) {
 
             com.showConfirm("是否确定要删除功能区", function() {
+
+                var $itemlist = $domain.find("li.fl-quo-item.item");
+
+                $.each($itemlist, function(i, v) {
+
+                    var $quote = $(v);
+
+                    $quote.attr("data-del-sign", 1);
+                });
+
+                quote.cacsedeUpdateItem();
 
                 $domain.remove();
                 com.focusPage('[data-qfaid="' + $domain.attr('data-qfaid') + '"]', '#functionAreaSumList').remove();
@@ -1290,6 +1356,77 @@
                             $dmoney.appendTo(com.focusPage('#functionAreaSumList'));
                         } else {
                             $dmoney.insertAfter(com.focusPage('#functionAreaSumList > div').eq(_index - 1));
+                        }
+
+                        if (v.quotetionFunctionAreaItems.length) {
+
+                            $.each(v.quotetionFunctionAreaItems, function(index, j) {
+
+                                if (j.isRtem != 1)
+                                    return true;
+
+                                com.post(api.quotation.queryQuotationRtem, {
+                                    "quotationRtem.source.qiid": j.qiid
+                                }, function(res) {
+
+                                    $.each(res.quotationRtems, function(indexs, rt) {
+
+                                        var quolist = $domain.find('.fl-quo-list.list');
+                                        var windex = quolist.find('.fl-quo-item.item').length;
+                                        var areaType = $domain.attr('data-areaType');
+
+                                        var cpWidget = com.focusPage('#functionAreaDetailList').find('.widget-box[data-dlevel="9998"]');
+                                        var cpList = cpWidget.find('.fl-quo-list.list');
+                                        var cpIndex = cpList.find('.fl-quo-item.item').length;
+
+                                        var rtem = {
+                                            "discount": rt.target.discount,
+                                            "content": rt.target.comment,
+                                            "name": rt.target.name,
+                                            "measurementUnit": rt.target.unit.name,
+                                            "formula": 0,
+                                            "num": 0,
+                                            "qfaiId": "",
+                                            "qiid": rt.target.qiid,
+                                            "subtype": rt.target.category.id,
+                                            "unitPrice": rt.target.unitPrice,
+                                            "addPrice": rt.target.addPrice,
+                                            "subPrice": rt.target.subPrice,
+                                            "workType": rt.target.workType.name,
+                                            "isRtem": 0
+                                        };
+
+                                        if (rt.type == constant.data().quotationRtem.TYPE_CMPREH_INT) {
+                                            rtem["qfaid"] = cpWidget.attr("data-qfaid");
+                                            rtem["type"] = constant.quotation().quotationFunctionAreaItem.TYPE_COMMON_INT;
+                                            rtem["areaType"] = constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT;
+                                            rtem["index"] = cpIndex + 1;
+                                        }
+
+                                        if (rt.type == constant.data().quotationRtem.TYPE_GENERRAL_INT && com.focusPage('.item[data-qiid="' + rt.target.qiid + '"]', $domain).length == 0) {
+                                            rtem["qfaid"] = $domain.attr("data-qfaid");
+                                            rtem["type"] = quote.quoItemType(rt.target.type, $domain.attr('data-areaType'));
+                                            rtem["areaType"] = $domain.attr('data-areaType');
+                                            rtem["index"] = windex + 1;
+                                        }
+
+                                        var item = null;
+
+                                        if (rtem.areaType == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+                                            item = cpList.find('.fl-quo-item.item[data-qiid="' + rtem.qiid + '"]', cpWidget);
+                                        } else {
+                                            item = quolist.find('.fl-quo-item.item[data-qiid="' + rtem.qiid + '"]', $domain);
+                                        }
+
+                                        if (!item.length && rtem.areaType == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+                                            item = painter.createQuote(rtem.index, rtem).appendTo(cpList);
+                                        } else if (!item.length && rtem.areaType != constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT) {
+                                            item = painter.createQuote(rtem.index, rtem).appendTo(quolist);
+                                        }
+
+                                    });
+                                });
+                            });
                         }
 
                         quo.calculateQuoFees();
@@ -1620,6 +1757,7 @@
                 // 获取报价项的类型
                 var _type = that.$nowLine.find('.type').attr('data-type');
                 var _areaType = that.$nowLine.find('.line').attr('data-areaType');
+                var isRtem = that.$nowLine.attr("data-isRtem");
 
                 var args = {
                     "quotetionFunctionAreaItem.discount": that.$nowLine.find('.discountprice').attr('data-discount'),// 折扣标示 1:打折 ;
@@ -1663,6 +1801,11 @@
                     // 选中左上角报价中的功能区ID 将总价格显示
                     com.focusPage('[data-qfaid="' + domain.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
                     that.$nowLine.find('input[name="deleteItems"]').val(res.quotetionFunctionAreaItem.qfaiId);
+
+                    if (isRtem == "1") {
+                        that.cacsedeUpdateItem();
+                    }
+
                 }, function(res) {
 
                     com.showAlert(com.error, res.errorMsg);
@@ -1720,6 +1863,122 @@
             this.$nowEditInput.addClass('hide');
         },
 
+        cacsedeUpdateItem: function() {
+
+            var rtemQiid = [];
+            var cpdomain = com.focusPage('#functionAreaDetailList').find('.widget-box[data-dlevel="9998"]');
+            var quoItem = com.focusPage(".fl-quo-item.item[data-isrtem='1']");
+
+            com.focusPage(".fl-quo-item.item[data-isrtem='0']").attr("data-count-num", 0);
+
+            // 批量计算
+            $.each(quoItem, function(i, e) {
+
+                var widget = $(e).parents('.widget-box');
+                var number = $(e).find('.cell.num .cell-wrap').text();
+
+                if (!$(e).find('input[name="deleteItems"]').val() || parseInt(widget.attr('data-dlevel')) == 9999)
+                    return true;
+
+                com.post(api.quotation.queryQuotationRtem, {
+                    "quotationRtem.source.qiid": $(e).attr("data-qiid")
+                }, function(res) {
+
+                    var rtems = res.quotationRtems;
+
+                    $.each(rtems, function(i, v) {
+
+                        var handler = widget.find(".fl-quo-item.item[data-qiid=" + v.target.qiid + "]");
+
+                        if (handler.length == 0 || v.type == constant.data().quotationRtem.TYPE_CMPREH_INT) {
+                            handler = cpdomain.find(".fl-quo-item.item[data-qiid=" + v.target.qiid + "]");
+                        }
+
+                        if (handler.length == 0|| v.formula.indexOf('w') == -1)
+                            return true;
+
+                        rtemQiid.push(parseInt(handler.find('input[name="deleteItems"]').val()));
+
+                        var areatype = handler.parents('.widget-box').attr('data-areatype');
+                        var newNum = handler.attr("data-count-num");
+
+                        if (areatype != constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT && v.type == constant.data().quotationRtem.TYPE_GENERRAL_INT) {
+                            newNum = quote.quotetionFunctionAreaFormula(v.formula, number);
+                        } else if (areatype == constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT && v.type == constant.data().quotationRtem.TYPE_CMPREH_INT) {
+                            newNum = parseFloat(newNum) + parseFloat($(e).attr('data-del-sign') == 1 ? 0 : quote.quotetionFunctionAreaFormula(v.formula, number));
+                        }
+
+                        handler.attr("data-count-num", newNum);
+                    });
+                }, null, false);
+            });
+
+            // 批量更新
+            var quoRtem = com.focusPage(".fl-quo-item.item[data-isrtem='0']");
+
+            $.each(quoRtem, function(i, e) {
+
+                var qfaiid = parseInt($(e).find('input[name="deleteItems"]').val());
+                var widget = $(e).parents('.widget-box');
+                var _type = $(e).find('.type').attr('data-type');
+
+                var oldFormula = $(e).find('.cell.formula .cell-wrap').text();
+                var oldNum = parseFloat($(e).find('.cell.num .cell-wrap').text());
+                var newNum = parseFloat($(e).attr("data-count-num"));
+
+                if (rtemQiid.indexOf(qfaiid) == -1 && qfaiid)
+                    return true;
+
+                if (oldNum == newNum || parseInt(widget.attr("data-dlevel")) == 9999)
+                    return true;
+
+                $(e).find('.cell.formula .cell-wrap').text(newNum);
+                $(e).find('.cell.num .cell-wrap').text(newNum);
+                $(e).find(".icon-arrow-up").removeClass("grey").addClass("green");
+                $(e).find(".icon-arrow-down").removeClass("grey").addClass("red");
+
+                var fee = quo.calculateNowQuoteItem(newNum, widget.attr('data-areaType'), $(e));
+                com.focusPage('[data-qfaid="' + widget.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(fee);
+
+                var args = {
+                    "quotetionFunctionAreaItem.discount": $(e).find('.discountprice').attr('data-discount'),// 折扣标示;
+                    "quotetionFunctionAreaItem.qfaiId": $(e).find('input[name="deleteItems"]').val(),// 报价项Id;
+                    "quotetionFunctionAreaItem.name": $(e).find('.name .cell-wrap').text(),// 报价项名;
+                    "quotetionFunctionAreaItem.measurementUnit": $(e).find('.unit .cell-wrap').text(),// 单位 ;
+                    "quotetionFunctionAreaItem.formula": $(e).find('.formula .cell-wrap').text(),// 计算公式;
+                    "quotetionFunctionAreaItem.workType": $(e).find('.worktype .cell-wrap').text(),// 工种;
+
+                    "quotetionFunctionAreaItem.unitPrice": $(e).find('.unitprice').attr('data-unitPrice'),// 单价 ;
+                    "quotetionFunctionAreaItem.addPrice": $(e).attr('data-addPrice'),// 增补价;
+                    "quotetionFunctionAreaItem.subPrice": $(e).attr('data-subPrice'),// 退减价;
+                    "quotetionFunctionAreaItem.initNum": $(e).find('.num .cell-wrap').text(),// 初始化数量;
+                    "quotetionFunctionAreaItem.num": $(e).find('.num .cell-wrap').text(),// 数量;
+                    "quotetionFunctionAreaItem.subtype": $(e).find('.num').attr('data-subtype'),// 1工程,2主材;
+                    "quotetionFunctionAreaItem.type": _type,// 类型 ;
+                    "quotetionFunctionAreaItem.qfaid": widget.attr('data-qfaid'),// 功能区Id;
+                    "quotetionFunctionAreaItem.index": parseInt($(e).find(".line .cell-wrap").text()),
+                    "quotetionFunctionAreaItem.qiid": $(e).attr("data-qiid"),
+                    "quotetionFunctionAreaItem.content": $(e).prop('title'),
+                };
+
+                var args = $.extend({}, args, quo.basicParams);
+
+                com.post(api.quotation.updateQuotetionFunctionAreaItem, args, function(res) {
+
+                    $(e).find('input[name="deleteItems"]').val(res.quotetionFunctionAreaItem.qfaiId);
+
+                }, function(res) {
+
+                    com.showAlert(com.error, res.errorMsg);
+
+                    $(e).find('.cell.formula .cell-wrap').text(oldFormula);
+                    $(e).find('.cell.num .cell-wrap').text(oldNum);
+
+                    quo.calculateNowQuoteItem(oldNum, widget.attr('data-areaType'), $(e));
+                }, false);
+            });
+        },
+
         // 批量删除报价项
         deleteQuoteInBatches: function($domain) {
 
@@ -1756,20 +2015,38 @@
 
                 $.each($q1, function(i, v) {
 
-                    $(v).parents('li.fl-quo-item.item').remove();
+                    $(v).parents('li.fl-quo-item.item').attr("data-del-sign", 1);
                 });
 
+                quote.cacsedeUpdateItem();
+
+                $.each($q1, function(i, v) {
+
+                    $(v).parents('li.fl-quo-item.item').remove();
+                });
                 var _fee = quo.calculateDomainFees(domain.nowEditDomain);
-
-                com.focusPage('[data-qfaid="' + domain.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
-
                 quo.calculateQuoFees();
 
                 _params = $.extend({}, _params, quo.basicParams, {
                     "quotetionFunctionArea.qfaId": domain.nowEditDomain.attr('data-qfaid')
                 });
 
-                com.post(api.quotation.deleteQuotetionFunctionAreaItem, _params);
+                com.post(api.quotation.deleteQuotetionFunctionAreaItem, _params, function(res) {
+
+                    com.focusPage('[data-qfaid="' + domain.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
+                }, function(res) {
+
+                    com.showAlert(com.error, res.errorMsg);
+
+                    $.each($q1, function(i, v) {
+
+                        $(v).parents('li.fl-quo-item.item').removeAttr("data-del-sign");
+                    });
+
+                    quote.cacsedeUpdateItem();
+                    quo.calculateDomainFees(domain.nowEditDomain);
+                    quo.calculateQuoFees();
+                });
             }
 
             quote.sortQuote(domain.nowEditDomain);
@@ -1790,6 +2067,10 @@
                 $quote.remove();
             } else {
 
+                $quote.attr('data-del-sign', 1);
+
+                quote.cacsedeUpdateItem();
+
                 $quote.remove();
 
                 var _fee = quo.calculateDomainFees(domain.nowEditDomain);
@@ -1805,7 +2086,9 @@
 
                 com.post(api.quotation.deleteQuotetionFunctionAreaItem, _params, function(res) {
 
-                }, null, false);
+                }, function(res) {
+                    $quote.removeAttr("data-del-sign");
+                }, false);
             }
 
             quote.sortQuote(domain.nowEditDomain);
@@ -2028,6 +2311,9 @@
             var _arrs = quote.quotesRecord;
             var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
 
+            var cpWidget = com.focusPage('#functionAreaDetailList').find('.widget-box[data-dlevel="9998"]');
+            var cpIndex = cpWidget.find('.fl-quo-item.item').length;
+
             if (!_arrs.length) {
                 return false;
             }
@@ -2040,36 +2326,8 @@
                     return false;
                 }
 
-                var type = "0";
                 var areaType = domain.nowEditDomain.attr('data-areaType');
-
-                if ($this.attr('data-type') == constant.data().quotationItem.TYPE_CUSTOM_INT) { // 自定义
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT;
-                }
-
-                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_NOT_COUNT_INT) { // 不计
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_IGNORE_INT;
-                }
-
-                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_COST_INT) { // 成本
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_COST_INT;
-                }
-
-                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_ACHIEVEMENT_INT) { // 非业绩
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT;
-                }
-
-                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) { // 综合
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT;
-                }
-
-                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_PROJECT_NUM_INT && $this.attr('data-type') == constant.data().quotationItem.TYPE_COST_INT) { // 工程量 && 成本
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_COST_INT;
-                }
-
-                if (areaType == constant.quotation().quotetionFunctionArea.TYPE_PROJECT_NUM_INT && $this.attr('data-type') == constant.data().quotationItem.TYPE_UNACHE_INT) { // 工程量 && 非业绩
-                    type = constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT;
-                }
+                var type = quote.quoItemType($this.attr('data-type'), areaType);
 
                 var _quotval = {
                     "discount": $this.attr('data-discount'),
@@ -2079,7 +2337,7 @@
                     "formula": '0',
                     "num": 0,
                     "qfaiId": "",
-                    "qfaid": "",
+                    "qfaid": domain.nowEditDomain.attr("data-qfaid"),
                     "qiid": $this.val(),
                     "type": type,
                     "subtype": $this.attr('data-quotetionTypeId'),
@@ -2090,16 +2348,163 @@
                     "quotetionType": $this.attr('data-quotetionType'),
                     "quotetionTypeId": $this.attr('data-quotetionTypeId'),
                     "areaType": domain.nowEditDomain.attr('data-areaType'),
+                    "isRtem": $this.attr('data-isRtem'),
+                    "index": _index += 1
                 };
 
-                var $item = painter.createQuote(_index + i + 1, _quotval);
-                $item.appendTo(domain.nowEditDomain.find('.fl-quo-list.list'));
+                quote.addQuoteRtem(_quotval);
                 var $historyItem = $this.parents('li.item-blue').clone(true);
-
                 quote.recordHistoryQuotes($historyItem);
+
+                if ($this.attr('data-isRtem') != "1")
+                    return true;
+
+                com.post(api.quotation.queryQuotationRtem, {
+                    "quotationRtem.source.qiid": $this.val()
+                }, function(res) {
+
+                    $.each(res.quotationRtems, function(i, v) {
+
+                        var _quortval = {
+                            "discount": v.target.discount,
+                            "content": v.target.comment,
+                            "name": v.target.name,
+                            "measurementUnit": v.target.unit.name,
+                            "formula": 0,
+                            "num": 0,
+                            "qfaiId": "",
+                            "qiid": v.target.qiid,
+                            "subtype": v.target.category.id,
+                            "unitPrice": v.target.unitPrice,
+                            "addPrice": v.target.addPrice,
+                            "subPrice": v.target.subPrice,
+                            "workType": v.target.workType.name,
+                            "isRtem": 0
+                        };
+
+                        if (v.type == constant.data().quotationRtem.TYPE_CMPREH_INT && cpWidget.length) {
+                            _quortval["qfaid"] = cpWidget.attr("data-qfaid");
+                            _quortval["type"] = constant.quotation().quotetionFunctionAreaItem.TYPE_COMMON_INT;
+                            _quortval["areaType"] = constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT;
+                            _quortval["index"] = cpIndex += 1;
+
+                            quote.addQuoteRtem(_quortval);
+                        }
+
+                        if (v.type == constant.data().quotationRtem.TYPE_GENERRAL_INT && com.focusPage('.item[data-qiid="' + v.target.qiid + '"]', domain.nowEditDomain).length == 0) {
+                            _quortval["qfaid"] = domain.nowEditDomain.attr("data-qfaid");
+                            _quortval["type"] = quote.quoItemType(v.target.type, domain.nowEditDomain.attr('data-areaType'));
+                            _quortval["areaType"] = domain.nowEditDomain.attr('data-areaType');
+                            _quortval["index"] = _quotval["index"] += 1;
+
+                            quote.addQuoteRtem(_quortval);
+                        }
+                    });
+                });
             });
 
             quote.quotesRecord = [];
+        },
+
+        addQuoteRtem: function(v) {
+
+            var item = null;
+
+            var widget = domain.nowEditDomain;
+            var cpWidget = com.focusPage('#functionAreaDetailList').find('.widget-box[data-dlevel="9998"]');
+
+            var cpList = cpWidget.find('.fl-quo-list.list');
+            var quolist = widget.find('.fl-quo-list.list');
+
+            if (v.areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
+                item = cpList.find('.fl-quo-item.item[data-qiid="' + v.qiid + '"]', cpWidget);
+            } else {
+                item = quolist.find('.fl-quo-item.item[data-qiid="' + v.qiid + '"]', widget);
+            }
+
+            if (item && item.length != 0) {
+
+                var oldFormula = item.find('.cell.formula .cell-wrap').text();
+                var oldNum = item.find('.cell.num .cell-wrap').text();
+
+                v.qfaiId = item.find('input[name="deleteItems"]').val();
+                v.formula = utils.accAdd(oldFormula, v.formula);
+                v.num = utils.accAdd(oldNum, v.num);
+
+                item.find('.cell.formula .cell-wrap').text(v.formula);
+                item.find('.cell.num .cell-wrap').text(v.num);
+
+            } else if (v.areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) {
+                item = painter.createQuote(v.index, v).appendTo(cpList);
+            } else {
+                item = painter.createQuote(v.index, v).appendTo(quolist);
+            }
+
+            var fee = quo.calculateNowQuoteItem(v.num, v.areaType, item);
+
+            var args = {
+                "quotetionFunctionAreaItem.discount": v.discount,
+                "quotetionFunctionAreaItem.qfaiId": v.qfaiId,
+                "quotetionFunctionAreaItem.name": v.name,
+                "quotetionFunctionAreaItem.measurementUnit": v.measurementUnit,
+                "quotetionFunctionAreaItem.formula": v.formula,
+                "quotetionFunctionAreaItem.workType": v.workType,
+                "quotetionFunctionAreaItem.unitPrice": v.unitPrice,
+                "quotetionFunctionAreaItem.addPrice": v.addPrice,
+                "quotetionFunctionAreaItem.subPrice": v.subPrice,
+                "quotetionFunctionAreaItem.initNum": v.num,
+                "quotetionFunctionAreaItem.num": v.num,
+                "quotetionFunctionAreaItem.subtype": v.subtype,
+                "quotetionFunctionAreaItem.type": v.type,
+                "quotetionFunctionAreaItem.qfaid": v.qfaid,
+                "quotetionFunctionAreaItem.index": v.index,
+                "quotetionFunctionAreaItem.qiid": v.qiid,
+                "quotetionFunctionAreaItem.content": v.content,
+            }
+
+            com.post(api.quotation.updateQuotetionFunctionAreaItem, $.extend({}, args, quo.basicParams), function(res) {
+                
+                com.focusPage('[data-qfaid="' + res.quotetionFunctionAreaItem.qfaid + '"]', '#functionAreaSumList').find('label.no-padding-left').text(fee);
+                item.find('input[name="deleteItems"]').val(res.quotetionFunctionAreaItem.qfaiId);
+
+                item.find(".icon-arrow-up").removeClass("grey").addClass("green");
+                item.find(".icon-arrow-down").removeClass("grey").addClass("red");
+            }, null, false);
+        },
+
+        quoItemType: function(itemType, areaType) {
+
+        	 var type = "0";
+
+             if (itemType == constant.data().quotationItem.TYPE_CUSTOM_INT) { // 自定义
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_CUSTOM_INT;
+             }
+
+             if (areaType == constant.quotation().quotetionFunctionArea.TYPE_NOT_COUNT_INT) { // 不计
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_IGNORE_INT;
+             }
+
+             if (areaType == constant.quotation().quotetionFunctionArea.TYPE_COST_INT) { // 成本
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_COST_INT;
+             }
+
+             if (areaType == constant.quotation().quotetionFunctionArea.TYPE_ACHIEVEMENT_INT) { // 非业绩
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT;
+             }
+
+             if (areaType == constant.quotation().quotetionFunctionArea.TYPE_CMPREH_INT) { // 综合
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_CMPREH_INT;
+             }
+
+             if (areaType == constant.quotation().quotetionFunctionArea.TYPE_PROJECT_NUM_INT && itemType == constant.data().quotationItem.TYPE_COST_INT) { // 工程量 && 成本
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_COST_INT;
+             }
+
+             if (areaType == constant.quotation().quotetionFunctionArea.TYPE_PROJECT_NUM_INT && itemType == constant.data().quotationItem.TYPE_UNACHE_INT) { // 工程量 && 非业绩
+                 type = constant.quotation().quotetionFunctionAreaItem.TYPE_UNACHE_INT;
+             }
+
+             return type;
         },
 
         moveAreaItem: function($quote, $movequote, $direction) {
@@ -2140,6 +2545,45 @@
             com.post(api.quotation.updateQuotetionFunctionAreaItemForIndex, $.extend({}, _data, _quotetionFunctionArea), function(res) {
 
             }, null, false);
+        },
+
+        quotetionFunctionAreaFormula: function(expres, initNum) {
+
+            expres = expres ? expres : "0";
+
+            if (expres.indexOf("{") != -1 || expres.indexOf("}") != -1) {
+                expres = com.format(expres, {
+                    "a": 0, // 周长
+                    "b": 0, // 面积
+                    "c": 0, // 举架
+                    "d": 0, // 洞面
+                    "e": 0, // 参数
+                    "f": 0, // 窗面
+                    "g": 0, // 变量
+                    "h": 0, // 梁长
+                    "i": 0, // 梁高
+
+                    "o": 0, // 楼层
+                    "of": 0, // 有无电梯
+
+                    "u": quo.basicParams["quotetion.taxPrice"], // 税金
+                    "v": quo.basicParams["quotetion.managePrice"], // 管理费
+                    "x": quo.basicParams["quotetion.undisPrice"], // 不打折总额
+                    "y": quo.basicParams["quotetion.disPrice"], // 打折总额
+                    "z": quo.basicParams["quotetion.trafficPrice"], // 车运费
+                    "w": initNum, // 工程量
+                });
+            }
+
+            if (expres.indexOf('|') != -1) {
+
+                var _pre = expres.split('|')[0];
+                var _nex = expres.split('|')[1];
+
+                expres = "Math.max(" + _pre + ", " + _nex + ")";
+            }
+
+            return utils.changeThrDecimal(isNaN(eval(expres)) ? 0 : eval(expres));
         },
 
         init: function() {
@@ -2525,7 +2969,6 @@
                 $item.click(function() {// 编辑数量
 
                     quote.getNumCellFocus($item);
-                    return false;
                 });
 
                 // 删除报价项
@@ -2614,6 +3057,9 @@
                 $item.append($btnCell);
             }
 
+            $item.attr('data-qiid', qv.qiid);
+            $item.attr('data-isRtem', qv.isRtem == 1 ? 1 : 0);
+            $item.attr('data-count-num', qv.isRtem == 1 ? null : qv.num);
             $item.attr('data-addPrice', qv.addPrice);
             $item.attr('data-subPrice', qv.subPrice);
 
@@ -2669,6 +3115,7 @@
                 "data-quotetionTypeId": v.category.id,
                 "data-quotetionClassification": v.classification.name,
                 "data-workType": v.workType ? v.workType.name : "-",
+                "data-isRtem": v.isRtem,
                 "data-des": v.comment,
             }).val(v.qiid);
 

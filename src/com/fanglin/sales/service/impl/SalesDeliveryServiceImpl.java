@@ -331,7 +331,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemDao.save(salesDeliveryItemPO);
 
 			if (rights != null && rights.size() != 0) {
-				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, creater);
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_INIT_INT, creater);
 			}
 
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
@@ -476,6 +476,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesBalanceCO.setVbalance(Arith.mul(salesBalancePO.getVbalance(), rate));
 		salesBalanceCO.setPbalance(Arith.mul(salesBalancePO.getPbalance(), rate));
 		salesBalanceCO.setDifference(Arith.mul(salesBalancePO.getDifference(), rate));
+		salesBalanceCO.setRate(rate);
 
 		salesBalanceDao.save(salesBalanceCO);
 	}

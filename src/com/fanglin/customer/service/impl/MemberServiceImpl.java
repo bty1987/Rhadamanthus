@@ -14,14 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.CppointDao;
 import com.fanglin.customer.dao.CppointRecordDao;
-import com.fanglin.customer.dao.CustomerChanceDao;
 import com.fanglin.customer.dao.MemberDao;
 import com.fanglin.customer.po.CppointPO;
 import com.fanglin.customer.po.CppointRecordPO;
-import com.fanglin.customer.po.CustomerChancePO;
 import com.fanglin.customer.service.MemberService;
 import com.fanglin.customer.vo.MemberActivityVO;
 import com.fanglin.customer.vo.MemberGoodsVO;
@@ -51,7 +48,6 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.Paging;
 
 @Service("memberservice")
 @Transactional(readOnly = true)
@@ -68,9 +64,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private CustomerPhoneDao customerPhoneDao;
-
-	@Autowired
-	private CustomerChanceDao customerChanceDao;
 
 	@Autowired
 	private DecorationInfoDao decorationInfoDao;
@@ -106,12 +99,11 @@ public class MemberServiceImpl implements MemberService {
 
 		List<Integer> companyIds = new ArrayList<Integer>();
 
+		List<Long> customerIds = new ArrayList<Long>();
+
 		if (memberVO.getPhone() == null) {
 			return memberVOs;
 		}
-
-		Paging paging = new Paging(0, 10);
-		List<Filter> filters = new ArrayList<Filter>();
 
 		List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(FormatUtil.encodePhone(memberVO.getPhone()), CustomerPhonePO.STATUS_ENABLE_INT, null);
 
@@ -119,9 +111,15 @@ public class MemberServiceImpl implements MemberService {
 			throw new FLException(130006, "客户电话不存在");
 		}
 
-		filters.add(new Filter("decoration.customer.cid", (null != customerPhones && !customerPhones.isEmpty()) ? String.valueOf(customerPhones.get(0).getCid()) : "-1", "eq"));
+		for (CustomerPhonePO customerPhonePO : customerPhones) {
+			customerIds.add(customerPhonePO.getCid());
+		}
 
-		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForCompany(paging, filters, null);
+		if (customerIds == null || customerIds.size() == 0) {
+			throw new FLException(130006, "客户电话不存在");
+		}
+
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomerIds(customerIds);
 
 		for (DecorationPO decorationPO : decorationPOs) {
 
@@ -143,6 +141,7 @@ public class MemberServiceImpl implements MemberService {
 		for (DecorationPO decorationPO : decorationPOs) {
 			memberVOs.add(new MemberVO().init(decorationPO, companyMap.get(decorationPO.getCompany())));
 		}
+
 		return memberVOs;
 	}
 
@@ -224,7 +223,7 @@ public class MemberServiceImpl implements MemberService {
 				decorationAOs.addAll(originRefer);
 			}
 
-			List<DecorationPO> orderRefer = decorationInfoDao.queryDecorationForOrderRefer(decorationPO.getOrderId());
+			List<DecorationPO> orderRefer = decorationInfoDao.queryDecorationForOrderReferd(decorationPO.getOrderId());
 
 			if (orderRefer != null) {
 				decorationAOs.addAll(orderRefer);
@@ -243,9 +242,7 @@ public class MemberServiceImpl implements MemberService {
 				member.setPhone(FormatUtil.decodePhone(customerPhones.get(0).getPhone()));
 			}
 
-			CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(decorationPO.getOrderId());
-
-			if (customerChancePO != null) member.setStoreTime(customerChancePO.getMeetTime());
+			member.setStoreTime(decorationPO.getCreateTime());
 
 			member.setOrderId(decorationPO.getOrderId());
 

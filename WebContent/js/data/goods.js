@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     var goods = {
 
@@ -34,17 +34,24 @@ $(function() {
             executeTimes: com.focusPage("#executeTimes"),
             executeDates: com.focusPage("#executeDates"),
 
+            goodsNum: com.focusPage("#goodsNum"),
+            path: com.focusPage("#path"),
+            sampleImg: com.focusPage("#sampleImg"),
+            comment: com.focusPage("#comment"),
+
             filePath: com.focusPage("#filePath")
         },
 
         btns: {
             submitBtn: com.focusPage("#submitBtn"),
             importBtn: com.focusPage("#importBtn"),
-            exportBtn: com.focusPage("#exportBtn")
+            exportBtn: com.focusPage("#exportBtn"),
+            saveBtn: com.focusPage("#saveBtn"),
         },
 
         modals: {
-            drawingGoodsModal: com.focusPage("#drawingGoodsModal")
+            drawingGoodsModal: com.focusPage("#drawingGoodsModal"),
+            sampleModal: com.focusPage("#sampleModal"),
         },
 
         pageType: params['urlLoadParams'].type,
@@ -53,6 +60,7 @@ $(function() {
 
     com.datetime(goods.items.executeDates, "date", false);
     com.datetime(goods.items.executeTimes, "time", false);
+    goods.btns.saveBtn.click(saveRecord);
 
     goods.items.type.bindData([{
         gid: 0,
@@ -61,31 +69,31 @@ $(function() {
         gid: 1,
         goods: "套餐"
     }], "gid", "goods");
-    
+
     goods.items.atttype.bindData(constant.data().goodsPool.atttype.datas, 'key', 'value');
 
-    com.post(api.data.queryCategory, {}, function(res) {
+    com.post(api.data.queryCategory, {}, function (res) {
 
         goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
-    com.post(api.common.queryMeasurementUnit, {}, function(res) {
+    com.post(api.common.queryMeasurementUnit, {}, function (res) {
 
         goods.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
     });
 
-    com.post(api.data.queryAccessoriesType, {}, function(res) {
+    com.post(api.data.queryAccessoriesType, {}, function (res) {
 
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
-    com.post(api.data.queryGoodsKind, {}, function(res) {
+    com.post(api.data.queryGoodsKind, {}, function (res) {
 
         var oneKinds = [];
         var twoKinds = [];
         var thrKinds = [];
 
-        $.each(res.goodsKinds, function(i, v) {
+        $.each(res.goodsKinds, function (i, v) {
 
             if (v.status != 0)
                 return true;
@@ -117,34 +125,70 @@ $(function() {
         goods.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
     });
 
-    goods.items.onekind.change(function() {
+    com.focusPage('#onekind').on("change", function () {
+        updateZerokind();
+        com.post(api.data.queryGoodsKindByFgkid, { "goodsKind.parent.gkid": goods.items.onekind.val() }, function (res) {
+
+            var twoKinds = [];
+            var thrKinds = [];
+            $.each(res.goodsKinds, function (i, v) {
+
+                if (v.status != 0)
+                    return true;
+
+                twoKinds.push({
+                    "key": v.gkid,
+                    "value": v.name
+                });
+            });
+
+            goods.items.twokind.bindData(twoKinds, 'key', 'value', '无');
+            goods.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
+        });
+
+    });
+
+    com.focusPage('#twokind').on("change", function () {
+        updateZerokind();
+        com.post(api.data.queryGoodsKindByFgkid, { "goodsKind.parent.gkid": goods.items.twokind.val() }, function (res) {
+
+            var thrKinds = [];
+
+            $.each(res.goodsKinds, function (i, v) {
+
+                if (v.status != 0)
+                    return true;
+
+                thrKinds.push({
+                    "key": v.gkid,
+                    "value": v.name
+                });
+            });
+
+            goods.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
+
+        });
+
+    });
+
+    goods.items.thrkind.change(function () {
 
         updateZerokind();
     });
 
-    goods.items.twokind.change(function() {
-
-        updateZerokind();
-    });
-
-    goods.items.thrkind.change(function() {
-
-        updateZerokind();
-    });
-
-    goods.btns.importBtn.click(function() {
+    goods.btns.importBtn.click(function () {
 
         importGoods();
     });
 
-    goods.btns.exportBtn.click(function() {
+    goods.btns.exportBtn.click(function () {
 
         exportGoods();
     });
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", function(list, k, v) {
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", function (list, k, v) {
 
-        $.each(list, function(index, val) {
+        $.each(list, function (index, val) {
 
             if (val.bid == k) {
 
@@ -152,7 +196,7 @@ $(function() {
 
                 com.post(api.data.queryBrandByBid, {
                     "brand.bid": k
-                }, function(res) {
+                }, function (res) {
 
                     goods.items.category.val(res.brand.categoryName);
                 });
@@ -167,7 +211,7 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.base("gCondList", "gPagenation", "gResultList", api.data.pageGoods);
-    
+
     if (goods.pageType == "basic" || goods.pageType == "senior") {
         searcher.base("gCondList", "gPagenation", "gResultList", api.data.pageGoodsForAdvance);
     }
@@ -180,7 +224,7 @@ $(function() {
 
     if (goods.pageType == "senior") {
 
-        searcher.button(function() {
+        searcher.button(function () {
 
             var $btnGroup = $("<div></div>").addClass("btn-group");
 
@@ -239,13 +283,21 @@ $(function() {
             id: "add",
             name: "添加",
             clazz: "btn-success",
-            icon: "icon-plus"
+            icon: "icon-plus",
+            show: function () {
+
+                return goods.pageAtttype == 0 || true;
+            }
         }, {
             id: "export",
             name: "导出",
             clazz: "btn-yellow",
-            icon: "icon-download-alt"
-        },{
+            icon: "icon-download-alt",
+            show: function () {
+
+                return goods.pageAtttype == 0 || true;
+            }
+        }, {
             id: "claim",
             name: "申领",
             clazz: "btn-success",
@@ -320,7 +372,7 @@ $(function() {
     }, {
         field: "type",
         name: "类型 ",
-        prop: function(v) {
+        prop: function (v) {
 
             return v.type == "0" ? "商品" : "套餐";
         },
@@ -354,47 +406,47 @@ $(function() {
     }, {
         field: "status",
         name: "状态 ",
-        prop: function(v) {
+        prop: function (v) {
 
             return v.status == "0" ? "启用" : "禁用";
         },
         clazz: "red"
-    },{
+    }, {
         field: "series",
         name: "系列",
         prop: "series",
         clazz: "grey"
-    },{
+    }, {
         field: "elevel",
         name: "环保级别",
         prop: "elevel",
         clazz: "grey"
-    },{
+    }, {
         field: "material",
         name: "材质",
         prop: "material",
         clazz: "grey"
-    },{
+    }, {
         field: "quality",
         name: "特性",
         prop: "quality",
         clazz: "grey"
-    },{
+    }, {
         field: "color",
         name: "颜色",
         prop: "color",
         clazz: "grey"
-    },{
+    }, {
         field: "format",
         name: "规格",
         prop: "format",
         clazz: "grey"
-    },{
+    }, {
         field: "model",
         name: "型号",
         prop: "model",
         clazz: "grey"
-    },{
+    }, {
         fieId: "atttype",
         name: "装修类型",
         prop: "atttype",
@@ -405,7 +457,7 @@ $(function() {
     var linebtns = [{
         name: "编辑",
         clazz: "btn-primary",
-        handle: function(v) {
+        handle: function (v) {
 
             readonly("disabled");
 
@@ -453,7 +505,7 @@ $(function() {
             goods.items.onekind.val(v.onekind.gkid);
             goods.items.twokind.val(v.twokind.gkid);
             goods.items.thrkind.val(v.thrkind.gkid);
-            
+
             goods.items.series.val(v.series);
             goods.items.elevel.val(v.elevel);
             goods.items.material.val(v.material);
@@ -465,45 +517,53 @@ $(function() {
 
             com.popup4model("#addLayer", "编辑");
         },
-        show: function(v) {
+        show: function (v) {
 
-            return goods.pageType == "senior";
+            return goods.pageType == "senior" && v.atttype == 0;
         }
     }, {
         name: "颜色",
         clazz: "btn-warning",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goods = v;
 
             com.popup4page('#layerPopUp', 'views/data/color.html', '颜色');
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "规格",
         clazz: "btn-yellow",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goods = v;
 
             com.popup4page('#layerPopUp', 'views/data/format.html', '规格');
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "价格",
         clazz: "btn-pink",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goods = v;
             params.pageType = goods.pageType;
             com.popup4page('#layerPopUp', 'views/data/price.html', '价格');
         },
-        show: function(v) {
+        show: function (v) {
 
-            return goods.pageType == "senior" || !goods.pageType;
+            return (goods.pageType == "senior" || !goods.pageType) && v.atttype == 0;
         }
     }, {
         name: "图片",
         clazz: "btn-success",
-        handle: function(v) {
+        handle: function (v) {
 
             goods.gid = v.gid;
 
@@ -512,12 +572,12 @@ $(function() {
             com.post(api.communion.queryDataDrawing, {
                 "dataDrawing.sid": v.gid,
                 "dataDrawing.type": 2
-            }, function(data) {
+            }, function (data) {
 
                 var dataDrawings = data.dataDrawings;
 
                 if (dataDrawings && dataDrawings.length > 0) {
-                    $.each(dataDrawings, function(i, value) {
+                    $.each(dataDrawings, function (i, value) {
 
                         appendGalleryElement("goodsDrawing", value);
                     });
@@ -526,11 +586,15 @@ $(function() {
             }, null, false);
 
             goods.modals.drawingGoodsModal.modal("show");
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "记录",
         clazz: "btn-purple",
-        handle: function(v) {
+        handle: function (v) {
 
             params.data.goods = v;
 
@@ -540,12 +604,12 @@ $(function() {
         name: "状态",
         type: "switch",
         clazz: "status-lbl",
-        handle: function(v, check) {
+        handle: function (v, check) {
 
             com.post(api.data.updateGoodsForStatus, {
                 "goods.gid": v.gid,
                 "goods.status": v.status == 0 ? 1 : 0
-            }, function(res) {
+            }, function (res) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -553,24 +617,24 @@ $(function() {
 
             return false;
         },
-        init: function(v) {
+        init: function (v) {
 
             return !v.status;
         },
-        show: function(v) {
+        show: function (v) {
 
-            return goods.pageType == "senior" || !goods.pageType;
+            return (goods.pageType == "senior" || !goods.pageType) && v.atttype == 0;
         }
     }, {
         name: "是否出样",
         type: "switch",
         clazz: "isOrNot",
-        handle: function(v, check) {
+        handle: function (v, check) {
 
             com.post(api.data.showGoods, {
                 "goods.gid": v.gid,
                 "goods.isShow": v.isShow == 0 ? 1 : 0
-            }, function(res) {
+            }, function (res) {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
@@ -578,9 +642,29 @@ $(function() {
 
             return false;
         },
-        init: function(v) {
+        init: function (v) {
 
             return !v.isShow;
+        },
+        show: function (v) {
+
+            return v.isShow == 0 && v.atttype == 0;
+        }
+    }, {
+        name: "出样",
+        clazz: "btn-purple",
+        handle: function (v) {
+            goods.gid = v.gid;
+            com.clearImg(goods.items.sampleImg);
+            com.cleanItems(goods.items);
+            com.popup4model('#layerRecordAdd', '添加出样', null, function () {
+
+                com.clearValidator();
+            });
+        },
+        show: function (v) {
+
+            return v.isShow == 0 && v.atttype == 0;
         }
     }];
 
@@ -588,7 +672,7 @@ $(function() {
 
     searcher.render();
 
-    com.focusPage('#add', '#gPagenation').on("click", function() {
+    com.focusPage('#add', '#gPagenation').on("click", function () {
 
         com.cleanItems(goods.items);
 
@@ -600,13 +684,13 @@ $(function() {
         com.popup4model("#addLayer", "添加");
     });
 
-    com.focusPage('#claim', '#gPagenation').on("click", function() {
+    com.focusPage('#claim', '#gPagenation').on("click", function () {
 
         params.atttype = goods.pageAtttype;
-        com.popup4page('#layerPopUp', api.index.goodsPool3claim.url, "申领商品");
+        com.popup4page('#layerPopUp', api.index.goodsPool4condition.url, "申领商品");
     });
 
-    com.focusPage('#export', '#gPagenation').on("click", function() {
+    com.focusPage('#export', '#gPagenation').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -622,19 +706,19 @@ $(function() {
 
         com.post(!goods.pageType ? api.data.pageGoods : api.data.pageGoodsForAdvance, $.extend({}, params["goodsPageDataHistory" + goods.pageType], {
             "paging.noPage": 1
-        }), function(res) {
+        }), function (res) {
 
             $.exceler({
                 column: [['商品ID', 'gid'], ['商品编码', 'no'], ['商品名称', 'name'], ['别名', 'alias'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌ID', 'bid'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['类型', 'type']],
                 list: res.paging.data
-            }, function(v) {
+            }, function (v) {
 
                 v.type = v.type == "0" ? "商品" : "套餐";
             });
         });
     });
 
-    com.focusPage('#deletePriceBtn', '#gPagenation').on("click", function() {
+    com.focusPage('#deletePriceBtn', '#gPagenation').on("click", function () {
 
         goods.keyword = "update_delete_price";
 
@@ -649,7 +733,7 @@ $(function() {
         com.popup4model("#deletePrice", "删除价格");
     });
 
-    com.focusPage('#statusGoodsBtn', '#gPagenation').on("click", function() {
+    com.focusPage('#statusGoodsBtn', '#gPagenation').on("click", function () {
 
         goods.keyword = "update_status_goods";
 
@@ -664,7 +748,7 @@ $(function() {
         com.popup4model("#statusGoods", "更新商品价格");
     });
 
-    com.focusPage('#exportGood', '#gPagenation').on("click", function() {
+    com.focusPage('#exportGood', '#gPagenation').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -681,7 +765,7 @@ $(function() {
         com.popup4model("#exportGoods", "导出商品");
     });
 
-    com.focusPage('#exportColor', '#gPagenation').on("click", function() {
+    com.focusPage('#exportColor', '#gPagenation').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -698,7 +782,7 @@ $(function() {
         com.popup4model("#exportModal", "导出颜色");
     });
 
-    com.focusPage('#exportFormat', '#gPagenation').on("click", function() {
+    com.focusPage('#exportFormat', '#gPagenation').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -715,7 +799,7 @@ $(function() {
         com.popup4model("#exportModal", "导出规格");
     });
 
-    com.focusPage('#exportPrice', '#gPagenation').on("click", function() {
+    com.focusPage('#exportPrice', '#gPagenation').on("click", function () {
 
         var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -732,7 +816,7 @@ $(function() {
         com.popup4model("#exportModal", "导出价格");
     });
 
-    com.focusPage('#importGoo', '#gPagenation').on("click", function() {
+    com.focusPage('#importGoo', '#gPagenation').on("click", function () {
 
         goods.keyword = "import_goods";
 
@@ -747,7 +831,7 @@ $(function() {
         com.popup4model("#importGoods", "导入商品");
     });
 
-    com.focusPage('#importCol', '#gPagenation').on("click", function() {
+    com.focusPage('#importCol', '#gPagenation').on("click", function () {
 
         goods.keyword = "import_color";
 
@@ -762,7 +846,7 @@ $(function() {
         com.popup4model("#importColor", "导入颜色");
     });
 
-    com.focusPage('#importFor', '#gPagenation').on("click", function() {
+    com.focusPage('#importFor', '#gPagenation').on("click", function () {
 
         goods.keyword = "import_format";
 
@@ -777,7 +861,7 @@ $(function() {
         com.popup4model("#importFormat", "导入规格");
     });
 
-    com.focusPage('#importPri', '#gPagenation').on("click", function() {
+    com.focusPage('#importPri', '#gPagenation').on("click", function () {
 
         goods.keyword = "import_price";
 
@@ -792,7 +876,7 @@ $(function() {
         com.popup4model("#importPrice", "导入价格");
     });
 
-    goods.btns.submitBtn.click(function() {
+    goods.btns.submitBtn.click(function () {
 
         saveData();
     });
@@ -809,6 +893,7 @@ $(function() {
         var url = api.data.updateGoods;
         var options = {
             "goods.type": goods.items.type.val(),
+            "goods.name": goods.items.alias.val(),
             "goods.alias": goods.items.alias.val(),
             "goods.purchase": goods.items.purchase.val(),
             "goods.selling": goods.items.selling.val(),
@@ -832,14 +917,14 @@ $(function() {
         if (!gid) {
             url = api.data.addGoods;
             options["goods.no"] = goods.items.no.val();
-            options["goods.name"] = goods.items.name.val();
+            options["goods.name"] = goods.items.alias.val();
             options["goods.alias"] = goods.items.alias.val();
             options["goods.barcode"] = goods.items.barcode.val();
             options["goods.bid"] = goods.bid;
             options["goods.category"] = goods.items.category.val();
             options["goods.measurementUnit"] = goods.items.measurementUnit.val();
             options["goods.pieceNum"] = goods.items.pieceNum.val();
-            
+
             options["goods.series"] = goods.items.series.val();
             options["goods.elevel"] = goods.items.elevel.val();
             options["goods.material"] = goods.items.material.val();
@@ -849,17 +934,38 @@ $(function() {
             options["goods.quality"] = goods.items.quality.val();
             options["goods.atttype"] = goods.items.atttype.val();
 
-            
+
         } else {
             options["goods.gid"] = goods.gid;
         }
 
-        com.post(url, options, function(res) {
+        com.post(url, options, function (res) {
 
             com.showAlert(com.info, "操作成功");
 
             com.closePopup();
 
+            searcher.doSearch();
+        });
+    }
+
+    function saveRecord() {
+
+        if (com.validate('sampleModal'))
+            return false;
+
+        var url = api.data.addGoodsRecord;
+        var options = {
+            "goodsRecord.goodsNum": goods.items.goodsNum.val(),
+            "goodsRecord.goods.gid": goods.gid,
+            "goodsRecord.type": 0,
+            "goodsRecord.comment": goods.items.comment.val(),
+            "goodsRecord.path": goods.items.path.val(),
+        }
+
+        com.post(url, options, function (res) {
+
+            com.closePopup();
             searcher.doSearch();
         });
     }
@@ -935,7 +1041,7 @@ $(function() {
             "plan.args": args
         };
 
-        com.post(api.information.createPlan, options, function(res) {
+        com.post(api.information.createPlan, options, function (res) {
 
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
@@ -952,7 +1058,7 @@ $(function() {
 
         var args = "";
 
-        $.each(filtersName, function(i, v) {
+        $.each(filtersName, function (i, v) {
 
             var val = com.focusPage("[name='" + v + "']").val();
             var columnName = $("[name='" + v + "']").attr("data-rqs");
@@ -985,7 +1091,7 @@ $(function() {
             "plan.args": args
         };
 
-        com.post(api.information.createPlan, options, function(res) {
+        com.post(api.information.createPlan, options, function (res) {
 
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
@@ -995,7 +1101,7 @@ $(function() {
 
     com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls", {
         'uploadType': 3
-    }, 1, function(data) {
+    }, 1, function (data) {
 
         0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
     });
@@ -1005,7 +1111,7 @@ $(function() {
 
         com.uploadify("#goodsUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
-        }, 1, function(data) {
+        }, 1, function (data) {
 
             var options = {};
 
@@ -1016,7 +1122,7 @@ $(function() {
             options["dataDrawing.type"] = 2;
             options["dataDrawing.filesize"] = data.filesize;
 
-            com.post(api.communion.addDataDrawing, options, function(res) {
+            com.post(api.communion.addDataDrawing, options, function (res) {
 
                 var drawing = res.dataDrawing;
 
@@ -1027,6 +1133,16 @@ $(function() {
             searcher.doSearch();
         });
     }
+
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.png', {
+        'uploadType': 2
+    }, 1, function (data) {
+
+        goods.items.path.val(data.resUrl);
+        goods.items.filesize.val(data.filesize);
+
+        com.showImg(goods.items.sampleImg, data.resUrl, 150, 150, '', null, 0);
+    });
 
     function appendGalleryElement(galleryId, value) {
 
@@ -1040,25 +1156,25 @@ $(function() {
 
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
 
             com.post(api.communion.deleteDataDrawing, {
                 "dataDrawing.ddid": value.ddid
-            }, function(res) {
+            }, function (res) {
 
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
 
         }).appendTo(toolsDiv);
 
-        var goodsUrl = $("<a></a>").attr("href", "#").on("click", function() {
+        var goodsUrl = $("<a></a>").attr("href", "#").on("click", function () {
 
             var option = {
                 "goods.gid": goods.gid,
                 "goods.path": value.drawingUrl
             };
 
-            com.post(api.data.updateGoods, option, function(e) {
+            com.post(api.data.updateGoods, option, function (e) {
 
                 searcher.doSearch();
                 com.showAlert(com.info, "操作成功");

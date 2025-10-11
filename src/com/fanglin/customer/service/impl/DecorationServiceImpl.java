@@ -98,7 +98,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 				decorationPO.ptv(decorationVO, decorationDO);
 
-				SystemConfigPO memberFlag = systemConfigDao.querySystemConfig("MEMBER_ENABLE_FLAG", decorationDO.getConpany());
+				SystemConfigPO memberFlag = systemConfigDao.querySystemConfig("MEMBER_ENABLE_FLAG", decorationDO.getCompany());
 
 				if (memberFlag != null && memberFlag.getValue() != null) decorationVO.setMemberFlag((short) 1);
 

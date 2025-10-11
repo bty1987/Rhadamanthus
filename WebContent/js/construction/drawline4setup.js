@@ -470,7 +470,7 @@ jQuery(function($) {
                 com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#contructionNodes").attr("prenum", v.prenum);
                 com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
 
-                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.period);
+                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.connum);
             });
 
         }, null, false);
@@ -481,7 +481,10 @@ jQuery(function($) {
 
             $.each(res.constructionPlans, function(i, v) {
 
-                com.focusPage("input.timeLimits[cnid='" + v.cnode.cnid + "']", "#contructionNodes").val(v.connum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][prenum]", "#contructionNodes").attr("prenum", v.prenum);
+                com.focusPage("input[cnid='" + v.node.cnid + "'][postnum]", "#contructionNodes").attr("postnum", v.postnum);
+
+                com.focusPage("input.timeLimits[cnid='" + v.node.cnid + "']", "#contructionNodes").val(v.connum);
             });
         });
     }
@@ -507,11 +510,16 @@ jQuery(function($) {
 
             var $input = $(v);
 
+            var timeLimit = com.focusPage("input[text_sort=" + $input.attr('sort') + "]").val();
+            var prenum = $input.attr('prenum');
+            var postnum = $input.attr('postnum');
+
             option["constructionNodes[" + i + "].cnid"] = $input.attr('cnid');
             option["constructionNodes[" + i + "].sort"] = $input.attr('sort');
-            option["constructionNodes[" + i + "].timeLimit"] = $("input[text_sort=" + $input.attr('sort') + "]").val();
-            option["constructionNodes[" + i + "].prenum"] = $input.attr('prenum');
-            option["constructionNodes[" + i + "].postnum"] = $input.attr('postnum');
+            
+            option["constructionNodes[" + i + "].timeLimit"] = parseFloat(timeLimit ? timeLimit : 0);
+            option["constructionNodes[" + i + "].prenum"] = parseFloat(prenum ? prenum : 0);
+            option["constructionNodes[" + i + "].postnum"] = parseFloat(postnum ? postnum : 0);
         });
 
         com.post(api.construction.successDrawLine, option, function(res) {

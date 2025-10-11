@@ -92,7 +92,9 @@ jQuery(function($) {
         handle: function(v) {
 
             survey.sid = v.sid;
+
             show(v);
+
             return false;
         }
     }, {
@@ -101,6 +103,7 @@ jQuery(function($) {
         handle: function(v) {
 
             send(v.sid);
+
             return false;
         },
         show: function(v) {
@@ -132,7 +135,7 @@ jQuery(function($) {
         }, function(res) {
 
             survey.items.name.html(res.survey.name);
-
+            
             $.each(res.survey.items, function(i, v) {
 
                 if (v.type != constant.customer().survey.TYPE_SELECT_INT) {
@@ -156,6 +159,8 @@ jQuery(function($) {
 
                         elect(checkDivAll, option);
                     });
+                } else if (v.type == 4) {
+                    var textArea = $('<input type="text" readonly="readonly" data-type="dateRangePicker">').html(v.content).appendTo(contentDiv);
                 }
             });
 

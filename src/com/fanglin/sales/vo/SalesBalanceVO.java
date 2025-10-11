@@ -54,6 +54,8 @@ public class SalesBalanceVO implements Serializable {
 
 	private Long pbalance;
 
+	private Integer rate;
+
 	private Short type;
 
 	private Short onetype;
@@ -273,6 +275,14 @@ public class SalesBalanceVO implements Serializable {
 
 	public void setPbalance(Long pbalance) {
 		this.pbalance = pbalance;
+	}
+
+	public Integer getRate() {
+		return rate;
+	}
+
+	public void setRate(Integer rate) {
+		this.rate = rate;
 	}
 
 	public Short getType() {

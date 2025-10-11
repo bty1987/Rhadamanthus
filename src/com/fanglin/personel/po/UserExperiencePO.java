@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Table(name = "userExperience", catalog = "communion")
 public class UserExperiencePO implements Serializable {
 
-	private static final long serialVersionUID = 8111974803190366547L;
+	private static final long serialVersionUID = -7779388477309106067L;
 
 	private long upid;
 
@@ -37,23 +37,23 @@ public class UserExperiencePO implements Serializable {
 
 	private short isPrefor;
 
-	private Integer ocid;
+	private int ocid;
 
-	private Integer tcid;
+	private int tcid;
 
-	private Integer odid;
+	private int odid;
 
-	private Integer tdid;
+	private int tdid;
 
-	private Integer orid;
+	private int orid;
 
-	private Integer trid;
+	private int trid;
 
 	private Timestamp createTime;
 
-	private String comment;
-
 	private Timestamp operateTime;
+
+	private String comment;
 
 	public UserExperiencePO() {
 		super();
@@ -103,57 +103,67 @@ public class UserExperiencePO implements Serializable {
 	}
 
 	@Column(name = "ocid")
-	public Integer getOcid() {
+	public int getOcid() {
 		return ocid;
 	}
 
-	public void setOcid(Integer ocid) {
+	public void setOcid(int ocid) {
 		this.ocid = ocid;
 	}
 
 	@Column(name = "tcid")
-	public Integer getTcid() {
+	public int getTcid() {
 		return tcid;
 	}
 
-	public void setTcid(Integer tcid) {
+	public void setTcid(int tcid) {
 		this.tcid = tcid;
 	}
 
 	@Column(name = "odid")
-	public Integer getOdid() {
+	public int getOdid() {
 		return odid;
 	}
 
-	public void setOdid(Integer odid) {
+	public void setOdid(int odid) {
 		this.odid = odid;
 	}
 
 	@Column(name = "tdid")
-	public Integer getTdid() {
+	public int getTdid() {
 		return tdid;
 	}
 
-	public void setTdid(Integer tdid) {
+	public void setTdid(int tdid) {
 		this.tdid = tdid;
 	}
 
 	@Column(name = "orid")
-	public Integer getOrid() {
+	public int getOrid() {
 		return orid;
 	}
 
-	public void setOrid(Integer orid) {
+	public void setOrid(int orid) {
 		this.orid = orid;
 	}
 
 	@Column(name = "trid")
-	public Integer getTrid() {
+	public int getTrid() {
 		return trid;
 	}
 
-	public void setTrid(Integer trid) {
+	public void setTrid(int trid) {
 		this.trid = trid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ouid", referencedColumnName = "uid")
+	public UserPO getOperator() {
+		return operator;
+	}
+
+	public void setOperator(UserPO operator) {
+		this.operator = operator;
 	}
 
 	@Column(name = "createTime")
@@ -165,15 +175,6 @@ public class UserExperiencePO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "comment")
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
 	@Column(name = "operateTime")
 	public Timestamp getOperateTime() {
 		return operateTime;
@@ -183,14 +184,13 @@ public class UserExperiencePO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ouid", referencedColumnName = "uid")
-	public UserPO getOperator() {
-		return operator;
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
 	}
 
-	public void setOperator(UserPO operator) {
-		this.operator = operator;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

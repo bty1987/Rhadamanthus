@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceSalesBalanceDao;
 import com.fanglin.balance.dao.BalanceSalesDao;
+import com.fanglin.balance.po.BalancePO;
 import com.fanglin.balance.po.BalanceSalesBalancePO;
 import com.fanglin.balance.po.BalanceSalesPO;
 import com.fanglin.balance.service.BalanceSalesBalanceService;
@@ -53,6 +55,9 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
+
+	@Autowired
+	private BalanceDao balanceDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -108,6 +113,8 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 			throw new FLException(260037, "销售结算不存在");
 		}
 
+		int pompany = salesBalancePO.getSales().getPompany();
+
 		BalanceSalesPO balanceSalesPO = null;
 
 		if (balanceSalesVO != null && balanceSalesVO.getBsid() != null) {
@@ -115,19 +122,19 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 		}
 
 		if (balanceSalesVO == null) {
-			balanceSalesVO = new BalanceSalesVO();
+			balanceSalesVO = new BalanceSalesVO(new UserBaseVO(salesBalancePO.getSales().getSupplier().getUid()));
 		}
 
 		if (balanceSalesPO == null) {
-			balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, company);
+			balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), balanceSalesVO.getSupplier().getUid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, pompany);
 		}
 
 		if (balanceSalesPO == null) {
-			balanceSalesService.createBalanceSales(new BalanceSalesVO(new BrandVO(salesBalancePO.getSales().getBrand().getBid()), new UserBaseVO(userId)), userId, salesBalancePO.getSales().getCompany());
+			balanceSalesService.createBalanceSales(new BalanceSalesVO(new BrandVO(salesBalancePO.getSales().getBrand().getBid()), new UserBaseVO(userId), new UserBaseVO(salesBalancePO.getSales().getSupplier().getUid())), userId, pompany);
 
 			balanceSalesDao.flush();
 
-			balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, company);
+			balanceSalesPO = balanceSalesDao.queryBalanceSales(salesBalancePO.getSales().getBrand().getBid(), balanceSalesVO.getSupplier().getUid(), "A", BalanceSalesPO.STATUS_INIT_INT, BalanceSalesPO.STATUS_INIT_INT, pompany);
 		}
 
 		if (balanceSalesPO == null) {
@@ -176,6 +183,15 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 		}
 
 		salesBalanceDao.update(salesBalancePO);
+
+		BalancePO balancePO = balanceDao.get(balanceSalesPO.getBid());
+
+		if (balancePO == null) return 0;
+
+		balancePO.setAmount(balanceSalesPO.getPayment());
+		balancePO.setSurplus(Arith.sub(balanceSalesPO.getPayment(), balancePO.getCutpay()));
+
+		balanceDao.update(balancePO);
 
 		return 0;
 	}

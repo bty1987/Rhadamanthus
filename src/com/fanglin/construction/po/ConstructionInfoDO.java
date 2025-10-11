@@ -57,6 +57,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private short isIssue;
 
+	private short isCheck;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -64,6 +66,8 @@ public class ConstructionInfoDO implements Serializable {
 	private Timestamp drawlineTime;
 
 	private Timestamp designTime;
+
+	private Timestamp checkTime;
 
 	private String comment;
 
@@ -162,6 +166,15 @@ public class ConstructionInfoDO implements Serializable {
 		this.isIssue = isIssue;
 	}
 
+	@Column(name = "isCheck")
+	public short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(short isCheck) {
+		this.isCheck = isCheck;
+	}
+
 	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -196,6 +209,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setDesignTime(Timestamp designTime) {
 		this.designTime = designTime;
+	}
+
+	@Column(name = "checkTime")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
 	}
 
 	@Column(name = "comment")

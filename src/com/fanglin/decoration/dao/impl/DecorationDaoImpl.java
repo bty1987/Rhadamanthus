@@ -247,6 +247,12 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationByCustomerIds(List<Long> customerIds) {
+		return session().createCriteria(DecorationPO.class).createAlias("customer", "customer").add(Restrictions.in("customer.cid", customerIds)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, List<Integer> companys) {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT });
@@ -377,6 +383,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				query.add(query.getCriterion("house.hid", Long.valueOf(data), op));
 			} else if ("decoration.houseClass".equals(field)) {
 				query.add(query.getCriterion(String.format("%shouseClass", prefix), data, op));
+			} else if ("decoration.houseType".equals(field)) {
+				query.add(query.getCriterion(String.format("%shouseType", prefix), data, op));
 			} else if ("decoration.status".equals(field)) {
 				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
 			} else if ("decoration.statuses".equals(field)) {

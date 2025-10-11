@@ -29,6 +29,10 @@ public class GoodsRecordVO implements Serializable {
 
 	private String comment;
 
+	private Integer goodsNum;
+
+	private String path;
+
 	public GoodsRecordVO() {
 		super();
 	}
@@ -115,6 +119,22 @@ public class GoodsRecordVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getGoodsNum() {
+		return goodsNum;
+	}
+
+	public void setGoodsNum(Integer goodsNum) {
+		this.goodsNum = goodsNum;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }

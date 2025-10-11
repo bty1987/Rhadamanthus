@@ -135,6 +135,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 			throw new FLException(120024, "工程环节不存在");
 		}
 
+		if (constructionScheduleVO.getSalaryLimit() > Arith.add(constructionSchedulePO.getSalaryLimit(), constructionSchedulePO.getSalaryLimitTotal())) {
+			throw new FLException(120035, "工费浮动已达上限");
+		}
+
 		constructionSchedulePO.setAccessoryLimit(constructionScheduleVO.getAccessoryLimit());
 		constructionSchedulePO.setSalaryLimit(constructionScheduleVO.getSalaryLimit());
 		constructionSchedulePO.setAccessoryTotal(constructionScheduleVO.getAccessoryTotal());

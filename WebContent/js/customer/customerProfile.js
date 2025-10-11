@@ -44,7 +44,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.base("profilecondList", "profilepagenation", "profileresultList", api.customer.pageCustomerprofile);
+    searcher.base("profilecondList", "profilepagenation", "profileresultList", api.customer.pageCustomerProfile);
 
     searcher.condition(["data-surveyTemplate-name", "data-surveyTemplate-status"]);
 

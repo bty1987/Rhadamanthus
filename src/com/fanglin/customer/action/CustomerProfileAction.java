@@ -28,8 +28,8 @@ public class CustomerProfileAction extends BaseListAction {
 
 	private List<CustomerProfileVO> customerProfiles;
 
-	@Action(value = "pageCustomerprofile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCustomerprofile() throws FLException {
+	@Action(value = "pageCustomerProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageCustomerProfile() throws FLException {
 
 		customerProfileService.pageCustomerProfile(getPaging(), getFilters(), queryCompany());
 
@@ -76,18 +76,18 @@ public class CustomerProfileAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "handleCustomerProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String handleCustomerProfile() throws FLException {
+	@Action(value = "makeCustomerProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeCustomerProfile() throws FLException {
 
-		customerProfileService.handleCustomerProfile(customerProfile);
+		customerProfileService.makeCustomerProfile(customerProfile, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "makeCustomerProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String makeSurvey() throws FLException {
+	@Action(value = "handleCustomerProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String handleCustomerProfile() throws FLException {
 
-		customerProfileService.makeCustomerProfile(customerProfile, queryUserId(), queryCompany());
+		customerProfileService.handleCustomerProfile(customerProfile);
 
 		return SUCCESS;
 	}

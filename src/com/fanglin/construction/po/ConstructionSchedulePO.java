@@ -102,9 +102,11 @@ public class ConstructionSchedulePO implements Serializable {
 
 	private int accessoryLimit;
 
+	private int accessoryTotal;
+
 	private int salaryLimit;
 
-	private int accessoryTotal;
+	private int salaryLimitTotal;
 
 	private int salaryTotal;
 
@@ -325,6 +327,15 @@ public class ConstructionSchedulePO implements Serializable {
 		this.accessoryLimit = accessoryLimit;
 	}
 
+	@Column(name = "accessoryTotal")
+	public int getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(int accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
 	@Column(name = "salaryLimit")
 	public int getSalaryLimit() {
 		return salaryLimit;
@@ -334,13 +345,13 @@ public class ConstructionSchedulePO implements Serializable {
 		this.salaryLimit = salaryLimit;
 	}
 
-	@Column(name = "accessoryTotal")
-	public int getAccessoryTotal() {
-		return accessoryTotal;
+	@Column(name = "salaryLimitTotal")
+	public int getSalaryLimitTotal() {
+		return salaryLimitTotal;
 	}
 
-	public void setAccessoryTotal(int accessoryTotal) {
-		this.accessoryTotal = accessoryTotal;
+	public void setSalaryLimitTotal(int salaryLimitTotal) {
+		this.salaryLimitTotal = salaryLimitTotal;
 	}
 
 	@Column(name = "salaryTotal")

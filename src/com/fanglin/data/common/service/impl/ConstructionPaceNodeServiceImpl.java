@@ -28,6 +28,7 @@ public class ConstructionPaceNodeServiceImpl implements ConstructionPaceNodeServ
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;
+
 	@Override
 	public void pageConstructionPaceNode(Paging paging, List<Filter> filters, int company, ConstructionPaceNodeVO constructionPaceNode) {
 
@@ -35,7 +36,7 @@ public class ConstructionPaceNodeServiceImpl implements ConstructionPaceNodeServ
 		List<ConstructionPaceNodeVO> constructionPaceNodeVOs = new ArrayList<ConstructionPaceNodeVO>();
 
 		for (ConstructionPaceNodePO constructionPaceNodePO : constructionPaceNodePOs) {
-			constructionPaceNodeVOs.add(constructionPaceNodePO.ptv(new ConstructionPaceNodeVO()));
+			constructionPaceNodeVOs.add(constructionPaceNodePO.ptv(new ConstructionPaceNodeVO(new ConstructionNodeVO())));
 		}
 
 		paging.setData(constructionPaceNodeVOs);
@@ -60,15 +61,14 @@ public class ConstructionPaceNodeServiceImpl implements ConstructionPaceNodeServ
 
 		ConstructionPaceNodePO constructionPaceNodePO = new ConstructionPaceNodePO();
 
-		ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionPaceNodeVO.getNode().getCnid());
-		
-		if (constructionNodePO == null) {
-			throw new FLException(130026, "工程节点不存在");
+		BeanUtil.copyProperties(constructionPaceNodeVO, constructionPaceNodePO, "node");
+
+		if (constructionPaceNodeVO.getNode() != null) {
+
+			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionPaceNodeVO.getNode().getCnid());
+
+			constructionPaceNodePO.setNode(constructionNodePO);
 		}
-
-		BeanUtil.copyProperties(constructionPaceNodeVO, constructionPaceNodePO);
-
-		constructionPaceNodePO.setNode(constructionNodePO);
 
 		constructionPaceNodePO.setCompany(company);
 
@@ -77,15 +77,22 @@ public class ConstructionPaceNodeServiceImpl implements ConstructionPaceNodeServ
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateConstructionPaceNode(ConstructionPaceNodeVO constructionPaceNode) throws FLException {
+	public void updateConstructionPaceNode(ConstructionPaceNodeVO constructionPaceNodeVO) throws FLException {
 
-		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPaceNode.getCpnid());
+		ConstructionPaceNodePO constructionPaceNodePO = constructionPaceNodeDao.get(constructionPaceNodeVO.getCpnid());
 
 		if (constructionPaceNodePO == null) {
 			throw new FLException(130123, "工程计划不存在");
 		}
 
-		BeanUtil.copyProperties(constructionPaceNode, constructionPaceNodePO);
+		BeanUtil.copyProperties(constructionPaceNodeVO, constructionPaceNodePO, "node");
+
+		if (constructionPaceNodeVO.getNode() != null) {
+
+			ConstructionNodePO constructionNodePO = constructionNodeDao.get(constructionPaceNodeVO.getNode().getCnid());
+
+			constructionPaceNodePO.setNode(constructionNodePO);
+		}
 
 		constructionPaceNodeDao.update(constructionPaceNodePO);
 	}

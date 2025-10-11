@@ -158,6 +158,28 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 		balanceSelectionPO.setCreater(userDao.queryUserByUserId(userId));
 		balanceSelectionPO.setCompany(company);
 
+		String currentDate = DateUtil.current("yyMMdd").toString();
+
+		BalancePO balancePO = new BalancePO(new UserPO(), new UserPO());
+
+		CompanyPO companyPO = companyDao.get(company);
+
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BALANCE_INT, currentDate, balanceSelectionPO.getCompany());
+		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
+		balancePO.setNo(no);
+		balancePO.setType(BalanceSalesPO.STATUS_INIT_INT);
+		balancePO.setBelonger(brand.getSupplier());
+		balancePO.setCreater(balanceSelectionPO.getCreater());
+		balancePO.setCompany(balanceSelectionPO.getCompany());
+		balancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		balancePO.setAmount(balanceSelectionPO.getPayment());
+		balancePO.setSurplus(balanceSelectionPO.getPayment());
+
+		balanceDao.save(balancePO);
+
+		balanceSelectionPO.setBid(balancePO.getBid());
+
 		balanceSelectionDao.save(balanceSelectionPO);
 
 		UserPO operater = userDao.queryUserByUserId(userId);
@@ -577,6 +599,23 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 
 		balanceSelectionPO.setCost(amount);
 		balanceSelectionPO.setPayment(amount);
+
+		balanceSelectionDao.update(balanceSelectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int discountBalanceSelection(BalanceSelectionVO balanceSelectionVO) throws FLException {
+
+		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(balanceSelectionVO.getBsid());
+
+		if (balanceSelectionPO == null) {
+			throw new FLException(350027, "结算选材不存在");
+		}
+
+		balanceSelectionPO.setDiscount(balanceSelectionVO.getDiscount());
 
 		balanceSelectionDao.update(balanceSelectionPO);
 

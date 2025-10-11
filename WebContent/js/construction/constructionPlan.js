@@ -28,7 +28,13 @@
         },
 
         startTime: new Date(params.construction.drawlineTime),
+        endTime: new Date(params.construction.drawlineTime),
+
+        comStartTime: new Date(params.construction.drawlineTime),
+
         timenum: 0,
+        prenum: 0,
+        postnum: 0,
 
         pace: {
             "cpid": 0
@@ -39,7 +45,8 @@
         "constructionPace.lowerArea": constructionPlan.construction.decoration.house.innerArea
     }, function(res) {
 
-        if(res.constructionPace.cpid) constructionPlan.pace = res.constructionPace;
+        if (res.constructionPace.cpid)
+            constructionPlan.pace = res.constructionPace;
 
         constructionPlan.items.name.bindData(res.constructionPace, "cpnid", "name");
     }, null, false);
@@ -67,6 +74,16 @@
             tools.decoration.info(btn, v.orderId);
         }
     }, {
+        field: "pacenode.node.name",
+        name: "工程节点",
+        prop: "pacenode.node.name",
+        clazz: "grey"
+    },{
+        field: "node.name",
+        name: "工程节点",
+        prop: "node.name",
+        clazz: "blue"
+    }, {
         field: "connum",
         name: "工程天数",
         prop: "connum",
@@ -93,7 +110,10 @@
 
             var conStartTime = constructionPlan.startTime;
 
-            conStartTime.setDate(constructionPlan.startTime.getDate() + v.prenum);
+            conStartTime.setDate(constructionPlan.startTime.getDate() + v.prenum + constructionPlan.postnum);
+
+            constructionPlan.prenum = v.prenum;
+            constructionPlan.startTime = conStartTime;
 
             return com.dateFormat(conStartTime, "yyyy-MM-dd");
         },
@@ -105,7 +125,10 @@
 
             var conStartTime = constructionPlan.startTime;
 
-            conStartTime.setDate(constructionPlan.startTime.getDate() + v.connum + v.postnum);
+            conStartTime.setDate(constructionPlan.startTime.getDate() + v.connum);
+
+            constructionPlan.postnum = v.postnum;
+            constructionPlan.endTime = conStartTime;
 
             return com.dateFormat(conStartTime, "yyyy-MM-dd");
         },
@@ -120,7 +143,7 @@
         name: "主材开始时间",
         prop: function(v) {
 
-            var conStartTime = constructionPlan.startTime;
+            var conStartTime = constructionPlan.comStartTime;
 
             conStartTime.setDate(constructionPlan.startTime.getDate());
 
@@ -132,7 +155,7 @@
         name: "主材结束时间",
         prop: function(v) {
 
-            var conStartTime = constructionPlan.startTime;
+            var conStartTime = constructionPlan.comStartTime;
 
             conStartTime.setDate(constructionPlan.startTime.getDate() + v.comnum);
 
@@ -187,8 +210,15 @@
                 "constructionPlan.sort": v.sort - 1,
             }, function() {
 
+                constructionPlan.startTime = new Date(params.construction.drawlineTime);
+                constructionPlan.endTime = new Date(params.construction.drawlineTime);
+
+                constructionPlan.prenum = 0;
+                constructionPlan.postnum = 0;
+
                 searcher.doSearch();
             });
+
             return false;
         }
     }, {
@@ -200,6 +230,12 @@
                 "constructionPlan.cpid": v.cpid,
                 "constructionPlan.sort": v.sort + 1,
             }, function() {
+
+                constructionPlan.startTime = new Date(params.construction.drawlineTime);
+                constructionPlan.endTime = new Date(params.construction.drawlineTime);
+
+                constructionPlan.prenum = 0;
+                constructionPlan.postnum = 0;
 
                 searcher.doSearch();
             });
@@ -223,13 +259,14 @@
         }
     }, ];
 
-    searcher.line("node.name", lineprops, linebtus).render();
+    searcher.line("name", lineprops, linebtus).render();
 
     com.focusPage('#makeBtn').on("click", function() {
 
         com.post(api.construction.makeConstructionPlan, {
             "constructionPlan.orderId": constructionPlan.construction.decoration.orderId
         }, function() {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
@@ -265,8 +302,16 @@
         com.post(api.construction.updateConstructionPlan, options, function() {
 
             com.showAlert(com.info, "操作成功");
-            constructionPlan.modals.editconstructionPlanModal.modal("hide");
+
+            constructionPlan.startTime = new Date(params.construction.drawlineTime);
+            constructionPlan.endTime = new Date(params.construction.drawlineTime);
+
+            constructionPlan.prenum = 0;
+            constructionPlan.postnum = 0;
+
             searcher.doSearch();
+
+            constructionPlan.modals.editconstructionPlanModal.modal("hide");
         });
 
     });
@@ -277,7 +322,7 @@
             return false;
 
         var options = {
-            "constructionPlan.node.cpnid": constructionPlan.items.name.val(),
+            "constructionPlan.cpid": constructionPlan.items.name.val(),
             "constructionPlan.orderId": constructionPlan.construction.decoration.orderId,
             "constructionPlan.connumStartTime": constructionPlan.construction.drawlineTime,
             "constructionPlan.comment": constructionPlan.items.comment.val(),
@@ -286,6 +331,13 @@
         com.post(api.construction.addConstructionPlan, options, function() {
 
             com.showAlert(com.info, "操作成功");
+
+            constructionPlan.startTime = new Date(params.construction.drawlineTime);
+            constructionPlan.endTime = new Date(params.construction.drawlineTime);
+
+            constructionPlan.prenum = 0;
+            constructionPlan.postnum = 0;
+
             searcher.doSearch();
         });
 

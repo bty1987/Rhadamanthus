@@ -147,6 +147,8 @@ public class GoodsDaoImpl extends DaoImpl<GoodsPO> implements GoodsDao {
 				query.add(query.getCriterion(GoodsPO.COLUMN_BRAND_STR, data, op));
 			} else if (GoodsPO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+			} else if("atttype".equals(field)){
+				query.add(Restrictions.eq(field, Short.valueOf(filter.getData())));
 			}
 		}
 	}

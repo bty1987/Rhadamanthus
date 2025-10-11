@@ -27,6 +27,8 @@ public class SurveyTemplateItemPO implements Serializable {
 
 	public static final short TYPE_CHECK_INT = 3;
 
+	public static final short TYPE_DATE_INT = 4;
+
 	public static final short REQUIRE_REQUIRE_INT = 1;
 
 	private long stiid;

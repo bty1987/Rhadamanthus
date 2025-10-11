@@ -551,6 +551,8 @@ $(function() {
 
         decorationDetail.protationItems.buildArea.html(com.checkNull(decoration.house.buildArea, 0));
         decorationDetail.protationItems.precontractPrice.html(com.checkNull(decoration.precontractPrice, 0));
+        
+        decorationDetail.items.preferences.val(decoration.couponCut);
 
     }, null, false);
 

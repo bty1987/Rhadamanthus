@@ -304,6 +304,22 @@ jQuery(function($) {
             com.focusPage('#workerSalaryList').empty();
         }
 
+        var quotation = null;
+
+        com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            'quotation.orderId': params.construction.orderId
+        }, function(res) {
+
+            quotation = res.quotation;
+        }, null, false);
+
+        com.post(api.quotation.makeNormtion, {
+            "normtion.qid": quotation.qid,
+            "normtion.orderId": params.construction.orderId,
+        }, function(res) {
+
+        }, null, false);
+
         com.post(api.salary.queryWorkerSalary, options, function(res) {
 
             $.each(res.workerSalarys, function(i, v) {
@@ -363,7 +379,8 @@ jQuery(function($) {
             salaryDiv4.appendTo(com.focusPage("#workerSalaryList"));
 
             com.focusPage('#guaranteeModal').modal('show');
-        }, null, false)
+        }, null, false);
+
     }
 
     function addspan(px, name, value) {

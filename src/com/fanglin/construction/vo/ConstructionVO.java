@@ -57,6 +57,10 @@ public class ConstructionVO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp preStartTime;
+
+	private Timestamp preEndTime;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -234,6 +238,24 @@ public class ConstructionVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPreStartTime() {
+		return preStartTime;
+	}
+
+	public void setPreStartTime(Timestamp preStartTime) {
+		this.preStartTime = preStartTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPreEndTime() {
+		return preEndTime;
+	}
+
+	public void setPreEndTime(Timestamp preEndTime) {
+		this.preEndTime = preEndTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")

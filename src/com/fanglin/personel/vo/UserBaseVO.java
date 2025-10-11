@@ -34,6 +34,11 @@ public class UserBaseVO implements Serializable {
 		super();
 	}
 
+	public UserBaseVO(Integer uid) {
+		super();
+		this.uid = uid;
+	}
+
 	public UserBaseVO(String userId) {
 		super();
 		this.userId = userId;

@@ -47,12 +47,12 @@ jQuery(function() {
             return false;
         }
 
-        com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", function(list, k, v) {
+        com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "aid", "name", function(list, k, v) {
 
             $.each(list, function(index, val) {
 
-                if (val.goods.gid == k) {
-
+                if (val.aid == k) {
+                    
                     accessories.leftitems.goodsHidden.attr('data-gid', val.goods.gid).attr('data-type', val.goods.type).attr('data-selling', val.goods.selling).attr('data-caid', val.aid).attr('data-nid', val.noods.nid).attr('data-normnum', val.normnum).attr('data-normunit', val.normunit).attr('data-storenum', val.storenum).attr('data-storeunit', val.storeunit);
 
                     accessories.leftitems.goodsNo.attr('data-no', val.goods.no).val(val.goods.no);
@@ -80,6 +80,11 @@ jQuery(function() {
         var type = accessories.leftitems.goodsHidden.attr('data-type');
         var selling = accessories.leftitems.goodsHidden.attr('data-selling');
         var nid = accessories.leftitems.goodsHidden.attr("data-nid");
+        
+        var normnum = accessories.leftitems.goodsHidden.attr('data-normnum');
+        var normunit = accessories.leftitems.goodsHidden.attr('data-normunit');
+        var storenum = accessories.leftitems.goodsHidden.attr('data-storenum');
+        var storeunit = accessories.leftitems.goodsHidden.attr("data-storeunit");
 
         var name = accessories.leftitems.goodsName.val();
         var no = accessories.leftitems.goodsNo.val();
@@ -94,7 +99,7 @@ jQuery(function() {
             return false;
         }
 
-        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr('data-caid', caid);
+        var $liList = $('<li></li>').addClass('list-group-item').attr("data-gid", gid).attr("data-num", num).attr("data-selling", selling).attr('data-caid', caid).attr('data-normnum', normnum).attr('data-normunit', normunit).attr('data-storenum', storenum).attr('data-storeunit', storeunit);
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         if (schedule) {

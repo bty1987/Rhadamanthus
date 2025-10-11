@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.fanglin.communion.dao.CityProperPartnerDao;
 import com.fanglin.communion.po.CityProperPartnerPO;
-import com.fanglin.communion.po.DepartmentPartnerPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 
 @Repository("cityProperPartnerDao")
@@ -25,7 +24,7 @@ public class CityProperPartnerDaoImpl extends DaoImpl<CityProperPartnerPO> imple
 
 	@Override
 	public CityProperPartnerPO queryCityProperPartner(int cpid, short type) {
-		return (CityProperPartnerPO) session().createCriteria(DepartmentPartnerPO.class).add(Restrictions.eq("cpid", cpid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
+		return (CityProperPartnerPO) session().createCriteria(CityProperPartnerPO.class).add(Restrictions.eq("cpid", cpid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 }

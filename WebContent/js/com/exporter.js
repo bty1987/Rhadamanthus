@@ -121,7 +121,7 @@
     function getElement(o, props) {
         var prop = props.shift();
         if (props.length == 0) {
-            return o[prop];
+            return o[prop] ? o[prop] : "";
         } else if (o[prop]) { return getElement(o[prop], props); }
 
         return "";

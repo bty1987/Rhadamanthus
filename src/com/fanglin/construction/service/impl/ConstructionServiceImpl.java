@@ -294,10 +294,6 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		if (constructionVO.getSalaryLimit() > constructionPO.getSalaryLimitTotal()) {
-			throw new FLException(120035, "工费浮动已达上限");
-		}
-
 		constructionPO.setAccessoryLimit(constructionVO.getAccessoryLimit());
 		constructionPO.setSalaryLimit(constructionVO.getSalaryLimit());
 

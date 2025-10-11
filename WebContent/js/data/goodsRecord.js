@@ -16,6 +16,10 @@ $(function() {
     searcher.history("goodsRecordPostData");
 
     var lineprops = [{
+        field: "path",
+        type: "img",
+        prop: "path"
+    },{
         fieId: "soods.name",
         name: "名称",
         prop: "soods.name",

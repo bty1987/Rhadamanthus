@@ -129,10 +129,6 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 			throw new FLException(350006, "结算单不存在");
 		}
 
-		if (balancePO.getSurplus() < balanceCutpayVO.getMoney()) {
-			throw new FLException(350003, "结算单金额不足");
-		}
-
 		balanceCutpayPO.setBalance(balancePO);
 
 		if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT) {
@@ -166,10 +162,6 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		if (balancePO == null) {
 			throw new FLException(350006, "结算单不存在");
-		}
-
-		if (balancePO.getSurplus() < balanceCutpayPO.getMoney()) {
-			throw new FLException(350003, "结算单金额不足");
 		}
 
 		balanceCutpayPO.setBalance(balancePO);

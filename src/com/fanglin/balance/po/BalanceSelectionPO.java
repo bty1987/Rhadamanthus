@@ -63,6 +63,8 @@ public class BalanceSelectionPO implements java.io.Serializable {
 
 	private long profit;
 
+	private int discount;
+
 	private UserPO creater;
 
 	private UserPO auditer;
@@ -140,24 +142,6 @@ public class BalanceSelectionPO implements java.io.Serializable {
 		this.grade = grade;
 	}
 
-	@Column(name = "status")
-	public short getStatus() {
-		return status;
-	}
-
-	public void setStatus(short status) {
-		this.status = status;
-	}
-
-	@Column(name = "atttype")
-	public short getAtttype() {
-		return atttype;
-	}
-
-	public void setAtttype(short atttype) {
-		this.atttype = atttype;
-	}
-
 	@Column(name = "income")
 	public long getIncome() {
 		return income;
@@ -194,13 +178,13 @@ public class BalanceSelectionPO implements java.io.Serializable {
 		this.profit = profit;
 	}
 
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
+	@Column(name = "discount")
+	public int getDiscount() {
+		return discount;
 	}
 
-	public void setCompany(int company) {
-		this.company = company;
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -224,7 +208,7 @@ public class BalanceSelectionPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "buid", referencedColumnName = "uid")
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
 	public UserPO getBalancer() {
 		return balancer;
 	}
@@ -267,6 +251,33 @@ public class BalanceSelectionPO implements java.io.Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	public BalanceSelectionPO init(BrandPO brand, String grade, UserPO creater, int company) {

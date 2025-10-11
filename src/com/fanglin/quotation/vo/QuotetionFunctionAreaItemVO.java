@@ -36,6 +36,8 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 
 	private Short discount;
 
+	private Short isRtem;
+
 	private String content;
 
 	public Long getQfaiId() {
@@ -156,6 +158,14 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 
 	public void setDiscount(Short discount) {
 		this.discount = discount;
+	}
+
+	public Short getIsRtem() {
+		return isRtem;
+	}
+
+	public void setIsRtem(Short isRtem) {
+		this.isRtem = isRtem;
 	}
 
 	public String getContent() {

@@ -31,7 +31,7 @@ public class ConstructionInfoAction extends BaseListAction {
 	@Action(value = "pageConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstructionInfo() throws FLException {
 
-		constructionInfoService.pageConstructionInfo(getPaging(), getFilters(), queryCompany());
+		constructionInfoService.pageConstructionInfo(getPaging(), getFilters(), constructionInfo, queryCompany());
 
 		return SUCCESS;
 	}
@@ -72,6 +72,14 @@ public class ConstructionInfoAction extends BaseListAction {
 	public String updateConstructionInfoByOrderId() throws FLException {
 
 		constructionInfoService.updateConstructionInfoByOrderId(constructionInfo);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "checkConstructionInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkConstructionInfo() throws FLException {
+
+		constructionInfoService.checkConstructionInfo(constructionInfo);
 
 		return SUCCESS;
 	}

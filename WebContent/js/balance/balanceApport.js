@@ -1,15 +1,15 @@
 $(function() {
 
-    var apportDetail = {
+    var balanceApport = {
 
         btns: {
-             addApportDetailBtn:com.focusPage("#addApportDetailBtn"),// 添加
+             addBalanceApportBtn:com.focusPage("#addBalanceApportBtn"),// 添加
              saveBtn:com.focusPage("#saveBtn"),
              cancelBtn:com.focusPage("#cancelBtn"),
         },
 
         modals: {
-            apportDetailModal:com.focusPage("#apportDetailModal"),
+            balanceApportModal:com.focusPage("#balanceApportModal"),
         },
 
         items: {
@@ -20,20 +20,20 @@ $(function() {
         bid: params.balance.bid
     };
 
-    apportDetail.modals.apportDetailModal.on("hide.bs.modal", function() {
+    balanceApport.modals.balanceApportModal.on("hide.bs.modal", function() {
 
-        com.cleanItems(apportDetail.items);
+        com.cleanItems(balanceApport.items);
         com.clearValidator();
         com.closeTip();
     });
 
-    apportDetail.btns.addApportDetailBtn.click(function() {
+    balanceApport.btns.addBalanceApportBtn.click(function() {
 
         com.clearValidator();
-        apportDetail.modals.apportDetailModal.modal("show");
+        balanceApport.modals.balanceApportModal.modal("show");
     });
 
-    apportDetail.btns.saveBtn.bindClick(saveDate);
+    balanceApport.btns.saveBtn.bindClick(saveDate);
 
     var initList = function(listData) {
 
@@ -81,13 +81,13 @@ $(function() {
         }
     };
 
-    queryApportDetailForBalance(apportDetail.bid);
+    queryBalanceApportForBalance(balanceApport.bid);
 
-    function queryApportDetailForBalance(bid) {
+    function queryBalanceApportForBalance(bid) {
 
-        com.post(api.balance.queryApportDetailForBalance, {"apportDetail.bid": bid}, function(data) {
+        com.post(api.balance.queryBalanceApportForBalance, {"balanceApport.bid": bid}, function(data) {
 
-            initList(data.apportDetails);
+            initList(data.balanceApports);
         }, function(e) {
 
             com.showAlert(com.error, e.errorMsg);
@@ -95,24 +95,24 @@ $(function() {
     };
 
     function saveDate(){
-        if (com.validate('apportDetailModal')) {
+        if (com.validate('balanceApportModal')) {
 
             return false;
         };
 
         var options ={
-            "apportDetail.bid" : apportDetail.bid,
-            "apportDetail.money": apportDetail.items.money.val(),
-            "apportDetail.comment": apportDetail.items.comment.val(),
+            "balanceApport.bid" : balanceApport.bid,
+            "balanceApport.money": balanceApport.items.money.val(),
+            "balanceApport.comment": balanceApport.items.comment.val(),
         };
 
-        com.post(api.balance.addApportDetail, options, function() {
+        com.post(api.balance.addBalanceApport, options, function() {
 
             com.showAlert(com.info, "添加成功");
-            queryApportDetailForBalance(apportDetail.bid);
+            queryBalanceApportForBalance(balanceApport.bid);
         });
 
-        apportDetail.modals.apportDetailModal.modal("hide");
+        balanceApport.modals.balanceApportModal.modal("hide");
     };
 
 });

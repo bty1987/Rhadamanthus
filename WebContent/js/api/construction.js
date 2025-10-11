@@ -122,7 +122,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["accessoryLimit", "salaryLimit", "salaryTotal", "accessoryTotal"]
+                args: ["accessoryLimit", "salaryLimit", "salaryTotal", "accessoryTotal", "salaryLimitTotal"]
             }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice"]
@@ -554,21 +554,21 @@ $.extend(api, {
             url: "makeConstructionPlan.do",
             type: "update",
             tranargs: {
-                args: ["constructionPlan.connum", "constructionPlan.comnum"]
+                args: ["constructionPlan.connum", "constructionPlan.comnum", "constructionPlan.prenum", "constructionPlan.postnum"]
             }
         },
         addConstructionPlan: {
             url: "addConstructionPlan.do",
             type: "update",
             tranargs: {
-                args: ["constructionPlan.connum", "constructionPlan.comnum"]
+                args: ["constructionPlan.connum", "constructionPlan.comnum", "constructionPlan.prenum", "constructionPlan.postnum"]
             }
         },
         updateConstructionPlan: {
             url: "updateConstructionPlan.do",
             type: "update",
             tranargs: {
-                args: ["constructionPlan.connum", "constructionPlan.comnum"]
+                args: ["constructionPlan.connum", "constructionPlan.comnum", "constructionPlan.prenum", "constructionPlan.postnum"]
             }
         },
         moveConstructionPlan: {

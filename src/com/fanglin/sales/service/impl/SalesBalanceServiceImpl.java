@@ -341,6 +341,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setTotal(depositpay);
 			salesBalancePO.setAllowance(allowance);
 			salesBalancePO.setBalance(balance);
+			salesBalancePO.setRate(1000);
 
 			long vbalance = Arith.sub(Arith.round(depositpay, 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
 
@@ -404,6 +405,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			reveBalancePO.setPbalance(-vbalance);
 			reveBalancePO.setVbalance(-vbalance);
 			reveBalancePO.setTotal(-salesBalancePO.getTotal());
+			reveBalancePO.setRate(1000);
 
 			reveBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -495,6 +497,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setAllowance(_allowance);
 			salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
 			salesBalancePO.setBalance(balance);
+			salesBalancePO.setRate(1000);
 
 			SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_MUILT_BALANCE_INT", salesPO.getCompany());
 

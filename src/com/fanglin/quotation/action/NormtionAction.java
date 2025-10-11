@@ -181,6 +181,14 @@ public class NormtionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "makeNormtion", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String makeNormtion() throws FLException {
+
+		normtionService.makeNormtion(normtion, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "makeNormtionForQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeNormtionForQuotation() throws FLException {
 

@@ -1401,11 +1401,11 @@ Condition.addupRule("data", {
         }
     },
     "surveyTemplate-name": {
-        label: "类型名称",
+        label: "名称",
         type: "text",
         submitConfig: {
             name: "name",
-            op: "eq",
+            op: "cn",
             validate: null
         }
     },

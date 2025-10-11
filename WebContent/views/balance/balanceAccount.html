@@ -54,6 +54,81 @@
             </div>
         </div>
     </div>
+
+	<div class="modal fade" id="addBccountModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="aid">账户</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+
+								<div class="form-group">
+									<label for="name" class="col-sm-3 control-label no-padding-right">名称</label>
+									<div class="col-md-9">
+										<input type="text" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="belonger"
+										class="col-sm-3 control-label no-padding-right">归属人</label>
+									<div class="col-sm-9">
+										<input type="text" id="bccount" class="col-xs-10 col-sm-6 v_required v_typeahead" data-placeholder="请输入归属人" data-toggle="popover" data-trigger='manual' data-placement="bottom" />
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="text-align: center">
+					<button type="button" id="saveBccountBtn" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="addCccountModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+						<span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="aid">账户</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+
+								<div class="form-group">
+									<label for="name" class="col-sm-3 control-label no-padding-right">名称</label>
+									<div class="col-md-9">
+										<input type="text" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' />
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer" style="text-align: center">
+					<button type="button" id="saveCccountBtn" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    
     <div class="modal fade" id="withdrawBalanceAccountModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -84,6 +159,6 @@
 
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" src="js/balance/balanceAccount.js">
     $.loadScript(['js/balance/balanceAccount.js']);
 </script>

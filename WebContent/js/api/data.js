@@ -44,8 +44,8 @@ $.extend(api.index, {
     constructionNodeIndex: {
         url: "/views/data/constructionPeriod4node.html"
     },
-    goodsPool3claim: {
-        url: "/views/data/goodsPool3claim.html"
+    goodsPool4condition: {
+        url: "/views/data/goodsPool4condition.html"
     },
 });
 
@@ -411,6 +411,7 @@ $.extend(api, {
         },
         updateHouse: {
             url: "updateHouse.do",
+            intercept: true,
             server: "communion",
             type: "update",
             tranargs: {
@@ -987,6 +988,9 @@ $.extend(api, {
 
         pageGoodsRecord: {
             url: "pageGoodsRecord.do"
+        },      
+        addGoodsRecord: {
+            url: "addGoodsRecord.do"
         },
 
         queryPackage: {
