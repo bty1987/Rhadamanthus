@@ -1507,6 +1507,14 @@ $.extend(api, {
                 args: ["selectionItem.refnum"],
             }
         },
+        addedSelectionItem: {
+            url: "addedSelectionItem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["selectionItem.num"],
+            }
+        },
         tranSelectionItem: {
             url: "tranSelectionItem.do",
             intercept: true,
@@ -1579,6 +1587,13 @@ $.extend(api, {
                 result: "normtion",
                 args: ["moodTotal", "mriceTotal"]
             }]
+        },
+        makeNormtion: {
+            url: "makeNormtion.do",
+            type: "update",
+            tranargs: {
+                args: ["normoodItem.normnum", "normoodItem.storenum", "normriceItem.trannum", "normriceItem.salary", "normriceItem.num"]
+            }
         },
         makeNormtionForQuotation: {
             url: "makeNormtionForQuotation.do",

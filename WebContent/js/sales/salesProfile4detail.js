@@ -193,6 +193,14 @@ jQuery(function($) {
 
                     elect(checkDivAll, option, type, state);
                 });
+            } else if (v.type == constant.customer().survey.TYPE_DATE_INT) {
+
+                var inputdate = $('<input type="text" readonly="readonly" data-type="dateRangePicker">').prop('id', v.spiid + "date").html(v.content).appendTo(contentDiv);
+
+                com.datetime(inputdate);
+
+                if (v.require == 0)
+                    inputdate.addClass("v_required");
             }
         });
 
@@ -208,7 +216,7 @@ jQuery(function($) {
         var handleBtn = $('<button class="btn btn-minier btn-primary pull-right" style="margin-right: 10px" type="button" id="execute">执行</button>').appendTo($execute);
         var addBtn = $('<button class="btn btn-minier btn-primary pull-right" style="margin-right: 10px" type="button" id="execute">添加</button>').appendTo($execute);
         var updateBtn = $('<button class="btn btn-minier btn-primary pull-right" style="margin-right: 10px" type="button" id="updateBtn">补录</button>').appendTo($execute);
-        var printBtn= $('<button class="btn btn-minier btn-primary pull-right btn-pink" style="margin-right: 10px" type="button" id="print‌">打印</button>').appendTo($execute);
+        var printBtn = $('<button class="btn btn-minier btn-primary pull-right btn-pink" style="margin-right: 10px" type="button" id="print‌">打印</button>').appendTo($execute);
 
         handleBtn.click(function() {
 
@@ -231,8 +239,11 @@ jQuery(function($) {
                 options["salesProfile.items[" + i + "].spiid"] = spiid;
 
                 if (type == constant.customer().survey.TYPE_INPUT_INT) {
-
                     options["salesProfile.items[" + i + "].content"] = com.focusPage("#" + spiid + "textarea").val();
+                }
+                
+                if (type == constant.customer().survey.TYPE_DATE_INT) {
+                    options["salesProfile.items[" + i + "].content"] = com.focusPage("#" + spiid + "date").val();
                 }
 
                 if (type == constant.customer().survey.TYPE_SINGLE_INT) {

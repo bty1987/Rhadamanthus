@@ -9,6 +9,17 @@
 
 package com.fanglin.personel.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -28,10 +39,29 @@ import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.fadada.signature.Signature;
 import com.fanglin.information.po.MessagePO;
-import com.fanglin.personel.dao.*;
-import com.fanglin.personel.po.*;
+import com.fanglin.personel.dao.DutmentDao;
+import com.fanglin.personel.dao.UserCompanyDao;
+import com.fanglin.personel.dao.UserContractDao;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserEducationDao;
+import com.fanglin.personel.dao.UserInfoDao;
+import com.fanglin.personel.dao.UserOperationDao;
+import com.fanglin.personel.dao.UserRoleDao;
+import com.fanglin.personel.po.DutmentPO;
+import com.fanglin.personel.po.UserContractPO;
+import com.fanglin.personel.po.UserEducationPO;
+import com.fanglin.personel.po.UserExperiencePO;
+import com.fanglin.personel.po.UserInfoPO;
+import com.fanglin.personel.po.UserOperationPO;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.personel.service.UserService;
-import com.fanglin.personel.vo.*;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserContractVO;
+import com.fanglin.personel.vo.UserEducationVO;
+import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.personel.vo.UserOperationVO;
+import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.RoleDao;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -41,17 +71,14 @@ import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.ModuleVO;
 import com.fanglin.system.vo.RoleVO;
-import com.fanglin.utils.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
+import com.fanglin.utils.HttpUtil;
+import com.fanglin.utils.LogUtils;
+import com.fanglin.utils.Paging;
+import com.fanglin.utils.PinYin4Util;
+import com.fanglin.utils.SystemConfig;
 
 @Service("userService")
 @Transactional(readOnly = true)
@@ -485,7 +512,7 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("入职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setComment(String.format("公司:%s, 部门:%s, 职位:%s. ", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
 		userExperiencePO.setOperator(operator);
 
@@ -648,7 +675,7 @@ public class UserServiceImpl implements UserService {
 			userExperiencePO.setUid(userPO.getUid());
 			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus == UserPO.STATUS_ONJOB_INT ? "入职" : "离职");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
 
 			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", olddept.getName(), oldduty.getName(), newdept.getName(), newduty.getName()));
 			userExperiencePO.setOperator(operator);
@@ -794,7 +821,7 @@ public class UserServiceImpl implements UserService {
 
 		DepartmentPO deptPO = userPO.getDept();
 
-		if ( oldRolePO != null && newRolePO != null && oldRolePO.getRid() != newRolePO.getRid()) {
+		if (oldRolePO != null && newRolePO != null && oldRolePO.getRid() != newRolePO.getRid()) {
 
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 
@@ -1047,7 +1074,7 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("离职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setOperator(operator);
 		userExperiencePO.setComment(String.format("原司: %s, 原部: %s, 原职: %s", companyPO.getName(), userPO.getDept().getName(), userPO.getDuty().getName()));
 
@@ -1170,7 +1197,7 @@ public class UserServiceImpl implements UserService {
 		userExperiencePO.setIsPrefor(userVO.getIsPrefor());
 		userExperiencePO.setOperator(operator);
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(userVO.getOperateTime() != null ? userVO.getOperateTime() : DateUtil.getDateToTimestamp(new Date()));
 
 		userExperiencePO.setComment(comment.toString());
 

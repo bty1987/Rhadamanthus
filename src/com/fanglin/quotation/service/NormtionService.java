@@ -54,6 +54,8 @@ public interface NormtionService {
 
 	public NormtionVO queryNormtion(NormtionVO normtionVO) throws FLException;
 
+	public int makeNormtion(NormtionVO normtionVO, String userId) throws FLException;
+
 	public int makeNormtion(NormtionVO normtionVO, Short schedule, String userId) throws FLException;
 
 	public int makeNormtion(NormtionVO normtionVO, ExtensionVO extensionVO, Short schedule, String userId) throws FLException;

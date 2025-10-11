@@ -69,9 +69,11 @@ public class ConstructionScheduleVO implements Serializable {
 
 	private Integer accessoryLimit;
 
+	private Integer accessoryTotal;
+
 	private Integer salaryLimit;
 
-	private Integer accessoryTotal;
+	private Integer salaryLimitTotal;
 
 	private Integer salaryTotal;
 
@@ -268,6 +270,14 @@ public class ConstructionScheduleVO implements Serializable {
 		this.accessoryLimit = accessoryLimit;
 	}
 
+	public Integer getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(Integer accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
 	public Integer getSalaryLimit() {
 		return salaryLimit;
 	}
@@ -276,12 +286,12 @@ public class ConstructionScheduleVO implements Serializable {
 		this.salaryLimit = salaryLimit;
 	}
 
-	public Integer getAccessoryTotal() {
-		return accessoryTotal;
+	public Integer getSalaryLimitTotal() {
+		return salaryLimitTotal;
 	}
 
-	public void setAccessoryTotal(Integer accessoryTotal) {
-		this.accessoryTotal = accessoryTotal;
+	public void setSalaryLimitTotal(Integer salaryLimitTotal) {
+		this.salaryLimitTotal = salaryLimitTotal;
 	}
 
 	public Integer getSalaryTotal() {

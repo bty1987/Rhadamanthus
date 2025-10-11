@@ -205,7 +205,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			List<Short> twotypes = Arrays.asList(WorkerSalaryPO.TWOTYPE_SALARY_INT, WorkerSalaryPO.TWOTYPE_ADDITME_INT, WorkerSalaryPO.TWOTYPE_PROPER_INT);
 
-			if (workerSalaryVO.getType() == WorkerSalaryPO.TWOTYPE_SALARY_INT && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid(), twotypes), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
+			if (twotypes.contains(workerSalaryVO.getTwotype()) && Arith.add(workerSalaryDao.amountWorkerSalary(cid, constructionSchedulePO.getNode().getCnid(), twotypes), workerSalaryVO.getMoney()) > Arith.add(normriceItemDao.amountNormriceItem(quotationPO.getQid(), constructionSchedulePO.getNode().getCnid()), constructionSchedulePO.getSalaryLimit())) {
 				throw new FLException(280007, "工费已达上限");
 			}
 

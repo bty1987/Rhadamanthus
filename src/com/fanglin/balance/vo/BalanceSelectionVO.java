@@ -31,6 +31,8 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	private Long profit;
 
+	private Integer discount;
+
 	private String alias;
 
 	private String categoryId;
@@ -195,6 +197,14 @@ public class BalanceSelectionVO implements java.io.Serializable {
 
 	public void setProfit(Long profit) {
 		this.profit = profit;
+	}
+
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
 	}
 
 	public UserBaseVO getCreater() {

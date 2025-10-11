@@ -387,7 +387,7 @@ Condition.addupRule("construction", {
         }
     },
     
-    "info-isissue": {
+    "info-isIssue": {
         label: "进度",
         type: "select",
         submitConfig: {
@@ -398,7 +398,23 @@ Condition.addupRule("construction", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: constant.construction().construction.isIssue.datas,
+            listPath: constant.construction().constructionInfo.isIssue.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "info-isCheck": {
+        label: "验房",
+        type: "select",
+        submitConfig: {
+            name: "isIssue",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().constructionInfo.isCheck.datas,
             keyPath: "key",
             valuePath: "value"
         }

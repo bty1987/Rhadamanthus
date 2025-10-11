@@ -90,6 +90,11 @@ $(function() {
         clazz: "red",
         dataset: constructionPaceNode.status
     }, {
+        fieId: "node.name",
+        name: "工程节点",
+        prop: "node.name",
+        clazz: "grey",
+    }, {
         fieId: "phase",
         name: "施工节点",
         prop: "phase",

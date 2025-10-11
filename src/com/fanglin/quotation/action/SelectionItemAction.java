@@ -111,6 +111,14 @@ public class SelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "addedSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addedSelectionItem() throws FLException {
+
+		selectionItemService.addedSelectionItem(selectionItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "tranSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranSelectionItem() throws FLException {
 

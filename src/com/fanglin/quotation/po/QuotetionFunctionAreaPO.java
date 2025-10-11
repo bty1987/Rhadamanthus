@@ -13,31 +13,33 @@ import javax.persistence.Table;
 public class QuotetionFunctionAreaPO implements Serializable {
 
 	private static final long serialVersionUID = 470291788273394310L;
-	
+
 	public static final short TYPE_MANAGEMENT_INT = 0; // 管理
-	
+
 	public static final short TYPE_PROJECT_NUM_INT = 1; // 工程量
-	
+
 	public static final short TYPE_FUNCTIONAREA_TOTAL_INT = 2; // 功能区总价
-	
+
 	public static final short TYPE_NOT_COUNT_INT = 3; // 不计算
 
+	public static final short TYPE_CMPREH_INT = 7; // 综合
+
 	private long qfaId;
-	
+
 	private long qid;
-	
+
 	private String name;
-	
+
 	private int functionAreaOrder;
-	
+
 	private short type;
-	
+
 	private short index;
 
 	public QuotetionFunctionAreaPO() {
 		super();
 	}
-	
+
 	public QuotetionFunctionAreaPO(long qfaId) {
 		this.qfaId = qfaId;
 	}
@@ -52,7 +54,7 @@ public class QuotetionFunctionAreaPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="qfaId")
+	@Column(name = "qfaId")
 	public long getQfaId() {
 		return qfaId;
 	}
@@ -61,7 +63,7 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 
-	@Column(name="qid")
+	@Column(name = "qid")
 	public long getQid() {
 		return qid;
 	}
@@ -70,16 +72,16 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.qid = qid;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	@Column(name="functionAreaOrder")
+	@Column(name = "functionAreaOrder")
 	public int getFunctionAreaOrder() {
 		return functionAreaOrder;
 	}
@@ -88,7 +90,7 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.functionAreaOrder = functionAreaOrder;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -97,7 +99,7 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.type = type;
 	}
 
-	@Column(name="[index]")
+	@Column(name = "[index]")
 	public short getIndex() {
 		return index;
 	}
@@ -105,5 +107,5 @@ public class QuotetionFunctionAreaPO implements Serializable {
 	public void setIndex(short index) {
 		this.index = index;
 	}
-	
+
 }

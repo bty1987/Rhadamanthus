@@ -28,6 +28,8 @@ public interface CustomerChanceService {
 
 	public void confirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException;
 
+	public void affirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException;
+
 	public void issueCustomerChance(CustomerChanceVO customerChangeVO, String userId) throws FLException;
 
 	public void changeCustomerChance(DecorationVO decorationVO, CustomerChanceVO customerChanceVO, String userId, int company) throws FLException;

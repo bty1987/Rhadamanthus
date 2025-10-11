@@ -24,7 +24,9 @@ $(function() {
     var creater = {};
     var trList = $("#reslist");
 
-    com.post(api.balance.queryBalanceSalesByBsid, {"balanceSales.bsid": params.balance.bsid}, function(res) {
+    com.post(api.balance.queryBalanceSalesByBsid, {
+        "balanceSales.bsid": params.balance.bsid
+    }, function(res) {
 
         balanceSales = res.balanceSales;
         brand = balanceSales.brand;
@@ -40,7 +42,7 @@ $(function() {
         pageList(1, 50);
         tabody.appendTo(table);
 
-     }, 500);
+    }, 500);
 
     var index = 0;
     function pageList(page, rows) {
@@ -54,11 +56,16 @@ $(function() {
         com.post(api.balance.pageBalanceSalesBalance, option, function(res) {
 
             createLine(res.paging.data);
-            if (page < res.paging.totalPage) setTimeout(function() {pageList(page+1, rows);}, 500);
-            else createFooter();
+            if (page < res.paging.totalPage)
+                setTimeout(function() {
+
+                    pageList(page + 1, rows);
+                }, 500);
+            else
+                createFooter();
 
         }, null, false);
-    };
+    }
 
     if (params.balance.type == 1) {
 
@@ -66,7 +73,7 @@ $(function() {
         createLine = createComLine;
         createFooter = createComFooter;
     }
-    
+
     if (params.balance.type == 2) {
 
         createHeader = createPreHeader;
@@ -79,7 +86,7 @@ $(function() {
         createHeader = createSelectionHeader;
         createLine = createSelectionLine;
         createFooter = createSelectionFooter;
-    } 
+    }
 
     function createComHeader() {
 
@@ -95,9 +102,7 @@ $(function() {
         var tr2 = $('<tr colspan="11" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
         var td37 = $('<td colspan="11" style="border: 1px solid;"></td>').appendTo(tr2);
-        var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" +
-            "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章并签字确认，" +
-            "本次账单代收款的金额为：人民币").appendTo(td37);
+        var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" + "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章并签字确认，" + "本次账单代收款的金额为：人民币").appendTo(td37);
         var span2 = $('<span></span>').attr("id", "totalInc").text("").appendTo(span1);
         var span3 = $('<span></span>').text(")，本次账单服务费的金额为：人民币").appendTo(span1);
         var span4 = $('<span></span>').attr("id", "totalSer").text("").appendTo(span1);
@@ -124,10 +129,10 @@ $(function() {
     function createComLine(items) {
 
         $.each(items, function(i, v) {
-            
+
             var oneType = v.salesBalance.onetype;
-            var Type = v.salesBalance.type;
-            
+            var type = v.salesBalance.type;
+
             var salesRevenue = 0;
             var salesAmount = 0;
             var accountsPayable = 0;
@@ -136,7 +141,7 @@ $(function() {
 
             if (oneType == 0) {
 
-                if (Type == 3) {
+                if (type == 3) {
 
                     venderMaling = 0;
                     allowance = 0;
@@ -168,6 +173,15 @@ $(function() {
                 venderMaling = (-venderMaling);
             }
 
+            var rate = v.salesBalance.rate ? v.salesBalance.rate : 1;
+
+            var venderMaling = utils.changeThrDecimal(venderMaling);
+            var allowance = utils.changeThrDecimal(utils.accMul(allowance, rate));
+
+            var salesRevenue = utils.changeThrDecimal(utils.accMul(salesRevenue, rate));
+            var salesAmount = utils.changeThrDecimal(utils.accMul(salesAmount, rate));
+            var accountsPayable = utils.changeThrDecimal(utils.accMul(accountsPayable, rate));
+
             var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center; font-size: 7px;"></tr>').appendTo(tabody);
             var td15 = $('<td style="border: 1px solid;"></td>').text(serNum + 1).appendTo(tr4);
             var td16 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.createTime).appendTo(tr4);
@@ -189,8 +203,8 @@ $(function() {
             options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
             options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);// 合计供应商减免金额
             options.totalService = utils.accAdd(options.totalService, utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable)));
-            
-            serNum = serNum+1;
+
+            serNum = serNum + 1;
         });
     }
 
@@ -219,7 +233,7 @@ $(function() {
 
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">').appendTo(div);
-        var caption = $('<caption style="line-height: 65px;font-size:20px;">'+params.company.name+'主材销售分析明细表</caption>').appendTo(table);
+        var caption = $('<caption style="line-height: 65px;font-size:20px;">' + params.company.name + '主材销售分析明细表</caption>').appendTo(table);
 
         var tr1 = $('<tr style="font-size: 7px;"></tr>').appendTo(table);
         var td1 = $('<td colspan="4" style="border: 1px solid;"></td>').text("供应商名称: " + brand.name).appendTo(tr1);
@@ -258,20 +272,22 @@ $(function() {
         $.each(items, function(i, v) {
 
             var oneType = v.salesBalance.onetype;
-            var Type = v.salesBalance.type;
-            var salesRevenue = 0;
-            var salesAmount = 0;
-            var accountsPayable = 0;
+            var type = v.salesBalance.type;
+
             var venderMaling = (v.salesBalance && v.salesBalance.sales && v.salesBalance.sales.venderMaling) ? Math.round(v.salesBalance.sales.venderMaling) : 0;
             var allowance = (v.salesBalance && v.salesBalance.allowance) ? v.salesBalance.allowance : 0;
 
+            var salesRevenue = 0;
+            var salesAmount = 0;
+            var accountsPayable = 0;
+
             if (oneType == 0) {
 
-                if (Type == 3) {
+                if (type == 3) {
 
                     venderMaling = 0;
                     allowance = 0;
-                    
+
                     salesRevenue = v.salesBalance.sales.depositpay;
                     salesAmount = utils.accAdd(salesRevenue, utils.accAdd(venderMaling, allowance));
                     accountsPayable = utils.accSub(v.salesBalance.pbalance, venderMaling);
@@ -300,8 +316,17 @@ $(function() {
                 venderMaling = (-venderMaling);
             }
 
+            var rate = v.salesBalance.rate ? v.salesBalance.rate : 1;
+
+            var venderMaling = utils.changeThrDecimal(venderMaling);
+            var allowance = utils.changeThrDecimal(utils.accMul(allowance, rate));
+
+            var salesRevenue = utils.changeThrDecimal(utils.accMul(salesRevenue, rate));
+            var salesAmount = utils.changeThrDecimal(utils.accMul(salesAmount, rate));
+            var accountsPayable = utils.changeThrDecimal(utils.accMul(accountsPayable, rate));
+
             index = index + 1;
-            
+
             var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center;font-size: 5px;"></tr>').appendTo(tabody);
             var td24 = $('<td style="border: 1px solid;"></td>').text(index).appendTo(tr4);
             var td25 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.createTime).appendTo(tr4);
@@ -327,8 +352,8 @@ $(function() {
             options.totalSalesAmount = utils.accAdd(options.totalSalesAmount, salesAmount);// 合计销售金额
             options.totalCost = utils.accAdd(options.totalCost, v.salesBalance.pbalance);// 合计销售成本金额
             options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
-            options.totalSettlementProfit = utils.accAdd(options.totalSettlementProfit, utils.accSub(salesAmount, v.salesBalance.pbalance));//合计结算利润
-            options.totalCompanyProfit = utils.accAdd(options.totalCompanyProfit, utils.accSub(salesRevenue, accountsPayable));//合计公司利润
+            options.totalSettlementProfit = utils.accAdd(options.totalSettlementProfit, utils.accSub(salesAmount, v.salesBalance.pbalance));// 合计结算利润
+            options.totalCompanyProfit = utils.accAdd(options.totalCompanyProfit, utils.accSub(salesRevenue, accountsPayable));// 合计公司利润
         });
     }
 
@@ -369,9 +394,7 @@ $(function() {
         var tr2 = $('<tr colspan="21" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
         var td37 = $('<td colspan="21" style="border: 1px solid;"></td>').appendTo(tr2);
-        var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" +
-            "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章并签字确认，" +
-            "本次账单代收款的金额为：人民币").appendTo(td37);
+        var span1 = $('<span></span>').text("首先感谢贵公司对我司的支持！为明确双方往来款项的准确清晰，" + "特将贵公司与我司往来账款明细列出，如以下交易无误、核对相符，请在“数据核对无误”处盖章并签字确认，" + "本次账单代收款的金额为：人民币").appendTo(td37);
         var span2 = $('<span></span>').attr("id", "totalInc").text("").appendTo(span1);
         var span3 = $('<span></span>').text(")，本次账单服务费的金额为：人民币").appendTo(span1);
         var span4 = $('<span></span>').attr("id", "totalSer").text("").appendTo(span1);
@@ -433,13 +456,13 @@ $(function() {
             var td39 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.pbalance).appendTo(tr4);
             var td40 = $('<td style="border: 1px solid;"></td>').text(salesItems.total).appendTo(tr4);
             var td41 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
-            var td42 = $('<td style="border: 1px solid;"></td>').text(utils.accDiv(v.salesBalance.sales.house.buildArea,1000)).appendTo(tr4);
+            var td42 = $('<td style="border: 1px solid;"></td>').text(utils.accDiv(v.salesBalance.sales.house.buildArea, 1000)).appendTo(tr4);
             var td43 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr4);
 
         });
     }
 
     function createSelectionFooter() {
+
     }
 });
-

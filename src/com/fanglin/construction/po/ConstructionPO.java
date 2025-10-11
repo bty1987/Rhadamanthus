@@ -87,6 +87,10 @@ public class ConstructionPO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp preStartTime;
+
+	private Timestamp preEndTime;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -105,7 +109,7 @@ public class ConstructionPO implements Serializable {
 
 	private short balanceStatus;
 
-	private Short terminalStatus;
+	private short terminalStatus;
 
 	public ConstructionPO() {
 		super();
@@ -285,6 +289,24 @@ public class ConstructionPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "preStartTime")
+	public Timestamp getPreStartTime() {
+		return preStartTime;
+	}
+
+	public void setPreStartTime(Timestamp preStartTime) {
+		this.preStartTime = preStartTime;
+	}
+
+	@Column(name = "preEndTime")
+	public Timestamp getPreEndTime() {
+		return preEndTime;
+	}
+
+	public void setPreEndTime(Timestamp preEndTime) {
+		this.preEndTime = preEndTime;
+	}
+
 	@Column(name = "startTime")
 	public Timestamp getStartTime() {
 		return startTime;
@@ -364,11 +386,11 @@ public class ConstructionPO implements Serializable {
 	}
 
 	@Column(name = "terminalStatus")
-	public Short getTerminalStatus() {
+	public short getTerminalStatus() {
 		return terminalStatus;
 	}
 
-	public void setTerminalStatus(Short terminalStatus) {
+	public void setTerminalStatus(short terminalStatus) {
 		this.terminalStatus = terminalStatus;
 	}
 

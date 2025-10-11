@@ -18,6 +18,7 @@ jQuery(function($) {
             name: com.focusPage("#BalanceSalesName"),
             brand: com.focusPage("#brand"),
             updateName: com.focusPage("#updata"),
+            supplier: com.focusPage('#supplier')
         },
 
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
@@ -30,12 +31,36 @@ jQuery(function($) {
         depage: params['urlLoadParams'].depage,
     };
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
+    balanceSales.modals.createBalanceSalesModal.on("hide.bs.modal", function() {
+
+        com.focusPage('option[selected="selected"]').remove();
+        com.clearValidator();
+        com.cleanItems(balanceSales.items);
+    });
+
+    com.initTypeahead('brand', api.data.queryBrandByPinyin, "brand.pinyin", {
+        "brand.atttype": 0
+    }, 'brands', 'bid', 'name', function(list, k, v) {
+
+        $.each(list, function(index, val) {
+
+            if (val['bid'] == k) {
+
+                supplier(val)
+            }
+        });
+        return v
+    });
 
     var seacher = new Searcher();
     var history = "balanceSalesPostData";
+    var url = api.balance.pageBalanceSales;
 
-    seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSales);
+    if (balanceSales.depage == "supplier") {
+        url = api.balance.pageBalanceSalesForSupplier
+    }
+
+    seacher.base("bscondList", "bspagenation", "bsresultList", url);
 
     seacher.condition(["balance-balanceSelse-balance-no", "balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
 
@@ -108,6 +133,15 @@ jQuery(function($) {
             tools.personel.info(btn, v.creater.userId);
         }
     }, {
+        field: "supplier",
+        name: "厂商",
+        prop: "supplier.userName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.supplier.userId);
+        }
+    }, {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
@@ -134,6 +168,25 @@ jQuery(function($) {
     }];
 
     var linebtus = [{
+        name: "扣款",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            params.balance.bsid = v.bsid;
+
+            params.balance = v.balance;
+            params.balance.bid = v.balance.bid;
+            params.balance.uid = v.balance.supplier.uid;
+
+            com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款") && balanceSales.depage != "supplier";
+
+            return false;
+        },
+        show: function(v) {
+
+            return (v.balance.no != "0000000000");
+        }
+    }, {
         name: "汇总",
         clazz: "btn-purple",
         handle: function(v) {
@@ -175,24 +228,6 @@ jQuery(function($) {
             return false;
         }
     }, {
-        name: "扣款",
-        clazz: "btn-danger",
-        handle: function(v) {
-
-            params.balance.bsid = v.bsid;
-
-            params.balance = v.balance;
-            params.balance.bid = v.balance.bid;
-            params.balance.uid = v.balance.belonger.uid;
-
-            com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
-
-            return false;
-        },
-        show: function(v){
-            return (v.balance.no != "0000000000");
-        }
-    }, {
         name: "更新",
         clazz: "btn-info",
         handle: function(v) {
@@ -227,7 +262,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_AFFIRM_INT);
+            return (v.status == constant.balance().balanceSales.STATUS_AFFIRM_INT) && balanceSales.depage == null;
         }
     }, {
         name: "锁定",
@@ -284,7 +319,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.balance().balanceSales.STATUS_UNLOCK_INT) && balanceSales.depage == "supplier";
+            return (v.status == constant.balance().balanceSales.STATUS_UNLOCK_INT) && (balanceSales.depage == "supplier" || balanceSales.depage == null);
         }
     }, {
         name: "明细打印",
@@ -318,8 +353,9 @@ jQuery(function($) {
 
             return (v.status != constant.balance().balanceSales.STATUS_INIT_INT) && balanceSales.depage == null;
         }
+
     }, {
-        name: "选材打印",
+        name: "打印",
         clazz: "btn-blue",
         handle: function(v) {
 
@@ -332,7 +368,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != constant.balance().balanceSales.STATUS_INIT_INT) && balanceSales.depage == null;
+            return false;
         }
     }, {
         name: "删除",
@@ -359,7 +395,9 @@ jQuery(function($) {
         handle: function(v) {
 
             managedrawing(v);
+
             initUploadBtn(v);
+
             return false;
         }
     }];
@@ -397,7 +435,7 @@ jQuery(function($) {
                 v.status = constant.balance().balanceSales.status.keys[v.status];
                 v.lockTime = v.lockTime == null ? "" : v.lockTime;
                 v.balancer.userName = v.balancer.userName == null ? "" : v.balancer.userName;
-                v.balanceTime = v.balanceTime ==  null ? "" : v.balanceTime;
+                v.balanceTime = v.balanceTime == null ? "" : v.balanceTime;
             });
         });
     });
@@ -410,6 +448,7 @@ jQuery(function($) {
         var options = {
             "balanceSales.name": balanceSales.items.name.val(),
             "balanceSales.brand.bid": com.typeahead("brand"),
+            "balanceSales.supplier.uid": balanceSales.items.supplier.val(),
             "balanceSales.grade": $('input[name="grade"]:checked').val(),
         };
 
@@ -628,5 +667,19 @@ jQuery(function($) {
 
             searcher.doSearch();
         });
+    }
+
+    function supplier(v) {
+
+        com.post(api.data.queryBrandByBid, {
+            "brand.bid": v.bid
+        }, function(res) {
+
+            if (res.brand.supplier != null || res.brand.supplier != "") {
+                $('<option selected="selected"></option>').attr("value", res.brand.supplier.uid).html(res.brand.supplier.currentName).appendTo(com.focusPage("#supplier"));
+            }
+        });
+        
+        balanceSales.items.supplier.bindData(balanceSales.suppliers, "uid", "currentName");
     }
 });

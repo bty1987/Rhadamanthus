@@ -67,6 +67,8 @@ public class BalanceSalesBO implements java.io.Serializable {
 
 	private UserPO creater;
 
+	private UserPO supplier;
+
 	private UserPO balancer;
 
 	private Timestamp createTime;
@@ -217,7 +219,17 @@ public class BalanceSalesBO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "buid", referencedColumnName = "uid")
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
 	public UserPO getBalancer() {
 		return balancer;
 	}
@@ -246,9 +258,10 @@ public class BalanceSalesBO implements java.io.Serializable {
 
 	public BalanceSalesVO ptv(BalanceSalesVO balanceSalesVO) {
 
-		BeanUtil.copyPropertie(this, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "balancer"));
+		BeanUtil.copyPropertie(this, balanceSalesVO, Arrays.asList("brand", "balance", "creater", "supplier", "balancer"));
 
 		if (balanceSalesVO.getCreater() != null && getCreater() != null) balanceSalesVO.getCreater().setBaseInfo(getCreater());
+		if (balanceSalesVO.getSupplier() != null && getSupplier() != null) balanceSalesVO.getSupplier().setBaseInfo(getSupplier());
 		if (balanceSalesVO.getBalancer() != null && getBalancer() != null) balanceSalesVO.getBalancer().setBaseInfo(getBalancer());
 
 		if (balanceSalesVO.getBrand() != null && getBrand() != null) getBrand().ptv(balanceSalesVO.getBrand());

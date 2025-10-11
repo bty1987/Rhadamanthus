@@ -39,7 +39,7 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	public static final short STATUS_UNLOCK_INT = 1;// 锁定
 
-	public static final short STATUS_AFFIRM_INT = 2;//确认
+	public static final short STATUS_AFFIRM_INT = 2;// 确认
 
 	public static final short STATUS_ENABLE_CHECK_INT = 3;// 结算
 
@@ -61,13 +61,9 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	private long profit;
 
-	private short status;
-
-	private short atttype;
-
-	private int company;
-
 	private UserPO creater;
+
+	private UserPO supplier;
 
 	private UserPO balancer;
 
@@ -76,6 +72,12 @@ public class BalanceSalesPO implements java.io.Serializable {
 	private Timestamp balanceTime;
 
 	private Timestamp lockTime;
+
+	private short status;
+
+	private short atttype;
+
+	private int company;
 
 	public BalanceSalesPO() {
 		super();
@@ -217,7 +219,17 @@ public class BalanceSalesPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "buid", referencedColumnName = "uid")
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
 	public UserPO getBalancer() {
 		return balancer;
 	}
@@ -246,9 +258,10 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	public BalanceSalesVO ptv(BalanceSalesVO balanceSalesVO) {
 
-		BeanUtil.copyPropertie(this, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
+		BeanUtil.copyPropertie(this, balanceSalesVO, Arrays.asList("brand", "creater", "supplier", "balancer"));
 
 		if (balanceSalesVO.getCreater() != null && getCreater() != null) balanceSalesVO.getCreater().setBaseInfo(getCreater());
+		if (balanceSalesVO.getSupplier() != null && getSupplier() != null) balanceSalesVO.getSupplier().setBaseInfo(getSupplier());
 		if (balanceSalesVO.getBalancer() != null && getBalancer() != null) balanceSalesVO.getBalancer().setBaseInfo(getBalancer());
 
 		if (balanceSalesVO.getBrand() != null && getBrand() != null) getBrand().ptv(balanceSalesVO.getBrand());

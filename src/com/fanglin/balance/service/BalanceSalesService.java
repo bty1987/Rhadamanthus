@@ -14,6 +14,8 @@ public interface BalanceSalesService {
 
 	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, BalanceSalesVO balanceSalesVO, int company);
 
+	public void pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company);
+
 	public List<BalanceSalesVO> queryBalanceSales(BalanceSalesVO balanceSalesVO, int company);
 
 	public BalanceSalesVO queryBalanceSalesByBsid(BalanceSalesVO balanceSalesVO);

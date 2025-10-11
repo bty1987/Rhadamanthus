@@ -414,6 +414,12 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void affirmCustomerChance(CustomerChanceVO customerChanceVO, String securityCode, String verifyCode) throws FLException {
+		confirmCustomerChance(customerChanceVO, securityCode, verifyCode);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void issueCustomerChance(CustomerChanceVO customerChanceVO, String userId) throws FLException {
 
 		CustomerChancePO customerChancePO = customerChanceDao.get(customerChanceVO.getCcid());

@@ -20,12 +20,12 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<NormriceItemPO> queryNormriceItem(long qid) {
-		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).list();
+		return createCriteria(NormriceItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("status", NormriceItemPO.STATUS_INIT_INT)).list();
 	}
 
 	@Override
-	public NormriceItemPO queryNormriceItemPO(long sid, long quoteId, short type) {
-		return (NormriceItemPO) session().createCriteria(NormriceItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
+	public NormriceItemPO queryNormriceItem(long sid, long quoteId, long npid, short type) {
+		return (NormriceItemPO) session().createCriteria(NormriceItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("npid", npid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -38,10 +38,37 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	}
 
 	@Override
+	public int disabledNormriceItem(long qid) {
+
+		String sql = "update quotation.normriceitem set status = :status where qid = :qid";
+		session().createSQLQuery(sql).setLong("qid", qid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
 	public int disabledNormriceItem(long qid, short type) {
 
 		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int disabledNormriceItem(long qid, long sid, short type) {
+
+		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type = :type and sid = :sid";
+		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setLong("sid", sid).setLong("sid", sid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int disabledNormriceItem(long qid, long sid, long quoteId, short type) {
+
+		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type = :type and sid = :sid and quoteId = :quoteId";
+		session().createSQLQuery(sql).setLong("qid", qid).setShort("type", type).setLong("sid", sid).setLong("quoteId", quoteId).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
 
 		return 0;
 	}

@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface GoodsPoolService {
 
-	public void pageGoodsPool(Paging paging, List<Filter> filters,GoodsPoolVO goodsPool) throws FLException;
+	public void pageGoodsPool(Paging paging, List<Filter> filters, GoodsPoolVO goodsPool) throws FLException;
 
 	public List<GoodsPoolVO> queryGoodsPool(List<Filter> filters) throws FLException;
 
@@ -29,6 +29,6 @@ public interface GoodsPoolService {
 
 	public int updateGoodsPoolForStatus(GoodsPoolVO goodsPoolVO) throws FLException;
 
-	public int batchAddFromPool(List<GoodsPoolVO> goodsPools) throws FLException;
+	public int batchAddFromPool(List<GoodsPoolVO> goodsPools, int company) throws FLException;
 
 }

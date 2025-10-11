@@ -31,6 +31,8 @@ public class ConstructionInfoPO implements Serializable {
 
 	public static final short ISISSUE_ISSUE_INT = 1;
 
+	public static final short ISCHECK_CHECK_INT = 1;
+
 	private long ciid;
 
 	private long cid;
@@ -47,6 +49,8 @@ public class ConstructionInfoPO implements Serializable {
 
 	private short isIssue;
 
+	private short isCheck;
+
 	private Timestamp finishTime;
 
 	private Timestamp keyTime;
@@ -54,6 +58,8 @@ public class ConstructionInfoPO implements Serializable {
 	private Timestamp drawlineTime;
 
 	private Timestamp designTime;
+
+	private Timestamp checkTime;
 
 	private long actuaTime;
 
@@ -150,6 +156,15 @@ public class ConstructionInfoPO implements Serializable {
 		this.isIssue = isIssue;
 	}
 
+	@Column(name = "isCheck")
+	public short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(short isCheck) {
+		this.isCheck = isCheck;
+	}
+
 	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -184,6 +199,15 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setDesignTime(Timestamp designTime) {
 		this.designTime = designTime;
+	}
+
+	@Column(name = "checkTime")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
 	}
 
 	@Column(name = "actuaTime")

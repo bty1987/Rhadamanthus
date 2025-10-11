@@ -1,19 +1,30 @@
 jQuery(function($) {
 
-    var balanceAccountes = {
+    var balanceAccount = {
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
             withdrawBtn: com.focusPage("#withdrawBtn"),
+
+            saveBccountBtn: com.focusPage("#saveBccountBtn"),
+            saveCccountBtn: com.focusPage("#saveCccountBtn"),
         },
 
         modals: {
-            addBalanceAccountModal : com.focusPage("#addBalanceAccountModal"),
-            withdrawBalanceAccountModal : com.focusPage("#withdrawBalanceAccountModal"),
+            addBalanceAccountModal: com.focusPage("#addBalanceAccountModal"),
+            withdrawBalanceAccountModal: com.focusPage("#withdrawBalanceAccountModal"),
+
+            addBccountModal: com.focusPage("#addBccountModal"),
+            addCccountModal: com.focusPage("#addCccountModal"),
         },
 
         items: {
-            money : com.focusPage("#money"),
+            money: com.focusPage("#money"),
+
+            bname: com.focusPage("#name", "#addBccountModal"),
+            buser: com.focusPage("#bccount", "#addBccountModal"),
+
+            cname: com.focusPage("#name", "#addCccountModal"),
         },
 
         addItems: {
@@ -27,36 +38,46 @@ jQuery(function($) {
         isBalanceAccountStatus: {}
     };
 
-    balanceAccountes.btns.saveBtn.bindClick(saveData);
-    balanceAccountes.btns.withdrawBtn.bindClick(withdraw);
+    balanceAccount.btns.saveBtn.bindClick(saveData);
+    balanceAccount.btns.withdrawBtn.bindClick(withdraw);
+    balanceAccount.btns.saveBccountBtn.bindClick(addBccount);
+    balanceAccount.btns.saveCccountBtn.bindClick(addCccount);
 
-    balanceAccountes.modals.addBalanceAccountModal.on("hide.bs.modal", function () {
+    balanceAccount.modals.addBalanceAccountModal.on("hide.bs.modal", function() {
 
         com.clearValidator();
         com.cleanTypeahead("belonger");
-        com.cleanItems(balanceAccountes.addItems);
+        com.cleanItems(balanceAccount.addItems);
     });
 
-    balanceAccountes.modals.withdrawBalanceAccountModal.on("hide.bs.modal", function () {
+    balanceAccount.modals.withdrawBalanceAccountModal.on("hide.bs.modal", function() {
 
         com.clearValidator();
-        com.cleanItems(balanceAccountes.items);
+        com.cleanItems(balanceAccount.items);
     });
 
-    balanceAccountes.addItems.type.bindData(constant.balance().balanceAccount.type.datas, "key", "value");
+    balanceAccount.addItems.type.bindData(constant.balance().balanceAccount.type.datas, "key", "value");
 
-    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {
+        "departmentType.name": "",
+        "user.status": 0
+    }, "autoFillKeyValue", "key", "value", null);
 
-    var displayFunc  = (function() {
+    com.initTypeahead('bccount', api.personel.querySupplierByPinyin, "supplier.pinYin", {
+        "departmentType.name": "",
+        "user.status": 0
+    }, "suppliers", "userId", "currentName", null);
 
-        var renderList = function(tableId,listData) {
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
 
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
 
-                $.each(listData,function(i, v) {
+                $.each(listData, function(i, v) {
 
                     var $liLine = creatLine(v);
 
@@ -75,31 +96,24 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
             var $span = $('<span></span>').addClass('lbl status-lbl');
             var $btnWithdraw = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('提款');
 
             $invalid.append($statusSwitch).append($span);
             $divBtnWrap.append($invalid).append($btnWithdraw).appendTo($h3);
 
-            var propertyArr = [
-                ["归属人:", v.belonger.userName, "grey", function(btn) {
+            var propertyArr = [["归属人:", v.belonger.userName, "grey", function(btn) {
 
-                    tools.personel.info(btn, v.belonger.userId);
-                }],
-                ["创建人:", v.creater.currentName, "grey", function(btn) {
+                tools.personel.info(btn, v.belonger.userId);
+            }], ["创建人:", v.creater.currentName, "grey", function(btn) {
 
-                    tools.personel.info(btn, v.creater.userId);
-                }],
-                ["创建时间:", v.createTime, "grey"],
-                ["应付额:", v.referMoney, "grey"],
-                ["实付额:", v.realMoney, "grey"],
-                ["余额:", v.surplus, "grey"],
-                ["类型:", constant.balance().balanceAccount.type.keys[v.type], "red"],
-                ["状态:", constant.balance().balanceAccount.status.keys[v.status], "red"],
-            ];
+                tools.personel.info(btn, v.creater.userId);
+            }], ["创建时间:", v.createTime, "grey"], ["应付额:", v.referMoney, "grey"], ["实付额:", v.realMoney, "grey"], ["余额:", v.surplus, "grey"], ["类型:", constant.balance().balanceAccount.type.keys[v.type], "red"], ["状态:", constant.balance().balanceAccount.status.keys[v.status], "red"], ];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -124,27 +138,27 @@ jQuery(function($) {
 
             $invalid.click(function() {
 
-                var cvalue = $statusSwitch.prop("checked") ? 0:1;
+                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
 
                 updatastatus(v.baid, cvalue);
             });
 
             $btnWithdraw.click(function() {
 
-                balanceAccountes.baid = v.baid;
-                balanceAccountes.modals.withdrawBalanceAccountModal.modal("show");
+                balanceAccount.baid = v.baid;
+                balanceAccount.modals.withdrawBalanceAccountModal.modal("show");
             });
 
             return $liLine;
         };
 
         return {
-            init : function(tableId,listData) {
+            init: function(tableId, listData) {
 
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v) {
+            drawLine: function(v) {
 
                 return creatLine(v);
             }
@@ -153,25 +167,54 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["balance-balanceAccount-name", "balance-balanceAccount-status"], "condList", api.balance.pageBalanceAccount, function(data){
+    searcher.init(["balance-balanceAccount-name", "balance-balanceAccount-type", "balance-balanceAccount-status"], "condList", api.balance.pageBalanceAccount, function(data) {
+
         displayFunc.init('resultList', data);
-    }, "pagenation", "accountPostData",null, false, null, function() {
+    }, "pagenation", "accountPostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalanceAccount').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        return [$adda];
+        var $badda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBccount').css("margin", "0px 3px");
+        var $baddi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($badda);
+        var $baddspan = $('<span></span>').text('添加结算').appendTo($badda);
+
+        var $cadda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addCccount').css("margin", "0px 3px");
+        var $caddi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($cadda);
+        var $caddspan = $('<span></span>').text('添加出纳').appendTo($cadda);
+
+        return [$adda, $badda, $cadda];
     });
 
     com.focusPage('#addBalanceAccount', '#pagenation').click(function() {
 
-        balanceAccountes.baid = null;
+        balanceAccount.baid = null;
 
         com.clearValidator();
-        com.cleanItems(balanceAccountes.addItems);
+        com.cleanItems(balanceAccount.addItems);
 
-        balanceAccountes.modals.addBalanceAccountModal.modal("show");
+        balanceAccount.modals.addBalanceAccountModal.modal("show");
+    });
+
+    com.focusPage('#addBccount', '#pagenation').click(function() {
+
+        balanceAccount.baid = null;
+
+        com.clearValidator();
+        com.cleanItems(balanceAccount.items);
+        
+        balanceAccount.modals.addBccountModal.modal("show");
+    });
+
+    com.focusPage('#addCccount', '#pagenation').click(function() {
+
+        balanceAccount.baid = null;
+
+        com.clearValidator();
+        com.cleanItems(balanceAccount.items);
+
+        balanceAccount.modals.addCccountModal.modal("show");
     });
 
     function saveData() {
@@ -182,8 +225,8 @@ jQuery(function($) {
 
         var options = {
             'balanceAccount.belonger.userId': com.typeahead("belonger"),
-            'balanceAccount.name': balanceAccountes.addItems.name.val(),
-            'balanceAccount.type': balanceAccountes.addItems.type.val()
+            'balanceAccount.name': balanceAccount.addItems.name.val(),
+            'balanceAccount.type': balanceAccount.addItems.type.val()
         };
 
         com.post(api.balance.addBalanceAccount, options, function(res) {
@@ -191,13 +234,60 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
-            balanceAccountes.modals.addBalanceAccountModal.modal("hide");
+            balanceAccount.modals.addBalanceAccountModal.modal("hide");
+        });
+    }
+
+    function addBccount() {
+
+        if (com.validate("addBccountModal")) {
+            return false;
+        }
+
+        var options = {
+            'balanceAccount.belonger.userId': com.typeahead("bccount"),
+            'balanceAccount.name': balanceAccount.items.bname.val(),
+            'balanceAccount.type': 0
+        };
+        
+        com.post(api.balance.addBalanceAccount, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+            accountes.modals.addBccountModal.modal("hide");
+        });
+    }
+
+    function addCccount() {
+
+        if (com.validate("addCccountModal")) {
+            return false;
+        }
+
+        var options = {
+            'balanceAccount.belonger.userId': params.userInfo.user.userId,
+            'balanceAccount.name': balanceAccount.items.cname.val(),
+            'balanceAccount.type': 1
+        };
+
+        com.post(api.balance.addBalanceAccount, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+
+            balanceAccount.modals.addCccountModal.modal("hide");
         });
     }
 
     function updatastatus(baid, newstatus) {
 
-        com.post(api.balance.updateBalanceAccountForStatus, {"balanceAccount.baid": baid, "balanceAccount.status": newstatus}, function() {
+        com.post(api.balance.updateBalanceAccountForStatus, {
+            "balanceAccount.baid": baid,
+            "balanceAccount.status": newstatus
+        }, function() {
+
             newstatus == 0 ? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
 
             searcher.doSearch();
@@ -206,11 +296,16 @@ jQuery(function($) {
 
     function withdraw() {
 
-        com.post(api.balance.withdrawBalanceAccount, {"balanceAccount.baid": balanceAccountes.baid, "balanceAccount.money": balanceAccountes.items.money.val()}, function(){
+        com.post(api.balance.withdrawBalanceAccount, {
+            "balanceAccount.baid": balanceAccount.baid,
+            "balanceAccount.money": balanceAccount.items.money.val()
+        }, function() {
 
             com.showAlert(com.info, "操作成功");
+
             searcher.doSearch();
-            balanceAccountes.modals.withdrawBalanceAccountModal.modal("hide");
+
+            balanceAccount.modals.withdrawBalanceAccountModal.modal("hide");
         });
     }
 });

@@ -21,12 +21,12 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<NormoodItemPO> queryNormoodItem(long qid) {
-		return createCriteria(NormoodItemPO.class).add(Restrictions.eq("qid", qid)).list();
+		return createCriteria(NormoodItemPO.class).add(Restrictions.eq("qid", qid)).add(Restrictions.eq("status", NormoodItemPO.STATUS_INIT_INT)).list();
 	}
 
 	@Override
-	public NormoodItemPO queryNormoodItemPO(long sid, long quoteId, short type) {
-		return (NormoodItemPO) session().createCriteria(NormoodItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
+	public NormoodItemPO queryNormoodItem(long sid, long quoteId, long ngid, short type) {
+		return (NormoodItemPO) session().createCriteria(NormoodItemPO.class).add(Restrictions.eq("sid", sid)).add(Restrictions.eq("quoteld", quoteId)).add(Restrictions.eq("ngid", ngid)).add(Restrictions.eq("type", type)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -57,10 +57,37 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 	}
 
 	@Override
+	public int disableNormoodItem(long qid) {
+
+		String sql = "update quotation.normooditem set status = :status where qid = :qid";
+		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
 	public int disableNormoodItem(long qid, short type) {
 
 		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type";
 		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setShort("type", type).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int disableNormoodItem(long qid, long sid, short type) {
+
+		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type and sid = :sid";
+		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("sid", sid).setLong("qid", qid).setShort("type", type).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int disableNormoodItem(long qid, long sid, long quoteId, short type) {
+
+		String sql = "update quotation.normooditem set status = :status where qid = :qid and type = :type and sid = :sid and quoteld = :quoteId";
+		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setLong("sid", sid).setLong("quoteId", quoteId).setShort("type", type).executeUpdate();
 
 		return 0;
 	}

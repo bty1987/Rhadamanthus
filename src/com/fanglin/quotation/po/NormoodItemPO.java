@@ -52,6 +52,8 @@ public class NormoodItemPO implements Serializable {
 
 	private long qiid;
 
+	private long ngid;
+
 	private short type;
 
 	private short normtype;
@@ -133,6 +135,15 @@ public class NormoodItemPO implements Serializable {
 
 	public void setQiid(long qiid) {
 		this.qiid = qiid;
+	}
+
+	@Column(name = "ngid")
+	public long getNgid() {
+		return ngid;
+	}
+
+	public void setNgid(long ngid) {
+		this.ngid = ngid;
 	}
 
 	@Column(name = "type")

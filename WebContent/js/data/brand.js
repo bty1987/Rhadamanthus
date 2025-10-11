@@ -175,7 +175,18 @@ jQuery(function($) {
         clazz: "btn-success",
         handle: function(v) {
 
-            editDelivery(v);
+            editDelivery(v, false);
+        },
+        show: function() {
+
+            return (brand.pageType == "default" || brand.pageType == "finance");
+        }
+    }, {
+        name: "配送状态",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            editDelivery(v, true);
         },
         show: function() {
 
@@ -388,7 +399,7 @@ jQuery(function($) {
             type: 'checkbox',
             name: i,
         }).css("margin-left", "0px").prop("checked", null).addClass('ace');
-        var $checkDiv = $('<div></div>').addClass('col-md-1 pull-right1').append($checkInput).append($('<span class="lbl"></span>'));
+        var $checkDiv = $('<div></div>').addClass('col-md-1 pull-right1 deliveryStatus').append($checkInput).append($('<span class="lbl"></span>'));
 
         var $groupDiv = $('<div></div>').addClass('checkbox pull-right1').css({
             'margin-bottom': '0',
@@ -417,12 +428,18 @@ jQuery(function($) {
         $indexCheck.append($label).appendTo($div);
     }
 
-    function editDelivery(v) {
+    function editDelivery(v, flag) {
 
         brand.brand = v;
         
         com.focusPage("input[type='checkbox']", "#deliveryModal").prop("checked", null);
         com.focusPage("input[type='text']", "#deliveryModal").val(0);
+        
+        if(flag){
+            com.focusPage("div.deliveryStatus", "#deliveryModal").show();
+        }else{
+            com.focusPage("div.deliveryStatus", "#deliveryModal").hide();
+        }
 
         com.post(api.right.querySalesDeliveryStatusRight, {
             "salesDeliveryStatusRight.bid": brand.brand.bid

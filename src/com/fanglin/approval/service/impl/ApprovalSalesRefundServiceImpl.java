@@ -362,16 +362,19 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			salesBalancePO.setRefunds(salesRefundsPO);
 			salesBalancePO.setCreater(approvalPO.getReceiver());
 			salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
-			salesBalancePO.setBalance(balance);
-			salesBalancePO.setVbalance(0);
-			salesBalancePO.setPbalance(0);
+
 			salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
 
 			salesBalancePO.setSalesman(salesPO.getSalesman());
 			salesBalancePO.setDept(salesPO.getSalesman().getDept());
 			salesBalancePO.setRegion(salesPO.getSalesman().getDept().getFatherDept());
+
+			salesBalancePO.setTotal(Arith.sub(0, approvalSalesRefundPO.getRefund()));
+			salesBalancePO.setBalance(balance);
+			salesBalancePO.setVbalance(0);
+			salesBalancePO.setPbalance(0);
+			salesBalancePO.setRate(1000);
 
 			salesBalanceDao.save(salesBalancePO);
 		}

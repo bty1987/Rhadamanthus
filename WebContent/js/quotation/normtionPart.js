@@ -139,9 +139,10 @@ var QuotationDetail = (function() {
 
                 var _storenumtotal = parseFloat(that.attr('data-storenum'));
                 var _normnumtotal = parseFloat(that.attr('data-normnum'));
+                var atttype = that.attr('data-atttype');
 
-                normnumtotal = utils.changeThrDecimal(utils.accAdd(normnumtotal, _normnumtotal));
-                storenumtotal = utils.changeThrDecimal(utils.accAdd(storenumtotal, _storenumtotal));
+                normnumtotal = utils.changeThrDecimal(utils.accAdd(normnumtotal, utils.accMul(_normnumtotal, atttype == "0" ? 1 : -1)));
+                storenumtotal = utils.changeThrDecimal(utils.accAdd(storenumtotal, utils.accMul(_storenumtotal, atttype == "0" ? 1 : -1)));
             });
 
             com.focusPage('#normnumtotal').text(normnumtotal);
@@ -175,7 +176,14 @@ var QuotationDetail = (function() {
 
                 var _datasalary = parseFloat(that.attr('data-salary'));
                 var _datanum = parseFloat(that.attr('data-num'));
-                var _normricetotal = utils.changeThrDecimal(utils.accMul(_datasalary, _datanum));
+                var _datatrannum = parseFloat(that.attr('data-trannum'));
+                
+                var num = parseFloat(_datatrannum == '0' ? 1 : _datanum);
+                var trannum = parseFloat(_datatrannum == '0' ? 1 : _datatrannum);
+                var salary = parseFloat(_datasalary);
+                var atttype = that.attr('data-atttype');
+                
+                var _normricetotal = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, salary)), atttype == "0" ? 1 : -1));
 
                 normricetotal = utils.changeThrDecimal(utils.accAdd(normricetotal, _normricetotal));
 
@@ -186,7 +194,6 @@ var QuotationDetail = (function() {
                 } else {
                     normnodes["#cn_" + _schedule] = utils.accAdd(0, _normricetotal);
                 }
-
             });
 
             com.focusPage('#normricetotal').text(normricetotal);
@@ -204,7 +211,7 @@ var QuotationDetail = (function() {
                     return true;
 
                 nodesum.text(v).attr("data-total", v);
-            })
+            });
 
         },
         init: function() {
@@ -283,7 +290,6 @@ var QuotationDetail = (function() {
             return $domain;
         },
 
-        // 创建附加项
         nomricedomain: function(dv) {
 
             var that = this;
@@ -414,7 +420,8 @@ var QuotationDetail = (function() {
                 "data-normnum": qv.normnum,
                 "data-storenum": qv.storenum,
                 "data-nid": qv.noods.nid,
-                "data-normtype": qv.normtype
+                "data-normtype": qv.normtype,
+                "data-atttype": qv.atttype,
             });
 
             var _typeName = "-";
@@ -515,8 +522,10 @@ var QuotationDetail = (function() {
             var $item = $('<li></li>').addClass('fl-quo-item item').prop('title', qv.npiid).attr({
                 "data-salary": qv.salary,
                 "data-num": qv.num,
+                "data-trannum": qv.trannum,
                 "data-name": qv.constructionNode.sort,
-                "data-normtype": qv.normtype
+                "data-normtype": qv.normtype,
+                "data-atttype": qv.atttype,
             });
 
             var _total = 0;
@@ -542,12 +551,17 @@ var QuotationDetail = (function() {
             if (qv.normtype == constant.quotation().normriceItem.NORMTYPE_ADD_INT) { // 工费
                 _typeName = constant.quotation().normriceItem.normtype.keys[constant.quotation().normriceItem.NORMTYPE_ADD_INT];
             }
-
-            _total = utils.changeThrDecimal(utils.accMul(qv.num, qv.salary));
+            
+            var num = parseFloat(qv.trannum == '0' ? 1 : qv.num);
+            var trannum = parseFloat(qv.trannum == '0' ? 1 : qv.trannum);
+            var salary = parseFloat(qv.salary);
+            
+            _total = utils.changeThrDecimal(utils.accMul(trannum, utils.accMul(num, salary)));
+            
             var _lineSet = [];
 
             _lineSet.push(["line", list.find("li").length + 1, ["data-areaType", qv.areaType]]);
-            _lineSet.push(["formula", qv.num ? qv.num : "0", ]);
+            _lineSet.push(["formula", num, ]);
             _lineSet.push(["num", qv.salary]);
             _lineSet.push(["name", qv.constructionNode.name]);
             _lineSet.push(["type", _typeName, ["data-type", qv.type]]);
@@ -709,7 +723,7 @@ var QuotationDetail = (function() {
                     "normtion.mriceTotal": 0
                 };
 
-                com.post(api.quotation.makeNormtionForQuotation, params, function() {
+                com.post(api.quotation.makeNormtion, params, function() {
 
                     com.focusPage("#normoodItem1").html('');
                     com.focusPage("#normriceItem1").html('');
@@ -802,8 +816,8 @@ var QuotationDetail = (function() {
 
                         var _list = com.focusPage("#normoodItem1");
 
-                        quo.normnumtotals = utils.accAdd(quo.normnumtotals, v.normnum);
-                        quo.storenumtotals = utils.accAdd(quo.storenumtotals, v.storenum);
+                        quo.normnumtotals = utils.accAdd(quo.normnumtotals, utils.accMul(v.normnum, v.atttype == "0" ? 1 : -1));
+                        quo.storenumtotals = utils.accAdd(quo.storenumtotals, utils.accMul(v.normnum, v.atttype == "0" ? 1 : -1));
 
                         _list.append(painter.createQuote(_list, _list.find("li").length + 1, v));
                     }
@@ -822,7 +836,7 @@ var QuotationDetail = (function() {
 
                         var _list = com.focusPage("#normriceItem1");
 
-                        var _total = utils.changeThrDecimal(utils.accMul(v.num, v.salary));
+                        var _total = utils.changeThrDecimal(utils.accMul(utils.accMul(v.num, v.salary), v.atttype == "0" ? 1 : -1));
 
                         quo.normricetotals = utils.accAdd(quo.normricetotals, _total);
 
@@ -999,12 +1013,12 @@ var QuotationDetail = (function() {
                 $.each(res.normoodItems, function(i, v) {
 
                     if (v.normtype == 0) {
-                        quo.normnumtotals = utils.accAdd(quo.normnumtotals, v.normnum);
-                        quo.storenumtotals = utils.accAdd(quo.storenumtotals, v.storenum);
+                        quo.normnumtotals = utils.accAdd(quo.normnumtotals, utils.accMul(v.normnum, v.atttype == "0" ? 1 : -1));
+                        quo.storenumtotals = utils.accAdd(quo.storenumtotals, utils.accMul(v.storenum, v.atttype == "0" ? 1 : -1));
                         quotationFunctionAreas[1].quotationFunctionAreaItems.push(v);
                     } else {
-                        quo.normnumtotal = utils.accAdd(quo.normnumtotal, v.normnum);
-                        quo.storenumtotal = utils.accAdd(quo.storenumtotal, v.storenum);
+                        quo.normnumtotal = utils.accAdd(quo.normnumtotal, utils.accMul(v.normnum, v.atttype == "0" ? 1 : -1));
+                        quo.storenumtotal = utils.accAdd(quo.storenumtotal, utils.accMul(v.storenum, v.atttype == "0" ? 1 : -1));
                         quotationFunctionAreas[0].quotationFunctionAreaItems.push(v);
                     }
                 });
@@ -1015,14 +1029,18 @@ var QuotationDetail = (function() {
             }, function(res) {
 
                 $.each(res.normriceItems, function(i, v) {
-
+                    
+                    var num = parseFloat(v.trannum == '0' ? 1 : v.num);
+                    var trannum = parseFloat(v.trannum == '0' ? 1 : v.trannum);
+                    var salary = parseFloat(v.salary);
+                    
                     if (v.normtype == 0) {
-                        var _total = utils.changeThrDecimal(utils.accMul(v.num, v.salary));
-                        quo.normricetotals = utils.accAdd(quo.normricetotals, _total);
+                        var _total = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, salary)), v.atttype == "0" ? 1 : -1));
+                        quo.normricetotals = utils.changeThrDecimal(utils.accAdd(quo.normricetotals, _total));
                         quotationFunctionAreasa[1].quotationFunctionAreaItems1.push(v);
                     } else {
-                        var _total = utils.changeThrDecimal(utils.accMul(v.num, v.salary));
-                        quo.normricetotal = utils.accAdd(quo.normricetotal, _total);
+                        var _total = utils.changeThrDecimal(utils.accMul(utils.accMul(trannum, utils.accMul(num, salary)), v.atttype == "0" ? 1 : -1));
+                        quo.normricetotal = utils.changeThrDecimal(utils.accAdd(quo.normricetotal, _total));
                         quotationFunctionAreasa[0].quotationFunctionAreaItems1.push(v);
                     }
 

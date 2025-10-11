@@ -849,6 +849,7 @@ var decorationUtils = {
         }, null, false);
 
         var decorationPayments = [];
+        
         // 通过装修单号获取装修款项信息
         com.post(api.payment.queryDecorationPaymentByOrderId, {
             "decorationPayment.decoration.orderId": decorationDetail.orderId
@@ -928,7 +929,7 @@ var decorationUtils = {
 
                 $deleteBtn.on("click", function() {
 
-                    com.showConfirm("确定要删除其他款项吗?", function() {
+                    com.showConfirm("确定要删除款项", function() {
 
                         com.post(api.payment.deleteDecorationPayment, {
                             "decorationPayment.dpid": v.dpid
@@ -950,7 +951,7 @@ var decorationUtils = {
                     }
                 }
 
-                if (v.twoType == 3 && v.paymentStatus == 0) {
+                if ((v.twoType == 0 || v.twoType == 3) && v.paymentStatus == 0) {
                     $divBtnWrap.append($deleteBtn);
                 }
 
@@ -1532,6 +1533,34 @@ var decorationUtils = {
                 }, function() {
 
                     com.showAlert(com.info, "发送成功");
+                });
+            });
+        });
+        
+        com.focusPage("#checkOriginalBtn").on('click', function() {
+            
+            var constructionInfo = null
+            
+            com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function(res){
+                
+                constructionInfo = res.constructionInfo;
+            }, null, false);
+            
+            if(!constructionInfo || !constructionInfo.ciid){
+                com.showAlert(com.warning, "工程信息不存在");
+                return false;
+            }
+
+            com.showConfirm("确认量房已验证", function() {
+
+                var option = {
+                    "constructionInfo.ciid": constructionInfo.ciid,
+                    "constructionInfo.isCheck": 2,
+                };
+                
+                com.post(api.construction.checkConstructionInfo, option, function(res){
+                    
+                    com.showAlert(com.info, "操作成功");
                 });
             });
         });

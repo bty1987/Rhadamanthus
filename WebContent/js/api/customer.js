@@ -422,6 +422,9 @@ $.extend(api, {
         confirmCustomerChance: {
             url: "confirmCustomerChance.do"
         },
+        affirmCustomerChance: {
+            url: "affirmCustomerChance.do"
+        },
         changeCustomerChance: {
             url: "changeCustomerChance.do"
         },
@@ -438,8 +441,8 @@ $.extend(api, {
             url: "finishCustomerChance.do"
         },
 
-        pageCustomerprofile: {
-            url: "pageCustomerprofile.do"
+        pageCustomerProfile: {
+            url: "pageCustomerProfile.do"
         },
         queryCustomerProfileByOrderId: {
             url: "queryCustomerProfileByOrderId.do"
@@ -633,7 +636,7 @@ $.extend(api, {
             url: "queryFeedbackComplaintDept.do"
         },
         addFeedbackComplaintDept: {
-        	 url: "addFeedbackComplaintDept.do",
+            url: "addFeedbackComplaintDept.do",
         },
         updateFeedbackComplaintDept: {
             url: "updateFeedbackComplaintDept.do"
@@ -915,7 +918,6 @@ $.extend(api, {
         deleteConversation: {
             url: "deleteConversation.do"
         }
-
 
     }
 });

@@ -52,6 +52,8 @@ public class NormriceItemPO implements Serializable {
 
 	private long qiid;
 
+	private long npid;
+
 	private short type;
 
 	private short normtype;
@@ -135,6 +137,15 @@ public class NormriceItemPO implements Serializable {
 
 	public void setQiid(long qiid) {
 		this.qiid = qiid;
+	}
+
+	@Column(name = "npid")
+	public long getNpid() {
+		return npid;
+	}
+
+	public void setNpid(long npid) {
+		this.npid = npid;
 	}
 
 	@Column(name = "type")

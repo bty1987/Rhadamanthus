@@ -53,6 +53,10 @@ public class GoodsRecordPO implements Serializable {
 
 	private String comment;
 
+	private int goodsNum;
+
+	private String path;
+
 	public GoodsRecordPO() {
 		super();
 	}
@@ -133,6 +137,24 @@ public class GoodsRecordPO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "goodsNum")
+	public int getGoodsNum() {
+		return goodsNum;
+	}
+
+	public void setGoodsNum(int goodsNum) {
+		this.goodsNum = goodsNum;
+	}
+
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public GoodsRecordVO ptv(GoodsRecordVO goodsRecordVO) {

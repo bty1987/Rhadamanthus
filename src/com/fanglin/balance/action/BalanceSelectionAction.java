@@ -164,6 +164,13 @@ public class BalanceSelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "discountBalanceSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String discountBalanceSelection() throws FLException {
+
+		balanceSelectionService.discountBalanceSelection(balanceSelection);
+		return SUCCESS;
+	}
+
 	public BalanceSelectionVO getBalanceSelection() {
 		return balanceSelection;
 	}

@@ -5,8 +5,24 @@ Condition.addupRule("balance", {
         type: "text",
         submitConfig: {
             name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "balanceAccount-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
             op: "eq",
             validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.balance().balanceAccount.type.datas,
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "balanceAccount-status": {
@@ -25,6 +41,7 @@ Condition.addupRule("balance", {
             valuePath: "value"
         }
     },
+    
     "balance-no": {
         label: "结算单号",
         type: "text",

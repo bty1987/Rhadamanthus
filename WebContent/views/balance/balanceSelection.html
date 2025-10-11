@@ -62,6 +62,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<div class="modal fade" id="renewal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -88,9 +89,38 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="drawingModal" tabindex="-1">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">结算图片</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row-fluid">
+                                <ul class="ace-thumbnails" id="balanceDrawing"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                        <a class="form-group" id="balanceUpload"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
+
 <div id="stockRecordPopUp" class="portlet box page-content"></div>
+
 <script type="text/javascript">
 	$.loadScript(['js/balance/balanceSelection.js']);
 </script>

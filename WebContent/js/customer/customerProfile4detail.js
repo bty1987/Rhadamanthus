@@ -63,7 +63,7 @@ jQuery(function($) {
                 "customerProfile.orderId": params.customer.orderId,
             }
         }
-        
+
         if (!url)
             return false
 
@@ -170,6 +170,14 @@ jQuery(function($) {
 
                     elect(checkDivAll, option, type, state);
                 });
+            } else if (v.type == constant.customer().survey.TYPE_DATE_INT) {
+
+                var inputdate = $('<input type="text" readonly="readonly" data-type="dateRangePicker">').prop('id', v.cpiid + "date").html(v.content).appendTo(contentDiv);
+
+                com.datetime(inputdate);
+
+                if (v.require == 0)
+                    inputdate.addClass("v_required");
             }
         });
 
@@ -204,8 +212,11 @@ jQuery(function($) {
                 options["customerProfile.items[" + i + "].cpiid"] = cpiid;
 
                 if (type == constant.customer().survey.TYPE_INPUT_INT) {
-
                     options["customerProfile.items[" + i + "].content"] = com.focusPage("#" + cpiid + "textarea").val();
+                }
+                
+                if (type == constant.customer().survey.TYPE_DATE_INT) {
+                    options["customerProfile.items[" + i + "].content"] = com.focusPage("#" + cpiid + "date").val();
                 }
 
                 if (type == constant.customer().survey.TYPE_SINGLE_INT) {

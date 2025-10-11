@@ -122,6 +122,8 @@ public class SalesBalancePO implements Serializable {
 
 	private long pbalance;
 
+	private int rate;
+
 	private short type;
 
 	private short onetype;
@@ -373,6 +375,15 @@ public class SalesBalancePO implements Serializable {
 
 	public void setPbalance(long pbalance) {
 		this.pbalance = pbalance;
+	}
+
+	@Column(name = "rate")
+	public int getRate() {
+		return rate;
+	}
+
+	public void setRate(int rate) {
+		this.rate = rate;
 	}
 
 	@Column(name = "type")

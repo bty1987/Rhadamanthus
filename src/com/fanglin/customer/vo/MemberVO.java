@@ -137,7 +137,7 @@ public class MemberVO implements Serializable {
 		if (decorationPO.getSupervisor() != null) {
 			setSupervisorId(decorationPO.getSupervisor().getUserId());
 			setSupervisor(decorationPO.getSupervisor().getCurrentName());
-			setSupervisorPhone(decorationPO.getDesigner().getPhone());
+			setSupervisorPhone(decorationPO.getSupervisor().getPhone());
 		}
 
 		return this;

@@ -28,9 +28,9 @@ public class UserExperienceVO implements Serializable {
 
 	private Timestamp createTime;
 
-	private String comment;
-
 	private Timestamp operateTime;
+
+	private String comment;
 
 	public UserExperienceVO() {
 		super();

@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.GoodsKindVO;
 import com.fanglin.data.material.dao.AoodsDao;
+import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.dao.GoodsRecordDao;
 import com.fanglin.data.material.dao.SoodsDao;
 import com.fanglin.data.material.service.GoodsRecordService;
@@ -22,8 +24,11 @@ import com.fanglin.data.material.vo.GoodsRecordVO;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.material.vo.SoodsVO;
 import com.fanglin.data.po.AoodsPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.GoodsRecordPO;
 import com.fanglin.data.po.SoodsPO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
@@ -41,6 +46,12 @@ public class GoodsRecordServiceImpl implements GoodsRecordService {
 
 	@Autowired
 	private AoodsDao aoodsDao;
+
+	@Autowired
+	private UserDao userDao;
+
+	@Autowired
+	private GoodsDao goodsDao;
 
 	@Override
 	public void pageGoodsRecord(Paging paging, List<Filter> filters, GoodsRecordVO goodsRecord) {
@@ -82,6 +93,30 @@ public class GoodsRecordServiceImpl implements GoodsRecordService {
 
 		paging.setData(goodsRecordVOs);
 
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addGoodsRecord(GoodsRecordVO goodsRecord, String userId) throws FLException {
+
+		GoodsRecordPO goodsRecordPO = new GoodsRecordPO(new GoodsPO(), new UserPO());
+
+		BeanUtil.copyProperties(goodsRecord, goodsRecordPO, Arrays.asList("goods", "operator"));
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		goodsRecordPO.setOperator(userPO);
+
+		if (goodsRecord.getGoods() != null && (goodsRecord.getGoods().getGid() != null)) {
+
+			GoodsPO goodsPO = goodsDao.get(goodsRecord.getGoods().getGid());
+
+			goodsRecordPO.setGoods(goodsPO);
+		}
+
+		goodsRecordDao.save(goodsRecordPO);
+
+		return 0;
 	}
 
 }

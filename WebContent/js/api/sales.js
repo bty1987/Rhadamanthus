@@ -376,7 +376,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -388,7 +388,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -560,7 +560,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -581,7 +581,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -592,7 +592,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "paging-data-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]

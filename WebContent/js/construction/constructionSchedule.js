@@ -61,6 +61,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.construction.pageConstructionSchedule);
     searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime"]);
+    searcher.history("constructoinSchedulePostData")
 
     var lineprops = [{
         field: "decoration.orderId",

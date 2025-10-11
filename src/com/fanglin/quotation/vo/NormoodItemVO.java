@@ -20,6 +20,8 @@ public class NormoodItemVO implements Serializable {
 
 	private Long qiid;
 
+	private Long ngid;
+
 	private Short type;
 
 	private Short normtype;
@@ -91,6 +93,14 @@ public class NormoodItemVO implements Serializable {
 
 	public void setQiid(Long qiid) {
 		this.qiid = qiid;
+	}
+
+	public Long getNgid() {
+		return ngid;
+	}
+
+	public void setNgid(Long ngid) {
+		this.ngid = ngid;
 	}
 
 	public Short getType() {

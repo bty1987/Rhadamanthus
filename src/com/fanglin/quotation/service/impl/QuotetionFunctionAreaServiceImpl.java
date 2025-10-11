@@ -13,6 +13,7 @@ import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationPricePO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
+import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.data.quotation.dao.QuotationPriceDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
@@ -51,6 +52,9 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
+	@Autowired
+	private QuotationItemDao quotationItemDao;
+
 	@Override
 	public List<QuotetionFunctionAreaVO> queryQuotetionFunctionAreaByQid(QuotetionVO quotetionVO) throws FLException {
 
@@ -76,8 +80,11 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 				BeanUtil.copyProperties(quotetionFunctionAreaItemPO, quotetionFunctionAreaItemVO);
 
-				if (quotetionFunctionAreaItemPO.getQiid() != 0) {
+				QuotationItemPO quotationItemPO = quotationItemDao.get(quotetionFunctionAreaItemPO.getQiid());
+
+				if (quotationItemPO != null) {
 					quotetionFunctionAreaItemVO.setQiid(quotetionFunctionAreaItemPO.getQiid());
+					quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 				}
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
@@ -186,6 +193,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 				quotetionFunctionAreaItemVO.setIndex(sort++);
 				quotetionFunctionAreaItemVO.setContent(quotationItemPO.getComment());
+				quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
 			}

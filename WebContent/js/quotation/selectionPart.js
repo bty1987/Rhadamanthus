@@ -971,6 +971,9 @@ var selectionDetail = (function() {
                         if (res.selectionItems && res.selectionItems.length) {
                             $.each(res.selectionItems, function(i, v) {
 
+                                if ([constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT, constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT].indexOf(v.type) != -1)
+                                    return true;
+
                                 var price = utils.accMul(v.postprice, v.num);
                                 var $selectionItemLi = painter.createSelectionItem(v).attr('data-price', price);
                                 var $functionArea = $selectionItemLi.parents('.widget-box');

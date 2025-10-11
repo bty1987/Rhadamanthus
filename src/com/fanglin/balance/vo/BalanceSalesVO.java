@@ -45,6 +45,8 @@ public class BalanceSalesVO implements java.io.Serializable {
 
 	private UserBaseVO creater;
 
+	private UserBaseVO supplier;
+
 	private UserBaseVO balancer;
 
 	private Timestamp createTime;
@@ -57,25 +59,31 @@ public class BalanceSalesVO implements java.io.Serializable {
 		super();
 	}
 
+	public BalanceSalesVO(UserBaseVO supplier) {
+		super();
+		this.supplier = supplier;
+	}
+
 	public BalanceSalesVO(BrandVO brand, UserBaseVO creater) {
 		super();
 		this.brand = brand;
 		this.creater = creater;
 	}
 
-	public BalanceSalesVO(BrandVO brand, UserBaseVO creater, UserBaseVO balancer) {
+	public BalanceSalesVO(BrandVO brand, UserBaseVO creater, UserBaseVO supplier) {
 		super();
 		this.brand = brand;
 		this.creater = creater;
-		this.balancer = balancer;
+		this.supplier = supplier;
 	}
 
-	public BalanceSalesVO(BrandVO brand, BalanceVO balance, UserBaseVO creater, UserBaseVO balancer) {
+	public BalanceSalesVO(BrandVO brand, BalanceVO balance, UserBaseVO creater, UserBaseVO balancer, UserBaseVO supplier) {
 		super();
 		this.brand = brand;
 		this.creater = creater;
 		this.balancer = balancer;
 		this.balance = balance;
+		this.supplier = supplier;
 	}
 
 	public Long getBsid() {
@@ -221,6 +229,14 @@ public class BalanceSalesVO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	public UserBaseVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserBaseVO supplier) {
+		this.supplier = supplier;
 	}
 
 	public UserBaseVO getBalancer() {

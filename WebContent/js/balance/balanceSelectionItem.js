@@ -25,6 +25,16 @@ $(function() {
     seacher.history(history);
 
     seacher.button([{
+        id: "checkAll",
+        name: "全选",
+        clazz: "btn-pink",
+        icon: "icon-plus"
+    }, {
+        id: "unbind",
+        name: "解绑",
+        clazz: "btn-danger",
+        icon: "icon-check"
+    }, {
         id: "export",
         name: "导出",
         clazz: "btn-yellow",
@@ -32,6 +42,11 @@ $(function() {
     }]);
 
     var lineprops = [{
+        field: "bsiid",
+        name: "多选",
+        type: "checkbox",
+        prop: "bsiid"
+    }, {
         fieId: "selectionItem.goods.brand",
         name: "品牌",
         prop: "selectionItem.goods.brand",
@@ -120,6 +135,11 @@ $(function() {
 
             tools.personel.info(btn, v.selectionItem.balancer.userId);
         }
+    }, {
+        fieId: "selectionItem.createTime",
+        name: "拆单时间",
+        prop: "selectionItem.createTime",
+        clazz: "green"
     }, {
         fieId: "selectionItem.balanceTime",
         name: "结算时间",
@@ -233,6 +253,56 @@ $(function() {
 
     com.focusPage('#export', '#pagenation').on("click", function() {
 
+        exports();
+    });
+
+    com.focusPage('#unbind', '#pagenation').on("click", function() {
+
+        var $inputs = com.focusPage('input[type="checkbox"]:checked');
+
+        if (!$inputs.length) {
+            com.showAlert(com.warning, "请选择需要解绑数据");
+            return false;
+        }
+
+        var options = {};
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            if ($input.attr('bsiid') != 0) {
+                options["balanceSelectionItems[" + i + "].bsiid"] = $input.attr('bsiid');
+            }
+        });
+
+        options["balanceSelection.bsid"] = balanceSelectionItem.bsid;
+        options["balanceSelection.income"] = balanceSelectionItem.balance.income;
+        options["balanceSelection.cost"] = 0;
+        options["balanceSelection.payment"] = 0;
+        options["balanceSelection.profit"] = balanceSelectionItem.balance.profit;
+
+        com.post(api.balance.unbindBalanceSelection, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            seacher.doSearch();
+        });
+    });
+
+    com.focusPage('#checkAll').on("click", function() {
+
+        if (com.focusPage('input[type="checkbox"]').prop('checked')) {
+            com.focusPage('input[type="checkbox"]').removeAttr('checked');
+            com.focusPage('input[type="checkbox"]').prop('checked', false);
+        } else {
+            com.focusPage('input[type="checkbox"]').attr('checked', true);
+            com.focusPage('input[type="checkbox"]').prop('checked', true);
+        }
+    });
+
+    function exports1() {
+
         var total = com.focusPage('span[name="totalRecords"]', "#pagenation").text();
 
         if (total == 0) {
@@ -251,7 +321,28 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['装修单号', 'selectionItem.decoration.orderId'], ['楼盘', 'selectionItem.decoration.house.village.name'], ['楼号', 'selectionItem.decoration.house.houseNumber'], ['设计师', 'selectionItem.decoration.designer.currentName'], ['编号', 'selectionItem.goods.no'], ['商品', 'selectionItem.goods.name'], ['品类', 'selectionItem.goods.category'], ['品牌', 'selectionItem.goods.brand'], ['功能区', 'selectionItem.areaName'], ['类型', 'selectionItem.type'], ['状态', 'selectionItem.status'], ['结算价', 'selectionItem.postprice'], ['预算金额', 'selectionItem.preprice'], ['拆单量', 'num'], ['退货量', 'selectionItem.refnum'], ['预算量', 'selectionItem.initNum'], ['实用量', 'utility'], ['成本', 'price'], ['结算人', 'selectionItem.balancer.currentName'], ['结算时间', 'selectionItem.balanceTime']],
+                column: [//
+                ['装修单号', 'selectionItem.decoration.orderId'], // 
+                ['楼盘', 'selectionItem.decoration.house.village.name'], //
+                ['楼号', 'selectionItem.decoration.house.houseNumber'], //
+                ['设计师', 'selectionItem.decoration.designer.currentName'], //
+                ['编号', 'selectionItem.goods.no'], //
+                ['商品', 'selectionItem.goods.name'], //
+                ['品类', 'selectionItem.goods.category'], //
+                ['品牌', 'selectionItem.goods.brand'], //
+                ['功能区', 'selectionItem.areaName'], //
+                ['类型', 'selectionItem.type'], //
+                ['状态', 'selectionItem.status'], //
+                ['结算价', 'selectionItem.postprice'], //
+                ['预算金额', 'selectionItem.preprice'], // 
+                ['拆单量', 'num'], //
+                ['退货量', 'selectionItem.refnum'], //
+                ['预算量', 'selectionItem.initNum'], //
+                ['实用量', 'utility'], //
+                ['成本', 'price'], //
+                ['结算人', 'selectionItem.balancer.currentName'], //
+                ['拆单时间', 'selectionItem.createTime'], //
+                ['结算时间', 'selectionItem.balanceTime']],
                 list: res.paging.data
             }, function(v) {
 
@@ -267,6 +358,70 @@ $(function() {
                 v.selectionItem.type = constant.quotation().selectionItem.type.keys[v.selectionItem.type];
             });
         });
-    });
+    }
+
+    function exports() {
+
+        var total = com.focusPage('span[name="totalRecords"]', "#pagenation").text();
+
+        if (total == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (total > 1000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
+            return false;
+        }
+
+        com.post(api.balance.pageBalanceSelectionItem, $.extend({}, params[history], {
+            "paging.noPage": 1,
+            "balanceSelection.bsid": balanceSelectionItem.bsid
+        }), function(res) {
+
+            $.exceler({
+                column: [//
+                ['序号', ''], //
+                ['品牌', 'selectionItem.goods.brand'], //
+                ['订单编号', 'selectionItem.decoration.orderId'], // 
+                ['地址', 'address'], // 
+                ['户型', 'selectionItem.decoration.house.houseType'], // 
+                ['功能区', 'selectionItem.areaName'], // 
+                ['品类', 'selectionItem.goods.category'], // 
+                ['一级类别', 'selectionItem.goods.onekind.name'], // 
+                ['二级类别', 'selectionItem.goods.twokind.name'], // 
+                ['三级类别', 'selectionItem.goods.thrkind.name'], //
+                ['型号', ''], //
+                ['颜色', ''], //
+                ['规格', ''], //
+                ['单位', 'selectionItem.goods.measurementUnit'], //
+                ['数量', 'selectionItem.initNum'], //
+                ['单价', 'selectionItem.postprice'], //
+                ['结算值', 'posttotal'], //
+                ['合计金额', ''], //
+                ['备注', 'selectionItem.comment'], //
+                ['面积', 'selectionItem.decoration.house.innerArea'], //
+                ['标配/升级', ''], //
+                ],
+                list: res.paging.data
+            }, function(v) {
+
+                v.num = [2, 4].indexOf(v.selectionItem.type) != -1 ? -v.selectionItem.num : v.selectionItem.num;
+
+                var utility = utils.changeThrDecimal(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)));
+                v.utility = [2, 4].indexOf(v.selectionItem.type) != -1 ? -utility : utility;
+
+                var cost = utils.changeThrDecimal(utils.accMul(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)), parseFloat(v.selectionItem.postprice)));
+                v.price = [2, 4].indexOf(v.selectionItem.type) != -1 ? -cost : cost;
+
+                v.posttotal = utils.changeThrDecimal(utils.accMul(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.postprice)));
+
+                v.selectionItem.status = constant.quotation().selectionItem.status.keys[v.selectionItem.status];
+                v.selectionItem.type = constant.quotation().selectionItem.type.keys[v.selectionItem.type];
+
+                v.address = v.selectionItem.decoration.house.village.name + " " + v.selectionItem.decoration.house.houseNumber;
+            });
+        });
+    }
 
 });

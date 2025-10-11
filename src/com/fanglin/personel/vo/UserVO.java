@@ -10,6 +10,7 @@
 package com.fanglin.personel.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 import com.fanglin.communion.vo.DepartmentVO;
@@ -81,6 +82,8 @@ public class UserVO implements Serializable {
 	private String signNo;
 
 	private String token;
+
+	private Timestamp operateTime;
 
 	public UserVO() {
 		super();
@@ -349,6 +352,14 @@ public class UserVO implements Serializable {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public Timestamp getOperateTime() {
+		return operateTime;
+	}
+
+	public void setOperateTime(Timestamp operateTime) {
+		this.operateTime = operateTime;
 	}
 
 	public UserVO setBaseInfo(UserPO userPO) {

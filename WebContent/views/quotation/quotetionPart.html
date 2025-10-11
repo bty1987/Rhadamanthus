@@ -408,12 +408,23 @@
                         <div class="modal-body" >
                             <div class="row" style="margin-bottom: 10px;">
 								<div class="col-md-12">
-									<label class="col-xs-10 col-md-1 control-label no-padding-right" for="calDiscount">折扣</label>
-									<input type="text" id="calculateDiscount" class="col-xs-10 col-md-2 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+									<label class="col-xs-1 col-md-1 control-label no-padding-right" for="calDiscount">折扣</label>
+									<input type="text" id="calculateDiscount" class="col-xs-1 col-md-2 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
 
-									<div class="action-buttons">
+									<div class="action-buttons col-xs-2">
 										<a id="calculateBtns" class="btn btn-primary btn-xs" style="margin-left: 10px;">计算</a>
 										<a id="machingMoreBtn" class="btn btn-success btn-xs">更多</a>
+									</div>
+
+									<div id="fixedMoney">
+										<label class="col-xs-1">
+											<input class="ace" name="fixedMoney" type="checkbox" value="1">
+											<span class="lbl">智能</span>
+										</label>
+										<label class="col-xs-1">
+											<input class="ace" name="fixedMoney" type="checkbox" value="2">
+											<span class="lbl">严选</span>
+										</label>
 									</div>
     							</div>
    							</div>

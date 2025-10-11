@@ -2,14 +2,14 @@ $.extend(api.index, {
     balanceDetailIndex: {
         url: "/views/balance/balanceDetail.html"
     },
-    apportDetailIndex: {
-        url: "/views/balance/apportDetail.html"
+    balanceApportIndex: {
+        url: "/views/balance/balanceApport.html"
     },
-    balanceBalanceIndex: {
-        url: "/views/balance/balanceBalance.html"
+    balance2balanceIndex: {
+        url: "/views/balance/balance2balance.html"
     },
-    payBalanceIndex: {
-        url: "/views/balance/payBalance.html"
+    balance2accountIndex: {
+        url: "/views/balance/balance2account.html"
     },
     balanceSalesIndex: {
         url: "/views/balance/balanceSales.html"
@@ -149,27 +149,29 @@ $.extend(api, {
                 args: ["money"]
             }]
         },
-        queryApportDetailForBalance: {
-            url: "queryApportDetailForBalance.do",
+        
+        queryBalanceApportForBalance: {
+            url: "queryBalanceApportForBalance.do",
             type: "query",
             tranargs: [{
-                result: "apportDetails",
+                result: "balanceApports",
                 args: ["money"]
             }]
         },
-        addApportDetail: {
-            url: "addApportDetail.do",
+        addBalanceApport: {
+            url: "addBalanceApport.do",
             type: "update",
             tranargs: {
-                args: ["apportDetail.money"]
+                args: ["balanceApport.money"]
             }
         },
+        
         queryBalanceSalesForSales: {
             url: "queryBalanceSalesForSales.do",
             type: "query",
             tranargs: [{
                 result: "salesBalances",
-                args: ["pbalance"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }]
         },
         queryBalanceSalesForBalance: {
@@ -328,6 +330,15 @@ $.extend(api, {
                 args: ["amount", "surplus", "cutpay"]
             }]
         },
+        pageBalanceSalesForSupplier: {
+            url: "pageBalanceSalesForSupplier.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit"]
+            }]
+        },
         queryBalanceSales: {
             url: "queryBalanceSales.do",
             demo: true,
@@ -408,7 +419,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-salesBalance",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "paging-data-salesBalance-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -420,7 +431,7 @@ $.extend(api, {
             demo: true,
             tranargs: [{
                 result: "balanceSalesBalances-salesBalance",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon"]
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
             }, {
                 result: "balanceSalesBalances-salesBalance-sales",
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
@@ -433,7 +444,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["income", "cost", "payment", "profit"]
+                args: ["income", "cost", "payment", "profit", "discount"]
             }]
         },
         pageBalanceSelectionForBalance: {
@@ -442,7 +453,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["income", "cost", "payment", "profit"]
+                args: ["income", "cost", "payment", "profit", "discount"]
             }, {
                 result: "paging-data-balance",
                 args: ["amount", "surplus", "cutpay"]
@@ -454,7 +465,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["income", "cost", "payment", "profit"]
+                args: ["income", "cost", "payment", "profit", "discount"]
             }, {
                 result: "paging-data-balance",
                 args: ["amount", "surplus", "cutpay"]
@@ -466,7 +477,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "balanceSelections",
-                args: ["income", "cost", "payment", "profit"]
+                args: ["income", "cost", "payment", "profit", "discount"]
             }]
         },
         queryBalanceSelectionByBsid: {
@@ -475,7 +486,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "balanceSelection",
-                args: ["income", "cost", "payment", "profit"]
+                args: ["income", "cost", "payment", "profit", "discount"]
             }]
         },
 
@@ -483,28 +494,28 @@ $.extend(api, {
             url: "createBalanceSelection.do",
             type: "update",
             tranargs: {
-                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
             }
         },
         submitBalanceSelection: {
             url: "submitBalanceSelection.do",
             type: "update",
             tranargs: {
-                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
             }
         },
         batchBalanceSelection: {
             url: "batchBalanceSelection.do",
             type: "update",
             tranargs: {
-                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
             }
         },
         unbindBalanceSelection: {
             url: "unbindBalanceSelection.do",
             type: "update",
             tranargs: {
-                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
             }
         },
         lockBalanceSelection: {
@@ -541,9 +552,17 @@ $.extend(api, {
             url: "amountBalanceSelection.do",
             type: "update",
             tranargs: {
-                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
             }
         },
+        discountBalanceSelection: {
+            url: "discountBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+        
         pageBalanceSelectionItem: {
             url: "pageBalanceSelectionItem.do",
             demo: true,

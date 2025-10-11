@@ -10,7 +10,8 @@ jQuery(function($) {
             belongApproveModal: com.focusPage("#belongApproveModal"),
             QRcodeModal: com.focusPage("#QRcodeModal"),
             configModal: com.focusPage("#configModal"),
-            disableModal: com.focusPage("#disableModal")
+            disableModal: com.focusPage("#disableModal"),
+            discountModal: com.focusPage("#discountModal"),
         },
         items: {
             villageRule: com.focusPage("#villageRule"),
@@ -47,6 +48,8 @@ jQuery(function($) {
             infolist: com.focusPage("#infolist"),
 
             annotate: com.focusPage("#annotate", "#disableModal"),
+            
+            discount: com.focusPage("#discount", "#discountModal"),
         },
 
         updateItems: {
@@ -96,6 +99,7 @@ jQuery(function($) {
             updateBtn: com.focusPage("#updateBtn", "#updateModal").on("click", update),
             configBtn: com.focusPage("#configBtn", "#configModal").on("click", configEvent),
             disableBtn: com.focusPage("#disableBtn", "#disableModal").on("click", disable),
+            discountBtn: com.focusPage("#discountBtn", "#updateModal").on("click", discount),
         },
 
         atttypes: [],
@@ -841,7 +845,7 @@ jQuery(function($) {
         show: function(v) {
 
             // return v.status == 3 && customerChance.depage == "user";
-            return  customerChance.detype == null;
+            return customerChance.detype == null;
         },
 
     }, {
@@ -879,7 +883,7 @@ jQuery(function($) {
                 "type": 1,
                 "csid": v.source.csid
             }
-            
+
             com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: 设计需求完善");
 
             return false;
@@ -887,7 +891,18 @@ jQuery(function($) {
         show: function(v) {
 
             // return v.status == 3 && customerChance.depage == "user";
-            return  customerChance.detype == null;
+            return customerChance.detype == null;
+        },
+    }, {
+        name: "折扣",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            customerChance.ccid = v.ccid;
+
+            customerChance.modals.discountModal.modal("show");
+
+            return false;
         },
     }];
 
@@ -982,6 +997,23 @@ jQuery(function($) {
             customerChance.modals.disableModal.modal("hide");
         });
     }
+    
+    function discount() {
+
+        var options = {
+            "customerChance.chance.ccid": customerChance.ccid
+        };
+
+        com.post(api.customer.discountCustomerChance, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            com.clearValidator();
+            searcher.doSearch();
+
+            customerChance.modals.discountModal.modal("hide");
+        });
+    }
 
     function send(v) {
 
@@ -1002,13 +1034,11 @@ jQuery(function($) {
 
         var options = {
             "customerChance.ccid": ccid,
-            "verifyCode": "999999",
-            "securityCode": "DwRF4Epz3/Qv9Qoxq+9g0w=="
         };
 
         com.showConfirm("确认机会信息", function() {
 
-            com.post(api.customer.confirmCustomerChance, options, function(res) {
+            com.post(api.customer.affirmCustomerChance, options, function(res) {
 
                 searcher.doSearch();
                 com.showAlert(com.info, "确认成功");

@@ -51,7 +51,15 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	private EventsDao eventsDao;
 
 	@Override
-	public void pageConstructionInfo(Paging paging, List<Filter> filters, Integer company) throws FLException {
+	public void pageConstructionInfo(Paging paging, List<Filter> filters, ConstructionInfoVO constructionInfoVO, Integer company) throws FLException {
+
+		if (constructionInfoVO != null && constructionInfoVO.getDecoration() != null && constructionInfoVO.getDecoration().getHouseType() != null) {
+			filters.add(new Filter("decoration.houseType", constructionInfoVO.getDecoration().getHouseType(), "eq"));
+		}
+
+		if (constructionInfoVO != null && constructionInfoVO.getDrawlineTime() != null) {
+			filters.add(new Filter("drawlineTimeFlag", "", "eq"));
+		}
 
 		List<ConstructionInfoDO> constructionInfoDOs = constructionInfoDao.pageConstructionInfo(paging, filters, company);
 		List<ConstructionInfoVO> constructionInfoVOs = new ArrayList<ConstructionInfoVO>();
@@ -208,7 +216,21 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 				eventsPO.setShowDate(Integer.parseInt(DateUtil.getDateToDateString(DateUtil.plusDay(designTime, -(int) day), "yyyyMMdd")));
 				eventsDao.save(eventsPO);
 			}
-
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void checkConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException {
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
+
+		if (constructionInfoPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+
+		constructionInfoPO.setIsCheck(ConstructionInfoPO.ISCHECK_CHECK_INT);
+
+		constructionInfoDao.update(constructionInfoPO);
 	}
 }

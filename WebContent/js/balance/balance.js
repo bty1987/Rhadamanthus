@@ -1,266 +1,727 @@
-jQuery(function($) {
-
-    var balance = {
-
-        btns: {
-            addConfirmBtn: com.focusPage("#addConfirmBtn"),
-        },
-
-        modals: {
-            addModal: com.focusPage("#addModal"),
-        },
-
-        items: {
-            type: com.focusPage("#type"),
-            belongerName: com.focusPage("#belongerName"),
-            amount: com.focusPage("#amount"),
-        },
-
-        isType: {},
-        isStatus: {},
-        selectList: []
-    };
-
-    balance.btns.addConfirmBtn.bindClick(addBalance);
-
-    balance.modals.addModal.on("hide.bs.modal", function() {
-
-        com.cleanItems(balance.items);
-        com.clearValidator();
-        com.closeTip();
-    });
-
-    balance.items.type.bindData(constant.balance().balance.type.datas, "key", "value");
-
-    com.initTypeahead('belongerName', api.personel.queryUserByPinyin, "pinyinName", {
-        "user.status": 0
-    }, "autoFillKeyValue", "key", "value", null);
-
-    var displayFunc = (function() {
-
-        var renderList = function(tableId, listData) {
-
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function(i, v) {
-
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid');
-            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $btnBalance = $("<a></a>").addClass("btn btn-minier btn-yellow").html("结算");
-            var $btnPayBalance = $("<a></a>").addClass("btn btn-minier btn-danger").html("出纳");
-            var $btnBalanceDetail = $("<a></a>").addClass("btn btn-minier btn-success").html("结算明细");
-            var $btnApportDetail = $("<a></a>").addClass("btn btn-minier btn-warning").html("分摊明细");
-            var $btnBalanceSales = $("<a></a>").addClass("btn btn-minier btn-inverse").html("结算销售");
-            var $btnBalanceCutpay = $("<a></a>").addClass("btn btn-minier btn-info").html("结算扣款");
-
-            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.no);
-            var $label = $('<label></label>');
-            var $input = $('<input></input>').attr({
-                'class': 'ace ace-checkbox-2',
-                'name': 'balance',
-                'type': 'checkbox',
-                'id': v.bid,
-            }).val(v.bid);
-
-            var propertyArr = [];
-
-            propertyArr.push(["归属人: ", v.belonger.userName, "grey", function(btn) {
-
-                tools.personel.info(btn, v.belonger.userId);
-            }]);
-            propertyArr.push(["创建人: ", v.creater.userName, "grey", function(btn) {
-
-                tools.personel.info(btn, v.creater.userId);
-            }]);
-            propertyArr.push(["创建时间: ", v.createTime, "green"]);
-            propertyArr.push(["金额: ", v.amount, "blue"]);
-            propertyArr.push(["扣款总额: ", v.cutpay, "blue"]);
-            propertyArr.push(["类型: ", constant.balance().balance.type.keys[v.type], "red"]);
-            propertyArr.push(["状态: ", constant.balance().balance.status.keys[v.status], "red"]);
-            propertyArr.push(["付款标识: ", constant.balance().balance.isPay.keys[v.isPay], "red"]);
-
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                var $b = $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-
-                if (value[3]) {
-
-                    $b.click(function() {
-
-                        value[3]($b);
-                    });
-                }
-
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $input.click(function() {
-
-                var $that = $(this);
-                var bid = $that.attr("id");
-
-                var checked = $that.prop("checked");
-
-                if (checked)
-                    !balance.selectList.contains(bid) && balance.selectList.push(bid);
-                else
-                    balance.selectList.contains(bid) && balance.selectList.splice(balance.selectList.indexOf(bid), 1);
-            });
-
-            if (balance.selectList.contains(String(v.bid)))
-                $input.prop('checked', true).attr("checked", true);
-
-            $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($btnBalance).append($btnBalanceDetail).append($btnBalanceCutpay).append($btnApportDetail);
-            $h3.append($label.append($input).append($span)).append($btnDiv);
-
-            $btnBalance.click(function() {
-
-                params.balance.bid = v.bid;
-                params.balance.uid = v.belonger.uid;
-                params.balance.surplus = v.surplus;
-
-                com.popup4page("#stockRecordPopUp", api.index.balanceBalanceIndex.url, "结算", "", function() {
-
-                    searcher.doSearch();
-                });
-            });
-
-            $btnPayBalance.click(function() {
-
-                params.balance.bid = v.bid;
-                params.balance.uid = v.belonger.uid;
-                params.balance.surplus = v.surplus;
-
-                com.popup4page("#stockRecordPopUp", api.index.payBalanceIndex.url, "出纳", "", function() {
-
-                    searcher.doSearch();
-                });
-            });
-
-            $btnBalanceDetail.click(function() {
-
-                params.balance.bid = v.bid;
-
-                com.popup4page("#stockRecordPopUp", api.index.balanceDetailIndex.url, "结算明细");
-            });
-
-            $btnApportDetail.click(function() {
-
-                params.balance.bid = v.bid;
-
-                com.popup4page("#stockRecordPopUp", api.index.apportDetailIndex.url, "分摊明细");
-            });
-
-            $btnBalanceSales.click(function() {
-
-                params.balance.bid = v.bid;
-
-                com.popup4page("#stockRecordPopUp", api.index.balanceSalesIndex.url, "销售单");
-            });
-
-            $btnBalanceCutpay.click(function() {
-
-                params.balance = v;
-                params.balance.bid = v.bid;
-                params.balance.uid = v.belonger.uid;
-                com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
-
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function(tableId, listData) {
-
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function(v) {
-
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var searcher = new Searcher();
-
-    searcher.init(["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-balance-isPay"], "condList", api.balance.pageBalance, function(data) {
-
-        displayFunc.init('resultList', data);
-    }, "pagenation", "balancePostData", null, false, null, function() {
-
-        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'checks').css("margin", "0px 3px");
-        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
-        var $checkspan = $('<span></span>').text('付款').appendTo($checka);
-
-        $checka.click(function() {
-
-            var options = {};
-
-            if (balance.selectList.length == 0) {
-                com.showAlert(com.warning, "请选择需要进行付款的结算单");
-                return false;
-            }
-
-            $.each(balance.selectList, function(i, v) {
-
-                options["balances[" + i + "].bid"] = v;
-            });
-
-            com.post(api.balance.payedBalance, options, function() {
-
-                com.showAlert(com.info, "操作成功");
-                searcher.doSearch();
-                balance.selectList = [];
-            });
-        });
-
-        return [$checka];
-
-    }, 'resultList');
-
-    com.focusPage("#addBalance").click(function() {
-
-        balance.modals.addModal.modal("show");
-    });
-
-    function addBalance() {
-
-        if (com.validate('addModal')) {
-            return false;
-        }
-
-        var options = {
-            "balance.belonger.userId": com.typeahead("belongerName"),
-            "balance.amount": balance.items.amount.val(),
-            "balance.type": balance.items.type.val()
-        };
-
-        com.post(api.balance.addBalance, options, function(res) {
-
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-        });
-
-        balance.modals.addModal.modal("hide");
+$.extend(api.index, {
+    balanceDetailIndex: {
+        url: "/views/balance/balanceDetail.html"
+    },
+    balanceApportIndex: {
+        url: "/views/balance/balanceApport.html"
+    },
+    balance2balanceIndex: {
+        url: "/views/balance/balance2balance.html"
+    },
+    balance2accountIndex: {
+        url: "/views/balance/balance2account.html"
+    },
+    balanceSalesIndex: {
+        url: "/views/balance/balanceSales.html"
+    },
+    balanceSalesBalanceIndex: {
+        url: "/views/balance/balanceSalesBalance.html"
+    },
+    balanceSalesBalancePrint: {
+        url: "/views/balance/balanceSalesBalancePrint.html"
+    },
+    balanceSales2print: {
+        url: "/views/balance/balanceSales2print.html"
+    },
+    balanceCutpayIndex: {
+        url: "/views/balance/balanceCutpay.html"
+    },
+    balanceDccountDetailIndex: {
+        url: "/views/balance/balanceDccountDetail.html"
+    },
+    balanceCutpay2print: {
+        url: "/views/balance/balanceCutpay2print.html"
+    },
+    balanceSelectionItemIndex: {
+        url: "/views/balance/balanceSelectionItem.html"
+    },
+    balanceSelection2print: {
+        url: "/views/balance/balanceSelection2print.html"
+    },
+    balanceSelectionIndex: {
+        url: "/views/balance/balanceSelection.html"
+    },
+    balanceOalesIndex: {
+        url: "/views/balance/balanceOales.html"
+    },
+    balanceOalesItemIndex: {
+        url: "/views/balance/balanceOalesItem.html"
+    },
+    balanceSelectionRecordIndex: {
+        url: "/views/balance/balanceSelectionRecord.html"
     }
+});
 
+$.extend(api, {
+    balance: {
+        pageBalance: {
+            url: "pageBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
+        queryBalance: {
+            url: "queryBalance.do",
+            type: "query",
+            tranargs: [{
+                result: "balances",
+                args: ["amount", "surplus"]
+            }]
+        },
+        addBalance: {
+            url: "addBalance.do",
+            type: "update",
+            tranargs: {
+                args: ["balance.amount"]
+            }
+        },
+        balanceBalance: {
+            url: "balanceBalance.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceAccountes.money"]
+            }
+        },
+        payBalance: {
+            url: "payBalance.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceAccountes.money"]
+            }
+        },
+        payedBalance: {
+            url: "payedBalance.do"
+        },
+        pageBalanceAccount: {
+            url: "pageBalanceAccount.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["referMoney", "realMoney", "surplus"]
+            }]
+        },
+        queryBalanceAccount: {
+            url: "queryBalanceAccount.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceAccountes",
+                args: ["realMoney", "referMoney", "surplus"]
+            }]
+        },
+        queryBalanceAccountForTeller: {
+            url: "queryBalanceAccountForTeller.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceAccountes",
+                args: ["realMoney", "referMoney", "surplus"]
+            }]
+        },
+        addBalanceAccount: {
+            url: "addBalanceAccount.do",
+            demo: true
+        },
+        updateBalanceAccountForStatus: {
+            url: "updateBalanceAccountForStatus.do",
+            demo: true
+        },
+
+        withdrawBalanceAccount: {
+            url: "withdrawBalanceAccount.do",
+            demo: true,
+            type: "update",
+            tranargs: {
+                args: ["balanceAccount.money"]
+            }
+        },
+
+        queryBalanceDetailForBalance: {
+            url: "queryBalanceDetailForBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceDetails",
+                args: ["money"]
+            }]
+        },
+
+        queryBalanceApportForBalance: {
+            url: "queryBalanceApportForBalance.do",
+            type: "query",
+            tranargs: [{
+                result: "balanceApports",
+                args: ["money"]
+            }]
+        },
+        addBalanceApport: {
+            url: "addBalanceApport.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceApport.money"]
+            }
+        },
+
+        queryBalanceSalesForSales: {
+            url: "queryBalanceSalesForSales.do",
+            type: "query",
+            tranargs: [{
+                result: "salesBalances",
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
+            }]
+        },
+        queryBalanceSalesForBalance: {
+            url: "queryBalanceSalesForBalance.do",
+            type: "query",
+            tranargs: [{
+                result: "balances",
+                args: ["amount", "surplus"]
+            }]
+        },
+        pageComcost: {
+            url: "pageComcost.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["money"]
+            }]
+        },
+        queryComcost: {
+            url: "queryComcost.do",
+            type: "query",
+            tranargs: [{
+                result: "comcosts",
+                args: ["money"]
+            }]
+        },
+        addComcost: {
+            url: "addComcost.do",
+            type: "update",
+            tranargs: {
+                args: ["comcost.money"]
+            }
+        },
+        updateComcostForStatus: {
+            url: "updateComcostForStatus.do",
+            demo: true
+        },
+
+        pageBalanceCutpay: {
+            url: "pageBalanceCutpay.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["cutpay", "surplus", "total", "money"]
+            }]
+        },
+        queryBalanceCutpay: {
+            url: "queryBalanceCutpay.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceCutpays",
+                args: ["money", "cutpay", "total"]
+            }, {
+                result: "balanceCutpays-dccount",
+                args: ["cutpay", "surplus"]
+            }]
+        },
+        queryBalanceCutpayByOuid: {
+            url: "queryBalanceCutpayByOuid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceCutpays",
+                args: ["money", "cutpay", "total"]
+            }, {
+                result: "balanceCutpays-dccount",
+                args: ["cutpay", "surplus"]
+            }]
+        },
+        addBalanceCutpay: {
+            url: "addBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+        submitBalanceCutpay: {
+            url: "submitBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+        unbindBalanceCutpay: {
+            url: "unbindBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+        deductBalanceCutpay: {
+            url: "deductBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+
+        pageBalanceDccount: {
+            url: "pageBalanceDccount.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["cutpay", "surplus"]
+            }]
+        },
+        queryBalanceDccount: {
+            url: "queryBalanceDccount.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceDccountes",
+                args: ["cutpay", "surplus"]
+            }]
+        },
+        addBalanceDccount: {
+            url: "addBalanceDccount.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceDccount.cutpay", "balanceDccount.surplus"]
+            }
+        },
+        updateBalanceDccountForStatus: {
+            url: "updateBalanceDccountForStatus.do",
+            demo: true
+        },
+        updateBalanceDccount: {
+            url: "updateBalanceDccount.do",
+            demo: true
+        },
+        deleteBalanceSales: {
+            url: "deleteBalanceSales.do"
+        },
+
+        pageBalanceSales: {
+            url: "pageBalanceSales.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit"]
+            }]
+        },
+        pageBalanceSalesForBalance: {
+            url: "pageBalanceSalesForBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
+        pageBalanceSalesForSupplier: {
+            url: "pageBalanceSalesForSupplier.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit"]
+            }]
+        },
+        queryBalanceSales: {
+            url: "queryBalanceSales.do",
+            demo: true,
+            tranargs: [{
+                result: "balanceSaleses",
+                args: ["income", "cost", "payment", "profit"]
+            }]
+        },
+        queryBalanceSalesByBsid: {
+            url: "queryBalanceSalesByBsid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceSales",
+                args: ["income", "cost", "payment", "profit"]
+            }]
+        },
+        createBalanceSales: {
+            url: "createBalanceSales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSales.income", "balanceSales.cost", "balanceSales.payment", "balanceSales.profit"]
+            }
+        },
+        submitBalanceSales: {
+            url: "submitBalanceSales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSales.income", "balanceSales.cost", "balanceSales.payment", "balanceSales.profit"]
+            }
+        },
+        unbindBalanceSales: {
+            url: "unbindBalanceSales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSales.income", "balanceSales.cost", "balanceSales.payment", "balanceSales.profit"]
+            }
+        },
+        countBalanceSalesBalance: {
+            url: "countBalanceSalesBalance.do",
+            demo: true
+        },
+
+        updateBalanceSales: {
+            url: "updateBalanceSales.do",
+            demo: true
+        },
+
+        balanceBalanceSales: {
+            url: "balanceBalanceSales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSales.income", "balanceSales.payment"]
+            }
+        },
+        lockBalanceSales: {
+            url: "lockBalanceSales.do",
+            demo: true
+        },
+        unlockBalanceSales: {
+            url: "unlockBalanceSales.do",
+            demo: true
+        },
+        affirmBalanceSales: {
+            url: "affirmBalanceSales.do",
+            demo: true
+        },
+        amountBalanceSales: {
+            url: "amountBalanceSales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSales.income", "balanceSales.cost", "balanceSales.payment", "balanceSales.profit"]
+            }
+        },
+        pageBalanceSalesBalance: {
+            url: "pageBalanceSalesBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-salesBalance",
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
+            }, {
+                result: "paging-data-salesBalance-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+        queryBalanceSalesBalance: {
+            url: "queryBalanceSalesBalance.do",
+            type: "query",
+            demo: true,
+            tranargs: [{
+                result: "balanceSalesBalances-salesBalance",
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance", "coupon", "rate"]
+            }, {
+                result: "balanceSalesBalances-salesBalance-sales",
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
+        },
+
+        pageBalanceSelection: {
+            url: "pageBalanceSelection.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit", "discount"]
+            }]
+        },
+        pageBalanceSelectionForBalance: {
+            url: "pageBalanceSelectionForBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit", "discount"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
+        pageBalanceSelectionForSupplier: {
+            url: "pageBalanceSelectionForSupplier.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["income", "cost", "payment", "profit", "discount"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
+        queryBalanceSelection: {
+            url: "queryBalanceSelection.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceSelections",
+                args: ["income", "cost", "payment", "profit", "discount"]
+            }]
+        },
+        queryBalanceSelectionByBsid: {
+            url: "queryBalanceSelectionByBsid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceSelection",
+                args: ["income", "cost", "payment", "profit", "discount"]
+            }]
+        },
+
+        createBalanceSelection: {
+            url: "createBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+        submitBalanceSelection: {
+            url: "submitBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+        batchBalanceSelection: {
+            url: "batchBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+        unbindBalanceSelection: {
+            url: "unbindBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+        lockBalanceSelection: {
+            url: "lockBalanceSelection.do",
+            demo: true
+        },
+        unlockBalanceSelection: {
+            url: "unlockBalanceSelection.do",
+            demo: true
+        },
+        updateBalanceSelection: {
+            url: "updateBalanceSelection.do",
+            demo: true
+        },
+        balanceBalanceSelection: {
+            url: "balanceBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.payment"]
+            }
+        },
+        auditBalanceSelection: {
+            url: "auditBalanceSelection.do",
+            demo: true
+        },
+        unauditBalanceSelection: {
+            url: "unauditBalanceSelection.do",
+            demo: true
+        },
+        deleteBalanceSelection: {
+            url: "deleteBalanceSelection.do"
+        },
+        amountBalanceSelection: {
+            url: "amountBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+        discountBalanceSelection: {
+            url: "discountBalanceSelection.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
+            }
+        },
+
+        pageBalanceSelectionItem: {
+            url: "pageBalanceSelectionItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-selectionItem",
+                args: ["num", "initNum", "refnum", "postprice", "preprice"]
+            }, {
+                result: "paging-data-selectionItem-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-selectionItem-decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
+        queryBalanceSelectionItem: {
+            url: "queryBalanceSelectionItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-selectionItem",
+                args: ["num", "initNum", "refnum", "postprice", "preprice"]
+            }, {
+                result: "paging-data-selectionItem-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-selectionItem-decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
+        countBalanceSelectionItem: {
+            url: "countBalanceSelectionItem.do",
+            demo: true
+        },
+        pendingBalanceSelectionItem: {
+            url: "pendingBalanceSelectionItem.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
+            }
+        },
+
+        pageBalanceOales: {
+            url: "pageBalanceOales.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["profit"]
+            }]
+        },
+        pageBalanceOalesForBalance: {
+            url: "pageBalanceOalesForBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["profit"]
+            }, {
+                result: "paging-data-balance",
+                args: ["amount", "surplus", "cutpay"]
+            }]
+        },
+        queryBalanceOales: {
+            url: "queryBalanceOales.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceOaleses",
+                args: ["profit"]
+            }]
+        },
+        queryBalanceOalesByBoid: {
+            url: "queryBalanceOalesByBoid.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceOales",
+                args: ["profit"]
+            }]
+        },
+        createBalanceOales: {
+            url: "createBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        submitBalanceOales: {
+            url: "submitBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        unbindBalanceOales: {
+            url: "unbindBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        lockBalanceOales: {
+            url: "lockBalanceOales.do",
+            demo: true
+        },
+        unlockBalanceOales: {
+            url: "unlockBalanceOales.do",
+            demo: true
+        },
+        updateBalanceOales: {
+            url: "updateBalanceOales.do",
+            demo: true
+        },
+        balanceBalanceOales: {
+            url: "balanceBalanceOales.do",
+        },
+        deleteBalanceOales: {
+            url: "deleteBalanceOales.do"
+        },
+        amountBalanceOales: {
+            url: "amountBalanceOales.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceOales.profit"]
+            }
+        },
+        pageBalanceOalesItem: {
+            url: "pageBalanceOalesItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-oales",
+                args: ["total", "award", "profit", "cost", "threshold"]
+            }]
+        },
+        queryBalanceOalesItem: {
+            url: "queryBalanceOalesItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data-oales",
+                args: ["total", "award", "profit", "cost", "threshold"]
+            }]
+        },
+        queryBalanceSelectionRecord: {
+            url: "queryBalanceSelectionRecord.do",
+            demo: true
+        },
+
+        addBalancePicture: {
+            url: "addBalancePicture.do",
+            intercept: true
+        },
+        queryBalancePicture: {
+            url: "queryBalancePicture.do"
+        },
+        deleteBalancePicture: {
+            url: "deleteBalancePicture.do"
+        }
+    }
 });

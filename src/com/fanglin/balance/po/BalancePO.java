@@ -52,11 +52,15 @@ public class BalancePO implements java.io.Serializable {
 
 	private UserPO creater;
 
+	private UserPO balancer;
+
 	private Timestamp createTime;
 
 	private Timestamp startTime;
 
 	private Timestamp endTime;
+
+	private Timestamp balanceTime;
 
 	private long amount;
 
@@ -93,16 +97,6 @@ public class BalancePO implements java.io.Serializable {
 		this.bid = bid;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "buid", referencedColumnName = "uid")
-	public UserPO getBelonger() {
-		return belonger;
-	}
-
-	public void setBelonger(UserPO belonger) {
-		this.belonger = belonger;
-	}
-
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -120,6 +114,26 @@ public class BalancePO implements java.io.Serializable {
 
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "buid", referencedColumnName = "uid")
+	public UserPO getBelonger() {
+		return belonger;
+	}
+
+	public void setBelonger(UserPO belonger) {
+		this.belonger = belonger;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "bluid", referencedColumnName = "uid")
+	public UserPO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserPO balancer) {
+		this.balancer = balancer;
 	}
 
 	@Column(name = "createTime")
@@ -147,6 +161,15 @@ public class BalancePO implements java.io.Serializable {
 
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
 	}
 
 	@Column(name = "amount")
@@ -214,12 +237,12 @@ public class BalancePO implements java.io.Serializable {
 
 	public BalanceVO ptv(BalanceVO balanceVO) {
 
-		BeanUtil.copyProperties(this, balanceVO, Arrays.asList("belonger", "creater"));
+		BeanUtil.copyProperties(this, balanceVO, Arrays.asList("creater", "belonger", "balancer"));
 
 		if (balanceVO.getCreater() != null && getCreater() != null) balanceVO.getCreater().setBaseInfo(getCreater());
 		if (balanceVO.getBelonger() != null && getBelonger() != null) balanceVO.getBelonger().setBaseInfo(getBelonger());
+		if (balanceVO.getBalancer() != null && getBalancer() != null) balanceVO.getBalancer().setBaseInfo(getBalancer());
 
 		return balanceVO;
 	}
-
 }

@@ -301,9 +301,11 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(140035, "增减项状态不可操作");
 		}
 
+		int num = selectionItemDao.countSelectionItemForNum(selectionItemPO.getOrderId(), selectionItemPO.getAreaId(), selectionItemPO.getQuoteId()) - selectionItemPO.getNum() + selectionItemVO.getNum();
+
 		BrandPO brandPO = brandDao.queryBrandByBid(selectionItemPO.getGoods().getBid());
 
-		if (brandPO.getCategory().getIsLimit() == CategoryPO.ISLIMIT_LIMIT_INT && selectionItemVO.getNum() > selectionItemPO.getInitNum()) {
+		if (brandPO.getCategory().getIsLimit() == CategoryPO.ISLIMIT_LIMIT_INT && num > selectionItemPO.getInitNum()) {
 			throw new FLException(200044, "拆单量不足");
 		}
 
@@ -633,6 +635,53 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionItemPO.setRefnum(selectionItemVO.getRefnum());
 
 		selectionItemDao.update(selectionItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addedSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException {
+
+		SelectionItemPO selectionItem = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItem == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		int num = selectionItemDao.countSelectionItemForNum(selectionItem.getOrderId(), selectionItem.getAreaId(), selectionItem.getQuoteId()) + selectionItemVO.getNum();
+
+		BrandPO brandPO = brandDao.queryBrandByBid(selectionItem.getGoods().getBid());
+
+		if (brandPO.getCategory().getIsLimit() == CategoryPO.ISLIMIT_LIMIT_INT && num > selectionItem.getInitNum()) {
+			throw new FLException(200044, "拆单量不足");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		SelectionItemPO selectionItemPO = new SelectionItemPO();
+
+		selectionItemPO.setSid(selectionItem.getSid());
+		selectionItemPO.setQuoteId(selectionItem.getQuoteId());
+		selectionItemPO.setOrderId(selectionItem.getOrderId());
+		selectionItemPO.setAreaId(selectionItem.getAreaId());
+		selectionItemPO.setAreaName(selectionItem.getAreaName());
+		selectionItemPO.setGoods(selectionItem.getGoods());
+		selectionItemPO.setSuid(selectionItem.getSuid());
+		selectionItemPO.setQiid(selectionItem.getQiid());
+		selectionItemPO.setSgid(selectionItem.getSgid());
+		selectionItemPO.setInitNum(selectionItem.getInitNum());
+		selectionItemPO.setPostprice(selectionItem.getPostprice());
+		selectionItemPO.setPreprice(selectionItem.getPreprice());
+		selectionItemPO.setType(selectionItemVO.getType());
+		selectionItemPO.setCompany(selectionItem.getCompany());
+		selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
+		selectionItemPO.setCreater(operater);
+		selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+		selectionItemPO.setNum(selectionItemVO.getNum());
+
+		selectionItemDao.save(selectionItemPO);
 
 		return 0;
 	}

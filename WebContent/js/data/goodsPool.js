@@ -113,14 +113,50 @@ $(function () {
         goodsPool.items.thrkind.bindData(thrKinds, 'key', 'value');
     });
 
-    goodsPool.items.onekind.change(function () {
-
+    com.focusPage('#onekind').on("change", function () {
         updateZerokind();
+        com.post(api.data.queryGoodsKindByFgkid, { "goodsKind.parent.gkid": goodsPool.items.onekind.val() }, function (res) {
+
+            var twoKinds = [];
+            var thrKinds = [];
+            $.each(res.goodsKinds, function (i, v) {
+
+                if (v.status != 0)
+                    return true;
+
+                twoKinds.push({
+                    "key": v.gkid,
+                    "value": v.name
+                });
+            });
+
+            goodsPool.items.twokind.bindData(twoKinds, 'key', 'value', '无');
+            goodsPool.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
+        });
+
     });
 
-    goodsPool.items.twokind.change(function () {
-
+    com.focusPage('#twokind').on("change", function () {
         updateZerokind();
+        com.post(api.data.queryGoodsKindByFgkid, { "goodsKind.parent.gkid": goodsPool.items.twokind.val() }, function (res) {
+
+            var thrKinds = [];
+
+            $.each(res.goodsKinds, function (i, v) {
+
+                if (v.status != 0)
+                    return true;
+
+                thrKinds.push({
+                    "key": v.gkid,
+                    "value": v.name
+                });
+            });
+
+            goodsPool.items.thrkind.bindData(thrKinds, 'key', 'value', '无');
+
+        });
+
     });
 
     goodsPool.items.thrkind.change(function () {
@@ -177,11 +213,13 @@ $(function () {
 
         var $btnGroup = $("<div></div>").addClass("btn-group");
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary').attr('id', 'add').css({
-            'margin-left': '4px'
-        }).appendTo($btnGroup);
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        if (goodsPool.pageType == 0) {
+            var $adda = $('<a></a>').addClass('btn btn-minier btn-primary').attr('id', 'add').css({
+                'margin-left': '4px'
+            }).appendTo($btnGroup);
+            var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+            var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        }
 
         var $exportGroup = $("<div></div>").addClass("btn-group hide");
         var $addaExport = $('<a></a>').addClass('btn btn-minier btn-success dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoodsPool').css({
@@ -464,6 +502,10 @@ $(function () {
             drawRadio(constant.data().goodsPool.cascade.datas, "picture", com.focusPage("#picturecascadeDiv"), false, v.picturecascade);
 
             com.popup4model("#addGoodsPoolLayer", "编辑");
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "颜色",
@@ -473,6 +515,10 @@ $(function () {
             params.data.goodsPool = v;
 
             com.popup4page('#goodsPoolLayerPopUp', 'views/data/colorPool.html', '颜色池');
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "规格",
@@ -482,6 +528,10 @@ $(function () {
             params.data.goodsPool = v;
 
             com.popup4page('#goodsPoolLayerPopUp', 'views/data/formatPool.html', '规格池');
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "价格",
@@ -491,6 +541,10 @@ $(function () {
             params.data.goodsPool = v;
 
             com.popup4page('#goodsPoolLayerPopUp', 'views/data/pricePool.html', '价格池');
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "图片",
@@ -518,6 +572,10 @@ $(function () {
             }, null, false);
 
             goodsPool.modals.drawingGoodsPoolModal.modal("show");
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "分配",
@@ -527,6 +585,10 @@ $(function () {
             params.data.goodsPool = v;
 
             com.popup4page('#goodsListPopUp', 'views/data/goodsPool2alloce.html', '商品');
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }, {
         name: "状态",
@@ -548,6 +610,10 @@ $(function () {
         init: function (v) {
 
             return !v.status;
+        },
+        show: function (v) {
+
+            return v.atttype == 0;
         }
     }];
 

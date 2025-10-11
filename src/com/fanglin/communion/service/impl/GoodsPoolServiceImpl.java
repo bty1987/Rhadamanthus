@@ -9,17 +9,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.dao.ColorPoolDao;
+import com.fanglin.communion.dao.FormatPoolDao;
 import com.fanglin.communion.dao.GoodsPoolDao;
 import com.fanglin.communion.po.BrandPO;
+import com.fanglin.communion.po.ColorPoolPO;
+import com.fanglin.communion.po.FormatPoolPO;
 import com.fanglin.communion.po.GoodsPoolPO;
 import com.fanglin.communion.service.GoodsPoolService;
 import com.fanglin.communion.vo.GoodsPoolVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.common.dao.GoodsKindDao;
 import com.fanglin.data.common.vo.GoodsKindVO;
 import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.AccessoriesTypeVO;
 import com.fanglin.data.po.AccessoriesTypePO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsKindPO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.utils.BeanUtil;
@@ -38,6 +45,15 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 	@Autowired
 	private GoodsDao goodsDao;
+
+	@Autowired
+	private GoodsKindDao goodsKindDao;
+
+	@Autowired
+	private ColorPoolDao colorPoolDao;
+
+	@Autowired
+	private FormatPoolDao formatPoolDao;
 
 	@Override
 	public void pageGoodsPool(Paging paging, List<Filter> filters, GoodsPoolVO goodsPool) throws FLException {
@@ -170,21 +186,55 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 		if (goodsPoolVO.getTwokind() != null && goodsPoolVO.getTwokind().getGkid() != null) goodsPoolPO.setTwokind(new GoodsKindPO(goodsPoolVO.getTwokind().getGkid()));
 		if (goodsPoolVO.getThrkind() != null && goodsPoolVO.getThrkind().getGkid() != null) goodsPoolPO.setThrkind(new GoodsKindPO(goodsPoolVO.getThrkind().getGkid()));
 
-		List<String> pinyins = PinYin4Util.getPinyin(goodsPoolVO.getName());
+		GoodsKindPO twokind = goodsKindDao.get(goodsPoolVO.getTwokind().getGkid());
+
+		if (twokind == null) {
+			throw new FLException(130127, "类别不存在");
+		}
+
+		BrandPO brandPO = brandDao.get(goodsPoolVO.getBid());
+		String brandName = brandPO.getName();
+
+		StringBuffer goodsname = new StringBuffer();
+		goodsname.append(goodsPoolPO.getCategory()).append(twokind.getName()).append(brandName);
+
+		if (goodsPoolVO.getColor() != null) goodsname.append(goodsPoolVO.getColor());
+		if (goodsPoolVO.getFormat() != null) goodsname.append(goodsPoolVO.getFormat());
+		if (goodsPoolVO.getModel() != null) goodsname.append(goodsPoolVO.getModel());
+		goodsPoolPO.setName(goodsname.toString());
+
+		List<String> pinyins = PinYin4Util.getPinyin(goodsname.toString());
 
 		goodsPoolPO.setAlias(goodsPoolVO.getAlias());
 		goodsPoolPO.setPinyin((String) pinyins.get(0));
 		goodsPoolPO.setStatus(GoodsPoolPO.STATUS_ENABLE_INT);
 		goodsPoolPO.setType(GoodsPoolPO.TYPE_GOODS_INT);
 
-		BrandPO brandPO = brandDao.get(goodsPoolVO.getBid());
-		String brandName = brandPO.getName();
-
 		goodsPoolPO.setBrand(brandName);
 
 		goodsPoolDao.save(goodsPoolPO);
 
 		goodsPoolVO.setGpid(goodsPoolPO.getGpid());
+
+		if (goodsPoolVO.getColor() != null) {
+
+			ColorPoolPO colorPoolPO = new ColorPoolPO();
+			colorPoolPO.setGoodsPool(goodsPoolPO);
+			colorPoolPO.setName(goodsPoolVO.getColor());
+			colorPoolPO.setStatus(ColorPO.STATUS_ENABLE_INT);
+
+			colorPoolDao.save(colorPoolPO);
+		}
+
+		if (goodsPoolVO.getFormat() != null) {
+
+			FormatPoolPO formatPoolPO = new FormatPoolPO();
+			formatPoolPO.setGoodsPool(goodsPoolPO);
+			formatPoolPO.setInfo(goodsPoolVO.getFormat());
+			formatPoolPO.setStatus(FormatPO.STATUS_ENABLE_INT);
+
+			formatPoolDao.save(formatPoolPO);
+		}
 
 		return 0;
 	}
@@ -232,7 +282,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int batchAddFromPool(List<GoodsPoolVO> goodsPools) throws FLException {
+	public int batchAddFromPool(List<GoodsPoolVO> goodsPools, int company) throws FLException {
 
 		if (goodsPools == null) {
 			throw new FLException(260004, "没有选择商品");
@@ -247,6 +297,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 			}
 
 			GoodsPoolPO goodsPoolPO = goodsPoolDao.get(goodsPoolVO.getGpid());
+
 			GoodsPO goodsPO = new GoodsPO();
 
 			BeanUtil.copyProperties(goodsPoolPO, goodsPO, Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
@@ -255,6 +306,7 @@ public class GoodsPoolServiceImpl implements GoodsPoolService {
 			if (goodsPoolPO.getOnekind() != null) goodsPO.setOnekind(new GoodsKindPO(goodsPoolPO.getOnekind().getGkid()));
 			if (goodsPoolPO.getTwokind() != null) goodsPO.setTwokind(new GoodsKindPO(goodsPoolPO.getTwokind().getGkid()));
 			if (goodsPoolPO.getThrkind() != null) goodsPO.setThrkind(new GoodsKindPO(goodsPoolPO.getThrkind().getGkid()));
+			goodsPO.setCompany(company);
 
 			goodsDao.save(goodsPO);
 		}

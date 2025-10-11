@@ -176,6 +176,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 			reveBalancePO.setPbalance(-vbalance);
 			reveBalancePO.setVbalance(-vbalance);
 			reveBalancePO.setTotal(-salesBalancePO.getTotal());
+			reveBalancePO.setRate(1000);
 
 			salesBalanceDao.save(reveBalancePO);
 		}

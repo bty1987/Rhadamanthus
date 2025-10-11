@@ -5,18 +5,21 @@ $(function() {
         modals: {
             updateSelectionItemModal: com.focusPage('#updateSelectionItemModal'),
             refundSelectionItemModal: com.focusPage('#refundSelectionItemModal'),
+            addedSelectionItemModal: com.focusPage('#addedSelectionItemModal'),
             balanceSelectionItemModal: com.focusPage('#balanceSelectionItemModal'),
             pictureModal: com.focusPage('#pictureModal')
         },
         btns: {
             updateBtn: com.focusPage('#updateBtn'),
             refundBtn: com.focusPage('#refundBtn'),
+            addedBtn: com.focusPage('#addedBtn'),
             balanceSalesBtn: com.focusPage('#balanceSalesBtn'),
         },
         items: {
             num: com.focusPage("#num"),
             comment: com.focusPage('#comment'),
             refnum: com.focusPage('#refnum'),
+            added: com.focusPage('#added'),
             utilitynum: com.focusPage('#utilitynum'),
             balanceSales: com.focusPage('#balanceSales'),
 
@@ -109,6 +112,12 @@ $(function() {
         com.cleanItems(selectionItem.items);
     });
 
+    selectionItem.modals.addedSelectionItemModal.on("hide.bs.modal", function() {
+
+        com.clearValidator();
+        com.cleanItems(selectionItem.items);
+    });
+
     selectionItem.modals.balanceSelectionItemModal.on("hide.bs.modal", function() {
 
         com.clearValidator();
@@ -117,6 +126,7 @@ $(function() {
 
     selectionItem.btns.updateBtn.bindClick(updateData);
     selectionItem.btns.refundBtn.bindClick(refundSelectionItem);
+    selectionItem.btns.addedBtn.bindClick(addedSelectionItem);
     selectionItem.btns.balanceSalesBtn.bindClick(balanceSalesData);
 
     selectionItem.pageConfig = getConfig(params['urlLoadParams'].type, 8);
@@ -159,6 +169,7 @@ $(function() {
             var $btnReject = $('<a></a>').addClass('btn btn-minier btn-pink').html('驳回');
             var $btnAccount = $('<a></a>').addClass('btn btn-minier btn-pink').html('对账');
             var $btnSelect = $('<a></a>').addClass('btn btn-minier btn-pink').html('选材单');
+            var $btnAdded = $('<a></a>').addClass('btn btn-minier btn-pink').html('补量');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-success').html('打印');
             var $btnPicture = $('<a></a>').addClass('btn btn-minier btn-success').html('图片');
@@ -253,6 +264,9 @@ $(function() {
             if (selectionItem.pageConfig.pageBtn.contains("select"))
                 $divBtnWrap.append($btnSelect);
 
+            if (selectionItem.pageConfig.pageBtn.contains("added"))
+                $divBtnWrap.append($btnAdded);
+
             if (selectionItem.pageConfig.pageBtn.contains("delete"))
                 $divBtnWrap.append($btnDel);
 
@@ -272,6 +286,7 @@ $(function() {
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT ? $btnBalance.show() : $btnBalance.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnReject.show() : $btnReject.hide();
             v.status == constant.quotation().selectionItem.STATUS_REVIEW_INT || v.status == constant.quotation().selectionItem.STATUS_BALANCE_INT ? $btnDel.hide() : $btnDel.show();
+            [constant.quotation().selectionItem.TYPE_ALONE_INT, constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT, constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT, constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT].indexOf(v.type) != -1 ? $btnAdded.hide() : $btnAdded.show();
 
             $divBtnWrap.appendTo($h3);
 
@@ -296,7 +311,15 @@ $(function() {
                 selectionItem.parameters.num = v.num;
 
                 selectionItem.modals.refundSelectionItemModal.modal('show');
-            })
+            });
+
+            $btnAdded.click(function(e) {
+                selectionItem.parameters.siid = v.siid;
+                selectionItem.parameters.num = v.num;
+                selectionItem.parameters.type = v.type;
+
+                selectionItem.modals.addedSelectionItemModal.modal('show');
+            });
 
             $btnRran.click(function(e) {
 
@@ -775,6 +798,43 @@ $(function() {
         });
 
         selectionItem.modals.refundSelectionItemModal.modal("hide");
+    }
+
+    function addedSelectionItem(){
+
+        if (com.validate('addedSelectionItemModal'))
+            return false;
+
+        if (selectionItem.items.added.val() == "" || selectionItem.items.added.val() == 0) {
+            com.showAlert(com.warning, '请输入补量');
+            return false;
+        }
+
+        var type = selectionItem.parameters.type;
+
+        if (type == constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
+            type = constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT;
+        } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT){
+            type = constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT;
+        } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT){
+            type = constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT;
+        } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT){
+            type = constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT;
+        } else if (type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT){
+            type = constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT;
+        }
+
+        com.post(api.quotation.addedSelectionItem, {
+            "selectionItem.siid": selectionItem.parameters.siid,
+            "selectionItem.num": selectionItem.items.added.val(),
+            "selectionItem.type": type
+        }, function(res) {
+
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+
+        selectionItem.modals.addedSelectionItemModal.modal("hide");
     }
 
     function balanceSalesData() {

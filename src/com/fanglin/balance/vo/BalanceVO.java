@@ -17,15 +17,19 @@ public class BalanceVO implements Serializable {
 
 	private String no;
 
+	private UserBaseVO creater;
+
 	private UserBaseVO belonger;
 
-	private UserBaseVO creater;
+	private UserBaseVO balancer;
 
 	private Timestamp createTime;
 
 	private Timestamp startTime;
 
 	private Timestamp endTime;
+
+	private Timestamp balanceTime;
 
 	private Long amount;
 
@@ -67,6 +71,14 @@ public class BalanceVO implements Serializable {
 		this.no = no;
 	}
 
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
 	public UserBaseVO getBelonger() {
 		return belonger;
 	}
@@ -75,12 +87,12 @@ public class BalanceVO implements Serializable {
 		this.belonger = belonger;
 	}
 
-	public UserBaseVO getCreater() {
-		return creater;
+	public UserBaseVO getBalancer() {
+		return balancer;
 	}
 
-	public void setCreater(UserBaseVO creater) {
-		this.creater = creater;
+	public void setBalancer(UserBaseVO balancer) {
+		this.balancer = balancer;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -108,6 +120,15 @@ public class BalanceVO implements Serializable {
 
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
 	}
 
 	public Long getAmount() {

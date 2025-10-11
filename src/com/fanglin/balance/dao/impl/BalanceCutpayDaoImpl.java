@@ -47,7 +47,7 @@ public class BalanceCutpayDaoImpl extends DaoImpl<BalanceCutpayPO> implements Ba
 	@Override
 	public long amountBalanceCutpay(long bid) {
 
-		String sql = "select sum(money)) from balance.balancecutpay where bid = :bid";
+		String sql = "select sum(money) from balance.balancecutpay where bid = :bid";
 
 		BigDecimal amount = (BigDecimal) session().createSQLQuery(sql).setLong("bid", bid).uniqueResult();
 

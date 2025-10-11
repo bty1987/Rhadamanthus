@@ -7,18 +7,32 @@ jQuery(function($) {
 
         modals: {
             contructionNodeModal: com.focusPage("#contructionNodeModal"),
+            checkModal: com.focusPage("#checkModal"),
+        },
+
+        btns: {
+            checkBtn: com.focusPage("#checkBtn", "#checkModal").click(checkInfo),
         },
 
         nodeItems: {
             contructionNodes: com.focusPage("#contructionNodes", "#contructionNodeModal"),
-
         },
+
+        items: {
+            isCheck: com.focusPage("#isCheck", "#checkModal"),
+        },
+
+        info: null,
+
+        pageType: params.urlLoadParams.type,
     };
 
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {
         "departmentType.name": "工程部",
         "user.status": 0
     }, "autoFillKeyValue", "key", "value", null);
+
+    information.items.isCheck.bindData(constant.construction().constructionInfo.isCheck.datas, "key", "value");
 
     var displayFunc = (function() {
 
@@ -42,6 +56,7 @@ jQuery(function($) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.decoration.orderId));
+
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $invalid = $('<div></div>').addClass('pull-right');
@@ -49,6 +64,8 @@ jQuery(function($) {
             var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-yellow').html("施工计划");
             var $btnConplanPrint = $('<a></a>').addClass('btn btn-minier btn-success').html("打印");
             var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-success').html("预派监理");
+            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
+
             var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.decoration.orderId);
@@ -88,7 +105,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).appendTo($h3);
+            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
@@ -108,12 +125,20 @@ jQuery(function($) {
             $btnProLine.click(function() {
 
                 pretreat(v);
-
             });
 
             $btnConplan.click(function() {
 
-                viewConstructionPlanIndex(v);
+                params.construction = v;
+
+                com.popup4page("#stockRecordPopUp", "/views/construction/constructionPlan.html", "计划");
+            });
+
+            $btnCheck.click(function() {
+
+                information.info = v;
+
+                information.modals.checkModal.modal("show");
             });
 
             return $liLine;
@@ -134,10 +159,22 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration.supervisor', 'decoration.designStatus', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", ], "condList", api.construction.pageConstructionInfo, function(data) {
+    var options = {
+        "constructionInfo.drawlineTime": ""
+    }
+
+    if (information.pageType == "plan") {
+        options["constructionInfo.decoration.houseType"] = "期房"
+    }
+
+    if (information.pageType == "done") {
+        options["constructionInfo.decoration.houseType"] = "现房"
+    }
+
+    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", , "construction-info-isCheck", ], "condList", api.construction.pageConstructionInfo, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", "constructionInfoPostData", null, false, null, function() {
+    }, "pagenation", "constructionInfoPostData", options, false, null, function() {
 
         var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'export').css("margin", "0px 3px");
         var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
@@ -163,7 +200,23 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "decoration.orderId"], ["楼盘地址", "decoration.house.houseNumber"], ["面积", "decoration.house.buildArea"], ["设计分区", "decoration.designer.dept.fatherDept.name"], ["设计部", "decoration.designer.dept.name"], ["设计师", "decoration.designer.userName"], ["签单时间", "decoration.contractTime"], ["预计交钥匙时间", "keyTime"], ["预计放线时间", "drawlineTime"], ["预计完工时间", 'finishTime'], ["预计设计完成时间", 'designTime'], ["合同方案确认时间", 'decoration.sdesignTime'], ["放线方案确认时间", 'decoration.edesignTime'], ["订单类型", "decoration.typeness"], ["工程状态", "decoration.projectStatus"]],
+                column: [//
+                ["装修单号", "decoration.orderId"], //
+                ["楼盘地址", "decoration.house.houseNumber"], //
+                ["面积", "decoration.house.buildArea"], //
+                ["设计分区", "decoration.designer.dept.fatherDept.name"], //
+                ["设计部", "decoration.designer.dept.name"], //
+                ["设计师", "decoration.designer.userName"], //
+                ["签单时间", "decoration.contractTime"], //
+                ["预计交钥匙时间", "keyTime"], //
+                ["预计放线时间", "drawlineTime"], //
+                ["预计完工时间", 'finishTime'], //
+                ["预计设计完成时间", 'designTime'], //
+                ["合同方案确认时间", 'decoration.sdesignTime'], //
+                ["放线方案确认时间", 'decoration.edesignTime'], //
+                ["订单类型", "decoration.typeness"], //
+                ["工程状态", "decoration.projectStatus"]//
+                ],
                 list: res.paging.data
 
             }, function(v) {
@@ -329,14 +382,26 @@ jQuery(function($) {
 
             com.showAlert(com.info, "放线成功");
 
+            searcher.doSearch();
+
             information.contructionNodeModal.modal("hide");
         });
     });
 
-    function viewConstructionPlanIndex(v) {
+    function checkInfo() {
 
-        params.construction = v;
+        var option = {
+            "constructionInfo.ciid": information.information.ciid,
+            "constructionInfo.isCheck": com.typeahead("supervisor"),
+        };
 
-        com.popup4page("#stockRecordPopUp", "/views/construction/constructionPlan.html", "计划");
+        com.post(api.construction.checkConstructionInfo, option, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            searcher.doSearch();
+
+            information.checkModal.modal("hide");
+        });
     }
 });

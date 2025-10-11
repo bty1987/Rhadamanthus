@@ -106,21 +106,21 @@ var printselectionDetail = (function() {
                     if (params.quotation.supplierPage == true && params.userInfo.user.uid != v.supplier.uid)
                         return true;
 
-                    var num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
+                    var num = [2, 4, 32, 34].indexOf(v.type) != -1 ? -v.num : v.num;
 
                     var item = {
                         "name": ""
                     };
 
-                    if ([0].indexOf(v.type) != -1 && quotationFunctionAreaItems[v.quoteId])
+                    if ([0, 30].indexOf(v.type) != -1 && quotationFunctionAreaItems[v.quoteId])
                         item = {
                             "name": quotationFunctionAreaItems[v.quoteId].itemName
                         }
-                    if ([1, 2].indexOf(v.type) != -1 && extensionItems[v.quoteId])
+                    if ([1, 2, 31, 32].indexOf(v.type) != -1 && extensionItems[v.quoteId])
                         item = {
                             "name": extensionItems[v.quoteId].itemName
                         }
-                    if ([3, 4].indexOf(v.type) != -1 && addReduceItems[v.quoteId])
+                    if ([3, 4, 13, 14, 33, 34].indexOf(v.type) != -1 && addReduceItems[v.quoteId])
                         item = {
                             "name": addReduceItems[v.quoteId].itemName
                         }

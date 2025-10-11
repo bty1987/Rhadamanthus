@@ -17,7 +17,7 @@ public interface BalanceService {
 	public int addBalance(BalanceVO balanceVO, String userId, int company);
 
 	public int balanceBalance(BalanceVO balanceVO, List<BalanceAccountVO> accounts, String userId) throws FLException;
-	
+
 	public int payBalance(BalanceVO balanceVO, List<BalanceAccountVO> accounts, String userId) throws FLException;
 
 	public int payedBalance(List<BalanceVO> balances) throws FLException;

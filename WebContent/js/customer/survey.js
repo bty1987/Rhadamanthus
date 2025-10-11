@@ -203,49 +203,66 @@ jQuery(function($) {
         }, function(res) {
 
             survey.items.name.html(res.survey.name);
+
             var state = res.survey.status;
+
             $.each(res.survey.items, function(i, v) {
+
+                var type = v.type;
 
                 if (v.type != constant.customer().survey.TYPE_TEXT_INT) {
                     var contentDiv = $('<div class="col-md-12 hr8"></div>').appendTo(survey.items.itemlist);
                     var titleSpan = $('<span class="col-md-12"></span>').html((i) + ". " + v.name).appendTo(contentDiv);
                 }
-                var type= v.type;
+
                 if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
                     survey.items.title.html(v.content);
                 } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
+
                     if (state != constant.customer().survey.STATUS_SEND_INT) {
-                        var textArea = $('<textarea class="col-md-12 text" disabled></textarea>').html(v.content).appendTo(contentDiv);
-                    }else{
-                        var textArea = $('<textarea class="col-md-12 text"></textarea>').html(v.content).appendTo(contentDiv);
+                        var textArea = $('<textarea class="col-md-12 text" disabled></textarea>').attr("id", "input_" + v.siid).html(v.content).appendTo(contentDiv);
+                    } else {
+                        var textArea = $('<textarea class="col-md-12 text"></textarea>').attr("id", "input_" + v.siid).html(v.content).appendTo(contentDiv);
                     }
+
                 } else if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
                     var ridioDivAll = $('<div class="col-md-12 control-group"></div>').appendTo(contentDiv);
                     ridioDivAll.prop('id', v.siid);
                     $.each(v.options, function(j, option) {
+
                         elect(ridioDivAll, option, type, state);
                     });
                 } else if (v.type == constant.customer().survey.TYPE_MULTIPLE_INT) {
-                    var checkDivAll = $('<div class="col-md-12 control-group"></div>').appendTo(contentDiv);
-                    checkDivAll.prop('id', v.siid);
+
+                    var checkDivAll = $('<div class="col-md-12 control-group"></div>').prop('id', v.siid).appendTo(contentDiv);
+
                     $.each(v.options, function(j, option) {
+
                         elect(checkDivAll, option, type, state);
                     });
+                } else if (v.type == 4) {
+                    var inputdate = $('<input type="text" readonly="readonly" data-type="dateRangePicker">').attr("id", "input_" + v.siid).html(v.content).appendTo(contentDiv);
+                    com.datetime(inputdate);
                 }
 
             });
-            if (v.status == constant.customer().survey.STATUS_SEND_INT){
+
+            if (v.status == constant.customer().survey.STATUS_SEND_INT) {
                 var $execute = $('<div class="modal-footer" id="exDiv"></div>').appendTo(survey.items.particulars);
                 var $button = $('<button class="btn btn-primary" type="button" id="execute">执行</button>').appendTo($execute);
-
             }
+
             survey.modals.surveyModal.modal("show");
 
-            com.focusPage("#execute").click(function () {
+            com.focusPage("#execute").click(function() {
+
                 var options = {};
                 options["survey.sid"] = res.survey.sid;
 
-                $.each(res.survey.items, function (i, v) {
+                $.each(res.survey.items, function(i, v) {
+
+                    console.log(v)
+
                     if (v.type != constant.customer().survey.TYPE_TEXT_INT) {
                         options["survey.items[" + i + "].siid"] = v.siid;
                         options["survey.items[" + i + "].name"] = v.name;
@@ -255,43 +272,54 @@ jQuery(function($) {
                         options["survey.items[" + i + "].content"] = v.content;
                     } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
                         options["survey.items[" + i + "].siid"] = v.siid;
-                        options["survey.items[" + i + "].content"] = com.focusPage(".text").val();
+                        options["survey.items[" + i + "].content"] = com.focusPage("#input_" + v.siid).val();
+                    } else if (v.type == constant.customer().survey.TYPE_DATE_INT) {
+                        options["survey.items[" + i + "].siid"] = v.siid;
+                        options["survey.items[" + i + "].content"] = com.focusPage("#input_" + v.siid).val();
                     }
 
-                    if (v.options.length != 0){
-                        //单选
-                        if (v.type == constant.customer().survey.TYPE_SINGLE_INT){
+                    if (v.options.length != 0) {
+
+                        if (v.type == constant.customer().survey.TYPE_SINGLE_INT) { // 单选
 
                             var checkbox = com.focusPage("input[type='radio']");
-                            $.each(checkbox, function (k, n) {
+
+                            $.each(checkbox, function(k, n) {
+
                                 if (k >= v.options.length) {
-                                    return
+                                    return false;
                                 }
-                                if ($(n).prop("checked")){
+
+                                if ($(n).prop("checked")) {
                                     options["survey.items[" + i + "].options[" + k + "].checked"] = 0;
-                                }else {
+                                } else {
                                     options["survey.items[" + i + "].options[" + k + "].checked"] = 1;
                                 }
+
                                 $(n).remove()
                             });
-                        }else {
-                            //多选
+                        } else { // 多选
+
                             var checkboxs = com.focusPage("input[type='checkbox']");
-                            $.each(checkboxs, function (k, n) {
+
+                            $.each(checkboxs, function(k, n) {
+
                                 if (k >= v.options.length) {
-                                    return
+                                    return false;
                                 }
-                                if ($(n).prop("checked")){
+
+                                if ($(n).prop("checked")) {
                                     options["survey.items[" + i + "].options[" + k + "].checked"] = 0;
-                                }else {
+                                } else {
                                     options["survey.items[" + i + "].options[" + k + "].checked"] = 1;
                                 }
+
                                 $(n).remove()
                             });
                         }
                     }
 
-                    $.each(v.options, function (j, b) {
+                    $.each(v.options, function(j, b) {
 
                         options["survey.items[" + i + "].siid"] = v.siid;
                         if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
@@ -304,9 +332,11 @@ jQuery(function($) {
                         }
                     })
                 });
+
                 com.showConfirm("是否确认执行调研信息", function() {
 
                     com.post(api.customer.handleSurvey, options, function() {
+
                         survey.modals.surveyModal.modal("hide");
                         searcher.doSearch();
                     });
@@ -321,22 +351,26 @@ jQuery(function($) {
         var ridioDiv = $('<div class="col-md-12"></div>').appendTo(contentDiv);
         var div = $('<div></div>').addClass("checkbox").appendTo(ridioDiv);
         var label = $('<label class="col-md-5"></label>').appendTo(div);
-        
+
         if (status != constant.customer().survey.STATUS_SEND_INT) {
             var input = $('<input class="ace check" disabled>').attr({
                 'name': 'form-field-checkbox' + option.siid
             }).appendTo(label);
 
-        }else {
+        } else {
             var input = $('<input class="ace check">').attr({
                 'name': 'form-field-checkbox' + option.siid
             }).appendTo(label);
         }
 
         if (type == constant.customer().survey.TYPE_SINGLE_INT) {
-            input.prop({'type': 'radio'})
-        }else if (type == constant.customer().survey.TYPE_MULTIPLE_INT) {
-            input.prop({'type': 'checkbox'})
+            input.prop({
+                'type': 'radio'
+            })
+        } else if (type == constant.customer().survey.TYPE_MULTIPLE_INT) {
+            input.prop({
+                'type': 'checkbox'
+            })
         }
 
         var span = $('<span class="lbl"</span>').html(option.title).appendTo(label);
@@ -362,6 +396,7 @@ jQuery(function($) {
         };
 
         com.post(api.customer.makeSurvey, options, function(res) {
+
             survey.items.orderId.val("");
             survey.items.surveyTemplate.val("");
             searcher.doSearch();

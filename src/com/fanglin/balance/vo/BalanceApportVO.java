@@ -7,7 +7,7 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ApportDetailVO implements Serializable {
+public class BalanceApportVO implements Serializable {
 
 	private static final long serialVersionUID = 950904568941125216L;
 
@@ -23,11 +23,11 @@ public class ApportDetailVO implements Serializable {
 
 	private String comment;
 	
-	public ApportDetailVO() {
+	public BalanceApportVO() {
 		super();
 	}
 
-	public ApportDetailVO(UserBaseVO creater) {
+	public BalanceApportVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
 	}

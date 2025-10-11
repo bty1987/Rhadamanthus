@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.balance.dao.ApportDetailDao;
 import com.fanglin.balance.dao.BalanceAccountDao;
+import com.fanglin.balance.dao.BalanceApportDao;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceDetailDao;
-import com.fanglin.balance.po.ApportDetailPO;
 import com.fanglin.balance.po.BalanceAccountPO;
+import com.fanglin.balance.po.BalanceApportPO;
 import com.fanglin.balance.po.BalanceDetailPO;
 import com.fanglin.balance.po.BalancePO;
 import com.fanglin.balance.service.BalanceService;
@@ -56,7 +56,7 @@ public class BalanceServiceImpl implements BalanceService {
 	private BalanceDetailDao balanceDetailDao;
 
 	@Autowired
-	private ApportDetailDao apportDetailDao;
+	private BalanceApportDao balanceApportDao;
 
 	@Override
 	public void pageBalance(Paging paging, List<Filter> filters, int company) {
@@ -175,15 +175,15 @@ public class BalanceServiceImpl implements BalanceService {
 
 		balanceDao.update(balancePO);
 
-		ApportDetailPO apportDetailPO = new ApportDetailPO(new UserPO());
+		BalanceApportPO balanceApportPO = new BalanceApportPO(new UserPO());
 
-		apportDetailPO.setBid(balancePO.getBid());
-		apportDetailPO.setCreater(creater);
-		apportDetailPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
-		apportDetailPO.setMoney(balancePO.getSurplus());
-		apportDetailPO.setComment(balancePO.getType() == 0 ? "支出" : "收款");
+		balanceApportPO.setBid(balancePO.getBid());
+		balanceApportPO.setCreater(creater);
+		balanceApportPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
+		balanceApportPO.setMoney(balancePO.getSurplus());
+		balanceApportPO.setComment(balancePO.getType() == 0 ? "支出" : "收款");
 
-		apportDetailDao.save(apportDetailPO);
+		balanceApportDao.save(balanceApportPO);
 
 		return 0;
 	}
@@ -222,6 +222,9 @@ public class BalanceServiceImpl implements BalanceService {
 
 			balanceDetailDao.save(balanceDetailPO);
 		}
+
+		balancePO.setBalancer(creater);
+		balancePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 
 		balanceDao.update(balancePO);
 

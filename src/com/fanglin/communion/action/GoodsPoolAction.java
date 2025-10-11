@@ -104,7 +104,7 @@ public class GoodsPoolAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		goodsPoolService.batchAddFromPool(goodsPools);
+		goodsPoolService.batchAddFromPool(goodsPools,queryCompany());
 
 		return SUCCESS;
 	}

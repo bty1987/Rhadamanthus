@@ -123,7 +123,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 
 			surveyTemplateItemDao.save(itemPO);
 
-			if (itemVO.getType() == SurveyTemplateItemPO.TYPE_TEXT_INT || itemVO.getType() == SurveyTemplateItemPO.TYPE_INPUT_INT) continue;
+			if (itemVO.getType() == SurveyTemplateItemPO.TYPE_TEXT_INT || itemVO.getType() == SurveyTemplateItemPO.TYPE_INPUT_INT || itemVO.getType() == SurveyTemplateItemPO.TYPE_DATE_INT) continue;
 
 			List<SurveyTemplateOptionVO> options = itemVO.getOptions();
 
@@ -175,7 +175,7 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 
 			surveyTemplateItemDao.save(itemPO);
 
-			if (itemVO.getType() == SurveyTemplateItemPO.TYPE_TEXT_INT || itemVO.getType() == SurveyTemplateItemPO.TYPE_INPUT_INT) continue;
+			if (itemVO.getType() == SurveyTemplateItemPO.TYPE_TEXT_INT || itemVO.getType() == SurveyTemplateItemPO.TYPE_INPUT_INT || itemVO.getType() == SurveyTemplateItemPO.TYPE_DATE_INT) continue;
 
 			List<SurveyTemplateOptionVO> options = itemVO.getOptions();
 
@@ -237,31 +237,31 @@ public class SurveyTemplateServiceImpl implements SurveyTemplateService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int copySurveyTemplate(SurveyTemplateVO surveyTemplate, int company) throws FLException {
-		
+
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyTemplate.getStid());
-		
+
 		if (surveyTemplatePO == null) {
 			throw new FLException(130096, "调研模版不存在");
 		}
-		SurveyTemplatePO newTemplate = new SurveyTemplatePO();
-		
-		BeanUtil.copyProperties(surveyTemplatePO, newTemplate, Arrays.asList("items"));
+		SurveyTemplatePO surveyTemplateNO = new SurveyTemplatePO();
 
-		surveyTemplateDao.save(newTemplate);
+		BeanUtil.copyProperties(surveyTemplatePO, surveyTemplateNO, Arrays.asList("items"));
+
+		surveyTemplateDao.save(surveyTemplateNO);
 
 		List<SurveyTemplateItemPO> items = surveyTemplatePO.getItems();
-		
+
 		for (SurveyTemplateItemPO itemPO : items) {
-			
+
 			SurveyTemplateItemPO newTemplateItem = new SurveyTemplateItemPO();
-			
+
 			BeanUtil.copyPropertie(itemPO, newTemplateItem, Arrays.asList("options"));
-			
-			newTemplateItem.setStid(newTemplate.getStid());
+
+			newTemplateItem.setStid(surveyTemplateNO.getStid());
 
 			surveyTemplateItemDao.save(newTemplateItem);
 		}
-		
+
 		return 0;
 	}
 

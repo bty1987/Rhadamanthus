@@ -1,5 +1,6 @@
 package com.fanglin.quotation.dao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -163,6 +164,15 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setParameterList("statuses", statuses).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int countSelectionItemForNum(String orderId, long areaId, long quoteId) {
+
+		String sql = "SELECT SUM(num) FROM quotation.selectionitem WHERE orderId = :orderId AND areaId = :areaId AND quoteId = :quoteId";
+		BigDecimal countNum = (BigDecimal) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setLong(SelectionItemPO.COLUMN_AREAID_STR, areaId).setLong(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId).uniqueResult();
+
+		return countNum == null ? 0 : countNum.intValue();
 	}
 
 	@Override

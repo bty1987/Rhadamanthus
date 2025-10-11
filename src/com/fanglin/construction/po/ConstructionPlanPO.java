@@ -25,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.construction.vo.ConstructionPlanVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.ConstructionPaceNodePO;
 import com.fanglin.utils.BeanUtil;
 
@@ -44,9 +45,9 @@ public class ConstructionPlanPO implements Serializable {
 
 	private String name;
 
-	private ConstructionPaceNodePO node;
+	private ConstructionPaceNodePO pacenode;
 
-	private Long cnid;
+	private ConstructionNodePO node;
 
 	private int connum;
 
@@ -98,15 +99,6 @@ public class ConstructionPlanPO implements Serializable {
 		this.cid = cid;
 	}
 
-	@Column(name = "cnid")
-	public Long getCnid() {
-		return cnid;
-	}
-
-	public void setCnid(Long cnid) {
-		this.cnid = cnid;
-	}
-
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -127,11 +119,21 @@ public class ConstructionPlanPO implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cpnid", referencedColumnName = "cpnid")
-	public ConstructionPaceNodePO getNode() {
+	public ConstructionPaceNodePO getPacenode() {
+		return pacenode;
+	}
+
+	public void setPacenode(ConstructionPaceNodePO pacenode) {
+		this.pacenode = pacenode;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getNode() {
 		return node;
 	}
 
-	public void setNode(ConstructionPaceNodePO node) {
+	public void setNode(ConstructionNodePO node) {
 		this.node = node;
 	}
 
@@ -254,9 +256,10 @@ public class ConstructionPlanPO implements Serializable {
 
 	public ConstructionPlanVO ptv(ConstructionPlanVO constructionPlanVO) {
 
-		BeanUtil.copyProperties(this, constructionPlanVO, Arrays.asList("node"));
+		BeanUtil.copyProperties(this, constructionPlanVO, Arrays.asList("pacenode", "node"));
 
 		if (constructionPlanVO.getNode() != null && getNode() != null) getNode().ptv(constructionPlanVO.getNode());
+		if (constructionPlanVO.getPacenode() != null && getPacenode() != null) getPacenode().ptv(constructionPlanVO.getPacenode());
 
 		return constructionPlanVO;
 	}

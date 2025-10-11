@@ -13,7 +13,12 @@ jQuery(function($) {
 
                 drawradio("check");
             }),
-            inputBtn: com.focusPage("#inputBtn").on("click", drawinput),
+            inputBtn: com.focusPage("#inputBtn").on("click", function(){
+                drawinput(1, {});
+            }),
+            dateBtn: com.focusPage("#dateBtn").on("click", function(){
+                drawinput(4, {});
+            }),
 
             saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         },
@@ -320,9 +325,14 @@ jQuery(function($) {
         }
     }
 
-    function drawinput(v) {
+    function drawinput(type, v) {
+        
+        var typeclass = "typeinput";
+        
+        if(type == 1) typeclass = "typeinput";
+        if(type == 4) typeclass = "typedate";
 
-        var group = $('<div class="form-group typeinput typeitem"></div>').attr({'data-stiid': v.stiid || '','data-sort': v.sort || $(".typeitem").length + 1}).appendTo(surveyTemplate.items.itemlist);
+        var group = $('<div class="form-group ' + typeclass + ' typeitem"></div>').attr({'data-stiid': v.stiid || '','data-sort': v.sort || $(".typeitem").length + 1}).appendTo(surveyTemplate.items.itemlist);
 
         var titleDiv = $('<div class="col-md-12" style="margin-top: 10px; display: flex; align-items: center;"></div>').appendTo(group);
         var label = $('<label class="col-md-3 control-label no-padding-right" for="name"></label>').html("文本内容").appendTo(titleDiv);
@@ -358,7 +368,7 @@ jQuery(function($) {
 
         deleteBtn.click(function() {
 
-            var _group = $(this).parents(".typeinput");
+            var _group = $(this).parents("." + typeclass);
             var _hr = _group.next("hr");
 
             _hr.remove();
@@ -431,11 +441,13 @@ jQuery(function($) {
                 if (v.type == 0) {
                     drawtext(v);
                 } else if (v.type == 1) {
-                    drawinput(v);
+                    drawinput(1, v);
                 } else if (v.type == 2) {
                     drawradio("radio", v);
                 } else if (v.type == 3) {
                     drawradio("check", v);
+                } else if (v.type == 4) {
+                    drawinput(4, v);
                 }
             });
         });
@@ -473,6 +485,13 @@ jQuery(function($) {
                 args["surveyTemplate.items[" + i + "].type"] = 0;
                 args["surveyTemplate.items[" + i + "].content"] = item.find("textarea").val();
                 args["surveyTemplate.items[" + i + "].require"] = 1;
+
+            } else if (item.hasClass("typedate")) {
+
+                args["surveyTemplate.items[" + i + "].name"] = item.find("textarea").val();
+                args["surveyTemplate.items[" + i + "].type"] = 4;
+                args["surveyTemplate.items[" + i + "].content"] = item.find("textarea").val();
+                args["surveyTemplate.items[" + i + "].require"] = item.find('input[name="require"]').prop("checked") ? 0 : 1;
 
             } else if (item.hasClass("typeradio") || item.hasClass("typecheck")) {
 

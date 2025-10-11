@@ -83,7 +83,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO())));
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);
@@ -96,7 +96,20 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO())));
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+		}
+
+		paging.setData(balanceSalesVOs);
+	}
+
+	@Override
+	public void pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+
+		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSalesForSupplier(paging, filters, userId, company);
+		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
+
+		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);
@@ -141,18 +154,25 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		BalanceSalesPO balanceSalesPO = new BalanceSalesPO(brandPO);
 
-		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "balance", "creater", "balancer"));
+		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "balance", "creater", "supplier", "balancer"));
 
 		balanceSalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceSalesPO.setCreater(userPO);
+
 		balanceSalesPO.setGrade(balanceSalesVO.getGrade());
 		balanceSalesPO.setName(balanceSalesVO.getName());
 		balanceSalesPO.setCompany(company);
 
+		if (balanceSalesVO.getSupplier() != null && balanceSalesVO.getSupplier().getUid() != null) {
+			balanceSalesPO.setSupplier(new UserPO(balanceSalesVO.getSupplier().getUid()));
+		} else {
+			balanceSalesPO.setSupplier(new UserPO(brandPO.getSupplier().getUid()));
+		}
+
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
 		if (balanceSalesVO.getName() == null) {
-			balanceSalesPO.setName(String.format("%s-%s-%s", currentDate, brandPO.getName(), "A"));
+			balanceSalesPO.setName(String.format("%s-%s-%s-%s", currentDate, brandPO.getName(), "A", (System.currentTimeMillis() % 1000)));
 		}
 
 		if (balanceSalesVO.getGrade() == null) {
@@ -169,7 +189,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		balancePO.setNo(no);
 		balancePO.setType(BalanceSalesPO.STATUS_INIT_INT);
-		balancePO.setBelonger(balanceSalesPO.getCreater());
+		balancePO.setBelonger(balanceSalesPO.getSupplier());
 		balancePO.setCreater(balanceSalesPO.getCreater());
 		balancePO.setCompany(balanceSalesPO.getCompany());
 		balancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

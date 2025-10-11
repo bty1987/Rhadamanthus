@@ -65,6 +65,11 @@ public class ConstructionPaceNodePO implements Serializable {
 		super();
 	}
 
+	public ConstructionPaceNodePO(ConstructionNodePO node) {
+		super();
+		this.node = node;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cpnid")

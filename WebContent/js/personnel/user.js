@@ -62,7 +62,8 @@
             userrole: com.focusPage("#userrole", "#userRoleModal"),
             role: com.focusPage("#role", "#userRoleModal"),
             selectrole: com.focusPage("#roles", "#userRoleModal"),
-            isPrefor: com.focusPage("#isPrefor", "#transferModal")
+            isPrefor: com.focusPage("#isPrefor", "#transferModal"),
+            operateTime: com.focusPage("#operateTime", "#transferModal")
         },
         postData: null,
         isExpert: true,
@@ -97,6 +98,8 @@
 
     // 不同页面的不同参数
     user.pageConfig = userUtils.getConfig(user.pageType);
+    
+    com.datetime(com.focusPage("#operateTime"));
 
     com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {
         'uploadType': 0
@@ -209,11 +212,11 @@
         user.deptType = res.departmentTypes;
     }, null, false);
 
-    com.post(api.personel.queryUserCompanyForSelf, {}, function(res) {
+    com.post(api.system.queryCompany, {}, function(res) {
 
-        $.each(res.userCompanys, function(i, v) {
+        $.each(res.companys, function(i, v) {
 
-            user.companysel.push(v.company);
+            user.companysel.push(v);
         });
 
     }, null, false);
@@ -1408,6 +1411,7 @@
             "user.duty.did": user.items.duty.val(),
             "user.role.rid": com.typeahead("roleTran"),
             "user.isPrefor": user.getProp[user.items.isPrefor.prop("checked")],
+            "user.operateTime": user.items.operateTime.val(),
             "approve": "agree"
         };
 

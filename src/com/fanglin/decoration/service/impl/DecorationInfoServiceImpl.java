@@ -234,7 +234,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		if (referationPO == null) {
 
-			decorationInfoPO.setReferOrderId(decorationVO.getOrderId());
+			decorationInfoPO.setReferOrderId(decorationInfoVO.getOrderId());
 
 			decorationInfoDao.update(decorationInfoPO);
 		} else {

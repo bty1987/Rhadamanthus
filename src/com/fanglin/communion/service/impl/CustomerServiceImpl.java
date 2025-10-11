@@ -306,6 +306,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 		customerPhoneDao.save(customerPhonePO);
 
+		customerPO.setPhone(phone);
+
+		customerDao.update(customerPO);
+
 		return 0;
 	}
 

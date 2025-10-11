@@ -65,6 +65,20 @@ jQuery(function($) {
         prop: "balance.createTime",
         clazz: "green",
     }, {
+        fieId: "balance.balancer.userName",
+        name: "付款人",
+        prop: "balance.balancer.userName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.balance.balancer.userId);
+        }
+    }, {
+        fieId: "balance.balanceTime",
+        name: "付款时间",
+        prop: "balance.balanceTime",
+        clazz: "green",
+    }, {
         fieId: "balance.amount",
         name: "金额",
         prop: "balance.amount",

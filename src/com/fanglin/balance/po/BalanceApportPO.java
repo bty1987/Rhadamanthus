@@ -16,28 +16,28 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "apportDetail", catalog = "balance")
-public class ApportDetailPO implements java.io.Serializable {
-	
+@Table(name = "balanceapport", catalog = "balance")
+public class BalanceApportPO implements java.io.Serializable {
+
 	private static final long serialVersionUID = -7238756772906089936L;
 
 	private long adid;
-	
+
 	private long bid;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private long money;
-	
+
 	private String comment;
 
-	public ApportDetailPO() {
+	public BalanceApportPO() {
 		super();
 	}
 
-	public ApportDetailPO(UserPO creater) {
+	public BalanceApportPO(UserPO creater) {
 		super();
 		this.creater = creater;
 	}
@@ -98,5 +98,5 @@ public class ApportDetailPO implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

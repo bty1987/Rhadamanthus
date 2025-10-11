@@ -30,6 +30,8 @@ import com.fanglin.data.po.NormoodPO;
 import com.fanglin.data.po.NormricePO;
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.NormriceVO;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -101,6 +103,9 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Autowired
 	private NormriceItemDao normriceItemDao;
+
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Override
 	public void pageNormtion(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -634,6 +639,59 @@ public class NormtionServiceImpl implements NormtionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int makeNormtion(NormtionVO normtionVO, String userId) throws FLException {
+
+		NormtionPO normtionPO = normtionDao.queryNormtion(normtionVO.getQid());
+
+		if (normtionPO == null) {
+			throw new FLException(200071, "报价定额不存在");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(normtionPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		if (decorationPO.getProjectStatus() == DecorationPO.PROJECTSTATUS_FINISH_INT) {
+
+			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_EXPAND_INT, NormoodItemPO.STATUS_DISABLED_INT);
+			normoodItemDao.deleteNormoodItem(normtionPO.getQid(), NormoodItemPO.TYPE_ADDCUT_INT, NormoodItemPO.STATUS_DISABLED_INT);
+
+			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
+			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_EXPAND_INT, NormriceItemPO.STATUS_DISABLED_INT);
+			normriceItemDao.deleteNormriceItem(normtionPO.getQid(), NormriceItemPO.TYPE_ADDCUT_INT, NormriceItemPO.STATUS_DISABLED_INT);
+
+			return 0;
+		}
+
+		normoodItemDao.disableNormoodItem(normtionVO.getQid());
+		normriceItemDao.disabledNormriceItem(normtionVO.getQid());
+
+		normoodItemDao.flush();
+
+		normtionVO.setOrderId(normtionPO.getOrderId());
+
+		makeNormtion(normtionVO, null, userId);
+
+		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(normtionPO.getOrderId());
+
+		for (ExtensionPO extensionPO : extensionPOs) {
+			makeNormtion(normtionVO, new ExtensionVO(extensionPO.getEid()), null, userId);
+		}
+
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(normtionPO.getOrderId());
+
+		for (AddReducePO addReducePO : addReducePOs) {
+			makeNormtion(normtionVO, new AddReduceVO(addReducePO.getArId()), null, userId);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int makeNormtion(NormtionVO normtionVO, Short schedule, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(normtionVO.getOrderId());
@@ -667,16 +725,16 @@ public class NormtionServiceImpl implements NormtionService {
 				NormoodPO normoodPO = (NormoodPO) data[1];
 				NoodsPO noodsPO = (NoodsPO) data[2];
 
-				NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItemPO(normtionVO.getQid(), itemPO.getQfaiId(), NormoodItemPO.TYPE_OFFER_INT);
+				NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionVO.getQid(), itemPO.getQfaiId(), normoodPO.getNgid(), NormoodItemPO.TYPE_OFFER_INT);
 
 				if (normoodItemPO != null) {
 
 					normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
 
 					normoodItemPO.setNormunit(normoodPO.getNormunit());
-					normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+					normoodItemPO.setNormnum(Arith.mul(itemPO.getInitNum(), normoodPO.getNormnum()));
 					normoodItemPO.setStoreunit(normoodPO.getStoreunit());
-					normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+					normoodItemPO.setStorenum(Arith.mul(itemPO.getInitNum(), normoodPO.getStorenum()));
 
 					normoodItemDao.update(normoodItemPO);
 
@@ -690,15 +748,16 @@ public class NormtionServiceImpl implements NormtionService {
 				normoodItemPO.setAreald(itemPO.getQuotationFunctionAreaId());
 				normoodItemPO.setQuoteld(itemPO.getQfaiId());
 				normoodItemPO.setQiid(itemPO.getQuotationItemId());
+				normoodItemPO.setNgid(normoodPO.getNgid());
 
 				normoodItemPO.setType(NormoodItemPO.TYPE_OFFER_INT);
 				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
 				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 
 				normoodItemPO.setNormunit(normoodPO.getNormunit());
-				normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+				normoodItemPO.setNormnum(Arith.mul(itemPO.getInitNum(), normoodPO.getNormnum()));
 				normoodItemPO.setStoreunit(normoodPO.getStoreunit());
-				normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+				normoodItemPO.setStorenum(Arith.mul(itemPO.getInitNum(), normoodPO.getStorenum()));
 				normoodItemPO.setNoods(noodsPO);
 
 				normoodItemDao.save(normoodItemPO);
@@ -714,16 +773,19 @@ public class NormtionServiceImpl implements NormtionService {
 				NormricePO normricePO = (NormricePO) data[1];
 				ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-				NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItemPO(normtionVO.getQid(), item.getQfaiid(), NormriceItemPO.TYPE_OFFER_INT);
+				NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionVO.getQid(), item.getQfaiid(), normricePO.getNpid(), NormriceItemPO.TYPE_OFFER_INT);
 
 				if (normriceItemPO != null) {
 
 					normriceItemPO.setStatus(NormriceItemPO.STATUS_INIT_INT);
 
+					normriceItemPO.setConstructionNode(constructionNodePO);
+
 					normriceItemPO.setName(constructionNodePO.getName());
 					normriceItemPO.setUnit(normricePO.getUnit());
 					normriceItemPO.setTrannum(normricePO.getTrannum());
 					normriceItemPO.setSalary(normricePO.getSalary());
+					normriceItemPO.setNum(item.getInitNum());
 
 					normriceItemDao.update(normriceItemPO);
 
@@ -737,11 +799,11 @@ public class NormtionServiceImpl implements NormtionService {
 				normriceItemPO.setAreald(item.getQuotationFunctionAreaId());
 				normriceItemPO.setQuoteld(item.getQfaiid());
 				normriceItemPO.setQiid(item.getQuotationItemId());
+				normriceItemPO.setNpid(normricePO.getNpid());
 
 				normriceItemPO.setType(NormriceItemPO.TYPE_OFFER_INT);
 				normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
 				normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
-				normriceItemPO.setNum(item.getNum());
 
 				normriceItemPO.setConstructionNode(constructionNodePO);
 
@@ -749,13 +811,11 @@ public class NormtionServiceImpl implements NormtionService {
 				normriceItemPO.setUnit(normricePO.getUnit());
 				normriceItemPO.setTrannum(normricePO.getTrannum());
 				normriceItemPO.setSalary(normricePO.getSalary());
+				normriceItemPO.setNum(item.getInitNum());
 
 				normriceItemDao.save(normriceItemPO);
 			}
 		}
-
-		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), NormoodItemPO.TYPE_OFFER_INT, NormoodItemPO.STATUS_DISABLED_INT);
-		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), NormriceItemPO.TYPE_OFFER_INT, NormriceItemPO.STATUS_DISABLED_INT);
 
 		return 0;
 	}
@@ -776,8 +836,10 @@ public class NormtionServiceImpl implements NormtionService {
 			addNormtion(normtionVO, userId);
 		}
 
-		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
-		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
+		normoodItemDao.disableNormoodItem(normtionVO.getQid(), extensionVO.getEid(), NormoodItemPO.TYPE_EXPAND_INT);
+		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), extensionVO.getEid(), NormriceItemPO.TYPE_EXPAND_INT);
+
+		normoodItemDao.flush();
 
 		List<?> extensionItemAOs = quotationNormoodDao.queryExtensionItem(extensionVO.getEid());
 
@@ -789,13 +851,30 @@ public class NormtionServiceImpl implements NormtionService {
 			NormoodPO normoodPO = (NormoodPO) data[1];
 			NoodsPO noodsPO = (NoodsPO) data[2];
 
-			NormoodItemPO normoodItemPO = new NormoodItemPO();
+			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionVO.getQid(), itemPO.getEiid(), normoodPO.getNgid(), NormoodItemPO.TYPE_EXPAND_INT);
+
+			if (normoodItemPO != null) {
+
+				normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
+
+				normoodItemPO.setNormunit(normoodPO.getNormunit());
+				normoodItemPO.setNormnum(Arith.mul(itemPO.getInitnum(), normoodPO.getNormnum()));
+				normoodItemPO.setStoreunit(normoodPO.getStoreunit());
+				normoodItemPO.setStorenum(Arith.mul(itemPO.getInitnum(), normoodPO.getStorenum()));
+
+				normoodItemDao.update(normoodItemPO);
+
+				continue;
+			}
+
+			normoodItemPO = new NormoodItemPO();
 
 			normoodItemPO.setQid(normtionVO.getQid());
 			normoodItemPO.setSid(itemPO.getEid());
 			normoodItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
 			normoodItemPO.setQuoteld(itemPO.getEiid());
 			normoodItemPO.setQiid(itemPO.getQiid());
+			normoodItemPO.setNgid(normoodPO.getNgid());
 
 			normoodItemPO.setType(NormoodItemPO.TYPE_EXPAND_INT);
 			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
@@ -807,9 +886,9 @@ public class NormtionServiceImpl implements NormtionService {
 			}
 
 			normoodItemPO.setNormunit(normoodPO.getNormunit());
-			normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+			normoodItemPO.setNormnum(Arith.mul(itemPO.getInitnum(), normoodPO.getNormnum()));
 			normoodItemPO.setStoreunit(normoodPO.getStoreunit());
-			normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+			normoodItemPO.setStorenum(Arith.mul(itemPO.getInitnum(), normoodPO.getStorenum()));
 			normoodItemPO.setNoods(noodsPO);
 
 			normoodItemDao.save(normoodItemPO);
@@ -825,17 +904,36 @@ public class NormtionServiceImpl implements NormtionService {
 			NormricePO normricePO = (NormricePO) data[1];
 			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-			NormriceItemPO normriceItemPO = new NormriceItemPO();
+			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionVO.getQid(), itemPO.getEiid(), normricePO.getNpid(), NormriceItemPO.TYPE_EXPAND_INT);
+
+			if (normriceItemPO != null) {
+
+				normriceItemPO.setStatus(NormriceItemPO.STATUS_INIT_INT);
+
+				normriceItemPO.setConstructionNode(constructionNodePO);
+
+				normriceItemPO.setName(constructionNodePO.getName());
+				normriceItemPO.setUnit(normricePO.getUnit());
+				normriceItemPO.setTrannum(normricePO.getTrannum());
+				normriceItemPO.setSalary(normricePO.getSalary());
+				normriceItemPO.setNum(itemPO.getInitnum());
+
+				normriceItemDao.update(normriceItemPO);
+
+				continue;
+			}
+
+			normriceItemPO = new NormriceItemPO();
 
 			normriceItemPO.setQid(normtionVO.getQid());
 			normriceItemPO.setSid(itemPO.getEid());
 			normriceItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
 			normriceItemPO.setQuoteld(itemPO.getEiid());
 			normriceItemPO.setQiid(itemPO.getQiid());
+			normriceItemPO.setNpid(normricePO.getNpid());
 
 			normriceItemPO.setType(NormriceItemPO.TYPE_EXPAND_INT);
 			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
-			normriceItemPO.setNum(itemPO.getNum());
 
 			if (Arrays.asList(ExtensionItemPO.TYPE_ADD_DATA_INT, ExtensionItemPO.TYPE_ADD_CUSTOM_INT, ExtensionItemPO.TYPE_ADD_QUOTE_INT).contains(itemPO.getType())) {
 				normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
@@ -849,6 +947,7 @@ public class NormtionServiceImpl implements NormtionService {
 			normriceItemPO.setUnit(normricePO.getUnit());
 			normriceItemPO.setTrannum(normricePO.getTrannum());
 			normriceItemPO.setSalary(normricePO.getSalary());
+			normriceItemPO.setNum(itemPO.getInitnum());
 
 			normriceItemDao.save(normriceItemPO);
 		}
@@ -872,12 +971,12 @@ public class NormtionServiceImpl implements NormtionService {
 			addNormtion(normtionVO, userId);
 		}
 
-		normoodItemDao.deleteNormoodItem(normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
-		normriceItemDao.deleteNormriceItem(normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
+		normoodItemDao.disableNormoodItem(normtionVO.getQid(), addReduceVO.getArId(), NormoodItemPO.TYPE_ADDCUT_INT);
+		normriceItemDao.disabledNormriceItem(normtionVO.getQid(), addReduceVO.getArId(), NormriceItemPO.TYPE_ADDCUT_INT);
+
+		normoodItemDao.flush();
 
 		List<?> addReduceItemAOs = quotationNormoodDao.queryAddReduceItem(addReduceVO.getArId());
-
-		if (addReduceItemAOs == null || addReduceItemAOs.size() == 0) return 0;
 
 		for (Object addReduceItemAO : addReduceItemAOs) {
 
@@ -887,13 +986,30 @@ public class NormtionServiceImpl implements NormtionService {
 			NormoodPO normoodPO = (NormoodPO) data[1];
 			NoodsPO noodsPO = (NoodsPO) data[2];
 
-			NormoodItemPO normoodItemPO = new NormoodItemPO();
+			NormoodItemPO normoodItemPO = normoodItemDao.queryNormoodItem(normtionVO.getQid(), itemPO.getAriId(), normoodPO.getNgid(), NormoodItemPO.TYPE_ADDCUT_INT);
+
+			if (normoodItemPO != null) {
+
+				normoodItemPO.setStatus(NormoodItemPO.STATUS_INIT_INT);
+
+				normoodItemPO.setNormunit(normoodPO.getNormunit());
+				normoodItemPO.setNormnum(Arith.mul(itemPO.getInitnum(), normoodPO.getNormnum()));
+				normoodItemPO.setStoreunit(normoodPO.getStoreunit());
+				normoodItemPO.setStorenum(Arith.mul(itemPO.getInitnum(), normoodPO.getStorenum()));
+
+				normoodItemDao.update(normoodItemPO);
+
+				continue;
+			}
+
+			normoodItemPO = new NormoodItemPO();
 
 			normoodItemPO.setQid(normtionVO.getQid());
 			normoodItemPO.setSid(itemPO.getArId());
 			normoodItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
 			normoodItemPO.setQuoteld(itemPO.getAriId());
 			normoodItemPO.setQiid(itemPO.getQiid());
+			normoodItemPO.setNgid(normoodPO.getNgid());
 
 			normoodItemPO.setType(NormoodItemPO.TYPE_ADDCUT_INT);
 			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_MATERIAL_INT);
@@ -905,9 +1021,9 @@ public class NormtionServiceImpl implements NormtionService {
 			}
 
 			normoodItemPO.setNormunit(normoodPO.getNormunit());
-			normoodItemPO.setNormnum(Arith.mul(itemPO.getNum(), normoodPO.getNormnum()));
+			normoodItemPO.setNormnum(Arith.mul(itemPO.getInitnum(), normoodPO.getNormnum()));
 			normoodItemPO.setStoreunit(normoodPO.getStoreunit());
-			normoodItemPO.setStorenum(Arith.mul(itemPO.getNum(), normoodPO.getStorenum()));
+			normoodItemPO.setStorenum(Arith.mul(itemPO.getInitnum(), normoodPO.getStorenum()));
 			normoodItemPO.setNoods(noodsPO);
 
 			normoodItemDao.save(normoodItemPO);
@@ -923,17 +1039,36 @@ public class NormtionServiceImpl implements NormtionService {
 			NormricePO normricePO = (NormricePO) data[1];
 			ConstructionNodePO constructionNodePO = (ConstructionNodePO) data[2];
 
-			NormriceItemPO normriceItemPO = new NormriceItemPO();
+			NormriceItemPO normriceItemPO = normriceItemDao.queryNormriceItem(normtionVO.getQid(), itemPO.getAriId(), normricePO.getNpid(), NormriceItemPO.TYPE_ADDCUT_INT);
+
+			if (normriceItemPO != null) {
+
+				normriceItemPO.setStatus(NormriceItemPO.STATUS_INIT_INT);
+
+				normriceItemPO.setConstructionNode(constructionNodePO);
+
+				normriceItemPO.setName(constructionNodePO.getName());
+				normriceItemPO.setUnit(normricePO.getUnit());
+				normriceItemPO.setTrannum(normricePO.getTrannum());
+				normriceItemPO.setSalary(normricePO.getSalary());
+				normriceItemPO.setNum(itemPO.getInitnum());
+
+				normriceItemDao.update(normriceItemPO);
+
+				continue;
+			}
+
+			normriceItemPO = new NormriceItemPO();
 
 			normriceItemPO.setQid(normtionVO.getQid());
 			normriceItemPO.setSid(itemPO.getArId());
 			normriceItemPO.setAreald(itemPO.getQuotationFunctionArea().getQfaId());
 			normriceItemPO.setQuoteld(itemPO.getAriId());
 			normriceItemPO.setQiid(itemPO.getQiid());
+			normriceItemPO.setNpid(normricePO.getNpid());
 
 			normriceItemPO.setType(NormriceItemPO.TYPE_ADDCUT_INT);
 			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_WORKFEE_INT);
-			normriceItemPO.setNum(itemPO.getNum());
 
 			if (Arrays.asList(AddReduceItemPO.TYPE_COMMON_QUOTATION_INT, AddReduceItemPO.TYPE_CUSTOM_QUOTATION_INT).contains(itemPO.getType())) {
 				normriceItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
@@ -947,6 +1082,7 @@ public class NormtionServiceImpl implements NormtionService {
 			normriceItemPO.setUnit(normricePO.getUnit());
 			normriceItemPO.setTrannum(normricePO.getTrannum());
 			normriceItemPO.setSalary(normricePO.getSalary());
+			normriceItemPO.setNum(itemPO.getInitnum());
 
 			normriceItemDao.save(normriceItemPO);
 		}

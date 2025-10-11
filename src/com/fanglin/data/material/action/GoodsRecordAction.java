@@ -32,6 +32,14 @@ public class GoodsRecordAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "addGoodsRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addGoodsRecord() throws FLException {
+
+		goodsRecordService.addGoodsRecord(goodsRecord,queryUserId());
+
+		return SUCCESS;
+	}
+
 	public GoodsRecordVO getGoodsRecord() {
 		return goodsRecord;
 	}

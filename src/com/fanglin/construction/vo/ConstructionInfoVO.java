@@ -29,6 +29,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Short isIssue;
 
+	private Short isCheck;
+
 	private Timestamp startTime;
 
 	private Timestamp endTime;
@@ -40,6 +42,8 @@ public class ConstructionInfoVO implements Serializable {
 	private Timestamp drawlineTime;
 
 	private Timestamp designTime;
+
+	private Timestamp checkTime;
 
 	private Long actuaTime;
 
@@ -128,6 +132,14 @@ public class ConstructionInfoVO implements Serializable {
 		this.isIssue = isIssue;
 	}
 
+	public Short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(Short isCheck) {
+		this.isCheck = isCheck;
+	}
+
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -178,6 +190,15 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setDesignTime(Timestamp designTime) {
 		this.designTime = designTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
 	}
 
 	public Long getActuaTime() {

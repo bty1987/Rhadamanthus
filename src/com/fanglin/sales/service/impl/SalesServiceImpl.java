@@ -297,7 +297,7 @@ public class SalesServiceImpl implements SalesService {
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
-		BrandPO brandPO = brandDao.get(salesVO.getBrand().getBid());
+		BrandPO brand = brandDao.get(salesVO.getBrand().getBid());
 		UserPO supplier = userDao.queryUserByUserId(salesVO.getSupplier().getUserId());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
@@ -310,8 +310,8 @@ public class SalesServiceImpl implements SalesService {
 
 		salesPO.setNo(no);
 		salesPO.setSalesman(salesman);
-		salesPO.setDept(salesman.getDept());
-		salesPO.setRegion(salesman.getDept().getFatherDept());
+		salesPO.setDept(decorationPO.getDesignDept());
+		salesPO.setRegion(decorationPO.getDesignDept().getFatherDept());
 		salesPO.setCreater(creater);
 		salesPO.setSupplier(supplier);
 		salesPO.setInstorer(instorer);
@@ -319,8 +319,8 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setGuideDept(guider.getDept());
 		salesPO.setHouse(decorationPO.getHouse());
 		salesPO.setCustomer(decorationPO.getCustomer());
-		salesPO.setBrand(brandPO);
-		salesPO.setCategory(brandPO.getCategory().getName());
+		salesPO.setBrand(brand);
+		salesPO.setCategory(brand.getCategory().getName());
 
 		salesPO.setAmount(salesVO.getTotal());
 		salesPO.setTotal(salesVO.getTotal());
