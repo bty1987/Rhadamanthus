@@ -12,28 +12,28 @@ import com.fanglin.data.po.AccessoriesTypePO;
 import com.fanglin.utils.Paging;
 
 @Repository("accessoriesTypeDao")
-public class AccessoriesTypeDaoImpl extends DaoImpl<AccessoriesTypePO> implements AccessoriesTypeDao{
-	
-	public AccessoriesTypeDaoImpl(){
+public class AccessoriesTypeDaoImpl extends DaoImpl<AccessoriesTypePO> implements AccessoriesTypeDao {
+
+	public AccessoriesTypeDaoImpl() {
 		super(AccessoriesTypePO.class);
 	}
-	
+
 	@Override
 	public List<AccessoriesTypePO> pageAccessoriesType(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<AccessoriesTypePO> query = pagingQuery(paging, AccessoriesTypePO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AccessoriesTypePO> queryAccessoriesType() {
 		return session().createCriteria(AccessoriesTypePO.class).list();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<AccessoriesTypePO> queryAccessoriesTypeByWtid(int wtid) {
@@ -42,23 +42,25 @@ public class AccessoriesTypeDaoImpl extends DaoImpl<AccessoriesTypePO> implement
 
 	@Override
 	public AccessoriesTypePO queryAccessoriesTypeByName(String name) {
-		
+
 		return (AccessoriesTypePO) session().createCriteria(AccessoriesTypePO.class).add(Restrictions.eq(AccessoriesTypePO.COLUMN_NAME_STR, name)).uniqueResult();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters != null) {
+			for (Filter filter : filters) {
+
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
-				
+
 				query.alias("workType", "workType");
-				
-				if("workTypeName".equals(field)){
+
+				if ("workTypeName".equals(field)) {
 					query.add(query.getCriterion(AccessoriesTypePO.COLUMN_WORKTYPE_NAME_STR, data, op));
+				} else if (AccessoriesTypePO.COLUMN_TYPE_STR.equals(field)) {
+					query.add(query.getCriterion(AccessoriesTypePO.COLUMN_TYPE_STR, Short.parseShort(data), op));
 				}
 			}
 		}

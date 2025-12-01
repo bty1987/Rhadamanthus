@@ -3,14 +3,26 @@ jQuery(function($) {
     var balanceSelection4balance = {
 
         bsid: null,
-        btns: {},
+        btns: {
+            balanceBtn: com.focusPage("#balanceBtn").click(balance),
+        },
 
-        modals: {},
+        modals: {
+            balanceModal: com.focusPage("#balanceModal"),
+        },
 
-        items: {},
+        items: {
+            bccount: com.focusPage("#bccount"),
+            cccount: com.focusPage("#cccount"),
+        },
 
         status: {}
     };
+
+    com.post(api.balance.queryBalanceAccountForTeller, {}, function(res) {
+
+        balanceSelection4balance.items.cccount.bindData(res.balanceAccountes, "baid", "name");
+    }, null, false);
 
     var seacher = new Searcher();
 
@@ -20,7 +32,7 @@ jQuery(function($) {
         "balanceSelection.status": constant.balance().balanceSelection.STATUS_ENABLE_CHECK_INT
     });
 
-    seacher.condition(["balance-balanceSelection-balance-no", "balance-balanceSelection-balance-type", "balance-balanceSelection-balance-status", "balance-balanceSelection-brand", "balance-balanceSelection-balance-isPay"]);
+    seacher.condition(["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-selection-brand", "balance-balance-isPay"]);
 
     seacher.history("balanceSelectionPostData");
 
@@ -167,9 +179,42 @@ jQuery(function($) {
         name: "锁定时间",
         prop: "lockTime",
         clazz: "green"
+    }, {
+        field: "payeder",
+        name: "付款人",
+        prop: "balance.payeder.userName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.payeder.userId);
+        }
+    }, {
+        field: "payedTime",
+        name: "付款时间",
+        prop: "balance.payedTime",
+        clazz: "green"
     }];
 
     var linebtus = [{
+        name: "结算",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            balanceSelection4balance.balance = v.balance;
+
+            com.clearValidator();
+            com.cleanItems(balanceSelection4balance.items);
+
+            com.post(api.balance.queryBalanceAccount, {
+                "balanceAccount.belonger.uid": v.balance.belonger.uid
+            }, function(res) {
+
+                balanceSelection4balance.items.bccount.bindData(res.balanceAccountes, "baid", "name");
+            }, null, false);
+
+            balanceSelection4balance.modals.balanceModal.modal("show");
+        }
+    }, {
         name: "付款",
         clazz: "btn-warning",
         handle: function(v) {
@@ -195,7 +240,7 @@ jQuery(function($) {
 
             params.balance.bid = v.balance.bid;
 
-            com.popup4page("#stockRecordPopUp", api.index.balanceSelectionIndex.url, "选材单");
+            com.popup4page("#balancePopUp", api.index.balanceSelectionIndex.url, "选材单");
         }
     }, {
         name: "结算扣款",
@@ -205,7 +250,7 @@ jQuery(function($) {
             params.balance = v.balance;
             params.balance.bid = v.balance.bid;
             params.balance.uid = v.balance.belonger.uid;
-            com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
+            com.popup4page("#balancePopUp", api.index.balanceCutpayIndex.url, "结算扣款");
         },
         show: function(v) {
 
@@ -254,5 +299,27 @@ jQuery(function($) {
             com.focusPage('input[type="checkbox"]').prop('checked', true);
         }
     });
+
+    function balance() {
+
+        if (com.validate('balanceModal')) {
+            return false;
+        }
+
+        var options = {
+            "balance.bid": balanceSelection4balance.balance.bid,
+            "balanceAccountes[0].money": balanceSelection4balance.balance.surplus,
+            "balanceAccountes[0].baid": balanceSelection4balance.items.bccount.val(),
+            "balanceAccountes[1].money": balanceSelection4balance.balance.surplus,
+            "balanceAccountes[1].baid": balanceSelection4balance.items.cccount.val(),
+        };
+
+        com.post(api.balance.balanceBalance, options, function() {
+
+            com.showAlert(com.info, "操作成功");
+
+            balanceSelection4balance.modals.balanceModal.modal("hide");
+        });
+    }
 
 });

@@ -384,6 +384,7 @@ jQuery(function($) {
         name: "编辑",
         clazz: "btn-success",
         handle: function(v) {
+
             oales.oid = v.oid;
 
             oales.items.orderId.val(v.decoration.orderId);
@@ -716,7 +717,6 @@ jQuery(function($) {
                 v.status = constant.sales().oales.status.keys[v.status];
             });
         });
-
     });
 
     function saveData() {
@@ -727,6 +727,8 @@ jQuery(function($) {
         var bid = com.typeahead("awardStock");
 
         var url = api.sales.addOales;
+        
+        var profit = parseFloat(oales.items.total.val()) - parseFloat(oales.items.cost.val());
 
         var options = {
             "oales.decoration.orderId": oales.items.orderId.val(),
@@ -735,7 +737,7 @@ jQuery(function($) {
             "oales.brand": oales.items.brandName.val(),
             "oales.total": oales.items.total.val(),
             "oales.cost": oales.items.cost.val(),
-            "oales.profit": oales.items.profit.val(),
+            "oales.profit": profit ? profit : 0,
             "oales.threshold": oales.items.threshold.val(),
             "oales.awardType": oales.items.awardType.val(),
             "oales.award": oales.items.award.val(),
@@ -757,7 +759,8 @@ jQuery(function($) {
             url = api.sales.updateOales;
             options["oales.oid"] = oales.oid;
         }
-        if(oales.refund == 1){
+        
+        if (oales.refund == 1) {
             url = api.sales.refundOales;
             options["oales.oid"] = oales.oid;
         }
@@ -772,21 +775,18 @@ jQuery(function($) {
             com.cleanTypeahead("brandName");
             oales.refund = null;
         });
-
     }
 
     function remove(oid) {
 
-        var options = {
+        com.post(api.sales.deleteOales, {
             "oales.oid": oid,
-        };
-        com.post(api.sales.deleteOales, options, function(res) {
+        }, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
         });
-
     }
 
     function revocation(oid) {
@@ -800,7 +800,6 @@ jQuery(function($) {
 
             searcher.doSearch();
         });
-
     }
 
     function invalid(oid) {
@@ -821,63 +820,54 @@ jQuery(function($) {
         params.sales.oales = v;
 
         com.popup4page("#oalesPayPopUp", "/views/sales/oalesPay.html", "销售付款");
-
     }
 
     function submit(oid) {
 
-        var options = {
+        com.post(api.sales.submitOales, {
             "oales.oid": oid,
-        };
-        com.post(api.sales.submitOales, options, function(res) {
+        }, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
         });
-
     }
 
     function finishOales(oid) {
 
-        var options = {
+        com.post(api.sales.finishOales, {
             "oales.oid": oid,
-        };
-        com.post(api.sales.finishOales, options, function(res) {
+        }, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
         });
-
     }
 
     function checkOales(oid) {
 
-        var options = {
+        com.post(api.sales.checkOales, {
             "oaleses[0].oid": oid,
-        };
-        com.post(api.sales.checkOales, options, function(res) {
+        }, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
         });
-
     }
 
     function rejectOales(oid) {
 
-        var options = {
+        com.post(api.sales.rejectOales, {
             "oales.oid": oid,
-        };
-        com.post(api.sales.rejectOales, options, function(res) {
+        }, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
         });
-
     }
 
     function confirmOales(oid) {
@@ -891,7 +881,6 @@ jQuery(function($) {
 
             searcher.doSearch();
         });
-
     }
 
     function managedrawing(v) {
@@ -903,29 +892,35 @@ jQuery(function($) {
         }, function(data) {
 
             var salesPictures = data.salesPictures;
-            if (salesPictures && salesPictures.length) {
-                $.each(salesPictures, function(i, value) {
 
-                    if (value.status == constant.sales().salesPicture.STATUS_YES_SHORT) {
-                        appendGalleryElement("salesDrawing", value);
-                    }
+            oales.drawingModal.modal("show");
 
-                });
-                com.popup4photos(com.focusPage("#salesDrawing"));
-            }
+            if (!salesPictures || salesPictures.length == 0)
+                return false;
+
+            $.each(salesPictures, function(i, value) {
+
+                if (value.status == constant.sales().salesPicture.STATUS_YES_SHORT) {
+                    appendGalleryElement("salesDrawing", value);
+                }
+            });
+
+            com.popup4photos(com.focusPage("#salesDrawing"));
         }, null, false);
-
-        oales.drawingModal.modal("show");
     }
 
     function appendGalleryElement(galleryId, value) {
 
         var gallery = com.focusPage("#" + galleryId);
+        
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.spid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
+        
         var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        
         com.showImg(img, value.path, 150, 150, value.name, null, 0);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
 
@@ -936,8 +931,8 @@ jQuery(function($) {
                 com.focusPage("#gallery_li" + value.spid).remove();
             });
         }).appendTo(toolsDiv);
+        
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
-
     }
 
     function initUploadBtn(v) {

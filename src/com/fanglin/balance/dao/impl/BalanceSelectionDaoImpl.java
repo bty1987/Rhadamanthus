@@ -12,6 +12,7 @@ import com.fanglin.balance.dao.BalanceSelectionDao;
 import com.fanglin.balance.po.BalanceSelectionBO;
 import com.fanglin.balance.po.BalanceSelectionPO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
@@ -24,7 +25,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	}
 
 	@Override
-	public List<BalanceSelectionPO> pageBalanceSelection(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceSelectionPO> pageBalanceSelection(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<BalanceSelectionPO> query = pagingQuery(paging, BalanceSelectionPO.class);
 
@@ -38,7 +39,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	}
 
 	@Override
-	public List<BalanceSelectionBO> pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, Short status, int company) {
+	public List<BalanceSelectionBO> pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, Short status, int company) throws FLException {
 
 		PagingQuery<BalanceSelectionBO> query = pagingQuery(paging, BalanceSelectionBO.class);
 
@@ -48,7 +49,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 			query.add(Restrictions.eq("status", status));
 		}
 
-		queryFilterExcute(query, filters);
+		queryFilterExcute(query, filters, "balance");
 
 		query.desc("bsid");
 
@@ -56,7 +57,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 	}
 
 	@Override
-	public List<BalanceSelectionPO> pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+	public List<BalanceSelectionPO> pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
 
 		PagingQuery<BalanceSelectionPO> query = pagingQuery(paging, BalanceSelectionPO.class);
 
@@ -92,7 +93,7 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 		return Arith.div(amount.longValue(), 1000000);
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
 
@@ -108,28 +109,48 @@ public class BalanceSelectionDaoImpl extends DaoImpl<BalanceSelectionPO> impleme
 				query.add(Restrictions.eq("status", Short.valueOf(data)));
 			} else if ("grade".equals(field)) {
 				query.add(query.getCriterion("grade", data, op));
+			} else if ("createrId".equals(field)) {
+				query.alias("creater", "creater").add(query.getCriterion("creater.userId", data, op));
+			} else if ("brandId".equals(field)) {
+				query.alias("brand", "brand").add(query.getCriterion("brand.bid", Long.valueOf(data), op));
 			} else if ("createTimeDateRange".equals(field)) {
 				query.timeranges("createTime", "createTime", data);
-			} else if ("createrId".equals(field)) {
-				query.alias("creater", "creater");
-				query.add(query.getCriterion("creater.userId", data, op));
-			} else if ("brandId".equals(field)) {
-				query.alias("brand", "brand");
-				query.add(query.getCriterion("brand.bid", Long.valueOf(data), op));
-			} else if ("balanceNo".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.no", String.valueOf(data), op));
-			} else if ("balanceType".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.type", Short.valueOf(data), op));
-			} else if ("balanceStatus".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.status", Short.valueOf(data), op));
-			} else if ("balanceIsPay".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.isPay", Short.valueOf(data), op));
 			} else if ("lockTimeDateRange".equals(field)) {
 				query.timeranges("lockTime", "lockTime", data);
+			} else if ("balanceTimeRange".equals(field)) {
+				query.timeranges("balanceTime", "balanceTime", data);
+			}
+		}
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
+
+		if (filters == null) return;
+
+		BalanceDaoImpl.queryFilterExcute(query, filters, prefix);
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(Restrictions.ilike("name", data, MatchMode.ANYWHERE));
+			} else if ("status".equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(data)));
+			} else if ("grade".equals(field)) {
+				query.add(query.getCriterion("grade", data, op));
+			} else if ("createrId".equals(field)) {
+				query.alias("creater", "creater").add(query.getCriterion("creater.userId", data, op));
+			} else if ("brandId".equals(field)) {
+				query.alias("brand", "brand").add(query.getCriterion("brand.bid", Long.valueOf(data), op));
+			} else if ("createTimeRange".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("lockTimeRange".equals(field)) {
+				query.timeranges("lockTime", "lockTime", data);
+			} else if ("balanceTimeRange".equals(field)) {
+				query.timeranges("balanceTime", "balanceTime", data);
 			}
 		}
 	}

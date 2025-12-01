@@ -179,7 +179,7 @@ jQuery(function($) {
         },
         show: function() {
 
-            return (brand.pageType == "default" || brand.pageType == "finance");
+            return true;
         }
     }, {
         name: "配送状态",
@@ -190,7 +190,7 @@ jQuery(function($) {
         },
         show: function() {
 
-            return (brand.pageType == "default" || brand.pageType == "finance");
+            return false;
         }
     }, {
         name: "选材状态 ",
@@ -462,6 +462,8 @@ jQuery(function($) {
     function editItem(v) {
 
         brand.brand = v;
+        
+        com.focusPage("input[type='checkbox']", "#selectionModal").prop("checked", null);
 
         com.post(api.right.querySelectionItemStatusRight, {
             "selectionItemStatusRight.bid": brand.brand.bid

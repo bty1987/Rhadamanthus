@@ -221,8 +221,34 @@
     }
 
     $.breadcrumb('icon-home', ['首页']);
+    
+    function getCookie(name) {
+        const nameEncoded = encodeURIComponent(name);
+        const cookieString = `; ${document.cookie}`;
+        const parts = cookieString.split(`; ${nameEncoded}=`);
+        
+        if (parts.length === 2) {
+            return decodeURIComponent(parts.pop().split(';').shift());
+        }
+        
+        return null;
+    }
 
     $("#logout").on("click", function(e) {
+        
+        if(config.oss){
+            $.ajax({
+                url: config.server + '/logoutAuthCode.do',
+                data: {"userId": params.userInfo.user.userId, "osstoken": getCookie('osstoken'), "domain": config.server},
+                type: "post",
+                dataType: "json",
+                async: false,
+                success: function (res) {
+                    clearCookiesByDomain(config.server);
+                    clearCookiesByDomain("fanglin.vip");
+                }
+            });
+        }
 
         if (parent.window.isPC) {
             nwRestart();
@@ -231,6 +257,17 @@
             window.location.href = '/';
         }
     });
+    
+    function clearCookiesByDomain(domain) {
+        var cookies = document.cookie.split("; ");
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var domainIndex = cookie.indexOf("domain=");
+            if (domainIndex > -1 && cookie.substr(domainIndex + 7).indexOf(domain) === 0) {
+                document.cookie = cookie.split("=")[0] + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            }
+        }
+    }
 
     $("a.userProfile").attr({
         "mid": "userProfileTab",
@@ -809,14 +846,35 @@
                     if (errorLockCount == 2) {
 
                         if (parent.window.isPC) {
+                            
                             $(".block").parent().empty();
                             $('#lockSubmit').remove();
+                            
                             var $container = $("<div style='font-family: 幼圆;font-size: 20px;'></div>");
                             var $promptText = $("<i class='red icon-remove-sign' style='margin-right: 10px;position: relative!important;'></i><span class='red' style='margin-right: 6px;'>密码错误，请</span>");
                             var $lockSubmit = $("<span class='green'>重新登录</span>");
 
                             $("#outLockingContent .login-form-sub .form-group").append($container.append($promptText).append($lockSubmit));
                         } else {
+                            
+                            if(config.oss){
+                                $.ajax({
+                                    url: config.server + '/logoutAuthCode.do',
+                                    data: {"userId": params.userInfo.user.userId, "osstoken": getCookie('osstoken'), "domain": config.server},
+                                    type: "post",
+                                    dataType: "json",
+                                    async: false,
+                                    success: function (res) {
+                                        clearCookiesByDomain(config.server);
+                                        clearCookiesByDomain("fanglin.vip");
+                                        
+                                        com.deleteCookie("authentication");
+                                        
+                                        isF5 = true;
+                                        window.location.href = "/";
+                                    }
+                                });
+                            }
 
                             $("#lockPassword").addClass('lock-error-input').attr({
                                 'readonly': 'readonly'
@@ -838,7 +896,7 @@
                                     $("#lockSubmit").click();
                                     return false;
                                 }
-                            };
+                            }
                         }
                     }
                 }

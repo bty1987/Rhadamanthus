@@ -1,10 +1,7 @@
-package com.fanglin.inventory.vo;
+package com.fanglin.data.material.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.data.material.vo.ColorVO;
-import com.fanglin.data.material.vo.FormatVO;
-import com.fanglin.data.material.vo.GoodsVO;
 
 public class GoodsPackageVO implements Serializable {
 

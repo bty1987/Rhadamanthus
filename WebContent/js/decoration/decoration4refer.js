@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var referDecoration = {
         modals: {
@@ -20,7 +20,7 @@ jQuery(function ($) {
 
     }
 
-    referDecoration.items.referOrderId.blur(function () {
+    referDecoration.items.referOrderId.blur(function() {
 
         var orderId = referDecoration.items.referOrderId.val();
 
@@ -28,7 +28,7 @@ jQuery(function ($) {
             "decoration.orderId": orderId
         }
 
-        com.post(api.decoration.queryDecorationForCommonByOrderId, options, function (res) {
+        com.post(api.decoration.queryDecorationForCommonByOrderId, options, function(res) {
 
             var decoration = res.decoration;
 
@@ -45,14 +45,14 @@ jQuery(function ($) {
 
             if (decoration.contractTime)
                 referDecoration.items.referContractTime.val(decoration.precontractTime);
-        }, function (res) {
+        }, function(res) {
 
             com.showAlert(com.error, "推荐装修单不存在");
             return false;
         });
     });
 
-    referDecoration.items.referPhone.blur(function () {
+    referDecoration.items.referPhone.blur(function() {
 
         referDecoration.refer.orderId = null;
 
@@ -66,7 +66,7 @@ jQuery(function ($) {
 
         var decoration = null;
 
-        com.post(api.decoration.pageDecorationForCustomer, options, function (res) {
+        com.post(api.decoration.pageDecorationForCustomer, options, function(res) {
 
             if (res.paging.totalRecords == 0) {
                 com.showAlert(com.error, "推荐装修单不存在");
@@ -75,7 +75,7 @@ jQuery(function ($) {
 
             var decorations = res.paging.data;
 
-            $.each(decorations, function (i, v) {
+            $.each(decorations, function(i, v) {
 
                 decoration = v;
 
@@ -95,14 +95,14 @@ jQuery(function ($) {
 
                 return false;
             });
-        }, function (res) {
+        }, function(res) {
 
             com.showAlert(com.error, "推荐装修单不存在");
             return false;
         });
     });
 
-    referDecoration.items.referVillage.blur(function () {
+    referDecoration.items.referVillage.blur(function() {
 
         referDecoration.refer.orderId = null;
 
@@ -118,7 +118,7 @@ jQuery(function ($) {
         var house = null;
         var decoration = null;
 
-        com.post(api.data.queryHouseByNoAHnum, options, function (res) {
+        com.post(api.data.queryHouseByNoAHnum, options, function(res) {
 
             house = res.house;
         }, null, false);
@@ -130,7 +130,7 @@ jQuery(function ($) {
             "decoration.house.hid": house.hid
         }
 
-        com.post(api.decoration.checkDecoration, options, function (res) {
+        com.post(api.decoration.checkDecoration, options, function(res) {
 
             var decoration = res.decoration;
 
@@ -145,14 +145,14 @@ jQuery(function ($) {
 
             if (decoration.contractTime)
                 referDecoration.items.referContractTime.val(decoration.precontractTime);
-        }, function (res) {
+        }, function(res) {
 
             com.showAlert(com.error, "推荐装修单不存在");
             return false;
         });
     });
 
-    referDecoration.items.referHouseNumber.blur(function () {
+    referDecoration.items.referHouseNumber.blur(function() {
 
         referDecoration.refer.orderId = null;
 
@@ -168,7 +168,7 @@ jQuery(function ($) {
         var house = null;
         var decoration = null;
 
-        com.post(api.data.queryHouseByNoAHnum, options, function (res) {
+        com.post(api.data.queryHouseByNoAHnum, options, function(res) {
 
             house = res.house;
         }, null, false);
@@ -180,7 +180,7 @@ jQuery(function ($) {
             "decoration.house.hid": house.hid
         }
 
-        com.post(api.decoration.checkDecoration, options, function (res) {
+        com.post(api.decoration.checkDecoration, options, function(res) {
 
             var decoration = res.decoration;
 
@@ -195,7 +195,7 @@ jQuery(function ($) {
 
             if (decoration.contractTime)
                 referDecoration.items.referContractTime.val(decoration.precontractTime);
-        }, function (res) {
+        }, function(res) {
 
             com.showAlert(com.error, "推荐装修单不存在");
             return false;
@@ -230,7 +230,7 @@ jQuery(function ($) {
     }, {
         field: "address",
         name: "楼盘地址",
-        prop: function (v) {
+        prop: function(v) {
 
             return (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber);
         },
@@ -263,7 +263,7 @@ jQuery(function ($) {
     }, {
         field: "discount",
         name: "折扣",
-        prop: function (v) {
+        prop: function(v) {
 
             return com.checkNull(v.discount, 10);
         },
@@ -319,11 +319,6 @@ jQuery(function ($) {
         prop: "contractTime",
         clazz: "green"
     }, {
-        field: "contractTime",
-        name: "签单时间",
-        prop: "contractTime",
-        clazz: "green"
-    }, {
         field: "status",
         name: "状态",
         prop: "status",
@@ -331,25 +326,43 @@ jQuery(function ($) {
         clazz: "red"
     }];
 
+    var linebtus = [{
+        name: "删除",
+        clazz: "btn-danger",
+        handle: function(v) {
 
+            com.post(api.decoration.deleteReferDecorationInfo, {
+                "decoration.orderId": params.decoration.orderId,
+                "decorationInfo.referOrderId": v.orderId
+            }, function() {
 
-    searcher.line("orderId", lineprops, []).render();
+                com.showAlert(com.info, "删除成功");
+                searcher.doSearch();
+            });
 
-    com.focusPage('#supplement').on("click", function () {
-    	
-    	com.cleanItems(referDecoration.items);
+            return false;
+        }
+    }];
+
+    searcher.line(function(v){
+        
+        return v.orderId + (v.referType == 1 ? " (推荐)" : " (被推荐)");
+    }, lineprops, linebtus).render();
+
+    com.focusPage('#supplement').on("click", function() {
+
+        com.cleanItems(referDecoration.items);
         referDecoration.modals.addReferDecorationModal.modal("show");
     });
 
-    com.focusPage('#submitBtn').on("click", function () {
+    com.focusPage('#submitBtn').on("click", function() {
 
         var options = {
             "decoration.orderId": params.decoration.orderId,
             "decorationInfo.referOrderId": referDecoration.items.referOrderId.val(),
-
         };
 
-        com.post(api.decoration.referDecorationInfo, options, function (res) {
+        com.post(api.decoration.referDecorationInfo, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
 

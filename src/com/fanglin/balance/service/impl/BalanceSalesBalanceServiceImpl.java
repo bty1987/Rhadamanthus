@@ -159,8 +159,8 @@ public class BalanceSalesBalanceServiceImpl implements BalanceSalesBalanceServic
 		salesBalancePO.setCheckStatus(SalesBalancePO.CHECKSTATUS_CHECK_INT);
 		salesBalancePO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
-		salesBalancePO.setVenderTime(DateUtil.getDateToTimestamp(new Date()));
-		salesBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
+		if (salesBalancePO.getVenderTime() == null) salesBalancePO.setVenderTime(DateUtil.getDateToTimestamp(new Date()));
+		if (salesBalancePO.getPostTime() == null) salesBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
 
 		if (salesBalancePO.getType() == SalesBalancePO.TYPE_INIT_INT) {
 

@@ -321,9 +321,58 @@ $(function() {
         var $contractFile = $show.includes("contractFiles") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同文件"))), createDiv().css("min-height", "150px").append(createDiv("infobox-container", "contractFiles"))))) : null;
         var $designContractPicture = $show.includes("designContractPicture") ? createDiv().append(createDiv("col-xs-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("合同方案2")), createDiv("inline pull-right", "designContractPictureUpload_a").css("text-align", "right").append(createDiv("pull-left", "designContractPictureUpload_b"))), createDiv().css("min-height", "150px").append(createUl("designContractPicture", "ace-thumbnails"))))) : null;
 
-        var row2 = createDiv("row").append($OriginalPicture).append($designPictures).append($designContractPicture).append($projectPictures).append($contractMap).append($CADProjectPicture).append($contractFile).appendTo(stepPane);
+        var $liveShot = createDiv("col-md-12 liveShot").css({"border-top": "1px solid #dce8f1"});
+
+        // 创建内部容器
+        var $innerContainer = createDiv("block clearfix form-group");
+
+        // 创建各个上传区块
+        var $selfieBlock = createImageUploadBlock("量房员自拍", "selfieBlock", "selfiePicture");
+        var $drawingBlock = createImageUploadBlock("现场测绘图", "drawingBlock", "drawingPicture");
+        var $photoBlock = createImageUploadBlock("现场照片", "photoBlock", "livePicture");
+        var $file720Block = createImageUploadBlock("720°文件", "file720Block", "720Files");
+
+        // 组装所有区块
+        $innerContainer.append($selfieBlock).append($drawingBlock).append($photoBlock).append($file720Block);
+
+        // 最终组装
+        $liveShot.append($innerContainer);
+
+        var row2 = createDiv("row").append($liveShot).append($OriginalPicture).append($designPictures).append($designContractPicture).append($projectPictures).append($contractMap).append($CADProjectPicture).append($contractFile).appendTo(stepPane);
 
         var $btns = conf.opt == null ? [] : conf.opt.btn == null ? [] : conf.opt.btn;
+
+        if ($btns.includes("selfieUpload")) {
+
+            decorationUtils.loadHuploadify("selfieBlock", "上传图片", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
+
+                decorationUtils.addDecorationPicture(data, 11, "selfiePicture");
+            }, "btn btn-minier btn-primary");
+        }
+
+        if ($btns.includes("drawingUpload")) {
+
+            decorationUtils.loadHuploadify("drawingBlock", "上传图片", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
+
+                decorationUtils.addDecorationPicture(data, 21, "drawingPicture");
+            }, "btn btn-minier btn-primary");
+        }
+
+        if ($btns.includes("photoUpload")) {
+
+            decorationUtils.loadHuploadify("photoBlock", "上传图片", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
+
+                decorationUtils.addDecorationPicture(data, 31, "livePicture");
+            }, "btn btn-minier btn-primary");
+        }
+
+        if ($btns.includes("file720Upload")) {
+
+            decorationUtils.loadHuploadify("file720Block", "上传文件", "*.pdf", false, function(data) {
+
+                decorationUtils.addDecorationPicture(data, 41, "720Files");
+            }, "btn btn-minier btn-primary");
+        }
 
         if ($btns.includes("designPictureUpload")) {
 
@@ -332,13 +381,8 @@ $(function() {
                 decorationUtils.addDecorationPicture(data, 1, "designPictures");
             }, "btn btn-minier btn-primary");
 
-            // var $btnView = $("<a></a>").addClass("uploadify-button btn btn-minier btn-primary").html("上传合同方案").click(function() {
-            //
-            // com.popup4page("#designPictureUpload_c", api.index.decorationPictureIndex.url, "上传合同");
-            // });
-            //
-            // container = com.focusPage('#designPictureUpload_b').append($btnView);
         }
+
         if ($btns.includes("projectPictureUpload")) {
             decorationUtils.loadHuploadify("projectPictureUpload_b", "上传放线方案", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
@@ -352,18 +396,21 @@ $(function() {
                 decorationUtils.addDecorationPicture(data, 5, "designContractPicture");
             }, "btn btn-minier btn-primary");
         }
+
         if ($btns.includes("OriginalUpload")) {
             decorationUtils.loadHuploadify("OriginalUpload", "上传现场图", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                 decorationUtils.addDecorationPicture(data, 4, "OriginalPicture");
             }, "btn btn-minier btn-primary");
         }
+
         if ($btns.includes("CADUpload")) {
             decorationUtils.loadHuploadify("CADUpload", "上传工程文件CAD", "*.dwg;*.dwt", false, function(data) {
 
                 decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
             }, "btn btn-minier btn-primary");
         }
+
         if ($btns.includes("ContractUpload")) {
             decorationUtils.loadHuploadify("ContractUpload", "上传合同备档", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
@@ -512,6 +559,35 @@ $(function() {
 
     }
 
+    // 创建图片上传区块的函数
+    function createImageUploadBlock(title, btnName, codeName) {
+
+        var $col = createDiv("col-md-3").css({"text-align": "center"});
+
+        // 创建标题
+        var $title = $('<h5></h5>').append($('<strong></strong>').addClass('clearfix').css({"text-align": "center"}).html(title));
+
+        var $div = createDiv("col-md-12").css({"margin-bottom": "5px"});
+
+        // 创建缩略图容器
+        var $thumbnailList = null;
+
+        if (btnName == "file720Block") {
+            $thumbnailList = createDiv("col-md-12").attr('id', codeName);
+        } else {
+            $thumbnailList = $('<ul></ul>').addClass('ace-thumbnails').attr('id', codeName).css({"margin": "auto", "display": "flex", "justify-content": "center"});
+        }
+
+        var $btn = createDiv("inline", btnName);
+
+        $div.append($thumbnailList)
+
+        // 组装完整区块
+        $col.append($title).append($div).append($btn);
+
+        return $col;
+    }
+
     drawNode = {
         draw: function(nodes) {
 
@@ -593,6 +669,7 @@ $(function() {
                         rows = drawUsers(v);
                         break;
                 }
+
                 $.each(rows, function(j, b) {
 
                     stepPane.append(b);
@@ -608,30 +685,35 @@ $(function() {
                     decorationUtils.addDecorationPicture(data, 1, "designPictures");
                 }, "btn btn-success");
             }
+
             if (isprojectPictureUpload) {
                 decorationUtils.loadHuploadify("projectPictureUpload", "上传放线方案", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                     decorationUtils.addDecorationPicture(data, 2, "projectPictures");
                 }, "btn btn-primary");
             }
+
             if (isOriginalUpload) {
                 decorationUtils.loadHuploadify("OriginalUpload", "上传现场图", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                     decorationUtils.addDecorationPicture(data, 4, "OriginalPicture");
                 }, "btn btn-purple");
             }
+
             if (isCADUpload) {
                 decorationUtils.loadHuploadify("CADUpload", "上传工程文件CAD", "*.dwg;*.dwt", false, function(data) {
 
                     decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
                 }, "btn btn-warning");
             }
+
             if (isContractUpload) {
                 decorationUtils.loadHuploadify("ContractUpload", "上传合同备档", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 
                     decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
                 }, "btn btn-inverse");
             }
+
             if (isdesignContractPictureUpload) {
                 decorationUtils.loadHuploadify("designContractPictureUpload", "上传合同2", "*.jpg;*.jpge;*.gif;*.png", true, function(data) {
 

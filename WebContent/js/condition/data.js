@@ -627,7 +627,22 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-
+    "accessoriesType-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.data().accessoriesType.type.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "aoods-name": {
         label: "商品名",
         type: "text",
@@ -638,10 +653,19 @@ Condition.addupRule("data", {
         }
     },
     "aoods-type": {
-        label: "辅类",
+        label: "分类辅类",
         type: "text",
         submitConfig: {
             name: "accessoriesType.name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "aoods-type-sort": {
+        label: "排序辅类",
+        type: "text",
+        submitConfig: {
+            name: "sortType.name",
             op: "cn",
             validate: null
         }

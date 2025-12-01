@@ -166,6 +166,14 @@ public class PaymentCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "alipay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String alipay() throws FLException {
+
+		paytranService.alipay(wxpay);
+
+		return SUCCESS;
+	}
+
 	public List<PaymentContractVO> getPaymentContracts() {
 		return paymentContracts;
 	}

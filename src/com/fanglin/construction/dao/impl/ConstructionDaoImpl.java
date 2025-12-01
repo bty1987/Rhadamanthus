@@ -22,6 +22,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionDao")
@@ -36,7 +37,9 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 
 		PagingQuery<ConstructionPO> query = pagingQuery(paging, ConstructionPO.class);
 
-		query.add(query.getCriterion("decoration.company", company, "eq"));
+		if (company != null && company != CompanyPO.TYPE_HEADQUARTER_INT) {
+			query.add(query.getCriterion("decoration.company", company, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -111,6 +114,8 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 				query.timeranges("endTime", data);
 			} else if ("construction.finishTime".equals(field)) {
 				query.timeranges("finishTime", data);
+			} else if ("construction.supervisor".equals(field)) {
+				query.add(query.getCriterion("supervisor.userId", data, op));
 			}
 		}
 	}

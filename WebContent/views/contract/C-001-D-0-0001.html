@@ -29,26 +29,7 @@
                                         <input id="sin-customer-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-6">
-                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">联系电话1</label>
-                                    <div class="col-sm-9">
-                                        <input id="sin-customer-phone1" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
-                                    </div>
-                                </div>
 
-                                <div class="form-group col-sm-6">
-                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">邮箱</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-customer-email" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">微信</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-customer-wechat" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="col-md-12 company">
@@ -104,6 +85,33 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-md-12">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="customer_name" class="col-sm-3 control-label no-padding-right orange">甲方指定人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-appointor-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-appointor-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">联系电话</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-appointor-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                            </div>
+
                             <hr>
 
                             <div class="col-md-12">
@@ -138,10 +146,17 @@
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="belonger" class="col-sm-3 control-label no-padding-right orange">房屋类型</label>
+                                    <label for="housetype" class="col-sm-3 control-label no-padding-right orange">房屋类型</label>
                                     <div class="col-sm-9">
                                         <!-- <input id="con-housetype" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"> -->
                                         <select id="con-housetype" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="housestatus" class="col-sm-3 control-label no-padding-right orange">房屋类别</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-housetypeness" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
                                     </div>
                                 </div>
 
@@ -156,13 +171,6 @@
                                     <label for="contract_mode" class="col-sm-3 control-label no-padding-right orange">承揽模式</label>
                                     <div class="col-sm-9">
                                         <input id="con-work-model" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label for="rental" class="col-sm-3 control-label no-padding-right orange">合同总额</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-contract-total" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual" readonly="readonly">
                                     </div>
                                 </div>
 
@@ -187,6 +195,13 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group col-sm-6">
+                                    <label class="col-sm-3 control-label no-padding-right" for="startTime">设计图纸采取</label>
+                                    <div class="col-sm-9">
+                                        <select id="con-decorationPicture-type" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                                        <span class="col-sm-4">方式提供</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <hr>

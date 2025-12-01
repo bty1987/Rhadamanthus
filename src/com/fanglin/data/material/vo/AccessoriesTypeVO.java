@@ -4,18 +4,22 @@ import java.io.Serializable;
 
 import com.fanglin.communion.vo.WorkTypeVO;
 
-public class AccessoriesTypeVO implements Serializable{
+public class AccessoriesTypeVO implements Serializable {
 
 	private static final long serialVersionUID = -7622284090232006941L;
-	
+
 	private Long atid;
-	
+
 	private String name;
-	
+
 	private WorkTypeVO workType;
-	
+
+	private Short type;
+
+	private Short sort;
+
 	private Short status;
-	
+
 	private String comment;
 
 	public AccessoriesTypeVO() {
@@ -26,7 +30,7 @@ public class AccessoriesTypeVO implements Serializable{
 		super();
 		this.workType = workType;
 	}
-	
+
 	public Long getAtid() {
 		return atid;
 	}
@@ -51,6 +55,22 @@ public class AccessoriesTypeVO implements Serializable{
 		this.workType = workType;
 	}
 
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getSort() {
+		return sort;
+	}
+
+	public void setSort(Short sort) {
+		this.sort = sort;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -66,5 +86,5 @@ public class AccessoriesTypeVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

@@ -51,7 +51,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 	private SurveyTemplateDao surveyTemplateDao;
 
 	@Autowired
-	private UserDao userdDao;
+	private UserDao userDao;
 
 	@Override
 	public void pageCustomerProfile(Paging paging, List<Filter> filters, int company) {
@@ -135,7 +135,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 
 		CustomerProfilePO customerProfilePO = new CustomerProfilePO();
 
-		UserPO creater = userdDao.queryUserByUserId(userId);
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		String orderId = customerProfileVO.getOrderId();
 
@@ -166,7 +166,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 
 			customerProfileItemDao.save(customerProfileItemPO);
 
-			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(itemVO.getType())) continue;
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT, SurveyTemplateItemPO.TYPE_DATE_INT).contains(itemVO.getType())) continue;
 
 			List<CustomerProfileOptionVO> options = itemVO.getOptions();
 
@@ -204,7 +204,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 
 		CustomerProfilePO customerProfilePO = new CustomerProfilePO();
 
-		UserPO creater = userdDao.queryUserByUserId(userId);
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		String orderId = customerProfileVO.getOrderId();
 
@@ -246,7 +246,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 
 			customerProfileItemDao.save(customerProfileItemPO);
 
-			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(surveyTemplateItemPO.getType())) continue;
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT, SurveyTemplateItemPO.TYPE_DATE_INT).contains(surveyTemplateItemPO.getType())) continue;
 
 			List<SurveyTemplateOptionPO> surveyTemplateOptionPOs = surveyTemplateItemPO.getOptions();
 
@@ -285,7 +285,7 @@ public class CustomerProfileServiceImpl implements CustomerProfileService {
 
 			CustomerProfileItemPO itemPO = customerProfileItemDao.get(itemVO.getCpiid());
 
-			if (Arrays.asList(CustomerProfileItemPO.TYPE_TEXT_INT, CustomerProfileItemPO.TYPE_INPUT_INT).contains(itemPO.getType())) {
+			if (Arrays.asList(CustomerProfileItemPO.TYPE_TEXT_INT, CustomerProfileItemPO.TYPE_INPUT_INT, SurveyTemplateItemPO.TYPE_DATE_INT).contains(itemPO.getType())) {
 				itemPO.setContent(itemVO.getContent());
 				customerProfileItemDao.update(itemPO);
 			}

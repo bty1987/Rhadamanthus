@@ -35,14 +35,16 @@ jQuery(function($) {
         url = api.balance.pageBalanceSelectionForSupplier;
     }
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {}, "brands", "bid", "name", null);
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "brand.pinyin", {
+        "brand.status": 0
+    }, "brands", "bid", "name", null);
 
     var seacher = new Searcher();
     var history = balanceSelection.depage + "balanceSelectionPostData";
 
     seacher.base("bscondList", "bspagenation", "bsresultList", url);
 
-    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelection-status", "balance-balanceSelse-brand", "balance-balanceSelection-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+    seacher.condition(["balance-selection-name", "balance-selection-status", "balance-selection-brand", "balance-selection-grade", "balance-selection-createTime", "balance-selection-creater", "balance-selection-lockTime", "balance-selection-balanceTime"]);
 
     seacher.button([{
         id: "createBalanceSelection",
@@ -164,7 +166,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.balance.no != "0000000000");
+            return (v.balance && v.balance.no != "0000000000");
         }
     }, {
         name: "汇总",
@@ -373,6 +375,17 @@ jQuery(function($) {
 
             return false;
         }
+    }, {
+        name: "同步金蝶",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            kingdee(v);
+        },
+        show: function(v) {
+
+            return v.status == constant.balance().balanceSelection.STATUS_ENABLE_CHECK_INT;
+        }
     }];
 
     seacher.line("name", lineprops, linebtus).render();
@@ -530,4 +543,86 @@ jQuery(function($) {
         });
     }
 
+    function kingdee(v) {
+
+        var drganizationNo = "";
+        var balanceSelections = {
+            bsid: 0,
+            creater: {
+                userId: null
+            },
+            balanceTime: null,
+            grade: null,
+            brand: {
+                kino: null,
+                supplier: {
+                    oldUserId: null
+                }
+            },
+            name: null,
+            payment: 0,
+            income: 0,
+            paymentOrg: null,
+            items: []
+        };
+
+        // 单据编号/创建人/业务日期/币别/类型/核算类别/款项组织/结算组织/品牌/供应商/结算单号/代收服务费合计/代收合计
+        com.post(api.balance.queryBalanceSelectionByBsid, {
+            "balanceSelection.bsid": v.bsid
+        }, function(res) {
+
+            balanceSelections.bsid = res.balanceSelection.bsid;
+            balanceSelections.creater.userId = res.balanceSelection.creater.userId;
+            balanceSelections.balanceTime = res.balanceSelection.balanceTime;
+            balanceSelections.grade = res.balanceSelection.grade;
+            balanceSelections.brand.kino = res.balanceSelection.brand.kino;
+            balanceSelections.brand.supplier.oldUserId = res.balanceSelection.brand.supplier != null ? res.balanceSelection.brand.supplier.oldUserId : "";
+            balanceSelections.name = res.balanceSelection.name;
+            balanceSelections.payment = res.balanceSelection.payment;
+            balanceSelections.income = res.balanceSelection.income;
+            balanceSelections.paymentOrg = params.company.srganization.no;
+        }, null, false);
+
+        com.post(api.balance.pageBalanceSelectionItem, {
+            "paging.noPage": 1,
+            "balanceSelection.bsid": v.bsid
+        }, function(res) {
+
+            $.each(res.paging.data, function(i, v) {
+
+                var orderId = v.selectionItem.decoration.orderId;
+
+                if (i == 0) {
+                    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                        "decoration.orderId": orderId
+                    }, function(res) {
+
+                        com.post(api.system.queryCompanyByCid, {
+                            "company.cid": res.decoration.dompany
+                        }, function(data) {
+
+                            drganizationNo = data.company.drganization.no;
+                        }, null, false);
+
+                    }, null, false);
+                }
+
+                // 代收金额/服务费金额/客户/装修单号/销售单号/优惠券
+                var item = {
+                    salesRevenue: 0, // TODO
+                    serviceMoney: 0, // TODO
+                    orderId: orderId,
+                    no: orderId,
+                    coupon: 0, // 结算选材没有coupon
+                    address: v.selectionItem.decoration.house.village.name + " " + v.selectionItem.decoration.house.houseNumber,
+                    dorgNo: drganizationNo
+                };
+
+                balanceSelections.items.push(item);
+            });
+
+        }, null, false);
+
+        kingdeeUtils.balance(balanceSelections);
+    }
 });

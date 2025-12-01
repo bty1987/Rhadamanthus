@@ -22,4 +22,8 @@ public interface CppointRecordDao extends Dao<CppointRecordPO> {
 
 	public List<CppointRecordPO> queryCppointRecord(Long cpid, Paging paging, List<Filter> filters);
 
+	public CppointRecordPO queryCppointRecordByOrderId(String orderId);
+
+	public void updateCppointRecordByNo(String pointOrderId);
+
 }

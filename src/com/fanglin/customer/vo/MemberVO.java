@@ -27,9 +27,13 @@ public class MemberVO implements Serializable {
 
 	private String supervisor;
 
-	private Timestamp storeTime;//到店时间
+	private Timestamp storeTime;// 到店时间
 
-	private Timestamp contractTime;//签约时间
+	private Timestamp contractTime;// 签约时间
+
+	private Short paySacle;// 付款比例
+
+	private Short status;
 
 	private String company;
 
@@ -115,6 +119,22 @@ public class MemberVO implements Serializable {
 		this.contractTime = contractTime;
 	}
 
+	public Short getPaySacle() {
+		return paySacle;
+	}
+
+	public void setPaySacle(Short paySacle) {
+		this.paySacle = paySacle;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
 	public String getCompany() {
 		return company;
 	}
@@ -127,6 +147,7 @@ public class MemberVO implements Serializable {
 
 		setOrderId(decorationPO.getOrderId());
 		setCompany(companyName);
+		setPaySacle(decorationPO.getPaySacle());
 
 		if (decorationPO.getDesigner() != null) {
 			setDesigerId(decorationPO.getDesigner().getUserId());

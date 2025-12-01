@@ -12,6 +12,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.impl.DecorationDaoImpl;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("constructionInfoDao")
@@ -41,14 +42,13 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 	@Override
 	public ConstructionInfoPO queryConstructionInfoByOrderId(String orderId) {
-
 		return (ConstructionInfoPO) session().createCriteria(ConstructionInfoPO.class).add(Restrictions.eq(ConstructionInfoPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
 	}
 
 	@Override
 	public List<?> countConstructionInfo(long startTime, long endTime, int company) {
 
-		String sql = "select ci.actuaTime, count(*) as count from construction.constructioninfo ci, decoration.decoration d where ci.actuaTime between :start and :end and ci.orderId = d.orderId and d.company = :company group by ci.actuaTime";
+		String sql = "select ci.actuaTime, count(*) as count from construction.constructioninfo ci, decoration.decoration d left join construction.drawline dl on d.orderId = dl.orderId where ci.actuaTime between :start and :end and ci.orderId = d.orderId and d.company = :company and dl.dlid is null group by ci.actuaTime";
 
 		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
 	}
@@ -65,7 +65,7 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 			String data = filter.getData();
 
 			if ("isIssue".equals(field)) {
-				query.add(Restrictions.eq("isIssus", Short.parseShort(data)));
+				query.add(Restrictions.eq("isIssue", Short.parseShort(data)));
 			} else if ("isCheck".equals(field)) {
 				query.add(Restrictions.eq("isCheck", Short.parseShort(data)));
 			} else if ("keyTime".equals(field)) {
@@ -73,7 +73,7 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 			} else if ("drawlineTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_DRAWLINETIME_STR, data);
 			} else if ("drawlineTimeFlag".equals(field)) {
-				query.add(Restrictions.isNotNull(ConstructionInfoDO.COLUMN_DRAWLINETIME_STR));
+				query.add(getCriterion(ConstructionInfoDO.COLUMN_DRAWLINETIME_STR, DateUtil.getDateToTimestamp(DateUtil.parseDate(data + " 23:59:59", "yyyy-MM-dd HH:mm:ss")), "le"));
 			} else if ("finishTime".equals(field)) {
 				query.timeranges(ConstructionInfoDO.COLUMN_FINISHTIME_STR, data);
 			} else if ("designTime".equals(field)) {

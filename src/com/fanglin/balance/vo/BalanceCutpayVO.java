@@ -20,6 +20,8 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	private BalanceDccountVO dccount;
 
+	private UserBaseVO belonger;
+
 	private UserBaseVO operater;
 
 	private Timestamp operateTime;
@@ -33,6 +35,8 @@ public class BalanceCutpayVO implements java.io.Serializable {
 	private Short status;
 
 	private String comment;
+
+	private String path;
 
 	public BalanceCutpayVO() {
 		super();
@@ -49,10 +53,11 @@ public class BalanceCutpayVO implements java.io.Serializable {
 		this.operater = operater;
 	}
 
-	public BalanceCutpayVO(BalanceVO balance, UserBaseVO operater, BalanceDccountVO dccount, BalanceCutpayVO cutpay) {
+	public BalanceCutpayVO(BalanceVO balance, UserBaseVO operater, UserBaseVO belonger, BalanceDccountVO dccount, BalanceCutpayVO cutpay) {
 		super();
 		this.balance = balance;
 		this.operater = operater;
+		this.belonger = belonger;
 		this.dccount = dccount;
 		this.cutpay = cutpay;
 	}
@@ -79,6 +84,14 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	public void setCutpay(BalanceCutpayVO cutpay) {
 		this.cutpay = cutpay;
+	}
+
+	public UserBaseVO getBelonger() {
+		return belonger;
+	}
+
+	public void setBelonger(UserBaseVO belonger) {
+		this.belonger = belonger;
 	}
 
 	public UserBaseVO getOperater() {
@@ -152,6 +165,14 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	public void setDccount(BalanceDccountVO dccount) {
 		this.dccount = dccount;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 }

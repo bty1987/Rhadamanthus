@@ -41,7 +41,7 @@ public class BalanceCutpayDaoImpl extends DaoImpl<BalanceCutpayPO> implements Ba
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<BalanceCutpayPO> queryBalanceCutpayByOuid(int ouid) {
-		return session().createCriteria(BalanceCutpayPO.class).add(Restrictions.eq("operater.uid", ouid)).list();
+		return session().createCriteria(BalanceCutpayPO.class).add(Restrictions.eq("belonger.uid", ouid)).list();
 	}
 
 	@Override

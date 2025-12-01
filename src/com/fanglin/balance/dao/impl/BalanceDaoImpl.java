@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.po.BalancePO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -19,7 +20,7 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 	}
 
 	@Override
-	public List<BalancePO> pageBalance(Paging paging, List<Filter> filters, int company) {
+	public List<BalancePO> pageBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<BalancePO> query = pagingQuery(paging, BalancePO.class);
 
@@ -33,7 +34,7 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 	}
 
 	@Override
-	public List<BalancePO> queryBalance(List<Filter> filters, int company) {
+	public List<BalancePO> queryBalance(List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<BalancePO> query = pagingQuery(new Paging(), BalancePO.class);
 
@@ -51,7 +52,23 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 		return (BalancePO) session().createCriteria(BalancePO.class).add(Restrictions.eq("no", no)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
+		queryFilterExcute(query, filters, "");
+	}
+
+	public static void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
+
+		if (filters == null) return;
+
+		if (prefix == null) {
+			prefix = "";
+		}
+
+		if (!"".equals(prefix)) {
+
+			query.alias(prefix, prefix);
+			prefix = String.format("%s.", prefix);
+		}
 
 		for (Filter filter : filters) {
 
@@ -59,22 +76,24 @@ public class BalanceDaoImpl extends DaoImpl<BalancePO> implements BalanceDao {
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if (BalancePO.COLUMN_NO_STR.equals(field)) {
-				query.add(query.getCriterion(field, String.valueOf(data), op));
-			} else if ("creater".equals(field)) {
-				query.alias("creater", "creater");
-				query.add(query.getCriterion("creater.uid", data, op));
-			} else if ("belonger".equals(field)) {
-				query.alias("belonger", "belonger");
-				query.add(query.getCriterion("belonger.uid", Integer.valueOf(data), op));
-			} else if (BalancePO.COLUMN_STATUS_STR.equals(field)) {
-				query.add(query.getCriterion(field, Short.valueOf(data), op));
-			} else if (BalancePO.COLUMN_TYPE_STR.equals(field)) {
-				query.add(query.getCriterion(field, Short.valueOf(data), op));
-			} else if (BalancePO.COLUMN_ISPAY_STR.equals(field)) {
-				query.add(query.getCriterion(field, Short.valueOf(data), op));
-			} else {
-				query.add(query.getCriterion(field, data, op));
+			if (field.contains("belonger")) {
+				query.alias(String.format("%sbelonger", prefix), String.format("%sbelonger", prefix));
+			} else if (field.contains("creater")) {
+				query.alias(String.format("%screater", prefix), String.format("%sbelonger", prefix));
+			}
+
+			if ("balance.no".equals(field)) {
+				query.add(query.getCriterion(String.format("%sno", prefix), String.valueOf(data), op));
+			} else if ("balance.creater".equals(field)) {
+				query.add(query.getCriterion(String.format("%screater.uid", prefix), data, op));
+			} else if ("balance.belonger".equals(field)) {
+				query.add(query.getCriterion(String.format("%sbelonger.uid", prefix), Integer.valueOf(data), op));
+			} else if ("balance.status".equals(field)) {
+				query.add(query.getCriterion(String.format("%sstatus", prefix), Short.valueOf(data), op));
+			} else if ("balance.type".equals(field)) {
+				query.add(query.getCriterion(String.format("%stype", prefix), Short.valueOf(data), op));
+			} else if ("balance.isPay".equals(field)) {
+				query.add(query.getCriterion(String.format("%sisPay", prefix), Short.valueOf(data), op));
 			}
 		}
 

@@ -291,7 +291,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			decorationBelongDao.save(decorationBelongPO);
 		}
 
-		decorationPO.setMeasureTime(DateUtil.getDateToTimestamp(new Date()));
+		decorationAdditionPO.setBelongTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationAdditionDao.update(decorationAdditionPO);
 		decorationDao.update(decorationPO);

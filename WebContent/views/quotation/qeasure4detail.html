@@ -1,0 +1,75 @@
+<div id="qeasureDetailModal">
+	<div id="particulars">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-md-12">
+					<h3 class="blue center" id="name"></h3>
+					<p id="title" style="text-indent: 20px;"></p>
+				</div>
+			</div>
+			<div class="row" id="functionAreas"></div>
+			<hr />
+			<div class="form-group" id="itemlist"></div>
+
+		</form>
+	</div>
+</div>
+
+<div class="modal fade" id="functionAreaModal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content" id="functionAreaParticulars">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span><span class="sr-only">Close</span>
+				</button>
+				<h4 class="modal-title">功能区</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+					<div class="form-group">
+						<div class="col-md-12">
+							<h3 class="blue center" id="name"></h3>
+							<p id="title" style="text-indent: 20px;"></p>
+						</div>
+					</div>
+					<div class="form-group" id="functionAreaItemList"></div>
+					
+				</form>
+			</div>
+			<div class="modal-footer" id="exDiv">
+				<button class="btn btn-primary" type="button" id="execute">执行</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="addFunctionAreaModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">功能区</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right" for="surveyTemplate">功能区</label>
+                        <div class="col-sm-8">
+                            <select class="col-xs-10 col-sm-5 v_required" id="functionArea" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="addFunctionAreaBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $.loadScript([ 'js/quotation/qeasure4detail.js' ]);
+</script>

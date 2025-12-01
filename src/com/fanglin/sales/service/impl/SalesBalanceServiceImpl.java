@@ -88,7 +88,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
-			salesBalanceVOs.add(salesBalancePO.ptv(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
+			salesBalanceVOs.add(salesBalancePO.ptv(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return salesBalanceVOs;
@@ -104,7 +104,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 		if (salesBalanceVO != null && salesBalanceVO.getSales() != null && salesBalanceVO.getSales().getType() != null) type = salesBalanceVO.getSales().getType();
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters, type, company);
-
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
 		paging.setData(salesBalanceVOs);
@@ -120,7 +119,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 		if (salesBalanceVO != null && salesBalanceVO.getSales() != null && salesBalanceVO.getSales().getType() != null) type = salesBalanceVO.getSales().getType();
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForDompany(paging, filters, type, dompany);
-
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
 		paging.setData(salesBalanceVOs);
@@ -280,6 +278,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int advSalesBalance(List<Long> sids, String userId) throws FLException {
 
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
 		for (long sid : sids) {
 
 			SalesPO salesPO = salesDao.get(sid);
@@ -307,8 +307,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			}
 
 			SalesBalancePO salesBalancePO = new SalesBalancePO();
-
-			UserPO userPO = userDao.queryUserByUserId(userId);
 
 			salesBalancePO.setSales(salesPO);
 			salesBalancePO.setCreater(userPO);
@@ -419,6 +417,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int preSalesBalance(List<Long> sids, String userId) throws FLException {
 
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
 		for (long sid : sids) {
 
 			SalesPO salesPO = salesDao.get(sid);
@@ -442,8 +442,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			}
 
 			SalesBalancePO salesBalancePO = new SalesBalancePO();
-
-			UserPO userPO = userDao.queryUserByUserId(userId);
 
 			long balance = 0;
 
@@ -523,6 +521,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int vpostSalesBalance(List<SalesBalanceVO> sbids, String userId) throws FLException {
 
+		UserPO voster = userDao.queryUserByUserId(userId);
+
 		for (SalesBalanceVO salesBalanceVO : sbids) {
 
 			SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
@@ -535,13 +535,11 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				throw new FLException(260038, "销售结算状态不可操作");
 			}
 
-			SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
+			SalesPO salesPO = salesBalancePO.getSales();
 
 			if (salesPO == null) {
 				throw new FLException(260021, "销售单不存在");
 			}
-
-			UserPO voster = userDao.queryUserByUserId(userId);
 
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_VENDORBALANCE_INT);
 			salesBalancePO.setVoster(voster);
@@ -577,6 +575,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int postSalesBalance(List<SalesBalanceVO> sbids, String userId) throws FLException {
 
+		UserPO poster = userDao.queryUserByUserId(userId);
+
 		for (SalesBalanceVO salesBalanceVO : sbids) {
 
 			SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
@@ -589,13 +589,11 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				throw new FLException(260038, "销售结算状态不可操作");
 			}
 
-			SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
+			SalesPO salesPO = salesBalancePO.getSales();
 
 			if (salesPO == null) {
 				throw new FLException(260021, "销售单不存在");
 			}
-
-			UserPO poster = userDao.queryUserByUserId(userId);
 
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_BALANCE_INT);
 			salesBalancePO.setPoster(poster);

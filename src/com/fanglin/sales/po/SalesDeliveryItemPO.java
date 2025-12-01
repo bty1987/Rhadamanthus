@@ -214,8 +214,9 @@ public class SalesDeliveryItemPO implements Serializable {
 		return protranTime;
 	}
 
-	public void setProtranTime(Timestamp protranTime) {
+	public SalesDeliveryItemPO setProtranTime(Timestamp protranTime) {
 		this.protranTime = protranTime;
+		return this;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

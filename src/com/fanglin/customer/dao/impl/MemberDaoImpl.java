@@ -27,7 +27,7 @@ public class MemberDaoImpl extends DaoImpl<GroupPO> implements MemberDao {
 	@Override
 	public long amountMemberPointForDecoration(String orderId) {
 
-		String sql = "SELECT SUM(dp.referMoney*a.multiple/1000) from payment.decorationpayment dp, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId AND dp.paymentStatus IN (1, 2) AND dp.onetype = 0 AND dp.twotype = 1 and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1";
+		String sql = "SELECT SUM(dp.referMoney*a.multiple/1000) from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decorationactivity da, information.activity a where dp.orderId = :orderId AND dp.paymentStatus IN (1, 2) AND dp.onetype = 0 AND dp.twotype = 1 and dp.drid = dr.drid and dp.orderId = da.orderId and da.aid = a.aid and a.atttype = 1 and dp.sort != 0 and DATEDIFF(NOW(), dr.collecttime) < a.validays";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
 
 		return sqlQuery == null ? 0 : sqlQuery.longValue();

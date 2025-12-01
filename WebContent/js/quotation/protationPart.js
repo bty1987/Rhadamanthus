@@ -865,6 +865,8 @@ var protationPart = (function() {
                 params["protation.totalPrice"] = null;
 
                 com.post(api.approval.submitApprovalForProtationPrefer, params, function(res) {
+                    
+                    quote.oldProtationData();
 
                     com.showAlert(com.info, "操作成功");
                     com.focusPage("#approveModal").modal("hide");

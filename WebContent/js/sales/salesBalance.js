@@ -130,6 +130,10 @@ $(function() {
                                 break;
                             case "salesman":
                                 propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
+                                if (v.salesman.dept)
+                                    propertyArr.push(["渠道部门:", v.salesman.dept.name, "grey", tools.department.info, v.salesman.dept.did]);
+                                if (v.salesman.dept && v.sales.salesman.dept.fatherDept)
+                                    propertyArr.push(["渠道大区:", v.salesman.dept.fatherDept.name, "grey", tools.department.info, v.salesman.dept.fatherDept.did]);
                                 break;
                             case "dept":
                                 propertyArr.push(["归属部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
@@ -374,12 +378,12 @@ $(function() {
                             }, function(res) {
 
                                 com.showAlert(com.info, "厂结成功");
-                                salesBalanceSearcher.doSearch();
+                                searcher.doSearch();
                             });
 
                         }, function() {
 
-                            salesBalanceSearcher.doSearch();
+                            searcher.doSearch();
                         });
                     });
 
@@ -417,12 +421,12 @@ $(function() {
                             }, function(res) {
 
                                 com.showAlert(com.info, "结算成功");
-                                salesBalanceSearcher.doSearch();
+                                searcher.doSearch();
                             });
 
                         }, function() {
 
-                            salesBalanceSearcher.doSearch();
+                            searcher.doSearch();
                         });
 
                     });
@@ -450,7 +454,7 @@ $(function() {
                         }, function(res) {
 
                             com.showAlert(com.info, "更新为预结成功");
-                            salesBalanceSearcher.doSearch();
+                            searcher.doSearch();
                         });
                     });
 
@@ -462,7 +466,7 @@ $(function() {
 
                             com.showAlert(com.info, "操作成功");
 
-                            salesBalanceSearcher.doSearch();
+                            searcher.doSearch();
                         });
                     });
 
@@ -485,7 +489,7 @@ $(function() {
         };
     })();
 
-    var salesBalanceSearcher = new Searcher();
+    var searcher = new Searcher();
 
     var salesBalanceParams = {}
 
@@ -493,7 +497,7 @@ $(function() {
         salesBalanceParams["salesBalance.sales.type"] = 1;
     }
 
-    salesBalanceSearcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function(data) {
+    searcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function(data) {
 
         displayFunc.init('resultList', data);
 
@@ -568,7 +572,7 @@ $(function() {
                 com.closePopup();
                 com.cleanItems(salesBalance.items);
 
-                salesBalanceSearcher.doSearch();
+                searcher.doSearch();
             });
         }
     });
@@ -592,7 +596,7 @@ $(function() {
             com.closePopup();
             com.cleanItems(salesBalance.items);
 
-            salesBalanceSearcher.doSearch();
+            searcher.doSearch();
         });
     });
 
@@ -637,7 +641,37 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [['装修单号', 'sales.orderId'], ['销售单号', 'sales.no'], ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], ['品牌', 'sales.brand.name'], ['渠道', 'salesman.currentName'], ['渠道ID', 'salesman.userId'], ['归属大区', 'region.name'], ['归属部门', 'dept.name'], ['总价', 'total'], ["券值", 'sales.coupon'], ["券信息", 'sales.couponInfo'], ["驻店", 'sales.instorer.currentName'], ["预结值", 'balance'], ["预结时间", 'createTime'], ["预结人", 'creater.currentName'], ["厂结", 'vbalance'], ["厂结人", 'voster.currentName'], ["厂结时间", 'venderTime'], ["结算值", 'pbalance'], ["结算时间", 'postTime'], ["结算人", 'poster.currentName'], ["抹零", 'sales.maling'], ["厂商抹零", 'sales.venderMaling'], ["补贴", 'allowance'], ["状态", 'status'], ["类型", 'type'], ["等级", 'sales.grade'], ],
+                column: [//
+                ['装修单号', 'sales.orderId'], //
+                ['销售单号', 'sales.no'], //
+                ['楼盘地址', ['sales.house.village.name', 'sales.house.houseNumber']], //
+                ['品牌', 'sales.brand.name'], //
+                ['渠道ID', 'salesman.userId'], //
+                ['渠道', 'salesman.currentName'], //
+                ['渠道大区', 'salesman.dept.fatherDept.name'], //
+                ['渠道部门', 'salesman.dept.name'], //
+                ['归属大区', 'region.name'], //
+                ['归属部门', 'dept.name'], //
+                ['总价', 'total'], //
+                ['券值', 'sales.coupon'], //
+                ['券信息', 'sales.couponInfo'], //
+                ['驻店', 'sales.instorer.currentName'], //
+                ['预结值', 'balance'], //
+                ['预结时间', 'createTime'], //
+                ['预结人', 'creater.currentName'], //
+                ['厂结', 'vbalance'], //
+                ['厂结人', 'voster.currentName'], //
+                ['厂结时间', 'venderTime'], //
+                ['结算值', 'pbalance'], //
+                ['结算时间', 'postTime'], //
+                ['结算人', 'poster.currentName'], //
+                ['抹零', 'sales.maling'], //
+                ['厂商抹零', 'sales.venderMaling'], //
+                ['补贴', 'allowance'], //
+                ['状态', 'status'], //
+                ['类型', 'type'], //
+                ['等级', 'sales.grade'], //
+                ],
                 list: res.paging.data
 
             }, function(v) {
@@ -668,7 +702,7 @@ $(function() {
         com.post(api.sales.vpostSalesBalance, options, function(res) {
 
             com.showAlert(com.info, "厂结成功");
-            salesBalanceSearcher.doSearch();
+            searcher.doSearch();
         });
     }
 
@@ -683,7 +717,7 @@ $(function() {
         com.post(api.sales.postSalesBalance, options, function(res) {
 
             com.showAlert(com.info, "结算成功");
-            salesBalanceSearcher.doSearch();
+            searcher.doSearch();
         });
     }
 
@@ -780,7 +814,7 @@ $(function() {
         com.post(api.balance.submitBalanceSales, options, function(res) {
 
             com.showAlert(com.info, "创建结算单成功");
-            salesBalanceSearcher.doSearch();
+            searcher.doSearch();
         });
     }
 
@@ -854,7 +888,7 @@ $(function() {
 
             });
 
-            salesBalanceSearcher.doSearch();
+            searcher.doSearch();
         });
     }
 

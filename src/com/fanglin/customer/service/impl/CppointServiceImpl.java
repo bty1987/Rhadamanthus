@@ -98,7 +98,7 @@ public class CppointServiceImpl implements CppointService {
 
 		cppointDao.save(cppointPO);
 
-		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, null, decorationPO.getOrderId(), operater));
+		cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, decorationPO.getOrderId(), operater));
 
 		return cppointVO;
 	}
@@ -126,7 +126,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setDpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, null, null, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, null, operater));
 		}
 
 		if (spoint != null && spoint != 0) {
@@ -136,7 +136,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setSpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, null, null, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, null, operater));
 		}
 
 		if (opoint != null && opoint != 0) {
@@ -146,7 +146,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setOpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, null, null, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_ADDUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, 0, 0, 0, 0, 0, null, null, operater));
 		}
 
 		return cppointVO;
@@ -179,7 +179,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setDpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, null, null, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_DECORATION_INT, balance, dpoint, dpoint, spoint, opoint, null, null, operater));
 		}
 
 		if (spoint != null && spoint != 0) {
@@ -193,7 +193,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setSpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, null, null, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_SALES_INT, balance, spoint, dpoint, spoint, opoint, null, null, operater));
 		}
 
 		if (opoint != null && opoint != 0) {
@@ -203,7 +203,7 @@ public class CppointServiceImpl implements CppointService {
 			cppointPO.setOpoint(balance);
 
 			cppointDao.update(cppointPO);
-			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, null, null, operater));
+			cppointRecordDao.save(new CppointRecordPO().init(cppointPO.getCustomer().getCid(), cppointPO.getCpid(), CppointRecordPO.TYPE_USERUP_INT, CppointRecordPO.POINTTYPE_OPOINT_INT, balance, opoint, dpoint, spoint, opoint, null, null, operater));
 		}
 
 		return cppointVO;

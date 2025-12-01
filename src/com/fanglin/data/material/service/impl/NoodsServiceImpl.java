@@ -41,7 +41,6 @@ public class NoodsServiceImpl implements NoodsService {
 		}
 
 		paging.setData(noodsVOs);
-
 	}
 
 	@Override
@@ -68,7 +67,6 @@ public class NoodsServiceImpl implements NoodsService {
 			BeanUtil.copyProperties(noodsPO, noodsVO);
 
 			noodsVOs.add(noodsVO);
-
 		}
 
 		return noodsVOs;
@@ -80,15 +78,14 @@ public class NoodsServiceImpl implements NoodsService {
 
 		NoodsPO noodsPO = new NoodsPO();
 
-		noodsPO.setCompany(company);
-		noodsPO.setStatus(NoodsPO.STATUS_ENABLE_INT);
-		noodsPO.setName(noodsVO.getName());
-		noodsPO.setSelling(noodsVO.getSelling());
-		noodsPO.setBalance(noodsVO.getBalance());
+		BeanUtil.copyProperties(noodsVO, noodsPO);
 
-		BeanUtil.copyProperties(noodsPO, noodsVO);
+		noodsPO.setStatus(NoodsPO.STATUS_ENABLE_INT);
+		noodsPO.setCompany(company);
 
 		noodsDao.save(noodsPO);
+
+		BeanUtil.copyProperties(noodsPO, noodsVO);
 
 		return 0;
 	}
@@ -103,11 +100,7 @@ public class NoodsServiceImpl implements NoodsService {
 			throw new FLException(130118, "定材不存在");
 		}
 
-		noodsPO.setName(noodsVO.getName());
-		noodsPO.setSelling(noodsVO.getSelling());
-		noodsPO.setBalance(noodsVO.getBalance());
-
-		BeanUtil.copyProperties(noodsPO, noodsVO);
+		BeanUtil.copyProperties(noodsVO, noodsPO);
 
 		noodsDao.update(noodsPO);
 

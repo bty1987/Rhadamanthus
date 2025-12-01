@@ -2,7 +2,9 @@ package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,9 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.quotation.vo.QeasureItemVO;
+import com.fanglin.quotation.vo.QeasureOptionVO;
 import com.fanglin.quotation.vo.QeasureVO;
 import com.fanglin.utils.BeanUtil;
 
@@ -22,6 +27,8 @@ import com.fanglin.utils.BeanUtil;
 public class QeasurePO implements Serializable {
 
 	private static final long serialVersionUID = -2165150769814105906L;
+
+	public static final short STATUS_INIT_INT = 0;
 
 	private long qmid;
 
@@ -42,6 +49,8 @@ public class QeasurePO implements Serializable {
 	private short status;
 
 	private int company;
+
+	private List<QeasureItemPO> items;
 
 	public QeasurePO() {
 		super();
@@ -140,11 +149,41 @@ public class QeasurePO implements Serializable {
 		this.company = company;
 	}
 
+	@OneToMany(mappedBy = "qmid", fetch = FetchType.LAZY)
+	public List<QeasureItemPO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<QeasureItemPO> items) {
+		this.items = items;
+	}
+
 	public QeasureVO ptv(QeasureVO qeasureVO) {
 
-		BeanUtil.copyProperties(this, qeasureVO, Arrays.asList("creater"));
+		BeanUtil.copyProperties(this, qeasureVO, Arrays.asList("creater", "items"));
 
 		if (qeasureVO.getCreater() != null && getCreater() != null) qeasureVO.getCreater().setBaseInfo(getCreater());
+
+		if (qeasureVO.getItems() == null || getItems() == null) return qeasureVO;
+
+		for (QeasureItemPO itemPO : getItems()) {
+			qeasureVO.getItems().add(itemPO.ptv(new QeasureItemVO(new ArrayList<QeasureOptionVO>())));
+		}
+
+		return qeasureVO;
+	}
+
+	public QeasureVO ptv(QeasureVO qeasureVO, List<QeasureItemPO> qeasureItemPOs) {
+
+		BeanUtil.copyProperties(this, qeasureVO, Arrays.asList("creater", "items"));
+
+		if (qeasureVO.getCreater() != null && getCreater() != null) qeasureVO.getCreater().setBaseInfo(getCreater());
+
+		if (qeasureVO.getItems() == null || qeasureItemPOs == null) return qeasureVO;
+
+		for (QeasureItemPO itemPO : qeasureItemPOs) {
+			qeasureVO.getItems().add(itemPO.ptv(new QeasureItemVO(new ArrayList<QeasureOptionVO>())));
+		}
 
 		return qeasureVO;
 	}

@@ -31,7 +31,7 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	public int amountNormriceItem(long qid, long cnid) {
 
-		String sql = "select sum(if(atttype = 0, salary, -salary)*num/1000) from quotation.normriceitem where qid =:qid and cnid = :cnid and status = :status";
+		String sql = "select sum(if(atttype = 0, salary, -salary)*if(trannum = 0, 1, num/1000*trannum/1000)) from quotation.normriceitem where qid =:qid and cnid = :cnid and status = :status";
 		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("cnid", cnid).setShort("status", NormriceItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
@@ -40,8 +40,8 @@ public class NormriceItemDaoImpl extends DaoImpl<NormriceItemPO> implements Norm
 	@Override
 	public int disabledNormriceItem(long qid) {
 
-		String sql = "update quotation.normriceitem set status = :status where qid = :qid";
-		session().createSQLQuery(sql).setLong("qid", qid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).executeUpdate();
+		String sql = "update quotation.normriceitem set status = :status where qid = :qid and type != :type";
+		session().createSQLQuery(sql).setLong("qid", qid).setShort("status", NormriceItemPO.STATUS_DISABLED_INT).setShort("type", NormriceItemPO.TYPE_QUOTA_INT).executeUpdate();
 
 		return 0;
 	}

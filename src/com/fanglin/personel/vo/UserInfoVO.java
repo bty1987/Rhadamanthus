@@ -1,5 +1,6 @@
 package com.fanglin.personel.vo;
 
+import java.sql.Timestamp;
 
 public class UserInfoVO implements java.io.Serializable {
 
@@ -8,65 +9,73 @@ public class UserInfoVO implements java.io.Serializable {
 	private Long uiid;
 
 	private UserVO user;
-	
+
 	private Short level;
-	
+
 	private Integer gender;
-	
+
 	private Integer height;
-	
+
 	private Integer weight;
-	
+
 	private Short political;
-	
+
 	private String nation;
-	
+
 	private String hobby;
-	
+
 	private String qq;
 
 	private String wechat;
 
 	private String email;
-	
+
 	private Short isMarried;
-	
+
 	private Short isBirth;
 
 	private Short isHouseLoan;
 
 	private Short isCarLoan;
-	
+
 	private Short isCarID;
-	
+
 	private Short isPassID;
-	
+
 	private Short isHMID;
-	
+
 	private Short isTWID;
-	
+
 	private Short householdType;
-	
+
 	private String hometownAddress;
 
 	private String address;
-	
+
 	private String lover;
-	
+
 	private String claner;
-	
+
 	private String clanerCom;
-	
+
 	private String emergencyMan;
 
 	private String emergencyPhone;
-	
+
 	private UserVO fangliner;
-	
+
 	private String firstTime;
-	
+
 	private String entryTime;
-	
+
+	private String boardTime;
+
+	private Timestamp hireTime;
+
+	private Timestamp fireTime;
+
+	private Timestamp tranTime;
+
 	private Short employWay;
 
 	private String recommendMan;
@@ -90,43 +99,43 @@ public class UserInfoVO implements java.io.Serializable {
 	private String isContract;
 
 	private String signTime;
-	
+
 	private String eignTime;
-	
+
 	private String fignTime;
-	
+
 	private Integer signNum;
 
 	private String preformNum;
-	
+
 	private String formTime;
-	
+
 	private Short isInsurance;
-	
+
 	private Short insuranceType;
-	
+
 	private String insuranceTime;
 
 	private String pensionNum;
 
 	private String medicalNum;
-	
+
 	private String publicNum;
-	
+
 	private String palary;
 
 	private String salary;
-	
+
 	private String bank;
 
 	private String bankCardNum;
-	
+
 	private String comment;
-	
+
 	private String rank;
-	
+
 	private Short form;
-	
+
 	private String hometownPlace;
 
 	public UserInfoVO() {
@@ -137,7 +146,7 @@ public class UserInfoVO implements java.io.Serializable {
 		super();
 		this.user = user;
 	}
-	
+
 	public UserInfoVO(UserVO user, UserVO fangliner) {
 		super();
 		this.user = user;
@@ -392,6 +401,38 @@ public class UserInfoVO implements java.io.Serializable {
 		this.entryTime = entryTime;
 	}
 
+	public String getBoardTime() {
+		return boardTime;
+	}
+
+	public void setBoardTime(String boardTime) {
+		this.boardTime = boardTime;
+	}
+
+	public Timestamp getHireTime() {
+		return hireTime;
+	}
+
+	public void setHireTime(Timestamp hireTime) {
+		this.hireTime = hireTime;
+	}
+
+	public Timestamp getFireTime() {
+		return fireTime;
+	}
+
+	public void setFireTime(Timestamp fireTime) {
+		this.fireTime = fireTime;
+	}
+
+	public Timestamp getTranTime() {
+		return tranTime;
+	}
+
+	public void setTranTime(Timestamp tranTime) {
+		this.tranTime = tranTime;
+	}
+
 	public Short getEmployWay() {
 		return employWay;
 	}
@@ -639,5 +680,5 @@ public class UserInfoVO implements java.io.Serializable {
 	public void setHometownPlace(String hometownPlace) {
 		this.hometownPlace = hometownPlace;
 	}
-	
+
 }

@@ -12,6 +12,7 @@ import com.fanglin.balance.dao.BalanceOalesDao;
 import com.fanglin.balance.po.BalanceOalesBO;
 import com.fanglin.balance.po.BalanceOalesPO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -23,7 +24,7 @@ public class BalanceOalesDaoImpl extends DaoImpl<BalanceOalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceOalesPO> pageBalanceOales(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceOalesPO> pageBalanceOales(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<BalanceOalesPO> query = pagingQuery(paging, BalanceOalesPO.class);
 
@@ -37,13 +38,13 @@ public class BalanceOalesDaoImpl extends DaoImpl<BalanceOalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceOalesBO> pageBalanceOalesForBalance(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceOalesBO> pageBalanceOalesForBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<BalanceOalesBO> query = pagingQuery(paging, BalanceOalesBO.class);
 
 		query.add(Restrictions.eq("company", company));
 
-		queryFilterExcute(query, filters);
+		queryFilterExcute(query, filters, "balance");
 
 		query.desc("boid");
 
@@ -68,9 +69,15 @@ public class BalanceOalesDaoImpl extends DaoImpl<BalanceOalesPO> implements Bala
 		return amount.longValue();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
+		queryFilterExcute(query, filters, null);
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, String prefix) throws FLException {
 
 		if (filters == null) return;
+
+		if (prefix != null) BalanceDaoImpl.queryFilterExcute(query, filters, prefix);
 
 		for (Filter filter : filters) {
 
@@ -84,24 +91,12 @@ public class BalanceOalesDaoImpl extends DaoImpl<BalanceOalesPO> implements Bala
 				query.add(Restrictions.eq("status", Short.valueOf(data)));
 			} else if ("grade".equals(field)) {
 				query.add(query.getCriterion("grade", data, op));
-			} else if ("createTimeDateRange".equals(field)) {
-				query.timeranges("createTime", "createTime", data);
 			} else if ("createrId".equals(field)) {
 				query.alias("creater", "creater");
 				query.add(query.getCriterion("creater.userId", data, op));
-			} else if ("balanceNo".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.no", String.valueOf(data), op));
-			} else if ("balanceType".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.type", Short.valueOf(data), op));
-			} else if ("balanceStatus".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.status", Short.valueOf(data), op));
-			} else if ("balanceIsPay".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.isPay", Short.valueOf(data), op));
-			} else if ("lockTimeDateRange".equals(field)) {
+			} else if ("createTimeRange".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("lockTimeRange".equals(field)) {
 				query.timeranges("lockTime", "lockTime", data);
 			}
 		}

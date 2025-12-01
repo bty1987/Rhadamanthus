@@ -1,7 +1,6 @@
 package com.fanglin.balance.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -53,18 +52,10 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 	public void pageBalanceAccount(Paging paging, List<Filter> filters, String userId) {
 
 		List<BalanceAccountPO> balanceAccountPOs = balanceAccountDao.pageBalanceAccount(paging, filters);
-
 		List<BalanceAccountVO> balanceAccountVOs = new ArrayList<BalanceAccountVO>();
 
-		for (BalanceAccountPO balanceAccountesPO : balanceAccountPOs) {
-
-			BalanceAccountVO accountVO = new BalanceAccountVO(new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(balanceAccountesPO, accountVO, Arrays.asList("creater", "belonger"));
-			BeanUtil.copyProperties(balanceAccountesPO.getCreater(), accountVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(balanceAccountesPO.getBelonger(), accountVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
-
-			balanceAccountVOs.add(accountVO);
+		for (BalanceAccountPO balanceAccountPO : balanceAccountPOs) {
+			balanceAccountVOs.add(balanceAccountPO.ptv(new BalanceAccountVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceAccountVOs);
@@ -77,14 +68,7 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 		List<BalanceAccountVO> balanceAccountVOs = new ArrayList<BalanceAccountVO>();
 
 		for (BalanceAccountPO balanceAccountPO : balanceAccountPOs) {
-
-			balanceAccountVO = new BalanceAccountVO(new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(balanceAccountPO, balanceAccountVO, Arrays.asList("creater", "belonger"));
-			BeanUtil.copyProperties(balanceAccountPO.getCreater(), balanceAccountVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(balanceAccountPO.getBelonger(), balanceAccountVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
-
-			balanceAccountVOs.add(balanceAccountVO);
+			balanceAccountVOs.add(balanceAccountPO.ptv(new BalanceAccountVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return balanceAccountVOs;
@@ -92,20 +76,12 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 
 	@Override
 	public List<BalanceAccountVO> queryBalanceAccountForTeller(int company) {
+
 		List<BalanceAccountPO> balanceAccountPOs = balanceAccountDao.queryBalanceAccountForTeller(company);
 		List<BalanceAccountVO> balanceAccountVOs = new ArrayList<BalanceAccountVO>();
 
-		BalanceAccountVO balanceAccountVO;
-
 		for (BalanceAccountPO balanceAccountPO : balanceAccountPOs) {
-
-			balanceAccountVO = new BalanceAccountVO(new UserBaseVO(), new UserBaseVO());
-
-			BeanUtil.copyProperties(balanceAccountPO, balanceAccountVO, Arrays.asList("creater", "belonger"));
-			BeanUtil.copyProperties(balanceAccountPO.getCreater(), balanceAccountVO.getCreater(), Arrays.asList("dept", "duty", "role"));
-			BeanUtil.copyProperties(balanceAccountPO.getBelonger(), balanceAccountVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
-
-			balanceAccountVOs.add(balanceAccountVO);
+			balanceAccountVOs.add(balanceAccountPO.ptv(new BalanceAccountVO(new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return balanceAccountVOs;
@@ -115,17 +91,19 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 	@Transactional(rollbackFor = Exception.class)
 	public void addBalanceAccount(BalanceAccountVO balanceAccountVO, String userId, int company) {
 
-		UserPO create = userDao.queryUserByUserId(userId);
+		UserPO creater = userDao.queryUserByUserId(userId);
 		UserPO belonger = userDao.queryUserByUserId(balanceAccountVO.getBelonger().getUserId());
 
 		BalanceAccountPO balanceAccountPO = new BalanceAccountPO();
 
-		balanceAccountPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		balanceAccountPO.setName(balanceAccountVO.getName());
-		balanceAccountPO.setCompany(create.getCompany());
-		balanceAccountPO.setCreater(create);
-		balanceAccountPO.setBelonger(belonger);
+		BeanUtil.copyProperties(balanceAccountVO, balanceAccountPO, "creater", "belonger");
+
 		balanceAccountPO.setType(balanceAccountVO.getType());
+
+		balanceAccountPO.setCreater(creater);
+		balanceAccountPO.setBelonger(belonger);
+
+		balanceAccountPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceAccountPO.setCompany(company);
 
 		balanceAccountDao.save(balanceAccountPO);
@@ -150,6 +128,7 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void withdrawBalanceAccount(BalanceAccountVO balanceAccountVO, String userId, int company) throws FLException {
+
 		BalanceAccountPO balanceAccountPO = balanceAccountDao.get(balanceAccountVO.getBaid());
 
 		if (balanceAccountPO == null) {
@@ -161,14 +140,13 @@ public class BalanceAccountServiceImpl implements BalanceAccountService {
 		}
 
 		balanceAccountPO.setSurplus(Arith.sub(balanceAccountPO.getSurplus(), balanceAccountVO.getMoney()));
-
 		balanceAccountPO.setRealMoney(Arith.add(balanceAccountPO.getRealMoney(), balanceAccountVO.getMoney()));
-
 		balanceAccountPO.setCompany(company);
 
 		balanceAccountDao.update(balanceAccountPO);
 
 		BalancePO balancePO = new BalancePO();
+
 		CompanyPO companyPO = companyDao.get(company);
 		UserPO create = userDao.queryUserByUserId(userId);
 

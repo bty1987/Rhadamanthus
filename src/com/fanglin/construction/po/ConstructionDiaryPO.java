@@ -29,22 +29,26 @@ public class ConstructionDiaryPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 
+	public static final short ISUPLOAD_UPLOAD_INT = 1;// 已传
+
 	private long cdid;
 
 	private DecorationPO decoration;
 	
-	private Long cid;
+	private long cid;
 	
-	private Long csid;
+	private long csid;
 	
-	private Long cnid;
+	private long cnid;
 
 	private UserPO creater;
 
 	private Timestamp createTime;
 
-	private Short atttype;
-	
+	private short atttype;
+
+	private short isUpload;
+
 	private String content;
 
 	public ConstructionDiaryPO() {
@@ -133,6 +137,7 @@ public class ConstructionDiaryPO implements Serializable {
 		this.createTime = createTime;
 	}
 	
+	@Column(name = "atttype")
 	public short getAtttype() {
 		return atttype;
 	}
@@ -141,6 +146,16 @@ public class ConstructionDiaryPO implements Serializable {
 		this.atttype = atttype;
 	}
 
+	@Column(name = "isUpload")
+	public short getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(short isUpload) {
+		this.isUpload = isUpload;
+	}
+
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}

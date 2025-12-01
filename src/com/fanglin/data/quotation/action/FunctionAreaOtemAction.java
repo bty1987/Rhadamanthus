@@ -27,11 +27,11 @@ public class FunctionAreaOtemAction extends BaseListAction {
 	private List<FunctionAreaOtemVO> functionAreaOtems;
 
 	private FunctionAreaOtemVO functionAreaOtem;
-
+	
 	@Action(value = "queryFunctionAreaOtem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFunctionAreaOtem() throws FLException {
 
-		functionAreaOtem = functionAreaOtemService.queryFunctionAreaOtem(functionAreaOtem);
+		functionAreaOtems = functionAreaOtemService.queryFunctionAreaOtem(functionAreaOtem);
 
 		return SUCCESS;
 	}
@@ -39,7 +39,7 @@ public class FunctionAreaOtemAction extends BaseListAction {
 	@Action(value = "makeFunctionAreaOtem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeFunctionAreaOtem() throws FLException {
 
-		functionAreaOtem = functionAreaOtemService.makeFunctionAreaOtem(functionAreaOtem);
+		functionAreaOtem = functionAreaOtemService.makeFunctionAreaOtem(functionAreaOtems, functionAreaOtem);
 
 		return SUCCESS;
 	}

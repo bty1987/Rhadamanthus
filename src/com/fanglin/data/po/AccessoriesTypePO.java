@@ -30,6 +30,8 @@ public class AccessoriesTypePO implements Serializable {
 
 	public static final String COLUMN_NAME_STR = "name";
 
+	public static final String COLUMN_TYPE_STR = "type";
+
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short STATUS_ENABLE_INT = 0;
@@ -41,6 +43,10 @@ public class AccessoriesTypePO implements Serializable {
 	private String name;
 
 	private WorkTypePO workType;
+
+	private short type;
+
+	private short sort;
 
 	private short status;
 
@@ -88,6 +94,24 @@ public class AccessoriesTypePO implements Serializable {
 
 	public void setWorkType(WorkTypePO workType) {
 		this.workType = workType;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "sort")
+	public short getSort() {
+		return sort;
+	}
+
+	public void setSort(short sort) {
+		this.sort = sort;
 	}
 
 	@Column(name = "status")

@@ -1,6 +1,7 @@
 package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class QeasureFunctionAreaVO implements Serializable {
 
@@ -14,8 +15,15 @@ public class QeasureFunctionAreaVO implements Serializable {
 
 	private String name;
 
+	private List<QeasureItemVO> items;
+
 	public QeasureFunctionAreaVO() {
 		super();
+	}
+
+	public QeasureFunctionAreaVO(List<QeasureItemVO> items) {
+		super();
+		this.items = items;
 	}
 
 	public Long getQmfaid() {
@@ -48,6 +56,14 @@ public class QeasureFunctionAreaVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<QeasureItemVO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<QeasureItemVO> items) {
+		this.items = items;
 	}
 
 }

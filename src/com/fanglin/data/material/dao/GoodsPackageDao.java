@@ -1,9 +1,9 @@
-package com.fanglin.inventory.dao;
+package com.fanglin.data.material.dao;
 
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.inventory.po.GoodsPackagePO;
+import com.fanglin.data.po.GoodsPackagePO;
 
 public interface GoodsPackageDao extends Dao<GoodsPackagePO>{
 

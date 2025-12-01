@@ -69,7 +69,7 @@ public class AoodsServiceImpl implements AoodsService {
 
 		for (AoodsPO aoodsPO : AoodsPOs) {
 
-			AoodsVO aoodsVO = aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO()));
+			AoodsVO aoodsVO = aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO()));
 
 			if (aoodsPO.getBompany() != 0) {
 				aoodsVO.setBompany(companyDao.get(aoodsPO.getBompany()).getName());
@@ -86,11 +86,11 @@ public class AoodsServiceImpl implements AoodsService {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		List<AoodsPO> aoodsPOs = aoodsDao.queryAoods(aoodsVO.getAccessoriesType().getAtid(), aoodsVO.getAtttype(), decorationPO.getCompany());
+		List<AoodsPO> aoodsPOs = aoodsDao.queryAoods(aoodsVO.getAccessoriesType().getAtid(), aoodsVO.getSortType().getAtid(), aoodsVO.getAtttype(), decorationPO.getCompany());
 		List<AoodsVO> aoodsVOs = new ArrayList<AoodsVO>();
 
 		for (AoodsPO aoodsPO : aoodsPOs) {
-			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
+			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
 		}
 
 		return aoodsVOs;
@@ -105,7 +105,7 @@ public class AoodsServiceImpl implements AoodsService {
 		List<AoodsVO> aoodsVOs = new ArrayList<AoodsVO>();
 
 		for (AoodsPO aoodsPO : aoodsPOs) {
-			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
+			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
 		}
 
 		return aoodsVOs;
@@ -118,7 +118,7 @@ public class AoodsServiceImpl implements AoodsService {
 		List<AoodsVO> aoodsVOs = new ArrayList<AoodsVO>();
 
 		for (AoodsPO aoodsPO : aoodsPOs) {
-			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
+			aoodsVOs.add(aoodsPO.ptv(new AoodsVO(new GoodsVO(), new AccessoriesTypeVO(), new AccessoriesTypeVO(), new NoodsVO(), new ConstructionNodeVO())));
 		}
 
 		return aoodsVOs;
@@ -151,6 +151,7 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setGoods(new GoodsPO(aoodsVO.getGoods().getGid()));
 
 		if (aoodsVO.getAccessoriesType() != null && aoodsVO.getAccessoriesType().getAtid() != null) aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
+		if (aoodsVO.getSortType() != null && aoodsVO.getSortType().getAtid() != null) aoodsPO.setSortType(new AccessoriesTypePO(aoodsVO.getSortType().getAtid()));
 		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() != null) aoodsPO.setConstructionNode(new ConstructionNodePO(aoodsVO.getConstructionNode().getCnid()));
 		if (aoodsVO.getNoods() != null && aoodsVO.getNoods().getNid() != null) aoodsPO.setNoods(new NoodsPO(aoodsVO.getNoods().getNid()));
 
@@ -189,6 +190,7 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setBompany(cid);
 
 		if (aoodsVO.getAccessoriesType() != null && aoodsVO.getAccessoriesType().getAtid() != null) aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
+		if (aoodsVO.getSortType() != null && aoodsVO.getSortType().getAtid() != null) aoodsPO.setSortType(new AccessoriesTypePO(aoodsVO.getSortType().getAtid()));
 
 		if (aoodsVO.getConstructionNode() != null && aoodsVO.getConstructionNode().getCnid() == null) {
 			aoodsPO.setConstructionNode(null);

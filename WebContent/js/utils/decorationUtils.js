@@ -355,6 +355,7 @@ var decorationUtils = {
                 if (v.sales.type == 1) {
                     v.sales.brand.name = v.sales.brand.name + '(补贴)';
                 }
+
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
                 }
@@ -542,6 +543,7 @@ var decorationUtils = {
         }
         return material;
     },
+
     decorationActivityInfo: function(orderId, activitys, wizard) {
 
         var uiBtnMethod = wizard["activityBtnMethod"];
@@ -560,6 +562,7 @@ var decorationUtils = {
             }
         });
     },
+
     addDecorationActivityForDiv: function(_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
 
         var pricingSpan = $("<div></div>").addClass("col-md-4").css("margin", "5px 0px").attr("id", "dactivity_" + _decorationActivity.daId).prependTo(_activitys);
@@ -596,12 +599,13 @@ var decorationUtils = {
                         });
                     }
                 });
-                
+
             } else {
                 uiBtnMethod(uiPgDiv, _decorationActivity);
             }
         }
     },
+
     decorationActivityItemInfo: function(orderId, infopack, itempack, config, wizard) {
 
         var uiBtnMethod = wizard["uiBtnMethod"];
@@ -643,6 +647,7 @@ var decorationUtils = {
 
         });
     },
+
     addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config, nodeContent) {
 
         if (_activityItem.state == 1)
@@ -752,7 +757,7 @@ var decorationUtils = {
                         });
                     });
                 });
-                
+
                 var decorationActivityRecordBtn = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录").css("margin", "0px 3px").appendTo(uiPgDiv);
 
                 decorationActivityRecordBtn.on("click", function() {
@@ -767,6 +772,7 @@ var decorationUtils = {
             }
         }
     },
+
     salesActivityItemInfo: function(orderId, itempack, config, wizard) {
 
         com.post(api.sales.querySalesActivityItem, {
@@ -815,6 +821,7 @@ var decorationUtils = {
             }
         });
     },
+
     initAdvancePayment: function(orederId, wizard) {
 
         if (wizard.advance != "advance") {
@@ -822,6 +829,7 @@ var decorationUtils = {
             com.focusPage('#advancePayment').html("");
         }
     },
+
     initPayment: function(decorationDetail, isDesign) {
 
         var totalMoney = 0;
@@ -849,7 +857,7 @@ var decorationUtils = {
         }, null, false);
 
         var decorationPayments = [];
-        
+
         // 通过装修单号获取装修款项信息
         com.post(api.payment.queryDecorationPaymentByOrderId, {
             "decorationPayment.decoration.orderId": decorationDetail.orderId
@@ -982,11 +990,13 @@ var decorationUtils = {
                 }
             });
         }
+
         if ($baseul.html() == "") {
             var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#basePaymentDiv").html(''));
             var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
             var $span = $('<span></span>').text('无基本款项数据').appendTo($mesg);
         }
+
         if ($otherul.html() == "") {
             var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#otherPaymentDiv").html(''));
             var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
@@ -996,6 +1006,7 @@ var decorationUtils = {
         if (com.focusPage('#payedMoney')) {
             com.focusPage('#payedMoney').remove();
         }
+
         com.focusPage('#projectTotal').html(receiveMoney);
         var projectPercent = totalMoney == 0 ? 0 : utils.accMul(utils.changeThrDecimal(utils.accDiv(receiveMoney, totalMoney)), 100);
         com.focusPage('#projectPercent').html(projectPercent > 100 ? 100 : projectPercent + "%");
@@ -1025,6 +1036,7 @@ var decorationUtils = {
         com.focusPage('#materialAmount').html(materialAmount);
         com.focusPage('#materialRate').html(predisPrice == 0 ? 0 : utils.accMul(utils.changeThrDecimal(utils.accDiv(utils.accAdd(materialAmount, materialAdvance), predisPrice)), 100) + "%");
     },
+
     initServicePayment: function(decoration) {
 
         var mainDiv = com.focusPage('#preparePayment');
@@ -1101,6 +1113,7 @@ var decorationUtils = {
             $ul.appendTo($tableWrap);
         }
     },
+
     initDecorationMidpack: function(decoration, wizard) {
 
         var mainDiv = com.focusPage('#preparePayment').html("");
@@ -1195,6 +1208,7 @@ var decorationUtils = {
             com.focusPage('#oalesPercent').html((oalesPercent > 100 ? 100 : oalesPercent) + "%");
         }
     },
+
     initDecorationInclusive: function(decoration, wizard) {
 
         var mainDiv = com.focusPage('#preparePayment').html("");
@@ -1259,6 +1273,7 @@ var decorationUtils = {
         com.focusPage('#mdiff').html(utils.changeTwoDecimal(com.checkNull(inclusive.mdiff, 0)));
         com.focusPage('#materialPaidup').html(utils.changeTwoDecimal(com.checkNull(inclusive.materialPaidup, 0)));
     },
+
     initDecorationHolonomy: function(decoration, wizard) {
 
         var mainDiv = com.focusPage('#preparePayment').html("");
@@ -1355,6 +1370,7 @@ var decorationUtils = {
             com.focusPage('#oalesPercent').html((oalesPercent > 100 ? 100 : oalesPercent) + "%");
         }
     },
+
     initDecorationBelong: function(orderId, status) {
 
         var $design, $salesman, $designul, $salesmanul;
@@ -1411,16 +1427,24 @@ var decorationUtils = {
             });
         }
     },
+
     loadHuploadify: function(eId, ename, fileType, multi, callback, btnstyle) {
+
+        var limit = 5;
+
+        if (["selfieBlock", "drawingBlock", "photoBlock", "file720Block"].indexOf(eId) != -1) {
+            limit = 1;
+        }
 
         com.uploadify("#" + eId, ename, api.common.uploadImg, ('btn ' + btnstyle ? btnstyle : "btn-success"), fileType, {
             'uploadType': 2
-        }, 5, function(data) {
+        }, limit, function(data) {
 
             callback(data);
         });
 
     },
+
     addDecorationPicture: function(data, type, eId) {
 
         if (data.errorCode == 0) {
@@ -1448,13 +1472,22 @@ var decorationUtils = {
                     decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
                 } else if (type == 5) {
                     decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
+                } else if (type == 11) {
+                    decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
+                } else if (type == 21) {
+                    decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
+                } else if (type == 31) {
+                    decorationUtils.addPicture(com.focusPage("#" + eId), res.decorationPicture);
+                } else if (type == 41) {
+                    decorationUtils.addCAD(com.focusPage("#" + eId), res.decorationPicture);
                 }
             });
         } else {
             com.showAlert(com.error, data.errorMsg);
         }
     },
-    initDecorationPicture: function(designId, pictureId, cadId, contractId, originalId, agreeId,designContractPictureId, orderId) {
+
+    initDecorationPicture: function(designId, pictureId, cadId, contractId, originalId, agreeId, designContractPictureId, selfieId, drawingId, liveId, panoramaId, orderId) {
 
         var $desgin = com.focusPage("#" + designId).html("");
         var $picture = com.focusPage("#" + pictureId).html("");
@@ -1462,8 +1495,12 @@ var decorationUtils = {
         var $cad = com.focusPage("#" + cadId).html("");
         var $original = com.focusPage("#" + originalId).html("");
         var $agree = com.focusPage("#" + agreeId).html("");
-        var $contractPicture= com.focusPage("#" + designContractPictureId).html("");
-        
+        var $contractPicture = com.focusPage("#" + designContractPictureId).html("");
+        var $selfie = com.focusPage("#" + selfieId).html("");
+        var $drawing = com.focusPage("#" + drawingId).html("");
+        var $live = com.focusPage("#" + liveId).html("");
+        var $panorama = com.focusPage("#" + panoramaId).html("");
+
         com.post(api.decoration.queryDecorationPictureByOrderId, {
             "decorationPicture.orderId": orderId
         }, function(res) {
@@ -1487,6 +1524,14 @@ var decorationUtils = {
                     decorationUtils.addPicture($original, decorationPicture);
                 } else if (decorationPicture.type == 5) {
                     decorationUtils.addPicture($contractPicture, decorationPicture);
+                } else if (decorationPicture.type == 11) {
+                    decorationUtils.addPicture($selfie, decorationPicture);
+                } else if (decorationPicture.type == 21) {
+                    decorationUtils.addPicture($drawing, decorationPicture);
+                } else if (decorationPicture.type == 31) {
+                    decorationUtils.addPicture($live, decorationPicture);
+                } else if (decorationPicture.type == 41) {
+                    decorationUtils.addCAD($panorama, decorationPicture);
                 }
             }
 
@@ -1496,6 +1541,10 @@ var decorationUtils = {
             com.popup4photos("#ContractPictures");
             com.popup4photos("#CADProjectPicture");
             com.popup4photos("#designContractPicture");
+            com.popup4photos("#selfiePicture");
+            com.popup4photos("#drawingPicture");
+            com.popup4photos("#livePicture");
+            com.popup4photos("#720Files");
         });
 
         com.post(api.decoration.queryDecorationContractByOrderId, {
@@ -1536,17 +1585,19 @@ var decorationUtils = {
                 });
             });
         });
-        
+
         com.focusPage("#checkOriginalBtn").on('click', function() {
-            
+
             var constructionInfo = null
-            
-            com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function(res){
-                
+
+            com.post(api.construction.queryConstructionInfoByOrderId, {
+                "constructionInfo.orderId": orderId
+            }, function(res) {
+
                 constructionInfo = res.constructionInfo;
             }, null, false);
-            
-            if(!constructionInfo || !constructionInfo.ciid){
+
+            if (!constructionInfo || !constructionInfo.ciid) {
                 com.showAlert(com.warning, "工程信息不存在");
                 return false;
             }
@@ -1557,22 +1608,45 @@ var decorationUtils = {
                     "constructionInfo.ciid": constructionInfo.ciid,
                     "constructionInfo.isCheck": 2,
                 };
-                
-                com.post(api.construction.checkConstructionInfo, option, function(res){
-                    
+
+                com.post(api.construction.checkConstructionInfo, option, function(res) {
+
                     com.showAlert(com.info, "操作成功");
                 });
             });
         });
 
     },
+
     addPicture: function(e, i) {
 
+        var size = 200;
+
+        if ([11, 21, 31].indexOf(i.type) != -1) {
+            size = 150;
+
+            var firstLiId = e.find('li').first().attr('id');
+            var totalLiCount = e.find('li').length;
+
+            if (totalLiCount > 0) {
+
+                var dpId = firstLiId.split("_")[1];
+
+                com.post(api.decoration.deleteDecorationPicture, {
+                    "decorationPicture.dpId": dpId
+                }, function(res) {
+
+                    com.focusPage("#imgLi_" + dpId).remove();
+                });
+            }
+
+        }
+
         var $li = $('<li></li>').attr("id", "imgLi_" + i.dpId).appendTo(e);
-        var $img = $('<img></img>').attr('width', 200).attr('height', 200);
+        var $img = $('<img></img>').attr('width', size).attr('height', size);
         var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
 
-        com.showImg($img, i.path, 200, 200, i.name);
+        com.showImg($img, i.path, size, size, i.name);
 
         var $tags = $('<div></div>').addClass('tags').appendTo($li);
         var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -1593,6 +1667,7 @@ var decorationUtils = {
             }, function(res) {
 
                 com.focusPage("#imgLi_" + res.decorationPicture.dpId).remove();
+
             });
         });
 
@@ -1604,8 +1679,32 @@ var decorationUtils = {
         com.popup4photos("#ContractPictures");
         com.popup4photos("#CADProjectPicture");
         com.popup4photos("#designContractPicture");
+        com.popup4photos("#selfiePicture");
+        com.popup4photos("#drawingPicture");
+        com.popup4photos("#livePicture");
+        com.popup4photos("#720Files");
     },
+
     addCAD: function(e, i) {
+
+        if (i.type == 41) {
+
+            var firstLiId = e.find('div').first().attr('id');
+            var totalLiCount = e.find('div').length;
+
+            if (totalLiCount > 0) {
+
+                var dpId = firstLiId.split("_")[1];
+
+                com.post(api.decoration.deleteDecorationPicture, {
+                    "decorationPicture.dpId": dpId
+                }, function(res) {
+
+                    com.focusPage("#cad_" + dpId).remove();
+                });
+            }
+
+        }
 
         var $name = i.name;
 
@@ -1645,6 +1744,7 @@ var decorationUtils = {
             });
         });
     },
+
     addContract: function(e, i) {
 
         var $name = i.name;
@@ -1667,6 +1767,7 @@ var decorationUtils = {
         });
 
     },
+
     initConstructionScheduleInfo: function() {
 
         var options = {};
@@ -1682,6 +1783,7 @@ var decorationUtils = {
             com.focusPage("#schedule").val(decorationUtils.scheduleInfos[parseInt(res.constructionSchedule.schedule)]);
         });
     },
+
     initBaseInfo: function(orderId, $api, callback) {
 
         com.post($api, {
@@ -1692,6 +1794,7 @@ var decorationUtils = {
         }, null, false);
 
     },
+
     initAccount: function(orderId, accountFlg) {
 
         var $metaData = com.focusPage('#accountPayment').html('');
@@ -1759,6 +1862,7 @@ var decorationUtils = {
 
         });
     },
+
     initService: function(decorationDetail, orderId) {
 
         var $service = com.focusPage("#serviceInfo").html('');
@@ -2209,6 +2313,7 @@ var decorationUtils = {
             $li.remove();
         });
     },
+
     countTatol: function(daiId) {
 
         var total = com.focusPage("#total_" + daiId).text();
@@ -2228,6 +2333,7 @@ var decorationUtils = {
         com.focusPage("#_thingCut strong").html(thing);
         com.focusPage("#_detail strong").html(utils.accAdd(coupon, thing));
     },
+
     initQuotationPrint: function(wizard) {
 
         var quotationId = quotationUtils.quotationDetail.quotation.qid;
@@ -2243,6 +2349,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printFinanceBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2254,6 +2361,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printCostBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2265,6 +2373,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printCustomerBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2275,6 +2384,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printEngineeringBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2285,6 +2395,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printMaterialBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2295,6 +2406,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printWorkBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2305,6 +2417,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printQuoteItemBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2316,6 +2429,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printExtensionItemBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2326,6 +2440,7 @@ var decorationUtils = {
             };
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
         });
+
         $("#printAddReduceItemBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2348,6 +2463,7 @@ var decorationUtils = {
             params.quotation.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
             com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, !!status);
         });
+
         $("#printNormriceWBtn").click(function() {
 
             params.quotation.quotationId = quotationId;
@@ -2457,18 +2573,18 @@ var decorationUtils = {
             }, null, false);
 
             if (decoration.type == constant.decoration().decoration.TYPE_INCLUSIVE_INT) {
-                
+
                 _preferPrice = quotationPrefer.quotePrice;
-                
+
                 _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(quotationPrefer.quotePrice, preferPrice), quotationPrefer.quotePrice));
                 _discountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.quotePrice, protation.preferPrice), protation.quotePrice));
 
                 _manageDiscount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_managePrice, managePrefer), _managePrice));
                 _manageDiscountValue = utils.changeThrDecimal(utils.accDiv(utils.accSub(protation.managePrice, protation.manageProfit), protation.managePrice));
             } else {
-                
+
                 _preferPrice = _totalPrice;
-                
+
                 _discount = utils.changeThrDecimal(utils.accDiv(utils.accSub(_totalPrice, preferPrice), _totalPrice));
                 _discountValue = quotation.discount;
 
@@ -2481,7 +2597,7 @@ var decorationUtils = {
 
             _manageDiscount = _manageDiscount < 0 ? 0 : _manageDiscount > 1 ? 1 : _manageDiscount;
             _manageDiscountValue = _manageDiscountValue < 0 ? 0 : _manageDiscountValue > 1 ? 1 : _manageDiscountValue;
-            
+
             if (_preferPrice < preferPrice) {
                 com.showAlert(com.warning, "优惠金额不合理");
                 return false;
@@ -2579,6 +2695,7 @@ var decorationUtils = {
             });
         });
     },
+
     initApproval: function(param) {
 
         var quotation = quotationUtils.quotationDetail.quotation;
@@ -2619,6 +2736,7 @@ var decorationUtils = {
             });
         });
     },
+
     initPresignPrint: function() {
 
         $("#prinPresignBtn").click(function() {

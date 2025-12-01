@@ -226,6 +226,58 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int lockSelection(SelectionVO selectionVO) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		selectionPO.setStatus(SelectionPO.STATUS_LOCK_INT);
+
+		selectionDao.update(selectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unlockSelection(SelectionVO selectionVO) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		selectionPO.setStatus(SelectionPO.STATUS_INIT_INT);
+
+		selectionDao.update(selectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int resetSelection(SelectionVO selectionVO) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		selectionPO.setIsAffirm(SelectionPO.ISAFFIRM_UNCONFIRMED_INT);
+		selectionPO.setAffirmTime(null);
+
+		selectionDao.update(selectionPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendSelection(SelectionVO selectionVO, String userId) throws FLException {
 
 		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());

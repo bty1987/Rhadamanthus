@@ -19,7 +19,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.swiftpass.service.SwiftpassService;
 
-@ParentPackage("common")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class SwiftpassAction extends BaseListAction {

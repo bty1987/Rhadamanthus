@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.balance.dao.BalanceCutpayDao;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceDccountDao;
+import com.fanglin.balance.dao.BalancePictureDao;
 import com.fanglin.balance.po.BalanceCutpayPO;
 import com.fanglin.balance.po.BalanceDccountPO;
 import com.fanglin.balance.po.BalancePO;
+import com.fanglin.balance.po.BalancePicturePO;
 import com.fanglin.balance.service.BalanceCutpayService;
 import com.fanglin.balance.vo.BalanceCutpayVO;
 import com.fanglin.balance.vo.BalanceDccountVO;
@@ -41,6 +43,9 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 	private BalanceDao balanceDao;
 
 	@Autowired
+	private BalancePictureDao balancePictureDao;
+
+	@Autowired
 	private BalanceDccountDao balanceDccountDao;
 
 	@Override
@@ -50,8 +55,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 		List<BalanceCutpayVO> balanceCutpayVOs = new ArrayList<BalanceCutpayVO>();
 
 		for (BalanceCutpayPO balanceCutpayPO : balanceCutpayPOs) {
-
-			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
+			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
 		}
 
 		paging.setData(balanceCutpayVOs);
@@ -65,7 +69,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		for (BalanceCutpayPO balanceCutpayPO : balanceCutpayPOs) {
 
-			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
+			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
 		}
 
 		return balanceCutpayVOs;
@@ -74,12 +78,12 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 	@Override
 	public List<BalanceCutpayVO> queryBalanceCutpayByOuid(BalanceCutpayVO balanceCutpayVO) {
 
-		List<BalanceCutpayPO> balanceCutpayPOs = balanceCutpayDao.queryBalanceCutpayByOuid(balanceCutpayVO.getOperater().getUid());
+		List<BalanceCutpayPO> balanceCutpayPOs = balanceCutpayDao.queryBalanceCutpayByOuid(balanceCutpayVO.getBelonger().getUid());
 		List<BalanceCutpayVO> balanceCutpayVOs = new ArrayList<BalanceCutpayVO>();
 
 		for (BalanceCutpayPO balanceCutpayPO : balanceCutpayPOs) {
 
-			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
+			balanceCutpayVOs.add(balanceCutpayPO.ptv(new BalanceCutpayVO(new BalanceVO(), new UserBaseVO(), new UserBaseVO(), new BalanceDccountVO(), new BalanceCutpayVO())));
 		}
 
 		return balanceCutpayVOs;
@@ -90,10 +94,12 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 	public int addBalanceCutpay(BalanceCutpayVO balanceCutpayVO, String userId) throws FLException {
 
 		UserPO operater = userDao.queryUserByUserId(userId);
+		UserPO belonger = userDao.queryUserByUserId(balanceCutpayVO.getBelonger().getUserId());
 
 		BalanceCutpayPO balanceCutpayPO = new BalanceCutpayPO();
 
 		balanceCutpayPO.setName(balanceCutpayVO.getName());
+		balanceCutpayPO.setBelonger(belonger);
 		balanceCutpayPO.setOperater(operater);
 		balanceCutpayPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceCutpayPO.setMoney(balanceCutpayVO.getMoney());
@@ -110,7 +116,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 			balanceCutpayPO.setDccount(balanceDccountPO);
 
-			if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT) {
+			if (balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT) {
 				balanceDccountPO.setSurplus(Arith.sub(balanceDccountPO.getSurplus(), balanceCutpayPO.getMoney()));
 			} else {
 				balanceDccountPO.setSurplus(Arith.add(balanceDccountPO.getSurplus(), balanceCutpayPO.getMoney()));
@@ -131,7 +137,7 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 
 		balanceCutpayPO.setBalance(balancePO);
 
-		if (balanceCutpayPO.getType() == balanceCutpayPO.TYPE_CUTPAY_INT) {
+		if (balanceCutpayPO.getType() == BalanceCutpayPO.TYPE_CUTPAY_INT) {
 			balanceCutpayPO.setTotal(Arith.add(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
 		} else {
 			balanceCutpayPO.setTotal(Arith.sub(balancePO.getCutpay(), balanceCutpayPO.getMoney()));
@@ -140,6 +146,16 @@ public class BalanceCutpayServicerImpl implements BalanceCutpayService {
 		balancePO.setCutpay(balanceCutpayPO.getTotal());
 
 		balanceDao.update(balancePO);
+
+		if (balanceCutpayVO.getPath() == null) return 0;
+
+		BalancePicturePO balancePicturePO = new BalancePicturePO();
+
+		balancePicturePO.setPid(balanceCutpayPO.getBcid());
+		balancePicturePO.setType(BalancePicturePO.TYPE_CUTPAY_INT);
+		balancePicturePO.setPath(balanceCutpayVO.getPath());
+
+		balancePictureDao.save(balancePicturePO);
 
 		return 0;
 	}

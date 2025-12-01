@@ -20,6 +20,8 @@ public interface SalesPaymentDao extends Dao<SalesPaymentPO> {
 
 	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids);
 
+	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids, List<Short> status);
+
 	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid);
 
 	public SalesPaymentPO querySalesPayment(long sid, List<Short> types);

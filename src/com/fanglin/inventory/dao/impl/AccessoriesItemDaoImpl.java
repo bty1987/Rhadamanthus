@@ -1,6 +1,6 @@
 package com.fanglin.inventory.dao.impl;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.po.AccessoriesItemPO;
+import com.fanglin.utils.Arith;
 
 @Repository("accessoriesItemDao")
 public class AccessoriesItemDaoImpl extends DaoImpl<AccessoriesItemPO> implements AccessoriesItemDao {
@@ -40,11 +41,10 @@ public class AccessoriesItemDaoImpl extends DaoImpl<AccessoriesItemPO> implement
 	@Override
 	public int amountAccessoriesItem(String orderId, long nid) {
 
-		String sql = "select sum(num) from inventory.accessories a, inventory.accessoriesitem ai where a.orderId = :orderId and a.aid = ai.aid and nid =:nid and a.status not in (3, 4)";
+		String sql = "select CAST(sum(if(type = 0, ai.num, -ai.num)*ai.storenum) AS SIGNED) from inventory.accessories a, inventory.accessoriesitem ai where a.orderId = :orderId and a.aid = ai.aid and nid =:nid and a.status not in (3, 4)";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setLong("nid", nid).uniqueResult();
 
-		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setLong("nid", nid).uniqueResult();
-
-		return count == null ? 0 : count.intValue();
+		return count == null ? 0 : Arith.div(count.intValue(), 1000000);
 	}
 
 }

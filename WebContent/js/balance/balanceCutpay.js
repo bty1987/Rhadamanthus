@@ -3,28 +3,36 @@ $(function() {
     var balanceCutpay = {
 
         btns: {
-            balanceCutpayBtn:com.focusPage("#balanceCutpayBtn"),
-            addBalanceCutpayBtn:com.focusPage("#addBalanceCutpayBtn"),
-            saveBtn:com.focusPage("#saveBtn"),
-            cancelBtn:com.focusPage("#cancelBtn"),
-            saveDeductBtn:com.focusPage("#saveDeductBtn"),
-            saveAddBtn:com.focusPage("#saveAddBtn"),
-            printBtn:com.focusPage("#printBtn"),
+            balanceCutpayBtn: com.focusPage("#balanceCutpayBtn"),
+            addBalanceCutpayBtn: com.focusPage("#addBalanceCutpayBtn"),
+            saveBtn: com.focusPage("#saveBtn"),
+            createBtn: com.focusPage("#createBtn"),
+            cancelBtn: com.focusPage("#cancelBtn"),
+            saveDeductBtn: com.focusPage("#saveDeductBtn"),
+            saveAddBtn: com.focusPage("#saveAddBtn"),
+            printBtn: com.focusPage("#printBtn"),
         },
 
         modals: {
-            balanceCutpayModal:com.focusPage("#balanceCutpayModal"),
-            deductBalanceCutpayModal:com.focusPage("#deductBalanceCutpayModal"),
-            addBalanceCutpayModal:com.focusPage("#addBalanceCutpayModal")
+            balanceCutpayModal: com.focusPage("#balanceCutpayModal"),
+            deductBalanceCutpayModal: com.focusPage("#deductBalanceCutpayModal"),
+            addBalanceCutpayModal: com.focusPage("#addBalanceCutpayModal"),
+            createModal: com.focusPage("#createModal")
         },
 
         items: {
-            money: com.focusPage("#money"),
-            comment: com.focusPage("#comment"),
-            name: com.focusPage("#name"),
+            name: com.focusPage("#name", "#createModal"),
+            belonger: com.focusPage("#belonger", "#createModal"),
+            money: com.focusPage("#money", "#createModal"),
+            atttype: com.focusPage("#atttype", "#createModal"),
+            comment: com.focusPage("#comment", "#createModal"),
+            path: com.focusPage("#path", "#createModal"),
+            sampleImg: com.focusPage("#sampleImg", "#createModal"),
+
             balanceCutpayName: com.focusPage("#balanceCutpayName"),
             deductMoney: com.focusPage("#deductMoney"),
             deductComment: com.focusPage("#deductComment"),
+
             balanceCutpayName: com.focusPage("#balanceCutpayName"),
             balanceDccountName: com.focusPage("#balanceDccountName"),
             balanceDccountSurplus: com.focusPage("#balanceDccountSurplus"),
@@ -47,6 +55,8 @@ $(function() {
         depage: params['urlLoadParams'].depage
     };
 
+    balanceCutpay.items.atttype.bindData(constant.balance().balanceCutpay.atttype.datas, "key", "value");
+
     balanceCutpay.modals.balanceCutpayModal.on("hide.bs.modal", function() {
 
         com.cleanItems(balanceCutpay.items);
@@ -61,9 +71,26 @@ $(function() {
         com.cleanItems(balanceCutpay.items);
     });
 
+    com.initTypeahead('belonger', api.personel.querySupplierByPinyin, "supplier.pinYin", {
+        "departmentType.name": "",
+        "user.status": 0
+    }, "suppliers", "userId", "currentName", null);
+
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.png', {
+        'uploadType': 2
+    }, 1, function(data) {
+
+        balanceCutpay.items.path.val(data.resUrl);
+        balanceCutpay.items.filesize.val(data.filesize);
+
+        com.showImg(balanceCutpay.items.sampleImg, data.resUrl, 150, 150, '', null, 0);
+    });
+
     balanceCutpay.items.balanceDccountName.on('change', function() {
 
-        com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
+        com.post(api.balance.queryBalanceDccount, {
+            "balanceDccount.belonger.uid": balanceCutpay.uid
+        }, function(res) {
 
             $.each(res.balanceDccountes, function(i, v) {
 
@@ -71,21 +98,6 @@ $(function() {
 
                     com.focusPage("#balanceDccountSurplus").val(v.surplus);
                     com.focusPage("#balanceDccountCutpay").val(v.cutpay);
-                }
-            });
-        });
-    });
-
-    balanceCutpay.items.balanceCutpayName.on('change', function() {
-
-
-        com.post(api.balance.queryBalanceCutpayByOuid, {"balanceCutpay.operater.uid": balanceCutpay.uid}, function(res) {
-
-            $.each(res.balanceCutpays, function(i, v) {
-
-                if (com.focusPage("#balanceCutpayName").val() == v.bcid) {
-
-                    com.focusPage("#money").val(v.money);
                 }
             });
         });
@@ -102,14 +114,18 @@ $(function() {
         com.focusPage("#pagebalanceCutpays").hide();
         com.focusPage("#money").attr("readOnly", "readOnly");
 
-        com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
+        com.post(api.balance.queryBalanceDccount, {
+            "balanceDccount.belonger.uid": balanceCutpay.uid
+        }, function(res) {
 
             var balanceDccountes = [];
-            balanceDccountes.push({name:" "});
+            balanceDccountes.push({
+                name: " "
+            });
 
             $.each(res.balanceDccountes, function(i, v) {
 
-                if (v.status == 0){
+                if (v.status == 0) {
 
                     balanceDccountes.push(v);
                 }
@@ -118,14 +134,18 @@ $(function() {
             com.focusPage("#balanceDccountName").bindData(balanceDccountes, "bdid", "name");
         }, null, false);
 
-        com.post(api.balance.queryBalanceCutpayByOuid, {"balanceCutpay.operater.uid": balanceCutpay.uid}, function(res) {
+        com.post(api.balance.queryBalanceCutpayByOuid, {
+            "balanceCutpay.belonger.uid": balanceCutpay.uid
+        }, function(res) {
 
             var balanceCutpays = [];
-            balanceCutpays.push({name:" "});
+            balanceCutpays.push({
+                name: " "
+            });
 
             $.each(res.balanceCutpays, function(i, v) {
 
-                if (v.status == 0){
+                if (v.status == 0) {
 
                     balanceCutpays.push(v);
                 }
@@ -142,7 +162,7 @@ $(function() {
 
     if (balanceCutpay.depage == "cutpay") {
         searcher.base("condList", "pagenation", "resultList", api.balance.pageBalanceCutpay);
-        searcher.condition([ "balance-balanceCutpay-name","balance-balanceCutpay-operater" ]);
+        searcher.condition(["balance-cutpay-name", "balance-cutpay-operater"]);
 
         searcher.button([{
             id: "createBalanceCutpay",
@@ -160,6 +180,15 @@ $(function() {
         fieId: "operater.currentName",
         name: "操作人",
         prop: "operater.currentName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.operater.userId);
+        }
+    }, {
+        fieId: "belonger.currentName",
+        name: "归属人",
+        prop: "belonger.currentName",
         clazz: "grey",
         click: function(btn, v) {
 
@@ -228,8 +257,8 @@ $(function() {
         clazz: "btn-danger",
         handle: function(v) {
 
-            com.post(api.balance.unbindBalanceCutpay,{
-                "balanceCutpay.bcid" : v.bcid,
+            com.post(api.balance.unbindBalanceCutpay, {
+                "balanceCutpay.bcid": v.bcid,
                 "balanceCutpay.balance.bid": balanceCutpay.bid,
             }, function() {
 
@@ -260,22 +289,29 @@ $(function() {
 
     searcher.line("name", lineprops, linebtns).render();
 
-    com.focusPage('#balanceCutpayBtn').on("click", function () {
+    com.focusPage('#balanceCutpayBtn').on("click", function() {
+
+        com.post(api.balance.queryBalanceCutpayByOuid, {
+            "balanceCutpay.belonger.uid": balanceCutpay.uid
+        }, function(res) {
+
+            balanceCutpay.items.balanceCutpayName.bindData(res.balanceCutpays, "bcid", "name");
+        });
 
         balanceCutpay.modals.balanceCutpayModal.modal("show");
     });
 
-    com.focusPage('#createBalanceCutpay').on("click", function () {
+    com.focusPage('#createBalanceCutpay').on("click", function() {
 
-        balanceCutpay.modals.balanceCutpayModal.modal("show");
+        balanceCutpay.modals.createModal.modal("show");
     });
 
-    com.focusPage('#addBalanceCutpayBtn').on("click", function () {
+    com.focusPage('#addBalanceCutpayBtn').on("click", function() {
 
         balanceCutpay.modals.addBalanceCutpayModal.modal("show");
     });
 
-    com.focusPage('#printBtn').on("click", function () {
+    com.focusPage('#printBtn').on("click", function() {
 
         params.balance = balanceCutpay.balance;
 
@@ -285,14 +321,13 @@ $(function() {
     function deductBalanceCutpay(v) {
 
         balanceCutpay.modals.deductBalanceCutpayModal.modal("show");
-    };
+    }
 
     balanceCutpay.btns.saveBtn.on("click", function() {
 
         if (com.validate('balanceCutpayModal')) {
-
             return false;
-        };
+        }
 
         var url = null;
         var options = {};
@@ -300,29 +335,27 @@ $(function() {
         if (balanceCutpay.depage != "cutpay") {
             url = api.balance.submitBalanceCutpay;
 
-            options ={
-                    "balanceCutpay.bcid": balanceCutpay.items.balanceCutpayName.val(),
-                    "balanceCutpay.balance.bid": balanceCutpay.bid,
-                    "balanceCutpay.comment": balanceCutpay.items.comment.val()
-                };
+            options = {
+                "balanceCutpay.bcid": balanceCutpay.items.balanceCutpayName.val(),
+                "balanceCutpay.balance.bid": balanceCutpay.bid,
+                "balanceCutpay.comment": balanceCutpay.items.comment.val()
+            };
         } else {
             url = api.balance.addBalanceCutpay;
 
-            options ={
+            options = {
                 "balanceCutpay.name": balanceCutpay.items.name.val(),
+                "balanceCutpay.belonger.userId": com.typeahead("belonger"),
                 "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
                 "balanceCutpay.money": balanceCutpay.items.money.val(),
                 "balanceCutpay.comment": balanceCutpay.items.comment.val(),
+                "balanceCutpay.path": balanceCutpay.items.path.val(),
             };
         }
 
         com.post(url, options, function(res) {
 
-            if (balanceCutpay.depage != "cutpay") {
-                com.showAlert(com.info, "绑定成功");
-            } else {
-                com.showAlert(com.info, "添加成功");
-            }
+            com.showAlert(com.info, "操作成功");
 
             searcher.doSearch();
         });
@@ -333,11 +366,10 @@ $(function() {
     balanceCutpay.btns.saveDeductBtn.on("click", function() {
 
         if (com.validate('deductBalanceCutpayModal')) {
-
             return false;
-        };
+        }
 
-        var options ={
+        var options = {
             "balanceCutpay.balance.bid": balanceCutpay.bid,
             "balanceCutpay.bcid": balanceCutpay.bcid,
             "balanceCutpay.name": balanceCutpay.deductName,
@@ -355,29 +387,29 @@ $(function() {
         balanceCutpay.modals.deductBalanceCutpayModal.modal("hide");
     });
 
-    balanceCutpay.btns.saveAddBtn.on("click", function() {
+    balanceCutpay.btns.createBtn.on("click", function() {
 
-        if (com.validate('addBalanceCutpayModal')) {
-
+        if (com.validate('createModal')) {
             return false;
-        };
+        }
 
-        var options ={
-            "balanceCutpay.balance.bid" : balanceCutpay.bid,
-            "balanceCutpay.dccount.bdid" : balanceCutpay.items.balanceDccountName.val(),
-            "balanceCutpay.name": balanceCutpay.items.balanceCutpayName.val(),
+        var options = {
+            "balanceCutpay.name": balanceCutpay.items.name.val(),
             "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
-            "balanceCutpay.money": balanceCutpay.items.balanceCutpayMoney.val(),
-            "balanceCutpay.comment": balanceCutpay.items.balanceCutpayComment.val(),
+            "balanceCutpay.atttype": balanceCutpay.items.atttype.val(),
+            'balanceCutpay.belonger.userId': com.typeahead("belonger"),
+            "balanceCutpay.money": balanceCutpay.items.money.val(),
+            "balanceCutpay.comment": balanceCutpay.items.comment.val(),
         };
 
         com.post(api.balance.addBalanceCutpay, options, function(res) {
 
             com.showAlert(com.info, "添加成功");
+            
             searcher.doSearch();
-        });
 
-        balanceCutpay.modals.addBalanceCutpayModal.modal("hide");
+            balanceCutpay.modals.createModal.modal("hide");
+        });
     });
 
     function managedrawing(v) {
@@ -390,6 +422,7 @@ $(function() {
         }, function(data) {
 
             var balancePictures = data.balancePictures;
+
             if (balancePictures && balancePictures.length) {
                 $.each(balancePictures, function(i, value) {
 
@@ -434,12 +467,14 @@ $(function() {
         }, 5, function(data) {
 
             var options = {};
+
             options["balancePicture.bid"] = v.balance.bid;
             options["balancePicture.pid"] = v.bcid;
             options["balancePicture.name"] = data.strutsUploadsFileName;
             options["balancePicture.path"] = data.resUrl;
             options["balancePicture.type"] = 0;
             options["balancePicture.filesize"] = data.filesize;
+
             com.post(api.balance.addBalancePicture, options, function(res) {
 
                 var balancePicture = res.balancePicture;

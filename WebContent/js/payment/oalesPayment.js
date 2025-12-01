@@ -225,6 +225,7 @@ jQuery(function($) {
 
                 if (value[3]) {
                     $b.click(function() {
+
                         value[3]($b);
                     });
                 }
@@ -395,12 +396,15 @@ jQuery(function($) {
 
         var orderId = payment.oales.orderId ? payment.oales.orderId : payment.oales.decoration.orderId;
 
-        //查询装修单信息
+        // 查询装修单信息
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": orderId
         }, function(res) {
 
             oalesPayment.decoration = res.decoration;
+            
+            if (!oalesPayment.profit)
+                oalesPayment.decoration.bompany = null;
         }, null, false);
 
         // 绑定收款单位的基础信息
@@ -424,7 +428,8 @@ jQuery(function($) {
 
         com.selectTypeahead("cashInfo", oalesPayment.cashUtil, "key", "value", null); // 现金方式
 
-        var grade = ["A", "C"].contains(payment.oales.decoration.grade) ? "A" : "";
+        // var grade = ["A", "C"].contains(payment.oales.decoration.grade) ? "A" : "";
+        var grade = "B";
 
         // 根据等级在数组中筛选出符合要求的用于显示
         paymentUtils.initBankGrade(oalesPayment, grade); // 刷卡&银行
@@ -484,8 +489,9 @@ jQuery(function($) {
 
                 options["oalesPayment.oales.oid"] = payment.oales.oid;
             }
-            
-            if(oalesPayment.profit) options["oalesPayment.bompany"] = oalesPayment.decoration.bompany;
+
+            if (oalesPayment.profit)
+                options["oalesPayment.bompany"] = oalesPayment.decoration.bompany;
 
         } else if (payment.type == 1 && payment.status == 0) {
             url = api.payment.refundOalesPayment;
@@ -595,8 +601,9 @@ jQuery(function($) {
         }, function(res) {
 
             oalesPayment.decoration = res.decoration;
-            
-            if(!oalesPayment.profit) oalesPayment.decoration.bompany = null;
+
+            if (!oalesPayment.profit)
+                oalesPayment.decoration.bompany = null;
         }, null, false);
 
         com.focusPage("#myModalLabels").html("付款信息");
@@ -607,7 +614,8 @@ jQuery(function($) {
         com.selectTypeahead("cashInfo", oalesPayment.cashUtil, "key", "value", null); // 现金方式
 
         // var grade = payment.sales.grade == "B" ? "B" : "";
-        var grade = payment.oales.grade == "C" ? "" : payment.oales.grade;
+        // var grade = payment.oales.grade == "C" ? "" : payment.oales.grade;
+        var grade = "B";
 
         paymentUtils.initBankGrade(oalesPayment, grade);
 

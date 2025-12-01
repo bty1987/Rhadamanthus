@@ -14,6 +14,8 @@ public interface SalesRefundsService {
 
 	public List<SalesRefundsVO> querySalesRefundsBySid(SalesRefundsVO refundsVO);
 
+	public SalesRefundsVO querySalesRefundsByRid(SalesRefundsVO refundsVO);
+
 	public List<SalesRefundsItemVO> querySalesRefundsItemBySid(SalesRefundsVO refundsVO);
 
 	public List<SalesRefundsItemVO> querySalesRefundsItemByRid(SalesRefundsVO refundsVO);

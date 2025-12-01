@@ -29,7 +29,9 @@ public class ConstructionDiaryVO implements Serializable {
 	private Timestamp createTime;
 
 	private Short atttype;
-	
+
+	private Short isUpload;
+
 	private String content;
 
 	public ConstructionDiaryVO() {
@@ -110,6 +112,14 @@ public class ConstructionDiaryVO implements Serializable {
 
 	public void setAtttype(Short atttype) {
 		this.atttype = atttype;
+	}
+
+	public Short getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(Short isUpload) {
+		this.isUpload = isUpload;
 	}
 
 	public String getContent() {

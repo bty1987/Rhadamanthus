@@ -60,6 +60,8 @@ public class MaterialPaymentAction extends BaseListAction {
 
 	private Timestamp dateTime;
 
+	private Long amount;
+
 	@Action(value = "pageMaterialPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageMaterialPayment() throws FLException {
 
@@ -96,6 +98,14 @@ public class MaterialPaymentAction extends BaseListAction {
 	public String queryMaterialReceiptByMrId() throws FLException {
 
 		materialReceipt = materialReceiptService.queryMaterialReceiptByMrId(materialReceipt);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "amountMaterialPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountMaterialPayment() {
+
+		amount = materialPaymentService.amountMaterialPayment(materialPayment);
 
 		return SUCCESS;
 	}
@@ -274,6 +284,14 @@ public class MaterialPaymentAction extends BaseListAction {
 
 	public void setPtids(List<Long> ptids) {
 		this.ptids = ptids;
+	}
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
 	}
 
 }

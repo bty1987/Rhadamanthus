@@ -899,6 +899,233 @@ public class PaytranServiceImpl implements PaytranService {
 		paytranVO.setRstcode(cipherText);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void alipay(Wxpay wxpay) throws FLException {
+
+		long money = wxpay.getPaymentMoney();
+
+		if (money == 0) {
+			throw new FLException(150025, "款项金额不正确");
+		}
+
+		UserPO creater = userDao.queryUserByUserId(wxpay.getUserId());
+		String oderId = wxpay.getPaymentOrderId();
+
+		DecorationPO decorationPO = null;
+		int company = 0;
+		String grade = "B"; // 代付款默认商户等级
+
+		// 代付款没有装修单号
+		if (oderId != null) {
+			decorationPO = decorationDao.queryDecorationByOrderId(oderId);
+
+			if (decorationPO == null) {
+				throw new FLException(140013, "订单不存在");
+			}
+
+			company = decorationPO.getBompany();
+			grade = decorationPO.getGrade();
+		}
+
+		short atttype = 0;
+		Long pid = wxpay.getPaymentid();
+
+		if (wxpay.getPaymentType() == PaytranPO.TYPE_ADVANCE_INT) {
+
+			if (pid == null || pid == 0) {
+
+				AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(oderId);
+
+				if (advancePaymentPO == null) {
+					advancePaymentPO = new AdvancePaymentPO();
+					advancePaymentPO.setDecoration(decorationPO);
+				}
+
+				if (wxpay.getPaymentAttrType() == PaytranPO.ATTTYPE_MATERIAL_INT) {
+					atttype = 2;
+				}
+
+				long oldBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, atttype);
+				long balance = Arith.add(oldBalance, money);
+
+				PaymentPO paymentPO = new PaymentPO(oderId, balance, money, PaymentPO.PAYMENT_TYPE_COLLECTION_INT, atttype, PaymentPO.PAYMENT_STATUS_INIT_INT, decorationPO.getCompany(), DateUtil.getDateToTimestamp(new Date()), String.valueOf(new Date().getTime()));
+				paymentPO.setCustomer(decorationPO.getCustomer());
+				paymentPO.setCreater(creater);
+
+				paymentDao.save(paymentPO);
+
+				wxpay.setPaymentid(paymentPO.getPid());
+			}
+
+		} else if (wxpay.getPaymentType() == PaytranPO.TYPE_DECORATION_INT) {
+
+			DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(pid);
+
+			if (decorationPaymentPO == null) {
+				throw new FLException(150003, "款项不存在");
+			}
+
+			if (decorationPaymentPO.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
+				throw new FLException(150036, "款项状态不可操作");
+			}
+
+			short sort = decorationPaymentPO.getSort();
+
+			// 装修款收款过程利用排序字段控制收款顺序
+			if (sort > 1) {
+				DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPayment(oderId, (short) (sort - 1));
+
+				if (prevDecorationPaymentPO != null) {
+					if (prevDecorationPaymentPO.getPaymentStatus() == (DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT)) {
+						throw new FLException(150009, "前置款项未处理");
+					}
+				}
+			}
+
+			PaymentTypePO paymentTypePO = paymentTypeDao.get(decorationPaymentPO.getPtid());
+
+			if (paymentTypePO != null) {
+				if (decorationPO.getPaySacle() < paymentTypePO.getPayScale()) {
+					throw new FLException(120018, "装修款比例不足");
+				}
+
+				if (decorationPO.getSaleScale() < paymentTypePO.getSaleScale()) {
+					throw new FLException(120033, "销售比例不足");
+				}
+			}
+		} else if (wxpay.getPaymentType() == PaytranPO.TYPE_SALES_INT) {
+
+			SalesPaymentPO salesPaymentPO = salesPaymentDao.get(pid);
+
+			if (salesPaymentPO == null) {
+				throw new FLException(150003, "款项不存在");
+			}
+
+			if (salesPaymentPO.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
+				throw new FLException(150036, "款项状态不可操作");
+			}
+
+		} else if (wxpay.getPaymentType() == PaytranPO.TYPE_SERVICE_INT) {
+
+			ServicePaymentPO servicePaymentPO = servicePaymentDao.get(pid);
+
+			if (servicePaymentPO == null) {
+				throw new FLException(150003, "款项不存在");
+			}
+
+			if (servicePaymentPO.getStatus() != ServicePaymentPO.COLUMN_INITIALSTATUS_INT) {
+				throw new FLException(150036, "款项状态不可操作");
+			}
+
+		} else if (wxpay.getPaymentType() == PaytranPO.TYPE_PROXY_INT) {
+
+			ProxyPaymentPO proxyPaymentPO = proxyPaymentDao.get(pid);
+
+			if (proxyPaymentPO == null) {
+				throw new FLException(150003, "款项不存在");
+			}
+
+			company = proxyPaymentPO.getCreater().getCompany();
+
+			proxyPaymentPO.setUnionId(wxpay.getUnionId());
+
+			proxyPaymentDao.update(proxyPaymentPO);
+		}
+
+		PaytranPO paytranPO = null;
+
+		if (wxpay.getPaymentptid() == null || wxpay.getPaymentptid() == 0) {
+			paytranPO = new PaytranPO(oderId, wxpay.getPaymentid(), wxpay.getPaymentType(), wxpay.getPaymentAttrType(), "", PaytranPO.STATUS_INIT_INT, money, PaytranPO.WAY_WXPAY_SHORT);
+			paytranPO.setCreater(creater);
+			paytranPO.setPushTime(DateUtil.getDateToTimestamp(new Date()));
+			paytranDao.save(paytranPO);
+		} else {
+			paytranPO = paytranDao.get(wxpay.getPaymentptid());
+
+			if (paytranPO.getStatus() != PaytranPO.STATUS_INIT_INT) {
+				throw new FLException(150047, "转换款支付不可操作");
+			}
+		}
+
+		String currentDate = DateUtil.current("yyyyMMdd").toString();
+		String ident = FormatUtil.fillZero(new Random().nextInt(9999), "0000");
+		String orderNo = String.format("%s%s%s", currentDate, paytranPO.getPtid(), ident);
+
+		wxpay.setThreeOrderNo(orderNo);
+
+		SystemConfigPO airpos = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_%s_STR", paytranPO.getAtttype(), grade), company);
+
+		if (airpos == null) {
+			airpos = systemConfigDao.querySystemConfig(String.format("PAYMENT_PLATFORM_WXPAY_PATH_%s_STR", grade), company);
+		}
+
+		if (airpos == null) {
+			airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_WXPAY_PATH_STR", company);
+		}
+
+		if (airpos == null) {
+			airpos = systemConfigDao.querySystemConfig("PAYMENT_PLATFORM_PATH_STR", company);
+		}
+
+		if (airpos == null || "".equals(airpos.getValue())) {
+			throw new FLException(150071, "不支持其他支付平台");
+		}
+
+		String dgrade = null;
+		String sgrade = null;
+
+		if (paytranPO.getAtttype() == PaytranPO.ATTTYPE_DECORATION_INT) {
+			dgrade = grade;
+		} else {
+			sgrade = grade;
+		}
+
+		// 获取商户
+		CustypePO custypePO = custypeDao.queryCustype(company, dgrade, sgrade, paytranPO.getType(), CustypePO.PLATFORM_WXPAY_INT);
+
+		if (custypePO == null) {
+			throw new FLException(130105, "商户不存在");
+		}
+
+		CompanyPO companyPO = companyDao.get(custypePO.getCompany());
+
+		try {
+			if (Class.forName(String.format("%s.Airpos", airpos.getValue())) == null || Class.forName(String.format("%s.Airpos", airpos.getValue())).getMethod("alipay", Wxpay.class, CustypePO.class, CompanyPO.class) == null) {
+				throw new FLException(150072, "不支持其他支付平台");
+			}
+
+			Class.forName(String.format("%s.Airpos", airpos.getValue())).getMethod("alipay", Wxpay.class, CustypePO.class, CompanyPO.class).invoke(null, wxpay, custypePO, companyPO);
+
+		} catch (FLException e) {
+			throw e;
+		} catch (InvocationTargetException e) {
+			if (e.getTargetException().getClass() == FLException.class) {
+				throw (FLException) e.getTargetException();
+			} else {
+				System.out.println(e.getMessage());
+				throw new FLException(150073, "不支持其他支付平台");
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			throw new FLException(150073, "不支持其他支付平台");
+		}
+
+		paytranPO.setOutOrderNo(orderNo); // 已存在的转换款再次发起支付时更新第三方订单号
+		paytranPO.setCtid(custypePO.getCtid());
+
+		ReceiptTypePO receiptTypePO = custypePO.getReceiptType();
+
+		if (receiptTypePO == null) {
+			throw new FLException(130005, "收据类型不存在");
+		}
+
+		paytranPO.setNo(receiptTypePO.getNo());
+
+		paytranDao.update(paytranPO);
+
+	}
+
 	public void makePayment(Wxpay wxpay, String userId) throws FLException {
 
 		long ptid = wxpay.getPaymentptid();
@@ -944,7 +1171,7 @@ public class PaytranServiceImpl implements PaytranService {
 			bankInfo = String.format("%s%s", bankInfo, info);
 		}
 
-		String comment = String.format("wechat:金额%s元", Arith.div(paidMoney, 1000.0));
+		String comment = String.format("%s:金额%s元", userId, Arith.div(paidMoney, 1000.0));
 
 		// 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款, 8: 外销款
 		switch (type) {

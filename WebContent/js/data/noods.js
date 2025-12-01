@@ -7,6 +7,7 @@ $(function() {
             name: com.focusPage("#name"),
             selling: com.focusPage("#selling"),
             balance: com.focusPage("#balance"),
+            surplus: com.focusPage("#surplus"),
         },
         modals: {
             updateNoodsModal: com.focusPage("#updateNoodsModal"),
@@ -44,6 +45,7 @@ $(function() {
             noods.items.name.val(v.name);
             noods.items.selling.val(v.selling);
             noods.items.balance.val(v.balance);
+            noods.items.surplus.val(v.surplus);
 
             noods.modals.updateNoodsModal.modal("show");
 
@@ -104,6 +106,11 @@ $(function() {
         prop: "balance",
         clazz: "grey"
     }, {
+        field: "surplus",
+        name: "浮动量",
+        prop: "surplus",
+        clazz: "grey"
+    }, {
         field: "calc",
         name: "计算标识",
         prop: "calc",
@@ -162,6 +169,7 @@ $(function() {
             "noods.name": noods.items.name.val(),
             "noods.selling": noods.items.selling.val(),
             "noods.balance": noods.items.balance.val(),
+            "noods.surplus": noods.items.surplus.val(),
         };
 
         if (noods.nid != null) {

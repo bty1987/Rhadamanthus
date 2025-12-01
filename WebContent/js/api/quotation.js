@@ -91,6 +91,10 @@ $.extend(api.index, {
     normPart: {
         url: "/views/quotation/normtionPart.html"
     },
+    
+    qeasure4detailIndex: {
+        url: "/views/quotation/qeasure4detail.html"
+    },
 });
 
 $.extend(api, {
@@ -214,6 +218,13 @@ $.extend(api, {
         },
         deleteFunctionArea: {
             url: "deleteFunctionArea.do"
+        },
+
+        queryFunctionAreaOtem: {
+            url: "queryFunctionAreaOtem.do"
+        },
+        makeFunctionAreaOtem: {
+            url: "makeFunctionAreaOtem.do"
         },
 
         pageQuotationCtem: {
@@ -1035,7 +1046,7 @@ $.extend(api, {
             }
         },
 
-        pageQuotationRefund:{
+        pageQuotationRefund: {
             url: "pageQuotationRefund.do",
             demo: true,
             type: "query",
@@ -1073,11 +1084,11 @@ $.extend(api, {
                 args: ["quotationRefund.totalPrice"],
             }
         },
-        deleteQuotationRefund:{
+        deleteQuotationRefund: {
             url: "deleteQuotationRefund.do"
         },
 
-        queryQuotationRefundItem:{
+        queryQuotationRefundItem: {
             url: "queryQuotationRefundItem.do",
             demo: true,
             type: "query",
@@ -1086,7 +1097,7 @@ $.extend(api, {
                 args: ["unitPrice", "addPrice", "subPrice", "initNum", "num"]
             }]
         },
-        updateQuotationRefundItem:{
+        updateQuotationRefundItem: {
             url: "updateQuotationRefundItem.do",
             intercept: true,
             type: "update",
@@ -1098,10 +1109,10 @@ $.extend(api, {
                 }]
             }
         },
-        updateQuotationRefundItemForIndex:{
+        updateQuotationRefundItemForIndex: {
             url: "updateQuotationRefundItemForIndex.do"
         },
-        deleteQuotationRefundItem:{
+        deleteQuotationRefundItem: {
             url: "deleteQuotationRefundItem.do",
             intercept: true,
             type: "update",
@@ -1407,6 +1418,15 @@ $.extend(api, {
         },
         affirmSelection: {
             url: "affirmSelection.do"
+        },
+        lockSelection: {
+            url:"lockSelection.do"
+        },
+        unlockSelection: {
+            url:"unlockSelection.do"
+        },
+        resetSelection: {
+            url:"resetSelection.do"
         },
         // -------- 选材项 -------------------------
         pageSelectionItem: {
@@ -1862,6 +1882,45 @@ $.extend(api, {
             }
         },
 
+        pageQeasure: {
+            url: "pageQeasure.do",
+            type: "query",
+        },
+        queryQeasureByOrderId: {
+            url: "queryQeasureByOrderId.do",
+            type: "query",
+        },
+        queryQeasureByQmid: {
+            url: "queryQeasureByQmid.do",
+            type: "query",
+        },
+        makeQeasure: {
+            url: "makeQeasure.do",
+        },
+        handleQeasure: {
+            url: "handleQeasure.do",
+        },
+        deleteQeasure: {
+            url: "deleteQeasure.do",
+        },
+
+        queryQeasureFunctionArea: {
+            url: "queryQeasureFunctionArea.do",
+            type: "query",
+        },
+        queryQeasureFunctionAreaByQmfaId: {
+            url: "queryQeasureFunctionAreaByQmfaId.do",
+            type: "query",
+        },
+        makeQeasureFunctionArea: {
+            url: "makeQeasureFunctionArea.do",
+        },
+        handleQeasureFunctionArea: {
+            url: "handleQeasureFunctionArea.do",
+        },
+        deleteQeasureFunctionArea: {
+            url: "deleteQeasureFunctionArea.do",
+        },
     }
 });
 
@@ -2044,6 +2103,7 @@ $.extend(api, {
                 args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.consPrice", "addReduce.comsPrice", "addReduce.discount", "addReduce.taxRate", "addReduce.taxPrice"],
             }
         },
+
     }
 });
 

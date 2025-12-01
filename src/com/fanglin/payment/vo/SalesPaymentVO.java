@@ -8,6 +8,7 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.vo.SalesRefundsVO;
 import com.fanglin.sales.vo.SalesVO;
 
 public class SalesPaymentVO implements Serializable {
@@ -19,6 +20,8 @@ public class SalesPaymentVO implements Serializable {
 	private SalesReceiptVO salesReceipt;
 
 	private SalesVO sales;
+
+	private SalesRefundsVO salesRefunds;
 
 	private String orderId;
 
@@ -102,9 +105,22 @@ public class SalesPaymentVO implements Serializable {
 		this.salesReceipt = salesReceipt;
 	}
 
+	public SalesPaymentVO(UserBaseVO creater, SalesVO sales, SalesReceiptVO salesReceipt, SalesRefundsVO salesRefunds) {
+		super();
+		this.creater = creater;
+		this.sales = sales;
+		this.salesReceipt = salesReceipt;
+		this.salesRefunds = salesRefunds;
+	}
+
 	public SalesPaymentVO(SalesReceiptVO salesReceipt) {
 		super();
 		this.salesReceipt = salesReceipt;
+	}
+
+	public SalesPaymentVO(SalesRefundsVO salesRefunds) {
+		super();
+		this.salesRefunds = salesRefunds;
 	}
 
 	public Long getSpid() {
@@ -121,6 +137,14 @@ public class SalesPaymentVO implements Serializable {
 
 	public void setSales(SalesVO sales) {
 		this.sales = sales;
+	}
+
+	public SalesRefundsVO getSalesRefunds() {
+		return salesRefunds;
+	}
+
+	public void setSalesRefunds(SalesRefundsVO salesRefunds) {
+		this.salesRefunds = salesRefunds;
 	}
 
 	public String getOrderId() {

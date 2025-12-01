@@ -65,6 +65,8 @@ public class ConstructionNodePO implements Serializable {
 
 	private short sort;
 
+	private short proset;
+
 	private String kino;
 
 	private String kiname;
@@ -207,6 +209,15 @@ public class ConstructionNodePO implements Serializable {
 
 	public void setSort(short sort) {
 		this.sort = sort;
+	}
+
+	@Column(name = "proset")
+	public short getProset() {
+		return proset;
+	}
+
+	public void setProset(short proset) {
+		this.proset = proset;
 	}
 
 	@Column(name = "kino")

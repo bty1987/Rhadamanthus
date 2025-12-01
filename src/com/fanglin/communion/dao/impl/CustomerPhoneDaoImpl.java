@@ -1,6 +1,8 @@
 package com.fanglin.communion.dao.impl;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -34,31 +36,47 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone, Short status, Integer company) {
+		return queryCustomerPhone(Arrays.asList(phone), status, null, company);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerPhonePO> queryCustomerPhone(List<String> phones, Short status, Short defaults, Integer company) {
+
+		if (phones == null || phones.isEmpty()) {
+			return new ArrayList<CustomerPhonePO>();
+		}
 
 		StringBuffer sql = new StringBuffer();
-
 		sql.append("select cp.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where (cp.phone =:cphone or c.phone = :phone) ");
+		sql.append("where (cp.phone in (:cphones) or c.phone in (:phones))");
 
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			sql.append("and c.company =:company ");
+		if (defaults != null) {
+			sql.append(" and cp.defaults = :defaults");
 		}
 
 		if (status != null) {
-			sql.append("and cp.status =:status ");
+			sql.append(" and cp.status = :status");
+		} else {
+			sql.append(" and cp.status = 0");
 		}
 
-		sql.append(" group by cp.cpid ");
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			sql.append(" and c.company = :company ");
+		}
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);
 
-		query.setString("phone", phone).setString("cphone", phone);
+		query.setParameterList("cphones", phones).setParameterList("phones", phones);
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			query.setInteger("company", company);
+		}
+
+		if (defaults != null) {
+			query.setShort("defaults", defaults);
 		}
 
 		if (status != null) {
@@ -101,7 +119,6 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 	public int countCustomerPhone(String phone) {
 
 		String sql = "select count(*) from communion.customerphone where phone  =:phone";
-
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("phone", phone).uniqueResult();
 
 		return count.intValue();
@@ -113,7 +130,6 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 		String sql = "update communion.customerphone c set c.defaults = 0 where c.cid = :cid";
 
 		return session().createSQLQuery(sql).setLong("cid", cid).executeUpdate();
-
 	}
 
 }

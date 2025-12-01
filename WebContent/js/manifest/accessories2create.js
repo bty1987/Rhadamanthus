@@ -114,7 +114,9 @@ jQuery(function() {
             com.post(api.inventory.checkAccessoriesItem, {
                 "accessories.orderId": accessories.rightitems.orderId.val(),
                 "accessoriesItem.nid": nid,
-                "accessoriesItem.num": num
+                "accessoriesItem.num": num,
+                "accessoriesItem.normnum": normnum,
+                "accessoriesItem.storenum": storenum,
             }, function(res) {
 
                 itemcheck = true;

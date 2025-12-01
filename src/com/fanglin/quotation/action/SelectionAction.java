@@ -95,6 +95,30 @@ public class SelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "lockSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockSelection() throws FLException {
+
+		selectionService.lockSelection(selection);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "unlockSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unlockSelection() throws FLException {
+
+		selectionService.unlockSelection(selection);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "resetSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetSelection() throws FLException {
+
+		selectionService.resetSelection(selection);
+
+		return SUCCESS;
+	}
+
 	public SelectionVO getSelection() {
 		return selection;
 	}

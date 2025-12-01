@@ -388,7 +388,7 @@ Condition.addupRule("construction", {
     },
     
     "info-isIssue": {
-        label: "进度",
+        label: "监理状态",
         type: "select",
         submitConfig: {
             name: "isIssue",
@@ -473,5 +473,20 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
-
+    "diary-isUpload": {
+        label: "是否上传图片",
+        type: "select",
+        submitConfig: {
+            name: "isUpload",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.construction().constructionDiary.isUpload.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

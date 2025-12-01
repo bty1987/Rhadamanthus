@@ -492,6 +492,20 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	}
 
 	@Override
+	public long pointDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException {
+
+		String orderId = decorationVO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		return decorationActivityItemDao.pointDecorationActivityItem(orderId);
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
 

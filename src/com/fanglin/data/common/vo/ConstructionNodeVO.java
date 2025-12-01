@@ -42,6 +42,8 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Short sort;
 
+	private Short proset;
+
 	private String kino;
 
 	private String kiname;
@@ -188,6 +190,14 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setSort(Short sort) {
 		this.sort = sort;
+	}
+
+	public Short getProset() {
+		return proset;
+	}
+
+	public void setProset(Short proset) {
+		this.proset = proset;
 	}
 
 	public String getKino() {

@@ -18,8 +18,10 @@ import com.fanglin.customer.po.CustomerSourcePO;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationInfoDao;
+import com.fanglin.decoration.dao.DecorationServiceDao;
 import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.po.DecorationServicePO;
 import com.fanglin.decoration.service.DecorationInfoService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -40,6 +42,9 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private DecorationServiceDao decorationServiceDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -149,11 +154,22 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 		String houseAddr = String.format("%s %s", villagePO.getName(), housePO.getHouseNumber());
 
-		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
+		if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 
-			decorationPO.setSourceStatus(decorationInfoVO.getSourceStatus());
+			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
 			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
+
+			DecorationServicePO decorationServicePO = new DecorationServicePO();
+
+			decorationServicePO.setName("设计方案确认");
+			decorationServicePO.setOrderId(decorationPO.getOrderId());
+			decorationServicePO.setStatus(DecorationServicePO.SERVICESTATUS_INIT_INT);
+			decorationServicePO.setOperater(designer);
+			decorationServicePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationServicePO.setComment(String.format("装修单: %s, 设计方案确认, %s", decorationPO.getOrderId(), decorationInfoVO.getSourceStatus()));
+
+			decorationServiceDao.save(decorationServicePO);
 
 			messageService.sendMessage(designer.getUserId(), null, String.format("装修单: %s , 地址: %s , 合同设计方案客户已确认通过 , 持续关注客户服务及放线开工推进 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		}
@@ -162,6 +178,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			decorationPO.setSourceStatus(decorationInfoVO.getSourceStatus());
 			decorationPO.setEdesignTime(DateUtil.getDateToTimestamp(new Date()));
+
 			messageService.sendMessage(designer.getUserId(), null, String.format("装修单: %s , 地址: %s , 放线开工设计方案客户已确认通过 , 持续关注客户服务及对接排放线事项安排 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		}
 
@@ -211,11 +228,80 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			referationPO = decorationDao.queryDecorationByOrderId(customerOriginPO.getReferOrderId());
 		}
 
+		if (referationPO == null && customerOriginPO != null) {
+
+			customerOriginPO.setReferOrderId(decorationInfoVO.getReferOrderId());
+
+			customerOriginDao.update(customerOriginPO);
+
+			return 0;
+		}
+
+		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationVO.getOrderId());
+
+		if (decorationInfoPO == null) {
+			decorationInfoPO = new DecorationInfoPO(decorationVO.getOrderId());
+		}
+
+		decorationInfoPO.setReferOrderId(decorationInfoVO.getReferOrderId());
+
+		decorationInfoDao.saveOrUpdate(decorationInfoPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteReferDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		DecorationPO referationPO = decorationDao.queryDecorationByOrderId(decorationInfoVO.getReferOrderId());
+
 		if (referationPO == null) {
+			throw new FLException(140086, "推荐订单不存在");
+		}
 
-			if (customerOriginPO != null && referationPO == null) {
+		CustomerChancePO customerChancePO = customerChanceDao.queryCustomerChance(decorationVO.getOrderId());
 
-				customerOriginPO.setReferOrderId(decorationInfoVO.getReferOrderId());
+		if (customerChancePO != null) {
+			DecorationPO ccReferationPO = decorationDao.queryDecorationByOrderId(customerChancePO.getSource().getReferOrderId());
+
+			if (ccReferationPO != null && customerChancePO != null && ccReferationPO.getOrderId().equals(decorationInfoVO.getReferOrderId())) {
+
+				customerChancePO.getSource().setReferOrderId(null);
+				customerChanceDao.update(customerChancePO);
+
+				return 0;
+			}
+		}
+
+		CustomerChancePO customerChancePO1 = customerChanceDao.queryCustomerChance(decorationInfoVO.getReferOrderId());
+
+		if (customerChancePO1 != null) {
+			DecorationPO ccReferationPO = decorationDao.queryDecorationByOrderId(customerChancePO1.getSource().getReferOrderId());
+
+			if (ccReferationPO != null && customerChancePO1 != null && ccReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
+
+				customerChancePO1.getSource().setReferOrderId(null);
+				customerChanceDao.update(customerChancePO1);
+
+				return 0;
+			}
+		}
+
+		CustomerOriginPO customerOriginPO = customerOriginDao.queryCustomerOrigin(decorationVO.getOrderId());
+
+		if (customerOriginPO != null) {
+			DecorationPO coReferationPO = decorationDao.queryDecorationByOrderId(customerOriginPO.getReferOrderId());
+
+			if (coReferationPO != null && customerOriginPO != null && coReferationPO.getOrderId().equals(decorationInfoVO.getReferOrderId())) {
+
+				customerOriginPO.setReferOrderId(null);
 
 				customerOriginDao.update(customerOriginPO);
 
@@ -223,22 +309,39 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			}
 		}
 
-		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getReferOrderId());
+		CustomerOriginPO customerOriginPO1 = customerOriginDao.queryCustomerOrigin(decorationInfoVO.getReferOrderId());
 
-		if (decorationInfoPO == null) {
-			decorationInfoPO = new DecorationInfoPO(decorationVO.getOrderId());
-			decorationInfoDao.save(decorationInfoPO);
-		} else {
-			referationPO = decorationDao.queryDecorationByOrderId(decorationInfoPO.getReferOrderId());
+		if (customerOriginPO1 != null) {
+			DecorationPO coReferationPO = decorationDao.queryDecorationByOrderId(customerOriginPO1.getReferOrderId());
+
+			if (coReferationPO != null && customerOriginPO1 != null && coReferationPO.getOrderId().equals(decorationVO.getOrderId())) {
+
+				customerOriginPO1.setReferOrderId(null);
+
+				customerOriginDao.update(customerOriginPO1);
+
+				return 0;
+			}
 		}
 
-		if (referationPO == null) {
+		DecorationInfoPO decorationInfoPO = decorationInfoDao.queryDecorationInfoByOrderId(decorationVO.getOrderId());
 
-			decorationInfoPO.setReferOrderId(decorationInfoVO.getOrderId());
+		if (decorationInfoPO != null && decorationInfoPO.getReferOrderId() != null && decorationInfoPO.getReferOrderId().equals(decorationInfoVO.getReferOrderId())) {
+			decorationInfoPO.setReferOrderId(null);
 
 			decorationInfoDao.update(decorationInfoPO);
-		} else {
-			throw new FLException(140086, "当前订单已存在推荐单");
+
+			return 0;
+		}
+
+		DecorationInfoPO decorationInfoPO1 = decorationInfoDao.queryDecorationInfoByOrderId(decorationInfoVO.getReferOrderId());
+
+		if (decorationInfoPO1 != null && decorationInfoPO1.getReferOrderId() != null && decorationInfoPO1.getReferOrderId().equals(decorationVO.getOrderId())) {
+			decorationInfoPO1.setReferOrderId(null);
+
+			decorationInfoDao.update(decorationInfoPO1);
+
+			return 0;
 		}
 
 		return 0;

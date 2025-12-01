@@ -46,9 +46,6 @@ import com.fanglin.data.po.ColorPO;
 import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsKindPO;
 import com.fanglin.data.po.GoodsPO;
-import com.fanglin.inventory.dao.GoodsPackageDao;
-import com.fanglin.inventory.po.GoodsPackagePO;
-import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.right.dao.BrandUserRightDao;
@@ -66,9 +63,6 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private GoodsDao goodsDao;
-
-	@Autowired
-	private GoodsPackageDao goodsPackageDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -411,73 +405,4 @@ public class GoodsServiceImpl implements GoodsService {
 		return 0;
 	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int addPackage(GoodsVO goodsVO, List<GoodsPackageVO> goodsPackageVOs, int company) throws FLException {
-
-		GoodsPO goodsPO = new GoodsPO();
-
-		if (goodsVO.getAccessoriesType() != null && goodsVO.getAccessoriesType().getAtid() != null) goodsPO.setAccessoriesType(new AccessoriesTypePO(goodsVO.getAccessoriesType().getAtid()));
-
-		if (goodsVO.getZerokind() != null && goodsVO.getZerokind().getGkid() != null) goodsPO.setZerokind(new GoodsKindPO(goodsVO.getZerokind().getGkid()));
-		if (goodsVO.getOnekind() != null && goodsVO.getOnekind().getGkid() != null) goodsPO.setOnekind(new GoodsKindPO(goodsVO.getOnekind().getGkid()));
-		if (goodsVO.getTwokind() != null && goodsVO.getTwokind().getGkid() != null) goodsPO.setTwokind(new GoodsKindPO(goodsVO.getTwokind().getGkid()));
-		if (goodsVO.getThrkind() != null && goodsVO.getThrkind().getGkid() != null) goodsPO.setThrkind(new GoodsKindPO(goodsVO.getThrkind().getGkid()));
-
-		List<String> pinyins = PinYin4Util.getPinyin(goodsVO.getName());
-
-		goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
-
-		goodsPO.setAlias(goodsVO.getAlias());
-		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
-		goodsPO.setType(GoodsPO.TYPE_SUIT_INT);
-		goodsPO.setCompany(company);
-
-		BrandPO brandPO = brandDao.get(goodsVO.getBid());
-		String brandName = brandPO.getName();
-
-		goodsPO.setBrand(brandName);
-
-		goodsDao.save(goodsPO);
-
-		goodsPO = goodsDao.get(goodsPO.getGid());
-
-		if (goodsPO == null) {
-			throw new FLException(260004, "商品不存在");
-		}
-
-		String brand = goodsPO.getBrand();
-
-		for (GoodsPackageVO goodsPackageVO : goodsPackageVOs) {
-
-			GoodsPackagePO goodsPackagePO = new GoodsPackagePO(new GoodsPO(), new ColorPO(), new FormatPO());
-
-			if (goodsPackageVO.getGoods().getGid() == null) {
-				throw new FLException(260004, "商品不存在");
-			}
-
-			String brandPackage = goodsDao.get(goodsPackageVO.getGoods().getGid()).getBrand();
-
-			short typePackage = goodsDao.get(goodsPackageVO.getGoods().getGid()).getType();
-
-			if (typePackage == 1) {
-				throw new FLException(260043, "套餐归属商品不可为套餐");
-			}
-
-			if (!brand.equals(brandPackage)) {
-				throw new FLException(260044, "品牌不一致");
-			}
-
-			BeanUtil.copyProperties(goodsPackageVO, goodsPackagePO, Arrays.asList("pid", "goods", "color", "format"));
-			BeanUtil.copyProperties(goodsPackageVO.getGoods(), goodsPackagePO.getGoods(), Arrays.asList("accessoriesType", "zerokind", "onekind", "twokind", "thrkind"));
-			BeanUtil.copyProperties(goodsPackageVO.getColor(), goodsPackagePO.getColor());
-			BeanUtil.copyProperties(goodsPackageVO.getFormat(), goodsPackagePO.getFormat());
-
-			goodsPackagePO.setPid(goodsPO.getGid());
-
-			goodsPackageDao.save(goodsPackagePO);
-		}
-
-		return 0;
-	}
 }

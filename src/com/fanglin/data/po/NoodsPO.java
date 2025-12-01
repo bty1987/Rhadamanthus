@@ -35,6 +35,8 @@ public class NoodsPO implements Serializable {
 
 	private int balance;
 
+	private int surplus;
+
 	private short status;
 
 	private short calc;
@@ -86,6 +88,14 @@ public class NoodsPO implements Serializable {
 
 	public void setBalance(int balance) {
 		this.balance = balance;
+	}
+
+	public int getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(int surplus) {
+		this.surplus = surplus;
 	}
 
 	@Column(name = "status")

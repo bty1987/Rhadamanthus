@@ -10,6 +10,7 @@ $(function() {
             goodsName: com.focusPage("#goodsName", "#addLayer"),
             nood: com.focusPage("#nood", "#addLayer"),
             accessoriesType: com.focusPage("#accessoriesType", "#addLayer"),
+            sortType: com.focusPage("#sortType", "#addLayer"),
             bcompany: com.focusPage("#bcompany", "#addLayer"),
             atttype: com.focusPage("#atttype", "#addLayer"),
             balance: com.focusPage("#balance", "#addLayer"),
@@ -23,6 +24,7 @@ $(function() {
 
             editName: com.focusPage("#editName", "#editLayer"),
             editAccessoriesType: com.focusPage("#editAccessoriesType", "#editLayer"),
+            editSortType: com.focusPage("#editSortType", "#editLayer"),
             editNood: com.focusPage("#editNood", "#editLayer"),
             editBcompany: com.focusPage("#editBcompany", "#editLayer"),
             old: com.focusPage("#old", "#editLayer"),
@@ -37,14 +39,14 @@ $(function() {
             editStorenum: com.focusPage('#storenum', "#editLayer"),
 
             ccompany: com.focusPage("#ccompany", "#copyLayer"),
-            quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal"),
+            quotationVersion: com.focusPage("#quotationVersion", "#quotationVersionModal")
         },
 
         btns: {
             submitBtn: com.focusPage("#submitBtn", "#addLayer"),
             editBtn: com.focusPage("#editBtn", "#editLayer"),
             copyBtn: com.focusPage("#copyBtn", "#copyLayer"),
-            confirmItemBtn: com.focusPage("#confirmItemBtn", "#quotationVersionModal"),
+            confirmItemBtn: com.focusPage("#confirmItemBtn", "#quotationVersionModal")
         },
 
         modals: {
@@ -58,13 +60,15 @@ $(function() {
         status: ["启用", "禁用"],
         atttype: ["标准", "外辅"],
 
-        pageType: params.urlLoadParams.type,
+        pageType: params.urlLoadParams.type
     };
 
     com.post(api.data.queryAccessoriesType, {}, function(res) {
 
         aoods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
-        com.focusPage('select[name="editAccessoriesType"]').bindData(res.accessoriesTypes, 'atid', 'name', true);
+        aoods.items.sortType.bindData(res.accessoriesTypes, 'atid', 'name', true);
+        aoods.items.editAccessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
+        aoods.items.editSortType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
     com.initTypeahead('nood', api.data.queryNoodsByName, "noods.name", {}, "noodes", "nid", "name", null);
@@ -124,11 +128,11 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageAoods);
-    searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-bompany", "data-aoods-atttype"]);
+    searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-type-sort", "data-aoods-status", "data-aoods-bompany", "data-aoods-atttype"]);
     searcher.history("aoodsHistoryData");
 
     if (aoods.pageType == "bompany") {
-        searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-atttype"]);
+        searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-type-sort", "data-aoods-status", "data-aoods-atttype"]);
     }
 
     searcher.param({
@@ -183,8 +187,16 @@ $(function() {
         clazz: "blue"
     }, {
         field: "accessoriesType.name",
-        name: "辅类",
+        name: "分类辅类",
         prop: "accessoriesType.name",
+        clazz: "red"
+    }, {
+        field: "sortType.name",
+        name: "排序辅类",
+        prop: function (v) {
+
+            return v.sortType.name == null ? v.sortType.name = "暂无" : v.sortType.name;
+        },
         clazz: "red"
     }, {
         field: "status",
@@ -238,7 +250,7 @@ $(function() {
         name: "库房数量",
         prop: "storenum",
         clazz: "blue"
-    }, ];
+    }];
 
     var linebtns = [{
         name: "定材",
@@ -267,6 +279,7 @@ $(function() {
             aoods.items.editBalance.val(v.balance);
             aoods.items.editSelling.val(v.selling);
             aoods.items.editAccessoriesType.val(v.accessoriesType.atid);
+            aoods.items.editSortType.val(v.sortType.atid);
             aoods.items.editAtttype.val(v.atttype);
             aoods.items.editConstructionNode.val(v.constructionNode.cnid);
 
@@ -326,6 +339,7 @@ $(function() {
             "aoods.goods.gid": com.typeahead(aoods.items.goodsName),
             "aoods.noods.nid": com.typeahead(aoods.items.nood),
             "aoods.accessoriesType.atid": aoods.items.accessoriesType.val(),
+            "aoods.sortType.atid": aoods.items.sortType.val(),
             "aoods.bompany": aoods.items.bcompany.val(),
             "aoods.atttype": aoods.items.atttype.val(),
             "aoods.balance": aoods.items.balance.val(),
@@ -358,6 +372,7 @@ $(function() {
             "aoods.goods.gid": aoods.gid,
             "aoods.noods.nid": com.typeahead(aoods.items.editNood),
             "aoods.accessoriesType.atid": aoods.items.editAccessoriesType.val(),
+            "aoods.sortType.atid": aoods.items.editSortType.val(),
             "aoods.bompany": aoods.items.editBcompany.val(),
             "aoods.atttype": aoods.items.editAtttype.val(),
             "aoods.balance": aoods.items.editBalance.val(),
@@ -367,7 +382,7 @@ $(function() {
             "aoods.normunit": aoods.items.editNormunit.val(),
             "aoods.normnum": aoods.items.editNormnum.val(),
             "aoods.storeunit": aoods.items.editStoreunit.val(),
-            "aoods.storenum": aoods.items.editStorenum.val(),
+            "aoods.storenum": aoods.items.editStorenum.val()
         };
 
         com.post(api.data.updateAoods, options, function(res) {

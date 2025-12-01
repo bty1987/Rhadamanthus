@@ -33,6 +33,10 @@ public class SoodsPO implements Serializable {
 
 	public static final short STATUS_INVALID_INT = 1;
 
+	public static final short TYPE_SOODS_INT = 0;
+
+	public static final short TYPE_AOODS_INT = 2;
+
 	private long sid;
 
 	private String name;

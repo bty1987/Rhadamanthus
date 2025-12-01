@@ -313,7 +313,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 				constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodeVO.getTimeLimit(), prenum, postnum).init(constructionNodePO);
 
-				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 0 : Integer.valueOf(salaryLimitTotal.getValue()));
+				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 5000000 : Integer.valueOf(salaryLimitTotal.getValue()));
 
 				constructionScheduleDao.save(constructionSchedulePO);
 			}
@@ -361,9 +361,15 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setDecoration(decorationPO);
 		drawLinePO.setAppler(appler);
 		drawLinePO.setStatus(DrawLinePO.STATUS_QUEUE_INT);
-		drawLinePO.setContent(drawLineVO.getContent());
 		drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(drawLineVO.getApplayTime(), "yyyyMMdd")));
+		drawLinePO.setContent(drawLineVO.getContent());
 		drawLinePO.setCompany(decorationPO.getCompany());
+
+		ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
+
+		if (constructionInfoPO != null) {
+			drawLinePO.setContent(String.format("%s %s", drawLinePO.getContent(), constructionInfoPO.getComment()));
+		}
 
 		drawLineDao.save(drawLinePO);
 
@@ -384,11 +390,11 @@ public class DrawLineServiceImpl implements DrawLineService {
 		if (constructionCostPO == null) {
 			constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
 			constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimit.getValue()));
-			constructionPO.setSalaryTotal(salaryLimitTotal == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimitTotal.getValue()));
+			constructionPO.setSalaryLimitTotal(salaryLimitTotal == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(salaryLimitTotal.getValue()));
 		} else {
 			constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
 			constructionPO.setSalaryLimit(constructionCostPO.getSalary());
-			constructionPO.setSalaryTotal(constructionCostPO.getSalary());
+			constructionPO.setSalaryLimitTotal(constructionCostPO.getSalary());
 
 			ccid = constructionCostPO.getCcid();
 		}
@@ -500,7 +506,6 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		constructionInfoPO.setCid(cid);
-		constructionInfoPO.setActuaTime(drawLinePO.getActualTime());
 
 		constructionInfoDao.update(constructionInfoPO);
 
@@ -542,7 +547,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 				constructionSchedulePO = new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodePO.getSort(), constructionNodeVO.getTimeLimit(), prenum, postnum).init(constructionNodePO);
 
-				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 0 : Integer.valueOf(salaryLimitTotal.getValue()));
+				constructionSchedulePO.setSalaryLimitTotal(salaryLimitTotal == null ? 5000000 : Integer.valueOf(salaryLimitTotal.getValue()));
 
 				constructionScheduleDao.save(constructionSchedulePO);
 			}

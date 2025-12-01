@@ -26,6 +26,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
@@ -400,7 +402,18 @@ public class ConstructionPO implements Serializable {
 
 		if (constructionVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(constructionVO.getDecoration());
 
-		if (constructionVO.getSupervisor() != null && getSupervisor() != null) constructionVO.getSupervisor().setBaseInfo(getSupervisor());
+		if (constructionVO.getSupervisor() != null && getSupervisor() != null) {
+
+			constructionVO.getSupervisor().setDuty(new DutyVO());
+			constructionVO.getSupervisor().setDept(new DepartmentVO());
+			constructionVO.getSupervisor().getDept().setFatherDept(new DepartmentVO());
+
+			BeanUtil.copyPropertie(this.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyPropertie(this.getSupervisor().getDuty(), constructionVO.getSupervisor().getDuty(), Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(this.getSupervisor().getDept(), constructionVO.getSupervisor().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyPropertie(this.getSupervisor().getDept().getFatherDept(), constructionVO.getSupervisor().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+
 		if (constructionVO.getLocker() != null && getLocker() != null) constructionVO.getLocker().setBaseInfo(getLocker());
 		if (constructionVO.getBalancer() != null && getBalancer() != null) constructionVO.getBalancer().setBaseInfo(getBalancer());
 

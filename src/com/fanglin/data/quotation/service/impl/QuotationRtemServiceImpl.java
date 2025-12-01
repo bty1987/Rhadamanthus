@@ -84,6 +84,16 @@ public class QuotationRtemServiceImpl implements QuotationRtemService {
 
 		source.setIsRtem(quotationRtemDao.countQuotationRtem(source.getQiid()) > 0 ? QuotationItemPO.ISRTEM_CACSE_INT : QuotationItemPO.ISRTEM_NONE_INT);
 
+		List<QuotationRtemPO> quotaitonRtemPOs = quotationRtemDao.queryQuotationRtem(quotationRtemVO.getSource().getQiid());
+
+		StringBuffer rtemFlag = new StringBuffer();
+
+		for (QuotationRtemPO quotationRtemRO : quotaitonRtemPOs) {
+			rtemFlag.append(String.format("%s,", quotationRtemRO.getTarget().getQiid()));
+		}
+
+		source.setRtemFlag(rtemFlag.toString());
+
 		quotationItemDao.update(source);
 
 		return 0;

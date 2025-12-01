@@ -156,7 +156,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
-		SystemConfigPO cmprehConfigPO = systemConfigDao.querySystemConfig("QUOTATION_CMPREH_CONFIG");
+		SystemConfigPO cmprehConfigPO = systemConfigDao.querySystemConfig("QUOTETION_CMPREH_CONFIG", company);
 
 		if (cmprehConfigPO != null) {
 			quotationFunctionAreaDao.save(new QuotetionFunctionAreaPO(quotetionPO.getQid(), "综合项目", 9998, QuotetionFunctionAreaPO.TYPE_CMPREH_INT, index));

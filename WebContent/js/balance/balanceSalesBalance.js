@@ -6,7 +6,8 @@ $(function() {
 
         types: {},
         onetypes: {},
-        statues: {}
+        statues: {},
+        balanceSales: null
     };
 
     com.focusPage('#fl-statement').statement("结算销售", "明细");
@@ -19,6 +20,7 @@ $(function() {
     }, function(res) {
 
         balanceSales = res.balanceSales;
+        balanceSalesBalance.balanceSales = res.balanceSales;
     }, null, false);
 
     var displayFunc = (function() {
@@ -46,8 +48,16 @@ $(function() {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
 
             var $h3 = $('<h3></h3>').addClass('oid').appendTo($liLine);
-            var $title = $('<small></small>').addClass('blue').html(' ' + v.salesBalance.sales.no).appendTo($h3);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
+
+            var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.salesBalance.sales.no);
+            var $label = $('<label></label>');
+            var $input = $('<input></input>').attr({
+                'class': 'ace ace-checkbox-2',
+                'name': "多选",
+                'type': 'checkbox',
+                'bsbid': v.bsbid,
+            }).val(v.bsbid);
 
             var propertyArr = [["装修单号:", v.salesBalance.sales.orderId, "blue", function(btn) {
 
@@ -135,6 +145,7 @@ $(function() {
 
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $unbound = $('<a></a>').addClass('btn btn-minier btn-yellow').html('解绑');
+            $h3.append($label.append($input).append($span)).append($divBtnWrap);
             $divBtnWrap.append($unbound).appendTo($h3);
 
             if (balanceSales.status != constant.balance().balanceSales.STATUS_INIT_INT) {
@@ -193,7 +204,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init([], "bsbcondList", api.balance.pageBalanceSalesBalance, function(data) {
+    searcher.init(["balance-salesBalance-sales-orderId"], "bsbcondList", api.balance.pageBalanceSalesBalance, function(data) {
 
         displayFunc.init('bsbresultList', data);
     }, "bsbpagenation", "balanceSalesBalancePostData", {
@@ -212,6 +223,20 @@ $(function() {
         var $exporti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($export);
         var $exportBtn = $('<span></span>').text('导出').appendTo($export);
 
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+
+        var $unbinda = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        var $unbindi = $('<i></i>').addClass('icon-check bigger-110').appendTo($unbinda);
+        var $unbindspan = $('<span></span>').text('解绑').appendTo($unbinda);
+
+        if (balanceSalesBalance.balanceSales.status != constant.balance().balanceSales.STATUS_INIT_INT) {
+
+            $checka.hide();
+            $unbinda.hide();
+        }
+
         $profitPrintBtn.click(function() {
 
             params.balance.bsid = balanceSalesBalance.bsid;
@@ -228,9 +253,19 @@ $(function() {
             com.popup("明细表", api.index.balanceSales2print.url, null, null, true);
         });
 
+        $checka.click(function() {
+
+            checkAll();
+        });
+
         $export.click(function() {
 
             exports();
+        });
+
+        $unbinda.click(function() {
+
+            unbind();
         });
 
         if (balanceSales.status == constant.balance().balanceSales.STATUS_INIT_INT || params['urlLoadParams'].depage == 'material') {
@@ -239,7 +274,7 @@ $(function() {
             $profitPrint.hide();
         }
 
-        return [$adda, $profitPrint, $export];
+        return [$adda, $profitPrint, $export, $checka, $unbinda];
 
     }, 'bsbresultList');
 
@@ -464,4 +499,43 @@ $(function() {
         });
     }
 
+    function checkAll() {
+
+        if (com.focusPage('input[type="checkbox"]').prop('checked')) {
+            com.focusPage('input[type="checkbox"]').removeAttr('checked');
+            com.focusPage('input[type="checkbox"]').prop('checked', false);
+        } else {
+            com.focusPage('input[type="checkbox"]').attr('checked', true);
+            com.focusPage('input[type="checkbox"]').prop('checked', true);
+        }
+        console.log(balanceSalesBalance.selectList)
+    }
+
+    function unbind() {
+
+        var $inputs = com.focusPage('input[type="checkbox"]:checked');
+
+        if (!$inputs.length) {
+            com.showAlert(com.warning, "请选择需要解绑数据");
+            return false;
+        }
+
+        var options = {};
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            options["balanceSalesBalances[" + i + "].bsbid"] = $input.attr('bsbid');;
+        });
+
+        options["balanceSales.bsid"] = balanceSalesBalance.bsid;
+
+        com.post(api.balance.unbindBalanceSales, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            balanceSalesBalance.selectList = [];
+        });
+    }
 });

@@ -11,6 +11,7 @@
 
 package com.fanglin.payment.dao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -53,6 +54,12 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		query.notPaging();
 
 		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<MaterialPaymentPO> queryMaterialPaymentByOrderIdAStatus(String orderId, List<Short> paymentTypes, Short[] paymentStatus) {
+		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, paymentStatus)).add(Restrictions.in(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, paymentTypes)).list();
 	}
 
 	@Override
@@ -146,6 +153,15 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		return num.intValue();
 	}
 
+	@Override
+	public long amountMaterialPayment(String orderId) {
+
+		String sql = "select sum(if(mp.paymenttype in (2, 3), mp.referMoney, -mp.refermoney)) from payment.materialpayment mp, material.material m where m.orderId = :orderId and m.mid = mp.mid and mp.paymentstatus != 0";
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+
+		return sqlQuery == null ? 0 : sqlQuery.longValue();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
@@ -195,5 +211,4 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 			}
 		}
 	}
-
 }

@@ -361,7 +361,7 @@ public class UserServiceImpl implements UserService {
 
 		if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) return userVO;
 
-		if (!userPO.getPassword().equals(MD5Helper.MD5(password))) return userVO;
+		if (!userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getPassword().equals(password.toUpperCase())) return userVO;
 
 		userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
 
@@ -504,6 +504,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userInfoPO.setUser(userPO);
+		userInfoPO.setHireTime(DateUtil.getDateToTimestamp(new Date()));
 
 		userInfoDao.save(userInfoPO);
 
@@ -894,11 +895,11 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190001, "旧密码输入错误");
 		}
 
-		if (!userPO.getPassword().equals(MD5Helper.MD5(password))) {
+		if (!userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getPassword().equals(password)) {
 			throw new FLException(190001, "旧密码输入错误");
 		}
 
-		userPO.setPassword(MD5Helper.MD5(rePassword));
+		userPO.setPassword(rePassword);
 
 		userDao.update(userPO);
 	}
@@ -1080,6 +1081,12 @@ public class UserServiceImpl implements UserService {
 
 		userExperienceDao.save(userExperiencePO);
 
+		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+
+		userInfoPO.setFireTime(DateUtil.getDateToTimestamp(new Date()));
+
+		userInfoDao.update(userInfoPO);
+
 		userDao.update(userPO);
 	}
 
@@ -1221,6 +1228,12 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userExperienceDao.save(userExperiencePO);
+
+		UserInfoPO userInfoPO = userInfoDao.queryUserInfoByUserId(userVO.getUserId());
+
+		userInfoPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+
+		userInfoDao.update(userInfoPO);
 
 		userDao.update(userPO);
 	}

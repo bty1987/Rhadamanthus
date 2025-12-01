@@ -114,6 +114,7 @@ public class SalesRefundsVO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -130,6 +131,7 @@ public class SalesRefundsVO implements Serializable {
 		this.isAffirm = isAffirm;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getAffirmTime() {
 		return affirmTime;
 	}

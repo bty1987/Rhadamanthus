@@ -1614,6 +1614,8 @@
                 return false;
 
             $chart.setOption($.extend($options, res.option));
+        }, function(res){
+            console.log(res);
         });
 
         return $chart;

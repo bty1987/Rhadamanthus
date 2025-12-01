@@ -24,8 +24,6 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.material.service.GoodsService;
 import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.inventory.service.GoodsPackageService;
-import com.fanglin.inventory.vo.GoodsPackageVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -37,21 +35,14 @@ public class GoodsAction extends BaseListAction {
 	@Autowired
 	private GoodsService goodsService;
 
-	@Autowired
-	private GoodsPackageService goodsPackageService;
-
-	private List<GoodsPackageVO> goodsPackages;
-
 	private List<GoodsVO> goodes;
 
 	private GoodsVO goods;
 
-	private GoodsPackageVO goodsPackage;
-
 	@Action(value = "pageGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageGoods() throws FLException {
 
-		goodsService.pageGoods(getPaging(), getFilters(), queryUserId(), queryCompany(),goods);
+		goodsService.pageGoods(getPaging(), getFilters(), queryUserId(), queryCompany(), goods);
 
 		return SUCCESS;
 	}
@@ -59,7 +50,7 @@ public class GoodsAction extends BaseListAction {
 	@Action(value = "pageGoodsForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageGoodsForAdvance() throws FLException {
 
-		goodsService.pageGoodsForAdvance(getPaging(), getFilters(), queryCompany(),goods);
+		goodsService.pageGoodsForAdvance(getPaging(), getFilters(), queryCompany(), goods);
 
 		return SUCCESS;
 	}
@@ -128,14 +119,6 @@ public class GoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "addPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addPackage() throws FLException {
-
-		goodsService.addPackage(goods, goodsPackages, queryCompany());
-
-		return SUCCESS;
-	}
-
 	@Action(value = "updateGoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateGoods() throws FLException {
 
@@ -160,14 +143,6 @@ public class GoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryGoodsForPackage() throws FLException {
-
-		goodsPackages = goodsPackageService.queryPackage(goodsPackage);
-
-		return SUCCESS;
-	}
-
 	public List<GoodsVO> getGoodes() {
 		return goodes;
 	}
@@ -182,22 +157,6 @@ public class GoodsAction extends BaseListAction {
 
 	public void setGoods(GoodsVO goods) {
 		this.goods = goods;
-	}
-
-	public List<GoodsPackageVO> getGoodsPackages() {
-		return goodsPackages;
-	}
-
-	public void setGoodsPackages(List<GoodsPackageVO> goodsPackages) {
-		this.goodsPackages = goodsPackages;
-	}
-
-	public GoodsPackageVO getGoodsPackage() {
-		return goodsPackage;
-	}
-
-	public void setGoodsPackage(GoodsPackageVO goodsPackage) {
-		this.goodsPackage = goodsPackage;
 	}
 
 }

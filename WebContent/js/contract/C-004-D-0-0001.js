@@ -28,8 +28,9 @@ jQuery(function($) {
 
         item: {
             houseType: com.focusPage("#con-housetype"),
-            invoiceType: com.focusPage("#con-invoice-type"),
-            showMoney: com.focusPage("#showMoney")
+            houseTypeness: com.focusPage("#con-housetypeness"),
+            showMoney: com.focusPage("#showMoney"),
+            decorationPictureType: com.focusPage("#con-decorationPicture-type")
         },
 
         contractArgs: params.decoration.contractargs,
@@ -69,6 +70,8 @@ jQuery(function($) {
 
     contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
     contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    contractEdit.item.houseTypeness.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
+    contractEdit.item.decorationPictureType.bindData(constant.decoration().decorationPicture.type.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -96,7 +99,7 @@ jQuery(function($) {
         var village = house.village;
         var proper = village.cityProper;
         var customer = res.decoration.customer;
-        
+
         contractEdit.customer = customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
@@ -122,7 +125,7 @@ jQuery(function($) {
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
         com.focusPage("#con-housetype", "#form").val(data.houseClass);
-        com.focusPage("#con-invoice-type", "#form").val(data.invoiceClass);
+        com.focusPage("#con-housetypeness", "#form").val(data.houseType);
 
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
         com.focusPage("#con-work-type", "#form").val(contractEdit.decorationType[data.type]);
@@ -132,12 +135,11 @@ jQuery(function($) {
         com.focusPage("#con-contract-stotal", "#form").val(data.orderTotalPrice);
         com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
 
-        com.focusPage("#con-innerarea", "#form").val(data.house.innerArea);
-        com.focusPage("#con-precontract-total", "#form").val(Math.round(utils.accSub(data.precontractPrice, data.couponCut)));
-        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(utils.accSub(data.precontractPrice, data.couponCut), 0.3)));
-
+        com.focusPage("#con-buildarea", "#form").val(house.innerArea);
+        
         contractEdit.decoration = data;
 
+        contractEdit.cover["cov-buildarea"] = data.house.innerArea;
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
     }, null, false);
@@ -150,6 +152,7 @@ jQuery(function($) {
         contractEdit.customer = res.customer;
 
         com.focusPage("#con-customer-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#sin-customer-phone", "#form").val(contractEdit.customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(contractEdit.customer.identity);
 
         com.focusPage("#con-bank-no", "#form").val(contractEdit.customer.companyBankno);
@@ -177,9 +180,9 @@ jQuery(function($) {
 
         com.focusPage("#con-work-number", "#form").val(datas.timeLimit);
 
-        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
-        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
-        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
+        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(0, 4) : ""), "year");
+        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(5, 2) : ""), "month");
+        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(8, 2) : ""), "day");
     });
 
     quotationUtils.quotationDetail = {
@@ -196,8 +199,10 @@ jQuery(function($) {
 
         quotationUtils.quotationDetail.protation = res.protation;
         contractEdit.totalPrice = res.protation.totalPrice;
+        
+        com.focusPage("#con-precontract-total", "#form").val(Math.round(utils.accSub(res.protation.totalPrice, contractEdit.decoration.couponCut)));
+        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(utils.accSub(res.protation.totalPrice, contractEdit.decoration.couponCut), 0.3)));
 
-        com.focusPage("#con-innerarea", "#form").val(res.protation.quoteArea);
     }, null, false);
 
     com.post(api.decoration.queryDecorationActivityByOrderId, {
@@ -336,8 +341,8 @@ jQuery(function($) {
     protationItems[0].item.push(["优惠金额", '']);
     protationItems[0].item.push(["管理费收取比例", 1]);
     protationItems[0].item.push(["折后管理费", 1]);
-    protationItems[3].item.push(["基础增项", 1]);
-    protationItems[3].item.push(["主材增项", 1]);
+    protationItems[3].item.push(["工程个性化预收", 1]);
+    protationItems[3].item.push(["主材个性化预收", 1]);
 
     com.focusPage('#talkingList').click(function() {
 
@@ -413,43 +418,43 @@ jQuery(function($) {
 
     contractEdit.table.push(table1);
 
-    var table2 = {
-        "insertWay": 1,
-        "keyword": "活动礼品项目列表",
-        "pageBegin": 1,
-        "headers": ["序号", "名称", "数量"],
-        "colWidthPercent": [1, 3, 1],
-        "headersAlignment": 1,
-        "cellHorizontalAlignment": 0,
-        "cellVerticalAlignment": 5,
-        "datas": []
-    };
+    // var table2 = {
+    // "insertWay": 1,
+    // "keyword": "活动礼品项目列表",
+    // "pageBegin": 1,
+    // "headers": ["序号", "名称", "数量"],
+    // "colWidthPercent": [1, 3, 1],
+    // "headersAlignment": 1,
+    // "cellHorizontalAlignment": 0,
+    // "cellVerticalAlignment": 5,
+    // "datas": []
+    // };
 
-    var decorationActivityItems = [];
-
-    com.post(api.decoration.queryDecorationActivityItem, {
-        "decoration.orderId": contractEdit.decorationOrderId
-    }, function(res) {
-
-        decorationActivityItems = res.decorationActivityItems;
-    }, null, false);
-
-    var index = 0;
-
-    if (decorationActivityItems && decorationActivityItems.length) {
-
-        $.each(decorationActivityItems, function(i, v) {
-
-            if (v.type != 1)
-                return true;
-            if ([0, 2, 4, 6].indexOf(v.state) == -1)
-                return true;
-
-            table2.datas.push([(index++ + 1), v.activityItemName, v.num]);
-        });
-    }
-
-    contractEdit.table.push(table2);
+    // var decorationActivityItems = [];
+    //
+    // com.post(api.decoration.queryDecorationActivityItem, {
+    // "decoration.orderId": contractEdit.decorationOrderId
+    // }, function(res) {
+    //
+    // decorationActivityItems = res.decorationActivityItems;
+    // }, null, false);
+    //
+    // var index = 0;
+    //
+    // if (decorationActivityItems && decorationActivityItems.length) {
+    //
+    // $.each(decorationActivityItems, function(i, v) {
+    //
+    // if (v.type != 1)
+    // return true;
+    // if ([0, 2, 4, 6].indexOf(v.state) == -1)
+    // return true;
+    //
+    // table2.datas.push([(index++ + 1), v.activityItemName, v.num]);
+    // });
+    // }
+    //
+    // contractEdit.table.push(table2);
 
     function talkingData(content, types) {
 
@@ -460,8 +465,7 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    }
-    ;
+    };
 
     var displayFunc = (function() {
 
@@ -545,7 +549,6 @@ jQuery(function($) {
 
             data = $.extend({}, data, contractEdit.cover);
 
-            data["cov-innerarea"] = data["con-innerarea"];
             data["cov-address"] = data["con-village-name"] + " " + data["con-housenumber"];
 
             data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
@@ -556,9 +559,6 @@ jQuery(function($) {
 
             data["con-precontract-total-cn"] = utils.getCNMoney(parseFloat(data["con-precontract-total"]));
             data["con-precontract-total-30"] = Math.round(parseFloat(data["con-precontract-total"]) * 0.3);
-            data["con-precontract-total-30-cn"] = utils.getCNMoney(data["con-precontract-total-30"]);
-
-            data["con-invoice-type1"] = data["con-invoice-type"];
 
             data["sin-customer-ident"] = data["con-customer-ident"];
 
@@ -592,11 +592,10 @@ jQuery(function($) {
 
             if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
-                options["decorationContract.dcid"] = params.decoration.contract.dcid
+                options["decorationContract.dcid"] = params.decoration.contract.dcid;
             }
 
-            console.log(options);
-
+            console.log(data);
             com.post(url, options, function(res) {
 
                 com.closePopup();

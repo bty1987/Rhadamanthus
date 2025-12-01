@@ -53,7 +53,7 @@ jQuery(function($) {
 
     seacher.base("condList", "pagenation", "resultList",api.balance.pageBalanceDccount);
 
-    seacher.condition([ "balance-balanceDccount-name","balance-balanceDccount-status" ]);
+    seacher.condition([ "balance-dccountname","balance-dccountstatus" ]);
 
     seacher.button([{
         id : "createBalanceDccount",

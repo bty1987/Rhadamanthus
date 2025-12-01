@@ -303,6 +303,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryPO.setSales(salesPO);
 			salesDeliveryPO.setCreater(creater);
 			salesDeliveryPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			salesDeliveryPO.setPeliveryTime(DateUtil.getDateToTimestamp(new Date()));
 			salesDeliveryPO.setCompany(salesPO.getCompany());
 
 			salesDeliveryDao.save(salesDeliveryPO);
@@ -360,39 +361,48 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deliveSalesDelivery(SalesDeliveryVO salesDelivery, String userId) throws FLException {
+	public void deliveSalesDelivery(SalesDeliveryVO salesDeliveryVO, String userId) throws FLException {
 
-		if (salesDelivery == null) {
+		if (salesDeliveryVO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		if (salesDelivery.getSales() == null) {
+		if (salesDeliveryVO.getSales() == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		SalesPO salesPO = salesDao.get(salesDelivery.getSales().getSid());
+		SalesPO salesPO = salesDao.get(salesDeliveryVO.getSales().getSid());
 
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		if (salesDeliveryDao.countSalesDelivery(salesPO.getSid()) != 0) return;
+		SalesDeliveryPO salesDeliveryPO = salesDeliveryDao.querySalesDelivery(salesPO.getSid());
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		SalesDeliveryPO salesDeliveryPO = new SalesDeliveryPO();
+		if (salesDeliveryPO == null) {
 
-		salesDeliveryPO.setSales(salesPO);
-		salesDeliveryPO.setCreater(creater);
-		salesDeliveryPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		salesDeliveryPO.setPeliveryTime(DateUtil.getDateToTimestamp(new Date()));
-		salesDeliveryPO.setCompany(salesPO.getCompany());
+			salesDeliveryPO = new SalesDeliveryPO();
 
-		if (salesDelivery.getPeliveryTime() != null) {
-			salesDeliveryPO.setPeliveryTime(salesDelivery.getPeliveryTime());
+			salesDeliveryPO.setSales(salesPO);
+			salesDeliveryPO.setCreater(creater);
+			salesDeliveryPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			salesDeliveryPO.setPeliveryTime(DateUtil.getDateToTimestamp(new Date()));
+			salesDeliveryPO.setCompany(salesPO.getCompany());
 		}
 
-		salesDeliveryDao.save(salesDeliveryPO);
+		if (salesDeliveryVO.getPeliveryTime() != null) {
+			salesDeliveryPO.setPeliveryTime(salesDeliveryVO.getPeliveryTime());
+		}
+
+		salesDeliveryDao.saveOrUpdate(salesDeliveryPO);
+
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.querySalesDeliveryItem(salesDeliveryPO.getSales().getSid());
+
+		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {
+			salesDeliveryItemDao.update(salesDeliveryItemPO.setProtranTime(salesDeliveryPO.getPeliveryTime()));
+		}
 	}
 
 	private void checkSalesDeliveryItem(SalesDeliveryItemPO salesDeliveryItemPO, List<SalesDeliveryStatusRightPO> rights, Short status, UserPO userPO) {

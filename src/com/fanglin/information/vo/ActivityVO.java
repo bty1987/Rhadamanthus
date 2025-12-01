@@ -28,6 +28,10 @@ public class ActivityVO implements java.io.Serializable {
 
 	private Integer multiple;
 
+	private Integer validays;
+
+	private Integer exchange;
+
 	private Timestamp createTime;
 
 	private Timestamp startTime;
@@ -117,6 +121,22 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setMultiple(Integer multiple) {
 		this.multiple = multiple;
+	}
+
+	public Integer getValidays() {
+		return validays;
+	}
+
+	public void setValidays(Integer validays) {
+		this.validays = validays;
+	}
+
+	public Integer getExchange() {
+		return exchange;
+	}
+
+	public void setExchange(Integer exchange) {
+		this.exchange = exchange;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")

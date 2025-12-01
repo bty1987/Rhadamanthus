@@ -1,40 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>FIP</title>
-    <meta name="keywords" content="方林,装饰,ERP,信息平台" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <link rel="shortcut icon" href="fanglin.ico" mce_href="fanglin.ico" type="image/x-icon">
-    
-    <script type="text/javascript" src="assets/js/jquery-2.0.3.min.js"></script>
-    <script type="text/javascript" src="js/com/config.js"></script>
-	
-    <script>
-    
-    var setCookie =  function(cname, cvalue, minutes) {
-        var d = new Date();
-            d.setTime(d.getTime() + (minutes*60*1000));
-            var expires = "expires=" + d.toUTCString();
-            document.cookie = cname + "=" + cvalue + "; " + expires;
-        }
-        
-        var authentication;
-        var args = window.location.search.substr(1);
-    
-	    if(args.indexOf('authentication=') != -1){
-	        authentication = args.substr(args.indexOf('=') + 1);
-	        
-	        setCookie("authentication" , authentication , config.timeout);
-	        setCookie("loginTime" , new Date().getTime() , config.timeout);
-	        
-	        window.location.href = "index.html?timestamp=" + new Date().getTime();
-	    }
+	<head>
+		<title>FIP</title>
+		<meta name="keywords" content="方林,装饰,ERP,信息平台" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		
-    </script>
-    
-  </head>
-  
-  <body>
-  </body>
+		<link rel="shortcut icon" href="fanglin.ico" mce_href="fanglin.ico"
+			type="image/x-icon">
+		
+		<script type="text/javascript" src="assets/js/jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="js/com/config.js"></script>
+		
+		<script>
+		
+			function getUrlParams() {
+		        var paramsObj = {};
+		        var paramsString = window.location.search.substring(1);
+		        if (paramsString) {
+		            var pairs = paramsString.split('&');
+		            for (var i = 0; i < pairs.length; i++) {
+		                var pair = pairs[i].split('=');
+		                var key = decodeURIComponent(pair[0]);
+		                var value = decodeURIComponent(pair[1] || '');
+		                paramsObj[key] = value;
+		            }
+		        }
+		        return paramsObj;
+		    }
+		
+		    var setCookie = function(cname, cvalue, minutes) {
+		
+		        var d = new Date();
+		        d.setTime(d.getTime() + (minutes * 60 * 1000));
+		        var expires = "expires=" + d.toUTCString();
+		        document.cookie = cname + "=" + cvalue + "; " + expires;
+		    }
+		
+		    var authentication;
+		    var args = window.location.search.substr(1);
+		
+		    if (args.indexOf('authentication=') != -1) {
+		        authentication = getUrlParams()["authentication"] + "==";
+		        
+		        var osstoken = getUrlParams()["osstoken"];
+		
+		        setCookie("authentication", authentication, config.timeout);
+		        setCookie("osstoken", osstoken, config.timeout);
+		        setCookie("loginTime", new Date().getTime(), config.timeout);
+		
+		        window.location.href = "index.html?timestamp=" + new Date().getTime();
+		    }
+		</script>
+	
+	</head>
+	
+	<body>
+	</body>
 </html>

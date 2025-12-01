@@ -224,6 +224,8 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int bindingCusDecoration(DecorationVO decorationVO, String unionId, String securityCode, String verifyCode) throws FLException {
 
+		System.out.println(String.format("Binding Decoration UnionId: %s, OrderId: %s.", unionId, decorationVO.getOrderId()));
+
 		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
 			throw new FLException(330010, "绑定订单失败,验证码错误");
 		}

@@ -102,6 +102,9 @@ public class ActivityServiceImpl implements ActivityService {
 		activityPO.setName(activityVO.getName());
 		activityPO.setEndTime(activityVO.getEndTime());
 		activityPO.setContent(activityVO.getContent());
+		activityPO.setValidays(activityVO.getValidays());
+		activityPO.setExchange(activityVO.getExchange());
+		activityPO.setAtttype(activityVO.getAtttype());
 
 		if (activityVO.getPaytype() != null) activityPO.setPaytype(activityVO.getPaytype());
 

@@ -111,6 +111,13 @@ public class ConstructionDiaryServiceImpl implements ConstructionDiaryService {
 		constructionDiaryPO.setCreater(userDao.queryUserByUserId(userId));
 		constructionDiaryPO.setDecoration(decorationPO);
 
+		if (constructionDiaryDrawings != null) {
+			constructionDiaryPO.setIsUpload(ConstructionDiaryPO.ISUPLOAD_UPLOAD_INT);
+
+			constructionSchedulePO.setIsUpload(ConstructionSchedulePO.ISUPLOAD_UPLOAD_INT);
+			constructionScheduleDao.update(constructionSchedulePO);
+		}
+
 		constructionDiaryDao.save(constructionDiaryPO);
 		constructionDiaryDao.flush();
 

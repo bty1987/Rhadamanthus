@@ -66,6 +66,7 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 
 	@Override
 	public int deleteExtension(String orderId) {
+
 		String sql = "delete from quotation.extension where orderId = :orderId";
 		session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
 

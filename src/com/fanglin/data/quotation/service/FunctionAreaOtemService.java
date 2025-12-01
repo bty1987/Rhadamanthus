@@ -11,12 +11,15 @@
 
 package com.fanglin.data.quotation.service;
 
+import java.util.List;
+
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.quotation.vo.FunctionAreaOtemVO;
 
 public interface FunctionAreaOtemService {
 
-	public FunctionAreaOtemVO queryFunctionAreaOtem(FunctionAreaOtemVO functionAreaOtem);
+	public List<FunctionAreaOtemVO> queryFunctionAreaOtem(FunctionAreaOtemVO functionAreaOtemVO) throws FLException;;
 
-	public FunctionAreaOtemVO makeFunctionAreaOtem(FunctionAreaOtemVO functionAreaOtem);
+	public FunctionAreaOtemVO makeFunctionAreaOtem(List<FunctionAreaOtemVO> functionAreaOtemVOs, FunctionAreaOtemVO functionAreaOtemVO) throws FLException;;
 
 }

@@ -12,6 +12,7 @@ import com.fanglin.balance.dao.BalanceSalesDao;
 import com.fanglin.balance.po.BalanceSalesBO;
 import com.fanglin.balance.po.BalanceSalesPO;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
@@ -23,7 +24,7 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceSalesBO> pageBalanceSales(Paging paging, List<Filter> filters, int company) {
+	public List<BalanceSalesBO> pageBalanceSales(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
 
@@ -37,7 +38,7 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, Short status, int company) {
+	public List<BalanceSalesBO> pageBalanceSalesForBalance(Paging paging, List<Filter> filters, Short status, int company) throws FLException {
 
 		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
 
@@ -53,11 +54,11 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 	}
 
 	@Override
-	public List<BalanceSalesBO> pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+	public List<BalanceSalesBO> pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
 
 		PagingQuery<BalanceSalesBO> query = pagingQuery(paging, BalanceSalesBO.class);
 
-		query.alias("brand", "brand").alias("supplier", "supplier").add(Restrictions.eq("supplier.userId", userId)).add(Restrictions.eq("company", company));
+		query.alias("brand", "brand").alias("brand.supplier", "supplier").add(Restrictions.eq("supplier.userId", userId)).add(Restrictions.eq("company", company));
 
 		queryFilterExcute(query, filters);
 
@@ -87,9 +88,11 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 		return amount;
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;
+
+		BalanceDaoImpl.queryFilterExcute(query, filters, "balance");
 
 		for (Filter filter : filters) {
 
@@ -108,17 +111,6 @@ public class BalanceSalesDaoImpl extends DaoImpl<BalanceSalesPO> implements Bala
 			} else if ("brandId".equals(field)) {
 				query.alias("brand", "brand");
 				query.add(query.getCriterion("brand.bid", Long.valueOf(data), op));
-			} else if ("balanceNo".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.no", String.valueOf(data), op));
-			} else if ("balanceType".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.type", Short.valueOf(data), op));
-			} else if ("balanceStatus".equals(field)) {
-				query.alias("balance", "balance");
-				query.add(query.getCriterion("balance.status", Short.valueOf(data), op));
-			} else if ("balanceIsPay".equals(field)) {
-				query.alias("balance", "balance").add(query.getCriterion("balance.isPay", Short.valueOf(data), op));
 			} else if ("createTimeRange".equals(field)) {
 				query.timeranges("createTime", "createTime", data);
 			} else if ("lockTimeRange".equals(field)) {

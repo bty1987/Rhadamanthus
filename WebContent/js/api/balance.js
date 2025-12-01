@@ -149,7 +149,7 @@ $.extend(api, {
                 args: ["money"]
             }]
         },
-        
+
         queryBalanceApportForBalance: {
             url: "queryBalanceApportForBalance.do",
             type: "query",
@@ -165,7 +165,7 @@ $.extend(api, {
                 args: ["balanceApport.money"]
             }
         },
-        
+
         queryBalanceSalesForSales: {
             url: "queryBalanceSalesForSales.do",
             type: "query",
@@ -562,7 +562,7 @@ $.extend(api, {
                 args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit", "balanceSelection.discount"]
             }
         },
-        
+
         pageBalanceSelectionItem: {
             url: "pageBalanceSelectionItem.do",
             demo: true,
@@ -570,6 +570,12 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data-selectionItem",
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
+            }, {
+                result: "paging-data-selectionItem-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-selectionItem-decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
             }]
         },
         queryBalanceSelectionItem: {
@@ -579,6 +585,12 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data-selectionItem",
                 args: ["num", "initNum", "refnum", "postprice", "preprice"]
+            }, {
+                result: "paging-data-selectionItem-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-selectionItem-decoration-house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
             }]
         },
         countBalanceSelectionItem: {

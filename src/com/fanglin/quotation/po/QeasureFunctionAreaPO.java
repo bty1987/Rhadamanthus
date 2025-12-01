@@ -1,6 +1,8 @@
 package com.fanglin.quotation.po;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.quotation.vo.QeasureFunctionAreaVO;
+import com.fanglin.quotation.vo.QeasureItemVO;
+import com.fanglin.quotation.vo.QeasureOptionVO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -70,6 +74,19 @@ public class QeasureFunctionAreaPO implements Serializable {
 	public QeasureFunctionAreaVO ptv(QeasureFunctionAreaVO qeasureFunctionAreaVO) {
 
 		BeanUtil.copyProperties(this, qeasureFunctionAreaVO, "");
+
+		return qeasureFunctionAreaVO;
+	}
+
+	public QeasureFunctionAreaVO ptv(QeasureFunctionAreaVO qeasureFunctionAreaVO, List<QeasureItemPO> qeasureItemPOs) {
+
+		BeanUtil.copyProperties(this, qeasureFunctionAreaVO, "");
+
+		if (qeasureFunctionAreaVO.getItems() == null || qeasureItemPOs == null) return qeasureFunctionAreaVO;
+
+		for (QeasureItemPO itemPO : qeasureItemPOs) {
+			qeasureFunctionAreaVO.getItems().add(itemPO.ptv(new QeasureItemVO(new ArrayList<QeasureOptionVO>())));
+		}
 
 		return qeasureFunctionAreaVO;
 	}

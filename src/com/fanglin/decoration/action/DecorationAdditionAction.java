@@ -1,8 +1,5 @@
 package com.fanglin.decoration.action;
 
-import java.util.List;
-import java.util.Map;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -11,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationAdditionVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -28,24 +24,12 @@ public class DecorationAdditionAction extends BaseListAction {
 
 	private DecorationAdditionVO decorationAddition;
 
-	private Map<String, Object> config;
-
 	private DecorationVO decoration;
-	
-	private List<Short> typeness;
 
 	@Action(value = "queryDecorationAdditionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationAdditionByOrderId() {
 
 		decorationAddition = decorationAdditionService.queryDecorationAdditionByOrderId(decorationAddition);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryDecorationConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationConfig() throws FLException {
-
-		config = decorationAdditionService.queryDecorationConfig(typeness, queryCompany());
 
 		return SUCCESS;
 	}
@@ -58,14 +42,6 @@ public class DecorationAdditionAction extends BaseListAction {
 		this.decorationAddition = decorationAddition;
 	}
 
-	public Map<String, Object> getConfig() {
-		return config;
-	}
-
-	public void setConfig(Map<String, Object> config) {
-		this.config = config;
-	}
-
 	public DecorationVO getDecoration() {
 		return decoration;
 	}
@@ -74,11 +50,4 @@ public class DecorationAdditionAction extends BaseListAction {
 		this.decoration = decoration;
 	}
 
-	public List<Short> getTypeness() {
-		return typeness;
-	}
-
-	public void setTypeness(List<Short> typeness) {
-		this.typeness = typeness;
-	}
 }

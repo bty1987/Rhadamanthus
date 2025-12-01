@@ -319,7 +319,7 @@ public class QuotationServiceImpl implements QuotationService {
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotationFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
-		SystemConfigPO cmprehConfigPO = systemConfigDao.querySystemConfig("QUOTATION_CMPREH_CONFIG");
+		SystemConfigPO cmprehConfigPO = systemConfigDao.querySystemConfig("QUOTATION_CMPREH_CONFIG", company);
 
 		if (cmprehConfigPO != null) {
 			quotationFunctionAreaDao.save(new QuotationFunctionAreaPO(quotationPO, "综合项目", 9998, QuotationFunctionAreaPO.TYPE_CMPREH_INT, index));
@@ -641,7 +641,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		String content = String.format("装修单号：%s,报价单:%s,已提交", decorationPO.getOrderId(), quotationPO.getName());
 
-		messageService.sendMessage(creater.getDept().getManager().getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, creater.getCompany());
+		if (creater.getDept() != null && creater.getDept().getManager() != null) messageService.sendMessage(creater.getDept().getManager().getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, creater.getCompany());
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 

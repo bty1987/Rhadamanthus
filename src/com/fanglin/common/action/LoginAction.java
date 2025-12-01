@@ -11,6 +11,8 @@
 
 package com.fanglin.common.action;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -122,6 +124,7 @@ public class LoginAction extends BaseListAction {
 			authentication = AESHelper.encrypt(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
 			loginLogVO.setSuccessFlag(1);
+
 			loginLogService.addLoginLog(loginLogVO);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
@@ -272,6 +275,32 @@ public class LoginAction extends BaseListAction {
 		current = DateUtil.current(current == null ? "yyyy-MM-dd hh:mm:ss" : current);
 
 		return SUCCESS;
+	}
+
+	public String hashPassword(String password, String salt) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			String combined = password + salt;
+			byte[] hash = digest.digest(combined.getBytes());
+			return bytesToHex(hash);
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("SHA-256算法不可用", e);
+		}
+	}
+
+	private String bytesToHex(byte[] bytes) {
+
+		StringBuilder hexString = new StringBuilder();
+
+		for (byte b : bytes) {
+			String hex = Integer.toHexString(0xff & b);
+			if (hex.length() == 1) {
+				hexString.append('0');
+			}
+			hexString.append(hex);
+		}
+
+		return hexString.toString();
 	}
 
 	public String getAuthentication() {

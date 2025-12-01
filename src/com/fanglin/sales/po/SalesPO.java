@@ -656,20 +656,16 @@ public class SalesPO implements Serializable {
 
 		if (salesVO.getCustomer() != null && getCustomer() != null) getCustomer().ptv(salesVO.getCustomer());
 
-		if (salesVO.getDept() != null) BeanUtil.copyProperties(getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-		if (salesVO.getRegion() != null) BeanUtil.copyProperties(getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
-		if (salesVO.getGuideDept() != null) BeanUtil.copyProperties(getGuideDept(), salesVO.getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesVO.getDept() != null && getDept() != null) getDept().ptv(salesVO.getDept());
+		if (salesVO.getRegion() != null && getRegion() != null) getRegion().ptv(salesVO.getRegion());
+		if (salesVO.getGuideDept() != null && getGuideDept() != null) getGuideDept().ptv(salesVO.getGuideDept());
 
-		if (salesVO.getCreater() != null) BeanUtil.copyProperties(getCreater(), salesVO.getCreater(), Arrays.asList("dept", "duty"));
-		if (salesVO.getSalesman() != null) BeanUtil.copyProperties(getSalesman(), salesVO.getSalesman(), Arrays.asList("dept", "duty"));
-		if (salesVO.getGuider() != null) BeanUtil.copyProperties(getGuider(), salesVO.getGuider(), Arrays.asList("dept", "duty"));
-		if (salesVO.getInstorer() != null) BeanUtil.copyProperties(getInstorer(), salesVO.getInstorer(), Arrays.asList("dept", "duty"));
-		if (salesVO.getSupplier() != null) BeanUtil.copyProperties(getSupplier(), salesVO.getSupplier(), Arrays.asList("dept", "duty"));
-		if (salesVO.getFinisher() != null) BeanUtil.copyProperties(getFinisher(), salesVO.getFinisher(), Arrays.asList("dept", "duty"));
-
-		if (salesVO.getSalesman() != null && salesVO.getSalesman().getDept() != null) BeanUtil.copyProperties(getSalesman().getDept(), salesVO.getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-		if (salesVO.getGuider() != null && salesVO.getGuider().getDept() != null) BeanUtil.copyProperties(getGuider().getDept(), salesVO.getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-		if (salesVO.getInstorer() != null && salesVO.getInstorer().getDept() != null) BeanUtil.copyProperties(getInstorer().getDept(), salesVO.getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesVO.getCreater() != null && getCreater() != null) salesVO.getCreater().setBaseInfo(getCreater());
+		if (salesVO.getSalesman() != null && getSalesman() != null) salesVO.getSalesman().setBaseInfo(getSalesman());
+		if (salesVO.getGuider() != null && getGuider() != null) salesVO.getGuider().setBaseInfo(getGuider());
+		if (salesVO.getInstorer() != null && getInstorer() != null) salesVO.getInstorer().setBaseInfo(getInstorer());
+		if (salesVO.getSupplier() != null && getSupplier() != null) salesVO.getSupplier().setBaseInfo(getSupplier());
+		if (salesVO.getFinisher() != null && getFinisher() != null) salesVO.getFinisher().setBaseInfo(getFinisher());
 
 		if (salesVO.getBrand() != null && getBrand() != null) getBrand().ptv(salesVO.getBrand());
 

@@ -16,4 +16,5 @@ public interface DecorationInfoService {
 
 	public int referDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
 
+	public int deleteReferDecorationInfo(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO) throws FLException;
 }

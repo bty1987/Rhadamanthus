@@ -62,6 +62,8 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public static final short WORKSTATUS_LEAVE_INT = 2;
 
+	public static final short ISUPLOAD_UPLOAD_INT = 1;// 已传
+
 	private long csid;
 
 	private long cid;
@@ -99,6 +101,8 @@ public class ConstructionSchedulePO implements Serializable {
 	private short workStatus;
 
 	private short scheduleStatus;
+
+	private short isUpload;
 
 	private int accessoryLimit;
 
@@ -316,6 +320,15 @@ public class ConstructionSchedulePO implements Serializable {
 
 	public void setScheduleStatus(short scheduleStatus) {
 		this.scheduleStatus = scheduleStatus;
+	}
+
+	@Column(name = "isUpload")
+	public short getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(short isUpload) {
+		this.isUpload = isUpload;
 	}
 
 	@Column(name = "accessoryLimit")

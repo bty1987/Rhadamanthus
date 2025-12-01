@@ -161,6 +161,9 @@ $.extend(api, {
         affirmDecorationActivityItem: {
             url: "affirmDecorationActivityItem.do"
         },
+        pointDecorationActivityItem: {
+            url: "pointDecorationActivityItem.do"
+        },
 
         queryDecorationActivityRecord: {
             url: "queryDecorationActivityRecord.do",
@@ -621,6 +624,9 @@ $.extend(api, {
         referDecorationInfo: {
             url: "referDecorationInfo.do"
         },
+        deleteReferDecorationInfo: {
+            url: "deleteReferDecorationInfo.do"
+        },
 
         exportDecorationByContractTime: {
             url: "exportDecorationByContractTime.do"
@@ -886,6 +892,7 @@ $.extend(api, {
         queryDecorationFunctionByName: {
             url: "queryDecorationFunctionByName.do"
         },
+        
     }
 });
 

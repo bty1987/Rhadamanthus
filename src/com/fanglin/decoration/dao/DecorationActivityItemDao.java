@@ -28,4 +28,6 @@ public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO>
 
 	public long amountDecorationActivityItem(String orderId, Short type, List<Short> states, Short isPrefor, Short isPayment);
 
+	public long pointDecorationActivityItem(String orderId);
+
 }

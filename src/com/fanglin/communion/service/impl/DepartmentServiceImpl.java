@@ -216,6 +216,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			departmentPO.setFatherDept(departmentDao.get(departmentVO.getFatherDept().getDid()));
 		}
 
+		departmentPO.setAlias(departmentPO.getName());
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
 		departmentPO.setCompany(company);
 		departmentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -257,6 +258,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		List<String> pinyins = PinYin4Util.getPinyin(departmentVO.getName());
 		departmentPO.setPinyin(pinyins.get(0));
+		departmentPO.setAlias(departmentPO.getName());
 
 		if (userPO != null) {
 			departmentPO.setManager(userPO);

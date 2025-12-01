@@ -124,7 +124,7 @@ public class OalesPayServiceImpl implements OalesPayService {
 
 		oalesPaymentPO.setOsid(oalesPayPO.getOpid());
 		oalesPaymentPO.setOrderId(oales.getDecoration().getOrderId());
-		oalesPaymentPO.setType(oalesPayVO.getType());
+		oalesPaymentPO.setType(oales.getType());
 		oalesPaymentPO.setStatus(OalesPaymentPO.STATUS_INITIAL_INT);
 		oalesPaymentPO.setReferMoney(oalesPayVO.getMoney());
 		oalesPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));

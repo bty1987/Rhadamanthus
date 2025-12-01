@@ -613,7 +613,7 @@ public class SalesServiceImpl implements SalesService {
 
 		System.out.println(String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号: %s, 销售单信息确认. ", orderId), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()), sender);
+		decorationService.sendMessage(orderId, "装修单", String.format("品牌: %s, 金额: %s, 销售单信息确认. ", salesPO.getBrand().getName(), Arith.div(salesPO.getTotal(), 1000000)), String.format("pages/sales/sales?orderId=%s&sid=%s", salesPO.getOrderId(), salesPO.getSid()), sender);
 
 		return 0;
 	}

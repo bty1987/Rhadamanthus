@@ -10,9 +10,9 @@ import com.fanglin.utils.Paging;
 
 public interface BalanceOalesService {
 
-	public void pageBalanceOales(Paging paging, List<Filter> filters, int company);
+	public void pageBalanceOales(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public void pageBalanceOalesForBalance(Paging paging, List<Filter> filters, int company);
+	public void pageBalanceOalesForBalance(Paging paging, List<Filter> filters, int company) throws FLException;
 
 	public List<BalanceOalesVO> queryBalanceOales(BalanceOalesVO balanceOalesVO, int company);
 

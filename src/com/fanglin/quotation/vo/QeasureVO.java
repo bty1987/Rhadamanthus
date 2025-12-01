@@ -2,6 +2,7 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -29,8 +30,21 @@ public class QeasureVO implements Serializable {
 
 	private Integer company;
 
+	private List<QeasureItemVO> items;
+
 	public QeasureVO() {
 		super();
+	}
+
+	public QeasureVO(List<QeasureItemVO> items, UserBaseVO creater) {
+		super();
+		this.items = items;
+		this.creater = creater;
+	}
+
+	public QeasureVO(UserBaseVO creater) {
+		super();
+		this.creater = creater;
 	}
 
 	public Long getQmid() {
@@ -111,6 +125,14 @@ public class QeasureVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public List<QeasureItemVO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<QeasureItemVO> items) {
+		this.items = items;
 	}
 
 }

@@ -21,15 +21,17 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface DrawLineDao extends Dao<DrawLinePO> {
-	
+
 	public List<DrawLinePO> pageDrawLine(Paging paging, List<Filter> filters, int company) throws FLException;
-	
+
 	public List<DrawLinePO> queryDrawLine(List<Filter> filters, int company) throws FLException;
-	
+
 	public int countDrawLine(String orderId);
-	
+
 	public int countDrawLine(long gid, Timestamp startTime, Timestamp endTime, int company);
-	
+
 	public List<?> countDrawLine(long startTime, long endTime, int company);
-	
+
+	public List<?> countDrawLineForTime(long startTime, long endTime, int company);
+
 }

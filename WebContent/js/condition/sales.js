@@ -84,7 +84,7 @@ Condition.addupRule("sales", {
             validate: null
         },
         dataSource: {
-            url: api.data.queryBrandByPinyinForAll,
+            url: api.data.queryBrandForAllByPinyin,
             postData: {},
             listPath: "brands",
             keyPath: "bid",

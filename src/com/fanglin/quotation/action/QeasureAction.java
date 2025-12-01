@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.quotation.service.QeasureFunctionAreaService;
 import com.fanglin.quotation.service.QeasureService;
 import com.fanglin.quotation.vo.QeasureFunctionAreaVO;
 import com.fanglin.quotation.vo.QeasureVO;
@@ -24,6 +25,9 @@ public class QeasureAction extends BaseListAction {
 
 	@Autowired
 	private QeasureService qeasureService;
+
+	@Autowired
+	private QeasureFunctionAreaService qeasureFunctionAreaService;
 
 	private List<QeasureVO> qeasures;
 
@@ -44,13 +48,13 @@ public class QeasureAction extends BaseListAction {
 	@Action(value = "queryQeasureByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQeasureByOrderId() throws FLException {
 
-		qeasures = qeasureService.queryQeasureByOrderId(qeasure);
+		qeasure = qeasureService.queryQeasureByOrderId(qeasure);
 
 		return SUCCESS;
 	}
 
 	@Action(value = "queryQeasureByQmid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQeasureBySid() throws FLException {
+	public String queryQeasureByQmid() throws FLException {
 
 		qeasure = qeasureService.queryQeasureByQmid(qeasure);
 
@@ -60,15 +64,15 @@ public class QeasureAction extends BaseListAction {
 	@Action(value = "queryQeasureFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQeasureFunctionArea() throws FLException {
 
-		qeasureFunctionAreas = qeasureService.queryQeasureFunctionArea(qeasureFunctionArea);
+		qeasureFunctionAreas = qeasureFunctionAreaService.queryQeasureFunctionArea(qeasureFunctionArea);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "queryQeasureFunctionAreaByQmid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQeasureFunctionAreaByQmid() throws FLException {
+	@Action(value = "queryQeasureFunctionAreaByQmfaId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQeasureFunctionAreaByQmfaId() throws FLException {
 
-		qeasureFunctionArea = qeasureService.queryQeasureFunctionAreaByQmid(qeasureFunctionArea);
+		qeasureFunctionArea = qeasureFunctionAreaService.queryQeasureFunctionAreaByQmfaId(qeasureFunctionArea);
 
 		return SUCCESS;
 	}
@@ -84,7 +88,7 @@ public class QeasureAction extends BaseListAction {
 	@Action(value = "makeQeasureFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeQeasureFunctionArea() throws FLException {
 
-		qeasureService.makeQeasure(qeasure, queryUserId(), queryCompany());
+		qeasureFunctionAreaService.makeQeasureFunctionArea(qeasure, qeasureFunctionArea);
 
 		return SUCCESS;
 	}
@@ -100,7 +104,15 @@ public class QeasureAction extends BaseListAction {
 	@Action(value = "handleQeasureFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String handleQeasureFunctionArea() throws FLException {
 
-		qeasureService.handleQeasureFunctionArea(qeasureFunctionArea);
+		qeasureFunctionAreaService.handleQeasureFunctionArea(qeasure, qeasureFunctionArea);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteQeasureFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteQeasureFunctionArea() throws FLException {
+
+		qeasureFunctionAreaService.deleteQeasureFunctionArea(qeasureFunctionArea);
 
 		return SUCCESS;
 	}

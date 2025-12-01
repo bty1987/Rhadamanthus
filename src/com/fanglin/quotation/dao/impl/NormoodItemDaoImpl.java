@@ -32,7 +32,7 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 	@Override
 	public int amountNormoodItem(long qid, long nid) {
 
-		String sql = "select sum(if(atttype = 0, normnum, -normnum)) from quotation.normooditem where qid =:qid and nid = :nid and status = :status";
+		String sql = "select sum(if(atttype = 0, storenum, -storenum)) from quotation.normooditem where qid =:qid and nid = :nid and status = :status";
 		BigDecimal count = (BigDecimal) session().createSQLQuery(sql).setLong("qid", qid).setLong("nid", nid).setShort("status", NormoodItemPO.STATUS_INIT_INT).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
@@ -59,8 +59,8 @@ public class NormoodItemDaoImpl extends DaoImpl<NormoodItemPO> implements Normoo
 	@Override
 	public int disableNormoodItem(long qid) {
 
-		String sql = "update quotation.normooditem set status = :status where qid = :qid";
-		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).executeUpdate();
+		String sql = "update quotation.normooditem set status = :status where qid = :qid and type != :type";
+		session().createSQLQuery(sql).setShort("status", NormoodItemPO.STATUS_DISABLED_INT).setLong("qid", qid).setShort("type", NormoodItemPO.TYPE_QUOTA_INT).executeUpdate();
 
 		return 0;
 	}

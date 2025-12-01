@@ -1,6 +1,7 @@
 package com.fanglin.customer.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.vo.MemberActivityVO;
@@ -12,7 +13,7 @@ import com.fanglin.customer.vo.MemberVO;
 
 public interface MemberService {
 
-	public List<MemberVO> queryMember(MemberVO memberVO) throws FLException;
+	public Map<String,List<MemberVO>> queryMember(List<MemberVO> members) throws FLException;
 
 	public List<MemberPointVO> queryMemberPoint(List<MemberPointVO> memberPointVOs);
 
@@ -24,6 +25,6 @@ public interface MemberService {
 
 	public int updateMemberGoods(MemberGoodsVO memberGoodsVO);
 
-	public List<MemberVO> queryMemberForInfo(MemberVO memberVO, Integer company) throws FLException;
+	public Map<String,List<MemberVO>> queryMemberForInfo(List<MemberVO> members, Integer company) throws FLException;
 
 }

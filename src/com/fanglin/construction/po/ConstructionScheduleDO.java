@@ -81,6 +81,8 @@ public class ConstructionScheduleDO implements Serializable {
 
 	private short scheduleStatus;
 
+	private short isUpload;
+
 	private int accessoryLimit;
 
 	private int salaryLimit;
@@ -269,6 +271,15 @@ public class ConstructionScheduleDO implements Serializable {
 
 	public void setScheduleStatus(short scheduleStatus) {
 		this.scheduleStatus = scheduleStatus;
+	}
+
+	@Column(name = "isUpload")
+	public short getIsUpload() {
+		return isUpload;
+	}
+
+	public void setIsUpload(short isUpload) {
+		this.isUpload = isUpload;
 	}
 
 	public int getAccessoryLimit() {

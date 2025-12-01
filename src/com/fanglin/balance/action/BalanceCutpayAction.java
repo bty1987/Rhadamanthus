@@ -45,7 +45,7 @@ public class BalanceCutpayAction extends BaseListAction {
 	}
 
 	@Action(value = "queryBalanceCutpayByOuid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBalanceCutpayByUserId() throws FLException {
+	public String queryBalanceCutpayByOuid() throws FLException {
 
 		balanceCutpays = balanceCutpayService.queryBalanceCutpayByOuid(balanceCutpay);
 

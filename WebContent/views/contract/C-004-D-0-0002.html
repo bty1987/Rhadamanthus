@@ -73,39 +73,12 @@
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="companyName" class="col-sm-3 control-label no-padding-right orange">甲方公司1</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-company-name1" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label for="companyAddr" class="col-sm-3 control-label no-padding-right orange">公司地址</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-company-addr" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
                                     <label for="companyPhone" class="col-sm-3 control-label no-padding-right orange">公司电话</label>
                                     <div class="col-sm-9">
-                                        <input id="con-company-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                        <input id="sin-company-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-sm-6">
-                                    <label for="companyBank" class="col-sm-3 control-label no-padding-right orange">开户行</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-company-bank" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label for="companyBankno" class="col-sm-3 control-label no-padding-right orange">开户账号</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-company-bankno" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="col-md-12">
@@ -133,17 +106,17 @@
 
                             <div class="col-md-12">
 
-                                <div class="form-group col-sm-6">
+                                <div class="form-group col-sm-6 hide">
                                      <label for="innerArea" class="col-sm-3 control-label no-padding-right orange">计价面积</label>
                                      <div class="col-sm-9">
                                          <input type="text" id="con-innerarea" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="10"></input>
                                      </div>
                                 </div>
 
-                                <div class="form-group col-sm-6 hide">
+                                <div class="form-group col-sm-6">
                                     <label for="manual" class="col-sm-3 control-label no-padding-right orange">面积</label>
                                     <div class="col-sm-9">
-                                        <input id="cov-buildarea" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                        <input id="con-buildarea" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
@@ -180,21 +153,7 @@
                             </div>
 
 
-                               <div class="col-md-12">
-
-                               <div class="form-group col-sm-6">
-                                    <label for="precontractPrice" class="col-sm-3 control-label no-padding-right orange">预签总额</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="con-precontract-total" class="col-sm-7 col-xs-10 conitem v_required v_float_3" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="12"></input>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label for="rental" class="col-sm-3 control-label no-padding-right orange">基础工程应付额</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="con-contract-stotal" class="col-sm-7 col-xs-10 conitem text-left" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="12"></input>
-                                    </div>
-                                </div>
+                            <div class="col-md-12">
 
                                 <div class="form-group col-sm-6">
                                     <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">首付款</label>
@@ -248,14 +207,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 hide">
-                                <div class="form-group col-sm-6">
-                                    <label for="workingDuration" class="col-sm-3 control-label no-padding-right">工期</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-work-number" type="text" class="col-sm-7 col-xs-10 conitem v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
-                                    </div>
-                                </div>
-
+                            <div class="col-md-12">
                                 <div class="form-group col-sm-6">
                                     <label class="col-sm-3 control-label no-padding-right" for="startTime">开工时间</label>
                                     <div class="col-sm-9">
@@ -267,11 +219,19 @@
                                         <span class="col-sm-1">日</span>
                                     </div>
                                 </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="workingDuration" class="col-sm-3 control-label no-padding-right">工期</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-work-number" type="text" class="col-sm-7 col-xs-10 conitem v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
                             </div>
 
-                           <hr>
+                            <hr>
 
-                            <div class="col-md-12">
+                            <div class="col-md-12 hide">
                                 <div class="form-group col-sm-6">
                                     <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">卡号</label>
                                     <div class="col-sm-9">
