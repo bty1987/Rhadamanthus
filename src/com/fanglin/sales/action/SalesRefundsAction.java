@@ -51,6 +51,14 @@ public class SalesRefundsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "querySalesRefundsByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesRefundsByRid() {
+
+		refunds = salesRefundsService.querySalesRefundsByRid(refunds);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "querySalesRefundsItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesRefundsItemBySid() {
 

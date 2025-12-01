@@ -2,8 +2,6 @@ package com.fanglin.balance.vo;
 
 import java.sql.Timestamp;
 
-
-
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
@@ -11,31 +9,40 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class BalanceAccountVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 701696245084630736L;
-	
-	private Long baid;
-	
-	private String name;
-	
-	private UserBaseVO belonger;
-	
-	private UserBaseVO creater;
-	
-	private Timestamp createTime;
-	
-	private Long referMoney;
-	
-	private Long realMoney;
-	
-	private Long money;
-	
-	private Long surplus;
-	
-	private Short type;
-	
-	private Short status;
-	
-	private Integer company;
 
+	private Long baid;
+
+	private String name;
+
+	private String no;
+
+	private String address;
+
+	private String phone;
+
+	private String bank;
+
+	private String bankno;
+
+	private UserBaseVO belonger;
+
+	private UserBaseVO creater;
+
+	private Timestamp createTime;
+
+	private Long referMoney;
+
+	private Long realMoney;
+
+	private Long money;
+
+	private Long surplus;
+
+	private Short type;
+
+	private Short status;
+
+	private Integer company;
 
 	public BalanceAccountVO() {
 		super();
@@ -53,6 +60,54 @@ public class BalanceAccountVO implements java.io.Serializable {
 
 	public void setBaid(Long baid) {
 		this.baid = baid;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getBankno() {
+		return bankno;
+	}
+
+	public void setBankno(String bankno) {
+		this.bankno = bankno;
 	}
 
 	public UserBaseVO getBelonger() {
@@ -120,15 +175,6 @@ public class BalanceAccountVO implements java.io.Serializable {
 		this.status = status;
 	}
 
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Short getType() {
 		return type;
 	}
@@ -144,7 +190,5 @@ public class BalanceAccountVO implements java.io.Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
-	
 
 }

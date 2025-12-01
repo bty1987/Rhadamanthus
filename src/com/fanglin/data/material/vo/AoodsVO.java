@@ -18,6 +18,8 @@ public class AoodsVO implements Serializable {
 
 	private AccessoriesTypeVO accessoriesType;
 
+	private AccessoriesTypeVO sortType;
+
 	private NoodsVO noods;
 
 	private ConstructionNodeVO constructionNode;
@@ -56,12 +58,13 @@ public class AoodsVO implements Serializable {
 		this.accessoriesType = accessoriesType;
 	}
 
-	public AoodsVO(GoodsVO goods, AccessoriesTypeVO accessoriesType, NoodsVO noods, ConstructionNodeVO constructionNode) {
+	public AoodsVO(GoodsVO goods, AccessoriesTypeVO accessoriesType, AccessoriesTypeVO sortType, NoodsVO noods, ConstructionNodeVO constructionNode) {
 
 		super();
 
 		this.goods = goods;
 		this.accessoriesType = accessoriesType;
+		this.sortType = sortType;
 		this.noods = noods;
 		this.constructionNode = constructionNode;
 	}
@@ -96,6 +99,14 @@ public class AoodsVO implements Serializable {
 
 	public void setAccessoriesType(AccessoriesTypeVO accessoriesType) {
 		this.accessoriesType = accessoriesType;
+	}
+
+	public AccessoriesTypeVO getSortType() {
+		return sortType;
+	}
+
+	public void setSortType(AccessoriesTypeVO sortType) {
+		this.sortType = sortType;
 	}
 
 	public NoodsVO getNoods() {

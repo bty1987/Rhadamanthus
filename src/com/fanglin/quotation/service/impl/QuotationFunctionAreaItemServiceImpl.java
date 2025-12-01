@@ -15,10 +15,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.quotation.dao.ExtensionItemDao;
@@ -115,7 +117,12 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
 				quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
 
-				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+				try {
+					quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+				} catch (DataException e) {
+					System.out.println(JSON.toJSON(quotationFunctionAreaItemPO));
+					throw e;
+				}
 
 				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
 
@@ -133,7 +140,6 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 						selectionItemDao.update(selectionItemPO);
 					}
-
 				}
 			}
 

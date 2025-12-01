@@ -231,7 +231,7 @@ public class CustomerProtectRuleServiceImpl implements CustomerProtectRuleServic
 
 			customerProtectRulePO = customerProtectRuleDao.queryCustomerProtectRule(CustomerProtectRulePO.TYPE_AREA_INT, decorationPO.getHouse().getInnerArea());
 
-			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getMeasureTime()) < customerProtectRulePO.getDays()) { // 量尺时间-当前时间>保护规则天数
+			if (customerProtectRulePO != null && DateUtil.diffDay(DateUtil.getDateToTimestamp(new Date()), decorationPO.getCreateTime()) < customerProtectRulePO.getDays()) { // 量尺时间-当前时间>保护规则天数
 				approvalDecorationBelongService.tranApprovalForDecorationBelong(decorationPO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT, userId, company, null, null);
 				return false;
 			}

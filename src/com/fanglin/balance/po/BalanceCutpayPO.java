@@ -28,7 +28,7 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	public static final String COLUMN_OPERATER_UID_STR = "operater.uid";
 
-	public final short TYPE_CUTPAY_INT = 0;
+	public static final short TYPE_CUTPAY_INT = 0;
 
 	public static final short STATUS_INIT_INT = 0;// 初始
 
@@ -43,6 +43,8 @@ public class BalanceCutpayPO implements java.io.Serializable {
 	private BalanceCutpayPO cutpay;
 
 	private BalanceDccountPO dccount;
+
+	private UserPO belonger;
 
 	private UserPO operater;
 
@@ -102,6 +104,16 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	public void setCutpay(BalanceCutpayPO cutpay) {
 		this.cutpay = cutpay;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bluid", referencedColumnName = "uid")
+	public UserPO getBelonger() {
+		return belonger;
+	}
+
+	public void setBelonger(UserPO belonger) {
+		this.belonger = belonger;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -189,8 +201,9 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	public BalanceCutpayVO ptv(BalanceCutpayVO balanceCutpayVO) {
 
-		BeanUtil.copyPropertie(this, balanceCutpayVO, Arrays.asList("balance", "operater", "dccount", "cutpay"));
+		BeanUtil.copyPropertie(this, balanceCutpayVO, Arrays.asList("balance", "belonger", "operater", "dccount", "cutpay"));
 
+		if (balanceCutpayVO.getBelonger() != null && getBelonger() != null) balanceCutpayVO.getBelonger().setBaseInfo(getBelonger());
 		if (balanceCutpayVO.getOperater() != null && getOperater() != null) balanceCutpayVO.getOperater().setBaseInfo(getOperater());
 		if (balanceCutpayVO.getDccount() != null && getDccount() != null) getDccount().ptv(balanceCutpayVO.getDccount());
 

@@ -130,6 +130,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 					quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 					quotationFunctionAreaItemVO.setExpres(quotationItemPO.getFormula());
 					quotationFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
+					quotationFunctionAreaItemVO.setQuotationRtemId(quotationItemPO.getRtemFlag());
 				}
 
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);

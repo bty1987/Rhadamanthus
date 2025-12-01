@@ -39,7 +39,7 @@ jQuery(function($) {
     });
 
     com.initTypeahead('brand', api.data.queryBrandByPinyin, "brand.pinyin", {
-        "brand.atttype": 0
+        "brand.atttype": 0,
     }, 'brands', 'bid', 'name', function(list, k, v) {
 
         $.each(list, function(index, val) {
@@ -62,7 +62,7 @@ jQuery(function($) {
 
     seacher.base("bscondList", "bspagenation", "bsresultList", url);
 
-    seacher.condition(["balance-balanceSelse-balance-no", "balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+    seacher.condition(["balance-balance-no", "balance-sales-name", "balance-sales-status", "balance-sales-brand", "balance-sales-grade", "balance-sales-createTime", "balance-sales-creater", "balance-sales-lockTime", "balance-sales-balanceTime"]);
 
     seacher.button([{
         id: "createBalanceSales",
@@ -176,7 +176,7 @@ jQuery(function($) {
 
             params.balance = v.balance;
             params.balance.bid = v.balance.bid;
-            params.balance.uid = v.balance.supplier.uid;
+            params.balance.uid = v.supplier.uid;
 
             com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款") && balanceSales.depage != "supplier";
 

@@ -354,6 +354,22 @@
             validate: null
         }
     },
+    "chance-source-houseAttr": {
+        label: "房屋属性",
+        type: "select",
+        submitConfig: {
+            name: "source.houseAttr",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.customer().customerSource.houseAttr.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "chance-createTime": {
         label: "分配时间",
         type: "dateRangePicker",

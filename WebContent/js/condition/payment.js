@@ -344,5 +344,55 @@ Condition.addupRule("payment", {
             keyPath: "key",
             valuePath: "value"
         }
+    },
+    "sales-isAffirm": {
+        label: "销售单确认",
+        type: "select",
+        submitConfig: {
+            name: "sales.isAffirm",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment.decorationPayment.isAffirm.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "sales-affirmTime": {
+        label: "销售单确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sales.affirmTime.range",
+            op: "between",
+            validate: null
+        }
+    },
+    "salesRefunds-isAffirm": {
+        label: "退货确认",
+        type: "select",
+        submitConfig: {
+            name: "refunds.isAffirm",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: {},
+            listPath: constant.payment.decorationPayment.isAffirm.datas,
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesRefunds-affirmTime": {
+        label: "退货确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "refunds.affirmTime.range",
+            op: "between",
+            validate: null
+        }
     }
 });

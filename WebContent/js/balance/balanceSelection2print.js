@@ -120,14 +120,14 @@ $(function() {
             var td30 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.goods.onekind.name).appendTo(tr4);
             var td31 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.goods.twokind.name).appendTo(tr4);
             var td32 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.goods.thrkind.name).appendTo(tr4);
-            var td33 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr4);
+            var td33 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.goods.name).appendTo(tr4);
             var td34 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr4);
             var td35 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr4);
             var td36 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.goods.measurementUnit).appendTo(tr4);
-            var td37 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.num).appendTo(tr4);
+            var td37 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)))).appendTo(tr4);
             var td38 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.postprice).appendTo(tr4);
             var td39 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(utils.accMul(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.postprice)))).appendTo(tr4);
-            var td40 = $('<td style="border: 1px solid;"></td>').text(0).appendTo(tr4);
+            var td40 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(utils.accMul(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)), parseFloat(v.selectionItem.postprice)))).appendTo(tr4);
             var td41 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.comment).appendTo(tr4);
             var td42 = $('<td style="border: 1px solid;"></td>').text(v.selectionItem.decoration.house.innerArea).appendTo(tr4);
             var td43 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr4);

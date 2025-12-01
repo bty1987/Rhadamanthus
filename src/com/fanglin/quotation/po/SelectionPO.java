@@ -32,6 +32,8 @@ public class SelectionPO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0;// 状态, 初始
 
+	public static final short ISAFFIRM_UNCONFIRMED_INT = 0;
+
 	public final short ISAFFIRM_CONFIRMED_INT = 1;
 
 	private long sid;// 选材单ID

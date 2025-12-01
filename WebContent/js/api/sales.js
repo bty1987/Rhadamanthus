@@ -200,6 +200,7 @@ $.extend(api, {
                 args: ["sales.total", "salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num", "salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"]
             }
         },
+        
         pageSalesRefunds: {
             url: "pageSalesRefunds.do",
             type: "query",
@@ -208,7 +209,6 @@ $.extend(api, {
                 args: ["total"]
             }]
         },
-
         querySalesRefundsBySid: {
             url: "querySalesRefundsBySid.do",
             type: "query",
@@ -217,7 +217,14 @@ $.extend(api, {
                 args: ["total"]
             }]
         },
-
+        querySalesRefundsByRid: {
+            url: "querySalesRefundsByRid.do",
+            type: "query",
+            tranargs: [{
+                result: "refunds",
+                args: ["total"]
+            }]
+        },
         querySalesRefundsItemBySid: {
             url: "querySalesRefundsItemBySid.do",
             type: "query",
@@ -246,6 +253,7 @@ $.extend(api, {
         affirmSalesRefunds: {
             url: "affirmSalesRefunds.do"
         },
+        
         pageOales: {
             url: "pageOales.do",
             type: "query",

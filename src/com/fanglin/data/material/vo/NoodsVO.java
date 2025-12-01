@@ -14,6 +14,8 @@ public class NoodsVO implements Serializable {
 
 	private Integer balance;
 
+	private Integer surplus;
+
 	private Short status;
 
 	private Short calc;
@@ -54,6 +56,14 @@ public class NoodsVO implements Serializable {
 
 	public void setBalance(Integer balance) {
 		this.balance = balance;
+	}
+
+	public Integer getSurplus() {
+		return surplus;
+	}
+
+	public void setSurplus(Integer surplus) {
+		this.surplus = surplus;
 	}
 
 	public Short getStatus() {

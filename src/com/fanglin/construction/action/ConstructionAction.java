@@ -49,7 +49,9 @@ public class ConstructionAction extends BaseListAction {
 	@Action(value = "pageConstruction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageConstruction() throws FLException {
 
-		constructionService.pageConstruction(getPaging(), getFilters(), queryCompany());
+		int company = (construction != null && construction.getDecoration() != null && construction.getDecoration().getCompany() != null) ? construction.getDecoration().getCompany() : queryCompany();
+
+		constructionService.pageConstruction(getPaging(), getFilters(), company);
 
 		return SUCCESS;
 	}

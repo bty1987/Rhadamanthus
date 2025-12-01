@@ -38,6 +38,8 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 
 	private Short isRtem;
 
+	private String quotationRtemId;
+
 	private String content;
 
 	public Long getQfaiId() {
@@ -166,6 +168,14 @@ public class QuotetionFunctionAreaItemVO implements Serializable {
 
 	public void setIsRtem(Short isRtem) {
 		this.isRtem = isRtem;
+	}
+
+	public String getQuotationRtemId() {
+		return quotationRtemId;
+	}
+
+	public void setQuotationRtemId(String quotationRtemId) {
+		this.quotationRtemId = quotationRtemId;
 	}
 
 	public String getContent() {

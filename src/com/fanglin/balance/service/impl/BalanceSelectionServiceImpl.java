@@ -75,7 +75,7 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 	private BalanceDao balanceDao;
 
 	@Override
-	public void pageBalanceSelection(Paging paging, List<Filter> filters, int company) {
+	public void pageBalanceSelection(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<BalanceSelectionPO> balanceSelectionPOs = balanceSelectionDao.pageBalanceSelection(paging, filters, company);
 		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
@@ -88,26 +88,26 @@ public class BalanceSelectionServiceImpl implements BalanceSelectionService {
 	}
 
 	@Override
-	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, BalanceSelectionVO balanceSelectionVO, int company) {
+	public void pageBalanceSelectionForBalance(Paging paging, List<Filter> filters, BalanceSelectionVO balanceSelectionVO, int company) throws FLException {
 
 		List<BalanceSelectionBO> balanceSelectionBOs = balanceSelectionDao.pageBalanceSelectionForBalance(paging, filters, balanceSelectionVO.getStatus(), company);
 		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
 
 		for (BalanceSelectionBO balanceSelectionBO : balanceSelectionBOs) {
-			balanceSelectionVOs.add(balanceSelectionBO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+			balanceSelectionVOs.add(balanceSelectionBO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSelectionVOs);
 	}
 
 	@Override
-	public void pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+	public void pageBalanceSelectionForSupplier(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
 
 		List<BalanceSelectionPO> balanceSelectionPOs = balanceSelectionDao.pageBalanceSelectionForSupplier(paging, filters, userId, company);
 		List<BalanceSelectionVO> balanceSelectionVOs = new ArrayList<BalanceSelectionVO>();
 
 		for (BalanceSelectionPO balanceSelectionPO : balanceSelectionPOs) {
-			balanceSelectionVOs.add(balanceSelectionPO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+			balanceSelectionVOs.add(balanceSelectionPO.ptv(new BalanceSelectionVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSelectionVOs);

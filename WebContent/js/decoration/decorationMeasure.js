@@ -96,8 +96,8 @@ jQuery(function($) {
         };
 
         var creatLine = function(v) {
-        	
-        	if (v.startTime != null && v.endTime != null) {
+
+            if (v.startTime != null && v.endTime != null) {
                 var startTime = v.startTime.substr(11);
                 var endTime = v.endTime.substr(11);
             }
@@ -106,40 +106,52 @@ jQuery(function($) {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            
             var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-success').html('放线');
             var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
             var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-warning').html('人员部署');
+            
+            var $btnQeasure = $('<a></a>').addClass('btn btn-minier btn-warning').html('量房单');
 
-            var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
+            var propertyArr = [ //
+            ["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.decoration.orderId);
-            }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
+            }], // 
+            ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
 
                 tools.house.info(btn, v.decoration.house.hid);
-            }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
+            }], // 
+            ["楼号: ", v.decoration.house.houseNumber, "grey"], // 
+            ["客户: ", v.decoration.customer.name, "grey", function(btn) {
 
                 tools.customer.info(btn, v.decoration.customer.cid);
-            }], ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
+            }], // 
+            ["设计师: ", v.decoration.designer.currentName, "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }], ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
+            }], // 
+            ["监理: ", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.supervisor.userId);
-            }], ["面积: ", v.decoration.house.buildArea, "blue"], ["合同额: ", v.decoration.orderTotalPrice, "blue"], 
-            
-            	["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
-            	["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
-            
-            	["报价版本: ", v.decoration.version.name, "grey"], ["申请人: ", v.appler.currentName, "grey", function(btn) {
+            }], // 
+            ["面积: ", v.decoration.house.buildArea, "blue"], // 
+            ["合同额: ", v.decoration.orderTotalPrice, "blue"],
+
+            ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], // 
+            ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
+
+            ["报价版本: ", v.decoration.version.name, "grey"], // 
+            ["申请人: ", v.appler.currentName, "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }], 
-            	["量尺时间: ", v.actualTime, "green"],
-            	["开始时间: ", startTime, "green"],
-            	["结束时间: ", endTime, "green"], 
-            	["描述: ", v.content, "grey"]];
+            }], // 
+            ["量尺时间: ", v.actualTime, "green"], // 
+            ["开始时间: ", startTime, "green"], // 
+            ["结束时间: ", endTime, "green"], // 
+            ["描述: ", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -156,8 +168,8 @@ jQuery(function($) {
 
                 $liProperty.appendTo($ulProperty);
             });
-
-
+            
+            $divBtnWrap.append($btnQeasure).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -172,8 +184,15 @@ jQuery(function($) {
             });
 
             $btnReset.click(function() {
-            	
+
                 reset(v.dmid);
+            });
+            
+            $btnQeasure.click(function() {
+
+                params.quotation.orderId = v.decoration.orderId;
+                
+                com.popup4page("#layerPopUp", api.index.qeasure4detailIndex.url, "量房单");
             });
 
             return $liLine;
@@ -196,9 +215,11 @@ jQuery(function($) {
     searcher.init(['decoration-orderId', 'decoration-measure-status', 'decoration-measure-actualDate'], "condList", api.decoration.pageDecorationMeasure, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", "drawLineApplyPostData", {"decorationMeasure.status": constant.decoration.measure.STATUS_QUEUE_INT});
+    }, "pagenation", "drawLineApplyPostData", {
+        "decorationMeasure.status": constant.decoration.measure.STATUS_QUEUE_INT
+    });
 
-//    com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
+    // com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
 
     function showUpdate(v) {
 

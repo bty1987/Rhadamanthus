@@ -85,6 +85,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 				if (quotationItemPO != null) {
 					quotetionFunctionAreaItemVO.setQiid(quotetionFunctionAreaItemPO.getQiid());
 					quotetionFunctionAreaItemVO.setIsRtem(quotationItemPO.getIsRtem());
+					quotetionFunctionAreaItemVO.setQuotationRtemId(quotationItemPO.getRtemFlag());
 				}
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);

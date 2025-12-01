@@ -349,6 +349,7 @@ jQuery(function(a) {
     user.items.recommendMan = com.focusPage("#recommendMan", "#userinfo");
 
     user.items.entryTime = com.focusPage("#entryTime");
+    user.items.boardTime = com.focusPage("#boardTime");
     user.items.formTime = com.focusPage("#formTime");
     user.items.employTime = com.focusPage("#employTime");
 
@@ -382,6 +383,7 @@ jQuery(function(a) {
     user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
 
     com.datetime(com.focusPage("#entryTime"));
+    com.datetime(com.focusPage("#boardTime"));
     com.datetime(com.focusPage("#employTime"));
     com.datetime(com.focusPage("#insuranceTime"));
     com.datetime(com.focusPage("#graduateTime"));
@@ -504,6 +506,7 @@ jQuery(function(a) {
             user.items.recommendMan.val($userInfo.recommendMan);
 
             user.items.entryTime.val($userInfo.entryTime);// 入职时间
+            user.items.boardTime.val($userInfo.boardTime);// 到岗时间
             user.items.employTime.val($userInfo.employTime);// 招聘时间
             user.items.firstTime.val($userInfo.firstTime);// 进入公司时间
             user.items.formTime.val($userInfo.formTime);// 转正时间
@@ -593,6 +596,7 @@ jQuery(function(a) {
                 "userInfo.firstTime": "" == user.items.firstTime.val() ? void 0 : user.items.firstTime.val(),
                 "userInfo.formTime": "" == user.items.formTime.val() ? void 0 : user.items.formTime.val(),
                 "userInfo.entryTime": "" == user.items.entryTime.val() ? void 0 : user.items.entryTime.val(),// 入职时间
+                "userInfo.boardTime": "" == user.items.boardTime.val() ? void 0 : user.items.boardTime.val(),// 到岗时间
                 "userInfo.employTime": "" == user.items.employTime.val() ? void 0 : user.items.employTime.val(),// 转正时间
                 "userInfo.insuranceType": user.items.insuranceTypeSel.val(),
                 "userInfo.preformNum": user.items.preformNum.val(),
@@ -617,7 +621,8 @@ jQuery(function(a) {
                 "userInfo.palary": user.items.palary.val(),
                 "userInfo.salary": user.items.salary.val(),// 工资
                 "userInfo.bank": user.items.bank.val(),// 开户行
-                "userInfo.bankCardNum": user.items.bankCardNum.val()// 银行卡号
+                "userInfo.bankCardNum": user.items.bankCardNum.val()
+            // 银行卡号
 
             };
 

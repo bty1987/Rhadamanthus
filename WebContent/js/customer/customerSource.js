@@ -252,6 +252,11 @@ $(function() {
 
             var decoration = res.decoration;
 
+            if ([2, 3, 7].indexOf(decoration.status) == -1) {
+                com.showAlert(com.error, "推荐客户不存在");
+                return false;
+            }
+
             if (decoration.orderId) {
                 customerSource.items.referOrderId.val(decoration.orderId);
                 customerSource.items.referPhone.val((decoration.status == 3 || decoration.status == 7) ? (decoration.customer.phone.substring(0, 3) + '******' + decoration.customer.phone.substring(9)) : "客户电话");
@@ -299,8 +304,10 @@ $(function() {
             $.each(decorations, function(i, v) {
 
                 decoration = v;
-                
-                if(decoration.status != 3 && decoration.status != 7) return true;
+
+                if ([2, 3, 7].indexOf(decoration.status) == -1) {
+                    return true;
+                }
 
                 if (decoration.orderId) {
                     customerSource.items.referOrderId.val(decoration.orderId);
@@ -357,6 +364,11 @@ $(function() {
         com.post(api.decoration.checkDecoration, options, function(res) {
 
             var decoration = res.decoration;
+            
+            if ([2, 3, 7].indexOf(decoration.status) == -1) {
+                com.showAlert(com.error, "推荐客户不存在");
+                return false;
+            }
 
             if (decoration.orderId) {
                 customerSource.items.referOrderId.val(decoration.orderId);
@@ -408,6 +420,11 @@ $(function() {
         com.post(api.decoration.checkDecoration, options, function(res) {
 
             var decoration = res.decoration;
+            
+            if ([2, 3, 7].indexOf(decoration.status) == -1) {
+                com.showAlert(com.error, "推荐客户不存在");
+                return false;
+            }
 
             if (decoration.orderId) {
                 customerSource.items.referOrderId.val(decoration.orderId);
@@ -730,7 +747,7 @@ $(function() {
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
             customerSource.items.businessType.val(v.busitype.dbid);
-            
+
             com.focusPage(".referCustomerInfo", "#createsource").show();
             com.focusPage("#referCustomer", "#createsource").prop("checked", "checked");
 
@@ -903,7 +920,7 @@ $(function() {
                 display(res.surveyTemplate);
             }, null, false);
         }
-        
+
         com.focusPage("#referCustomer", "#createsource").prop("checked", "checked");
         com.focusPage(".referCustomerInfo", "#createsource").show();
 
@@ -1321,11 +1338,11 @@ $(function() {
                 var titleSpan = $('<label class="col-sm-3 control-label no-padding-right"></span>').html(v.name).appendTo(contentDiv);
                 var groupDiv = $('<div class="col-sm-9"></div>').appendTo(contentDiv);
 
-                if (v.require == 0){
+                if (v.require == 0) {
                     titleSpan.addClass("orange");
                     contentDiv.addClass("require");
                 }
-                
+
             }
 
             var type = v.type;

@@ -1,6 +1,7 @@
 package com.fanglin.customer.action;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -33,6 +34,8 @@ public class MemberAction extends BaseListAction {
 
 	private List<MemberVO> members;
 
+	private Map<String,List<MemberVO>> resultMap;
+
 	private List<MemberPointVO> memberPoints;
 
 	private MemberActivityVO memberActivity;
@@ -48,7 +51,7 @@ public class MemberAction extends BaseListAction {
 	@Action(value = "queryMemberByPhone", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryMemberByPhone() throws FLException {
 
-		members = memberService.queryMember(member);
+		resultMap = memberService.queryMember(members);
 
 		return SUCCESS;
 	}
@@ -96,7 +99,7 @@ public class MemberAction extends BaseListAction {
 	@Action(value = "queryMemberForInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryMemberForInfo() throws FLException {
 
-		members = memberService.queryMemberForInfo(member, queryCompany());
+		resultMap = memberService.queryMemberForInfo(members, queryCompany());
 
 		return SUCCESS;
 	}
@@ -163,6 +166,14 @@ public class MemberAction extends BaseListAction {
 
 	public void setCompanys(List<String> companys) {
 		this.companys = companys;
+	}
+
+	public Map<String,List<MemberVO>> getResultMap() {
+		return resultMap;
+	}
+
+	public void setResultMap(Map<String,List<MemberVO>> resultMap) {
+		this.resultMap = resultMap;
 	}
 
 }

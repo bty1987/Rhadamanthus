@@ -104,6 +104,8 @@ public class QuotationItemPO implements Serializable {
 
 	private short isRtem;
 
+	private String rtemFlag;
+
 	private String comment;
 
 	public QuotationItemPO() {
@@ -329,6 +331,15 @@ public class QuotationItemPO implements Serializable {
 
 	public void setIsRtem(short isRtem) {
 		this.isRtem = isRtem;
+	}
+
+	@Column(name = "rtemFlag")
+	public String getRtemFlag() {
+		return rtemFlag;
+	}
+
+	public void setRtemFlag(String rtemFlag) {
+		this.rtemFlag = rtemFlag;
 	}
 
 	@Column(name = "comment")

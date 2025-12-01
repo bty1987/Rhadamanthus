@@ -31,6 +31,8 @@ public class BalancePicturePO implements Serializable {
 
 	public static final short STATUS_DEL_SHORT = 1;
 
+	public static final short TYPE_CUTPAY_INT = 0;
+
 	private long bpid;
 
 	private long bid;

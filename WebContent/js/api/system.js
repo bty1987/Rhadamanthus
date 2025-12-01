@@ -490,6 +490,12 @@ $.extend(api, {
         deleteVersion: {
             url: "deleteVersion.do",
             server: "communion"
+        },
+        generatePostSignature: {
+            url: "generatePostSignature.do"
+        },
+        getProgressiveImage: {
+            url: "getProgressiveImage.do"
         }
     }
 });

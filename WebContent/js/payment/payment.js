@@ -65,7 +65,8 @@ jQuery(function($) {
 			collectModal: com.focusPage("#collectModal", "#payment"),
 			createModal: com.focusPage("#createPaymentModal", "#payment"),
 			createCollectPaymentModal: com.focusPage("#createCollectPaymentModal", "#payment"),
-			collectCodeQrcodeModal: com.focusPage("#collectCodeQrcodeModal").prop("id", params['urlLoadParams'].paytype+"collectCodeQrcodeModal")
+			collectCodeQrcodeModal: com.focusPage("#collectCodeQrcodeModal").prop("id", params['urlLoadParams'].paytype+"collectCodeQrcodeModal"),
+			alipayCodepayModal: com.focusPage("#alipayCodeQrcodeModal")
 		},
 
 		cash: [],
@@ -260,6 +261,7 @@ jQuery(function($) {
 			var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
 			var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
 			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
+			var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('支付宝收款码');
 			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
 			var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
 			var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
@@ -298,6 +300,7 @@ jQuery(function($) {
 			if (v.status != constant.payment().payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
 			if (v.status == constant.payment().payment.STATUS_PAID_INT && v.type != constant.payment().advancePayment.TYPE_PAYED_INT && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
 			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("alipayCollectCode")) $divBtnWrap.append($alipayBtnCode);
 			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
 			if (v.status == constant.payment().payment.STATUS_INIT_INT && v.type == constant.payment().advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
 			if (v.status == constant.payment().payment.STATUS_CONFIRMED_INT && payment.pageConfig.pageBtn.contains("toKingdee")) $divBtnWrap.append($btnKingdee);
@@ -373,6 +376,57 @@ jQuery(function($) {
 				paymentUtils.initQrcode("collect", payment.type+"collectCodeQrcodeModal"); //收款码
 				var atttype = v.paymentType == 2 ? constant.payment().paytran.ATTTYPE_MATERIAL_INT : constant.payment().paytran.ATTTYPE_DECORATION_INT;
 				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=0"+"&pid="+v.pid+"&atttype="+atttype, payment.type+"collectCodeQrcodeModal");
+			});
+
+			// 支付宝二维码
+			$alipayBtnCode.click(function() {
+				var paytranId = 0;
+				var paytranMoney = v.recharge;
+
+				var paytranOption = {
+					"paytran.pid": v.pid,
+					"paytran.type": 0, // 各款项类型
+					"paytran.orderId": v.decoration.orderId
+				};
+
+				com.post(api.payment.queryPaytran, paytranOption, function (res) {
+					var paytrans = res.paytrans;
+
+					$.each(paytrans, function (i, v) {
+						if (v.status == 0) {
+							paytranId = v.ptid;
+							paytranMoney = v.money;
+							return false;
+						}
+					});
+				}, null, false);
+
+				if (paytranMoney != v.recharge) {
+					com.showAlert(com.error, "金额不正确.");
+					return false;
+				}
+
+				// 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款 , 6: 转换款 7：代收款
+				var options = {
+					"wxpay.paymentOrderId": v.decoration.orderId, //装修款
+					"wxpay.paymentType": 0, //预付款
+					"wxpay.paymentAttrType": v.paymentType == 2 ? 1 : 0, //装修0or主材1 payment.paymentTypeData[v.paymentType]
+					"wxpay.paymentMoney": paytranMoney,
+					"wxpay.userId": "alipay",
+					"wxpay.paymentid": v.pid,
+					"wxpay.paymentptid": paytranId,
+					"wxpay.unionId": v.decoration.customer.cid
+				};
+
+				com.post(api.payment.alipay, options, function (data) {
+
+					payment.modals.alipayCodepayModal.html("");
+
+					var url = data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true";
+
+					com.popup("支付宝收款码", url, null, null, false);
+
+				}, null, false);
 			});
 
 			//微信推送

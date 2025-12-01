@@ -60,8 +60,8 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.construction.pageConstructionSchedule);
-    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime"]);
-    searcher.history("constructoinSchedulePostData")
+    searcher.condition(["decoration-orderId", "decoration-village", "decoration-houseNumber", "decoration-designer", "construction-supervisor", "decoration-projectStatus", "construction-schedule-createTime", "construction-schedule-startTime", "construction-schedule-endTime", "construction-schedule-enterTime", "construction-schedule-leaveTime", "construction-diary-isUpload"]);
+    searcher.history("constructoinSchedulePostData");
 
     var lineprops = [{
         field: "decoration.orderId",
@@ -105,9 +105,9 @@ jQuery(function($) {
             tools.personel.info(btn, v.decoration.designer.userId);
         }
     }, {
-        field: "supervisor",
+        field: "construction.supervisor",
         name: "监理",
-        prop: "supervisor.userName",
+        prop: "construction.supervisor.userName",
         clazz: "grey",
         click: function(btn, v) {
 
@@ -138,6 +138,12 @@ jQuery(function($) {
         name: "工程状态",
         prop: "decoration.projectStatus",
         dataset: constant.decoration().decoration.projectStatus.keys,
+        clazz: "red"
+    }, {
+        field: "isUpload",
+        name: "是否上传图片",
+        prop: "isUpload",
+        dataset: constant.construction().constructionDiary.isUpload.keys,
         clazz: "red"
     }, {
         field: "contractTime",

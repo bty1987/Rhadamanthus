@@ -49,6 +49,11 @@ public class UserBaseVO implements Serializable {
 		this.duty = duty;
 	}
 
+	public UserBaseVO(DepartmentVO dept) {
+		super();
+		this.dept = dept;
+	}
+
 	public UserBaseVO(DutyVO duty, DepartmentVO dept) {
 		super();
 		this.duty = duty;
@@ -144,9 +149,8 @@ public class UserBaseVO implements Serializable {
 		setCurrentName(userPO.getCurrentName());
 		setUserName(userPO.getUserName());
 		setUserPhoto(userPO.getUserPhoto());
-		setPhone(userPO.getPhone());
 
-		if (getDept() != null && userPO.getDept() != null) setDept(userPO.getDept().ptv());
+		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
 		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
 
 		return this;
@@ -175,10 +179,10 @@ public class UserBaseVO implements Serializable {
 
 	public UserBaseVO ptv(UserPO userPO) {
 
-		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+		BeanUtil.copyProperties(userPO, this, Arrays.asList("role", "dept", "duty", "password", "phone", "identity", "company"));
 
-		BeanUtil.copyProperties(userPO.getDuty(), getDuty(), Arrays.asList("departmentType"));
-		BeanUtil.copyProperties(userPO.getDept(), getDept(), Arrays.asList("fatherDept", "type", "manager"));
+		if (getDuty() != null && userPO.getDuty() != null) userPO.getDuty().ptv(getDuty());
+		if (getDept() != null && userPO.getDept() != null) userPO.getDept().ptv(getDept());
 
 		return this;
 	}

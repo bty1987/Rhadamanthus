@@ -71,10 +71,12 @@ public class ConstructionDiaryDaoImpl extends DaoImpl<ConstructionDiaryPO> imple
 		for (Filter filter : filters) {
 
 			String field = filter.getField();
-			String data = filter.getField();
+			String data = filter.getData();
 
 			if ("csid".equals(field)) {
 				query.add(Restrictions.eq("csid", data));
+			} else if ("isUpload".equals(field)) {
+				query.add(Restrictions.eq("isUpload", Short.valueOf(data)));
 			}
 
 		}

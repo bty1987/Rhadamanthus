@@ -33,7 +33,66 @@
         }
     };
 
+    var btnLock = {
+        name: "锁定",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            com.post(api.quotation.lockSelection, {
+                "selection.sid": v.sid
+            }, function(res){
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+        },
+        show: function(v) {
+
+            return (v.status == constant.quotation().selection.STATUS_INIT_INT);
+        }
+    };
+
+    var btnUnlock = {
+        name: "解锁",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            com.post(api.quotation.unlockSelection, {
+                "selection.sid": v.sid
+            }, function(res){
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+        },
+        show: function(v) {
+
+            return (v.status == constant.quotation().selection.STATUS_LOCK_INT);
+        }
+    };
+
+    var btnReset = {
+        name: "重置",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            com.post(api.quotation.resetSelection, {
+                "selection.sid": v.sid
+            }, function(res){
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+        }
+    };
+
     var cardbtns = [];
+
+    if (selection.pageConfig.pageBtn.contains("reset"))
+        cardbtns.push(btnReset);
+
+    if (selection.pageConfig.pageBtn.contains("lock"))
+        cardbtns.push(btnLock);
+
+    if (selection.pageConfig.pageBtn.contains("unlock"))
+        cardbtns.push(btnUnlock);
 
     if (selection.pageConfig.pageBtn.contains("view"))
         cardbtns.push(btnView);

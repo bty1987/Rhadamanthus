@@ -123,8 +123,8 @@ $.extend(api, {
         queryBrandByPinyin: {
             url: "queryBrandByPinyin.do"
         },
-        queryBrandByPinyinForAll: {
-            url: "queryBrandByPinyinForAll.do"
+        queryBrandForAllByPinyin: {
+            url: "queryBrandForAllByPinyin.do"
         },
         addBrand: {
             url: "addBrand.do",
@@ -1258,7 +1258,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["selling", "balance"]
+                args: ["selling", "balance", "surplus"]
             }]
         },
         queryNoods: {
@@ -1266,7 +1266,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "noodes",
-                args: ["selling", "balance"]
+                args: ["selling", "balance", "surplus"]
             }]
         },
         queryNoodsByName: {
@@ -1274,21 +1274,21 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "noodes",
-                args: ["selling", "balance"]
+                args: ["selling", "balance", "surplus"]
             }]
         },
         addNoods: {
             url: "addNoods.do",
             type: "update",
             tranargs: {
-                args: ["noods.selling", "noods.balance"]
+                args: ["noods.selling", "noods.balance", "noods.surplus"]
             }
         },
         updateNoods: {
             url: "updateNoods.do",
             type: "update",
             tranargs: {
-                args: ["noods.selling", "noods.balance"]
+                args: ["noods.selling", "noods.balance", "noods.surplus"]
             }
         },
         updateNoodsForStatus: {
@@ -2098,6 +2098,21 @@ $.extend(api, {
         moveSupplierSignet: {
             url: "moveSupplierSignet.do"
         },
+        pageHoliday: {
+            url: "pageHoliday.do"
+        },
+        queryHoliday: {
+            url: "queryHoliday.do"
+        },
+        addHoliday: {
+            url: "addHoliday.do"
+        },
+        updateHoliday: {
+            url: "updateHoliday.do"
+        },
+        deleteHoliday: {
+            url: "deleteHoliday.do"
+        }
     }
 });
 

@@ -45,7 +45,7 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrand(Paging paging, String pinyin, Short atttype, Integer company) {
+	public List<BrandPO> pageBrand(Paging paging, String pinyin, Short atttype, Short status, Integer company) {
 
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 
@@ -59,7 +59,9 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 			query.add(Restrictions.eq("atttype", atttype));
 		}
 
-		query.add(Restrictions.eq("status", BrandPO.STATUS_ENABLE_INT));
+		if (atttype != null) {
+			query.add(Restrictions.eq("status", status));
+		}
 
 		return query.list();
 	}

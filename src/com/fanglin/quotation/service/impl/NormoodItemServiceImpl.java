@@ -112,39 +112,39 @@ public class NormoodItemServiceImpl implements NormoodItemService {
 			}
 		}
 
-		if (normpackItems != null) {
-			normoodItemVOs = new ArrayList<NormoodItemVO>();
+		if (normpackItems == null || normpackItems.size() == 0) return normoodItemVOs;
 
-			for (NormpackItemPO normpackItemPO : normpackItems) {
+		normoodItemVOs = new ArrayList<NormoodItemVO>();
 
-				NormoodItemPO normoodItemPO = new NormoodItemPO();
+		for (NormpackItemPO normpackItemPO : normpackItems) {
 
-				normoodItemPO.setQid(quotationPO.getQid());
-				normoodItemPO.setSid(quotationPO.getQid());
+			NormoodItemPO normoodItemPO = new NormoodItemPO();
 
-				normoodItemPO.setType(NormoodItemPO.TYPE_OFFER_INT);
-				normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_PACK_INT);
-				normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
+			normoodItemPO.setQid(quotationPO.getQid());
+			normoodItemPO.setSid(quotationPO.getQid());
 
-				if (normpackItemPO.getNoods() != null) {
-					normoodItemPO.setNoods(new NoodsPO(normpackItemPO.getNoods().getNid()));
-				}
+			normoodItemPO.setType(NormoodItemPO.TYPE_QUOTA_INT);
+			normoodItemPO.setNormtype(NormoodItemPO.NORMTYPE_PACK_INT);
+			normoodItemPO.setAtttype(NormoodItemPO.ATTTYPE_COLLECTION_INT);
 
-				normoodItemPO.setNormunit(normpackItemPO.getNormunit());
-				normoodItemPO.setNormnum(normpackItemPO.getNormnum());
-				normoodItemPO.setStoreunit(normpackItemPO.getStoreunit());
-				normoodItemPO.setStorenum(normpackItemPO.getStorenum());
-				normoodItemPO.setNoods(normpackItemPO.getNoods());
-
-				normoodItemDao.save(normoodItemPO);
-
-				NormoodItemVO normoodItemVO = new NormoodItemVO(new NoodsVO());
-
-				BeanUtil.copyProperties(normoodItemPO, normoodItemVO, Arrays.asList("noods"));
-				BeanUtil.copyPropertie(normoodItemPO.getNoods(), normoodItemVO.getNoods());
-
-				normoodItemVOs.add(normoodItemVO);
+			if (normpackItemPO.getNoods() != null) {
+				normoodItemPO.setNoods(new NoodsPO(normpackItemPO.getNoods().getNid()));
 			}
+
+			normoodItemPO.setNormunit(normpackItemPO.getNormunit());
+			normoodItemPO.setNormnum(normpackItemPO.getNormnum());
+			normoodItemPO.setStoreunit(normpackItemPO.getStoreunit());
+			normoodItemPO.setStorenum(normpackItemPO.getStorenum());
+			normoodItemPO.setNoods(normpackItemPO.getNoods());
+
+			normoodItemDao.save(normoodItemPO);
+
+			NormoodItemVO normoodItemVO = new NormoodItemVO(new NoodsVO());
+
+			BeanUtil.copyProperties(normoodItemPO, normoodItemVO, Arrays.asList("noods"));
+			BeanUtil.copyPropertie(normoodItemPO.getNoods(), normoodItemVO.getNoods());
+
+			normoodItemVOs.add(normoodItemVO);
 		}
 
 		return normoodItemVOs;

@@ -1,7 +1,7 @@
 jQuery(function (a) {
 
     if (!parent.window.isPC) {
-        $('body').css('display', 'block');
+        $('body').css('display', 'block')
     }
 
     var count = 0;
@@ -21,9 +21,58 @@ jQuery(function (a) {
         document.cookie = cname + "=" + cvalue + "; " + expires;
     };
 
+    function getUrlParams() {
+        var paramsObj = {};
+        var paramsString = window.location.search.substring(1);
+        if (paramsString) {
+            var pairs = paramsString.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                var key = decodeURIComponent(pair[0]);
+                var value = decodeURIComponent(pair[1] || '');
+                paramsObj[key] = value;
+            }
+        }
+        return paramsObj;
+    }
+    
+    if(config.oss){
+        $.ajax({
+            url: config.server + '/registAuthCode.do',
+            data: {"osstoken": config.server},
+            type: "post",
+            dataType: "json",
+            async: false,
+            success: function (res) {
+                window.location.replace(res.osstoken);
+            }
+        });
+    }else{
+        $(".main-container").removeClass("hide");
+        $(".slide").removeClass("hide");
+    }
+
+    var osstoken = getUrlParams()['ssoToken'];
+
+    if(osstoken){
+
+        var _token = osstoken;
+
+        $.ajax({
+            url: config.server + '/exchangeAuthCode.do',
+            data: {"osstoken": osstoken},
+            type: "post",
+            dataType: "json",
+            async: false,
+            success: function (res) {
+                window.location.replace(config.server + "/redirect.html?authentication=" + res.osstoken.replace(/[\r\n]/g,"") + "&osstoken=" + _token);
+            }
+        });
+    }
+
     if (!config.intranet) {
         $.ajax({
-            url: 'http://114.215.183.148/communion.do',
+            url: 'https://www.fanglinserver.com/communion.do',
             data: {},
             type: "post",
             dataType: "json",
@@ -38,12 +87,15 @@ jQuery(function (a) {
     if (parent.window.isPC) {
         pcBody();
     } else if (!location.hostname.startsWith('192.168')){
+        $("#unamePwdContainer").remove();
+        $("#QRLogin").remove();
+        $("#WXLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
 
     verifyCode();
-    
+
     var initQRCode = function () {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix).done(function (data) {
             $('#qrcode img').prop('src', data.QRCode).removeClass("hide");
@@ -166,7 +218,6 @@ jQuery(function (a) {
         backgroundShaking('container', 'canvas', '#ba2454', config.shakingColor);
     }
 
-
     // $("#backgroundImage > img").attr('src', config.backgroundImg);
     // $("#backgroundImage").fullscreenBackground();
     // $("#backgroundImage").css("position", "");
@@ -196,21 +247,21 @@ jQuery(function (a) {
             window.location.href = "index.html?timestamp=" + new Date().getTime();
             return false;
         }
-
+        
         $.ajax({
             type: "POST",
             dataType: "json",
             url: config.communion + "doLogin.do",
             data: {
                 userId: $("#userId").val(),
-                password: $("#password").val(),
+                password: flcry($("#password").val()),
                 verifyCode: $("#nowCode").val(),
                 company: config.company,
                 securityCode: params.securityCode,
             },
             success: function (data) {
                 initPage();
-                
+
                 if (data.errorCode == 1) {
                     $("#newCodeIcon").attr("class", "icon-remove red");
                     $("#newCodeIcon").attr("data-content", data.errorMsg);
@@ -307,4 +358,3 @@ jQuery(function (a) {
         }
     };
 });
-

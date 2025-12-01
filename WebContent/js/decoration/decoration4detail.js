@@ -1627,7 +1627,7 @@ jQuery(function($) {
                 decorationUtils.initPresignPrint();
                 break;
             case "picture":
-                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", "designContractPicture", decorationDetail.orderId);
+                decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", "designContractPicture", "selfiePicture", "drawingPicture", "livePicture", "720Files", decorationDetail.orderId);
                 break;
             case "material":
                 decorationUtils.initMaterial(decorationDetail);
@@ -1746,7 +1746,7 @@ jQuery(function($) {
                     decorationDetail.repeatFlg = true;
 
                 } else {
-                    com.showConfirm("已有该房产信息，是否绑定?", function() {
+                    com.showConfirm("已有该房产信息, 是否绑定?", function() {
 
                         decorationDetail.houseItems.thid = res.house.hid;
                         decorationDetail.houseItems.villageName = res.house.village.name;

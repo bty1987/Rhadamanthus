@@ -39,6 +39,10 @@ public class CppointRecordPO implements Serializable {
 
 	public static final short POINTTYPE_OPOINT_INT = 2;
 
+	public static final short STATUS_ABLE_SHORT = 0; // 有效
+
+	public static final short STATUS_DISABLE_SHORT = 1; // 失效
+
 	private long cprid;
 
 	private long cid;
@@ -49,7 +53,15 @@ public class CppointRecordPO implements Serializable {
 
 	private short pointType;
 
+	private short status;
+
 	private long balance;
+
+	private long dpoint;
+
+	private long spoint;
+
+	private long opoint;
 
 	private long point;
 
@@ -100,7 +112,7 @@ public class CppointRecordPO implements Serializable {
 	}
 
 	@Column(name = "type")
-	public long getType() {
+	public short getType() {
 		return type;
 	}
 
@@ -117,6 +129,15 @@ public class CppointRecordPO implements Serializable {
 		this.pointType = pointType;
 	}
 
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
 	@Column(name = "balance")
 	public long getBalance() {
 		return balance;
@@ -124,6 +145,33 @@ public class CppointRecordPO implements Serializable {
 
 	public void setBalance(long balance) {
 		this.balance = balance;
+	}
+
+	@Column(name = "dpoint")
+	public long getDpoint() {
+		return dpoint;
+	}
+
+	public void setDpoint(long dpoint) {
+		this.dpoint = dpoint;
+	}
+
+	@Column(name = "spoint")
+	public long getSpoint() {
+		return spoint;
+	}
+
+	public void setSpoint(long spoint) {
+		this.spoint = spoint;
+	}
+
+	@Column(name = "opoint")
+	public long getOpoint() {
+		return opoint;
+	}
+
+	public void setOpoint(long opoint) {
+		this.opoint = opoint;
 	}
 
 	@Column(name = "point")
@@ -172,7 +220,7 @@ public class CppointRecordPO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
-	public CppointRecordPO init(long cid, long cpid, short type, short pointType, long balance, long point, String no, String orderId, UserPO operater) {
+	public CppointRecordPO init(long cid, long cpid, short type, short pointType, long balance,long dpoint,long spoint,long opoint, long point, String no, String orderId, UserPO operater) {
 
 		this.setCid(cid);
 		this.setCpid(cpid);
@@ -182,6 +230,9 @@ public class CppointRecordPO implements Serializable {
 
 		this.setBalance(balance);
 		this.setPoint(point);
+		this.setDpoint(dpoint);
+		this.setSpoint(spoint);
+		this.setOpoint(opoint);
 		
 		this.setNo(no);
 		this.setOrderId(orderId);

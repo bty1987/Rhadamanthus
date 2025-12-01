@@ -14,7 +14,7 @@ var selectionDetail = (function() {
             addSelectionItemBtn: com.focusPage('#addSelectionItemBtn'),
             addSelectionItemCancelBtn: com.focusPage('#addSelectionItemCancelBtn'),
             printFinanceBtn: com.focusPage('#printFinanceBtn'),
-            updateSelectionItemBtn: com.focusPage('#updateSelectionItemBtn')
+            updateSelectionItemBtn: com.focusPage('#updateSelectionItemBtn'),
         },
         modals: {
             quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal'),
@@ -96,7 +96,7 @@ var selectionDetail = (function() {
 
                         com.showAlert(com.info, "操作成功");
 
-                        if(selection.basicParams['selection.sendTime'] != null && selection.basicParams['selection.affirmTime'] != null){
+                        if (selection.basicParams['selection.sendTime'] != null && selection.basicParams['selection.affirmTime'] != null) {
                             com.focusPage('#isAffirm').text('已变更');
                         }
                     });
@@ -155,6 +155,36 @@ var selectionDetail = (function() {
                 });
 
                 selection.modals.QRcodeModal.modal('show');
+            });
+
+            lockBtn: com.focusPage('#lockBtn').on('click', function() {
+
+                com.post(api.quotation.lockSelection, {
+                    "selection.sid": selection.basicParams['selection.sid']
+                }, function(res) {
+                    com.showAlert(com.info, "操作成功");
+                    selection.lockSelectionByStatus(constant.quotation().selection.STATUS_LOCK_INT);
+                });
+            });
+
+            unlockBtn: com.focusPage('#unlockBtn').on('click', function() {
+
+                com.post(api.quotation.unlockSelection, {
+                    "selection.sid": selection.basicParams['selection.sid']
+                }, function(res) {
+                    com.showAlert(com.info, "操作成功");
+                    selection.lockSelectionByStatus(constant.quotation().selection.STATUS_INIT_INT);
+                });
+            });
+
+            resetBtn: com.focusPage('#resetBtn').on('click', function() {
+
+                com.post(api.quotation.resetSelection, {
+                    "selection.sid": selection.basicParams['selection.sid']
+                }, function(res) {
+
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             saveMaterialBtn: com.focusPage('#saveMaterialBtn').on('click', function() {
@@ -310,6 +340,10 @@ var selectionDetail = (function() {
             selection.basicParams['selection.addReduceAddTotal'] = utils.changeThrDecimal(addReduceAddTotal);
             selection.basicParams['selection.addReduceMinusTotal'] = utils.changeThrDecimal(addReduceMinusTotal);
         },
+        lockSelectionByStatus: function(status) {
+            status == constant.quotation().selection.STATUS_LOCK_INT ? com.focusPage('#unlockBtn').show() : com.focusPage('#unlockBtn').hide();
+            status == constant.quotation().selection.STATUS_INIT_INT ? com.focusPage('#lockBtn').show() : com.focusPage('#lockBtn').hide();
+        },
         init: function() {
 
             this.initQuoModals();
@@ -365,7 +399,20 @@ var selectionDetail = (function() {
 
                     $btnSoods.click(function(e) {
 
-                        selectionItem.addSelectionItem(v);
+                        com.post(api.data.queryGoodsByGId, {
+                            'goods.gid': v.goods.gid
+                        }, function(res) {
+
+                            var goods = res.goods;
+
+                            if (selectionItem.brandId.length != 0 && selectionItem.brandId.indexOf(goods.bid) == -1) {
+                                com.showAlert(com.warning, "与关联项品牌不一致");
+                                return false;
+                            }
+
+                            v.goods.bid = goods.bid;
+                            selectionItem.addSelectionItem(v);
+                        }, null, false);
                     });
 
                     return $liLine;
@@ -404,6 +451,7 @@ var selectionDetail = (function() {
 
     var selectionItem = {
         type: [],
+        brandId: [],
         $nowLine: null,
         $nowEditInput: null,
         getNumCellFocus: function($line) {
@@ -441,14 +489,15 @@ var selectionDetail = (function() {
                 selection.calculateAllDomainTotal();
 
                 var option = {
-                	"selectionItem.siid": that.$nowLine.attr('data-siid'),
+                    "selectionItem.siid": that.$nowLine.attr('data-siid'),
                     "selectionItem.num": num
                 };
 
                 com.post(api.quotation.updateSelectionItem, option, function(res) {
 
                 }, function(v) {
-                	that.$nowLine.find('.num .cell-wrap').text(oldNum);
+
+                    that.$nowLine.find('.num .cell-wrap').text(oldNum);
                     selection.calculatePrice(postprice, oldNum, that.$nowLine);
                     selection.calculateAllDomainTotal();
                     com.showAlert(com.error, v.errorMsg);
@@ -490,7 +539,7 @@ var selectionDetail = (function() {
                 if (res.selectionItems && res.selectionItems.length) {
                     com.focusPage('#sendSelectionBtn').removeClass("disabled");
                     com.focusPage('#QRCodeBtn').removeClass("disabled");
-                }else{
+                } else {
                     com.focusPage('#sendSelectionBtn').addClass("disabled");
                     com.focusPage('#QRCodeBtn').addClass("disabled");
                 }
@@ -539,6 +588,8 @@ var selectionDetail = (function() {
 
             com.post(api.quotation.addSelectionItem, option, function(res) {
 
+                res.selectionItem.goods.bid = soods.goods.bid;
+
                 painter.createSelectionItem(res.selectionItem);
                 painter.updateHeight(selection.nowEditQuote.next());
                 com.showAlert(com.info, "操作成功");
@@ -574,6 +625,7 @@ var selectionDetail = (function() {
 
             com.post(api.quotation.deleteSelectionItem, option, function(e) {
 
+                $selectionItemLi.attr("data-siid", null);
                 $selectionItemLi.attr("data-price", 0).empty();
                 $selectionItemLi.parent("div.alone").remove();
                 com.showAlert(com.info, "操作成功");
@@ -588,7 +640,7 @@ var selectionDetail = (function() {
         },
         updateSelectionItem: function() {
 
-            selection.btns.updateSelectionItemBtn.click(function(){
+            selection.btns.updateSelectionItemBtn.click(function() {
 
                 if (com.validate('updateSelectionItemModal'))
                     return false;
@@ -631,6 +683,35 @@ var selectionDetail = (function() {
         }
     };
 
+    var rtem = {
+        quotationRtem: function($item) {
+
+            selectionItem.brandId = [];
+            var $domain = $item.parents('.widget-box');
+            var qiid = $item.attr('data-quotationItemId');
+
+            com.post(api.quotation.queryQuotationRtem, {
+                "quotationRtem.source.qiid": qiid
+            }, function(res) {
+
+                if (res.quotationRtems.length == 0)
+                    return false;
+
+                $.each(res.quotationRtems, function(i, v) {
+
+                    var itemRight = $domain.find('.fl-quo-item[data-quotationitemid="' + v.target.qiid + '"]').next('.fl-quo-item');
+
+                    if (!itemRight.attr('data-siid'))
+                        return true;
+
+                    var bid = parseInt(itemRight.attr('data-bid'));
+
+                    selectionItem.brandId.push(bid);
+                });
+            }, null, false);
+        }
+    };
+
     var painter = {
 
         createFunctionArea: function(name, type) {
@@ -657,13 +738,13 @@ var selectionDetail = (function() {
 
             var lineSetLeft = [];
             lineSetLeft.push(["name", "报价项"]);
-            if(selection.historyPage != api.index.selectionItemIndex.url) lineSetLeft.push(["num", "数量"]);
+            if (selection.historyPage != api.index.selectionItemIndex.url) lineSetLeft.push(["num", "数量"]);
             lineSetLeft.push(["btns", "功能"]);
 
             var lineSetRight = [];
             lineSetRight.push(["name", "商品"]);
             lineSetRight.push(["num", "数量"]);
-            if(selection.historyPage != api.index.selectionItemIndex.url) lineSetRight.push(["btns", "功能"]);
+            if (selection.historyPage != api.index.selectionItemIndex.url) lineSetRight.push(["btns", "功能"]);
 
             $.each(lineSetLeft, function(i, v) {
 
@@ -707,7 +788,7 @@ var selectionDetail = (function() {
 
             lineSet.push(['name blue', data.itemName + '(' + data.quotationFunctionAreaName + ')']);
 
-            if(selection.historyPage != api.index.selectionItemIndex.url) lineSet.push(['num red', data.num]);
+            if (selection.historyPage != api.index.selectionItemIndex.url) lineSet.push(['num red', data.num]);
 
             $.each(lineSet, function(i, v) {
 
@@ -730,6 +811,7 @@ var selectionDetail = (function() {
                 selection.nowEditQuote = $quoteItemLi;
                 selection.quotationItem = data;
                 goods.GoodsPage(data.quotationItemId);
+                rtem.quotationRtem($quoteItemLi);
                 selection.modals.quotationItemSoodsModal.modal("show");
             });
 
@@ -805,6 +887,7 @@ var selectionDetail = (function() {
             });
 
             $selectionItemLi.attr('data-siid', data.siid);
+            $selectionItemLi.attr('data-bid', data.goods.bid);
             $selectionItemLi.attr('data-postprice', data.postprice);
             $selectionItemLi.attr('data-comment', data.comment);
 
@@ -865,9 +948,9 @@ var selectionDetail = (function() {
 
                 var res = queryRes.selection;
 
-                if(res.affirmTime < res.sendTime && res.affirmTime != null && res.sendTime != null){
+                if (res.affirmTime < res.sendTime && res.affirmTime != null && res.sendTime != null) {
                     com.focusPage('#isAffirm').text('已变更');
-                }else{
+                } else {
                     com.focusPage('#isAffirm').text(constant.quotation().selection.isAffirm.keys[res.isAffirm]);
                 }
 
@@ -910,6 +993,7 @@ var selectionDetail = (function() {
                     selection.basicParams['selection.sendTime'] = res.selection.sendTime;
 
                     selectionItem.init();
+                    selection.lockSelectionByStatus(res.selection.status);
 
                     com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {
                         'quotation.qid': selection.basicParams['selection.qid']
@@ -918,7 +1002,7 @@ var selectionDetail = (function() {
                         if (res.quotationFunctionAreas && res.quotationFunctionAreas.length) {
                             $.each(res.quotationFunctionAreas, function(i, v) {
 
-                                v.type != constant.quotation().selectionItem.TYPE_QUOTATION_INT ? createItem(v, selectionItemType) : null;
+                                v.type != constant.quotation().quotationFunctionArea.TYPE_MANAGEMENT_INT ? createItem(v, selectionItemType) : null;
                             });
                         }
                     }, null, false);
@@ -930,7 +1014,7 @@ var selectionDetail = (function() {
                         if (res.extensions && res.extensions.length) {
                             $.each(res.extensions, function(i, v) {
 
-                                selectionItemType = v.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT ? constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT : constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT;
+                                selectionItemType = v.type == constant.quotation().extension.TYPE_ADD_INT ? constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT : constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT;
                                 createItem(v, selectionItemType);
                             });
                         }
@@ -1104,7 +1188,7 @@ var selectionDetail = (function() {
                 return data;
             }
 
-            if(selection.historyPage != api.index.selectionItemIndex.url){
+            if (selection.historyPage != api.index.selectionItemIndex.url) {
                 com.focusPage('#saveMaterialBtn').show();
                 com.focusPage('#saveConfigBtn').show();
                 com.focusPage('#sendSelectionBtn').show();

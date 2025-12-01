@@ -35,6 +35,8 @@ public class DecorationActivityItemAction extends BaseListAction {
 
 	private String verifyCode;
 
+	private Long amount;
+
 	@Action(value = "queryDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationActivityItem() {
 
@@ -131,6 +133,14 @@ public class DecorationActivityItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pointDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pointDecorationActivityItem() throws FLException {
+
+		amount = decorationActivityItemService.pointDecorationActivityItem(decoration, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public DecorationVO getDecoration() {
 		return decoration;
 	}
@@ -169,6 +179,14 @@ public class DecorationActivityItemAction extends BaseListAction {
 
 	public void setVerifyCode(String verifyCode) {
 		this.verifyCode = verifyCode;
+	}
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
 	}
 
 }

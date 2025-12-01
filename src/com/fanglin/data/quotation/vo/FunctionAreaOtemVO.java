@@ -32,6 +32,11 @@ public class FunctionAreaOtemVO implements Serializable {
 		this.faiid = faiid;
 	}
 
+	public FunctionAreaOtemVO(List<FunctionAreaOptionVO> options) {
+		super();
+		this.options = options;
+	}
+
 	public Long getFaiid() {
 		return faiid;
 	}

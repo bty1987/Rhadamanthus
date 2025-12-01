@@ -25,7 +25,11 @@ public class DepartmentVO implements Serializable {
 
 	private String no;
 
+	private String code;
+
 	private String name;
+
+	private String alias;
 
 	private DepartmentTypeVO type;
 
@@ -49,10 +53,13 @@ public class DepartmentVO implements Serializable {
 
 	private Integer company;
 
-	private String code;
-
 	public DepartmentVO() {
 		super();
+	}
+
+	public DepartmentVO(DepartmentVO fatherDept) {
+		super();
+		this.fatherDept = fatherDept;
 	}
 
 	public DepartmentVO(DepartmentTypeVO type, DepartmentVO fatherDept) {
@@ -90,6 +97,14 @@ public class DepartmentVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	public DepartmentTypeVO getType() {

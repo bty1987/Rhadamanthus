@@ -31,6 +31,8 @@ public interface MaterialPaymentService {
 
 	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO);
 
+	public long amountMaterialPayment(MaterialPaymentVO materialPayment);
+
 	public void checkMaterialPayment(MaterialPaymentVO materialPaymentVO) throws FLException;
 
 	public void addMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;

@@ -25,7 +25,7 @@ jQuery(function($) {
 
     seacher.base("bocondList", "bopagenation", "boresultList", api.balance.pageBalanceOales);
 
-    seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater", "balance-balanceSelse-lockTime"]);
+    seacher.condition(["balance-oales-name", "balance-oales-status", "balance-oales-grade", "balance-oales-createTime", "balance-oales-creater", "balance-oales-lockTime"]);
 
     seacher.button([{
         id: "createBalanceOales",

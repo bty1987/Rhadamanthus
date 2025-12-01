@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
+import com.fanglin.construction.dao.DrawLineDao;
 import com.fanglin.construction.po.ConstructionInfoDO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.service.ConstructionInfoService;
@@ -42,6 +43,9 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	private ConstructionPlanService constructionPlanService;
 
 	@Autowired
+	private DrawLineDao drawLineDao;
+
+	@Autowired
 	private DecorationDao decorationDao;
 
 	@Autowired
@@ -57,8 +61,16 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 			filters.add(new Filter("decoration.houseType", constructionInfoVO.getDecoration().getHouseType(), "eq"));
 		}
 
+		if (constructionInfoVO != null && constructionInfoVO.getDecoration() != null && constructionInfoVO.getDecoration().getDesignStatus() != null) {
+			filters.add(new Filter("decoration.designStatus", String.valueOf(constructionInfoVO.getDecoration().getDesignStatus()), "eq"));
+		}
+
 		if (constructionInfoVO != null && constructionInfoVO.getDrawlineTime() != null) {
-			filters.add(new Filter("drawlineTimeFlag", "", "eq"));
+			filters.add(new Filter("drawlineTimeFlag", DateUtil.getDateToDateString(DateUtil.getTimestampToDate(constructionInfoVO.getDrawlineTime()), "yyyy-MM-dd"), "eq"));
+		}
+
+		if (constructionInfoVO != null && constructionInfoVO.getIsIssue() != null) {
+			filters.add(new Filter("isIssue", String.valueOf(constructionInfoVO.getIsIssue()), "eq"));
 		}
 
 		List<ConstructionInfoDO> constructionInfoDOs = constructionInfoDao.pageConstructionInfo(paging, filters, company);
@@ -94,13 +106,18 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 	@Override
 	public List<?> countConstructionInfo(ConstructionInfoVO constructionInfoVO, int company) {
 
+		List<Object> ress = new ArrayList<Object>();
+
 		Timestamp startTime = constructionInfoVO.getStartTime();
 		Timestamp endTime = constructionInfoVO.getEndTime();
 
 		long start = Long.parseLong(DateUtil.getDateToDateString(startTime, "yyyyMMdd"));
 		long end = Long.parseLong(DateUtil.getDateToDateString(endTime, "yyyyMMdd"));
 
-		return constructionInfoDao.countConstructionInfo(start, end, company);
+		ress.addAll(constructionInfoDao.countConstructionInfo(start, end, company));
+		ress.addAll(drawLineDao.countDrawLineForTime(start, end, company));
+
+		return ress;
 	}
 
 	@Override

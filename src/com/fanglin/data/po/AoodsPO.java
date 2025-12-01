@@ -33,6 +33,8 @@ public class AoodsPO implements Serializable {
 
 	public static final String COLUMN_ANAME_STR = "accessoriesType.name";
 
+	public static final String COLUMN_SANAME_STR = "sortType.name";
+
 	public static final String COLUMN_GID_STR = "goods.gid";
 
 	public static final String COLUMN_NO_STR = "goods.no";
@@ -54,6 +56,8 @@ public class AoodsPO implements Serializable {
 	private GoodsPO goods;
 
 	private AccessoriesTypePO accessoriesType;
+
+	private AccessoriesTypePO sortType;
 
 	private NoodsPO noods;
 
@@ -101,9 +105,10 @@ public class AoodsPO implements Serializable {
 		this.constructionNode = constructionNode;
 	}
 
-	public AoodsPO(AccessoriesTypePO accessoriesType, GoodsPO goods, NoodsPO noods, ConstructionNodePO constructionNode) {
+	public AoodsPO(AccessoriesTypePO accessoriesType, AccessoriesTypePO sortType, GoodsPO goods, NoodsPO noods, ConstructionNodePO constructionNode) {
 		super();
 		this.accessoriesType = accessoriesType;
+		this.sortType = sortType;
 		this.goods = goods;
 		this.noods = noods;
 		this.constructionNode = constructionNode;
@@ -147,6 +152,16 @@ public class AoodsPO implements Serializable {
 
 	public void setAccessoriesType(AccessoriesTypePO accessoriesType) {
 		this.accessoriesType = accessoriesType;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "satid", referencedColumnName = "atid")
+	public AccessoriesTypePO getSortType() {
+		return sortType;
+	}
+
+	public void setSortType(AccessoriesTypePO sortType) {
+		this.sortType = sortType;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -270,7 +285,7 @@ public class AoodsPO implements Serializable {
 
 	public AoodsVO ptv(AoodsVO aoodsVO) {
 
-		BeanUtil.copyProperties(this, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany", "noods", "constructionNode"));
+		BeanUtil.copyProperties(this, aoodsVO, Arrays.asList("goods", "accessoriesType", "sortType", "bompany", "noods", "constructionNode"));
 
 		if (aoodsVO.getGoods() != null && getGoods() != null) {
 			getGoods().ptv(aoodsVO.getGoods());
@@ -280,6 +295,7 @@ public class AoodsPO implements Serializable {
 		}
 
 		if (aoodsVO.getAccessoriesType() != null && getAccessoriesType() != null) getAccessoriesType().ptv(aoodsVO.getAccessoriesType());
+		if (aoodsVO.getSortType() != null && getSortType() != null) getSortType().ptv(aoodsVO.getSortType());
 		if (aoodsVO.getNoods() != null && getNoods() != null) getNoods().ptv(aoodsVO.getNoods());
 		if (aoodsVO.getConstructionNode() != null && getConstructionNode() != null) getConstructionNode().ptv(aoodsVO.getConstructionNode());
 

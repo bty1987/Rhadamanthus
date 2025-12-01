@@ -82,7 +82,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		query.add(query.getCriterion(SelectionItemPO.COLUMN_COMPANY_STR, company, "eq"));
 
 		query.add(query.getCriterion("accountStatus", SelectionItemPO.ACCOUNT_STATUS_INIT_INT, "eq"));
-		query.add(query.getCriterion("status", SelectionItemPO.STATUS_BALANCE_SHORT, "eq"));
+		query.add(query.getCriterion("status", SelectionItemPO.STATUS_REVIEW_SHORT, "eq"));
 
 		queryFilterExcute(query, filters);
 

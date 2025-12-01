@@ -63,7 +63,7 @@ public class BalanceOalesServiceImpl implements BalanceOalesService {
 	private BalanceDao balanceDao;
 
 	@Override
-	public void pageBalanceOales(Paging paging, List<Filter> filters, int company) {
+	public void pageBalanceOales(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<BalanceOalesPO> balanceOalesPOs = balanceOalesDao.pageBalanceOales(paging, filters, company);
 		List<BalanceOalesVO> balanceOalesVOs = new ArrayList<BalanceOalesVO>();
@@ -85,7 +85,7 @@ public class BalanceOalesServiceImpl implements BalanceOalesService {
 	}
 
 	@Override
-	public void pageBalanceOalesForBalance(Paging paging, List<Filter> filters, int company) {
+	public void pageBalanceOalesForBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<BalanceOalesBO> balanceOalesBOs = balanceOalesDao.pageBalanceOalesForBalance(paging, filters, company);
 		List<BalanceOalesVO> balanceOalesVOs = new ArrayList<BalanceOalesVO>();
@@ -94,7 +94,7 @@ public class BalanceOalesServiceImpl implements BalanceOalesService {
 
 		for (BalanceOalesBO balanceOalesBO : balanceOalesBOs) {
 
-			balanceOalesVO = new BalanceOalesVO(new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
+			balanceOalesVO = new BalanceOalesVO(new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyPropertie(balanceOalesBO, balanceOalesVO, Arrays.asList("balance", "creater", "balancer"));
 			BeanUtil.copyProperties(balanceOalesBO.getCreater(), balanceOalesVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));

@@ -421,6 +421,7 @@
             com.post(api.quotation.submitQuotation, {
                 "quotation.qid": v.qid
             });
+            
             searcher.doSearch();
         },
         show: function(v) {
@@ -430,7 +431,7 @@
     };
 
     var btnAudit = {
-        name: "审核",
+        name: "审完",
         clazz: "btn-warning",
         handle: function(v) {
 
@@ -446,7 +447,7 @@
     };
 
     var btnFinish = {
-        name: "完成",
+        name: "交付",
         clazz: "btn-warning",
         handle: function(v) {
 
@@ -685,7 +686,7 @@
         },
         show: function(v) {
 
-            return (v.status == constant.quotation().quotation.STATUS_INIT_INT);
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_FINISH_INT && v.status == constant.quotation().quotation.STATUS_INIT_INT);
         }
     };
 
@@ -708,7 +709,7 @@
         },
         show: function(v) {
 
-            return (v.status == constant.quotation().quotation.STATUS_LOCK_INT);
+            return (v.attstatus == constant.quotation().quotation.ATTSTATUS_FINISH_INT && v.status == constant.quotation().quotation.STATUS_LOCK_INT);
         }
     };
 
@@ -1235,7 +1236,7 @@
             name: "制作时长",
             prop: function(v) {
 
-                return v.workTime + 's';
+                return sts(v.workTime);
             },
             clazz: "blue",
             show: function(v) {
@@ -1247,7 +1248,7 @@
             name: "审核时长",
             prop: function(v) {
 
-                return v.auditTime + 's';
+                return sts(v.auditTime);
             },
             clazz: "blue",
             show: function(v) {
@@ -1673,4 +1674,18 @@
             com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, false);
         }
     });
+    
+    function sts(seconds) {
+        
+        var days = Math.floor(seconds / 86400);
+        var hours = Math.floor((seconds % 86400) / 3600);
+        var minutes = Math.floor((seconds % 3600) / 60);
+        var secs = seconds % 60;
+
+        if (days > 0) {
+            return `${days}天 ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        } else {
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+    }
 });

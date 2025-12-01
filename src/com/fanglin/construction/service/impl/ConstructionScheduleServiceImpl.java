@@ -32,6 +32,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -73,7 +74,7 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		List<ConstructionScheduleVO> constructionVOs = new ArrayList<ConstructionScheduleVO>();
 
 		for (ConstructionScheduleDO constructionScheduleDO : constructionScheduleDOs) {
-			constructionVOs.add(constructionScheduleDO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(), new DecorationVO())));
+			constructionVOs.add(constructionScheduleDO.ptv(new ConstructionScheduleVO(new ConstructionNodeVO(), new ConstructionVO(new DecorationVO(), new UserBaseVO()), new DecorationVO())));
 		}
 
 		paging.setData(constructionVOs);

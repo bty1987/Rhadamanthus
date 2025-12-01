@@ -13,7 +13,10 @@ $(function() {
             startTime: com.focusPage("#startTime"),
             endTime: com.focusPage("#endTime"),
             types: com.focusPage("#type"),
+            atttype: com.focusPage("#atttype"),
             multiple: com.focusPage("#multiple"),
+            validays: com.focusPage("#validays"),
+            exchange: com.focusPage("#exchange"),
             content: com.focusPage("#content")
         },
 
@@ -28,6 +31,8 @@ $(function() {
     activity.saveBtn.bindClick(saveData);
 
     activity.items.types.bindData(constant.information().activity.type.datas, "key", "value");
+
+    activity.items.atttype.bindData(constant.information().activity.atttype.datas, "key", "value");
 
     activity.modals.activityModal.on("hide.bs.modal", function() {
 
@@ -75,7 +80,7 @@ $(function() {
             });
             var $span = $('<span></span>').addClass('lbl status-lbl');
 
-            var propertyArr = [["创建人:", v.creater.currentName, "grey"], ["开始时间:", v.startTime, "green"], ["结束时间:", v.endTime, "green"], ["状态:", v.status == constant.information().activity.STATUS_VALID_INT ? "有效" : "无效", "red"], ["类型:", constant.information().activity.type.keys[v.type], "red"], ["倍数:", v.multiple, "blue"], ["默认标识:", v.defaults == constant.information().activity.DEFAULTS_DEFAULT_INT ? "默认" : "标准", "red"], ["说明:", v.content, "grey"]];
+            var propertyArr = [["创建人:", v.creater.currentName, "grey"], ["开始时间:", v.startTime, "green"], ["结束时间:", v.endTime, "green"], ["状态:", v.status == constant.information().activity.STATUS_VALID_INT ? "有效" : "无效", "red"], ["活动类型:", constant.information().activity.type.keys[v.type], "red"], ["类型:", constant.information().activity.atttype.keys[v.atttype], "red"], ["倍数:", v.multiple, "blue"], ["有效天数:", v.validays, "blue"], ["兑换率:", v.exchange, "blue"], ["默认标识:", v.defaults == constant.information().activity.DEFAULTS_DEFAULT_INT ? "默认" : "标准", "red"], ["说明:", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -104,6 +109,8 @@ $(function() {
                 activity.items.startTime.val(v.startTime.substring(0, 10)).attr("disabled", "disabled");
                 activity.items.types.val(v.type).attr("disabled", "disabled");
                 activity.items.multiple.val(v.multiple).attr("disabled", "disabled");
+                activity.items.validays.val(v.validays);
+                activity.items.exchange.val(v.exchange);
                 activity.items.endTime.val(v.endTime.substring(0, 10));
                 activity.items.content.val(v.content);
 
@@ -240,7 +247,10 @@ $(function() {
             "activity.startTime": activity.items.startTime.val(),
             "activity.endTime": String(activity.items.endTime.val()).substring(0, 10) + " 23:59:59",
             "activity.type": activity.items.types.val(),
+            "activity.atttype": activity.items.atttype.val(),
             "activity.multiple": activity.items.multiple.val(),
+            "activity.validays": activity.items.validays.val(),
+            "activity.exchange": activity.items.exchange.val(),
             "activity.content": activity.items.content.val(),
             "activity.paytype": payType
         };

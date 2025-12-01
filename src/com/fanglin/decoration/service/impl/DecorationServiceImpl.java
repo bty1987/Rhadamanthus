@@ -952,6 +952,9 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		}
 
+		if (decorationVO.getDesigner() != null && decorationPO.getDesigner() != null) decorationVO.getDesigner().setPhone(decorationPO.getDesigner().getPhone());
+		if (decorationVO.getSupervisor() != null && decorationPO.getSupervisor() != null) decorationVO.getSupervisor().setPhone(decorationPO.getSupervisor().getPhone());
+
 		addition(decorationPO.getAddition(), decorationVO);
 
 		decorationVO.setDompany(CompanyServiceImpl.encode(decorationPO.getCompany()));
@@ -1122,7 +1125,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_INITIA_INT);
 		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_INITIAL_INT);
 
-		decorationPO.setOtherStatus(0);
+		decorationPO.setOtherStatus(DecorationPO.STATUS_INIT_INT);
 		decorationPO.setType(decorationVO.getType());
 		decorationPO.setTypeness(decorationVO.getTypeness());
 
@@ -1341,7 +1344,6 @@ public class DecorationServiceImpl implements DecorationService {
 				oldTime = decorationPO.getPrecontractTime();
 				decorationPO.setPrecontractTime(dateTime);
 				break;
-
 		}
 
 		decorationDao.update(decorationPO);
@@ -1511,8 +1513,10 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (!Arrays.asList(DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_SIGNED_INT).contains(decorationPO.getStatus())) {
-			throw new FLException(140025, "订单非签约,不能终止合同");
+		short status = decorationPO.getStatus();
+
+		if (!Arrays.asList(DecorationPO.STATUS_PROSIGNTERMINABLE_INT, DecorationPO.STATUS_SIGNEDTERMINABLE_INT).contains(status)) {
+			throw new FLException(140025, "订单非可终止状态,不能终止合同");
 		}
 
 		for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
@@ -1561,9 +1565,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		long advancePaymentAmount = advancePaymentPO == null ? 0 : advancePaymentPO.getBalance();
 
-		Short[] status = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
+		Short[] statuses = { PaymentPO.PAYMENT_STATUS_PAID_INT, PaymentPO.PAYMENT_STATUS_CONFIRMED_INT };
 
-		long decorationPaymentAmount = decorationPaymentDao.amountDecorationPayment(orderId, status, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
+		long decorationPaymentAmount = decorationPaymentDao.amountDecorationPayment(orderId, statuses, PaymentPO.PAYMENT_TYPE_EXTRACT_INT, PaymentPO.PAYMENT_PAYMENTTYPE_PROJECT_INT);
 
 		long amount = Arith.add(advancePaymentAmount, decorationPaymentAmount);
 

@@ -16,7 +16,7 @@ jQuery(function($) {
 
     seacher.base("bocondList1", "bopagenation1", "boresultList1", api.balance.pageBalanceOalesForBalance);
 
-    seacher.condition(["balance-balanceOales-balance-no", "balance-balanceOales-balance-type", "balance-balanceOales-balance-status", "balance-balanceSelection-balance-isPay"]);
+    seacher.condition(["balance-oales-balance-no", "balance-oales-balance-type", "balance-oales-balance-status", "balance-selection-balance-isPay"]);
 
     seacher.history("balanceOales4balancePostData");
 

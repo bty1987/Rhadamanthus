@@ -341,6 +341,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 			case ApprovalPO.APPROVAL_TYPE_QUOTATION_PREFER‌_INT:
 				approvalQuotationPreferService.refuseForQuotationPrefer(approvalPO);
 				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_TERMINAL_INT:
+				approvalDecorationTerminalService.refuse(approvalPO);
+				break;
 			default:
 				break;
 		}

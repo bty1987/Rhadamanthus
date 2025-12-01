@@ -12,7 +12,7 @@ public interface AoodsDao extends Dao<AoodsPO> {
 
 	public List<AoodsPO> pageAoods(Paging paging, List<Filter> filters, int company, String companyType) throws FLException;
 
-	public List<AoodsPO> queryAoods(Long atid, Short atttype, int bompany);
+	public List<AoodsPO> queryAoods(Long atid, Long satid, Short atttype, int bompany);
 
 	public List<AoodsPO> queryAoodsByAtid(long atid, int company);
 

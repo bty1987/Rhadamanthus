@@ -106,13 +106,14 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 			extensionItemPO = new ExtensionItemPO();
 
+			if (extensionPO.getType() == ExtensionPO.TYPE_SUB_INT) {
+				handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemVO.getQuoteItemId(), extensionItemVO.getNum(), 0);
+			}
+
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
 			extensionItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
 
-			if (extensionItemPO.getType() == ExtensionItemPO.TYPE_SUB_QUOTE_INT) {
-				handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemPO.getQuoteItemId(), extensionItemVO.getNum(), 0);
-			}
 		} else {
 
 			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
@@ -121,13 +122,13 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 				throw new FLException(200037, "存在关联选材项");
 			}
 
+			if (extensionPO.getType() == ExtensionPO.TYPE_SUB_INT) {
+				handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemVO.getQuoteItemId(), extensionItemVO.getNum(), extensionItemPO.getNum());
+			}
+
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
-
-			if (extensionItemPO.getType() == ExtensionItemPO.TYPE_SUB_QUOTE_INT) {
-				handleQuotationItem(extensionItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), extensionItemPO.getQuoteItemId(), extensionItemVO.getNum(), extensionItemPO.getNum());
-			}
 		}
 
 		extensionItemPO.setNum(extensionItemVO.getNum());
@@ -300,7 +301,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
-		if (_diff >= 0 && num < vonum) {
+		if (_diff >= 0 && _diff > num) {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 

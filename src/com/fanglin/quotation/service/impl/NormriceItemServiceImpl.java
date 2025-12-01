@@ -67,12 +67,13 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 		NormriceItemPO normriceItemPO = new NormriceItemPO();
 
 		if (normriceItemVO.getSid() != null) {
+
 			NormaddPO normaddPO = normaddDaoImpl.get(normriceItemVO.getSid());
 
 			normriceItemPO.setQid(quotationPO.getQid());
 			normriceItemPO.setSid(quotationPO.getQid());
 
-			normriceItemPO.setType(NormriceItemPO.TYPE_OFFER_INT);
+			normriceItemPO.setType(NormriceItemPO.TYPE_QUOTA_INT);
 			normriceItemPO.setNormtype(NormriceItemPO.NORMTYPE_ADD_INT);
 			normriceItemPO.setAtttype(NormriceItemPO.ATTTYPE_COLLECTION_INT);
 			normriceItemPO.setNum(normriceItemVO.getNum());
@@ -113,7 +114,6 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 			BeanUtil.copyProperties(normriceItemPO, normriceItemVO, Arrays.asList("constructionNode"));
 			BeanUtil.copyPropertie(normriceItemPO.getConstructionNode(), normriceItemVO.getConstructionNode(), Arrays.asList("startSurvey", "endSurvey"));
-
 		}
 
 		return 0;

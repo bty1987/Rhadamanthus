@@ -32,6 +32,8 @@ public class CustomerProfileItemPO implements Serializable {
 
 	public static final short TYPE_CHECK_INT = 3;
 
+	public static final short TYPE_DATE_INT = 4;
+
 	private long cpiid;
 
 	private long cpid;

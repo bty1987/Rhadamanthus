@@ -77,39 +77,39 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	private BalanceSalesBalanceService balanceSalesBalanceService;
 
 	@Override
-	public void pageBalanceSales(Paging paging, List<Filter> filters, int company) {
+	public void pageBalanceSales(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSales(paging, filters, company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);
 	}
 
 	@Override
-	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, BalanceSalesVO balanceSalesVO, int company) {
+	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, BalanceSalesVO balanceSalesVO, int company) throws FLException {
 
 		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSalesForBalance(paging, filters, balanceSalesVO.getStatus(), company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);
 	}
 
 	@Override
-	public void pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) {
+	public void pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) throws FLException {
 
 		List<BalanceSalesBO> balanceSalesBOs = balanceSalesDao.pageBalanceSalesForSupplier(paging, filters, userId, company);
 		List<BalanceSalesVO> balanceSalesVOs = new ArrayList<BalanceSalesVO>();
 
 		for (BalanceSalesBO balanceSalesBO : balanceSalesBOs) {
-			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
+			balanceSalesVOs.add(balanceSalesBO.ptv(new BalanceSalesVO(new BrandVO(), new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceSalesVOs);

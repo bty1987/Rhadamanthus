@@ -89,8 +89,11 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 
 		StringBuffer content = new StringBuffer(String.format("装修单号:%s", orderId));
 
-		for (ApprovalDecorationTerminalItemVO approvalDecorationTerminalItemVO : approvalDecorationTerminalItemVOs) {
-			content.append(String.format(", %s: %s", approvalDecorationTerminalItemVO.getPaymentType(), Arith.div(approvalDecorationTerminalItemVO.getReferMoney(), 1000.0)));
+		if (approvalDecorationTerminalItemVOs != null) {
+
+			for (ApprovalDecorationTerminalItemVO approvalDecorationTerminalItemVO : approvalDecorationTerminalItemVOs) {
+				content.append(String.format(", %s: %s", approvalDecorationTerminalItemVO.getPaymentType(), Arith.div(approvalDecorationTerminalItemVO.getReferMoney(), 1000.0)));
+			}
 		}
 
 		approvalPO = new ApprovalPO();
@@ -107,23 +110,32 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 		ApprovalDecorationTerminalPO approvalDecorationTerminalPO = new ApprovalDecorationTerminalPO();
 
 		BeanUtil.copyProperties(approvalDecorationTerminalVO, approvalDecorationTerminalPO);
+
 		approvalDecorationTerminalPO.setAid(approvalPO.getAid());
 
 		approvalDecorationTerminalDao.save(approvalDecorationTerminalPO);
 
-		for (ApprovalDecorationTerminalItemVO approvalDecorationTerminalItemVO : approvalDecorationTerminalItemVOs) {
+		if (approvalDecorationTerminalItemVOs != null) {
 
-			ApprovalDecorationTerminalItemPO approvalDecorationTerminalItemPO = new ApprovalDecorationTerminalItemPO();
+			for (ApprovalDecorationTerminalItemVO approvalDecorationTerminalItemVO : approvalDecorationTerminalItemVOs) {
 
-			BeanUtil.copyProperties(approvalDecorationTerminalItemVO, approvalDecorationTerminalItemPO);
+				ApprovalDecorationTerminalItemPO approvalDecorationTerminalItemPO = new ApprovalDecorationTerminalItemPO();
 
-			approvalDecorationTerminalItemPO.setAid(approvalPO.getAid());
-			approvalDecorationTerminalItemPO.setAdtid(approvalDecorationTerminalPO.getAdtid());
-			approvalDecorationTerminalItemPO.setReferMoney(approvalDecorationTerminalItemVO.getReferMoney());
-			approvalDecorationTerminalItemPO.setPaymentType(approvalDecorationTerminalItemVO.getPaymentType());
+				BeanUtil.copyProperties(approvalDecorationTerminalItemVO, approvalDecorationTerminalItemPO);
 
-			approvalDecorationTerminalItemDao.save(approvalDecorationTerminalItemPO);
+				approvalDecorationTerminalItemPO.setAid(approvalPO.getAid());
+				approvalDecorationTerminalItemPO.setAdtid(approvalDecorationTerminalPO.getAdtid());
+				approvalDecorationTerminalItemPO.setReferMoney(approvalDecorationTerminalItemVO.getReferMoney());
+				approvalDecorationTerminalItemPO.setPaymentType(approvalDecorationTerminalItemVO.getPaymentType());
+
+				approvalDecorationTerminalItemDao.save(approvalDecorationTerminalItemPO);
+			}
+
 		}
+
+		decorationPO.setStatus((short) (decorationPO.getStatus() + DecorationPO.STATUS_APPROVAL_INT));
+
+		decorationDao.update(decorationPO);
 
 		messageService.sendMessage(approvalPO.getReceiver().getUserId(), approvalPO.getSender().getUserId(), approvalPO.getContents(), MessagePO.TYPE_SEND_APPROVAL_INT, company);
 
@@ -160,21 +172,51 @@ public class ApprovalDecorationTerminalServiceImpl implements ApprovalDecoration
 
 		decorationVO.setOrderId(orderId);
 
+		decorationPO.setStatus((short) (decorationPO.getStatus() - DecorationPO.STATUS_APPROVAL_INT + DecorationPO.STATUS_TERMINABLE_INT));
+
+		decorationDao.update(decorationPO);
+
 		List<ApprovalDecorationTerminalItemPO> approvalDecorationTerminalItemPOs = approvalDecorationTerminalItemDao.queryApprovalDecorationTerminalItemByAdtId(approvalDecorationTerminalPO.getAdtid());
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 
-		for (ApprovalDecorationTerminalItemPO approvalDecorationTerminalItemPO : approvalDecorationTerminalItemPOs) {
+		if (approvalDecorationTerminalItemPOs != null && approvalDecorationTerminalItemPOs.size() != 0) {
 
-			DecorationPaymentVO decorationPaymentVO = new DecorationPaymentVO();
+			for (ApprovalDecorationTerminalItemPO approvalDecorationTerminalItemPO : approvalDecorationTerminalItemPOs) {
 
-			decorationPaymentVO.setPaymentType(approvalDecorationTerminalItemPO.getPaymentType());
-			decorationPaymentVO.setReferMoney(approvalDecorationTerminalItemPO.getReferMoney());
+				DecorationPaymentVO decorationPaymentVO = new DecorationPaymentVO();
 
-			decorationPaymentVOs.add(decorationPaymentVO);
+				decorationPaymentVO.setPaymentType(approvalDecorationTerminalItemPO.getPaymentType());
+				decorationPaymentVO.setReferMoney(approvalDecorationTerminalItemPO.getReferMoney());
 
+				decorationPaymentVOs.add(decorationPaymentVO);
+			}
+
+			decorationService.terminalDecoration(decorationVO, decorationPaymentVOs, approvalPO.getReceiver().getUserId(), decorationPO.getCompany());
 		}
 
-		decorationService.terminalDecoration(decorationVO, decorationPaymentVOs, approvalPO.getReceiver().getUserId(), decorationPO.getCompany());
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refuse(ApprovalPO approvalPO) throws FLException {
+
+		ApprovalDecorationTerminalPO approvalDecorationTerminalPO = approvalDecorationTerminalDao.queryApprovalDecorationTerminalByAId(approvalPO.getAid());
+
+		if (approvalDecorationTerminalPO == null) {
+			throw new FLException(240003, "审批信息不完整");
+		}
+		String orderId = approvalDecorationTerminalPO.getOrderId();
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		decorationPO.setStatus((short) (decorationPO.getStatus() - DecorationPO.STATUS_APPROVAL_INT));
+
+		decorationDao.update(decorationPO);
 
 		return 0;
 	}

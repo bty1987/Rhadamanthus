@@ -351,6 +351,11 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		salesRefundsPO.setComment(approvalPO.getComment());
 
 		salesRefundsDao.save(salesRefundsPO);
+		salesRefundsDao.flush();
+
+		salesPaymentPO.setSalesRefunds(salesRefundsPO);
+
+		salesPaymentDao.update(salesPaymentPO);
 
 		List<Short> balanceStatuses = Arrays.asList(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT, SalesPO.BALANCESTATUS_SETTLEMENT_SHORT, SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
 

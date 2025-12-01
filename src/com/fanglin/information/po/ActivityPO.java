@@ -68,6 +68,10 @@ public class ActivityPO implements java.io.Serializable {
 
 	private int multiple;
 
+	private int validays;
+
+	private int exchange;
+
 	private UserPO creater;
 
 	private Timestamp createTime;
@@ -162,6 +166,24 @@ public class ActivityPO implements java.io.Serializable {
 
 	public void setMultiple(int multiple) {
 		this.multiple = multiple;
+	}
+
+	@Column(name = "validays")
+	public int getValidays() {
+		return validays;
+	}
+
+	public void setValidays(int validays) {
+		this.validays = validays;
+	}
+
+	@Column(name = "exchange")
+	public int getExchange() {
+		return exchange;
+	}
+
+	public void setExchange(int exchange) {
+		this.exchange = exchange;
 	}
 
 	@Column(name = "createTime")

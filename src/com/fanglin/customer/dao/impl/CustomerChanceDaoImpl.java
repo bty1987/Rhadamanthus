@@ -137,6 +137,8 @@ public class CustomerChanceDaoImpl extends DaoImpl<CustomerChancePO> implements 
 			} else if ("source.buildArea".equals(field)) {
 				int dataF = Integer.parseInt(data);
 				query.add(query.getCriterion("source.buildArea", Arith.mul(dataF, 1000000), op));
+			} else if ("source.houseAttr".equals(field)) {
+				query.add(query.getCriterion("source.houseAttr", Short.valueOf(data), op));
 			} else if ("source.creater".equals(field)) {
 				query.add(query.getCriterion("designer.userId", data, op));
 			} else if ("source.creater.dept".equals(field)) {

@@ -88,6 +88,8 @@ public class ConstructionScheduleDaoImpl extends DaoImpl<ConstructionSchedulePO>
 
 			if ("cnid".equals(field)) {
 				query.alias("node", "node").add(query.getCriterion("cnid", Long.parseLong(data), op));
+			} else if ("isUpload".equals(field)) {
+				query.add(Restrictions.eq("isUpload", Short.valueOf(data)));
 			} else if ("startTime".equals(field)) {
 				query.timeranges(ConstructionScheduleDO.COLUMN_STATUSTIME_STR, data);
 			} else if ("endTime".equals(field)) {

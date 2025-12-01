@@ -66,6 +66,14 @@ public class DecorationPO implements Serializable {
 
 	public static final short STATUS_COMPLETED_INT = 8;// 完工
 
+	public static final short STATUS_APPROVAL_INT = 20;// 待审中
+
+	public static final short STATUS_TERMINABLE_INT = 30;// 可终止
+
+	public static final short STATUS_PROSIGNTERMINABLE_INT = 32;// 预签可终止
+
+	public static final short STATUS_SIGNEDTERMINABLE_INT = 33;// 签约可终止
+
 	public static final long PROJECTSTATUS_INITIAL_INT = 0; // 初始
 
 	public static final long PROJECTSTATUS_START_INT = 1; // 开工
@@ -95,8 +103,6 @@ public class DecorationPO implements Serializable {
 	public static final short BALANCESTATUS_INIT_INT = 0;// 结算
 
 	public static final short BALANCESTATUS_CONDUCT_INT = 1;// 结算
-
-	public static final String CONFIG_KEY_HOLONOMY_STR = "fullsub%s";
 
 	private long doid;
 
@@ -190,7 +196,7 @@ public class DecorationPO implements Serializable {
 
 	private short balanceStatus;
 
-	private int otherStatus;
+	private short otherStatus;
 
 	private QuotationVersionPO version;
 
@@ -542,11 +548,11 @@ public class DecorationPO implements Serializable {
 		this.busitype = busitype;
 	}
 
-	public int getOtherStatus() {
+	public short getOtherStatus() {
 		return otherStatus;
 	}
 
-	public void setOtherStatus(int otherStatus) {
+	public void setOtherStatus(short otherStatus) {
 		this.otherStatus = otherStatus;
 	}
 
@@ -726,19 +732,13 @@ public class DecorationPO implements Serializable {
 		decorationVO.getDesigner().setDept(new DepartmentVO());
 		decorationVO.getDesigner().getDept().setFatherDept(new DepartmentVO());
 
-		BeanUtil.copyPropertie(this.getDesigner(), decorationVO.getDesigner(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyPropertie(this.getDesigner().getDuty(), decorationVO.getDesigner().getDuty(), Arrays.asList("departmentType"));
-		BeanUtil.copyPropertie(this.getDesigner().getDept(), decorationVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-		BeanUtil.copyPropertie(this.getDesigner().getDept().getFatherDept(), decorationVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		if (decorationVO.getDesigner() != null && this.getDesigner() != null) decorationVO.getDesigner().setBaseInfo(getDesigner());
 
 		decorationVO.getSalesman().setDuty(new DutyVO());
 		decorationVO.getSalesman().setDept(new DepartmentVO());
 		decorationVO.getSalesman().getDept().setFatherDept(new DepartmentVO());
 
-		BeanUtil.copyPropertie(this.getSalesman(), decorationVO.getSalesman(), Arrays.asList("duty", "dept"));
-		BeanUtil.copyPropertie(this.getSalesman().getDuty(), decorationVO.getSalesman().getDuty(), Arrays.asList("departmentType"));
-		BeanUtil.copyPropertie(this.getSalesman().getDept(), decorationVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-		BeanUtil.copyPropertie(this.getSalesman().getDept().getFatherDept(), decorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		if (decorationVO.getSalesman() != null && this.getSalesman() != null) decorationVO.getSalesman().setBaseInfo(getSalesman());
 
 		decorationVO.setVersion(new QuotationVersionVO());
 
@@ -757,10 +757,7 @@ public class DecorationPO implements Serializable {
 			decorationVO.getSupervisor().setDept(new DepartmentVO());
 			decorationVO.getSupervisor().getDept().setFatherDept(new DepartmentVO());
 
-			BeanUtil.copyPropertie(this.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(this.getSupervisor().getDuty(), decorationVO.getSupervisor().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(this.getSupervisor().getDept(), decorationVO.getSupervisor().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyPropertie(this.getSupervisor().getDept().getFatherDept(), decorationVO.getSupervisor().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+			decorationVO.getSupervisor().setBaseInfo(getSupervisor());
 		}
 
 		if (decorationVO.getCreater() != null && this.getCreater() != null) {
@@ -769,23 +766,12 @@ public class DecorationPO implements Serializable {
 			decorationVO.getCreater().setDept(new DepartmentVO());
 			decorationVO.getCreater().getDept().setFatherDept(new DepartmentVO());
 
-			BeanUtil.copyPropertie(this.getCreater(), decorationVO.getCreater(), Arrays.asList("duty", "dept"));
-			BeanUtil.copyPropertie(this.getCreater().getDuty(), decorationVO.getCreater().getDuty(), Arrays.asList("departmentType"));
-			BeanUtil.copyPropertie(this.getCreater().getDept(), decorationVO.getCreater().getDept(), Arrays.asList("type", "fatherDept", "manager"));
-			BeanUtil.copyPropertie(this.getCreater().getDept().getFatherDept(), decorationVO.getCreater().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+			decorationVO.getCreater().setBaseInfo(getCreater());
 		}
 
-		if (decorationVO.getQuoter() != null && this.getQuoter() != null) {
-			BeanUtil.copyPropertie(this.getQuoter(), decorationVO.getQuoter(), Arrays.asList("duty", "dept"));
-		}
-
-		if (decorationVO.getEscorter() != null && this.getEscorter() != null) {
-			BeanUtil.copyPropertie(this.getEscorter(), decorationVO.getEscorter(), Arrays.asList("duty", "dept"));
-		}
-
-		if (decorationVO.getMaterialer() != null && this.getMaterialer() != null) {
-			BeanUtil.copyPropertie(this.getMaterialer(), decorationVO.getMaterialer(), Arrays.asList("duty", "dept"));
-		}
+		if (decorationVO.getQuoter() != null && this.getQuoter() != null) decorationVO.getQuoter().setBaseInfo(getQuoter());
+		if (decorationVO.getEscorter() != null && this.getEscorter() != null) decorationVO.getEscorter().setBaseInfo(getEscorter());
+		if (decorationVO.getMaterialer() != null && this.getMaterialer() != null) decorationVO.getMaterialer().setBaseInfo(getMaterialer());
 
 		if (getAddition() != null) {
 			decorationVO.setIssueTime(getAddition().getIssueTime());

@@ -5,25 +5,40 @@ $(function() {
         items: {
             name: com.focusPage('#name'),
             workType: com.focusPage('#workType'),
-            comment: com.focusPage('#comment'),
-
+            type: com.focusPage('#type'),
+            sort: com.focusPage('#sort'),
+            comment: com.focusPage('#comment')
         },
 
         btns: {
-            submitBtn: com.focusPage("#submitBtn"),
+            submitBtn: com.focusPage("#submitBtn")
         },
 
         modules: {
 
         },
 
-        atid: null,
-
+        atid: null
     };
 
     com.post(api.common.queryWorkType, {}, function(res) {
 
         accessoriesType.items.workType.bindData(res.workTypes, "id", "name")
+    });
+
+    accessoriesType.items.type.bindData(constant.data().accessoriesType.type.datas, "key", "value");
+
+    accessoriesType.items.type.on("change", function () {
+        switch (accessoriesType.items.type.val()) {
+            case "0":
+                com.focusPage("#sortDiv").css("display", "none");
+                accessoriesType.items.sort.removeClass("v_required");
+                break;
+            case "1":
+                com.focusPage("#sortDiv").css("display", "block");
+                accessoriesType.items.sort.addClass("v_required");
+                break;
+        }
     });
 
     var searcher = new Searcher();
@@ -41,6 +56,17 @@ $(function() {
         prop: "workType.name",
         clazz: "grey"
     }, {
+        fieId: "type",
+        name: "类型",
+        prop: "type",
+        clazz: "red",
+        dataset: constant.data().accessoriesType.type.keys
+    }, {
+        fieId: "sort",
+        name: "排序",
+        prop: "sort",
+        clazz: "green"
+    }, {
         fieId: "status",
         name: "状态",
         prop: function(v) {
@@ -53,7 +79,7 @@ $(function() {
         name: "备注",
         prop: "comment",
         clazz: "grey"
-    }, ];
+    }];
 
     var linebtns = [{
         name: "编辑",
@@ -61,18 +87,20 @@ $(function() {
         handle: function(v) {
 
             com.clearValidator();
-
-            accessoriesType.items.name.val("");
-            accessoriesType.items.workType.val(0);
-            accessoriesType.items.comment.val("");
-
+            com.cleanItems(accessoriesType.items);
             com.closePopup();
 
             accessoriesType.atid = v.atid;
 
             accessoriesType.items.name.val(v.name);
             accessoriesType.items.workType.val(v.workType.id);
+            accessoriesType.items.type.val(v.type);
+            accessoriesType.items.sort.val(v.sort);
             accessoriesType.items.comment.val(v.comment);
+
+            if (v.type == 0) {
+                com.focusPage("#sortDiv").css("display", "none");
+            }
 
             com.popup4model('#layerAdd', '编辑');
         }
@@ -96,10 +124,10 @@ $(function() {
 
             return !v.status;
         }
-    }, ];
+    }];
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageAccessoriesType);
-    searcher.condition(["data-worktype"]);
+    searcher.condition(["data-worktype", "data-accessoriesType-type"]);
 
     searcher.button(function() {
 
@@ -122,14 +150,12 @@ $(function() {
     com.focusPage("#addAccessoriesType").click(function() {
 
         com.clearValidator();
-
-        accessoriesType.items.name.val("");
-        accessoriesType.items.workType.val(0);
-        accessoriesType.items.comment.val("");
-
+        com.cleanItems(accessoriesType.items);
         com.closePopup();
 
         accessoriesType.atid = null;
+
+        com.focusPage("#sortDiv").css("display", "none");
 
         com.popup4model('#layerAdd', '添加')
     });
@@ -159,14 +185,19 @@ $(function() {
 
         var name = accessoriesType.items.name.val();
         var workType = accessoriesType.items.workType.val();
+        var type = accessoriesType.items.type.val();
+        var sort = accessoriesType.items.sort.val();
         var comment = accessoriesType.items.comment.val();
 
         var url = api.data.addAccessoriesType;
         var options = {
             "accessoriesType.name": name,
             "accessoriesType.workType.id": workType,
+            "accessoriesType.type": type,
             "accessoriesType.comment": comment
         };
+
+        options["accessoriesType.sort"] = type == 0 ? 0 : sort;
 
         if (accessoriesType.atid) {
             url = api.data.updateAccessoriesType;

@@ -62,6 +62,8 @@ public class VillageServiceImpl implements VillageService {
 			throw new FLException(130003, "楼盘信息不存在");
 		}
 
+		villageVO.setCityProper(new CityProperVO(new CityVO()));
+
 		return villagePO.ptv(villageVO);
 	}
 

@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import com.fanglin.payment.vo.SalesPaymentVO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.po.SalesRefundsPO;
 import com.fanglin.utils.BeanUtil;
 
 @Entity
@@ -81,6 +82,8 @@ public class SalesPaymentPO implements Serializable {
 	private SalesReceiptPO salesReceipt;
 
 	private SalesPO sales;
+
+	private SalesRefundsPO salesRefunds;
 
 	private String orderId;
 
@@ -150,6 +153,16 @@ public class SalesPaymentPO implements Serializable {
 
 	public void setSales(SalesPO sales) {
 		this.sales = sales;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "rid", referencedColumnName = "rid")
+	public SalesRefundsPO getSalesRefunds() {
+		return salesRefunds;
+	}
+
+	public void setSalesRefunds(SalesRefundsPO salesRefunds) {
+		this.salesRefunds = salesRefunds;
 	}
 
 	@Column(name = "orderId")
@@ -254,7 +267,7 @@ public class SalesPaymentPO implements Serializable {
 
 	public SalesPaymentVO ptv(SalesPaymentVO salesPaymentVO) {
 
-		BeanUtil.copyProperties(this, salesPaymentVO, Arrays.asList("creater", "sales", "salesReceipt"));
+		BeanUtil.copyProperties(this, salesPaymentVO, Arrays.asList("creater", "sales", "salesReceipt", "salesRefunds"));
 
 		if (salesPaymentVO.getSalesReceipt() != null && getSalesReceipt() != null) {
 			BeanUtil.copyProperties(getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
@@ -268,9 +281,10 @@ public class SalesPaymentPO implements Serializable {
 			BeanUtil.copyProperties(getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
 		}
 
-		if (salesPaymentVO.getCreater() != null) salesPaymentVO.getCreater().setBaseInfo(getCreater());
+		if (salesPaymentVO.getCreater() != null && getCreater() != null) salesPaymentVO.getCreater().setBaseInfo(getCreater());
 
-		if (salesPaymentVO.getSales() != null) getSales().ptv(salesPaymentVO.getSales());
+		if (salesPaymentVO.getSales() != null && getSales() != null) getSales().ptv(salesPaymentVO.getSales());
+		if (salesPaymentVO.getSalesRefunds() != null && getSalesRefunds() != null) getSalesRefunds().ptv(salesPaymentVO.getSalesRefunds());
 
 		return salesPaymentVO;
 	}

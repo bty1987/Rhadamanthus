@@ -28,6 +28,16 @@ public class QeasureItemPO implements Serializable {
 
 	public static final short ATTTYPE_FUNCTION_AREA_INT = 1;
 
+	public static final short TYPE_TEXT_INT = 0;
+
+	public static final short TYPE_INPUT_INT = 1;
+
+	public static final short TYPE_RADIO_INT = 2;
+
+	public static final short TYPE_CHECK_INT = 3;
+
+	public static final short TYPE_DATE_INT = 4;
+
 	private long qmiid;
 
 	private long qmid;
@@ -125,8 +135,9 @@ public class QeasureItemPO implements Serializable {
 		return content;
 	}
 
-	public void setContent(String content) {
+	public QeasureItemPO setContent(String content) {
 		this.content = content;
+		return this;
 	}
 
 	@OneToMany(mappedBy = "qmiid", fetch = FetchType.LAZY)

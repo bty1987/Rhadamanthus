@@ -85,6 +85,14 @@ public class DrawLineDaoImpl extends DaoImpl<DrawLinePO> implements DrawLineDao 
 		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
 	}
 
+	@Override
+	public List<?> countDrawLineForTime(long startTime, long endTime, int company) {
+
+		String sql = "select dl.actualTime, count(*) as count from construction.drawline dl where dl.actualTime between :start and :end and dl.company = :company and dl.status != 3 group by dl.actualTime";
+
+		return session().createSQLQuery(sql).setLong("start", startTime).setLong("end", endTime).setInteger("company", company).list();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
 		if (filters == null) return;

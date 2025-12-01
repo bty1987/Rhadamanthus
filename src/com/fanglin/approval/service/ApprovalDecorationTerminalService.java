@@ -14,4 +14,6 @@ public interface ApprovalDecorationTerminalService {
 
 	public int approveForDecorationTerminal(ApprovalPO approvalPO) throws FLException;
 
+	public int refuse(ApprovalPO approvalPO) throws FLException;
+
 }

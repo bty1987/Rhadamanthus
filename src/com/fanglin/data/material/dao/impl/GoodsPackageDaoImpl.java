@@ -1,4 +1,4 @@
-package com.fanglin.inventory.dao.impl;
+package com.fanglin.data.material.dao.impl;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.inventory.dao.GoodsPackageDao;
-import com.fanglin.inventory.po.GoodsPackagePO;
+import com.fanglin.data.material.dao.GoodsPackageDao;
+import com.fanglin.data.po.GoodsPackagePO;
 
 @Repository("goodsPackageDao")
 public class GoodsPackageDaoImpl extends DaoImpl<GoodsPackagePO> implements GoodsPackageDao{

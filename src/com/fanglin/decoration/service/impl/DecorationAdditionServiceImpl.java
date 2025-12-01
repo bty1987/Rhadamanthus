@@ -1,15 +1,11 @@
 package com.fanglin.decoration.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.ConstructionNodeDao;
@@ -34,8 +30,6 @@ import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.sales.dao.OalesDao;
 import com.fanglin.sales.po.OalesPO;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
@@ -45,9 +39,6 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
-
-	@Autowired
-	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private DecorationDao decorationDao;
@@ -85,31 +76,6 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		BeanUtil.copyProperties(decorationAdditionPO, decorationAdditionVO);
 
 		return decorationAdditionVO;
-	}
-
-	@Override
-	public Map<String, Object> queryDecorationConfig(List<Short> typeness, int company) {
-
-		Map<String, Object> config = new HashMap<String, Object>();
-
-		JSONArray holonomyConfigs = new JSONArray();
-
-		List<SystemConfigPO> systemConfigPOs = new ArrayList<SystemConfigPO>();
-
-		for (short type : typeness) {
-
-			List<SystemConfigPO> _configs = systemConfigDao.obtainSystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, type), company);
-
-			systemConfigPOs.addAll(_configs);
-		}
-
-		for (SystemConfigPO _config : systemConfigPOs) {
-			holonomyConfigs.addAll(JSONArray.parseArray(_config == null ? "[]" : _config.value("[]")));
-		}
-
-		config.put("machingType", holonomyConfigs);
-
-		return config;
 	}
 
 	@Override

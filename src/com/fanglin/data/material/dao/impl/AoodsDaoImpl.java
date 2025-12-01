@@ -39,7 +39,7 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AoodsPO> queryAoods(Long atid, Short atttype, int bompany) {
+	public List<AoodsPO> queryAoods(Long atid, Long satid, Short atttype, int bompany) {
 
 		Criteria query = session().createCriteria(AoodsPO.class);
 
@@ -47,6 +47,10 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 
 		if (atid != null) {
 			query.add(Restrictions.eq("accessoriesType.atid", atid));
+		}
+
+		if (satid != null) {
+			query.add(Restrictions.eq("sortType.atid", satid));
 		}
 
 		if (atttype != null) {
@@ -117,6 +121,9 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 			} else if (AoodsPO.COLUMN_ANAME_STR.equals(field)) {
 				query.alias("accessoriesType", "accessoriesType");
 				query.add(query.getCriterion(AoodsPO.COLUMN_ANAME_STR, data, op));
+			} else if (AoodsPO.COLUMN_SANAME_STR.equals(field)) {
+				query.alias("sortType", "sortType");
+				query.add(query.getCriterion(AoodsPO.COLUMN_SANAME_STR, data, op));
 			} else if (AoodsPO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			} else if (AoodsPO.COLUMN_BOMPANY_STR.equals(field)) {

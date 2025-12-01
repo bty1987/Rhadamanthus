@@ -15,10 +15,12 @@ import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.GoodsDao;
+import com.fanglin.data.material.dao.SoodsDao;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.material.vo.SoodsVO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.QuotationItemPO;
+import com.fanglin.data.po.SoodsPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
@@ -71,6 +73,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private GoodsDao goodsDao;
+
+	@Autowired
+	private SoodsDao soodsDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -194,6 +199,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200037, "存在关联选材项");
 		}
 
+		SoodsPO soodsPO = soodsDao.get(selectionItemVO.getSoods().getSid());
 		GoodsPO goodsPO = goodsDao.get(selectionItemVO.getGoods().getGid());
 		BrandPO brandPO = brandDao.get(goodsPO.getBid());
 
@@ -232,6 +238,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 			if (rights != null && rights.size() != 0) {
 				checkSelectionItem(selectionItemNO, rights, SelectionItemPO.STATUS_INIT_SHORT, operater);
+			}
+
+			if (soodsPO.getType() == SoodsPO.TYPE_AOODS_INT) {
+				selectionItemNO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
+				selectionItemNO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+				selectionItemNO.setBalancer(operater);
 			}
 
 			selectionItemDao.save(selectionItemNO);

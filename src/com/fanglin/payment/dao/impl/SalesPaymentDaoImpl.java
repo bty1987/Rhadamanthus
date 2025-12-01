@@ -75,6 +75,12 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids, List<Short> status) {
+		return session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.in("sales.sid", sids)).add(Restrictions.in(SalesPaymentPO.COLUMN_STATUS_STR, status)).list();
+
+	}
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<SalesPaymentPO> querySalesPaymentForNotInitBySrid(long srid) {
 		return session().createCriteria(SalesPaymentPO.class).createAlias("salesReceipt", "salesReceipt").add(Restrictions.eq("salesReceipt.srId", srid)).add(Restrictions.sqlRestriction(" status!=0")).list();
 	}
@@ -150,8 +156,12 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 			} else if ("type".equals(field)) {
 				List<Short> type = JSONArray.parseArray(data, Short.class);
 				query.add(query.getCriterion(field, type, op));
+			} else if ("refunds.isAffirm".equals(field)) {
+				query.alias("salesRefunds", "refunds").add(query.getCriterion("refunds.isAffirm", Short.valueOf(data), op));
+			} else if ("refunds.affirmTime.range".equals(field)) {
+				query.alias("salesRefunds", "refunds");
+				query.timeranges("refunds.affirmTime", filter.getData());
 			}
 		}
 	}
-
 }

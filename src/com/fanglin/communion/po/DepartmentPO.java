@@ -60,7 +60,11 @@ public class DepartmentPO implements Serializable {
 
 	private String no;
 
+	private String code;
+
 	private String name;
+
+	private String alias;
 
 	private String pinyin;
 
@@ -85,8 +89,6 @@ public class DepartmentPO implements Serializable {
 	private String comment;
 
 	private int company;
-
-	private String code;
 
 	public DepartmentPO() {
 		super();
@@ -142,6 +144,15 @@ public class DepartmentPO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "alias")
+	public String getAlias() {
+		return alias;
+	}
+
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 
 	@Column(name = "pinyin")
@@ -278,6 +289,17 @@ public class DepartmentPO implements Serializable {
 			BeanUtil.copyProperties(getFatherDept(), departmentVO.getFatherDept(), Arrays.asList("fatherDept", "cityProper", "type", "manager"));
 		}
 
+		if (departmentVO.getManager() != null && getManager() != null && getManager().getUid() != 0) departmentVO.getManager().setBaseInfo(getManager());
+
+		return departmentVO;
+	}
+
+	public DepartmentVO ptv(DepartmentVO departmentVO) {
+
+		BeanUtil.copyProperties(this, departmentVO, Arrays.asList("fatherDept", "type", "manager"));
+
+		if (getType() != null && departmentVO.getType() != null) getType().ptv(departmentVO.getType());
+		if (getFatherDept() != null && departmentVO.getFatherDept() != null) getFatherDept().ptv(departmentVO.getFatherDept());
 		if (departmentVO.getManager() != null && getManager() != null && getManager().getUid() != 0) departmentVO.getManager().setBaseInfo(getManager());
 
 		return departmentVO;

@@ -10,11 +10,11 @@ import com.fanglin.utils.Paging;
 
 public interface BalanceSalesService {
 
-	public void pageBalanceSales(Paging paging, List<Filter> filters, int company);
+	public void pageBalanceSales(Paging paging, List<Filter> filters, int company) throws FLException;
 
-	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, BalanceSalesVO balanceSalesVO, int company);
+	public void pageBalanceSalesForBalance(Paging paging, List<Filter> filters, BalanceSalesVO balanceSalesVO, int company) throws FLException;
 
-	public void pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company);
+	public void pageBalanceSalesForSupplier(Paging paging, List<Filter> filters, String userId, int company) throws FLException;
 
 	public List<BalanceSalesVO> queryBalanceSales(BalanceSalesVO balanceSalesVO, int company);
 

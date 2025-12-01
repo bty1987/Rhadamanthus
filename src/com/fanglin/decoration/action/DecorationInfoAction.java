@@ -76,6 +76,14 @@ public class DecorationInfoAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "deleteReferDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteReferDecorationInfo() throws FLException {
+
+		decorationInfoService.deleteReferDecorationInfo(decoration, decorationInfo);
+
+		return SUCCESS;
+	}
+
 	public DecorationInfoVO getDecorationInfo() {
 		return decorationInfo;
 	}

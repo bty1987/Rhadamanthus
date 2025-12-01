@@ -32,7 +32,7 @@ jQuery(function($) {
 
     searcher.base("diaryCondList", "diaryPagenation", "diaryResultList", api.construction.pageConstructionDiary);
 
-    searcher.condition(["decoration-orderId"]);
+    searcher.condition(["decoration-orderId", "construction-diary-isUpload"]);
 
     var lineprops = [{
         field: "decoration",
@@ -54,6 +54,12 @@ jQuery(function($) {
         name: "工程状态",
         prop: "cnid",
         dataset: construction.constructionNodes,
+        clazz: "red"
+    }, {
+        field: "isUpload",
+        name: "是否上传图片",
+        prop: "isUpload",
+        dataset: constant.construction().constructionDiary.isUpload.keys,
         clazz: "red"
     }, {
         field: "creater",

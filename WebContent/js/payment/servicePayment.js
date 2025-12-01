@@ -58,7 +58,8 @@ jQuery(function($) {
 		modals: {
 			collectModal: com.focusPage("#collectModal", "#servicePayment"),
 			createServicetModal: com.focusPage("#createServicetModal", "#servicePayment"),
-			serviceCollectQrcodeModal: com.focusPage("#serviceCollectQrcodeModal").prop("id", params['urlLoadParams'].paytype+"serviceCollectQrcodeModal")
+			serviceCollectQrcodeModal: com.focusPage("#serviceCollectQrcodeModal").prop("id", params['urlLoadParams'].paytype+"serviceCollectQrcodeModal"),
+			alipayCodepayModal: com.focusPage("#serviceAlipayCodeQrcodeModal")
 		},
 
 		cash: [],
@@ -176,6 +177,7 @@ jQuery(function($) {
 
 			var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
 			var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
+			var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('支付宝收款码');
 			var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
 
 			var $btnService = $('<a></a>').addClass('btn btn-minier btn-success').html("服务费");
@@ -208,6 +210,7 @@ jQuery(function($) {
 
 			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
 			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("alipayCollectCode")) $divBtnWrap.append($alipayBtnCode);
 			if (v.status == constant.payment().materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
 
 			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
@@ -294,6 +297,57 @@ jQuery(function($) {
 				com.focusPage("#"+servicePayment.type+"serviceCollectQrcodeModal").html("");
 				paymentUtils.initQrcode("collect", servicePayment.type+"serviceCollectQrcodeModal"); //收款码
 				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=4"+"&pid="+v.spid+"&atttype=0", servicePayment.type+"serviceCollectQrcodeModal");
+			});
+
+			// 支付宝二维码
+			$alipayBtnCode.click(function() {
+				var paytranId = 0;
+				var paytranMoney = v.serviceMoney;
+
+				var paytranOption = {
+					"paytran.pid": v.spid,
+					"paytran.type": 4,
+					"paytran.orderId": v.decoration.orderId
+				};
+
+				com.post(api.payment.queryPaytran, paytranOption, function (res) {
+					var paytrans = res.paytrans;
+
+					$.each(paytrans, function (i, v) {
+						if (v.status == 0) {
+							paytranId = v.ptid;
+							paytranMoney = v.money;
+							return false;
+						}
+					});
+				}, null, false);
+
+				if (paytranMoney != v.serviceMoney) {
+					com.showAlert(com.error, "金额不正确.");
+					return false;
+				}
+
+				// 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款 , 6: 转换款 7：代收款
+				var options = {
+					"wxpay.paymentOrderId": v.decoration.orderId, //装修款
+					"wxpay.paymentType": 4, //服务款
+					"wxpay.paymentAttrType": 0, //装修0or主材1
+					"wxpay.paymentMoney": paytranMoney,
+					"wxpay.userId": "alipay",
+					"wxpay.paymentid": v.spid,
+					"wxpay.paymentptid": paytranId,
+					"wxpay.unionId": v.decoration.customer.cid
+				};
+
+				com.post(api.payment.alipay, options, function (data) {
+
+					servicePayment.modals.alipayCodepayModal.html("");
+
+					var url = data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true";
+
+					com.popup("支付宝收款码", url, null, null, false);
+
+				}, null, false);
 			});
 
 			//微信推送

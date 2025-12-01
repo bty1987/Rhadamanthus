@@ -16,14 +16,13 @@ import java.util.List;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.vo.GoodsVO;
-import com.fanglin.inventory.vo.GoodsPackageVO;
 import com.fanglin.utils.Paging;
 
 public interface GoodsService {
 
-	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company,GoodsVO goods) throws FLException;
+	public void pageGoods(Paging paging, List<Filter> filters, String userId, int company, GoodsVO goods) throws FLException;
 
-	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company,GoodsVO goods) throws FLException;
+	public void pageGoodsForAdvance(Paging paging, List<Filter> filters, int company, GoodsVO goods) throws FLException;
 
 	public List<GoodsVO> queryGoods(List<Filter> filters, int company) throws FLException;
 
@@ -46,7 +45,5 @@ public interface GoodsService {
 	public int updateGoodsForStatus(GoodsVO goodsVO) throws FLException;
 
 	public int showGoods(GoodsVO goodsVO) throws FLException;
-
-	public int addPackage(GoodsVO goodsVO, List<GoodsPackageVO> goodsPackageVOs, int company) throws FLException;
 
 }

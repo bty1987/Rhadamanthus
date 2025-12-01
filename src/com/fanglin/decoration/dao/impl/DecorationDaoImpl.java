@@ -45,7 +45,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -69,7 +69,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -85,7 +85,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -103,7 +103,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -118,7 +118,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -150,7 +150,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -172,7 +172,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -186,7 +186,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -202,7 +202,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}
@@ -222,7 +222,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		queryFilterExcute(query, filters);
 
-		query.desc("doid");
+		query.add(query.getCriterion("otherStatus", DecorationPO.STATUS_INIT_INT, "eq")).desc("doid");
 
 		return query.list();
 	}

@@ -61,33 +61,58 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $invalid = $('<div></div>').addClass('pull-right');
             var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("记录");
-            var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-yellow').html("施工计划");
+            var $btnConplan = $('<a></a>').addClass('btn btn-minier btn-warning').html("施工计划");
             var $btnConplanPrint = $('<a></a>').addClass('btn btn-minier btn-success').html("打印");
-            var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-success').html("预派监理");
+            var $btnProLine = $('<a></a>').addClass('btn btn-minier btn-inverse').html("预派监理");
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-info').html("验房");
+            var $btnProfile = $('<a></a>').addClass('btn btn-minier btn-warning').html("画像");
 
-            var propertyArr = [["装修单: ", v.decoration.orderId, "blue", function(btn) {
+            var propertyArr = [
+            ["装修单: ", v.decoration.orderId, "blue", function(btn) {
 
                 tools.decoration.info(btn, v.decoration.orderId);
-            }], ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
+            }],
+            ["楼盘: ", v.decoration.house.village.name, "grey", function(btn) {
 
                 tools.house.info(btn, v.decoration.house.hid);
-            }], ["楼号: ", v.decoration.house.houseNumber, "grey"], ["客户: ", v.decoration.customer.name, "grey", function(btn) {
+            }],
+            ["楼号: ", v.decoration.house.houseNumber, "grey"],
+            ["客户: ", v.decoration.customer.name, "grey", function(btn) {
 
                 tools.customer.info(btn, v.decoration.customer.cid);
-            }], ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey", function(btn) {
+            }],
+            ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey", function(btn) {
 
                 tools.department.info(btn, v.decoration.designer.dept.fatherDept.did);
-            }], ["设计部:", v.decoration.designer.dept.name, "grey", function(btn) {
+            }],
+            ["设计部:", v.decoration.designer.dept.name, "grey", function(btn) {
 
                 tools.department.info(btn, v.decoration.designer.dept.did);
-            }], ["设计师:", v.decoration.designer.userName, "grey", function(btn) {
+            }],
+            ["设计师:", v.decoration.designer.userName, "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.designer.userId);
-            }], ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey", function(btn) {
+            }],
+            ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey", function(btn) {
 
                 tools.personel.info(btn, v.decoration.supervisor.userId);
-            }], ["面积:", v.decoration.house.buildArea, "blue"], ["合同额: ", v.decoration.orderTotalPrice, "blue"], ["报价版本: ", v.decoration.version.name, "grey"], ["签单时间: ", v.decoration.contractTime, "green"], ["预计交钥匙时间: ", v.keyTime, "green"], ["预计放线时间: ", v.drawlineTime, "green"], ["预计完工时间: ", v.finishTime, "green"], ["预计设计完成时间: ", v.designTime, "green"], ["合同方案确认时间: ", v.decoration.sdesignTime, "green"], ["放线方案确认时间: ", v.decoration.edesignTime, "green"], ["装修类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"], ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"], ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"], ];
+            }],
+            ["面积:", v.decoration.house.buildArea, "blue"],
+            ["合同额: ", v.decoration.orderTotalPrice, "blue"],
+            ["报价版本: ", v.decoration.version.name, "grey"],
+            ["签单时间: ", v.decoration.contractTime, "green"],
+            ["预计交钥匙时间: ", v.keyTime, "green"],
+            ["预计放线时间: ", v.drawlineTime, "green"],
+            ["预计完工时间: ", v.finishTime, "green"],
+            ["预计设计完成时间: ", v.designTime, "green"],
+            ["合同方案确认时间: ", v.decoration.sdesignTime, "green"],
+            ["放线方案确认时间: ", v.decoration.edesignTime, "green"],
+            ["装修类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
+            ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"],
+            ["装修状态: ", constant.decoration().decoration.status.keys[v.decoration.status], "red"],
+            ["装修业务: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
+            ["备注: ", v.comment, "grey"],
+            ];
 
             $.each(propertyArr, function(index, value) {
 
@@ -105,7 +130,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).appendTo($h3);
+            $btnDiv.append($btnView).append($btnConplanPrint).append($btnConplan).append($btnProLine).append($btnCheck).append($btnProfile).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
@@ -141,6 +166,11 @@ jQuery(function($) {
                 information.modals.checkModal.modal("show");
             });
 
+            $btnProfile.click(function() {
+
+                viewDecorationProfile(v.decoration.orderId);
+            });
+
             return $liLine;
         };
 
@@ -164,14 +194,28 @@ jQuery(function($) {
     }
 
     if (information.pageType == "plan") {
-        options["constructionInfo.decoration.houseType"] = "期房"
+
+        var current = new Date();
+
+        current.setMonth(current.getMonth() + 2)
+
+        options["constructionInfo.decoration.houseType"] = "期房";
+        options["constructionInfo.decoration.designStatus"] = constant.decoration().decoration.DESIGNSTATUS_END_INT;
+        options["constructionInfo.isIssue"] = 0;
+        options["constructionInfo.drawlineTime"] = com.dateFormat(current, "yyyy-MM-dd");
     }
 
     if (information.pageType == "done") {
-        options["constructionInfo.decoration.houseType"] = "现房"
+        options["constructionInfo.decoration.houseType"] = "现房";
+        options["constructionInfo.decoration.designStatus"] = constant.decoration().decoration.DESIGNSTATUS_END_INT;
+        options["constructionInfo.isIssue"] = 0;
     }
 
-    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", , "construction-info-isCheck", ], "condList", api.construction.pageConstructionInfo, function(data) {
+    if (information.pageType == "issue") {
+        options["constructionInfo.isIssue"] = 1;
+    }
+
+    searcher.init(['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-designer', 'decoration-supervisor', 'decoration-houseType', 'decoration-designStatus', 'decoration-projectStatus', "construction-info-keyTime", "construction-info-drawlineTime", "construction-info-finishTime", "construction-info-designTime", "decoration-sdesignTime", "decoration-edesignTime", "construction-info-isIssue", "construction-info-isCheck", ], "condList", api.construction.pageConstructionInfo, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", "constructionInfoPostData", options, false, null, function() {
@@ -200,22 +244,22 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [//
-                ["装修单号", "decoration.orderId"], //
-                ["楼盘地址", "decoration.house.houseNumber"], //
-                ["面积", "decoration.house.buildArea"], //
-                ["设计分区", "decoration.designer.dept.fatherDept.name"], //
-                ["设计部", "decoration.designer.dept.name"], //
-                ["设计师", "decoration.designer.userName"], //
-                ["签单时间", "decoration.contractTime"], //
-                ["预计交钥匙时间", "keyTime"], //
-                ["预计放线时间", "drawlineTime"], //
-                ["预计完工时间", 'finishTime'], //
-                ["预计设计完成时间", 'designTime'], //
-                ["合同方案确认时间", 'decoration.sdesignTime'], //
-                ["放线方案确认时间", 'decoration.edesignTime'], //
-                ["订单类型", "decoration.typeness"], //
-                ["工程状态", "decoration.projectStatus"]//
+                column: [
+                ["装修单号", "decoration.orderId"],
+                ["楼盘地址", "decoration.house.houseNumber"],
+                ["面积", "decoration.house.buildArea"],
+                ["设计分区", "decoration.designer.dept.fatherDept.name"],
+                ["设计部", "decoration.designer.dept.name"],
+                ["设计师", "decoration.designer.userName"],
+                ["签单时间", "decoration.contractTime"],
+                ["预计交钥匙时间", "keyTime"],
+                ["预计放线时间", "drawlineTime"],
+                ["预计完工时间", 'finishTime'],
+                ["预计设计完成时间", 'designTime'],
+                ["合同方案确认时间", 'decoration.sdesignTime'],
+                ["放线方案确认时间", 'decoration.edesignTime'],
+                ["订单类型", "decoration.typeness"],
+                ["工程状态", "decoration.projectStatus"]
                 ],
                 list: res.paging.data
 
@@ -261,6 +305,9 @@ jQuery(function($) {
         }, null, false);
 
         $.each(constructionNodes, function(index, value) {
+
+            if (value.proset != constant.data().constructionNode.PROSET_PROSET_INT)
+                return true;
 
             var $liLi = $('<li></li>').addClass('item-blue clearfix');
             var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -403,5 +450,16 @@ jQuery(function($) {
 
             information.checkModal.modal("hide");
         });
+    }
+
+    // 画像
+    function viewDecorationProfile(orderId) {
+
+        params.customer.orderId = orderId;
+        params.customer.profile = {
+            "orderId": orderId
+        }
+
+        com.popup4page("#layerPopUp", api.index.customerProfile4detailIndex.url, "客户画像: ");
     }
 });

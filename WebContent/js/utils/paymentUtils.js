@@ -875,11 +875,13 @@ var paymentUtils = {
                 case "sales-affirmTime":
                     propertyArr.push(["销售确认时间:", com.checkNull(v.sales.affirmTime, "暂无"), "green"]);
                     break;
-                case "sales-isAffirm":
-                    propertyArr.push(["退货确认:", payment.isAffirms[v.refunds.isAffirm], "red"]);
+                case "salesRefunds-isAffirm":
+                    if(v.salesRefunds == null) break;
+                    propertyArr.push(["退货确认:", payment.isAffirms[v.salesRefunds.isAffirm], "red"]);
                     break;
-                case "sales-affirmTime":
-                    propertyArr.push(["退货确认时间:", com.checkNull(v.refunds.affirmTime, "暂无"), "green"]);
+                case "salesRefunds-affirmTime":
+                    if(v.salesRefunds == null) break;
+                    propertyArr.push(["退货确认时间:", com.checkNull(v.salesRefunds.affirmTime, "暂无"), "green"]);
                     break;
                 case "status":
                     var status = ["payment", "sales", "service", "activity", "proxy", "oales"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];

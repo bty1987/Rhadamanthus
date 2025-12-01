@@ -644,7 +644,17 @@ public class NormtionServiceImpl implements NormtionService {
 		NormtionPO normtionPO = normtionDao.queryNormtion(normtionVO.getQid());
 
 		if (normtionPO == null) {
-			throw new FLException(200071, "报价定额不存在");
+			normtionPO = new NormtionPO();
+
+			BeanUtil.copyPropertie(normtionVO, normtionVO, Arrays.asList("creater"));
+
+			normtionPO.setQid(normtionVO.getQid());
+			normtionPO.setOrderId(normtionVO.getOrderId());
+
+			normtionPO.setCreater(userDao.queryUserByUserId(userId));
+			normtionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			normtionDao.save(normtionPO);
 		}
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(normtionPO.getOrderId());

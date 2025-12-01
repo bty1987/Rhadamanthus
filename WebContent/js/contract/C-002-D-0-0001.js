@@ -67,9 +67,9 @@ jQuery(function($) {
 
         com.focusPage("#con-work-number", "#form").val(datas.timeLimit);
 
-        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
-        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
-        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
+        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(0, 4) : ""), "year");
+        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(5, 2) : ""), "month");
+        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.drawlineTime ? datas.drawlineTime.substr(8, 2) : ""), "day");
     });
 
     // 通过装修单号获取装修款项信息

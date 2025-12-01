@@ -62,7 +62,6 @@ public class BalanceAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
 
 	@Action(value = "payBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String payBalance() throws FLException {
@@ -75,7 +74,7 @@ public class BalanceAction extends BaseListAction {
 	@Action(value = "payedBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String payedBalance() throws FLException {
 
-		balanceService.payedBalance(balances);
+		balanceService.payedBalance(balances, queryUserId());
 
 		return SUCCESS;
 	}
@@ -103,6 +102,5 @@ public class BalanceAction extends BaseListAction {
 	public void setBalanceAccountes(List<BalanceAccountVO> balanceAccountes) {
 		this.balanceAccountes = balanceAccountes;
 	}
-
 
 }

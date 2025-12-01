@@ -90,6 +90,14 @@ public class SalesRefundsServiceImpl implements SalesRefundsService {
 	}
 
 	@Override
+	public SalesRefundsVO querySalesRefundsByRid(SalesRefundsVO refundsVO) {
+
+		SalesRefundsPO refundsPO = salesRefundsDao.get(refundsVO.getRid());
+
+		return refundsPO.ptv(new SalesRefundsVO(new UserVO(), new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO())));
+	}
+
+	@Override
 	public List<SalesRefundsItemVO> querySalesRefundsItemBySid(SalesRefundsVO refundsVO) {
 
 		List<SalesRefundsItemPO> refundsItemPOs = salesRefundsItemDao.querySalesRefundsItemBySid(refundsVO.getSales().getSid());

@@ -24,6 +24,16 @@ public class FunctionAreaOtemPO implements Serializable {
 
 	private static final long serialVersionUID = -7935472691506737463L;
 
+	public static final short TYPE_TEXT_INT = 0;
+
+	public static final short TYPE_INPUT_INT = 1;
+
+	public static final short TYPE_RADIO_INT = 2;
+
+	public static final short TYPE_CHECK_INT = 3;
+
+	public static final short TYPE_DATE_INT = 4;
+
 	private long faiid;
 
 	private long faid;
@@ -103,7 +113,7 @@ public class FunctionAreaOtemPO implements Serializable {
 		this.content = content;
 	}
 
-	@OneToMany(mappedBy = "qmiid", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "faiid", fetch = FetchType.LAZY)
 	public List<FunctionAreaOptionPO> getOptions() {
 		return options;
 	}

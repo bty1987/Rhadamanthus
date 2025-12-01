@@ -846,8 +846,8 @@ $(function() {
         }
 
         com.closePopup();
-
-        brandBalance(sales.sales.bid);
+        
+        brandBalance(sales.sales.brand.bid);
         sales.modals.repositPaymentModal.modal('show');
 
         return false;
@@ -1587,7 +1587,7 @@ $(function() {
 
         com.post(api.sales.deliveSalesDelivery, {
             "salesDelivery.sales.sid": sales.sales.sid,
-            "salesDelivery.peliveryTime": sales.items.peliveryTime.val()
+            "salesDelivery.peliveryTime": sales.items.peliveryTime.val() + " 00:00:00",
         }, function() {
 
             com.showAlert(com.info, "操作成功");

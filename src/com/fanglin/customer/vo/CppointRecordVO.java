@@ -21,9 +21,17 @@ public class CppointRecordVO implements Serializable {
 
 	private Short pointType;
 
+	private Short status;
+
 	private Long balance;
 
 	private Long point;
+
+	private Long dpoint;
+
+	private Long spoint;
+
+	private Long opoint;
 
 	private UserBaseVO operater;
 
@@ -78,6 +86,14 @@ public class CppointRecordVO implements Serializable {
 		this.pointType = pointType;
 	}
 
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
 	public Long getBalance() {
 		return balance;
 	}
@@ -92,6 +108,30 @@ public class CppointRecordVO implements Serializable {
 
 	public void setPoint(Long point) {
 		this.point = point;
+	}
+
+	public Long getDpoint() {
+		return dpoint;
+	}
+
+	public void setDpoint(Long dpoint) {
+		this.dpoint = dpoint;
+	}
+
+	public Long getSpoint() {
+		return spoint;
+	}
+
+	public void setSpoint(Long spoint) {
+		this.spoint = spoint;
+	}
+
+	public Long getOpoint() {
+		return opoint;
+	}
+
+	public void setOpoint(Long opoint) {
+		this.opoint = opoint;
 	}
 
 	public UserBaseVO getOperater() {

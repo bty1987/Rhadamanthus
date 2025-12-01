@@ -669,9 +669,84 @@ var utils = {
         }
 
         return mobile_flag;
+    },
+
+    workDays: function (startTime, days, atttype) {
+
+        if (days <= 0) return startTime;
+
+        var holidaySet = new Set();
+        var url = api.data.queryHoliday;
+        var options = {
+            "holiday.startTime": startTime,
+            "holiday.atttype": 0,
+        };
+        
+        if(atttype){
+            options["holiday.atttype"] = atttype;
+        }
+
+        com.post(url, options, function (res) {
+
+            res.holidays.forEach(range => {
+                var start = new Date(range.startTime);
+                var end = new Date(range.endTime);
+
+                for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    holidaySet.add(d.toISOString().split('T')[0]);
+                }
+            });
+        }, null, false);
+
+        var date = new Date(startTime);
+        var remainingDays = days;
+        var maxIterations = 365 * 5; // 最大循环保护(5年)
+        var iterations = 0;
+
+        // 处理起始日
+        if (!utils.isWeekend(date) && !utils.isHoliday(date, holidaySet)) {
+            remainingDays--;
+        }
+
+        // 计算剩余工作日
+        while (remainingDays > 0 && iterations++ < maxIterations) {
+            date.setDate(date.getDate() + 1);
+
+            if (utils.isWeekend(date) || utils.isHoliday(date, holidaySet)) {
+                continue;
+            }
+
+            remainingDays--;
+        }
+
+        return com.dateFormat(date, 'yyyy-MM-dd');
+    },
+
+    isWeekend: function (date) {
+        var day = date.getDay();
+        return day === 0 || day === 6;
+    },
+
+    isHoliday: function (date, holidaySet) {
+        return holidaySet.has(date.toISOString().split('T')[0]);
+    },
+    
+    getUrlParams: function() {
+        var paramsObj = {};
+        var paramsString = window.location.search.substring(1);
+        if (paramsString) {
+            var pairs = paramsString.split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pair = pairs[i].split('=');
+                var key = decodeURIComponent(pair[0]);
+                var value = decodeURIComponent(pair[1] || '');
+                paramsObj[key] = value;
+            }
+        }
+        return paramsObj;
     }
 };
 
 var tools = {
 
-}
+};

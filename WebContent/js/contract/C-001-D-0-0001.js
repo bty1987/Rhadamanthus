@@ -27,7 +27,9 @@ jQuery(function($) {
         },
 
         item: {
-            houseType: com.focusPage("#con-housetype")
+            houseType: com.focusPage("#con-housetype"),
+            houseTypeness: com.focusPage("#con-housetypeness"),
+            decorationPictureType: com.focusPage("#con-decorationPicture-type")
         },
 
         contractArgs: params.decoration.contractargs,
@@ -66,7 +68,9 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
     contractEdit.decorationType = constant.decoration().decoration.typeness.keys;
-    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
+    contractEdit.item.houseType.bindData(constant.decoration().decoration.houseClass.datas, 'key', 'value');
+    contractEdit.item.houseTypeness.bindData(constant.decoration().decoration.houseType.datas, 'key', 'value');
+    contractEdit.item.decorationPictureType.bindData(constant.decoration().decorationPicture.type.datas, 'key', 'value');
 
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
@@ -94,7 +98,7 @@ jQuery(function($) {
         var village = house.village;
         var proper = village.cityProper;
         var customer = res.decoration.customer;
-        
+
         contractEdit.customer = customer;
 
         com.focusPage("#con-customer-name", "#form").val(contractEdit.customer.name);
@@ -121,12 +125,12 @@ jQuery(function($) {
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
         com.focusPage("#con-buildarea", "#form").val(house.innerArea);
-        com.focusPage("#con-housetype", "#form").val(data.houseType);
+        com.focusPage("#con-housetype", "#form").val(data.houseClass);
+        com.focusPage("#con-housetypeness", "#form").val(data.houseType);
 
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
         com.focusPage("#con-work-model", "#form").val(contractEdit.decorationType[data.typeness]);
 
-        com.focusPage("#con-contract-total", "#form").val(utils.accAdd(parseFloat(data.orderTotalPrice), parseFloat(contractEdit.designPrice)));
         com.focusPage("#con-contract-stotal", "#form").val(data.orderTotalPrice);
         com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
 
@@ -146,11 +150,12 @@ jQuery(function($) {
         contractEdit.customer = res.customer;
 
         com.focusPage("#con-customer-phone", "#form").val(contractEdit.customer.phone);
+        com.focusPage("#sin-customer-phone", "#form").val(contractEdit.customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(contractEdit.customer.identity);
         com.focusPage("#con-bank-no", "#form").val(contractEdit.customer.companyBankno);
         com.focusPage("#con-bank-name", "#form").val(contractEdit.customer.companyBank);
         com.focusPage("#con-bank-phone", "#form").val(contractEdit.customer.phone);
-        
+
         com.focusPage("#con-company-no", "#form").val(contractEdit.customer.companyNo);
         com.focusPage("#con-company-name", "#form").val(contractEdit.customer.companyName);
         com.focusPage("#con-company-name1", "#form").val(contractEdit.customer.companyName);
@@ -160,7 +165,6 @@ jQuery(function($) {
         com.focusPage("#con-company-bankno", "#form").val(contractEdit.customer.companyBankno);
 
         contractEdit.cover["cov-customer-phone"] = contractEdit.customer.phone;
-        contractEdit.cover["sin-customer-phone"] = contractEdit.customer.phone;
         contractEdit.cover["sin-customer-ident"] = contractEdit.customer.identity;
 
     }, null, false);
@@ -275,7 +279,7 @@ jQuery(function($) {
 
         var _index = 0;
 
-        table1.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", ""])
+        table1.datas.push([utils.getBigNumber(index + 1), functionArea, "", "", ""]);
 
         $.each(v, function(j, qv) {
 
@@ -284,13 +288,13 @@ jQuery(function($) {
                 qv.num = 1;
                 qv.measurementUnit = "项";
 
-                table1.datas.push([(_index + 1), qv.itemName, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"])
+                table1.datas.push([(_index + 1), qv.itemName, qv.measurementUnit, qv.num, qv.content ? qv.content : "-"]);
             }
 
             _index++;
         });
 
-        index++
+        index++;
     });
 
     contractEdit.table.push(table1);
@@ -421,7 +425,6 @@ jQuery(function($) {
             data["con-design-money1"] = parseFloat(data["con-design-money"]);
             data["con-activity-name1"] = data["con-activity-name"];
 
-            data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
             data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
             data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
             data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
@@ -432,6 +435,7 @@ jQuery(function($) {
 
                 data["cov-company-name"] = data["con-company-name"];
                 data["sin-company-name"] = data["con-company-name"];
+                data["sin-company-phone"] = data["con-company-phone"];
             }
 
             var url = api.decoration.addDecorationContract;
@@ -444,7 +448,7 @@ jQuery(function($) {
 
             if (params.decoration.contract && params.decoration.contract.dcid) {
                 url = api.decoration.makeDecorationContract;
-                options["decorationContract.dcid"] = params.decoration.contract.dcid
+                options["decorationContract.dcid"] = params.decoration.contract.dcid;
             }
 
             var popup = com.focusPage("#popup-page");

@@ -11,6 +11,8 @@ public interface CustomerPhoneDao extends Dao<CustomerPhonePO> {
 
 	public List<CustomerPhonePO> queryCustomerPhoneByPhone(String phone, Short status, Integer company);
 
+	public List<CustomerPhonePO> queryCustomerPhone(List<String> phones, Short status, Short defaults, Integer company);
+
 	public CustomerPhonePO queryCustomerPhoneForDefault(String phone, Integer company);
 
 	public CustomerPhonePO queryCustomerPhone(Long cid, String phone);

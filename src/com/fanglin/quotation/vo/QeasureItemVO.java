@@ -29,6 +29,11 @@ public class QeasureItemVO implements Serializable {
 		super();
 	}
 
+	public QeasureItemVO(List<QeasureOptionVO> options) {
+		super();
+		this.options = options;
+	}
+
 	public QeasureItemVO(Long qmiid) {
 		super();
 		this.qmiid = qmiid;

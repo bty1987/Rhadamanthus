@@ -462,20 +462,18 @@ public class SalesBalancePO implements Serializable {
 
 		BeanUtil.copyPropertie(this, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
 
-		if (salesBalanceVO.getSalesman() != null && getSalesman() != null) BeanUtil.copyProperties(getSalesman(), salesBalanceVO.getSalesman(), Arrays.asList("dept", "duty"));
-		if (salesBalanceVO.getDept() != null && getDept() != null) BeanUtil.copyProperties(getDept(), salesBalanceVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
-		if (salesBalanceVO.getRegion() != null && getRegion() != null) BeanUtil.copyProperties(getRegion(), salesBalanceVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+		if (salesBalanceVO.getSalesman() != null && getSalesman() != null) salesBalanceVO.getSalesman().setBaseInfo(getSalesman());
+		if (salesBalanceVO.getDept() != null && getDept() != null) getDept().ptv(salesBalanceVO.getDept());
+		if (salesBalanceVO.getRegion() != null && getRegion() != null) getRegion().ptv(salesBalanceVO.getRegion());
 
-		if (salesBalanceVO.getRefunds() != null && getRefunds() != null) BeanUtil.copyPropertie(getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("sales", "creater"));
-		if (salesBalanceVO.getCreater() != null && getCreater() != null) BeanUtil.copyPropertie(getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
-		if (salesBalanceVO.getPoster() != null && getPoster() != null) BeanUtil.copyPropertie(getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept", "duty"));
-		if (salesBalanceVO.getChecker() != null && getChecker() != null) BeanUtil.copyPropertie(getChecker(), salesBalanceVO.getChecker(), Arrays.asList("dept", "duty"));
-		if (salesBalanceVO.getVoster() != null && getVoster() != null) BeanUtil.copyPropertie(getVoster(), salesBalanceVO.getVoster(), Arrays.asList("dept", "duty"));
-		if (salesBalanceVO.getCreater() != null && getCreater() != null) BeanUtil.copyPropertie(getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
+		if (salesBalanceVO.getRefunds() != null && getRefunds() != null) getRefunds().ptv(salesBalanceVO.getRefunds());
+		if (salesBalanceVO.getCreater() != null && getCreater() != null) salesBalanceVO.getCreater().setBaseInfo(getCreater());
+		if (salesBalanceVO.getPoster() != null && getPoster() != null) salesBalanceVO.getPoster().setBaseInfo(getPoster());
+		if (salesBalanceVO.getChecker() != null && getChecker() != null) salesBalanceVO.getChecker().setBaseInfo(getChecker());
+		if (salesBalanceVO.getVoster() != null && getVoster() != null) salesBalanceVO.getVoster().setBaseInfo(getVoster());
 
 		if (salesBalanceVO.getSales() != null && getSales() != null) getSales().ptv(salesBalanceVO.getSales());
 
 		return salesBalanceVO;
 	}
-
 }

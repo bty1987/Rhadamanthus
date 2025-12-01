@@ -24,6 +24,8 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(List<Filter> filters);
 
+	public List<MaterialPaymentPO> queryMaterialPaymentByOrderIdAStatus(String orderId, List<Short> paymentTypes, Short[] paymentStatus);
+
 	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus);
 
 	public List<MaterialPaymentPO> queryMaterialPaymentByMids(List<Long> mids);
@@ -45,5 +47,7 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	public MaterialPaymentPO queryMaterialPaymentByMsoNoAType(String no, Short paymentType);
 
 	public int countMaterialPaymentByMidAType(long mid, Short paymentType);
+
+	public long amountMaterialPayment(String orderId);
 
 }

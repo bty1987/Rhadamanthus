@@ -28,4 +28,10 @@ public interface SelectionService {
 
 	public int affirmSelection(DecorationVO decorationVO, SelectionVO selectionVO, String securityCode, String verifyCode) throws FLException;
 
+	public int lockSelection(SelectionVO selectionVO) throws FLException;
+
+	public int unlockSelection(SelectionVO selectionVO) throws FLException;
+
+	public int resetSelection(SelectionVO selectionVO) throws FLException;
+
 }

@@ -207,6 +207,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	public List<MaterialPaymentVO> queryMaterialPaymentByMid(MaterialPaymentVO materialPaymentVO) {
+
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByMid(materialPaymentVO.getMaterial().getMid(), null);
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 
@@ -250,6 +251,20 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		return materialPaymentVOs;
+	}
+
+	@Override
+	public long amountMaterialPayment(MaterialPaymentVO materialPayment) {
+
+		String orderId = null;
+
+		if (materialPayment.getMaterial() != null && materialPayment.getMaterial().getOrderId() != null) {
+			orderId = materialPayment.getMaterial().getOrderId();
+		}
+
+		if (orderId == null) return 0;
+
+		return materialPaymentDao.amountMaterialPayment(orderId);
 	}
 
 	@Override

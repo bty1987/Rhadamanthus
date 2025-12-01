@@ -11,7 +11,6 @@ import com.fanglin.balance.po.BalanceSalesBalancePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.sales.dao.impl.SalesDaoImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("balanceSalesBalanceDao")
@@ -26,11 +25,11 @@ public class BalanceSalesBalanceDaoImpl extends DaoImpl<BalanceSalesBalancePO> i
 
 		PagingQuery<BalanceSalesBalancePO> query = pagingQuery(paging, BalanceSalesBalancePO.class);
 
-		query.add(Restrictions.eq("bsid", bsid));
+		query.alias("salesBalance", "salesBalance").alias("salesBalance.sales", "sales").add(Restrictions.eq("bsid", bsid));
 
 		queryFilterExcute(query, filters);
 
-		query.asc("bsid");
+		query.desc("sales.orderId").asc("bsbid");
 
 		return query.list();
 	}
@@ -54,7 +53,16 @@ public class BalanceSalesBalanceDaoImpl extends DaoImpl<BalanceSalesBalancePO> i
 
 		if (filters == null) return;
 
-		SalesDaoImpl.queryFilterExcute(query, filters, "salesBalance.sales");
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("sales.orderId".equals(field)) {
+				query.add(query.getCriterion("sales.orderId", data, op));
+			}
+		}
 	}
 
 }

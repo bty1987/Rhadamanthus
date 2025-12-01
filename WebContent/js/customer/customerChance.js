@@ -48,7 +48,7 @@ jQuery(function($) {
             infolist: com.focusPage("#infolist"),
 
             annotate: com.focusPage("#annotate", "#disableModal"),
-            
+
             discount: com.focusPage("#discount", "#discountModal"),
         },
 
@@ -256,7 +256,7 @@ jQuery(function($) {
         var $enableI = $('<i></i>').addClass('icon-ok-circle bigger-230');
         var $enableS = $('<span></span>').html("停止接单");
 
-        if (customerChance.depage == 'user')
+        if (customerChance.depage == "user" || customerChance.depage == "designer")
             $enable.append($enableI).append($enableS).appendTo(customerChance.items.infolist);
 
         var $disable = $('<a></a>').addClass('btn btn-app btn-warning').click(function() {
@@ -271,7 +271,7 @@ jQuery(function($) {
         var $disableI = $('<i></i>').addClass('icon-ban-circle bigger-230');
         var $disableS = $('<span></span>').html("恢复接单");
 
-        if (customerChance.depage == 'user')
+        if (customerChance.depage == "user" || customerChance.depage == "designer")
             $disable.append($disableI).append($disableS).appendTo(customerChance.items.infolist);
 
         customerChance.userRule.status == 0 ? $enable.hide() : $disable.hide();
@@ -284,7 +284,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageCustomerChance);
 
-    searcher.condition(customerChance.depage != "source" ? ["customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime"] : []);
+    searcher.condition(customerChance.depage != "source" ? ["customer-chance-source-name", "customer-chance-customer-phone", "customer-chance-house-village-no", "customer-chance-source-buildArea", "customer-chance-type", "customer-chance-status", "customer-chance-isFine", "customer-chance-belonger", "customer-chance-source-creater", "customer-chance-belonger-dept", "customer-chance-source-creater-dept", "customer-chance-finer", "customer-chance-source-createTime", "customer-chance-createTime", "customer-chance-fineTime", "customer-chance-source-houseAttr"] : []);
 
     searcher.history(customerChance.depage + "customerChancePostData");
 
@@ -292,7 +292,7 @@ jQuery(function($) {
         "customerChance.belonger.uid": null
     };
 
-    if (customerChance.depage == 'user') {
+    if (customerChance.depage == 'user' || customerChance.depage == 'designer') {
         extraParams["customerChance.belonger.userId"] = params.userInfo.user.userId;
     } else if (customerChance.depage == "dept") {
         extraParams["customerChance.belonger.dept.no"] = params.userInfo.user.dept.no;
@@ -327,7 +327,7 @@ jQuery(function($) {
         clazz: "grey",
         show: function(v) {
 
-            return ((v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && customerChance.depage == "user");
+            return ((v.isRead == constant.customer().customerChance.ISREAD_READ_INT) && (customerChance.depage == "user" || customerChance.depage == "designer"));
         }
     }, {
         field: "source",
@@ -506,6 +506,12 @@ jQuery(function($) {
             return (customerChance.depage == null || customerChance.depage == "manage");
         }
     }, {
+        field: "source.houseAttr",
+        name: "房屋属性",
+        prop: "source.houseAttr",
+        clazz: "red",
+        dataset: constant.customer().customerSource.houseAttr.keys
+    }, {
         field: "source.comment",
         name: "备注",
         prop: "source.comment",
@@ -534,7 +540,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isRead != constant.customer().customerChance.ISREAD_READ_INT && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT && customerChance.depage == "user" && customerChance.detype == null;
+            return v.isRead != constant.customer().customerChance.ISREAD_READ_INT && v.status != constant.customer().customerChance.STATUS_DISTRIBUTION_INT && (customerChance.depage == "user" || customerChance.depage == "designer") && customerChance.detype == null;
         }
     }, {
         name: "分配",
@@ -672,7 +678,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "user" && customerChance.detype == null;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT || v.status == 2) && customerChance.depage == "designer" && customerChance.detype == null;
         },
     }, {
         name: "转换",
@@ -776,7 +782,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
         name: "初审",
@@ -814,7 +820,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && customerChance.depage == "user" && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
+            return (v.status == constant.customer().customerChance.STATUS_INIT_INT) && (customerChance.depage == "user" || customerChance.depage == "designer") && v.isGroup != 0 && v.isPhone != 0 && v.isMeet == 2 && customerChance.detype == null;
         },
     }, {
         name: "审批",
@@ -997,7 +1003,7 @@ jQuery(function($) {
             customerChance.modals.disableModal.modal("hide");
         });
     }
-    
+
     function discount() {
 
         var options = {

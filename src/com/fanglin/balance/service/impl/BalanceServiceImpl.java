@@ -59,20 +59,20 @@ public class BalanceServiceImpl implements BalanceService {
 	private BalanceApportDao balanceApportDao;
 
 	@Override
-	public void pageBalance(Paging paging, List<Filter> filters, int company) {
+	public void pageBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		List<BalancePO> balancePOs = balanceDao.pageBalance(paging, filters, company);
 		List<BalanceVO> balanceVOs = new ArrayList<BalanceVO>();
 
 		for (BalancePO balancePO : balancePOs) {
-			balanceVOs.add(balancePO.ptv(new BalanceVO(new UserBaseVO(), new UserBaseVO())));
+			balanceVOs.add(balancePO.ptv(new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		paging.setData(balanceVOs);
 	}
 
 	@Override
-	public List<BalanceVO> queryBalance(BalanceVO balanceVO, List<Filter> filters, int company) {
+	public List<BalanceVO> queryBalance(BalanceVO balanceVO, List<Filter> filters, int company) throws FLException {
 
 		balanceVO.filter(filters);
 
@@ -85,7 +85,7 @@ public class BalanceServiceImpl implements BalanceService {
 		List<BalancePO> balancePOs = balanceDao.queryBalance(filters, company);
 
 		for (BalancePO balancePO : balancePOs) {
-			balanceVOs.add(balancePO.ptv(new BalanceVO(new UserBaseVO(), new UserBaseVO())));
+			balanceVOs.add(balancePO.ptv(new BalanceVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return balanceVOs;
@@ -233,7 +233,9 @@ public class BalanceServiceImpl implements BalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int payedBalance(List<BalanceVO> balanceVOs) throws FLException {
+	public int payedBalance(List<BalanceVO> balanceVOs, String userId) throws FLException {
+
+		UserPO payeder = userDao.queryUserByUserId(userId);
 
 		BalancePO balancePO;
 
@@ -244,11 +246,12 @@ public class BalanceServiceImpl implements BalanceService {
 			if (balancePO == null) continue;
 
 			balancePO.setIsPay(BalancePO.ISPAY_PAYED_INT);
+			balancePO.setPayeder(payeder);
+			balancePO.setPayedTime((DateUtil.getDateToTimestamp(new Date())));
 
 			balanceDao.update(balancePO);
 		}
 
 		return 0;
 	}
-
 }

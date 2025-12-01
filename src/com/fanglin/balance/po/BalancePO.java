@@ -54,6 +54,8 @@ public class BalancePO implements java.io.Serializable {
 
 	private UserPO balancer;
 
+	private UserPO payeder;
+
 	private Timestamp createTime;
 
 	private Timestamp startTime;
@@ -61,6 +63,8 @@ public class BalancePO implements java.io.Serializable {
 	private Timestamp endTime;
 
 	private Timestamp balanceTime;
+
+	private Timestamp payedTime;
 
 	private long amount;
 
@@ -136,6 +140,16 @@ public class BalancePO implements java.io.Serializable {
 		this.balancer = balancer;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "pyuid", referencedColumnName = "uid")
+	public UserPO getPayeder() {
+		return payeder;
+	}
+
+	public void setPayeder(UserPO payeder) {
+		this.payeder = payeder;
+	}
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -170,6 +184,15 @@ public class BalancePO implements java.io.Serializable {
 
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
+	}
+
+	@Column(name = "payedTime")
+	public Timestamp getPayedTime() {
+		return payedTime;
+	}
+
+	public void setPayedTime(Timestamp payedTime) {
+		this.payedTime = payedTime;
 	}
 
 	@Column(name = "amount")
@@ -237,11 +260,12 @@ public class BalancePO implements java.io.Serializable {
 
 	public BalanceVO ptv(BalanceVO balanceVO) {
 
-		BeanUtil.copyProperties(this, balanceVO, Arrays.asList("creater", "belonger", "balancer"));
+		BeanUtil.copyProperties(this, balanceVO, Arrays.asList("creater", "belonger", "balancer", "payeder"));
 
 		if (balanceVO.getCreater() != null && getCreater() != null) balanceVO.getCreater().setBaseInfo(getCreater());
 		if (balanceVO.getBelonger() != null && getBelonger() != null) balanceVO.getBelonger().setBaseInfo(getBelonger());
 		if (balanceVO.getBalancer() != null && getBalancer() != null) balanceVO.getBalancer().setBaseInfo(getBalancer());
+		if (balanceVO.getPayeder() != null && getPayeder() != null) balanceVO.getPayeder().setBaseInfo(getPayeder());
 
 		return balanceVO;
 	}

@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var oalesPay = {
 
@@ -27,28 +27,36 @@ jQuery(function ($) {
         type: constant.sales().oalespay.type.keys,
         pageType: params.urlLoadParams.pagetype
     };
+
     com.datetime(com.focusPage("#payTime"));
     com.datetime(com.focusPage("#createTime"));
 
     oalesPay.items.type = com.focusPage("#type").bindData(constant.sales().oalespay.type.datas, "key", "value");
-    oalesPay.modals.oalesPayModal.on('hide.bs.modal', function (e) {
+
+    oalesPay.modals.oalesPayModal.on('hide.bs.modal', function(e) {
 
         com.cleanItems(oalesPay.items);
         com.closeTip();
     });
+
     var searcher = new Searcher();
+
     if (oalesPay.pageType == "payment") {
+
         com.focusPage("#addOalesPay").remove();
         var url = api.sales.pageOalesPay;
+
         option = {
             "paging.page": 1,
             "paging.rows": 10
         };
+
         searcher.base("condList", "pagenation", "resultList", url);
         searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-type', 'sales-oales-brand', 'sales-oales-category', 'sales-oalesPay-payTime', 'sales-oales-checkTime', 'sales-oales-confirmTime', 'sales-oales-confirmTime']);
         searcher.history("oalsePayPostData");
+
         searcher.button([{
-            id: "exportOalesPay",
+            id: "exports",
             name: "导出",
             clazz: "btn-yellow",
             icon: "icon-plus"
@@ -117,6 +125,7 @@ jQuery(function ($) {
             prop: "oales.supplier.currentName",
             clazz: "grey",
             click: function(btn, v) {
+
                 tools.personel.info(btn, v.oales.supplier.userId);
             }
         }, {
@@ -125,6 +134,7 @@ jQuery(function ($) {
             prop: "creater.currentName",
             clazz: "grey",
             click: function(btn, v) {
+
                 tools.personel.info(btn, v.creater.userId);
             }
         }, {
@@ -133,6 +143,7 @@ jQuery(function ($) {
             prop: "oales.servicer.currentName",
             clazz: "grey",
             click: function(btn, v) {
+
                 tools.personel.info(btn, v.oales.servicer.userId);
             }
         }, {
@@ -160,6 +171,7 @@ jQuery(function ($) {
             prop: "oales.materialer.currentName",
             clazz: "grey",
             click: function(btn, v) {
+
                 tools.personel.info(btn, v.oales.materialer.userId);
             }
         }, {
@@ -183,6 +195,7 @@ jQuery(function ($) {
             prop: "oales.brand",
             clazz: "grey",
             click: function(btn, v) {
+
                 tools.brand.info(btn, v.oales.bid);
             }
         }, {
@@ -240,30 +253,33 @@ jQuery(function ($) {
             clazz: "red",
             dataset: constant.sales().oales.status.keys,
         }];
+
         var linebtns = [{
             name: "编辑",
             clazz: "btn-success",
-            handle: function (v) {
+            handle: function(v) {
+
                 oalesPay.opid = v.opid;
                 oalesPay.items.name.val(v.name);
                 oalesPay.items.money.val(v.money);
                 oalesPay.items.comment.val(v.comment);
                 oalesPay.items.payTime.val(v.payTime);
-                oalesPay.items.type = com.focusPage("#type").bindData(constant.sales().oalespay.type.datas, "key", "value");
+
                 oalesPay.modals.oalesPayModal.modal("show");
+
                 return false;
             },
         }, {
             name: "删除",
             clazz: "btn-warning",
-            handle: function (v) {
+            handle: function(v) {
 
                 remove(v.opid);
             },
         }, {
             name: "归属",
             clazz: "btn-purple",
-            handle: function (v) {
+            handle: function(v) {
 
                 oalesPay.opid = v.opid;
                 oalesPay.items.createTime.val(v.createTime);
@@ -271,76 +287,97 @@ jQuery(function ($) {
                 return false;
             },
         }];
+
         searcher.line("name", lineprops, linebtns).render();
     } else {
+
         com.focusPage("#pageing").remove();
         com.focusPage('#fl-statement').statement("外销单", "付款");
+
         showOalesPay();
     }
+    
+    com.focusPage('#exports', '#pagenation').click(function(res){
+        exports();
+    });
 
     function showOalesPay() {
-        com.post(api.sales.queryOalesPay, {"oalesPay.oid": params.sales.oales.oid}, function (res) {
+
+        com.post(api.sales.queryOalesPay, {
+            "oalesPay.oid": params.sales.oales.oid
+        }, function(res) {
 
             var listData = res.oalesPays;
             var $tableWrap = com.focusPage('#list');
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            if (!listData || listData.length == 0)
+                return false;
 
-                    var $h3 = $('<h3></h3>');
-                    var $small = $('<small></small>').addClass('blue').html(v.name);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+            $.each(listData, function(i, v) {
 
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-                    var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-                    var $btnCreateTime = $('<a></a>').addClass('btn btn-minier btn-purple').html('归属');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var propertyArr = [["名称:", v.name, "grey"], ["金额:", v.money, "grey"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "green"], ["付款时间:", v.payTime, "green"], ["类型:", constant.sales().oalespay.type.keys[v.type], "red"], ["备注:", v.comment, "grey"]];
+                var $h3 = $('<h3></h3>').addClass("oid");
+                var $small = $('<small></small>').addClass('blue').html(v.name).appendTo($h3);
+                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').appendTo($h3);
 
-                    $.each(propertyArr, function (index, value) {
+                var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+                var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
+                var $btnCreateTime = $('<a></a>').addClass('btn btn-minier btn-purple').html('归属');
 
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-                    $btnDiv.append($btnEdit).append($btnDelete).append($btnCreateTime);
+                var propertyArr = [//
+                ["名称:", v.name, "grey"], //
+                ["金额:", v.money, "grey"], //
+                ["创建人:", v.creater.currentName, "grey"], //
+                ["创建时间:", v.createTime, "green"], //
+                ["付款时间:", v.payTime, "green"], //
+                ["类型:", constant.sales().oalespay.type.keys[v.type], "red"], //
+                ["备注:", v.comment, "grey"]//
+                ];
 
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
+                $.each(propertyArr, function(index, value) {
 
-                    $small.appendTo($h3);
-                    $btnDiv.appendTo($h3);
-
-                    $btnEdit.click(function () {
-
-                        oalesPay.opid = v.opid;
-                        oalesPay.items.name.val(v.name);
-                        oalesPay.items.money.val(v.money);
-                        oalesPay.items.comment.val(v.comment);
-                        oalesPay.items.payTime.val(v.payTime);
-                        oalesPay.items.type = com.focusPage("#type").bindData(constant.sales().oalespay.type.datas, "key", "value");
-                        oalesPay.modals.oalesPayModal.modal("show");
-                    });
-
-                    $btnDelete.click(function () {
-
-                        remove(v.opid);
-                    })
-                    $btnCreateTime.click(function () {
-
-                        oalesPay.opid = v.opid;
-                        oalesPay.items.createTime.val(v.createTime);
-                        oalesPay.modals.createrTimeModal.modal("show");
-                    })
-
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
                 });
 
-                $ul.appendTo($tableWrap);
-            }
+                $btnDiv.append($btnEdit).append($btnDelete).append($btnCreateTime);
+
+                $liLine.append($h3).append($ulProperty).appendTo($ul);
+
+                $btnEdit.click(function() {
+
+                    oalesPay.opid = v.opid;
+                    oalesPay.items.name.val(v.name);
+                    oalesPay.items.money.val(v.money);
+                    oalesPay.items.comment.val(v.comment);
+                    oalesPay.items.payTime.val(v.payTime);
+                    oalesPay.items.type.val(v.type);
+
+                    oalesPay.modals.oalesPayModal.modal("show");
+                });
+
+                $btnDelete.click(function() {
+
+                    remove(v.opid);
+                });
+
+                $btnCreateTime.click(function() {
+
+                    oalesPay.opid = v.opid;
+
+                    oalesPay.items.createTime.val(v.createTime);
+
+                    oalesPay.modals.createrTimeModal.modal("show");
+                });
+
+            });
+
+            $ul.appendTo($tableWrap);
 
         }, null, false);
     }
@@ -352,8 +389,8 @@ jQuery(function ($) {
         oalesPay.modals.oalesPayModal.modal("show");
     }
 
-    com.focusPage('#exportOalesPay', '#pagenation').on("click", function () {
-
+    function exports() {
+        
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
@@ -366,12 +403,47 @@ jQuery(function ($) {
 
         com.post(api.sales.pageOalesPay, $.extend({}, params["oalsePayPostData"], {
             "paging.noPage": 1
-        }), function (res) {
+        }), function(res) {
 
             $.exceler({
-                column: [['名称', 'name'], ['金额', 'money'], ['类型', 'type'],['品类', 'oales.category'], ['品牌', 'oales.brand'], ['供应商', 'oales.supplier.currentName'], ['装修单号', 'oales.decoration.orderId'], ['楼盘', 'oales.decoration.house.village.name'], ['地址', 'oales.decoration.house.houseNumber'], ['外销单号', 'oales.no'], ['状态', 'oales.status'], ['主材员', 'oales.materialer.currentName'], ['主材员ID', 'oales.materialer.userId'], ['设计师', 'oales.decoration.designer.currentName'], ['设计师ID', 'oales.decoration.designer.userId'], ['部门', 'oales.dept.name'], ['分区', 'oales.region.name'], ['渠道', 'oales.channer.currentName'], ['渠道ID', 'oales.channer.userId'], ['服务管家', 'oales.servicer.currentName'], ['服务管家ID', 'oales.servicer.userId'], ['创建人', 'creater.currentName'], ['创建时间', 'createTime'], ['付款时间', 'payTime'], ['复核时间', 'oales.checkTime'], ['确认时间', 'oales.confirmTime'], ['总额', 'oales.total'], ['类型', 'oales.atttype'], ['奖励类型', 'oales.awardType'], ['成本', 'oales.cost'], ['系数', 'oales.threshold'], ['利润', 'oales.profit'], ['奖励', 'oales.award'], ['备注', 'comment']],
+                column: [//
+                ['名称', 'name'], //
+                ['金额', 'money'], //
+                ['类型', 'type'], //
+                ['品类', 'oales.category'], //
+                ['品牌', 'oales.brand'], //
+                ['供应商', 'oales.supplier.currentName'], //
+                ['装修单号', 'oales.decoration.orderId'], //
+                ['楼盘', 'oales.decoration.house.village.name'], //
+                ['地址', 'oales.decoration.house.houseNumber'], //
+                ['外销单号', 'oales.no'], //
+                ['状态', 'oales.status'], //
+                ['主材员', 'oales.materialer.currentName'], //
+                ['主材员ID', 'oales.materialer.userId'], //
+                ['设计师', 'oales.decoration.designer.currentName'], //
+                ['设计师ID', 'oales.decoration.designer.userId'], //
+                ['部门', 'oales.dept.name'], //
+                ['分区', 'oales.region.name'], //
+                ['渠道', 'oales.channer.currentName'], //
+                ['渠道ID', 'oales.channer.userId'], //
+                ['服务管家', 'oales.servicer.currentName'], //
+                ['服务管家ID', 'oales.servicer.userId'], //
+                ['创建人', 'creater.currentName'], //
+                ['创建时间', 'createTime'], //
+                ['付款时间', 'payTime'], //
+                ['复核时间', 'oales.checkTime'], //
+                ['确认时间', 'oales.confirmTime'], //
+                ['总额', 'oales.total'], //
+                ['类型', 'oales.atttype'], //
+                ['奖励类型', 'oales.awardType'], //
+                ['成本', 'oales.cost'], //
+                ['系数', 'oales.threshold'], //
+                ['利润', 'oales.profit'], //
+                ['奖励', 'oales.award'], //
+                ['备注', 'comment'] //
+                ],
                 list: res.paging.data,
-            }, function (v) {
+            }, function(v) {
 
                 v.oales.status = constant.sales().oales.status.keys[v.oales.status];
                 v.oales.atttype = constant.sales().oales.atttype.keys[v.oales.atttype];
@@ -380,7 +452,7 @@ jQuery(function ($) {
             });
         });
 
-    });
+    }
 
     function saveData() {
 
@@ -392,19 +464,21 @@ jQuery(function ($) {
         var options = {
             "oalesPay.name": oalesPay.items.name.val(),
             "oalesPay.money": oalesPay.items.money.val(),
+            "oalesPay.type": oalesPay.items.type.val(),
             "oalesPay.payTime": oalesPay.items.payTime.val(),
             "oalesPay.comment": oalesPay.items.comment.val(),
-            "oalesPay.type": params.sales.oales.type,
         };
+
         if (oalesPay.opid) {
             url = api.sales.updateOalesPay;
             options["oalesPay.opid"] = oalesPay.opid;
         }
+
         if (oalesPay.pageType != "payment") {
             options["oalesPay.oid"] = params.sales.oales.oid;
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
 
             if (oalesPay.pageType == "payment") {
                 searcher.doSearch();
@@ -415,6 +489,7 @@ jQuery(function ($) {
         });
 
         oalesPay.modals.oalesPayModal.modal("hide");
+        
         com.showAlert(com.info, "操作成功");
     }
 
@@ -423,11 +498,14 @@ jQuery(function ($) {
         var options = {
             "oalesPay.opid": opid,
         };
-        com.post(api.sales.deleteOalesPay, options, function (res) {
+        com.post(api.sales.deleteOalesPay, options, function(res) {
 
             com.focusPage("#list").empty();
+            
             showOalesPay();
+            
             searcher.doSearch();
+            
             com.showAlert(com.info, "操作成功");
         });
     }
@@ -444,7 +522,7 @@ jQuery(function ($) {
             "oalesPay.createTime": oalesPay.items.createTime.val()
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
 
             if (oalesPay.pageType == "payment") {
                 searcher.doSearch();
@@ -452,7 +530,9 @@ jQuery(function ($) {
                 com.focusPage("#list").empty();
                 showOalesPay();
             }
+            
             oalesPay.modals.createrTimeModal.modal("hide");
+            
             com.showAlert(com.info, "操作成功");
         })
     }

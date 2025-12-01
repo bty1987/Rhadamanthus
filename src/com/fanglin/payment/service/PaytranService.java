@@ -34,4 +34,6 @@ public interface PaytranService {
 
 	public void codepay(PaytranVO paytran) throws FLException;
 
+	public void alipay(Wxpay wxpay) throws FLException;
+
 }

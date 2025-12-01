@@ -2,6 +2,8 @@ package com.fanglin.personel.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -135,6 +137,8 @@ public class UserInfoPO implements java.io.Serializable {
 
 	private String entryTime;
 
+	private String boardTime;
+
 	private short employWay;
 
 	private String recommendMan;
@@ -162,6 +166,12 @@ public class UserInfoPO implements java.io.Serializable {
 	private String eignTime;
 
 	private String fignTime;
+
+	private Timestamp hireTime;
+
+	private Timestamp fireTime;
+
+	private Timestamp tranTime;
 
 	private int signNum;
 
@@ -569,6 +579,42 @@ public class UserInfoPO implements java.io.Serializable {
 
 	public void setEntryTime(String entryTime) {
 		this.entryTime = entryTime;
+	}
+
+	@Column(name = "boardTime")
+	public String getBoardTime() {
+		return boardTime;
+	}
+
+	public void setBoardTime(String boardTime) {
+		this.boardTime = boardTime;
+	}
+
+	@Column(name = "hireTime")
+	public Timestamp getHireTime() {
+		return hireTime;
+	}
+
+	public void setHireTime(Timestamp hireTime) {
+		this.hireTime = hireTime;
+	}
+
+	@Column(name = "fireTime")
+	public Timestamp getFireTime() {
+		return fireTime;
+	}
+
+	public void setFireTime(Timestamp fireTime) {
+		this.fireTime = fireTime;
+	}
+
+	@Column(name = "tranTime")
+	public Timestamp getTranTime() {
+		return tranTime;
+	}
+
+	public void setTranTime(Timestamp tranTime) {
+		this.tranTime = tranTime;
 	}
 
 	@Column(name = "employWay")

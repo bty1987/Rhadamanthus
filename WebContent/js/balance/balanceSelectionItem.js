@@ -36,7 +36,12 @@ $(function() {
         icon: "icon-check"
     }, {
         id: "export",
-        name: "导出",
+        name: "业务导出",
+        clazz: "btn-yellow",
+        icon: "icon-download-alt"
+    }, {
+        id: "export1",
+        name: "财务导出",
         clazz: "btn-yellow",
         icon: "icon-download-alt"
     }]);
@@ -255,6 +260,11 @@ $(function() {
 
         exports();
     });
+    
+    com.focusPage('#export1', '#pagenation').on("click", function() {
+
+        exports1();
+    });
 
     com.focusPage('#unbind', '#pagenation').on("click", function() {
 
@@ -310,7 +320,7 @@ $(function() {
             return false;
         }
 
-        if (total > 1000) {
+        if (total > 2000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
             return false;
         }
@@ -369,7 +379,7 @@ $(function() {
             return false;
         }
 
-        if (total > 1000) {
+        if (total > 2000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
             return false;
         }
@@ -391,14 +401,14 @@ $(function() {
                 ['一级类别', 'selectionItem.goods.onekind.name'], // 
                 ['二级类别', 'selectionItem.goods.twokind.name'], // 
                 ['三级类别', 'selectionItem.goods.thrkind.name'], //
-                ['型号', ''], //
+                ['型号', 'selectionItem.goods.name'], //
                 ['颜色', ''], //
                 ['规格', ''], //
                 ['单位', 'selectionItem.goods.measurementUnit'], //
-                ['数量', 'selectionItem.initNum'], //
+                ['数量', 'relnum'], //
                 ['单价', 'selectionItem.postprice'], //
-                ['结算值', 'posttotal'], //
-                ['合计金额', ''], //
+                ['结算值', 'totalprice'], //
+                ['合计金额', 'totalprice'], //
                 ['备注', 'selectionItem.comment'], //
                 ['面积', 'selectionItem.decoration.house.innerArea'], //
                 ['标配/升级', ''], //
@@ -420,6 +430,8 @@ $(function() {
                 v.selectionItem.type = constant.quotation().selectionItem.type.keys[v.selectionItem.type];
 
                 v.address = v.selectionItem.decoration.house.village.name + " " + v.selectionItem.decoration.house.houseNumber;
+                v.relnum = utils.changeThrDecimal(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)))
+                v.totalprice = utils.changeThrDecimal(utils.accMul(utils.accSub(parseFloat(v.selectionItem.num), parseFloat(v.selectionItem.refnum)), parseFloat(v.selectionItem.postprice)))
             });
         });
     }

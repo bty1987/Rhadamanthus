@@ -108,7 +108,7 @@ public class BrandServiceImpl implements BrandService {
 
 		Paging paging = new Paging(0, 10);
 
-		List<BrandPO> brandPOs = brandDao.pageBrand(paging, brandVO.getPinyin(), brandVO.getAtttype(), company);
+		List<BrandPO> brandPOs = brandDao.pageBrand(paging, brandVO.getPinyin(), brandVO.getAtttype(), brandVO.getStatus() == null ? BrandPO.STATUS_ENABLE_INT : null, company);
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 
 		for (BrandPO brandPO : brandPOs) {

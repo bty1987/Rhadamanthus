@@ -3,20 +3,26 @@ jQuery(function($) {
     var balanceSales4balance = {
 
         bsid: null,
-        btns: {},
+        btns: {balanceBtn: com.focusPage("#balanceBtn").click(balance),},
 
-        modals: {},
+        modals: {balanceModal: com.focusPage("#balanceModal"),},
 
-        items: {},
+        items: {bccount: com.focusPage("#bccount"),
+            cccount: com.focusPage("#cccount"),},
 
         status: {}
     };
+    
+    com.post(api.balance.queryBalanceAccountForTeller, {}, function(res) {
+
+        balanceSales4balance.items.cccount.bindData(res.balanceAccountes, "baid", "name");
+    }, null, false);
 
     var seacher = new Searcher();
 
     seacher.base("bscondList1", "bspagenation1", "bsresultList1", api.balance.pageBalanceSalesForBalance);
 
-    seacher.condition(["balance-balanceSelse-balance-no", "balance-balanceSelse-balance-type", "balance-balanceSelse-balance-status", "balance-balanceSelse-brand", "balance-balanceSelse-balance-isPay"]);
+    seacher.condition(["balance-balance-no", "balance-balance-type", "balance-balance-status", "balance-sales-brand", "balance-balance-isPay"]);
     seacher.param({"balanceSales.status": constant.balance().balanceSales.STATUS_ENABLE_CHECK_INT});
     seacher.history("balanceSalesPostData");
 
@@ -177,9 +183,42 @@ jQuery(function($) {
         name: "结算时间",
         prop: "balanceTime",
         clazz: "green"
+    }, {
+        field: "payeder",
+        name: "付款人",
+        prop: "balance.payeder.userName",
+        clazz: "grey",
+        click: function(btn, v) {
+
+            tools.personel.info(btn, v.payeder.userId);
+        }
+    }, {
+        field: "payedTime",
+        name: "付款时间",
+        prop: "balance.payedTime",
+        clazz: "green"
     }];
 
     var linebtus = [{
+        name: "结算",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            balanceSales4balance.balance = v.balance;
+
+            com.clearValidator();
+            com.cleanItems(balanceSales4balance.items);
+
+            com.post(api.balance.queryBalanceAccount, {
+                "balanceAccount.belonger.uid": v.balance.belonger.uid
+            }, function(res) {
+
+                balanceSales4balance.items.bccount.bindData(res.balanceAccountes, "baid", "name");
+            }, null, false);
+
+            balanceSales4balance.modals.balanceModal.modal("show");
+        }
+    }, {
         name: "付款",
         clazz: "btn-warning",
         handle: function(v) {
@@ -205,7 +244,7 @@ jQuery(function($) {
 
             params.balance.bid = v.balance.bid;
 
-            com.popup4page("#stockRecordPopUp", api.index.balanceSalesIndex.url, "销售单");
+            com.popup4page("#balancePopUp", api.index.balanceSalesIndex.url, "销售单");
         }
     }, {
         name: "结算扣款",
@@ -215,7 +254,7 @@ jQuery(function($) {
             params.balance = v.balance;
             params.balance.bid = v.balance.bid;
             params.balance.uid = v.balance.belonger.uid;
-            com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
+            com.popup4page("#balancePopUp", api.index.balanceCutpayIndex.url, "结算扣款");
         },
         show: function(v) {
 
@@ -264,5 +303,27 @@ jQuery(function($) {
             com.focusPage('input[type="checkbox"]').prop('checked', true);
         }
     });
+    
+    function balance() {
+
+        if (com.validate('balanceModal')) {
+            return false;
+        }
+
+        var options = {
+            "balance.bid": balanceSales4balance.balance.bid,
+            "balanceAccountes[0].money": balanceSales4balance.balance.surplus,
+            "balanceAccountes[0].baid": balanceSales4balance.items.bccount.val(),
+            "balanceAccountes[1].money": balanceSales4balance.balance.surplus,
+            "balanceAccountes[1].baid": balanceSales4balance.items.cccount.val(),
+        };
+
+        com.post(api.balance.balanceBalance, options, function() {
+
+            com.showAlert(com.info, "操作成功");
+
+            balanceSales4balance.modals.balanceModal.modal("hide");
+        });
+    }
 
 });

@@ -306,9 +306,17 @@ $.extend(api, {
                 args: ["realMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
             }]
         },
+        amountMaterialPayment: {
+            url: "amountMaterialPayment.do",
+            type: "query",
+            tranargs: [{
+                result: "",
+                args: ["amount"]
+            }]
+        },
         checkMaterialPayment: {
             url: "checkMaterialPayment.do"
-        }, // 前台没用到
+        },
         addMaterialPaymentForDeposit: {
             url: "addMaterialPaymentForDeposit.do",
             type: "update",
@@ -1091,6 +1099,13 @@ $.extend(api, {
         },
         confirmOalesPayment: {
             url: "confirmOalesPayment.do"
+        },
+        alipay: {
+            url: "alipay.do",
+            type: "update",
+            tranargs: {
+                args: ["wxpay.paymentMoney"]
+            }
         }
     }
 });
