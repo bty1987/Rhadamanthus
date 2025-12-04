@@ -21,6 +21,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.vo.ColorVO;
 import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -318,6 +319,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		for (SalesItemPO salesItemPO : salesItemPOs) {
 
 			if (salesDeliveryItemDao.querySalesDeliveryItemBySiid(salesItemPO.getSiid()) != null) continue;
+
+			// 套餐商品不生成配送项，只有普通商品和套餐明细（type=1）生成
+			if (salesItemPO.getGoods().getType() == GoodsPO.TYPE_SUIT_INT && salesItemPO.getType() != 1) {
+				continue;
+			}
 
 			SalesDeliveryItemPO salesDeliveryItemPO = new SalesDeliveryItemPO();
 

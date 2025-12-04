@@ -993,8 +993,8 @@ $.extend(api, {
             url: "addGoodsRecord.do"
         },
 
-        queryPackage: {
-            url: "queryPackage.do",
+        queryGoodsPackage: {
+            url: "queryGoodsPackage.do",
             type: "query",
             tranargs: [{
                 result: "goodsPackages",
@@ -1010,7 +1010,10 @@ $.extend(api, {
             tranargs: {
                 args: ["goodsPackages.num"]
             }
-
+        },
+        deleteGoodsPackage: {
+            url: "deleteGoodsPackage.do",
+            type: "update"
         },
 
         pagePrice: {

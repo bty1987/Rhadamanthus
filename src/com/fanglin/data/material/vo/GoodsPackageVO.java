@@ -19,6 +19,16 @@ public class GoodsPackageVO implements Serializable {
 
 	private Integer num;
 
+	private Integer purchase;  // 限价
+
+	private Integer selling;   // 售价
+
+	private Integer confine;   // 控价
+
+	private Short ctype;       // 结算类型
+
+	private Integer cvalue;    // 结算值
+
 	public GoodsPackageVO() {
 		super();
 	}
@@ -81,6 +91,46 @@ public class GoodsPackageVO implements Serializable {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public Integer getPurchase() {
+		return purchase;
+	}
+
+	public void setPurchase(Integer purchase) {
+		this.purchase = purchase;
+	}
+
+	public Integer getSelling() {
+		return selling;
+	}
+
+	public void setSelling(Integer selling) {
+		this.selling = selling;
+	}
+
+	public Integer getConfine() {
+		return confine;
+	}
+
+	public void setConfine(Integer confine) {
+		this.confine = confine;
+	}
+
+	public Short getCtype() {
+		return ctype;
+	}
+
+	public void setCtype(Short ctype) {
+		this.ctype = ctype;
+	}
+
+	public Integer getCvalue() {
+		return cvalue;
+	}
+
+	public void setCvalue(Integer cvalue) {
+		this.cvalue = cvalue;
 	}
 
 }

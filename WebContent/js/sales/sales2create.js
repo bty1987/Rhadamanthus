@@ -203,7 +203,10 @@ jQuery(function() {
         if (sales.goods.type == 1)
             $h4.append($edit);
 
-        var propertyArr = [['品类: ', sales.leftitems.category.val()], ['品牌: ', sales.leftitems.brand.val()], ['单位: ', sales.leftitems.measurementUnit.val()], ['颜色: ', sales.leftitems.color.find("option:selected").text()], ['规格: ', sales.leftitems.format.find("option:selected").text()], ['售价: ', price.selling, 'blue'], ['折扣价: ', $disPrice], ['折让价: ', $selling, 'blue'], ['数量: ', $num, 'red'], ['总价: ', $total, 'blue'], ['备注: ', sales.leftitems.remark.val()]];
+        // 判断商品类型
+        var goodsType = sales.goods.type == 1 ? '套餐' : '普通商品';
+
+        var propertyArr = [['品类: ', sales.leftitems.category.val()], ['品牌: ', sales.leftitems.brand.val()], ['单位: ', sales.leftitems.measurementUnit.val()], ['颜色: ', sales.leftitems.color.find("option:selected").text()], ['规格: ', sales.leftitems.format.find("option:selected").text()], ['类型: ', goodsType, 'orange'], ['售价: ', price.selling, 'blue'], ['折扣价: ', $disPrice], ['折让价: ', $selling, 'blue'], ['数量: ', $num, 'red'], ['总价: ', $total, 'blue'], ['备注: ', sales.leftitems.remark.val()]];
 
         $.each(propertyArr, function(index, value) {
 

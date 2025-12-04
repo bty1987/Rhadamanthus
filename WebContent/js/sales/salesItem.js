@@ -57,29 +57,85 @@ $(function() {
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
+            // 组织父子关系
+            var itemMap = {};
+            var rootItems = [];
+
+            // 第一遍：构建映射
             $.each(listData, function(i, v) {
+                itemMap[v.siid] = v;
+                v.children = [];
+            });
+
+            // 第二遍：组织父子关系
+            $.each(listData, function(i, v) {
+                if (v.psiid && itemMap[v.psiid]) {
+                    // 有父级，添加到父级的children
+                    itemMap[v.psiid].children.push(v);
+                } else {
+                    // 无父级，是根节点
+                    rootItems.push(v);
+                }
+            });
+
+            // 递归渲染函数
+            var renderItem = function(v, level) {
+                level = level || 0;
 
                 var $num = v.num;// 数量
                 var $price = v.price;// 折让价
                 var $total = v.total;
+                var isPackageChild = (v.type == 1); // 是否为套餐明细
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                if (isPackageChild) {
+                    $liLine.addClass('package-child-item');
+                    $liLine.css('padding-left', (20 + level * 20) + 'px');
+                    $liLine.css('background-color', '#f9f9f9');
+                    $liLine.css('border-left', '3px solid #87b87f');
+                }
+
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid').attr({
                     "li_Num": $num,
                     "li_Price": $price,
                     "li_delTotal": $total
                 });
-                var $small = $('<small></small>').addClass('blue').html(v.goods.name + ' ' + v.goods.no);
-                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid);
+
+                var namePrefix = isPackageChild ? '<i class="icon-level-up fa-rotate-90 grey"></i> ' : '';
+                var $small = $('<small></small>').addClass('blue').html(namePrefix + v.goods.name + ' ' + v.goods.no);
+                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right')
+                    .attr('data-num', v.num)
+                    .attr('data-selling', v.price)
+                    .attr('data-siid', v.siid)
+                    .attr('data-type', v.type || 0);
 
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                 var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
-                var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue"], ["折扣价:", v.disPrice, "blue"], ["折让价:", v.price, "blue"], ["数量:", v.num, "blue itemnum"], ["总价:", v.total, "blue"], ["结算值:", v.cvalue, "blue"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"], ["配送状态:", constant.sales().salesDeliveryItem.status.keys[v.deliveryStatus], "red"], ["备注:", v.comment, "grey"]];
+                var propertyArr = [
+                    ["商品品类:", v.goods.category, "grey"],
+                    ["商品颜色:", v.color.name, "grey"],
+                    ["商品规格:", v.format.info, "grey"],
+                    ["售价:", v.selling, "blue"],
+                    ["折扣价:", v.disPrice, "blue"],
+                    ["折让价:", v.price, "blue"],
+                    ["数量:", v.num, "blue itemnum"],
+                    ["总价:", v.total, "blue"],
+                    ["结算值:", v.cvalue, "blue"],
+                    ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"],
+                    ["类型:", v.priceType == "0" ? "正价" : "特价", "red"]
+                ];
+
+                // 如果是套餐明细，添加标识
+                if (isPackageChild) {
+                    propertyArr.push(["套餐明细", "是", "orange"]);
+                }
+
+                propertyArr.push(["配送状态:", constant.sales().salesDeliveryItem.status.keys[v.deliveryStatus], "red"]);
+                propertyArr.push(["备注:", v.comment, "grey"]);
 
                 $.each(propertyArr, function(index, value) {
-
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -89,8 +145,10 @@ $(function() {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if (salesItem.dompany != "pompany") {
-                    if (salesItem.sales.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) {
+                // 套餐明细不显示编辑和删除按钮
+                if (salesItem.dompany != "pompany" && !isPackageChild) {
+                    if (salesItem.sales.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT &&
+                        salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) {
                         $btnDiv.append($btnEdit).append($btnDelete);
                     }
                 }
@@ -98,18 +156,17 @@ $(function() {
                 $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
 
+                // 删除按钮事件
                 $btnDelete.click(function(e) {
-
                     e.stopPropagation();
 
                     var $this = $(this);
                     var $delTotal = $this.parents('div').parents('li').find('h3').attr('li_delTotal');
 
-                    var $lis = com.focusPage(".item-orange", "#layerPopUp");// 拿到每条子项li
+                    var $lis = com.focusPage(".item-orange", "#layerPopUp");
                     var priceTotalDel = 0;
 
                     $lis && $lis.length && $.each($lis, function(i, v) {
-
                         var $v = $(v);
                         priceTotalDel += utils.changeThrDecimal(parseFloat(utils.accMul($v.find('h3').attr('li_Num'), $v.find('h3').attr('li_Price'))));
                     });
@@ -121,9 +178,7 @@ $(function() {
                     };
 
                     com.showConfirm('确定要删除吗?', function(indexo, layero) {
-
                         com.post(api.sales.deleteSalesItem, ops, function() {
-
                             $btnDelete.parents('li.clearfix').remove();
                             com.focusPage('#list').empty();
                             querySalesItemBySid();
@@ -131,30 +186,38 @@ $(function() {
                     });
                 });
 
+                // 编辑按钮事件
                 $btnEdit.click(function() {
-
                     salesItem.salesItem = v;
 
                     com.popup4mini("#miniPopUp", "#layerEdit", "编辑", function() {
-
                         com.focusPage("#miniPopUp").attr("li_Total", $total);
                         com.focusPage('#salesItemDetialnum').on('change', function() {
-
                             if (com.validate('miniPopUp', 'right')) {
                                 return false;
                             }
                             com.focusPage('#salesItemDetialtotal').val(utils.changeThrDecimal(utils.accMul(parseFloat(com.focusPage('#salesItemDetialnum').val()), parseFloat(v.price))));
                         });
                     }, function() {
-
                         com.clearValidator();
                     }, function() {
-
                         com.focusPage('#salesItemDetialnum').val(v.num);
                         com.focusPage('#salesItemDetialtotal').val(v.total);
                         com.focusPage('#salesItemDetialcomment').val(v.comment);
                     });
                 });
+
+                // 递归渲染子项
+                if (v.children && v.children.length > 0) {
+                    $.each(v.children, function(i, child) {
+                        renderItem(child, level + 1);
+                    });
+                }
+            };
+
+            // 渲染根节点
+            $.each(rootItems, function(i, v) {
+                renderItem(v, 0);
             });
 
             $ul.appendTo($tableWrap);
@@ -602,7 +665,7 @@ $(function() {
         }, function(data) {
 
             $.exceler({
-                column: [['品牌', 'goods.category'], ['编码', 'goods.no'], ['产品', 'goods.name'], ['颜色', 'color.name'], ['规格', 'format.info'], ['单价', 'price'], ['数量', 'num'], ['金额', 'total'], ["备注", 'comment']],
+                column: [['品牌', 'goods.category'], ['编码', 'goods.no'], ['产品', 'goods.name'], ['颜色', 'color.name'], ['规格', 'format.info'], ['单价', 'price'], ['数量', 'num'], ['金额', 'total'], ['类型', function(item) { return item.type == 1 ? '套餐明细' : '普通商品'; }], ["备注", 'comment']],
                 list: data.salesItems
 
             });

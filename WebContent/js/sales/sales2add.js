@@ -134,28 +134,61 @@ jQuery(function() {
             'data-total': v.total,
             'data-remark': v.comment,
             'data-gid': v.goods.gid,
-            'data-siid': v.siid
+            'data-siid': v.siid,
+            'data-type': v.type || 0,
+            'data-psiid': v.psiid || null
         });
 
         var $h4 = $('<h4></h4>').html(v.goods.name + ' ' + v.goods.no).attr('addGid', v.goods.gid).attr('siid', v.siid);
 
-        var $btnEdit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑'));
+        // 判断是否为套餐或套餐明细
+        var isPackageOrChild = (v.goods.type == constant.data().goods.TYPE_SUIT_INT) || (v.type == 1) || (v.psiid != null);
+
+        var $btnEdit = null;
+        var $input = null;
+        var $btnCheck = null;
+        var $btnQCheck = null;
+
+        // 只有普通商品才显示编辑按钮和数量输入框
+        if (!isPackageOrChild) {
+            $btnEdit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑'));
+            $input = $('<div></div>').css('margin-right', '5px').addClass('pull-right action button hide').append($('<input>').attr("type", "text").css("width", "100px", "height", "26px", 'margin-right', '5px').addClass('v_required v_float_3'));
+            $btnCheck = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button hide').append($('<a></a>').addClass('btn btn-minier btn-info').html('确定'));
+            $btnQCheck = $('<div></div>').addClass('pull-right action-button hide').append($('<a></a>').addClass('btn btn-minier').html('取消'));
+        }
+
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-success').html('删除'));
-        var $input = $('<div></div>').css('margin-right', '5px').addClass('pull-right action button hide').append($('<input>').attr("type", "text").css("width", "100px", "height", "26px", 'margin-right', '5px').addClass('v_required v_float_3'));
-        var $btnCheck = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button hide').append($('<a></a>').addClass('btn btn-minier btn-info').html('确定'));
-        var $btnQCheck = $('<div></div>').addClass('pull-right action-button hide').append($('<a></a>').addClass('btn btn-minier').html('取消'));
 
         var $views = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn blue btn-minier _delete').html('查看')).click(function() {
 
             salesUtils.showPackage(sales.model.packageModel, com.focusPage('#itemList'), v.goods.gid);
         });
 
-        $h4.append($delete).append($btnEdit).append($btnQCheck).append($btnCheck).append($input).appendTo(sales.$liList);
+        // 添加删除按钮
+        $h4.append($delete);
 
+        // 只有普通商品才添加编辑相关按钮
+        if (!isPackageOrChild) {
+            $h4.append($btnEdit).append($btnQCheck).append($btnCheck).append($input);
+        }
+
+        $h4.appendTo(sales.$liList);
+
+        // 套餐类型商品显示查看按钮
         if (v.goods.type == constant.data().goods.TYPE_SUIT_INT)
             $h4.append($views);
 
-        var propertyArr = [['品类: ', v.goods.category], ['品牌: ', v.goods.brand], ['单位: ', v.goods.measurementUnit], ['颜色: ', v.color.name], ['规格: ', v.format.info], ['售价: ', v.selling, 'blue'], ['折扣价: ', v.disPrice, 'blue'], ['折让价: ', v.price, 'blue'], ['数量: ', v.num, 'red num'], ['总价: ', v.total, 'blue total'], ['备注: ', v.comment]];
+        // 判断商品类型
+        var goodsType = '';
+        if (v.type == 1 || v.psiid != null) {
+            goodsType = '套餐明细';
+        } else if (v.goods.type == constant.data().goods.TYPE_SUIT_INT) {
+            goodsType = '套餐';
+        } else {
+            goodsType = '普通商品';
+        }
+
+        var propertyArr = [['品类: ', v.goods.category], ['品牌: ', v.goods.brand], ['单位: ', v.goods.measurementUnit], ['颜色: ', v.color.name], ['规格: ', v.format.info], ['类型: ', goodsType, 'orange'], ['售价: ', v.selling, 'blue'], ['折扣价: ', v.disPrice, 'blue'], ['折让价: ', v.price, 'blue'], ['数量: ', v.num, 'red num'], ['总价: ', v.total, 'blue total'], ['备注: ', v.comment]];
         $.each(propertyArr, function(index, value) {
 
             var $span = $('<span></span>').addClass(value[1]);
@@ -172,45 +205,73 @@ jQuery(function() {
 
         sales.items.salesItemList.append(sales.$liList);
 
-        $btnEdit.click(function() {
+        // 只有普通商品才绑定编辑相关事件
+        if (!isPackageOrChild) {
+            $btnEdit.click(function() {
 
-            $input.removeClass('hide');
-            $btnCheck.removeClass('hide');
-            $btnQCheck.removeClass('hide');
-            $btnEdit.addClass('hide');
-            $delete.addClass('hide');
-            $views.addClass('hide');
-        });
+                $input.removeClass('hide');
+                $btnCheck.removeClass('hide');
+                $btnQCheck.removeClass('hide');
+                $btnEdit.addClass('hide');
+                $delete.addClass('hide');
+                $views.addClass('hide');
+            });
 
-        // 确定
-        $btnCheck.click(function() {
+            // 确定
+            $btnCheck.click(function() {
 
-            if (com.validate('salesItemList', 'bottom'))
-                return false;
+                if (com.validate('salesItemList', 'bottom'))
+                    return false;
 
-            var $this = $(this);
+                var $this = $(this);
 
-            var $item = $this.parents('.list-group-item');
-            var $info = $item.data();
+                var $item = $this.parents('.list-group-item');
+                var $info = $item.data();
 
-            var $siid = $info.siid;
-            var $num = $item.find("input").val();
-            var $price = $info.selling;
+                var $siid = $info.siid;
+                var $num = $item.find("input").val();
+                var $price = $info.selling;
 
-            var $itemTotal = utils.changeThrDecimal(utils.accMul($price, $num));
-            var $total = sales.rightitems.totals.val();
+                var $itemTotal = utils.changeThrDecimal(utils.accMul($price, $num));
+                var $total = sales.rightitems.totals.val();
 
-            var options = {
-                "salesItem.siid": $siid,
-                "salesItem.num": $num,
-                "salesItem.total": $itemTotal,
-                "salesItem.comment": $info.remark,
-                "sales.total": utils.changeThrDecimal(utils.accSub(utils.accAdd($total, $itemTotal), $info.total))
-            };
+                var options = {
+                    "salesItem.siid": $siid,
+                    "salesItem.num": $num,
+                    "salesItem.total": $itemTotal,
+                    "salesItem.comment": $info.remark,
+                    "sales.total": utils.changeThrDecimal(utils.accSub(utils.accAdd($total, $itemTotal), $info.total))
+                };
 
-            com.post(api.sales.updateSalesItem, options, function(res) {
+                com.post(api.sales.updateSalesItem, options, function(res) {
 
-                com.showAlert(com.info, "操作成功");
+                    com.showAlert(com.info, "操作成功");
+
+                    $input.addClass('hide');
+                    $btnCheck.addClass('hide');
+                    $btnQCheck.addClass('hide');
+                    $btnEdit.removeClass('hide');
+                    $delete.removeClass('hide');
+                    $views.removeClass('hide');
+                    $input.find("input").val("");
+
+                    var salesItem = res.salesItem;
+
+                    $item.data({
+                        "num": salesItem.num,
+                        "total": salesItem.total
+                    });
+
+                    $item.find("b.num").text(salesItem.num);
+                    $item.find("b.total").text(salesItem.total);
+
+                    cycTotal();
+
+                });
+            });
+
+            // 取消
+            $btnQCheck.click(function() {
 
                 $input.addClass('hide');
                 $btnCheck.addClass('hide');
@@ -218,34 +279,9 @@ jQuery(function() {
                 $btnEdit.removeClass('hide');
                 $delete.removeClass('hide');
                 $views.removeClass('hide');
-                $input.find("input").val("");
-
-                var salesItem = res.salesItem;
-
-                $item.data({
-                    "num": salesItem.num,
-                    "total": salesItem.total
-                });
-
-                $item.find("b.num").text(salesItem.num);
-                $item.find("b.total").text(salesItem.total);
-
-                cycTotal();
-
+                $input.find("input").val("")
             });
-        });
-
-        // 取消
-        $btnQCheck.click(function() {
-
-            $input.addClass('hide');
-            $btnCheck.addClass('hide');
-            $btnQCheck.addClass('hide');
-            $btnEdit.removeClass('hide');
-            $delete.removeClass('hide');
-            $views.removeClass('hide');
-            $input.find("input").val("")
-        });
+        }
 
         $delete.click(function() {
 

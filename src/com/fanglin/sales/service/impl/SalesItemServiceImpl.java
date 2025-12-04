@@ -15,6 +15,9 @@ import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.po.ColorPO;
 import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsPO;
+import com.fanglin.data.po.GoodsPackagePO;
+import com.fanglin.data.material.dao.GoodsDao;
+import com.fanglin.data.material.dao.GoodsPackageDao;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesItemPO;
@@ -34,6 +37,12 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 	@Autowired
 	private SalesItemDao salesItemDao;
+
+	@Autowired
+	private GoodsDao goodsDao;
+
+	@Autowired
+	private GoodsPackageDao goodsPackageDao;
 
 	@Override
 	public List<SalesItemVO> querySalesItemBySid(SalesVO salesVO) {
@@ -100,6 +109,58 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesPO.setOtherStatus(salesVO.getOtherStatus());
 
 		salesItemDao.save(salesItemPO);
+
+		// 检查商品是否为套餐类型
+		GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
+		if (goodsPO != null && goodsPO.getType() == GoodsPO.TYPE_SUIT_INT) {
+			// 套餐类型商品，需要展开套餐明细
+			List<GoodsPackagePO> goodsPackages = goodsPackageDao.queryPackage(goodsPO.getGid());
+
+			if (goodsPackages != null && !goodsPackages.isEmpty()) {
+				for (GoodsPackagePO goodsPackagePO : goodsPackages) {
+					// 为每个套餐明细创建子销售项
+					SalesItemPO childSalesItemPO = new SalesItemPO(
+						goodsPackagePO.getGoods(),
+						goodsPackagePO.getColor(),
+						goodsPackagePO.getFormat()
+					);
+
+					// 复制价格等基本信息
+					childSalesItemPO.setSid(salesVO.getSid());
+					childSalesItemPO.setPsiid(salesItemPO.getSiid()); // 关联父销售项
+					childSalesItemPO.setType((short) 1); // 标记为套餐明细
+
+					// 计算子项数量 = 套餐数量 × 套餐明细数量
+					long childNum = salesItemVO.getNum() * goodsPackagePO.getNum();
+					childSalesItemPO.setNum(childNum);
+					childSalesItemPO.setInitnum(childNum);
+					childSalesItemPO.setPunum(childNum);
+					childSalesItemPO.setXgnum(childNum);
+
+					// 复制价格信息（如果套餐明细有价格配置）
+					if (goodsPackagePO.getPurchase() > 0) {
+						childSalesItemPO.setPurchase(goodsPackagePO.getPurchase());
+					}
+					if (goodsPackagePO.getSelling() > 0) {
+						childSalesItemPO.setSelling(goodsPackagePO.getSelling());
+					}
+					if (goodsPackagePO.getConfine() > 0) {
+						childSalesItemPO.setPrice(goodsPackagePO.getConfine());
+					}
+					childSalesItemPO.setCtype(goodsPackagePO.getCtype());
+					childSalesItemPO.setCvalue(goodsPackagePO.getCvalue());
+
+					// 计算子项总价
+					if (childSalesItemPO.getPrice() > 0) {
+						long childTotal = Arith.mul(childNum, childSalesItemPO.getPrice());
+						childSalesItemPO.setTotal(childTotal);
+					}
+
+					// 保存子销售项
+					salesItemDao.save(childSalesItemPO);
+				}
+			}
+		}
 
 		if (salesVO.getTotal() != Arith.add(salesPO.getTotal(), salesItemVO.getTotal())) {
 			throw new FLException(260059, "销售单总额不必配");
