@@ -206,7 +206,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		departmentPO.setNo(String.format("%sD_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000")));
 
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("dId", "no", "fatherDept", "type", "company", "manager"));
+		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("dId", "no", "fatherDept", "type", "company", "aompany", "manager"));
 
 		if (departmentVO.getType() != null) {
 			departmentPO.setType(departmentTypeDao.get(departmentVO.getType().getDtid()));
@@ -219,6 +219,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		departmentPO.setAlias(departmentPO.getName());
 		departmentPO.setStatus(DepartmentPO.STATUS_ENABLE_INT);
 		departmentPO.setCompany(company);
+		departmentPO.setAompany(company);  // 业绩公司默认与公司相同
 		departmentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		if (userPO != null) {
@@ -246,7 +247,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			userPO = userDao.queryUserByUserId(departmentVO.getManager().getUserId());
 		}
 
-		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("no", "fatherDept", "type", "company", "status", "manager"));
+		BeanUtil.copyProperties(departmentVO, departmentPO, Arrays.asList("no", "fatherDept", "type", "company", "aompany", "status", "manager"));
 
 		if (departmentVO.getType() != null) {
 			departmentPO.setType(departmentTypeDao.get(departmentVO.getType().getDtid()));

@@ -592,6 +592,18 @@ $(function () {
             return v.atttype == 0;
         }
     }, {
+        name: "套餐明细",
+        clazz: "btn-info",
+        icon: "fa-list-ul",
+        condition: function(v) {
+            // 仅对套餐类型商品显示
+            return v.type == 1;
+        },
+        handle: function (v) {
+            // 调用显示套餐明细函数
+            showPackageDetail(v);
+        }
+    }, {
         name: "记录",
         clazz: "btn-purple",
         handle: function (v) {
@@ -1184,6 +1196,18 @@ $(function () {
 
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
         $("<i></i>").addClass("icon-plus green").appendTo(goodsUrl);
+    }
+
+    /**
+     * 显示套餐明细
+     * @param {Object} goodsData - 商品数据对象
+     */
+    function showPackageDetail(goodsData) {
+        // 将商品数据传递到 params
+        params.data.goods = goodsData;
+
+        // 使用弹窗加载 goods4package.html 页面
+        com.popup4page('#layerPopUp', 'views/data/goods4package.html', '套餐明细');
     }
 
 });

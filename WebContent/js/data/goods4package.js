@@ -1,298 +1,293 @@
 $(function() {
 
-    var goodsSuit = {
-        'flag': true,
+    var goodsPackage = {
+        items: {
+            goodsName: com.focusPage('#goodsName', "#addPackageModal"),
+            goodsNo: com.focusPage('#goodsNo', "#addPackageModal"),
+            category: com.focusPage('#category', "#addPackageModal"),
+            brand: com.focusPage('#brand', "#addPackageModal"),
+            colorSelect: com.focusPage('#colorSelect', "#addPackageModal"),
+            formatSelect: com.focusPage('#formatSelect', "#addPackageModal"),
+            num: com.focusPage('#num', "#addPackageModal"),
+            selling: com.focusPage('#selling', "#addPackageModal")
+        },
+        modals: {
+            addPackageModal: com.focusPage('#addPackageModal')
+        },
+        btns: {
+            savePackageBtn: com.focusPage('#savePackageBtn').on("click", saveData)
+        },
+
+        // 套餐商品ID（从 params 获取）
+        pid: params.data.goods != null ? params.data.goods.gid : "",
+
+        // 套餐商品品牌（用于校验）
+        packageBrand: params.data.goods != null ? params.data.goods.brand : "",
+
+        // 当前选中的商品
+        selectedGoods: null,
+
+        // 当前编辑的套餐明细ID（编辑模式）
+        editingGpid: null,
+
+        // 状态枚举
+        status: constant.data().goods.status.keys
     };
 
-    var _goodsPackage = params.data.goods;
+    // 弹窗关闭时清空数据
+    goodsPackage.modals.addPackageModal.on("hide.bs.modal", function(e) {
+        com.clearValidator();
+        com.cleanTypeahead("goodsName");
+        com.cleanItems(goodsPackage.items);
+        goodsPackage.selectedGoods = null;
+        goodsPackage.editingGpid = null;
+        com.focusPage('#modalTitle').text('添加套餐商品');
+    });
 
-    var $btnConfirm = $('<a></a>').addClass('btn btn-info').attr({
-        'name': 'subbtn',
-        'href': 'javascript:void(0);'
-    }).css('margin-left', '85%').text('添加');
+    // 初始化商品名称自动完成
+    com.initTypeahead(goodsPackage.items.goodsName, api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
+        // 选中商品后自动填充信息
+        $.each(list, function(index, val) {
+            if (val.gid == k) {
+                goodsPackage.selectedGoods = val;
 
-    var $btnCancel = $('<a></a>').addClass('btn').attr({
-        'name': 'cancelbtn',
-        'href': 'javascript:void(0);'
-    }).css('margin-left', '10px').text('取消');
-    var $condList1 = $('#fl-container .layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
-    var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-7%;"></div>');
-    $div.append($btnConfirm).append($btnCancel).appendTo($condList1);
+                // 填充商品信息
+                goodsPackage.items.goodsNo.val(val.no || '');
+                goodsPackage.items.category.val(val.category || '');
+                goodsPackage.items.brand.val(val.brand || '');
 
-    function addlinePackge(data, cid, colorName, fid, formatInfo, num) {
-
-        var $line = $('<li></li>').addClass('line').attr({
-            'data-gid': data.gid,
-            'data-cid': cid,
-            'data-fid': fid,
-            'data-num': num
-        });
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index'));// .text('')
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
-        var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [{
-            cellClass: "no blue",
-            value: data.no
-        }, {
-            cellClass: "name grey",
-            value: data.name
-        }, {
-            cellClass: "barcode grey",
-            value: data.barcode
-        }, {
-            cellClass: "category grey",
-            value: data.category
-        }, {
-            cellClass: "brand grey",
-            value: data.brand
-        }, {
-            cellClass: "color grey",
-            value: colorName
-        }, {
-            cellClass: "format grey",
-            value: formatInfo
-        }, {
-            cellClass: "measurementUnit grey",
-            value: data.measurementUnit
-        }, {
-            cellClass: "number blue",
-            value: num
-        }, {
-            cellClass: "status red",
-            value: data.status == 0 ? '启用' : '禁用'
-        }];
-
-        var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-
-        $.each(_lineInfoSet, function(i, v) {
-
-            var $cell = $('<div></div>').addClass('cell ' + v.cellClass).text(v.value);
-
-            $cell.appendTo($lineInfoWrap);
-
-        });
-
-        $optWrap.append($('<div></div>').addClass('cell option').append($btndel));
-
-        $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
-
-        $btndel.click(function(e) {
-            $(this).parents('.line.current').remove();
-        });
-
-        return $line;
-
-    }
-
-    function addline(lineindex) {
-
-        var $line = $('<li></li>').addClass('line').appendTo(com.focusPage('#list'));
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col11');
-        var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [{
-            cellClass: "no"
-        }, {
-            cellClass: "name",
-            hasInput: !0
-        }, {
-            cellClass: "barcode"
-        }, {
-            cellClass: "category"
-        }, {
-            cellClass: "brand"
-        }, {
-            cellClass: "color",
-            hasSelectColor: !0
-        }, {
-            cellClass: "format",
-            hasSelectFormat: !0
-        }, {
-            cellClass: "measurementUnit"
-        }, {
-            cellClass: "accessoriesTypeName"
-        }, {
-            cellClass: "number",
-            hasInput: !0
-        }, {
-            cellClass: "status"
-        }];
-
-        var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
-        var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-
-        $.each(_lineInfoSet, function(i, v) {
-            var $input;
-            var $select;
-            var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
-
-            if (v.hasInput) {
-                $input = $('<input>').prop({
-                    'type': 'text',
-                    'autocomplete': 'off'
-                }).addClass('editable v_required');
-                if (v.cellClass == "name") {
-                    $input.addClass('v_required');
+                // 验证品牌是否一致
+                if (goodsPackage.packageBrand && val.brand != goodsPackage.packageBrand) {
+                    com.showAlert(com.warning, "品牌不一致！套餐品牌：" + goodsPackage.packageBrand);
                 }
-                if (v.cellClass == "number") {
-                    $input.addClass('v_number');
+
+                // 验证不能添加套餐类型商品
+                if (val.type == 1) {
+                    com.showAlert(com.warning, "不能添加套餐类型商品！");
+                    goodsPackage.selectedGoods = null;
+                    return;
                 }
-                $cell.append($input);
-            }
-            if (v.hasSelectColor) {
-                $select = $('<select class="v_required"></select>');
-                $cell.append($select);
-            }
-            if (v.hasSelectFormat) {
-                $select = $('<select class="v_required"></select>');
-                $cell.append($select);
-            }
 
-            $cell.appendTo($lineInfoWrap);
+                // 加载颜色列表
+                com.post(api.data.queryColorForEnableByGid, {
+                    "color.gid": val.gid
+                }, function(res) {
+                    if (res.colors && res.colors.length > 0) {
+                        goodsPackage.items.colorSelect.bindData(res.colors, "cid", "color");
+                    } else {
+                        com.showAlert(com.warning, '该商品暂无颜色信息');
+                        goodsPackage.items.colorSelect.html('<option value="">无颜色</option>');
+                    }
+                });
 
+                // 加载规格列表
+                com.post(api.data.queryFormatForEnableByGid, {
+                    "format.gid": val.gid
+                }, function(res) {
+                    if (res.formats && res.formats.length > 0) {
+                        goodsPackage.items.formatSelect.bindData(res.formats, "fid", "format");
+                    } else {
+                        com.showAlert(com.warning, '该商品暂无规格信息');
+                        goodsPackage.items.formatSelect.html('<option value="">无规格</option>');
+                    }
+                });
+            }
         });
+        return v;
+    });
 
-        $optWrap.append($('<div></div>').addClass('cell option').append($btncheck).append($btndel));
+    // 初始化 Searcher
+    var searcher = new Searcher();
 
-        $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
+    // 定义显示字段
+    var packageProps = [{
+        fieId: "no",
+        name: "商品编号",
+        prop: "goods.no",
+        clazz: "blue"
+    }, {
+        fieId: "name",
+        name: "商品名称",
+        prop: "goods.goods",
+        clazz: "grey"
+    }, {
+        fieId: "category",
+        name: "品类",
+        prop: "goods.category",
+        clazz: "grey"
+    }, {
+        fieId: "brand",
+        name: "品牌",
+        prop: "goods.brand",
+        clazz: "grey"
+    }, {
+        fieId: "color",
+        name: "颜色",
+        prop: "color.color",
+        clazz: "grey"
+    }, {
+        fieId: "format",
+        name: "规格",
+        prop: "format.format",
+        clazz: "grey"
+    }, {
+        fieId: "num",
+        name: "数量",
+        prop: "num",
+        clazz: "blue"
+    }, {
+        fieId: "selling",
+        name: "售价",
+        prop: "selling",
+        clazz: "green",
+        render: function(v) {
+            return v.selling ? (v.selling / 100).toFixed(2) + ' 元' : '-';
+        }
+    }, {
+        fieId: "status",
+        name: "状态",
+        prop: "goods.status",
+        clazz: "red",
+        dataset: goodsPackage.status
+    }];
 
-        com.initTypeahead(".name input", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
-            $.each(list, function(index, val) {
-                if (val.gid == k) {
-                    $lineInfoWrap.find('.no').text(val.no);
-                    $lineInfoWrap.find('.barcode').text(val.barcode);
-                    $lineInfoWrap.find('.category').text(val.category);
-                    $lineInfoWrap.find('.brand').text(val.brand).attr('data-bid', val.bid);
-                    $lineInfoWrap.find('.measurementUnit').text(val.measurementUnit);
-                    $lineInfoWrap.find('.accessoriesTypeName').text(val.accessoriesType.name == null ? "" : val.accessoriesType.name);
-                    $lineInfoWrap.find('.status').text(val.status == "0" ? "启用" : "禁用");
-                    $line.attr({
-                        'data-gid': val.gid,
-                        'data-type': val.type
-                    });
-                    com.post(api.data.queryColorForEnableByGid, {
-                        "color.gid": val.gid
-                    }, function(res) {
-                        if (res.colors.length != 0) {
-                            goodsSuit.flag = true;
-                            com.focusPage('li[data-gid="' + val.gid + '"] .color select').bindData(res.colors, "cid", "name");
-                        } else {
-                            goodsSuit.flag = false;
-                            com.showAlert(com.warning, '该商品暂无颜色信息,请录入')
-                        }
-
-                    }, function(e) {
-                        com.showAlert(com.error, e.errorMsg);
-                    });
-
-                    com.post(api.data.queryFormatForEnableByGid, {
-                        "format.gid": val.gid
-                    }, function(res) {
-                        if (res.formats.length != 0) {
-                            goodsSuit.flag = true;
-                            com.focusPage('li[data-gid="' + val.gid + '"] .format select').bindData(res.formats, "fid", "info");
-                        } else {
-                            goodsSuit.flag = false;
-                            com.showAlert(com.warning, '该商品暂无规格信息,请录入')
-                        }
-
-                    }, function(e) {
-                        com.showAlert(com.error, e.errorMsg);
-                    })
-                }
-            });
-
-            return v;
-        });
-
-        $btncheck.click(function(e) {
-            e.stopPropagation();
-            if (com.validate('addGoodsPackage', 'bottom')) { return; }
-            var gid = $(this).parents('li.line.current').attr('data-gid');
-            var cid = $(this).parents('li.line.current').find('.color select').val();
-            var colorName = $(this).parents('li.line.current').find('.color select option:selected').text();
-            var fid = $(this).parents('li.line.current').find('.format select').val();
-            var formatInfo = $(this).parents('li.line.current').find('.format select option:selected').text();
-            var num = $(this).parents('li.line.current').find('.number input').val();
-            if (checkRowValue($line)) {
-                com.post(api.data.queryGoodsByGId, {
-                    'goods.gid': gid
-                }, function(data) {
-                    com.focusPage('#list').empty();
-                    addline(1).addClass('current');
-                    addlinePackge(data.goods, cid, colorName, fid, formatInfo, num).addClass('current').appendTo('#showList');
+    // 定义操作按钮
+    var linebtns = [{
+        name: "编辑",
+        clazz: "btn-info",
+        icon: "fa-edit",
+        handle: function(v) {
+            editPackageItem(v);
+        }
+    }, {
+        name: "删除",
+        clazz: "btn-warning",
+        icon: "fa-trash-o",
+        handle: function(v) {
+            com.showConfirm("确认删除该套餐商品吗？", function(result) {
+                com.post(api.data.deleteGoodsPackage, {
+                    "goodsPackage.gpid": v.gpid
                 }, function(e) {
-                    com.showAlert(com.error, e.errorMsg);
-                })
+                    com.showAlert(com.info, "删除成功");
+                    searcher.doSearch();
+                });
+            });
+        }
+    }];
+
+    // 配置 Searcher
+    searcher.base("packageCondList", "packagePagenation", "packageResultList", api.data.queryGoodsPackage);
+    searcher.result("goodsPackages").isPage(false);  // 不分页
+
+    // 设置查询参数
+    searcher.param({
+        "goodsPackage.pid": goodsPackage.pid
+    });
+
+    // 添加"添加"按钮
+    searcher.button(function() {
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left')
+            .attr('id', 'addBtn').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('fa fa-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text(' 添加套餐商品').appendTo($adda);
+        return [$adda];
+    });
+
+    // 渲染列表
+    searcher.line("no", packageProps, linebtns).render();
+
+    // 添加按钮点击事件
+    com.focusPage("#addBtn").click(function() {
+        goodsPackage.editingGpid = null;
+        com.focusPage('#modalTitle').text('添加套餐商品');
+        goodsPackage.modals.addPackageModal.modal("show");
+    });
+
+    /**
+     * 编辑套餐商品
+     */
+    function editPackageItem(item) {
+        goodsPackage.editingGpid = item.gpid;
+        com.focusPage('#modalTitle').text('编辑套餐商品');
+
+        // 填充表单数据
+        goodsPackage.items.goodsName.val(item.goods.goods || item.goods.name);
+        goodsPackage.items.goodsNo.val(item.goods.no || '');
+        goodsPackage.items.category.val(item.goods.category || '');
+        goodsPackage.items.brand.val(item.goods.brand || '');
+        goodsPackage.items.num.val(item.num || '');
+        goodsPackage.items.selling.val(item.selling ? (item.selling / 100).toFixed(2) : '');
+
+        goodsPackage.selectedGoods = item.goods;
+
+        // 加载并选中颜色
+        com.post(api.data.queryColorForEnableByGid, {
+            "color.gid": item.goods.gid
+        }, function(res) {
+            if (res.colors && res.colors.length > 0) {
+                goodsPackage.items.colorSelect.bindData(res.colors, "cid", "color");
+                if (item.color && item.color.cid) {
+                    goodsPackage.items.colorSelect.val(item.color.cid);
+                }
             }
-
         });
 
-        $btndel.click(function(e) {
-
-            com.focusPage('#list').empty();
-
-            addline(1).addClass('current');
+        // 加载并选中规格
+        com.post(api.data.queryFormatForEnableByGid, {
+            "format.gid": item.goods.gid
+        }, function(res) {
+            if (res.formats && res.formats.length > 0) {
+                goodsPackage.items.formatSelect.bindData(res.formats, "fid", "format");
+                if (item.format && item.format.fid) {
+                    goodsPackage.items.formatSelect.val(item.format.fid);
+                }
+            }
         });
 
-        return $line;
+        // 打开弹窗
+        goodsPackage.modals.addPackageModal.modal("show");
     }
 
-    addline(1).addClass('current');
-
-    function checkRowValue($line) {
-
-        var flag = true;
-
-        var bid = $line.find('.brand').attr('data-bid');
-
-        if (bid != _goodsPackage['goods.bid']) {
-            com.showAlert(com.warning, "品牌不一致");
-            flag = false;
-        }
-
-        var type = $line.attr('data-type');
-
-        if (type != 0) {
-            com.showAlert(com.warning, "不可添加套餐商品");
-            flag = false;
-        }
-
-        return flag;
-    }
-
-    $btnConfirm.click(function(e) {
-        var _option = {};
-
-        $.extend(_option, params.goods);
-
-        var packageList = com.focusPage('#showList', '#goodsSuitPopUp').find('li');
-        $.each(packageList, function(i, v) {
-            var _this = $(v);
-            _option["goodsPackages[" + i + "].goods.gid"] = _this.attr('data-gid');
-            _option["goodsPackages[" + i + "].color.cid"] = _this.attr('data-cid');
-            _option["goodsPackages[" + i + "].format.fid"] = _this.attr('data-fid');
-            _option["goodsPackages[" + i + "].num"] = _this.attr('data-num')
-        });
-
-        if (packageList.length == 0) {
-            com.showAlert(com.warning, "请添加套餐商品");
+    /**
+     * 保存套餐商品
+     */
+    function saveData() {
+        // 表单验证
+        if (com.validate('addPackageModal')) {
             return false;
         }
 
-        com.post(api.data.addPackage, _option, function() {
+        // 验证是否选择了商品
+        if (!goodsPackage.selectedGoods || !goodsPackage.selectedGoods.gid) {
+            com.showAlert(com.warning, "请选择商品");
+            return false;
+        }
 
+        // 构建保存参数
+        var option = {
+            "goods.gid": goodsPackage.pid,
+            "goodsPackages[0].goods.gid": goodsPackage.selectedGoods.gid,
+            "goodsPackages[0].color.cid": goodsPackage.items.colorSelect.val(),
+            "goodsPackages[0].format.fid": goodsPackage.items.formatSelect.val(),
+            "goodsPackages[0].num": goodsPackage.items.num.val()
+        };
+
+        // 售价（可选，转换为分）
+        var sellingValue = goodsPackage.items.selling.val();
+        if (sellingValue) {
+            option["goodsPackages[0].selling"] = Math.round(parseFloat(sellingValue) * 100);
+        }
+
+        // 如果是编辑模式，添加 gpid
+        if (goodsPackage.editingGpid) {
+            option["goodsPackages[0].gpid"] = goodsPackage.editingGpid;
+        }
+
+        // 调用保存接口
+        com.post(api.data.addPackage, option, function(e) {
             com.showAlert(com.info, "操作成功");
-
-            com.focusPage('#showList').empty();
-            com.focusPage('#list').empty();
+            searcher.doSearch();
+            goodsPackage.modals.addPackageModal.modal("hide");
         });
-
-        return false;
-    });
-
-    $btnCancel.click(function() {
-        com.closePopup();
-    });
-
+    }
 });

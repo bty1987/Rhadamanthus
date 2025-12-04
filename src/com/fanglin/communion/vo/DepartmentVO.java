@@ -53,6 +53,8 @@ public class DepartmentVO implements Serializable {
 
 	private Integer company;
 
+	private Integer aompany;  // 业绩公司
+
 	public DepartmentVO() {
 		super();
 	}
@@ -146,6 +148,14 @@ public class DepartmentVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Integer getAompany() {
+		return aompany;
+	}
+
+	public void setAompany(Integer aompany) {
+		this.aompany = aompany;
 	}
 
 	public Short getStatus() {

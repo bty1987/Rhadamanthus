@@ -34,6 +34,16 @@ public class GoodsPackagePO implements Serializable {
 
 	private int num;
 
+	private int purchase;  // 限价
+
+	private int selling;   // 售价
+
+	private int confine;   // 控价
+
+	private short ctype;   // 结算类型
+
+	private int cvalue;    // 结算值
+
 	public GoodsPackagePO() {
 		super();
 	}
@@ -107,6 +117,51 @@ public class GoodsPackagePO implements Serializable {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+
+	@Column(name = "purchase")
+	public int getPurchase() {
+		return purchase;
+	}
+
+	public void setPurchase(int purchase) {
+		this.purchase = purchase;
+	}
+
+	@Column(name = "selling")
+	public int getSelling() {
+		return selling;
+	}
+
+	public void setSelling(int selling) {
+		this.selling = selling;
+	}
+
+	@Column(name = "confine")
+	public int getConfine() {
+		return confine;
+	}
+
+	public void setConfine(int confine) {
+		this.confine = confine;
+	}
+
+	@Column(name = "ctype")
+	public short getCtype() {
+		return ctype;
+	}
+
+	public void setCtype(short ctype) {
+		this.ctype = ctype;
+	}
+
+	@Column(name = "cvalue")
+	public int getCvalue() {
+		return cvalue;
+	}
+
+	public void setCvalue(int cvalue) {
+		this.cvalue = cvalue;
 	}
 
 }

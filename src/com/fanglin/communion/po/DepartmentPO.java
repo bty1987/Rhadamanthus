@@ -90,6 +90,8 @@ public class DepartmentPO implements Serializable {
 
 	private int company;
 
+	private int aompany;  // 业绩公司
+
 	public DepartmentPO() {
 		super();
 	}
@@ -264,6 +266,15 @@ public class DepartmentPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "aompany")
+	public int getAompany() {
+		return aompany;
+	}
+
+	public void setAompany(int aompany) {
+		this.aompany = aompany;
 	}
 
 	@Column(name = "code")

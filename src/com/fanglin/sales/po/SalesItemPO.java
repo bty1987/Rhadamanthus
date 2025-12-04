@@ -76,6 +76,10 @@ public class SalesItemPO implements Serializable {
 
 	private short priceType;
 
+	private Long psiid;
+
+	private short type;
+
 	public SalesItemPO() {
 		super();
 	}
@@ -288,6 +292,24 @@ public class SalesItemPO implements Serializable {
 
 	public void setPriceType(short priceType) {
 		this.priceType = priceType;
+	}
+
+	@Column(name = "psiid")
+	public Long getPsiid() {
+		return psiid;
+	}
+
+	public void setPsiid(Long psiid) {
+		this.psiid = psiid;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	public SalesItemVO ptv(SalesItemVO salesItemVO) {

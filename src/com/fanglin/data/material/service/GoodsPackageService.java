@@ -12,4 +12,6 @@ public interface GoodsPackageService {
 
 	public int addGoodsPackage(GoodsVO goodsVO, List<GoodsPackageVO> goodsPackageVOs, int company) throws FLException;
 
+	public void deleteGoodsPackage(GoodsPackageVO goodsPackageVO) throws FLException;
+
 }
