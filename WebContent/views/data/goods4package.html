@@ -85,6 +85,26 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">结算类型</label>
+                        <div class="col-sm-9">
+                            <select id="ctypeSelect" class="col-xs-10 col-sm-8">
+                                <option value="">请选择结算类型</option>
+                                <option value="0">固定金额</option>
+                                <option value="1">百分比</option>
+                                <option value="2">按数量</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right">结算值</label>
+                        <div class="col-md-9">
+                            <input type="text" class="col-xs-10 col-sm-8 v_float_2" id="cvalue"
+                                   placeholder="选填，根据结算类型填写对应的值">
+                        </div>
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">

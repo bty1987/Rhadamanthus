@@ -2,7 +2,9 @@ package com.fanglin.sales.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -441,76 +443,108 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				throw new FLException(240007, "存在未处理审批信息");
 			}
 
-			SalesBalancePO salesBalancePO = new SalesBalancePO();
-
-			long balance = 0;
-
-			salesBalancePO.setSales(salesPO);
-			salesBalancePO.setCreater(userPO);
-			salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			salesBalancePO.setTotal(salesPO.getTotal());
-			salesBalancePO.setBalance(balance);
-			salesBalancePO.setType(SalesBalancePO.TYPE_INIT_INT);
-			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
-			salesBalancePO.setSalesman(salesPO.getSalesman());
-			salesBalancePO.setDept(salesPO.getDept());
-			salesBalancePO.setRegion(salesPO.getRegion());
-
-			salesBalanceDao.save(salesBalancePO);
-
+			// 查询所有销售项
 			List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesPO.getSid());
 
-			long _allowance = 0;
-
+			// 按品牌分组销售项
+			Map<String, List<SalesItemPO>> brandItemsMap = new HashMap<String, List<SalesItemPO>>();
 			for (SalesItemPO salesItemPO : salesItemPOs) {
-
-				long _price = salesItemPO.getPrice();
-				long _disPrice = salesItemPO.getDisPrice();
-
-				if (salesItemPO.getCtype() == SalesItemPO.CTYPE_POINT_INT) {
-					long _balance = Arith.mul(Arith.sub(_price, Arith.mul(_disPrice, Arith.sub(1000, salesItemPO.getCvalue()))), salesItemPO.getNum());
-					balance = Arith.add(balance, _balance);
+				// 获取商品品牌，如果商品或品牌为空，使用"未知品牌"
+				String brand = "未知品牌";
+				if (salesItemPO.getGoods() != null && salesItemPO.getGoods().getBrand() != null && !salesItemPO.getGoods().getBrand().isEmpty()) {
+					brand = salesItemPO.getGoods().getBrand();
 				}
 
-				if (salesItemPO.getCtype() == SalesItemPO.CTYPE_RESERVEPRICE_INT) {
-					long _balance = Arith.mul(Arith.sub(_price, salesItemPO.getCvalue()), salesItemPO.getNum());
-					balance = Arith.add(balance, _balance);
+				// 将销售项添加到对应品牌的列表中
+				if (!brandItemsMap.containsKey(brand)) {
+					brandItemsMap.put(brand, new ArrayList<SalesItemPO>());
 				}
-
-				_allowance = Arith.add(_allowance, Arith.mul(Arith.sub(salesItemPO.getDisPrice(), salesItemPO.getPrice()), salesItemPO.getNum()));
-
-				SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO();
-				salesBalanceItemPO.setSbid(salesBalancePO.getSbid());
-				salesBalanceItemPO.setSalesItem(salesItemPO);
-				salesBalanceItemPO.setRawCtype(salesItemPO.getRawCtype());
-				salesBalanceItemPO.setRawCvalue(salesItemPO.getRawCvalue());
-				salesBalanceItemPO.setCtype(salesItemPO.getCtype());
-				salesBalanceItemPO.setCvalue(salesItemPO.getCvalue());
-				salesBalanceItemPO.setNum(salesItemPO.getNum());
-				salesBalanceItemPO.setTotal(salesItemPO.getTotal());
-
-				salesBalanceItemDao.save(salesBalanceItemPO);
+				brandItemsMap.get(brand).add(salesItemPO);
 			}
 
-			salesBalancePO.setAllowance(_allowance);
-			salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
-			salesBalancePO.setBalance(balance);
-			salesBalancePO.setRate(1000);
+			// 为每个品牌创建一条结算数据
+			for (Map.Entry<String, List<SalesItemPO>> entry : brandItemsMap.entrySet()) {
+				String brand = entry.getKey();
+				List<SalesItemPO> brandItems = entry.getValue();
 
-			SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_MUILT_BALANCE_INT", salesPO.getCompany());
+				// 创建该品牌的结算单
+				SalesBalancePO salesBalancePO = new SalesBalancePO();
+				salesBalancePO.setSales(salesPO);
+				salesBalancePO.setCreater(userPO);
+				salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				salesBalancePO.setType(SalesBalancePO.TYPE_INIT_INT);
+				salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
+				salesBalancePO.setSalesman(salesPO.getSalesman());
+				salesBalancePO.setDept(salesPO.getDept());
+				salesBalancePO.setRegion(salesPO.getRegion());
+				salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
+				salesBalancePO.setRate(1000);
 
-			if (taggle != null && taggle.getValue() != null && salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(salesPO.getBrand().getBid()) > 0) salesBalancePO.setType(SalesBalancePO.TYPE_BALANCE_INT);
+				// 计算该品牌的总金额、优惠金额和结算金额
+				long brandTotal = 0;
+				long brandBalance = 0;
+				long brandAllowance = 0;
 
-			long vbalance = Arith.sub(Arith.round(salesPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
+				for (SalesItemPO salesItemPO : brandItems) {
+					long _price = salesItemPO.getPrice();
+					long _disPrice = salesItemPO.getDisPrice();
 
-			salesBalancePO.setVbalance(vbalance);
-			salesBalancePO.setPbalance(vbalance);
-			salesBalancePO.setDifference(Arith.sub(salesBalancePO.getTotal(), balance));
+					// 计算销售项的结算金额
+					if (salesItemPO.getCtype() == SalesItemPO.CTYPE_POINT_INT) {
+						long _balance = Arith.mul(Arith.sub(_price, Arith.mul(_disPrice, Arith.sub(1000, salesItemPO.getCvalue()))), salesItemPO.getNum());
+						brandBalance = Arith.add(brandBalance, _balance);
+					}
 
-			salesBalanceDao.update(salesBalancePO);
+					if (salesItemPO.getCtype() == SalesItemPO.CTYPE_RESERVEPRICE_INT) {
+						long _balance = Arith.mul(Arith.sub(_price, salesItemPO.getCvalue()), salesItemPO.getNum());
+						brandBalance = Arith.add(brandBalance, _balance);
+					}
 
+					// 累加优惠金额
+					brandAllowance = Arith.add(brandAllowance, Arith.mul(Arith.sub(salesItemPO.getDisPrice(), salesItemPO.getPrice()), salesItemPO.getNum()));
+
+					// 累加总金额
+					brandTotal = Arith.add(brandTotal, salesItemPO.getTotal());
+				}
+
+				// 设置结算单的金额信息
+				salesBalancePO.setTotal(brandTotal);
+				salesBalancePO.setBalance(brandBalance);
+				salesBalancePO.setAllowance(brandAllowance);
+
+				// 检查是否需要设置为多结算类型
+				SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_MUILT_BALANCE_INT", salesPO.getCompany());
+				if (taggle != null && taggle.getValue() != null && salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(salesPO.getBrand().getBid()) > 0) {
+					salesBalancePO.setType(SalesBalancePO.TYPE_BALANCE_INT);
+				}
+
+				// 计算应付和实付金额
+				long vbalance = Arith.sub(Arith.round(brandTotal, 0, Arith.ROUND_FLOOR), Arith.round(brandBalance, 0, Arith.ROUND_CEILING));
+				salesBalancePO.setVbalance(vbalance);
+				salesBalancePO.setPbalance(vbalance);
+				salesBalancePO.setDifference(Arith.sub(brandTotal, brandBalance));
+
+				// 保存结算单
+				salesBalanceDao.save(salesBalancePO);
+
+				// 为该品牌的每个销售项创建结算项
+				for (SalesItemPO salesItemPO : brandItems) {
+					SalesBalanceItemPO salesBalanceItemPO = new SalesBalanceItemPO();
+					salesBalanceItemPO.setSbid(salesBalancePO.getSbid());
+					salesBalanceItemPO.setSalesItem(salesItemPO);
+					salesBalanceItemPO.setRawCtype(salesItemPO.getRawCtype());
+					salesBalanceItemPO.setRawCvalue(salesItemPO.getRawCvalue());
+					salesBalanceItemPO.setCtype(salesItemPO.getCtype());
+					salesBalanceItemPO.setCvalue(salesItemPO.getCvalue());
+					salesBalanceItemPO.setNum(salesItemPO.getNum());
+					salesBalanceItemPO.setTotal(salesItemPO.getTotal());
+
+					salesBalanceItemDao.save(salesBalanceItemPO);
+				}
+			}
+
+			// 更新销售单状态
 			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT);
-
 			salesDao.update(salesPO);
 		}
 
