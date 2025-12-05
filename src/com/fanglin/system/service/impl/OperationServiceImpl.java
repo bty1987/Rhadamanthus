@@ -255,6 +255,8 @@ public class OperationServiceImpl implements OperationService {
 		OperationPO operationPO = operationDao.queryOperationByOperation(operation);
 
 		if (operationPO == null) return true;
+		if (operationPO.getType() == OperationPO.THROUGH_COMMON_INT) return true;
+		if (operationPO.getType() == OperationPO.THROUGH_PASS_INT) return true;
 
 		List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
 

@@ -176,12 +176,12 @@ function customTable(type) {
     contentHtml += '<td width="5%" align="center">金额</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
-    contentHtml += '<td width="5%" align="center">基础增项</td>';
+    contentHtml += '<td width="5%" align="center">工程个性化预收</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
     contentHtml += '<td width="5%" align="center">' + ((type & 8) == 8 ? protation.protation.adddPrice : '') + '</td>';
     contentHtml += '</tr>';
     contentHtml += '<tr>';
-    contentHtml += '<td width="5%" align="center">主材增项</td>';
+    contentHtml += '<td width="5%" align="center">主材个性化预收</td>';
     contentHtml += '<td colspan="2" width="5%" align="center">1</td>';
     contentHtml += '<td width="5%" align="center">' + ((type & 8) == 8 ? protation.protation.addmPrice : '') + '</td>';
     contentHtml += '</tr>';

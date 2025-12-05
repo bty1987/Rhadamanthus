@@ -31,6 +31,12 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesItemPO> querySalesItemByPsiid(long psiid) {
+		return session().createCriteria(SalesItemPO.class).add(Restrictions.eq("psiid", psiid)).list();
+	}
+
+	@Override
 	public int countSalesItem(long sid) {
 
 		String sql = "SELECT count(*) FROM sales.salesitem where sid=:sid";
@@ -41,7 +47,7 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 	@Override
 	public long amountSalesItem(long sid) {
 
-		String sql = "SELECT SUM(sales.salesitem.total) FROM sales.salesitem where sid=:sid";
+		String sql = "SELECT SUM(sales.salesitem.total) FROM sales.salesitem where sid=:sid and psiid = 0";
 
 		BigDecimal sum = (BigDecimal) session().createSQLQuery(sql).setLong("sid", sid).uniqueResult();
 

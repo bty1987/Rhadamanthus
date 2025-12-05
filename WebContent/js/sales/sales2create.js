@@ -193,7 +193,7 @@ jQuery(function() {
             cycTotal();
         });
 
-        var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function() {
+        var $edit = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('套餐')).click(function() {
 
             salesUtils.showPackage(sales.model.packageModel, com.focusPage('#itemList'), $h4.attr('addGid'));
         });

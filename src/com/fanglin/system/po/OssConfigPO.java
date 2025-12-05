@@ -1,82 +1,132 @@
 package com.fanglin.system.po;
 
-import javax.annotation.PreDestroy;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
-import com.aliyun.oss.OSS;
-import com.aliyun.oss.OSSClientBuilder;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Configuration
-public class OssConfigPO {
+@Entity
+@Table(name = "ossconfig", catalog = "data")
+public class OssConfigPO implements Serializable {
 
-	private String endpoint = "oss-cn-beijing.aliyuncs.com";
+	private static final long serialVersionUID = -377458132071370654L;
 
-	private String bucket = "edu-njc";
+	private long ossId;
 
-	private String dir = "user-dir-image/";
+	private String accessKeyId;
 
-	private long expireTime = 3600;
+	private String accessKeySecret;
 
-	private String host = "https://" + bucket + "." + endpoint;
+	private String endpoint;
 
-	private String accessKeyId = "***ALIYUN_AK2_REMOVED***";
+	private String bucket;
 
-	private String accessKeySecret = "***ALIYUN_SK2_REMOVED***";
+	private String dir;
 
-	private OSS ossClient;
+	private int expireTime;
 
-	@Bean
-	public OSS getOssClient() {
+	private String policy;
 
-		if (ossClient == null) {
-			ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-		}
-		return ossClient;
+	private String signature;
+
+	private Timestamp deadline;
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "ossId")
+	public long getOssId() {
+		return ossId;
 	}
 
-	@Bean
-	public String getEndpoint() {
-		return endpoint;
+	public void setOssId(long ossId) {
+		this.ossId = ossId;
 	}
 
-	@Bean
-	public String getBucket() {
-		return bucket;
-	}
-
-	@Bean
-	public String getDir() {
-		return dir;
-	}
-
-	@Bean
-	public long getExpireTime() {
-		return expireTime;
-	}
-
-	@Bean
-	public String getHost() {
-		return host;
-	}
-
-	@Bean
+	@Column(name = "accessKeyId")
 	public String getAccessKeyId() {
 		return accessKeyId;
 	}
 
-	@Bean
+	public void setAccessKeyId(String accessKeyId) {
+		this.accessKeyId = accessKeyId;
+	}
+
+	@Column(name = "accessKeySecret")
 	public String getAccessKeySecret() {
 		return accessKeySecret;
 	}
 
-	@PreDestroy
-	public void onDestroy() {
+	public void setAccessKeySecret(String accessKeySecret) {
+		this.accessKeySecret = accessKeySecret;
+	}
 
-		if (ossClient != null) {
-			ossClient.shutdown();
-		}
+	@Column(name = "endpoint")
+	public String getEndpoint() {
+		return endpoint;
+	}
+
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	@Column(name = "bucket")
+	public String getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+
+	@Column(name = "dir")
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
+	}
+
+	@Column(name = "expireTime")
+	public int getExpireTime() {
+		return expireTime;
+	}
+
+	public void setExpireTime(int expireTime) {
+		this.expireTime = expireTime;
+	}
+
+	@Column(name = "policy")
+	public String getPolicy() {
+		return policy;
+	}
+
+	public void setPolicy(String policy) {
+		this.policy = policy;
+	}
+
+	@Column(name = "signature")
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+
+	@Column(name = "deadline")
+	public Timestamp getDeadline() {
+		return deadline;
+	}
+
+	public void setDeadline(Timestamp deadline) {
+		this.deadline = deadline;
 	}
 
 }

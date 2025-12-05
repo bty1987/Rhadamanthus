@@ -1,7 +1,7 @@
 package com.fanglin.system.service.impl;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -13,14 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.HttpMethod;
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
+import com.fanglin.system.dao.OssConfigDao;
 import com.fanglin.system.po.OssConfigPO;
 import com.fanglin.system.service.OssConfigService;
 import com.fanglin.system.vo.OssConfigVO;
+import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("ossConfigService")
 @Transactional(readOnly = true)
@@ -29,83 +33,102 @@ public class OssConfigServiceImpl implements OssConfigService {
 	public static final Logger logger = LoggerFactory.getLogger(OssConfigServiceImpl.class);
 
 	@Autowired
-	private OSS ossClient;
-
-	@Autowired
-	private OssConfigPO ossConfigPO;
+	private OssConfigDao ossConfigDao;
 
 	@Override
-	public OssConfigVO generatePostSignature() {
+	@Transactional(rollbackFor = Exception.class)
+	public OssConfigVO generatePostSignature(OssConfigVO ossConfig) {
 
-		OssConfigVO ossConfigVO = new OssConfigVO();
+		OssConfigPO ossConfigPO = ossConfigDao.querySignature(ossConfig.getAccessKeyId(), ossConfig.getEndpoint(), ossConfig.getBucket(), ossConfig.getDir());
 
-		try {
-			long expireEndTime = System.currentTimeMillis() + ossConfigPO.getExpireTime() * 1000;
-			Date expiration = new Date(expireEndTime);
-			PolicyConditions policyConds = new PolicyConditions();
-			policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
-			policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, ossConfigPO.getDir());
-			String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
-			byte[] binaryData = postPolicy.getBytes("utf-8");
-			String encodedPolicy = BinaryUtil.toBase64String(binaryData);
-			String postSignature = ossClient.calculatePostSignature(postPolicy);
-
-			ossConfigVO.setAccessKeyId(ossConfigPO.getAccessKeyId());
-			ossConfigVO.setPolicy(encodedPolicy);
-			ossConfigVO.setSignature(postSignature);
-			ossConfigVO.setDir(ossConfigPO.getDir());
-			ossConfigVO.setHost(ossConfigPO.getHost());
-
-		} catch (OSSException oe) {
-			String ossErrorMsg = String.format("验证失败,重新验证 [OSS服务端错误：错误码=%s, 请求ID=%s, 详情=%s]", oe.getErrorCode(), oe.getRequestId(), oe.getErrorMessage());
-			logger.error(ossErrorMsg, oe);
-		} catch (ClientException ce) {
-			String clientErrorMsg = String.format("验证失败,重新验证 [客户端通信失败：详情=%s]", ce.getMessage());
-			logger.error(clientErrorMsg, ce);
-		} catch (UnsupportedEncodingException e) {
-			String errorMsg = String.format("验证失败,重新验证 [编码异常：不支持的字符集，详情=%s]", e.getMessage());
-			logger.error(errorMsg, e);
+		if (ossConfigPO == null) {
+			return ossConfig;
 		}
 
-		return ossConfigVO;
-	}
+		if (ossConfigPO.getDeadline().getTime() < DateUtil.getDateToTimestamp(new Date()).getTime()) {
 
-	@Override
-	public OssConfigVO getProgressiveImage(OssConfigVO ossConfig) {
+			OSS ossClient = null;
 
-		String objectName = ossConfigPO.getDir() + ossConfig.getKey();
+			try {
 
-		try {
+				ossClient = new OSSClient(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
 
-			if (ossClient.doesObjectExist(ossConfigPO.getBucket(), objectName)) { // 判断图片信息
-				String style = "image/resize,m_pad,w_150,h_150";
-				Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 10);
-				GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(ossConfigPO.getBucket(), objectName, HttpMethod.GET);
-				req.setProcess(style);
-				req.setExpiration(expiration);
-				URL signedUrl = ossClient.generatePresignedUrl(req);
+				long expireEndTime = System.currentTimeMillis() + ossConfigPO.getExpireTime() * 1000;
+				Date expiration = new Date(expireEndTime);
+				PolicyConditions policyConds = new PolicyConditions();
+				policyConds.addConditionItem(PolicyConditions.COND_CONTENT_LENGTH_RANGE, 0, 1048576000);
+				policyConds.addConditionItem(MatchMode.StartWith, PolicyConditions.COND_KEY, ossConfig.getDir());
+				String postPolicy = ossClient.generatePostPolicy(expiration, policyConds);
+				byte[] binaryData = postPolicy.getBytes("utf-8");
+				String encodedPolicy = BinaryUtil.toBase64String(binaryData);
+				String postSignature = ossClient.calculatePostSignature(postPolicy);
 
-				ossConfig.setUrl(signedUrl.toString());
+				ossConfigPO.setPolicy(encodedPolicy);
+				ossConfigPO.setSignature(postSignature);
+				ossConfigPO.setDeadline(DateUtil.getDateToTimestamp(expiration));
+
+				ossConfigDao.update(ossConfigPO);
+
+				BeanUtil.copyProperties(ossConfigPO, ossConfig, Arrays.asList("ossClient"));
+
+				ossConfig.setHost(String.format("https://%s.%s", ossConfigPO.getBucket(), ossConfigPO.getEndpoint()));
+				ossConfig.setPolicy(encodedPolicy);
+				ossConfig.setSignature(postSignature);
+
+			} catch (OSSException oe) {
+				String ossErrorMsg = String.format("验证失败,重新验证 [OSS服务端错误：错误码=%s, 请求ID=%s, 详情=%s]", oe.getErrorCode(), oe.getRequestId(), oe.getErrorMessage());
+				logger.error(ossErrorMsg, oe);
+			} catch (ClientException ce) {
+				String clientErrorMsg = String.format("验证失败,重新验证 [客户端通信失败：详情=%s]", ce.getMessage());
+				logger.error(clientErrorMsg, ce);
+			} catch (UnsupportedEncodingException e) {
+				String errorMsg = String.format("验证失败,重新验证 [编码异常：不支持的字符集，详情=%s]", e.getMessage());
+				logger.error(errorMsg, e);
+			} finally {
+				if (ossClient != null) {
+					ossClient.shutdown();
+				}
 			}
-		} catch (OSSException oe) {
-			String ossErrorMsg = String.format("验证失败,重新验证 [OSS服务端错误：错误码=%s, 请求ID=%s, 详情=%s]", oe.getErrorCode(), oe.getRequestId(), oe.getErrorMessage());
-			logger.error(ossErrorMsg, oe);
-		} catch (ClientException ce) {
-			String clientErrorMsg = String.format("验证失败,重新验证 [客户端通信失败：详情=%s]", ce.getMessage());
-			logger.error(clientErrorMsg, ce);
+		} else {
+
+			BeanUtil.copyProperties(ossConfigPO, ossConfig, Arrays.asList("ossClient"));
+
+			ossConfig.setHost(String.format("https://%s.%s", ossConfigPO.getBucket(), ossConfigPO.getEndpoint()));
+			ossConfig.setPolicy(ossConfigPO.getPolicy());
+			ossConfig.setSignature(ossConfigPO.getSignature());
 		}
 
 		return ossConfig;
 	}
 
 	@Override
-	public int deleteImageSample(OssConfigVO ossConfig) {
+	public OssConfigVO getProgressiveImage(OssConfigVO ossConfig) {
 
-		String objectName = ossConfigPO.getDir() + ossConfig.getKey();
+		OssConfigPO ossConfigPO = ossConfigDao.querySignature(ossConfig.getAccessKeyId(), ossConfig.getEndpoint(), ossConfig.getBucket(), ossConfig.getDir());
+
+		OSS ossClient = null;
+
+		if (ossConfigPO == null) {
+			return ossConfig;
+		}
 
 		try {
-			if (ossClient.doesObjectExist(ossConfigPO.getBucket(), objectName)) { // 判断图片信息
-				ossClient.deleteObject(ossConfigPO.getBucket(), objectName);
+
+			ossClient = new OSSClient(ossConfigPO.getEndpoint(), ossConfigPO.getAccessKeyId(), ossConfigPO.getAccessKeySecret());
+
+			String objectName = String.format("%s%s", ossConfig.getDir(), ossConfig.getKey());
+
+			if (ossClient.doesObjectExist(ossConfig.getBucket(), objectName)) { // 判断图片信息
+
+				Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 10);
+				GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(ossConfigPO.getBucket(), objectName, HttpMethod.GET);
+				if (ossConfig.getWidth() != null && ossConfig.getHeight() != null) {
+					String style = String.format("image/resize,m_fill,w_%s,h_%s", ossConfig.getWidth(), ossConfig.getHeight());
+					req.setProcess(style);
+				}
+				req.setExpiration(expiration);
+
+				ossConfig.setUrl(ossClient.generatePresignedUrl(req).toString());
 			}
 		} catch (OSSException oe) {
 			String ossErrorMsg = String.format("验证失败,重新验证 [OSS服务端错误：错误码=%s, 请求ID=%s, 详情=%s]", oe.getErrorCode(), oe.getRequestId(), oe.getErrorMessage());
@@ -113,8 +136,12 @@ public class OssConfigServiceImpl implements OssConfigService {
 		} catch (ClientException ce) {
 			String clientErrorMsg = String.format("验证失败,重新验证 [客户端通信失败：详情=%s]", ce.getMessage());
 			logger.error(clientErrorMsg, ce);
+		} finally {
+			if (ossClient != null) {
+				ossClient.shutdown();
+			}
 		}
 
-		return 0;
+		return ossConfig;
 	}
 }

@@ -24,7 +24,7 @@ var salesUtils = {
         
         container.html('');
         
-        com.post(api.data.queryPackage,{"goodsPackage.pid": gid},function(res){
+        com.post(api.data.queryGoodsPackage,{"goodsPackage.pid": gid},function(res){
             $.each(res.goodsPackages, function(i, v){
                 var list = [
                     ["商品编号: ", v.goods.no],

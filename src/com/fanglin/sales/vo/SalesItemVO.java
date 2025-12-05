@@ -14,6 +14,10 @@ public class SalesItemVO implements Serializable {
 
 	private Long sid;
 
+	private Long psiid;
+
+	private Short type;
+
 	private GoodsVO goods;
 
 	private ColorVO color;
@@ -30,6 +34,8 @@ public class SalesItemVO implements Serializable {
 
 	private Integer postDis;
 
+	private Short priceType;
+
 	private Integer price;
 
 	private Long num;
@@ -37,7 +43,7 @@ public class SalesItemVO implements Serializable {
 	private Long initnum;
 
 	private Long punum;
-	
+
 	private Long xgnum;
 
 	private Long total;
@@ -51,12 +57,6 @@ public class SalesItemVO implements Serializable {
 	private Short ctype;
 
 	private Integer cvalue;
-
-	private Short priceType;
-
-	private Long psiid;
-
-	private Short type;
 
 	public SalesItemVO() {
 		super();

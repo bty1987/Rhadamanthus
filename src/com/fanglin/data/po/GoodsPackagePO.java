@@ -3,6 +3,7 @@ package com.fanglin.data.po;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,9 +14,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.material.vo.GoodsPackageVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
-@Table(name = "goodspackage", catalog = "inventory")
+@Table(name = "goodspackage", catalog = "data")
 public class GoodsPackagePO implements Serializable {
 
 	private static final long serialVersionUID = -2129826916198144693L;
@@ -34,15 +37,15 @@ public class GoodsPackagePO implements Serializable {
 
 	private int num;
 
-	private int purchase;  // 限价
+	private int purchase; // 限价
 
-	private int selling;   // 售价
+	private int selling; // 售价
 
-	private int confine;   // 控价
+	private int confine; // 控价
 
-	private short ctype;   // 结算类型
+	private short ctype; // 结算类型
 
-	private int cvalue;    // 结算值
+	private int cvalue; // 结算值
 
 	public GoodsPackagePO() {
 		super();
@@ -164,4 +167,14 @@ public class GoodsPackagePO implements Serializable {
 		this.cvalue = cvalue;
 	}
 
+	public GoodsPackageVO ptv(GoodsPackageVO goodsPackageVO) {
+
+		BeanUtil.copyProperties(this, goodsPackageVO, Arrays.asList("goods", "color", "format"));
+
+		if (goodsPackageVO.getGoods() != null && getGoods() != null) getGoods().ptv(goodsPackageVO.getGoods());
+		if (goodsPackageVO.getColor() != null && getColor() != null) getColor().ptv(goodsPackageVO.getColor());
+		if (goodsPackageVO.getFormat() != null && getFormat() != null) getFormat().ptv(goodsPackageVO.getFormat());
+
+		return goodsPackageVO;
+	}
 }

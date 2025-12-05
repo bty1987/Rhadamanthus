@@ -26,7 +26,7 @@ public class OssConfigAction extends BaseListAction {
 	@Action(value = "generatePostSignature", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String generatePostSignature() {
 
-		ossConfig = ossConfigService.generatePostSignature();
+		ossConfigService.generatePostSignature(ossConfig);
 
 		return SUCCESS;
 	}
@@ -35,14 +35,6 @@ public class OssConfigAction extends BaseListAction {
 	public String getProgressiveImage() {
 
 		ossConfig = ossConfigService.getProgressiveImage(ossConfig);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "deleteImageSample", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteImageSample() {
-
-		ossConfigService.deleteImageSample(ossConfig);
 
 		return SUCCESS;
 	}

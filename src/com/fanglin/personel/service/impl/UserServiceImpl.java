@@ -361,7 +361,7 @@ public class UserServiceImpl implements UserService {
 
 		if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) return userVO;
 
-		if (!userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getPassword().equals(password.toUpperCase())) return userVO;
+		if (!userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getPassword().toUpperCase().equals(password.toUpperCase())) return userVO;
 
 		userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
 
@@ -895,11 +895,11 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190001, "旧密码输入错误");
 		}
 
-		if (!userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getPassword().equals(password)) {
+		if (!userPO.getPassword().equals(MD5Helper.MD5(password)) && !userPO.getPassword().toUpperCase().equals(password.toUpperCase())) {
 			throw new FLException(190001, "旧密码输入错误");
 		}
 
-		userPO.setPassword(rePassword);
+		userPO.setPassword(rePassword.toUpperCase());
 
 		userDao.update(userPO);
 	}

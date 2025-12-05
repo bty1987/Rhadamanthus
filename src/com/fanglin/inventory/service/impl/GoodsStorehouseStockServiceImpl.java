@@ -68,13 +68,13 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 	@Autowired
 	private ManifestService manifestService;
-	
+
 	@Autowired
 	private ColorDao colorDao;
-	
+
 	@Autowired
 	private FormatDao formatDao;
-	
+
 	@Override
 	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters, String userId) {
 
@@ -166,28 +166,28 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	public void plusGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException {
 
 		int num = goodsStorehouseStockVO.getNum();
-		
+
 		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
-		
+
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
-		
+
 		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), shid, null, 0, 0, num));
-			
+
 		manifestService.addManifestForCP(manifestItemVOs, userId, company);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void loseGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId,int company) throws FLException {
-		
+	public void loseGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException {
+
 		int num = goodsStorehouseStockVO.getNum();
-		
+
 		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
-		
+
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
-		
+
 		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), null, shid, 0, 0, num));
-			
+
 		manifestService.addManifestForCL(manifestItemVOs, userId, company);
 	}
 
@@ -208,7 +208,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), shid, null, 0, 0, num));
 
-		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryPackage(goodsStorehouseStockVO.getGoods().getGid());
+		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryGoodsPackage(goodsStorehouseStockVO.getGoods().getGid());
 
 		for (GoodsPackagePO goodsPackagePO : goodsPackagePOs) {
 			manifestItemVOs.add(new ManifestItemVO().init(goodsPackagePO.getGoods().getGid(), goodsPackagePO.getColor().getCid(), goodsPackagePO.getFormat().getFid(), null, shid, 0, 0, Arith.mul(num, goodsPackagePO.getNum())));
@@ -236,7 +236,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), null, shid, 0, 0, num));
 
-		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryPackage(goodsStorehouseStockVO.getGoods().getGid());
+		List<GoodsPackagePO> goodsPackagePOs = goodsPackageDao.queryGoodsPackage(goodsStorehouseStockVO.getGoods().getGid());
 
 		for (GoodsPackagePO goodsPackagePO : goodsPackagePOs) {
 			manifestItemVOs.add(new ManifestItemVO().init(goodsPackagePO.getGoods().getGid(), goodsPackagePO.getColor().getCid(), goodsPackagePO.getFormat().getFid(), shid, null, 0, 0, Arith.mul(num, goodsPackagePO.getNum())));
@@ -261,7 +261,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 		if (inGoodsStorehouseStockPO == null) {
 			inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
-			
+
 			ColorPO colorPO = colorDao.get(cid);
 			FormatPO formatPO = formatDao.get(fid);
 
@@ -275,7 +275,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			inGoodsStorehouseStockPO.setStorehouse(new StorehousePO(shid));
 
 			inGoodsStorehouseStockPO.setNum(0);
-			
+
 		}
 
 		inGoodsStorehouseStockPO.setNum(Arith.add(inGoodsStorehouseStockPO.getNum(), num));

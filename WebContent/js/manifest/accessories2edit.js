@@ -23,6 +23,11 @@ jQuery(function($) {
                 'data-selling': v.selling,
                 'data-caid': v.caid,
                 'data-nid': v.nid,
+                
+                'data-normnum': v.normnum,
+                'data-normunit': v.normunit,
+                'data-storenum': v.storenum,
+                'data-storeunit': v.storeunit,
             });
 
             $line.find('div.no').text(v.goods.no);
@@ -133,6 +138,11 @@ jQuery(function($) {
             var name = $line.find(".name input").val();
             var num = $line.find('.number input').val();
             var nid = $line.attr("data-nid");
+            
+            var normnum = $line.attr("data-normnum");
+            var normunit = $line.attr("data-normunit");
+            var storenum = $line.attr("data-storenum");
+            var storeunit = $line.attr("data-storeunit");
 
             if (nid) {
 
@@ -141,7 +151,9 @@ jQuery(function($) {
                 com.post(api.inventory.checkAccessoriesItem, {
                     "accessories.orderId": accessories.orderId,
                     "accessoriesItem.nid": nid,
-                    "accessoriesItem.num": num
+                    "accessoriesItem.num": num,
+                    "accessoriesItem.normnum": normnum,
+                    "accessoriesItem.storenum": storenum,
                 }, function(res) {
 
                     itemcheck = true;
@@ -160,7 +172,11 @@ jQuery(function($) {
                 "accessoriesItem.num": num,
                 "accessoriesItem.selling": selling,
                 "accessoriesItem.total": utils.accMul(num, selling),
-                "accessoriesItem.caid": $line.attr('data-caid')
+                
+                "accessoriesItem.normnum": normnum,
+                "accessoriesItem.normunit": normunit,
+                "accessoriesItem.storenum": storenum,
+                "accessoriesItem.storeunit": storeunit,
             };
 
             if (aiid) {

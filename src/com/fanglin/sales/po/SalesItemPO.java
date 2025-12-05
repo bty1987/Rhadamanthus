@@ -28,6 +28,8 @@ public class SalesItemPO implements Serializable {
 
 	public static final String COLUMN_SIID_STR = "siid";
 
+	public static final short TYPE_PACKAGE_INT = 1;
+
 	public static final short CTYPE_RESERVEPRICE_INT = 0;
 
 	public static final short CTYPE_POINT_INT = 1;
@@ -35,6 +37,10 @@ public class SalesItemPO implements Serializable {
 	private long siid;
 
 	private long sid;
+
+	private long psiid;
+
+	private short type;
 
 	private GoodsPO goods;
 
@@ -51,6 +57,8 @@ public class SalesItemPO implements Serializable {
 	private int disPrice;
 
 	private int postDis;
+
+	private short priceType;
 
 	private int price;
 
@@ -73,12 +81,6 @@ public class SalesItemPO implements Serializable {
 	private short ctype;
 
 	private int cvalue;
-
-	private short priceType;
-
-	private Long psiid;
-
-	private short type;
 
 	public SalesItemPO() {
 		super();
@@ -295,11 +297,11 @@ public class SalesItemPO implements Serializable {
 	}
 
 	@Column(name = "psiid")
-	public Long getPsiid() {
+	public long getPsiid() {
 		return psiid;
 	}
 
-	public void setPsiid(Long psiid) {
+	public void setPsiid(long psiid) {
 		this.psiid = psiid;
 	}
 

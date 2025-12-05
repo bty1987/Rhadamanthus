@@ -360,7 +360,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 			throw new FLException(130017, "房产不存在");
 		}
 
-		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null && !customerChanceVO.getCustomer().getPhone().equals(customerPO.getPhone())) {
+		if (customerChanceVO.getCustomer() != null && customerChanceVO.getCustomer().getPhone() != null && !customerPO.getPhone().equals(FormatUtil.encodePhone(customerChanceVO.getCustomer().getPhone()))) {
 			throw new FLException(130115, "客户电话不匹配");
 		}
 

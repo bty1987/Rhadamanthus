@@ -206,7 +206,7 @@ $(function() {
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
             var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
-            var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('支付宝收款码');
+            var $alipayBtnCode = $('<a></a>').addClass('btn btn-minier btn-info').html('二维收款');
             var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
             var $btnKingdee = $('<a></a>').addClass('btn btn-minier btn-yellow').html('同步金蝶');
@@ -366,7 +366,7 @@ $(function() {
                 paymentUtils.showQRCode("salesPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId=" + v.sales.orderId + "&paymentType=3" + "&pid=" + v.spid + "&atttype=1", "salesCodeQrcodeModal");
             });
 
-            // 支付宝二维码
+            // 二维收款
             $alipayBtnCode.click(function() {
 
                 var paytranId = 0;
@@ -399,7 +399,7 @@ $(function() {
 
                 // 0: 预付款 , 1: 装修款 , 2: 主材款 , 3: 销售款 , 4: 服务款 , 5: 活动款 , 6: 转换款 7：代收款
                 var options = {
-                    "wxpay.paymentOrderId": v.sales.orderId, // 装修款
+                    "wxpay.paymentOrderId": v.sales.orderId,
                     "wxpay.paymentType": 3, // 销售款
                     "wxpay.paymentAttrType": 1, // 装修0or主材1
                     "wxpay.paymentMoney": paytranMoney,
@@ -415,7 +415,7 @@ $(function() {
 
                     var url = data.wxpay.url + "&mchNo=" + data.wxpay.mchNo + "&bizId=" + data.wxpay.bizId + "&isShort=true";
 
-                    com.popup("支付宝收款码", url, null, null, false);
+                    com.popup("二维收款", url, null, null, false);
 
                 }, null, false);
             });
