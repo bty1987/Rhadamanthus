@@ -9,7 +9,9 @@ $(function() {
             colorSelect: com.focusPage('#colorSelect', "#addPackageModal"),
             formatSelect: com.focusPage('#formatSelect', "#addPackageModal"),
             num: com.focusPage('#num', "#addPackageModal"),
-            selling: com.focusPage('#selling', "#addPackageModal")
+            selling: com.focusPage('#selling', "#addPackageModal"),
+            ctypeSelect: com.focusPage('#ctypeSelect', "#addPackageModal"),
+            cvalue: com.focusPage('#cvalue', "#addPackageModal")
         },
         modals: {
             addPackageModal: com.focusPage('#addPackageModal')
@@ -150,6 +152,39 @@ $(function() {
             return v.selling ? (v.selling / 100).toFixed(2) + ' 元' : '-';
         }
     }, {
+        fieId: "ctype",
+        name: "结算类型",
+        prop: "ctype",
+        clazz: "blue",
+        render: function(v) {
+            var ctypeMap = {
+                '0': '固定金额',
+                '1': '百分比',
+                '2': '按数量'
+            };
+            return v.ctype !== null && v.ctype !== undefined ? ctypeMap[v.ctype] || '-' : '-';
+        }
+    }, {
+        fieId: "cvalue",
+        name: "结算值",
+        prop: "cvalue",
+        clazz: "green",
+        render: function(v) {
+            if (v.cvalue !== null && v.cvalue !== undefined && v.cvalue !== '') {
+                if (v.ctype == 0) {
+                    // 固定金额，显示为元
+                    return (v.cvalue / 100).toFixed(2) + ' 元';
+                } else if (v.ctype == 1) {
+                    // 百分比
+                    return v.cvalue + '%';
+                } else if (v.ctype == 2) {
+                    // 按数量
+                    return v.cvalue;
+                }
+            }
+            return '-';
+        }
+    }, {
         fieId: "status",
         name: "状态",
         prop: "goods.status",
@@ -230,6 +265,19 @@ $(function() {
         goodsPackage.items.num.val(item.num || '');
         goodsPackage.items.selling.val(item.selling ? (item.selling / 100).toFixed(2) : '');
 
+        // 填充结算类型和结算值
+        goodsPackage.items.ctypeSelect.val(item.ctype !== null && item.ctype !== undefined ? item.ctype : '');
+        if (item.cvalue !== null && item.cvalue !== undefined && item.cvalue !== '') {
+            // 如果是固定金额，需要转换为元
+            if (item.ctype == 0) {
+                goodsPackage.items.cvalue.val((item.cvalue / 100).toFixed(2));
+            } else {
+                goodsPackage.items.cvalue.val(item.cvalue);
+            }
+        } else {
+            goodsPackage.items.cvalue.val('');
+        }
+
         goodsPackage.selectedGoods = item.goods;
 
         // 加载并选中颜色
@@ -297,6 +345,24 @@ $(function() {
         var sellingValue = goodsPackage.items.selling.val();
         if (sellingValue) {
             option["goodsPackages[0].selling"] = Math.round(parseFloat(sellingValue) * 100);
+        }
+
+        // 结算类型
+        var ctypeValue = goodsPackage.items.ctypeSelect.val();
+        if (ctypeValue !== '') {
+            option["goodsPackages[0].ctype"] = ctypeValue;
+        }
+
+        // 结算值（根据结算类型处理）
+        var cvalueInput = goodsPackage.items.cvalue.val();
+        if (cvalueInput !== '' && ctypeValue !== '') {
+            if (ctypeValue == 0) {
+                // 固定金额，转换为分
+                option["goodsPackages[0].cvalue"] = Math.round(parseFloat(cvalueInput) * 100);
+            } else {
+                // 百分比或按数量，直接保存
+                option["goodsPackages[0].cvalue"] = parseFloat(cvalueInput);
+            }
         }
 
         // 如果是编辑模式，添加 gpid
