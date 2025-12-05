@@ -11,6 +11,8 @@ public interface SalesItemDao extends Dao<SalesItemPO> {
 
 	public List<SalesItemPO> querySalesItemBySids(List<Long> sids);
 
+	public List<SalesItemPO> querySalesItemByPsiid(long psiid);
+
 	public int countSalesItem(long sid);
 
 	public long amountSalesItem(long sid);

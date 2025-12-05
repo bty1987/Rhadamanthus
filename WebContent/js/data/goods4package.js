@@ -36,6 +36,7 @@ $(function() {
 
     // 弹窗关闭时清空数据
     goodsPackage.modals.addPackageModal.on("hide.bs.modal", function(e) {
+
         com.clearValidator();
         com.cleanTypeahead("goodsName");
         com.cleanItems(goodsPackage.items);
@@ -46,8 +47,10 @@ $(function() {
 
     // 初始化商品名称自动完成
     com.initTypeahead(goodsPackage.items.goodsName, api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
+
         // 选中商品后自动填充信息
         $.each(list, function(index, val) {
+
             if (val.gid == k) {
                 goodsPackage.selectedGoods = val;
 
@@ -72,8 +75,9 @@ $(function() {
                 com.post(api.data.queryColorForEnableByGid, {
                     "color.gid": val.gid
                 }, function(res) {
+
                     if (res.colors && res.colors.length > 0) {
-                        goodsPackage.items.colorSelect.bindData(res.colors, "cid", "color");
+                        goodsPackage.items.colorSelect.bindData(res.colors, "cid", "name");
                     } else {
                         com.showAlert(com.warning, '该商品暂无颜色信息');
                         goodsPackage.items.colorSelect.html('<option value="">无颜色</option>');
@@ -84,8 +88,9 @@ $(function() {
                 com.post(api.data.queryFormatForEnableByGid, {
                     "format.gid": val.gid
                 }, function(res) {
+
                     if (res.formats && res.formats.length > 0) {
-                        goodsPackage.items.formatSelect.bindData(res.formats, "fid", "format");
+                        goodsPackage.items.formatSelect.bindData(res.formats, "fid", "info");
                     } else {
                         com.showAlert(com.warning, '该商品暂无规格信息');
                         goodsPackage.items.formatSelect.html('<option value="">无规格</option>');
@@ -141,6 +146,7 @@ $(function() {
         prop: "selling",
         clazz: "green",
         render: function(v) {
+
             return v.selling ? (v.selling / 100).toFixed(2) + ' 元' : '-';
         }
     }, {
@@ -157,6 +163,7 @@ $(function() {
         clazz: "btn-info",
         icon: "fa-edit",
         handle: function(v) {
+
             editPackageItem(v);
         }
     }, {
@@ -164,10 +171,13 @@ $(function() {
         clazz: "btn-warning",
         icon: "fa-trash-o",
         handle: function(v) {
+
             com.showConfirm("确认删除该套餐商品吗？", function(result) {
+
                 com.post(api.data.deleteGoodsPackage, {
                     "goodsPackage.gpid": v.gpid
                 }, function(e) {
+
                     com.showAlert(com.info, "删除成功");
                     searcher.doSearch();
                 });
@@ -177,7 +187,7 @@ $(function() {
 
     // 配置 Searcher
     searcher.base("packageCondList", "packagePagenation", "packageResultList", api.data.queryGoodsPackage);
-    searcher.result("goodsPackages").isPage(false);  // 不分页
+    searcher.result("goodsPackages").isPage(true); // 不分页
 
     // 设置查询参数
     searcher.param({
@@ -186,20 +196,21 @@ $(function() {
 
     // 添加"添加"按钮
     searcher.button(function() {
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left')
-            .attr('id', 'addBtn').css("margin", "0px 3px");
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBtn').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('fa fa-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text(' 添加套餐商品').appendTo($adda);
+        var $addspan = $('<span></span>').text(' 添加').appendTo($adda);
         return [$adda];
     });
 
     // 渲染列表
-    searcher.line("no", packageProps, linebtns).render();
+    searcher.line("goods.name", packageProps, linebtns).render();
 
     // 添加按钮点击事件
     com.focusPage("#addBtn").click(function() {
+
         goodsPackage.editingGpid = null;
-        com.focusPage('#modalTitle').text('添加套餐商品');
+        com.focusPage('#modalTitle').text('添加');
         goodsPackage.modals.addPackageModal.modal("show");
     });
 
@@ -207,6 +218,7 @@ $(function() {
      * 编辑套餐商品
      */
     function editPackageItem(item) {
+
         goodsPackage.editingGpid = item.gpid;
         com.focusPage('#modalTitle').text('编辑套餐商品');
 
@@ -224,8 +236,9 @@ $(function() {
         com.post(api.data.queryColorForEnableByGid, {
             "color.gid": item.goods.gid
         }, function(res) {
+
             if (res.colors && res.colors.length > 0) {
-                goodsPackage.items.colorSelect.bindData(res.colors, "cid", "color");
+                goodsPackage.items.colorSelect.bindData(res.colors, "cid", "name");
                 if (item.color && item.color.cid) {
                     goodsPackage.items.colorSelect.val(item.color.cid);
                 }
@@ -236,8 +249,9 @@ $(function() {
         com.post(api.data.queryFormatForEnableByGid, {
             "format.gid": item.goods.gid
         }, function(res) {
+
             if (res.formats && res.formats.length > 0) {
-                goodsPackage.items.formatSelect.bindData(res.formats, "fid", "format");
+                goodsPackage.items.formatSelect.bindData(res.formats, "fid", "info");
                 if (item.format && item.format.fid) {
                     goodsPackage.items.formatSelect.val(item.format.fid);
                 }
@@ -252,16 +266,23 @@ $(function() {
      * 保存套餐商品
      */
     function saveData() {
+
+        console.log(111)
+
         // 表单验证
         if (com.validate('addPackageModal')) {
             return false;
         }
+        
+        console.log(222)
 
         // 验证是否选择了商品
         if (!goodsPackage.selectedGoods || !goodsPackage.selectedGoods.gid) {
             com.showAlert(com.warning, "请选择商品");
             return false;
         }
+        
+        console.log(333)
 
         // 构建保存参数
         var option = {
@@ -284,7 +305,8 @@ $(function() {
         }
 
         // 调用保存接口
-        com.post(api.data.addPackage, option, function(e) {
+        com.post(api.data.addGoodsPackage, option, function(e) {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             goodsPackage.modals.addPackageModal.modal("hide");

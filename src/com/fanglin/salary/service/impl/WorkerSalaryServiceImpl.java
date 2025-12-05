@@ -427,7 +427,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 				throw new FLException(280002, "工费状态不可操作");
 			}
 
-			WorkerBalancePO workerCollect = workerBalanceDao.queryWorkerBalance(workerSalaryPO.getUser().getUid(), company);
+			WorkerBalancePO workerCollect = workerBalanceDao.queryWorkerBalance(workerSalaryPO.getUser().getUid(), workerSalaryPO.getCompany());
 
 			if (workerCollect == null) {
 				throw new FLException(280004, "工人帐户不存在");

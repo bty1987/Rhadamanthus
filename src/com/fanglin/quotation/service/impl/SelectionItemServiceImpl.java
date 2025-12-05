@@ -810,6 +810,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemVO.getDecoration().setEscorter(new UserBaseVO());
 			selectionItemVO.getDecoration().setMaterialer(new UserBaseVO());
 
+			if (selectionItemVO.getDecoration().getSupervisor() != null && selectionItemPD.getDecoration().getSupervisor() != null) selectionItemVO.getDecoration().getSupervisor().setPhone(selectionItemPD.getDecoration().getSupervisor().getPhone());
+
 			selectionItemVOs.add(selectionItemPD.ptv(selectionItemVO));
 		}
 

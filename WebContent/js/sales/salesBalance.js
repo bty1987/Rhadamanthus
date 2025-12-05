@@ -648,8 +648,8 @@ $(function() {
                 ['品牌', 'sales.brand.name'], //
                 ['渠道ID', 'salesman.userId'], //
                 ['渠道', 'salesman.currentName'], //
-                ['渠道大区', 'salesman.dept.fatherDept.name'], //
-                ['渠道部门', 'salesman.dept.name'], //
+                ['渠道大区', 'salesman.dept.name'], //
+                ['渠道部门', 'salesman.dept.fatherDept.name'], //
                 ['归属大区', 'region.name'], //
                 ['归属部门', 'dept.name'], //
                 ['总价', 'total'], //

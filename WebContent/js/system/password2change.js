@@ -20,8 +20,6 @@ jQuery(function($) {
 
     $("#saveBtn").on("click", function(e) {
         
-        console.log(111)
-
         if (com.validate("changePasswordContent") || !password.sameFalg) {
             return false;
         }
@@ -73,9 +71,6 @@ jQuery(function($) {
             strength++;
         if (hasSpecial)
             strength++;
-        
-        console.log(strength)
-        console.log(!strength)
 
         return strength == 5;
     }

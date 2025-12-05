@@ -624,6 +624,7 @@
                     var btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-pink').html('增减项');
                     var btnAddReduceD = $('<a></a>').addClass('btn btn-minier btn-pink').html('增减项');
                     var btnAddReduceM = $('<a></a>').addClass('btn btn-minier btn-pink').html('增减项');
+                    var btnConstruction = $('<a></a>').addClass('btn btn-minier btn-pink').html('工程单');
 
                     var btnDctivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('装修活动');
                     var btnSctivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('销售活动');
@@ -637,9 +638,9 @@
                     var btnRepair = $('<a></a>').addClass('btn btn-minier btn-danger').html('保修');
                     var btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
                     var btnTerminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
-                    var btnTerminal1 = $('<a></a>').addClass('btn btn-minier btn-yellow').html('终止');
+                    var btnTerminal1 = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
 
-                    var btnTerminalStatus = $('<a></a>').addClass('btn btn-minier btn-pink').html('工程终止');
+                    var btnTerminalStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('工程终止');
 
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
@@ -954,6 +955,11 @@
                         viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 2);
                     });
 
+                    btnConstruction.click(function() {
+
+                        viewConschePart(v.orderId);
+                    });
+
                     btnInfo.click(function() {
 
                         viewDecorationTimelineIndex(v.orderId);
@@ -1092,12 +1098,12 @@
                                 $divBtnWrap.append(btnLine);
                                 break;
                             case "contract":// 合同 (0, 1, 2, 3, 4, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status%10) != -1) {
+                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status % 10) != -1) {
                                     $divBtnWrap.append(btnContract);
                                 }
                                 break;
                             case "contractc":// 合同(设计) (0, 1, 2, 3, 4, 7, 8)
-                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status%10) != -1) {
+                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_FINAL_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status % 10) != -1) {
                                     $divBtnWrap.append(btnContractc);
                                 }
                                 break;
@@ -1107,6 +1113,11 @@
                             case "price":// 报价 (0, 1, 2, 4)
                                 if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnPrice);
+                                }
+                                break;
+                            case "extension":// 扩展项 (0, 1, 2, 3, 4, 8)
+                                if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnExtension);
                                 }
                                 break;
                             case "normPart":// 定额
@@ -1130,9 +1141,9 @@
                                     $divBtnWrap.append(btnAddReduceM);
                                 }
                                 break;
-                            case "extension":// 扩展项 (0, 1, 2, 3, 4, 8)
+                            case "consche":// 工程单 (0, 1, 2, 3, 4, 8)
                                 if ([constant.decoration().decoration.STATUS_INIT_INT, constant.decoration().decoration.STATUS_DEPOSIT_INT, constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT, constant.decoration().decoration.STATUS_RESIGNED_INT, constant.decoration().decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnExtension);
+                                    $divBtnWrap.append(btnConstruction);
                                 }
                                 break;
                             case "info":// 信息周
@@ -1241,6 +1252,16 @@
             params.historyPage = api.index.decorationIndex.url;
 
             com.switchPage(api.index.normPart.url);
+        };
+
+        // 工程
+        var viewConschePart = function(orderId) {
+
+            params.construction.orderId = orderId;
+            params.urlLoadParams.type = "views"
+
+            com.popup4page("#layerPopUp", "/views/construction/supervision4detail.html?type=views", "查看");
+            // com.switchPage(api.index.normPart.url);
         };
 
         var viewSelection = function(orderId) {
@@ -1590,6 +1611,16 @@
             com.switchPage(api.index.decorationContractIndex.url);
             // com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + orderId);
         };
+
+        // 扩展项
+        var viewExtension = function(orderId) {
+
+            params.quotation.orderId = orderId;
+
+            params.historyPage = api.index.decorationIndex.url;
+
+            com.switchPage(api.index.extensionIndex.url);
+        };
         // 增减项
         var viewDecorationInDecreaseIndex = function(orderId, type, typeness, atttype) {
 
@@ -1624,15 +1655,6 @@
 
             com.switchPage(api.index.decorationTimelineIndex.url);
             // com.popup4page("#layerPopUp", api.index.decorationTimelineIndex.url, "装修单进程: " + orderId);
-        };
-        // 扩展项
-        var viewExtension = function(orderId) {
-
-            params.quotation.orderId = orderId;
-
-            params.historyPage = api.index.decorationIndex.url;
-
-            com.switchPage(api.index.extensionIndex.url);
         };
 
         // 券优惠

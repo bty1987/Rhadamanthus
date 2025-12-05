@@ -5,8 +5,8 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.data.po.GoodsPackagePO;
 
-public interface GoodsPackageDao extends Dao<GoodsPackagePO>{
+public interface GoodsPackageDao extends Dao<GoodsPackagePO> {
 
-	public List<GoodsPackagePO> queryPackage(long pid);
-	
+	public List<GoodsPackagePO> queryGoodsPackage(long pid);
+
 }

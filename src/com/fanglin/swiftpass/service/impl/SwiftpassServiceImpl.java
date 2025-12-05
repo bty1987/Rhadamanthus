@@ -118,7 +118,9 @@ public class SwiftpassServiceImpl implements SwiftpassService {
 
 		if (paytranPO.getPid() == 0) return;
 
-		paytranService.makePayment(wxpay, "wechat");
+		String payWay = args.getString("outType").toLowerCase();
+
+		paytranService.makePayment(wxpay, payWay);
 	}
 
 	@Override

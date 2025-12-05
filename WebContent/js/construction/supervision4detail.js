@@ -16,7 +16,9 @@ jQuery(function($) {
                 regex: /^-?(([1-9]\d{0,6})|(([1-9]\d{0,6}\.\d{1,3})|(0\.[1-9]{1,3})))$/,
                 errorMsg: "请正确输入工人工费，小数点后最多保留3位"
             }
-        }
+        },
+
+        pageType: params.urlLoadParams.type,
     };
 
     com.post(api.ds.salary, {}, function(res) {
@@ -33,6 +35,12 @@ jQuery(function($) {
     com.post(api.construction.queryConstructionScheduleByOrderId, {
         "constructionSchedule.orderId": params.construction.orderId
     }, function(res) {
+
+        if (!res.constructionSchedules)
+            return false;
+
+        if (res.constructionSchedules.length == 0)
+            return false;
 
         var newSchedules = res.constructionSchedules.sort(function(a, b) {
 
@@ -76,7 +84,9 @@ jQuery(function($) {
     com.focusPage('[data-rel=popover]').popover({
         html: true
     });
+
     var constructionSchedule;
+
     function initWizardSept(schedule, csid) {
 
         addActive(schedule);
@@ -110,7 +120,11 @@ jQuery(function($) {
 
                 updataStatus(schedule, csid, constructionSchedule.status);
                 updateEnterStatus(constructionSchedule.workStatus, otherename);
+
                 otherSuccessBtn.click(function() {
+
+                    if (supervision4detail.pageType)
+                        return false;
 
                     var options = {
                         "constructionSchedule.csid": constructionSchedule.csid
@@ -131,6 +145,9 @@ jQuery(function($) {
                 });
 
                 leaveSuccessBtn.click(function() {
+
+                    if (supervision4detail.pageType)
+                        return false;
 
                     var options = {
                         "constructionSchedule.csid": constructionSchedule.csid
@@ -197,6 +214,9 @@ jQuery(function($) {
 
     // 上传图片
     function initUploadBtn(schedule, csid) {
+
+        if (supervision4detail.pageType)
+            return false;
 
         com.uploadify("#" + schedule + "Upload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
@@ -282,6 +302,9 @@ jQuery(function($) {
             var buttonPeople = $('<div id="workerNameSpan" style="float: right"></div>').html(workerInfo.user.userId + "" + workerInfo.user.userName + "<br/>" + workerInfo.user.duty.name).appendTo(buttonsDiv);
 
             buttonSpan.click(function() {
+
+                if (supervision4detail.pageType)
+                    return false;
 
                 var options = {
                     "workerSalary.csid": workerInfo.csid,

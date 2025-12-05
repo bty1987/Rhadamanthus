@@ -998,22 +998,28 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "goodsPackages",
-                args: ["num"]
+                args: ["num", "purchase", "selling", "pieceNum", "confine"]
             }, {
                 result: "goodsPackages-goods",
                 args: ["purchase", "selling", "pieceNum", "confine"]
             }]
         },
-        addPackage: {
-            url: "addPackage.do",
+        addGoodsPackage: {
+            url: "addGoodsPackage.do",
             type: "update",
             tranargs: {
-                args: ["goodsPackages.num"]
+                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine"]
+            }
+        },
+        updateGoodsPackage: {
+            url: "updateGoodsPackage.do",
+            type: "update",
+            tranargs: {
+                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine"]
             }
         },
         deleteGoodsPackage: {
             url: "deleteGoodsPackage.do",
-            type: "update"
         },
 
         pagePrice: {

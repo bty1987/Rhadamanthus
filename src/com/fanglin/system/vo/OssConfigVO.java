@@ -1,23 +1,89 @@
 package com.fanglin.system.vo;
 
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
+
 public class OssConfigVO {
 
+	private Long ossId;
+
 	private String accessKeyId;
+
+	private String endpoint;
+
+	private String bucket;
+
+	private String dir;
+
+	private Integer expireTime;
+
+	private String host;
 
 	private String policy;
 
 	private String signature;
 
-	private String dir;
-
-	private String host;
+	private Timestamp deadline;
 
 	private String key;
+
+	private Integer width;
+
+	private Integer height;
 
 	private String url;
 
 	public OssConfigVO() {
 		super();
+	}
+
+	public Long getOssId() {
+		return ossId;
+	}
+
+	public void setOssId(Long ossId) {
+		this.ossId = ossId;
+	}
+
+	public String getEndpoint() {
+		return endpoint;
+	}
+
+	public void setEndpoint(String endpoint) {
+		this.endpoint = endpoint;
+	}
+
+	public String getBucket() {
+		return bucket;
+	}
+
+	public void setBucket(String bucket) {
+		this.bucket = bucket;
+	}
+
+	public String getDir() {
+		return dir;
+	}
+
+	public void setDir(String dir) {
+		this.dir = dir;
+	}
+
+	public Integer getExpireTime() {
+		return expireTime;
+	}
+
+	public void setExpireTime(Integer expireTime) {
+		this.expireTime = expireTime;
+	}
+
+	public String getHost() {
+		return host;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	public String getAccessKeyId() {
@@ -44,20 +110,13 @@ public class OssConfigVO {
 		this.signature = signature;
 	}
 
-	public String getDir() {
-		return dir;
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getDeadline() {
+		return deadline;
 	}
 
-	public void setDir(String dir) {
-		this.dir = dir;
-	}
-
-	public String getHost() {
-		return host;
-	}
-
-	public void setHost(String host) {
-		this.host = host;
+	public void setDeadline(Timestamp deadline) {
+		this.deadline = deadline;
 	}
 
 	public String getKey() {
@@ -66,6 +125,22 @@ public class OssConfigVO {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public Integer getWidth() {
+		return width;
+	}
+
+	public void setWidth(Integer width) {
+		this.width = width;
+	}
+
+	public Integer getHeight() {
+		return height;
+	}
+
+	public void setHeight(Integer height) {
+		this.height = height;
 	}
 
 	public String getUrl() {

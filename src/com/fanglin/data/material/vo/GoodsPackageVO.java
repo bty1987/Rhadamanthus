@@ -2,7 +2,6 @@ package com.fanglin.data.material.vo;
 
 import java.io.Serializable;
 
-
 public class GoodsPackageVO implements Serializable {
 
 	private static final long serialVersionUID = -3150381870201634575L;
@@ -19,15 +18,15 @@ public class GoodsPackageVO implements Serializable {
 
 	private Integer num;
 
-	private Integer purchase;  // 限价
+	private Integer purchase; // 限价
 
-	private Integer selling;   // 售价
+	private Integer selling; // 售价
 
-	private Integer confine;   // 控价
+	private Integer confine; // 控价
 
-	private Short ctype;       // 结算类型
+	private Short ctype; // 结算类型
 
-	private Integer cvalue;    // 结算值
+	private Integer cvalue; // 结算值
 
 	public GoodsPackageVO() {
 		super();

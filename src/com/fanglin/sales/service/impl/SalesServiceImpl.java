@@ -26,12 +26,12 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.material.dao.GoodsDao;
+import com.fanglin.data.material.dao.GoodsPackageDao;
 import com.fanglin.data.po.ColorPO;
 import com.fanglin.data.po.FormatPO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.GoodsPackagePO;
-import com.fanglin.data.material.dao.GoodsDao;
-import com.fanglin.data.material.dao.GoodsPackageDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.information.dao.ActivityDao;
@@ -367,6 +367,11 @@ public class SalesServiceImpl implements SalesService {
 		for (SalesItemVO salesItemVO : salesItemVOs) {
 
 			if (salesItemVO.getGoods() == null || salesItemVO.getGoods().getGid() == null) continue;
+
+			GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
+
+			if (goodsPO == null) continue;
+
 			if (salesItemVO.getColor() == null || salesItemVO.getColor().getCid() == null) continue;
 			if (salesItemVO.getFormat() == null || salesItemVO.getFormat().getFid() == null) continue;
 
@@ -375,62 +380,41 @@ public class SalesServiceImpl implements SalesService {
 			BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
 
 			salesItemPO.setSid(salesPO.getSid());
+			salesItemPO.setType(goodsPO.getType());
 			salesItemPO.setInitnum(salesItemVO.getNum());
 			salesItemPO.setPunum(salesItemVO.getNum());
 			salesItemPO.setXgnum(salesItemVO.getNum());
 
 			salesItemDao.save(salesItemPO);
 
-			// 检查商品是否为套餐类型
-			GoodsPO goodsPO = goodsDao.get(salesItemVO.getGoods().getGid());
-			if (goodsPO != null && goodsPO.getType() == GoodsPO.TYPE_SUIT_INT) {
-				// 套餐类型商品，需要展开套餐明细
-				List<GoodsPackagePO> goodsPackages = goodsPackageDao.queryPackage(goodsPO.getGid());
+			if (goodsPO == null || goodsPO.getType() != GoodsPO.TYPE_SUIT_INT) continue;
 
-				if (goodsPackages != null && !goodsPackages.isEmpty()) {
-					for (GoodsPackagePO goodsPackagePO : goodsPackages) {
-						// 为每个套餐明细创建子销售项
-						SalesItemPO childSalesItemPO = new SalesItemPO(
-							goodsPackagePO.getGoods(),
-							goodsPackagePO.getColor(),
-							goodsPackagePO.getFormat()
-						);
+			// 套餐类型商品，需要展开套餐明细
+			List<GoodsPackagePO> goodsPackages = goodsPackageDao.queryGoodsPackage(goodsPO.getGid());
 
-						// 复制价格等基本信息
-						childSalesItemPO.setSid(salesPO.getSid());
-						childSalesItemPO.setPsiid(salesItemPO.getSiid()); // 关联父销售项
-						childSalesItemPO.setType((short) 1); // 标记为套餐明细
+			if (goodsPackages == null || goodsPackages.isEmpty()) continue;
 
-						// 计算子项数量 = 套餐数量 × 套餐明细数量
-						long childNum = salesItemVO.getNum() * goodsPackagePO.getNum();
-						childSalesItemPO.setNum(childNum);
-						childSalesItemPO.setInitnum(childNum);
-						childSalesItemPO.setPunum(childNum);
-						childSalesItemPO.setXgnum(childNum);
+			for (GoodsPackagePO goodsPackagePO : goodsPackages) {
 
-						// 复制价格信息（如果套餐明细有价格配置）
-						if (goodsPackagePO.getPurchase() > 0) {
-							childSalesItemPO.setPurchase(goodsPackagePO.getPurchase());
-						}
-						if (goodsPackagePO.getSelling() > 0) {
-							childSalesItemPO.setSelling(goodsPackagePO.getSelling());
-						}
-						if (goodsPackagePO.getConfine() > 0) {
-							childSalesItemPO.setPrice(goodsPackagePO.getConfine());
-						}
-						childSalesItemPO.setCtype(goodsPackagePO.getCtype());
-						childSalesItemPO.setCvalue(goodsPackagePO.getCvalue());
+				SalesItemPO salesItemGP = new SalesItemPO(goodsPackagePO.getGoods(), goodsPackagePO.getColor(), goodsPackagePO.getFormat());
 
-						// 计算子项总价
-						if (childSalesItemPO.getPrice() > 0) {
-							long childTotal = Arith.mul(childNum, childSalesItemPO.getPrice());
-							childSalesItemPO.setTotal(childTotal);
-						}
+				BeanUtil.copyProperties(goodsPackagePO, salesItemGP, Arrays.asList("goods", "color", "format"));
 
-						// 保存子销售项
-						salesItemDao.save(childSalesItemPO);
-					}
-				}
+				// 复制价格等基本信息
+				salesItemGP.setSid(salesPO.getSid());
+				salesItemGP.setPsiid(salesItemPO.getSiid()); // 关联父销售项
+				salesItemGP.setType(SalesItemPO.TYPE_PACKAGE_INT); // 标记为套餐明细
+
+				long num = Arith.mul(salesItemPO.getNum(), goodsPackagePO.getNum());
+
+				salesItemGP.setInitnum(goodsPackagePO.getNum());
+				salesItemGP.setNum(num);
+				salesItemGP.setPunum(num);
+				salesItemGP.setXgnum(num);
+
+				salesItemGP.setTotal(Arith.mul(num, goodsPackagePO.getSelling()));
+
+				salesItemDao.save(salesItemGP);
 			}
 
 			total = Arith.add(total, salesItemVO.getTotal());

@@ -54,6 +54,8 @@ public class Airpos {
 
 	private static String swiftpass_updateKey_url;
 
+	private static String kingdee_callBack_publicKey; // 金蝶支付回调公钥
+
 	private static Properties prop;
 
 	private static String configFilePathName = "/swiftpass.properties";
@@ -71,6 +73,8 @@ public class Airpos {
 			swiftpass_query_url = "/api/openbill/queryBillInfo";
 			swiftpass_wxpay_url = "/api/h5/token/genToken";
 			swiftpass_updateKey_url = "/api/openbill/updateMerchantChannelKey";
+
+			kingdee_callBack_publicKey = prop.getProperty("KINGDEECALLBACKPUBLICKEY");
 
 		} catch (Throwable e) {
 			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
@@ -113,6 +117,70 @@ public class Airpos {
 		TreeMap<String, String> paramsData = new TreeMap<String, String>();
 
 		paramsData.put("bizId", "ecoBill-wechat");
+		paramsData.put("isShort", "true");
+		paramsData.put("param", paramJson);
+
+		String response = OpenSdk.gateway(swiftpass_wxpay_url, ReqMethodEnum.POST, null, null, paramsData);
+
+		if (response == null) {
+
+			System.out.println(swiftpass_wxpay_url);
+			System.out.println(paramsData);
+
+			throw new FLException(150053, "支付平台异常");
+		}
+
+		JSONObject result = JSON.parseObject(response);
+		String code = result.getString("code");
+
+		if (!code.equals("0000")) {
+
+			System.out.println(swiftpass_wxpay_url);
+			System.out.println(paramsData);
+			System.out.println(response);
+
+			throw new FLException(150053, String.format("支付平台异常,%s:%s", result.getString("code"), result.getString("msg")));
+		}
+
+		wxpay.setMchNo(custypePO.getNo());
+		wxpay.setUrl(result.getString("url"));
+		wxpay.setBizId(result.getString("bizId"));
+
+	}
+
+	public static void alipay(Wxpay wxpay, CustypePO custypePO, CompanyPO companyPO) throws FLException {
+
+		if (custypePO == null) {
+			throw new FLException(130105, "商户不存在");
+		}
+
+		if (companyPO == null) {
+			throw new FLException(230015, "公司不存在");
+		}
+
+		TreeMap<String, String> params = new TreeMap<String, String>();
+
+		List<String> paymentTypes = Arrays.asList("预付款", "装修款", "主材款", "销售款", "服务费", "活动款", "转换款", "代付款");
+		double money = Arith.div(wxpay.getPaymentMoney(), 1000.0);
+
+		String orderTitle = paymentTypes.get(wxpay.getPaymentType());
+		String paymentDetail = String.format("[{\"amount\": \"%s\",\"typeCn\": \"%s\"}]", money, orderTitle);
+
+		params.put("mchNo", custypePO.getNo()); // 商户编号
+		params.put("appOrderNo", wxpay.getThreeOrderNo()); // 应用系统订单编号
+		params.put("userId", wxpay.getUnionId()); // 用户唯一标识
+		params.put("clientName", wxpay.getPaymentOrderId()); // 客户姓名
+		params.put("totalAmount", String.valueOf(money)); // 总金额
+		params.put("orderTitle", orderTitle); // 订单主题
+		params.put("goodDesp", orderTitle); // 商品描述
+		params.put("timestamp", String.valueOf(System.currentTimeMillis())); // 申请下单时间
+		params.put("paymentDetail", paymentDetail); // 支付明细列表
+
+		String paramJson = JSONObject.toJSONString(params);
+
+		TreeMap<String, String> paramsData = new TreeMap<String, String>();
+
+		paramsData.put("bizId", "ecoBill-scanCode");
 		paramsData.put("isShort", "true");
 		paramsData.put("param", paramJson);
 
@@ -263,5 +331,30 @@ public class Airpos {
 		}
 
 		return publicKey;
+	}
+
+	public static boolean verifySignature(String params, String sign) {
+
+		try {
+
+			byte[] keyBytes = Base64.decode(kingdee_callBack_publicKey);
+			X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+
+			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+			PublicKey publicKey = keyFactory.generatePublic(keySpec);
+
+			Signature signature = Signature.getInstance("SHA256withRSA");
+			signature.initVerify(publicKey);
+			signature.update(params.getBytes("UTF-8"));
+
+			boolean flag = signature.verify(Base64.decode(sign));
+
+			return flag;
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+
 	}
 }
