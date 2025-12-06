@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.vo.SalesBalanceVO;
@@ -98,6 +99,8 @@ public class SalesBalancePO implements Serializable {
 
 	private DepartmentPO region;
 
+	private BrandPO brand;
+
 	private Timestamp postTime;
 
 	private UserPO voster;// 厂商结算人
@@ -152,6 +155,17 @@ public class SalesBalancePO implements Serializable {
 		this.salesman = salesman;
 		this.dept = dept;
 		this.region = region;
+	}
+
+	public SalesBalancePO(SalesPO sales, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region, BrandPO brand) {
+		super();
+		this.sales = sales;
+		this.creater = creater;
+		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
+		this.brand = brand;
 	}
 
 	public SalesBalancePO(SalesPO sales, SalesRefundsPO refunds, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region) {
@@ -265,6 +279,16 @@ public class SalesBalancePO implements Serializable {
 
 	public void setRegion(DepartmentPO region) {
 		this.region = region;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bid", referencedColumnName = "bid")
+	public BrandPO getBrand() {
+		return brand;
+	}
+
+	public void setBrand(BrandPO brand) {
+		this.brand = brand;
 	}
 
 	@Column(name = "postTime")
@@ -460,11 +484,12 @@ public class SalesBalancePO implements Serializable {
 
 	public SalesBalanceVO ptv(SalesBalanceVO salesBalanceVO) {
 
-		BeanUtil.copyPropertie(this, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
+		BeanUtil.copyPropertie(this, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "brand", "checker", "voster"));
 
 		if (salesBalanceVO.getSalesman() != null && getSalesman() != null) salesBalanceVO.getSalesman().setBaseInfo(getSalesman());
 		if (salesBalanceVO.getDept() != null && getDept() != null) getDept().ptv(salesBalanceVO.getDept());
 		if (salesBalanceVO.getRegion() != null && getRegion() != null) getRegion().ptv(salesBalanceVO.getRegion());
+		if (salesBalanceVO.getBrand() != null && getBrand() != null) getBrand().ptv(salesBalanceVO.getBrand());
 
 		if (salesBalanceVO.getRefunds() != null && getRefunds() != null) getRefunds().ptv(salesBalanceVO.getRefunds());
 		if (salesBalanceVO.getCreater() != null && getCreater() != null) salesBalanceVO.getCreater().setBaseInfo(getCreater());
