@@ -1,7 +1,7 @@
-package com.fanglin.system.dao;
+package com.fanglin.aliyun.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.system.po.OssConfigPO;
+import com.fanglin.aliyun.po.OssConfigPO;
 
 public interface OssConfigDao extends Dao<OssConfigPO> {
 

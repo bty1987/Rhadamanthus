@@ -4,6 +4,10 @@ $.extend(api.index, {
 });
 
 $.extend(api, {common: {
+    // 登录相关
+    requestLoginChallenge: {url: "requestLoginChallenge.do", intercept: false},
+    doLogin: {url: "doLogin.do", intercept: false},
+
     QRCode: {url: "QRCode.do", demo: true},
     wmCode: {url: "wmCode.do", demo: true},
 

@@ -1024,42 +1024,63 @@
      * @param defaultUrl 默认地址
      * @param type 类型 , 0: 本地 , 1: 钉钉
      */
+    /**
+     * 显示图片，支持多种存储方式
+     *
+     * @param {Object} $e - 图片元素对象
+     * @param {String} url - 图片路径
+     * @param {Number} width - 目标宽度
+     * @param {Number} height - 目标高度
+     * @param {String} alt - alt 信息
+     * @param {String} defaultUrl - 默认地址
+     * @param {Number} type - 类型：0=本地, 1=钉钉, 2=华为云OBS, 3=阿里云OSS
+     * @param {Object} args - 额外参数（已废弃，type=3 时使用 config.ossConfig）
+     * @return {String} 图片源地址
+     */
     showImg: function($e, url, width, height, alt, defaultUrl, type, args) {
 
         var $media = '', imgUrl = '', sourceUrl = '';
 
         if (type == 1) {
+            // 钉钉图片处理
             $media = config.dmedia;
             imgUrl = url ? $media + url + '_' + alt + '.jpg' : defaultUrl;
-
             sourceUrl = $media + url;
-        } else if (type == 2) {
-            sourceUrl = com.showObs($e, url, width, height, alt, defaultUrl, type);
-        } else if (type == 3 && url != "") {
-            com.post(api.upgrade.getProgressiveImage, {
-                "ossConfig.accessKeyId": args.accessKeyId,
-                "ossConfig.endpoint": args.endpoint,
-                "ossConfig.bucket": args.bucket,
-                "ossConfig.dir": args.dir,
-                "ossConfig.key": url,
-                "ossConfig.width": width,
-                "ossConfig.height": height
-            }, function(data) {
 
-                if (data.ossConfig.url) {
-                    imgUrl = data.ossConfig.url;
-                    sourceUrl = data.ossConfig.url;
-                }
-            }, null, false);
+        } else if (type == 2) {
+            // 华为云 OBS 图片处理（直接拼接 URL）
+            sourceUrl = com.showObs($e, url, width, height, alt, defaultUrl, type);
+
+        } else if (type == 3 && url != "") {
+            // ==================== 阿里云 OSS 图片处理（直接拼接 URL）====================
+            // 使用全局配置 config.ossConfig
+            var ossConfig = config.ossConfig || {};
+
+            // 构建 OSS Host
+            var ossHost = ossConfig.host ||
+                ('https://' + ossConfig.bucket + '.' + ossConfig.endpoint);
+
+            // 构建完整 URL
+            var fullUrl = ossHost + '/' + (ossConfig.dir || '') + url;
+
+            // 添加图片处理参数（缩放裁剪）
+            if (width && height) {
+                imgUrl = fullUrl + '?x-oss-process=image/resize,m_fill,w_' + width + ',h_' + height;
+            } else {
+                imgUrl = fullUrl;
+            }
+
+            sourceUrl = fullUrl;
+
         } else {
+            // 本地图片处理
             $media = config.media;
             imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp=' + new Date().getTime() : defaultUrl;
-
             sourceUrl = $media + api.common.showImg.url + '?imgBasePath=' + url;
         }
 
+        // 设置图片属性
         $e.attr("src", imgUrl).attr("layer-src", sourceUrl).attr("alt", alt).error(function() {
-
             $(this).hide();
         });
 
@@ -1685,21 +1706,40 @@
         });
     },
     /**
-     * 上传文件/图片
-     * 
-     * @param container 上传容器
-     * @param title 标题
-     * @param uapi 请求API
-     * @param clazz 样式
-     * @param exts 支持格式
-     * @param args 请求参数
-     * @param limit 限制数量
-     * @param success 成功回调
-     * @param fail 失败回调
-     * @param complete 完成回调
+     * 上传文件/图片（兼容 OSS 和本地上传）
+     *
+     * @param {String|Object} container - 上传容器（ID、选择器或jQuery对象）
+     * @param {String} title - 按钮标题文本
+     * @param {Object} uapi - 自定义上传API对象（可选）
+     * @param {String} clazz - 按钮样式类名（可选，默认'btn btn-success'）
+     * @param {String} exts - 支持的文件格式（可选，默认'*.jpg;*.jpeg;*.gif;*.png'）
+     * @param {Object} args - 请求参数（本地上传的formData或OSS配置参数）
+     * @param {Number} limit - 文件数量限制（可选，默认1）
+     * @param {Function} success - 成功回调函数(result, file)
+     * @param {Function} fail - 失败回调函数(error)
+     * @param {Function} complete - 完成回调函数（可选）
+     *
+     * @example
+     * // 本地上传示例
+     * com.uploadify('#uploadBtn', '上传图片', null, null, '*.jpg;*.png', {}, 1,
+     *     function(result, file) {
+     *         console.log('上传成功:', result.uploadPath);
+     *     }
+     * );
+     *
+     * // OSS上传示例（需要在config中设置 isAliOss: true）
+     * com.uploadify('#uploadBtn', '上传图片', null, null, '*.jpg;*.png', {
+     *     accessKeyId: 'xxx',
+     *     endpoint: 'oss-cn-hangzhou.aliyuncs.com',
+     *     bucket: 'my-bucket',
+     *     dir: 'uploads/'
+     * }, 1, function(file) {
+     *     console.log('上传成功:', file.name);
+     * });
      */
-    uploadify: function(container, title, uapi, clazz, exts, args, limit, success, fail, complete, isAliOss) {
+    uploadify: function(container, title, uapi, clazz, exts, args, limit, success, fail, complete) {
 
+        // 1. 容器参数处理
         if (container && typeof (container) == "object" && container.length)
             container = container;
         else if (container && typeof (container) == "string")
@@ -1707,112 +1747,205 @@
         else
             return false;
 
-        var formData = $.extend({}, args);
-        var multi = limit && limit > 1 ? true : false;
-        var queueSizeLimit = limit ? limit : 1;
-        var fileTypeExts = exts ? exts : '*.jpg;*.jpeg;*.gif;*.png';
-        var buttonClass = clazz ? clazz : 'btn btn-success';
+        // 2. 提取公共配置参数
+        var commonConfig = {
+            multi: limit && limit > 1 ? true : false,          // 是否批量上传
+            queueSizeLimit: limit ? limit : 1,                 // 上传队列限制
+            fileTypeExts: exts ? exts : '*.jpg;*.jpeg;*.gif;*.png', // 文件格式限制
+            buttonClass: clazz ? clazz : 'btn btn-success',    // 按钮样式
+            buttonText: title || '选择文件',                    // 按钮文本
+            fileSizeLimit: '5MB',                              // 文件大小限制
+            height: '45',                                      // 按钮高度
+            fileTypeDesc: '支持的格式:'                         // 文件类型描述
+        };
 
-        var url = config.media + (uapi ? uapi.url : exts.indexOf('jpg') == -1 ? api.common.uploadOther.url : api.common.uploadImg.url);
-
-        if (isAliOss) {
-
-            container.html("").Huploadify({
-                'auto': true,
-                'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                'fileTypeExts': fileTypeExts,
-                'fileSizeLimit': "5MB",
-                'uploader': "",
-                'height': '45',
-                'buttonClass': buttonClass,
-                'buttonText': title,
-                'onUploadStart': function(file) {
-
-                    com.post(api.upgrade.generatePostSignature, {
-                        "ossConfig.accessKeyId": args.accessKeyId,
-                        "ossConfig.endpoint": args.endpoint,
-                        "ossConfig.bucket": args.bucket,
-                        "ossConfig.dir": args.dir
-                    }, function(data) {
-
-                        var ossConfig = data.ossConfig;
-
-                        var formData = new FormData();
-                        formData.append('policy', ossConfig.policy);
-                        formData.append('OSSAccessKeyId', ossConfig.accessKeyId);
-                        formData.append('signature', ossConfig.signature);
-                        formData.append('key', args.dir ? args.dir + file.name : file.name);
-                        formData.append('file', file);
-
-                        $.ajax({
-                            url: ossConfig.host,
-                            type: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function() {
-
-                                if (typeof success === 'function')
-                                    success(file);
-                            },
-                            error: function(xhr, status, errorThrown) {
-
-                                com.showAlert(com.error, "上传失败");
-
-                                if (typeof (fail) == "function")
-                                    fail({
-                                        errorCode: xhr.status
-                                    });
-                            }
-                        });
-                    });
-                },
-                'onUploadError': function(file, errorCode) {
-
-                    if (typeof (complete) == "function")
-                        complete();
-                }
-            });
+        // 3. 判断上传模式并执行
+        if (config.isAliOss) {
+            // ==================== OSS 上传模式 ====================
+            com._uploadifyOss(container, commonConfig, args, success, fail, complete);
         } else {
-            container.html("").Huploadify({
-                'debug': false, // 开启调试
-                'auto': true, // 是否自动上传
-                'successTimeout': config.uploadTimeout, // 超时时间
-                'formData': formData, // 附带值
-                'multi': multi, // 批量上传
-                'buttonClass': buttonClass,
-                'buttonText': title,
-                'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-                'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-                'uploader': url, // 上传处理程序
-                'height': '45', // 浏览按钮的高度
-                'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                'fileTypeExts': fileTypeExts, // 允许上传的文件后缀
-                'fileSizeLimit': '5MB', // 上传文件的大小限制
-                'queueSizeLimit': limit, // 上传数量
-                'onUploadSuccess': function(file, data) { // 上传到服务器,服务器返回相应信息到data里
-
-                    var result = JSON.parse(data);
-
-                    if (result.errorCode == 0 && typeof (success) == "function") {
-
-                        if (typeof (success) == "function")
-                            success(result, file);
-                    } else {
-
-                        com.showAlert(com.error, "上传失败");
-
-                        if (typeof (fail) == "function")
-                            fail(result);
-                    }
-                },
-                'onQueueComplete': function() {
-
-                    if (typeof (complete) == "function")
-                        complete();
-                }
-            });
+            // ==================== 本地上传模式 ====================
+            com._uploadifyLocal(container, commonConfig, uapi, exts, args, success, fail, complete);
         }
+    },
+
+    /**
+     * OSS 上传实现（私有方法）
+     *
+     * @param {Object} container - 上传容器
+     * @param {Object} commonConfig - 公共配置
+     * @param {Object} ossArgs - OSS配置参数（accessKeyId, endpoint, bucket, dir）
+     * @param {Function} success - 成功回调
+     * @param {Function} fail - 失败回调
+     * @param {Function} complete - 完成回调
+     */
+    _uploadifyOss: function(container, commonConfig, ossArgs, success, fail, complete) {
+
+        container.html("").Huploadify({
+            'auto': true,
+            'fileTypeDesc': commonConfig.fileTypeDesc,
+            'fileTypeExts': commonConfig.fileTypeExts,
+            'fileSizeLimit': commonConfig.fileSizeLimit,
+            'uploader': "", // OSS直传不需要uploader
+            'height': commonConfig.height,
+            'buttonClass': commonConfig.buttonClass,
+            'buttonText': commonConfig.buttonText,
+
+            // OSS上传开始事件
+            'onUploadStart': function(file) {
+
+                // 步骤1: 获取OSS上传签名
+                com.post(api.upgrade.generatePostSignature, {
+                    "ossConfig.accessKeyId": ossArgs.accessKeyId,
+                    "ossConfig.endpoint": ossArgs.endpoint,
+                    "ossConfig.bucket": ossArgs.bucket,
+                    "ossConfig.dir": ossArgs.dir
+                }, function(data) {
+
+                    var ossConfig = data.ossConfig;
+
+                    // 步骤2: 构建OSS上传表单数据
+                    var formData = new FormData();
+                    formData.append('policy', ossConfig.policy);
+                    formData.append('OSSAccessKeyId', ossConfig.accessKeyId);
+                    formData.append('signature', ossConfig.signature);
+                    formData.append('key', ossArgs.dir ? ossArgs.dir + file.name : file.name);
+                    formData.append('file', file);
+
+                    // 步骤3: 直接上传到OSS
+                    $.ajax({
+                        url: ossConfig.host,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        timeout: config.uploadTimeout * 1000,
+                        success: function(response) {
+
+                            // 构建成功响应对象（统一格式）
+                            var result = {
+                                errorCode: 0,
+                                errorMsg: '上传成功',
+                                uploadPath: ossConfig.host + '/' + (ossArgs.dir ? ossArgs.dir + file.name : file.name),
+                                fileName: file.name,
+                                fileSize: file.size,
+                                fileType: file.type
+                            };
+
+                            if (typeof success === 'function')
+                                success(result, file);
+                        },
+                        error: function(xhr, status, errorThrown) {
+
+                            com.showAlert(com.error, "OSS上传失败: " + (errorThrown || status));
+
+                            if (typeof (fail) == "function")
+                                fail({
+                                    errorCode: xhr.status || -1,
+                                    errorMsg: errorThrown || status || 'OSS上传失败',
+                                    xhr: xhr
+                                });
+                        }
+                    });
+                }, function(res) {
+                    // 获取签名失败
+                    com.showAlert(com.error, "获取OSS签名失败: " + res.errorMsg);
+                    if (typeof (fail) == "function")
+                        fail(res);
+                });
+            },
+
+            // OSS上传错误事件
+            'onUploadError': function(file, errorCode) {
+
+                com.showAlert(com.error, "文件选择或验证失败");
+
+                if (typeof (fail) == "function")
+                    fail({
+                        errorCode: errorCode,
+                        errorMsg: '文件选择或验证失败',
+                        file: file
+                    });
+
+                if (typeof (complete) == "function")
+                    complete();
+            }
+        });
+    },
+
+    /**
+     * 本地上传实现（私有方法）
+     *
+     * @param {Object} container - 上传容器
+     * @param {Object} commonConfig - 公共配置
+     * @param {Object} uapi - 自定义上传API
+     * @param {String} exts - 文件扩展名
+     * @param {Object} formData - 表单附加数据
+     * @param {Function} success - 成功回调
+     * @param {Function} fail - 失败回调
+     * @param {Function} complete - 完成回调
+     */
+    _uploadifyLocal: function(container, commonConfig, uapi, exts, formData, success, fail, complete) {
+
+        // 构建上传URL
+        var uploadUrl = config.media + (uapi ? uapi.url :
+            (exts && exts.indexOf('jpg') == -1 ? api.common.uploadOther.url : api.common.uploadImg.url));
+
+        container.html("").Huploadify({
+            'debug': false,                              // 关闭调试模式
+            'auto': true,                                // 自动上传
+            'successTimeout': config.uploadTimeout,      // 超时时间（秒）
+            'formData': $.extend({}, formData),          // 附带的表单数据
+            'multi': commonConfig.multi,                 // 是否批量上传
+            'buttonClass': commonConfig.buttonClass,     // 按钮样式
+            'buttonText': commonConfig.buttonText,       // 按钮文本
+            'overrideEvents': ['onDialogClose'],         // 不执行默认的onSelect事件
+            'fileObjName': 'strutsUploads',              // 服务器端文件对象名称
+            'uploader': uploadUrl,                       // 上传处理URL
+            'height': commonConfig.height,               // 按钮高度
+            'fileTypeDesc': commonConfig.fileTypeDesc,   // 文件类型描述
+            'fileTypeExts': commonConfig.fileTypeExts,   // 允许的文件后缀
+            'fileSizeLimit': commonConfig.fileSizeLimit, // 文件大小限制
+            'queueSizeLimit': commonConfig.queueSizeLimit, // 上传队列限制
+
+            // 本地上传成功事件
+            'onUploadSuccess': function(file, data) {
+
+                var result = JSON.parse(data);
+
+                if (result.errorCode == 0) {
+                    // 上传成功
+                    if (typeof (success) == "function")
+                        success(result, file);
+                } else {
+                    // 上传失败（服务器返回错误）
+                    com.showAlert(com.error, "上传失败: " + result.errorMsg);
+
+                    if (typeof (fail) == "function")
+                        fail(result);
+                }
+            },
+
+            // 上传队列完成事件
+            'onQueueComplete': function() {
+
+                if (typeof (complete) == "function")
+                    complete();
+            },
+
+            // 上传错误事件
+            'onUploadError': function(file, errorCode, errorMsg) {
+
+                com.showAlert(com.error, "上传出错: " + (errorMsg || errorCode));
+
+                if (typeof (fail) == "function")
+                    fail({
+                        errorCode: errorCode,
+                        errorMsg: errorMsg || '上传失败',
+                        file: file
+                    });
+            }
+        });
     },
     /**
      * 上传文件/图片

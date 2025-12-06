@@ -1,11 +1,11 @@
-package com.fanglin.system.dao.impl;
+package com.fanglin.aliyun.dao.impl;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.system.dao.OssConfigDao;
-import com.fanglin.system.po.OssConfigPO;
+import com.fanglin.aliyun.dao.OssConfigDao;
+import com.fanglin.aliyun.po.OssConfigPO;
 
 @Repository("ossConfigDao")
 public class OssConfigDaoImpl extends DaoImpl<OssConfigPO> implements OssConfigDao {

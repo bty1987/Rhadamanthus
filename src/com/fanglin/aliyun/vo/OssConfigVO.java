@@ -1,4 +1,4 @@
-package com.fanglin.system.vo;
+package com.fanglin.aliyun.vo;
 
 import java.sql.Timestamp;
 

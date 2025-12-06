@@ -25,4 +25,6 @@ public interface VillageService {
 
 	public int updateVillageForUrl(VillageVO villageVO) throws FLException;
 
+	public VillageVO locateVillage(VillageVO villageVO) throws FLException;
+
 }

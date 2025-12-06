@@ -129,6 +129,18 @@ public class VillageAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "locateVillage", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String locateVillage() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		village = villageService.locateVillage(village);
+
+		return SUCCESS;
+	}
+
 	public VillageVO getVillage() {
 		return village;
 	}

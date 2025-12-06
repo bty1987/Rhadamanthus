@@ -18,6 +18,17 @@
     backgroundImg: './images/bg_fanglin.jpg',
     shakingColor: '#197bb5', // 1918: #892f89 , ehome: #3d677c
 
+    // 文件上传配置
+    isAliOss: false,  // 是否启用阿里云 OSS 上传（false=本地上传，true=OSS上传）
+
+    // OSS 图片显示配置（type=3 时使用）
+    ossConfig: {
+        bucket: '',            // OSS Bucket 名称（如：fanglin-erp）
+        endpoint: '',          // OSS 端点（如：oss-cn-hangzhou.aliyuncs.com）
+        dir: '',               // 图片目录前缀（如：images/，可选）
+        host: ''               // OSS 访问域名（可选，如：https://cdn.fanglin.com 或自动构建）
+    },
+
     communion: '',
     server: '',
     media: '',

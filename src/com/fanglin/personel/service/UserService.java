@@ -47,6 +47,16 @@ public interface UserService {
 
 	public UserVO validateUser(String loginId, String password) throws FLException;
 
+	/**
+	 * 使用挑战-响应方式验证用户
+	 * @param loginId 登录ID
+	 * @param responseHash 客户端计算的响应哈希
+	 * @param nonce 服务器端生成的随机数
+	 * @return 用户信息（验证失败返回null）
+	 * @throws FLException
+	 */
+	public UserVO validateUserByChallenge(String loginId, String responseHash, String nonce) throws FLException;
+
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 
 	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company, String userId) throws FLException;

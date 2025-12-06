@@ -1,8 +1,19 @@
 # Rhadamanthus - 方林装饰 ERP 系统
 
-> 最后更新：2025-12-02
+> 最后更新：2025-12-06
 
 ## 变更记录 (Changelog)
+
+### 2025-12-06
+- **✅ 完成 aliyun 模块创建与 OSS 代码迁移**
+- **新增模块**：
+  - **阿里云集成模块** (`src/com/fanglin/aliyun`)：从 system 模块迁移 OSS 对象存储相关代码
+- **核心成果**：
+  - ✅ 创建完整的模块目录结构(action/dao/service/po/vo)
+  - ✅ 迁移 7 个核心文件(OssConfigPO/VO/Dao/DaoImpl/Service/ServiceImpl/Action)
+  - ✅ 更新包名从 `com.fanglin.system` 到 `com.fanglin.aliyun`
+  - ✅ 生成完整的模块文档(CLAUDE.md)
+- **当前已完成 28/28 个模块文档，覆盖率 100%** 🎉
 
 ### 2025-12-02
 - **✅ 完成前端架构分析与 API 接口文档**
@@ -116,12 +127,13 @@ graph TD
     C --> C11["utils 工具类"];
     C --> C12["report 报表统计"];
 
-    D --> D1["yspay 银盛支付"];
-    D --> D2["wechat 微信集成"];
-    D --> D3["swiftpass 威富通支付"];
-    D --> D4["store 商城模块"];
-    D --> D5["fadada 法大大电子签"];
-    D --> D6["postar 邮政快递"];
+    D --> D1["aliyun 阿里云集成"];
+    D --> D2["yspay 银盛支付"];
+    D --> D3["wechat 微信集成"];
+    D --> D4["swiftpass 威富通支付"];
+    D --> D5["store 商城模块"];
+    D --> D6["fadada 法大大电子签"];
+    D --> D7["postar 邮政快递"];
 
     click B1 "./src/com/fanglin/decoration/CLAUDE.md" "查看装饰订单模块"
     click B2 "./src/com/fanglin/quotation/CLAUDE.md" "查看报价管理模块"
@@ -144,12 +156,13 @@ graph TD
     click C10 "./src/com/fanglin/core/CLAUDE.md" "查看核心组件模块"
     click C11 "./src/com/fanglin/utils/CLAUDE.md" "查看工具类模块"
     click C12 "./src/com/fanglin/report/CLAUDE.md" "查看报表统计模块"
-    click D1 "./src/com/fanglin/yspay/CLAUDE.md" "查看银盛支付模块"
-    click D2 "./src/com/fanglin/wechat/CLAUDE.md" "查看微信集成模块"
-    click D3 "./src/com/fanglin/swiftpass/CLAUDE.md" "查看威富通支付模块"
-    click D4 "./src/com/fanglin/store/CLAUDE.md" "查看在线商城模块"
-    click D5 "./src/com/fanglin/fadada/CLAUDE.md" "查看法大大电子签模块"
-    click D6 "./src/com/fanglin/postar/CLAUDE.md" "查看邮政快递模块"
+    click D1 "./src/com/fanglin/aliyun/CLAUDE.md" "查看阿里云集成模块"
+    click D2 "./src/com/fanglin/yspay/CLAUDE.md" "查看银盛支付模块"
+    click D3 "./src/com/fanglin/wechat/CLAUDE.md" "查看微信集成模块"
+    click D4 "./src/com/fanglin/swiftpass/CLAUDE.md" "查看威富通支付模块"
+    click D5 "./src/com/fanglin/store/CLAUDE.md" "查看在线商城模块"
+    click D6 "./src/com/fanglin/fadada/CLAUDE.md" "查看法大大电子签模块"
+    click D7 "./src/com/fanglin/postar/CLAUDE.md" "查看邮政快递模块"
 ```
 
 ---
@@ -185,6 +198,7 @@ graph TD
 | `src/com/fanglin/store` | 在线商城 | 电商功能 | 商品管理、购物车、订单处理、优惠券 | [已完成](./src/com/fanglin/store/CLAUDE.md) ✅ |
 | `src/com/fanglin/fadada` | 法大大电子签 | 电子合同签署 | 合同创建、签署流程、印章管理、签名管理 | [已完成](./src/com/fanglin/fadada/CLAUDE.md) ✅ |
 | `src/com/fanglin/postar` | 邮政快递集成 | 快递接口 | 快递下单、物流查询、支付回调 | [已完成](./src/com/fanglin/postar/CLAUDE.md) ✅ |
+| `src/com/fanglin/aliyun` | 阿里云集成 | 阿里云服务接入 | OSS对象存储、上传签名、图片处理 | [已完成](./src/com/fanglin/aliyun/CLAUDE.md) ✅ |
 
 ---
 
@@ -337,7 +351,7 @@ graph TD
 
 ## 扩展阅读
 
-### 所有模块文档（27个模块 100%覆盖）
+### 所有模块文档（28个模块 100%覆盖）
 
 #### 核心业务模块（9个）
 - [装饰订单模块](./src/com/fanglin/decoration/CLAUDE.md) ✅
@@ -364,7 +378,8 @@ graph TD
 - [信息管理模块](./src/com/fanglin/information/CLAUDE.md) ✅
 - [报表统计模块](./src/com/fanglin/report/CLAUDE.md) ✅
 
-#### 集成模块（6个）
+#### 集成模块（7个）
+- [阿里云集成模块](./src/com/fanglin/aliyun/CLAUDE.md) ✅
 - [银盛支付模块](./src/com/fanglin/yspay/CLAUDE.md) ✅
 - [微信集成模块](./src/com/fanglin/wechat/CLAUDE.md) ✅
 - [威富通支付模块](./src/com/fanglin/swiftpass/CLAUDE.md) ✅

@@ -1,4 +1,4 @@
-package com.fanglin.system.service.impl;
+package com.fanglin.aliyun.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
@@ -19,10 +19,10 @@ import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
-import com.fanglin.system.dao.OssConfigDao;
-import com.fanglin.system.po.OssConfigPO;
-import com.fanglin.system.service.OssConfigService;
-import com.fanglin.system.vo.OssConfigVO;
+import com.fanglin.aliyun.dao.OssConfigDao;
+import com.fanglin.aliyun.po.OssConfigPO;
+import com.fanglin.aliyun.service.OssConfigService;
+import com.fanglin.aliyun.vo.OssConfigVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 

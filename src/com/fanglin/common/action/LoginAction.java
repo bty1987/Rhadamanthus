@@ -73,12 +73,53 @@ public class LoginAction extends BaseListAction {
 
 	private String company;
 
+	private String nonce;
+
+	/**
+	 * 生成登录挑战（nonce）
+	 * 用于挑战-响应认证
+	 */
+	@Action(value = "requestLoginChallenge", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String requestLoginChallenge() {
+		try {
+			String userId = request.getParameter("userId");
+
+			if (userId == null || userId.trim().isEmpty()) {
+				throw new FLException(110019, "用户ID不能为空");
+			}
+
+			// 生成随机nonce（UUID）
+			String nonce = java.util.UUID.randomUUID().toString().replace("-", "");
+
+			// 获取当前时间戳
+			long timestamp = System.currentTimeMillis();
+
+			// 将nonce存储到session中，设置5分钟过期
+			request.getSession().setAttribute("login_nonce_" + userId, nonce);
+			request.getSession().setAttribute("login_nonce_time_" + userId, timestamp);
+
+			// 返回nonce给前端
+			setNonce(nonce);
+
+		} catch (FLException e) {
+			setErrorCode(e.getCode());
+			setErrorMsg(e.getErrorMessage());
+		} catch (Exception e) {
+			setErrorCode(110000);
+			setErrorMsg("系统处理问题");
+			LogUtils.logging(logger, e, "requestLoginChallenge", "common");
+		}
+
+		return SUCCESS;
+	}
+
 	@Action(value = "doLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String doLogin() {
 
 		String inputCode = request.getParameter("verifyCode");
 		String loginId = request.getParameter("userId");
 		String password = request.getParameter("password");
+		String responseHash = request.getParameter("responseHash");  // 新增：挑战响应哈希
 		String securityCode = request.getParameter("securityCode");
 		String ip = IPUtil.getIpAddr(request);
 
@@ -101,7 +142,37 @@ public class LoginAction extends BaseListAction {
 				throw new FLException(110003, "密码输入错误次数过多,拒绝登陆");
 			}
 
-			UserVO user = userService.validateUser(loginId, password);
+			UserVO user = null;
+
+			// ===== 挑战-响应认证分支 =====
+			if (responseHash != null && !responseHash.trim().isEmpty()) {
+				// 从session获取nonce
+				String storedNonce = (String) request.getSession().getAttribute("login_nonce_" + loginId);
+				Long nonceTime = (Long) request.getSession().getAttribute("login_nonce_time_" + loginId);
+
+				if (storedNonce == null || nonceTime == null) {
+					throw new FLException(110020, "登录会话已过期，请刷新页面重试");
+				}
+
+				// 检查nonce是否过期（5分钟）
+				if (System.currentTimeMillis() - nonceTime > 5 * 60 * 1000) {
+					throw new FLException(110020, "登录会话已过期，请刷新页面重试");
+				}
+
+				// 使用挑战-响应方式验证
+				user = userService.validateUserByChallenge(loginId, responseHash, storedNonce);
+
+				// 验证成功后清除nonce（防止重放）
+				request.getSession().removeAttribute("login_nonce_" + loginId);
+				request.getSession().removeAttribute("login_nonce_time_" + loginId);
+
+			} else if (password != null && !password.trim().isEmpty()) {
+				// 旧方式：明文密码验证（向后兼容）
+				user = userService.validateUser(loginId, password);
+			} else {
+				throw new FLException(110002, "请提供密码");
+			}
+			// ===== 挑战-响应认证结束 =====
 
 			if (user == null) {
 
@@ -333,6 +404,14 @@ public class LoginAction extends BaseListAction {
 
 	public void setCompany(String company) {
 		this.company = company;
+	}
+
+	public String getNonce() {
+		return nonce;
+	}
+
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
 	}
 
 }

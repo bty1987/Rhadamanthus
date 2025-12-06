@@ -356,6 +356,10 @@ $.extend(api, {
             url: "updateVillageForUrl.do",
             server: "communion"
         },
+        locateVillage: {
+            url: "locateVillage.do",
+            server: "communion"
+        },
         queryVillageRule: {
             url: "queryVillageRule.do",
             type: "query",

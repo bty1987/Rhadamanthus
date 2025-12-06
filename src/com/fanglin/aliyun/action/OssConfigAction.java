@@ -1,4 +1,4 @@
-package com.fanglin.system.action;
+package com.fanglin.aliyun.action;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.system.service.OssConfigService;
-import com.fanglin.system.vo.OssConfigVO;
+import com.fanglin.aliyun.service.OssConfigService;
+import com.fanglin.aliyun.vo.OssConfigVO;
 
 @ParentPackage("base")
 @Namespace("/")

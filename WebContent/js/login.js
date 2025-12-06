@@ -28,32 +28,68 @@ function initPage(){
 	$("#passwordIcon").attr("data-content", "请输入密码");
 }
 
+/**
+ * 登录函数（新版 - 挑战-响应认证）
+ */
 function login() {
+	var userId = $("#userId").val();
+	var password = $("#password").val();
+	var verifyCode = $("#nowCode").val();
+
+	// 第一步：请求登录挑战（nonce）
 	$.ajax({
 		type: "POST",
 		dataType: "json",
-		url: "doLogin.do",
-		data: {
-			userId: $("#userId").val(), 
-			password: $("#password").val(),
-			verifyCode: $("#nowCode").val()
-		},
+		url: "requestLoginChallenge.do",
+		data: { userId: userId },
 		success: function(data) {
-			initPage();
-			
-			if(data.errorCode == 1){
-				$("#newCodeIcon").attr("class", "icon-remove red");
-				$("#newCodeIcon").attr("data-content", data.errorMsg);
+			if (data.errorCode != 0) {
 				$("#errorMsg").html(data.errorMsg);
-				$("#Verify").attr("src", "verifyCode.do?timestamp="+ new Date().getTime());
-			}else if(data.errorCode == 0) {
-				document.location.href = "index.do?timestamp="+ new Date().getTime();
-			}else{
-				$("#passwordIcon").attr("class", "icon-remove red");
-				$("#passwordIcon").attr("data-content", data.errorMsg);
-				$("#errorMsg").html(data.errorMsg);
-				$("#Verify").attr("src","verifyCode.do?timestamp="+ new Date().getTime());
-			} 
+				return;
+			}
+
+			var nonce = data.nonce;
+
+			// 第二步：计算响应哈希
+			// 客户端：MD5(MD5(password) + nonce)
+			var passwordMD5 = hex_md5(password);  // 第一次MD5
+			var responseHash = hex_md5(passwordMD5 + nonce);  // 第二次MD5
+
+			// 第三步：发送响应哈希进行登录
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "doLogin.do",
+				data: {
+					userId: userId,
+					responseHash: responseHash,  // 使用响应哈希而非明文密码
+					verifyCode: verifyCode,
+					securityCode: window.securityCode || ""
+				},
+				success: function(data) {
+					initPage();
+
+					if(data.errorCode == 1){
+						$("#newCodeIcon").attr("class", "icon-remove red");
+						$("#newCodeIcon").attr("data-content", data.errorMsg);
+						$("#errorMsg").html(data.errorMsg);
+						$("#Verify").attr("src", "verifyCode.do?timestamp="+ new Date().getTime());
+					} else if(data.errorCode == 0) {
+						document.location.href = "index.do?timestamp="+ new Date().getTime();
+					} else {
+						$("#passwordIcon").attr("class", "icon-remove red");
+						$("#passwordIcon").attr("data-content", data.errorMsg);
+						$("#errorMsg").html(data.errorMsg);
+						$("#Verify").attr("src","verifyCode.do?timestamp="+ new Date().getTime());
+					}
+				},
+				error: function() {
+					$("#errorMsg").html("网络错误，请重试");
+				}
+			});
+		},
+		error: function() {
+			$("#errorMsg").html("网络错误，请重试");
 		}
 	});
 }
