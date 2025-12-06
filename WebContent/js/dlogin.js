@@ -261,6 +261,10 @@ jQuery(function (a) {
             dataType: "json",
             url: config.communion + "requestLoginChallenge.do",
             data: { userId: userId },
+            xhrFields: {
+                withCredentials: true  // 跨域请求携带 cookie（保持 session 一致）
+            },
+            crossDomain: true,
             success: function (data) {
                 if (data.errorCode != 0) {
                     $("#errorMsg").html(data.errorMsg || "获取登录挑战失败");
@@ -286,6 +290,10 @@ jQuery(function (a) {
                         company: config.company,
                         securityCode: params.securityCode,
                     },
+                    xhrFields: {
+                        withCredentials: true  // 跨域请求携带 cookie（保持 session 一致）
+                    },
+                    crossDomain: true,
                     success: function (data) {
                         initPage();
 
