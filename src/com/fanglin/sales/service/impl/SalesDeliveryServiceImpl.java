@@ -472,9 +472,13 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		if (salesDeliveryStatusRightBO == null) return;
 		if (salesDeliveryStatusRightBO.getCrate() == 0) return;
 
-		SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), SalesBalancePO.TYPE_BALANCE_INT, SalesBalancePO.ONETYPE_INIT_INT);
+		SalesBalancePO salesBalancePO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), salesDeliveryItemPO.getSalesItem().getGoods().getBid(), SalesBalancePO.TYPE_BALANCE_INT, SalesBalancePO.ONETYPE_INIT_INT);
 
 		if (salesBalancePO == null) return;
+
+		SalesBalancePO salesBalanceDO = salesBalanceDao.querySalesBalance(salesDeliveryItemPO.getSales().getSid(), salesDeliveryItemPO.getSalesItem().getGoods().getBid(), SalesBalancePO.TYPE_INIT_INT, SalesBalancePO.ONETYPE_INIT_INT, status);
+
+		if (salesBalanceDO != null) return;
 
 		SalesBalancePO salesBalanceCO = SerializationUtils.clone(salesBalancePO);
 
@@ -488,8 +492,8 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesBalanceCO.setPbalance(Arith.mul(salesBalancePO.getPbalance(), rate));
 		salesBalanceCO.setDifference(Arith.mul(salesBalancePO.getDifference(), rate));
 		salesBalanceCO.setRate(rate);
+		salesBalanceCO.setDeliverSchedule(status);
 
 		salesBalanceDao.save(salesBalanceCO);
 	}
-
 }

@@ -121,6 +121,16 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
+	public SalesBalancePO querySalesBalance(long sid, long bid, short type, short onetype) {
+		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").createAlias("brand", "brand").add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public SalesBalancePO querySalesBalance(long sid, long bid, short type, short onetype, short deliverySchedule) {
+		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").createAlias("brand", "brand").add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).add(Restrictions.eq("deliverySchedule", deliverySchedule)).add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
 	public int countSalesBalance(long sid, short type, short onetype, short checkStatus) throws FLException {
 
 		String sql = "SELECT count(*) FROM sales.salesbalance where sid = :sid AND type = :type AND onetype = :onetype AND checkstatus = :checkStatus";
