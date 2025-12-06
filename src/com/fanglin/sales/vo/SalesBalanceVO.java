@@ -109,6 +109,20 @@ public class SalesBalanceVO implements Serializable {
 		this.voster = voster;
 	}
 
+	public SalesBalanceVO(SalesVO sales, SalesRefundsVO refunds, BrandVO brand, UserBaseVO creater, UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept, DepartmentVO region, UserBaseVO checker, UserBaseVO voster) {
+		super();
+		this.sales = sales;
+		this.refunds = refunds;
+		this.brand = brand;
+		this.creater = creater;
+		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
+		this.checker = checker;
+		this.voster = voster;
+	}
+
 	public Long getSbid() {
 		return sbid;
 	}

@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="conf"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_67"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/asm-6.2.jar"/>
@@ -83,25 +82,14 @@
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/xwork-core-2.3.34.jar"/>
 	<classpathentry kind="lib" path="D:/Apache Software Foundation/Tomcat-7.0.88/lib"/>
 	<classpathentry kind="lib" path="D:/Apache Software Foundation/Tomcat-7.0.88/lib/servlet-api.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-sdk-oss-2.5.0.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/esdk-obs-java-3.19.7.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/jackson-annotations-2.9.9.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/jackson-core-2.9.9.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/jackson-databind-2.9.9.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/java-xmlbuilder-1.1.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/log4j-api-2.8.2.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/log4j-core-2.8.2.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/okhttp-3.11.0.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/hwyun-obs/okio-1.14.0.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/fluent-hc-4.5.5.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/gson-2.8.5.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/httpclient-4.5.5.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/httpclient-cache-4.5.5.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/httpclient-win-4.5.5.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/httpcore-4.4.9.jar"/>
-	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/httpmime-4.5.5.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/hutool-core-4.6.8.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/hutool-crypto-4.6.8.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/yspay/nlpush_sdk_java-1.0.05-platform.jar"/>
@@ -114,5 +102,8 @@
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/fadada_api_sdk-1.7.17.1.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/hamcrest-core-1.3.jar"/>
 	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/fadada/junit-4.12.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_67"/>
+	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/jdom-1.1.jar"/>
+	<classpathentry kind="lib" path="E:/Ali/Athena/98.Jars/Other/aliyun-oss/aliyun-sdk-oss-2.5.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
