@@ -240,6 +240,9 @@ jQuery(function (a) {
         });
     }
 
+    /**
+     * 登录函数（新版 - 挑战-响应认证）
+     */
     function login() {
 
         if (config.demo) {
@@ -247,43 +250,95 @@ jQuery(function (a) {
             window.location.href = "index.html?timestamp=" + new Date().getTime();
             return false;
         }
-        
+
+        var userId = $("#userId").val();
+        var password = $("#password").val();
+        var verifyCode = $("#nowCode").val();
+
+        // 第一步：请求登录挑战（nonce）
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: config.communion + "doLogin.do",
-            data: {
-                userId: $("#userId").val(),
-                password: flcry($("#password").val()),
-                verifyCode: $("#nowCode").val(),
-                company: config.company,
-                securityCode: params.securityCode,
-            },
+            url: config.communion + "requestLoginChallenge.do",
+            data: { userId: userId },
             success: function (data) {
-                initPage();
-
-                if (data.errorCode == 1) {
-                    $("#newCodeIcon").attr("class", "icon-remove red");
-                    $("#newCodeIcon").attr("data-content", data.errorMsg);
-                    $("#errorMsg").html(data.errorMsg);
-                    verifyCode();
-                } else if (data.errorCode == 0) {
-                    setCookie("authentication", data.authentication.replace(/[\r\n]/g,""), config.timeout);
-                    setCookie("loginTime", new Date().getTime(), config.timeout);
-                    setCookie("versionCode", config.versionCode, config.timeout);
-                    if (!parent.window.isPC) {
-                        document.location.href = "index.html?timestamp=" + new Date().getTime();
-                    } else {
-                        openChildWindow();
-                    }
-                } else {
-                    $("#passwordIcon").attr("class", "icon-remove red");
-                    $("#passwordIcon").attr("data-content", data.errorMsg);
-                    $("#errorMsg").html(data.errorMsg);
-                    verifyCode();
+                if (data.errorCode != 0) {
+                    $("#errorMsg").html(data.errorMsg || "获取登录挑战失败");
+                    return;
                 }
+
+                var nonce = data.nonce;
+
+                // 第二步：计算响应哈希
+                // 客户端：MD5(MD5(password) + nonce)
+                var passwordMD5 = getMD5(password);  // 第一次MD5
+                var responseHash = getMD5(passwordMD5 + nonce);  // 第二次MD5
+
+                // 第三步：发送响应哈希进行登录
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: config.communion + "doLogin.do",
+                    data: {
+                        userId: userId,
+                        responseHash: responseHash,  // 使用响应哈希而非明文密码
+                        verifyCode: verifyCode,
+                        company: config.company,
+                        securityCode: params.securityCode,
+                    },
+                    success: function (data) {
+                        initPage();
+
+                        if (data.errorCode == 1) {
+                            $("#newCodeIcon").attr("class", "icon-remove red");
+                            $("#newCodeIcon").attr("data-content", data.errorMsg);
+                            $("#errorMsg").html(data.errorMsg);
+                            verifyCode();
+                        } else if (data.errorCode == 0) {
+                            setCookie("authentication", data.authentication.replace(/[\r\n]/g, ""), config.timeout);
+                            setCookie("loginTime", new Date().getTime(), config.timeout);
+                            setCookie("versionCode", config.versionCode, config.timeout);
+                            if (!parent.window.isPC) {
+                                document.location.href = "index.html?timestamp=" + new Date().getTime();
+                            } else {
+                                openChildWindow();
+                            }
+                        } else {
+                            $("#passwordIcon").attr("class", "icon-remove red");
+                            $("#passwordIcon").attr("data-content", data.errorMsg);
+                            $("#errorMsg").html(data.errorMsg);
+                            verifyCode();
+                        }
+                    },
+                    error: function () {
+                        $("#errorMsg").html("网络错误，请重试");
+                    }
+                });
+            },
+            error: function () {
+                $("#errorMsg").html("网络错误，请重试");
             }
         });
+    }
+
+    /**
+     * 获取MD5函数
+     * 兼容多种MD5实现方式
+     */
+    function getMD5(str) {
+        // 方式1：使用 hex_md5 函数（如果已加载 utils.js）
+        if (typeof hex_md5 !== 'undefined') {
+            return hex_md5(str);
+        }
+        // 方式2：使用 CryptoJS.MD5（如果已加载 crypto.min.js）
+        else if (typeof CryptoJS !== 'undefined' && CryptoJS.MD5) {
+            return CryptoJS.MD5(str).toString();
+        }
+        // 方式3：如果都不可用，抛出错误
+        else {
+            alert('MD5函数不可用，请确保加载了必要的加密库');
+            throw new Error('MD5 function not available');
+        }
     }
 
     function initPage() {
