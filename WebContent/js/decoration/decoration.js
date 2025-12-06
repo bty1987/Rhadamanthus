@@ -45,6 +45,41 @@
         constructionItems: {
             terminalStatus: com.focusPage("#terminalStatus", "#updateTerminalStatusModal")
         },
+        approvalItems: {
+            // Select 下拉框
+            refundCompany: com.focusPage("#refundCompany"),
+            refundPersonnelStatus: com.focusPage("#refundPersonnelStatus"),
+            refundPaymentType: com.focusPage("#refundPaymentType"),
+            refundCancelType: com.focusPage("#refundCancelType"),
+
+            // Input 输入框
+            refundPenaltyAmount: com.focusPage("#refundPenaltyAmount"),
+            refundIncurredAmount: com.focusPage("#refundIncurredAmount"),
+            refundDrawingCost: com.focusPage("#refundDrawingCost"),
+            refundCalculationMethod: com.focusPage("#refundCalculationMethod"),
+            refundActualAmount: com.focusPage("#refundActualAmount"),
+            refundDiscountDetail: com.focusPage("#refundDiscountDetail"),
+            refundReason: com.focusPage("#refundReason"),
+
+            // Span 显示字段
+            refundOrderNo: com.focusPage("#refundOrderNo"),
+            refundBuildingAddress: com.focusPage("#refundBuildingAddress"),
+            refundSignDate: com.focusPage("#refundSignDate"),
+            refundPreSignTime: com.focusPage("#refundPreSignTime"),
+            refundPreSignAmount: com.focusPage("#refundPreSignAmount"),
+            refundSignAmount: com.focusPage("#refundSignAmount"),
+            refundReceivedAmount: com.focusPage("#refundReceivedAmount"),
+            refundOrderType: com.focusPage("#refundOrderType"),
+            refundOrderStatus: com.focusPage("#refundOrderStatus"),
+            refundDesigner: com.focusPage("#refundDesigner"),
+            refundSalesman: com.focusPage("#refundSalesman"),
+            refundActivity: com.focusPage("#refundActivity"),
+            refundSupervisor: com.focusPage("#refundSupervisor"),
+            refundBankName: com.focusPage("#refundBankName"),
+            refundBankAccount: com.focusPage("#refundBankAccount"),
+            refundCardHolder: com.focusPage("#refundCardHolder"),
+            refundConstructionProgress: com.focusPage("#refundConstructionProgress")
+        },
 
         projectStatusArr: {},
         designStatusArr: {}
@@ -83,6 +118,7 @@
     order.refundContractModal.on('hide.bs.modal', function(e) {
 
         com.cleanItems(order.infoItems);
+        com.cleanItems(order.approvalItems);
         com.closeTip();
     });
 
@@ -300,33 +336,40 @@
             details = details + v + ": " + com.focusPage("#backup_" + i).val() + "\n";
         });
 
+        // 收集表单数据
         var args = [{
-            "name": "装修单号",
-            "value": decoration.orderId
+            "name": "所属公司",
+            "value": com.focusPage("#refundCompany").val() || ""
         }, {
-            "name": "城市",
-            "value": decoration.house.village.cityProper.city.name
+            "name": "订单编号",
+            "value": com.focusPage("#refundOrderNo").text() || decoration.orderId
         }, {
-            "name": "城区",
-            "value": decoration.house.village.cityProper.name
+            "name": "楼盘地址",
+            "value": com.focusPage("#refundBuildingAddress").text() || (decoration.house.village.name + " " + decoration.house.houseNumber)
         }, {
-            "name": "地址",
-            "value": decoration.house.village.name + " " + decoration.house.houseNumber
+            "name": "签单日期",
+            "value": com.focusPage("#refundSignDate").text() || (decoration.status == constant.decoration().decoration.STATUS_PROSIGN_INT ? decoration.precontractTime : decoration.contractTime)
         }, {
-            "name": "签单时间",
-            "value": decoration.status == constant.decoration().decoration.STATUS_PROSIGN_INT ? decoration.precontractTime : decoration.contractTime
+            "name": "预签时间",
+            "value": com.focusPage("#refundPreSignTime").text() || ""
+        }, {
+            "name": "预签额",
+            "value": com.focusPage("#refundPreSignAmount").text() || ""
         }, {
             "name": "签单额",
-            "value": decoration.orderTotalPrice
+            "value": com.focusPage("#refundSignAmount").text() || decoration.orderTotalPrice
         }, {
             "name": "实收额",
-            "value": decoration.factPrice
+            "value": com.focusPage("#refundReceivedAmount").text() || decoration.factPrice
         }, {
-            "name": "装修单类型",
-            "value": constant.decoration().decoration.typeness.keys[decoration.typeness]
+            "name": "订单类型",
+            "value": com.focusPage("#refundOrderType").text() || constant.decoration().decoration.typeness.keys[decoration.typeness]
+        }, {
+            "name": "订单状态",
+            "value": com.focusPage("#refundOrderStatus").text() || ""
         }, {
             "name": "设计师",
-            "value": decoration.designer.currentName
+            "value": com.focusPage("#refundDesigner").text() || decoration.designer.currentName
         }, {
             "name": "设计部",
             "value": decoration.designer.dept.name
@@ -335,17 +378,59 @@
             "value": decoration.designer.dept.fatherDept.name
         }, {
             "name": "业务员",
-            "value": decoration.salesman.currentName
+            "value": com.focusPage("#refundSalesman").text() || decoration.salesman.currentName
         }, {
-            "name": "参与活动",
-            "value": ""
+            "name": "人员状态",
+            "value": com.focusPage("#refundPersonnelStatus").val() || ""
         }, {
-            "name": "监理",
-            "value": decoration.supervisor.currentName ? decoration.supervisor.currentName : ""
+            "name": "参加活动",
+            "value": com.focusPage("#refundActivity").text() || ""
+        }, {
+            "name": "监理姓名",
+            "value": com.focusPage("#refundSupervisor").text() || (decoration.supervisor.currentName ? decoration.supervisor.currentName : "")
+        }, {
+            "name": "退款类型",
+            "value": com.focusPage("#refundPaymentType").val() || ""
+        }, {
+            "name": "开户行银行",
+            "value": com.focusPage("#refundBankName").text() || ""
+        }, {
+            "name": "开户行账号",
+            "value": com.focusPage("#refundBankAccount").text() || ""
+        }, {
+            "name": "持卡人姓名",
+            "value": com.focusPage("#refundCardHolder").text() || ""
+        }, {
+            "name": "施工进度",
+            "value": com.focusPage("#refundConstructionProgress").text() || ""
+        }, {
+            "name": "违约金金额",
+            "value": com.focusPage("#refundPenaltyAmount").val() || ""
+        }, {
+            "name": "已发生项目金额",
+            "value": com.focusPage("#refundIncurredAmount").val() || ""
+        }, {
+            "name": "绘图成本金额",
+            "value": com.focusPage("#refundDrawingCost").val() || ""
+        }, {
+            "name": "退款计算方式",
+            "value": com.focusPage("#refundCalculationMethod").val() || ""
+        }, {
+            "name": "实际退款金额",
+            "value": com.focusPage("#refundActualAmount").val() || ""
+        }, {
+            "name": "退单类型",
+            "value": com.focusPage("#refundCancelType").val() || ""
+        }, {
+            "name": "已办理优惠明细",
+            "value": com.focusPage("#refundDiscountDetail").val() || ""
+        }, {
+            "name": "退单原因",
+            "value": com.focusPage("#refundReason").val() || ""
         }, {
             "name": "款项信息",
             "value": details
-        }, ];
+        }];
 
         if (com.focusPage("#dingApprove", "#violation").prop("checked")) {
             options["code"] = "PROC-9B7CBC59-96FB-4941-BF01-608DB3E37C5E";
@@ -537,6 +622,18 @@
     order.designStatusArr = constant.decoration().decoration.designStatus.keys;
     order.repairStatus = constant.decoration().decoration.repairStatus.keys;
     order.balanceStatus = constant.decoration().decoration.balanceStatus.keys;
+
+    // 初始化退款合同模态框的下拉选项
+    com.post(api.ds.decoration, {}, function(res) {
+        // 绑定所属公司下拉框
+        com.focusPage("#refundCompany").bindData(res.refundCompany, "key", "value");
+        // 绑定人员状态下拉框
+        com.focusPage("#refundPersonnelStatus").bindData(res.refundPersonnelStatus, "key", "value");
+        // 绑定退款类型下拉框
+        com.focusPage("#refundPaymentType").bindData(res.refundPaymentType, "key", "value");
+        // 绑定退单类型下拉框
+        com.focusPage("#refundCancelType").bindData(res.refundCancelType, "key", "value");
+    });
 
     // 合同终止内违约金显示
     com.post(api.data.queryPaymentType, {
@@ -2013,6 +2110,39 @@
         function terminalOrder(orderId, status, precontractPrice, rowId) {
 
             params.decoration.orderId = orderId;
+
+            // 获取活动物品信息并填充到"已办理优惠明细"
+            com.post(api.decoration.queryDecorationActivityItem, {
+                "decorationActivityItem.decoration.orderId": orderId
+            }, function(res) {
+
+                var discountDetail = "";
+
+                if (res.decorationActivityItems && res.decorationActivityItems.length > 0) {
+                    // 拼接活动物品信息
+                    $.each(res.decorationActivityItems, function(index, item) {
+                        if (discountDetail != "") {
+                            discountDetail += "；";
+                        }
+                        // 格式：物品名称 x 数量 (金额元)
+                        discountDetail += item.activity.name;
+                        if (item.num && item.num > 0) {
+                            discountDetail += " x " + item.num;
+                        }
+                        if (item.money && item.money > 0) {
+                            discountDetail += " (" + item.money + "元)";
+                        }
+                    });
+                }
+
+                // 填充到输入框
+                com.focusPage("#refundDiscountDetail").val(discountDetail);
+
+            }, function(error) {
+                // 即使获取失败也继续显示模态框
+                console.log("获取活动物品信息失败", error);
+                com.focusPage("#refundDiscountDetail").val("");
+            });
 
             order.refundContractModal.modal("show");
 

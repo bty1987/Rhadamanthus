@@ -684,68 +684,57 @@ $(function() {
 
     function getPlace(city, villageName) {
 
-        console.log(city)
+        console.log('开始定位楼盘: ' + villageName + ', 城市: ' + city);
 
-        $.ajax({
-            url: "https://apis.map.qq.com/ws/place/v1/search?keyword=" + villageName + "&region=" + city + "&output=json&key=PAXBZ-GJZ3T-K2JXQ-LUN5D-IPF47-XZBUV",
-            type: "GET",
-            success: function(data) {
+        // 调用后台接口进行定位
+        com.post(api.data.locateVillage, {
+            "village.no": village.currentVill.no
+        }, function(res) {
 
-                var lng;
-                var lat;
-                var placeFlag;
+            com.showAlert(com.info, '定位成功');
 
-                if (data.data.length > 0 && data.data[0].location != undefined) {
-                    lng = data.results[0].location.lng;
-                    lat = data.results[0].location.lat;
-                    placeFlag = true;
-                } else {
-                    lng = 123.38497;
-                    lat = 41.810947;
-                    placeFlag = false;
-                }
+            // 使用接口返回的楼盘信息(包含更新后的坐标)
+            village.currentVill = res.village;
 
-                village.currentVill.tempPoint.x = lng;
-                village.currentVill.tempPoint.y = lat;
+            var x = res.village.x / 1000000;
+            var y = res.village.y / 1000000;
 
-                if (com.focusPage("#mapContainer>canvas").length == 0) {
-                    mp = createMap();
-                }
-                
-                var latlng = new TMap.LatLng(lat, lng)
+            village.currentVill.tempPoint = {
+                x: x,
+                y: y
+            };
 
-                mp.setCenter(latlng);
-
-                // mp = new TMap.Map("mapContainer", {
-                // enableMapClick: false,
-                // minZoom: 11,
-                // maxZoom: 20
-                // }); // 在百度地图容器中创建一个地图
-                // mp.centerAndZoom(new TMap.Point(lng, lat), 15); // 设定地图中心和坐标并将地图显示在地图容器中
-                // mp.setMapStyle({
-                // style: 'light'
-                // });
-                // mp.enableKeyboard();
-                // mp.enableScrollWheelZoom(true);
-
-                if (placeFlag) {
-//                    var newPoint = new TMap.Point(lng, lat);
-//                    var marker2 = new ComplexCustomOverlay(newPoint, villageName); // 控制标注地址和备注信息
-//                    mp.addOverlay(marker2);
-//                    mp.setCenter(newPoint);
-                    
-                    multiMarker.setGeometries([{
-                        "id": "1", // 点标记唯一标识，后续如果有删除、修改位置等操作，都需要此id
-                        "styleId": 'myStyle', // 指定样式id
-                        "position": latlng, // 点标记坐标位置
-                        "properties": {// 自定义属性
-                            "title": name
-                        }
-                    }]);
-                }
-
+            // 重新绘制地图
+            if (com.focusPage("#mapContainer>canvas").length == 0) {
+                mp = createMap();
             }
-        })
+
+            var latlng = new TMap.LatLng(y, x);
+            mp.setCenter(latlng);
+
+            // 添加标记点
+            if (!multiMarker) {
+                multiMarker = new TMap.MultiMarker({
+                    map: mp,
+                    styles: {
+                        "myStyle": mpstyle
+                    },
+                    geometries: []
+                });
+            }
+
+            multiMarker.setGeometries([{
+                "id": "1",
+                "styleId": 'myStyle',
+                "position": latlng,
+                "properties": {
+                    "title": villageName
+                }
+            }]);
+
+        }, function(err) {
+            com.showAlert(com.error, '定位失败: ' + err.errorMsg);
+        });
     }
 
     var multiMarker = null;

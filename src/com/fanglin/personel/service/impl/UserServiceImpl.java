@@ -380,6 +380,46 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserVO validateUserByChallenge(String loginId, String responseHash, String nonce) throws FLException {
+
+		// 1. 查询用户
+		UserPO userPO = userDao.queryUserByLoginId(loginId);
+		UserVO userVO = null;
+
+		if (userPO == null) return userVO;
+
+		if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) return userVO;
+
+		// 2. 获取数据库中存储的MD5密码
+		String storedMD5 = userPO.getPassword();
+
+		// 3. 服务器端计算期望的响应哈希：MD5(stored_MD5 + nonce)
+		String expectedHash = MD5Helper.MD5(storedMD5 + nonce);
+
+		// 4. 对比客户端发送的哈希和服务器计算的哈希
+		if (!expectedHash.equalsIgnoreCase(responseHash)) {
+			return userVO;  // 验证失败
+		}
+
+		// 5. 验证成功，构建返回对象（与原validateUser方法相同）
+		userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
+
+		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole(), Arrays.asList("creater"));
+
+		SystemConfigPO defaultPassword = systemConfigDao.querySystemConfig("password", userPO.getCompany());
+
+		if (userPO.getPassword().equals(MD5Helper.MD5(defaultPassword == null ? "helloworld" : defaultPassword.getValue()))
+			&& userPO.getIsLogin() != UserPO.ISLOGIN_NOT_INT) {
+			userVO.setPassword("resetPassword");
+		}
+
+		userVO.setCompanys(String.valueOf(userPO.getCompany()));
+
+		return userVO;
+	}
+
+	@Override
 	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException {
 
 		List<UserBaseVO> userBaseVOs = new ArrayList<UserBaseVO>();

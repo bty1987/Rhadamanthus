@@ -1,6 +1,6 @@
-package com.fanglin.system.service;
+package com.fanglin.aliyun.service;
 
-import com.fanglin.system.vo.OssConfigVO;
+import com.fanglin.aliyun.vo.OssConfigVO;
 
 public interface OssConfigService {
 
