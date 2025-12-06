@@ -14,6 +14,7 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.balance.service.BalanceSalesBalanceService;
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -90,7 +91,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 		List<SalesBalanceVO> salesBalanceVOs = new ArrayList<SalesBalanceVO>();
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
-			salesBalanceVOs.add(salesBalancePO.ptv(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new BrandVO(), new UserBaseVO(), new UserBaseVO())));
+			salesBalanceVOs.add(salesBalancePO.ptv(new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new UserBaseVO(), new BrandVO()), new SalesRefundsVO(), new BrandVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO())));
 		}
 
 		return salesBalanceVOs;
@@ -477,11 +478,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				salesBalancePO.setRegion(salesPO.getRegion());
 				salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
 				salesBalancePO.setRate(1000);
+				salesBalancePO.setDeliverSchedule(SalesBalancePO.DELIVERYSCHEDULE_NONE_INT);
 
-				// 设置品牌关联
-				if (bid != null && bid > 0) {
-					salesBalancePO.setBrand(new com.fanglin.communion.po.BrandPO(bid));
-				}
+				salesBalancePO.setBrand(new BrandPO(bid));
 
 				// 计算该品牌的总金额、优惠金额和结算金额
 				long brandTotal = 0;

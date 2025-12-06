@@ -81,6 +81,8 @@ public class SalesBalancePO implements Serializable {
 
 	public static final short DELIVERSTATUS_ALL_INT = 2;
 
+	public static final short DELIVERYSCHEDULE_NONE_INT = -1;
+
 	private long sbid;
 
 	private SalesPO sales;
@@ -140,6 +142,8 @@ public class SalesBalancePO implements Serializable {
 	private short verifyStatus;
 
 	private short checkStatus;
+
+	private short deliverSchedule;
 
 	private String comment;
 
@@ -473,6 +477,15 @@ public class SalesBalancePO implements Serializable {
 		this.checkStatus = checkStatus;
 	}
 
+	@Column(name = "deliverSchedule")
+	public short getDeliverSchedule() {
+		return deliverSchedule;
+	}
+
+	public void setDeliverSchedule(short deliverSchedule) {
+		this.deliverSchedule = deliverSchedule;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -484,7 +497,7 @@ public class SalesBalancePO implements Serializable {
 
 	public SalesBalanceVO ptv(SalesBalanceVO salesBalanceVO) {
 
-		BeanUtil.copyPropertie(this, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "brand", "checker", "voster"));
+		BeanUtil.copyPropertie(this, salesBalanceVO, Arrays.asList("sales", "refunds", "brand", "creater", "poster", "salesman", "dept", "region", "brand", "checker", "voster"));
 
 		if (salesBalanceVO.getSalesman() != null && getSalesman() != null) salesBalanceVO.getSalesman().setBaseInfo(getSalesman());
 		if (salesBalanceVO.getDept() != null && getDept() != null) getDept().ptv(salesBalanceVO.getDept());
