@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -25,6 +26,8 @@ public class SalesBalanceVO implements Serializable {
 	private DepartmentVO dept;
 
 	private DepartmentVO region;
+
+	private BrandVO brand;
 
 	private Timestamp createTime;
 
@@ -160,6 +163,14 @@ public class SalesBalanceVO implements Serializable {
 
 	public void setRegion(DepartmentVO region) {
 		this.region = region;
+	}
+
+	public BrandVO getBrand() {
+		return brand;
+	}
+
+	public void setBrand(BrandVO brand) {
+		this.brand = brand;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
