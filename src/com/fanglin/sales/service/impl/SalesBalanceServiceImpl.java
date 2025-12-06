@@ -447,24 +447,22 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesPO.getSid());
 
 			// 按品牌分组销售项
-			Map<String, List<SalesItemPO>> brandItemsMap = new HashMap<String, List<SalesItemPO>>();
+			Map<Long, List<SalesItemPO>> brandItemsMap = new HashMap<Long, List<SalesItemPO>>();
 			for (SalesItemPO salesItemPO : salesItemPOs) {
-				// 获取商品品牌，如果商品或品牌为空，使用"未知品牌"
-				String brand = "未知品牌";
-				if (salesItemPO.getGoods() != null && salesItemPO.getGoods().getBrand() != null && !salesItemPO.getGoods().getBrand().isEmpty()) {
-					brand = salesItemPO.getGoods().getBrand();
-				}
+
+				long bid = salesItemPO.getGoods().getBid();
 
 				// 将销售项添加到对应品牌的列表中
-				if (!brandItemsMap.containsKey(brand)) {
-					brandItemsMap.put(brand, new ArrayList<SalesItemPO>());
+				if (!brandItemsMap.containsKey(salesItemPO.getGoods().getBid())) {
+					brandItemsMap.put(bid, new ArrayList<SalesItemPO>());
 				}
-				brandItemsMap.get(brand).add(salesItemPO);
+				brandItemsMap.get(bid).add(salesItemPO);
 			}
 
 			// 为每个品牌创建一条结算数据
-			for (Map.Entry<String, List<SalesItemPO>> entry : brandItemsMap.entrySet()) {
-				String brand = entry.getKey();
+			for (Map.Entry<Long, List<SalesItemPO>> entry : brandItemsMap.entrySet()) {
+
+				Long bid = entry.getKey();
 				List<SalesItemPO> brandItems = entry.getValue();
 
 				// 创建该品牌的结算单
@@ -514,7 +512,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 				// 检查是否需要设置为多结算类型
 				SystemConfigPO taggle = systemConfigDao.querySystemConfig("SALES_MUILT_BALANCE_INT", salesPO.getCompany());
-				if (taggle != null && taggle.getValue() != null && salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(salesPO.getBrand().getBid()) > 0) {
+				if (taggle != null && taggle.getValue() != null && salesDeliveryStatusRightDao.countSalesDeliveryStatusRight(bid) > 0) {
 					salesBalancePO.setType(SalesBalancePO.TYPE_BALANCE_INT);
 				}
 
