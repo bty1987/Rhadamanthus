@@ -106,9 +106,11 @@ $(function() {
             var propertyArr = [];
             var total = 0;
             $.each(items, function(i, v) {
-
+                
                 if (v.rid != refunds.rid)
                     return true;
+                
+                if(v.psiid) return true;
 
                 propertyArr.push([v.salesItem.goods.name, v.salesItem.format.info, v.num, v.salesItem.price, v.total]);
 

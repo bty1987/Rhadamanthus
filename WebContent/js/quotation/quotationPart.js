@@ -4590,7 +4590,12 @@ var QuotationDetail = (function() {
             var $dname = $('<span class="name"></span>').text(v.functionAreaName);// 功能区名字
             var $dsum = $('<label></label>').addClass('col-md-6 no-padding-left').text(sum);// 折扣价
 
-            $dwrap.append($dorder).append("|").append($dname);
+            if (v.functionAreaOrder == "9998") {
+                $dwrap.append($dname);
+            } else {
+                $dwrap.append($dorder).append("|").append($dname);
+            }
+
             $item.attr("data-qfaId", v.qfaId).append($dwrap).append($dsum);// 存入功能区ID
 
             return $item;
@@ -4858,6 +4863,8 @@ var QuotationDetail = (function() {
                             comp = parseFloat($domain.attr('data-disComPrice'));
                             cons = parseFloat($domain.attr('data-consPrice'));
                             coms = parseFloat($domain.attr('data-comsPrice'));
+
+                            painter.createDomainMoney(utils.changeThrDecimal(sumd), v).appendTo(com.focusPage('#functionAreaSumList'));
 
                             _disPrice = utils.accAdd(_disPrice, sumdp);
                             _undisPrice = utils.accAdd(_undisPrice, sum);

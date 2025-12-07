@@ -40,7 +40,7 @@ function login() {
 	$.ajax({
 		type: "POST",
 		dataType: "json",
-		url: "requestLoginChallenge.do",
+		url: config.communion + "requestLoginChallenge.do",
 		data: { userId: userId },
 		success: function(data) {
 			if (data.errorCode != 0) {
@@ -52,14 +52,14 @@ function login() {
 
 			// 第二步：计算响应哈希
 			// 客户端：MD5(MD5(password) + nonce)
-			var passwordMD5 = hex_md5(password);  // 第一次MD5
-			var responseHash = hex_md5(passwordMD5 + nonce);  // 第二次MD5
+			var passwordMD5 = flcry(password);  // 第一次MD5
+			var responseHash = flcry(passwordMD5 + nonce);  // 第二次MD5
 
 			// 第三步：发送响应哈希进行登录
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "doLogin.do",
+				url: config.communion + "doLogin.do",
 				data: {
 					userId: userId,
 					responseHash: responseHash,  // 使用响应哈希而非明文密码

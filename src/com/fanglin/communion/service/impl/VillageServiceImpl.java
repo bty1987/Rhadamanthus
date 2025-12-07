@@ -229,10 +229,7 @@ public class VillageServiceImpl implements VillageService {
 		String cityName = villagePO.getCityProper().getCity().getName();
 
 		// 3. 调用腾讯地图API获取坐标
-		String apiUrl = String.format(
-			"https://apis.map.qq.com/ws/place/v1/search?keyword=%s&region=%s&output=json&key=PAXBZ-GJZ3T-K2JXQ-LUN5D-IPF47-XZBUV",
-			villageName, cityName
-		);
+		String apiUrl = String.format("https://apis.map.qq.com/ws/place/v1/suggestion?keyword=%s&region=%s&output=json&key=U5FBZ-SQLKZ-H5BX3-TCVW6-L3APZ-LUF5F", villageName, cityName);
 
 		JSONObject result = HttpUtil.httpGet(apiUrl);
 

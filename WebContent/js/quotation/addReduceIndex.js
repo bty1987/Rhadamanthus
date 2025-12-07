@@ -500,7 +500,7 @@
                 case "decorationStatus":
                     lineprops.push({
                         field: "decorationStatus",
-                        name: "创建时间",
+                        name: "装修状态",
                         prop: "decoration.status",
                         clazz: "red",
                         dataset: constant.decoration().decoration.status.keys,

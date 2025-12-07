@@ -398,7 +398,7 @@ public class UserServiceImpl implements UserService {
 
 		// 4. 对比客户端发送的哈希和服务器计算的哈希
 		if (!expectedHash.equalsIgnoreCase(responseHash)) {
-			return userVO;  // 验证失败
+			return userVO; // 验证失败
 		}
 
 		// 5. 验证成功，构建返回对象（与原validateUser方法相同）
@@ -409,8 +409,7 @@ public class UserServiceImpl implements UserService {
 
 		SystemConfigPO defaultPassword = systemConfigDao.querySystemConfig("password", userPO.getCompany());
 
-		if (userPO.getPassword().equals(MD5Helper.MD5(defaultPassword == null ? "helloworld" : defaultPassword.getValue()))
-			&& userPO.getIsLogin() != UserPO.ISLOGIN_NOT_INT) {
+		if (userPO.getPassword().equals(MD5Helper.MD5(defaultPassword == null ? "helloworld" : defaultPassword.getValue())) && userPO.getIsLogin() != UserPO.ISLOGIN_NOT_INT) {
 			userVO.setPassword("resetPassword");
 		}
 

@@ -3322,7 +3322,12 @@
             var $dname = $('<span class="name"></span>').text(v.name);// 功能区名字
             var $dsum = $('<label></label>').addClass('col-md-6 no-padding-left').text(utils.changeThrDecimal(sum));// 折扣价
 
-            $dwrap.append($dorder).append("  ").append($dname);
+            if (v.functionAreaOrder == "9998") {
+                $dwrap.append($dname);
+            } else {
+                $dwrap.append($dorder).append("  ").append($dname);
+            }
+
             $item.attr("data-qfaId", v.qfaId).append($dwrap).append($dsum);// 存入功能区ID
 
             return $item;
@@ -3480,6 +3485,8 @@
                             cost = parseFloat($domain.attr('data-costPrice'));
                             unache = parseFloat($domain.attr('data-unachePrice'));
                             rtem = parseFloat($domain.attr('data-rtemPrice'));
+
+                            painter.createDomainMoney(utils.changeThrDecimal(sum), v).appendTo(com.focusPage('#functionAreaSumList'));
 
                             _disPrice = utils.changeThrDecimal(utils.accAdd(_disPrice, sumdp));
                             _undisPrice = utils.changeThrDecimal(utils.accAdd(_undisPrice, sum));

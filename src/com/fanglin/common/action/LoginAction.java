@@ -11,8 +11,6 @@
 
 package com.fanglin.common.action;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -76,8 +74,7 @@ public class LoginAction extends BaseListAction {
 	private String nonce;
 
 	/**
-	 * 生成登录挑战（nonce）
-	 * 用于挑战-响应认证
+	 * 生成登录挑战（nonce） 用于挑战-响应认证
 	 */
 	@Action(value = "requestLoginChallenge", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String requestLoginChallenge() {
@@ -119,7 +116,7 @@ public class LoginAction extends BaseListAction {
 		String inputCode = request.getParameter("verifyCode");
 		String loginId = request.getParameter("userId");
 		String password = request.getParameter("password");
-		String responseHash = request.getParameter("responseHash");  // 新增：挑战响应哈希
+		String responseHash = request.getParameter("responseHash"); // 新增：挑战响应哈希
 		String securityCode = request.getParameter("securityCode");
 		String ip = IPUtil.getIpAddr(request);
 
@@ -151,12 +148,12 @@ public class LoginAction extends BaseListAction {
 				Long nonceTime = (Long) request.getSession().getAttribute("login_nonce_time_" + loginId);
 
 				if (storedNonce == null || nonceTime == null) {
-					throw new FLException(110020, "登录会话已过期，请刷新页面重试");
+					throw new FLException(110020, "登录会话已过期,请刷新页面重试");
 				}
 
 				// 检查nonce是否过期（5分钟）
 				if (System.currentTimeMillis() - nonceTime > 5 * 60 * 1000) {
-					throw new FLException(110020, "登录会话已过期，请刷新页面重试");
+					throw new FLException(110020, "登录会话已过期,请刷新页面重试");
 				}
 
 				// 使用挑战-响应方式验证
@@ -346,32 +343,6 @@ public class LoginAction extends BaseListAction {
 		current = DateUtil.current(current == null ? "yyyy-MM-dd hh:mm:ss" : current);
 
 		return SUCCESS;
-	}
-
-	public String hashPassword(String password, String salt) {
-		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			String combined = password + salt;
-			byte[] hash = digest.digest(combined.getBytes());
-			return bytesToHex(hash);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException("SHA-256算法不可用", e);
-		}
-	}
-
-	private String bytesToHex(byte[] bytes) {
-
-		StringBuilder hexString = new StringBuilder();
-
-		for (byte b : bytes) {
-			String hex = Integer.toHexString(0xff & b);
-			if (hex.length() == 1) {
-				hexString.append('0');
-			}
-			hexString.append(hex);
-		}
-
-		return hexString.toString();
 	}
 
 	public String getAuthentication() {
