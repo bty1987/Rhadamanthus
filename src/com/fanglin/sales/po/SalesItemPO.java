@@ -70,6 +70,8 @@ public class SalesItemPO implements Serializable {
 
 	private long xgnum;
 
+	private long trnum;
+
 	private long total;
 
 	private String comment;
@@ -231,6 +233,15 @@ public class SalesItemPO implements Serializable {
 
 	public void setXgnum(long xgnum) {
 		this.xgnum = xgnum;
+	}
+
+	@Column(name = "trnum")
+	public long getTrnum() {
+		return trnum;
+	}
+
+	public void setTrnum(long trnum) {
+		this.trnum = trnum;
 	}
 
 	@Column(name = "total")

@@ -942,7 +942,93 @@ $('#pagination').on('click', 'a', function() {
 });
 ```
 
-### 3. 文件上传
+### 3. 数值字段精度转换 ⭐
+
+#### 重要规范
+
+本系统后台存储**金额**、**数量**等数值类型字段时，采用**整数存储**方式，精度为 **3 位小数**（即乘以 1000）。
+
+| 前台显示值 | 后台存储值 | 说明 |
+|-----------|-----------|------|
+| `1` | `1000` | 1 元 = 1000 分（数据库存储） |
+| `180000.00` | `180000000` | 18万元 = 180000000 分 |
+
+#### API 配置示例
+
+在 `js/api/[模块].js` 文件中，通过 `convert` 参数标记需要转换的数值字段：
+
+```javascript
+// js/api/sales.js
+$.extend(api, {
+    sales: {
+        // 创建接口：前端 → 后端（乘以 1000）
+        createSales: {
+            url: "createSales.do",
+            convert: {
+                "sales.totalAmount": "multiply",           // 总金额
+                "salesItems[*].quantity": "multiply",      // 数量（数组）
+                "salesItems[*].unitPrice": "multiply"      // 单价（数组）
+            }
+        },
+
+        // 查询接口：后端 → 前端（除以 1000）
+        querySalesByOrderId: {
+            url: "querySalesByOrderId.do",
+            convert: {
+                "sales.totalAmount": "divide",
+                "salesItems[*].quantity": "divide",
+                "salesItems[*].unitPrice": "divide"
+            }
+        },
+
+        // 配送接口：更新到货量
+        tranSalesDeliveryItem: {
+            url: "tranSalesDeliveryItem.do",
+            convert: {
+                "salesDeliveryItems[*].trnum": "multiply"  // 到货量
+            }
+        }
+    }
+});
+```
+
+#### 自动转换机制
+
+`com.post` 方法会自动根据 API 配置进行数值转换：
+
+```javascript
+// 前端调用
+com.post(api.sales.createSales, {
+    "sales.totalAmount": 180000.00,     // 前端输入 18万元
+    "salesItems[0].quantity": 100.5,    // 前端输入 100.5 件
+    "salesItems[0].unitPrice": 1200.05  // 前端输入 1200.05 元
+}, function(res) {
+    console.log('订单创建成功');
+});
+
+// com.post 自动转换后实际发送到后端：
+// {
+//   "sales.totalAmount": 180000000,     // × 1000
+//   "salesItems[0].quantity": 100500,   // × 1000
+//   "salesItems[0].unitPrice": 1200050  // × 1000
+// }
+```
+
+#### 需要转换的字段类型
+
+| 字段名模式 | 说明 | 示例 |
+|-----------|------|------|
+| `*Amount` | 金额 | `totalAmount`, `paidAmount` |
+| `*Price` | 价格 | `unitPrice`, `totalPrice` |
+| `*Num` | 数量 | `orderNum`, `deliveryNum`, `trnum` |
+| `*Quantity` | 数量 | `totalQuantity` |
+| `*Area` | 面积 | `buildingArea`, `useArea` |
+
+**详细说明**: 参考 [API 接口文档 - 数值字段精度转换规则](../docs/API.md#数值字段精度转换规则)
+
+---
+
+### 4. 文件上传
 
 ```javascript
 // 文件上传配置
@@ -961,7 +1047,7 @@ $('#fileUpload').huploadify({
 });
 ```
 
-### 4. 导出功能
+### 5. 导出功能
 
 ```javascript
 // 导出 Excel

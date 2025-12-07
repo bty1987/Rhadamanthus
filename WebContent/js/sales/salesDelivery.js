@@ -7,10 +7,14 @@ $(function() {
         modals: {
             editModal: com.focusPage("#EditModal"),
             decorationInfo: com.focusPage("#decorationInfo"),
+            tranModal: com.focusPage("#TranModal"),
         },
         items: {
             protranTime: com.focusPage("#protranTime"),
             comment: com.focusPage("#comment"),
+            tranNum: com.focusPage("#tranNum"),
+            tranGoodsName: com.focusPage("#tranGoodsName"),
+            tranOrderNum: com.focusPage("#tranOrderNum"),
         },
         btns: {
             saveEditBtn: com.focusPage("#saveEditBtn"),
@@ -221,13 +225,18 @@ $(function() {
 
             $btnTran.click(function(e) {
 
-                var option = {};
-                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
-                com.post(api.sales.tranSalesDeliveryItem, option, function(e) {
+                // 显示商品信息
+                salesDelivery.items.tranGoodsName.text(v.salesItem.goods.name);
+                salesDelivery.items.tranOrderNum.text(v.salesItem.num);
 
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
+                // 清空输入框
+                salesDelivery.items.tranNum.val('');
+
+                // 保存当前配送项ID
+                salesDelivery.currentSdiid = v.sdiid;
+
+                // 弹出配送数量填写modal
+                salesDelivery.modals.tranModal.modal("show");
             });
 
             $btnCheck.click(function(e) {
@@ -532,6 +541,45 @@ $(function() {
         salesDelivery.items.protranTime.val("");
         salesDelivery.items.comment.val("");
         salesDelivery.modals.editModal.modal("hide");
+    });
+
+    // 配送数量确认按钮
+    com.focusPage("#confirmTranBtn").on('click', function() {
+
+        // 表单验证
+        if (com.validate('TranModal')) {
+            return false;
+        }
+
+        var tranNum = salesDelivery.items.tranNum.val();
+
+        // 验证配送数量
+        if (!tranNum || tranNum <= 0) {
+            com.showAlert(com.warning, "请输入有效的配送数量");
+            return false;
+        }
+
+        var option = {};
+        option["salesDeliveryItems[0].sdiid"] = salesDelivery.currentSdiid;
+        option["salesDeliveryItems[0].trnum"] = tranNum;
+
+        com.post(api.sales.tranSalesDeliveryItem, option, function(res) {
+
+            com.showAlert(com.info, "配送成功，到货量已更新");
+            salesDelivery.items.tranNum.val("");
+            salesDelivery.modals.tranModal.modal("hide");
+            searcher.doSearch();
+        }, function(res) {
+
+            com.showAlert(com.error, res.errorMsg || "配送失败");
+        });
+    });
+
+    // 配送数量取消按钮
+    com.focusPage("#cancelTranBtn").on('click', function() {
+
+        salesDelivery.items.tranNum.val("");
+        salesDelivery.modals.tranModal.modal("hide");
     });
     
     function checkAll() {

@@ -47,6 +47,8 @@ public class SalesDeliveryItemVO implements Serializable {
 
 	private Integer company;
 
+	private Long trnum;
+
 	public SalesDeliveryItemVO() {
 		super();
 	}
@@ -222,6 +224,14 @@ public class SalesDeliveryItemVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Long getTrnum() {
+		return trnum;
+	}
+
+	public void setTrnum(Long trnum) {
+		this.trnum = trnum;
 	}
 
 	public SalesDeliveryItemVO filter(List<Filter> filters) {

@@ -152,6 +152,16 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
 			salesDeliveryItemDao.flush();
 
+			// 更新关联的 SalesItem 的到货量 (trnum)
+			if (salesDeliveryItemVO.getTrnum() != null && salesDeliveryItemVO.getTrnum() > 0) {
+				SalesItemPO salesItemPO = salesDeliveryItemPO.getSalesItem();
+				if (salesItemPO != null) {
+					salesItemPO.setTrnum(salesDeliveryItemVO.getTrnum());
+					salesItemDao.update(salesItemPO);
+					salesItemDao.flush();
+				}
+			}
+
 			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
 
 			if (rights != null && rights.size() != 0) {
