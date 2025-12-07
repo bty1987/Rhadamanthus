@@ -18,6 +18,7 @@ import com.fanglin.approval.dao.ApproverDao;
 import com.fanglin.approval.po.ApproverPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.Paging;
 
 @Repository("approverDaoImpl")
@@ -42,7 +43,7 @@ public class ApproverDaoImpl extends DaoImpl<ApproverPO> implements ApproverDao 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ApproverPO> queryApproverByType(short type, int company) {
-		return session().createCriteria(ApproverPO.class).add(Restrictions.eq(ApproverPO.COLUMN_TYPE_STR, type)).createAlias("user", "user").add(Restrictions.eq("company", company)).list();
+		return session().createCriteria(ApproverPO.class).add(Restrictions.eq(ApproverPO.COLUMN_TYPE_STR, type)).createAlias("user", "user").add(Restrictions.eq("user.status", UserPO.STATUS_ONJOB_INT)).add(Restrictions.eq("company", company)).list();
 	}
 
 	@Override
@@ -60,17 +61,17 @@ public class ApproverDaoImpl extends DaoImpl<ApproverPO> implements ApproverDao 
 
 		query.alias("user", "user");
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if ("userId".equals(filter.getField())) {
-					query.add(query.getCriterion("user.userId", filter));
-				} else if ("senderName".equals(filter.getField())) {
-					query.add(query.getCriterion("user.userId", filter));
-				} else if ("type".equals(filter.getField())) {
-					query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
-				} else if ("approval-approvalTime".equals(filter.getField())) {
-					query.add(query.getCriterion("approval-approvalTime", filter));
-				}
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+			if ("userId".equals(filter.getField())) {
+				query.add(query.getCriterion("user.userId", filter));
+			} else if ("senderName".equals(filter.getField())) {
+				query.add(query.getCriterion("user.userId", filter));
+			} else if ("type".equals(filter.getField())) {
+				query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
+			} else if ("approval-approvalTime".equals(filter.getField())) {
+				query.add(query.getCriterion("approval-approvalTime", filter));
 			}
 		}
 	}

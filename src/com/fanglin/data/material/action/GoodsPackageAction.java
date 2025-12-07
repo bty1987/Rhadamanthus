@@ -58,6 +58,14 @@ public class GoodsPackageAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateGoodsPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateGoodsPackage() throws FLException {
+
+		goodsPackageService.updateGoodsPackage(goodsPackage);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteGoodsPackage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteGoodsPackage() throws FLException {
 

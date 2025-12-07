@@ -55,8 +55,6 @@ public class GoodsPackageServiceImpl implements GoodsPackageService {
 			throw new FLException(260004, "商品不存在");
 		}
 
-		long bid = goodsPO.getBid();
-
 		for (GoodsPackageVO goodsPackageVO : goodsPackageVOs) {
 
 			if (goodsPackageVO.getGoods() == null) continue;
@@ -70,10 +68,6 @@ public class GoodsPackageServiceImpl implements GoodsPackageService {
 
 			if (type == 1) {
 				throw new FLException(260043, "套餐归属商品不可为套餐");
-			}
-
-			if (bid != goodsGP.getBid()) {
-				throw new FLException(260044, "品牌不一致");
 			}
 
 			GoodsPackagePO goodsPackagePO = new GoodsPackagePO(new GoodsPO(), new ColorPO(), new FormatPO());

@@ -63,7 +63,7 @@ $(function() {
 
                 // 验证品牌是否一致
                 if (goodsPackage.packageBrand && val.brand != goodsPackage.packageBrand) {
-                    com.showAlert(com.warning, "品牌不一致!套餐品牌: " + goodsPackage.packageBrand);
+                    console.log(com.warning, "品牌不一致!套餐品牌: " + goodsPackage.packageBrand);
                 }
 
                 // 验证不能添加套餐类型商品
@@ -152,7 +152,7 @@ $(function() {
         name: "结算类型",
         prop: "ctype",
         clazz: "red",
-        dataset: contant.data().price.ctype.keys,
+        dataset: constant.data().price.ctype.keys,
     }, {
         fieId: "cvalue",
         name: "结算值",
@@ -237,7 +237,7 @@ $(function() {
         goodsPackage.items.category.val(item.goods.category || '');
         goodsPackage.items.brand.val(item.goods.brand || '');
         goodsPackage.items.num.val(item.num || '');
-        goodsPackage.items.selling.val(item.selling ? (item.selling / 100).toFixed(2) : '');
+        goodsPackage.items.selling.val(item.selling ? item.selling : '');
 
         // 填充结算类型和结算值
         goodsPackage.items.ctypeSelect.val(item.ctype);

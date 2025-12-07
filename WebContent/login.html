@@ -1,99 +1,100 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta charset="utf-8" />
-	<title>FIP</title>
-	<meta name="keywords" content="方林,装饰,ERP" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
-	<link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
-	
-	<script>
-		
-		var csses = "";
-		csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css" />' // basic styles 
-		csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css" />'
-		
-		csses += '<link rel="stylesheet" href="assets/ace/css/ace.css" />' // ace styles
-		
-		document.write(csses);
-	</script>
-	
+    <meta charset="utf-8" />
+    <title>FIP</title>
+    <meta name="keywords" content="方林,装饰,ERP" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+    
+    <script>
+        
+        var csses = "";
+        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css" />' // basic styles 
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css" />'
+        
+        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css" />' // ace styles
+        
+        document.write(csses);
+    </script>
+    
 </head>
 
 <body class="login-layout" >
-	<div class="main-container">
-		<div class="main-content">
-			<div class="row">
-				<div class="col-sm-12" style="position:absolute; top:18%;">
-					<div id="login-box" class="visible no-border" style="overflow: visible;">
-						<form class="form-horizontal" id="loginFrom">
-							<div align="center">
+    <div class="main-container">
+        <div class="main-content">
+            <div class="row">
+                <div class="col-sm-12" style="position:absolute; top:18%;">
+                    <div id="login-box" class="visible no-border" style="overflow: visible;">
+                        <form class="form-horizontal" id="loginFrom">
+                            <div align="center">
                                 <div>
-									<img src="./images/icon.png" style="width: 120px;">
-	  								<h3><span class="white">方林信息平台</span></h3>
-									<h5><span class="white">Fanglin Information Platform</span></h5>
-								</div>
-								<div>
+                                    <img src="./images/icon.png" style="width: 120px;">
+                                      <h3><span class="white">方林信息平台</span></h3>
+                                    <h5><span class="white">Fanglin Information Platform</span></h5>
+                                </div>
+                                <div>
                                     <input type="text" class="form-control" id="userId" placeholder="登陆ID">
                                     <span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
                                 </div>
-							</div>
-							<label id="errorMsg" class="block clearfix red center" style="height: 15px;"></label>
-							<div class="block clearfix">
-								<div class="col-md-3 block input-icon input-icon-right  no-padding-right">
-									<input type="text" class="form-control" id="userId" placeholder="登陆ID">
-									<span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-								</div>
-								<div class="col-md-3 block input-icon input-icon-right no-padding-right">
-									<input type="password" class="form-control" id="password" placeholder="密码">
-									<span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-								</div>
-							
-								<div class="col-md-2 block input-icon input-icon-right  no-padding-right">
-									<input type="text" class="form-control" id="nowCode" placeholder="验证码">
-									<span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-								</div>
-								<div class="col-md-1">
-									<img class="" src="images/verifyCode.jpg" id="Verify" style="cursor: hand;" alt="看不清,换一张" />
-								</div>						
-							
-								<div class="col-md-3 btn-toolbar btn-group">
-									<button type="button" class="btn btn-sm btn-primary col-md-6" onclick="" id="loginBtn">
-										<i class="icon-key"></i> 登陆
-									</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div id="backgroundImage">
+                            </div>
+                            <label id="errorMsg" class="block clearfix red center" style="height: 15px;"></label>
+                            <div class="block clearfix">
+                                <div class="col-md-3 block input-icon input-icon-right  no-padding-right">
+                                    <input type="text" class="form-control" id="userId" placeholder="登陆ID">
+                                    <span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
+                                </div>
+                                <div class="col-md-3 block input-icon input-icon-right no-padding-right">
+                                    <input type="password" class="form-control" id="password" placeholder="密码">
+                                    <span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
+                                </div>
+                            
+                                <div class="col-md-2 block input-icon input-icon-right  no-padding-right">
+                                    <input type="text" class="form-control" id="nowCode" placeholder="验证码">
+                                    <span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
+                                </div>
+                                <div class="col-md-1">
+                                    <img class="" src="images/verifyCode.jpg" id="Verify" style="cursor: hand;" alt="看不清,换一张" />
+                                </div>
+                            
+                                <div class="col-md-3 btn-toolbar btn-group">
+                                    <button type="button" class="btn btn-sm btn-primary col-md-6" onclick="" id="loginBtn">
+                                        <i class="icon-key"></i> 登陆
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="backgroundImage">
         <img src="./images/background.jpg" width="1920" height="1080" />
     </div>
-	
-	<script type="text/javascript">
-	
-		var jses = "";
-		
-		if(!window.jQuery){
-			jses += '<script src="assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
-		}
-	
-		jses += '<script src="assets/ace/js/bootstrap.min.js"><\/script>';
-		jses += '<script src="assets/ace/js/ace.js"><\/script>';
-		jses += '<script src="assets/ace/js/jquery.fullscreenBackground.min.js"><\/script>';
-		
-		jses += '<script src="js/com/config.js"><\/script>';
-		jses += '<script src="js/com/server.js"><\/script>';
-		jses += '<script src="js/com/api.js"><\/script>';
-		jses += '<script src="js/login.js"><\/script>';
-		
-		document.write(jses);
-	</script>
+    
+    <script src="assets/altogether/js/crypto.min.js"></script>
+    <script type="text/javascript">
+    
+        var jses = "";
+        
+        if(!window.jQuery){
+            jses += '<script src="assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
+        }
+    
+        jses += '<script src="assets/ace/js/bootstrap.min.js"><\/script>';
+        jses += '<script src="assets/ace/js/ace.js"><\/script>';
+        jses += '<script src="assets/ace/js/jquery.fullscreenBackground.min.js"><\/script>';
+        
+        jses += '<script src="js/com/config.js"><\/script>';
+        jses += '<script src="js/com/server.js"><\/script>';
+        jses += '<script src="js/com/api.js"><\/script>';
+        jses += '<script src="js/login.js"><\/script>';
+        
+        document.write(jses);
+    </script>
 
 </body>
 </html>

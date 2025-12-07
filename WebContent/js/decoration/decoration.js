@@ -2113,7 +2113,7 @@
 
             // 获取活动物品信息并填充到"已办理优惠明细"
             com.post(api.decoration.queryDecorationActivityItem, {
-                "decorationActivityItem.decoration.orderId": orderId
+                "decoration.orderId": orderId
             }, function(res) {
 
                 var discountDetail = "";

@@ -119,6 +119,8 @@ $(function() {
             var td29 = $('<td style="border: 1px solid;"></td>').text("商品备注").appendTo(tr8);
             var propertyArr = [];
             $.each(items, function(i, v) {
+                
+                if(v.psiid) return true;
 
                 propertyArr.push([v.goods.name, v.format.info, v.num, v.price, v.total, v.comment]);
 

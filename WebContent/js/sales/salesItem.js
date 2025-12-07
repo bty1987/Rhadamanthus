@@ -135,10 +135,6 @@ $(function() {
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                console.log(salesItem.dompany)
-                console.log(!isPackage)
-                console.log(!v.psiid)
-
                 // 套餐明细不显示编辑和删除按钮
                 if (salesItem.dompany != "pompany" && !v.psiid) {
                     if (salesItem.sales.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) {

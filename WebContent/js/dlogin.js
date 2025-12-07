@@ -36,7 +36,7 @@ jQuery(function (a) {
         return paramsObj;
     }
     
-    if(config.oss){
+    if(config.sso){
         $.ajax({
             url: config.server + '/registAuthCode.do',
             data: {"osstoken": config.server},
@@ -253,7 +253,7 @@ jQuery(function (a) {
 
         var userId = $("#userId").val();
         var password = $("#password").val();
-        var verifyCode = $("#nowCode").val();
+        var nowCode = $("#nowCode").val();
 
         // 第一步：请求登录挑战（nonce）
         $.ajax({
@@ -261,10 +261,6 @@ jQuery(function (a) {
             dataType: "json",
             url: config.communion + "requestLoginChallenge.do",
             data: { userId: userId },
-            xhrFields: {
-                withCredentials: true  // 跨域请求携带 cookie（保持 session 一致）
-            },
-            crossDomain: true,
             success: function (data) {
                 if (data.errorCode != 0) {
                     $("#errorMsg").html(data.errorMsg || "获取登录挑战失败");
@@ -273,27 +269,21 @@ jQuery(function (a) {
 
                 var nonce = data.nonce;
 
-                // 第二步：计算响应哈希
-                // 客户端：MD5(MD5(password) + nonce)
-                var passwordMD5 = getMD5(password);  // 第一次MD5
-                var responseHash = getMD5(passwordMD5 + nonce);  // 第二次MD5
+                var passwordMD5 = getMD5(password);
+                var responseHash = getMD5(passwordMD5 + nonce);
 
-                // 第三步：发送响应哈希进行登录
                 $.ajax({
                     type: "POST",
                     dataType: "json",
                     url: config.communion + "doLogin.do",
                     data: {
                         userId: userId,
-                        responseHash: responseHash,  // 使用响应哈希而非明文密码
-                        verifyCode: verifyCode,
+//                        responseHash: responseHash,
+                        password: passwordMD5,
+                        verifyCode: nowCode,
                         company: config.company,
                         securityCode: params.securityCode,
                     },
-                    xhrFields: {
-                        withCredentials: true  // 跨域请求携带 cookie（保持 session 一致）
-                    },
-                    crossDomain: true,
                     success: function (data) {
                         initPage();
 
@@ -319,12 +309,12 @@ jQuery(function (a) {
                         }
                     },
                     error: function () {
-                        $("#errorMsg").html("网络错误，请重试");
+                        $("#errorMsg").html("网络错误, 请重试");
                     }
                 });
             },
             error: function () {
-                $("#errorMsg").html("网络错误，请重试");
+                $("#errorMsg").html("网络错误, 请重试");
             }
         });
     }
@@ -335,16 +325,16 @@ jQuery(function (a) {
      */
     function getMD5(str) {
         // 方式1：使用 hex_md5 函数（如果已加载 utils.js）
-        if (typeof hex_md5 !== 'undefined') {
-            return hex_md5(str);
+        if (typeof flcry !== 'undefined') {
+            return flcry(str).toLocaleUpperCase();
         }
         // 方式2：使用 CryptoJS.MD5（如果已加载 crypto.min.js）
         else if (typeof CryptoJS !== 'undefined' && CryptoJS.MD5) {
             return CryptoJS.MD5(str).toString();
         }
-        // 方式3：如果都不可用，抛出错误
+        // 方式3：如果都不可用, 抛出错误
         else {
-            alert('MD5函数不可用，请确保加载了必要的加密库');
+            alert('MD5函数不可用, 请确保加载了必要的加密库');
             throw new Error('MD5 function not available');
         }
     }

@@ -272,7 +272,6 @@ public class GoodsServiceImpl implements GoodsService {
 		goodsPO.setAlias(goodsVO.getAlias());
 		goodsPO.setPinyin((String) pinyins.get(0));
 		goodsPO.setStatus(GoodsPO.STATUS_ENABLE_INT);
-		goodsPO.setType(GoodsPO.TYPE_GOODS_INT);
 		goodsPO.setCompany(company);
 
 		BrandPO brandPO = brandDao.get(goodsVO.getBid());
