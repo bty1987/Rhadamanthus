@@ -13,6 +13,7 @@
 - [通用响应格式](#通用响应格式)
 - [错误码说明](#错误码说明)
 - [分页查询规范](#分页查询规范)
+- [数值字段精度转换规则](#数值字段精度转换规则) ⭐ **重要**
 - [模块接口清单](#模块接口清单)
 - [接口示例](#接口示例)
 
@@ -375,6 +376,439 @@ com.post(api.decoration.pageDecoration, {
 1. 添加精确的查询条件，减少总记录数
 2. 使用时间范围或 ID 范围过滤
 3. 考虑使用游标分页代替页码分页
+
+---
+
+## 数值字段精度转换规则
+
+### ⚠️ 重要：后台数值存储规范
+
+本系统后台存储**金额**、**数量**等数值类型字段时，采用**整数存储**方式，精度为 **3 位小数**（即乘以 1000）。
+
+#### 存储规则
+
+| 前台显示值 | 后台存储值 | 转换倍数 | 说明 |
+|-----------|-----------|---------|------|
+| `1` | `1000` | × 1000 | 1 元 = 1000 分（数据库存储） |
+| `99.5` | `99500` | × 1000 | 99.5 元 = 99500 分 |
+| `0.001` | `1` | × 1000 | 0.001 元 = 1 分 |
+| `180000.00` | `180000000` | × 1000 | 18万元 = 180000000 分 |
+
+**核心原因**：
+- ✅ 避免浮点数精度丢失（如 `0.1 + 0.2 = 0.30000000000000004`）
+- ✅ 保证财务计算的精确性
+- ✅ 支持高精度的小数运算（精确到 0.001）
+
+---
+
+### 前端 API 配置规范
+
+#### 1. 在 API 定义中标记数值字段
+
+在 `js/api/[模块].js` 文件中定义接口时，需要通过 `convert` 参数标记需要转换的数值字段：
+
+```javascript
+// js/api/decoration.js
+$.extend(api, {
+    decoration: {
+        // 创建装饰订单
+        createDecoration: {
+            url: "createDecoration.do",
+            validate: {
+                "decoration.customerId": { required: true },
+                "decoration.totalAmount": { required: true }
+            },
+            convert: {
+                // 标记需要乘以 1000 的字段
+                "decoration.totalAmount": "multiply",      // 总金额
+                "decoration.paidAmount": "multiply",       // 已付金额
+                "decoration.unpaidAmount": "multiply",     // 未付金额
+                "decorationInfo.buildingArea": "multiply", // 建筑面积
+                "decorationInfo.useArea": "multiply"       // 使用面积
+            }
+        },
+
+        // 查询装饰订单（返回时需要除以 1000）
+        queryDecorationByOrderId: {
+            url: "queryDecorationByOrderId.do",
+            convert: {
+                // 标记需要除以 1000 的字段
+                "decoration.totalAmount": "divide",
+                "decoration.paidAmount": "divide",
+                "decoration.unpaidAmount": "divide"
+            }
+        }
+    }
+});
+```
+
+#### 2. 转换类型说明
+
+| 转换类型 | 说明 | 使用场景 | 公式 |
+|---------|------|---------|------|
+| `multiply` | 乘以 1000 | **请求时**（前端 → 后端） | `value × 1000` |
+| `divide` | 除以 1000 | **响应时**（后端 → 前端） | `value ÷ 1000` |
+
+#### 3. com.post 自动转换机制
+
+`com.post` 方法在发送请求和接收响应时，会自动根据 API 配置进行数值转换：
+
+```javascript
+// 前端调用示例
+com.post(api.decoration.createDecoration, {
+    "decoration.customerId": "C001",
+    "decoration.totalAmount": 180000.00,  // 前端输入：18万元
+    "decoration.paidAmount": 54000.00,    // 前端输入：5.4万元
+    "decorationInfo.buildingArea": 120.5  // 前端输入：120.5 平米
+}, function(res) {
+    console.log('订单创建成功');
+});
+
+// com.post 自动转换后实际发送的参数：
+// {
+//   "decoration.customerId": "C001",
+//   "decoration.totalAmount": 180000000,  // 自动 × 1000
+//   "decoration.paidAmount": 54000000,    // 自动 × 1000
+//   "decorationInfo.buildingArea": 120500 // 自动 × 1000
+// }
+```
+
+#### 4. 响应数据自动转换
+
+查询接口返回的数据也会自动转换：
+
+```javascript
+com.post(api.decoration.queryDecorationByOrderId, {
+    "decorationOrderId": "D202512010001"
+}, function(res) {
+    // 后端返回的原始数据：
+    // {
+    //   "decoration": {
+    //     "totalAmount": 180000000,
+    //     "paidAmount": 54000000
+    //   }
+    // }
+
+    // com.post 自动除以 1000 后的数据：
+    console.log(res.decoration.totalAmount);  // 180000.00
+    console.log(res.decoration.paidAmount);   // 54000.00
+});
+```
+
+---
+
+### 需要转换的字段类型
+
+以下字段类型**必须**在 API 配置中标记转换：
+
+#### 1. 金额类字段（单位：元）
+
+| 字段名模式 | 说明 | 示例 |
+|-----------|------|------|
+| `*Amount` | 金额 | `totalAmount`, `paidAmount`, `unpaidAmount` |
+| `*Price` | 价格 | `unitPrice`, `totalPrice`, `discountPrice` |
+| `*Money` | 费用 | `managementMoney`, `serviceMoney` |
+| `*Fee` | 费用 | `designFee`, `constructionFee` |
+| `*Cost` | 成本 | `materialCost`, `laborCost` |
+
+#### 2. 数量类字段
+
+| 字段名模式 | 说明 | 示例 |
+|-----------|------|------|
+| `*Num` | 数量 | `orderNum`, `deliveryNum`, `refundNum` |
+| `*Quantity` | 数量 | `totalQuantity`, `availableQuantity` |
+| `*Count` | 计数 | `productCount`, `itemCount` |
+
+#### 3. 面积类字段（单位：平方米）
+
+| 字段名模式 | 说明 | 示例 |
+|-----------|------|------|
+| `*Area` | 面积 | `buildingArea`, `useArea`, `constructionArea` |
+
+#### 4. 长度类字段（单位：米）
+
+| 字段名模式 | 说明 | 示例 |
+|-----------|------|------|
+| `*Length` | 长度 | `roomLength`, `wallLength` |
+| `*Width` | 宽度 | `roomWidth`, `doorWidth` |
+| `*Height` | 高度 | `floorHeight`, `ceilingHeight` |
+
+---
+
+### 完整示例
+
+#### 示例 1: 创建主材销售订单
+
+**API 配置** (`js/api/sales.js`):
+```javascript
+$.extend(api, {
+    sales: {
+        createSales: {
+            url: "createSales.do",
+            convert: {
+                // 销售订单金额字段
+                "sales.totalAmount": "multiply",
+                "sales.discountAmount": "multiply",
+                "sales.actualAmount": "multiply",
+
+                // 销售项明细（数组）
+                "salesItems[*].quantity": "multiply",      // 数量
+                "salesItems[*].unitPrice": "multiply",     // 单价
+                "salesItems[*].totalPrice": "multiply",    // 小计
+                "salesItems[*].discountPrice": "multiply"  // 折扣金额
+            }
+        },
+
+        querySalesByOrderId: {
+            url: "querySalesByOrderId.do",
+            convert: {
+                "sales.totalAmount": "divide",
+                "sales.actualAmount": "divide",
+                "salesItems[*].quantity": "divide",
+                "salesItems[*].unitPrice": "divide",
+                "salesItems[*].totalPrice": "divide"
+            }
+        }
+    }
+});
+```
+
+**前端调用**:
+```javascript
+// 创建订单
+com.post(api.sales.createSales, {
+    "sales.totalAmount": 12000.50,      // 前端输入
+    "sales.discountAmount": 500.00,
+    "sales.actualAmount": 11500.50,
+    "salesItems[0].quantity": 10,       // 10 件
+    "salesItems[0].unitPrice": 1200.05, // 单价 1200.05 元
+    "salesItems[0].totalPrice": 12000.50
+}, function(res) {
+    console.log('订单创建成功:', res.sales.salesOrderId);
+});
+
+// 实际发送到后端：
+// {
+//   "sales.totalAmount": 12000500,
+//   "sales.discountAmount": 500000,
+//   "sales.actualAmount": 11500500,
+//   "salesItems[0].quantity": 10000,
+//   "salesItems[0].unitPrice": 1200050,
+//   "salesItems[0].totalPrice": 12000500
+// }
+```
+
+#### 示例 2: 批量更新配送数量
+
+**API 配置** (`js/api/sales.js`):
+```javascript
+$.extend(api, {
+    sales: {
+        tranSalesDeliveryItem: {
+            url: "tranSalesDeliveryItem.do",
+            convert: {
+                "salesDeliveryItems[*].trnum": "multiply"  // 到货量
+            }
+        }
+    }
+});
+```
+
+**前端调用**:
+```javascript
+com.post(api.sales.tranSalesDeliveryItem, {
+    "salesDeliveryItems[0].sdiid": 12345,
+    "salesDeliveryItems[0].trnum": 100.5  // 前端输入 100.5 件
+}, function(res) {
+    com.showAlert(com.info, '配送成功，到货量已更新');
+});
+
+// 实际发送到后端：
+// {
+//   "salesDeliveryItems[0].sdiid": 12345,
+//   "salesDeliveryItems[0].trnum": 100500  // 自动 × 1000
+// }
+```
+
+---
+
+### 特殊情况处理
+
+#### 1. 数组字段转换
+
+使用 `[*]` 通配符匹配数组中的所有元素：
+
+```javascript
+convert: {
+    "items[*].amount": "multiply",      // 转换数组中所有元素的 amount
+    "items[*].details[*].price": "multiply"  // 嵌套数组也支持
+}
+```
+
+#### 2. 嵌套对象转换
+
+支持多层嵌套对象的字段转换：
+
+```javascript
+convert: {
+    "decoration.quotation.totalAmount": "multiply",
+    "decoration.quotation.items[*].price": "multiply"
+}
+```
+
+#### 3. 条件转换（暂不支持）
+
+如果某个字段只在特定条件下需要转换，请在业务代码中手动处理：
+
+```javascript
+var amount = $("#amount").val();
+if (needConvert) {
+    amount = amount * 1000;
+}
+```
+
+---
+
+### 调试技巧
+
+#### 1. 查看转换后的实际请求参数
+
+在浏览器控制台查看 Network 请求，或在 `com.post` 前后添加日志：
+
+```javascript
+var params = {
+    "decoration.totalAmount": 180000.00
+};
+
+console.log('转换前:', params);
+
+com.post(api.decoration.createDecoration, params, function(res) {
+    console.log('响应数据:', res);
+});
+```
+
+#### 2. 临时禁用转换（调试用）
+
+在 API 配置中注释掉 `convert` 字段：
+
+```javascript
+createDecoration: {
+    url: "createDecoration.do",
+    // convert: {  // 临时注释，调试用
+    //     "decoration.totalAmount": "multiply"
+    // }
+}
+```
+
+#### 3. 验证转换正确性
+
+```javascript
+// 测试用例
+var testAmount = 180000.00;
+var converted = testAmount * 1000;  // 180000000
+var restored = converted / 1000;    // 180000.00
+
+console.assert(restored === testAmount, '转换错误');
+```
+
+---
+
+### 常见错误
+
+#### ❌ 错误 1: 忘记配置 convert
+
+```javascript
+// 错误示例
+createDecoration: {
+    url: "createDecoration.do"
+    // 缺少 convert 配置，金额不会转换！
+}
+
+// 调用时会发送错误的值：
+com.post(api.decoration.createDecoration, {
+    "decoration.totalAmount": 180000.00  // 后端收到 180000，而非 180000000
+});
+```
+
+**后果**: 数据库存储 180000，实际应该是 180000000，导致金额错误 1000 倍！
+
+#### ❌ 错误 2: 转换方向错误
+
+```javascript
+// 错误示例：查询接口使用了 multiply
+queryDecoration: {
+    url: "queryDecoration.do",
+    convert: {
+        "decoration.totalAmount": "multiply"  // ❌ 应该用 "divide"
+    }
+}
+```
+
+**后果**: 后端返回 180000000，前端又乘以 1000 = 180000000000，显示错误！
+
+#### ❌ 错误 3: 字段路径错误
+
+```javascript
+convert: {
+    "totalAmount": "multiply"  // ❌ 缺少对象前缀
+}
+
+// 正确写法：
+convert: {
+    "decoration.totalAmount": "multiply"  // ✅ 完整路径
+}
+```
+
+---
+
+### 最佳实践
+
+#### ✅ 1. 统一配置规范
+
+在每个模块的 API 文件顶部添加注释，标记哪些字段需要转换：
+
+```javascript
+/**
+ * 装饰订单模块 API
+ *
+ * 需要转换的字段（精度 × 1000）：
+ * - totalAmount: 总金额
+ * - paidAmount: 已付金额
+ * - unpaidAmount: 未付金额
+ * - buildingArea: 建筑面积
+ * - useArea: 使用面积
+ */
+$.extend(api, {
+    decoration: {
+        // ...
+    }
+});
+```
+
+#### ✅ 2. 代码审查清单
+
+在提交代码前检查：
+- [ ] 所有金额字段都配置了 `convert`
+- [ ] 转换方向正确（请求用 `multiply`，响应用 `divide`）
+- [ ] 字段路径完整（包含对象前缀）
+- [ ] 数组字段使用了 `[*]` 通配符
+
+#### ✅ 3. 单元测试
+
+为关键接口编写测试用例：
+
+```javascript
+// 测试金额转换
+QUnit.test('创建订单 - 金额转换', function(assert) {
+    var params = {
+        "decoration.totalAmount": 180000.00
+    };
+
+    var converted = applyConvert(params, api.decoration.createDecoration.convert);
+
+    assert.equal(converted["decoration.totalAmount"], 180000000, '金额转换正确');
+});
+```
 
 ---
 

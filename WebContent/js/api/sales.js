@@ -149,7 +149,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesItems",
-                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue", "punum", "xgnum"]
+                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue", "punum", "xgnum", "trnum"]
             }]
         },
         querySalesItemBySids: {
@@ -157,7 +157,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesItems",
-                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue", "punum", "xgnum"]
+                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue", "punum", "xgnum", "trnum"]
             }]
         },
         addSalesItem: {
@@ -165,7 +165,7 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["sales.total", "salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num", "salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"],
+                args: ["sales.total", "salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num", "salesItem.trnum", "salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"],
                 query: [{
                     result: "salesItem",
                     args: ["disPrice", "discount", "num", "postDis", "price", "purchase", "rawCvalue", "selling", "total", "cvalue"]
@@ -668,7 +668,11 @@ $.extend(api, {
             }]
         },
         tranSalesDeliveryItem: {
-            url: "tranSalesDeliveryItem.do"
+            url: "tranSalesDeliveryItem.do",
+            type: "update",
+            tranargs: {
+                args: ["salesDeliveryItem.trnum"]
+            }
         },
         checkSalesDeliveryItem: {
             url: "checkSalesDeliveryItem.do"

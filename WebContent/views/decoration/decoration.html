@@ -359,12 +359,8 @@
                 <div class="modal-body">
                     <form class="form-horizontal" id = "violation">
 
-                        <div class="form-group">
-                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">审批人</label>
-                            <div class="col-sm-9">
-                                <div id="approveTerminalManSel" class="col-xs-10 col-sm-6 "></div>
-                            </div>
-                        </div>
+                        <!-- 其他表单内容容器（默认隐藏） -->
+                        <div id="refundFormDetailContainer" style="display: none;">
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">所属公司</label>
@@ -567,6 +563,15 @@
                             <label class="col-sm-3 control-label no-padding-right">退单原因</label>
                             <div class="col-sm-9">
                                 <textarea id="refundReason" class="col-xs-10 col-sm-6" rows="3" placeholder="请输入退单原因"></textarea>
+                            </div>
+                        </div>
+
+                        </div><!-- 结束 refundFormDetailContainer -->
+
+                        <div class="form-group">
+                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">审批人</label>
+                            <div class="col-sm-9">
+                                <div id="approveTerminalManSel" class="col-xs-10 col-sm-6 "></div>
                             </div>
                         </div>
 

@@ -1,0 +1,385 @@
+/**
+ * 登录页面样式
+ * FIP - 方林信息平台
+ * 创建时间: 2025-12-07
+ */
+
+/* ========== 全局样式 ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.login-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ========== 左侧区域 ========== */
+.login-left {
+    flex: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    color: white;
+}
+
+.login-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('../images/background.jpg') center/cover no-repeat;
+    opacity: 0.1;
+}
+
+/* 品牌区域 */
+.brand-area {
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    z-index: 2;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.brand-logo img {
+    width: 48px;
+    height: 48px;
+}
+
+.brand-text {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.brand-tag {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    display: inline-block;
+}
+
+/* 标语区域 */
+.slogan-area {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    margin-top: -100px;
+}
+
+.slogan-title {
+    font-size: 42px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.slogan-subtitle {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* 展示图片 */
+.showcase-image {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 600px;
+    z-index: 1;
+}
+
+.showcase-image img {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+}
+
+/* ========== 右侧区域 ========== */
+.login-right {
+    width: 520px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    position: relative;
+}
+
+/* 登录标题 */
+.login-header {
+    margin-bottom: 40px;
+}
+
+.login-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.login-subtitle {
+    font-size: 14px;
+    color: #999;
+}
+
+/* ========== Tab 切换 ========== */
+.login-tabs {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #f0f0f0;
+    justify-content: center;
+}
+
+.login-tab {
+    font-size: 16px;
+    color: #666;
+    padding: 10px 0;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.login-tab.active {
+    color: #667eea;
+    font-weight: 500;
+}
+
+.login-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #667eea;
+}
+
+/* ========== 表单区域 ========== */
+.login-form-area {
+    position: relative;
+}
+
+.login-form-panel {
+    display: none;
+}
+
+.login-form-panel.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.form-input-wrapper {
+    position: relative;
+}
+
+.form-input {
+    width: 100%;
+    height: 44px;
+    padding: 0 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 16px;
+}
+
+.form-input.has-icon {
+    padding-left: 45px;
+}
+
+/* 验证码输入 */
+.verify-group {
+    display: flex;
+    gap: 12px;
+}
+
+.verify-input {
+    flex: 1;
+}
+
+.verify-code {
+    width: 120px;
+    height: 44px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+}
+
+.verify-code:hover {
+    opacity: 0.8;
+}
+
+/* 密码切换按钮 */
+.password-switch {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+    font-size: 16px;
+}
+
+/* 错误提示 */
+.error-msg {
+    color: #f5222d;
+    font-size: 12px;
+    margin-top: 8px;
+    min-height: 18px;
+}
+
+/* ========== 按钮样式 ========== */
+.btn-login {
+    width: 100%;
+    height: 46px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.btn-experience {
+    width: 100%;
+    height: 46px;
+    background: white;
+    color: #667eea;
+    border: 1px solid #667eea;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 15px;
+}
+
+.btn-experience:hover {
+    background: #f5f7ff;
+}
+
+/* ========== 扫码登录区域 ========== */
+.qrcode-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.qrcode-box {
+    width: 220px;
+    height: 220px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    background: #fafafa;
+}
+
+.qrcode-box img {
+    width: 200px;
+    height: 200px;
+}
+
+.qrcode-tip {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+}
+
+.qrcode-refresh {
+    color: #667eea;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* ========== 底部信息 ========== */
+.login-footer {
+    position: absolute;
+    bottom: 30px;
+    left: 60px;
+    right: 60px;
+    text-align: center;
+    font-size: 12px;
+    color: #999;
+}
+
+/* ========== 工具类 ========== */
+.hide {
+    display: none !important;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 1024px) {
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        width: 100%;
+    }
+}

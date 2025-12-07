@@ -2,99 +2,172 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>FIP</title>
+    <title>FIP - 方林信息平台</title>
     <meta name="keywords" content="方林,装饰,ERP" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
-    
+    <link rel="stylesheet" href="css/login.css">
+
     <script>
-        
         var csses = "";
-        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css" />' // basic styles 
         csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css" />'
-        
-        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css" />' // ace styles
-        
         document.write(csses);
     </script>
-    
 </head>
 
-<body class="login-layout" >
-    <div class="main-container">
-        <div class="main-content">
-            <div class="row">
-                <div class="col-sm-12" style="position:absolute; top:18%;">
-                    <div id="login-box" class="visible no-border" style="overflow: visible;">
-                        <form class="form-horizontal" id="loginFrom">
-                            <div align="center">
-                                <div>
-                                    <img src="./images/icon.png" style="width: 120px;">
-                                      <h3><span class="white">方林信息平台</span></h3>
-                                    <h5><span class="white">Fanglin Information Platform</span></h5>
-                                </div>
-                                <div>
-                                    <input type="text" class="form-control" id="userId" placeholder="登陆ID">
-                                    <span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-                                </div>
-                            </div>
-                            <label id="errorMsg" class="block clearfix red center" style="height: 15px;"></label>
-                            <div class="block clearfix">
-                                <div class="col-md-3 block input-icon input-icon-right  no-padding-right">
-                                    <input type="text" class="form-control" id="userId" placeholder="登陆ID">
-                                    <span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-                                </div>
-                                <div class="col-md-3 block input-icon input-icon-right no-padding-right">
-                                    <input type="password" class="form-control" id="password" placeholder="密码">
-                                    <span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-                                </div>
-                            
-                                <div class="col-md-2 block input-icon input-icon-right  no-padding-right">
-                                    <input type="text" class="form-control" id="nowCode" placeholder="验证码">
-                                    <span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-                                </div>
-                                <div class="col-md-1">
-                                    <img class="" src="images/verifyCode.jpg" id="Verify" style="cursor: hand;" alt="看不清,换一张" />
-                                </div>
-                            
-                                <div class="col-md-3 btn-toolbar btn-group">
-                                    <button type="button" class="btn btn-sm btn-primary col-md-6" onclick="" id="loginBtn">
-                                        <i class="icon-key"></i> 登陆
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+<body>
+    <div class="login-container">
+        <!-- 左侧区域 -->
+        <div class="login-left">
+            <!-- 品牌区域 -->
+            <div class="brand-area">
+                <div class="brand-logo">
+                    <img src="./images/icon.png" alt="方林集团">
+                    <div class="brand-text">方林集团</div>
+                </div>
+            </div>
+
+            <!-- 标语区域 -->
+            <div class="slogan-area">
+                <div class="slogan-title">立于一面极于九，专一域而驭八方</div>
+                <div class="slogan-subtitle">业内首推"行业标杆工艺不达标赔无条"的重锤承诺</div>
+            </div>
+
+            <!-- 展示图片 -->
+            <div class="showcase-image">
+                <img src="./images/showcase.png" alt="装饰展示" onerror="this.style.display='none'">
+            </div>
+        </div>
+
+        <!-- 右侧区域 -->
+        <div class="login-right">
+            <!-- 登录标题 -->
+            <div class="login-header">
+                <div class="login-title">欢迎登录</div>
+                <div class="login-subtitle">使用方林账号，开启管理化工作时代。</div>
+            </div>
+
+            <!-- Tab 切换 -->
+            <div class="login-tabs">
+                <div class="login-tab" data-tab="qrcode">钉钉扫码</div>
+                <div class="login-tab" data-tab="wechat">微信扫码</div>
+                <div class="login-tab active" data-tab="password">密码登录</div>
+            </div>
+
+            <!-- 登录表单区域 -->
+            <div class="login-form-area">
+                <!-- 钉钉扫码登录面板 -->
+                <div class="login-form-panel" id="qrcodePanel">
+                    <div class="qrcode-area">
+                        <div class="qrcode-box" id="qrcode">
+                            <img src="./images/verifyCode.jpg" alt="钉钉二维码" class="hide">
+                        </div>
+                        <div class="qrcode-tip">
+                            请使用<strong>钉钉</strong>扫码登录
+                        </div>
+                        <div class="qrcode-refresh hide" id="qrcodeRefresh">
+                            二维码已失效<br>
+                            <span style="cursor:pointer; color:#667eea;">点击刷新</span>
+                        </div>
                     </div>
                 </div>
+
+                <!-- 微信扫码登录面板 -->
+                <div class="login-form-panel" id="wechatPanel">
+                    <div class="qrcode-area">
+                        <div class="qrcode-box" id="wxcode">
+                            <img src="./images/verifyCode.jpg" alt="微信二维码" class="hide">
+                        </div>
+                        <div class="qrcode-tip">
+                            请使用<strong>微信</strong>扫码登录
+                        </div>
+                        <div class="qrcode-refresh hide" id="wechatRefresh">
+                            二维码已失效<br>
+                            <span style="cursor:pointer; color:#667eea;">点击刷新</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 密码登录面板 -->
+                <div class="login-form-panel active" id="passwordPanel">
+                    <form id="loginForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <div class="form-input-wrapper">
+                                <i class="icon-user form-input-icon"></i>
+                                <input type="text"
+                                       class="form-input has-icon"
+                                       id="userId"
+                                       name="userId"
+                                       placeholder="请输入工号/手机号/邮箱"
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-input-wrapper">
+                                <i class="icon-lock form-input-icon"></i>
+                                <input type="password"
+                                       class="form-input has-icon"
+                                       id="password"
+                                       name="password"
+                                       placeholder="请输入登录密码"
+                                       autocomplete="off">
+                                <i class="icon-eye-slash password-switch" id="passwordToggle"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="verify-group">
+                                <div class="verify-input">
+                                    <input type="text"
+                                           class="form-input"
+                                           id="nowCode"
+                                           name="nowCode"
+                                           placeholder="请输入验证码"
+                                           autocomplete="off">
+                                </div>
+                                <img class="verify-code"
+                                     src="images/verifyCode.jpg"
+                                     id="Verify"
+                                     alt="验证码">
+                            </div>
+                        </div>
+
+                        <div class="error-msg" id="errorMsg"></div>
+
+                        <button type="button" class="btn-login" id="loginBtn">
+                            <i class="icon-key"></i> 登录账号
+                        </button>
+
+                        <button type="button" class="btn-experience" id="experienceBtn">
+                            <i class="icon-rocket"></i> 立即体验
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 底部信息 -->
+            <div class="login-footer">
+                辽宁方林信息化服务有限公司©2014-2025 | 辽ICP备15003048号-4
             </div>
         </div>
     </div>
-    
-    <div id="backgroundImage">
-        <img src="./images/background.jpg" width="1920" height="1080" />
-    </div>
-    
+
     <script src="assets/altogether/js/crypto.min.js"></script>
     <script type="text/javascript">
-    
         var jses = "";
-        
+
         if(!window.jQuery){
             jses += '<script src="assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
         }
-    
-        jses += '<script src="assets/ace/js/bootstrap.min.js"><\/script>';
-        jses += '<script src="assets/ace/js/ace.js"><\/script>';
-        jses += '<script src="assets/ace/js/jquery.fullscreenBackground.min.js"><\/script>';
-        
+
         jses += '<script src="js/com/config.js"><\/script>';
         jses += '<script src="js/com/server.js"><\/script>';
         jses += '<script src="js/com/api.js"><\/script>';
         jses += '<script src="js/login.js"><\/script>';
-        
+
         document.write(jses);
     </script>
-
 </body>
 </html>

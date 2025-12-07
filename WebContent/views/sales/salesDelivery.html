@@ -118,14 +118,14 @@
                                 <span id="supervisor" style="line-height: 30px"></span>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="col-sm-4 control-label no-padding-right">类型</label>
                             <div class="col-sm-8">
                                 <span id="typeness" style="line-height: 30px"></span>
                             </div>
                         </div>
-                                                
+
                         <div class="form-group">
                             <label class="col-sm-4 control-label no-padding-right">工程状态</label>
                             <div class="col-sm-8">
@@ -136,6 +136,62 @@
                 </div>
                 <div class="modal-footer" style="text-align: center">
                     <button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 配送数量填写弹窗 -->
+    <div class="modal fade" id="TranModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">配送数量确认</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">商品名称</label>
+                            <div class="col-sm-9">
+                                <span id="tranGoodsName" style="line-height: 34px; font-weight: bold; color: #428bca;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">订单数量</label>
+                            <div class="col-sm-9">
+                                <span id="tranOrderNum" style="line-height: 34px; font-weight: bold; color: #5cb85c;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="tranNum">
+                                <i class="icon-asterisk red smaller-70"></i> 配送数量
+                            </label>
+                            <div class="col-sm-9">
+                                <div class="input-group col-xs-10 col-sm-7 no-padding" data-for="tranNum"
+                                     data-toggle="popover" data-trigger='manual'>
+                                    <input class="form-control v_required v_integer"
+                                           id="tranNum"
+                                           type="number"
+                                           min="0"
+                                           placeholder="请输入本次配送数量">
+                                </div>
+                                <span class="help-inline col-xs-12 col-sm-7" style="color: #999; font-size: 12px;">
+                                    请填写本次实际配送到达的数量
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="confirmTranBtn" class="btn btn-success">
+                        <i class="icon-ok"></i> 确认配送
+                    </button>
+                    <button type="button" id="cancelTranBtn" class="btn btn-default" data-dismiss="modal">
+                        取消
+                    </button>
                 </div>
             </div>
         </div>

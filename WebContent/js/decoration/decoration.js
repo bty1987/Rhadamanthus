@@ -660,6 +660,18 @@
 
         com.focusPage("#violation").append($div);
 
+        // 绑定钉钉审批复选框事件，控制表单详情的显示/隐藏
+        com.focusPage("#dingApprove").on("change", function() {
+            var $detailContainer = com.focusPage("#refundFormDetailContainer");
+            if ($(this).is(":checked")) {
+                // 勾选时显示详情容器
+                $detailContainer.slideDown(300);
+            } else {
+                // 取消勾选时隐藏详情容器
+                $detailContainer.slideUp(300);
+            }
+        });
+
         var $div = $('<div class="form-group"></div>');
         $('<label for="wechatApprove" class="col-sm-3 control-label no-padding-right"></label>').html("企业微信同步").appendTo($div);
         $('<div class="col-sm-9"></div>').append($('<input class="ace ace-switch ace-switch-5" type="checkbox" id="wechatApprove" disabled="disabled"><span class="lbl status-lbl"></span>')).appendTo($div);
@@ -1124,7 +1136,6 @@
                     btnTerminal1.click(function() {
 
                         terminalOrder1(v.orderId, v.status, v.precontractPrice);
-                        approvalUtils.initqueryApprovalUser("approveTerminalManSel", 19);
                     });
 
                     btnResign.click(function() {
@@ -2111,40 +2122,160 @@
 
             params.decoration.orderId = orderId;
 
-            // 获取活动物品信息并填充到"已办理优惠明细"
-            com.post(api.decoration.queryDecorationActivityItem, {
+            // 第一步：查询装饰订单完整信息
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": orderId
             }, function(res) {
 
-                var discountDetail = "";
+                var decoration = res.decoration;
 
-                if (res.decorationActivityItems && res.decorationActivityItems.length > 0) {
-                    // 拼接活动物品信息
-                    $.each(res.decorationActivityItems, function(index, item) {
-                        if (discountDetail != "") {
-                            discountDetail += "；";
-                        }
-                        // 格式：物品名称 x 数量 (金额元)
-                        discountDetail += item.activity.name;
-                        if (item.num && item.num > 0) {
-                            discountDetail += " x " + item.num;
-                        }
-                        if (item.money && item.money > 0) {
-                            discountDetail += " (" + item.money + "元)";
-                        }
-                    });
+                if (!decoration) {
+                    com.showAlert(com.error, "装修单不存在");
+                    return false;
                 }
 
-                // 填充到输入框
-                com.focusPage("#refundDiscountDetail").val(discountDetail);
+                // 赋值基本信息到 span 字段
+                com.focusPage("#refundOrderNo").text(decoration.orderId || "");
+
+                // 楼盘地址
+                var buildingAddress = "";
+                if (decoration.house && decoration.house.village) {
+                    buildingAddress = decoration.house.village.name;
+                    if (decoration.house.houseNumber) {
+                        buildingAddress += " " + decoration.house.houseNumber;
+                    }
+                }
+                com.focusPage("#refundBuildingAddress").text(buildingAddress);
+
+                // 签单日期（根据状态判断）
+                var signDate = "";
+                if (decoration.status == constant.decoration().decoration.STATUS_PROSIGN_INT) {
+                    signDate = decoration.precontractTime;
+                } else if (decoration.contractTime) {
+                    signDate = decoration.contractTime;
+                }
+                com.focusPage("#refundSignDate").text(signDate);
+
+                // 预签时间
+                var preSignTime = decoration.precontractTime;
+                com.focusPage("#refundPreSignTime").text(preSignTime);
+
+                // 预签额
+                com.focusPage("#refundPreSignAmount").text(decoration.precontractPrice || "");
+
+                // 签单额
+                com.focusPage("#refundSignAmount").text(decoration.orderTotalPrice || "");
+
+                // 实收额
+                com.focusPage("#refundReceivedAmount").text(decoration.factPrice || "");
+
+                // 订单类型
+                var orderType = "";
+                if (decoration.typeness !== undefined && constant.decoration().decoration.typeness.keys) {
+                    orderType = constant.decoration().decoration.typeness.keys[decoration.typeness] || "";
+                }
+                com.focusPage("#refundOrderType").text(orderType);
+
+                // 订单状态
+                var orderStatus = "";
+                if (decoration.status !== undefined && constant.decoration().decoration.status.keys) {
+                    orderStatus = constant.decoration().decoration.status.keys[decoration.status] || "";
+                }
+                com.focusPage("#refundOrderStatus").text(orderStatus);
+
+                // 设计师
+                var designerName = "";
+                if (decoration.designer && decoration.designer.currentName) {
+                    designerName = decoration.designer.currentName;
+                }
+                com.focusPage("#refundDesigner").text(designerName);
+
+                // 业务员
+                var salesmanName = "";
+                if (decoration.salesman && decoration.salesman.currentName) {
+                    salesmanName = decoration.salesman.currentName;
+                }
+                com.focusPage("#refundSalesman").text(salesmanName);
+
+                // 监理姓名
+                var supervisorName = "";
+                if (decoration.supervisor && decoration.supervisor.currentName) {
+                    supervisorName = decoration.supervisor.currentName;
+                }
+                com.focusPage("#refundSupervisor").text(supervisorName);
+
+                // 开户行银行、账号、持卡人（从客户信息中获取）
+                var bankName = "";
+                var bankAccount = "";
+                var cardHolder = "";
+                if (decoration.customer) {
+                    bankName = decoration.customer.bankName || "";
+                    bankAccount = decoration.customer.bankAccount || "";
+                    cardHolder = decoration.customer.name || "";
+                }
+                com.focusPage("#refundBankName").text(bankName);
+                com.focusPage("#refundBankAccount").text(bankAccount);
+                com.focusPage("#refundCardHolder").text(cardHolder);
+
+                // 施工进度（如果有施工信息）
+                var constructionProgress = "";
+                if (decoration.construction && decoration.construction.progress) {
+                    constructionProgress = decoration.construction.progress;
+                }
+                com.focusPage("#refundConstructionProgress").text(constructionProgress);
+
+                // 第二步：获取活动物品信息并填充到"已办理优惠明细"
+                com.post(api.decoration.queryDecorationActivityItem, {
+                    "decoration.orderId": orderId
+                }, function(res) {
+
+                    var discountDetail = "";
+                    var activityNames = "";  // 参加活动名称列表
+
+                    if (res.decorationActivityItems && res.decorationActivityItems.length > 0) {
+                        // 拼接活动物品信息
+                        $.each(res.decorationActivityItems, function(index, item) {
+                            if (discountDetail != "") {
+                                discountDetail += "；";
+                            }
+                            // 格式：物品名称 x 数量 (金额元)
+                            discountDetail += item.activity.name;
+
+                            // 收集活动名称
+                            if (activityNames.indexOf(item.activity.name) === -1) {
+                                if (activityNames != "") activityNames += "、";
+                                activityNames += item.activity.name;
+                            }
+
+                            if (item.num && item.num > 0) {
+                                discountDetail += " x " + item.num;
+                            }
+                            if (item.money && item.money > 0) {
+                                discountDetail += " (" + item.money + "元)";
+                            }
+                        });
+                    }
+
+                    // 填充到输入框
+                    com.focusPage("#refundDiscountDetail").val(discountDetail);
+
+                    // 填充参加活动
+                    com.focusPage("#refundActivity").text(activityNames);
+
+                }, function(error) {
+                    // 即使获取失败也继续显示模态框
+                    console.log("获取活动物品信息失败", error);
+                    com.focusPage("#refundDiscountDetail").val("");
+                    com.focusPage("#refundActivity").text("");
+                });
+
+                // 第三步：显示模态框
+                order.refundContractModal.modal("show");
 
             }, function(error) {
-                // 即使获取失败也继续显示模态框
-                console.log("获取活动物品信息失败", error);
-                com.focusPage("#refundDiscountDetail").val("");
+                com.showAlert(com.error, "查询订单信息失败: " + (error.errorMsg || ""));
+                console.log("查询订单信息失败", error);
             });
-
-            order.refundContractModal.modal("show");
 
         }
 

@@ -46,6 +46,8 @@ public class SalesItemVO implements Serializable {
 
 	private Long xgnum;
 
+	private Long trnum;
+
 	private Long total;
 
 	private String comment;
@@ -187,6 +189,14 @@ public class SalesItemVO implements Serializable {
 
 	public void setXgnum(Long xgnum) {
 		this.xgnum = xgnum;
+	}
+
+	public Long getTrnum() {
+		return trnum;
+	}
+
+	public void setTrnum(Long trnum) {
+		this.trnum = trnum;
 	}
 
 	public Long getTotal() {
