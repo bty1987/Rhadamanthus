@@ -451,6 +451,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			Map<Long, List<SalesItemPO>> brandItemsMap = new HashMap<Long, List<SalesItemPO>>();
 			for (SalesItemPO salesItemPO : salesItemPOs) {
 
+				if (salesItemPO.getPsiid() == 0 && salesItemPO.getType() == SalesItemPO.TYPE_PACKAGE_INT) continue;
+
 				long bid = salesItemPO.getGoods().getBid();
 
 				// 将销售项添加到对应品牌的列表中

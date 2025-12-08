@@ -405,6 +405,13 @@ public class SalesServiceImpl implements SalesService {
 				salesItemGP.setPsiid(salesItemPO.getSiid()); // 关联父销售项
 				salesItemGP.setType(SalesItemPO.TYPE_PACKAGE_INT); // 标记为套餐明细
 
+				salesItemGP.setPurchase(goodsPackagePO.getPurchase());
+				salesItemGP.setSelling(goodsPackagePO.getSelling());
+				salesItemGP.setDiscount(1000);
+				salesItemGP.setDisPrice(goodsPackagePO.getSelling());
+				salesItemGP.setPostDis(1000);
+				salesItemGP.setPrice(goodsPackagePO.getSelling());
+
 				long num = Arith.mul(salesItemPO.getNum(), goodsPackagePO.getNum());
 
 				salesItemGP.setInitnum(goodsPackagePO.getNum());

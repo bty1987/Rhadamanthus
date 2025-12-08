@@ -17,4 +17,6 @@ public interface SalesItemDao extends Dao<SalesItemPO> {
 
 	public long amountSalesItem(long sid);
 
+	public int deleteSalesItemByPsiid(long psiid);
+
 }

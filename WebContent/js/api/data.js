@@ -992,7 +992,7 @@ $.extend(api, {
 
         pageGoodsRecord: {
             url: "pageGoodsRecord.do"
-        },      
+        },
         addGoodsRecord: {
             url: "addGoodsRecord.do"
         },
@@ -1002,24 +1002,24 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "goodsPackages",
-                args: ["num", "purchase", "selling", "pieceNum", "confine"]
+                args: ["num", "purchase", "selling", "pieceNum", "confine", "cvalue"]
             }, {
                 result: "goodsPackages-goods",
-                args: ["purchase", "selling", "pieceNum", "confine"]
+                args: ["purchase", "selling", "pieceNum", "confine", "cvalue"]
             }]
         },
         addGoodsPackage: {
             url: "addGoodsPackage.do",
             type: "update",
             tranargs: {
-                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine"]
+                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine", "goodsPackages.cvalue", ]
             }
         },
         updateGoodsPackage: {
             url: "updateGoodsPackage.do",
             type: "update",
             tranargs: {
-                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine"]
+                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine", "goodsPackages.cvalue", ]
             }
         },
         deleteGoodsPackage: {

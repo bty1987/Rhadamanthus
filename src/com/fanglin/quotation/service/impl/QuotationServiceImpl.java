@@ -322,7 +322,7 @@ public class QuotationServiceImpl implements QuotationService {
 		SystemConfigPO cmprehConfigPO = systemConfigDao.querySystemConfig("QUOTATION_CMPREH_CONFIG", company);
 
 		if (cmprehConfigPO != null) {
-			quotationFunctionAreaDao.save(new QuotationFunctionAreaPO(quotationPO, "综合项目", 9998, QuotationFunctionAreaPO.TYPE_CMPREH_INT, index));
+			quotationFunctionAreaDao.save(new QuotationFunctionAreaPO(quotationPO, "综合项目", 9998, decorationPO.getType() != DecorationPO.TYPE_INCLUSIVE_INT ? QuotationFunctionAreaPO.TYPE_CMPREH_INT : QuotationFunctionAreaPO.TYPE_NOT_COUNT_INT, index));
 		}
 
 		QuotationFunctionAreaPO autogeneration = new QuotationFunctionAreaPO(quotationPO, "生成项目", 9999, QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT, index);
