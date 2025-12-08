@@ -58,4 +58,13 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 		return sum.longValue();
 	}
 
+	@Override
+	public int deleteSalesItemByPsiid(long psiid) {
+
+		String sql = "delete from sales.salesitem where psiid = :psiid";
+		session().createSQLQuery(sql).setLong("psiid", psiid).executeUpdate();
+
+		return 0;
+	}
+
 }

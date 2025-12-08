@@ -165,7 +165,8 @@ jQuery(function() {
         });
 
         // 添加删除按钮
-        $h4.append($delete);
+        if (v.psiid == null || v.psiid == 0)
+            $h4.append($delete);
 
         // 只有普通商品才添加编辑相关按钮
         if (!isPackageOrChild) {
@@ -181,11 +182,11 @@ jQuery(function() {
         // 判断商品类型
         var goodsType = '';
         if (v.type == 1 || v.psiid != null) {
-            goodsType = '套餐明细';
+            goodsType = '套餐';
         } else if (v.goods.type == constant.data().goods.TYPE_SUIT_INT) {
             goodsType = '套餐';
         } else {
-            goodsType = '普通商品';
+            goodsType = '商品';
         }
 
         var propertyArr = [['品类: ', v.goods.category], ['品牌: ', v.goods.brand], ['单位: ', v.goods.measurementUnit], ['颜色: ', v.color.name], ['规格: ', v.format.info], ['类型: ', goodsType, 'orange'], ['售价: ', v.selling, 'blue'], ['折扣价: ', v.disPrice, 'blue'], ['折让价: ', v.price, 'blue'], ['数量: ', v.num, 'red num'], ['总价: ', v.total, 'blue total'], ['备注: ', v.comment]];
@@ -355,14 +356,14 @@ jQuery(function() {
             com.showAlert(com.warning, "折扣价低于控价");
             return false;
         }
-        
+
         if (price.ctype == 1 && price.confine != 0 && $disPrice > price.confine) {
-            
+
             setTimeout(function() {
 
                 com.closeMask(mask, popup);
             }, 800);
-            
+
             com.showAlert(com.warning, "折扣价高于限价");
             return false;
         }

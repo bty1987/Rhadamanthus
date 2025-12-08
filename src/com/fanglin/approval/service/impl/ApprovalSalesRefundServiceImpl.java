@@ -205,6 +205,8 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
+		if (salesPO.getAmount() < approvalSalesRefundVO.getRefund()) throw new FLException(370003, "销售总额不足");
+
 		// 判断销售单款项积分以及领取活动物品积分比较结果
 		salesActivityService.checkSalesActivity(sid, approvalSalesRefundVO.getRefund());
 
@@ -264,12 +266,16 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			ApprovalSalesRefundItemPO approvalSalesRefundItemPO = new ApprovalSalesRefundItemPO();
 
 			approvalSalesRefundItemPO.setNum(0);// 退货数量
-			approvalSalesRefundItemPO.setTotal(0);// 退货金额
+			approvalSalesRefundItemPO.setTotal(approvalSalesRefundVO.getRefund());// 退货金额
 			approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
 			approvalSalesRefundItemPO.setSid(sid);
 			approvalSalesRefundItemPO.setSalesItem(salesItemPO);// 销售单型号信息类
 
 			approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
+
+			salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundVO.getRefund()));
+
+			salesItemDao.update(salesItemPO);
 		}
 
 		if (code != null && !"".equals(code)) {
