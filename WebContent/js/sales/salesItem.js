@@ -109,7 +109,7 @@ $(function() {
 
                 var namePrefix = (isPackage && v.psiid) ? '<i class="icon-level-up fa-rotate-90 grey"></i> ' : '';
                 var $small = $('<small></small>').addClass('blue').html(namePrefix + v.goods.name + ' ' + v.goods.no);
-                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid).attr('data-type', v.type || 0);
+                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right').attr('data-num', v.num).attr('data-selling', v.price).attr('data-siid', v.siid).attr('data-type', v.type || 0).attr('data-psiid', v.psiid);
 
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                 var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
@@ -564,6 +564,7 @@ $(function() {
 
             var that = $(this);
             var siid = that.attr('data-siid');
+            var psiid = that.attr('data-psiid');
             var selling = parseFloat(that.attr('selling'));
             var num = parseFloat(that.val());
             var max = parseFloat(that.attr('max'));
@@ -574,6 +575,7 @@ $(function() {
                 if (max >= num && num > 0) {
                     salesItem.options["approvalSalesRefundItem[" + index + "].sid"] = salesItem.sid;
                     salesItem.options["approvalSalesRefundItem[" + index + "].salesItem.siid"] = siid;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].salesItem.psiid"] = psiid;
                     salesItem.options["approvalSalesRefundItem[" + index + "].num"] = num;
                     salesItem.options["approvalSalesRefundItem[" + index + "].total"] = _total;
                     index += 1;
@@ -596,6 +598,7 @@ $(function() {
                 if (max > 0) {
                     salesItem.options["approvalSalesRefundItem[" + index + "].sid"] = salesItem.sid;
                     salesItem.options["approvalSalesRefundItem[" + index + "].salesItem.siid"] = siid;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].salesItem.psiid"] = psiid;
                     salesItem.options["approvalSalesRefundItem[" + index + "].num"] = max;
                     salesItem.options["approvalSalesRefundItem[" + index + "].total"] = itemTotal;
                     index += 1;
@@ -636,12 +639,19 @@ $(function() {
     function recordMoney(ishide) {
 
         com.focusPage('#list li.clearfix div.action-buttons').each(function(i) {
+            
+            var $iteminput = $(this);
+            
+            var siid = $iteminput.attr("data-siid");
+            var psiid = $iteminput.attr("data-psiid");
+            
+            if(!psiid || psiid == 0) return true;
 
-            $(this).html("");
-            var $inputNum = $('<input>').addClass('span1 v_float_3').attr('name', 'num').attr('value', '0').attr('type', 'number').attr('min', '0').attr('max', $(this).attr('data-num')).attr('step', '0.001').attr('selling', $(this).attr('data-selling')).attr('data-siid', $(this).attr('data-siid'));
+            $iteminput.html("");
+            
+            var $inputNum = $('<input>').addClass('span1 v_float_3').attr('name', 'num').attr('value', '0').attr('type', 'number').attr('min', '0').attr('max', $iteminput.attr('data-num')).attr('step', '0.001').attr('selling', $iteminput.attr('data-selling')).attr('data-siid', siid).attr('data-psiid', psiid);
 
-            var $label = $('<label></label>').addClass('span2').html("退货数量:").append($inputNum);
-            $(this).append($label);
+            var $label = $('<label></label>').addClass('span2').html("退货数量:").append($inputNum).appendTo($iteminput);
 
             if (ishide) {
                 hideButtons([$inputNum, $label]);
