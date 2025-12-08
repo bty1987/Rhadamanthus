@@ -12,12 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ossconfig", catalog = "data")
+@Table(name = "ossconfig", catalog = "hades")
 public class OssConfigPO implements Serializable {
 
 	private static final long serialVersionUID = -377458132071370654L;
 
-	private long ossId;
+	private long ossid;
 
 	private String accessKeyId;
 
@@ -39,13 +39,13 @@ public class OssConfigPO implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "ossId")
-	public long getOssId() {
-		return ossId;
+	@Column(name = "ossid")
+	public long getOssid() {
+		return ossid;
 	}
 
-	public void setOssId(long ossId) {
-		this.ossId = ossId;
+	public void setOssid(long ossid) {
+		this.ossid = ossid;
 	}
 
 	@Column(name = "accessKeyId")

@@ -118,13 +118,14 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesPO.setOtherStatus(salesVO.getOtherStatus());
 
 		salesItemDao.save(salesItemPO);
+		salesItemDao.flush();
 
 		if (salesVO.getTotal() != Arith.add(salesPO.getTotal(), salesItemVO.getTotal())) {
 			throw new FLException(260059, "销售单总额不必配");
 		}
 
-		salesPO.setTotal(salesVO.getTotal());
-		salesPO.setAmount(salesVO.getTotal());
+		salesPO.setTotal(salesItemDao.amountSalesItem(salesPO.getSid()));
+		salesPO.setAmount(salesPO.getTotal());
 
 		salesDao.update(salesPO);
 
@@ -193,9 +194,6 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
-		salesPO.setTotal(salesVO.getTotal());
-		salesPO.setAmount(salesVO.getTotal());
-
 		salesItemPO.setNum(salesItemVO.getNum());
 		salesItemPO.setInitnum(salesItemVO.getNum());
 		salesItemPO.setPunum(salesItemVO.getNum());
@@ -204,6 +202,10 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesItemPO.setComment(salesItemVO.getComment());
 
 		salesItemDao.update(salesItemPO);
+		salesItemDao.flush();
+
+		salesPO.setTotal(salesItemDao.amountSalesItem(salesPO.getSid()));
+		salesPO.setAmount(salesPO.getTotal());
 
 		salesDao.update(salesPO);
 
@@ -279,13 +281,14 @@ public class SalesItemServiceImpl implements SalesItemService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
+		salesItemDao.delete(salesItemPO);
+		salesItemDao.deleteSalesItemByPsiid(salesItemPO.getSiid());
+		salesItemDao.flush();
+
 		salesPO.setTotal(salesVO.getTotal());
 		salesPO.setAmount(salesVO.getTotal());
 
 		salesDao.update(salesPO);
-
-		salesItemDao.delete(salesItemPO);
-		salesItemDao.deleteSalesItemByPsiid(salesItemPO.getSiid());
 
 		return 0;
 	}

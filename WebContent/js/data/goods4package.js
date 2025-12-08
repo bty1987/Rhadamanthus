@@ -292,6 +292,7 @@ $(function() {
         }
 
         // 构建保存参数
+        var url = api.data.addGoodsPackage;
         var option = {
             "goods.gid": goodsPackage.pid,
             "goodsPackages[0].goods.gid": goodsPackage.selectedGoods.gid,
@@ -308,11 +309,12 @@ $(function() {
 
         // 如果是编辑模式，添加 gpid
         if (goodsPackage.editingGpid) {
+            url = api.data.updateGoodsPackage;
             option["goodsPackages[0].gpid"] = goodsPackage.editingGpid;
         }
 
         // 调用保存接口
-        com.post(api.data.addGoodsPackage, option, function(e) {
+        com.post(url, option, function(e) {
 
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
