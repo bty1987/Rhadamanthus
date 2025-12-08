@@ -159,7 +159,7 @@ jQuery(function() {
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-minier btn-success').html('删除'));
 
-        var $views = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn blue btn-minier _delete').html('查看')).click(function() {
+        var $views = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn blue btn-minier _delete').html('套餐')).click(function() {
 
             salesUtils.showPackage(sales.model.packageModel, com.focusPage('#itemList'), v.goods.gid);
         });

@@ -106,16 +106,61 @@ $(function() {
     var initList = function(listData) {
 
         if (listData && listData.length) {
+            // 组织父子关系
+            var itemMap = {};
+            var rootItems = [];
+
+            // 第一遍：构建映射
             $.each(listData, function(i, v) {
 
+                itemMap[v.salesItem.siid] = v;
+                v.children = [];
+            });
+
+            // 第二遍：组织父子关系
+            $.each(listData, function(i, v) {
+
+                if (v.salesItem.psiid && itemMap[v.salesItem.psiid]) {
+                    // 有父级，添加到父级的children
+                    itemMap[v.salesItem.psiid].children.push(v);
+                } else {
+                    // 无父级，是根节点
+                    rootItems.push(v);
+                }
+            });
+
+            // 递归渲染函数
+            var renderItem = function(v, level) {
+
+                level = level || 0;
+
                 var rid = v.rid;
+                var isPackage = (v.salesItem.type == 1); // 是否为套餐明细
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
+
+                if (isPackage) {
+                    $liLine.addClass('package-child-item');
+                    $liLine.css('padding-left', (20 + level * 20) + 'px');
+                    $liLine.css('background-color', '#f9f9f9');
+                    $liLine.css('border-left', '3px solid #87b87f');
+                }
+
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
-                var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name + ' ' + v.salesItem.goods.no);
+
+                var namePrefix = (isPackage && v.salesItem.psiid) ? '<i class="icon-level-up fa-rotate-90 grey"></i> ' : '';
+                var $small = $('<small></small>').addClass('blue').html(namePrefix + v.salesItem.goods.name + ' ' + v.salesItem.goods.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-                var propertyArr = [["商品品类:", v.salesItem.goods.category, "grey"], ["商品颜色:", v.salesItem.color.name, "grey"], ["商品规格:", v.salesItem.format.info, "grey"], ["售价:", v.salesItem.selling, "blue"], ["折扣价:", v.salesItem.disPrice, "blue"], ["折让价:", v.salesItem.price, "blue"], ["数量:", v.num, "blue"], ["总价:", v.total, "blue"], ["原结算方式:", v.salesItem.rawCtype == 0 ? "底价" : "点位", "red"], ["原结算值:", v.salesItem.rawCvalue, "blue"], ["结算方式:", v.salesItem.ctype == 0 ? "底价" : "点位", "red"], ["结算值:", v.salesItem.cvalue, "blue"], ["备注:", v.salesItem.comment, "grey"]];
+                var propertyArr = [["商品品类:", v.salesItem.goods.category, "grey"], ["商品颜色:", v.salesItem.color.name, "grey"], ["商品规格:", v.salesItem.format.info, "grey"], ["售价:", v.salesItem.selling, "blue"], ["折扣价:", v.salesItem.disPrice, "blue"], ["折让价:", v.salesItem.price, "blue"], ["数量:", v.num, "blue"], ["总价:", v.total, "blue"], ["原结算方式:", v.salesItem.rawCtype == 0 ? "底价" : "点位", "red"], ["原结算值:", v.salesItem.rawCvalue, "blue"], ["结算方式:", v.salesItem.ctype == 0 ? "底价" : "点位", "red"], ["结算值:", v.salesItem.cvalue, "blue"]];
+
+                // 如果是套餐明细，添加标识
+                if (isPackage) {
+                    propertyArr.push(["套餐:", "是", "orange"]);
+                }
+
+                propertyArr.push(["备注:", v.salesItem.comment, "grey"]);
 
                 $.each(propertyArr, function(index, value) {
 
@@ -129,6 +174,20 @@ $(function() {
                 $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
                 $liLine.appendTo(com.focusPage("#" + rid));
+
+                // 递归渲染子项
+                if (v.children && v.children.length > 0) {
+                    $.each(v.children, function(i, child) {
+
+                        renderItem(child, level + 1);
+                    });
+                }
+            };
+
+            // 渲染根节点
+            $.each(rootItems, function(i, v) {
+
+                renderItem(v, 0);
             });
         }
     };
