@@ -34,7 +34,7 @@
     media: '',
     dmedia: '',
     library: '',
-    store: '',
+    store: ''
 };
 
 window.console && window.console.log && console.log("%c有时候，正是那些人们认为的无用之人成就了无人能成之事。\nSometimes it's the very people who no one imagines anything of who do the things no one can imagine.\n--Alan·Mathison·Turing'sayings\n", "color:#428bca; font-size:1em");

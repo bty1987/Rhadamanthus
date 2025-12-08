@@ -230,6 +230,8 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		approvalSalesRefundDao.save(approvalSalesRefundPO);
 
+		List<Long> psiids = new ArrayList<Long>();
+
 		for (ApprovalSalesRefundItemVO approvalSalesRefundItemVO : approvalSalesRefundItemVOs) {
 
 			if (approvalSalesRefundItemVO == null) continue;
@@ -245,6 +247,24 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 			approvalSalesRefundItemPO.setNum(approvalSalesRefundItemVO.getNum());// 退货数量
 			approvalSalesRefundItemPO.setTotal(approvalSalesRefundItemVO.getTotal());// 退货金额
+			approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
+			approvalSalesRefundItemPO.setSid(sid);
+			approvalSalesRefundItemPO.setSalesItem(salesItemPO);// 销售单型号信息类
+
+			approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
+
+			if (salesItemPO.getPsiid() != 0) psiids.add(salesItemPO.getPsiid());
+		}
+
+		for (Long siid : psiids) {
+			SalesItemPO salesItemPO = salesItemDao.get(siid);
+
+			if (salesItemPO == null) continue;
+
+			ApprovalSalesRefundItemPO approvalSalesRefundItemPO = new ApprovalSalesRefundItemPO();
+
+			approvalSalesRefundItemPO.setNum(0);// 退货数量
+			approvalSalesRefundItemPO.setTotal(0);// 退货金额
 			approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
 			approvalSalesRefundItemPO.setSid(sid);
 			approvalSalesRefundItemPO.setSalesItem(salesItemPO);// 销售单型号信息类

@@ -93,7 +93,7 @@
     order.drawLineModal = com.focusPage("#drawLineModal");
     order.contructionNodeModal = com.focusPage("#contructionNodeModal");
     order.refundContractModal = com.focusPage("#refundContractModal");
-    order.refundContractModal1 = com.focusPage("#refundContractModal1");
+    order.terminalContractModal = com.focusPage("#terminalContractModal");
     order.customerInfoModal = com.focusPage("#customerInfoModal");
     order.drawContractModal = com.focusPage("#drawContractModal");
     order.prosignModal = com.focusPage("#prosignModal");
@@ -122,8 +122,8 @@
         com.closeTip();
     });
 
-    // 合同终止1
-    order.refundContractModal1.on('hide.bs.modal', function(e) {
+    // 合同终止审批
+    order.terminalContractModal.on('hide.bs.modal', function(e) {
 
         com.cleanItems(order.infoItems);
         com.closeTip();
@@ -449,7 +449,7 @@
 
     com.focusPage("#refundContractBtn1").on("click", function() {
 
-        if (com.validate("refundContractModal1")) {
+        if (com.validate("terminalContractModal")) {
             return false;
         }
 
@@ -478,7 +478,7 @@
 
         com.post(api.decoration.terminalDecoration, options, function(res) {
 
-            order.refundContractModal1.modal("hide");
+            order.terminalContractModal.modal("hide");
             com.showAlert(com.info, "提交成功");
 
             searcher.doSearch();
@@ -746,8 +746,8 @@
                     var btnBalance = $('<a></a>').addClass('btn btn-minier btn-danger').html('内决');
                     var btnRepair = $('<a></a>').addClass('btn btn-minier btn-danger').html('保修');
                     var btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
+                    var btnAerminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
                     var btnTerminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
-                    var btnTerminal1 = $('<a></a>').addClass('btn btn-minier btn-danger').html('终止');
 
                     var btnTerminalStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('工程终止');
 
@@ -1126,16 +1126,16 @@
                     });
 
                     // 合同终止1
-                    btnTerminal.click(function() {
+                    btnAerminal.click(function() {
 
-                        terminalOrder(v.orderId, v.status, v.precontractPrice);
+                        aerminalOrder(v.orderId, v.status, v.precontractPrice);
                         approvalUtils.initqueryApprovalUser("approveTerminalManSel", 19);
                     });
 
-                    // 合同终止2（积分）
-                    btnTerminal1.click(function() {
+                    // 合同终止（积分）
+                    btnTerminal.click(function() {
 
-                        terminalOrder1(v.orderId, v.status, v.precontractPrice);
+                        terminalOrder(v.orderId, v.status, v.precontractPrice);
                     });
 
                     btnResign.click(function() {
@@ -1289,12 +1289,12 @@
                                 break;
                             case "terminal":// 合同终止 (2, 3)
                                 if ([constant.decoration().decoration.STATUS_PROSIGN_INT, constant.decoration().decoration.STATUS_SIGNED_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnTerminal);
+                                    $divBtnWrap.append(btnAerminal);
                                 }
                                 break;
                             case "terminal1":// 合同终止 (32, 33)
                                 if ([constant.decoration().decoration.STATUS_PROSIGNTERMINABLE_INT, constant.decoration().decoration.STATUS_SIGNEDTERMINABLE_INT].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnTerminal1);
+                                    $divBtnWrap.append(btnTerminal);
                                 }
                                 break;
                             case "resign":// 重新签合同 (3)
@@ -2117,8 +2117,8 @@
             }, false);
         }
 
-        // 合同终止1
-        function terminalOrder(orderId, status, precontractPrice, rowId) {
+        // 合同终止审批
+        function aerminalOrder(orderId, status, precontractPrice, rowId) {
 
             params.decoration.orderId = orderId;
 
@@ -2279,8 +2279,8 @@
 
         }
 
-        // 合同终止2（积分）
-        function terminalOrder1(orderId, status, precontractPrice, rowId) {
+        // 合同终止（积分）
+        function terminalOrder(orderId, status, precontractPrice, rowId) {
 
             params.decoration.orderId = orderId;
             params.decoration.rowId = rowId;
@@ -2340,7 +2340,7 @@
                 com.focusPage("#backup").val(0);
                 order.paymentValue = backup;
 
-                order.refundContractModal1.modal("show");
+                order.terminalContractModal.modal("show");
             }, null, false);
         }
 
