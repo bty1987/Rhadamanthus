@@ -6,7 +6,7 @@ import org.apache.struts2.json.annotations.JSON;
 
 public class OssConfigVO {
 
-	private Long ossId;
+	private Long ossid;
 
 	private String accessKeyId;
 
@@ -38,12 +38,12 @@ public class OssConfigVO {
 		super();
 	}
 
-	public Long getOssId() {
-		return ossId;
+	public Long getOssid() {
+		return ossid;
 	}
 
-	public void setOssId(Long ossId) {
-		this.ossId = ossId;
+	public void setOssid(Long ossid) {
+		this.ossid = ossid;
 	}
 
 	public String getEndpoint() {
