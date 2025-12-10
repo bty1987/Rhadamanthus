@@ -102,19 +102,11 @@ public class GoodsPackageServiceImpl implements GoodsPackageService {
 			throw new FLException(260004, "商品不存在");
 		}
 
-		GoodsPO goodsGP = goodsDao.get(goodsPackageVO.getGoods().getGid());
-
-		if (goodsGP == null) {
-			throw new FLException(260043, "套餐商品不可操作");
-		}
-
 		BeanUtil.copyProperties(goodsPackageVO, goodsPackagePO, Arrays.asList("pid", "goods", "color", "format"));
 
-		goodsPackagePO.setGoods(goodsGP);
+		goodsPackagePO.setGoods(goodsPO);
 		goodsPackagePO.setColor(new ColorPO(goodsPackageVO.getColor().getCid()));
 		goodsPackagePO.setFormat(new FormatPO(goodsPackageVO.getFormat().getFid()));
-
-		goodsPackagePO.setPid(goodsPO.getGid());
 
 		goodsPackageDao.save(goodsPackagePO);
 

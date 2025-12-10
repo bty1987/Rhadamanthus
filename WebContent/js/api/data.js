@@ -1019,7 +1019,7 @@ $.extend(api, {
             url: "updateGoodsPackage.do",
             type: "update",
             tranargs: {
-                args: ["goodsPackages.num", "goodsPackages.purchase", "goodsPackages.selling", "goodsPackages.pieceNum", "goodsPackages.confine", "goodsPackages.cvalue", ]
+                args: ["goodsPackage.num", "goodsPackage.purchase", "goodsPackage.selling", "goodsPackage.pieceNum", "goodsPackage.confine", "goodsPackage.cvalue", ]
             }
         },
         deleteGoodsPackage: {

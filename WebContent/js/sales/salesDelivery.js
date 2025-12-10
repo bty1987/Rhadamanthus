@@ -144,6 +144,9 @@ $(function() {
                     case "refundNum":
                         propertyArr.push(["退货数量:", utils.changeThrDecimal(v.salesItem.initnum - v.salesItem.num), "blue"]);
                         break;
+                    case "trnum":
+                        propertyArr.push(["配送数量:", v.salesItem.trnum, "blue"]);
+                        break;
                     case "address":
                         propertyArr.push(["楼盘地址:", (v.sales.house.village.name + " " + v.sales.house.houseNumber), "grey"]);
                         break;

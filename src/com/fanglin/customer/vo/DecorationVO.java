@@ -17,6 +17,8 @@ public class DecorationVO implements Serializable {
 
 	private Integer houseArea;
 
+	private Integer innerArea;
+
 	private String address;
 
 	private Short type;
@@ -89,6 +91,14 @@ public class DecorationVO implements Serializable {
 
 	public void setHouseArea(Integer houseArea) {
 		this.houseArea = houseArea;
+	}
+
+	public Integer getInnerArea() {
+		return innerArea;
+	}
+
+	public void setInnerArea(Integer innerArea) {
+		this.innerArea = innerArea;
 	}
 
 	public String getAddress() {

@@ -147,6 +147,8 @@ public class SalesBalancePO implements Serializable {
 
 	private String comment;
 
+	private int company;
+
 	public SalesBalancePO() {
 		super();
 	}
@@ -493,6 +495,15 @@ public class SalesBalancePO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	public SalesBalanceVO ptv(SalesBalanceVO salesBalanceVO) {

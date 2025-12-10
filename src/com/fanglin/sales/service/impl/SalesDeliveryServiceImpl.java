@@ -152,23 +152,23 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
 			salesDeliveryItemDao.flush();
 
-			// 更新关联的 SalesItem 的到货量 (trnum)
-			if (salesDeliveryItemVO.getTrnum() != null && salesDeliveryItemVO.getTrnum() > 0) {
-				SalesItemPO salesItemPO = salesDeliveryItemPO.getSalesItem();
-				if (salesItemPO != null) {
-					salesItemPO.setTrnum(salesDeliveryItemVO.getTrnum());
-					salesItemDao.update(salesItemPO);
-					salesItemDao.flush();
-				}
-			}
-
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSalesItem().getGoods().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, traner);
 			}
 
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
+
+			if (salesDeliveryItemVO.getTrnum() == null) continue;
+
+			SalesItemPO salesItemPO = salesDeliveryItemPO.getSalesItem();
+
+			if (salesItemPO == null) continue;
+
+			salesItemPO.setTrnum(salesDeliveryItemVO.getTrnum());
+
+			salesItemDao.update(salesItemPO);
 		}
 	}
 
@@ -192,7 +192,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
 			salesDeliveryItemDao.flush();
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSalesItem().getGoods().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
@@ -230,7 +230,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
 			salesDeliveryItemDao.flush();
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSalesItem().getGoods().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CONFIRM_INT, confirmer);
@@ -267,7 +267,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemDao.update(salesDeliveryItemPO);
 			salesDeliveryItemDao.flush();
 
-			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBrand().getBid());
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSalesItem().getGoods().getBid());
 
 			if (rights != null && rights.size() != 0) {
 				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
@@ -323,9 +323,9 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesDeliveryItem.getSales().getSid());
 
-		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesPO.getBrand().getBid());
-
 		for (SalesItemPO salesItemPO : salesItemPOs) {
+
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesItemPO.getGoods().getBid());
 
 			if (salesDeliveryItemDao.querySalesDeliveryItemBySiid(salesItemPO.getSiid()) != null) continue;
 			if (salesItemPO.getType() == SalesItemPO.TYPE_PACKAGE_INT && salesItemPO.getPsiid() == 0) continue;
@@ -335,10 +335,10 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			salesDeliveryItemPO.setSalesItem(salesItemPO);
 			salesDeliveryItemPO.setCreater(creater);
 			salesDeliveryItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			salesDeliveryItemPO.setCompany(salesPO.getDompany());
-			salesDeliveryItemPO.setSales(salesPO);
-
 			salesDeliveryItemPO.setProtranTime(salesDeliveryPO.getCreateTime());
+
+			salesDeliveryItemPO.setSales(salesPO);
+			salesDeliveryItemPO.setCompany(salesItemPO.getGoods().getCompany());
 
 			salesDeliveryItemDao.save(salesDeliveryItemPO);
 

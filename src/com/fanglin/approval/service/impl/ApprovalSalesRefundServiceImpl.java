@@ -26,6 +26,7 @@ import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.balance.service.BalanceSalesBalanceService;
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
+import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -105,6 +106,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private BrandDao brandDao;
 
 	@Autowired
 	private SalesBalanceDao salesBalanceDao;
@@ -430,8 +434,12 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				salesBalancePO.setDept(salesPO.getSalesman().getDept());
 				salesBalancePO.setRegion(salesPO.getSalesman().getDept().getFatherDept());
 
-				// 设置品牌信息
-				salesBalancePO.setBrand(new BrandPO(bid));
+				BrandPO brandPO = brandDao.get(bid);
+
+				if (brandPO == null) continue;
+
+				salesBalancePO.setBrand(brandPO);
+				salesBalancePO.setCompany(brandPO.getCompany());
 
 				// 初始化金额
 				long brandTotal = 0;
