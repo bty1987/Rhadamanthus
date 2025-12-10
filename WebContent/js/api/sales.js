@@ -640,7 +640,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-salesItem",
-                args: ["initnum", "num"]
+                args: ["initnum", "num", "trnum"]
             }]
         },
         pageSalesDeliveryItemForSupplier: {
@@ -648,7 +648,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-salesItem",
-                args: ["initnum", "num"]
+                args: ["initnum", "num", "trnum"]
             }]
         },
         pageSalesDeliveryItemForInstorer: {
@@ -656,7 +656,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-salesItem",
-                args: ["initnum", "num"]
+                args: ["initnum", "num", "trnum"]
             }]
         },
         querySalesDeliveryItem: {
@@ -664,14 +664,14 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesDeliveryItems-salesItem",
-                args: ["initnum", "num"]
+                args: ["initnum", "num", "trnum"]
             }]
         },
         tranSalesDeliveryItem: {
             url: "tranSalesDeliveryItem.do",
             type: "update",
             tranargs: {
-                args: ["salesDeliveryItem.trnum"]
+                args: ["salesDeliveryItems.trnum"]
             }
         },
         checkSalesDeliveryItem: {

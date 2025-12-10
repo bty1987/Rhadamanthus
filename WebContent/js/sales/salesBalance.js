@@ -145,7 +145,7 @@ $(function() {
                                 propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey", tools.personel.info, v.sales.instorer.userId]);
                                 break;
                             case "brand":
-                                propertyArr.push(["品牌:", v.sales.brand.name, "grey", tools.brand.info, v.sales.brand.bid]);
+                                propertyArr.push(["品牌:", v.brand ? v.brand.name : v.sales.brand.name, "grey", tools.brand.info, v.sales.brand.bid]);
                                 break;
                             case "depositpay":
                                 propertyArr.push(["定金:", v.sales.depositpay, "blue"]);

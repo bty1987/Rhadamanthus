@@ -192,10 +192,10 @@ $(function() {
                                 propertyArr.push(["渠道:", v.salesman.currentName, "grey", tools.personel.info, v.salesman.userId]);
                                 break;
                             case "dept":
-                                propertyArr.push(["部门:", v.dept.name, "grey", tools.department.info, v.dept.did]);
+                                propertyArr.push(["部门:", v.salesman.dept.name, "grey", tools.department.info, v.dept.did]);
                                 break;
                             case "region":
-                                propertyArr.push(["分区:", v.region.name, "grey", tools.department.info, v.region.did]);
+                                propertyArr.push(["分区:", (v.salesman.dept && v.salesman.dept.fatherDept) ? v.salesman.dept.fatherDept.name : "", "grey", tools.department.info, v.region.did]);
                                 break;
                             case "creater":
                                 propertyArr.push(["创建人:", v.creater.currentName, "grey", tools.personel.info, v.creater.userId]);

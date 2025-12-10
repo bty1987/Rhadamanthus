@@ -75,6 +75,8 @@ public class SalesBalanceVO implements Serializable {
 
 	private String comment;
 
+	private Integer company;
+
 	public SalesBalanceVO() {
 		super();
 	}
@@ -372,6 +374,14 @@ public class SalesBalanceVO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

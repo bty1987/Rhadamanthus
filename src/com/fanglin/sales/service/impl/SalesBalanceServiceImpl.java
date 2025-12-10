@@ -14,6 +14,7 @@ import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.balance.service.BalanceSalesBalanceService;
 import com.fanglin.balance.vo.BalanceSalesBalanceVO;
+import com.fanglin.communion.dao.BrandDao;
 import com.fanglin.communion.po.BrandPO;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.communion.vo.CustomerVO;
@@ -70,6 +71,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Autowired
 	private SalesDeliveryStatusRightDao salesDeliveryStatusRightDao;
+
+	@Autowired
+	private BrandDao brandDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -321,6 +325,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setSalesman(salesPO.getSalesman());
 			salesBalancePO.setDept(salesPO.getDept());
 			salesBalancePO.setRegion(salesPO.getRegion());
+			salesBalancePO.setCompany(salesPO.getCompany());
 
 			long balance = 0;
 			long allowance = 0;
@@ -409,6 +414,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			reveBalancePO.setRate(1000);
 
 			reveBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+			reveBalancePO.setCompany(salesPO.getCompany());
 
 			salesBalanceDao.save(reveBalancePO);
 		}
@@ -482,7 +488,12 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				salesBalancePO.setRate(1000);
 				salesBalancePO.setDeliverSchedule(SalesBalancePO.DELIVERYSCHEDULE_NONE_INT);
 
-				salesBalancePO.setBrand(new BrandPO(bid));
+				BrandPO brandPO = brandDao.get(bid);
+
+				if (brandPO == null) continue;
+
+				salesBalancePO.setBrand(brandPO);
+				salesBalancePO.setCompany(brandPO.getCompany());
 
 				// 计算该品牌的总金额、优惠金额和结算金额
 				long brandTotal = 0;

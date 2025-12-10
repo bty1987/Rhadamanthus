@@ -126,8 +126,8 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public SalesBalancePO querySalesBalance(long sid, long bid, short type, short onetype, short deliverySchedule) {
-		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").createAlias("brand", "brand").add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).add(Restrictions.eq("deliverySchedule", deliverySchedule)).add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
+	public SalesBalancePO querySalesBalance(long sid, long bid, short type, short onetype, short deliverSchedule) {
+		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").createAlias("brand", "brand").add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).add(Restrictions.eq("deliverSchedule", deliverSchedule)).add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("brand.bid", bid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

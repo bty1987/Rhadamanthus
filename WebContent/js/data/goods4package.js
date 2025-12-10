@@ -291,6 +291,12 @@ $(function() {
             return false;
         }
 
+        // 如果是编辑模式，添加 gpid
+        if (goodsPackage.editingGpid) {
+            updateData();
+            return false;
+        }
+
         // 构建保存参数
         var url = api.data.addGoodsPackage;
         var option = {
@@ -307,11 +313,36 @@ $(function() {
         option["goodsPackages[0].ctype"] = goodsPackage.items.ctypeSelect.val();
         option["goodsPackages[0].cvalue"] = goodsPackage.items.cvalue.val();
 
-        // 如果是编辑模式，添加 gpid
-        if (goodsPackage.editingGpid) {
-            url = api.data.updateGoodsPackage;
-            option["goodsPackages[0].gpid"] = goodsPackage.editingGpid;
-        }
+        // 调用保存接口
+        com.post(url, option, function(e) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+            goodsPackage.modals.addPackageModal.modal("hide");
+        });
+    }
+
+    /**
+     * 保存套餐商品
+     */
+    function updateData() {
+
+        // 构建保存参数
+        var url = api.data.updateGoodsPackage;
+        var option = {
+            "goods.gid": goodsPackage.pid,
+            "goodsPackage.goods.gid": goodsPackage.selectedGoods.gid,
+            "goodsPackage.color.cid": goodsPackage.items.colorSelect.val(),
+            "goodsPackage.format.fid": goodsPackage.items.formatSelect.val(),
+            "goodsPackage.num": goodsPackage.items.num.val()
+        };
+
+        option["goodsPackage.gpid"] = goodsPackage.editingGpid;
+        option["goodsPackage.selling"] = goodsPackage.items.selling.val();
+
+        // 结算类型
+        option["goodsPackage.ctype"] = goodsPackage.items.ctypeSelect.val();
+        option["goodsPackage.cvalue"] = goodsPackage.items.cvalue.val();
 
         // 调用保存接口
         com.post(url, option, function(e) {
