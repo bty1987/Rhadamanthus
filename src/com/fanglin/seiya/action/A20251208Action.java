@@ -1,0 +1,132 @@
+/**
+ * @File Name		: ApprovalAction.java
+ * @Package   	: com.fanglin.approval.action
+ * @Version		: 1.0
+ * @Date			: 2015-10-25
+ * @Copyright	: Copyright Creators 2014
+ * @Author		: baity
+ * @Email			: bty1987@163.com
+ * @Describing	: 
+ */
+
+package com.fanglin.seiya.action;
+
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import com.fanglin.construction.vo.ConstructerVO;
+import com.fanglin.construction.vo.ConstructionScheduleVO;
+import com.fanglin.construction.vo.ConstructionVO;
+import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.seiya.service.A20251208Service;
+import com.fanglin.utils.SystemConfig;
+
+@ParentPackage("base")
+@Namespace("/")
+@Controller
+public class A20251208Action extends BaseListAction {
+
+	private static final long serialVersionUID = 9177125723988196033L;
+
+	@Autowired
+	private A20251208Service a20251208Service;
+
+	private UserInfoVO userInfo;
+
+	private ConstructerVO constructer;
+
+	private ConstructionVO construction;
+
+	private ConstructionScheduleVO constructionSchedule;
+
+	@Action(value = "saveOrUpdateUserForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String saveOrUpdateUserForPlatforPm() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		a20251208Service.saveOrUpdateUserForPlatforPm(userInfo, queryCompany(), queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "beginConstructionScheduleForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String beginConstructionScheduleForPlatforPm() throws FLException {
+
+		a20251208Service.beginConstructionScheduleForPlatforPm(constructionSchedule, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "finishConstructionScheduleForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishConstructionScheduleForPlatforPm() throws FLException {
+
+		a20251208Service.finishConstructionScheduleForPlatforPm(constructionSchedule, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "addConstructerForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addConstructerForPlatforPm() throws FLException {
+
+		a20251208Service.addConstructerForPlatforPm(constructer, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "deleteConstructerForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteConstructerForPlatforPm() throws FLException {
+
+		a20251208Service.deleteConstructerForPlatforPm(constructer);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "beginConstructionForPlatforPm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String beginConstructionForPlatforPm() throws FLException {
+
+		a20251208Service.beginConstructionForPlatforPm(construction, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	public UserInfoVO getUserInfo() {
+		return userInfo;
+	}
+
+	public void setUserInfo(UserInfoVO userInfo) {
+		this.userInfo = userInfo;
+	}
+
+	public ConstructerVO getConstructer() {
+		return constructer;
+	}
+
+	public void setConstructer(ConstructerVO constructer) {
+		this.constructer = constructer;
+	}
+
+	public ConstructionVO getConstruction() {
+		return construction;
+	}
+
+	public void setConstruction(ConstructionVO construction) {
+		this.construction = construction;
+	}
+
+	public ConstructionScheduleVO getConstructionSchedule() {
+		return constructionSchedule;
+	}
+
+	public void setConstructionSchedule(ConstructionScheduleVO constructionSchedule) {
+		this.constructionSchedule = constructionSchedule;
+	}
+	
+}

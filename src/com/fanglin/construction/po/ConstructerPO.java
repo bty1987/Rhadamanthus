@@ -27,7 +27,11 @@ public class ConstructerPO implements java.io.Serializable {
 
 	public static final String COLUMN_CID_STR = "cid";
 
+	public static final String COLUMN_CNID_STR = "cnid";
+
 	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final String COLUMN_UID_STR = "user.uid";
 
 	public static final String COLUMN_USERID_STR = "user.userId";
 
