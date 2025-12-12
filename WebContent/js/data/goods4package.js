@@ -46,6 +46,10 @@ $(function() {
         goodsPackage.selectedGoods = null;
         goodsPackage.editingGpid = null;
         com.focusPage('#modalTitle').text('添加套餐商品');
+
+        // 恢复可编辑状态
+        goodsPackage.items.companySelect.prop('disabled', false);
+        goodsPackage.items.goodsName.prop('readonly', false);
     });
 
     // 初始化加载公司列表
@@ -266,6 +270,11 @@ $(function() {
 
         goodsPackage.editingGpid = null;
         com.focusPage('#modalTitle').text('添加');
+
+        // 确保添加模式下字段可编辑
+        goodsPackage.items.companySelect.prop('disabled', false);
+        goodsPackage.items.goodsName.prop('readonly', false);
+
         goodsPackage.modals.addPackageModal.modal("show");
     });
 
@@ -276,6 +285,10 @@ $(function() {
 
         goodsPackage.editingGpid = item.gpid;
         com.focusPage('#modalTitle').text('编辑套餐商品');
+
+        // 编辑模式下设置公司和商品名称为只读
+        goodsPackage.items.companySelect.prop('disabled', true);
+        goodsPackage.items.goodsName.prop('readonly', true);
 
         // 填充公司信息
         if (item.goods && item.goods.company) {
