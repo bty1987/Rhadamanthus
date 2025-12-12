@@ -222,6 +222,10 @@ $(function() {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+
+                if (value[3])
+                    $(value[3]).appendTo($liProperty);
+
                 $liProperty.appendTo($ulProperty);
             });
 
@@ -316,6 +320,7 @@ $(function() {
             });
 
             $btnAdded.click(function(e) {
+
                 selectionItem.parameters.siid = v.siid;
                 selectionItem.parameters.num = v.num;
                 selectionItem.parameters.type = v.type;
@@ -802,7 +807,7 @@ $(function() {
         selectionItem.modals.refundSelectionItemModal.modal("hide");
     }
 
-    function addedSelectionItem(){
+    function addedSelectionItem() {
 
         if (com.validate('addedSelectionItemModal'))
             return false;
@@ -816,13 +821,13 @@ $(function() {
 
         if (type == constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
             type = constant.quotation().selectionItem.TYPE_ADDED_QUOTATION_SHORT;
-        } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT){
+        } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT) {
             type = constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONADD_INT;
-        } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT){
+        } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT) {
             type = constant.quotation().selectionItem.TYPE_ADDED_EXTENSIONMINUS_INT;
-        } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT){
+        } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_ADDITEM_COM_INT) {
             type = constant.quotation().selectionItem.TYPE_ADDED_ADDITEM_INT;
-        } else if (type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT){
+        } else if (type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_NORETURN_INT) {
             type = constant.quotation().selectionItem.TYPE_ADDED_MINUSITEM_INT;
         }
 
@@ -1157,46 +1162,30 @@ $(function() {
 
                     // 绑定点击事件
                     $infoIcon.click(function(e) {
+
                         e.stopPropagation(); // 防止事件冒泡
 
                         // 查询结算选材单信息
-                        com.post(api.balance.queryBalanceSelectionByItem, {
-                            "balanceSelectionItem.bsiid": v.siid
+                        com.post(api.balance.fetchBalanceSelectionItem, {
+                            "balanceSelectionItem.selectionItem.siid": v.siid
                         }, function(res) {
-                            // 获取状态文本
-                            var statusText = '';
-                            switch(res.balanceSelection.status) {
-                                case 0: statusText = '初始'; break;
-                                case 1: statusText = '锁定'; break;
-                                case 2: statusText = '待审'; break;
-                                case 3: statusText = '审核'; break;
-                                default: statusText = '未知';
-                            }
 
-                            // 构建提示信息
+                            var balanceSelection = res.balanceSelectionItem.balanceSelection || {};
+
                             var tipHtml = '<div style="text-align:left;">';
                             tipHtml += '<strong>结算选材单信息</strong><br/>';
                             tipHtml += '<hr style="margin:5px 0;"/>';
-                            tipHtml += '名称: ' + (res.balanceSelection.name || '无') + '<br/>';
-                            tipHtml += '状态: ' + statusText + '<br/>';
-                            if (res.balanceSelection.createTime) {
-                                tipHtml += '创建时间: ' + res.balanceSelection.createTime;
-                            }
+                            tipHtml += '名称: ' + (balanceSelection.name || '无') + '<br/>';
+                            tipHtml += '状态: ' + constant.balance().balanceSelection.status.keys[balanceSelection.status] + '<br/>';
+                            tipHtml += '创建时间: ' + balanceSelection.createTime || "";
                             tipHtml += '</div>';
 
-                            // 显示提示
                             com.showTip($infoIcon, tipHtml, "top");
 
-                        }, function(res) {
-                            // 查询失败,显示错误信息
-                            com.showTip($infoIcon, "未关联结算选材单", "top");
                         });
                     });
 
-                    // 将图标添加到标签中
-                    $accountStatusLabel.append($infoIcon);
-
-                    propertyArr.push([$accountStatusLabel, selectionItem.accountStatusList[v.accountStatus], "red"]);
+                    propertyArr.push([$accountStatusLabel, selectionItem.accountStatusList[v.accountStatus], "red", $infoIcon]);
                     break;
                 case "num":
                     propertyArr.push(["拆单量:", [2, 4].indexOf(v.type) != -1 ? -v.num : v.num, "blue"]);

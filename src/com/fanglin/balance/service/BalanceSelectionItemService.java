@@ -14,10 +14,10 @@ public interface BalanceSelectionItemService {
 
 	public List<BalanceSelectionItemVO> queryBalanceSelectionItem(BalanceSelectionItemVO balanceSelectionItem);
 
+	public BalanceSelectionItemVO fetchBalanceSelectionItem(BalanceSelectionItemVO balanceSelectionItem) throws FLException;
+
 	public int countBalanceSelectionItem(BalanceSelectionVO balanceSelection);
 
 	public int pendingBalanceSelectionItem(BalanceSelectionVO balanceSelectionVO, BalanceSelectionItemVO balanceSelectionItemVO, String userId, int company) throws FLException;
-
-	public BalanceSelectionVO queryBalanceSelectionByItem(long bsiid) throws FLException;
 
 }

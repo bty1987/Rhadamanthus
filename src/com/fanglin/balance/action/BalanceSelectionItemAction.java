@@ -49,6 +49,14 @@ public class BalanceSelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "fetchBalanceSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String fetchBalanceSelectionItem() throws FLException {
+
+		balanceSelectionItem = balanceSelectionItemService.fetchBalanceSelectionItem(balanceSelectionItem);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "countBalanceSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String countBalanceSelectionItem() throws FLException {
 
@@ -61,14 +69,6 @@ public class BalanceSelectionItemAction extends BaseListAction {
 	public String pendingBalanceSelectionItem() throws FLException {
 
 		balanceSelectionItemService.pendingBalanceSelectionItem(balanceSelection, balanceSelectionItem, queryUserId(), queryCompany());
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryBalanceSelectionByItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBalanceSelectionByItem() throws FLException {
-
-		balanceSelection = balanceSelectionItemService.queryBalanceSelectionByItem(balanceSelectionItem.getBsiid());
 
 		return SUCCESS;
 	}

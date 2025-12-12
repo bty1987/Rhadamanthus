@@ -128,6 +128,6 @@ public class CustomerSourceAction extends BaseListAction {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(FormatUtil.decodeCompany("DmxbFnC3r1YgOMUmcVyOLQ=="));
+		System.out.println(FormatUtil.decodeCompany("nNQbZ6UyJXlwmLZqNdxOhg=="));
 	}
 }
