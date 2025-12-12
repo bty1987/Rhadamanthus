@@ -604,6 +604,15 @@ $.extend(api, {
                 args: ["balanceSelection.income", "balanceSelection.cost", "balanceSelection.payment", "balanceSelection.profit"]
             }
         },
+        queryBalanceSelectionByItem: {
+            url: "queryBalanceSelectionByItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceSelection",
+                args: ["income", "cost", "payment", "profit", "discount"]
+            }]
+        },
 
         pageBalanceOales: {
             url: "pageBalanceOales.do",
