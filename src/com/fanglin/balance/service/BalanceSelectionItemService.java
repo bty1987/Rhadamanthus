@@ -18,4 +18,6 @@ public interface BalanceSelectionItemService {
 
 	public int pendingBalanceSelectionItem(BalanceSelectionVO balanceSelectionVO, BalanceSelectionItemVO balanceSelectionItemVO, String userId, int company) throws FLException;
 
+	public BalanceSelectionVO queryBalanceSelectionByItem(long bsiid) throws FLException;
+
 }
