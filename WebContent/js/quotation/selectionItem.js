@@ -23,7 +23,7 @@ $(function() {
             utilitynum: com.focusPage('#utilitynum'),
             balanceSales: com.focusPage('#balanceSales'),
 
-            picture: com.focusPage('#picture', '#pictureModal'),
+            picture: com.focusPage('#picture', '#pictureModal')
         },
         title: com.focusPage("#myModalLabel"),
         dcomment: com.focusPage("#dcomment"),
@@ -35,6 +35,7 @@ $(function() {
         },
         typeList: [],
         statusList: [],
+        accountStatusList: [],
         postData: '',
 
         pageType: params.urlLoadParams.type,
@@ -97,6 +98,7 @@ $(function() {
 
     selectionItem.statusList = constant.quotation().selectionItem.status.keys;
     selectionItem.typeList = constant.quotation().selectionItem.type.keys;
+    selectionItem.accountStatusList = constant.quotation().selectionItem.accountStatus.keys;
 
     com.initTypeahead(selectionItem.items.balanceSales, api.balance.queryBalanceSelection, "balanceSelection.name", {}, "balanceSelections", "bsid", "name");
 
@@ -1144,6 +1146,57 @@ $(function() {
                     break;
                 case "status":
                     propertyArr.push(["状态:", selectionItem.statusList[v.status], "red"]);
+                    break
+                case "accountStatus":
+                    // 创建对账状态标签,包含信息图标
+                    var $accountStatusLabel = $("<span>对账状态: </span>");
+                    var $infoIcon = $("<i></i>").addClass("icon-info-sign blue").css({
+                        "cursor": "pointer",
+                        "margin-left": "5px"
+                    }).attr("title", "点击查看结算选材单信息");
+
+                    // 绑定点击事件
+                    $infoIcon.click(function(e) {
+                        e.stopPropagation(); // 防止事件冒泡
+
+                        // 查询结算选材单信息
+                        com.post(api.balance.queryBalanceSelectionByItem, {
+                            "balanceSelectionItem.bsiid": v.siid
+                        }, function(res) {
+                            // 获取状态文本
+                            var statusText = '';
+                            switch(res.balanceSelection.status) {
+                                case 0: statusText = '初始'; break;
+                                case 1: statusText = '锁定'; break;
+                                case 2: statusText = '待审'; break;
+                                case 3: statusText = '审核'; break;
+                                default: statusText = '未知';
+                            }
+
+                            // 构建提示信息
+                            var tipHtml = '<div style="text-align:left;">';
+                            tipHtml += '<strong>结算选材单信息</strong><br/>';
+                            tipHtml += '<hr style="margin:5px 0;"/>';
+                            tipHtml += '名称: ' + (res.balanceSelection.name || '无') + '<br/>';
+                            tipHtml += '状态: ' + statusText + '<br/>';
+                            if (res.balanceSelection.createTime) {
+                                tipHtml += '创建时间: ' + res.balanceSelection.createTime;
+                            }
+                            tipHtml += '</div>';
+
+                            // 显示提示
+                            com.showTip($infoIcon, tipHtml, "top");
+
+                        }, function(res) {
+                            // 查询失败,显示错误信息
+                            com.showTip($infoIcon, "未关联结算选材单", "top");
+                        });
+                    });
+
+                    // 将图标添加到标签中
+                    $accountStatusLabel.append($infoIcon);
+
+                    propertyArr.push([$accountStatusLabel, selectionItem.accountStatusList[v.accountStatus], "red"]);
                     break;
                 case "num":
                     propertyArr.push(["拆单量:", [2, 4].indexOf(v.type) != -1 ? -v.num : v.num, "blue"]);
