@@ -23,6 +23,15 @@
                 <form class="form-horizontal">
 
                     <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right orange" for="companySelect">所属公司</label>
+                        <div class="col-md-9">
+                            <select id="companySelect" class="col-xs-10 col-sm-8 v_required" data-toggle="popover" data-trigger='manual'>
+                                <option value="">请选择公司</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-md-3 control-label no-padding-right orange" for="goodsName">商品名称</label>
                         <div class="col-md-9">
                             <input type="text" id="goodsName" class="col-xs-10 col-sm-8 v_required v_typeahead"

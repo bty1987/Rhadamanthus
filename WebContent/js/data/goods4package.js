@@ -2,6 +2,7 @@ $(function() {
 
     var goodsPackage = {
         items: {
+            companySelect: com.focusPage('#companySelect', "#addPackageModal"),
             goodsName: com.focusPage('#goodsName', "#addPackageModal"),
             goodsNo: com.focusPage('#goodsNo', "#addPackageModal"),
             category: com.focusPage('#category', "#addPackageModal"),
@@ -47,8 +48,42 @@ $(function() {
         com.focusPage('#modalTitle').text('添加套餐商品');
     });
 
+    // 初始化加载公司列表
+    com.post(api.system.queryCompany, {}, function(res) {
+        if (res.companies && res.companies.length > 0) {
+            goodsPackage.items.companySelect.bindData(res.companies, "cid", "name");
+        } else {
+            com.showAlert(com.warning, '暂无公司数据');
+        }
+    });
+
+    // 监听公司选择变化，清空商品选择
+    goodsPackage.items.companySelect.on('change', function() {
+        // 清空商品输入框
+        goodsPackage.items.goodsName.val('');
+        com.cleanTypeahead("goodsName");
+        goodsPackage.selectedGoods = null;
+
+        // 清空商品信息
+        goodsPackage.items.goodsNo.val('');
+        goodsPackage.items.category.val('');
+        goodsPackage.items.brand.val('');
+        goodsPackage.items.colorSelect.html('<option value="">请选择颜色</option>');
+        goodsPackage.items.formatSelect.html('<option value="">请选择规格</option>');
+    });
+
     // 初始化商品名称自动完成
-    com.initTypeahead(goodsPackage.items.goodsName, api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
+    com.initTypeahead(goodsPackage.items.goodsName, api.data.queryGoodsByName, "goods.name", function() {
+        // 动态返回查询参数，包含所选公司
+        var companyId = goodsPackage.items.companySelect.val();
+        if (!companyId) {
+            com.showAlert(com.warning, '请先选择公司');
+            return false;
+        }
+        return {
+            "goods.company": companyId
+        };
+    }, "goodes", "gid", "name", function(list, k, v) {
 
         // 选中商品后自动填充信息
         $.each(list, function(index, val) {
@@ -230,6 +265,11 @@ $(function() {
 
         goodsPackage.editingGpid = item.gpid;
         com.focusPage('#modalTitle').text('编辑套餐商品');
+
+        // 填充公司信息
+        if (item.goods && item.goods.company) {
+            goodsPackage.items.companySelect.val(item.goods.company);
+        }
 
         // 填充表单数据
         goodsPackage.items.goodsName.val(item.goods.goods || item.goods.name);
