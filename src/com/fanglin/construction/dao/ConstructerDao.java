@@ -15,4 +15,6 @@ public interface ConstructerDao extends Dao<ConstructerPO> {
 
 	public int countConstructer(long cid, int wuid, long csid);
 
+	public ConstructerPO queryConstructerByUid(String orderId, long cnid, int wuid);
+
 }

@@ -117,7 +117,7 @@ public class SalesServiceImpl implements SalesService {
 		List<SalesVO> salesVOs = new ArrayList<SalesVO>();
 
 		for (SalesPO salesPO : salesPOs) {
-			salesVOs.add(salesPO.ptv(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO())));
+			salesVOs.add(salesPO.ptv(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentVO())), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new BrandVO())));
 		}
 
 		return salesVOs;
@@ -387,6 +387,10 @@ public class SalesServiceImpl implements SalesService {
 
 			salesItemDao.save(salesItemPO);
 
+			System.out.println(salesItemVO.getTotal());
+
+			total = Arith.add(total, salesItemVO.getTotal());
+
 			if (goodsPO == null || goodsPO.getType() != GoodsPO.TYPE_SUIT_INT) continue;
 
 			// 套餐类型商品，需要展开套餐明细
@@ -423,9 +427,10 @@ public class SalesServiceImpl implements SalesService {
 
 				salesItemDao.save(salesItemGP);
 			}
-
-			total = Arith.add(total, salesItemVO.getTotal());
 		}
+
+		System.out.println(total);
+		System.out.println(salesPO.getTotal());
 
 		if (total != salesPO.getTotal()) {
 			throw new FLException(260059, "销售单总额不匹配");

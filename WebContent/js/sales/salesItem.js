@@ -642,10 +642,11 @@ $(function() {
             
             var $iteminput = $(this);
             
+            var type = $iteminput.attr("data-type");
             var siid = $iteminput.attr("data-siid");
             var psiid = $iteminput.attr("data-psiid");
             
-            if(!psiid || psiid == 0) return true;
+            if(psiid == 0 && type == 1) return true;
 
             $iteminput.html("");
             

@@ -45,6 +45,12 @@ public class ConstructerDaoImpl extends DaoImpl<ConstructerPO> implements Constr
 	}
 
 	@Override
+	public ConstructerPO queryConstructerByUid(String orderId, long cnid, int wuid) {
+
+		return (ConstructerPO) session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq("cnid", cnid)).add(Restrictions.eq(ConstructerPO.COLUMN_UID_STR, wuid)).uniqueResult();
+	}
+
+	@Override
 	public ConstructerPO queryConstructerByCrid(long crid) {
 
 		return (ConstructerPO) session().createCriteria(ConstructerPO.class).add(Restrictions.eq(ConstructerPO.COLUMN_CRID_STR, crid)).uniqueResult();
