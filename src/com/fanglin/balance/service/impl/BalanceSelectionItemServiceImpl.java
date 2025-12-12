@@ -66,6 +66,36 @@ public class BalanceSelectionItemServiceImpl implements BalanceSelectionItemServ
 	}
 
 	@Override
+	public BalanceSelectionItemVO fetchBalanceSelectionItem(BalanceSelectionItemVO balanceSelectionItemVO) throws FLException {
+
+		// 根据选材项目ID查询选材项目
+		BalanceSelectionItemPO balanceSelectionItemPO = balanceSelectionItemDao.queryBalanceSelectionItemBySiid(balanceSelectionItemVO.getSelectionItem().getSiid());
+
+		if (balanceSelectionItemPO == null) {
+			throw new FLException(200038, "结算选材项不存在");
+		}
+
+		balanceSelectionItemPO.ptv(balanceSelectionItemVO);
+
+		// 获取关联的结算选材单ID
+		long bsid = balanceSelectionItemPO.getBsid();
+
+		// 查询结算选材单
+		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(bsid);
+
+		if (balanceSelectionPO == null) {
+			throw new FLException(350027, "结算选材单不存在");
+		}
+
+		// 转换为 VO
+		BalanceSelectionVO balanceSelectionVO = balanceSelectionPO.ptv(new BalanceSelectionVO(null, null, null, null));
+
+		balanceSelectionItemVO.setBalanceSelection(balanceSelectionVO);
+
+		return balanceSelectionItemVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int pendingBalanceSelectionItem(BalanceSelectionVO balanceSelectionVO, BalanceSelectionItemVO balanceSelectionItemVO, String userId, int company) throws FLException {
 
@@ -117,32 +147,6 @@ public class BalanceSelectionItemServiceImpl implements BalanceSelectionItemServ
 	public int countBalanceSelectionItem(BalanceSelectionVO balanceSelection) {
 
 		return balanceSelectionItemDao.countBalanceSelectionItem(balanceSelection.getBsid());
-	}
-
-	@Override
-	public BalanceSelectionVO queryBalanceSelectionByItem(long bsiid) throws FLException {
-
-		// 根据选材项目ID查询选材项目
-		BalanceSelectionItemPO balanceSelectionItemPO = balanceSelectionItemDao.get(bsiid);
-
-		if (balanceSelectionItemPO == null) {
-			throw new FLException(200038, "结算选材项不存在");
-		}
-
-		// 获取关联的结算选材单ID
-		long bsid = balanceSelectionItemPO.getBsid();
-
-		// 查询结算选材单
-		BalanceSelectionPO balanceSelectionPO = balanceSelectionDao.get(bsid);
-
-		if (balanceSelectionPO == null) {
-			throw new FLException(350027, "结算选材单不存在");
-		}
-
-		// 转换为 VO
-		BalanceSelectionVO balanceSelectionVO = balanceSelectionPO.ptv(new BalanceSelectionVO(null, null, null, null));
-
-		return balanceSelectionVO;
 	}
 
 }

@@ -10,6 +10,8 @@ public class BalanceSelectionItemVO implements java.io.Serializable {
 
 	private Long bsid;
 
+	private BalanceSelectionVO balanceSelection;
+
 	private SelectionItemVO selectionItem;
 
 	public BalanceSelectionItemVO() {
@@ -35,6 +37,14 @@ public class BalanceSelectionItemVO implements java.io.Serializable {
 
 	public void setBsid(Long bsid) {
 		this.bsid = bsid;
+	}
+
+	public BalanceSelectionVO getBalanceSelection() {
+		return balanceSelection;
+	}
+
+	public void setBalanceSelection(BalanceSelectionVO balanceSelection) {
+		this.balanceSelection = balanceSelection;
 	}
 
 	public SelectionItemVO getSelectionItem() {

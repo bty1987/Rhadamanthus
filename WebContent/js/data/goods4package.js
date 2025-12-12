@@ -49,19 +49,26 @@ $(function() {
     });
 
     // 初始化加载公司列表
-    com.post(api.system.queryCompany, {}, function(res) {
-        if (res.companies && res.companies.length > 0) {
-            goodsPackage.items.companySelect.bindData(res.companies, "cid", "name");
-        } else {
-            com.showAlert(com.warning, '暂无公司数据');
-        }
+    com.post(api.system.queryCompany, {
+        "company.atttype": "1"
+    }, function(res) {
+
+        goodsPackage.items.companySelect.bindData(res.companys, "cid", "name");
     });
 
     // 监听公司选择变化，清空商品选择
     goodsPackage.items.companySelect.on('change', function() {
+
         // 清空商品输入框
         goodsPackage.items.goodsName.val('');
         com.cleanTypeahead("goodsName");
+
+        com.focusPage("#goodsName", "#addPackageModal").typeahead("args", {
+            "goods.company": $(this).val()
+        });
+
+        console.log($(this).val())
+
         goodsPackage.selectedGoods = null;
 
         // 清空商品信息
@@ -74,8 +81,12 @@ $(function() {
 
     // 初始化商品名称自动完成
     com.initTypeahead(goodsPackage.items.goodsName, api.data.queryGoodsByName, "goods.name", function() {
+
         // 动态返回查询参数，包含所选公司
         var companyId = goodsPackage.items.companySelect.val();
+
+        console.log(companyId);
+
         if (!companyId) {
             com.showAlert(com.warning, '请先选择公司');
             return false;

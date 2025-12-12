@@ -42,7 +42,7 @@ public class BalanceSelectionItemDaoImpl extends DaoImpl<BalanceSelectionItemPO>
 
 	@Override
 	public BalanceSelectionItemPO queryBalanceSelectionItemBySiid(long siid) {
-		return (BalanceSelectionItemPO) session().createCriteria(BalanceSelectionItemPO.class).add(Restrictions.eq("siid", siid)).setMaxResults(1).uniqueResult();
+		return (BalanceSelectionItemPO) session().createCriteria(BalanceSelectionItemPO.class).createAlias("selectionItem", "selectionItem").add(Restrictions.eq("selectionItem.siid", siid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
