@@ -13,6 +13,7 @@ $(function() {
         items: {
             name: com.focusPage("#name", "#customerUserRuleItem"),
             type: com.focusPage("#type", "#customerUserRuleItem"),
+            companySel: com.focusPage("#companySel", "#customerUserRuleItem"),
             deptype: com.focusPage("#deptype", "#customerUserRuleItem"),
             deptSel: com.focusPage("#deptSel", "#customerUserRuleItem"),
             uppval: com.focusPage("#uppval", "#customerUserRuleItem"),
@@ -46,6 +47,27 @@ $(function() {
         com.clearValidator();
     });
 
+    // 初始化加载公司列表
+    com.post(api.system.queryCompany, {
+        "company.atttype": "1"
+    }, function(res) {
+
+        customerUserRuleItem.items.companySel.bindData(res.companys, "cid", "name", true);
+    }, null, false);
+
+    // 监听公司选择变化，清空部门选择并重新加载
+    customerUserRuleItem.items.companySel.on("change", function() {
+
+        // 清空部门类型和部门选择
+        customerUserRuleItem.items.deptype.val("");
+        customerUserRuleItem.items.deptSel.html('<option value="">请选择部门</option>');
+
+        // 如果选择了部门类型，重新触发部门类型变化事件以更新部门列表
+        if (customerUserRuleItem.items.deptype.val()) {
+            customerUserRuleItem.items.deptype.trigger("change");
+        }
+    });
+
     com.post(api.communion.queryDepartmentType, {}, function(res) {
 
         customerUserRuleItem.items.deptype.bindData(res.departmentTypes, "dtid", "name", true);
@@ -55,9 +77,17 @@ $(function() {
 
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_INT) {
 
-            com.post(api.communion.queryDepartmentByDtid, {
+            var companyId = customerUserRuleItem.items.companySel.val();
+            var queryParams = {
                 "dept.type.dtid": $(this).val()
-            }, function(res) {
+            };
+
+            // 如果选择了公司，添加公司参数
+            if (companyId) {
+                queryParams["dept.company"] = companyId;
+            }
+
+            com.post(api.communion.queryDepartmentByDtid, queryParams, function(res) {
 
                 customerUserRuleItem.items.deptSel.bindData(res.deptList, "did", "name");
             });
@@ -169,6 +199,7 @@ $(function() {
 
     com.focusPage('#addCustomerUserRuleItem', '#pagenationCustomerUserRuleItem').on("click", function() {
 
+        com.focusPage(".companySel").hide();
         com.focusPage(".deptype").hide();
         com.focusPage(".deptSel").hide();
 
@@ -178,6 +209,7 @@ $(function() {
     customerUserRuleItem.items.type.change(function() {
 
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_AREA_INT) {
+            com.focusPage(".companySel").hide();
             com.focusPage(".deptype").hide();
             com.focusPage(".deptSel").hide();
             com.focusPage(".uppval").show();
@@ -186,6 +218,7 @@ $(function() {
         }
 
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_OTHER_INT) {
+            com.focusPage(".companySel").hide();
             com.focusPage(".deptype").hide();
             com.focusPage(".deptSel").hide();
             com.focusPage(".uppval").hide();
@@ -194,6 +227,7 @@ $(function() {
         }
 
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_TYPE_INT) {
+            com.focusPage(".companySel").hide();
             com.focusPage(".deptype").show();
             com.focusPage(".deptSel").hide();
             com.focusPage(".uppval").show();
@@ -202,6 +236,7 @@ $(function() {
         }
 
         if (customerUserRuleItem.items.type.val() == constant.customer().customerUserRuleItem.TYPE_DEPT_INT) {
+            com.focusPage(".companySel").show();
             com.focusPage(".deptype").show();
             com.focusPage(".deptSel").show();
             com.focusPage(".uppval").show();
@@ -220,6 +255,7 @@ $(function() {
             "customerUserRuleItem.curid": params.customer.curid,
             "customerUserRuleItem.departmentType.dtid": customerUserRuleItem.items.deptype.val(),
             "customerUserRuleItem.department.did": customerUserRuleItem.items.deptSel.val(),
+            "customerUserRuleItem.department.company": customerUserRuleItem.items.companySel.val(),
             "customerUserRuleItem.name": customerUserRuleItem.items.name.val(),
             "customerUserRuleItem.type": customerUserRuleItem.items.type.val(),
             "customerUserRuleItem.uppval": customerUserRuleItem.items.uppval.val(),
