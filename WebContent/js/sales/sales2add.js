@@ -165,7 +165,7 @@ jQuery(function() {
         });
 
         // 添加删除按钮
-        if (v.psiid == null || v.psiid == 0)
+        if (v.psiid == 0)
             $h4.append($delete);
 
         // 只有普通商品才添加编辑相关按钮
@@ -181,7 +181,7 @@ jQuery(function() {
 
         // 判断商品类型
         var goodsType = '';
-        if (v.type == 1 || v.psiid != null) {
+        if (v.type == 1 || v.psiid != 0) {
             goodsType = '套餐';
         } else if (v.goods.type == constant.data().goods.TYPE_SUIT_INT) {
             goodsType = '套餐';
