@@ -300,6 +300,9 @@ $.extend(api, {
         disableCustomerUserRule: {
             url: "disableCustomerUserRule.do"
         },
+        disableCustomerUserRuleByCurid: {
+            url: "disableCustomerUserRuleByCurid.do"
+        },
 
         queryCustomerUserRuleItem: {
             url: "queryCustomerUserRuleItem.do",

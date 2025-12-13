@@ -184,4 +184,11 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 		customerUserRuleDao.disableCustomerUserRule(company);
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void disableCustomerUserRuleByCurid(long curid) {
+
+		customerUserRuleDao.disableCustomerUserRuleByCurid(curid);
+	}
+
 }
