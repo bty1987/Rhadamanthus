@@ -23,6 +23,7 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
@@ -60,7 +61,7 @@ public class DepartmentAction extends BaseListAction {
 	@Action(value = "queryDepartmentByDtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDepartmentByDtid() throws FLException {
 
-		deptList = departmentService.queryDepartmentByDtid(dept, company != null ? CompanyServiceImpl.decode(company) : queryCompany());
+		deptList = departmentService.queryDepartmentByDtid(dept, (company != null && FormatUtil.decodeCompany(FormatUtil.decodePhone(company)) != -1) ? FormatUtil.decodeCompany(FormatUtil.decodePhone(company)) : queryCompany());
 
 		return SUCCESS;
 	}
