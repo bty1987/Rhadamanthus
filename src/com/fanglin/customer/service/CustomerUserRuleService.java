@@ -21,4 +21,6 @@ public interface CustomerUserRuleService {
 
 	public void disableCustomerUserRule(int company);
 
+	public void disableCustomerUserRuleByCurid(long curid);
+
 }

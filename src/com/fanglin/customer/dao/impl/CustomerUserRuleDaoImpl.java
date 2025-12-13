@@ -107,6 +107,15 @@ public class CustomerUserRuleDaoImpl extends DaoImpl<CustomerUserRulePO> impleme
 		return 0;
 	}
 
+	@Override
+	public int disableCustomerUserRuleByCurid(long curid) {
+
+		String sql = "update customer.customeruserrule set status = 4, finishtime = CURRENT_TIMESTAMP where curid = :curid";
+		session().createSQLQuery(sql).setLong("curid", curid).executeUpdate();
+
+		return 0;
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;

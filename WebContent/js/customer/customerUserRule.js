@@ -321,6 +321,28 @@ $(function() {
             return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
         }
     }, {
+        name: "失效",
+        clazz: "btn-danger",
+        icon: "icon-ban-circle",
+        handle: function(v) {
+
+            com.showConfirm("确认将该人员规则置为失效?", function(result) {
+
+                com.post(api.customer.disableCustomerUserRuleByCurid, {
+                    "customerUserRule.curid": v.curid
+                }, function(res) {
+
+                    searcher.doSearch();
+                    com.showAlert(com.info, "失效成功")
+                });
+            });
+            return false;
+        },
+        show: function(v) {
+
+            return v.status != constant.customer().customerUserRule.STATUS_DISABLE_INT && customerUserRule.depage == null;
+        }
+    }, {
         name: "开始接单",
         clazz: "btn-success",
         handle: function(v, check) {
