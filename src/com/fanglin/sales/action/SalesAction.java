@@ -39,6 +39,10 @@ public class SalesAction extends BaseListAction {
 
 	private Long amount;
 
+	private String securityCode;
+
+	private String verifyCode;
+
 	@Action(value = "pageSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSales() throws FLException {
 
@@ -266,7 +270,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value = "affirmSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String affirmSales() throws FLException {
 
-		salesService.affirmSales(sales);
+		salesService.affirmSales(sales, securityCode, verifyCode);
 
 		return SUCCESS;
 	}
@@ -325,5 +329,21 @@ public class SalesAction extends BaseListAction {
 
 	public void setAmount(Long amount) {
 		this.amount = amount;
+	}
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
 	}
 }

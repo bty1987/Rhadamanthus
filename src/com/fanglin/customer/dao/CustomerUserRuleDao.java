@@ -27,6 +27,4 @@ public interface CustomerUserRuleDao extends Dao<CustomerUserRulePO> {
 
 	public int disableCustomerUserRule(int company);
 
-	public int disableCustomerUserRuleByCurid(long curid);
-
 }

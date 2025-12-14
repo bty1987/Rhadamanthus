@@ -677,7 +677,11 @@ public class SalesServiceImpl implements SalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmSales(SalesVO salesVO) throws FLException {
+	public int affirmSales(SalesVO salesVO, String securityCode, String verifyCode) throws FLException {
+
+		if (securityCode != null && verifyCode != null && !FormatUtil.checkVode(verifyCode, securityCode)) {
+			throw new FLException(330012, "验证失败,请重新验证");
+		}
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
 
@@ -693,6 +697,10 @@ public class SalesServiceImpl implements SalesService {
 
 		if (salesVO.getCustomer() == null) {
 			throw new FLException(130002, "客户不存在");
+		}
+
+		if (salesVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(salesVO.getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
 		}
 
 		com.fanglin.customer.vo.DecorationVO cusDecorationVO = new com.fanglin.customer.vo.DecorationVO();

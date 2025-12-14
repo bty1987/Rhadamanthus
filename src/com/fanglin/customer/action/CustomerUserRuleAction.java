@@ -79,7 +79,7 @@ public class CustomerUserRuleAction extends BaseListAction {
 	@Action(value = "disableCustomerUserRuleByCurid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String disableCustomerUserRuleByCurid() throws FLException {
 
-		customerUserRuleService.disableCustomerUserRuleByCurid(customerUserRule.getCurid());
+		customerUserRuleService.disableCustomerUserRuleByCurid(customerUserRule);
 
 		return SUCCESS;
 	}
