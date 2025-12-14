@@ -37,18 +37,18 @@
                 /\.do$/,           // 业务接口
                 /\/api\//,         // API接口
                 /\/service\//,     // 服务接口
-                /\.json$/,         // 动态JSON
                 /\.jsp$/,          // JSP页面
                 /\.php$/,          // PHP页面
                 /\.asp$/           // ASP页面
             ],
             // 新增：需要排除的URL模式
             excludeUrlPatterns: [
-                /\.(js|css|html|htm)$/,  // 静态文件
+                /\.(js|css|html|htm)$/,      // 静态文件
                 /\.(png|jpg|jpeg|gif|svg|ico)$/,  // 图片文件
-                /\.(woff|woff2|ttf|eot)$/,  // 字体文件
-                /\.min\.js$/,               // 压缩JS
-                /\.min\.css$/               // 压缩CSS
+                /\.(woff|woff2|ttf|eot)$/,      // 字体文件
+                /\.min\.js$/,                   // 压缩JS
+                /\.min\.css$/,                  // 压缩CSS
+                /\.json$/                       // JSON文件 - 移到排除列表
             ]
         },
 
