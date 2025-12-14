@@ -330,12 +330,15 @@
         jses += '<script src="js/com/utils.js"><\/script>';
         jses += '<script src="js/com/error.js"><\/script>';
         jses += '<script src="js/com/core.js"><\/script>';
+        
         jses += '<script src="js/com/validator.js"><\/script>';
         jses += '<script src="js/com/condition.js"><\/script>';
         jses += '<script src="js/com/searcher.js"><\/script>';
         jses += '<script src="js/com/exporter.js"><\/script>';
         jses += '<script src="js/com/printer.js"><\/script>';
         jses += '<script src="js/com/constant.js"><\/script>';
+        jses += '<script src="js/com/constant-optimizer.js"><\/script>';
+        
         jses += '<script src="js/index.js"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
@@ -346,7 +349,6 @@
         }else if(parent.window.isPC && parent.window.isEncryption){
 
 			win.evalNWBin(null, 'js/com/memory.bin');
-			win.evalNWBin(null, 'js/com/performance-patch-fixed.bin');
 			
             win.evalNWBin(null, 'js/com/config.bin');
             win.evalNWBin(null, 'js/com/load.bin');
