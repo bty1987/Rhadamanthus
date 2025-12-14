@@ -1,17 +1,17 @@
 /**
- * 自动内存管理器 - 零修改业务代码的内存泄漏解决方案
+ * 修复版自动内存管理器 - 解决静态文件请求被拦截问题
  * 创建时间：2025-12-14
- * 功能：自动拦截和管理所有前端资源，无需修改业务代码
+ * 修复：避免拦截静态文件请求，只管理业务逻辑相关的Ajax请求
  */
 
 (function() {
     'use strict';
 
     /**
-     * 自动内存管理器
-     * 原理：通过重写原生API和框架方法，自动捕获所有资源创建和销毁
+     * 修复版自动内存管理器
+     * 主要修复：智能识别业务Ajax请求，避免拦截静态文件请求
      */
-    var AutoMemoryManager = {
+    var FixedMemoryManager = {
         // 页面资源映射
         pageResources: new Map(),
         // 全局资源跟踪
@@ -31,7 +31,25 @@
             enableAutoCleanup: true,
             debugMode: false,
             maxResourcesPerPage: 100,
-            cleanupInterval: 60000 // 1分钟检查一次
+            cleanupInterval: 60000,
+            // 新增：需要拦截的URL模式
+            managedUrlPatterns: [
+                /\.do$/,           // 业务接口
+                /\/api\//,         // API接口
+                /\/service\//,     // 服务接口
+                /\.jsp$/,          // JSP页面
+                /\.php$/,          // PHP页面
+                /\.asp$/           // ASP页面
+            ],
+            // 新增：需要排除的URL模式
+            excludeUrlPatterns: [
+                /\.(js|css|html|htm)$/,      // 静态文件
+                /\.(png|jpg|jpeg|gif|svg|ico)$/,  // 图片文件
+                /\.(woff|woff2|ttf|eot)$/,      // 字体文件
+                /\.min\.js$/,                   // 压缩JS
+                /\.min\.css$/,                  // 压缩CSS
+                /\.json$/                       // JSON文件 - 移到排除列表
+            ]
         },
 
         /**
@@ -46,8 +64,8 @@
             // 拦截原生API
             this.interceptNativeAPIs();
 
-            // 拦截jQuery方法
-            this.interceptJQuery();
+            // 拦截jQuery方法 (修复版)
+            this.interceptJQueryFixed();
 
             // 拦截com对象方法
             this.interceptComObject();
@@ -62,15 +80,42 @@
             this.observePageChanges();
 
             if (this.config.debugMode) {
-                console.log('AutoMemoryManager initialized for page:', this.currentPageId);
+                console.log('FixedMemoryManager initialized for page:', this.currentPageId);
             }
+        },
+
+        /**
+         * 判断是否为需要管理的Ajax请求
+         */
+        shouldManageAjaxRequest: function(url, options) {
+            if (!url && options && options.url) {
+                url = options.url;
+            }
+
+            if (!url) return false;
+
+            // 检查是否在排除列表中
+            for (var i = 0; i < this.config.excludeUrlPatterns.length; i++) {
+                if (this.config.excludeUrlPatterns[i].test(url)) {
+                    return false;  // 排除静态文件
+                }
+            }
+
+            // 检查是否在管理列表中
+            for (var i = 0; i < this.config.managedUrlPatterns.length; i++) {
+                if (this.config.managedUrlPatterns[i].test(url)) {
+                    return true;   // 管理业务请求
+                }
+            }
+
+            // 默认不管理，避免误拦截
+            return false;
         },
 
         /**
          * 生成页面ID
          */
         generatePageId: function() {
-            // 从URL或页面标题生成唯一ID
             var url = window.location.pathname;
             var title = document.title;
             var timestamp = Date.now();
@@ -115,7 +160,6 @@
                         callback.apply(this, arguments);
                     } catch (error) {
                         console.error('Interval error:', error);
-                        // 发生错误时自动清理
                         self.globalResources.intervals.delete(intervalId);
                         clearInterval(intervalId);
                     }
@@ -133,55 +177,12 @@
                 self.globalResources.intervals.delete(intervalId);
                 return originalClearInterval.apply(this, arguments);
             };
-
-            // 拦截addEventListener
-            var originalAddEventListener = EventTarget.prototype.addEventListener;
-            EventTarget.prototype.addEventListener = function(type, listener, options) {
-                var wrappedListener = function(event) {
-                    try {
-                        return listener.call(this, event);
-                    } catch (error) {
-                        console.error('Event listener error:', error);
-                    }
-                };
-
-                var result = originalAddEventListener.call(this, type, wrappedListener, options);
-
-                // 存储原始监听器以供移除时使用
-                var listenerInfo = {
-                    element: this,
-                    type: type,
-                    listener: listener,
-                    wrappedListener: wrappedListener,
-                    pageId: self.currentPageId
-                };
-
-                self.globalResources.eventListeners.add(listenerInfo);
-                self.trackResource('eventListener', listenerInfo);
-
-                return result;
-            };
-
-            // 拦截removeEventListener
-            var originalRemoveEventListener = EventTarget.prototype.removeEventListener;
-            EventTarget.prototype.removeEventListener = function(type, listener, options) {
-                // 查找并移除对应的包装监听器
-                self.globalResources.eventListeners.forEach(function(info) {
-                    if (info.element === this && info.type === type && info.listener === listener) {
-                        originalRemoveEventListener.call(this, type, info.wrappedListener, options);
-                        self.globalResources.eventListeners.delete(info);
-                        return true;
-                    }
-                }.bind(this));
-
-                return originalRemoveEventListener.call(this, type, listener, options);
-            };
         },
 
         /**
-         * 拦截jQuery方法
+         * 拦截jQuery方法 - 修复版
          */
-        interceptJQuery: function() {
+        interceptJQueryFixed: function() {
             if (typeof $ === 'undefined') return;
 
             var self = this;
@@ -189,9 +190,8 @@
             // 拦截jQuery事件绑定
             var originalOn = $.fn.on;
             $.fn.on = function(types, selector, data, fn, one) {
-                // 处理参数重载
+                // 参数处理...
                 if (typeof types === 'object') {
-                    // 事件对象格式
                     for (var type in types) {
                         this.on(type, selector, data, types[type], one);
                     }
@@ -238,31 +238,71 @@
                 return result;
             };
 
-            // 拦截jQuery ajax
+            // 修复版：智能拦截jQuery ajax
             var originalAjax = $.ajax;
-            $.ajax = function(options) {
-                var xhr = originalAjax.call(this, options);
+            $.ajax = function(url, options) {
+                // 处理参数重载
+                if (typeof url === 'object') {
+                    options = url;
+                    url = options.url;
+                } else if (typeof options === 'undefined') {
+                    options = {};
+                } else {
+                    options.url = url;
+                }
+
+                // 判断是否需要管理这个请求
+                if (!self.shouldManageAjaxRequest(url, options)) {
+                    // 静态文件请求，直接调用原始方法
+                    return originalAjax.call(this, url, options);
+                }
+
+                // 业务请求，需要管理
+                var xhr = originalAjax.call(this, url, options);
 
                 if (xhr && xhr.abort) {
                     self.globalResources.ajaxRequests.add(xhr);
                     self.trackResource('ajaxRequest', {
                         xhr: xhr,
                         options: options,
+                        url: url,
                         pageId: self.currentPageId
                     });
 
-                    // 请求完成后自动移除
+                    // 包装done方法
                     var originalDone = xhr.done;
-                    xhr.done = function() {
-                        self.globalResources.ajaxRequests.delete(xhr);
-                        return originalDone.apply(this, arguments);
-                    };
+                    if (originalDone) {
+                        xhr.done = function() {
+                            self.globalResources.ajaxRequests.delete(xhr);
+                            return originalDone.apply(this, arguments);
+                        };
+                    }
 
+                    // 包装fail方法
                     var originalFail = xhr.fail;
-                    xhr.fail = function() {
-                        self.globalResources.ajaxRequests.delete(xhr);
-                        return originalFail.apply(this, arguments);
-                    };
+                    if (originalFail) {
+                        xhr.fail = function() {
+                            self.globalResources.ajaxRequests.delete(xhr);
+                            return originalFail.apply(this, arguments);
+                        };
+                    }
+
+                    // 添加success和error的包装（如果存在）
+                    var originalSuccess = options.success;
+                    if (originalSuccess) {
+                        options.success = function(data, textStatus, jqXHR) {
+                            self.globalResources.ajaxRequests.delete(xhr);
+                            return originalSuccess.call(this, data, textStatus, jqXHR);
+                        };
+                    }
+
+                    var originalError = options.error;
+                    if (originalError) {
+                        options.error = function(jqXHR, textStatus, errorThrown) {
+                            self.globalResources.ajaxRequests.delete(xhr);
+                            return originalError.call(this, jqXHR, textStatus, errorThrown);
+                        };
+                    }
                 }
 
                 return xhr;
@@ -271,7 +311,6 @@
             // 拦截jQuery DOM操作
             var originalEmpty = $.fn.empty;
             $.fn.empty = function() {
-                // 在清空前清理事件
                 this.find('*').off();
                 this.off();
                 return originalEmpty.call(this);
@@ -279,7 +318,6 @@
 
             var originalRemove = $.fn.remove;
             $.fn.remove = function() {
-                // 在移除前清理事件和数据
                 this.find('*').off();
                 this.off();
                 this.removeData();
@@ -295,12 +333,11 @@
 
             var self = this;
 
-            // 拦截com.post
+            // 拦截com.post - 这个肯定需要管理
             if (com.post) {
                 var originalComPost = com.post;
                 com.post = function(api, options, callback, failCallback, asyncFlag) {
                     var wrappedCallback = function(response) {
-                        // 请求完成，自动清理
                         if (currentRequest) {
                             self.globalResources.ajaxRequests.delete(currentRequest);
                         }
@@ -308,7 +345,6 @@
                     };
 
                     var wrappedFailCallback = function(response) {
-                        // 请求失败，自动清理
                         if (currentRequest) {
                             self.globalResources.ajaxRequests.delete(currentRequest);
                         }
@@ -344,7 +380,6 @@
                             if (success) success(layero, index);
                         },
                         function(index) {
-                            // 弹窗关闭时自动清理
                             self.cleanupPageResources(self.currentPageId, ['popup']);
                             if (cancel) cancel(index);
                         }
@@ -378,38 +413,6 @@
                             originalSuccess(layero, index);
                         };
                     }
-
-                    return result;
-                };
-            }
-
-            // 拦截typeahead
-            if (typeof $.fn.typeahead !== 'undefined') {
-                var originalTypeahead = $.fn.typeahead;
-                $.fn.typeahead = function(options) {
-                    var result = originalTypeahead.call(this, options);
-
-                    self.trackResource('typeahead', {
-                        element: this,
-                        options: options,
-                        pageId: self.currentPageId
-                    });
-
-                    return result;
-                };
-            }
-
-            // 拦截chosen
-            if (typeof $.fn.chosen !== 'undefined') {
-                var originalChosen = $.fn.chosen;
-                $.fn.chosen = function(options) {
-                    var result = originalChosen.call(this, options);
-
-                    self.trackResource('chosen', {
-                        element: this,
-                        options: options,
-                        pageId: self.currentPageId
-                    });
 
                     return result;
                 };
@@ -462,7 +465,6 @@
             var lastUrl = window.location.href;
             setInterval(function() {
                 if (window.location.href !== lastUrl) {
-                    // URL发生变化，可能是页面切换
                     self.onPageChange();
                     lastUrl = window.location.href;
                 }
@@ -473,7 +475,6 @@
                 var observer = new MutationObserver(function(mutations) {
                     mutations.forEach(function(mutation) {
                         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                            // 检查是否有新的页面容器
                             mutation.addedNodes.forEach(function(node) {
                                 if (node.nodeType === Node.ELEMENT_NODE) {
                                     if (node.classList && node.classList.contains('flpage')) {
@@ -528,25 +529,11 @@
         cleanupOldPages: function() {
             var self = this;
 
-            // 清理非当前活动的页面资源
             this.pageResources.forEach(function(resources, pageId) {
                 if (pageId !== self.currentPageId) {
                     self.cleanupPageResources(pageId);
                 }
             });
-
-            // 清理jQuery缓存中的无效元素
-            if (typeof $ !== 'undefined') {
-                // 清理不在DOM中的jQuery对象
-                $.cache = $.cache || {};
-                for (var cacheId in $.cache) {
-                    var cacheItem = $.cache[cacheId];
-                    if (cacheItem.handle && cacheItem.handle.elem && !$.contains(document, cacheItem.handle.elem)) {
-                        // 元素已不在DOM中，清理缓存
-                        delete $.cache[cacheId];
-                    }
-                }
-            }
         },
 
         /**
@@ -592,23 +579,6 @@
                 resources.ajaxRequests.clear();
             }
 
-            // 清理事件监听器
-            if (!types || types.includes('event')) {
-                resources.eventListeners.forEach(function(eventInfo) {
-                    try {
-                        if (eventInfo.element && eventInfo.element.removeEventListener) {
-                            eventInfo.element.removeEventListener(
-                                eventInfo.type,
-                                eventInfo.wrappedListener || eventInfo.wrappedFn
-                            );
-                        }
-                    } catch (e) {
-                        // 忽略错误
-                    }
-                });
-                resources.eventListeners.clear();
-            }
-
             // 清理组件
             if (!types || types.includes('component')) {
                 resources.components.forEach(function(componentInfo) {
@@ -617,9 +587,6 @@
                             componentInfo.element.off();
                             componentInfo.element.removeData();
                         }
-                        if (componentInfo.destroy && typeof componentInfo.destroy === 'function') {
-                            componentInfo.destroy();
-                        }
                     } catch (e) {
                         // 忽略错误
                     }
@@ -627,7 +594,6 @@
                 resources.components.clear();
             }
 
-            // 移除页面资源记录
             this.pageResources.delete(pageId);
 
             if (this.config.debugMode) {
@@ -644,7 +610,6 @@
             setInterval(function() {
                 self.cleanupOldPages();
 
-                // 检查资源数量，如果过多则警告
                 var stats = self.getResourceStats();
                 if (stats.total > self.config.maxResourcesPerPage) {
                     console.warn('Too many active resources:', stats);
@@ -695,12 +660,10 @@
         cleanupAll: function() {
             var self = this;
 
-            // 清理所有页面资源
             this.pageResources.forEach(function(resources, pageId) {
                 self.cleanupPageResources(pageId);
             });
 
-            // 清理全局资源
             this.globalResources.timers.forEach(function(timerId) {
                 clearTimeout(timerId);
             });
@@ -718,49 +681,41 @@
             });
             this.globalResources.ajaxRequests.clear();
 
-            // 清理DOM观察器
             this.globalResources.domObservers.forEach(function(observer) {
                 observer.disconnect();
             });
             this.globalResources.domObservers.clear();
 
             console.log('All resources cleaned up');
-        },
-
-        /**
-         * 设置配置
-         */
-        setConfig: function(config) {
-            Object.assign(this.config, config);
         }
     };
 
     // 页面卸载时自动清理
     window.addEventListener('beforeunload', function() {
-        AutoMemoryManager.cleanupAll();
+        FixedMemoryManager.cleanupAll();
     });
 
     // 导出到全局
-    window.AutoMemoryManager = AutoMemoryManager;
+    window.FixedMemoryManager = FixedMemoryManager;
 
     // 提供便捷的全局方法
     window.autoCleanup = function() {
-        AutoMemoryManager.cleanupCurrentPage();
+        FixedMemoryManager.cleanupCurrentPage();
     };
 
     window.autoCheckMemory = function() {
-        var stats = AutoMemoryManager.getResourceStats();
-        console.log('Auto Memory Stats:', stats);
+        var stats = FixedMemoryManager.getResourceStats();
+        console.log('Fixed Memory Stats:', stats);
         return stats;
     };
 
     // 自动初始化
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            AutoMemoryManager.init();
+            FixedMemoryManager.init();
         });
     } else {
-        AutoMemoryManager.init();
+        FixedMemoryManager.init();
     }
 
 })();
