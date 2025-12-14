@@ -84,7 +84,7 @@ $(function() {
 
             // 如果选择了公司，添加公司参数
             if (companyId) {
-                queryParams["dept.company"] = companyId;
+                queryParams["company"] = companyId;
             }
 
             com.post(api.communion.queryDepartmentByDtid, queryParams, function(res) {
@@ -255,7 +255,6 @@ $(function() {
             "customerUserRuleItem.curid": params.customer.curid,
             "customerUserRuleItem.departmentType.dtid": customerUserRuleItem.items.deptype.val(),
             "customerUserRuleItem.department.did": customerUserRuleItem.items.deptSel.val(),
-            "customerUserRuleItem.department.company": customerUserRuleItem.items.companySel.val(),
             "customerUserRuleItem.name": customerUserRuleItem.items.name.val(),
             "customerUserRuleItem.type": customerUserRuleItem.items.type.val(),
             "customerUserRuleItem.uppval": customerUserRuleItem.items.uppval.val(),
