@@ -131,6 +131,10 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			throw new FLException(130002, "客户不存在");
 		}
 
+		if (decorationVO.getCustomer().getPhone() != null && !decorationPO.getCustomer().getPhone().equals(FormatUtil.encodePhone(decorationVO.getCustomer().getPhone()))) {
+			throw new FLException(130115, "客户电话不匹配");
+		}
+
 		com.fanglin.customer.vo.DecorationVO cecorationVO = new com.fanglin.customer.vo.DecorationVO();
 
 		cecorationVO.setOrderId(orderId);

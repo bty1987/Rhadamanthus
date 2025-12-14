@@ -62,7 +62,7 @@ $(function() {
 
     // 监听公司选择变化，清空商品选择
     goodsPackage.items.companySelect.on('change', function() {
-
+        
         // 清空商品输入框
         goodsPackage.items.goodsName.val('');
         com.cleanTypeahead("goodsName");

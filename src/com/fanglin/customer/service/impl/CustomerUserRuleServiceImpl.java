@@ -186,9 +186,17 @@ public class CustomerUserRuleServiceImpl implements CustomerUserRuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void disableCustomerUserRuleByCurid(long curid) {
+	public void disableCustomerUserRuleByCurid(CustomerUserRuleVO customerUserRuleVO) throws FLException {
 
-		customerUserRuleDao.disableCustomerUserRuleByCurid(curid);
+		CustomerUserRulePO customerUserRulePO = customerUserRuleDao.get(customerUserRuleVO.getCurid());
+
+		if (customerUserRulePO == null) {
+			throw new FLException(330081, "无匹配规则");
+		}
+
+		customerUserRulePO.setStatus(CustomerUserRulePO.STATUS_DISABLE_INT);
+
+		customerUserRuleDao.update(customerUserRulePO);
 	}
 
 }
