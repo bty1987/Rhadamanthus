@@ -36,6 +36,38 @@
         },
 
         /**
+         * 加载所有必要的常量
+         */
+        loadAllConstants: function() {
+            var self = this;
+
+            if (this.loadingPromise) {
+                return this.loadingPromise;
+            }
+
+            this.loadingPromise = new Promise(function(resolve, reject) {
+                // 加载核心常量模块
+                var coreModules = ['common', 'system', 'personel'];
+                var promises = [];
+
+                coreModules.forEach(function(module) {
+                    promises.push(self.loadConstantsModule(module));
+                });
+
+                Promise.all(promises).then(function() {
+                    console.log('✅ Core constants loaded successfully');
+                    resolve();
+                }).catch(function(error) {
+                    console.error('❌ Failed to load constants:', error);
+                    // 即使失败也resolve，避免阻塞页面
+                    resolve();
+                });
+            });
+
+            return this.loadingPromise;
+        },
+
+        /**
          * 修复Constant对象初始化
          */
         fixConstantInit: function() {
@@ -47,7 +79,7 @@
                 window.Constant = function() {
                     return {
                         init: function() {
-                            return Promise.resolve({});
+                            return self.loadAllConstants();
                         }
                     };
                 };
@@ -62,36 +94,6 @@
                 var enhancedConstant = {
                     init: function() {
                         return self.loadAllConstants();
-                    },
-
-                    /**
-                     * 加载所有必要的常量
-                     */
-                    loadAllConstants: function() {
-                        if (self.loadingPromise) {
-                            return self.loadingPromise;
-                        }
-
-                        self.loadingPromise = new Promise(function(resolve, reject) {
-                            // 加载核心常量模块
-                            var coreModules = ['common', 'system', 'personel'];
-                            var promises = [];
-
-                            coreModules.forEach(function(module) {
-                                promises.push(self.loadConstantsModule(module));
-                            });
-
-                            Promise.all(promises).then(function() {
-                                console.log('✅ Core constants loaded successfully');
-                                resolve();
-                            }).catch(function(error) {
-                                console.error('❌ Failed to load constants:', error);
-                                // 即使失败也resolve，避免阻塞页面
-                                resolve();
-                            });
-                        });
-
-                        return self.loadingPromise;
                     }
                 };
 
