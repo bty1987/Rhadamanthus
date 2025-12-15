@@ -1304,7 +1304,7 @@ jQuery(function($) {
 
     // 加载公司列表
     function loadCompanies() {
-        com.post(api.system.queryCompanyForOption, {}, function(res) {
+        com.post(api.system.queryCompany, {}, function(res) {
             renderCompanies(res.companies || []);
         });
     }
@@ -1468,7 +1468,7 @@ jQuery(function($) {
                 // 首次展开，需要加载子模块
                 $expandBtn.html('<i class="ace-icon fa fa-spinner fa-spin"></i>');
 
-                com.post(api.system.queryModule, {
+                com.post(api.system.queryModuleForLogin, {
                     'module.system': 1,
                     'module.fatherModule.mid': parentModule.mid,
                     'module.level': parentLevel + 1
