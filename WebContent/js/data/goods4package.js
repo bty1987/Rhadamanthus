@@ -71,8 +71,6 @@ $(function() {
             "goods.company": $(this).val()
         });
 
-        console.log($(this).val())
-
         goodsPackage.selectedGoods = null;
 
         // 清空商品信息
@@ -88,8 +86,6 @@ $(function() {
 
         // 动态返回查询参数，包含所选公司
         var companyId = goodsPackage.items.companySelect.val();
-
-        console.log(companyId);
 
         if (!companyId) {
             com.showAlert(com.warning, '请先选择公司');
