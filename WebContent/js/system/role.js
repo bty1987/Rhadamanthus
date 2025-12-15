@@ -851,7 +851,35 @@ jQuery(function($) {
 
             // 通过DOM结构向上查找父模块
             var $currentLi = $currentModule.closest('li.dd-item');
+            console.log('当前模块li:', {
+                mid: moduleId,
+                currentLiClass: $currentLi.attr('class'),
+                currentLiMid: $currentLi.attr('data-mid'),
+                currentLiLevel: $currentLi.attr('data-level'),
+                parentHtml: $currentLi.parent().prop('tagName'),
+                parentClass: $currentLi.parent().attr('class')
+            });
+
             var $parentLi = $currentLi.parent().closest('li.dd-item');
+            console.log('查找的父模块li:', {
+                found: $parentLi.length > 0,
+                parentLiMid: $parentLi.attr('data-mid'),
+                parentLiLevel: $parentLi.attr('data-level'),
+                parentLiClass: $parentLi.attr('class')
+            });
+
+            // 如果直接向上找不到，尝试其他方式查找父模块
+            if ($parentLi.length === 0) {
+                console.log('直接向上查找失败，尝试其他方式...');
+
+                // 方法1：查找同级的2级模块复选框
+                var $allLevel2Modules = $('.module-permission[data-level="2"]');
+                console.log('页面中所有2级模块数量:', $allLevel2Modules.length);
+
+                // 方法2：打印DOM结构用于调试
+                console.log('当前li的父级元素结构:', $currentLi.parent()[0]);
+                console.log('当前li的父级的父级元素结构:', $currentLi.parent().parent()[0]);
+            }
 
             if ($parentLi.length > 0) {
                 var parentMid = $parentLi.attr('data-mid');
