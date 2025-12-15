@@ -555,6 +555,38 @@ jQuery(function($) {
         }
 
         $list.append(fragment);
+
+        // 添加全局事件委托，处理动态加载的模块权限变更
+        $list.off('change', '.module-permission').on('change', '.module-permission', function() {
+            var $checkbox = $(this);
+            var mid = parseInt($checkbox.data('mid'));
+            var level = parseInt($checkbox.data('level'));
+
+            // 从缓存中找到模块数据
+            var moduleData = role.moduleCache.get('moduleData');
+            var module = null;
+
+            // 根据层级查找模块
+            if (level === 1) {
+                module = moduleData.level1.find(function(m) { return m.mid === mid; });
+            } else if (level === 2) {
+                for (var parentId in moduleData.level2) {
+                    var modules = moduleData.level2[parentId];
+                    module = modules.find(function(m) { return m.mid === mid; });
+                    if (module) break;
+                }
+            } else if (level === 3) {
+                for (var parentId in moduleData.level3) {
+                    var modules = moduleData.level3[parentId];
+                    module = modules.find(function(m) { return m.mid === mid; });
+                    if (module) break;
+                }
+            }
+
+            if (module) {
+                handleModulePermissionChange($checkbox, module);
+            }
+        });
     }
 
     // 创建模块项（支持懒加载）
@@ -620,10 +652,7 @@ jQuery(function($) {
             $moduleInput.prop('checked', true);
         }
 
-        // 绑定变更事件，实现级联选中
-        $moduleInput.on('change', function() {
-            handleModulePermissionChange($(this), module);
-        });
+        // 注意：模块权限变更事件通过全局事件委托处理，无需单独绑定
 
         $moduleCheck.append($moduleLabel);
         $rightsDiv.append($moduleCheck);
@@ -774,11 +803,21 @@ jQuery(function($) {
         var isChecked = $checkbox.prop('checked');
         var moduleData = role.moduleCache.get('moduleData');
 
+        console.log('权限变更:', {
+            moduleId: module.mid,
+            name: module.name,
+            level: module.level,
+            checked: isChecked,
+            fatherModule: module.fatherModule ? module.fatherModule.name : 'null'
+        });
+
         if (isChecked) {
             // 选中子模块，需要选中父模块
+            console.log('选中子模块，开始更新父模块...');
             updateParentModules(module.mid, module.level, true);
         } else {
             // 取消选中父模块，需要取消选中所有子模块
+            console.log('取消选中模块，开始更新子模块...');
             updateChildModules(module.mid, module.level, false);
         }
     }
@@ -787,109 +826,70 @@ jQuery(function($) {
     function updateParentModules(moduleId, currentLevel, check) {
         if (currentLevel <= 1) return; // 已经是1级，没有父模块
 
-        var parentLevel = currentLevel - 1;
+        var moduleData = role.moduleCache.get('moduleData');
 
-        // 遍历所有层级的模块，查找父模块
-        function findParentModule(modules) {
-            for (var i = 0; i < modules.length; i++) {
-                var module = modules[i];
-
-                // 检查是否有子模块匹配当前moduleId
-                if (module.children && module.children.length > 0) {
-                    for (var j = 0; j < module.children.length; j++) {
-                        if (module.children[j].mid === moduleId) {
-                            // 找到父模块
-                            var $parentCheckbox = $('.module-permission[data-mid="' + module.mid + '"]');
-                            if ($parentCheckbox.length > 0) {
-                                $parentCheckbox.prop('checked', check);
-                                // 继续向上查找
-                                updateParentModules(module.mid, parentLevel, check);
+        // 查找父模块
+        function findParentModule(moduleId, level) {
+            if (level === 2) {
+                // 2级模块的父模块是1级模块
+                for (var i = 0; i < moduleData.level1.length; i++) {
+                    var level1Module = moduleData.level1[i];
+                    if (moduleData.level2[level1Module.mid]) {
+                        for (var j = 0; j < moduleData.level2[level1Module.mid].length; j++) {
+                            if (moduleData.level2[level1Module.mid][j].mid == moduleId) {
+                                return level1Module;
                             }
-                            return;
                         }
                     }
                 }
-            }
-        }
-
-        // 从缓存中查找父模块
-        if (parentLevel === 2) {
-            // 从1级模块中查找
-            $.each(moduleData.level1, function(i, level1Module) {
-                if (moduleData.level2[level1Module.mid]) {
-                    findParentModule(moduleData.level2[level1Module.mid]);
-                }
-            });
-        } else if (parentLevel === 1) {
-            // 从缓存数据中构建树形结构来查找
-            buildModuleTreeAndFindParent(moduleId, currentLevel);
-        }
-    }
-
-    // 从缓存数据构建树形结构并查找父模块
-    function buildModuleTreeAndFindParent(targetMid, targetLevel) {
-        var moduleTree = [];
-
-        // 构建1级模块树
-        $.each(moduleData.level1, function(i, level1Module) {
-            var node = {
-                mid: level1Module.mid,
-                level: 1,
-                children: []
-            };
-
-            // 添加2级子模块
-            if (moduleData.level2[level1Module.mid]) {
-                $.each(moduleData.level2[level1Module.mid], function(j, level2Module) {
-                    var childNode = {
-                        mid: level2Module.mid,
-                        level: 2,
-                        children: [],
-                        fatherModule: level1Module  // 设置父模块引用
-                    };
-
-                    // 添加3级子模块
-                    if (moduleData.level3[level2Module.mid]) {
-                        childNode.children = moduleData.level3[level2Module.mid];
-                        // 设置父模块引用
-                        $.each(moduleData.level3[level2Module.mid], function(k, level3Module) {
-                            level3Module.fatherModule = level2Module;
-                        });
+            } else if (level === 3) {
+                // 3级模块的父模块是2级模块
+                for (var parentId in moduleData.level3) {
+                    var level3Modules = moduleData.level3[parentId];
+                    for (var i = 0; i < level3Modules.length; i++) {
+                        if (level3Modules[i].mid == moduleId) {
+                            // 找到3级模块，现在找对应的2级模块
+                            if (moduleData.level2[parentId]) {
+                                return moduleData.level2[parentId][0];
+                            }
+                        }
                     }
-
-                    node.children.push(childNode);
-                });
-            }
-
-            moduleTree.push(node);
-        });
-
-        // 递归查找父模块
-        function findInTree(nodes, mid, level, path) {
-            for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].mid === mid && nodes[i].level === level) {
-                    return path;
-                }
-
-                if (nodes[i].children && nodes[i].children.length > 0) {
-                    var result = findInTree(nodes[i].children, mid, level, path.concat([nodes[i]]));
-                    if (result) return result;
                 }
             }
             return null;
         }
 
-        var path = findInTree(moduleTree, targetMid, targetLevel, []);
-        if (path && path.length > 0) {
-            // 设置父模块为选中
-            for (var i = 0; i < path.length; i++) {
-                var $parentCheckbox = $('.module-permission[data-mid="' + path[i].mid + '"]');
-                if ($parentCheckbox.length > 0) {
-                    $parentCheckbox.prop('checked', true);
-                }
+        var parentModule = findParentModule(moduleId, currentLevel);
+
+        console.log('查找父模块结果:', {
+            childModuleId: moduleId,
+            childLevel: currentLevel,
+            parentModule: parentModule ? { id: parentModule.mid, name: parentModule.name, level: parentModule.level } : null
+        });
+
+        if (parentModule) {
+            var $parentCheckbox = $('.module-permission[data-mid="' + parentModule.mid + '"]');
+            console.log('父模块复选框查找结果:', {
+                parentId: parentModule.mid,
+                selector: '.module-permission[data-mid="' + parentModule.mid + '"]',
+                found: $parentCheckbox.length > 0,
+                currentChecked: $parentCheckbox.length > 0 ? $parentCheckbox.prop('checked') : 'N/A'
+            });
+
+            if ($parentCheckbox.length > 0) {
+                $parentCheckbox.prop('checked', check);
+                console.log('✓ 设置父模块选中:', parentModule.mid, parentModule.name, 'checked:', check);
+
+                // 递归更新上级父模块
+                updateParentModules(parentModule.mid, parentModule.level, check);
+            } else {
+                console.log('✗ 未找到父模块复选框:', parentModule.mid, parentModule.name);
             }
+        } else {
+            console.log('✗ 未找到父模块');
         }
     }
+
 
     // 更新子模块状态
     function updateChildModules(parentId, parentLevel, check) {
