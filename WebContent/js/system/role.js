@@ -231,6 +231,7 @@ jQuery(function($) {
 
             var $chainPage = $('<a></a>').addClass('btn btn-minier btn-yellow').html('外链配置');
             var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
+            var $btnBatchModule = $('<a></a>').addClass('btn btn-minier btn-purple').html('批量配置');
             var $btnTask = $('<a></a>').addClass('btn btn-minier btn-danger').html('任务配置');
             var $officeModule = $('<a></a>').addClass('btn btn-minier btn-info').html('办公配置');
             var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
@@ -249,9 +250,9 @@ jQuery(function($) {
             });
 
             if (role.pageType == "advance") {
-                $divBtnWrap.append($chainPage).append($btnModule).append($btnTask).append($officeModule).append($btnOperation).append($btnChart).append($btnEdit).append($btnDel).appendTo($h3);
+                $divBtnWrap.append($chainPage).append($btnModule).append($btnBatchModule).append($btnTask).append($officeModule).append($btnOperation).append($btnChart).append($btnEdit).append($btnDel).appendTo($h3);
             } else {
-                $divBtnWrap.append($btnModule).append($btnTask).appendTo($h3);
+                $divBtnWrap.append($btnModule).append($btnBatchModule).append($btnTask).appendTo($h3);
             }
 
             $liLine.append($h3).append($ulProperty);
@@ -263,6 +264,13 @@ jQuery(function($) {
                 queryModuleByRoleId(v.rid, 1);
 
                 role.modals.moduleModal.modal('show');
+            });
+
+            $btnBatchModule.click(function() {
+
+                role.rid = v.rid;
+
+                openBatchModuleModal(v.rid);
             });
 
             $btnTask.bind('click', function(rid) {
@@ -1256,6 +1264,429 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功");
             role.modals.chartPageModal.modal("hide");
         });
+    }
+
+    // ==================== 批量模块配置功能 ====================
+
+    // 初始化批量配置相关元素
+    role.modals.batchModuleModal = com.focusPage('#batchModuleModal');
+    role.items.companyList = com.focusPage('#companyList');
+    role.items.batchModuleList = com.focusPage('#batchModuleList');
+    role.items.selectedInfo = com.focusPage('#selectedInfo');
+
+    // 批量模块配置弹窗相关数据
+    var batchConfig = {
+        selectedCompanies: [], // 选中的公司列表
+        modulePermissions: {}, // 模块权限配置
+        currentRoleId: null // 当前角色ID
+    };
+
+    // 打开批量模块配置弹窗
+    function openBatchModuleModal(roleId) {
+        batchConfig.currentRoleId = roleId;
+        batchConfig.selectedCompanies = [];
+        batchConfig.modulePermissions = {};
+
+        // 加载公司列表
+        loadCompanies();
+
+        // 加载模块列表
+        loadBatchModules();
+
+        // 显示弹窗
+        role.modals.batchModuleModal.modal('show');
+    }
+
+    // 加载公司列表
+    function loadCompanies() {
+        com.post(api.system.queryCompanyForOption, {}, function(res) {
+            renderCompanies(res.companies || []);
+        });
+    }
+
+    // 渲染公司列表
+    function renderCompanies(companies) {
+        role.items.companyList.empty();
+
+        $.each(companies, function(i, company) {
+            var $companyItem = $('<div class="checkbox"></div>');
+            var $checkbox = $('<input type="checkbox">')
+                .attr('id', 'company_' + company.cid)
+                .attr('value', company.cid)
+                .addClass('ace company-checkbox');
+            var $label = $('<label></label>')
+                .attr('for', 'company_' + company.cid)
+                .append($checkbox)
+                .append('<span class="lbl">' + company.name + '</span>');
+
+            $companyItem.append($label);
+            role.items.companyList.append($companyItem);
+        });
+    }
+
+    // 加载批量模块列表
+    function loadBatchModules() {
+        role.items.batchModuleList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>加载模块列表中...</p></div>');
+
+        // 先获取当前用户有权限的模块
+        com.post(api.system.queryModuleForLogin, {
+            'module.system': 1
+        }, function(data) {
+            // 清空现有内容
+            role.items.batchModuleList.empty();
+
+            // 创建模块树容器
+            var $moduleTree = $('<div id="batchModuleTree" class="dd"></div>');
+            role.items.batchModuleList.append($moduleTree);
+
+            // 渲染模块树
+            renderBatchModuleTree(data.modules || []);
+        });
+    }
+
+    // 渲染批量模块树
+    function renderBatchModuleTree(modules) {
+        var $ol = $('<ol class="dd-list"></ol>');
+        var fragment = document.createDocumentFragment();
+
+        $.each(modules, function(i, module) {
+            module.level = 1;
+            module.fatherModule = null;
+            var $li = createBatchModuleItem(module, 1);
+            fragment.appendChild($li[0]);
+        });
+
+        $ol.append(fragment);
+        role.items.batchModuleList.append($ol);
+    }
+
+    // 创建批量模块项
+    function createBatchModuleItem(module, level) {
+        var $li = $('<li></li>').addClass('dd-item').attr('data-mid', module.mid).attr('data-level', level);
+
+        var $div = $('<div></div>').addClass('dd-handle clearfix');
+
+        // 模块名称
+        var $nameSpan = $('<span class="module-name" style="font-weight: bold;"></span>').text(module.name + (module.alias ? '-' + module.alias : ''));
+        $div.append($nameSpan);
+
+        // 添加展开按钮（1级和2级菜单）
+        if (level < 3) {
+            var $expandBtn = $('<button type="button" class="btn btn-xs btn-info pull-left" style="margin-right: 5px;">' +
+                '<i class="ace-icon fa fa-plus"></i></button>');
+            $div.append($expandBtn);
+
+            // 创建子容器
+            var $childOl = $('<ol class="dd-list hide"></ol>');
+            $li.append($childOl);
+
+            // 绑定展开/折叠事件
+            $expandBtn.on('click', function(e) {
+                e.stopPropagation();
+                toggleBatchChildModules($(this), module, $childOl, level);
+            });
+        }
+
+        // 权限复选框区域
+        var $rightsDiv = $('<div class="pull-right" style="margin-left: 10px;"></div>');
+        var $rights = createBatchModuleRights(module);
+        $rightsDiv.append($rights);
+        $div.append($rightsDiv);
+
+        $li.append($div);
+        return $li;
+    }
+
+    // 创建批量模块权限复选框
+    function createBatchModuleRights(module) {
+        var $rightsDiv = $('<div style="display: inline-block;"></div>');
+
+        // 权限复选框
+        var $moduleCheck = $('<div></div>').addClass('checkbox').css({
+            'margin-bottom': '0',
+            'margin-top': '0',
+            'display': 'inline-block',
+            'margin-right': '5px'
+        });
+        var $moduleInput = $('<input type="checkbox" name="batchModule" data-mid="' + module.mid + '" data-level="' + module.level + '">')
+            .addClass('ace batch-module-permission')
+            .val(module.mid);
+        var $moduleLabel = $('<label></label>').append($moduleInput).append('<span class="lbl">权限</span>');
+
+        $moduleCheck.append($moduleLabel);
+        $rightsDiv.append($moduleCheck);
+
+        // 快捷方式和访问权限（仅对有URL的模块）
+        if (module.url && module.url !== '') {
+            // 快捷方式
+            var $linkCheck = $('<div></div>').addClass('checkbox').css({
+                'margin-bottom': '0',
+                'margin-top': '0',
+                'display': 'inline-block',
+                'margin-right': '5px'
+            });
+            var $linkInput = $('<input type="checkbox" name="batchLink" data-mid="' + module.mid + '">')
+                .addClass('ace');
+            var $linkLabel = $('<label></label>').append($linkInput).append('<span class="lbl">快捷</span>');
+            $linkCheck.append($linkLabel);
+            $rightsDiv.append($linkCheck);
+
+            // 访问权限
+            var $accessCheck = $('<div></div>').addClass('checkbox').css({
+                'margin-bottom': '0',
+                'margin-top': '0',
+                'display': 'inline-block'
+            });
+            var $accessInput = $('<input type="checkbox" name="batchAccess" data-mid="' + module.mid + '">')
+                .addClass('ace');
+            var $accessLabel = $('<label></label>').append($accessInput).append('<span class="lbl">访问</span>');
+            $accessCheck.append($accessLabel);
+            $rightsDiv.append($accessCheck);
+        }
+
+        return $rightsDiv;
+    }
+
+    // 切换批量模块子模块显示状态
+    function toggleBatchChildModules($expandBtn, parentModule, $childContainer, parentLevel) {
+        var $icon = $expandBtn.find('i');
+        var isExpanded = $icon.hasClass('fa-minus');
+
+        if (isExpanded) {
+            // 折叠
+            $childContainer.addClass('hide');
+            $icon.removeClass('fa-minus').addClass('fa-plus');
+        } else {
+            // 展开
+            if ($childContainer.children().length === 0) {
+                // 首次展开，需要加载子模块
+                $expandBtn.html('<i class="ace-icon fa fa-spinner fa-spin"></i>');
+
+                com.post(api.system.queryModuleForLogin, {
+                    'module.system': 1,
+                    'module.fatherModule.mid': parentModule.mid,
+                    'module.level': parentLevel + 1
+                }, function(data) {
+                    $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+
+                    if (data.modules && data.modules.length > 0) {
+                        var $ol = $('<ol class="dd-list"></ol>');
+                        var fragment = document.createDocumentFragment();
+
+                        $.each(data.modules, function(i, childModule) {
+                            childModule.level = parentLevel + 1;
+                            childModule.fatherModule = parentModule;
+                            var $childLi = createBatchModuleItem(childModule, parentLevel + 1);
+                            fragment.appendChild($childLi[0]);
+                        });
+
+                        $ol.append(fragment);
+                        $childContainer.append($ol);
+                    }
+
+                    $childContainer.removeClass('hide');
+                });
+            } else {
+                $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+                $childContainer.removeClass('hide');
+            }
+        }
+    }
+
+    // 绑定批量配置事件
+    com.focusPage(document).ready(function() {
+        // 全选公司
+        com.focusPage('#selectAllCompanies').on('change', function() {
+            var isChecked = $(this).prop('checked');
+            com.focusPage('.company-checkbox').prop('checked', isChecked);
+            updateSelectedInfo();
+        });
+
+        // 公司选择变更
+        com.focusPage('#companyList').on('change', '.company-checkbox', function() {
+            updateSelectedInfo();
+        });
+
+        // 全部展开模块
+        com.focusPage('#expandAllModules').on('click', function() {
+            com.focusPage('#batchModuleTree .btn:has(i.fa-plus)').each(function() {
+                $(this).click();
+            });
+        });
+
+        // 全部折叠模块
+        com.focusPage('#collapseAllModules').on('click', function() {
+            com.focusPage('#batchModuleTree .btn:has(i.fa-minus)').each(function() {
+                $(this).click();
+            });
+        });
+
+        // 模块权限变更事件委托
+        com.focusPage('#batchModuleTree').on('change', '.batch-module-permission', function() {
+            var $checkbox = $(this);
+            var mid = parseInt($checkbox.data('mid'));
+            var level = parseInt($checkbox.data('level'));
+            var isChecked = $checkbox.prop('checked');
+
+            // 级联处理
+            handleBatchModulePermissionChange($checkbox, mid, level, isChecked);
+        });
+
+        // 批量保存
+        com.focusPage('#saveBatchModuleBtn').on('click', function() {
+            saveBatchModuleConfig();
+        });
+
+        // 关闭弹窗时清空数据
+        com.focusPage('#batchModuleModal').on('hidden.bs.modal', function() {
+            batchConfig.selectedCompanies = [];
+            batchConfig.modulePermissions = {};
+            batchConfig.currentRoleId = null;
+        });
+    });
+
+    // 更新选中信息显示
+    function updateSelectedInfo() {
+        var selectedCompanyIds = [];
+        var selectedCompanyNames = [];
+
+        com.focusPage('.company-checkbox:checked').each(function() {
+            var companyId = $(this).val();
+            var companyName = $(this).siblings('.lbl').text();
+            selectedCompanyIds.push(companyId);
+            selectedCompanyNames.push(companyName);
+        });
+
+        batchConfig.selectedCompanies = selectedCompanyIds;
+
+        if (selectedCompanyIds.length > 0) {
+            role.items.selectedInfo.text('已选择 ' + selectedCompanyIds.length + ' 个公司: ' + selectedCompanyNames.join(', '));
+        } else {
+            role.items.selectedInfo.text('请选择要配置的公司');
+        }
+    }
+
+    // 处理批量模块权限变更（级联）
+    function handleBatchModulePermissionChange($checkbox, mid, level, isChecked) {
+        if (isChecked) {
+            // 选中子模块，需要选中父模块
+            updateBatchParentModules(mid, level, true);
+        } else {
+            // 取消选中父模块，需要取消选中所有子模块
+            updateBatchChildModules(mid, level, false);
+        }
+    }
+
+    // 更新批量父模块状态
+    function updateBatchParentModules(moduleId, currentLevel, check) {
+        if (currentLevel <= 1) return;
+
+        var $currentLi = com.focusPage('#batchModuleTree .dd-item[data-mid="' + moduleId + '"]');
+        var $parentLi = $currentLi.parent().closest('li.dd-item');
+
+        if ($parentLi.length > 0) {
+            var parentMid = $parentLi.attr('data-mid');
+            var $parentCheckbox = $parentLi.find('.batch-module-permission[data-mid="' + parentMid + '"]');
+
+            if ($parentCheckbox.length > 0 && $parentCheckbox.prop('checked') !== check) {
+                $parentCheckbox.prop('checked', check);
+                // 递归向上处理
+                updateBatchParentModules(parentMid, currentLevel - 1, check);
+            }
+        }
+    }
+
+    // 更新批量子模块状态
+    function updateBatchChildModules(parentId, parentLevel, check) {
+        if (parentLevel >= 3) return;
+
+        var $parentLi = com.focusPage('#batchModuleTree .dd-item[data-mid="' + parentId + '"]');
+        var $childLis = $parentLi.find('> .dd-list > .dd-item');
+
+        $childLis.each(function() {
+            var $childLi = $(this);
+            var childMid = $childLi.attr('data-mid');
+            var $childCheckbox = $childLi.find('.batch-module-permission[data-mid="' + childMid + '"]');
+
+            if ($childCheckbox.length > 0) {
+                $childCheckbox.prop('checked', check);
+                // 递归处理更深层次的子模块
+                updateBatchChildModules(childMid, parentLevel + 1, check);
+            }
+        });
+    }
+
+    // 保存批量模块配置
+    function saveBatchModuleConfig() {
+        if (batchConfig.selectedCompanies.length === 0) {
+            com.showAlert(com.warning, '请至少选择一个公司');
+            return;
+        }
+
+        // 收集所有选中的模块权限
+        var modulePermissions = [];
+        com.focusPage('.batch-module-permission:checked').each(function() {
+            var mid = $(this).val();
+            modulePermissions.push({
+                mid: mid,
+                access: 0, // 默认有访问权限
+                link: 0 // 默认有快捷方式权限
+            });
+        });
+
+        if (modulePermissions.length === 0) {
+            com.showAlert(com.warning, '请至少选择一个模块权限');
+            return;
+        }
+
+        // 显示保存确认
+        com.confirm('确定要为选中的 ' + batchConfig.selectedCompanies.length + ' 个公司配置 ' + modulePermissions.length + ' 个模块权限吗？', function() {
+            performBatchSave(modulePermissions);
+        });
+    }
+
+    // 执行批量保存
+    function performBatchSave(modulePermissions) {
+        var successCount = 0;
+        var totalCount = batchConfig.selectedCompanies.length;
+        var hasError = false;
+
+        function saveNextCompany(index) {
+            if (index >= batchConfig.selectedCompanies.length) {
+                // 所有公司处理完成
+                if (hasError) {
+                    com.showAlert(com.warning, '批量配置完成，部分公司配置失败，请检查日志');
+                } else {
+                    com.showAlert(com.info, '批量配置成功，共处理 ' + successCount + ' 个公司');
+                }
+                role.modals.batchModuleModal.modal('hide');
+                return;
+            }
+
+            var companyId = batchConfig.selectedCompanies[index];
+
+            // 为每个公司保存模块权限
+            com.post(api.system.updateRoleModuleByRid, {
+                'module.system': 1,
+                'role.rid': batchConfig.currentRoleId,
+                'modules': modulePermissions,
+                'rid': batchConfig.currentRoleId,
+                'userId': queryUserId(),
+                'company': companyId
+            }, function(res) {
+                successCount++;
+                console.log('公司 ' + companyId + ' 配置成功');
+                saveNextCompany(index + 1);
+            }, function(error) {
+                hasError = true;
+                console.error('公司 ' + companyId + ' 配置失败:', error);
+                saveNextCompany(index + 1);
+            });
+        }
+
+        // 开始批量保存
+        com.showLoading('正在批量配置模块权限，请稍候...');
+        saveNextCompany(0);
     }
 
 });

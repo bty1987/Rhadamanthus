@@ -173,6 +173,80 @@
         </div>
     </div>
 
+    <!--批量模块配置-->
+    <div class="modal fade" id="batchModuleModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 90%; max-width: 1200px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">批量模块配置</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <!-- 左侧：公司选择 -->
+                        <div class="col-xs-4" style="border-right: 1px solid #ddd; max-height: 500px; overflow-y: auto;">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title">选择公司</h4>
+                                    <div class="widget-toolbar">
+                                        <label class="inline">
+                                            <input type="checkbox" id="selectAllCompanies" class="ace ace-checkbox-2">
+                                            <span class="lbl"> 全选</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <div id="companyList" class="space-2">
+                                            <!-- 公司列表将在这里动态加载 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右侧：模块权限配置 -->
+                        <div class="col-xs-8" style="max-height: 500px; overflow-y: auto;">
+                            <div class="widget-box">
+                                <div class="widget-header">
+                                    <h4 class="widget-title">模块权限配置</h4>
+                                    <div class="widget-toolbar">
+                                        <div class="btn-group">
+                                            <button type="button" id="expandAllModules" class="btn btn-xs btn-info">
+                                                <i class="ace-icon fa fa-expand"></i> 全部展开
+                                            </button>
+                                            <button type="button" id="collapseAllModules" class="btn btn-xs btn-info">
+                                                <i class="ace-icon fa fa-compress"></i> 全部折叠
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="widget-body">
+                                    <div class="widget-main">
+                                        <div id="batchModuleList">
+                                            <!-- 模块权限列表将在这里动态加载 -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="pull-left">
+                        <span id="selectedInfo" class="text-muted"></span>
+                    </div>
+                    <button type="button" id="saveBatchModuleBtn" class="btn btn-primary">批量保存</button>
+                    <button type="button" id="cancelBatchModuleBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--图表配置-->
     <div class="modal fade" id="chartPageModal" tabindex="-1">
         <div class="modal-dialog">
