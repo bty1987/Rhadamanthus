@@ -351,6 +351,29 @@ public class ModuleServiceImpl implements ModuleService {
 		return 0;
 	}
 
+	@Override
+	public List<ModuleVO> queryModuleByLevel(ModuleVO moduleVO, Integer company) throws FLException {
+		List<ModulePO> modulePOs;
+		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
+
+		// 获取父模块ID
+		Integer fatherId = null;
+		if (moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+			fatherId = moduleVO.getFatherModule().getMid();
+		}
+
+		// 查询指定层级的模块
+		modulePOs = moduleDao.queryModuleByLevel(moduleVO.getSystem(), moduleVO.getLevel(), fatherId);
+
+		for (ModulePO modulePO : modulePOs) {
+			ModuleVO vo = new ModuleVO();
+			convertModule(modulePO, vo);
+			moduleVOs.add(vo);
+		}
+
+		return moduleVOs;
+	}
+
 	private int convertModule(ModulePO modulePO, ModuleVO moduleVO) {
 
 		BeanUtil.copyProperties(modulePO, moduleVO, Arrays.asList("fatherModule", "operations"));
