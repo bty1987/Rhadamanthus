@@ -262,6 +262,49 @@ graph TD
 - 使用 C3P0 连接池管理
 - 开启二级缓存 (EhCache)
 
+### 后端分层规范
+
+#### Service 层
+- **方法参数**: 传递业务的 **VO 对象**
+- **职责**: 处理业务逻辑，从 VO 对象中提取属性传递给 DAO 层
+- **示例**:
+  ```java
+  @Override
+  @Transactional(rollbackFor = Exception.class)
+  public void disableCustomerUserRuleByCurid(CustomerUserRuleVO customerUserRule) {
+      // 从VO对象中提取curid属性传给DAO层
+      customerUserRuleDao.disableCustomerUserRuleByCurid(customerUserRule.getCurid());
+  }
+  ```
+
+#### DAO 层
+- **方法参数**: 传递 **PO/VO 属性**（基本数据类型或具体字段）
+- **职责**: 执行数据库操作，参数应简单明确
+- **示例**:
+  ```java
+  @Override
+  public int disableCustomerUserRuleByCurid(long curid) {
+      String sql = "update customer.customeruserrule set status = 4, finishtime = CURRENT_TIMESTAMP where curid = :curid";
+      session().createSQLQuery(sql).setLong("curid", curid).executeUpdate();
+      return 0;
+  }
+  ```
+
+#### 数据流向
+```
+Action 层 → 传递 VO 对象 → Service 层 → 提取属性 → 传递基本类型/属性 → DAO 层
+```
+
+#### 规范优势
+- **Service 层使用 VO 对象**：
+  - 便于扩展功能时添加更多业务逻辑
+  - 从 VO 中提取多个属性进行复杂操作
+  - 保持方法签名的稳定性
+- **DAO 层使用具体属性**：
+  - SQL 查询更清晰明确
+  - 性能优化（避免传递大对象）
+  - 方法职责更单一
+
 ### 前端规范
 - 页面位于 `WebContent/views/[模块]/` 目录
 - 静态资源位于 `WebContent/assets/`

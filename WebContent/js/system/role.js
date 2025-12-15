@@ -56,6 +56,10 @@ jQuery(function($) {
         pageType: params['urlLoadParams'].type,
 
         tasks: {},
+
+        // 性能优化相关缓存
+        moduleCache: new Map(), // 模块数据缓存
+        searchKeyword: '',
     };
 
     var setting = {
@@ -422,235 +426,317 @@ jQuery(function($) {
     });
 
     function queryModuleByRoleId(roleId, system) {
-
         role.system = system;
+        role.rid = roleId;
 
-        var $wrap = com.focusPage('#moduleModal').find('.modal-body').empty();
+        // 生成缓存键
+        var cacheKey = `modules_level1_${system}_${roleId}`;
 
-        com.post(api.system.queryModuleForLogin, {
-            'module.system': system
-        }, function(data) {
-
-            var menuArr = {
+        // 初始化模块数据缓存结构
+        if (!role.moduleCache.has('moduleData')) {
+            role.moduleCache.set('moduleData', {
                 level1: [],
-                level2: [],
-                level3: [],
-            };
-
-            var menuObj = {
-                level1: {},
                 level2: {},
-            };
-            var treeData = data.modules;
-
-            var $tree = $('<ol class="dd-list"></ol>');
-            var arr;
-            $wrap.append($tree);
-
-            if (!treeData || !treeData.length) {
-                return;
-            }
-
-            $.each(treeData, function(i, v) {
-
-                arr = menuArr['level' + v.level];
-                arr[arr.length] = v;
+                level3: {},
+                rightsMap: {}
             });
+        }
 
-            $.each(menuArr, function(key, val) {
+        var $wrap = com.focusPage('#moduleModal').find('.modal-body');
 
-                menuArr[key] = val.sort(function(a, b) {
+        // 显示加载提示
+        $wrap.html(`
+            <div class="text-center" style="padding: 50px;">
+                <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
+                <p>正在加载模块数据...</p>
+            </div>
+        `);
 
-                    return a.mid - b.mid;
-                });
-            });
-
-            if (menuArr.level1.length) {
-                $.each(menuArr.level1, function(i, v) {
-
-                    var $li = $('<li></li>').addClass('dd-item');
-                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name + "-" + v.alias);
-
-                    var $input = $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'module'
-                    }).addClass('ace').val(v.mid);
-                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
-                        'margin-bottom': '0',
-                        'margin-top': '-5px'
-                    });
-                    var $label = $('<label></label>').append($input).append('<span class="lbl">权限</span>');
-
-                    $indexCheck.append($label).appendTo($div);
-
-                    $li.append($div).appendTo($tree);
-                    menuObj.level1[v.mid] = $li;
-                });
-            }
-
-            if (menuArr.level2.length) {
-                $.each(menuArr.level2, function(i, v) {
-
-                    var $li = $('<li></li>').addClass('dd-item');
-                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name + "-" + v.alias);
-
-                    var $input = $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'module'
-                    }).addClass('ace').val(v.mid);
-                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
-                        'margin-bottom': '0',
-                        'margin-top': '-5px'
-                    });
-                    var $label = $('<label></label>').append($input).append('<span class="lbl">权限</span>');
-
-                    $indexCheck.append($label).appendTo($div);
-
-                    if (v.url && v.url != '') {
-                        var $inputL = $('<input>').attr({
-                            type: 'checkbox',
-                            name: 'link'
-                        }).addClass('ace').val(v.mid);
-
-                        var $checkL = $('<div></div>').addClass('checkbox pull-right').css({
-                            'margin-bottom': '0',
-                            'margin-top': '-5px',
-                            'margin-left': '5px'
-                        });
-                        var $labelL = $('<label></label>').append($inputL).append('<span class="lbl">快捷</span>');
-
-                        $checkL.append($labelL).appendTo($div);
-
-                        var $inputA = $('<input>').attr({
-                            type: 'checkbox',
-                            name: 'access'
-                        }).addClass('ace').val(v.mid);
-
-                        var $checkA = $('<div></div>').addClass('checkbox pull-right').css({
-                            'margin-bottom': '0',
-                            'margin-top': '-5px',
-                            'margin-left': '5px'
-                        });
-                        var $labelA = $('<label></label>').append($inputA).append('<span class="lbl">访问</span>');
-
-                        $checkA.append($labelA).appendTo($div);
-
-                    }
-
-                    menuObj.level2[v.mid] = $li;
-
-                    $li.append($div);
-
-                    var $parent = menuObj.level1[v.fatherModule.mid];
-                    $parent.children('div').hasClass('btn-default') || $parent.children('div').addClass('btn-default');
-                    if (!$parent.children('button').length) {
-                        var $title = $parent.children('div');
-                        $('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
-                        $('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
-                    }
-
-                    var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list').appendTo($parent);
-                    $li.appendTo($pol);
-                });
-            }
-
-            if (menuArr.level3.length) {
-                $.each(menuArr.level3, function(i, v) {
-
-                    var $li = $('<li></li>').addClass('dd-item item-blue2');
-                    var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name + "-" + v.alias);
-
-                    var $input = $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'module'
-                    }).addClass('ace').val(v.mid);
-
-                    var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
-                        'margin-bottom': '0',
-                        'margin-top': '-5px'
-                    });
-                    var $label = $('<label></label>').append($input).append('<span class="lbl">权限</span>');
-
-                    $indexCheck.append($label).appendTo($div);
-
-                    if (v.url && v.url != '') {
-                        var $inputL = $('<input>').attr({
-                            type: 'checkbox',
-                            name: 'link'
-                        }).addClass('ace').val(v.mid);
-
-                        var $checkL = $('<div></div>').addClass('checkbox pull-right').css({
-                            'margin-bottom': '0',
-                            'margin-top': '-5px',
-                            'margin-left': '5px'
-                        });
-                        var $labelL = $('<label></label>').append($inputL).append('<span class="lbl">快捷</span>');
-
-                        $checkL.append($labelL).appendTo($div);
-
-                        var $inputA = $('<input>').attr({
-                            type: 'checkbox',
-                            name: 'access'
-                        }).addClass('ace').val(v.mid);
-
-                        var $checkA = $('<div></div>').addClass('checkbox pull-right').css({
-                            'margin-bottom': '0',
-                            'margin-top': '-5px',
-                            'margin-left': '5px'
-                        });
-                        var $labelA = $('<label></label>').append($inputA).append('<span class="lbl">访问</span>');
-
-                        $checkA.append($labelA).appendTo($div);
-
-                    }
-
-                    menuObj.level2[v.mid] = $li;
-
-                    $li.append($div);
-
-                    var $parent = menuObj.level2[v.fatherModule.mid];
-                    if (!$parent.children('button').length) {
-                        var $title = $parent.children('div');
-                        $('<button type="button" data-action="collapse" class="minus">Collapse</button>').insertBefore($title);
-                        $('<button type="button" data-action="expand" class="hide plus">Expand</button>').insertBefore($title);
-                    }
-
-                    var $pol = $parent.children('ol').length ? $parent.children('ol') : $('<ol></ol>').addClass('dd-list').appendTo($parent);
-                    $li.appendTo($pol);
-                });
-            }
-
-            $('button[data-action="collapse"]').click(function() {
-
-                var $this = $(this);
-                $this.siblings('ol').addClass('hide');
-                $this.parent().find('.plus').toggleClass('hide');
-                $this.toggleClass('hide');
-            });
-
-            $('button[data-action="expand"]').click(function() {
-
-                var $this = $(this);
-                $this.siblings('ol').removeClass('hide');
-                $this.parent().find('.minus').toggleClass('hide');
-                $this.toggleClass('hide');
-            });
-
-        }, null, false);
-
-        // 获取角色的模块
-        com.post(api.system.queryModuleByRid, {
+        // 首先加载第1级模块
+        com.post(api.system.queryModuleForLogin, {
             'module.system': system,
-            "role.rid": roleId
+            'module.level': 1  // 只加载第1级
         }, function(data) {
+            // 加载角色权限
+            com.post(api.system.queryModuleByRid, {
+                'module.system': system,
+                "role.rid": roleId
+            }, function(rightsData) {
+                // 处理1级模块数据
+                var moduleData = role.moduleCache.get('moduleData');
+                moduleData.level1 = data.modules || [];
 
-            $.each(data.modules, function(i, v) {
+                // 处理权限数据
+                if (rightsData.modules && rightsData.modules.length) {
+                    $.each(rightsData.modules, function(i, v) {
+                        moduleData.rightsMap[v.mid] = v;
+                    });
+                }
 
-                $wrap.find('input[name="module"][value="' + v.mid + '"]').prop('checked', true);
-                $wrap.find('input[name="link"][value="' + v.mid + '"]').prop('checked', v.link == 0);
-                $wrap.find('input[name="access"][value="' + v.mid + '"]').prop('checked', v.access == 0);
+                // 渲染模块树
+                setTimeout(function() {
+                    renderModuleTreeLazy(moduleData);
+                }, 50);
             });
+        }, function() {
+            $wrap.html(`
+                <div class="text-center" style="padding: 50px; color: red;">
+                    <i class="ace-icon fa fa-exclamation-triangle fa-2x"></i>
+                    <p>加载模块数据失败</p>
+                </div>
+            `);
         });
+    }
+
+    // 懒加载渲染函数
+    function renderModuleTreeLazy(moduleData) {
+        var $wrap = com.focusPage('#moduleModal').find('.modal-body');
+
+        // 创建搜索框
+        var $searchBox = $(`
+            <div class="row" style="margin-bottom: 15px;">
+                <div class="col-xs-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="moduleSearchInput" placeholder="搜索模块名称...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-sm" type="button">
+                                <i class="ace-icon fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        // 创建滚动容器
+        var $scrollContainer = $(`
+            <div id="moduleScrollContainer" style="height: 400px; overflow-y: auto; border: 1px solid #ddd;">
+                <ol class="dd-list" id="moduleListRoot"></ol>
+            </div>
+        `);
+
+        $wrap.empty().append($searchBox).append($scrollContainer);
+
+        // 绑定搜索事件
+        var searchInput = $searchBox.find('#moduleSearchInput');
+        searchInput.on('input', debounce(function() {
+            role.searchKeyword = $(this).val().toLowerCase();
+            renderModuleListLazy();
+        }, 300));
+
+        // 初始渲染1级模块
+        renderModuleListLazy();
+    }
+
+    // 渲染模块列表（懒加载版本）
+    function renderModuleListLazy() {
+        var $list = $('#moduleListRoot');
+        var moduleData = role.moduleCache.get('moduleData');
+
+        $list.empty();
+
+        // 使用文档片段批量操作
+        var fragment = document.createDocumentFragment();
+
+        // 1级菜单
+        if (moduleData.level1.length) {
+            $.each(moduleData.level1, function(i, v) {
+                var $li = createModuleItemLazy(v, 1);
+                fragment.appendChild($li[0]);
+            });
+        }
+
+        $list.append(fragment);
+    }
+
+    // 创建模块项（支持懒加载）
+    function createModuleItemLazy(module, level) {
+        var $li = $('<li></li>').addClass('dd-item').attr('data-mid', module.mid).attr('data-level', level);
+        if (level === 3) {
+            $li.addClass('item-blue2');
+        }
+
+        var $div = $('<div></div>').addClass('dd-handle clearfix');
+
+        // 模块名称
+        var $nameSpan = $('<span class="module-name"></span>').text(module.name + "-" + module.alias);
+        $div.append($nameSpan);
+
+        // 添加展开按钮（1级和2级菜单）
+        if (level < 3) {
+            var $expandBtn = $('<button type="button" class="btn btn-xs btn-info pull-left" style="margin-right: 5px;">' +
+                '<i class="ace-icon fa fa-plus"></i></button>');
+            $div.append($expandBtn);
+
+            // 绑定点击事件
+            $expandBtn.on('click', function(e) {
+                e.stopPropagation();
+                loadChildModules(module, level, $li);
+            });
+        }
+
+        // 添加权限复选框
+        var $rightsDiv = createRightsCheckboxes(module);
+        $div.append($rightsDiv);
+
+        $li.append($div);
+
+        // 如果有子模块，添加子容器
+        if (level < 3) {
+            var $childContainer = $('<ol class="dd-list hide"></ol>');
+            $li.append($childContainer);
+        }
+
+        return $li;
+    }
+
+    // 创建权限复选框
+    function createRightsCheckboxes(module) {
+        var $rightsDiv = $('<div></div>').addClass('pull-right');
+        var moduleData = role.moduleCache.get('moduleData');
+        var rights = moduleData.rightsMap[module.mid];
+
+        // 模块权限
+        var $moduleCheck = $('<div></div>').addClass('checkbox').css({
+            'margin-bottom': '0',
+            'margin-top': '-5px',
+            'display': 'inline-block',
+            'margin-right': '5px'
+        });
+        var $moduleInput = $('<input type="checkbox" name="module">')
+            .addClass('ace')
+            .val(module.mid);
+        var $moduleLabel = $('<label></label>').append($moduleInput).append('<span class="lbl">权限</span>');
+
+        if (rights) {
+            $moduleInput.prop('checked', true);
+        }
+
+        $moduleCheck.append($moduleLabel);
+        $rightsDiv.append($moduleCheck);
+
+        // 快捷方式和访问权限（仅对有URL的模块）
+        if (module.url && module.url !== '') {
+            // 快捷方式
+            var $linkCheck = $('<div></div>').addClass('checkbox').css({
+                'margin-bottom': '0',
+                'margin-top': '-5px',
+                'display': 'inline-block',
+                'margin-right': '5px'
+            });
+            var $linkInput = $('<input type="checkbox" name="link">')
+                .addClass('ace')
+                .val(module.mid);
+
+            if (rights && rights.link === 0) {
+                $linkInput.prop('checked', true);
+            }
+
+            var $linkLabel = $('<label></label>').append($linkInput).append('<span class="lbl">快捷</span>');
+            $linkCheck.append($linkLabel);
+            $rightsDiv.append($linkCheck);
+
+            // 访问权限
+            var $accessCheck = $('<div></div>').addClass('checkbox').css({
+                'margin-bottom': '0',
+                'margin-top': '-5px',
+                'display': 'inline-block'
+            });
+            var $accessInput = $('<input type="checkbox" name="access">')
+                .addClass('ace')
+                .val(module.mid);
+
+            if (rights && rights.access === 0) {
+                $accessInput.prop('checked', true);
+            }
+
+            var $accessLabel = $('<label></label>').append($accessInput).append('<span class="lbl">访问</span>');
+            $accessCheck.append($accessLabel);
+            $rightsDiv.append($accessCheck);
+        }
+
+        return $rightsDiv;
+    }
+
+    // 加载子模块
+    function loadChildModules(parentModule, parentLevel, $parentLi) {
+        var childLevel = parentLevel + 1;
+        var cacheKey = `level${childLevel}_${parentModule.mid}`;
+        var moduleData = role.moduleCache.get('moduleData');
+        var $childContainer = $parentLi.find('>.dd-list');
+        var $expandBtn = $parentLi.find('>.dd-handle button');
+
+        // 检查是否已经加载
+        if (moduleData['level' + childLevel][parentModule.mid]) {
+            toggleChildContainer($childContainer, $expandBtn);
+            return;
+        }
+
+        // 显示加载状态
+        $expandBtn.html('<i class="ace-icon fa fa-spinner fa-spin"></i>');
+
+        // 请求子模块数据
+        com.post(api.system.queryModuleForLogin, {
+            'module.system': role.system,
+            'module.level': childLevel,
+            'module.fatherModule.mid': parentModule.mid
+        }, function(data) {
+            // 恢复按钮状态
+            if (data.modules && data.modules.length > 0) {
+                $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+
+                // 缓存子模块数据
+                moduleData['level' + childLevel][parentModule.mid] = data.modules;
+
+                // 渲染子模块
+                renderChildModules(data.modules, childLevel, $childContainer);
+
+                // 显示子容器
+                $childContainer.removeClass('hide');
+            } else {
+                // 没有子模块，移除按钮
+                $expandBtn.remove();
+            }
+        }, function() {
+            // 加载失败，恢复按钮
+            $expandBtn.html('<i class="ace-icon fa fa-plus"></i>');
+        });
+    }
+
+    // 渲染子模块
+    function renderChildModules(modules, level, $container) {
+        var fragment = document.createDocumentFragment();
+
+        $.each(modules, function(i, v) {
+            var $li = createModuleItemLazy(v, level);
+            fragment.appendChild($li[0]);
+        });
+
+        $container.empty().append(fragment);
+    }
+
+    // 切换子容器显示/隐藏
+    function toggleChildContainer($container, $expandBtn) {
+        if ($container.hasClass('hide')) {
+            $container.removeClass('hide');
+            $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+        } else {
+            $container.addClass('hide');
+            $expandBtn.html('<i class="ace-icon fa fa-plus"></i>');
+        }
+    }
+
+    // 工具函数：防抖
+    function debounce(func, delay) {
+        var timer;
+        return function() {
+            var context = this;
+            var args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                func.apply(context, args);
+            }, delay);
+        };
     }
 
     function editRole(rid, no, name, content) {
