@@ -840,13 +840,23 @@ jQuery(function($) {
         function findParentModule(moduleId, level) {
             console.log('查找父模块开始:', { moduleId: moduleId, level: level });
 
+            // 先打印缓存结构用于调试
+            console.log('缓存结构调试:', {
+                'level2 keys': Object.keys(moduleData.level2),
+                'level3 keys': Object.keys(moduleData.level3),
+                'level3数据': moduleData.level3
+            });
+
             if (level === 2) {
                 // 2级模块的父模块是1级模块 - 遍历所有1级模块的2级子模块
+                console.log('查找2级模块的父模块...');
                 for (var i = 0; i < moduleData.level1.length; i++) {
                     var level1Module = moduleData.level1[i];
                     if (moduleData.level2[level1Module.mid]) {
+                        console.log('检查1级模块的子模块:', level1Module.mid, level1Module.name, '子模块数量:', moduleData.level2[level1Module.mid].length);
                         for (var j = 0; j < moduleData.level2[level1Module.mid].length; j++) {
                             var level2Module = moduleData.level2[level1Module.mid][j];
+                            console.log('比较2级模块:', level2Module.mid, '目标:', moduleId);
                             if (level2Module.mid == moduleId) {
                                 console.log('✓ 找到2级模块的父模块:', {
                                     childModule: { id: moduleId, name: level2Module.name },
@@ -861,11 +871,18 @@ jQuery(function($) {
                 }
             } else if (level === 3) {
                 // 3级模块的父模块是2级模块 - 遍历所有2级模块的3级子模块
+                console.log('查找3级模块的父模块...');
+                console.log('所有level3的parentId:', Object.keys(moduleData.level3));
+
                 for (var parentId in moduleData.level3) {
                     var level3Modules = moduleData.level3[parentId];
+                    console.log('检查parentId:', parentId, '子模块数量:', level3Modules.length);
+
                     for (var i = 0; i < level3Modules.length; i++) {
                         var level3Module = level3Modules[i];
+                        console.log('比较3级模块:', level3Module.mid, '目标:', moduleId);
                         if (level3Module.mid == moduleId) {
+                            console.log('找到匹配的3级模块，parentId:', parentId);
                             // parentId就是对应的2级模块ID
                             if (moduleData.level2[parentId] && moduleData.level2[parentId].length > 0) {
                                 var parentLevel2Module = moduleData.level2[parentId][0];
@@ -876,6 +893,8 @@ jQuery(function($) {
                                     parentModule: { id: parentLevel2Module.mid, name: parentLevel2Module.name, level: 2 }
                                 });
                                 return parentLevel2Module;
+                            } else {
+                                console.log('❗ 找到parentId但在level2中不存在:', parentId);
                             }
                         }
                     }
