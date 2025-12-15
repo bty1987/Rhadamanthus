@@ -836,39 +836,43 @@ jQuery(function($) {
 
         var moduleData = role.moduleCache.get('moduleData');
 
-        // 查找父模块
+        // 查找父模块 - 简化版本，基于缓存结构查找
         function findParentModule(moduleId, level) {
             console.log('查找父模块开始:', { moduleId: moduleId, level: level });
 
             if (level === 2) {
-                // 2级模块的父模块是1级模块
+                // 2级模块的父模块是1级模块 - 遍历所有1级模块的2级子模块
                 for (var i = 0; i < moduleData.level1.length; i++) {
                     var level1Module = moduleData.level1[i];
                     if (moduleData.level2[level1Module.mid]) {
                         for (var j = 0; j < moduleData.level2[level1Module.mid].length; j++) {
-                            if (moduleData.level2[level1Module.mid][j].mid == moduleId) {
-                                console.log('找到2级模块的父模块:', {
-                                    childModule: moduleId,
+                            var level2Module = moduleData.level2[level1Module.mid][j];
+                            if (level2Module.mid == moduleId) {
+                                console.log('✓ 找到2级模块的父模块:', {
+                                    childModule: { id: moduleId, name: level2Module.name },
                                     parentModule: { id: level1Module.mid, name: level1Module.name, level: 1 }
                                 });
+                                // 确保父模块有正确的level属性
+                                level1Module.level = 1;
                                 return level1Module;
                             }
                         }
                     }
                 }
             } else if (level === 3) {
-                // 3级模块的父模块是2级模块
+                // 3级模块的父模块是2级模块 - 遍历所有2级模块的3级子模块
                 for (var parentId in moduleData.level3) {
                     var level3Modules = moduleData.level3[parentId];
                     for (var i = 0; i < level3Modules.length; i++) {
-                        if (level3Modules[i].mid == moduleId) {
-                            // 找到3级模块，现在找对应的2级模块
+                        var level3Module = level3Modules[i];
+                        if (level3Module.mid == moduleId) {
+                            // parentId就是对应的2级模块ID
                             if (moduleData.level2[parentId] && moduleData.level2[parentId].length > 0) {
                                 var parentLevel2Module = moduleData.level2[parentId][0];
                                 // 确保2级模块有正确的level属性
                                 parentLevel2Module.level = 2;
-                                console.log('找到3级模块的父模块:', {
-                                    childModule: moduleId,
+                                console.log('✓ 找到3级模块的父模块:', {
+                                    childModule: { id: moduleId, name: level3Module.name },
                                     parentModule: { id: parentLevel2Module.mid, name: parentLevel2Module.name, level: 2 }
                                 });
                                 return parentLevel2Module;
@@ -877,7 +881,8 @@ jQuery(function($) {
                     }
                 }
             }
-            console.log('未找到父模块:', { moduleId: moduleId, level: level });
+
+            console.log('✗ 未找到父模块:', { moduleId: moduleId, level: level });
             return null;
         }
 
@@ -913,18 +918,23 @@ jQuery(function($) {
     }
 
 
-    // 更新子模块状态
+    // 更新子模块状态 - 基于mid关系
     function updateChildModules(parentId, parentLevel, check) {
         if (parentLevel >= 3) return; // 已经是3级，没有子模块
 
+        console.log('更新子模块状态:', { parentId: parentId, parentLevel: parentLevel, check: check });
+
         var childLevel = parentLevel + 1;
+        var moduleData = role.moduleCache.get('moduleData');
 
         if (childLevel === 2 && moduleData.level2[parentId]) {
             // 更新2级子模块
+            console.log('找到2级子模块数量:', moduleData.level2[parentId].length);
             $.each(moduleData.level2[parentId], function(i, childModule) {
                 var $childCheckbox = $('.module-permission[data-mid="' + childModule.mid + '"]');
                 if ($childCheckbox.length > 0) {
                     $childCheckbox.prop('checked', check);
+                    console.log('设置2级子模块:', childModule.mid, childModule.name, 'checked:', check);
                 }
 
                 // 递归更新3级子模块
@@ -932,12 +942,16 @@ jQuery(function($) {
             });
         } else if (childLevel === 3 && moduleData.level3[parentId]) {
             // 更新3级子模块
+            console.log('找到3级子模块数量:', moduleData.level3[parentId].length);
             $.each(moduleData.level3[parentId], function(i, childModule) {
                 var $childCheckbox = $('.module-permission[data-mid="' + childModule.mid + '"]');
                 if ($childCheckbox.length > 0) {
                     $childCheckbox.prop('checked', check);
+                    console.log('设置3级子模块:', childModule.mid, childModule.name, 'checked:', check);
                 }
             });
+        } else {
+            console.log('未找到子模块:', { parentId: parentId, childLevel: childLevel });
         }
     }
 
