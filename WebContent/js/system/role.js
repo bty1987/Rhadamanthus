@@ -432,15 +432,13 @@ jQuery(function($) {
         // 生成缓存键
         var cacheKey = `modules_level1_${system}_${roleId}`;
 
-        // 初始化模块数据缓存结构
-        if (!role.moduleCache.has('moduleData')) {
-            role.moduleCache.set('moduleData', {
-                level1: [],
-                level2: {},
-                level3: {},
-                rightsMap: {}
-            });
-        }
+        // 初始化模块数据缓存结构（每次都重新初始化，避免状态混乱）
+        role.moduleCache.set('moduleData', {
+            level1: [],
+            level2: {},
+            level3: {},
+            rightsMap: {}
+        });
 
         var $wrap = com.focusPage('#moduleModal').find('.modal-body');
 
@@ -669,6 +667,7 @@ jQuery(function($) {
 
         // 检查是否已经加载
         if (moduleData['level' + childLevel][parentModule.mid]) {
+            // 已加载，直接切换显示状态
             toggleChildContainer($childContainer, $expandBtn);
             return;
         }
@@ -691,7 +690,9 @@ jQuery(function($) {
             }, function(rightsData) {
                 // 恢复按钮状态
                 if (data.modules && data.modules.length > 0) {
-                    $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+                    // 更新按钮图标为减号（展开状态）
+                    var $icon = $expandBtn.find('i');
+                    $icon.removeClass('fa-spinner fa-spin fa-plus').addClass('fa-minus');
 
                     // 更新权限数据
                     if (rightsData.modules && rightsData.modules.length) {
@@ -715,7 +716,8 @@ jQuery(function($) {
             });
         }, function() {
             // 加载失败，恢复按钮
-            $expandBtn.html('<i class="ace-icon fa fa-plus"></i>');
+            var $icon = $expandBtn.find('i');
+            $icon.removeClass('fa-spinner fa-spin fa-minus').addClass('fa-plus');
         });
     }
 
@@ -733,12 +735,16 @@ jQuery(function($) {
 
     // 切换子容器显示/隐藏
     function toggleChildContainer($container, $expandBtn) {
+        var $icon = $expandBtn.find('i');
+
         if ($container.hasClass('hide')) {
+            // 显示容器
             $container.removeClass('hide');
-            $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+            $icon.removeClass('fa-plus').addClass('fa-minus');
         } else {
+            // 隐藏容器
             $container.addClass('hide');
-            $expandBtn.html('<i class="ace-icon fa fa-plus"></i>');
+            $icon.removeClass('fa-minus').addClass('fa-plus');
         }
     }
 
