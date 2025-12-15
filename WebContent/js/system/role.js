@@ -459,7 +459,7 @@ jQuery(function($) {
         `);
 
         // 首先加载第1级模块
-        com.post(api.system.queryModuleForLogin, {
+        com.post(api.system.queryModule, {
             'module.system': system,
             'module.level': 1  // 只加载第1级
         }, function(data) {
@@ -619,7 +619,7 @@ jQuery(function($) {
         $div.append($nameSpan);
 
         // 添加展开按钮（1级和2级菜单）
-        if (level < 3) {
+        if (!module.url) {
             var $expandBtn = $('<button type="button" class="btn btn-xs btn-info pull-left" style="margin-right: 5px;">' +
                 '<i class="ace-icon fa fa-plus"></i></button>');
             $div.append($expandBtn);
@@ -790,8 +790,13 @@ jQuery(function($) {
     // 渲染子模块
     function renderChildModules(modules, level, $container) {
         var fragment = document.createDocumentFragment();
-
+        
+        modules = modules.sort(function(o, t){
+            return o.order - t.order;
+        });
+        
         $.each(modules, function(i, v) {
+            if(v.level != level) return true;
             var $li = createModuleItemLazy(v, level);
             fragment.appendChild($li[0]);
         });
