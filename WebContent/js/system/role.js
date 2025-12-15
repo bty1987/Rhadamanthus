@@ -583,8 +583,16 @@ jQuery(function($) {
                 }
             }
 
+            console.log('事件委托找到模块:', {
+                mid: mid,
+                level: level,
+                module: module ? { id: module.mid, name: module.name, level: module.level } : null
+            });
+
             if (module) {
                 handleModulePermissionChange($checkbox, module);
+            } else {
+                console.error('未找到模块数据:', { mid: mid, level: level });
             }
         });
     }
@@ -830,6 +838,8 @@ jQuery(function($) {
 
         // 查找父模块
         function findParentModule(moduleId, level) {
+            console.log('查找父模块开始:', { moduleId: moduleId, level: level });
+
             if (level === 2) {
                 // 2级模块的父模块是1级模块
                 for (var i = 0; i < moduleData.level1.length; i++) {
@@ -837,6 +847,10 @@ jQuery(function($) {
                     if (moduleData.level2[level1Module.mid]) {
                         for (var j = 0; j < moduleData.level2[level1Module.mid].length; j++) {
                             if (moduleData.level2[level1Module.mid][j].mid == moduleId) {
+                                console.log('找到2级模块的父模块:', {
+                                    childModule: moduleId,
+                                    parentModule: { id: level1Module.mid, name: level1Module.name, level: 1 }
+                                });
                                 return level1Module;
                             }
                         }
@@ -849,13 +863,21 @@ jQuery(function($) {
                     for (var i = 0; i < level3Modules.length; i++) {
                         if (level3Modules[i].mid == moduleId) {
                             // 找到3级模块，现在找对应的2级模块
-                            if (moduleData.level2[parentId]) {
-                                return moduleData.level2[parentId][0];
+                            if (moduleData.level2[parentId] && moduleData.level2[parentId].length > 0) {
+                                var parentLevel2Module = moduleData.level2[parentId][0];
+                                // 确保2级模块有正确的level属性
+                                parentLevel2Module.level = 2;
+                                console.log('找到3级模块的父模块:', {
+                                    childModule: moduleId,
+                                    parentModule: { id: parentLevel2Module.mid, name: parentLevel2Module.name, level: 2 }
+                                });
+                                return parentLevel2Module;
                             }
                         }
                     }
                 }
             }
+            console.log('未找到父模块:', { moduleId: moduleId, level: level });
             return null;
         }
 
