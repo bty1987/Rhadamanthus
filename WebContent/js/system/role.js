@@ -457,9 +457,10 @@ jQuery(function($) {
             'module.system': system,
             'module.level': 1  // 只加载第1级
         }, function(data) {
-            // 加载角色权限
+            // 加载角色权限（按层级过滤）
             com.post(api.system.queryModuleByRid, {
                 'module.system': system,
+                'module.level': 1,  // 同样只加载第1级的权限
                 "role.rid": roleId
             }, function(rightsData) {
                 // 处理1级模块数据
@@ -675,28 +676,43 @@ jQuery(function($) {
         // 显示加载状态
         $expandBtn.html('<i class="ace-icon fa fa-spinner fa-spin"></i>');
 
-        // 请求子模块数据
+        // 请求子模块数据（带权限）
         com.post(api.system.queryModuleForLogin, {
             'module.system': role.system,
             'module.level': childLevel,
             'module.fatherModule.mid': parentModule.mid
         }, function(data) {
-            // 恢复按钮状态
-            if (data.modules && data.modules.length > 0) {
-                $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
+            // 同时请求该层级角色权限
+            com.post(api.system.queryModuleByRid, {
+                'module.system': role.system,
+                'module.level': childLevel,
+                'module.fatherModule.mid': parentModule.mid,
+                "role.rid": role.rid
+            }, function(rightsData) {
+                // 恢复按钮状态
+                if (data.modules && data.modules.length > 0) {
+                    $expandBtn.html('<i class="ace-icon fa fa-minus"></i>');
 
-                // 缓存子模块数据
-                moduleData['level' + childLevel][parentModule.mid] = data.modules;
+                    // 更新权限数据
+                    if (rightsData.modules && rightsData.modules.length) {
+                        $.each(rightsData.modules, function(i, v) {
+                            moduleData.rightsMap[v.mid] = v;
+                        });
+                    }
 
-                // 渲染子模块
-                renderChildModules(data.modules, childLevel, $childContainer);
+                    // 缓存子模块数据
+                    moduleData['level' + childLevel][parentModule.mid] = data.modules;
 
-                // 显示子容器
-                $childContainer.removeClass('hide');
-            } else {
-                // 没有子模块，移除按钮
-                $expandBtn.remove();
-            }
+                    // 渲染子模块（包含权限状态）
+                    renderChildModules(data.modules, childLevel, $childContainer);
+
+                    // 显示子容器
+                    $childContainer.removeClass('hide');
+                } else {
+                    // 没有子模块，移除按钮
+                    $expandBtn.remove();
+                }
+            });
         }, function() {
             // 加载失败，恢复按钮
             $expandBtn.html('<i class="ace-icon fa fa-plus"></i>');
