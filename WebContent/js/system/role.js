@@ -1333,9 +1333,10 @@ jQuery(function($) {
     function loadBatchModules() {
         role.items.batchModuleList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>加载模块列表中...</p></div>');
 
-        // 先获取当前用户有权限的模块
-        com.post(api.system.queryModuleForLogin, {
-            'module.system': 1
+        // 先获取当前用户有权限的模块 - 使用正确的API和参数格式
+        com.post(api.system.queryModule, {
+            'module.system': 1,
+            'module.level': 1  // 只加载第1级模块
         }, function(data) {
             // 清空现有内容
             role.items.batchModuleList.empty();
@@ -1375,8 +1376,8 @@ jQuery(function($) {
         var $nameSpan = $('<span class="module-name" style="font-weight: bold;"></span>').text(module.name + (module.alias ? '-' + module.alias : ''));
         $div.append($nameSpan);
 
-        // 添加展开按钮（1级和2级菜单）
-        if (level < 3) {
+        // 添加展开按钮（1级和2级菜单）- 只有没有URL的才显示展开按钮（有子模块）
+        if (!module.url) {
             var $expandBtn = $('<button type="button" class="btn btn-xs btn-info pull-left" style="margin-right: 5px;">' +
                 '<i class="ace-icon fa fa-plus"></i></button>');
             $div.append($expandBtn);
@@ -1467,7 +1468,7 @@ jQuery(function($) {
                 // 首次展开，需要加载子模块
                 $expandBtn.html('<i class="ace-icon fa fa-spinner fa-spin"></i>');
 
-                com.post(api.system.queryModuleForLogin, {
+                com.post(api.system.queryModule, {
                     'module.system': 1,
                     'module.fatherModule.mid': parentModule.mid,
                     'module.level': parentLevel + 1
@@ -1478,7 +1479,12 @@ jQuery(function($) {
                         var $ol = $('<ol class="dd-list"></ol>');
                         var fragment = document.createDocumentFragment();
 
-                        $.each(data.modules, function(i, childModule) {
+                        // 按order字段排序
+                        var sortedModules = data.modules.sort(function(o, t) {
+                            return o.order - t.order;
+                        });
+
+                        $.each(sortedModules, function(i, childModule) {
                             childModule.level = parentLevel + 1;
                             childModule.fatherModule = parentModule;
                             var $childLi = createBatchModuleItem(childModule, parentLevel + 1);
