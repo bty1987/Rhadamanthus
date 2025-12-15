@@ -428,6 +428,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 				salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
+				salesBalancePO.setOnetype(approvalSalesRefundPO.getType());
 				salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
 
 				salesBalancePO.setSalesman(salesPO.getSalesman());
