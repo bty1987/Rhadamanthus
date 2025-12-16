@@ -3,9 +3,11 @@ jQuery(function($) {
     var decorationFunction = {
         modal: {
             apiModal: com.focusPage("#apiModal"),
+            syncModal: com.focusPage("#syncModal"),
         },
         btn: {
             apiBtn: com.focusPage("#apiBtn"),
+            syncConfirmBtn: com.focusPage("#syncConfirmBtn"),
         },
         items: {
             apiData: com.focusPage("#apiData"),
@@ -15,10 +17,14 @@ jQuery(function($) {
             nodeData: com.focusPage("#nodeData"),
             statusData: com.focusPage("#statusData"),
             companyData: com.focusPage("#companyData"),
+            syncFunctionName: com.focusPage("#syncFunctionName"),
+            companyList: com.focusPage("#companyList"),
         },
 
         name: {},
         dfids: [],
+        currentSyncKey: {},
+        companys: [],
     };
 
     com.post(api.decoration.queryDecorationFunction, {
@@ -33,8 +39,9 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html('配置');
+            var $btnSync = $('<a></a>').addClass('btn btn-minier btn-info').html('同步').css('margin-left', '5px');
 
-            $divBtnWrap.append($btnView).appendTo($h3);
+            $divBtnWrap.append($btnView).append($btnSync).appendTo($h3);
 
             $h3.appendTo($li.appendTo($ul));
 
@@ -43,9 +50,69 @@ jQuery(function($) {
                 apiConfig(v.key);
             });
 
+            $btnSync.on('click', function() {
+
+                syncConfig(v.key, v.name);
+            });
+
             $ul.appendTo(com.focusPage("#resultList"));
         });
     });
+
+    // 同步配置功能
+    function syncConfig(key, name) {
+        decorationFunction.currentSyncKey = key;
+        decorationFunction.items.syncFunctionName.html(name);
+        decorationFunction.items.companyList.html('<div class="text-center"><i class="icon-spinner icon-spin"></i> 正在加载公司信息...</div>');
+
+        // 显示同步模态框
+        decorationFunction.modal.syncModal.modal("show");
+
+        // 加载公司信息
+        loadCompanyList();
+    }
+
+    // 加载公司列表
+    function loadCompanyList() {
+        com.post(api.system.queryCompany, {}, function(res) {
+            decorationFunction.companys = res.companys || [];
+            renderCompanyList();
+        }, function() {
+            decorationFunction.items.companyList.html('<div class="text-center text-danger">加载公司信息失败</div>');
+        });
+    }
+
+    // 渲染公司列表
+    function renderCompanyList() {
+        if (!decorationFunction.companys || decorationFunction.companys.length === 0) {
+            decorationFunction.items.companyList.html('<div class="text-center text-muted">暂无公司信息</div>');
+            return;
+        }
+
+        var html = '<div class="checkbox-group">';
+        $.each(decorationFunction.companys, function(i, company) {
+            html += '<div class="checkbox">';
+            html += '<label>';
+            html += '<input type="checkbox" name="companyCheckbox" value="' + company.cid + '" data-name="' + company.name + '"> ';
+            html += company.name + (company.status === 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>');
+            html += '</label>';
+            html += '</div>';
+        });
+        html += '<div class="checkbox">';
+        html += '<label>';
+        html += '<input type="checkbox" id="selectAllCompanies"> 全选/全不选';
+        html += '</label>';
+        html += '</div>';
+        html += '</div>';
+
+        decorationFunction.items.companyList.html(html);
+
+        // 绑定全选/全不选事件
+        com.focusPage('#selectAllCompanies').on('change', function() {
+            var isChecked = $(this).prop('checked');
+            com.focusPage('input[name="companyCheckbox"]').prop('checked', isChecked);
+        });
+    }
 
     // 显示所有api进行配置
     function apiConfig(key) {
@@ -154,5 +221,53 @@ jQuery(function($) {
             decorationFunction.modal.apiModal.modal("hide");
         });
     });
+
+    // 同步确认按钮点击事件
+    decorationFunction.btn.syncConfirmBtn.click(function() {
+        var selectedCompanies = [];
+        com.focusPage('input[name="companyCheckbox"]:checked').each(function() {
+            var company = {
+                cid: $(this).val(),
+                name: $(this).data('name')
+            };
+            selectedCompanies.push(company);
+        });
+
+        if (selectedCompanies.length === 0) {
+            com.showAlert(com.warning, "请选择至少一个公司进行同步");
+            return;
+        }
+
+        // 调用同步接口
+        performSync(decorationFunction.currentSyncKey, selectedCompanies);
+    });
+
+    // 执行同步操作
+    function performSync(functionName, companys) {
+        com.showLoading('正在同步装饰功能配置...');
+
+        // 准备同步参数
+        var params = {
+            "decorationFunctionRight.name": functionName
+        };
+
+        $.each(companys, function(i, v){
+            params["companys[" + i + "]"] = v.cid;
+        })
+
+        // 调用同步接口
+        com.post(api.right.syncDecorationFunctionRight, params, function(res) {
+            com.hideLoading();
+            if (res.errorCode === 0) {
+                com.showAlert(com.info, "同步成功！");
+                decorationFunction.modal.syncModal.modal("hide");
+            } else {
+                com.showAlert(com.error, "同步失败：" + (res.errorMsg || "未知错误"));
+            }
+        }, function(res) {
+            com.hideLoading();
+            com.showAlert(com.error, "同步请求失败：" + (res.errorMsg || "网络错误"));
+        });
+    }
 
 });
