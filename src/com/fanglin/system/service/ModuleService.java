@@ -34,18 +34,11 @@ public interface ModuleService {
 
 	public List<ModuleVO> queryModuleByFatherModule(ModuleVO moduleVO) throws FLException;
 
-	/**
-	 * 根据层级查询模块
-	 * @param moduleVO 包含层级和父模块ID的查询条件
-	 * @param company 公司ID
-	 * @return 指定层级的模块列表
-	 * @throws FLException
-	 */
-	public List<ModuleVO> queryModuleByLevel(ModuleVO moduleVO, Integer company) throws FLException;
-
 	public ModuleVO checkModule(ModuleVO moduleVO, String userId, Integer company) throws FLException;
 
 	public int addModule(ModuleVO moduleVO) throws FLException;
+
+	public int updateRoleModule(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId, Integer company) throws FLException;
 
 	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid, String userId, Integer company) throws FLException;
 

@@ -63,17 +63,32 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleModulePO> queryRoleModule(int rid, int level, short system, Integer company) {
+	public List<RoleModulePO> queryRoleModule(int rid, short level, short system, Integer company) {
 		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).add(Restrictions.eq("company", company)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int level, short system, Integer company) {
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, short level, short system, Integer company) {
 
 		String sql = "select {rm.*} from communion.rolemodule rm, communion.module m where rm.rid in :rids and rm.mid = m.mid and m.system = :system and m.level = :level and rm.company = :company group by rm.mid;";
 
-		return session().createSQLQuery(sql).addEntity("rm", RoleModulePO.class).setParameterList("rids", rids).setShort("system", system).setInteger("level", level).setInteger("company", company).list();
+		return session().createSQLQuery(sql).addEntity("rm", RoleModulePO.class).setParameterList("rids", rids).setShort("system", system).setShort("level", level).setInteger("company", company).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<RoleModulePO> queryRoleModule(int rid, int fmid, short level, short system, Integer company) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.level", level)).createAlias("module.fatherModule", "fatherModule").add(Restrictions.eq("fatherModule.mid", fmid)).add(Restrictions.eq("module.system", system)).add(Restrictions.eq("company", company)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int fmid, short level, short system, Integer company) {
+
+		String sql = "select {rm.*} from communion.rolemodule rm, communion.module m where rm.rid in :rids and rm.mid = m.mid and m.fatherModuleId = :fmid and m.system = :system and m.level = :level and rm.company = :company group by rm.mid;";
+
+		return session().createSQLQuery(sql).addEntity("rm", RoleModulePO.class).setParameterList("rids", rids).setShort("system", system).setShort("level", level).setInteger("fmid", fmid).setInteger("company", company).list();
 	}
 
 	@Override
@@ -98,7 +113,25 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 
 	@Override
 	public RoleModulePO queryRoleModule(int rid, int mid, Integer company) {
-		return (RoleModulePO) session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.mid", mid)).add(Restrictions.eq("company", company)).uniqueResult();
+		return (RoleModulePO) session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.mid", mid)).add(Restrictions.eq("company", company)).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ModulePO> queryRoleModuleForOne(List<Integer> rids, short system, Integer company) {
+
+		String sql = "select {m.*} from communion.rolemodule rm, communion.module m left join communion.module om on m.fatherModuleId = om.mid where rm.rid in :rids and rm.mid = m.mid and m.system = :system and m.level = 2 and rm.company = :company group by om.mid;";
+
+		return session().createSQLQuery(sql).addEntity("m", ModulePO.class).setParameterList("rids", rids).setShort("system", system).setInteger("company", company).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ModulePO> queryRoleModuleForTwo(List<Integer> rids, int mid, short system, Integer company) {
+
+		String sql = "select {m.*} from communion.rolemodule rm, communion.module m left join communion.module om on m.fatherModuleId = om.mid where rm.rid in :rids and rm.mid = m.mid and m.system = :system and om.fatherModuleId = :mid and m.level = 3 and rm.company = :company group by om.mid;";
+
+		return session().createSQLQuery(sql).addEntity("m", ModulePO.class).setParameterList("rids", rids).setShort("system", system).setInteger("mid", mid).setInteger("company", company).list();
 	}
 
 	@Override
@@ -111,15 +144,13 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 	}
 
 	@Override
-	public int syncRoleModule(int rid, int cuid, List<Integer> companys) {
+	public int syncRoleModule(int rid, int cuid, List<Integer> companys, int company) {
 
 		StringBuffer syncsql = new StringBuffer("insert into communion.rolemodule (rid, mid, link, access, cuid, company) ");
 
-		syncsql.append(" select rm1.* from (select rm.rid, rm.mid, rm.access, rm.link, :cuid, co.cid 'company' from communion.company co inner join communion.rolemodule rm where rm.rid = :rid and co.cid in :companys) rm1 ");
-		syncsql.append(" left join communion.rolemodule rm2 on (rm1.rid = rm2.rid and rm1.mid = rm2.mid and rm1.company = rm2.company) ");
-		syncsql.append(" where rm2.rmid is null ");
+		syncsql.append("select rm.rid, rm.mid, rm.link, rm.access, :cuid, co.cid from communion.rolemodule rm, communion.company co where rm.rid = :rid and rm.company = :company and co.cid in :companys");
 
-		session().createSQLQuery(syncsql.toString()).setInteger("cuid", cuid).setInteger("rid", rid).setParameterList("companys", companys).executeUpdate();
+		session().createSQLQuery(syncsql.toString()).setInteger("cuid", cuid).setInteger("rid", rid).setParameterList("companys", companys).setInteger("company", company).executeUpdate();
 
 		return 0;
 	}
@@ -159,6 +190,15 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 
 		String sql = "delete from communion.rolemodule where mid = :mid and company = :company";
 		session().createSQLQuery(sql).setInteger("mid", mid).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteRoleModule(int rid, List<Integer> companys) {
+
+		String sql = "delete from communion.rolemodule where rid = :rid and company in :companys";
+		session().createSQLQuery(sql).setInteger("rid", rid).setParameterList("companys", companys).executeUpdate();
 
 		return 0;
 	}

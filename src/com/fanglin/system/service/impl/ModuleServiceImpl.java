@@ -120,12 +120,34 @@ public class ModuleServiceImpl implements ModuleService {
 			return moduleVOs;
 		} else {
 
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getSystem(), company);
+			List<RoleModulePO> roleModulePOs = null;
+
+			if (moduleVO.getLevel() != null && moduleVO.getFatherModule() == null) {
+				roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getLevel(), moduleVO.getSystem(), company);
+			} else if (moduleVO.getLevel() != null && moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+				roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getFatherModule().getMid(), moduleVO.getLevel(), moduleVO.getSystem(), company);
+			} else {
+				roleModulePOs = roleModuleDao.queryRoleModule(rolePO.getRid(), moduleVO.getSystem(), company);
+			}
 
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
 			for (RoleModulePO roleModulePO : roleModulePOs) {
 				convertModule(modules, roleModulePO.getModule(), roleModulePO.getLink(), roleModulePO.getAccess());
+			}
+
+			List<ModulePO> modulePOs = new ArrayList<ModulePO>();
+
+			if (moduleVO.getLevel() != null && moduleVO.getLevel() == 1 && moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+				modulePOs = roleModuleDao.queryRoleModuleForOne(Arrays.asList(rolePO.getRid()), moduleVO.getSystem(), company);
+			}
+
+			if (moduleVO.getLevel() != null && moduleVO.getLevel() == 2 && moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+				modulePOs = roleModuleDao.queryRoleModuleForTwo(Arrays.asList(rolePO.getRid()), moduleVO.getFatherModule().getMid(), moduleVO.getSystem(), company);
+			}
+
+			for (ModulePO modulePO : modulePOs) {
+				convertModule(modules, modulePO, RoleModulePO.LINK_NONE_INT, RoleModulePO.ACCESS_ACCESS_INT);
 			}
 
 			return new ArrayList<ModuleVO>(modules.values());
@@ -185,12 +207,34 @@ public class ModuleServiceImpl implements ModuleService {
 				rids.add(userRolePO.getRole().getRid());
 			}
 
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getSystem(), company);
+			List<RoleModulePO> roleModulePOs = null;
+
+			if (moduleVO.getLevel() != null && moduleVO.getFatherModule() == null) {
+				roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getLevel(), moduleVO.getSystem(), company);
+			} else if (moduleVO.getLevel() != null && moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+				roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getFatherModule().getMid(), moduleVO.getLevel(), moduleVO.getSystem(), company);
+			} else {
+				roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getSystem(), company);
+			}
 
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
 			for (RoleModulePO roleModulePO : roleModulePOs) {
 				convertModule(modules, roleModulePO.getModule(), roleModulePO.getLink(), roleModulePO.getAccess());
+			}
+
+			List<ModulePO> modulePOs = new ArrayList<ModulePO>();
+
+			if (moduleVO.getLevel() != null && moduleVO.getLevel() == 1 && moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+				modulePOs = roleModuleDao.queryRoleModuleForOne(rids, moduleVO.getSystem(), company);
+			}
+
+			if (moduleVO.getLevel() != null && moduleVO.getLevel() == 2 && moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
+				modulePOs = roleModuleDao.queryRoleModuleForTwo(rids, moduleVO.getFatherModule().getMid(), moduleVO.getSystem(), company);
+			}
+
+			for (ModulePO modulePO : modulePOs) {
+				convertModule(modules, modulePO, RoleModulePO.LINK_NONE_INT, RoleModulePO.ACCESS_ACCESS_INT);
 			}
 
 			return new ArrayList<ModuleVO>(modules.values());
@@ -292,6 +336,49 @@ public class ModuleServiceImpl implements ModuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateRoleModule(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid, String userId, Integer company) throws FLException {
+
+		RolePO rolePO = roleDao.get(roleVO.getRid());
+
+		if (rolePO == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		RolePO roleCO = roleDao.get(rid);
+
+		if (roleCO == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		if (roleCO.getRid() == rolePO.getRid()) throw new FLException(-1, "无操作权限");
+		if (roleCO.getLevel() < rolePO.getLevel()) throw new FLException(-1, "无操作权限");
+
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		if (modules == null) return 0;
+		if (modules.size() == 0) return 0;
+
+		for (ModuleVO module : modules) {
+
+			RoleModulePO roleModulePO = roleModuleDao.queryRoleModule(roleVO.getRid(), module.getMid(), company);
+
+			if (roleModulePO != null && module.getAccess() == ModulePO.ACCESS_DISABLE_INT && module.getLink() == ModulePO.LINK_NO_INT) {
+				roleModuleDao.delete(roleModulePO);
+			} else if (roleModulePO != null) {
+				roleModulePO.setAccess(module.getAccess());
+				roleModulePO.setLink(module.getLink());
+
+				roleModuleDao.update(roleModulePO);
+			} else {
+				roleModuleDao.save(new RoleModulePO(new ModulePO(module.getMid()), rolePO.getRid(), module.getLink(), module.getAccess(), operator, company));
+			}
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid, String userId, Integer company) throws FLException {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
@@ -349,29 +436,6 @@ public class ModuleServiceImpl implements ModuleService {
 		moduleDao.deleteById(mid);
 
 		return 0;
-	}
-
-	@Override
-	public List<ModuleVO> queryModuleByLevel(ModuleVO moduleVO, Integer company) throws FLException {
-		List<ModulePO> modulePOs;
-		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
-
-		// 获取父模块ID
-		Integer fatherId = null;
-		if (moduleVO.getFatherModule() != null && moduleVO.getFatherModule().getMid() != null) {
-			fatherId = moduleVO.getFatherModule().getMid();
-		}
-
-		// 查询指定层级的模块
-		modulePOs = moduleDao.queryModuleByLevel(moduleVO.getSystem(), moduleVO.getLevel(), fatherId);
-
-		for (ModulePO modulePO : modulePOs) {
-			ModuleVO vo = new ModuleVO();
-			convertModule(modulePO, vo);
-			moduleVOs.add(vo);
-		}
-
-		return moduleVOs;
 	}
 
 	private int convertModule(ModulePO modulePO, ModuleVO moduleVO) {

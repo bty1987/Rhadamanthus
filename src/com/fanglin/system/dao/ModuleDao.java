@@ -26,17 +26,8 @@ public interface ModuleDao extends Dao<ModulePO> {
 
 	public List<ModulePO> queryModuleBySystem(short system);
 
-	public int deleteModule(int mId);
-
 	public List<ModulePO> queryModuleByFatherModule(Short system, Integer mid);
 
-	/**
-	 * 根据层级和父模块ID查询模块
-	 * @param system 系统标识
-	 * @param level 模块层级
-	 * @param fatherId 父模块ID（可选，如果为null则查询该层级所有模块）
-	 * @return 指定层级的模块列表
-	 */
-	public List<ModulePO> queryModuleByLevel(Short system, Short level, Integer fatherId);
+	public int deleteModule(int mId);
 
 }

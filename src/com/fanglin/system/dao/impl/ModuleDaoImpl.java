@@ -14,7 +14,6 @@ package com.fanglin.system.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -88,53 +87,6 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 		session().createSQLQuery(sql).setInteger("mId", mId).executeUpdate();
 
 		return 0;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<ModulePO> queryModuleByLevel(Short system, Short level, Integer fatherId) {
-		Criteria query = session().createCriteria(ModulePO.class);
-
-		// 系统标识
-		if (system != null) {
-			query.add(Restrictions.eq("system", system));
-		}
-
-		// 层级
-		if (level != null) {
-			query.add(Restrictions.eq("level", level));
-		}
-
-		// 父模块ID（可选）
-		if (fatherId != null && fatherId > 0) {
-			// 使用原生 SQL 查询，避免 Hibernate 关联查询的复杂性
-			String sql = "SELECT * FROM communion.module WHERE fatherModuleId = :fatherId";
-			if (system != null) {
-				sql += " AND system = :system";
-			}
-			if (level != null) {
-				sql += " AND level = :level";
-			}
-			sql += " ORDER BY mid";
-
-			org.hibernate.SQLQuery sqlQuery = session().createSQLQuery(sql);
-			sqlQuery.setInteger("fatherId", fatherId);
-			if (system != null) {
-				sqlQuery.setShort("system", system);
-			}
-			if (level != null) {
-				sqlQuery.setShort("level", level);
-			}
-
-			// 设置返回类型
-			sqlQuery.addEntity(ModulePO.class);
-			return sqlQuery.list();
-		}
-
-		// 按排序字段排序
-		query.addOrder(org.hibernate.criterion.Order.asc("mid"));
-
-		return query.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
