@@ -1,6 +1,7 @@
 package com.fanglin.communion.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import com.fanglin.system.vo.CityProperVO;
 
@@ -39,6 +40,10 @@ public class VillageVO implements Serializable {
 	private Long mileage;
 
 	private Integer company;
+
+	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	public VillageVO() {
 		super();
@@ -186,6 +191,22 @@ public class VillageVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 }
