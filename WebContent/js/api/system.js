@@ -221,6 +221,10 @@ $.extend(api, {
             url: "addModule.do",
             server: "communion"
         },
+        updateRoleModule: {
+            url: "updateRoleModule.do",
+            server: "communion"
+        },
         updateRoleModuleByRid: {
             url: "updateRoleModuleByRid.do",
             server: "communion"
