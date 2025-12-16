@@ -557,6 +557,36 @@
         });
     },
 
+    /**
+     * 显示加载提示
+     *
+     * @param content 加载提示内容，默认为"加载中..."
+     * @param options 可选配置，包含 shade（遮罩透明度）、time（自动关闭时间）等
+     * @return 返回加载索引，可用于关闭
+     */
+    showLoading: function(content, options) {
+        options = options || {};
+        var loadIndex = layer.msg(content || '加载中...', {
+            shade: options.shade || 0.3,
+            time: options.time || 0, // 默认不自动关闭
+            icon: options.icon || 16
+        });
+        return loadIndex;
+    },
+
+    /**
+     * 隐藏加载提示
+     *
+     * @param loadIndex 加载索引，如果为空则关闭所有加载提示
+     */
+    hideLoading: function(loadIndex) {
+        if (loadIndex) {
+            layer.close(loadIndex);
+        } else {
+            layer.closeAll('loading');
+        }
+    },
+
      /**
      * 确认窗口是否
      * 

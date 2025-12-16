@@ -1475,6 +1475,383 @@ $('.deleteBtn').on('click', function() {
 
 ---
 
+### 4. 框架使用规范
+
+#### (1) **重要：修改代码时的文件管理原则**
+
+**原则**：修改现有功能代码时，必须直接修改原文件，禁止创建新文件来实现相同功能。
+
+**原因**：
+- 避免代码合并时的冲突和版本管理问题
+- 保持功能实现的唯一性和一致性
+- 减少代码重复和维护成本
+- 确保团队协作时的代码同步
+
+**正确做法**：
+```javascript
+// ✅ 正确：直接修改原文件
+// 修改 js/system/role.js 中的现有函数
+function saveModule() {
+    // 在原有逻辑基础上优化或修改
+    // 改进实现，但不创建新文件
+}
+
+// ✅ 正确：添加新的辅助函数到原文件
+function validateModuleData(data) {
+    // 新增验证逻辑
+    return data && data.mid;
+}
+```
+
+**错误做法**：
+```javascript
+// ❌ 错误：创建新文件实现相同功能
+// 不要创建 js/system/role-v2.js
+// 不要创建 js/system/role-refactored.js
+// 不要创建 js/system/role-new.js
+```
+
+**适用场景**：
+- 功能逻辑优化
+- 性能改进
+- Bug修复
+- 代码重构
+- 增加新功能到现有模块
+
+**例外情况**（可以创建新文件）：
+- 全新功能模块
+- 独立的工具类库
+- 第三方集成封装
+- 组件库扩展
+
+#### (2) **重要：禁止直接调用第三方组件**
+
+**原则**：不可跳过 `com` 框架直接调用底层组件（如 layer、bootbox 等），必须通过框架统一访问。
+
+**原因**：
+- 确保统一的用户体验和样式
+- 便于框架升级和维护
+- 避免组件版本冲突
+- 统一的错误处理和日志
+
+```javascript
+// ✅ 正确：使用框架提供的方法
+com.showAlert(com.info, '操作成功');
+com.showConfirm('确认删除？', function() {
+    // 确认后的操作
+});
+com.showLoading('正在处理...');
+
+// ❌ 错误：直接调用底层组件
+layer.msg('操作成功');                    // 禁止
+layer.confirm('确认删除？', function() {}); // 禁止
+bootbox.alert('操作成功');                 // 禁止
+```
+
+#### (2) **UI 组件调用规范**
+
+```javascript
+// ✅ 信息提示
+com.showAlert(com.info, '提示信息');      // 信息
+com.showAlert(com.warning, '警告信息');    // 警告
+com.showAlert(com.error, '错误信息');      // 错误
+
+// ✅ 确认对话框
+com.showConfirm('确认操作？', function() {
+    // 用户点击确认后执行
+});
+
+// ✅ 加载提示
+com.showLoading('正在处理...');
+// ... 处理逻辑 ...
+com.hideLoading();
+```
+
+#### (3) **框架方法优先级**
+
+当需要某个功能时，按以下顺序查找：
+
+1. **首选**：`com` 对象中的方法
+2. **备选**：查找系统提供的其他工具类
+3. **最后**：在框架统一封装下使用第三方组件
+
+```javascript
+// ✅ 正确的查找顺序
+if (typeof com.showConfirm === 'function') {
+    com.showConfirm(msg, callback);
+} else if (typeof window.systemConfirm === 'function') {
+    window.systemConfirm(msg, callback);
+} else {
+    // 只有在万不得已时，才在框架统一封装下使用
+    frameworkAdaptedConfirm(msg, callback);
+}
+```
+
+#### (4) **自定义组件封装**
+
+如果需要新的UI功能，应：
+
+```javascript
+// ✅ 在 com 对象中扩展
+com.showCustomDialog = function(options) {
+    // 统一封装第三方组件调用
+    return layer.open({
+        type: 1,
+        title: options.title,
+        content: options.content,
+        // ... 统一的配置
+    });
+};
+
+// ✅ 使用时
+com.showCustomDialog({
+    title: '自定义对话框',
+    content: '<div>对话框内容</div>'
+});
+```
+
+#### (5) **违规处理**
+
+代码审查时发现直接调用底层组件的：
+
+```javascript
+// ❌ 发现的问题代码
+layer.msg('提示信息');
+
+// ✅ 修复方案
+com.showAlert(com.info, '提示信息');
+```
+
+**修复优先级**：
+- 🔴 **高优先级**：新功能开发必须使用框架方法
+- 🟡 **中优先级**：维护现有代码时逐步修复
+- 🟢 **低优先级**：已稳定运行的代码可在重构时修复
+
+---
+
+### 5. DOM操作规范
+
+#### (1) **重要：统一使用com.focusPage获取页面元素**
+
+**原则**：除 `login/index` 页面之外，获取页面标签元素不可直接使用 `$`，必须使用 `com.focusPage` 方法。
+
+**原因**：
+- 确保页面元素的隔离和命名空间管理
+- 避免多页面环境下的元素ID冲突
+- 提供统一的DOM操作入口
+- 便于页面性能优化和内存管理
+- 支持页面卸载时的资源清理
+
+```javascript
+// ✅ 正确：使用com.focusPage
+var $userName = com.focusPage('#userName');
+var $submitBtn = com.focusPage('#submitBtn');
+var $dataTable = com.focusPage('#dataTable tbody');
+
+// ❌ 错误：直接使用jQuery选择器
+var $userName = $('#userName');           // 禁止
+var $submitBtn = $('.submit-btn');         // 禁止
+var $dataTable = $('#dataTable tbody');    // 禁止
+```
+
+#### (2) **适用范围**
+
+**必须使用 com.focusPage 的场景**：
+- 所有业务页面（除 login/index 外）
+- 动态加载的页面内容
+- 模态框(Modal)内的元素操作
+- 通过路由切换的页面
+
+**可以使用直接选择器的场景**：
+- `login/index.html` 页面（全局登录页）
+- 系统全局公共组件（如顶部导航栏）
+- 第三方插件初始化（在明确知道不会冲突的情况下）
+
+```javascript
+// ✅ login页面可以使用直接选择器
+// login/index.html
+$('#loginForm').submit(function() {
+    // 登录逻辑
+});
+
+// ✅ 全局导航栏可以使用直接选择器
+// 主框架页面
+$('#mainNavigation').on('click', 'a', function() {
+    // 导航逻辑
+});
+
+// ✅ 业务页面必须使用com.focusPage
+// views/module/page.html
+var $form = com.focusPage('#dataForm');
+var $saveBtn = com.focusPage('#saveBtn');
+```
+
+#### (3) **com.focusPage 使用规范**
+
+**基本用法**：
+```javascript
+// 单个元素选择
+var $element = com.focusPage('#elementId');
+var $elements = com.focusPage('.elementClass');
+
+// 复合选择器
+var $container = com.focusPage('#container .item input:checked');
+
+// 上下文选择
+var $rows = com.focusPage('tbody tr.selected');
+```
+
+**链式调用**：
+```javascript
+// ✅ 支持链式操作
+com.focusPage('#dataTable')
+    .addClass('active')
+    .find('tr')
+    .removeClass('selected');
+```
+
+**事件绑定**：
+```javascript
+// ✅ 正确的事件绑定
+com.focusPage('#submitBtn').on('click', function() {
+    // 处理逻辑
+});
+
+// ✅ 事件委托
+com.focusPage('#dataTable').on('click', '.deleteBtn', function() {
+    // 处理删除逻辑
+});
+```
+
+#### (4) **常见使用场景**
+
+**表单操作**：
+```javascript
+// ✅ 表单数据获取
+var formData = {
+    name: com.focusPage('#name').val(),
+    email: com.focusPage('#email').val(),
+    age: com.focusPage('#age').val()
+};
+
+// ✅ 表单验证
+if (com.focusPage('#name').val() === '') {
+    com.showAlert(com.warning, '请输入姓名');
+    return false;
+}
+```
+
+**表格操作**：
+```javascript
+// ✅ 获取选中行
+var $selectedRows = com.focusPage('#dataTable tbody tr.selected');
+
+// ✅ 动态添加行
+var $newRow = $('<tr><td>新数据</td></tr>');
+com.focusPage('#dataTable tbody').append($newRow);
+
+// ✅ 批量操作
+com.focusPage('#dataTable input[type="checkbox"]:checked').each(function() {
+    // 处理选中的行
+});
+```
+
+**模态框操作**：
+```javascript
+// ✅ 模态框内元素操作
+$('#editModal').on('shown.bs.modal', function() {
+    var $form = com.focusPage('#editForm', '#editModal');
+    $form.find('input[name="title"]').focus();
+});
+```
+
+#### (5) **性能优化建议**
+
+**缓存常用元素**：
+```javascript
+// ✅ 缓存频繁使用的元素
+var $dataTable = com.focusPage('#dataTable');
+var $searchBtn = com.focusPage('#searchBtn');
+
+// 在后续操作中使用缓存的引用
+$dataTable.find('tr').removeClass('active');
+```
+
+**避免重复选择**：
+```javascript
+// ❌ 不推荐：重复选择同一元素
+com.focusPage('#userName').val(name);
+com.focusPage('#userName').addClass('error');
+
+// ✅ 推荐：缓存元素引用
+var $userName = com.focusPage('#userName');
+$userName.val(name);
+$userName.addClass('error');
+```
+
+#### (6) **错误处理**
+
+**元素不存在的处理**：
+```javascript
+// ✅ 安全的选择器检查
+var $element = com.focusPage('#optionalElement');
+if ($element.length > 0) {
+    $element.show();
+} else {
+    console.warn('元素未找到: #optionalElement');
+}
+```
+
+**多页面环境适配**：
+```javascript
+// ✅ 检查元素是否在当前页面上下文中
+function safeShowElement(selector) {
+    var $element = com.focusPage(selector);
+    if ($element.length > 0 && $element.is(':visible')) {
+        $element.show();
+        return true;
+    }
+    return false;
+}
+```
+
+#### (7) **违规处理**
+
+**代码审查要点**：
+```javascript
+// ❌ 需要修复的代码
+$('#userList').html(html);                    // 直接使用$
+$('.delete-btn').on('click', handler);       // 直接使用$
+$('input[name="username"]').val(name);        // 直接使用$
+
+// ✅ 修复后的代码
+com.focusPage('#userList').html(html);        // 使用com.focusPage
+com.focusPage('.delete-btn').on('click', handler); // 使用com.focusPage
+com.focusPage('input[name="username"]').val(name); // 使用com.focusPage
+```
+
+**批量修复工具**：
+```javascript
+// 开发阶段可以使用的批量检查工具
+function checkDirectSelectorUsage() {
+    var violations = [];
+
+    // 检查常见的选择器使用
+    var patterns = [
+        /\$\(['"]#/,           // $('#id')
+        /\$\(['"]\./,          // $('.class')
+        /\$\(['"]\[/,          // $('[attr')
+    ];
+
+    // 检查当前文件中的违规使用
+    // ... 实现检查逻辑
+
+    return violations;
+}
+```
+
+---
+
 ## 配置文件
 
 ### 1. 全局配置 (`js/com/config.js`)

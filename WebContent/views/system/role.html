@@ -173,6 +173,74 @@
         </div>
     </div>
 
+    <!--模块配置(新)-->
+    <div class="modal fade" id="moduleNewModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 80%; max-width: 600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">模块配置(新)</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="moduleNewTree" style="max-height: 500px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                                <!-- 模块树将在这里动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="saveModuleNewBtn" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--模块复制弹窗-->
+    <div class="modal fade" id="companyCopyModal" tabindex="-1">
+        <div class="modal-dialog" style="width: 600px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                        <span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">模块复制</h4>
+                    <span id="copyRoleName" class="text-info"></span>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">源角色</label>
+                            <div class="col-sm-9">
+                                <span class="form-control-static" id="sourceRoleName"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">目标公司</label>
+                            <div class="col-sm-9">
+                                <div id="companyList" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                                    <!-- 公司列表将在这里动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="confirmCopyBtn" class="btn btn-primary">确认复制</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!--图表配置-->
     <div class="modal fade" id="chartPageModal" tabindex="-1">
         <div class="modal-dialog">
@@ -258,6 +326,33 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* 三级模块样式 */
+    .dd-item.item-green {
+        background-color: #f8fff8;
+        border-left: 3px solid #82b465;
+    }
+
+    .dd-item.item-green .dd-handle {
+        background-color: #f8fff8;
+        border: 1px solid #d6e9c6;
+    }
+
+    .dd-item.item-green .dd-handle:hover {
+        background-color: #e8f5e8;
+    }
+
+    /* 层级缩进样式优化 */
+    .dd-list .dd-list .dd-list {
+        margin-left: 20px;
+    }
+
+    /* 按钮hover效果 */
+    .btn:hover .fa-spinner {
+        animation: none;
+    }
+</style>
 
 <script type="text/javascript">
     $.loadScript(['js/system/role.js']);
