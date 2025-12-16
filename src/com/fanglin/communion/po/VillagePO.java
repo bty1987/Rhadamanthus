@@ -1,6 +1,7 @@
 package com.fanglin.communion.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Arrays;
 
 import javax.persistence.Column;
@@ -66,6 +67,10 @@ public class VillagePO implements Serializable {
 	private long mileage;
 
 	private int company;
+
+	private Timestamp createTime;
+
+	private Timestamp updateTime;
 
 	public VillagePO() {
 		super();
@@ -251,6 +256,24 @@ public class VillagePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "updateTime")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	public VillageVO ptv(VillageVO villageVO) {
