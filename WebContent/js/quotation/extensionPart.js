@@ -508,8 +508,8 @@ var ExtensionDetail = (function() {
             var _index = $arwrap.find('.fl-quo-item').length;
 
             var atttype = extensionDetail.basicParams["extension.atttype"];
-            var type = extensionDetail.type == constant.quotation().extension.TYPE_ADD_INT ? constant.quotation().extensionItem.TYPE_QUOTATIONADD_INT : constant.quotation().extensionItem.TYPE_QUOTATIONSUB_INT;
-
+            var type = extensionDetail.type == constant.quotation().extension.TYPE_ADD_INT ? constant.quotation().extensionItem.TYPE_QUOTATIONINADD_INT : constant.quotation().extensionItem.TYPE_QUOTATIONINSUB_INT;
+            
             var discount = v.discount;
             var unitPrice = v.unitPrice;
             var subPrice = v.subPrice;
@@ -549,7 +549,7 @@ var ExtensionDetail = (function() {
                 "eid": "",
                 "quoteItemId": v.qfaiId,
                 "discount": discount,
-                "quotationitemid": null,
+                "quotationitemid": extensionDetail.quotationItemId,
                 "qiid": v.quotationItemId
             };
 
@@ -954,10 +954,10 @@ var ExtensionDetail = (function() {
             $btnSelect.click(function() {
 
                 extensionDetail.$modals.addQuotaionItemModal.modal('hide');
-
+                
+                extensionDetail.quotationItemId = v.qfaiId;
+                
                 if (extensionDetail.basicParams["extension.type"] == constant.quotation().extension.TYPE_ADD_INT) {
-
-                    extensionDetail.quotationItemId = v.qfaiId;
                     extensionDetail.$modals.addNormalItemModal.modal('show');
                 } else {
                     quote.addQuoteFunctionAreaItemModal(v);
