@@ -230,8 +230,8 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $chainPage = $('<a></a>').addClass('btn btn-minier btn-yellow').html('外链配置');
-            var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
-            var $btnModuleNew = $('<a></a>').addClass('btn btn-minier btn-purple').html('模块配置(新)');
+            var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success hide').html('模块配置');
+            var $btnModuleNew = $('<a></a>').addClass('btn btn-minier btn-purple').html('模块配置');
             var $btnCopyModule = $('<a></a>').addClass('btn btn-minier btn-default').html('模块复制');
             var $btnTask = $('<a></a>').addClass('btn btn-minier btn-danger').html('任务配置');
             var $officeModule = $('<a></a>').addClass('btn btn-minier btn-info').html('办公配置');
