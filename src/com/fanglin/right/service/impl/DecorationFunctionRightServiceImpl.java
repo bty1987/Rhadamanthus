@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.dao.DecorationFunctionDao;
 import com.fanglin.decoration.po.DecorationFunctionPO;
 import com.fanglin.decoration.vo.DecorationFunctionVO;
@@ -15,6 +16,7 @@ import com.fanglin.right.dao.DecorationFunctionRightDao;
 import com.fanglin.right.po.DecorationFunctionRightPO;
 import com.fanglin.right.service.DecorationFunctionRightService;
 import com.fanglin.right.vo.DecorationFunctionRightVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 
 @Service("decorationFunctionRightService")
@@ -63,6 +65,22 @@ public class DecorationFunctionRightServiceImpl implements DecorationFunctionRig
 			decorationFunctionRightDao.save(decorationFunctionRightPO);
 		}
 
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int syncDecorationFunctionRight(DecorationFunctionRightVO decorationFunctionRightVO, List<String> companys, Integer company) throws FLException {
+
+		List<Integer> cids = new ArrayList<Integer>();
+
+		for (String cid : companys) {
+			cids.add(CompanyServiceImpl.decode(cid));
+		}
+
+		decorationFunctionRightDao.deleteDecorationFunctionRight(decorationFunctionRightVO.getName(), cids);
+		decorationFunctionRightDao.syncDecorationFunctionRight(decorationFunctionRightVO.getName(), cids, company);
+
+		return 0;
 	}
 
 }

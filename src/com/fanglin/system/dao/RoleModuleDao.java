@@ -15,6 +15,7 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.system.po.ModulePO;
 import com.fanglin.system.po.RoleModulePO;
 import com.fanglin.system.po.RoleModuleRO;
 import com.fanglin.utils.Paging;
@@ -27,13 +28,21 @@ public interface RoleModuleDao extends Dao<RoleModulePO> {
 
 	public List<RoleModulePO> queryRoleModule(List<Integer> rids, short system, Integer company);
 
-	public List<RoleModulePO> queryRoleModule(int rid, int level, short system, Integer company);
+	public List<RoleModulePO> queryRoleModule(int rid, short level, short system, Integer company);
 
-	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int level, short system, Integer company);
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, short level, short system, Integer company);
+
+	public List<RoleModulePO> queryRoleModule(int rid, int fmid, short level, short system, Integer company);
+
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int fmid, short level, short system, Integer company);
 
 	public List<RoleModulePO> queryRoleModuleForLink(int rid, short system, Integer company);
 
 	public List<RoleModulePO> queryRoleModuleForLink(List<Integer> rids, short system, Integer company);
+
+	public List<ModulePO> queryRoleModuleForOne(List<Integer> rids, short system, Integer company);
+
+	public List<ModulePO> queryRoleModuleForTwo(List<Integer> rids, int mid, short system, Integer company);
 
 	public RoleModulePO queryRoleModule(List<Integer> rids, int mid, Integer company);
 
@@ -41,7 +50,7 @@ public interface RoleModuleDao extends Dao<RoleModulePO> {
 
 	public int countRoleModuleByMid(int mid, Integer company);
 
-	public int syncRoleModule(int rid, int cuid, List<Integer> companys);
+	public int syncRoleModule(int rid, int cuid, List<Integer> companys, int company);
 
 	public int deleteRoleModule(int rid, int company);
 
@@ -50,5 +59,7 @@ public interface RoleModuleDao extends Dao<RoleModulePO> {
 	public int deleteRoleModuleByRid(int rid, short system, int company);
 
 	public int deleteRoleModuleByMid(int mid, int company);
+
+	public int deleteRoleModule(int rid, List<Integer> companys);
 
 }

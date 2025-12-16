@@ -28,6 +28,8 @@ public class DecorationFunctionRightAction extends BaseListAction {
 
 	private DecorationFunctionRightVO decorationFunctionRight;
 
+	private List<String> companys;
+
 	private List<Long> dfids;
 
 	@Action(value = "queryDecorationFunctionRightByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -42,6 +44,14 @@ public class DecorationFunctionRightAction extends BaseListAction {
 	public String updateDecorationFunctionRight() throws FLException {
 
 		decorationFunctionRightService.updateDecorationFunctionRight(decorationFunctionRight, dfids, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "syncDecorationFunctionRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncDecorationFunctionRight() throws FLException {
+
+		decorationFunctionRightService.syncDecorationFunctionRight(decorationFunctionRight, companys, queryCompany());
 
 		return SUCCESS;
 	}
@@ -68,6 +78,14 @@ public class DecorationFunctionRightAction extends BaseListAction {
 
 	public void setDfids(List<Long> dfids) {
 		this.dfids = dfids;
+	}
+
+	public List<String> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<String> companys) {
+		this.companys = companys;
 	}
 
 }

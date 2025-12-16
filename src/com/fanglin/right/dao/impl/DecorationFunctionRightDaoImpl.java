@@ -23,6 +23,24 @@ public class DecorationFunctionRightDaoImpl extends DaoImpl<DecorationFunctionRi
 	}
 
 	@Override
+	public void syncDecorationFunctionRight(String name, List<Integer> cids, Integer company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into platform.decorationfunctionright (name, dfid, company) ");
+
+		syncsql.append("select dfr.name, dfr.dfid, co.cid from platform.decorationfunctionright dfr, communion.company co where dfr.name = :name and dfr.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setString("name", name).setInteger("company", company).setParameterList("companys", cids).setInteger("company", company).executeUpdate();
+
+	}
+
+	@Override
+	public void deleteDecorationFunctionRight(String name, List<Integer> cids) {
+
+		String sql = "delete from platform.decorationfunctionright where name = :name and company in :companys";
+		session().createSQLQuery(sql).setString("name", name).setParameterList("companys", cids).executeUpdate();
+	}
+
+	@Override
 	public int deleteDecorationFunctionRightByName(String name, Integer company) {
 
 		String sql = "delete from platform.decorationfunctionright where name = :name and company = :company";

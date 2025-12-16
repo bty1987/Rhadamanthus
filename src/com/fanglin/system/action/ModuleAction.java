@@ -72,14 +72,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModuleForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleForLogin() throws FLException {
 
-		// 如果指定了层级，则按层级查询；否则查询所有层级（保持原有逻辑）
-		if (module != null && module.getLevel() != null) {
-			// 按指定层级查询
-			modules = moduleService.queryModuleByLevel(module, queryCompany());
-		} else {
-			// 原有逻辑：查询用户权限内的所有模块
-			modules = moduleService.queryModuleByUserId(module, new UserVO(queryUserId()), queryCompany());
-		}
+		modules = moduleService.queryModuleByUserId(module, new UserVO(queryUserId()), queryCompany());
 
 		return SUCCESS;
 	}
@@ -132,6 +125,18 @@ public class ModuleAction extends BaseListAction {
 		}
 
 		moduleService.addModule(module);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateRoleModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateRoleModule() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		moduleService.updateRoleModule(module, role, modules, queryRoleId(), queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

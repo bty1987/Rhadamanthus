@@ -9,6 +9,10 @@ public interface DecorationFunctionRightDao extends Dao<DecorationFunctionRightP
 
 	public List<DecorationFunctionRightPO> queryDecorationFunctionRightByName(String name, Integer company);
 
+	public void syncDecorationFunctionRight(String name, List<Integer> cids, Integer company);
+
 	public int deleteDecorationFunctionRightByName(String name, Integer company);
+
+	public void deleteDecorationFunctionRight(String name, List<Integer> cids);
 
 }

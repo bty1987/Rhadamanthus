@@ -95,8 +95,8 @@ public class RoleModuleServiceImpl implements RoleModuleService {
 
 		UserPO operater = userDao.queryUserByUserId(userId);
 
-		roleModuleDao.deleteRoleModule(roleVO.getRid(), company);
-		roleModuleDao.syncRoleModule(roleVO.getRid(), operater.getUid(), cids);
+		roleModuleDao.deleteRoleModule(roleVO.getRid(), cids);
+		roleModuleDao.syncRoleModule(roleVO.getRid(), operater.getUid(), cids, company);
 
 		return 0;
 	}

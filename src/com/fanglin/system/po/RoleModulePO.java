@@ -21,6 +21,10 @@ public class RoleModulePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6081152605726686260L;
 
+	public static final short ACCESS_ACCESS_INT = 0;
+
+	public static final short LINK_NONE_INT = 1;
+
 	private int rmId;
 
 	private int rid;
