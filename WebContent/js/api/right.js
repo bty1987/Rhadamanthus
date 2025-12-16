@@ -73,6 +73,9 @@ $.extend(api, {
         updateDecorationFunctionRight: {
             url: "updateDecorationFunctionRight.do"
         },
+        syncDecorationFunctionRight: {
+            url: "syncDecorationFunctionRight.do"
+        },
 
         queryProductionFunctionRightByName: {
             url: "queryProductionFunctionRightByName.do"
