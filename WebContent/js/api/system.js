@@ -184,6 +184,7 @@ $.extend(api, {
             url: "deleteRoleByRid.do",
             server: "communion"
         },
+
         pageModule: {
             url: "pageModule.do",
             demo: true
@@ -223,11 +224,16 @@ $.extend(api, {
         },
         updateRoleModule: {
             url: "updateRoleModule.do",
-            server: "communion"
+            server: "communion",
+            intercept: true,
         },
         updateRoleModuleByRid: {
             url: "updateRoleModuleByRid.do",
             server: "communion"
+        },
+        syncRoleModule: {
+            url: "syncRoleModule.do",
+            server: "communion",
         },
         deleteModule: {
             url: "deleteModule.do",
