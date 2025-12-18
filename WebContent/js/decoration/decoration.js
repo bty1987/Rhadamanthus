@@ -1573,6 +1573,10 @@
                 if (datas.drawlineTime && !datas.finishTime) {
                     finishTime = utils.workDays(datas.drawlineTime, (constructionPeriod ? constructionPeriod : 0));
                 }
+                
+                if(datas.timeLimit){
+                    constructionPeriod = datas.timeLimit;
+                }
 
                 if (datas.designTime) {
                     designTime = datas.designTime;
@@ -1583,7 +1587,7 @@
                 }
 
                 order.infoItems.dlmConpany.val(0);
-                order.infoItems.quoteArea.val(decoration.house.quoteArea);
+                order.infoItems.quoteArea.val(decoration.house.innerArea);
                 order.infoItems.timeLimit.val(constructionPeriod);
                 order.infoItems.ishovel.val(datas.ishovel);
                 order.infoItems.iskey.val(datas.iskey);

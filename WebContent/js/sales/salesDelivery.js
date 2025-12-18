@@ -319,6 +319,20 @@ $(function() {
 
         salesDelivery.extraParams["statuses[" + i + "]"] = v;
     });
+    
+    if (salesDelivery.pageType == "init") {
+        salesDelivery.extraParams["companyType"] = "company";
+    } else if (salesDelivery.pageType == "tran") {
+        salesDelivery.extraParams["companyType"] = "sales.dompany";
+    } else if (salesDelivery.pageType == "check") {
+        salesDelivery.extraParams["companyType"] = "sales.dompany";
+    } else if (salesDelivery.pageType == "confirm") {
+        salesDelivery.extraParams["companyType"] = "company";
+    } else if (salesDelivery.pageType == "finish") {
+        salesDelivery.extraParams["companyType"] = "company";
+    } else {
+        salesDelivery.extraParams["companyType"] = "sales.dompany";
+    }
 
     var searcher = new Searcher();
 
@@ -364,8 +378,7 @@ $(function() {
 
                 com.showAlert(com.warning, "请选择需要进行确认的配送项");
 
-                return;
-
+                return false;
             }
 
             $.each($inputs, function(i, v) {
@@ -381,7 +394,6 @@ $(function() {
 
                     com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
-
                 });
 
             }, function() {
@@ -402,8 +414,7 @@ $(function() {
 
                 com.showAlert(com.warning, "请选择需要进行配送的配送项");
 
-                return;
-
+                return false;
             }
 
             $.each($inputs, function(i, v) {

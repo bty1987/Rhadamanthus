@@ -54,7 +54,7 @@ $(function() {
 
     // 初始化加载公司列表
     com.post(api.system.queryCompany, {
-        "company.atttype": "1"
+        //"company.atttype": "1"
     }, function(res) {
 
         goodsPackage.items.companySelect.bindData(res.companys, "cid", "name");
