@@ -63,7 +63,7 @@ jQuery(function($) {
     function syncConfig(key, name) {
         decorationFunction.currentSyncKey = key;
         decorationFunction.items.syncFunctionName.html(name);
-        decorationFunction.items.companyList.html('<div class="text-center"><i class="icon-spinner icon-spin"></i> 正在加载公司信息...</div>');
+        decorationFunction.items.companyList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
 
         // 显示同步模态框
         decorationFunction.modal.syncModal.modal("show");
@@ -78,39 +78,42 @@ jQuery(function($) {
             decorationFunction.companys = res.companys || [];
             renderCompanyList();
         }, function() {
-            decorationFunction.items.companyList.html('<div class="text-center text-danger">加载公司信息失败</div>');
+            decorationFunction.items.companyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
         });
     }
 
     // 渲染公司列表
     function renderCompanyList() {
         if (!decorationFunction.companys || decorationFunction.companys.length === 0) {
-            decorationFunction.items.companyList.html('<div class="text-center text-muted">暂无公司信息</div>');
+            decorationFunction.items.companyList.html('<div class="text-center text-muted">暂无可选公司</div>');
             return;
         }
 
-        var html = '<div class="checkbox-group">';
-        $.each(decorationFunction.companys, function(i, company) {
-            html += '<div class="checkbox">';
-            html += '<label>';
-            html += '<input type="checkbox" name="companyCheckbox" value="' + company.cid + '" data-name="' + company.name + '"> ';
-            html += company.name + (company.status === 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>');
-            html += '</label>';
-            html += '</div>';
+        var companyHtml = '';
+        decorationFunction.companys.forEach(function(company) {
+            companyHtml += '<div class="company-item">' +
+                '<label class="checkbox-inline">' +
+                '<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '" data-name="' + company.name + '">' +
+                '<span class="lbl">' + company.name + '</span>' +
+                (company.status === 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>') +
+                '</label>' +
+                '</div>';
         });
-        html += '<div class="checkbox">';
-        html += '<label>';
-        html += '<input type="checkbox" id="selectAllCompanies"> 全选/全不选';
-        html += '</label>';
-        html += '</div>';
-        html += '</div>';
 
-        decorationFunction.items.companyList.html(html);
+        // 添加全选功能
+        companyHtml += '<div class="company-item">' +
+            '<label class="checkbox-inline">' +
+            '<input type="checkbox" class="ace" id="selectAllCompanies">' +
+            '<span class="lbl">全选/全不选</span>' +
+            '</label>' +
+            '</div>';
+
+        decorationFunction.items.companyList.html(companyHtml);
 
         // 绑定全选/全不选事件
         com.focusPage('#selectAllCompanies').on('change', function() {
             var isChecked = $(this).prop('checked');
-            com.focusPage('input[name="companyCheckbox"]').prop('checked', isChecked);
+            com.focusPage('.company-checkbox').prop('checked', isChecked);
         });
     }
 
@@ -225,7 +228,7 @@ jQuery(function($) {
     // 同步确认按钮点击事件
     decorationFunction.btn.syncConfirmBtn.click(function() {
         var selectedCompanies = [];
-        com.focusPage('input[name="companyCheckbox"]:checked').each(function() {
+        com.focusPage('.company-checkbox:checked').each(function() {
             var company = {
                 cid: $(this).val(),
                 name: $(this).data('name')
@@ -234,7 +237,7 @@ jQuery(function($) {
         });
 
         if (selectedCompanies.length === 0) {
-            com.showAlert(com.warning, "请选择至少一个公司进行同步");
+            com.showAlert(com.warning, "请至少选择一个目标公司");
             return;
         }
 
