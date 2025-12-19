@@ -51,11 +51,9 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.DutmentDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.dao.UserInfoDao;
-import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.DutmentPO;
 import com.fanglin.personel.po.UserInfoPO;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.personel.vo.UserInfoVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
@@ -92,9 +90,6 @@ public class A20251208ServiceImpl implements A20251208Service {
 	private DutyDao dutyDao;
 
 	@Autowired
-	private UserRoleDao userRoleDao;
-
-	@Autowired
 	private CountingService countingService;
 
 	@Autowired
@@ -123,7 +118,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 	@Autowired
 	private SurveyService surveyService;
-	
+
 	@Autowired
 	private ConstructionScheduleService constructionScheduleService;
 
@@ -172,6 +167,10 @@ public class A20251208ServiceImpl implements A20251208Service {
 			}
 
 			DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
+
+			if (departmentPO == null) {
+				throw new FLException(310002, "部门不可添加人员");
+			}
 
 			if (departmentPO.getFatherDept() == null) {
 				throw new FLException(310002, "部门不可添加人员");
@@ -247,10 +246,6 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 		userDao.saveOrUpdate(userPO);
 
-		UserPO operator = userDao.queryUserByUserId(userId);
-
-		userRoleDao.save(new UserRolePO(userPO.getUid(), userPO.getRole(), operator));
-
 		userVO.setUid(userPO.getUid());
 
 		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user", "fangliner"));
@@ -262,7 +257,7 @@ public class A20251208ServiceImpl implements A20251208Service {
 
 		userInfoVO.getUser().ptv(userInfoPO.getUser());
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int beginConstructionScheduleForPlatforPm(ConstructionScheduleVO constructionScheduleVO, String userId) throws FLException {

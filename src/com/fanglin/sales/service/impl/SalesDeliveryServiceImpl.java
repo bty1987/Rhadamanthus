@@ -71,9 +71,12 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	private SalesBalanceDao salesBalanceDao;
 
 	@Override
-	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException {
+	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses, String companyType) throws FLException {
 
 		filters.add(new Filter("statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
+
+		if (companyType != null) filters.add(new Filter(companyType, String.valueOf(company), "eq"));
+		else return;
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company);
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = new ArrayList<SalesDeliveryItemVO>();
@@ -86,13 +89,16 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	}
 
 	@Override
-	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int queryCompany) throws FLException {
+	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int company, String companyType) throws FLException {
+
+		if (companyType != null) filters.add(new Filter(companyType, String.valueOf(company), "eq"));
+		else return;
+
+		if (filters.size() == 0) return;
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null) return;
-
-		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, queryCompany, userPO.getUid());
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company, userPO.getUid());
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = new ArrayList<SalesDeliveryItemVO>();
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {
@@ -103,13 +109,16 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	}
 
 	@Override
-	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int queryCompany) throws FLException {
+	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int company, String companyType) throws FLException {
+
+		if (companyType != null) filters.add(new Filter(companyType, String.valueOf(company), "eq"));
+		else return;
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		if (userPO == null) return;
 
-		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItemForInstorer(paging, filters, queryCompany, userPO.getUid());
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItemForInstorer(paging, filters, company, userPO.getUid());
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = new ArrayList<SalesDeliveryItemVO>();
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {

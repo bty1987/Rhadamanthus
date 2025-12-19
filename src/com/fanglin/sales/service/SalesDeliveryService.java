@@ -10,11 +10,11 @@ import com.fanglin.utils.Paging;
 
 public interface SalesDeliveryService {
 
-	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException;
+	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses, String companyType) throws FLException;
 
-	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int company) throws FLException;
+	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int company, String companyType) throws FLException;
 
-	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int company) throws FLException;
+	public void pageSalesDeliveryItemForInstorer(Paging paging, List<Filter> filters, String userId, int company, String companyType) throws FLException;
 
 	public List<SalesDeliveryItemVO> querySalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItemVO);
 

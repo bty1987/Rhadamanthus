@@ -26,8 +26,6 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
-		query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_COMPANY_STR, company, "eq"));
-
 		queryFilterExcute(query, filters);
 
 		query.desc("sdiid");
@@ -98,6 +96,8 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 
 			if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("company".equals(field)) {
+				query.add(query.getCriterion("company", Integer.valueOf(data), op));
 			} else if ("statuses".equals(field)) {
 				query.add(query.getCriterion("status", filter.getShorts(), "in"));
 			} else if (SalesDeliveryItemPO.COLUMN_CREATETIME_STR.equals(field)) {

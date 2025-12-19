@@ -2149,6 +2149,12 @@ var QuotationDetail = (function() {
             // 选中元素中input标签 val赋值为$numCell的文本值 并且点击input标签获取焦点 .focus()获取焦点 .select()选中
             $editInput.removeClass('hide').appendTo($numCell).find('input').val($numCell.find('.cell-wrap').text()).focus().select();
 
+            if ($line.attr('data-expres').indexOf('~') != -1) {
+                $editInput.find('input').attr('readonly', 'readonly');
+            } else {
+                $editInput.find('input').removeAttr('readonly');
+            }
+
             that.$nowLine = $line;
             that.$nowEditInput = $editInput;
 
@@ -3181,7 +3187,7 @@ var QuotationDetail = (function() {
                     "content": $this.attr('data-des'),
                     "itemName": $this.attr('data-name'),
                     "measurementUnit": $this.attr('data-itemUnite'),
-                    "formula": quoteFormula.formula,
+                    "formula": quoteFormula.num,
                     "num": quoteFormula.num,
                     "qfaiId": null,
                     "quotationFunctionAreaId": widget.attr("data-qfaid"),
@@ -3501,6 +3507,11 @@ var QuotationDetail = (function() {
                     "k": quo.preferParams["quotationPrefer.quoteArea"], // 计价面积
                     "j": 0
                 });
+            }
+
+            if (expres.indexOf('~') != -1) {
+
+                expres = expres.split('~')[1];
             }
 
             if (expres.indexOf('|') != -1) {
@@ -3917,6 +3928,11 @@ var QuotationDetail = (function() {
                             "k": quo.preferParams["quotationPrefer.quoteArea"], // 计价面积
                             "j": 0
                         });
+                    }
+
+                    if (v.formula.indexOf('~') != -1) {
+
+                        v.formula = v.formula.split('~')[1];
                     }
 
                     if (v.formula.indexOf('|') != -1) {
