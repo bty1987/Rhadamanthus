@@ -727,7 +727,7 @@ $(function() {
 
         var formula = quotationItem.items.formula.val();
 
-        if (formula.replace(/(\u5468\u957f|\u53cd\u8ba1\u4ef7\u9762\u79ef|\u8ba1\u4ef7\u9762\u79ef|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u9762|\u53c2\u6570|\u7a97\u9762|\u53d8\u91cf|\u6881\u957f|\u6881\u9ad8)|\u8f66\u8fd0\u8d39|\u7a0e\u91d1|\u7ba1\u7406\u8d39|\u4e0d\u6253\u6298\u603b\u989d|\u6253\u6298\u603b\u989d|\u697c\u5c42|\u7535\u68af/g, "").replace(/[\+\-\*\/\(\)\|\!]/g, "").replace(/[0-9]/g, "") != "") {
+        if (formula.replace(/(\u5468\u957f|\u53cd\u8ba1\u4ef7\u9762\u79ef|\u8ba1\u4ef7\u9762\u79ef|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u9762|\u53c2\u6570|\u7a97\u9762|\u53d8\u91cf|\u6881\u957f|\u6881\u9ad8)|\u8f66\u8fd0\u8d39|\u7a0e\u91d1|\u7ba1\u7406\u8d39|\u4e0d\u6253\u6298\u603b\u989d|\u6253\u6298\u603b\u989d|\u697c\u5c42|\u7535\u68af/g, "").replace(/[\+\-\*\/\(\)\|\!\~]/g, "").replace(/[0-9]/g, "") != "") {
 
             com.showAlert(com.warning, "公式存在无效参数");
 

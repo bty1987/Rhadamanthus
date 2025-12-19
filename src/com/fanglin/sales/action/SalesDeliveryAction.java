@@ -31,12 +31,14 @@ public class SalesDeliveryAction extends BaseListAction {
 
 	private SalesDeliveryItemVO salesDeliveryItem;
 
+	private String companyType;
+
 	private List<Short> statuses;
 
 	@Action(value = "pageSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesDeliveryItem() throws FLException {
 
-		salesDeliveryService.pageSalesDeliveryItem(getPaging(), getFilters(), queryCompany(), statuses);
+		salesDeliveryService.pageSalesDeliveryItem(getPaging(), getFilters(), queryCompany(), statuses, companyType);
 
 		return SUCCESS;
 	}
@@ -44,7 +46,7 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Action(value = "pageSalesDeliveryItemForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesDeliveryItemForSupplier() throws FLException {
 
-		salesDeliveryService.pageSalesDeliveryItemForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
+		salesDeliveryService.pageSalesDeliveryItemForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany(), companyType);
 
 		return SUCCESS;
 	}
@@ -52,7 +54,7 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Action(value = "pageSalesDeliveryItemForInstorer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesDeliveryItemForInstorer() throws FLException {
 
-		salesDeliveryService.pageSalesDeliveryItemForInstorer(getPaging(), getFilters(), queryUserId(), queryCompany());
+		salesDeliveryService.pageSalesDeliveryItemForInstorer(getPaging(), getFilters(), queryUserId(), queryCompany(), companyType);
 
 		return SUCCESS;
 	}
@@ -143,6 +145,14 @@ public class SalesDeliveryAction extends BaseListAction {
 
 	public void setSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) {
 		this.salesDeliveryItem = salesDeliveryItem;
+	}
+
+	public String getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
 	}
 
 	public List<Short> getStatuses() {

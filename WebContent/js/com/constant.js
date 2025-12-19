@@ -132,6 +132,14 @@ var Constant = function() {
 
                     return handle("balance");
                 },
+                approval: function() {
+
+                    return handle("approval");
+                },
+                system: function() {
+
+                    return handle("system");
+                },
             };
 
             com.post(api.data.queryConstructionNode, {}, function(res) {
