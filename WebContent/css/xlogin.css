@@ -1,0 +1,603 @@
+/**
+ * 企业微信登录页面专用样式
+ * 在原有login.css基础上扩展
+ */
+
+/* ========== 品牌标识 ========== */
+.brand-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #00D084 0%, #00B074 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 208, 132, 0.3);
+}
+
+.brand-badge i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* ========== 特性展示区域 ========== */
+.features-area {
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.feature-item i {
+    color: #00D084;
+    font-size: 24px;
+    margin-right: 15px;
+    min-width: 24px;
+}
+
+.feature-text h4 {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+}
+
+.feature-text p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ========== 登录方式选择 ========== */
+.login-methods {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.method-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.method-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.method-item.active {
+    background: white;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.method-item i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* ========== 二维码样式 ========== */
+.qrcode-wrapper {
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.qrcode-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+}
+
+.qrcode-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: linear-gradient(45deg, #00D084, #00B074, #00D084);
+    background-size: 400% 400%;
+    animation: borderAnimation 3s ease infinite;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: subtract;
+    mask-composite: subtract;
+}
+
+@keyframes borderAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.qrcode-placeholder {
+    text-align: center;
+    color: white;
+    padding: 40px 20px;
+}
+
+.qrcode-placeholder i {
+    color: #00D084;
+    margin-bottom: 15px;
+}
+
+.qrcode-placeholder p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.qrcode-error {
+    text-align: center;
+    color: #ff6b6b;
+    padding: 40px 20px;
+}
+
+.qrcode-error i {
+    margin-bottom: 15px;
+    color: #ff6b6b;
+}
+
+.qrcode-error p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.demo-qr-code {
+    position: relative;
+    display: inline-block;
+}
+
+.demo-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff6b6b;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.demo-link {
+    color: #00D084;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* ========== 点击登录样式 ========== */
+.click-login-area {
+    text-align: center;
+    padding: 20px;
+}
+
+.login-info {
+    margin-bottom: 30px;
+}
+
+.login-icon {
+    margin-bottom: 20px;
+    color: #00D084;
+}
+
+.login-info h3 {
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+}
+
+.login-info p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 16px;
+    margin: 0;
+}
+
+.btn-work-wechat {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #00D084 0%, #00B074 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 208, 132, 0.3);
+    min-width: 250px;
+    margin-bottom: 30px;
+}
+
+.btn-work-wechat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 208, 132, 0.4);
+}
+
+.btn-work-wechat:active {
+    transform: translateY(0);
+}
+
+.btn-work-wechat:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-work-wechat i:first-child {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.btn-work-wechat i:last-child {
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.login-tips {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+    backdrop-filter: blur(10px);
+}
+
+.login-tips i {
+    color: #00D084;
+    margin-right: 8px;
+}
+
+.login-tips ul {
+    margin: 10px 0 0 0;
+    padding-left: 25px;
+}
+
+.login-tips li {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+
+/* ========== 其他登录方式 ========== */
+.other-login {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.divider {
+    text-align: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.divider span {
+    background: inherit;
+    padding: 0 15px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.other-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.other-link {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.other-link:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+
+.other-link i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* ========== 底部信息 ========== */
+.login-footer {
+    margin-top: 40px;
+}
+
+.footer-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.footer-info span {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.help-link {
+    display: flex;
+    align-items: center;
+    color: #00D084;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.help-link:hover {
+    color: #00B074;
+    text-decoration: none;
+}
+
+.help-link i {
+    margin-right: 5px;
+}
+
+.footer-copyright {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+}
+
+/* ========== 成功状态样式 ========== */
+.qrcode-area.success {
+    background: linear-gradient(135deg, rgba(0, 208, 132, 0.1) 0%, rgba(0, 176, 116, 0.1) 100%);
+    border: 1px solid rgba(0, 208, 132, 0.3);
+}
+
+#qrcodeSuccess {
+    color: #00D084;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#qrcodeSuccess i {
+    margin-bottom: 15px;
+    animation: successPulse 1s ease-in-out;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(0.8); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ========== 刷新按钮样式 ========== */
+.qrcode-refresh {
+    text-align: center;
+    color: #ff6b6b;
+    cursor: pointer;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.qrcode-refresh:hover {
+    color: #ff5252;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+}
+
+.qrcode-refresh i {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.qrcode-refresh strong {
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.qrcode-refresh span {
+    color: #00D084;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* ========== 帮助弹窗样式 ========== */
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #00D084 0%, #00B074 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border: none;
+}
+
+.modal-header .close {
+    color: white;
+    opacity: 0.8;
+}
+
+.modal-header .close:hover {
+    opacity: 1;
+}
+
+.help-section {
+    margin-bottom: 25px;
+}
+
+.help-section h5 {
+    color: #00D084;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.help-section h5 i {
+    margin-right: 8px;
+}
+
+.help-section ol, .help-section ul {
+    padding-left: 25px;
+    margin: 10px 0;
+}
+
+.help-section li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    color: #555;
+}
+
+.help-section strong {
+    color: #333;
+}
+
+.help-contact {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 25px;
+}
+
+.help-contact h5 {
+    color: #00D084;
+    margin-bottom: 10px;
+}
+
+.help-contact p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ========== 响应式设计 ========== */
+@media (max-width: 992px) {
+    .features-area {
+        display: none;
+    }
+
+    .login-methods {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .method-item {
+        padding: 10px;
+    }
+
+    .other-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-left {
+        display: none;
+    }
+
+    .login-right {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .btn-work-wechat {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .brand-badge {
+        display: inline-flex;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+/* ========== 加载动画 ========== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.login-form-panel {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ========== 深色模式适配 ========== */
+@media (prefers-color-scheme: dark) {
+    .help-section li {
+        color: #ccc;
+    }
+
+    .help-section strong {
+        color: #fff;
+    }
+
+    .help-contact {
+        background: #2c2c2c;
+    }
+
+    .help-contact p {
+        color: #ccc;
+    }
+}
