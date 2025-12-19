@@ -1716,6 +1716,28 @@ jQuery(function($) {
                         '</div>';
                 });
                 com.focusPage('#companyList').html(companyHtml);
+
+                // 绑定滚动事件处理，阻止事件冒泡到页面
+                com.focusPage('#companyList').off('wheel mousewheel DOMMouseScroll').on('wheel mousewheel DOMMouseScroll', function(e) {
+                    var e0 = e.originalEvent;
+                    var delta = e0.wheelDelta || -e0.detail;
+                    var isScrollingUp = delta > 0;
+
+                    // 获取容器的滚动位置和高度信息
+                    var scrollTop = this.scrollTop;
+                    var scrollHeight = this.scrollHeight;
+                    var clientHeight = this.clientHeight;
+                    var isAtTop = scrollTop === 0;
+                    var isAtBottom = scrollTop + clientHeight >= scrollHeight;
+
+                    // 如果在顶部向上滚动或在底部向下滚动，阻止默认行为
+                    if ((isAtTop && isScrollingUp) || (isAtBottom && !isScrollingUp)) {
+                        e.preventDefault();
+                    }
+
+                    // 阻止事件冒泡到页面级别
+                    e.stopPropagation();
+                });
             } else {
                 com.focusPage('#companyList').html('<div class="text-center text-muted">暂无可选公司</div>');
             }
@@ -1778,5 +1800,11 @@ jQuery(function($) {
             $confirmBtn.prop('disabled', false).html('确认复制');
         });
     }
+
+    // 绑定模块复制弹窗的关闭事件，清理滚动事件监听器
+    com.focusPage('#companyCopyModal').on('hidden.bs.modal', function() {
+        // 清理滚动事件监听器，避免内存泄漏
+        com.focusPage('#companyList').off('wheel mousewheel DOMMouseScroll');
+    });
 
 });
