@@ -11,4 +11,6 @@ public interface DecorationServiceDao extends Dao<DecorationServicePO> {
 
 	public int makeDecorationService(short type, String orderId, int ouid);
 
+	public List<DecorationServicePO> pageDecorationService(com.fanglin.utils.Paging paging, java.util.List<com.fanglin.core.vo.Filter> filters, int company) throws com.fanglin.core.interceptor.FLException;
+
 }
