@@ -331,7 +331,7 @@ $(function() {
     } else if (salesDelivery.pageType == "finish") {
         salesDelivery.extraParams["companyType"] = "company";
     } else {
-        salesDelivery.extraParams["companyType"] = "sales.dompany";
+        salesDelivery.extraParams["companyType"] = "company";
     }
 
     var searcher = new Searcher();

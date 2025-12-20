@@ -2021,7 +2021,7 @@
                 var _rtems = rtems.queryQuotationRtems(e);
 
                 if (!_rtems.length)
-                    return false
+                    return true;
 
                 $.each(_rtems, function(index, v) {
 

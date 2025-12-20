@@ -464,6 +464,10 @@ public class UserServiceImpl implements UserService {
 
 		DepartmentPO departmentPO = departmentDao.get(userVO.getDept().getDid());
 
+		if (departmentPO == null) {
+			throw new FLException(310002, "部门不可添加人员");
+		}
+
 		if (departmentPO.getFatherDept() == null) {
 			throw new FLException(310002, "部门不可添加人员");
 		}

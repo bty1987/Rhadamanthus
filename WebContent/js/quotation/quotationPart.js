@@ -1650,7 +1650,7 @@ var QuotationDetail = (function() {
 
                                     if (!cpitem.length && rt.type == constant.data().quotationRtem.TYPE_CMPREH_INT) {
                                         rtem["quotationFunctionAreaId"] = cpWidget.attr("data-qfaid");
-                                        rtem["type"] = constant.quotation().quotationFunctionAreaItem.TYPE_COMMON_INT;
+                                        rtem["type"] = quote.quoItemType(rt.target.type, $domain.attr('data-areaType'));
                                         rtem["areaType"] = constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT;
                                         rtem["index"] = cpIndex + 1;
                                         painter.createQuote(rtem.index, rtem).appendTo(cpList);
@@ -3242,7 +3242,7 @@ var QuotationDetail = (function() {
 
                     if (v.type == constant.data().quotationRtem.TYPE_CMPREH_INT && cpWidget.length) {
                         _quortval["quotationFunctionAreaId"] = cpWidget.attr("data-qfaid");
-                        _quortval["type"] = constant.quotation().quotationFunctionAreaItem.TYPE_COMMON_INT;
+                        _quortval["type"] = quote.quoItemType(v.target.type, widget.attr('data-areaType'));
                         _quortval["areaType"] = constant.quotation().quotationFunctionArea.TYPE_CMPREH_INT;
 
                         quote.addQuoteRtem(_quortval);

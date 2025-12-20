@@ -478,8 +478,8 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				long vbalance = Arith.sub(Arith.round(brandTotal, 0, Arith.ROUND_FLOOR), Arith.round(brandBalance, 0, Arith.ROUND_CEILING));
 
 				// 设置金额信息
-				salesBalancePO.setTotal(brandTotal);
-				salesBalancePO.setBalance(brandBalance);
+				salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_FLOOR));
+				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_FLOOR));
 				salesBalancePO.setAllowance(brandAllowance);
 				salesBalancePO.setVbalance(vbalance);
 				salesBalancePO.setPbalance(vbalance);
