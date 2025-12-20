@@ -816,6 +816,11 @@ $.extend(api, {
         queryDecorationServiceByOrderId: {
             url: "queryDecorationServiceByOrderId.do"
         },
+        pageDecorationService: {
+            url: "pageDecorationService.do",
+            demo: true,
+            type: "query"
+        },
         addDecorationService: {
             url: "addDecorationService.do"
         },

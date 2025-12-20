@@ -4,13 +4,48 @@
         <div class='page-header'><h1>服务信息</h1></div>
     </div>
 
+    <!-- 查询模式切换 -->
+    <div class="row" style="margin-bottom: 15px;">
+        <div class="col-xs-12">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-sm btn-info active" id="singleModeBtn">
+                    <input type="radio" name="queryMode" value="single" checked> 单个订单查询
+                </label>
+                <label class="btn btn-sm btn-info" id="pageModeBtn">
+                    <input type="radio" name="queryMode" value="page"> 分页查询
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 单个订单查询区域 -->
+    <div class="row" id="singleQueryArea">
+        <div class="col-xs-12">
+            <div class="form-inline">
+                <label>装修单号:</label>
+                <input type="text" id="orderIdInput" class="form-control input-sm" placeholder="请输入装修单号" style="width: 150px;">
+                <button id="singleQueryBtn" class="btn btn-sm btn-primary">
+                    <i class="icon-search"></i> 查询
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分页查询区域 -->
+    <div class="row" id="pageQueryArea" style="display: none;">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+        </div>
+    </div>
+
+    <!-- 查询结果区域 -->
     <div class="row">
         <div class="col-xs-12">
-            <div id="serviceInfo" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="serviceInfo" class="clearfix tab-pane active"></div> <!--单个查询结果-->
+            <div id="resultList" class="clearfix tab-pane active" style="display: none;"></div> <!--分页查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix" style="display: none;"></div> <!--分页-->
 
             <div class="row" style="margin-left: 0px;margin-right: 0px;margin-top: 14px;" id="select1">
-                <!--<button class="btn  pull-left btn-sm" id="addService">添加</button>-->
-
                 <button class="btn pull-right btn-info" type="button" id="btnBack">
                     <i class="icon-mail-forward bigger-110"></i>
                     返回

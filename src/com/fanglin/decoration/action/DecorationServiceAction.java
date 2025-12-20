@@ -52,6 +52,14 @@ public class DecorationServiceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageDecorationService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationService() throws FLException {
+
+		decorationServiceService.pageDecorationService(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+
 	public List<DecorationServiceVO> getDecorationServices() {
 		return decorationServices;
 	}

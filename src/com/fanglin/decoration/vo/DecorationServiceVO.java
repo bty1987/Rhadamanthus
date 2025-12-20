@@ -24,8 +24,12 @@ public class DecorationServiceVO implements Serializable{
 	private Timestamp operateTime;
 	
 	private Short status;
-	
+
 	private String comment;
+
+	private DecorationVO decoration;
+
+	private String statusText;
 
 	public DecorationServiceVO(){
 		super();
@@ -100,5 +104,21 @@ public class DecorationServiceVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
+	public String getStatusText() {
+		return statusText;
+	}
+
+	public void setStatusText(String statusText) {
+		this.statusText = statusText;
+	}
+
 }
