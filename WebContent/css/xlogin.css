@@ -399,6 +399,159 @@
     font-size: 12px;
 }
 
+/* ========== iframe容器样式 ========== */
+.iframe-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    margin: 0;
+    border: 2px solid #e8e8e8;
+    transition: all 0.3s ease;
+}
+
+.iframe-container:hover {
+    border-color: #00D084;
+    box-shadow: 0 6px 25px rgba(0, 208, 132, 0.2);
+}
+
+.iframe-header {
+    background: linear-gradient(135deg, #00D084 0%, #00B074 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.iframe-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.iframe-header h4 i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+#closeIframeBtn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+#closeIframeBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+#closeIframeBtn:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.work-wechat-iframe {
+    width: 100%;
+    border: none;
+    background: white;
+    display: none;
+    min-height: 500px;
+}
+
+.work-wechat-iframe::-webkit-scrollbar {
+    width: 6px;
+}
+
+.work-wechat-iframe::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.work-wechat-iframe::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.work-wechat-iframe::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.iframe-tip {
+    background: rgba(0, 208, 132, 0.05);
+    padding: 12px 20px;
+    text-align: center;
+    color: #00B074;
+    font-size: 14px;
+    border-top: 1px solid rgba(0, 176, 116, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.iframe-tip i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* ========== iframe加载状态样式 ========== */
+.iframe-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #00D084;
+}
+
+.iframe-loading i {
+    display: block;
+    margin: 0 auto 15px;
+    font-size: 24px;
+}
+
+.iframe-loading p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ========== iframe错误状态样式 ========== */
+.iframe-error {
+    text-align: center;
+    padding: 60px 20px;
+    color: #dc3545;
+}
+
+.iframe-error i {
+    display: block;
+    margin: 0 auto 15px;
+    font-size: 24px;
+}
+
+.iframe-error p {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.iframe-error button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.3s ease;
+}
+
+.iframe-error button:hover {
+    background: #c82333;
+}
+
 /* ========== 成功状态样式 ========== */
 .qrcode-area.success {
     background: linear-gradient(135deg, rgba(0, 208, 132, 0.1) 0%, rgba(0, 176, 116, 0.1) 100%);
