@@ -20,6 +20,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.SelectionDO;
 import com.fanglin.quotation.po.SelectionPO;
@@ -38,6 +39,9 @@ public class SelectionServiceImpl implements SelectionService {
 	private SelectionDao selectionDao;
 
 	@Autowired
+	private SelectionItemDao selectionItemDao;
+
+	@Autowired
 	private QuotationDao quotationDao;
 
 	@Autowired
@@ -53,7 +57,6 @@ public class SelectionServiceImpl implements SelectionService {
 	public void pageSelection(Paging paging, List<Filter> filters, Integer company) throws FLException {
 
 		List<SelectionDO> selectionDOs = selectionDao.pageSelection(paging, filters, company);
-
 		List<SelectionVO> selectionVOs = new ArrayList<SelectionVO>();
 
 		for (SelectionDO selectionDO : selectionDOs) {
@@ -74,8 +77,8 @@ public class SelectionServiceImpl implements SelectionService {
 
 			selectionVOs.add(selectionVO);
 		}
-		paging.setData(selectionVOs);
 
+		paging.setData(selectionVOs);
 	}
 
 	@Override
@@ -284,6 +287,10 @@ public class SelectionServiceImpl implements SelectionService {
 
 		if (selectionPO == null) {
 			throw new FLException(200035, "选材单不存在");
+		}
+
+		if (selectionItemDao.checkSelectionItem(selectionPO.getOrderId()) != 0) {
+			throw new FLException(200041, "存在未关联选材项");
 		}
 
 		String orderId = selectionPO.getOrderId();

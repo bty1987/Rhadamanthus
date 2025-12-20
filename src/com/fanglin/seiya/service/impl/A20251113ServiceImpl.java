@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Authentication;
@@ -94,6 +95,35 @@ public class A20251113ServiceImpl implements A20251113Service {
 			e.printStackTrace();
 			throw new FLException(110000, "系统处理问题");
 		}
+	}
+
+	@Override
+	public String socialAuthCode(String domain) throws FLException {
+
+		String url = String.format("%s/admin-api/user/auth/sso/social-auth-redirect?redirectUri=%s&socialType=20", OSS_URL_STR, domain);
+
+		JSONObject response = com.fanglin.utils.HttpUtil.httpGet(url);
+
+		return response.getString("data");
+	}
+
+	@Override
+	public String stateAuthCode(String socialCode, String socialState) throws FLException {
+
+		String url = String.format("%s/admin-api/user/auth/sso/social-login", OSS_URL_STR);
+
+		Map<String, String> params = new HashMap<String, String>();
+
+		params.put("socialCode", socialCode);
+		params.put("socialState", socialState);
+
+		params.put("socialType", "20");
+
+		JSONObject response = com.fanglin.utils.HttpUtil.httpPost(url, params);
+
+		System.out.println(response);
+
+		return null;
 	}
 
 	@Override

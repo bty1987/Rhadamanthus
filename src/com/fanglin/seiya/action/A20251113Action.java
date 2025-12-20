@@ -34,6 +34,10 @@ public class A20251113Action extends BaseListAction {
 
 	private String osstoken;
 
+	private String socialCode;
+
+	private String socialState;
+
 	private String userId;
 
 	private String domain;
@@ -50,6 +54,22 @@ public class A20251113Action extends BaseListAction {
 	public String exchangeAuthCode() throws FLException {
 
 		osstoken = a20251113Service.exchangeAuthCode(osstoken);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "socialAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String socialAuthCode() throws FLException {
+
+		domain = a20251113Service.socialAuthCode(domain);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "stateAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String stateAuthCode() throws FLException {
+
+		domain = a20251113Service.stateAuthCode(socialCode, socialState);
 
 		return SUCCESS;
 	}
@@ -84,6 +104,22 @@ public class A20251113Action extends BaseListAction {
 
 	public void setDomain(String domain) {
 		this.domain = domain;
+	}
+
+	public String getSocialCode() {
+		return socialCode;
+	}
+
+	public void setSocialCode(String socialCode) {
+		this.socialCode = socialCode;
+	}
+
+	public String getSocialState() {
+		return socialState;
+	}
+
+	public void setSocialState(String socialState) {
+		this.socialState = socialState;
 	}
 
 }

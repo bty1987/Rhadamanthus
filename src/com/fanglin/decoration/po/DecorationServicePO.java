@@ -2,6 +2,7 @@ package com.fanglin.decoration.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,41 +13,43 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.decoration.vo.DecorationServiceVO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "decorationService", catalog = "decoration")
-public class DecorationServicePO implements Serializable{
+public class DecorationServicePO implements Serializable {
 
 	private static final long serialVersionUID = -4568396564651596348L;
-	
+
 	public static final String DECORATION_ORDERID_STR = "orderId";
-	
+
 	public static final String DECORATION_DSID_STR = "dsid";
-	
+
 	public static final short SERVICESTATUS_INIT_INT = 0;
-	
+
 	public static final short SERVICESTATUS_FINISH_INT = 1;
-	
+
 	private long dsid;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String detail;
-	
+
 	private UserPO operater;
-	
+
 	private Timestamp operateTime;
-	
+
 	private short status;
-	
+
 	private String comment;
 
 	@Id
 	@GeneratedValue
-	@Column(name="dsid")
+	@Column(name = "dsid")
 	public long getDsid() {
 		return dsid;
 	}
@@ -54,7 +57,7 @@ public class DecorationServicePO implements Serializable{
 	public void setDsid(long dsid) {
 		this.dsid = dsid;
 	}
-	
+
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -116,6 +119,15 @@ public class DecorationServicePO implements Serializable{
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public DecorationServiceVO ptv(DecorationServiceVO decorationServiceVO) {
+
+		BeanUtil.copyProperties(this, decorationServiceVO, Arrays.asList("decoration", "operater"));
+
+		if (decorationServiceVO.getOperater() != null && this.getOperater() != null) decorationServiceVO.getOperater().setBaseInfo(getOperater());
+
+		return decorationServiceVO;
 	}
 
 }

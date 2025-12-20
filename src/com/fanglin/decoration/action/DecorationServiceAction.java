@@ -28,6 +28,14 @@ public class DecorationServiceAction extends BaseListAction {
 
 	private DecorationServiceVO decorationService;
 
+	@Action(value = "pageDecorationService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationService() throws FLException {
+
+		decorationServiceService.pageDecorationService(getPaging(), getFilters(), authentication());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryDecorationServiceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationServiceByOrderId() {
 
@@ -48,14 +56,6 @@ public class DecorationServiceAction extends BaseListAction {
 	public String completeDecorationService() throws FLException {
 
 		decorationServiceService.completeDecorationService(decorationService);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "pageDecorationService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationService() throws FLException {
-
-		decorationServiceService.pageDecorationService(getPaging(), getFilters(), authentication());
 
 		return SUCCESS;
 	}

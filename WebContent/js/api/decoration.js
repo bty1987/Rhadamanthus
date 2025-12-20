@@ -813,13 +813,20 @@ $.extend(api, {
             url: "affirmDecorationAccount.do"
         },
 
-        queryDecorationServiceByOrderId: {
-            url: "queryDecorationServiceByOrderId.do"
-        },
         pageDecorationService: {
             url: "pageDecorationService.do",
             demo: true,
-            type: "query"
+            type: "query",
+            tranargs: [{
+                result: "paging-data-decoration",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data--house",
+                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
+            }]
+        },
+        queryDecorationServiceByOrderId: {
+            url: "queryDecorationServiceByOrderId.do"
         },
         addDecorationService: {
             url: "addDecorationService.do"
@@ -897,7 +904,7 @@ $.extend(api, {
         queryDecorationFunctionByName: {
             url: "queryDecorationFunctionByName.do"
         },
-        
+
     }
 });
 

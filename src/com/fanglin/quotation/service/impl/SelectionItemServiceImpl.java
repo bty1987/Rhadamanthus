@@ -133,16 +133,9 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200035, "选材单不存在");
 		}
 
-		List<SelectionItemPO> selectionItemPOs = selectionItemDao.querySelectionItem(selectionPO.getSid());
-		List<SelectionItemVO> selectionItemVOs = new ArrayList<SelectionItemVO>();
+		List<SelectionItemPD> selectionItemPOs = selectionItemDao.querySelectionItem(selectionPO.getSid());
 
-		for (SelectionItemPO selectionItemPO : selectionItemPOs) {
-			SelectionItemVO _selectionItemVO = new SelectionItemVO(new GoodsVO());
-
-			selectionItemPO.ptv(_selectionItemVO);
-
-			selectionItemVOs.add(_selectionItemVO);
-		}
+		List<SelectionItemVO> selectionItemVOs = ptv(selectionItemPOs);
 
 		return selectionItemVOs;
 	}
@@ -164,7 +157,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200035, "选材单不存在");
 		}
 
-		List<SelectionItemPD> selectionItemPOs = selectionItemDao.querySelectionItemDBySid(selectionPO.getSid());
+		List<SelectionItemPD> selectionItemPOs = selectionItemDao.querySelectionItem(selectionPO.getSid());
 
 		selectionItemVOs = ptv(selectionItemPOs);
 

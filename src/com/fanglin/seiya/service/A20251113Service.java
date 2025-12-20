@@ -8,6 +8,10 @@ public interface A20251113Service {
 
 	public String exchangeAuthCode(String osstoken) throws FLException;
 
+	public String socialAuthCode(String domain) throws FLException;
+
+	public String stateAuthCode(String socialCode, String socialState) throws FLException;
+
 	public int logoutAuthCode(String userId, String osstoken, String domain) throws FLException;
 
 }

@@ -1965,8 +1965,8 @@
 
             params.historyPage = api.index.decorationIndex.url;
 
-            com.switchPage(api.index.decorationServiceIndex.url);
-            // com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + orderId);
+//            com.switchPage(api.index.decorationServiceIndex.url);
+             com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + orderId);
         }
 
         // 推荐

@@ -1699,50 +1699,39 @@ jQuery(function($) {
         // 设置源角色信息
         com.focusPage('#sourceRoleName').text(roleName);
         com.focusPage('#copyRoleName').text('从角色【' + roleName + '】复制模块到其他公司');
+        
+        var companyList = com.focusPage('#companyList');
 
         // 清空公司列表
-        com.focusPage('#companyList').html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
+        companyList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
 
         // 加载公司列表
         com.post(api.system.queryCompany, {}, function(data) {
-            if (data.companys && data.companys.length > 0) {
-                var companyHtml = '';
-                data.companys.forEach(function(company) {
-                    companyHtml += '<div class="company-item">' +
-                        '<label class="checkbox-inline">' +
-                        '<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '">' +
-                        '<span class="lbl">' + company.name + '</span>' +
-                        '</label>' +
-                        '</div>';
-                });
-                com.focusPage('#companyList').html(companyHtml);
-
-                // 绑定滚动事件处理，阻止事件冒泡到页面
-                com.focusPage('#companyList').off('wheel mousewheel DOMMouseScroll').on('wheel mousewheel DOMMouseScroll', function(e) {
-                    var e0 = e.originalEvent;
-                    var delta = e0.wheelDelta || -e0.detail;
-                    var isScrollingUp = delta > 0;
-
-                    // 获取容器的滚动位置和高度信息
-                    var scrollTop = this.scrollTop;
-                    var scrollHeight = this.scrollHeight;
-                    var clientHeight = this.clientHeight;
-                    var isAtTop = scrollTop === 0;
-                    var isAtBottom = scrollTop + clientHeight >= scrollHeight;
-
-                    // 如果在顶部向上滚动或在底部向下滚动，阻止默认行为
-                    if ((isAtTop && isScrollingUp) || (isAtBottom && !isScrollingUp)) {
-                        e.preventDefault();
-                    }
-
-                    // 阻止事件冒泡到页面级别
-                    e.stopPropagation();
-                });
-            } else {
-                com.focusPage('#companyList').html('<div class="text-center text-muted">暂无可选公司</div>');
+            
+            if (!data.companys || data.companys.length == 0) {
+                companyList.html('<div class="text-center text-muted">暂无可选公司</div>');
+                return false;
             }
+                
+            companyList.html("");
+            
+            data.companys.forEach(function(company) {
+                var item = $('<div class="company-item"></div>').appendTo(companyList);
+                var label = $('<label class="checkbox-inline"></label>').appendTo(item);
+                var input = $('<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
+                var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
+                
+                label.click(function(e){
+                    
+                    $(this).find("input").prop("checked", "checked");
+                    
+                    e.stopPropagation();
+                    
+                    return false;
+                });
+            });
         }, function() {
-            com.focusPage('#companyList').html('<div class="text-center text-danger">加载公司列表失败</div>');
+            companyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
         });
     }
 
