@@ -43,7 +43,7 @@ $.extend(api.index, {
     },
 
     decorationServiceIndex: {
-        url: "/views/decoration/decorationService.html"
+        url: "/views/decoration/decoration4service.html"
     },
 
     decorationReferIndex: {
