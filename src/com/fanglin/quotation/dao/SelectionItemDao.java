@@ -18,7 +18,7 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public List<SelectionItemPD> pageSelectionItemForAccount(Paging paging, List<Filter> filters, Integer company);
 
-	public List<SelectionItemPO> querySelectionItem(long sid);
+	public List<SelectionItemPD> querySelectionItem(long sid);
 
 	public SelectionItemPO querySelectionItem(long sid, long areaId, long quoteId, short type);
 
@@ -26,7 +26,7 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public SelectionItemPO pickSelectionItem(String orderId, Long qiid);
 
-	public List<SelectionItemPD> querySelectionItemDBySid(long sid);
+	public int checkSelectionItem(String orderId);
 
 	public int countSelectionItem(String orderId, Long quoteId);
 

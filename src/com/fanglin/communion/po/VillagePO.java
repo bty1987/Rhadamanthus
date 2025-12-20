@@ -50,6 +50,10 @@ public class VillagePO implements Serializable {
 
 	private String salesPhone;
 
+	private Timestamp createTime;
+
+	private Timestamp updateTime;
+
 	private String deliveryTime;
 
 	private String rule;
@@ -67,10 +71,6 @@ public class VillagePO implements Serializable {
 	private long mileage;
 
 	private int company;
-
-	private Timestamp createTime;
-
-	private Timestamp updateTime;
 
 	public VillagePO() {
 		super();

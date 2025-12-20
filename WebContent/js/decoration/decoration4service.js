@@ -1,34 +1,89 @@
-
 jQuery(function($) {
+
     var decorationService = {
-        decorationOrderId : null,
-        dsid:null,
-        serviceItems:{},
-        rollback :params.historyPage,
-        item:{},
-        modal:null,
-        serviceModal:null
+        decorationOrderId: null,
+        dsid: null,
+        serviceItems: {},
+        rollback: params.historyPage,
+        item: {},
+        modal: null,
+        serviceModal: null
     };
 
-    var  servicePage = {
-        btnBack:com.focusPage("#btnBack")
+    var servicePage = {
+        btnBack: com.focusPage("#btnBack")
     };
 
-    decorationService.decorationOrderId = params.decorationOrderId;
+    decorationService.decorationOrderId = params.decoration.orderId;
     decorationService.serviceItems.comment = com.focusPage('#comment');
 
     decorationService.serviceModal = com.focusPage("#serviceModal");
 
-    decorationService.serviceModal.on('hide.bs.modal', function (e) {
+    decorationService.serviceModal.on('hide.bs.modal', function(e) {
+
         com.cleanItems(decorationService.serviceItems);
         com.closeTip();
     });
 
-    drawTable(decorationService.decorationOrderId);
+    // 初始化 searcher 组件来替代 drawTable
+    var searcher = Searcher().base("serviceSearch", "servicePager", "serviceInfo", api.decoration.queryDecorationServiceByOrderId)
+    searcher.param({
+        "decorationService.orderId": decorationService.decorationOrderId
+    })
+    searcher.result("decorationServices") // 指定返回数据的字段名
+    searcher.isPage(true); // 不使用分页，一次性加载所有数据
 
-    com.focusPage("#serviceSaveBtn").on('click',function(res){
+    var props = [ // 属性配置
+    {
+        name: "装修单号",
+        prop: "orderId",
+        clazz: "grey"
+    }, {
+        name: "详述",
+        prop: "detail",
+        clazz: "grey"
+    }, {
+        name: "操作人",
+        prop: "operater.currentName",
+        clazz: "grey"
+    }, {
+        name: "操作时间",
+        prop: "operateTime",
+        clazz: "green"
+    }, {
+        name: "状态",
+        prop: function(v) {
 
-        if(com.validate("serviceModal")){
+            return v.status == 0 ? '初始' : '完成';
+        },
+        clazz: "red"
+    }, {
+        name: "备注",
+        prop: "comment",
+        clazz: "grey"
+    }];
+
+    var btns = [ // 按钮事件配置
+    {
+        name: "完成",
+        clazz: "btn-yellow",
+        show: function(v) {
+
+            return v.status == 0;
+        }, // 只在状态为0时显示
+        handle: function(v) {
+
+            decorationService.dsid = v.dsid;
+            com.cleanItems(decorationService.serviceItems);
+            decorationService.serviceModal.modal("show");
+        }
+    }];
+
+    searcher.line("name", props, btns).render();
+
+    com.focusPage("#serviceSaveBtn").on('click', function(res) {
+
+        if (com.validate("serviceModal")) {
             return;
         }
 
@@ -36,75 +91,20 @@ jQuery(function($) {
         options["decorationService.dsid"] = decorationService.dsid;
         options["decorationService.comment"] = decorationService.serviceItems.comment.val();
 
-        com.post(api.decoration.completeDecorationService,options,function(res){
-            drawTable(decorationService.decorationOrderId);
+        com.post(api.decoration.completeDecorationService, options, function(res) {
+
+            // 使用 searcher 的 doSearch 方法重新加载数据
+            Searcher().base("serviceSearch", "servicePager", "serviceInfo", api.decoration.queryDecorationServiceByOrderId).param({
+                "decorationService.orderId": decorationService.decorationOrderId
+            }).result("decorationServices").doSearch();
             decorationService.serviceModal.modal("hide");
         });
 
     });
 
-    decorationService.rollback && servicePage.btnBack.click(function () {
+    decorationService.rollback && servicePage.btnBack.click(function() {
+
         com.switchPage(decorationService.rollback);
     });
-
-    function drawTable(decorationOrderId) {
-
-        var $service = com.focusPage("#serviceInfo").html('');
-
-        var $serviceul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($service);
-
-        com.post(api.decoration.queryDecorationServiceByOrderId, {"decorationService.orderId": decorationOrderId}, function (res) {
-            decorationServices = res.decorationServices;
-
-            if (decorationServices && decorationServices.length) {
-                $.each(decorationServices, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    var $updateBtn = $('<a></a>').addClass('btn btn-minier btn-yellow').html('完成');
-
-                    var propertyArr = [
-                        ["装修单号:", v.orderId, "grey"],
-                        ["详述:", v.detail, "grey"],
-                        ["操作人:", v.operater.currentName, "grey"],
-                        ["操作时间:", v.operateTime, "green"],
-                        ["状态:", v.status == 0 ? '初始' : '完成', "red"],
-                        ["备注:", v.comment, "grey"]
-                    ];
-
-                    $updateBtn.click(function () {
-                        decorationService.dsid = v.dsid;
-                        com.cleanItems(decorationService.serviceItems);
-                        decorationService.serviceModal.modal("show");
-                    });
-
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    if (v.status == 0) {
-                        $divBtnWrap.append($updateBtn);
-                        $divBtnWrap.appendTo($h4);
-                    }
-
-                    $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
-
-                    $liLine.appendTo($serviceul);
-                });
-            } else {
-                var $metaData = com.focusPage('#serviceInfo').html('');
-                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($metaData);
-                var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-                $mesg.append($('<span></span>').text('无可用数据提供'));
-            }
-        }, null, false);
-
-    }
 
 });

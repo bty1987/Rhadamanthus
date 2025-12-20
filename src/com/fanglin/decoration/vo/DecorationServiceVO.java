@@ -7,39 +7,43 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class DecorationServiceVO implements Serializable{
+public class DecorationServiceVO implements Serializable {
 
 	private static final long serialVersionUID = -721836936860379625L;
 
 	private Long dsid;
-	
+
 	private String orderId;
-	
+
+	private DecorationVO decoration;
+
 	private String name;
-	
+
 	private String detail;
-	
+
 	private UserBaseVO operater;
-	
+
 	private Timestamp operateTime;
-	
+
 	private Short status;
 
 	private String comment;
 
-	private DecorationVO decoration;
-
-	private String statusText;
-
-	public DecorationServiceVO(){
+	public DecorationServiceVO() {
 		super();
 	}
-	
-	public DecorationServiceVO(UserBaseVO operater){
+
+	public DecorationServiceVO(UserBaseVO operater) {
 		super();
 		this.operater = operater;
 	}
-	
+
+	public DecorationServiceVO(DecorationVO decoration, UserBaseVO operater) {
+		super();
+		this.decoration = decoration;
+		this.operater = operater;
+	}
+
 	public Long getDsid() {
 		return dsid;
 	}
@@ -80,7 +84,7 @@ public class DecorationServiceVO implements Serializable{
 		this.operater = operater;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
@@ -111,14 +115,6 @@ public class DecorationServiceVO implements Serializable{
 
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
-	}
-
-	public String getStatusText() {
-		return statusText;
-	}
-
-	public void setStatusText(String statusText) {
-		this.statusText = statusText;
 	}
 
 }

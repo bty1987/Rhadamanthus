@@ -88,32 +88,24 @@ jQuery(function($) {
             decorationFunction.items.companyList.html('<div class="text-center text-muted">暂无可选公司</div>');
             return;
         }
+        
+        decorationFunction.items.companyList.html("");
 
-        var companyHtml = '';
         decorationFunction.companys.forEach(function(company) {
-            companyHtml += '<div class="company-item">' +
-                '<label class="checkbox-inline">' +
-                '<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '" data-name="' + company.name + '">' +
-                '<span class="lbl">' + company.name + '</span>' +
-                (company.status === 0 ? '<span class="label label-success">启用</span>' : '<span class="label label-default">禁用</span>') +
-                '</label>' +
-                '</div>';
-        });
-
-        // 添加全选功能
-        companyHtml += '<div class="company-item">' +
-            '<label class="checkbox-inline">' +
-            '<input type="checkbox" class="ace" id="selectAllCompanies">' +
-            '<span class="lbl">全选/全不选</span>' +
-            '</label>' +
-            '</div>';
-
-        decorationFunction.items.companyList.html(companyHtml);
-
-        // 绑定全选/全不选事件
-        com.focusPage('#selectAllCompanies').on('change', function() {
-            var isChecked = $(this).prop('checked');
-            com.focusPage('.company-checkbox').prop('checked', isChecked);
+            
+            var item = $('<div class="company-item"></div>').appendTo(decorationFunction.items.companyList);
+            var label = $('<label class="checkbox-inline"></label>').appendTo(item);
+            var input = $('<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
+            var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
+            
+            label.click(function(e){
+                
+                $(this).find("input").prop("checked", "checked");
+                
+                e.stopPropagation();
+                
+                return false;
+            });
         });
     }
 

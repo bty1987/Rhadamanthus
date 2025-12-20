@@ -93,8 +93,8 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SelectionItemPO> querySelectionItem(long sid) {
-		return createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).list();
+	public List<SelectionItemPD> querySelectionItem(long sid) {
+		return createCriteria(SelectionItemPD.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).list();
 	}
 
 	@Override
@@ -108,17 +108,28 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<SelectionItemPD> querySelectionItemDBySid(long sid) {
-		return createCriteria(SelectionItemPD.class).add(Restrictions.eq("selection.sid", sid)).list();
+	public SelectionItemPO pickSelectionItem(String orderId, Long qiid) {
+
+		String sql = String.format("select {sit.*} from data.soodsitem sis, quotation.selectionitem sit where sis.qiid = :qiid AND sis.sid = sit.quoteId AND sit.orderId = :orderId AND sit.type = :type");
+
+		return (SelectionItemPO) session().createSQLQuery(sql).addEntity("sit", SelectionItemPO.class).setString("orderId", orderId).setLong("qiid", qiid == null ? -1 : qiid).setShort("type", SelectionItemPO.TYPE_ALONE_SHORT).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public SelectionItemPO pickSelectionItem(String orderId, Long qiid) {
+	public int checkSelectionItem(String orderId) {
 
-		String sql = String.format("select {sit.*} from data.soodsitem sis, quotation.selectionitem sit where sis.qiid = :qiid and sis.sid = sit.quoteId and sit.orderId = :orderId and sit.type = :type");
+		StringBuffer sql = new StringBuffer("SELECT count(*) FROM quotation.quotation q ");
 
-		return (SelectionItemPO) session().createSQLQuery(sql).addEntity("sit", SelectionItemPO.class).setString("orderId", orderId).setLong("qiid", qiid == null ? -1 : qiid).setShort("type", SelectionItemPO.TYPE_ALONE_SHORT).setMaxResults(1).uniqueResult();
+		sql.append("INNER JOIN quotation.quotationfunctionarea qfa ON q.qid = qfa.quotationId ");
+		sql.append("INNER JOIN quotation.quotationfunctionareaitem2 qfai ON qfa.qfaid = qfai.quotationFunctionAreaId ");
+		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = q.orderId AND qfai.qfaiId = si.quoteid ON si.type = 0 ");
+		sql.append("LEFT JOIN quotation.extension e on e.orderId = q.orderId ");
+		sql.append("LEFT JOIN quotation.extensionitem ei on ei.eid = e.eid AND qfai.qfaiid = ei.quoteItemId ON ei.type = 0 ");
+		sql.append("where q.orderId = :orderId AND q.defaults = 1 AND si.siid is null AND ei.eiid is null;");
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql.toString()).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
 	}
 
 	@Override
@@ -178,7 +189,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	@Override
 	public int updateSelectionItem(long areaId, short type, short newtype) {
 
-		String sql = "update SelectionItemPO set type = :newtype where areaId = :areaId and type = :type";
+		String sql = "update SelectionItemPO set type = :newtype where areaId = :areaId AND type = :type";
 		session().createQuery(sql).setLong("areaId", areaId).setShort("type", type).setShort("newtype", newtype).executeUpdate();
 
 		return 0;

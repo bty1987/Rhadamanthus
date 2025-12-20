@@ -91,12 +91,9 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	@Override
 	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int company, String companyType) throws FLException {
 
-		if (companyType != null) filters.add(new Filter(companyType, String.valueOf(company), "eq"));
-		else return;
-
-		if (filters.size() == 0) return;
-
 		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) return;
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company, userPO.getUid());
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = new ArrayList<SalesDeliveryItemVO>();
