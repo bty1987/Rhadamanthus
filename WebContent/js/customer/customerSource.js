@@ -20,7 +20,6 @@ $(function() {
             name: com.focusPage("#name", "#customerSource"),
             gender: com.focusPage("#gender", "#customerSource"),
             phone: com.focusPage("#phone", "#customerSource"),
-      phoneReadonlyHint: com.focusPage(".phone-readonly-hint", "#customerSource"),
             intention: com.focusPage("#intention", "#customerSource"),
             grade: com.focusPage("#grade", "#customerSource"),
             villageName: com.focusPage("#villageName", "#customerSource"),
@@ -756,8 +755,8 @@ $(function() {
             customerSource.items.comment.val(v.comment);
             customerSource.items.price.val(v.price);
             customerSource.items.intention.val(v.intention);
-            customerSource.items.phone.val(v.phone).prop('readonly', true); // 编辑时电话不可修改
-            customerSource.items.phoneReadonlyHint.show(); // 显示提示信息
+            // 编辑时隐藏电话表单内容
+            customerSource.items.phone.closest('.form-group').hide();
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
             customerSource.items.businessType.val(v.busitype.dbid);
@@ -938,9 +937,8 @@ $(function() {
         com.focusPage("#referCustomer", "#createsource").prop("checked", "checked");
         com.focusPage(".referCustomerInfo", "#createsource").show();
 
-        // 创建时确保电话输入框可编辑
-        customerSource.items.phone.prop('readonly', false);
-        customerSource.items.phoneReadonlyHint.hide(); // 隐藏提示信息
+        // 创建时确保电话表单内容显示
+        customerSource.items.phone.closest('.form-group').show();
 
         customerSource.modals.createSourceModal.modal("show");
     });
@@ -1144,9 +1142,8 @@ $(function() {
         com.cleanItems(customerSource.approveItems);
         com.cleanItems(customerSource.updateHouseItems);
 
-        // 重置电话输入框状态为可编辑
-        customerSource.items.phone.prop('readonly', false);
-        customerSource.items.phoneReadonlyHint.hide(); // 隐藏提示信息
+        // 重置电话表单内容显示
+        customerSource.items.phone.closest('.form-group').show();
 
         com.focusPage(".item", "#from1").remove();
     }
