@@ -1,6 +1,5 @@
 /**
- * 企业微信登录脚本 - iframe版本
- * 直接使用iframe显示企业微信登录页面
+ * 企业微信登录脚本 - iframe版本 直接使用iframe显示企业微信登录页面
  */
 
 jQuery(function($) {
@@ -131,7 +130,10 @@ jQuery(function($) {
 
             handleSocialAuthCallback(socialCode, socialState);
             return true;
+        }else{
+            console.log('检测到socialCode/socialState回调:', window.location.search);
         }
+        
         return false;
     }
 
@@ -173,7 +175,8 @@ jQuery(function($) {
             method: 'GET',
             timeout: WORK_WECHAT_CONFIG.loadTimeout,
             data:{
-                "domain": "https://daily-zq.fanglin.vip/organization/employee",
+                //"domain": "https://daily-zq.fanglin.vip/organization/employee",
+                "domain": "https://platform-erp.fanglin.vip/xlogin.html",
             },
             success: function(response) {
                 console.log('获取企业微信登录URL响应:', response);
@@ -569,17 +572,14 @@ jQuery(function($) {
                 console.log('stateAuthCode.do接口响应:', response);
 
                 // 检查响应是否包含osstoken
-                if (response && response.osstoken) {
-                    console.log('获取到osstoken，准备跳转到主页:', response.osstoken);
-
-                    // 生成token
-                    var _token = 'token_' + Date.now();
+                if (response && response.domain) {
+                    console.log('获取到domain，准备跳转到主页:', response.domain);
 
                     // 参考dlogin.js第68行的跳转逻辑
                     window.location.replace(config.server + "/redirect.html?authentication=" +
-                        response.osstoken.replace(/[\r\n]/g, "") + "&osstoken=" + _token);
+                        response.domain.replace(/[\r\n]/g, ""));
                 } else {
-                    console.error('stateAuthCode.do接口响应无效，缺少osstoken');
+                    console.error('stateAuthCode.do接口响应无效，缺少domain');
                     showLoginFailure('登录认证失败，响应数据无效');
                 }
             },
