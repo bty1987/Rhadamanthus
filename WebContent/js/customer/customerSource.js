@@ -20,7 +20,7 @@ $(function() {
             name: com.focusPage("#name", "#customerSource"),
             gender: com.focusPage("#gender", "#customerSource"),
             phone: com.focusPage("#phone", "#customerSource"),
-            phone1: com.focusPage("#phone1", "#customerSource"),
+      phoneReadonlyHint: com.focusPage(".phone-readonly-hint", "#customerSource"),
             intention: com.focusPage("#intention", "#customerSource"),
             grade: com.focusPage("#grade", "#customerSource"),
             villageName: com.focusPage("#villageName", "#customerSource"),
@@ -556,10 +556,24 @@ $(function() {
     }, {
         field: "phone",
         name: "客户电话",
-        prop: "phone",
+        prop: function(v) {
+            if (!v.phone) return "";
+
+            // 如果电话号码已经包含*号，直接显示
+            if (v.phone.includes('*')) {
+                return v.phone;
+            }
+
+            // 如果是11位完整号码，显示为前3位+****+后4位
+            if (v.phone.length === 11) {
+                return v.phone.substr(0, 3) + '****' + v.phone.substr(7);
+            }
+
+            // 其他情况直接显示
+            return v.phone;
+        },
         clazz: "grey",
         show: function(v) {
-
             return (customerSource.depage == "user");
         }
     }, {
@@ -742,8 +756,8 @@ $(function() {
             customerSource.items.comment.val(v.comment);
             customerSource.items.price.val(v.price);
             customerSource.items.intention.val(v.intention);
-            customerSource.items.phone.val(v.phone.substr(0, 3));
-            customerSource.items.phone1.val(v.phone.substr(7, 11));
+            customerSource.items.phone.val(v.phone).prop('readonly', true); // 编辑时电话不可修改
+            customerSource.items.phoneReadonlyHint.show(); // 显示提示信息
             customerSource.items.name.val(v.name);
             customerSource.items.buildArea.val(v.innerArea);
             customerSource.items.businessType.val(v.busitype.dbid);
@@ -924,6 +938,10 @@ $(function() {
         com.focusPage("#referCustomer", "#createsource").prop("checked", "checked");
         com.focusPage(".referCustomerInfo", "#createsource").show();
 
+        // 创建时确保电话输入框可编辑
+        customerSource.items.phone.prop('readonly', false);
+        customerSource.items.phoneReadonlyHint.hide(); // 隐藏提示信息
+
         customerSource.modals.createSourceModal.modal("show");
     });
 
@@ -990,7 +1008,7 @@ $(function() {
         var floor = customerSource.items.floor.val();
         var door = customerSource.items.door.val();
         var villageName = customerSource.items.villageName.val();
-        var phone = customerSource.items.phone.val() + "****" + customerSource.items.phone1.val();
+        var phone = customerSource.items.phone.val();
 
         var options = {
             "customerSource.name": customerSource.items.name.val(),
@@ -1125,6 +1143,10 @@ $(function() {
         com.cleanItems(customerSource.items);
         com.cleanItems(customerSource.approveItems);
         com.cleanItems(customerSource.updateHouseItems);
+
+        // 重置电话输入框状态为可编辑
+        customerSource.items.phone.prop('readonly', false);
+        customerSource.items.phoneReadonlyHint.hide(); // 隐藏提示信息
 
         com.focusPage(".item", "#from1").remove();
     }
