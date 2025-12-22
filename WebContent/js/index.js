@@ -264,7 +264,7 @@
             var cookie = cookies[i];
             var domainIndex = cookie.indexOf("domain=");
             if (domainIndex > -1 && cookie.substr(domainIndex + 7).indexOf(domain) === 0) {
-                document.cookie = cookie.split("=")[0] + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = cookie.split("=")[0] + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;domain=" + domain;
             }
         }
     }
