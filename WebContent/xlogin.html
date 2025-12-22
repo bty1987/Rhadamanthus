@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>FIP - 方林信息平台 | 企业微信登录</title>
+    <title>FIP - 方林信息平台 | 企微登录</title>
     <meta name="keywords" content="方林,装饰,ERP,企业微信,登录" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -83,11 +83,16 @@
         <div class="login-right">
             <!-- 登录标题 -->
             <div class="login-header">
-                <div class="login-title">企业微信登录</div>
-                <div class="login-subtitle">使用企业微信账号，安全便捷登录系统。</div>
+                <div class="login-title">欢迎登录</div>
+                <div class="login-subtitle">选择登录方式，进入方林信息平台。</div>
             </div>
 
-  
+            <!-- Tab 切换 -->
+            <div class="login-tabs">
+                <div class="login-tab active" data-tab="workwechat">企微登录</div>
+                <div class="login-tab" data-tab="password">密码登录</div>
+            </div>
+
             <!-- 登录表单区域 -->
             <div class="login-form-area">
                 <!-- 扫码登录面板 -->
@@ -162,34 +167,68 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 其他登录方式 -->
-            <div class="other-login">
-                <div class="divider">
-                    <span>其他登录方式</span>
-                </div>
-                <div class="other-links">
-                    <a href="login.html" class="other-link">
-                        <i class="ace-icon fa fa-key"></i>
-                        <span>账号密码登录</span>
-                    </a>
-                    <a href="javascript:void(0)" class="other-link" id="dingdingLink">
-                        <i class="ace-icon fa fa-dingding"></i>
-                        <span>钉钉扫码登录</span>
-                    </a>
+                <!-- 密码登录面板 -->
+                <div class="login-form-panel" id="passwordPanel">
+                    <form id="loginForm" onsubmit="return false;">
+                        <div class="form-group">
+                            <div class="form-input-wrapper">
+                                <i class="ace-icon fa fa-user form-input-icon"></i>
+                                <input type="text"
+                                       class="form-input has-icon"
+                                       id="userId"
+                                       name="userId"
+                                       placeholder="请输入工号/手机号/邮箱"
+                                       autocomplete="off">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-input-wrapper">
+                                <i class="ace-icon fa fa-lock form-input-icon"></i>
+                                <input type="password"
+                                       class="form-input has-icon"
+                                       id="password"
+                                       name="password"
+                                       placeholder="请输入登录密码"
+                                       autocomplete="off">
+                                <i class="ace-icon fa fa-eye-slash password-switch" id="passwordToggle"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="verify-group">
+                                <div class="verify-input">
+                                    <input type="text"
+                                           class="form-input"
+                                           id="nowCode"
+                                           name="nowCode"
+                                           placeholder="请输入验证码"
+                                           autocomplete="off">
+                                </div>
+                                <img class="verify-code"
+                                     src="images/verifyCode.jpg"
+                                     id="Verify"
+                                     alt="验证码"
+                                     onclick="this.src='images/verifyCode.jpg?t='+new Date().getTime()">
+                            </div>
+                        </div>
+
+                        <div class="error-msg" id="errorMsg"></div>
+
+                        <button type="button" class="btn-login" id="loginBtn">
+                            <i class="ace-icon fa fa-key"></i> 登录账号
+                        </button>
+
+                        <button type="button" class="btn-experience" id="experienceBtn">
+                            <i class="ace-icon fa fa-rocket"></i> 立即体验
+                        </button>
+                    </form>
                 </div>
             </div>
 
             <!-- 底部信息 -->
             <div class="login-footer">
-                <div class="footer-info">
-                    <span>企业微信登录支持</span>
-                    <a href="javascript:void(0)" class="help-link" id="helpLink">
-                        <i class="ace-icon fa fa-question-circle"></i>
-                        使用帮助
-                    </a>
-                </div>
                 <div class="footer-copyright">
                     辽宁方林信息化服务有限公司©2014-2025 | 辽ICP备15003048号-4
                 </div>
@@ -252,8 +291,11 @@
 
     <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
     <script src="assets/ace/js/bootstrap.min.js"></script>
+    <script src="assets/altogether/js/crypto.min.js"></script>
     <script src="js/com/config.js"></script>
     <script src="js/com/server.js"></script>
+    <script src="js/com/api.js"></script>
+    <script src="js/login.js"></script>
     <script src="js/xlogin.js"></script>
 </body>
 </html>

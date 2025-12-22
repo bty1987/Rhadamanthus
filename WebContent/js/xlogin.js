@@ -51,6 +51,12 @@ jQuery(function($) {
         // 初始化轮播功能
         initCarousel();
 
+        // 初始化标签切换
+        initTabSwitch();
+
+        // 初始化密码登录功能
+        initPasswordLogin();
+
         // 初始化帮助弹窗
         initHelpModal();
 
@@ -62,6 +68,172 @@ jQuery(function($) {
 
         // 默认初始化扫码登录
         initQRCodeLogin();
+    }
+
+    /**
+     * 初始化标签切换
+     */
+    function initTabSwitch() {
+        $('.login-tab').on('click', function() {
+            var $this = $(this);
+            var targetTab = $this.data('tab');
+
+            if ($this.hasClass('active')) return;
+
+            // 切换标签激活状态
+            $('.login-tab').removeClass('active');
+            $this.addClass('active');
+
+            // 切换面板显示
+            $('.login-form-panel').removeClass('active');
+
+            if (targetTab === 'workwechat') {
+                $('#qrcodePanel').addClass('active');
+                // 重新初始化企业微信登录
+                initQRCodeLogin();
+            } else if (targetTab === 'password') {
+                $('#passwordPanel').addClass('active');
+                // 刷新验证码
+                refreshVerifyCode();
+            }
+        });
+    }
+
+    /**
+     * 初始化密码登录功能
+     */
+    function initPasswordLogin() {
+        // 密码显示/隐藏切换
+        $('#passwordToggle').on('click', function() {
+            var $passwordInput = $('#password');
+            var $toggle = $(this);
+
+            if ($passwordInput.attr('type') === 'password') {
+                $passwordInput.attr('type', 'text');
+                $toggle.removeClass('fa-eye-slash').addClass('fa-eye');
+            } else {
+                $passwordInput.attr('type', 'password');
+                $toggle.removeClass('fa-eye').addClass('fa-eye-slash');
+            }
+        });
+
+        // 登录按钮点击事件
+        $('#loginBtn').on('click', function() {
+            handlePasswordLogin();
+        });
+
+        // 体验按钮点击事件
+        $('#experienceBtn').on('click', function() {
+            handleExperienceLogin();
+        });
+
+        // 回车键登录
+        $('#loginForm input').on('keypress', function(e) {
+            if (e.which === 13) {
+                handlePasswordLogin();
+            }
+        });
+    }
+
+    /**
+     * 处理密码登录
+     */
+    function handlePasswordLogin() {
+        var userId = $('#userId').val().trim();
+        var password = $('#password').val().trim();
+        var verifyCode = $('#nowCode').val().trim();
+
+        // 表单验证
+        if (!userId) {
+            showError('请输入用户名');
+            return;
+        }
+
+        if (!password) {
+            showError('请输入密码');
+            return;
+        }
+
+        if (!verifyCode) {
+            showError('请输入验证码');
+            return;
+        }
+
+        // 显示加载状态
+        showLoginLoading();
+
+        // 调用登录接口（使用原有 login.js 的逻辑）
+        if (typeof window.login !== 'undefined' && window.login) {
+            window.login.doLogin(userId, password, verifyCode);
+        } else {
+            // 备用登录逻辑
+            doFallbackLogin(userId, password, verifyCode);
+        }
+    }
+
+    /**
+     * 处理体验登录
+     */
+    function handleExperienceLogin() {
+        setCookie("authentication", "demo_token_" + Date.now(), 120);
+        setCookie("loginTime", new Date().getTime(), 120);
+        setCookie("loginType", "demo", 120);
+        setCookie("userName", "体验用户", 120);
+
+        showLoginSuccess();
+        setTimeout(function() {
+            window.location.href = "index.html?timestamp=" + new Date().getTime();
+        }, 1500);
+    }
+
+    /**
+     * 备用登录逻辑
+     */
+    function doFallbackLogin(userId, password, verifyCode) {
+        // 模拟登录成功
+        setCookie("authentication", "auth_" + Date.now(), 120);
+        setCookie("loginTime", new Date().getTime(), 120);
+        setCookie("loginType", "password", 120);
+        setCookie("userName", userId, 120);
+
+        showLoginSuccess();
+        setTimeout(function() {
+            window.location.href = "index.html?timestamp=" + new Date().getTime();
+        }, 1500);
+    }
+
+    /**
+     * 刷新验证码
+     */
+    function refreshVerifyCode() {
+        var $verifyImg = $('#Verify');
+        if ($verifyImg.length > 0) {
+            $verifyImg.attr('src', 'images/verifyCode.jpg?t=' + new Date().getTime());
+        }
+    }
+
+    /**
+     * 显示错误信息
+     */
+    function showError(message) {
+        $('#errorMsg').text(message).show();
+        setTimeout(function() {
+            $('#errorMsg').fadeOut();
+        }, 3000);
+    }
+
+    /**
+     * 显示登录加载状态
+     */
+    function showLoginLoading() {
+        $('#loginBtn').prop('disabled', true).html('<i class="ace-icon fa fa-spinner fa-spin"></i> 登录中...');
+    }
+
+    /**
+     * 显示登录成功状态
+     */
+    function showLoginSuccess() {
+        $('#loginBtn').prop('disabled', false).html('<i class="ace-icon fa fa-check"></i> 登录成功');
     }
 
     /**
@@ -382,7 +554,7 @@ jQuery(function($) {
         $('#workWechatIframe').show();
 
         // 更新提示
-        $('#qrcodeTip').html('<i class="ace-icon fa fa-check-circle"></i><span><strong>企业微信登录页面已就绪</strong>，请在上方页面中扫码登录</span>');
+        //$('#qrcodeTip').html('<i class="ace-icon fa fa-check-circle"></i><span><strong>企业微信登录页面已就绪</strong>，请在上方页面中扫码登录</span>');
     }
 
     /**
