@@ -363,7 +363,7 @@ $(function() {
         com.post(api.decoration.checkDecoration, options, function(res) {
 
             var decoration = res.decoration;
-            
+
             if ([2, 3, 7].indexOf(decoration.status) == -1) {
                 com.showAlert(com.error, "推荐客户不存在");
                 return false;
@@ -419,7 +419,7 @@ $(function() {
         com.post(api.decoration.checkDecoration, options, function(res) {
 
             var decoration = res.decoration;
-            
+
             if ([2, 3, 7].indexOf(decoration.status) == -1) {
                 com.showAlert(com.error, "推荐客户不存在");
                 return false;
@@ -556,7 +556,9 @@ $(function() {
         field: "phone",
         name: "客户电话",
         prop: function(v) {
-            if (!v.phone) return "";
+
+            if (!v.phone)
+                return "";
 
             // 如果电话号码已经包含*号，直接显示
             if (v.phone.includes('*')) {
@@ -573,6 +575,7 @@ $(function() {
         },
         clazz: "grey",
         show: function(v) {
+
             return (customerSource.depage == "user");
         }
     }, {
@@ -1052,6 +1055,16 @@ $(function() {
             } else {
                 options["customerSource.village.no"] = com.typeahead(customerSource.items.villageName);
             }
+        }
+
+        if (phone) {
+
+            var cid = checkCustomer(customerSource.approveItems);
+
+            if (!cid)
+                return false;
+
+            options["customerSource.customer.cid"] = hid;
         }
 
         if (customerSource.type == "update") {

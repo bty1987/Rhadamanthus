@@ -58,6 +58,7 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 
 @Service("customerSourceService")
@@ -194,7 +195,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerPO != null) {
 			customerSourcePO.setCustomer(customerPO);
-			customerSourcePO.setPhone(customerSourceVO.getPhone());
+			customerSourcePO.setPhone(customerPO.getPhone());
 		}
 
 		VillagePO villagePO = null;
@@ -224,7 +225,11 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 			customerSourcePO.setHouseNumber(housePO.getHouseNumber());
 		}
 
-		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype"));
+		BeanUtil.copyProperties(customerSourceVO, customerSourcePO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman", "busitype", "phone"));
+
+		if (customerSourceVO.getPhone() != null) {
+			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
+		}
 
 		customerSourcePO.setCreater(creater);
 		customerSourcePO.setCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -265,7 +270,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerPO != null) {
 			customerSourcePO.setCustomer(customerPO);
-			customerSourcePO.setPhone(customerSourceVO.getPhone());
+			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
 		}
 
 		String villageName = customerSourcePO.getVillage() != null ? customerSourcePO.getVillage().getName() : "";
@@ -373,7 +378,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 
 		if (customerPO != null) {
 			customerSourcePO.setCustomer(customerPO);
-			customerSourcePO.setPhone(customerSourceVO.getPhone());
+			customerSourcePO.setPhone(FormatUtil.encodePhone(customerSourceVO.getPhone()));
 		}
 
 		customerSourceDao.save(customerSourcePO);
