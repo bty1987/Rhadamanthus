@@ -19,54 +19,63 @@
 
 <body>
     <div class="login-container">
-        <!-- 左侧区域 - 企业品牌展示 -->
+        <!-- 左侧区域 - 图片轮播展示 -->
         <div class="login-left">
-            <!-- 品牌区域 -->
-            <div class="brand-area">
+            <!-- 图片轮播区域 -->
+            <div class="carousel-container">
+                <div class="carousel-slides">
+                    <div class="carousel-slide active">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_1.png" alt="装饰展示1" onerror="this.src='./images/showcase.png'">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_2.png" alt="装饰展示2" onerror="this.src='./images/showcase.png'">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_3.png" alt="装饰展示3" onerror="this.src='./images/showcase.png'">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_4.png" alt="装饰展示4" onerror="this.src='./images/showcase.png'">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_5.png" alt="装饰展示5" onerror="this.src='./images/showcase.png'">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_6.png" alt="装饰展示6" onerror="this.src='./images/showcase.png'">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_7.png" alt="装饰展示7" onerror="this.src='./images/showcase.png'">
+                    </div>
+                </div>
+
+                <!-- 轮播指示器 -->
+                <div class="carousel-indicators">
+                    <span class="indicator active" data-slide="0"></span>
+                    <span class="indicator" data-slide="1"></span>
+                    <span class="indicator" data-slide="2"></span>
+                    <span class="indicator" data-slide="3"></span>
+                    <span class="indicator" data-slide="4"></span>
+                    <span class="indicator" data-slide="5"></span>
+                    <span class="indicator" data-slide="6"></span>
+                </div>
+
+                <!-- 轮播控制按钮 -->
+                <div class="carousel-controls">
+                    <button class="carousel-btn prev-btn" id="prevSlide">
+                        <i class="ace-icon fa fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-btn next-btn" id="nextSlide">
+                        <i class="ace-icon fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 品牌标识覆盖层 -->
+            <div class="brand-overlay hide">
                 <div class="brand-logo">
                     <img src="./images/icon.png" alt="方林集团">
                     <div class="brand-text">方林集团</div>
                 </div>
-                <div class="brand-badge">
-                    <i class="ace-icon fa fa-weixin"></i>
-                    <span>企业微信登录</span>
-                </div>
-            </div>
-
-            <!-- 标语区域 -->
-            <div class="slogan-area">
-                <div class="slogan-title">立于一面极于九，专一域而驭八方</div>
-                <div class="slogan-subtitle">业内首推"行业标杆工艺不达标赔无条"的重锤承诺</div>
-            </div>
-
-            <!-- 企业微信特性展示 -->
-            <div class="features-area">
-                <div class="feature-item">
-                    <i class="ace-icon fa fa-shield"></i>
-                    <div class="feature-text">
-                        <h4>安全认证</h4>
-                        <p>企业微信官方安全认证</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <i class="ace-icon fa fa-users"></i>
-                    <div class="feature-text">
-                        <h4>统一身份</h4>
-                        <p>与企业微信账号打通</p>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <i class="ace-icon fa fa-bolt"></i>
-                    <div class="feature-text">
-                        <h4>快速登录</h4>
-                        <p>扫码即登录，无需密码</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 展示图片 -->
-            <div class="showcase-image">
-                <img src="./images/showcase.png" alt="装饰展示" onerror="this.style.display='none'" style="display: none;">
+                <div class="brand-slogan">立于一面极于九，专一域而驭八方</div>
             </div>
         </div>
 
@@ -78,18 +87,7 @@
                 <div class="login-subtitle">使用企业微信账号，安全便捷登录系统。</div>
             </div>
 
-            <!-- 登录方式选择 -->
-            <div class="login-methods">
-                <div class="method-item active" data-method="qrcode">
-                    <i class="ace-icon fa fa-qrcode"></i>
-                    <span>扫码登录</span>
-                </div>
-                <div class="method-item" data-method="click">
-                    <i class="ace-icon fa fa-hand-pointer-o"></i>
-                    <span>点击登录</span>
-                </div>
-            </div>
-
+  
             <!-- 登录表单区域 -->
             <div class="login-form-area">
                 <!-- 扫码登录面板 -->
@@ -105,24 +103,14 @@
 
                         <!-- iframe显示区域 -->
                         <div class="iframe-container hide" id="iframeContainer">
-                            <div class="iframe-header">
-                                <h4><i class="ace-icon fa fa-weixin"></i> 企业微信登录</h4>
-                                <button type="button" class="btn btn-xs btn-default" id="closeIframeBtn">
-                                    <i class="ace-icon fa fa-times"></i> 关闭
-                                </button>
-                            </div>
                             <iframe
                                 id="workWechatIframe"
                                 class="work-wechat-iframe"
                                 src=""
                                 frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
+                                >
                             </iframe>
-                            <div class="iframe-tip">
-                                <i class="ace-icon fa fa-info-circle"></i>
-                                <span>请在上方企业微信页面中完成登录</span>
-                            </div>
                         </div>
 
                         <div class="qrcode-tip" id="qrcodeTip">
