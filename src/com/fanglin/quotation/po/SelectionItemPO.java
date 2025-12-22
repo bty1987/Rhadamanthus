@@ -1,4 +1,4 @@
-﻿package com.fanglin.quotation.po;
+package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

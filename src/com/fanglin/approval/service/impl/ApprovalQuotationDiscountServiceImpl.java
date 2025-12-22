@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @File Name		: ApprovalQuotationDiscountServiceImpl.java
  * @Package   	: com.fanglin.approval.service.impl
  * @Version		: 1.0
