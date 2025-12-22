@@ -10,7 +10,7 @@ jQuery(function($) {
         // 本地回调地址
         redirectUri: window.location.origin + '/xlogin.html',
         // iframe高度
-        iframeHeight: 500,
+        iframeHeight: 400,
         // 加载超时时间（毫秒）
         loadTimeout: 15000
     };
@@ -48,8 +48,8 @@ jQuery(function($) {
             return; // 如果有socialCode/socialState，直接处理回调，不继续初始化登录流程
         }
 
-        // 初始化登录方式切换
-        initMethodSwitch();
+        // 初始化轮播功能
+        initCarousel();
 
         // 初始化帮助弹窗
         initHelpModal();
@@ -65,31 +65,73 @@ jQuery(function($) {
     }
 
     /**
-     * 初始化登录方式切换
+     * 初始化轮播功能
      */
-    function initMethodSwitch() {
-        $('.method-item').on('click', function() {
-            var $this = $(this);
-            var method = $this.data('method');
+    function initCarousel() {
+        var currentSlide = 0;
+        var totalSlides = $('.carousel-slide').length;
+        var slideInterval;
 
-            if (method === currentMethod) return;
+        // 显示指定幻灯片
+        function showSlide(index) {
+            $('.carousel-slide').removeClass('active');
+            $('.indicator').removeClass('active');
 
-            // 切换激活状态
-            $('.method-item').removeClass('active');
-            $this.addClass('active');
+            $('.carousel-slide').eq(index).addClass('active');
+            $('.indicator').eq(index).addClass('active');
 
-            // 切换面板
-            $('.login-form-panel').removeClass('active');
-            if (method === 'qrcode') {
-                $('#qrcodePanel').addClass('active');
-                initQRCodeLogin();
-            } else if (method === 'click') {
-                $('#clickPanel').addClass('active');
-                initClickLogin();
-            }
+            currentSlide = index;
+        }
 
-            currentMethod = method;
+        // 下一张幻灯片
+        function nextSlide() {
+            var nextIndex = (currentSlide + 1) % totalSlides;
+            showSlide(nextIndex);
+        }
+
+        // 上一张幻灯片
+        function prevSlide() {
+            var prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(prevIndex);
+        }
+
+        // 开始自动轮播
+        function startAutoPlay() {
+            slideInterval = setInterval(nextSlide, 4000); // 每4秒切换一次
+        }
+
+        // 停止自动轮播
+        function stopAutoPlay() {
+            clearInterval(slideInterval);
+        }
+
+        // 绑定控制按钮事件
+        $('#nextSlide').on('click', function() {
+            stopAutoPlay();
+            nextSlide();
+            startAutoPlay();
         });
+
+        $('#prevSlide').on('click', function() {
+            stopAutoPlay();
+            prevSlide();
+            startAutoPlay();
+        });
+
+        // 绑定指示器点击事件
+        $('.indicator').on('click', function() {
+            var slideIndex = $(this).data('slide');
+            stopAutoPlay();
+            showSlide(slideIndex);
+            startAutoPlay();
+        });
+
+        // 鼠标悬停时暂停轮播
+        $('.carousel-container').on('mouseenter', stopAutoPlay);
+        $('.carousel-container').on('mouseleave', startAutoPlay);
+
+        // 启动自动轮播
+        startAutoPlay();
     }
 
     /**
@@ -237,9 +279,6 @@ jQuery(function($) {
                         // 使用iframe显示企业微信登录页面
                         showIframe(wechatUrl);
 
-                        // 生成并显示二维码作为备用
-                        generateQRCodeAsFallback(wechatUrl);
-
                     } catch (e) {
                         console.error('解析URL失败:', e.message);
                         showQRCodeError('企业微信登录链接解析失败');
@@ -318,174 +357,6 @@ jQuery(function($) {
     }
 
     /**
-     * 生成二维码作为备用显示
-     */
-    function generateQRCodeAsFallback(wechatUrl) {
-        console.log('=== 开始生成二维码作为备用 ===');
-        console.log('企业微信URL:', wechatUrl);
-
-        if (!wechatUrl) {
-            console.error('企业微信URL为空，无法生成二维码');
-            showQRCodeError('企业微信登录链接无效');
-            return;
-        }
-
-        // 使用多个二维码生成服务作为备选
-        var qrApis = [
-            'https://api.qrserver.com/v1/create-qr-code/?size=200&data=',
-            'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=',
-            'https://quickchart.io/qr?size=200&text=',
-            'https://api.qrify.io/?format=png&size=200&text='
-        ];
-
-        var currentApiIndex = 0;
-
-        function tryNextApi() {
-            if (currentApiIndex >= qrApis.length) {
-                console.error('所有二维码API都失败了');
-                showQRCodeError('所有二维码生成服务都不可用，请稍后重试');
-                return;
-            }
-
-            var qrApiUrl = qrApis[currentApiIndex] + encodeURIComponent(wechatUrl);
-            console.log('尝试二维码API #' + (currentApiIndex + 1) + ':', qrApiUrl);
-
-            // 在二维码区域显示二维码
-            if (currentApiIndex === 0) {
-                $('#workWechatQR').html(`
-                    <div class="qrcode-wrapper">
-                        <div class="qrcode-loading">
-                            <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
-                            <p>正在生成二维码...</p>
-                        </div>
-                        <img src="${qrApiUrl}" alt="企业微信二维码" class="qrcode-image"
-                             onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'qrcode-error\\'><i class=\\'ace-icon fa fa-exclamation-triangle fa-2x\\'></i><p>二维码生成失败，正在尝试其他方式...</p></div>'; setTimeout(function(){ tryNextApi(); }, 1000);"
-                             onload="handleQrCodeSuccess(this)">
-                        <div class="qrcode-border"></div>
-                    </div>
-                `);
-            } else {
-                // 后续API尝试，直接替换图片
-                var $img = $('#workWechatQR img.qrcode-image');
-                if ($img.length === 0) {
-                    $('#workWechatQR').html(`
-                        <div class="qrcode-wrapper">
-                            <div class="qrcode-loading">
-                                <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
-                                <p>正在尝试其他二维码服务...</p>
-                            </div>
-                            <img src="${qrApiUrl}" alt="企业微信二维码" class="qrcode-image"
-                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'qrcode-error\\'><i class=\\'ace-icon fa fa-exclamation-triangle fa-2x\\'></i><p>二维码生成失败，正在尝试其他方式...</p></div>'; setTimeout(function(){ tryNextApi(); }, 1000);"
-                                 onload="handleQrCodeSuccess(this)">
-                            <div class="qrcode-border"></div>
-                        </div>
-                    `);
-                } else {
-                    $img.attr('src', qrApiUrl);
-                }
-            }
-
-            currentApiIndex++;
-        }
-
-        // 设置加载超时检查
-        setTimeout(function() {
-            var $img = $('#workWechatQR img.qrcode-image');
-            var $loading = $('#workWechatQR .qrcode-loading');
-            if ($loading.length > 0) {
-                console.warn('二维码生成时间较长，正在继续等待...');
-            }
-            if ($img.length > 0 && !$img[0].complete && $img[0].naturalWidth === 0) {
-                console.warn('二维码图片可能加载失败，尝试下一个API');
-                if (currentApiIndex < qrApis.length) {
-                    tryNextApi();
-                }
-            }
-        }, 8000); // 8秒超时检查
-
-        tryNextApi();
-        console.log('二维码生成流程已启动');
-    }
-
-    /**
-     * 处理二维码加载成功
-     */
-    function handleQrCodeSuccess(img) {
-        console.log('二维码加载成功:', img.src);
-        $('.qrcode-loading').remove();
-        console.log('二维码显示完成');
-    }
-
-    /**
-     * 处理二维码加载错误
-     */
-    function handleQrCodeError(img) {
-        console.error('二维码加载失败:', img.src);
-        $('.qrcode-loading').remove();
-
-        // 显示错误信息和重试按钮
-        $('#workWechatQR').html(`
-            <div class="qrcode-error">
-                <i class="ace-icon fa fa-exclamation-triangle fa-2x"></i>
-                <p>二维码生成失败</p>
-                <p class="error-details">URL: ' + img.src + '</p>
-                <button type="button" class="btn btn-sm btn-default" onclick="retryQRCode()">
-                    <i class="ace-icon fa fa-refresh"></i> 重试
-                </button>
-            </div>
-        `);
-    }
-
-    /**
-     * 重试二维码生成
-     */
-    function retryQRCode() {
-        console.log('=== 重试二维码生成 ===');
-
-        // 首先尝试从iframe获取URL
-        var currentUrl = '';
-        if ($('#iframeContainer').is(':visible')) {
-            currentUrl = $('#workWechatIframe').attr('src');
-            console.log('从iframe获取URL:', currentUrl);
-        }
-
-        // 如果iframe没有URL，重新请求企业微信登录接口
-        if (!currentUrl) {
-            console.log('iframe没有有效URL，重新请求企业微信登录接口');
-            resetQRCodeUI();
-            showQRCodeLoading('正在重新获取登录链接...');
-
-            $.ajax({
-                url: WORK_WECHAT_CONFIG.socialAuthCodeUrl,
-                method: 'GET',
-                timeout: WORK_WECHAT_CONFIG.loadTimeout,
-                success: function(response) {
-                    console.log('重试 - 获取企业微信登录URL响应:', response);
-
-                    if (response.errorCode === 0 && response.domain) {
-                        var wechatUrl = response.domain;
-                        console.log('重试 - 企业微信登录URL:', wechatUrl);
-                        generateQRCodeAsFallback(wechatUrl);
-                    } else {
-                        showQRCodeError('重新获取登录链接失败: ' + (response.msg || '未知错误'));
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('重试 - 获取企业微信登录URL失败:', error);
-                    showQRCodeError('网络错误，请检查连接后重试');
-                }
-            });
-        } else {
-            // 使用现有的URL重新生成二维码
-            console.log('使用现有URL重新生成二维码:', currentUrl);
-            generateQRCodeAsFallback(currentUrl);
-        }
-    }
-
-    // 添加全局重试函数供外部调用
-    window.retryQRCode = retryQRCode;
-
-    /**
      * iframe加载中状态
      */
     function showIframeLoading(message) {
@@ -553,7 +424,7 @@ jQuery(function($) {
 
         // 跳转到主页面
         setTimeout(function() {
-            //window.location.href = "index.html?timestamp=" + new Date().getTime();
+            window.location.href = "index.html?timestamp=" + new Date().getTime();
         }, 2000);
     }
 
@@ -733,27 +604,9 @@ jQuery(function($) {
     }
 
     /**
-     * 显示Demo模式
+     * 显示Demo模式 - 仅使用iframe
      */
     function showQRCodeDemo() {
-        $('#workWechatQR').html(`
-            <div class="demo-qr-code">
-                <img src="images/verifyCode.jpg" alt="Demo二维码" class="qrcode-image">
-                <div class="demo-badge">Demo</div>
-            </div>
-        `);
-
-        $('.qrcode-tip').html('<i class="ace-icon fa fa-info-circle"></i><span>Demo模式：点击<span class="demo-link">模拟登录</span></span>');
-
-        $('.demo-link').on('click', function() {
-            simulateDemoLogin();
-        });
-    }
-
-    /**
-     * 模拟Demo登录
-     */
-    function simulateDemoLogin() {
         // 显示iframe加载Demo页面
         var demoUrl = 'about:blank';
         showIframe(demoUrl);

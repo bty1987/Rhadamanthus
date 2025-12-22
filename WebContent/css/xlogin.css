@@ -3,6 +3,146 @@
  * 在原有login.css基础上扩展
  */
 
+/* ========== 轮播容器 ========== */
+.carousel-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carousel-slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    overflow: hidden;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* ========== 轮播指示器 ========== */
+.carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 10;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicator.active {
+    background: white;
+    transform: scale(1.2);
+}
+
+.indicator:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* ========== 轮播控制按钮 ========== */
+.carousel-controls {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 10;
+}
+
+.carousel-btn {
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.carousel-btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.carousel-btn:active {
+    transform: scale(0.95);
+}
+
+/* ========== 品牌覆盖层 ========== */
+.brand-overlay {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 20;
+    color: white;
+}
+
+.brand-overlay .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.brand-overlay .brand-logo img {
+    width: 48px;
+    height: 48px;
+}
+
+.brand-overlay .brand-text {
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.brand-slogan {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: 300;
+    max-width: 300px;
+    line-height: 1.4;
+}
+
 /* ========== 品牌标识 ========== */
 .brand-badge {
     display: flex;
@@ -463,7 +603,9 @@
     border: none;
     background: white;
     display: none;
-    min-height: 500px;
+    height: 900px;
+    max-height: 900px;
+    overflow: hidden;
 }
 
 .work-wechat-iframe::-webkit-scrollbar {
