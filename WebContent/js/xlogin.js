@@ -18,6 +18,21 @@ jQuery(function($) {
     // ========== 全局变量 ==========
     var currentMethod = 'qrcode'; // 当前登录方式
     var currentAuthCode = null; // 当前授权码
+    
+    function deleteAllCookies() {
+        var cookies = document.cookie.split(';');
+        
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf('=');
+            var name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+            
+            // 删除cookie，需要指定路径
+            document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        }
+    }
+    
+    deleteAllCookies();
 
     // ========== 初始化 ==========
     initPage();
@@ -119,8 +134,8 @@ jQuery(function($) {
     function checkSocialAuthCallback() {
         // 检查URL参数中的socialCode和socialState
         var urlParams = new URLSearchParams(window.location.search);
-        var socialCode = urlParams.get('socialCode');
-        var socialState = urlParams.get('socialState');
+        var socialCode = urlParams.get('code');
+        var socialState = urlParams.get('state');
 
         if (socialCode && socialState) {
             console.log('检测到socialCode/socialState回调:', {
@@ -176,7 +191,7 @@ jQuery(function($) {
             timeout: WORK_WECHAT_CONFIG.loadTimeout,
             data:{
                 //"domain": "https://daily-zq.fanglin.vip/organization/employee",
-                "domain": "https://platform-erp.fanglin.vip/xlogin.html",
+                "domain": "https://test-erp.fanglin.vip/xlogin.html",
             },
             success: function(response) {
                 console.log('获取企业微信登录URL响应:', response);
@@ -538,7 +553,7 @@ jQuery(function($) {
 
         // 跳转到主页面
         setTimeout(function() {
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
+            //window.location.href = "index.html?timestamp=" + new Date().getTime();
         }, 2000);
     }
 
@@ -575,9 +590,7 @@ jQuery(function($) {
                 if (response && response.domain) {
                     console.log('获取到domain，准备跳转到主页:', response.domain);
 
-                    // 参考dlogin.js第68行的跳转逻辑
-                    window.location.replace(config.server + "/redirect.html?authentication=" +
-                        response.domain.replace(/[\r\n]/g, ""));
+                    window.location.replace(config.server + "/redirect.html?authentication=" + response.domain.replace(/[\r\n]/g, ""));
                 } else {
                     console.error('stateAuthCode.do接口响应无效，缺少domain');
                     showLoginFailure('登录认证失败，响应数据无效');
