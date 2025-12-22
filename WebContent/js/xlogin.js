@@ -255,10 +255,28 @@ jQuery(function($) {
 
             UI.setButtonState($('#workWechatLoginBtn'), 'loading', '正在跳转到企业微信...');
 
-            setTimeout(() => {
-                window.open('https://work.weixin.qq.com/', '_blank');
-                this.showTempMessage('请在新打开的企业微信页面中完成登录，然后返回本页面');
-            }, 1000);
+            // 获取企业微信登录URL
+            $.ajax({
+                url: CONFIG.socialAuthCodeUrl,
+                method: 'GET',
+                timeout: CONFIG.loadTimeout,
+                data: {
+                    domain: "https://platform-erp.fanglin.vip/xlogin.html",
+                },
+                success: (response) => {
+                    if (response.errorCode === 0 && response.domain) {
+                        const wechatUrl = response.domain;
+                        window.location.href = wechatUrl; // 直接跳转到企业微信登录页面
+                    } else {
+                        UI.setButtonState($('#workWechatLoginBtn'), 'normal');
+                        this.showTempMessage('获取企业微信登录链接失败：' + (response.msg || '未知错误'));
+                    }
+                },
+                error: (xhr) => {
+                    UI.setButtonState($('#workWechatLoginBtn'), 'normal');
+                    this.handleAjaxError(xhr, '获取企业微信登录链接失败');
+                }
+            });
         },
 
         // 处理企业微信回调
