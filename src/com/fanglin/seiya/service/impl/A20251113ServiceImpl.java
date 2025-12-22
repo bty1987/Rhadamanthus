@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -112,7 +113,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 
 		String url = String.format("%s/admin-api/user/auth/sso/social-login", OSS_URL_STR);
 
-		Map<String, String> params = new HashMap<String, String>();
+		JSONObject params = new JSONObject();
 
 		params.put("socialCode", socialCode);
 		params.put("socialState", socialState);
@@ -123,7 +124,44 @@ public class A20251113ServiceImpl implements A20251113Service {
 
 		System.out.println(response);
 
+		if (response == null) {
+			throw new FLException(110000, "系统处理问题");
+		}
+
+		// if (response.getInteger("code") == 0 && response.getJSONObject("data") != null) {
+		// return exchangeAuthCode(response.getJSONObject("data").getString("accessToken"));
+		// }
+
+		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(response.getJSONObject("data").getString("phone"), "");
+
+		if (userPOs != null && userPOs.size() != 0) {
+
+			UserPO userPO = userPOs.get(0);
+
+			Authentication authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, userPO.getCompany(), userPO.getFreedom());
+
+			authentication.setCompany(userPO.getCompany());
+
+			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+		}
+
 		return null;
+	}
+
+	public static void main(String[] args) {
+
+		String url = String.format("%s/admin-api/user/auth/sso/social-login", "https://daily-gateway.fanglin.vip");
+
+		JSONObject params = new JSONObject();
+
+		params.put("socialCode", "P3J2nN9ZLLOms90K56cPZ91A5jaEA6SN4XLvk5cF55o");
+		params.put("socialState", "a75218c39570f9e86f956731b622171e");
+
+		params.put("socialType", "20");
+
+		JSONObject response = com.fanglin.utils.HttpUtil.httpPost(url, params);
+
+		System.out.println(response);
 	}
 
 	@Override
@@ -162,7 +200,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 		return 0;
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main1(String[] args) throws Exception {
 
 		String clientId = "sso-erp-pc";
 		String redirectUrl = "http://192.168.5.21/";
