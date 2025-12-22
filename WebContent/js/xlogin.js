@@ -78,25 +78,110 @@ jQuery(function($) {
             var $this = $(this);
             var targetTab = $this.data('tab');
 
-            if ($this.hasClass('active')) return;
+            console.log(targetTab)
+            console.log($this.hasClass('active'))
+
+            //if ($this.hasClass('active')) return;
+
+            console.log('切换标签:', targetTab); // 调试日志
 
             // 切换标签激活状态
             $('.login-tab').removeClass('active');
             $this.addClass('active');
 
-            // 切换面板显示
-            $('.login-form-panel').removeClass('active');
+            // 强制重置所有面板状态
+            $('.login-form-panel').each(function() {
+                $(this).removeClass('active')
+                    .css({'display': 'none', 'opacity': '0'});
+            });
+
+            // 强制重绘
+            document.body.offsetHeight; // 触发重绘
 
             if (targetTab === 'workwechat') {
-                $('#qrcodePanel').addClass('active');
-                // 重新初始化企业微信登录
-                initQRCodeLogin();
+                console.log('显示企业微信登录面板');
+
+                // 重置企业微信登录状态
+                resetWorkWechatPanel();
+
+                // 使用原生JavaScript强制设置样式
+                var qrcodePanel = document.getElementById('qrcodePanel');
+                qrcodePanel.style.display = 'block';
+                qrcodePanel.style.opacity = '1';
+                $(qrcodePanel).addClass('active');
+
+                // 延迟初始化企业微信登录
+                setTimeout(function() {
+                    console.log('重新初始化企业微信登录...');
+                    initQRCodeLogin();
+                }, 100);
+
             } else if (targetTab === 'password') {
-                $('#passwordPanel').addClass('active');
+                console.log('显示密码登录面板');
+
+                // 使用原生JavaScript强制设置样式
+                var passwordPanel = document.getElementById('passwordPanel');
+                passwordPanel.style.display = 'block';
+                passwordPanel.style.opacity = '1';
+                $(passwordPanel).addClass('active');
+
                 // 刷新验证码
                 refreshVerifyCode();
+
+                // 重置密码表单状态
+                resetPasswordForm();
             }
         });
+    }
+
+    /**
+     * 重置企业微信登录面板状态
+     */
+    function resetWorkWechatPanel() {
+        console.log('开始重置企业微信面板...');
+
+        // 强制隐藏所有可能的加载状态和错误状态
+        $('#iframeLoading, #iframeError').remove();
+
+        // 重置二维码区域
+        resetQRCodeUI();
+
+        // 确保二维码区域可见
+        $('#workWechatQR').removeClass('hide');
+
+        // 确保iframe容器隐藏
+        $('#iframeContainer').addClass('hide');
+
+        // 清空iframe源
+        $('#workWechatIframe').attr('src', '').hide();
+
+        // 恢复提示信息
+        //$('#qrcodeTip').html('<i class="ace-icon fa fa-mobile"></i><span>请使用<strong>企业微信</strong>扫码登录</span>');
+
+        // 清除之前的授权码
+        currentAuthCode = null;
+
+        console.log('企业微信面板状态已完全重置');
+    }
+
+    /**
+     * 重置密码登录表单状态
+     */
+    function resetPasswordForm() {
+        // 清空表单
+        $('#loginForm')[0].reset();
+
+        // 重置按钮状态
+        $('#loginBtn').prop('disabled', false).html('<i class="ace-icon fa fa-key"></i> 登录账号');
+
+        // 清除错误信息
+        $('#errorMsg').hide();
+
+        // 重置密码显示状态
+        $('#password').attr('type', 'password');
+        $('#passwordToggle').removeClass('fa-eye').addClass('fa-eye-slash');
+
+        console.log('密码登录表单状态已重置');
     }
 
     /**
@@ -120,11 +205,6 @@ jQuery(function($) {
         // 登录按钮点击事件
         $('#loginBtn').on('click', function() {
             handlePasswordLogin();
-        });
-
-        // 体验按钮点击事件
-        $('#experienceBtn').on('click', function() {
-            handleExperienceLogin();
         });
 
         // 回车键登录
@@ -169,21 +249,6 @@ jQuery(function($) {
             // 备用登录逻辑
             doFallbackLogin(userId, password, verifyCode);
         }
-    }
-
-    /**
-     * 处理体验登录
-     */
-    function handleExperienceLogin() {
-        setCookie("authentication", "demo_token_" + Date.now(), 120);
-        setCookie("loginTime", new Date().getTime(), 120);
-        setCookie("loginType", "demo", 120);
-        setCookie("userName", "体验用户", 120);
-
-        showLoginSuccess();
-        setTimeout(function() {
-            window.location.href = "index.html?timestamp=" + new Date().getTime();
-        }, 1500);
     }
 
     /**
@@ -501,7 +566,7 @@ jQuery(function($) {
         showIframeLoading('正在加载企业微信登录页面...');
 
         // 更新提示信息
-        $('#qrcodeTip').html('<i class="ace-icon fa fa-desktop"></i><span>正在打开<strong>企业微信登录页面</strong></span>');
+        //$('#qrcodeTip').html('<i class="ace-icon fa fa-desktop"></i><span>正在打开<strong>企业微信登录页面</strong></span>');
 
         // 设置iframe高度
         $('.work-wechat-iframe').css('height', WORK_WECHAT_CONFIG.iframeHeight + 'px');
@@ -523,7 +588,7 @@ jQuery(function($) {
         $('#workWechatIframe').attr('src', '');
 
         // 恢复提示信息
-        $('#qrcodeTip').html('<i class="ace-icon fa fa-mobile"></i><span>请使用<strong>企业微信</strong>扫码登录</span>');
+        //$('#qrcodeTip').html('<i class="ace-icon fa fa-mobile"></i><span>请使用<strong>企业微信</strong>扫码登录</span>');
 
         console.log('iframe已关闭');
     }
