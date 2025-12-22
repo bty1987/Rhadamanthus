@@ -1,4 +1,4 @@
-﻿package com.fanglin.system.service.impl;
+package com.fanglin.system.service.impl;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

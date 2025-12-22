@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @File Name		: QuotationVersionDaoImpl.java
  * @Package   	: com.fanglin.dao.impl
  * @Version		: 1.0
