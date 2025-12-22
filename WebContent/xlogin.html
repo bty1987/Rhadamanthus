@@ -19,9 +19,8 @@
 
 <body>
     <div class="login-container">
-        <!-- 左侧区域 - 企业品牌展示 -->
+        <!-- 左侧品牌展示 -->
         <div class="login-left">
-            <!-- 品牌区域 -->
             <div class="brand-area">
                 <div class="brand-logo">
                     <img src="./images/icon.png" alt="方林集团">
@@ -33,13 +32,11 @@
                 </div>
             </div>
 
-            <!-- 标语区域 -->
             <div class="slogan-area">
                 <div class="slogan-title">立于一面极于九，专一域而驭八方</div>
                 <div class="slogan-subtitle">业内首推"行业标杆工艺不达标赔无条"的重锤承诺</div>
             </div>
 
-            <!-- 企业微信特性展示 -->
             <div class="features-area">
                 <div class="feature-item">
                     <i class="ace-icon fa fa-shield"></i>
@@ -64,13 +61,39 @@
                 </div>
             </div>
 
-            <!-- 展示图片 -->
             <div class="showcase-image">
-                <img src="./images/showcase.png" alt="装饰展示" onerror="this.style.display='none'" style="display: none;">
+                <div class="banner-slider">
+                    <div class="slider-wrapper">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_1.png"
+                             alt="方林装饰1" class="slide active">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_2.png"
+                             alt="方林装饰2" class="slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_3.png"
+                             alt="方林装饰3" class="slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_4.png"
+                             alt="方林装饰4" class="slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_5.png"
+                             alt="方林装饰5" class="slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_6.png"
+                             alt="方林装饰6" class="slide">
+                        <img src="https://fanglin-data-daily.oss-cn-beijing.aliyuncs.com/static-res/images/login-banner_7.png"
+                             alt="方林装饰7" class="slide">
+                    </div>
+                    <!-- 轮播指示器 -->
+                    <div class="slider-indicators">
+                        <span class="indicator active" data-slide="0"></span>
+                        <span class="indicator" data-slide="1"></span>
+                        <span class="indicator" data-slide="2"></span>
+                        <span class="indicator" data-slide="3"></span>
+                        <span class="indicator" data-slide="4"></span>
+                        <span class="indicator" data-slide="5"></span>
+                        <span class="indicator" data-slide="6"></span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 右侧区域 - 登录表单 -->
+        <!-- 右侧登录区域 -->
         <div class="login-right">
             <!-- 登录标题 -->
             <div class="login-header">
@@ -95,7 +118,6 @@
                 <!-- 扫码登录面板 -->
                 <div class="login-form-panel active" id="qrcodePanel">
                     <div class="qrcode-area">
-                        <!-- 二维码加载区域 -->
                         <div class="qrcode-box" id="workWechatQR">
                             <div class="qrcode-placeholder">
                                 <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
@@ -103,7 +125,6 @@
                             </div>
                         </div>
 
-                        <!-- iframe显示区域 -->
                         <div class="iframe-container hide" id="iframeContainer">
                             <div class="iframe-header">
                                 <h4><i class="ace-icon fa fa-weixin"></i> 企业微信登录</h4>
@@ -111,14 +132,7 @@
                                     <i class="ace-icon fa fa-times"></i> 关闭
                                 </button>
                             </div>
-                            <iframe
-                                id="workWechatIframe"
-                                class="work-wechat-iframe"
-                                src=""
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen>
-                            </iframe>
+                            <iframe id="workWechatIframe" class="work-wechat-iframe" src="" frameborder="0" allowfullscreen></iframe>
                             <div class="iframe-tip">
                                 <i class="ace-icon fa fa-info-circle"></i>
                                 <span>请在上方企业微信页面中完成登录</span>
