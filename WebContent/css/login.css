@@ -27,23 +27,9 @@ body {
     flex: 1;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 60px;
-    color: white;
-}
-
-.login-left::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('../images/background.jpg') center/cover no-repeat;
-    opacity: 0.1;
+    overflow: hidden;
+    height: 100vh;
+    min-height: 100vh;
 }
 
 /* 品牌区域 */
@@ -187,11 +173,14 @@ body {
 }
 
 .login-form-panel {
-    display: none;
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .login-form-panel.active {
-    display: block;
+    display: block !important;
+    opacity: 1;
 }
 
 .form-group {
