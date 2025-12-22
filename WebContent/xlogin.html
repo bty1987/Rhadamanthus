@@ -19,8 +19,9 @@
 
 <body>
     <div class="login-container">
-        <!-- 左侧品牌展示 -->
+        <!-- 左侧区域 - 企业品牌展示 -->
         <div class="login-left">
+            <!-- 品牌区域 -->
             <div class="brand-area">
                 <div class="brand-logo">
                     <img src="./images/icon.png" alt="方林集团">
@@ -32,11 +33,13 @@
                 </div>
             </div>
 
+            <!-- 标语区域 -->
             <div class="slogan-area">
                 <div class="slogan-title">立于一面极于九，专一域而驭八方</div>
                 <div class="slogan-subtitle">业内首推"行业标杆工艺不达标赔无条"的重锤承诺</div>
             </div>
 
+            <!-- 企业微信特性展示 -->
             <div class="features-area">
                 <div class="feature-item">
                     <i class="ace-icon fa fa-shield"></i>
@@ -61,12 +64,13 @@
                 </div>
             </div>
 
+            <!-- 展示图片 -->
             <div class="showcase-image">
                 <img src="./images/showcase.png" alt="装饰展示" onerror="this.style.display='none'" style="display: none;">
             </div>
         </div>
 
-        <!-- 右侧登录区域 -->
+        <!-- 右侧区域 - 登录表单 -->
         <div class="login-right">
             <!-- 登录标题 -->
             <div class="login-header">
@@ -91,6 +95,7 @@
                 <!-- 扫码登录面板 -->
                 <div class="login-form-panel active" id="qrcodePanel">
                     <div class="qrcode-area">
+                        <!-- 二维码加载区域 -->
                         <div class="qrcode-box" id="workWechatQR">
                             <div class="qrcode-placeholder">
                                 <i class="ace-icon fa fa-spinner fa-spin fa-2x"></i>
@@ -98,6 +103,7 @@
                             </div>
                         </div>
 
+                        <!-- iframe显示区域 -->
                         <div class="iframe-container hide" id="iframeContainer">
                             <div class="iframe-header">
                                 <h4><i class="ace-icon fa fa-weixin"></i> 企业微信登录</h4>
@@ -105,7 +111,14 @@
                                     <i class="ace-icon fa fa-times"></i> 关闭
                                 </button>
                             </div>
-                            <iframe id="workWechatIframe" class="work-wechat-iframe" src="" frameborder="0" allowfullscreen></iframe>
+                            <iframe
+                                id="workWechatIframe"
+                                class="work-wechat-iframe"
+                                src=""
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
                             <div class="iframe-tip">
                                 <i class="ace-icon fa fa-info-circle"></i>
                                 <span>请在上方企业微信页面中完成登录</span>
