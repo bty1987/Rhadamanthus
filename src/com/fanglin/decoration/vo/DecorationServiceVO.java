@@ -23,7 +23,15 @@ public class DecorationServiceVO implements Serializable {
 
 	private UserBaseVO operater;
 
+    private UserBaseVO finisher;
+
+    private Timestamp createTime;
+
 	private Timestamp operateTime;
+
+    private Timestamp planTime;
+
+    private Timestamp finishTime;
 
 	private Short status;
 
@@ -115,6 +123,41 @@ public class DecorationServiceVO implements Serializable {
 
 	public void setDecoration(DecorationVO decoration) {
 		this.decoration = decoration;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(Timestamp planTime) {
+		this.planTime = planTime;
+	}
+
+	public UserBaseVO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserBaseVO finisher) {
+		this.finisher = finisher;
 	}
 
 }

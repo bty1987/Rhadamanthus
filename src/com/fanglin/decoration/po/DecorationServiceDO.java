@@ -44,6 +44,14 @@ public class DecorationServiceDO implements Serializable {
 
 	private String comment; // 备注
 
+	private Timestamp createTime; // 创建时间
+
+	private Timestamp finishTime; // 完成时间
+
+	private Timestamp planTime; // 计划时间
+
+	private UserPO finisher; // 完成人
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "dsid")
@@ -119,11 +127,49 @@ public class DecorationServiceDO implements Serializable {
 		this.comment = comment;
 	}
 
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@Column(name = "planTime")
+	public Timestamp getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(Timestamp planTime) {
+		this.planTime = planTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "fuid", referencedColumnName = "uid")
+	public UserPO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserPO finisher) {
+		this.finisher = finisher;
+	}
+
 	public DecorationServiceVO ptv(DecorationServiceVO decorationServiceVO) {
 
-		BeanUtil.copyProperties(this, decorationServiceVO, Arrays.asList("decoration", "operater"));
+		BeanUtil.copyProperties(this, decorationServiceVO, Arrays.asList("decoration", "operater", "finisher"));
 
 		if (decorationServiceVO.getOperater() != null && this.getOperater() != null) decorationServiceVO.getOperater().setBaseInfo(getOperater());
+		if (decorationServiceVO.getFinisher() != null && this.getFinisher() != null) decorationServiceVO.getFinisher().setBaseInfo(getFinisher());
 		if (decorationServiceVO.getDecoration() != null && getDecoration() != null) getDecoration().ptvcascade(decorationServiceVO.getDecoration());
 
 		return decorationServiceVO;

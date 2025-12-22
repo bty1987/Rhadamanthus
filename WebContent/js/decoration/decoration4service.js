@@ -16,6 +16,8 @@ jQuery(function($) {
 
     decorationService.decorationOrderId = params.decoration.orderId;
     decorationService.serviceItems.comment = com.focusPage('#comment');
+    decorationService.serviceItems.planTime = com.focusPage('#planTime');
+    decorationService.serviceItems.finisher = com.focusPage('#finisher');
 
     decorationService.serviceModal = com.focusPage("#serviceModal");
 
@@ -43,6 +45,10 @@ jQuery(function($) {
         prop: "detail",
         clazz: "grey"
     }, {
+        name: "创建时间",
+        prop: "createTime",
+        clazz: "blue"
+    }, {
         name: "操作人",
         prop: "operater.currentName",
         clazz: "grey"
@@ -50,6 +56,20 @@ jQuery(function($) {
         name: "操作时间",
         prop: "operateTime",
         clazz: "green"
+    }, {
+        name: "计划时间",
+        prop: "planTime",
+        clazz: "orange"
+    }, {
+        name: "完成时间",
+        prop: "finishTime",
+        clazz: "purple"
+    }, {
+        name: "完成人",
+        prop: function(v) {
+            return v.finisher ? v.finisher.currentName : '';
+        },
+        clazz: "grey"
     }, {
         name: "状态",
         prop: function(v) {
@@ -81,6 +101,24 @@ jQuery(function($) {
 
     searcher.line("name", props, btns).render();
 
+    // 初始化日期选择器
+    com.focusPage('#planTime').datepicker(com.datepickerdefault);
+
+    // 加载用户列表到完成人下拉框
+    com.post(api.personel.queryUserForOption, {}, function(res) {
+        var $finisherSelect = com.focusPage('#finisher');
+        $finisherSelect.empty().append('<option value="">请选择完成人</option>');
+        if (res && res.users) {
+            $.each(res.users, function(i, user) {
+                $finisherSelect.append('<option value="' + user.uid + '">' + user.currentName + '</option>');
+            });
+        }
+        // 如果使用chosen插件，需要重新初始化
+        if ($finisherSelect.data('chosen')) {
+            $finisherSelect.trigger("chosen:updated");
+        }
+    });
+
     com.focusPage("#serviceSaveBtn").on('click', function(res) {
 
         if (com.validate("serviceModal")) {
@@ -90,6 +128,8 @@ jQuery(function($) {
         var options = {};
         options["decorationService.dsid"] = decorationService.dsid;
         options["decorationService.comment"] = decorationService.serviceItems.comment.val();
+        options["decorationService.planTime"] = decorationService.serviceItems.planTime.val();
+        options["decorationService.finisher.uid"] = decorationService.serviceItems.finisher.val();
 
         com.post(api.decoration.completeDecorationService, options, function(res) {
 
