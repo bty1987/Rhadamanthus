@@ -90,6 +90,7 @@ jQuery(function (a) {
         $("#unamePwdContainer").remove();
         $("#QRLogin").remove();
         $("#WXLogin").remove();
+        $("#WWLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
@@ -184,6 +185,10 @@ jQuery(function (a) {
         $('#WXLogin').addClass('hide');
         $('#unamePwdContainer').removeClass('hide');
     });
+    $('#WWToForm').click(function () {
+        $('#WWLogin').addClass('hide');
+        $('#unamePwdContainer').removeClass('hide');
+    });
     $('#FormToQR').click(function () {
         $('#unamePwdContainer').addClass('hide');
         $('#QRLogin').removeClass('hide');
@@ -192,17 +197,157 @@ jQuery(function (a) {
         $('#unamePwdContainer').addClass('hide');
         $('#WXLogin').removeClass('hide');
     });
+    $('#FormToWW').click(function () {
+        $('#unamePwdContainer').addClass('hide');
+        $('#WWLogin').removeClass('hide');
+    });
     $('#QRToWX').click(function () {
         $('#QRLogin').addClass('hide');
         $('#WXLogin').removeClass('hide');
+    });
+    $('#QRToWW').click(function () {
+        $('#QRLogin').addClass('hide');
+        $('#WWLogin').removeClass('hide');
     });
     $('#WXToQR').click(function () {
         $('#WXLogin').addClass('hide');
         $('#QRLogin').removeClass('hide');
     });
+    $('#WXToWW').click(function () {
+        $('#WXLogin').addClass('hide');
+        $('#WWLogin').removeClass('hide');
+    });
+    $('#WWToQR').click(function () {
+        $('#WWLogin').addClass('hide');
+        $('#QRLogin').removeClass('hide');
+    });
+    $('#WWToWX').click(function () {
+        $('#WWLogin').addClass('hide');
+        $('#WXLogin').removeClass('hide');
+    });
 
     $("#Verify").click(function () {
         verifyCode();
+    });
+
+    // 企微登录按钮点击事件
+    $("#wwLoginBtn").on('click', function () {
+        // 判断是否为 PC 端
+        if (parent.window.isPC) {
+            console.log("ispc");
+
+            // 显示加载状态
+            $('.login_wwcode_refresh').removeClass('hide').html(
+                '<i class="icon-spinner icon-spin"></i> <span style="color: #38adff;">正在获取企业微信登录信息...</span>'
+            );
+
+            // 调用 socialAuthCode.do 接口
+            $.ajax({
+                url: config.server + 'socialAuthCode.do',
+                method: 'GET',
+                timeout: 15000,
+                data: {
+                    "domain": "https://test-erp.fanglin.vip/xlogin.html",
+                },
+                success: function(response) {
+                    console.log('获取企业微信登录URL响应:', response);
+
+                    // 检查响应格式
+                    if (!response) {
+                        console.error('响应为空');
+                        $('.login_wwcode_refresh').html('<span style="color: #ff6600;">服务器响应为空</span>');
+                        return;
+                    }
+
+                    if (typeof response !== 'object') {
+                        console.error('响应格式错误:', typeof response);
+                        $('.login_wwcode_refresh').html('<span style="color: #ff6600;">服务器响应格式错误</span>');
+                        return;
+                    }
+
+                    if (response.errorCode === 0 && response.domain) {
+                        // 成功获取企业微信登录URL
+                        var wechatUrl = response.domain;
+                        console.log('成功获取的 response.domain:', wechatUrl);
+
+                        // 验证URL格式
+                        if (typeof wechatUrl !== 'string' || !wechatUrl.startsWith('http')) {
+                            console.error('URL格式无效:', wechatUrl);
+                            $('.login_wwcode_refresh').html('<span style="color: #ff6600;">企业微信登录链接格式无效</span>');
+                            return;
+                        }
+
+                        // 显示成功信息
+                        $('.login_wwcode_refresh').html(
+                            '<span style="color: #00cc66;">✓ 已获取企业微信登录链接</span><br>' +
+                            '<span style="color: #999; font-size: 12px;">' + wechatUrl + '</span>'
+                        );
+
+                        // 后续可以实现跳转或打开新窗口
+                        // window.open(wechatUrl, '_blank');
+
+                        var subwin = null;c
+                        var docWindowOptions = {
+                            "show": true,
+                            "title": "方林信息平台",
+                            "icon": "fanglinHD.png",
+                            "frame": false,
+                            "resizable": true,
+                            "position": "center",
+                            "min_width": 1366,
+                            "min_height": 768,
+                            "show_in_taskbar": true,
+                        };
+
+                        nw.Window.open(wechatUrl, docWindowOptions, function(new_win){subwin = new_win;});
+
+                        setInterval(function(){
+                            console.log(subwin.window.authentication);
+
+                            if(!subwin.window.authentication) return false;
+
+                            setCookie("authentication", subwin.window.authentication.replace(/[\r\n]/g,""), config.timeout);
+                            setCookie("loginTime", new Date().getTime(), config.timeout);
+
+                            if (!parent.window.isPC) {
+                                window.location.href = "index.html?timestamp=" + new Date().getTime();
+                            } else {
+                                openChildWindow();
+                            }
+                        }, 1000);
+
+                    } else {
+                        var errorMsg = response.msg || response.errorMsg || '获取企业微信登录URL失败';
+                        console.error('接口返回错误:', errorMsg);
+                        $('.login_wwcode_refresh').html('<span style="color: #ff6600;">' + errorMsg + '</span>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('获取企业微信登录URL失败:', {
+                        status: status,
+                        error: error,
+                        responseText: xhr.responseText,
+                        statusCode: xhr.status
+                    });
+
+                    var errorMsg = '网络错误，请检查连接';
+                    if (xhr.status === 0) {
+                        errorMsg = '网络连接失败，请检查网络';
+                    } else if (xhr.status === 404) {
+                        errorMsg = '登录接口不存在，请联系管理员';
+                    } else if (xhr.status === 500) {
+                        errorMsg = '服务器内部错误，请稍后重试';
+                    }
+
+                    $('.login_wwcode_refresh').html('<span style="color: #ff6600;">' + errorMsg + '</span>');
+                }
+            });
+
+        } else {
+            // 非 PC 端，隐藏提示
+            console.log('非PC端，企微登录功能不可用');
+        }
+        return false;
     });
 
     $('[data-rel=popover]').popover({container: 'body'});
@@ -392,7 +537,7 @@ jQuery(function (a) {
         $('#name').parent().remove();
         $('#ename').parent().remove();
         $("#unamePwdContainer > div:first-child").removeClass('clearfix').removeAttr("style");
-        $("#unamePwdContainer > div:first-child > div:first-child").css({'padding': '0px', 'margin-top': '30px'});
+        $("#unamePwdContainer > div:first-child > div:first-child").css({'padding': "0px", 'margin-top': '30px'});
         $('#dloginContainer').removeClass('clearfix').css({'margin': '', 'text-align': 'center'});
         $('#dloginContainer div:first-child').removeClass('login_content');
         $('.slide').css('display', 'none');
@@ -400,6 +545,21 @@ jQuery(function (a) {
         $('.login-layout').css('background-color', 'white');
         $('.main-content #login-box .login_content').css({'width': '100%', 'border': '0px'});
         $('.main-content #login-box .clearfix').css('overflow', 'hidden');
+
+        // 企微登录区域 PC 端样式调整
+        $('#WWLogin .login_wwcode_text').css({
+            'padding': '30px 20px',
+            'text-align': 'center'
+        });
+        $('#wwLoginBtn').css({
+            'margin': '15px 0',
+            'font-size': '16px',
+            'padding': '12px 30px'
+        });
+        $('#WWLogin .login_wwcode_refresh').css({
+            'padding': '15px',
+            'text-align': 'center'
+        });
 
     }
 

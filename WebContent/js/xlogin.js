@@ -698,7 +698,12 @@ jQuery(function($) {
                 if (response && response.domain) {
                     console.log('获取到domain，准备跳转到主页:', response.domain);
 
-                    window.location.replace(config.server + "/redirect.html?authentication=" + response.domain.replace(/[\r\n]/g, ""));
+                    window.authentication = response.domain;
+
+                    setTimeout(function(){
+                        window.location.replace(config.server + "/redirect.html?authentication=" + response.domain.replace(/[\r\n]/g, ""));
+                    }, 3000);
+
                 } else {
                     console.error('stateAuthCode.do接口响应无效，缺少domain');
                     showLoginFailure('登录认证失败，响应数据无效');
