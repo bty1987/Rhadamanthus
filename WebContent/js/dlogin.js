@@ -243,7 +243,7 @@ jQuery(function (a) {
 
             // 调用 socialAuthCode.do 接口
             $.ajax({
-                url: config.server + 'socialAuthCode.do',
+                url: config.communion + 'socialAuthCode.do',
                 method: 'GET',
                 timeout: 15000,
                 data: {
@@ -252,41 +252,16 @@ jQuery(function (a) {
                 success: function(response) {
                     console.log('获取企业微信登录URL响应:', response);
 
-                    // 检查响应格式
-                    if (!response) {
-                        console.error('响应为空');
-                        $('.login_wwcode_refresh').html('<span style="color: #ff6600;">服务器响应为空</span>');
-                        return;
-                    }
-
-                    if (typeof response !== 'object') {
-                        console.error('响应格式错误:', typeof response);
-                        $('.login_wwcode_refresh').html('<span style="color: #ff6600;">服务器响应格式错误</span>');
-                        return;
-                    }
-
-                    if (response.errorCode === 0 && response.domain) {
+                     if (response.errorCode === 0 && response.domain) {
                         // 成功获取企业微信登录URL
                         var wechatUrl = response.domain;
                         console.log('成功获取的 response.domain:', wechatUrl);
 
-                        // 验证URL格式
-                        if (typeof wechatUrl !== 'string' || !wechatUrl.startsWith('http')) {
-                            console.error('URL格式无效:', wechatUrl);
-                            $('.login_wwcode_refresh').html('<span style="color: #ff6600;">企业微信登录链接格式无效</span>');
-                            return;
-                        }
-
-                        // 显示成功信息
-                        $('.login_wwcode_refresh').html(
-                            '<span style="color: #00cc66;">✓ 已获取企业微信登录链接</span><br>' +
-                            '<span style="color: #999; font-size: 12px;">' + wechatUrl + '</span>'
-                        );
 
                         // 后续可以实现跳转或打开新窗口
                         // window.open(wechatUrl, '_blank');
 
-                        var subwin = null;c
+                        var subwin = null;
                         var docWindowOptions = {
                             "show": true,
                             "title": "方林信息平台",
@@ -294,8 +269,8 @@ jQuery(function (a) {
                             "frame": false,
                             "resizable": true,
                             "position": "center",
-                            "min_width": 1366,
-                            "min_height": 768,
+                            "min_width": 480,
+                            "min_height": 700,
                             "show_in_taskbar": true,
                         };
 
@@ -312,6 +287,7 @@ jQuery(function (a) {
                             if (!parent.window.isPC) {
                                 window.location.href = "index.html?timestamp=" + new Date().getTime();
                             } else {
+                                subwin.close();
                                 openChildWindow();
                             }
                         }, 1000);
@@ -560,6 +536,11 @@ jQuery(function (a) {
             'padding': '15px',
             'text-align': 'center'
         });
+        
+        $('#loginBtn').css({"float": "left", "width":"100%"});
+        $('#FormToQR').css({"float": "left", "width":"32%", "margin":"2px 0px 2px 0px"});
+        $('#FormToWX').css({"float": "left", "width":"32%", "margin":"2px 0px 0px 2px"});
+        $('#FormToWW').css({"float": "left", "width":"32%", "margin":"2px 0px 0px 2px"});
 
     }
 
