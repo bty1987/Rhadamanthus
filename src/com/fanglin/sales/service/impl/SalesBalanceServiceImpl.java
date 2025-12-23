@@ -523,8 +523,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				}
 
 				// 设置结算单的金额信息
-				salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_FLOOR));
-				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_FLOOR));
+				salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_CEILING));
+				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_CEILING));
 				salesBalancePO.setAllowance(brandAllowance);
 
 				// 检查是否需要设置为多结算类型

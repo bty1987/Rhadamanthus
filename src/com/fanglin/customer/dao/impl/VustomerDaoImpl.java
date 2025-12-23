@@ -2,9 +2,9 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -67,7 +67,6 @@ public class VustomerDaoImpl extends DaoImpl<VustomerPO> implements VustomerDao 
 		return query.list();
 	}
 
-	@SuppressWarnings("deprecation")
 	public void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters == null) return;
@@ -88,7 +87,7 @@ public class VustomerDaoImpl extends DaoImpl<VustomerPO> implements VustomerDao 
 				query.alias("belonger", "belonger");
 				query.add(query.getCriterion("belonger.userId", filter.getData(), filter.getOp()));
 			} else if ("belonger.uid".equals(filter.getField())) {
-				query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
+				query.add(Restrictions.sqlRestriction("buid is ? ", null, StandardBasicTypes.STRING));
 			}
 		}
 	}

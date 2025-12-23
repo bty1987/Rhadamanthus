@@ -101,7 +101,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 	@Override
 	public String socialAuthCode(String domain) throws FLException {
 
-		String url = String.format("%s/admin-api/user/auth/sso/social-auth-redirect?redirectUri=%s&socialType=20", OSS_URL_STR, domain);
+		String url = String.format("%s/admin-api/user/auth/sso/social-auth-redirect?redirectUri=%s&socialType=29", OSS_URL_STR, domain);
 
 		JSONObject response = com.fanglin.utils.HttpUtil.httpGet(url);
 
@@ -118,7 +118,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 		params.put("socialCode", socialCode);
 		params.put("socialState", socialState);
 
-		params.put("socialType", "20");
+		params.put("socialType", "29");
 
 		JSONObject response = com.fanglin.utils.HttpUtil.httpPost(url, params);
 
@@ -132,7 +132,7 @@ public class A20251113ServiceImpl implements A20251113Service {
 		// return exchangeAuthCode(response.getJSONObject("data").getString("accessToken"));
 		// }
 
-		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(response.getJSONObject("data").getString("phone"), "");
+		List<UserPO> userPOs = userDao.queryUserByPhoneAIdent(response.getJSONObject("data").getString("phone"), "-1");
 
 		if (userPOs != null && userPOs.size() != 0) {
 
