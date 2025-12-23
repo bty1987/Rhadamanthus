@@ -101,6 +101,7 @@ jQuery(function($) {
             ["合同额: ", v.decoration.orderTotalPrice, "blue"],
             ["报价版本: ", v.decoration.version.name, "grey"],
             ["签单时间: ", v.decoration.contractTime, "green"],
+            ["设计天数: ", v.designPeriod ? v.designPeriod + "天" : "", "blue"],
             ["预计交钥匙时间: ", v.keyTime, "green"],
             ["预计放线时间: ", v.drawlineTime, "green"],
             ["预计完工时间: ", v.finishTime, "green"],
@@ -252,6 +253,7 @@ jQuery(function($) {
                 ["设计部", "decoration.designer.dept.name"],
                 ["设计师", "decoration.designer.userName"],
                 ["签单时间", "decoration.contractTime"],
+                ["设计天数", "designPeriod"],
                 ["预计交钥匙时间", "keyTime"],
                 ["预计放线时间", "drawlineTime"],
                 ["预计完工时间", 'finishTime'],
@@ -272,6 +274,7 @@ jQuery(function($) {
                 v.decoration.designer.dept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.name);
                 v.decoration.designer.dept.fatherDept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.fatherDept.name);
                 v.decoration.contractTime = (v.decoration.contractTime == null ? "" : v.decoration.contractTime);
+                v.designPeriod = (v.designPeriod == null ? "" : v.designPeriod);
                 v.keyTime = (v.keyTime == null ? "" : v.keyTime);
                 v.drawlineTime = (v.drawlineTime == null ? "" : v.drawlineTime);
                 v.finishTime = (v.finishTime == null ? "" : v.finishTime);
