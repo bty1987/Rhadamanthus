@@ -19,6 +19,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Integer timeLimit;
 
+	private Integer designPeriod;
+
 	private Long cid;
 
 	private Short ishovel;
@@ -90,6 +92,14 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setTimeLimit(Integer timeLimit) {
 		this.timeLimit = timeLimit;
+	}
+
+	public Integer getDesignPeriod() {
+		return designPeriod;
+	}
+
+	public void setDesignPeriod(Integer designPeriod) {
+		this.designPeriod = designPeriod;
 	}
 
 	public Long getCid() {

@@ -49,6 +49,8 @@ public class ConstructionInfoDO implements Serializable {
 
 	private int timeLimit;
 
+	private int designPeriod;
+
 	private short ishovel;
 
 	private short iskey;
@@ -118,6 +120,15 @@ public class ConstructionInfoDO implements Serializable {
 
 	public void setTimeLimit(int timeLimit) {
 		this.timeLimit = timeLimit;
+	}
+
+	@Column(name = "designPeriod")
+	public int getDesignPeriod() {
+		return designPeriod;
+	}
+
+	public void setDesignPeriod(int designPeriod) {
+		this.designPeriod = designPeriod;
 	}
 
 	@Column(name = "cid")
