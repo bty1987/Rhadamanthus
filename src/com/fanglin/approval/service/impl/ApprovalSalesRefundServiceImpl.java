@@ -475,11 +475,11 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 				}
 
 				// 计算应付和实付金额
-				long vbalance = Arith.sub(Arith.round(brandTotal, 0, Arith.ROUND_UP), Arith.round(brandBalance, 0, Arith.ROUND_UP));
+				long vbalance = Arith.sub(Arith.round(brandTotal, 0, Arith.ROUND_DOWN), Arith.round(brandBalance, 0, Arith.ROUND_DOWN));
 
 				// 设置金额信息
-				salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_UP));
-				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_UP));
+				salesBalancePO.setTotal(Arith.round(brandTotal, 0, Arith.ROUND_DOWN));
+				salesBalancePO.setBalance(Arith.round(brandBalance, 0, Arith.ROUND_DOWN));
 				salesBalancePO.setAllowance(brandAllowance);
 				salesBalancePO.setVbalance(vbalance);
 				salesBalancePO.setPbalance(vbalance);
