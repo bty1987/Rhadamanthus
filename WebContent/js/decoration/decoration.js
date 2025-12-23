@@ -159,6 +159,7 @@
 
     order.infoItems.conpanyName = com.focusPage("#conpanyName");
     order.infoItems.timeLimit = com.focusPage("#timeLimit");
+    order.infoItems.designPeriod = com.focusPage("#designPeriod");
     order.infoItems.quoteArea = com.focusPage("#quoteArea");
     order.infoItems.ishovel = com.focusPage("#ishovel");
     order.infoItems.iskey = com.focusPage("#iskey");
@@ -573,6 +574,7 @@
             "constructionInfo.designTime": order.infoItems.designTime.val() ? order.infoItems.designTime.val() + " 00:00:00" : '',
             "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() ? order.infoItems.drawlineTime.val() + " 00:00:00" : '',
             "constructionInfo.comment": order.infoItems.comment.val(),
+            "constructionInfo.designPeriod": order.infoItems.designPeriod.val(),
             "constructionInfo.isConfirmPricture": 1
         };
 
@@ -1526,6 +1528,42 @@
                 }, 200);
             });
 
+            order.infoItems.timeLimit.on('blur', function() {
+
+                setTimeout(function() {
+
+                    var drawlineTimeValue = order.infoItems.drawlineTime.val();
+                    var timeLimitValue = parseInt(order.infoItems.timeLimit.val()) || 0;
+
+                    if (drawlineTimeValue && timeLimitValue > 0) {
+                        var newFinishTime = utils.workDays(drawlineTimeValue, timeLimitValue);
+                        order.infoItems.finishTime.val(newFinishTime);
+                    }
+
+                }, 200);
+            });
+
+            order.infoItems.designPeriod.on('blur', function() {
+
+                setTimeout(function() {
+
+                    var designPeriodValue = parseInt(order.infoItems.designPeriod.val()) || 0;
+                    var baseTime = null;
+
+                    if (decoration.precontractTime) {
+                        baseTime = decoration.precontractTime;
+                    } else if (decoration.contractTime) {
+                        baseTime = decoration.contractTime;
+                    }
+
+                    if (baseTime && designPeriodValue > 0) {
+                        var newDesignTime = utils.workDays(baseTime, designPeriodValue);
+                        order.infoItems.designTime.val(newDesignTime);
+                    }
+
+                }, 200);
+            });
+
             contract.orderId = v.orderId;
 
             com.focusPage("#customerCurrentName").html(v.customer.name == null ? "暂无" : v.customer.name);
@@ -1563,9 +1601,9 @@
                 if (datas.designTime) {
                     designTime = datas.designTime;
                 } else if (decoration.precontractTime) {
-                    designTime = utils.workDays(decoration.precontractTime, (designPeriod ? designPeriod : 0));
+                    designTime = utils.workDays(decoration.precontractTime, (datas.designPeriod ? datas.designPeriod : 0));
                 } else if (decoration.contractTime) {
-                    designTime = utils.workDays(decoration.contractTime, (designPeriod ? designPeriod : 0));
+                    designTime = utils.workDays(decoration.contractTime, (datas.designPeriod ? datas.designPeriod : 0));
                 }
 
                 var finishTime = null;
@@ -1573,9 +1611,13 @@
                 if (datas.drawlineTime && !datas.finishTime) {
                     finishTime = utils.workDays(datas.drawlineTime, (constructionPeriod ? constructionPeriod : 0));
                 }
-                
+
                 if(datas.timeLimit){
                     constructionPeriod = datas.timeLimit;
+                }
+
+                if(datas.designPeriod){
+                    designPeriod = datas.designPeriod;
                 }
 
                 if (datas.designTime) {
@@ -1589,6 +1631,7 @@
                 order.infoItems.dlmConpany.val(0);
                 order.infoItems.quoteArea.val(decoration.house.innerArea);
                 order.infoItems.timeLimit.val(constructionPeriod);
+                order.infoItems.designPeriod.val(datas.designPeriod ? datas.designPeriod : "");
                 order.infoItems.ishovel.val(datas.ishovel);
                 order.infoItems.iskey.val(datas.iskey);
                 order.infoItems.isCeremony.val(datas.isCeremony);

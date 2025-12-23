@@ -477,6 +477,9 @@ $.extend(api, {
             demo: true,
             type: "query",
             tranargs: [{
+                result: "paging-data",
+                args: ["timeLimit", "designPeriod"]
+            }, {
                 result: "paging-data-decoration",
                 args: ["orderTotalPrice"]
             }, {
@@ -489,35 +492,40 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "constructionInfo",
-                args: ["timeLimit"]
+                args: ["timeLimit", "designPeriod"]
             }]
         },
         countConstructionInfo: {
             url: "countConstructionInfo.do",
-            type: "query"
-        },
-        updateConstructionInfo: {
-            url: "updateConstructionInfo.do",
-            type: "update",
-            tranargs: {
-                args: ["constructionInfo.timeLimit"]
-            }
+            type: "query",
+            tranargs: [{
+                result: "constructionInfo",
+                args: ["timeLimit", "designPeriod"]
+            }]
         },
         queryConstructionInfoByOrderId: {
             url: "queryConstructionInfoByOrderId.do",
             type: "query",
             tranargs: [{
                 result: "constructionInfo",
-                args: ["timeLimit"]
+                args: ["timeLimit", "designPeriod"]
             }]
+        },
+        updateConstructionInfo: {
+            url: "updateConstructionInfo.do",
+            type: "update",
+            tranargs: {
+                args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod"]
+            }
         },
         updateConstructionInfoByOrderId: {
             url: "updateConstructionInfoByOrderId.do",
             type: "update",
             tranargs: {
-                args: ["constructionInfo.timeLimit"]
+                args: ["constructionInfo.timeLimit", "constructionInfo.designPeriod"]
             }
         },
+
         pageConstructionAccessory: {
             url: "pageConstructionAccessory.do",
             demo: true,

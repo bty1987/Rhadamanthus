@@ -2,8 +2,8 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -59,7 +59,7 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 			} else if ("belonger".equals(field)) {
 				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_BELONGER_STR, Integer.valueOf(data)));
 			} else if ("belonger.uid".equals(field)) {
-				query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
+				query.add(Restrictions.sqlRestriction("buid is ? ", null, StandardBasicTypes.STRING));
 			} else if ("designer".equals(field)) {
 				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(data)));
 			} else if ("salesman".equals(field)) {
