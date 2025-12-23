@@ -2,6 +2,10 @@ package com.fanglin.decoration.service.impl;
 
 import java.util.Date;
 
+import com.fanglin.construction.dao.ConstructionInfoDao;
+import com.fanglin.construction.po.ConstructionInfoPO;
+import com.fanglin.construction.po.ConstructionPlanPO;
+import com.fanglin.utils.Arith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +49,9 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 	@Autowired
 	private DecorationServiceDao decorationServiceDao;
+
+    @Autowired
+    private ConstructionInfoDao constructionInfoDao;
 
 	@Autowired
 	private DecorationService decorationService;
@@ -161,7 +168,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		if ((decorationInfoVO.getSourceStatus() % 10) == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT) {
 
 			decorationPO.setSourceStatus(DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT);
-			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
+			decorationPO.setDesignStatus(decorationInfoVO.getSourceStatus());
 			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
 
 			DecorationServicePO decorationServicePO = new DecorationServicePO();
@@ -172,6 +179,19 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 			decorationServicePO.setOperater(designer);
 			decorationServicePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationServicePO.setComment(String.format("装修单: %s, 设计方案确认, %s", decorationPO.getOrderId(), decorationInfoVO.getSourceStatus()));
+
+            ConstructionInfoPO constructionInfoPO = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
+
+            int daynum = 1;
+
+            if(decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MINI_INT) daynum = daynum + 3;
+
+            if(decorationInfoVO.getSourceStatus() == DecorationPO.DESIGN_STATUS_MORE_INT && constructionInfoPO != null){
+                daynum = daynum + Arith.div(constructionInfoPO.getDesignPeriod(), 300, Arith.ROUND_FLOOR) / 1000;
+            }
+
+			// 设置计划时间：当前时间 + 4天
+			decorationServicePO.setPlanTime(DateUtil.getDateToTimestamp(DateUtil.plusDay(new Date(), daynum)));
 
 			decorationServiceDao.save(decorationServicePO);
 

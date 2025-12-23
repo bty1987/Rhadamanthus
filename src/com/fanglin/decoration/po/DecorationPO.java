@@ -86,6 +86,10 @@ public class DecorationPO implements Serializable {
 
 	public static final short DESIGNSTATUS_END_INT = 2;// 已完成
 
+    public static final short DESIGN_STATUS_MINI_INT = 11; // 微改
+
+    public static final short DESIGN_STATUS_MORE_INT = 21; // 大改
+
 	public static final short STATUS_INITIA_INT = 0;// 待确认
 
 	public static final short STATUS_CONTRACT_CONFIRMATION_INT = 1;// 合同确认
