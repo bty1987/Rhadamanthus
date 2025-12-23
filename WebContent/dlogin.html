@@ -57,7 +57,7 @@
 	</div>
 	<div class="main-content">
 		<div class="row">
-			<div class="col-sm-10 col-sm-offset-1" style="position:absolute; top:10%;">
+			<div class="col-sm-11 col-sm-offset-1" style="position:absolute; top:10%;">
 				<div id="login-box" class="visible no-border" style="overflow: visible;">
 					<form class="form-horizontal" id="loginFrom">
 						<div align="center">
@@ -96,6 +96,9 @@
 										<button id="FormToWX"  type="button" class="btn btn-sm btn-success">
 											<i class="icon-key"></i> 微信登录
 										</button>
+										<button id="FormToWW"  type="button" class="btn btn-sm btn-info">
+											<i class="icon-key"></i> 企微登录
+										</button>
 									</div>
 								</div>
 							</div>
@@ -112,6 +115,7 @@
 												请使用钉钉扫描二维码登录
 												<span style="color:#38adff;cursor:pointer;">刷新</span>
 												<p><a id="QRToWX">微信扫码登录</a></p>
+												<p><a id="QRToWW">企微扫码登录</a></p>
 												<p><a id="QRToForm">用户名和密码登录</a></p>
 											</div>
 											<div class="login_qrcode_scan" style="display: none;">
@@ -135,12 +139,38 @@
 												请使用微信扫码登录
 												<span style="color:#38adff;cursor:pointer;">刷新</span>
 												<p><a id="WXToQR">钉钉扫码登录</a></p>
+												<p><a id="WXToWW">企微扫码登录</a></p>
 												<p><a id="WXToForm">用户名和密码登录</a></p>
 											</div>
 											<div class="login_qrcode_scan" style="display: none;">
 												二维码已扫描
 											</div>
 											<div class="login_wxcode_refresh hide" style="display: block;">您的二维码已失效, <br>请点击下方刷新按钮</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- 企微登录-->
+							<div class="clearfix hide" id="WWLogin">
+
+								<div class="login_content">
+									<div class="login_body">
+
+										<div class="login_qrcode">
+											<div class="login_wwcode_text" style="text-align: center; padding: 40px 20px;">
+												<button type="button" class="btn btn-lg btn-info" id="wwLoginBtn" style="margin: 20px 0;">
+													<i class="icon-desktop"></i> 点击打开企业微信登录
+												</button>
+												<div style="margin-top: 30px; font-size: 14px; color: #666;">
+													<p><a id="WWToQR" style="color: #38adff;">钉钉扫码登录</a></p>
+													<p><a id="WWToWX" style="color: #38adff;">微信扫码登录</a></p>
+													<p><a id="WWToForm" style="color: #38adff;">用户名和密码登录</a></p>
+												</div>
+											</div>
+											<div class="login_wwcode_refresh hide" style="display: block; text-align: center; padding: 20px;">
+												<span style="color: #999;">企业微信登录功能开发中...</span>
+											</div>
 										</div>
 									</div>
 								</div>
