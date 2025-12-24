@@ -544,6 +544,7 @@ public class CustomerChanceServiceImpl implements CustomerChanceService {
 
 		BeanUtil.copyPropertie(customerSourcePO, decorationVO, Arrays.asList("village", "creater", "customer", "house", "designer", "salesman"));
 
+        decorationVO.setOrderId(customerChancePO.getOrderId());
 		decorationVO.setCreater(new UserBaseVO(userId));
 		decorationVO.setHouse(new HouseVO(customerChancePO.getHouse().getHid()));
 		decorationVO.setCustomer(new CustomerVO(customerChancePO.getCustomer().getCid()));
