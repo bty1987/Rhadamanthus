@@ -68,15 +68,12 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 	@Override
 	public Long amountOales(String orderId, Short isScale) {
 
-		StringBuffer sql = new StringBuffer("SELECT SUM(o.total) FROM sales.oales o where o.orderId = :orderId");
+		StringBuffer sql = new StringBuffer("SELECT SUM(o.total) FROM sales.oales o where o.orderId = :orderId and o.status != :status");
+
+		Query query = session().createSQLQuery(sql.toString()).setString("orderId", orderId).setShort("status", OalesPO.STATUS_INVALID_INI);
 
 		if (isScale != null) {
 			sql.append(" and o.isScale = :isScale");
-		}
-
-		Query query = session().createSQLQuery(sql.toString()).setString("orderId", orderId);
-
-		if (isScale != null) {
 			query.setShort("isScale", isScale);
 		}
 
