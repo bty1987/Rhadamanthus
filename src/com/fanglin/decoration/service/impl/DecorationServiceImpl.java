@@ -1657,6 +1657,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public void tranDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, int company) throws FLException {
 
+		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid());
 		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid(), company);
 
 		makeDecoration(decorationVO, decorationInfoVO, decorationVO.getCreater().getUserId(), company);
@@ -1744,6 +1745,27 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		decorationAdditionService.updateDecorationForSaleScale(decorationVO);
+	}
+
+	public void checkOverDecoration(long cid, long hid) throws FLException {
+
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByHid(hid);
+
+		for (DecorationPO decorationPO : decorationPOs) {
+
+			if (!Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_WASTE_INT).contains(decorationPO.getStatus())) {
+				throw new FLException(140063, String.format("装修单(%s)存在, 设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
+			}
+		}
+
+		decorationPOs = decorationDao.queryDecorationByCustomerId(cid);
+
+		for (DecorationPO decorationPO : decorationPOs) {
+
+			if (!Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_WASTE_INT).contains(decorationPO.getStatus())) {
+				throw new FLException(140063, String.format("装修单(%s)存在, 设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
+			}
+		}
 	}
 
 	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
