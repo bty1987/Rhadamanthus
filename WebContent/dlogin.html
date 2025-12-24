@@ -66,39 +66,72 @@
 							<h5><span class="white" id="ename"></span></h5>
 
 							<!--用户名密码登录-->
-							<div  id="unamePwdContainer" class="hide">
-								<div class="clearfix" style="margin: 60px 10px 10px 10px;overflow-y: hidden;">
-									<label id="errorMsg" class="block clearfix red center"></label>
-									<div class="col-md-3 input-icon input-icon-right  no-padding-right">
-										<input type="text" class="form-control" id="userId" placeholder="登陆ID" maxlength="32" autocomplete="off">
-										<span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-									</div>
-									<div class="col-md-3 input-icon input-icon-right no-padding-right">
-										<input type="password" class="form-control" id="password" placeholder="密码" maxlength="32" autocomplete="off">
-										<span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-									</div>
+							<div id="unamePwdContainer" class="hide">
+								<div class="clearfix" style="margin: 30px 20px 20px 20px; overflow-y: auto;">
+									<label id="errorMsg" class="block clearfix red center" style="margin-bottom: 15px;"></label>
 
-									<div class="col-md-2 input-icon input-icon-right  no-padding-right" style="width: 12%;">
-										<input type="text" class="form-control" id="nowCode" placeholder="验证码" maxlength="8">
-										<span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
-									</div>
-									<div class="col-md-1">
-										<img src="" id="Verify" style="cursor: pointer;height: 34px;" alt="看不清,换一张" />
-									</div>
+									<!-- 登录表单容器 -->
+									<div style="max-width: 360px; margin: 0 auto; padding: 0 10px;">
 
-									<div class="btn-toolbar" style="float: left;">
-										<button type="button" class="btn btn-sm btn-primary" id="loginBtn">
-											<i class="icon-key"></i> 登陆
-										</button>
-										<button id="FormToQR"  type="button" class="btn btn-sm btn-danger">
-											<i class="icon-key"></i> 钉钉登录
-										</button>
-										<button id="FormToWX"  type="button" class="btn btn-sm btn-success">
-											<i class="icon-key"></i> 微信登录
-										</button>
-										<button id="FormToWW"  type="button" class="btn btn-sm btn-info">
-											<i class="icon-key"></i> 企微登录
-										</button>
+										<!-- 用户名输入框 -->
+										<div class="form-group" style="margin-bottom: 15px;">
+											<div class="input-icon input-icon-right">
+												<input type="text" class="form-control" id="userId" placeholder="登陆ID" maxlength="32" autocomplete="off">
+												<span id="userIdIcon" class="icon-user" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
+											</div>
+										</div>
+
+										<!-- 密码输入框 -->
+										<div class="form-group" style="margin-bottom: 15px;">
+											<div class="input-icon input-icon-right">
+												<input type="password" class="form-control" id="password" placeholder="密码" maxlength="32" autocomplete="off">
+												<span id="passwordIcon" class="icon-lock" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
+											</div>
+										</div>
+
+										<!-- 验证码输入框和图片 -->
+										<div class="form-group" style="margin-bottom: 18px;">
+											<div class="row" style="margin: 0;">
+												<div class="col-xs-8" style="padding-left: 0; padding-right: 8px;">
+													<div class="input-icon input-icon-right">
+														<input type="text" class="form-control" id="nowCode" placeholder="验证码" maxlength="8">
+														<span id="newCodeIcon" class="" data-rel="popover" data-trigger="hover" data-placement="top" data-content=""></span>
+													</div>
+												</div>
+												<div class="col-xs-4" style="padding-left: 0; padding-right: 0; text-align: right;">
+													<img src="" id="Verify" style="cursor: pointer; height: 30px; display: inline-block;" alt="看不清,换一张" title="点击刷新验证码" />
+												</div>
+											</div>
+										</div>
+
+										<!-- 登录按钮 -->
+										<div class="form-group" style="margin-bottom: 12px;">
+											<button type="button" class="btn btn-primary btn-block" id="loginBtn">
+												<i class="icon-key"></i> 登录
+											</button>
+										</div>
+
+										<!-- 其他登录方式 -->
+										<div class="form-group">
+											<div class="row" style="margin: 0;">
+												<div class="col-xs-4" style="padding-left: 0; padding-right: 5px;">
+													<button id="FormToQR" type="button" class="btn btn-danger btn-block">
+														<i class="icon-key"></i> 钉钉
+													</button>
+												</div>
+												<div class="col-xs-4" style="padding-left: 5px; padding-right: 5px;">
+													<button id="FormToWX" type="button" class="btn btn-success btn-block">
+														<i class="icon-key"></i> 微信
+													</button>
+												</div>
+												<div class="col-xs-4" style="padding-left: 5px; padding-right: 0;">
+													<button id="FormToWW" type="button" class="btn btn-info btn-block">
+														<i class="icon-key"></i> 企微
+													</button>
+												</div>
+											</div>
+										</div>
+
 									</div>
 								</div>
 							</div>
