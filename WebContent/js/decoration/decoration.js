@@ -1947,15 +1947,11 @@
             com.post(api.decoration.queryDecorationActivityByOrderId, {
                 "decorationActivity.orderId": decoration.orderId
             }, function(res) {
-                console.log(res.decorationActivitys)
                 decorationActivity = (res.decorationActivitys && res.decorationActivitys.length > 0) ? res.decorationActivitys[0] : {};
-                console.log(res.decorationActivitys[0])
             }, null, false);
 
             var couponCut = 0;
             var thingCut = 0;
-
-            console.log(decorationActivity)
 
             if(decorationActivity && decorationActivity.activity && decorationActivity.activity.atttype == 1){
                 thingCut = decoration.factPrice / 100;
