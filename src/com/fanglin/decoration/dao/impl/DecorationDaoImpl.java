@@ -270,6 +270,12 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<DecorationPO> queryDecorationByHid(long hid) {
+		return session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).list();
+	}
+
+	@Override
 	public DecorationPO queryDecorationByHid(long hid, List<Integer> companys) {
 
 		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT);
