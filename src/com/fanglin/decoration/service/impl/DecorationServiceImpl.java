@@ -1033,10 +1033,16 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationPO.setVersion(quotationVersionPO);
 
-		String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
-		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+        String orderId = null;
 
-		String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+        if(decorationVO.getOrderId() != null){
+            orderId = decorationVO.getOrderId();
+        }else{
+            String currentDate = DateUtil.current("yyyyMMdd").toString().substring(2);
+            int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_DECORATION_ORDER_INT, currentDate, company);
+
+            orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+        }
 
 		decorationPO.setOrderId(orderId);
 		decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
