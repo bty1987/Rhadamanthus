@@ -71,6 +71,66 @@
     </div>
 </div>
 
+<!-- 导入定额材料模态框 -->
+<div class="modal fade" id="importNormoodModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">导入定额材料</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <!-- 导入格式说明 -->
+                    <div class="form-group alert alert-info">
+                        <p><strong>导入格式说明:</strong></p>
+                        <p>名称/报价项ID/定材ID/定额单位/定额量/库房单位/库房量/价格</p>
+                        <p style="color: #999;">注意: 上传文件中请填写具体内容, 不显示表头</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="quotationVersion">报价版本</label>
+                        <div class="col-sm-9">
+                            <select id="quotationVersion" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="attachment">上传文件</label>
+                        <div class="col-sm-9">
+                            <div id="attachment"></div>
+                            <input type="text" class="hidden" id="filePath"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="executeDates">执行日期</label>
+                        <div class="col-sm-9">
+                            <input class="date-picker v_required" id="executeDates" type="text" readonly="readonly"
+                                   data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="executeTimes">执行时间</label>
+                        <div class="col-sm-9">
+                            <div class="bootstrap-timepicker">
+                                <input id="executeTimes" type="text" class="v_required"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmImportBtn" class="btn btn-success">导入</button>
+                <button type="button" id="cancelImportBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
-    $.loadScript(['js/data/normood.js']);
+    $.loadScript(['js/utils/planUtils.js','js/data/normood.js']);
 </script>
