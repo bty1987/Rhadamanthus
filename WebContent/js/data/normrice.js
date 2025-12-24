@@ -7,27 +7,62 @@ $(function() {
             unit: com.focusPage('#unit', "#addNormriceModal"),
             trannum: com.focusPage('#trannum', "#addNormriceModal"),
             salary: com.focusPage('#salary', "#addNormriceModal"),
-            stuff: com.focusPage('#stuff', "#addNormriceModal")
+            stuff: com.focusPage('#stuff', "#addNormriceModal"),
+
+            // 导入功能相关
+            quotationVersion: com.focusPage("#quotationVersion", "#importNormriceModal"),
+            executeDates: com.focusPage("#executeDates", "#importNormriceModal"),
+            executeTimes: com.focusPage("#executeTimes", "#importNormriceModal"),
+            filePath: com.focusPage("#filePath", "#importNormriceModal")
         },
         modals: {
-            addNormriceModal: com.focusPage('#addNormriceModal')
+            addNormriceModal: com.focusPage('#addNormriceModal'),
+            importNormriceModal: com.focusPage('#importNormriceModal')
         },
         btns: {
             addNormriceBtn: com.focusPage('#addNormriceBtn'),
             addNormriceItemBtn: com.focusPage('#addNormriceItemBtn').on("click", saveData),
             normriceBackBtn: com.focusPage('#normriceBackBtn'),
+            confirmImportBtn: com.focusPage("#confirmImportBtn").on("click", importNormrice)
         },
 
         qiid: params.data.quotationItem != null ? params.data.quotationItem.qiid : "",
 
-        pageType: params.urlLoadParams.pageType
+        pageType: params.urlLoadParams.pageType,
+
+        keyword: "import_quotation_normrice" // 导入功能关键字
     };
+
+    // 初始化日期和时间选择器
+    com.datetime(normrice.items.executeDates, "date", false);
+    com.datetime(normrice.items.executeTimes, "time", false);
+
+    // 初始化文件上传
+    com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls", {
+        'uploadType': 3
+    }, 1, function(data) {
+        0 == data.errorCode ? com.focusPage("#filePath", "#importNormriceModal").val(data.resUrl) : alert(data.errorMsg);
+    });
 
     normrice.modals.addNormriceModal.on("hide.bs.modal", function(e) {
 
         com.clearValidator();
         com.cleanTypeahead("constructionNode");
         com.cleanItems(normrice.items);
+    });
+
+    normrice.modals.importNormriceModal.on("hide.bs.modal", function(e) {
+        com.clearValidator();
+        // 清空文件路径和表单
+        normrice.items.filePath.val("");
+        normrice.items.quotationVersion.val("");
+    });
+
+    // 当导入模态框显示时，加载报价版本数据
+    normrice.modals.importNormriceModal.on("show.bs.modal", function(e) {
+        com.post(api.quotation.queryQuotationVersion, {}, function(res) {
+            normrice.items.quotationVersion.bindData(res.quotationVersions, "no", "name", "请选择");
+        });
     });
 
     com.post(api.data.queryMeasurementUnit, {}, function(res) {
@@ -172,6 +207,16 @@ $(function() {
         searcher.base("normriceCondList", "normricePagenation", "normriceResultList", api.data.pageNormrice);
         searcher.condition(["data-normrice-quotationItem", "data-normrice-quotation-version", "data-normrice-constructionNode", "data-normrice-status"]);
 
+        // 添加导入按钮
+        searcher.button(function() {
+
+            var $importa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'importNormrice').css("margin", "0px 3px");
+            var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
+            var $importspan = $('<span></span>').text('导入').appendTo($importa);
+
+            return [$importa];
+        });
+
         searcher.line("constructionNode.name", normprops.concat({
             type: "newline"
         }).concat(quoteprops), linebtns).render();
@@ -180,6 +225,15 @@ $(function() {
     com.focusPage("#add").click(function() {
 
         normrice.modals.addNormriceModal.modal("show");
+    });
+
+    // 导入按钮点击事件（分页区域）
+    com.focusPage("#importNormrice").click(function() {
+
+        normrice.keyword = "import_normrice";
+
+        // 显示导入模态框
+        normrice.modals.importNormriceModal.modal("show");
     });
 
     function saveData() {
@@ -204,6 +258,62 @@ $(function() {
             searcher.doSearch();
 
             normrice.modals.addNormriceModal.modal("hide");
+        });
+    }
+
+    // 导入定额工费
+    function importNormrice() {
+
+        if (com.validate('importNormriceModal')) {
+            return false;
+        }
+
+        var filePath = normrice.items.filePath.val();
+
+        if (filePath == null || filePath == "") {
+            com.showAlert(com.warning, "上传文件不能为空");
+            return false;
+        }
+
+        var quotationVersion = normrice.items.quotationVersion.val();
+
+        if (quotationVersion == null || quotationVersion == "") {
+            com.showAlert(com.warning, "请选择报价版本");
+            return false;
+        }
+
+        // 将文件路径和报价版本拼接为参数
+        var args = filePath + "|" + quotationVersion;
+
+        var date = normrice.items.executeDates.val();
+        var time = normrice.items.executeTimes.val();
+
+        var executeTime = date.replace(/\-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = normrice.items.executeDates.val() + ' ' + normrice.items.executeTimes.val();
+        var checkTime = new Date(times);
+
+        // 检查执行时间（需要导入 planUtils）
+        if (typeof planUtils !== 'undefined' && !planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
+            return false;
+        }
+
+        var options = {
+            "plan.task.keyWord": normrice.keyword,
+            "plan.executeTime": executeTime,
+            "plan.args": args
+        };
+
+        com.post(api.information.createPlan, options, function(res) {
+
+            com.showAlert(com.info, "计划创建成功");
+
+            // 关闭模态框
+            normrice.modals.importNormriceModal.modal("hide");
+
+            // 刷新列表
+            searcher.doSearch();
         });
     }
 });
