@@ -904,7 +904,7 @@ $.extend(api, {
         queryDecorationFunctionByName: {
             url: "queryDecorationFunctionByName.do"
         },
-
+        
     }
 });
 
