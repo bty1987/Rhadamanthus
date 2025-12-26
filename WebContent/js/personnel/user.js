@@ -39,7 +39,8 @@
             userAdvanceModal: com.focusPage("#userAdvanceModal"),
             userCompanyModal: com.focusPage("#userCompanyModal"),
             usertaskModal: com.focusPage("#taskModal"),
-            userRoleModal: com.focusPage("#userRoleModal")
+            userRoleModal: com.focusPage("#userRoleModal"),
+            companyCopyModal: com.focusPage("#companyCopyModal")
         },
         items: {
             userPhoto: com.focusPage("#userPhoto", "#pictureModal"),
@@ -76,20 +77,20 @@
         }
     };
 
-    if (user.pageType == 'expert') {
+    if (user.pageType === 'expert') {
         user.isExpert = true;
-    } else if (user.pageType == 'common') {
+    } else if (user.pageType === 'common') {
         user.isExpert = false;
     }
 
     user.simpleAddUserModal = com.focusPage("#simpleAddUserModal");
-    user.simpleAddUserModal.on('hide.bs.modal', function(e) {
+    user.simpleAddUserModal.on('hide.bs.modal', function() {
 
         com.cleanItems(user.items);
         com.closeTip();
     });
 
-    user.modals.pictureModal.on('show.bs.modal', function(e) {
+    user.modals.pictureModal.on('show.bs.modal', function() {
 
         com.cleanItems(user.items);
         com.clearValidator();
@@ -307,6 +308,7 @@
                     var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
                     var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('默认密码');
                     var $btnlogout = $('<a></a>').addClass('btn btn-minier btn-danger').html('登出');
+                    var $btnSyncRight = $('<a></a>').addClass('btn btn-minier btn-info').html('同步权限');
 
                     var propertyArr = userUtils.getPropertyArr(user.pageConfig.propertyArr, v);
 
@@ -800,6 +802,14 @@
                         binding.openlogoutDialog(v.userId);
                     });
 
+                    // 同步权限按钮点击事件
+                    $btnSyncRight.click(function() {
+
+                        user.uid = v.uid;
+                        showCompanySelectionModal(v.uid, v.currentName);
+                        user.modals.companyCopyModal.modal('show');
+                    });
+
                     if (user.pageConfig.pageBtn.contains("qrcode") && v.status == constant.personel.user.STATUS_ONJOB_INT)
                         $divBtnWrap.append($qrcode);
 
@@ -886,6 +896,9 @@
 
                     if (user.pageConfig.pageBtn.contains("exit"))
                         $divBtnWrap.append($btnlogout);
+
+                    if (user.pageConfig.pageBtn.contains("syncRight"))
+                        $divBtnWrap.append($btnSyncRight);
 
                     if (user.pageConfig.propertyArr.contains("picture")) {
                         $liLine.append($urldiv);
@@ -1720,5 +1733,114 @@
             user.modals.userCompanyModal.modal("hide");
         });
     }
+
+    /**
+     * 显示公司选择弹窗 - 用于同步权限功能
+     * @param {Number} uid - 用户ID
+     * @param {String} userName - 用户姓名
+     */
+    function showCompanySelectionModal(uid, userName) {
+        // 设置源用户信息
+        com.focusPage('#sourceUserName').text(userName);
+        com.focusPage('#syncRightUserName').text('从用户【' + userName + '】同步权限到其他公司');
+
+        var companyList = com.focusPage('#companyList');
+
+        // 清空公司列表
+        companyList.html('<div class="text-center"><i class="ace-icon fa fa-spinner fa-spin fa-2x"></i><p>正在加载公司列表...</p></div>');
+
+        // 加载公司列表
+        com.post(api.system.queryCompany, {}, function(data) {
+
+            if (!data.companys || data.companys.length == 0) {
+                companyList.html('<div class="text-center text-muted">暂无可选公司</div>');
+                return false;
+            }
+
+            companyList.html("");
+
+            data.companys.forEach(function(company) {
+                var item = $('<div class="company-item"></div>').appendTo(companyList);
+                var label = $('<label class="checkbox-inline"></label>').appendTo(item);
+                var input = $('<input type="checkbox" class="ace company-checkbox" value="' + company.cid + '"></input>').appendTo(label);
+                var span = $('<span class="lbl">' + company.name + '</span>').appendTo(label);
+
+                label.click(function(e) {
+
+                    $(this).find("input").prop("checked", "checked");
+
+                    e.stopPropagation();
+
+                    return false;
+                });
+            });
+        }, function() {
+            companyList.html('<div class="text-center text-danger">加载公司列表失败</div>');
+        });
+    }
+
+    /**
+     * 确认同步权限操作
+     */
+    function confirmSyncRight() {
+        var selectedCompanies = [];
+        com.focusPage('.company-checkbox:checked').each(function() {
+            selectedCompanies.push($(this).val());
+        });
+
+        if (selectedCompanies.length === 0) {
+            com.showAlert(com.warning, '请至少选择一个目标公司');
+            return;
+        }
+
+        // 禁用按钮，防止重复提交
+        var $confirmBtn = com.focusPage('#confirmSyncRightBtn');
+        $confirmBtn.prop('disabled', true).html('<i class="ace-icon fa fa-spinner fa-spin fa-1x"></i> 正在同步...');
+
+        // 构建请求参数
+        var params = {
+            'user.uid': user.uid,
+            'companys[0].cid': selectedCompanies[0]
+        };
+
+        // 如果选择了多个公司，添加其他公司参数
+        for (var i = 1; i < selectedCompanies.length; i++) {
+            params['companys[' + i + '].cid'] = selectedCompanies[i];
+        }
+
+        // 调用同步接口
+        com.post(api.right.syncDecorationRight, params, function(data) {
+            if (data.errorCode == 0) {
+                com.showAlert(com.info, '权限同步成功！');
+                user.modals.companyCopyModal.modal('hide');
+
+                // 刷新用户列表
+                setTimeout(function() {
+                    if (typeof userSeacher !== 'undefined') {
+                        userSeacher.doSearch();
+                    }
+                }, 500);
+            } else {
+                com.showAlert(com.error, data.errorMsg || '权限同步失败');
+            }
+        }, function(error) {
+            console.error('权限同步失败:', error);
+            com.showAlert(com.error, '权限同步失败，请重试');
+            // 确保在失败时也恢复按钮状态
+            $confirmBtn.prop('disabled', false).html('确认同步');
+        }, function() {
+            // 恢复按钮状态 - complete回调在成功或失败后都会执行
+            $confirmBtn.prop('disabled', false).html('确认同步');
+        });
+    }
+
+    // 绑定同步权限弹窗的确认按钮事件
+    com.focusPage('#confirmSyncRightBtn').on("click", confirmSyncRight);
+
+    // 绑定同步权限弹窗的关闭事件，清理滚动事件监听器
+    com.focusPage('#companyCopyModal').on('hidden.bs.modal', function() {
+        // 清理滚动事件监听器，避免内存泄漏
+        com.focusPage('#companyList').off('wheel mousewheel DOMMouseScroll');
+    });
 
 });
