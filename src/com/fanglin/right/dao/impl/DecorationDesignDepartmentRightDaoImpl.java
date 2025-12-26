@@ -22,24 +22,45 @@ import com.fanglin.right.po.DecorationDesignDepartmentRightPO;
 
 @Repository("decorationDesignDepartmentRightDao")
 public class DecorationDesignDepartmentRightDaoImpl extends DaoImpl<DecorationDesignDepartmentRightPO> implements DecorationDesignDepartmentRightDao {
-	
-	public DecorationDesignDepartmentRightDaoImpl(){
+
+	public DecorationDesignDepartmentRightDaoImpl() {
 		super(DecorationDesignDepartmentRightPO.class);
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationDesignDepartmentRightPO> queryDecorationDesignDepartmentRightByUId(int uId, int company) {
-		return session().createCriteria(DecorationDesignDepartmentRightPO.class).add(Restrictions.eq(DecorationDesignDepartmentRightPO.COLUMN_UID_STR, uId)).add(Restrictions.eq(DecorationDesignDepartmentRightPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	@Override
-	public int deleteDecorationDesignDepartmentRightByUId(int uId, int company) {
-		
-		String sql = "delete from platform.decorationdesigndepartmentright where uId = :uId and company = :company";
-		session().createSQLQuery(sql).setLong("uId", uId).setInteger("company", company).executeUpdate();
-		
+	@SuppressWarnings("unchecked")
+	public List<DecorationDesignDepartmentRightPO> queryDecorationDesignDepartmentRight(int uid, int company) {
+		return session().createCriteria(DecorationDesignDepartmentRightPO.class).add(Restrictions.eq(DecorationDesignDepartmentRightPO.COLUMN_UID_STR, uid)).add(Restrictions.eq(DecorationDesignDepartmentRightPO.COLUMN_COMPANY_STR, company)).list();
+	}
+
+	@Override
+	public int syncDecorationDesignDepartmentRight(int uid, List<Integer> companys, int company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into platform.decorationdesigndepartmentright (uid, did, company) ");
+
+		syncsql.append("select dddr.uid, dddr.did, co.cid from platform.decorationdesigndepartmentright dddr, communion.company co where dddr.uid = :uid and dddr.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setInteger("uid", uid).setParameterList("companys", companys).setInteger("company", company).executeUpdate();
+
 		return 0;
 	}
-	
+
+	@Override
+	public int deleteDecorationDesignDepartmentRight(int uid, int company) {
+
+		String sql = "delete from platform.decorationdesigndepartmentright where uid = :uid and company = :company";
+		session().createSQLQuery(sql).setLong("uid", uid).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteDecorationDesignDepartmentRight(int uid, List<Integer> companys) {
+
+		String sql = "delete from platform.decorationdesigndepartmentright where uid = :uid and company in :companys";
+		session().createSQLQuery(sql).setLong("uid", uid).setParameterList("companys", companys).executeUpdate();
+
+		return 0;
+	}
+
 }

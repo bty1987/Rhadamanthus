@@ -22,23 +22,44 @@ import com.fanglin.right.po.DecorationStatusRightPO;
 
 @Repository("decorationStatusRightDao")
 public class DecorationStatusRightDaoImpl extends DaoImpl<DecorationStatusRightPO> implements DecorationStatusRightDao {
-	
-	public DecorationStatusRightDaoImpl(){
+
+	public DecorationStatusRightDaoImpl() {
 		super(DecorationStatusRightPO.class);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationStatusRightPO> queryDecorationStatusRightByUId(int uId, int company) {
+	public List<DecorationStatusRightPO> queryDecorationStatusRight(int uId, int company) {
 		return session().createCriteria(DecorationStatusRightPO.class).add(Restrictions.eq(DecorationStatusRightPO.COLUMN_UID_STR, uId)).add(Restrictions.eq(DecorationStatusRightPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	@Override
-	public int deleteDecorationStatusRightByUId(int uId, int company) {
-		
-		String sql = "delete from platform.decorationstatusright where uId = :uId and company = :company";
-		session().createSQLQuery(sql).setLong("uId", uId).setInteger("company", company).executeUpdate();
-		
+	public int syncDecorationStatusRight(int uid, List<Integer> companys, int company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into platform.decorationstatusright (uid, status, company) ");
+
+		syncsql.append("select dsr.uid, dsr.status, co.cid from platform.decorationstatusright dsr, communion.company co where dsr.uid = :uid and dsr.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setInteger("uid", uid).setParameterList("companys", companys).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteDecorationStatusRight(int uid, int company) {
+
+		String sql = "delete from platform.decorationstatusright where uid = :uid and company = :company";
+		session().createSQLQuery(sql).setLong("uid", uid).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteDecorationStatusRight(int uid, List<Integer> companys) {
+
+		String sql = "delete from platform.decorationstatusright where uid = :uid and company in :companys";
+		session().createSQLQuery(sql).setLong("uid", uid).setParameterList("companys", companys).executeUpdate();
+
 		return 0;
 	}
 

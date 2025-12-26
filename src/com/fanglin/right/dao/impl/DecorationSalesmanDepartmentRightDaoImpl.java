@@ -22,23 +22,44 @@ import com.fanglin.right.po.DecorationSalesmanDepartmentRightPO;
 
 @Repository("decorationSalesmanDepartmentRightDao")
 public class DecorationSalesmanDepartmentRightDaoImpl extends DaoImpl<DecorationSalesmanDepartmentRightPO> implements DecorationSalesmanDepartmentRightDao {
-	
-	public DecorationSalesmanDepartmentRightDaoImpl(){
+
+	public DecorationSalesmanDepartmentRightDaoImpl() {
 		super(DecorationSalesmanDepartmentRightPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationSalesmanDepartmentRightPO> queryDecorationSalesmanDepartmentRightByUId(int uId, int company) {
+	public List<DecorationSalesmanDepartmentRightPO> queryDecorationSalesmanDepartmentRight(int uId, int company) {
 		return session().createCriteria(DecorationSalesmanDepartmentRightPO.class).add(Restrictions.eq(DecorationSalesmanDepartmentRightPO.COLUMN_UID_STR, uId)).add(Restrictions.eq(DecorationSalesmanDepartmentRightPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
 	@Override
-	public int deleteDecorationSalesmanDepartmentRightByUId(int uId, int company) {
-		
+	public int syncDecorationSalesmanDepartmentRight(int uid, List<Integer> companys, int company) {
+
+		StringBuffer syncsql = new StringBuffer("insert into platform.decorationsalesmandepartmentright (uid, did, company) ");
+
+		syncsql.append("select dsdr.uid, dsdr.did, co.cid from platform.decorationsalesmandepartmentright dsdr, communion.company co where dsdr.uid = :uid and dsdr.company = :company and co.cid in :companys");
+
+		session().createSQLQuery(syncsql.toString()).setInteger("uid", uid).setParameterList("companys", companys).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteDecorationSalesmanDepartmentRight(int uid, int company) {
+
 		String sql = "delete from platform.decorationsalesmandepartmentright where uId = :uId and company = :company";
-		session().createSQLQuery(sql).setLong("uId", uId).setInteger("company", company).executeUpdate();
-		
+		session().createSQLQuery(sql).setLong("uid", uid).setInteger("company", company).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteDecorationSalesmanDepartmentRight(int uid, List<Integer> companys) {
+
+		String sql = "delete from platform.decorationsalesmandepartmentright where uid = :uid and company in :companys";
+		session().createSQLQuery(sql).setLong("uid", uid).setParameterList("companys", companys).executeUpdate();
+
 		return 0;
 	}
 

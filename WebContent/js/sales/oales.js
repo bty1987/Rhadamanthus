@@ -728,7 +728,7 @@ jQuery(function($) {
 
         var url = api.sales.addOales;
         
-        var profit = parseFloat(oales.items.total.val()) - parseFloat(oales.items.cost.val());
+        var profit = utils.changeThrDecimal()utils.accSub(oales.items.total.val(), oales.items.cost.val()));
 
         var options = {
             "oales.decoration.orderId": oales.items.orderId.val(),
