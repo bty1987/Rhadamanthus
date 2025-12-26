@@ -24,6 +24,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.right.service.DecorationRightService;
+import com.fanglin.system.vo.CompanyVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -31,65 +32,73 @@ import com.fanglin.right.service.DecorationRightService;
 public class DecorationRightAction extends BaseListAction {
 
 	private static final long serialVersionUID = -9179677081761019110L;
-	
+
 	@Autowired
 	private DecorationRightService decorationRightService;
-	
+
 	private UserBaseVO user;
-	
+
 	private List<Integer> dids;
-	
+
 	private List<Short> statuses;
-	
-	@Action(value="queryDecorationDesignDepartmentRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationDesignDepartmentRightByUserId() throws FLException{
-		
+
+	private List<CompanyVO> companys;
+
+	@Action(value = "queryDecorationDesignDepartmentRightByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationDesignDepartmentRightByUserId() throws FLException {
+
 		dids = decorationRightService.queryDecorationDesignDepartmentRightByUserId(user, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryDecorationSalesmanDepartmentRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationSalesmanDepartmentRightByUserId() throws FLException{
-		
+
+	@Action(value = "queryDecorationSalesmanDepartmentRightByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationSalesmanDepartmentRightByUserId() throws FLException {
+
 		dids = decorationRightService.queryDecorationSalesmanDepartmentRightByUserId(user, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryDecorationStatusRightByUserId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryDecorationStatusRightByUserId() throws FLException{
-		
+
+	@Action(value = "queryDecorationStatusRightByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationStatusRightByUserId() throws FLException {
+
 		statuses = decorationRightService.queryDecorationStatusRightByUserId(user, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateDecorationDesignDepartmentRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateDecorationDesignDepartmentRight() throws FLException{
-		
+
+	@Action(value = "updateDecorationDesignDepartmentRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationDesignDepartmentRight() throws FLException {
+
 		decorationRightService.updateDecorationDesignDepartmentRight(user, dids, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateDecorationSalesmanDepartmentRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateDecorationSalesmanDepartmentRight() throws FLException{
-		
+
+	@Action(value = "updateDecorationSalesmanDepartmentRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationSalesmanDepartmentRight() throws FLException {
+
 		decorationRightService.updateDecorationSalesmanDepartmentRight(user, dids, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateDecorationStatusRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateDecorationStatusRight() throws FLException{
-		
+
+	@Action(value = "updateDecorationStatusRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationStatusRight() throws FLException {
+
 		decorationRightService.updateDecorationStatusRight(user, statuses, queryCompany());
-		
+
 		return SUCCESS;
 	}
 
+	@Action(value = "syncDecorationRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String syncDecorationRight() throws FLException {
 
+		decorationRightService.syncDecorationRight(user, companys, queryCompany());
+
+		return SUCCESS;
+	}
 
 	public UserBaseVO getUser() {
 		return user;
@@ -113,6 +122,14 @@ public class DecorationRightAction extends BaseListAction {
 
 	public void setStatuses(List<Short> statuses) {
 		this.statuses = statuses;
+	}
+
+	public List<CompanyVO> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(List<CompanyVO> companys) {
+		this.companys = companys;
 	}
 
 }

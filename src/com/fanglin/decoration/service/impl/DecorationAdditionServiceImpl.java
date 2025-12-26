@@ -212,9 +212,12 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		short saleScale = (short) (priceTotal != 0 ? Arith.mul(Arith.div(saleTotal, priceTotal), 100) : DecorationPO.TYPE_INIT_SALESCALE_INT);
 
-		decorationPO.setSaleScale(saleScale);
+		decorationPO.setSaleScale((short) (saleScale > 100 ? 100 : saleScale));
 
 		decorationDao.update(decorationPO);
+	}
 
+	public static void main(String[] args) {
+		System.out.println(Arith.div(0, 10000));
 	}
 }
