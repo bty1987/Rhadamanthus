@@ -17,9 +17,13 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.right.po.DecorationSalesmanDepartmentRightPO;
 
 public interface DecorationSalesmanDepartmentRightDao extends Dao<DecorationSalesmanDepartmentRightPO> {
-	
-	public List<DecorationSalesmanDepartmentRightPO> queryDecorationSalesmanDepartmentRightByUId(int uId, int company);
-	
-	public int deleteDecorationSalesmanDepartmentRightByUId(int uId, int company);
+
+	public List<DecorationSalesmanDepartmentRightPO> queryDecorationSalesmanDepartmentRight(int uId, int company);
+
+	public int syncDecorationSalesmanDepartmentRight(int uid, List<Integer> companys, int company);
+
+	public int deleteDecorationSalesmanDepartmentRight(int uId, int company);
+
+	public int deleteDecorationSalesmanDepartmentRight(int uId, List<Integer> companys);
 
 }

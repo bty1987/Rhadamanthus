@@ -26,6 +26,10 @@ $.extend(api, {
         updateDecorationStatusRight: {
             url: "updateDecorationStatusRight.do"
         },
+        
+        syncDecorationRight: {
+            url: "syncDecorationRight.do"
+        },
 
         queryRoleChainPageByRid: {
             url: "queryRoleChainPageByRid.do"
@@ -147,7 +151,7 @@ $.extend(api, {
         },
         updateSelectionItemStatusRight: {
             url: "updateSelectionItemStatusRight.do"
-        }
-
+        },
+        
     }
 });
