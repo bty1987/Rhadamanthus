@@ -65,7 +65,7 @@ public class WeChatConfigAction extends BaseListAction {
 	 * 查询微信 JS-SDK 配置（通过 VO 对象）
 	 * @return 成功
 	 */
-	@Action(value = "queryWxConfig", results = {
+	@Action(value = "queryWeChatConfig", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryWXConfig() {
@@ -84,7 +84,7 @@ public class WeChatConfigAction extends BaseListAction {
 	 * 获取微信 JS-SDK 配置（JSON 格式字符串）
 	 * @return 成功
 	 */
-	@Action(value = "getWxConfig", results = {
+	@Action(value = "getWeChatConfig", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String getConfig() {

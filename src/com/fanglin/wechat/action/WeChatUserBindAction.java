@@ -45,7 +45,7 @@ public class WeChatUserBindAction extends BaseListAction {
 	 * 查询微信用户绑定的系统用户
 	 * @return 成功
 	 */
-	@Action(value = "queryWxUserBind", results = {
+	@Action(value = "queryWeChatUserBind", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryUserBind() {
@@ -59,7 +59,7 @@ public class WeChatUserBindAction extends BaseListAction {
 	 * 添加或更新微信用户绑定
 	 * @return 成功
 	 */
-	@Action(value = "addWxUserBind", results = {
+	@Action(value = "addWeChatUserBind", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String addUserBind() {
@@ -73,7 +73,7 @@ public class WeChatUserBindAction extends BaseListAction {
 	 * 删除微信用户绑定
 	 * @return 成功
 	 */
-	@Action(value = "deleteWxUserBind", results = {
+	@Action(value = "deleteWeChatUserBind", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String deleteUserBind() {

@@ -79,7 +79,7 @@ public class WeChatMessageAction extends BaseListAction {
 	 * 发送支付通知消息
 	 * @return 成功
 	 */
-	@Action(value = "sendWxPaymentMessage", results = {
+	@Action(value = "sendWeChatPaymentMessage", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String sendPaymentMessage() {
@@ -93,7 +93,7 @@ public class WeChatMessageAction extends BaseListAction {
 	 * 发送服务进度通知消息（不含路径）
 	 * @return 成功
 	 */
-	@Action(value = "sendWxServiceSchedule", results = {
+	@Action(value = "sendWeChatServiceSchedule", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String sendServiceSchedule() {
@@ -107,7 +107,7 @@ public class WeChatMessageAction extends BaseListAction {
 	 * 发送服务进度通知消息（含路径）
 	 * @return 成功
 	 */
-	@Action(value = "sendWxServiceScheduleWithUrl", results = {
+	@Action(value = "sendWeChatServiceScheduleWithUrl", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String sendServiceScheduleWithUrl() {

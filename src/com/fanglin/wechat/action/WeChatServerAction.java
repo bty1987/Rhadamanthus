@@ -49,7 +49,7 @@ public class WeChatServerAction extends BaseListAction {
 	 * 获取 communion 服务器地址
 	 * @return 成功
 	 */
-	@Action(value = "queryWxServerUrl", results = {
+	@Action(value = "queryWeChatServerUrl", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryServerUrl() {

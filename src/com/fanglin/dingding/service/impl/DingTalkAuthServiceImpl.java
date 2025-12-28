@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.dingding.service.AuthService;
+import com.fanglin.dingding.service.DingTalkAuthService;
 import com.fanglin.dingding.service.DingTalkAccessTokenService;
 import com.fanglin.dingding.service.DingTalkJsapiTicketService;
 import com.fanglin.dingding.utils.DDApi;
@@ -20,11 +20,11 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 
-@Service("authDDService")
+@Service("dingTalkAuthService")
 @Transactional(readOnly = true)
-public class AuthServiceImpl implements AuthService {
+public class DingTalkAuthServiceImpl implements DingTalkAuthService {
 
-	public static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
+	public static final Logger logger = LoggerFactory.getLogger(DingTalkAuthServiceImpl.class);
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;

@@ -78,7 +78,7 @@ public class WeChatAppAction extends BaseListAction {
 	 * 创建小程序 Session
 	 * @return 成功
 	 */
-	@Action(value = "makeWxAppSession", results = {
+	@Action(value = "makeWeChatAppSession", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String makeSession() throws FLException {
@@ -92,7 +92,7 @@ public class WeChatAppAction extends BaseListAction {
 	 * 获取用户信息（重新获取 session_key）
 	 * @return 成功
 	 */
-	@Action(value = "queryWxAppUserInfo", results = {
+	@Action(value = "queryWeChatAppUserInfo", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryUserInfoWithCompany() throws FLException {
@@ -106,7 +106,7 @@ public class WeChatAppAction extends BaseListAction {
 	 * 获取用户信息（使用缓存的 session_key）
 	 * @return 成功
 	 */
-	@Action(value = "queryWxAppUserInfoByCache", results = {
+	@Action(value = "queryWeChatAppUserInfoByCache", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryUserInfoByCache() throws FLException {
@@ -120,7 +120,7 @@ public class WeChatAppAction extends BaseListAction {
 	 * 获取群组信息
 	 * @return 成功
 	 */
-	@Action(value = "queryWxAppGroupInfo", results = {
+	@Action(value = "queryWeChatAppGroupInfo", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryGroupInfo() throws FLException {
@@ -134,7 +134,7 @@ public class WeChatAppAction extends BaseListAction {
 	 * 获取手机号信息
 	 * @return 成功
 	 */
-	@Action(value = "queryWxAppPhoneInfo", results = {
+	@Action(value = "queryWeChatAppPhoneInfo", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String queryPhoneInfo() throws FLException {
@@ -148,7 +148,7 @@ public class WeChatAppAction extends BaseListAction {
 	 * 删除过期的 Session
 	 * @return 成功
 	 */
-	@Action(value = "deleteWxAppSession", results = {
+	@Action(value = "deleteWeChatAppSession", results = {
 			@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) },
 			params = { "contentType", "text/html" })
 	public String deleteSession() {

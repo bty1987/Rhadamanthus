@@ -12,9 +12,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.User;
-import com.fanglin.dingding.service.ApprovalService;
-import com.fanglin.dingding.service.AuthService;
-import com.fanglin.dingding.service.UserService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
+import com.fanglin.dingding.service.DingTalkAuthService;
+import com.fanglin.dingding.service.DingTalkUserService;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -22,15 +22,15 @@ import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 
-@Service("approvalDDService")
+@Service("dingTalkApprovalService")
 @Transactional(readOnly = true)
-public class ApprovalServiceImpl implements ApprovalService {
+public class DingTalkApprovalServiceImpl implements DingTalkApprovalService {
 
 	@Autowired
-	private UserService userDDService;
+	private DingTalkUserService dingTalkUserService;
 
 	@Autowired
-	private AuthService authDDService;
+	private DingTalkAuthService dingTalkAuthService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -39,7 +39,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public JSONObject getApproval(String no) throws FLException {
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(CompanyPO.TYPE_HEADQUARTER_INT));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(CompanyPO.TYPE_HEADQUARTER_INT));
 
 		String url = String.format(DDApi.DDAPI_GET_PROCESS_INSTANCE_STR, oapiHost.getValue(), accessToken);
 
@@ -83,7 +83,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public String initiateApproval(String processCode, String senderId, String approver, String copy, String copyPosition, JSONArray formComponentValues, int company) throws FLException {
 
-		User sender = userDDService.getUser(senderId, company);
+		User sender = dingTalkUserService.getUser(senderId, company);
 
 		if (sender == null) {
 			throw new FLException(270003, "获取人员信息失败");
@@ -113,7 +113,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		params.put("form_component_values", formComponentValues);
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
-		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
+		String accessToken = dingTalkAuthService.getAccessToken(FormatUtil.encodeCompany(company));
 
 		String url = String.format(DDApi.DDAPI_CREATE_PROCESS_INSTANCE_STR, oapiHost.getValue(), accessToken);
 
