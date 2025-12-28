@@ -11,32 +11,33 @@
 
 package com.fanglin.wechat.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.WxPKCS7Encoder;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
+import com.fanglin.wechat.dao.WeChatAppSessionDao;
 import com.fanglin.wechat.dao.WeChatOpenUnionDao;
-import com.fanglin.wechat.dao.impl.WeChatAppSessionDao;
 import com.fanglin.wechat.po.WeChatAppSessionPO;
 import com.fanglin.wechat.po.WeChatOpenUnionPO;
 import com.fanglin.wechat.service.WeChatAccessTokenService;
 import com.fanglin.wechat.service.WeChatAppService;
 import com.fanglin.wechat.utils.AES;
 import com.fanglin.wechat.utils.WeChatApi;
+import com.fanglin.wechat.utils.WxPKCS7Encoder;
 import com.fanglin.wechat.vo.WeChatGroupInfoVO;
 import com.fanglin.wechat.vo.WeChatPhoneInfoVO;
 import com.fanglin.wechat.vo.WeChatUserInfoVO;
-import org.apache.commons.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 微信小程序服务实现
@@ -52,10 +53,10 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	private SystemConfigDao systemConfigDao;
 
 	@Autowired
-	private WeChatAppSessionDao wxAppSessionDao;
+	private WeChatAppSessionDao weChatAppSessionDao;
 
 	@Autowired
-	private WeChatOpenUnionDao wxOpenUnionDao;
+	private WeChatOpenUnionDao weChatOpenUnionDao;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -66,7 +67,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		WeChatUserInfoVO userInfoVO = null;
 
 		// 检查 session 是否已存在
-		WeChatAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWeChatAppSessionByCode(code);
+		WeChatAppSessionPO wxAppSessionPO = weChatAppSessionDao.queryWeChatAppSessionByCode(code);
 		if (wxAppSessionPO != null) {
 			throw new FLException(910116, "Session信息已存在");
 		}
@@ -90,19 +91,23 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 
 			// 保存 session 信息
 			wxAppSessionPO = new WeChatAppSessionPO(code, sessionKey, openId, new Date().getTime());
-			wxAppSessionDao.save(wxAppSessionPO);
+
+			weChatAppSessionDao.save(wxAppSessionPO);
 
 			userInfoVO = new WeChatUserInfoVO(openId, unionId);
 
 			// 保存 OpenID 与 UnionID 的关联关系
-			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(openId);
+			WeChatOpenUnionPO wxOpenUnionPO = weChatOpenUnionDao.queryWeChatOpenUnion(openId);
+
 			if (wxOpenUnionPO == null || wxOpenUnionPO.getCompany() != $company) {
+
 				wxOpenUnionPO = new WeChatOpenUnionPO();
 				wxOpenUnionPO.setUnionId(unionId);
 				wxOpenUnionPO.setOpenId(openId);
 				wxOpenUnionPO.setType(WeChatOpenUnionPO.TYPE_APPLET_INT);
 				wxOpenUnionPO.setCompany($company);
-				wxOpenUnionDao.save(wxOpenUnionPO);
+
+				weChatOpenUnionDao.save(wxOpenUnionPO);
 			}
 		} else {
 			System.out.println(url);
@@ -152,7 +157,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	public WeChatUserInfoVO queryUserInfo(String code, String encryptedData, String iv) throws FLException {
 
 		// 从数据库查询 session 信息
-		WeChatAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWeChatAppSessionByCode(code);
+		WeChatAppSessionPO wxAppSessionPO = weChatAppSessionDao.queryWeChatAppSessionByCode(code);
 		if (wxAppSessionPO == null) {
 			throw new FLException(910118, "Session信息不存在");
 		}
@@ -161,8 +166,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		WeChatUserInfoVO userInfoVO = null;
 		AES aes = new AES();
 		try {
-			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-					Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
+			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
 			if (null != resultByte && resultByte.length > 0) {
 				String userInfo = new String(WxPKCS7Encoder.decode(resultByte));
 				userInfoVO = JSONObject.parseObject(userInfo, WeChatUserInfoVO.class);
@@ -178,7 +182,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	public WeChatGroupInfoVO queryGroupInfo(String code, String encryptedData, String iv) throws FLException {
 
 		// 从数据库查询 session 信息
-		WeChatAppSessionPO wxAppSessionPO = wxAppSessionDao.queryWeChatAppSessionByCode(code);
+		WeChatAppSessionPO wxAppSessionPO = weChatAppSessionDao.queryWeChatAppSessionByCode(code);
 		if (wxAppSessionPO == null) {
 			throw new FLException(910118, "Session信息不存在");
 		}
@@ -187,8 +191,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 		WeChatGroupInfoVO groupInfoVO = null;
 		AES aes = new AES();
 		try {
-			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData),
-					Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
+			byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(wxAppSessionPO.getSessionKey()), Base64.decodeBase64(iv));
 			if (null != resultByte && resultByte.length > 0) {
 				String groupInfo = new String(WxPKCS7Encoder.decode(resultByte));
 				groupInfoVO = JSONObject.parseObject(groupInfo, WeChatGroupInfoVO.class);
@@ -202,8 +205,6 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 
 	@Override
 	public WeChatPhoneInfoVO queryPhoneInfo(String code, String encryptedData, String iv, String company) throws FLException {
-
-		int $company = FormatUtil.decodeCompany(company);
 
 		// 获取 AccessToken
 		String accessToken = accessTokenService.queryAccessToken(company).getAccesstoken();
@@ -238,7 +239,7 @@ public class WeChatAppServiceImpl implements WeChatAppService {
 	public int deleteSession() {
 		// 删除过期的 session（超过 24 小时的）
 		long expireTime = new Date().getTime() - (24 * 60 * 60 * 1000);
-		return wxAppSessionDao.deleteWeChatAppSession(expireTime);
+		return weChatAppSessionDao.deleteWeChatAppSession(expireTime);
 	}
 
 }

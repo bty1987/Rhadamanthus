@@ -11,6 +11,17 @@
 
 package com.fanglin.wechat.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.wechat.dao.WeChatAccessTokenDao;
@@ -20,18 +31,8 @@ import com.fanglin.wechat.po.WeChatAccessTokenPO;
 import com.fanglin.wechat.po.WeChatMessageTemplatePO;
 import com.fanglin.wechat.po.WeChatOpenUnionPO;
 import com.fanglin.wechat.service.WeChatMessageService;
-import com.fanglin.wechat.utils.WeChatApi;
 import com.fanglin.wechat.utils.HttpHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.fanglin.wechat.utils.WeChatApi;
 
 /**
  * 微信消息服务实现 用于发送微信模板消息（支付通知、服务进度通知等）
@@ -69,7 +70,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 
 	@Override
 	@SuppressWarnings("serial")
-	public int sendServiceSchedule(String unionId, String name, String orderId, String content, String path) {
+	public int sendServiceSchedule(final String unionId, final String name, final String orderId, final String content, final String path) {
 
 		try {
 			// 获取 AccessToken
@@ -77,10 +78,8 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			SystemConfigPO wapi = systemConfigDao.querySystemConfig("wapi");
 
 			// 查询用户的 OpenID
-			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId,
-					WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
-			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate(
-					"ServiceSchedule", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
+			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId, WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
+			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("ServiceSchedule", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
 
 			SystemConfigPO publicAppid = systemConfigDao.querySystemConfig("WECHAT_APPID_PUBLIC_INT", 0);
 
@@ -106,8 +105,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			// 设置小程序路径
 			final String miniprogram = path != null && !path.startsWith("http") ? path : null;
 			if (miniprogram != null && !"".equals(miniprogram)) {
-				final SystemConfigPO server = systemConfigDao.querySystemConfig("WECHAT_APPID_APPLET_INT"
-						, 5);
+				final SystemConfigPO server = systemConfigDao.querySystemConfig("WECHAT_APPID_APPLET_INT", 5);
 				params.put("miniprogram", new HashMap<String, String>() {
 					{
 						put("appid", server.getValue());
@@ -156,8 +154,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			params.put("data", data);
 
 			// 调用微信 API 发送模板消息
-			String url = String.format(WeChatApi.WXAPI_MESSAGE_TEMPLATE_SEND_STR, wapi.getValue(),
-					wAccessTokenPO.getAccesstoken());
+			String url = String.format(WeChatApi.WXAPI_MESSAGE_TEMPLATE_SEND_STR, wapi.getValue(), wAccessTokenPO.getAccesstoken());
 
 			logger.info("发送服务进度通知: url={}, params={}", url, params);
 			HttpHelper.httpPost(url, params);
@@ -171,14 +168,12 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 
 	@Override
 	@SuppressWarnings("serial")
-	public int sendPayment(String unionId, String name, String orderId, String money, String comment) {
+	public int sendPayment(final String unionId, final String name, final String orderId, final String money, final String comment) {
 
 		try {
 			// 查询用户的 OpenID
-			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId,
-					WeChatOpenUnionPO.TYPE_PUBLIC_INT);
-			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate(
-					"Payment", WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
+			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId, WeChatOpenUnionPO.TYPE_PUBLIC_INT);
+			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("Payment", WeChatMessageTemplatePO.TYPE_PUBLIC_INT, 1);
 
 			if (wxOpenUnionPO == null || messageTemplatePO == null) {
 				logger.warn("用户信息或消息模板不存在: unionId={}", unionId);
@@ -235,8 +230,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			params.put("data", data);
 
 			// 调用微信 API 发送模板消息
-			String url = String.format(WeChatApi.WXAPI_MESSAGE_TEMPLATE_SEND_STR, wapi.getValue(),
-					wAccessTokenPO.getAccesstoken());
+			String url = String.format(WeChatApi.WXAPI_MESSAGE_TEMPLATE_SEND_STR, wapi.getValue(), wAccessTokenPO.getAccesstoken());
 
 			logger.info("发送支付通知: url={}, params={}", url, params);
 			HttpHelper.httpPost(url, params);
@@ -250,7 +244,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 
 	@Override
 	@SuppressWarnings("serial")
-	public int sendNotice(String unionId, String name, String phone, String content, String url, String miniprogram) {
+	public int sendNotice(final String unionId, final String name, final String phone, final String content, final String url, final String miniprogram) {
 
 		try {
 			// 获取 AccessToken
@@ -258,10 +252,8 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			SystemConfigPO wapi = systemConfigDao.querySystemConfig("wapi");
 
 			// 查询用户的 OpenID
-			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId,
-					WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
-			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate(
-					"Notice", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
+			WeChatOpenUnionPO wxOpenUnionPO = wxOpenUnionDao.queryWeChatOpenUnion(unionId, WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
+			final WeChatMessageTemplatePO messageTemplatePO = messageTemplateDao.queryMessageTemplate("Notice", WeChatMessageTemplatePO.TYPE_PUBLIC_INT);
 
 			if (wxOpenUnionPO == null || messageTemplatePO == null) {
 				logger.warn("用户信息或消息模板不存在: unionId={}", unionId);
@@ -334,8 +326,7 @@ public class WeChatMessageServiceImpl implements WeChatMessageService {
 			params.put("data", data);
 
 			// 调用微信 API 发送模板消息
-			String finalUrl = String.format(WeChatApi.WXAPI_MESSAGE_TEMPLATE_SEND_STR, wapi.getValue(),
-					wAccessTokenPO.getAccesstoken());
+			String finalUrl = String.format(WeChatApi.WXAPI_MESSAGE_TEMPLATE_SEND_STR, wapi.getValue(), wAccessTokenPO.getAccesstoken());
 
 			logger.info("发送通知消息: url={}, params={}", finalUrl, params);
 			HttpHelper.httpPost(finalUrl, params);

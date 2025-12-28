@@ -15,6 +15,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.wechat.dao.WeChatUserInfoDao;
 import com.fanglin.wechat.po.WeChatUserInfoPO;
 
 @Repository("weChatUserInfoDao")

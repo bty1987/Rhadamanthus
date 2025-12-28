@@ -1,8 +1,9 @@
-package com.fanglin.wechat.dao.impl;
+package com.fanglin.wechat.dao;
 
+import com.fanglin.core.dao.Dao;
 import com.fanglin.wechat.po.WeChatAppSessionPO;
 
-public interface WeChatAppSessionDao {
+public interface WeChatAppSessionDao extends Dao<WeChatAppSessionPO> {
 
 	public WeChatAppSessionPO queryWeChatAppSessionByCode(String code);
 
