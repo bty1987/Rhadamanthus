@@ -33,7 +33,7 @@ public class MessageServiceImpl implements MessageService {
 	private UserDao userDao;
 
 	@Autowired
-	private com.fanglin.dingding.service.MessageService messageDDService;
+	private com.fanglin.dingding.service.DingTalkMessageService messageDDService;
 
 	@Override
 	public void pageMessage(Paging paging, List<Filter> filters, String userId, int company) {

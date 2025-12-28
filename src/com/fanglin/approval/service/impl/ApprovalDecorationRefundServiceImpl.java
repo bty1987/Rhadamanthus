@@ -31,7 +31,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -67,7 +67,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	private AddReduceDao addReduceDao;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private DingTalkApprovalService approvalService;
 
 	@Autowired
 	private PaymentTypeDao paymentTypeDao;

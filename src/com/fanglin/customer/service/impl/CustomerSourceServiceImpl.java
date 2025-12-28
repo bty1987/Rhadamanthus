@@ -97,7 +97,7 @@ public class CustomerSourceServiceImpl implements CustomerSourceService {
 	private MessageService messageService;
 
 	@Autowired
-	private MessageService dingTalkMessageService;
+	private DingTalkMessageService dingTalkMessageService;
 
 	@Autowired
 	private CountingService countingService;

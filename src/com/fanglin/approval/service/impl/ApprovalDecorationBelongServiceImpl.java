@@ -41,7 +41,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -83,7 +83,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	private DecorationAdditionDao decorationAdditionDao;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private DingTalkApprovalService approvalService;
 
 	@Autowired
 	private DepartmentDao departmentDao;

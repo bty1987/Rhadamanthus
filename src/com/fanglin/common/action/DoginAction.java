@@ -23,8 +23,8 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.bean.User;
-import com.fanglin.dingding.service.AuthService;
-import com.fanglin.dingding.service.UserService;
+import com.fanglin.dingding.service.DingTalkAuthService;
+import com.fanglin.dingding.service.DingTalkUserService;
 import com.fanglin.utils.LogUtils;
 
 @ParentPackage("login")
@@ -37,10 +37,10 @@ public class DoginAction extends BaseListAction {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
-	private AuthService authDDService;
+	private DingTalkAuthService authDDService;
 
 	@Autowired
-	private UserService userDDService;
+	private DingTalkUserService userDDService;
 
 	private String url;
 

@@ -28,7 +28,7 @@ import com.fanglin.dingding.bean.Group;
 import com.fanglin.dingding.bean.ImageMessage;
 import com.fanglin.dingding.bean.TextMessage;
 import com.fanglin.dingding.bean.VoiceMessage;
-import com.fanglin.dingding.service.GroupService;
+import com.fanglin.dingding.service.DingTalkGroupService;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -55,7 +55,7 @@ public class ConversationServiceImpl implements ConversationService {
 	private UserDao userdDao;
 
 	@Autowired
-	private GroupService groupService;
+	private DingTalkGroupService groupService;
 
 	@Autowired
 	private DecorationService decorationService;

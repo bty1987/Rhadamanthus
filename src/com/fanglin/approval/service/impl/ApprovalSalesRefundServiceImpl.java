@@ -40,7 +40,7 @@ import com.fanglin.data.material.vo.FormatVO;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.dingding.service.ApprovalService;
+import com.fanglin.dingding.service.DingTalkApprovalService;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.dao.SalesReceiptDao;
 import com.fanglin.payment.po.SalesPaymentPO;
@@ -123,7 +123,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 	private SalesActivityService salesActivityService;
 
 	@Autowired
-	private ApprovalService approvalService;
+	private DingTalkApprovalService approvalService;
 
 	@Autowired
 	private BalanceSalesBalanceService balanceSalesBalanceService;

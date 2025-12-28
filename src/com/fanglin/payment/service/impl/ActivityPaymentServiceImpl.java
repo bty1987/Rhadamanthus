@@ -13,7 +13,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.EmemberDao;
 import com.fanglin.customer.po.EmemberPO;
-import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.payment.dao.ActivityPaymentDao;
@@ -31,6 +30,7 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatMessageService;
 
 @Service("activityPaymentService")
 @Transactional(readOnly = true)
@@ -49,7 +49,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 	private UserDao userDao;
 
 	@Autowired
-	private MessageService messageService;
+	private WeChatMessageService messageService;
 
 	@Autowired
 	private EmemberDao ememberDao;
@@ -210,7 +210,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 		}
 
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %.3f", Arith.div(realMoney, 1000.0)));
+			messageService.sendServiceSchedule(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %.3f", Arith.div(realMoney, 1000.0)));
 		}
 
 		return 0;

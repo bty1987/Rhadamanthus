@@ -31,7 +31,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.dingding.service.MessageService;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -91,7 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
 	private ConstantDao constantDao;
 
 	@Autowired
-	private MessageService messageDDService;
+	private DingTalkMessageService messageDDService;
 
 	@Autowired
 	private ConstructionNodeDao constructionNodeDao;

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.dingding.service.MessageService;
+import com.fanglin.dingding.service.DingTalkMessageService;
 import com.fanglin.market.dao.EcustomerDao;
 import com.fanglin.market.po.EcustomerPO;
 import com.fanglin.market.service.EcustomerService;
@@ -30,7 +30,7 @@ public class EcustomerServiceImpl implements EcustomerService {
 	private EcustomerDao ecustomerDao;
 
 	@Autowired
-	private MessageService messageDDService;
+	private DingTalkMessageService messageDDService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;

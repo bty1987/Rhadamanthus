@@ -34,6 +34,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.HttpUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.wechat.service.WeChatMessageService;
 
 @Service("decorationServiceC")
 @Transactional(readOnly = true)
@@ -55,7 +56,7 @@ public class DecorationServiceImpl implements DecorationService {
 	private CustomerNoticeDao customerNoticeDao;
 
 	@Autowired
-	private MessageService messageService;
+	private WeChatMessageService messageService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -310,7 +311,7 @@ public class DecorationServiceImpl implements DecorationService {
 		List<DecorationPO> decorationPOs = cecorationDao.queryCusDecorationByOrderId(orderId);
 
 		for (DecorationPO decorationPO : decorationPOs) {
-			messageService.sendMessage(decorationPO.getUnionId(), name, orderId, content, path);
+			messageService.sendServiceSchedule(decorationPO.getUnionId(), name, orderId, content, path);
 		}
 
 		customerNoticeDao.save(new CustomerNoticePO().init(orderId, name, content, path, creater));
