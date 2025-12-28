@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "jsapiticket", catalog = "wechat")
-public class JsapiTicketPO implements java.io.Serializable {
+public class WeChatJsapiTicketPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6513276145439985544L;
 
@@ -26,11 +26,11 @@ public class JsapiTicketPO implements java.io.Serializable {
 
 	private int company;
 
-	public JsapiTicketPO() {
+	public WeChatJsapiTicketPO() {
 		super();
 	}
 
-	public JsapiTicketPO(String jsapiticket, long operateTime, int company) {
+	public WeChatJsapiTicketPO(String jsapiticket, long operateTime, int company) {
 		super();
 		this.jsapiticket = jsapiticket;
 		this.operateTime = operateTime;

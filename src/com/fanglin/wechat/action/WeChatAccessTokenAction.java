@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.wechat.action;
@@ -19,31 +19,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
-import com.fanglin.wechat.service.AccessTokenService;
-import com.fanglin.wechat.service.JsapiTicketService;
-import com.fanglin.wechat.service.OpenAccessTokenService;
-import com.fanglin.wechat.vo.AccessTokenVO;
-import com.fanglin.wechat.vo.JsapiTicketVO;
+import com.fanglin.wechat.service.WeChatAccessTokenService;
+import com.fanglin.wechat.service.WeChatOpenAccessTokenService;
+import com.fanglin.wechat.vo.WeChatAccessTokenVO;
+import com.fanglin.wechat.vo.WeChatJsapiTicketVO;
 
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class AccessTokenAction extends BaseListAction {
+public class WeChatAccessTokenAction extends BaseListAction {
 
 	private static final long serialVersionUID = -387995638369730321L;
 
 	@Autowired
-	private AccessTokenService accessTokenService;
+	private WeChatAccessTokenService accessTokenService;
 
 	@Autowired
-	private JsapiTicketService jsapiTicketService;
+	private WeChatOpenAccessTokenService openAccessTokenService;
 
-	@Autowired
-	private OpenAccessTokenService openAccessTokenService;
+	private WeChatAccessTokenVO accessToken;
 
-	private AccessTokenVO accessToken;
-
-	private JsapiTicketVO jsapiTicket;
+	private WeChatJsapiTicketVO jsapiTicket;
 
 	private Short type;
 
@@ -60,7 +56,7 @@ public class AccessTokenAction extends BaseListAction {
 	@Action(value = "queryJsapiTicket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryWJsapiTicketForNew() {
 
-		jsapiTicket = jsapiTicketService.queryJsapiTicketForNew(company);
+		jsapiTicket = accessTokenService.queryJsapiTicketForNew(company);
 
 		return SUCCESS;
 	}
@@ -89,19 +85,19 @@ public class AccessTokenAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public AccessTokenVO getAccessToken() {
+	public WeChatAccessTokenVO getAccessToken() {
 		return accessToken;
 	}
 
-	public void setAccessToken(AccessTokenVO accessToken) {
+	public void setAccessToken(WeChatAccessTokenVO accessToken) {
 		this.accessToken = accessToken;
 	}
 
-	public JsapiTicketVO getJsapiTicket() {
+	public WeChatJsapiTicketVO getJsapiTicket() {
 		return jsapiTicket;
 	}
 
-	public void setJsapiTicket(JsapiTicketVO jsapiTicket) {
+	public void setJsapiTicket(WeChatJsapiTicketVO jsapiTicket) {
 		this.jsapiTicket = jsapiTicket;
 	}
 

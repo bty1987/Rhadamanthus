@@ -12,11 +12,11 @@
 package com.fanglin.wechat.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.wechat.po.JsapiTicketPO;
+import com.fanglin.wechat.po.WeChatJsapiTicketPO;
 
-public interface JsapiTicketDao extends Dao<JsapiTicketPO> {
+public interface WeChatJsapiTicketDao extends Dao<WeChatJsapiTicketPO> {
 
-	public JsapiTicketPO queryJsapiTicket(int company);
+	public WeChatJsapiTicketPO queryJsapiTicket(int company);
 
 	public int deleteJsapiTicket(long operateTime);
 

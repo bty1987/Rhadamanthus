@@ -6,17 +6,17 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.wechat.dao;
 
 import com.fanglin.core.dao.Dao;
-import com.fanglin.wechat.po.AccessTokenPO;
+import com.fanglin.wechat.po.WeChatAccessTokenPO;
 
-public interface AccessTokenDao extends Dao<AccessTokenPO> {
+public interface WeChatAccessTokenDao extends Dao<WeChatAccessTokenPO> {
 
-	public AccessTokenPO queryAccessToken(int company);
+	public WeChatAccessTokenPO queryAccessToken(int company);
 
 	public int deleteAccessToken(long operateTime);
 

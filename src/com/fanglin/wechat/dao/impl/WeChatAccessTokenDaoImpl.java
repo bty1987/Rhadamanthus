@@ -6,7 +6,7 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.wechat.dao.impl;
@@ -16,19 +16,19 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.wechat.dao.AccessTokenDao;
-import com.fanglin.wechat.po.AccessTokenPO;
+import com.fanglin.wechat.dao.WeChatAccessTokenDao;
+import com.fanglin.wechat.po.WeChatAccessTokenPO;
 
-@Repository("accessTokenDao")
-public class AccessTokenDaoImpl extends DaoImpl<AccessTokenPO> implements AccessTokenDao {
+@Repository("weChatAccessTokenDao")
+public class WeChatAccessTokenDaoImpl extends DaoImpl<WeChatAccessTokenPO> implements WeChatAccessTokenDao {
 
-	public AccessTokenDaoImpl() {
-		super(AccessTokenPO.class);
+	public WeChatAccessTokenDaoImpl() {
+		super(WeChatAccessTokenPO.class);
 	}
 
 	@Override
-	public AccessTokenPO queryAccessToken(int company) {
-		return (AccessTokenPO) session().createCriteria(AccessTokenPO.class).add(Restrictions.eq(AccessTokenPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc(AccessTokenPO.COLUMN_OPERATETIME_STR)).setMaxResults(1).uniqueResult();
+	public WeChatAccessTokenPO queryAccessToken(int company) {
+		return (WeChatAccessTokenPO) session().createCriteria(WeChatAccessTokenPO.class).add(Restrictions.eq(WeChatAccessTokenPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc(WeChatAccessTokenPO.COLUMN_OPERATETIME_STR)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

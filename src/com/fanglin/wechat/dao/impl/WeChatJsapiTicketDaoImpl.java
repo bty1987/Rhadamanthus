@@ -16,19 +16,19 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.wechat.dao.JsapiTicketDao;
-import com.fanglin.wechat.po.JsapiTicketPO;
+import com.fanglin.wechat.dao.WeChatJsapiTicketDao;
+import com.fanglin.wechat.po.WeChatJsapiTicketPO;
 
-@Repository("jsapiTicketDao")
-public class JsapiTicketDaoImpl extends DaoImpl<JsapiTicketPO> implements JsapiTicketDao {
+@Repository("weChatJsapiTicketDao")
+public class WeChatJsapiTicketDaoImpl extends DaoImpl<WeChatJsapiTicketPO> implements WeChatJsapiTicketDao {
 
-	public JsapiTicketDaoImpl() {
-		super(JsapiTicketPO.class);
+	public WeChatJsapiTicketDaoImpl() {
+		super(WeChatJsapiTicketPO.class);
 	}
 
 	@Override
-	public JsapiTicketPO queryJsapiTicket(int company) {
-		return (JsapiTicketPO) session().createCriteria(JsapiTicketPO.class).add(Restrictions.eq(JsapiTicketPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc(JsapiTicketPO.COLUMN_OPERATETIME_STR)).setMaxResults(1).uniqueResult();
+	public WeChatJsapiTicketPO queryJsapiTicket(int company) {
+		return (WeChatJsapiTicketPO) session().createCriteria(WeChatJsapiTicketPO.class).add(Restrictions.eq(WeChatJsapiTicketPO.COLUMN_COMPANY_STR, company)).addOrder(Order.desc(WeChatJsapiTicketPO.COLUMN_OPERATETIME_STR)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override

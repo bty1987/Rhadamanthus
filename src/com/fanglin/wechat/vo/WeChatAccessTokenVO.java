@@ -1,6 +1,6 @@
 package com.fanglin.wechat.vo;
 
-public class AccessTokenVO implements java.io.Serializable {
+public class WeChatAccessTokenVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3510368582173133287L;
 

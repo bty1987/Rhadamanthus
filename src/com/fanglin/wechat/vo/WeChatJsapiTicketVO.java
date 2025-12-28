@@ -1,6 +1,6 @@
 package com.fanglin.wechat.vo;
 
-public class JsapiTicketVO implements java.io.Serializable {
+public class WeChatJsapiTicketVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7899938529350157347L;
 
