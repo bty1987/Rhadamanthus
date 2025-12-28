@@ -94,7 +94,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SelectionItemPD> querySelectionItem(long sid) {
-		return createCriteria(SelectionItemPD.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).list();
+		return createCriteria(SelectionItemPD.class).createAlias("selection", "selection").add(Restrictions.eq("selection.sid", sid)).list();
 	}
 
 	@Override
@@ -122,9 +122,9 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 		sql.append("INNER JOIN quotation.quotationfunctionarea qfa ON q.qid = qfa.quotationId ");
 		sql.append("INNER JOIN quotation.quotationfunctionareaitem2 qfai ON qfa.qfaid = qfai.quotationFunctionAreaId ");
-		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = q.orderId AND qfai.qfaiId = si.quoteid ON si.type = 0 ");
-		sql.append("LEFT JOIN quotation.extension e on e.orderId = q.orderId ");
-		sql.append("LEFT JOIN quotation.extensionitem ei on ei.eid = e.eid AND qfai.qfaiid = ei.quoteItemId ON ei.type = 0 ");
+		sql.append("LEFT JOIN quotation.selectionitem si on si.orderId = q.orderId AND qfai.qfaiId = si.quoteid AND si.type = 0 ");
+		sql.append("LEFT JOIN quotation.extension e ON e.orderId = q.orderId ");
+		sql.append("LEFT JOIN quotation.extensionitem ei ON ei.eid = e.eid AND qfai.qfaiid = ei.quoteItemId AND ei.type = 0 ");
 		sql.append("where q.orderId = :orderId AND q.defaults = 1 AND si.siid is null AND ei.eiid is null;");
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql.toString()).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).uniqueResult();
