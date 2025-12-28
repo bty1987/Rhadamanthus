@@ -43,7 +43,7 @@ $.extend(api.index, {
     },
 
     decorationServiceIndex: {
-        url: "/views/decoration/decoration4service.html"
+        url: "/views/decoration/decorationService.html"
     },
 
     decorationReferIndex: {
@@ -813,18 +813,6 @@ $.extend(api, {
             url: "affirmDecorationAccount.do"
         },
 
-        pageDecorationService: {
-            url: "pageDecorationService.do",
-            demo: true,
-            type: "query",
-            tranargs: [{
-                result: "paging-data-decoration",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
-            }, {
-                result: "paging-data--house",
-                args: ["buildArea", "freeArea", "innerArea", "totalArea", "quoteArea"]
-            }]
-        },
         queryDecorationServiceByOrderId: {
             url: "queryDecorationServiceByOrderId.do"
         },

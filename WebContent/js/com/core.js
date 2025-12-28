@@ -224,6 +224,8 @@
             dataType: "json",
             async: optAsync, // 设为false就是同步请求
             success: function(res) {
+                
+                console.log(res)
 
                 if (res == null) {
                     return false;
@@ -292,6 +294,7 @@
                         $("#userLock").click();
                     }
                 } else {
+                    
                     if (failCallback) {
                         failCallback(res);
                     } else {

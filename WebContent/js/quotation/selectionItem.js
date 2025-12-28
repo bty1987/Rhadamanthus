@@ -587,10 +587,12 @@ $(function() {
                 list: res.paging.data
             }, function(v) {
 
-                v.num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
+                v.num = [2, 4].indexOf(v.type % 10) != -1 ? -v.num : v.num;
                 v.status = selectionItem.statusList[v.status];
                 v.type = selectionItem.typeList[v.type];
                 v.surplus = utils.changeThrDecimal(utils.accSub(parseFloat(v.num), parseFloat(v.refnum)));
+                
+                v.surplus = [2, 4].indexOf(v.type % 10) != -1 ? -v.surplus : v.surplus;
             });
         });
     }
