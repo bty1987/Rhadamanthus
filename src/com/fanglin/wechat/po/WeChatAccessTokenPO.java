@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "accesstoken", catalog = "wechat")
-public class AccessTokenPO implements java.io.Serializable {
+public class WeChatAccessTokenPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5253002651815597375L;
 
@@ -26,11 +26,11 @@ public class AccessTokenPO implements java.io.Serializable {
 
 	private int company;
 
-	public AccessTokenPO() {
+	public WeChatAccessTokenPO() {
 		super();
 	}
 
-	public AccessTokenPO(String accesstoken, long operateTime, int company) {
+	public WeChatAccessTokenPO(String accesstoken, long operateTime, int company) {
 		super();
 		this.accesstoken = accesstoken;
 		this.operateTime = operateTime;

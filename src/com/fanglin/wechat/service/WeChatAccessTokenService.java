@@ -6,16 +6,19 @@
  * @Copyright	: Copyright Creators 2014
  * @Author		: baity
  * @Email			: bty1987@163.com
- * @Describing	: 
+ * @Describing	:
  */
 
 package com.fanglin.wechat.service;
 
-import com.fanglin.wechat.vo.AccessTokenVO;
+import com.fanglin.wechat.vo.WeChatAccessTokenVO;
+import com.fanglin.wechat.vo.WeChatJsapiTicketVO;
 
-public interface AccessTokenService {
+public interface WeChatAccessTokenService {
 
-	public AccessTokenVO queryAccessToken(String company);
+	public WeChatAccessTokenVO queryAccessToken(String company);
+
+	public WeChatJsapiTicketVO queryJsapiTicketForNew(String company);
 
 	public int makeAccessToken(short type, String company);
 
